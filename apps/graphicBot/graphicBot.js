@@ -546,191 +546,10 @@ GraphicBot.prototype.startWork = function () {
   }
 }
 
-GraphicBot.prototype.addFrontMethods = function () {
+GraphicBot.prototype.botRouter = function () {
   const instance = this;
-  if (this.frontGeneral === null) {
-    throw new Error("front render first");
-  }
-
-  this.frontGeneral.injectionInput = async function (input, value, speedUp = false, iframeBoo = false, iframe = null) {
-    try {
-      if (input === undefined || typeof value !== "string") {
-        throw new Error("invaild input");
-      }
-      if (iframeBoo === true && (iframe === null || iframe === undefined)) {
-        throw new Error("if iframe is true, must be iframe dom input");
-      }
-      const inputId = input.id;
-      let iframeRect, iframes, thisIframe;
-      let rect;
-      let x, y;
-      let data;
-
-      if (iframeBoo) {
-        thisIframe = iframe;
-      } else {
-        iframeRect = {
-          top: 0,
-          left: 0
-        };
-        if (inputId !== "") {
-          if (document.getElementById(inputId) === null && document.querySelector("iframe") !== null) {
-            iframes = document.querySelectorAll("iframe");
-            thisIframe = null;
-            for (let i of iframes) {
-              if (i.contentWindow.document.getElementById(inputId) !== null) {
-                thisIframe = i;
-                break;
-              }
-            }
-            if (thisIframe === null) {
-              throw new Error("cannot find input");
-            } else {
-              iframeBoo = true;
-              iframeRect = thisIframe.getBoundingClientRect();
-            }
-          } else {
-            iframeBoo = false;
-          }
-        }
-      }
-      rect = input.getBoundingClientRect();
-      x = iframeRect.left + rect.left + (rect.width / 2);
-      y = iframeRect.top + rect.top + (rect.height / 2);
-
-      data = { x, y, value, speedUp: speedUp ? "true" : "false" };
-
-      await ajaxPromise(data, HOSTCONST + "/injectionInput");
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  this.frontGeneral.scrollWindow = async function (positionX, positionY, amount) {
-    if (positionX === undefined || positionY === undefined || typeof amount !== "number") {
-      throw new Error("invaild input");
-    }
-    await sleep(200);
-    await ajaxPromise({ positionX, positionY, amount }, HOSTCONST + "/scroll");
-    await sleep(1000);
-  }
-
-  this.frontGeneral.clickElement = async function (dom, iframeBoo = false, iframe = null) {
-    if (dom === undefined || dom === null) {
-      throw new Error("must be dom");
-    }
-    if (iframeBoo === true && (iframe === null || iframe === undefined)) {
-      throw new Error("if iframe is true, must be iframe dom input");
-    }
-    const domId = dom.id;
-    let iframeRect, iframes, thisIframe;
-    let rect;
-    let x, y;
-    let data;
-
-    if (iframeBoo) {
-      thisIframe = iframe;
-    } else {
-      iframeRect = {
-        top: 0,
-        left: 0
-      };
-      if (domId !== "") {
-        if (document.getElementById(domId) === null && document.querySelector("iframe") !== null) {
-          iframes = document.querySelectorAll("iframe");
-          thisIframe = null;
-          for (let i of iframes) {
-            if (i.contentWindow.document.getElementById(domId) !== null) {
-              thisIframe = i;
-              break;
-            }
-          }
-          if (thisIframe === null) {
-            throw new Error("cannot find input");
-          } else {
-            iframeBoo = true;
-            iframeRect = thisIframe.getBoundingClientRect();
-          }
-        } else {
-          iframeBoo = false;
-        }
-      }
-    }
-    rect = dom.getBoundingClientRect();
-    x = iframeRect.left + rect.left + (rect.width / 2);
-    y = iframeRect.top + rect.top + (rect.height / 2);
-
-    data = { x, y };
-
-    await ajaxPromise(data, HOSTCONST + "/clickElement");
-
-  }
-
-  this.frontGeneral.calendarInput = async function (input, value, calendarBox, iframeBoo = false, iframe = null) {
-    try {
-      if (input === undefined || typeof value !== "string" || typeof calendarBox !== "object") {
-        throw new Error("invaild input");
-      }
-      if (iframeBoo === true && (iframe === null || iframe === undefined)) {
-        throw new Error("if iframe is true, must be iframe dom input");
-      }
-      const inputId = input.id;
-      let iframeRect, iframes, thisIframe;
-      let rect;
-      let x, y;
-      let data;
-
-      if (iframeBoo) {
-        thisIframe = iframe;
-      } else {
-        iframeRect = {
-          top: 0,
-          left: 0
-        };
-        if (inputId !== "") {
-          if (document.getElementById(inputId) === null && document.querySelector("iframe") !== null) {
-            iframes = document.querySelectorAll("iframe");
-            thisIframe = null;
-            for (let i of iframes) {
-              if (i.contentWindow.document.getElementById(inputId) !== null) {
-                thisIframe = i;
-                break;
-              }
-            }
-            if (thisIframe === null) {
-              throw new Error("cannot find input");
-            } else {
-              iframeBoo = true;
-              iframeRect = thisIframe.getBoundingClientRect();
-            }
-          } else {
-            iframeBoo = false;
-          }
-        }
-      }
-      rect = input.getBoundingClientRect();
-      x = iframeRect.left + rect.left + (rect.width / 2);
-      y = iframeRect.top + rect.top + (rect.height / 2);
-
-      data = { x, y, value, calendarBox };
-
-      await ajaxPromise(data, HOSTCONST + "/calendarInput");
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-}
-
-GraphicBot.prototype.botServer = async function () {
-  const instance = this;
+  const back = this.back;
   const { fileSystem, shell, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix } = this.mother;
-  const express = require("express");
-  const bodyParser = require("body-parser");
-  const app = express();
-  const port = this.port;
   const orderConst = 'g';
   const tong = this.tong;
   const address = this.address;
@@ -749,22 +568,11 @@ GraphicBot.prototype.botServer = async function () {
       throw new Error("invaild input");
     }
   }
+  let funcObj = {};
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
-
-  try {
-
-    let frontGeneralString, frontGeneral;
-    frontGeneralString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
-    frontGeneralString = "const document = { createElement: (str) => {} };\n\n" + frontGeneralString;
-    frontGeneralString += "\n\n" + "module.exports = GeneralJs";
-    await fileSystem(`write`, [ `${process.cwd()}/temp/frontGeneral.js`, frontGeneralString ]);
-    frontGeneral = require(`${process.cwd()}/temp/frontGeneral.js`);
-    this.frontGeneral = frontGeneral;
-    this.addFrontMethods();
-
-    app.post("/frontEnd", (req, res) => {
+  funcObj.post_frontEnd = {
+    link: [ "/frontEnd" ],
+    func: function (req, res) {
       instance.front = 0;
       res.set({
         "Content-Type": "application/json",
@@ -773,9 +581,12 @@ GraphicBot.prototype.botServer = async function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send({ message: "OK" });
-    });
+    }
+  };
 
-    app.post("/receive", (req, res) => {
+  funcObj.post_receive = {
+    link: [ "/receive" ],
+    func: function (req, res) {
       if (req.body.to === undefined || req.body.path === undefined || req.body.data === undefined) {
         throw new Error("must be to, data, path");
       }
@@ -802,199 +613,233 @@ GraphicBot.prototype.botServer = async function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send({ message: "OK" });
-    });
+    }
+  };
 
-    app.post("/injectionInput", async (req, res) => {
-      if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined) {
-        throw new Error("must x, y, value");
-      }
-      const { screenSize, chromeHeight, chromeLeft } = instance;
-      const robot = instance.bot;
-      let { x, y, value } = req.body;
-      let text;
-      let tempArr, tempObj;
-      let customX;
-      let speedUp;
-
-      x = Number(x);
-      y = Number(y);
-      x = x + chromeLeft;
-      y = y + chromeHeight;
-
-      customX = req.body.customX === undefined ? (chromeLeft + (screenSize.width / 2)) : Number(req.body.customX);
-      customY = req.body.customY === undefined ? (screenSize.height / 2) : Number(req.body.customY);
-
-      if (req.body.speedUp === undefined) {
-        speedUp = false;
-      } else {
-        speedUp = (req.body.speedUp === "true");
-      }
-
-      robot.moveMouse(x, y);
-
-      if (/^info\./gi.test(value)) {
-        tempArr = value.split('.');
-        tempArr.shift();
-        tempObj = instance.info;
-        for (let i of tempArr) {
-          tempObj = tempObj[i];
+  funcObj.post_injectionInput = {
+    link: [ "/injectionInput" ],
+    func: async function (req, res) {
+      try {
+        if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined) {
+          throw new Error("must x, y, value");
         }
-        text = tempObj;
-      } else {
-        text = value;
-      }
+        const { screenSize, chromeHeight, chromeLeft } = instance;
+        const robot = instance.bot;
+        let { x, y, value } = req.body;
+        let text;
+        let tempArr, tempObj;
+        let customX;
+        let speedUp;
 
-      robot.mouseClick("left");
-      if (!speedUp) {
-        robot.mouseClick("left", true);
-        await instance.pressKey("delete");
-      }
-      await instance.clipBoard(text);
-      await instance.pasteText();
+        x = Number(x);
+        y = Number(y);
+        x = x + chromeLeft;
+        y = y + chromeHeight;
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send({ message: "OK" });
-    });
+        customX = req.body.customX === undefined ? (chromeLeft + (screenSize.width / 2)) : Number(req.body.customX);
+        customY = req.body.customY === undefined ? (screenSize.height / 2) : Number(req.body.customY);
 
-    app.post("/clickElement", async (req, res) => {
-      if (req.body.x === undefined || req.body.y === undefined) {
-        throw new Error("must be x, y");
-      }
-      const { screenSize, chromeHeight, chromeLeft } = instance;
-      const robot = instance.bot;
-      let { x, y } = req.body;
-
-      x = Number(x);
-      y = Number(y);
-      x = x + chromeLeft;
-      y = y + chromeHeight;
-
-      robot.moveMouse(x, y);
-      robot.mouseClick("left");
-
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send({ message: "OK" });
-    });
-
-    app.post("/calendarInput", async (req, res) => {
-      if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined || req.body.calendarBox === undefined) {
-        throw new Error("must x, y, value, calendarBox");
-      }
-      const { screenSize, chromeHeight, chromeLeft } = instance;
-      const robot = instance.bot;
-      let { x, y, value, calendarBox } = req.body;
-      let today;
-      let move;
-      let matrix;
-      let startPoint;
-      let dateX, dateY;
-      let calendarX, calendarY;
-
-      x = Number(x);
-      y = Number(y);
-      x = x + chromeLeft;
-      y = y + chromeHeight;
-      today = new Date();
-      value = stringToDate(value);
-      calendarBox = JSON.parse(calendarBox);
-      move = ((today.getFullYear() * 12) + today.getMonth()) - ((value.getFullYear() * 12) + value.getMonth());
-
-      robot.moveMouse(x, y);
-      robot.mouseClick("left");
-      await sleep(500);
-
-      if (move > 0) {
-        for (let i = 0; i < move; i++) {
-          robot.moveMouse(calendarBox.left.left + (calendarBox.left.width / 2) + chromeLeft, calendarBox.left.top + (calendarBox.left.height / 2) + chromeHeight);
-          robot.mouseClick("left");
-          await sleep(500);
+        if (req.body.speedUp === undefined) {
+          speedUp = false;
+        } else {
+          speedUp = (req.body.speedUp === "true");
         }
-      } else if (move < 0) {
-        for (let i = 0; i < Math.abs(move); i++) {
-          robot.moveMouse(calendarBox.right.left + (calendarBox.right.width / 2) + chromeLeft, calendarBox.right.top + (calendarBox.right.height / 2) + chromeHeight);
-          robot.mouseClick("left");
-          await sleep(500);
+
+        robot.moveMouse(x, y);
+
+        if (/^info\./gi.test(value)) {
+          tempArr = value.split('.');
+          tempArr.shift();
+          tempObj = instance.info;
+          for (let i of tempArr) {
+            tempObj = tempObj[i];
+          }
+          text = tempObj;
+        } else {
+          text = value;
         }
-      }
 
-      matrix = getDateMatrix(value);
-      matrix = matrix.returnSundayMatrix();
-
-      for (let i = 0; i < matrix[0].length; i++) {
-        if (matrix[0][i] !== null) {
-          startPoint = i;
-          break;
+        robot.mouseClick("left");
+        if (!speedUp) {
+          robot.mouseClick("left", true);
+          await instance.pressKey("delete");
         }
+        await instance.clipBoard(text);
+        await instance.pasteText();
+
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "OK" });
+      } catch (e) {
+        console.log(e);
       }
+    }
+  };
 
-      dateX = Math.floor(value.getDate() / 7);
-      dateY = (value.getDate() % 7) - 1;
-      dateY = dateY + startPoint;
-      if (dateY >= 7) {
-        dateX = dateX + 1;
-        dateY = dateY - 7;
+  funcObj.post_clickElement = {
+    link: [ "/clickElement" ],
+    func: async function (req, res) {
+      try {
+        if (req.body.x === undefined || req.body.y === undefined) {
+          throw new Error("must be x, y");
+        }
+        const { screenSize, chromeHeight, chromeLeft } = instance;
+        const robot = instance.bot;
+        let { x, y } = req.body;
+
+        x = Number(x);
+        y = Number(y);
+        x = x + chromeLeft;
+        y = y + chromeHeight;
+
+        robot.moveMouse(x, y);
+        robot.mouseClick("left");
+
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "OK" });
+      } catch (e) {
+        console.log(e);
       }
+    }
+  };
 
-      calendarX = chromeLeft + calendarBox.first.x + (calendarBox.first.width * (dateY)) + (calendarBox.first.width / 2);
-      calendarY = chromeHeight + calendarBox.first.y + (calendarBox.first.height * (dateX)) + (calendarBox.first.height / 2);
+  funcObj.post_calendarInput = {
+    link: [ "/calendarInput" ],
+    func: async function (req, res) {
+      try {
+        if (req.body.x === undefined || req.body.y === undefined || req.body.value === undefined || req.body.calendarBox === undefined) {
+          throw new Error("must x, y, value, calendarBox");
+        }
+        const { screenSize, chromeHeight, chromeLeft } = instance;
+        const robot = instance.bot;
+        let { x, y, value, calendarBox } = req.body;
+        let today;
+        let move;
+        let matrix;
+        let startPoint;
+        let dateX, dateY;
+        let calendarX, calendarY;
 
-      robot.moveMouse(calendarX, calendarY);
-      robot.mouseClick("left");
-      await sleep(500);
+        x = Number(x);
+        y = Number(y);
+        x = x + chromeLeft;
+        y = y + chromeHeight;
+        today = new Date();
+        value = stringToDate(value);
+        calendarBox = JSON.parse(calendarBox);
+        move = ((today.getFullYear() * 12) + today.getMonth()) - ((value.getFullYear() * 12) + value.getMonth());
 
-      robot.moveMouse(calendarBox.return.left + (calendarBox.return.width / 2) + chromeLeft, calendarBox.return.top + (calendarBox.return.height / 2) + chromeHeight);
-      robot.mouseClick("left");
-      await sleep(500);
+        robot.moveMouse(x, y);
+        robot.mouseClick("left");
+        await sleep(500);
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send({ message: "OK" });
-    });
+        if (move > 0) {
+          for (let i = 0; i < move; i++) {
+            robot.moveMouse(calendarBox.left.left + (calendarBox.left.width / 2) + chromeLeft, calendarBox.left.top + (calendarBox.left.height / 2) + chromeHeight);
+            robot.mouseClick("left");
+            await sleep(500);
+          }
+        } else if (move < 0) {
+          for (let i = 0; i < Math.abs(move); i++) {
+            robot.moveMouse(calendarBox.right.left + (calendarBox.right.width / 2) + chromeLeft, calendarBox.right.top + (calendarBox.right.height / 2) + chromeHeight);
+            robot.mouseClick("left");
+            await sleep(500);
+          }
+        }
 
-    app.post("/scroll", async (req, res) => {
-      if (req.body.positionX === undefined || req.body.positionY === undefined || req.body.amount === undefined) {
-        throw new Error("must be positionX, positionY, amount");
+        matrix = getDateMatrix(value);
+        matrix = matrix.returnSundayMatrix();
+
+        for (let i = 0; i < matrix[0].length; i++) {
+          if (matrix[0][i] !== null) {
+            startPoint = i;
+            break;
+          }
+        }
+
+        dateX = Math.floor(value.getDate() / 7);
+        dateY = (value.getDate() % 7) - 1;
+        dateY = dateY + startPoint;
+        if (dateY >= 7) {
+          dateX = dateX + 1;
+          dateY = dateY - 7;
+        }
+
+        calendarX = chromeLeft + calendarBox.first.x + (calendarBox.first.width * (dateY)) + (calendarBox.first.width / 2);
+        calendarY = chromeHeight + calendarBox.first.y + (calendarBox.first.height * (dateX)) + (calendarBox.first.height / 2);
+
+        robot.moveMouse(calendarX, calendarY);
+        robot.mouseClick("left");
+        await sleep(500);
+
+        robot.moveMouse(calendarBox.return.left + (calendarBox.return.width / 2) + chromeLeft, calendarBox.return.top + (calendarBox.return.height / 2) + chromeHeight);
+        robot.mouseClick("left");
+        await sleep(500);
+
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "OK" });
+      } catch (e) {
+        console.log(e);
       }
-      const { screenSize, chromeLeft } = instance;
-      const robot = instance.bot;
-      let { positionX, positionY, amount } = req.body;
+    }
+  };
 
-      positionX = /center/gi.test(positionX) ? (chromeLeft + (screenSize.width / 2)) : Number(positionX.replace(/[^0-9\-\.]/g, ''));
-      positionY = /center/gi.test(positionY) ? (screenSize.height / 2) : Number(positionY.replace(/[^0-9\-\.]/g, ''));
-      amount = Number(amount.replace(/[^0-9\-\.]/g, ''));
+  funcObj.post_scroll = {
+    link: [ "/scroll" ],
+    func: async function (req, res) {
+      try {
+        if (req.body.positionX === undefined || req.body.positionY === undefined || req.body.amount === undefined) {
+          throw new Error("must be positionX, positionY, amount");
+        }
+        const { screenSize, chromeLeft } = instance;
+        const robot = instance.bot;
+        let { positionX, positionY, amount } = req.body;
 
-      robot.moveMouse(positionX, positionY);
-      robot.scrollMouse(0, amount);
+        positionX = /center/gi.test(positionX) ? (chromeLeft + (screenSize.width / 2)) : Number(positionX.replace(/[^0-9\-\.]/g, ''));
+        positionY = /center/gi.test(positionY) ? (screenSize.height / 2) : Number(positionY.replace(/[^0-9\-\.]/g, ''));
+        amount = Number(amount.replace(/[^0-9\-\.]/g, ''));
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send({ message: "OK" });
-    });
+        robot.moveMouse(positionX, positionY);
+        robot.scrollMouse(0, amount);
 
-    app.get("/confirm", (req, res) => {
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "OK" });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  funcObj.get_confirm = {
+    link: [ "/confirm" ],
+    func: function (req, res) {
       res.set("Content-Type", "application/json");
       res.send({ doing: instance.doing });
-    });
+    }
+  };
 
-    app.get("/print", async (req, res) => {
+  funcObj.get_print = {
+    link: [ "/print" ],
+    func: async function (req, res) {
       try {
         const taskNumber = 0;
         let latest;
@@ -1016,9 +861,12 @@ GraphicBot.prototype.botServer = async function () {
       } catch (e) {
         console.log(e);
       }
-    });
+    }
+  };
 
-    app.get("/cash", async (req, res) => {
+  funcObj.get_cash = {
+    link: [ "/cash" ],
+    func: async function (req, res) {
       try {
         const taskNumber = 2;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
@@ -1037,9 +885,12 @@ GraphicBot.prototype.botServer = async function () {
       } catch (e) {
         console.log(e);
       }
-    });
+    }
+  };
 
-    app.post("/form", async (req, res) => {
+  funcObj.post_form = {
+    link: [ "/form" ],
+    func: async function (req, res) {
       try {
         const taskNumber = 1;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
@@ -1058,9 +909,84 @@ GraphicBot.prototype.botServer = async function () {
       } catch (e) {
         console.log(e);
       }
-    });
+    }
+  };
 
-    app.listen(port, () => { console.log(`Server running`); });
+  //end : set router
+  let resultObj = { get: [], post: [] };
+  for (let i in funcObj) {
+    resultObj[i.split('_')[0]].push(funcObj[i]);
+  }
+  return resultObj;
+}
+
+GraphicBot.prototype.botServer = async function () {
+  const instance = this;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const https = require("https");
+  const express = require("express");
+  const bodyParser = require("body-parser");
+  const multer = require("multer");
+  const multiForms = multer();
+  const useragent = require("express-useragent");
+  const FrontMethods = require(this.dir + "/router/frontMethods.js");
+  const app = express();
+
+  app.use(useragent.express());
+  app.use(bodyParser.json());
+  app.use(multiForms.array());
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  try {
+    let front, routerObj;
+    let pems, pemsLink, certDir, keyDir, caDir;
+
+    const { name, rawObj: address } = await this.mother.ipCheck();
+    console.log(``);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching graphic bot in ${name.replace(/info/i, '')} ==============`);
+    console.log(``);
+
+    front = new FrontMethods();
+    this.frontGeneral = await front.addFrontMethods();
+
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + address.host;
+
+    console.log(address.host);
+
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
+    routerObj = this.botRouter();
+    for (let obj of routerObj.get) {
+      app.get(obj.link, obj.func);
+    }
+    for (let obj of routerObj.post) {
+      app.post(obj.link, obj.func);
+    }
+
+    https.createServer(pems, app).listen(this.port, () => {
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+    });
 
   } catch (e) {
     console.log(e);

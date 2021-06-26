@@ -272,7 +272,7 @@ Robot.prototype.taxBill = async function () {
 Robot.prototype.cashReceipt = async function () {
   try {
     const { shell, shellLink } = this.mother;
-    const { officeinfo: { map, ghost } } = this.address;
+    const { homeinfo: { map, ghost } } = this.address;
     const target = "graphic";
     let port;
     for (let obj of map) {
@@ -280,7 +280,7 @@ Robot.prototype.cashReceipt = async function () {
         port = obj.port.express[0];
       }
     }
-    shell.exec(`curl http://${ghost.host}:${String(port)}/cash`);
+    shell.exec(`curl https://${ghost.host}:${String(port)}/cash`);
   } catch (e) {
     console.log(e);
   }
