@@ -490,24 +490,133 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
   }
 }
 
-GraphicBot.prototype.positionWatch = function () {
+GraphicBot.prototype.positionWatch = async function () {
   const instance = this;
-  const { bot } = this;
-  let mouse, color, keyName;
-  keyName = null;
-  this.keypress((ch, key) => {
-    keyName = key.name;
-    if (key && key.ctrl && key.name == 'c') {
-      process.exit();
+  const { bot: robot } = this;
+
+  const { sleep } = this.mother;
+
+  await this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint");
+
+  await sleep(1000);
+
+  await this.pressKey("f12");
+
+  await sleep(500);
+
+  // let mouse, color, keyName;
+  // keyName = null;
+  // this.keypress((ch, key) => {
+  //   keyName = key.name;
+  //   if (key && key.ctrl && key.name == 'c') {
+  //     process.exit();
+  //   }
+  // });
+  // setInterval(() => {
+  //   mouse = bot.getMousePos();
+  //   color = bot.getPixelColor(mouse.x, mouse.y);
+  //   if (keyName === "z") {
+  //     console.log("x:" + mouse.x + " y:" + mouse.y + " color: #" + color);
+  //   }
+  // }, 100);
+
+  let gap, twoPI;
+  let screenSize;
+  let height, width;
+  let mouse, color, colorArr;
+  let boo, pastBoo;
+  let xArr, yArr;
+
+  robot.setMouseDelay(1);
+
+  gap = 10;
+  twoPI = Math.PI * 2.0;
+  screenSize = robot.getScreenSize();
+  height = (screenSize.height / 2) - gap;
+  width = screenSize.width;
+
+  xArr = [];
+  yArr = [];
+
+  boo = false;
+  pastBoo = false;
+
+  for (let x = 0; x < width; x++) {
+    y = height * Math.sin((twoPI * x) / width) + height;
+    robot.moveMouse(x, y);
+    color = robot.getPixelColor(x, y);
+    colorArr = colorParsing(color);
+    boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
+    if (boo === !pastBoo) {
+      xArr.push(x);
+      yArr.push(y);
+      console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
     }
-  });
-  setInterval(() => {
-    mouse = bot.getMousePos();
-    color = bot.getPixelColor(mouse.x, mouse.y);
-    if (keyName === "z") {
-      console.log("x:" + mouse.x + " y:" + mouse.y + " color: #" + color);
+    pastBoo = boo;
+  }
+
+  boo = false;
+  pastBoo = false;
+
+  for (let x = 0; x < width; x++) {
+    y = height * Math.cos((twoPI * x) / width) + height;
+    robot.moveMouse(x, y);
+    color = robot.getPixelColor(x, y);
+    colorArr = colorParsing(color);
+    boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
+    if (boo === !pastBoo) {
+      xArr.push(x);
+      yArr.push(y);
+      console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
     }
-  }, 100);
+    pastBoo = boo;
+  }
+
+  boo = false;
+  pastBoo = false;
+
+  for (let x = 0; x < width; x++) {
+    y = (screenSize.height - gap) - ((height * Math.sin((twoPI * x) / width)) + height);
+    robot.moveMouse(x, y);
+    color = robot.getPixelColor(x, y);
+    colorArr = colorParsing(color);
+    boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
+    if (boo === !pastBoo) {
+      xArr.push(x);
+      yArr.push(y);
+      console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
+    }
+    pastBoo = boo;
+  }
+
+  boo = false;
+  pastBoo = false;
+
+  for (let x = 0; x < width; x++) {
+    y = (screenSize.height - gap) - ((height * Math.cos((twoPI * x) / width)) + height);
+    robot.moveMouse(x, y);
+    color = robot.getPixelColor(x, y);
+    colorArr = colorParsing(color);
+    boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
+    if (boo === !pastBoo) {
+      xArr.push(x);
+      yArr.push(y);
+      console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
+    }
+    pastBoo = boo;
+  }
+
+  xArr.sort((a, b) => { return a - b; });
+  yArr.sort((a, b) => { return a - b; });
+
+  console.log(xArr);
+  console.log(yArr);
+  console.log(screenSize);
+
+  robot.setMouseDelay(10);
+
+  await this.chromeClose();
+
 }
 
 GraphicBot.prototype.startWork = function () {

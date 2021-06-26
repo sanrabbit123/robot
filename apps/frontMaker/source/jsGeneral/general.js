@@ -48,6 +48,62 @@ GeneralJs.colorChip = {
   purple: "#ba7dd7",
 };
 
+GeneralJs.colorParsing = function (str) {
+  if (typeof str === "string") {
+    if (/^\#/.test(str) && str.length === 7) {
+      str = str.slice(1);
+    }
+    if (str.length !== 6 && str.replace(/[^0-9a-f]/gi, '') === '') {
+      throw new Error("invaild input");
+    }
+    let colorArr;
+    colorArr = [ str.slice(0, 2), str.slice(2, 4), str.slice(4) ];
+    colorArr = colorArr.map((s) => {
+      let num;
+      num = 0;
+      if (/[a-z]/gi.test(s[1])) {
+        num += s[1].charCodeAt(0) - 97 + 10;
+      } else {
+        num += Number(s[1]);
+      }
+      if (/[a-z]/gi.test(s[0])) {
+        num += (s[0].charCodeAt(0) - 97 + 10) * 16;
+      } else {
+        num += (Number(s[0])) * 16;
+      }
+      return num;
+    });
+    return colorArr;
+  } else if (Array.isArray(str)) {
+    if (str.length !== 3) {
+      throw new Error("invaild input");
+    }
+    if (typeof str[0] !== "number" || typeof str[1] !== "number" || typeof str[2] !== "number") {
+      throw new Error("invaild input");
+    }
+    if (Number.isNaN(str[0]) || Number.isNaN(str[1]) || Number.isNaN(str[2])) {
+      throw new Error("invaild input");
+    }
+    const convertNum = (num) => {
+      const convertStr = (n) => {
+        if (n < 10) {
+          return String(n);
+        } else {
+          return String.fromCharCode(n + 87);
+        }
+      }
+      let first, second;
+      second = num % 16;
+      first = (num - second) / 16;
+      return convertStr(first) + convertStr(second);
+    }
+    str = str.map(convertNum);
+    return '#' + str.join('');
+  } else {
+    throw new Error("invaild input");
+  }
+}
+
 GeneralJs.mimeTypes = { aac: "audio/aac", abw: "application/x-abiword", arc: "application/octet-stream", avi: "video/x-msvideo", azw: "application/vnd.amazon.ebook", bin: "application/octet-stream", bz: "application/x-bzip", bz2: "application/x-bzip2", csh: "application/x-csh", css: "text/css", csv: "text/csv", doc: "application/msword", epub: "application/epub+zip", gif: "image/gif", htm: "text/html", html: "text/html", ico: "image/x-icon", ics: "text/calendar", jar: "application/java-archive", jpeg: "image/jpeg", jpg: "image/jpeg", mjs: "application/js", js: "application/js", json: "application/json", mid: "audio/midi", midi: "audio/midi", mpeg: "video/mpeg", mpkg: "application/vnd.apple.installer+xml", odp: "application/vnd.oasis.opendocument.presentation", ods: "application/vnd.oasis.opendocument.spreadsheet", odt: "application/vnd.oasis.opendocument.text", oga: "audio/ogg", ogv: "video/ogg", ogx: "application/ogg", pdf: "application/pdf", ppt: "application/vnd.ms-powerpoint", rar: "application/x-rar-compressed", rtf: "application/rtf", sh: "application/x-sh", svg: "image/svg+xml", swf: "application/x-shockwave-flash", tar: "application/x-tar", tif: "image/tiff", tiff: "image/tiff", ttf: "application/x-font-ttf", vsd: "application/vnd.visio", wav: "audio/x-wav", weba: "audio/webm", webm: "video/webm", webp: "image/webp", woff: "application/x-font-woff", xhtml: "application/xhtml+xml", xls: "application/vnd.ms-excel", xml: "application/xml", xul: "application/vnd.mozilla.xul+xml", zip: "application/zip", "3gp": "video/3gpp", "3g2": "video/3gpp2", "7z": "application/x-7z-compressed" };
 
 GeneralJs.postWall = function (xhr) {

@@ -1975,6 +1975,60 @@ Mother.prototype.stringToDate = function (str) {
   }
 }
 
-
+Mother.prototype.colorParsing = function (str) {
+  if (typeof str === "string") {
+    if (/^\#/.test(str) && str.length === 7) {
+      str = str.slice(1);
+    }
+    if (str.length !== 6 && str.replace(/[^0-9a-f]/gi, '') === '') {
+      throw new Error("invaild input");
+    }
+    let colorArr;
+    colorArr = [ str.slice(0, 2), str.slice(2, 4), str.slice(4) ];
+    colorArr = colorArr.map((s) => {
+      let num;
+      num = 0;
+      if (/[a-z]/gi.test(s[1])) {
+        num += s[1].charCodeAt(0) - 97 + 10;
+      } else {
+        num += Number(s[1]);
+      }
+      if (/[a-z]/gi.test(s[0])) {
+        num += (s[0].charCodeAt(0) - 97 + 10) * 16;
+      } else {
+        num += (Number(s[0])) * 16;
+      }
+      return num;
+    });
+    return colorArr;
+  } else if (Array.isArray(str)) {
+    if (str.length !== 3) {
+      throw new Error("invaild input");
+    }
+    if (typeof str[0] !== "number" || typeof str[1] !== "number" || typeof str[2] !== "number") {
+      throw new Error("invaild input");
+    }
+    if (Number.isNaN(str[0]) || Number.isNaN(str[1]) || Number.isNaN(str[2])) {
+      throw new Error("invaild input");
+    }
+    const convertNum = (num) => {
+      const convertStr = (n) => {
+        if (n < 10) {
+          return String(n);
+        } else {
+          return String.fromCharCode(n + 87);
+        }
+      }
+      let first, second;
+      second = num % 16;
+      first = (num - second) / 16;
+      return convertStr(first) + convertStr(second);
+    }
+    str = str.map(convertNum);
+    return '#' + str.join('');
+  } else {
+    throw new Error("invaild input");
+  }
+}
 
 module.exports = Mother;
