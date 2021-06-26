@@ -348,7 +348,7 @@ GraphicBot.prototype.clipBoard = async function (text) {
 
 GraphicBot.prototype.botOrders = async function (num, arg) {
   const instance = this;
-  const { bot } = this;
+  const { bot, screenSize } = this;
   const { sleep, fileSystem, copyToClipboard } = this.mother;
   try {
     if (typeof num !== "number") {
@@ -460,7 +460,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         } else {
           await sleep(2000);
         }
-        await this.moveAndClick(1622, 1030, 500, false);
+        await this.moveAndClick(screenSize.width * (5 / 6), screenSize.height - 20, 500, false);
         await this.clipBoard(tempString);
         await this.pasteText();
         instance.front = 1;
@@ -468,7 +468,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         frontFirstLaunching = 1;
         while (instance.front === 1) {
           console.log("front waiting...");
-          await sleep(1000);
+          await sleep(500);
         }
       }
     }
