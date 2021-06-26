@@ -520,9 +520,7 @@ GraphicBot.prototype.positionWatch = async function () {
   //   }
   // }, 100);
 
-  let gap, twoPI;
   let screenSize;
-  let height, width;
   let mouse, color, colorArr;
   let boo, pastBoo;
   let xArr, yArr;
@@ -531,78 +529,23 @@ GraphicBot.prototype.positionWatch = async function () {
 
   robot.setMouseDelay(1);
 
-  gap = 10;
-  twoPI = Math.PI * 2.0;
   screenSize = robot.getScreenSize();
-  height = (screenSize.height / 2) - gap;
-  width = screenSize.width;
 
   xArr = [];
   yArr = [];
 
-  ratio = [ (1 / 10), (1 / 2), (1 / 10) ];
+  ratio = [ (1 / 10), (1 / 2), (9 / 10) ];
 
   boo = false;
   pastBoo = false;
 
-  for (let x = 0; x < width; x++) {
-    y = height * Math.sin((twoPI * x) / width) + height;
-    robot.moveMouse(x, y);
-    color = robot.getPixelColor(x, y);
+  for (let x = 0; x < screenSize.width; x++) {
+    robot.moveMouse(x, (screenSize.height));
+    color = robot.getPixelColor(x, (screenSize.height));
     colorArr = colorParsing(color);
     boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
     if (boo === !pastBoo) {
       xArr.push(x);
-      yArr.push(y);
-    }
-    pastBoo = boo;
-  }
-
-  boo = false;
-  pastBoo = false;
-
-  for (let x = 0; x < width; x++) {
-    y = height * Math.cos((twoPI * x) / width) + height;
-    robot.moveMouse(x, y);
-    color = robot.getPixelColor(x, y);
-    colorArr = colorParsing(color);
-    boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
-    if (boo === !pastBoo) {
-      xArr.push(x);
-      yArr.push(y);
-    }
-    pastBoo = boo;
-  }
-
-  boo = false;
-  pastBoo = false;
-
-  for (let x = 0; x < width; x++) {
-    y = (screenSize.height - gap) - ((height * Math.sin((twoPI * x) / width)) + height);
-    robot.moveMouse(x, y);
-    color = robot.getPixelColor(x, y);
-    colorArr = colorParsing(color);
-    boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
-    if (boo === !pastBoo) {
-      xArr.push(x);
-      yArr.push(y);
-      console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
-    }
-    pastBoo = boo;
-  }
-
-  boo = false;
-  pastBoo = false;
-
-  for (let x = 0; x < width; x++) {
-    y = (screenSize.height - gap) - ((height * Math.cos((twoPI * x) / width)) + height);
-    robot.moveMouse(x, y);
-    color = robot.getPixelColor(x, y);
-    colorArr = colorParsing(color);
-    boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
-    if (boo === !pastBoo) {
-      xArr.push(x);
-      yArr.push(y);
     }
     pastBoo = boo;
   }
