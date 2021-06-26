@@ -370,6 +370,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     }
     let tempArr, tempString;
     let frontFirst, frontEnd;
+    let frontFirstLaunching;
 
     frontFirst = "\n\n";
     if (typeof arg === "string") {
@@ -396,9 +397,12 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const scrollWindow = " + this.frontGeneral.scrollWindow.toString() + ";\n\n";
     frontFirst += "const clickElement = " + this.frontGeneral.clickElement.toString() + ";\n\n";
     frontFirst += "const calendarInput = " + this.frontGeneral.calendarInput.toString() + ";\n\n";
+    frontFirst += "const endFront = async () => { await ajaxPromise({ to: 0, data: 0 }, ENDCONST); };\n\n";
 
     frontEnd = "\n\n\n\n";
     frontEnd += "await ajaxPromise({ to: 0, data: 0 }, ENDCONST);\n\n";
+
+    frontFirstLaunching = 0;
 
     for (let i of arr) {
       if (Array.isArray(i)) {
@@ -451,18 +455,24 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       } else if (typeof i === "function") {
         tempString = i.toString().trim().replace(/\}$/, '').replace(/^async function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
         tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
-        await sleep(3000);
+        if (frontFirstLaunching === 0) {
+          await this.pressKey("f12");
+        } else {
+          await sleep(2000);
+        }
         await this.moveAndClick(1622, 1030, 500, false);
         await this.clipBoard(tempString);
         await this.pasteText();
         instance.front = 1;
         await this.pressKey("enter");
+        frontFirstLaunching = 1;
         while (instance.front === 1) {
           console.log("front waiting...");
           await sleep(1000);
         }
       }
     }
+
     return "done";
   } catch (e) {
     console.log(e);

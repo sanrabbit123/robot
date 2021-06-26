@@ -1,7 +1,6 @@
 module.exports = function (proid, info) {
   return [
     "https://eform.io/signin",
-    "key_f12",
     async function () {
       try {
         const { requestNumber, client, project, designer } = equalJson(JSON.stringify(POSTCONST));

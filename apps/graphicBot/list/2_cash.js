@@ -1,12 +1,12 @@
 module.exports = function (arg, info) {
   return [
     "https://www.hometax.go.kr/",
-    "key_f12",
     async function () {
       const loginButtonId = "group88615548";
       while (document.getElementById(loginButtonId) === null) {
         await sleep(500);
       }
+      await endFront();
       document.getElementById(loginButtonId).click();
     },
     async function () {
@@ -26,6 +26,7 @@ module.exports = function (arg, info) {
       document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId).click();
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.id), "info.hometax.id");
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), "info.hometax.pwd");
+      await endFront();
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
     },
     async function () {
@@ -33,6 +34,7 @@ module.exports = function (arg, info) {
       while (document.getElementById(firstTargetButtonId) === null) {
         await sleep(500);
       }
+      await endFront();
       document.getElementById(firstTargetButtonId).click();
     },
     async function () {
@@ -111,12 +113,14 @@ module.exports = function (arg, info) {
       while (document.getElementById(homeButtonId) === null) {
         await sleep(500);
       }
+      await endFront();
       document.getElementById(homeButtonId).click();
     },
     async function () {
       while (document.getElementById("myMenuQuickLi3") === null) {
         await sleep(500);
       }
+      await endFront();
       document.getElementById("myMenuQuickLi3").click();
     },
     async function () {
