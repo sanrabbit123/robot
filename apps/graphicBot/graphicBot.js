@@ -37,7 +37,7 @@ const GraphicBot = function () {
   this.front = 0;
   this.frontGeneral = null;
   this.info = null;
-  for (let obj of ADDRESS.officeinfo.map) {
+  for (let obj of ADDRESS.homeinfo.map) {
     if (obj.name === "graphic") {
       this.info = new InfoArray(obj.info);
     }
