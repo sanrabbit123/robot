@@ -527,6 +527,7 @@ GraphicBot.prototype.positionWatch = async function () {
   let boo, pastBoo;
   let xArr, yArr;
   let ratio;
+  let x, y;
 
   robot.setMouseDelay(1);
 
@@ -553,7 +554,6 @@ GraphicBot.prototype.positionWatch = async function () {
     if (boo === !pastBoo) {
       xArr.push(x);
       yArr.push(y);
-      console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
     }
     pastBoo = boo;
   }
@@ -570,7 +570,6 @@ GraphicBot.prototype.positionWatch = async function () {
     if (boo === !pastBoo) {
       xArr.push(x);
       yArr.push(y);
-      console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
     }
     pastBoo = boo;
   }
@@ -604,7 +603,6 @@ GraphicBot.prototype.positionWatch = async function () {
     if (boo === !pastBoo) {
       xArr.push(x);
       yArr.push(y);
-      console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
     }
     pastBoo = boo;
   }
@@ -615,12 +613,11 @@ GraphicBot.prototype.positionWatch = async function () {
 
     for (let y = 0; y < screenSize.height; y++) {
       robot.moveMouse((screenSize.width * r), y);
-      color = robot.getPixelColor(x, y);
+      color = robot.getPixelColor((screenSize.width * r), y);
       colorArr = colorParsing(color);
       boo = (colorArr[0] < 150 && colorArr[1] > 220 && colorArr[2] < 150);
       if (boo === !pastBoo) {
         yArr.push(y);
-        console.log("x:" + String(x) + " y:" + String(y) + " color: #" + color);
       }
       pastBoo = boo;
     }
