@@ -939,39 +939,41 @@ GraphicBot.prototype.botRouter = function () {
       try {
         const targetComputer = "uragen";
         const tongName = "illustrator";
-        // const targetTong = `${instance.tong}/${tongName}`;
-        // let tongBoo = false;
-        // let tongDir;
-        // let targetTongList;
-        // let ip;
-        //
-        // ip = null;
-        // for (let obj of instance.address.homeinfo.map) {
-        //   if (obj.name === targetComputer) {
-        //     ip = obj.ip;
-        //   }
-        // }
-        //
-        // //make tong
-        // tongDir = await fileSystem(`readDir`, [ instance.tong ]);
-        // tongDir = tongDir.filter((i) => { return i !== `.DS_Store`; });
-        // tongBoo = tongDir.includes(tongName);
-        // if (!tongBoo) {
-        //   shell.exec(`mkdir ${shellLink(targetTong)};`);
-        // }
-        //
-        // //clean target tong
-        // targetTongList = await fileSystem(`readDir`, [ targetTong ]);
-        // if (instance.firstDo[tongName]) {
-        //   for (let j of targetTongList) {
-        //     shell.exec(`rm -rf ${shellLink(targetTong)}/${j};`);
-        //   }
-        // }
-        //
-        // //write stack
-        // await fileSystem(`writeJson`, [ targetTong + "/" + tongName + "_order_" + String((new Date()).valueOf()) + ".json", req.body ]);
-        // instance.firstDo[tongName] = false;
-        //
+        const targetTong = `${instance.tong}/${tongName}`;
+        let tongBoo = false;
+        let tongDir;
+        let targetTongList;
+        let ip;
+
+        ip = null;
+        for (let obj of instance.address.homeinfo.map) {
+          if (obj.name === targetComputer) {
+            ip = obj.ip;
+          }
+        }
+
+        //make tong
+        tongDir = await fileSystem(`readDir`, [ instance.tong ]);
+        tongDir = tongDir.filter((i) => { return i !== `.DS_Store`; });
+        tongBoo = tongDir.includes(tongName);
+        if (!tongBoo) {
+          shell.exec(`mkdir ${shellLink(targetTong)};`);
+        }
+
+        //clean target tong
+        targetTongList = await fileSystem(`readDir`, [ targetTong ]);
+        if (instance.firstDo[tongName]) {
+          for (let j of targetTongList) {
+            shell.exec(`rm -rf ${shellLink(targetTong)}/${j};`);
+          }
+        }
+
+        //write stack
+        await fileSystem(`writeJson`, [ targetTong + "/" + tongName + "_order_" + String((new Date()).valueOf()) + ".json", req.body ]);
+        instance.firstDo[tongName] = false;
+
+        console.log(instance.timeout[tongName]);
+
         // //debounce clean
         // while (instance.timeout[tongName] !== null) {
         //   if (instance.running[tongName]) {
