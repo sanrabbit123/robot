@@ -362,7 +362,7 @@ GraphicBot.prototype.clipBoard = async function (text) {
 
 GraphicBot.prototype.botOrders = async function (num, arg) {
   const instance = this;
-  const { bot, screenSize } = this;
+  const { bot, screenSize, chromeSize } = this;
   const { sleep, fileSystem, copyToClipboard } = this.mother;
   try {
     if (typeof num !== "number") {
@@ -475,7 +475,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         } else {
           await sleep(2000);
         }
-        await this.moveAndClick(screenSize.width * (9 / 10), screenSize.height - 25, 500);
+        await this.moveAndClick(chromeSize.right + ((screenSize.width - chromeSize.right) / 2), screenSize.height - chromeSize.cursor, 500);
         await this.clipBoard(tempString);
         await sleep(500);
         await this.pasteText();
