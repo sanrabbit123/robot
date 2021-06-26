@@ -39,6 +39,27 @@ ReceiptRouter.prototype.rou_get_Root = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_get_bluePrint = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = '/';
+  obj.func = async function (req, res) {
+    try {
+      const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8"><style media="screen">body {position: absolute;top: 0px;left: 0px;width: 100vw;height: 100vh;background: #00ff00;}</style></head><body></body></html>`;
+      res.set({
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(String(ip).replace(/[^0-9\.]/gi, ''));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_generalMongo = function () {
   const instance = this;
   const back = this.back;
