@@ -2368,7 +2368,7 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
   const calendar = this.calendar;
   const { equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/makeSchedule", "/listSchedule", "/updateSchedule", "deleteSchedule" ];
+  obj.link = [ "/makeSchedule", "/listSchedule", "/updateSchedule", "/deleteSchedule" ];
   obj.func = async function (req, res) {
     try {
       let resultObj;

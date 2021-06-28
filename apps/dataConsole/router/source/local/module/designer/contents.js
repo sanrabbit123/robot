@@ -2757,24 +2757,36 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                 if (instance.type === "photo") {
                   if (thisCase["boo"].textContent.trim() === "O") {
                     calendarEvent = function (thisCase) {
-                      let tempArr, dateValue, updateDate;
+                      const to = "photographing";
+                      const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
+                      let tempArr, dateValue, updateDate, start;
+
                       dateValue = thisCase["date"].textContent.trim();
+
                       if (dateValue !== "미정" && dateValue !== "해당 없음") {
                         tempArr = dateValue.split('-');
                         updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
-                        const to = "photographing";
-                        const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
-                        const start = updateDate;
-                        GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
+                        start = updateDate;
+                      } else {
+                        start = null;
+                      }
+
+                      GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
+                        if (start !== null) {
                           if (list.length === 0) {
                             return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
                           } else {
                             return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
                           }
-                        }).catch((err) => {
-                          throw new Error(err);
-                        });
-                      }
+                        } else {
+                          if (list.length !== 0) {
+                            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
+                          }
+                        }
+                      }).catch((err) => {
+                        throw new Error(err);
+                      });
+
                     }
                   }
                 }
