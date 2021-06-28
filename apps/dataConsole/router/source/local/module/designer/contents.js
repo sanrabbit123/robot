@@ -877,7 +877,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       },
     };
 
-    stringArr.push(textMaker(map["portfolioStatus"].title, portfolioStatus, /요망/gi.test(portfolioStatus) ? "red" : (/편집 완료/gi.test(portfolioStatus) ? "green" : "black"), "portfolioStatus"));
+    stringArr.push(textMaker(map["portfolioStatus"].title, portfolioStatus, /요망/gi.test(portfolioStatus) ? "red" : (/요청 완료/gi.test(portfolioStatus) ? "purple" : (/편집 완료/gi.test(portfolioStatus) ? "green" : "black")), "portfolioStatus"));
     updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;

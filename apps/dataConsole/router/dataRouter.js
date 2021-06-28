@@ -2167,7 +2167,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
             if (project.process.contract.meeting.date.getFullYear() < 1900) {
               resultObj = { "alert": "현장 미팅에 대한 정보가 없습니다!" };
             } else {
-              await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "request", id: req.body.id });
+              await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "request", id: req.body.id }, { headers: { "Content-Type": "application/json" } });
               resultObj = { "alert": "의뢰서 제작 요청이 완료되었습니다!" };
             }
           }
@@ -2190,7 +2190,10 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         };
         command = [ "webProposal", proid ];
         // message = await coreRequest("timer", { command, time });
-        await requestSystem("http://" + ADDRESS.homeinfo.ip.outer + ":" + ADDRESS.homeinfo.polling.port + "/toAiServer", { type: "proposal", id: proid });
+
+        console.log("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer");
+
+        await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "done" }));

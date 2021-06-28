@@ -1,4 +1,4 @@
-DesignerJs.prototype.checkListData = function (factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin) {
+DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0, tendencyIndent = 0, tendencyWidthIndent = 0, tendencyFactorHeight = 0, mobileTendencyVisualMargin = 0) {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -4204,6 +4204,192 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
   }
 }
 
+DesignerJs.prototype.checkListDetailSearchBox = function () {
+  const instance = this;
+  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  return function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let cancelBox, whiteBox, scrollBox, scrollBase;
+    let margin, innerMargin;
+
+    innerMargin = 24;
+    margin = 90;
+
+    cancelBox = createNode({
+      mother: totalMother,
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(grayBarWidth) + ea,
+        width: withOut(grayBarWidth, ea),
+        height: withOut(belowHeight, ea),
+        background: colorChip.black,
+        animation: "justfadein 0.3s ease forwards",
+        zIndex: String(2),
+        cursor: "pointer",
+      },
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            totalMother.removeChild(totalMother.lastChild);
+            totalMother.removeChild(totalMother.lastChild);
+          }
+        }
+      ]
+    });
+
+    whiteBox = createNode({
+      mother: totalMother,
+      style: {
+        position: "fixed",
+        top: String(margin) + ea,
+        left: String(grayBarWidth + margin) + ea,
+        width: withOut(grayBarWidth + (margin * 2), ea),
+        height: withOut(belowHeight + (margin * 2), ea),
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        animation: "fadeup 0.3s ease forwards",
+        zIndex: String(2),
+      }
+    });
+
+    scrollBox = createNode({
+      mother: whiteBox,
+      style: {
+        position: "absolute",
+        top: String(innerMargin) + ea,
+        left: String(innerMargin) + ea,
+        width: withOut(innerMargin * 2, ea),
+        height: withOut(innerMargin, ea),
+        overflow: "scroll",
+      }
+    });
+
+    scrollBase = createNode({
+      mother: scrollBox,
+      style: {
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(8000) + "px",
+      }
+    });
+
+    instance.checkListDetailSearchContents(scrollBase);
+  }
+}
+
+DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
+  const instance = this;
+  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const innerMargin = Number(mother.parentNode.style.top.replace(/[^0-9\-\.]/gi, ''));
+  const checkListData = this.checkListData();
+  const designer = this.designers[this.designers.length - 1];
+  let targetTong, domTong;
+  let size;
+  let block, title, contents;
+  let titleWidth;
+  let tempResult;
+  let factorWidth, factorHeight;
+
+  size = 15;
+  titleWidth = 160;
+  factorWidth = 180;
+  factorHeight = 40;
+
+
+  targetTong = [];
+  for (let { children } of checkListData) {
+    for (let obj of children) {
+      if (obj.type !== "string" && obj.type !== "longtext") {
+        targetTong.push(obj);
+      }
+    }
+  }
+
+  domTong = [];
+  for (let obj of targetTong) {
+    if (obj.type === "matrix") {
+
+      block = createNode({
+        mother,
+        style: {
+          position: "relative",
+          display: "block",
+          width: String(100) + '%',
+          height: "auto",
+          fontSize: String(size) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              width: String(titleWidth) + ea,
+              height: String(100) + '%',
+              fontSize: "inherit",
+            }
+          },
+          {
+            style: {
+              position: "relative",
+              display: "block",
+              left: String(titleWidth) + ea,
+              width: withOut(titleWidth, ea),
+              fontSize: "inherit",
+            }
+          }
+        ]
+      });
+
+      title = block.firstChild;
+      contents = block.lastChild;
+
+      createNode({
+        mother: title,
+        text: obj.name,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: String(factorWidth) + ea,
+          height: String(factorHeight) + ea,
+          fontSize: "inherit",
+          fontWeight: String(600),
+        }
+      });
+
+      tempResult = obj.value(designer);
+      for (let property of tempResult.contents) {
+        createNode({
+          mother: contents,
+          text: property,
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: String(factorWidth) + ea,
+            height: String(factorHeight) + ea,
+            fontSize: "inherit",
+          }
+        });
+      }
+
+      domTong.push(block);
+
+    } else if (obj.type === "tendency") {
+
+    } else if (obj.type === "async") {
+
+    }
+  }
+
+}
+
 DesignerJs.prototype.checkListView = async function () {
   const instance = this;
   try {
@@ -4262,6 +4448,7 @@ DesignerJs.prototype.checkListView = async function () {
           }
         }
       });
+      searchInput.addEventListener("contextmenu", this.checkListDetailSearchBox());
     }
 
     //standard doms event

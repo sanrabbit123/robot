@@ -115,6 +115,7 @@ class Designers extends Array {
       return this;
     }
     let query, tempArr;
+    let newTong, designerString;
     if (/,/g.test(q)) {
       tempArr = q.split(',');
     } else if (/\//g.test(q)) {
@@ -133,10 +134,11 @@ class Designers extends Array {
     if (query.length === 0) {
       return this;
     }
-    const newTong = [];
+    newTong = [];
     for (let q of query) {
       for (let designer of this) {
-        if ((new RegExp(q, "gi")).test(designer.designer) || (new RegExp(q, "gi")).test(designer.desid) || (new RegExp(q, "gi")).test(designer.information.phone) || (new RegExp(q, "gi")).test(designer.information.email)) {
+        designerString = JSON.stringify(designer);
+        if ((new RegExp(q, "gi")).test(designerString)) {
           newTong.push(designer);
         }
       }
