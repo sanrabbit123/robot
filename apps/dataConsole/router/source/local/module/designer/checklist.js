@@ -4455,7 +4455,7 @@ DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
   modeRight = 62;
   modeWidth = 36.34;
   modeMargin = 5;
-  modeCircleTop = 7;
+  modeCircleTop = isMac() ? 7 : 5;
 
   createNode({
     mother,
@@ -4656,19 +4656,19 @@ DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
 
         createNode({
           mother: title,
-          text: obj.name,
           style: {
             position: "relative",
             display: "inline-block",
             width: String(factorWidth) + ea,
             height: String(factorHeight) + ea,
+            fontSize: "inherit",
           },
           children: [
             {
               text: obj.name,
               style: {
                 position: "absolute",
-                top: String(isMac() ? 0 : 2) + ea,
+                top: String(isMac() ? 0 : 1) + ea,
                 left: String(0) + ea,
                 fontSize: "inherit",
                 fontWeight: String(600),
@@ -4757,7 +4757,7 @@ DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
                   fontSize: "inherit",
                   fontWeight: "inherit",
                   color: searchCondition.conditions.includes(String(i) + token + String(j) + token + String(k)) ? colorChip.green : colorChip.black,
-                  top: String(isMac() ? 0 : 2) + ea,
+                  top: String(isMac() ? 0 : 1) + ea,
                   left: String((radius * 2) + circleMargin) + ea,
                   width: withOut((radius * 2) + circleMargin, ea),
                   height: String(100) + '%',
