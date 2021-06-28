@@ -1021,7 +1021,6 @@ DesignerJs.prototype.calculationView = async function () {
         business = business.replace(/-/g, '');
         boo = true;
         for (let i of this) {
-          console.log(i);
           if (i.date.valueOf() > date.valueOf()) {
             if (i.who.business.replace(/-/g, '') === business) {
               if (i.amount.total === amount || i.amount.supply === amount) {
@@ -1095,7 +1094,7 @@ DesignerJs.prototype.calculationView = async function () {
       mode: "read",
       db: "python",
       collection: "cashReceipt",
-      whereQuery: { date: { $gte: proposalDate[0].date } },
+      whereQuery: { $and: [ { date: { $gte: proposalDate[0].date } }, { method: 1 } ] },
     }, PYTHONHOST + "/generalMongo", { equal: true });
     cashReceipt.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
 
