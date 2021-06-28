@@ -137,9 +137,20 @@ class Designers extends Array {
     newTong = [];
     for (let q of query) {
       for (let designer of this) {
-        designerString = JSON.stringify(designer);
-        if ((new RegExp(q, "gi")).test(designerString)) {
-          newTong.push(designer);
+        if (/[0-9]/gi.test(q) && (q.replace(/[0-9\-]/gi, '') === '')) {
+          if ((new RegExp(q.replace(/[\-]/gi, ''), "gi")).test(String(designer.information.phone).replace(/[\-]/gi, '')) || (new RegExp(q.replace(/[\-]/gi, ''), "gi")).test(String(designer.information.business.businessInfo.businessNumber).replace(/[\-]/gi, ''))) {
+            newTong.push(designer);
+          }
+          for (let { accountNumber } of designer.information.business.account) {
+            if ((new RegExp(q.replace(/[\-]/gi, ''), "gi")).test(String(accountNumber).replace(/[\-]/gi, ''))) {
+              newTong.push(designer);
+            }
+          }
+        } else {
+          designerString = JSON.stringify(designer);
+          if ((new RegExp(q, "gi")).test(designerString)) {
+            newTong.push(designer);
+          }
         }
       }
     }

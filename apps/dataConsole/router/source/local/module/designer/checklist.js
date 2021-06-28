@@ -441,6 +441,35 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             }
           },
           height: (desktop ? factorHeight : factorHeight * 1.75),
+          search: function (designer, z = null) {
+            let contents, tempArr;
+            contents = [
+              "1년 이하",
+              "1년 - 3년",
+              "3년 - 5년",
+              "5년 - 7년",
+              "7년 - 10년",
+              "10년 이상"
+            ];
+            if (z === null) {
+              return { contents };
+            } else if (typeof z === "number") {
+              const today = new Date();
+              const { information } = designer;
+              const { startY, startM } = information.business.career;
+              const thisMonth = ((today.getFullYear() * 12) + today.getMonth()) - ((startY * 12) + startM);
+              tempArr = contents[z].split(" - ");
+              if (tempArr.length === 1) {
+                if (/이상/gi.test(contents[z])) {
+                  return { result: ((Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) <= thisMonth) };
+                } else {
+                  return { result: ((Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) >= thisMonth) };
+                }
+              } else {
+                return { result: ((Number(tempArr[0].replace(/[^0-9]/gi, '')) * 12) <= thisMonth && (Number(tempArr[1].replace(/[^0-9]/gi, '')) * 12) > thisMonth) };
+              }
+            }
+          },
           type: "async",
         },
         {
@@ -720,6 +749,31 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
               return { updateQuery, text: divText };
             }
           },
+          search: function (designer, z = null) {
+            let contents;
+            contents = [
+              "40km 미만",
+              "40km - 60km",
+              "60km - 80km",
+              "80km - 100km",
+              "100km - 120km",
+              "120km 이상"
+            ];
+            if (z === null) {
+              return { contents };
+            } else if (typeof z === "number") {
+              tempArr = contents[z].split(" - ");
+              if (tempArr.length === 1) {
+                if (/이상/gi.test(contents[z])) {
+                  return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) <= designer.analytics.region.range) };
+                } else {
+                  return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) > designer.analytics.region.range) };
+                }
+              } else {
+                return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) <= designer.analytics.region.range && Number(tempArr[1].replace(/[^0-9]/gi, '')) > designer.analytics.region.range) };
+              }
+            }
+          },
           height: factorHeight,
           type: "string",
         },
@@ -744,6 +798,31 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
               return { updateQuery, text: divText };
             }
           },
+          search: function (designer, z = null) {
+            let contents;
+            contents = [
+              "40km 미만",
+              "40km - 60km",
+              "60km - 80km",
+              "80km - 100km",
+              "100km - 120km",
+              "120km 이상"
+            ];
+            if (z === null) {
+              return { contents };
+            } else if (typeof z === "number") {
+              tempArr = contents[z].split(" - ");
+              if (tempArr.length === 1) {
+                if (/이상/gi.test(contents[z])) {
+                  return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) <= designer.analytics.region.expenses) };
+                } else {
+                  return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) > designer.analytics.region.expenses) };
+                }
+              } else {
+                return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) <= designer.analytics.region.expenses && Number(tempArr[1].replace(/[^0-9]/gi, '')) > designer.analytics.region.expenses) };
+              }
+            }
+          },
           height: factorHeight,
           type: "string",
         },
@@ -766,6 +845,31 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
               return errorObj;
             } else {
               return { updateQuery, text: divText };
+            }
+          },
+          search: function (designer, z = null) {
+            let contents;
+            contents = [
+              "40km 미만",
+              "40km - 60km",
+              "60km - 80km",
+              "80km - 100km",
+              "100km - 120km",
+              "120km 이상"
+            ];
+            if (z === null) {
+              return { contents };
+            } else if (typeof z === "number") {
+              tempArr = contents[z].split(" - ");
+              if (tempArr.length === 1) {
+                if (/이상/gi.test(contents[z])) {
+                  return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) <= designer.analytics.region.construct) };
+                } else {
+                  return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) > designer.analytics.region.construct) };
+                }
+              } else {
+                return { result: (Number(tempArr[0].replace(/[^0-9]/gi, '')) <= designer.analytics.region.construct && Number(tempArr[1].replace(/[^0-9]/gi, '')) > designer.analytics.region.construct) };
+              }
             }
           },
           height: factorHeight,
@@ -2803,11 +2907,13 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
 DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null) {
   const instance = this;
   const { ea, belowHeight, firstTop, motherHeight } = this;
+  const { scrollTo } = GeneralJs;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
   const { colorChip } = GeneralJs;
-  let target;
+  let target, pastScrollTop;
 
+  pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
 
   if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
@@ -2868,9 +2974,10 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
       }
     }
   }
-  totalMother.scrollTo({ top: 0, behavior: "smooth" });
+
   this.checkListDetail(desid);
   this.checkListIconSet(desid);
+  scrollTo(totalMother, pastScrollTop);
   if (callback !== null) {
     if (typeof callback === "function") {
       callback();
@@ -3725,7 +3832,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, colorChip, withOut, blankHref } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, blankHref, scrollTo } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, motherHeight } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -3957,7 +4064,18 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     });
 
     previousIcon.addEventListener("click", function (e) {
-      const { desid: previousDesid } = instance.designers.previous(desid);
+      let previousDesid, boo, thisStandard;
+      previousDesid = desid;
+      do {
+        previousDesid = instance.designers.previous(previousDesid).desid;
+        for (let dom of instance.standardDoms) {
+          if (dom.getAttribute("desid") === previousDesid) {
+            thisStandard = dom;
+            boo = (dom.style.display === "none");
+          }
+        }
+      } while (boo);
+      scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
       if (instance.modes.indexOf(instance.mode) === 0) {
         instance.checkListDetailLaunching(previousDesid);
       } else {
@@ -3966,7 +4084,18 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     });
 
     nextIcon.addEventListener("click", function (e) {
-      const { desid: nextDesid } = instance.designers.next(desid);
+      let nextDesid, boo, thisStandard;
+      nextDesid = desid;
+      do {
+        nextDesid = instance.designers.next(nextDesid).desid;
+        for (let dom of instance.standardDoms) {
+          if (dom.getAttribute("desid") === nextDesid) {
+            thisStandard = dom;
+            boo = (dom.style.display === "none");
+          }
+        }
+      } while (boo);
+      scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
       if (instance.modes.indexOf(instance.mode) === 0) {
         instance.checkListDetailLaunching(nextDesid);
       } else {
@@ -4206,186 +4335,557 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
 
 DesignerJs.prototype.checkListDetailSearchBox = function () {
   const instance = this;
-  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const { totalMother, ea, grayBarWidth, belowHeight, searchCondition } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const className = "searchConditionBack";
   return function (e) {
     e.stopPropagation();
     e.preventDefault();
+    if (document.querySelector('.' + className) === null) {
+      let cancelBox, whiteBox, scrollBox, scrollBase;
+      let margin, innerMargin;
+      let paddingTop, paddingBottom;
 
-    let cancelBox, whiteBox, scrollBox, scrollBase;
-    let margin, innerMargin;
+      innerMargin = 48;
+      margin = 100;
+      paddingTop = 63;
+      paddingBottom = 160;
 
-    innerMargin = 24;
-    margin = 90;
-
-    cancelBox = createNode({
-      mother: totalMother,
-      style: {
-        position: "fixed",
-        top: String(0),
-        left: String(grayBarWidth) + ea,
-        width: withOut(grayBarWidth, ea),
-        height: withOut(belowHeight, ea),
-        background: colorChip.black,
-        animation: "justfadein 0.3s ease forwards",
-        zIndex: String(2),
-        cursor: "pointer",
-      },
-      events: [
-        {
-          type: "click",
-          event: function (e) {
-            totalMother.removeChild(totalMother.lastChild);
-            totalMother.removeChild(totalMother.lastChild);
+      cancelBox = createNode({
+        mother: totalMother,
+        class: [ className ],
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(grayBarWidth) + ea,
+          width: withOut(grayBarWidth, ea),
+          height: withOut(belowHeight, ea),
+          background: colorChip.black,
+          animation: "justfadein 0.3s ease forwards",
+          zIndex: String(2),
+          cursor: "pointer",
+        },
+        events: [
+          {
+            type: [ "click", "contextmenu" ],
+            event: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              instance.checkListDetailSearchParsing();
+              totalMother.removeChild(totalMother.lastChild);
+              totalMother.removeChild(totalMother.lastChild);
+            }
           }
+        ]
+      });
+      whiteBox = createNode({
+        mother: totalMother,
+        style: {
+          position: "fixed",
+          top: String(margin) + ea,
+          left: String(grayBarWidth + margin) + ea,
+          width: withOut(grayBarWidth + (margin * 2), ea),
+          height: withOut(belowHeight + (margin * 2), ea),
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          animation: "fadeup 0.3s ease forwards",
+          zIndex: String(2),
         }
-      ]
-    });
-
-    whiteBox = createNode({
-      mother: totalMother,
-      style: {
-        position: "fixed",
-        top: String(margin) + ea,
-        left: String(grayBarWidth + margin) + ea,
-        width: withOut(grayBarWidth + (margin * 2), ea),
-        height: withOut(belowHeight + (margin * 2), ea),
-        background: colorChip.white,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-        animation: "fadeup 0.3s ease forwards",
-        zIndex: String(2),
-      }
-    });
-
-    scrollBox = createNode({
-      mother: whiteBox,
-      style: {
-        position: "absolute",
-        top: String(innerMargin) + ea,
-        left: String(innerMargin) + ea,
-        width: withOut(innerMargin * 2, ea),
-        height: withOut(innerMargin, ea),
-        overflow: "scroll",
-      }
-    });
-
-    scrollBase = createNode({
-      mother: scrollBox,
-      style: {
-        position: "relative",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(8000) + "px",
-      }
-    });
-
-    instance.checkListDetailSearchContents(scrollBase);
+      });
+      scrollBox = createNode({
+        mother: whiteBox,
+        style: {
+          position: "absolute",
+          top: String(innerMargin) + ea,
+          left: String(innerMargin) + ea,
+          width: withOut(innerMargin * 2, ea),
+          height: withOut(innerMargin, ea),
+          overflow: "scroll",
+        }
+      });
+      scrollBase = createNode({
+        mother: scrollBox,
+        style: {
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          paddingTop: String(paddingTop) + ea,
+          paddingBottom: String(paddingBottom) + ea,
+        }
+      });
+      instance.checkListDetailSearchContents(scrollBase);
+    }
   }
 }
 
 DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
   const instance = this;
-  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const { totalMother, ea, grayBarWidth, belowHeight, searchCondition } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
   const innerMargin = Number(mother.parentNode.style.top.replace(/[^0-9\-\.]/gi, ''));
   const checkListData = this.checkListData();
   const designer = this.designers[this.designers.length - 1];
-  let targetTong, domTong;
-  let size;
+  const token = "_";
+  let domTong;
+  let titleSize, size;
+  let titleHeight;
   let block, title, contents;
   let titleWidth;
   let tempResult;
   let factorWidth, factorHeight;
+  let radius;
+  let circleMargin, circleVisual;
+  let obj;
+  let modeTop, modeRight;
+  let modeWidth, modeMargin;
+  let modeCircleTop;
 
+  titleSize = 25;
+  titleHeight = 48;
   size = 15;
   titleWidth = 160;
-  factorWidth = 180;
-  factorHeight = 40;
+  factorWidth = 172;
+  factorHeight = 30;
+  radius = 3;
+  circleMargin = 6;
+  circleVisual = 1.5;
+  modeTop = 15;
+  modeRight = 62;
+  modeWidth = 36.34;
+  modeMargin = 5;
+  modeCircleTop = 7;
 
-
-  targetTong = [];
-  for (let { children } of checkListData) {
-    for (let obj of children) {
-      if (obj.type !== "string" && obj.type !== "longtext") {
-        targetTong.push(obj);
-      }
-    }
-  }
-
-  domTong = [];
-  for (let obj of targetTong) {
-    if (obj.type === "matrix") {
-
-      block = createNode({
-        mother,
+  createNode({
+    mother,
+    style: {
+      position: "fixed",
+      width: withOut(100, innerMargin * 2, ea),
+      height: String(titleHeight) + ea,
+      background: colorChip.white,
+      top: String(innerMargin * (5 / 6)) + ea,
+      left: String(innerMargin) + ea,
+      zIndex: String(1),
+      borderBottom: "1px solid " + colorChip.gray2,
+    },
+    children: [
+      {
+        text: "디자이너 조건 검색",
         style: {
-          position: "relative",
-          display: "block",
-          width: String(100) + '%',
-          height: "auto",
-          fontSize: String(size) + ea,
+          position: "absolute",
+          top: String(0) + ea,
+          left: String(-1) + ea,
+          fontSize: String(titleSize) + ea,
+          fontWeight: String(500),
+          color: colorChip.black
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(modeTop + modeCircleTop) + ea,
+          right: String((modeRight * 2) + modeWidth + modeMargin) + ea,
+          background: colorChip.black,
+          width: String((radius - 1) * 2) + ea,
+          height: String((radius - 1) * 2) + ea,
+          borderRadius: String((radius - 1) * 2) + ea,
+        }
+      },
+      {
+        text: "초기화",
+        class: [ "hoverDefault_lite" ],
+        style: {
+          position: "absolute",
+          top: String(modeTop) + ea,
+          right: String(modeRight * 2) + ea,
+          fontSize: String(size - 1) + ea,
+          fontWeight: String(500),
+          color: colorChip.black,
         },
-        children: [
+        events: [
           {
-            style: {
-              position: "absolute",
-              width: String(titleWidth) + ea,
-              height: String(100) + '%',
-              fontSize: "inherit",
-            }
-          },
-          {
-            style: {
-              position: "relative",
-              display: "block",
-              left: String(titleWidth) + ea,
-              width: withOut(titleWidth, ea),
-              fontSize: "inherit",
+            type: "click",
+            event: function (e) {
+              let targetTongs;
+              let children;
+              targetTongs = [];
+              for (let b of searchCondition.blocks) {
+                children = b.querySelectorAll(".hoverDefault_lite");
+                for (let c of children) {
+                  targetTongs.push(c);
+                }
+              }
+              for (let dom of targetTongs) {
+                dom.setAttribute("toggle", "off");
+                dom.firstChild.style.background = colorChip.gray2;
+                dom.lastChild.style.color = colorChip.black;
+              }
+              searchCondition.conditions = [];
             }
           }
         ]
-      });
-
-      title = block.firstChild;
-      contents = block.lastChild;
-
-      createNode({
-        mother: title,
-        text: obj.name,
+      },
+      {
         style: {
-          position: "relative",
-          display: "inline-block",
-          width: String(factorWidth) + ea,
-          height: String(factorHeight) + ea,
-          fontSize: "inherit",
-          fontWeight: String(600),
+          position: "absolute",
+          top: String(modeTop + modeCircleTop) + ea,
+          right: String(modeRight + modeWidth + modeMargin) + ea,
+          background: searchCondition.mode === "and" ? colorChip.green : colorChip.deactive,
+          width: String((radius - 1) * 2) + ea,
+          height: String((radius - 1) * 2) + ea,
+          borderRadius: String((radius - 1) * 2) + ea,
         }
-      });
+      },
+      {
+        text: "교집합",
+        class: [ "hoverDefault_lite" ],
+        style: {
+          position: "absolute",
+          top: String(modeTop) + ea,
+          right: String(modeRight) + ea,
+          fontSize: String(size - 1) + ea,
+          fontWeight: String(500),
+          color: searchCondition.mode === "and" ? colorChip.green : colorChip.deactive,
+        },
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              if (searchCondition.mode === "and") {
+                searchCondition.mode = "or";
+                this.style.color = colorChip.deactive;
+                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.deactive;
+                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.green;
+                this.parentNode.children[this.parentNode.children.length - 1].style.color = colorChip.green;
+              } else {
+                searchCondition.mode = "and";
+                this.style.color = colorChip.green;
+                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.green;
+                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.deactive;
+                this.parentNode.children[this.parentNode.children.length - 1].style.color = colorChip.deactive;
+              }
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(modeTop + modeCircleTop) + ea,
+          right: String(0 + modeWidth + modeMargin) + ea,
+          background: searchCondition.mode === "and" ? colorChip.deactive : colorChip.green,
+          width: String((radius - 1) * 2) + ea,
+          height: String((radius - 1) * 2) + ea,
+          borderRadius: String((radius - 1) * 2) + ea,
+        }
+      },
+      {
+        text: "합집합",
+        class: [ "hoverDefault_lite" ],
+        style: {
+          position: "absolute",
+          top: String(modeTop) + ea,
+          right: String(0) + ea,
+          fontSize: String(size - 1) + ea,
+          fontWeight: String(500),
+          color: searchCondition.mode === "and" ? colorChip.deactive : colorChip.green,
+        },
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              if (searchCondition.mode === "and") {
+                searchCondition.mode = "or";
+                this.style.color = colorChip.green;
+                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.green;
+                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.deactive;
+                this.parentNode.children[this.parentNode.children.length - 3].style.color = colorChip.deactive;
+              } else {
+                searchCondition.mode = "and";
+                this.style.color = colorChip.deactive;
+                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.deactive;
+                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.green;
+                this.parentNode.children[this.parentNode.children.length - 3].style.color = colorChip.green;
+              }
+            }
+          }
+        ]
+      },
+    ]
+  });
 
-      tempResult = obj.value(designer);
-      for (let property of tempResult.contents) {
+  domTong = [];
+  for (let i = 0; i < checkListData.length; i++) {
+    for (let j = 0; j < checkListData[i].children.length; j++) {
+      obj = checkListData[i].children[j];
+      if (obj.type === "matrix" || typeof obj.search === "function") {
+
+        block = createNode({
+          mother,
+          style: {
+            position: "relative",
+            display: "block",
+            width: String(100) + '%',
+            height: "auto",
+            fontSize: String(size) + ea,
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                width: String(titleWidth) + ea,
+                height: String(100) + '%',
+                fontSize: "inherit",
+              }
+            },
+            {
+              style: {
+                position: "relative",
+                display: "block",
+                left: String(titleWidth) + ea,
+                width: withOut(titleWidth, ea),
+                fontSize: "inherit",
+              }
+            }
+          ]
+        });
+
+        title = block.firstChild;
+        contents = block.lastChild;
+
         createNode({
-          mother: contents,
-          text: property,
+          mother: title,
+          text: obj.name,
           style: {
             position: "relative",
             display: "inline-block",
             width: String(factorWidth) + ea,
             height: String(factorHeight) + ea,
             fontSize: "inherit",
+            fontWeight: String(600),
           }
         });
+
+        if (obj.type === "matrix") {
+          tempResult = obj.value(designer);
+        } else {
+          tempResult = obj.search(designer);
+        }
+        for (let k = 0; k < tempResult.contents.length; k++) {
+          createNode({
+            mother: contents,
+            class: [ "hoverDefault_lite" ],
+            attribute: [
+              { toggle: (searchCondition.conditions.includes(String(i) + token + String(j) + token + String(k)) ? "on" : "off") },
+              { x: String(i) },
+              { y: String(j) },
+              { z: String(k) },
+            ],
+            events: [
+              {
+                type: [ "click", "contextmenu" ],
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const x = Number(this.getAttribute('x'));
+                  const y = Number(this.getAttribute('y'));
+                  const z = Number(this.getAttribute('z'));
+                  const toggle = this.getAttribute("toggle");
+                  const value = ([ String(x), String(y), String(z) ]).join(token);
+                  let tempArr, targetIndex;
+                  if (toggle === "off") {
+                    searchCondition.conditions.push(value);
+                    this.lastChild.style.color = colorChip.green;
+                    this.firstChild.style.background = colorChip.green;
+                    this.setAttribute("toggle", "on");
+                  } else {
+                    for (let i = 0; i < searchCondition.conditions.length; i++) {
+                      tempArr = searchCondition.conditions[i].split(token);
+                      if (tempArr.length !== 3) {
+                        throw new Error("invaild value");
+                      }
+                      if (Number(tempArr[0]) === x && Number(tempArr[1]) === y && Number(tempArr[2]) === z) {
+                        targetIndex = i;
+                        break;
+                      }
+                    }
+                    searchCondition.conditions.splice(targetIndex, 1);
+                    this.lastChild.style.color = colorChip.black;
+                    this.firstChild.style.background = colorChip.gray2;
+                    this.setAttribute("toggle", "off");
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "relative",
+              display: "inline-block",
+              width: String(factorWidth) + ea,
+              height: String(factorHeight) + ea,
+              fontSize: "inherit",
+              fontWeight: String(300),
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                  top: String((size / 2) - radius + circleVisual) + ea,
+                  left: String(0),
+                  width: String(radius * 2) + ea,
+                  height: String(radius * 2) + ea,
+                  borderRadius: String(radius * 2) + ea,
+                  background: searchCondition.conditions.includes(String(i) + token + String(j) + token + String(k)) ? colorChip.green : colorChip.gray2,
+                }
+              },
+              {
+                text: tempResult.contents[k],
+                style: {
+                  position: "absolute",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                  color: searchCondition.conditions.includes(String(i) + token + String(j) + token + String(k)) ? colorChip.green : colorChip.black,
+                  top: String(0),
+                  left: String((radius * 2) + circleMargin) + ea,
+                  width: withOut((radius * 2) + circleMargin, ea),
+                  height: String(100) + '%',
+                },
+              },
+            ]
+          });
+        }
+
+        domTong.push(block);
       }
-
-      domTong.push(block);
-
-    } else if (obj.type === "tendency") {
-
-    } else if (obj.type === "async") {
-
     }
+  }
+  searchCondition.blocks = domTong;
+
+  createNode({
+    mother,
+    style: {
+      position: "fixed",
+      width: withOut(100, innerMargin * 2, ea),
+      height: String(titleHeight) + ea,
+      background: colorChip.white,
+      bottom: String(0) + ea,
+      left: String(innerMargin) + ea,
+      zIndex: String(1),
+      borderTop: "1px solid " + colorChip.gray2,
+    },
+  });
+
+}
+
+DesignerJs.prototype.checkListDetailSearchParsing = function () {
+  const instance = this;
+  const { searchCondition, standardDoms, designers } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const checkListData = this.checkListData();
+  const token = "_";
+  let tempArr, tempObj;
+  let x, y, z;
+  let desidArr, desidArr2;
+  let blocks;
+
+  Set.prototype.union = function (setB) {
+    let union = new Set(this);
+    for (let elem of setB) {
+      union.add(elem);
+    }
+    return union;
+  }
+
+  Set.prototype.intersection = function (setB) {
+    let intersection = new Set();
+    for (let elem of setB) {
+      if (this.has(elem)) {
+        intersection.add(elem);
+      }
+    }
+    return intersection;
+  }
+
+  class SetArray extends Array {
+    union() {
+      let finalSet;
+      finalSet = new Set([]);
+      for (let set of this) {
+        finalSet = finalSet.union(set);
+      }
+      return Array.from(finalSet);
+    }
+    intersection() {
+      let finalSet;
+      if (this.length === 0) {
+        return [];
+      } else {
+        finalSet = this[0];
+        if (this.length > 1) {
+          for (let i = 1; i < this.length; i++) {
+            finalSet = finalSet.intersection(this[i]);
+          }
+          return Array.from(finalSet);
+        } else {
+          return Array.from(finalSet);
+        }
+      }
+    }
+  }
+
+  if (searchCondition.conditions.length === 0) {
+    desidArr = [];
+    for (let { desid } of designers) {
+      desidArr.push(desid);
+    }
+  } else {
+    desidArr = new SetArray();
+    for (let order of searchCondition.conditions) {
+      tempArr = order.split(token);
+      if (tempArr.length !== 3) {
+        throw new Error("invaild order");
+      }
+      x = Number(tempArr[0]);
+      y = Number(tempArr[1]);
+      z = Number(tempArr[2]);
+
+      desidArr2 = [];
+      for (let designer of designers) {
+        if (checkListData[x].children[y].type === "matrix") {
+          tempObj = checkListData[x].children[y].value(designer);
+          tempObj.result = (tempObj.value[z] === 1);
+        } else {
+          tempObj = checkListData[x].children[y].search(designer, z);
+        }
+        if (tempObj.result) {
+          desidArr2.push(designer.desid);
+        }
+      }
+      desidArr.push(new Set(desidArr2));
+    }
+    if (searchCondition.mode === "and") {
+      desidArr = desidArr.intersection();
+    } else {
+      desidArr = desidArr.union();
+    }
+  }
+
+  blocks = [];
+  for (let i = 1; i < standardDoms.length; i++) {
+    if (desidArr.includes(standardDoms[i].getAttribute("desid"))) {
+      standardDoms[i].style.display = "block";
+      blocks.push(standardDoms[i]);
+    } else {
+      standardDoms[i].style.display = "none";
+    }
+  }
+
+  if (blocks.length > 0) {
+    setTimeout(() => {
+      blocks[0].click();
+    }, 0);
   }
 
 }
@@ -4422,6 +4922,11 @@ DesignerJs.prototype.checkListView = async function () {
     this.modes = [ "checklist", "report" ];
     this.mode = this.modes[0];
     this.result = null;
+    this.searchCondition = {
+      mode: "or",
+      conditions: [],
+      blocks: [],
+    };
 
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
