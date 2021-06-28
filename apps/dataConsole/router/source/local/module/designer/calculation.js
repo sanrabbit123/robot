@@ -1021,6 +1021,7 @@ DesignerJs.prototype.calculationView = async function () {
         business = business.replace(/-/g, '');
         boo = true;
         for (let i of this) {
+          console.log(i);
           if (i.date.valueOf() > date.valueOf()) {
             if (i.who.business.replace(/-/g, '') === business) {
               if (i.amount.total === amount || i.amount.supply === amount) {
