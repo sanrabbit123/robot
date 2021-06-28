@@ -4423,7 +4423,7 @@ DesignerJs.prototype.checkListDetailSearchBox = function () {
 DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
   const instance = this;
   const { totalMother, ea, grayBarWidth, belowHeight, searchCondition } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   const innerMargin = Number(mother.parentNode.style.top.replace(/[^0-9\-\.]/gi, ''));
   const checkListData = this.checkListData();
   const designer = this.designers[this.designers.length - 1];
@@ -4451,7 +4451,7 @@ DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
   radius = 3;
   circleMargin = 6;
   circleVisual = 1.5;
-  modeTop = 15;
+  modeTop = isMac() ? 15 : 17;
   modeRight = 62;
   modeWidth = 36.34;
   modeMargin = 5;
@@ -4474,7 +4474,7 @@ DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
         text: "디자이너 조건 검색",
         style: {
           position: "absolute",
-          top: String(0) + ea,
+          top: String(isMac() ? 0 : 3) + ea,
           left: String(-1) + ea,
           fontSize: String(titleSize) + ea,
           fontWeight: String(500),
@@ -4662,9 +4662,19 @@ DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
             display: "inline-block",
             width: String(factorWidth) + ea,
             height: String(factorHeight) + ea,
-            fontSize: "inherit",
-            fontWeight: String(600),
-          }
+          },
+          children: [
+            {
+              text: obj.name,
+              style: {
+                position: "absolute",
+                top: String(isMac() ? 0 : 2) + ea,
+                left: String(0) + ea,
+                fontSize: "inherit",
+                fontWeight: String(600),
+              }
+            }
+          ]
         });
 
         if (obj.type === "matrix") {
@@ -4747,7 +4757,7 @@ DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
                   fontSize: "inherit",
                   fontWeight: "inherit",
                   color: searchCondition.conditions.includes(String(i) + token + String(j) + token + String(k)) ? colorChip.green : colorChip.black,
-                  top: String(0),
+                  top: String(isMac() ? 0 : 2) + ea,
                   left: String((radius * 2) + circleMargin) + ea,
                   width: withOut((radius * 2) + circleMargin, ea),
                   height: String(100) + '%',
