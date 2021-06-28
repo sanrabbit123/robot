@@ -728,7 +728,15 @@ BackWorker.prototype.designerCalculation = async function () {
           if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
             condition1 = true;
           } else {
-            condition1 = false;
+            if (designer.projects[i].contents.photo.boo) {
+              if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf()) {
+                condition1 = false;
+              } else {
+                condition1 = true;
+              }
+            } else {
+              condition1 = false;
+            }
           }
         } else {
           condition1 = true;

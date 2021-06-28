@@ -363,7 +363,15 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       if (([ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '해당 없음' ]).includes(designer.projects[i].contents.raw.portfolio.status)) {
         condition = true;
       } else {
-        condition = false;
+        if (designer.projects[i].contents.photo.boo) {
+          if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf()) {
+            condition = false;
+          } else {
+            condition = true;
+          }
+        } else {
+          condition = false;
+        }
       }
     } else {
       condition = true;
