@@ -708,6 +708,7 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes loginfadedown0{from{opacity:0.1;}to{opacity:0;}}
   @keyframes loginfadedown1{from{opacity:0.6;backdrop-filter: blur(4px);}to{opacity:0;backdrop-filter: blur(0px);}}
   @keyframes profilefadeup{from{opacity:0;transform:translateY(10px);}to{opacity:0.9;transform:translateY(0px);}}
+  @keyframes communicationfadeup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fadedowndelay{from{opacity:1;transform:translateY(0px);}70%,to{opacity:0;transform:translateY(-5px);}}
 
   @keyframes fadeout{from{opacity:1;transform:translateX(0px);}to{opacity:0;transform:translateX(-30px);}}
@@ -2594,8 +2595,6 @@ GeneralJs.prototype.memberView = function () {
     let ea = "px";
     let temp;
 
-    console.log(member);
-
     instance.memberBox = {};
 
     //cancel back
@@ -2608,31 +2607,33 @@ GeneralJs.prototype.memberView = function () {
       left: String(0) + ea,
       background: "transparent",
       opacity: String(0),
+      zIndex: String(3),
     };
     for (let i in style) {
       div_clone.style[i] = style[i];
     }
     div_clone.addEventListener("click", function (e) {
-      instance.below.removeChild(instance.memberBox.cancel);
-      instance.below.removeChild(instance.memberBox.contents);
+      instance.memberBox.cancel.remove();
+      instance.memberBox.contents.remove();
     });
     instance.memberBox.cancel = div_clone;
-    this.parentElement.appendChild(div_clone);
+    document.getElementById("totalcontents").appendChild(div_clone);
 
     //white box
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("backblurdefault_lite");
     style = {
-      position: "absolute",
+      position: "fixed",
       width: String(326) + ea,
       height: String(160) + ea,
-      top: String(-104) + ea,
+      bottom: String(66) + ea,
       left: String(220) + ea,
       background: GeneralJs.colorChip.white,
       borderRadius: String(4) + ea,
       opacity: String(0.9),
       boxShadow: "0px 6px 18px -9px #505050",
       animation: "profilefadeup 0.4s ease forwards",
+      zIndex: String(3),
     };
     for (let i in style) {
       div_clone.style[i] = style[i];
@@ -2787,7 +2788,7 @@ GeneralJs.prototype.memberView = function () {
     div_clone.appendChild(svg_clone);
 
     instance.memberBox.contents = div_clone;
-    this.parentElement.appendChild(div_clone);
+    document.getElementById("totalcontents").appendChild(div_clone);
   }
 }
 
@@ -3901,10 +3902,338 @@ GeneralJs.prototype.communicationBox = function () {
     throw new Error("below button first");
   }
   const { belowButtons: { sub: { talkIcon } } } = this;
+  class Communication extends Array {
+    constructor(arr) {
+      super();
+      if (!Array.isArray(arr)) {
+        throw new Error("input must be array");
+      }
+      for (let f of arr) {
+        if (typeof f !== "function") {
+          throw new Error("input must be only function array");
+        }
+      }
+      if (arr.length !== 3) {
+        throw new Error("input must be visualFunc, vaildFunc, actionFunc");
+      }
+      for (let f of arr) {
+        this.push(f);
+      }
+      this.visual = arr[0];
+      this.vaild = arr[1];
+      this.action = arr[2];
+    }
+  }
+  class CommunicationBox extends Array {
+    setItem(arr) {
+      if (!Array.isArray(arr)) {
+        throw new Error("input must be array");
+      }
+      let obj = new Communication(arr);
+      this.push(obj);
+    }
+  }
+  class WidthArray extends Array {
+    sum() {
+      let num;
+      num = 0;
+      for (let i of this) {
+        num += i;
+      }
+      return num;
+    }
+  }
 
-  
+  GeneralJs.stacks.communication = new CommunicationBox();
+  this.communication = GeneralJs.stacks.communication;
+  this.communicationBox = {};
 
+  const renderItem = function (mother, name, callback) {
+    const { createNode, colorChip, withOut } = GeneralJs;
+    const ea = "px";
+    let size;
+    let width, height;
+    let textTop;
+    let innerMargin;
+    let block;
+    let renderWidth;
 
+    size = 14;
+    width = 300;
+    height = 32;
+    textTop = 5;
+    innerMargin = 10;
 
+    block = createNode({
+      mother,
+      class: [ "hoverDefault_lite" ],
+      events: [
+        {
+          type: [ "click", "contextmenu" ],
+          event: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const whiteTarget = this.parentElement.parentElement;
+            let width;
+
+            width = 40;
+
+            createNode({
+              mother: whiteTarget,
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                background: colorChip.white,
+              }
+            });
+
+            createNode({
+              mother: whiteTarget,
+              mode: "svg",
+              source: instance.returnLoading(),
+              class: [ "loading" ],
+              style: {
+                position: "absolute",
+                top: withOut(50, (width / 2), ea),
+                left: withOut(50, (width / 2), ea),
+                width: String(width) + ea,
+                background: colorChip.white,
+              }
+            });
+
+            callback(e).then((result) => {
+              instance.communicationBox.cancel.click();
+            }).catch((err) => {
+              throw new Error(err);
+            });
+          }
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(width) + ea,
+        height: String(height) + ea,
+        borderRadius: String(4) + "px",
+        marginRight: String(innerMargin / 2) + ea,
+        marginBottom: String(innerMargin / 2) + ea,
+        background: colorChip.green,
+        transition: "all 0s ease",
+      },
+      children: [
+        {
+          text: name,
+          style: {
+            position: "absolute",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.white,
+            top: String(textTop) + ea,
+          }
+        }
+      ]
+    });
+
+    renderWidth = block.firstChild.getBoundingClientRect().width + (innerMargin * 2);
+    block.style.width = String(renderWidth) + ea
+    block.firstChild.style.width = String(100) + '%';
+    block.firstChild.style.textAlign = "center";
+
+    return { width: renderWidth, margin: innerMargin / 2, height: height };
+  }
+
+  talkIcon.addEventListener("click", function (e) {
+    if (!(GeneralJs.stacks.communication instanceof CommunicationBox)) {
+      throw new Error("communication box error");
+    }
+    const { createNode, colorChip, withOut } = GeneralJs;
+    const { communication } = instance;
+    const ea = "px";
+    const mother = document.getElementById("totalcontents");
+    let visual, vaild, action;
+    let cancelBox, whiteBox;
+    let cancelWidth, cancelHeight;
+    let width, height, top, left, bottom;
+    let size;
+    let emptyWidth, emptyHeight;
+    let emptyTextTop;
+    let innerMargin;
+    let blockWidth, blockMargin, blockHeight;
+    let tempObj, tempArr;
+    let num;
+    let widthArr;
+    let lastBlocksNumber;
+    let refreshHeight;
+
+    cancelWidth = 98.5;
+    cancelHeight = 98;
+
+    bottom = 66;
+    width = 2026;
+    height = 160;
+    left = 184;
+    size = 15;
+
+    emptyWidth = 250;
+    emptyHeight = 48;
+    emptyTextTop = 12;
+
+    innerMargin = 10;
+
+    cancelBox = createNode({
+      mother,
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            instance.communicationBox.cancel.remove();
+            instance.communicationBox.contents.remove();
+            instance.communicationBox.cancel = null;
+            instance.communicationBox.contents = null;
+          }
+        }
+      ],
+      style: {
+        position: "fixed",
+        width: String(cancelWidth) + "vw",
+        height: String(cancelHeight) + "vh",
+        bottom: String(0) + ea,
+        left: String(0) + ea,
+        background: "transparent",
+        opacity: String(0),
+        zIndex: String(3),
+      }
+    });
+
+    whiteBox = createNode({
+      mother,
+      style: {
+        position: "fixed",
+        width: String(width) + ea,
+        height: String(height) + ea,
+        bottom: String(bottom) + ea,
+        left: String(left) + ea,
+        borderRadius: String(4) + "px",
+        boxShadow: "0px 6px 18px -9px " + colorChip.shadow,
+        animation: "communicationfadeup 0.4s ease forwards",
+        overflow: "hidden",
+        transition: "all 0s ease",
+        zIndex: String(3),
+      },
+      children: [
+        {
+          style: {
+            position: "absolute",
+            width: String(100) + '%',
+            height: String(100) + '%',
+            top: String(0),
+            left: String(0),
+            background: colorChip.white,
+            opacity: String(0.92),
+            transition: "all 0s ease",
+          }
+        },
+        {
+          style: {
+            position: "relative",
+            width: withOut(innerMargin * 2, ea),
+            height: withOut(innerMargin * 2, ea),
+            top: String(0) + ea,
+            left: String(0) + ea,
+            padding: String(innerMargin) + ea,
+            transition: "all 0s ease",
+          },
+          children: [
+            {
+              style: {
+                position: "relative",
+                width: String(100) + '%',
+                height: String(100) + '%',
+                top: String(0),
+                left: String(0),
+                transition: "all 0s ease",
+              }
+            }
+          ]
+        }
+      ]
+    });
+
+    instance.communicationBox.cancel = cancelBox;
+    instance.communicationBox.contents = whiteBox;
+
+    if (communication.length === 0) {
+
+      whiteBox.style.width = String(emptyWidth) + ea;
+      whiteBox.style.height = String(emptyHeight) + ea;
+
+      createNode({
+        mother: whiteBox.lastChild,
+        text: "이 곳에는 할 수 있는 것이 없어요.",
+        style: {
+          position: "absolute",
+          fontSize: String(size) + ea,
+          fontWeight: String(600),
+          color: colorChip.green,
+          width: String(100) + '%',
+          textAlign: "center",
+          top: String(emptyTextTop) + ea,
+          left: String(0) + ea,
+        }
+      });
+
+    } else {
+
+      widthArr = [];
+
+      num = 0;
+      for (let arr of communication) {
+        [ visual, vaild, action ] = arr;
+        if (vaild()) {
+          if (num % 3 === 0) {
+            tempArr = new WidthArray();
+          }
+          tempObj = renderItem(whiteBox.lastChild.firstChild, visual(), action);
+          blockWidth = tempObj.width;
+          blockMargin = tempObj.margin;
+          blockHeight = tempObj.height;
+          tempArr.margin = blockMargin;
+          tempArr.height = blockHeight;
+          tempArr.push(blockWidth + blockMargin);
+          if (num % 3 === 2) {
+            widthArr.push(tempArr);
+          }
+          num++;
+        }
+      }
+
+      if (tempArr.length !== 3 && tempArr.length !== 0) {
+        widthArr.push(tempArr);
+      }
+
+      if (widthArr.length === 0) {
+        throw new Error("invaild blocks");
+      }
+
+      widthArr.sort((a, b) => { return b.sum() - a.sum() });
+      whiteBox.style.width = String(widthArr[0].sum() - widthArr[0].margin + (innerMargin * 2)) + ea;
+      refreshHeight = (widthArr.length * widthArr[0].height) + ((widthArr.length - 1) * widthArr[0].margin) + (innerMargin * 2);
+      whiteBox.style.height = String(refreshHeight) + ea;
+      lastBlocksNumber = widthArr[widthArr.length - 1].length;
+      for (let i = whiteBox.lastChild.firstChild.children.length - 1; i > whiteBox.lastChild.firstChild.children.length - 1 - lastBlocksNumber; i--) {
+        whiteBox.lastChild.firstChild.children[i].style.marginBottom = String(0) + ea;
+      }
+      for (let i = 0; i < whiteBox.lastChild.firstChild.children.length; i++) {
+        if (i % 3 === 2 || i === whiteBox.lastChild.firstChild.children.length - 1) {
+          whiteBox.lastChild.firstChild.children[i].style.marginRight = String(0) + ea;
+        }
+      }
+
+    }
+
+  });
 
 }

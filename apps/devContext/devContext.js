@@ -59,7 +59,6 @@ DevContext.prototype.launching = async function () {
     // await back.setInfoObj({ getMode: false })
     // await back.setMemberObj({ getMode: false })
 
-    
 
 
 
@@ -1120,6 +1119,43 @@ DevContext.prototype.launching = async function () {
     await this.MONGOC.close();
     await this.MONGOLOCALC.close();
     console.log(`done`);
+  }
+}
+
+DevContext.prototype.frontDesignerSync = async function () {
+  const instance = this;
+  const { mysqlQuery } = this.mother;
+  try {
+    await this.MONGOC.connect();
+
+    const selfMongo = this.MONGOC;
+    const table = "deslist";
+    let rows;
+    let desid;
+    let designer;
+    let query;
+
+    rows = await mysqlQuery("SELECT * FROM " + table + ";");
+    rows = rows.map((obj) => {
+      let newObj;
+      newObj = {};
+      for (let i in obj) {
+        newObj[i] = String(obj[i]);
+      }
+      return newObj;
+    });
+
+    for (let obj of rows) {
+      desid = back.idFilter("designer").pastToNew(obj.desid);
+      designer = await back.getDesignerById(desid, { selfMongo });
+      query = `UPDATE ${table} SET start_Y = '${String(designer.information.business.career.startY)}', start_M = '${String(designer.information.business.career.startM)}' WHERE desid = '${obj.desid}';`;
+      await mysqlQuery(query);
+      console.log(query);
+    }
+
+    await this.MONGOC.close();
+  } catch (e) {
+    console.log(e);
   }
 }
 

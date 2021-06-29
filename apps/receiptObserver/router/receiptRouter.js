@@ -293,6 +293,95 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_createStylingContract = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  let obj = {};
+  obj.link = "/createStylingContract";
+  obj.func = async function (req, res) {
+    try {
+      const { proid } = req.body;
+      const selfMongo = instance.mongo;
+      const project = await back.getProjectById(proid, { selfMongo });
+      const client = await back.getClientById(project.cliid, { selfMongo });
+      const designer = await back.getDesignerById(project.desid, { selfMongo });
+      let url, requestNumber, proposalDate;
+
+      proposalDate = project.proposal.date.valueOf();
+
+      requestNumber = 0;
+      for (let i = 0; i < client.requests.length; i++) {
+        if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
+          requestNumber = i;
+          break;
+        }
+      }
+
+      url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port) + "/form";
+
+      await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, fileSystem, slack_bot, dateToString, autoComma } = this.mother;
+  let obj = {};
+  obj.link = "/receiveStylingContract";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.json === undefined) {
+        throw new Error("must be json");
+      }
+      const json = equalJson(req.body.json);
+      const collection = "stylingForm";
+      const selfMongo = instance.mongolocal;
+      let obj;
+
+      obj = {
+        id: json.id,
+        date: new Date(),
+        name: json.name,
+        proid: json.proid,
+        client: {
+          cliid: json.cliid,
+          requestNumber: json.requestNumber
+        }
+      };
+
+      await back.mongoCreate(collection, obj, { selfMongo });
+      instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 완료 : " + obj.name, channel: "#400_customer" });
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 

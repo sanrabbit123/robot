@@ -2190,9 +2190,6 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         };
         command = [ "webProposal", proid ];
         // message = await coreRequest("timer", { command, time });
-
-        console.log("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer");
-
         await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
 
         res.set("Content-Type", "application/json");

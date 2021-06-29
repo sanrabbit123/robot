@@ -1799,7 +1799,7 @@ Mother.prototype.decryptoHash = function (password, hash) {
   });
 }
 
-Mother.prototype.mysqlQuery = function (query, option = { local: false, front: false, python: true }) {
+Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true }) {
   const mysql = require('mysql2');
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const mysqlStandard = ADDRESS["frontinfo"];
@@ -1808,10 +1808,8 @@ Mother.prototype.mysqlQuery = function (query, option = { local: false, front: f
     host = "localhost";
   } else if (option.front === true) {
     host = ADDRESS["frontinfo"]["host"];
-  } else if (option.python === true) {
-    host = ADDRESS["pythoninfo"]["host"];
   } else {
-    host = ADDRESS["pythoninfo"]["host"];
+    host = ADDRESS["frontinfo"]["host"];
   }
   const { user, password, database } = mysqlStandard;
   const connection = mysql.createConnection({ host, user, password, database });

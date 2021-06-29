@@ -152,6 +152,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
       }).then(function () {
         return kakaoInstance.sendTalk("designerProposal", "배창규", "010-2747-3403", { client: name, host, path, proid });
       }).then(function () {
+        instance.mother.slack_bot.chat.postMessage({ text: name + " 고객님께 제안서 알림톡을 전송하였습니다!\n" + host + "/" + path + "?proid=" + proid, channel: "#error_log" });
         console.log("web proposal done", name, phone, proid);
       }).catch(function (err) {
         reject(err);

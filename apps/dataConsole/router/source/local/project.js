@@ -5807,6 +5807,223 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
   }
 }
 
+ProjectJs.prototype.communicationRender = function () {
+  const instance = this;
+  const { communication } = this.mother;
+  const { stringToDate, sleep } = GeneralJs;
+
+  communication.setItem([
+    () => { return "제안서 다시 발송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "계약서 발송"; },
+    function () {
+      const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+      let boo;
+      let date0, date1, date2, date3;
+      boo = true;
+      if (instance.whiteBox === null) {
+        boo = false;
+      } else {
+        const proid = instance.whiteBox.id;
+        let thisCase;
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.proid === proid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase === null) {
+          boo = false;
+        } else {
+          date0 = stringToDate(thisCase.firstDate);
+          date1 = stringToDate(thisCase.formDateFrom);
+          date2 = stringToDate(thisCase.formDateTo);
+          date3 = stringToDate(thisCase.paymentsRemainDate);
+          if (date0.valueOf() > emptyDateValue && date1.valueOf() > emptyDateValue && date2.valueOf() > emptyDateValue && date3.valueOf() < emptyDateValue) {
+            boo = true;
+          } else {
+            boo = false;
+          }
+        }
+      }
+      return boo;
+    },
+    async function (e) {
+      try {
+        const proid = instance.whiteBox.id;
+        let thisCase;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.proid === proid) {
+              thisCase = c;
+            }
+          }
+        }
+        const project = (await GeneralJs.ajaxJson({ noFlat: true, where: { proid } }, "/getProjects", { equal: true }))[0];
+        const client = (await GeneralJs.ajaxJson({ noFlat: true, where: { cliid: project.cliid } }, "/getClients", { equal: true }))[0];
+        if (client.email.length === 0 || !(/\@/.test(client.email)) || !(/\./.test(client.email))) {
+          window.alert(client.name + "고객님의 이메일이 없습니다! 계약서를 보낼 수 없습니다!");
+          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/client?cliid=" + client.cliid);
+        } else {
+          if (window.confirm(client.name + "고객님에게 스타일링 계약서를 전송합니다! 확실하십니까?")) {
+            await GeneralJs.ajaxJson({ proid }, PYTHONHOST + "/createStylingContract");
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "현장 미팅 알림"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "프로젝트 시작 고지"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+
+  communication.setItem([
+    () => { return "시공 계약서 발송"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "시공 착수금 요청"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "시공 중도금 요청"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "시공 잔금 요청"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+
+  communication.setItem([
+    () => { return "촬영 재알림"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "현장 사진 공유"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "고객 후기 컨텐츠 공유"; },
+    function () {
+
+      return true;
+    },
+    async function (e) {
+      try {
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+}
+
 ProjectJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -5819,6 +6036,7 @@ ProjectJs.prototype.launching = async function () {
     this.addSearchEvent();
     this.addExtractEvent();
     this.whiteResize();
+    this.communicationRender();
 
     const getObj = GeneralJs.returnGet();
     let getTarget;

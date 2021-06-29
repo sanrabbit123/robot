@@ -158,55 +158,59 @@ module.exports = function (proid, info) {
         }
         await clickElement(document.getElementById("react-select-9--option-3"));
 
-        // await sleep(500);
-        // document.querySelectorAll('.btn-router')[1].click();
-        // await sleep(500);
-        //
-        // while (document.querySelector(".confirm") === null) {
-        //   await sleep(500);
-        // }
-        // document.querySelector(".confirm").click();
-        //
-        // await sleep(2000);
-        //
-        // while (document.querySelector("ul.sc-kRqLsF") === null) {
-        //   await sleep(500);
-        // }
-        // while (document.querySelector("ul.sc-kRqLsF").children.length === 0) {
-        //   await sleep(500);
-        // }
-        // while (document.querySelectorAll("li.sc-iaUyKn").length === 0) {
-        //   await sleep(500);
-        // }
-        //
-        // document.querySelector("li.sc-iaUyKn").querySelector(".hTuXtU").children[1].click();
-        // await sleep(500);
-        //
-        // while (document.querySelector(".info-list") === null) {
-        //   await sleep(500);
-        // }
-        // await sleep(500);
-        //
-        // tempArr = document.querySelector(".info-list").children;
-        // data = {};
-        // raw = [];
-        // for (let dom of tempArr) {
-        //   raw.push(dom.textContent);
-        // }
-        // raw = raw.map((r) => { return r.split(':'); });
-        // for (let arr of raw) {
-        //   if (/이름/gi.test(arr[0])) {
-        //     data.name = arr[1].trim();
-        //   }
-        //   if (/ID/gi.test(arr[0])) {
-        //     data.id = arr[1].trim();
-        //   }
-        //   if (/생성시간/gi.test(arr[0])) {
-        //     data.time = arr[1].trim();
-        //   }
-        // }
-        //
-        // await ajaxPromise({ to: "python", path: "/contractForm", data, RECEIVECONST);
+        await sleep(500);
+        document.querySelectorAll('.btn-router')[1].click();
+        await sleep(500);
+
+        while (document.querySelector(".confirm") === null) {
+          await sleep(500);
+        }
+        document.querySelector(".confirm").click();
+
+        await sleep(2000);
+
+        while (document.querySelector("ul.sc-kRqLsF") === null) {
+          await sleep(500);
+        }
+        while (document.querySelector("ul.sc-kRqLsF").children.length === 0) {
+          await sleep(500);
+        }
+        while (document.querySelectorAll("li.sc-iaUyKn").length === 0) {
+          await sleep(500);
+        }
+
+        document.querySelector("li.sc-iaUyKn").querySelector(".hTuXtU").children[1].click();
+        await sleep(500);
+
+        while (document.querySelector(".info-list") === null) {
+          await sleep(500);
+        }
+        await sleep(500);
+
+        tempArr = document.querySelector(".info-list").children;
+        data = {};
+        raw = [];
+        for (let dom of tempArr) {
+          raw.push(dom.textContent);
+        }
+        raw = raw.map((r) => { return r.split(':'); });
+        for (let arr of raw) {
+          if (/이름/gi.test(arr[0])) {
+            data.name = arr[1].trim();
+          }
+          if (/ID/gi.test(arr[0])) {
+            data.id = arr[1].trim();
+          }
+          if (/생성시간/gi.test(arr[0])) {
+            data.time = arr[1].trim();
+          }
+        }
+
+        data.requestNumber = requestNumber;
+        data.cliid = client.cliid;
+        data.proid = project.proid;
+
+        await ajaxPromise({ to: "python", path: "/receiveStylingContract", data, RECEIVECONST);
 
       } catch (e) {
         console.log(e);
