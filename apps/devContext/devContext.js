@@ -62,6 +62,47 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const selfMongo = this.MONGOLOCALC;
+    //
+    // "인스타그램"
+    // "유튜브"
+    // "블로그"
+    //
+    // const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
+    // const requests = clients.getRequestsTongsMonthly();
+    // let tong;
+    // let a1, a2, a3;
+    // let tempArr, arr;
+    //
+    // arr = [];
+    // for (let z = 0; z < 6; z++) {
+    //   tong = requests.select(new Date(2021, z)).tong;
+    //   a1 = 0;
+    //   a2 = 0;
+    //   a3 = 0;
+    //   for (let i of tong) {
+    //     if (/인스타/gi.test(i.request.etc.channel)) {
+    //       a1 = a1 + 1;
+    //     } else if (/유튜/gi.test(i.request.etc.channel)) {
+    //       a2 = a2 + 1;
+    //     } else if (/블/gi.test(i.request.etc.channel)) {
+    //       a3 = a3 + 1;
+    //     }
+    //   }
+    //   tempArr = [ a1, a2, a3 ];
+    //   arr.push(tempArr);
+    // }
+
+    
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1020,7 +1061,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김연주", "2021-04-27" ],
+    //   [ "이진선", "2021-06-15" ],
     // ]);
 
 
@@ -1029,17 +1070,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2105_aa06s", [
-    //   { porlid: "ghost", index: 8 },
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 10 },
-    //   { porlid: "ghost", index: 11 },
+    // await this.setProposalSettingForDesigner("d2106_aa01s", [
     //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 7 }
+    //   { porlid: "ghost", index: 7 },
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 3 },
     // ], [
-    //   "고객님의 취향과 라이프 스타일에 맞게 시공부터 스타일링까지 진행합니다.",
-    //   "모던하고 대비 있는 스타일에 능하며, 그 외에도 여러 스타일을 구사할 수 있습니다.",
-    //   "고객님과의 활발한 커뮤니케이션을 진행하며 디자인을 진행합니다."
+    //   "아늑하고 따뜻한 스타일의 내추럴 무드와 모던한 스타일을 지향하는 편입니다.",
+    //   "클라이언트의 예산에 맞추며, 빠른 진행을 원할시 스케줄에 최대한 맞추어 드리려고 합니다.",
+    //   "고객님께서 원하시는 공간의 활용과 무드를 구현시키는 것을 중요하게 생각합니다."
     // ]);
 
 
@@ -1664,15 +1704,16 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid, file
     if (!Array.isArray(files)) {
       throw new Error("files must be array");
     }
-    if (files.length !== 6) {
-      throw new Error("files must be 6 array");
+    if (files.length !== 6 && files.length !== 5) {
+      throw new Error("files must be 5 or 6 array");
     }
     for (let i = 0; i < files.length; i++) {
       if (files[i].porlid === undefined || files[i].index === undefined) {
         throw new Error("files must be [ { porlid: \"a78\", index: 2 } or { porlid: \"ghost\", index: 2 } ]");
       }
     }
-    let proposalArr, dummy, filesArr;
+    let proposalArr, dummy, filesArr, mode;
+    mode = files.length;
     filesArr = [];
     for (let { porlid, index } of files) {
       if (porlid !== "ghost") {
@@ -1683,50 +1724,97 @@ DevContext.prototype.setProposalSettingForDesigner = async function (desid, file
     }
 
     dummy = function (fileArr) {
-      let resultArr = { name: "기본 세팅", photo: [
-        {
-            "position" : "0",
-            "sgTrue" : "g",
-            "unionPo" : "union",
-            "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"" + filesArr[0] + "\");",
-            "imgSrc" : filesArr[0]
-        },
-        {
-            "position" : "1",
-            "sgTrue" : "s",
-            "unionPo" : "right",
-            "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"" + filesArr[1] + "\");",
-            "imgSrc" : filesArr[1]
-        },
-        {
-            "position" : "2",
-            "sgTrue" : "g",
-            "unionPo" : "union",
-            "imgSrc" : filesArr[2],
-            "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[2] + "\");"
-        },
-        {
-            "position" : "3",
-            "sgTrue" : "g",
-            "unionPo" : "union",
-            "imgSrc" : filesArr[3],
-            "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"" + filesArr[3] + "\");"
-        },
-        {
-            "position" : "4",
-            "sgTrue" : "s",
-            "unionPo" : "left",
-            "imgSrc" : filesArr[4],
-            "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
-        },
-        {
-            "position" : "5",
-            "sgTrue" : "s",
-            "unionPo" : "right",
-            "imgSrc" : filesArr[5],
-            "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"" + filesArr[5] + "\");"
-        }
-      ], description };
+      let resultArr;
+
+      if (mode === 6) {
+
+        resultArr = { name: "기본 세팅", photo: [
+          {
+              "position" : "0",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"" + filesArr[0] + "\");",
+              "imgSrc" : filesArr[0]
+          },
+          {
+              "position" : "1",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"" + filesArr[1] + "\");",
+              "imgSrc" : filesArr[1]
+          },
+          {
+              "position" : "2",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "imgSrc" : filesArr[2],
+              "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[2] + "\");"
+          },
+          {
+              "position" : "3",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "imgSrc" : filesArr[3],
+              "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"" + filesArr[3] + "\");"
+          },
+          {
+              "position" : "4",
+              "sgTrue" : "s",
+              "unionPo" : "left",
+              "imgSrc" : filesArr[4],
+              "styleText" : "top: 67%; left: 67.2%; width: 16%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
+          },
+          {
+              "position" : "5",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "imgSrc" : filesArr[5],
+              "styleText" : "top: 67%; left: 84%; width: 16%; height: 33%; background-image: url(\"" + filesArr[5] + "\");"
+          }
+        ], description };
+
+      } else if (mode === 5) {
+
+        resultArr = { name: "기본 세팅", photo: [
+          {
+              "position" : "0",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "styleText" : "width: 66.5%; height: 66%; top: 0%; left: 0%; background-image: url(\"" + filesArr[0] + "\");",
+              "imgSrc" : filesArr[0]
+          },
+          {
+              "position" : "1",
+              "sgTrue" : "s",
+              "unionPo" : "right",
+              "styleText" : "width: 32.8%; height: 66%; top: 0%; left: 67.2%; background-image: url(\"" + filesArr[1] + "\");",
+              "imgSrc" : filesArr[1]
+          },
+          {
+              "position" : "2",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "imgSrc" : filesArr[2],
+              "styleText" : "top: 67%; left: 0%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[2] + "\");"
+          },
+          {
+              "position" : "3",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "imgSrc" : filesArr[3],
+              "styleText" : "top: 67%; left: 33.5%; width: 33%; height: 33%; background-image: url(\"" + filesArr[3] + "\");"
+          },
+          {
+              "position" : "4",
+              "sgTrue" : "g",
+              "unionPo" : "union",
+              "imgSrc" : filesArr[4],
+              "styleText" : "top: 67%; left: 67.2%; width: 32.8%; height: 33%; background-image: url(\"" + filesArr[4] + "\");"
+          }
+        ], description };
+
+      }
+
       return resultArr;
     }
 

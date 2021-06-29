@@ -418,6 +418,7 @@ const withToolsArr = function (Clients) {
   }
 
   class RequestsTongs extends Array {
+
     reportAll() {
       let arr = [];
       for (let i of this) {
@@ -425,6 +426,25 @@ const withToolsArr = function (Clients) {
       }
       return arr;
     }
+
+    select(dateObj) {
+      if (!(dateObj instanceof Date)) {
+        throw new Error("must be date object");
+      }
+      let key, target;
+
+      target = null;
+      key = (String(dateObj.getFullYear()).slice(2) + "년 " + String(dateObj.getMonth() + 1) + "월");
+      for (let obj of this) {
+        if (obj.name === key) {
+          target = obj;
+          break;
+        }
+      }
+
+      return target;
+    }
+
   }
 
   class RequestsTongFactor {
