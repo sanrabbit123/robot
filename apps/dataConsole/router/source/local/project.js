@@ -1512,7 +1512,6 @@ ProjectJs.prototype.spreadData = async function (search = null) {
     let cliidSet, desidSet;
     let clients, designers;
     let serviceWording;
-
     let totalMother;
     let standardDataTong = [], infoDataTong = [];
     let standardDomsFirst, caseDomsFirst, casesFirst;

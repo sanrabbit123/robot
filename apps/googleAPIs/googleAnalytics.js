@@ -291,11 +291,7 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0, t
         resultObj.cliid = tempJson.cliid;
         resultObj.request = tempJson.requests[0].request;
         resultObj.googleAnalytics = tempJson.requests[0].analytics.googleAnalytics;
-        if (!test) {
-          await MONGOC.db(`miro81`).collection(`googleAnalytics_client`).insertOne(resultObj);
-        } else {
-          console.log(resultObj);
-        }
+        console.log(resultObj);
 
       } catch (e) {
         console.log(e);

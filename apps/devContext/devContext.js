@@ -56,6 +56,15 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
+    // await back.setInfoObj({ getMode: false })
+    // await back.setMemberObj({ getMode: false })
+
+    
+
+
+
+
+
 
     // const selfMongo = this.MONGOLOCALC;
     // const project = await back.getProjectById("p2106_aa16s", { selfMongo });
@@ -68,8 +77,6 @@ DevContext.prototype.launching = async function () {
 
     // const res = await requestSystem("https://home-liaison.servehttp.com:55556/toAiServer", { type: "proposal", id: "p2106_aa59s" }, { headers: { "Content-type": "application/json" } });
     // console.log(res);
-
-
 
     /*
 
@@ -988,9 +995,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "차은정",
-    //     designer: "김은설",
-    //     link: "https://drive.google.com/drive/folders/19jqQEryLmgNjHl17SalPPIMnPZKpBbiz",
+    //     client: "박은경",
+    //     designer: "이혜진",
+    //     link: "https://drive.google.com/drive/folders/1JzGhpM15G4S9G1Aq6PxcppNPl6lyubxE",
     //   },
     // ]);
 

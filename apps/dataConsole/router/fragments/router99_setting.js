@@ -2,10 +2,10 @@
 
 DataRouter.prototype.setMembers = async function () {
   const instance = this;
-  const { pythonExecute } = this.mother;
+  const back = this.back;
+  const { fileSystem } = this.mother;
   try {
-    const { members } = JSON.parse(await pythonExecute(this.pythonApp, [ "getMembers" ], {}));
-    this.members = members;
+    this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {
     instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
     console.log(e);

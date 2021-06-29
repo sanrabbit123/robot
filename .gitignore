@@ -2,6 +2,7 @@
 __pycache__/
 apps/infoObj.js
 apps/infoObj_bak.js
+apps/memberObj.js
 binary/
 temp/
 node_modules/

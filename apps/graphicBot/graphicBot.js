@@ -1136,6 +1136,8 @@ GraphicBot.prototype.botServer = async function () {
     let front, routerObj;
     let pems, pemsLink, certDir, keyDir, caDir;
 
+    await this.back.setInfoObj({ getMode: false });
+
     const { name, rawObj: address } = await this.mother.ipCheck();
     console.log(``);
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching graphic bot in ${name.replace(/info/i, '')} ==============`);

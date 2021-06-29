@@ -355,6 +355,152 @@ BackMaker.prototype.getAjaxAuthorization = async function () {
   }
 }
 
+BackMaker.prototype.setInfoObj = async function (option = { selfMongo: null, getMode: false }) {
+  const instance = this;
+  const { mongo, mongoinfo, fileSystem } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  try {
+    const infoPath = `${process.cwd()}/apps/infoObj.js`;
+    let arr, target;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      arr = await MONGOC.db(`miro81`).collection(`info`).find({ "classification.id": 0 }).toArray();
+      await MONGOC.close();
+    } else {
+      arr = await option.selfMongo.db(`miro81`).collection(`info`).find({ "classification.id": 0 }).toArray();
+    }
+
+    if (arr.length === 0) {
+      console.log("\x1b[32m", "there is no info object");
+      return false;
+    }
+
+    arr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+    target = arr[0];
+
+    console.log("\x1b[32m%s\x1b[0m", "info set complete");
+
+    if (option.getMode === true) {
+      return target.info;
+    } else {
+      await fileSystem(`write`, [ infoPath, `module.exports = ${JSON.stringify(target.info, null, 2)}` ]);
+      return true;
+    }
+
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+BackMaker.prototype.updateInfoObj = async function (option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo, fileSystem, equalJson } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  try {
+    const infoPath = `${process.cwd()}/apps/infoObj.js`;
+    let target, json;
+
+    target = equalJson(JSON.stringify(require(infoPath)));
+    json = {
+      date: new Date(),
+      classification: {
+        id: 0,
+        name: "core",
+      },
+      info: target
+    };
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(`info`).updateOne(json);
+      await MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(`info`).updateOne(json);
+    }
+
+    console.log("\x1b[32m%s\x1b[0m", "info update complete");
+    return true;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.setMemberObj = async function (option = { selfMongo: null, getMode: false }) {
+  const instance = this;
+  const { mongo, mongoinfo, fileSystem } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  try {
+    const infoPath = `${process.cwd()}/apps/memberObj.js`;
+    let arr, target;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      arr = await MONGOC.db(`miro81`).collection(`info`).find({ "classification.id": 1 }).toArray();
+      await MONGOC.close();
+    } else {
+      arr = await option.selfMongo.db(`miro81`).collection(`info`).find({ "classification.id": 1 }).toArray();
+    }
+
+    if (arr.length === 0) {
+      console.log("\x1b[32m", "there is no member object");
+      return false;
+    }
+
+    arr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+    target = arr[0];
+
+    console.log("\x1b[32m%s\x1b[0m", "member set complete");
+
+    if (option.getMode === true) {
+      return target.info;
+    } else {
+      await fileSystem(`write`, [ infoPath, `module.exports = ${JSON.stringify(target.info, null, 2)}` ]);
+      return true;
+    }
+
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+BackMaker.prototype.updateMemberObj = async function (option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongoinfo, fileSystem, equalJson } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  try {
+    const infoPath = `${process.cwd()}/apps/memberObj.js`;
+    let target, json;
+
+    target = equalJson(JSON.stringify(require(infoPath)));
+    json = {
+      date: new Date(),
+      classification: {
+        id: 1,
+        name: "member",
+      },
+      info: target
+    };
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(`info`).updateOne(json);
+      await MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(`info`).updateOne(json);
+    }
+
+    console.log("\x1b[32m%s\x1b[0m", "member update complete");
+    return true;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // GET Client --------------------------------------------------------------------------------
 
 BackMaker.prototype.getClientById = async function (cliid, option = { withTools: false, selfMongo: null, devAlive: false }) {

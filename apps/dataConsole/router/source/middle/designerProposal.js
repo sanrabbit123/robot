@@ -2571,7 +2571,7 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     sourceArr = [
       { title: thisDesigner.designer + " 디자이너 디자인 용역비", amount: instance.feeToString(fee, percentage, true) },
       { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: instance.feeToString(fee, 1 - percentage, true) },
-      { title: "출장비 " + (desktop ? ("(디자이너 주소 : " + addressCompress(thisDesigner.information.address[0]) + ", 거리 : " + String(297) + "km" + ")") : ("(거리 : " + String(297) + "km" + ")")), amount: autoComma(1000000) + "원" }
+      { title: "출장비 (거리 : " + String(297) + "km)", amount: autoComma(1000000) + "원" }
     ];
 
     num = 0;

@@ -662,6 +662,7 @@ DataConsole.prototype.connect = async function (testMode = false) {
       MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => 127.0.0.1`);
     } else {
+      await this.back.setInfoObj({ getMode: false });
       isLocal = false;
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
       console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);

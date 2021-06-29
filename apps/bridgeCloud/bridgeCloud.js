@@ -1162,6 +1162,8 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   const humanInstance = new HumanPacket();
 
   try {
+    await this.back.setInfoObj({ getMode: false });
+
     await MONGOC.connect();
     await kakaoInstance.ready();
 

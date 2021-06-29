@@ -56,6 +56,38 @@ Robot.prototype.mongoToJson = async function () {
   }
 }
 
+Robot.prototype.infoObj = async function () {
+  try {
+    await this.back.setInfoObj({ getMode: false });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.memberObj = async function () {
+  try {
+    await this.back.setMemberObj({ getMode: false });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.infoUpdate = async function () {
+  try {
+    await this.back.updateInfoObj();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.memberUpdate = async function () {
+  try {
+    await this.back.updateMemberObj();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.dataConsole = function (testMode = false) {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   let app = new DataConsole();
@@ -944,7 +976,35 @@ const MENU = {
     } catch (e) {
       console.log(e);
     }
-  }
+  },
+  infoObj: async function () {
+    try {
+      await robot.infoObj();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  infoUpdate: async function () {
+    try {
+      await robot.infoUpdate();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  memberObj: async function () {
+    try {
+      await robot.memberObj();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  memberUpdate: async function () {
+    try {
+      await robot.memberUpdate();
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };
 let launchingFunc;
 

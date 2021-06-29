@@ -621,6 +621,8 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   try {
+    await this.back.setInfoObj({ getMode: false });
+
     const MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
 

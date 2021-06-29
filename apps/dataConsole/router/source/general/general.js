@@ -3888,3 +3888,23 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
   }
 
 }
+
+GeneralJs.prototype.communicationBox = function () {
+  const instance = this;
+  if (this.belowButtons !== undefined && this.belowButtons !== null && typeof this.belowButtons !== "object") {
+    throw new Error("below button first");
+  }
+  if (this.belowButtons.sub === undefined || this.belowButtons.sub === null) {
+    throw new Error("below button first");
+  }
+  if (this.belowButtons.sub.talkIcon === undefined || this.belowButtons.sub.talkIcon === null) {
+    throw new Error("below button first");
+  }
+  const { belowButtons: { sub: { talkIcon } } } = this;
+
+  
+
+
+
+
+}

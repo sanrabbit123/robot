@@ -1465,6 +1465,8 @@ Ghost.prototype.serverLaunching = async function () {
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
     console.log(``);
 
+    await this.back.setInfoObj({ getMode: false });
+
     //set mongo connetion
     const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
@@ -1639,6 +1641,8 @@ Ghost.prototype.robotPassLaunching = async function () {
     console.log(``);
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching robot pass server =====================`);
     console.log(``);
+
+    await this.back.setInfoObj({ getMode: false });
 
     const BUTTON_LIST = [
         "proposal",
