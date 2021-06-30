@@ -414,10 +414,10 @@ BackMaker.prototype.updateInfoObj = async function (option = { selfMongo: null }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
-      await MONGOC.db(`miro81`).collection(`info`).updateOne(json);
+      await MONGOC.db(`miro81`).collection(`info`).insertOne(json);
       await MONGOC.close();
     } else {
-      await option.selfMongo.db(`miro81`).collection(`info`).updateOne(json);
+      await option.selfMongo.db(`miro81`).collection(`info`).insertOne(json);
     }
 
     console.log("\x1b[32m%s\x1b[0m", "info update complete");
@@ -487,10 +487,10 @@ BackMaker.prototype.updateMemberObj = async function (option = { selfMongo: null
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       await MONGOC.connect();
-      await MONGOC.db(`miro81`).collection(`info`).updateOne(json);
+      await MONGOC.db(`miro81`).collection(`info`).insertOne(json);
       await MONGOC.close();
     } else {
-      await option.selfMongo.db(`miro81`).collection(`info`).updateOne(json);
+      await option.selfMongo.db(`miro81`).collection(`info`).insertOne(json);
     }
 
     console.log("\x1b[32m%s\x1b[0m", "member update complete");
