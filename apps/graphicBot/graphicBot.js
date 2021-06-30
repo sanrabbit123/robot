@@ -25,13 +25,13 @@ const GraphicBot = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
 
-  if (/Linux/gi.test()) {
+  if (/Linux/gi.test(thisOs)) {
     this.bot = require(`${process.cwd()}/apps/graphicBot/os/linux/build/Release/robotjs.node`);
     this.os = "linux";
-  } else if (/Darwin/gi.test()) {
+  } else if (/Darwin/gi.test(thisOs)) {
     this.bot = require(`${process.cwd()}/apps/graphicBot/os/mac/build/Release/robotjs.node`);
     this.os = "mac";
-  } else if (/Windows/gi.test()) {
+  } else if (/Windows/gi.test(thisOs)) {
     this.bot = require(`${process.cwd()}/apps/graphicBot/os/windows/build/Release/robotjs.node`);
     this.os = "windows";
   } else {
@@ -289,7 +289,7 @@ GraphicBot.prototype.chromeOpen = async function (url) {
     const { exec, execFile } = require("child_process");
     const chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe";
     return new Promise(function(resolve, reject) {
-      exec(`taskkill /IM "chrome.exe" /F` function (error, stdout, stderr) {
+      exec(`taskkill /IM "chrome.exe" /F`, function (error, stdout, stderr) {
         execFile(normalize(chrome), [ "--start-maximized", url ], function (error, stdout, stderr) {
           setTimeout(function () {
             resolve(stdout);
@@ -301,7 +301,7 @@ GraphicBot.prototype.chromeOpen = async function (url) {
   } else if (os === "mac") {
     return new Promise(function (resolve, reject) {
       exec(`killall 'Google Chrome'`, (error, stdout, stderr) => {
-        exec(`/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' --start-maximized ${link}`);
+        exec(`/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' --start-maximized ${url}`);
         setTimeout(function () {
           resolve(stdout);
         }, 3000);
@@ -1154,6 +1154,7 @@ GraphicBot.prototype.getChromeSize = async function () {
     this.chromeSize.left = (xArr[0] === xArr[xArr.length - 1]) ? 0 : xArr[0];
     this.chromeSize.right = xArr[xArr.length - 1];
 
+    console.log(xArr, yArr);
     console.log(this.screenSize);
     console.log(this.chromeSize);
 
