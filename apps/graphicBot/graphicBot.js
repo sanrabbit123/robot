@@ -3,6 +3,8 @@ const GraphicBot = function () {
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const { exec } = require(`child_process`);
+  const os = require(`os`);
+  const thisOs = os.type();
   class InfoArray extends Array {
     constructor(arr) {
       super();
@@ -22,7 +24,19 @@ const GraphicBot = function () {
   }
   this.mother = new Mother();
   this.back = new BackMaker();
-  this.bot = require(`${process.cwd()}/apps/graphicBot/build/Release/robotjs.node`);
+
+  if (/Linux/gi.test()) {
+    this.bot = require(`${process.cwd()}/apps/graphicBot/os/linux/build/Release/robotjs.node`);
+    this.os = "linux";
+  } else if (/Darwin/gi.test()) {
+    this.bot = require(`${process.cwd()}/apps/graphicBot/os/mac/build/Release/robotjs.node`);
+    this.os = "mac";
+  } else if (/Windows/gi.test()) {
+    this.bot = require(`${process.cwd()}/apps/graphicBot/os/windows/build/Release/robotjs.node`);
+    this.os = "windows";
+  } else {
+    throw new Error("unknown os");
+  }
   this.screenSize = this.bot.getScreenSize();
   this.chromeSize = {
     top: 99,
