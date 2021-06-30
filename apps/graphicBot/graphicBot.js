@@ -299,6 +299,14 @@ GraphicBot.prototype.chromeOpen = async function (url) {
     });
 
   } else if (os === "mac") {
+    return new Promise(function (resolve, reject) {
+      exec(`killall 'Google Chrome'`, (error, stdout, stderr) => {
+        exec(`/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' --start-maximized ${link}`);
+        setTimeout(function () {
+          resolve(stdout);
+        }, 3000);
+      });
+    });
 
   }
 }
@@ -312,7 +320,7 @@ GraphicBot.prototype.chromeClose = async function () {
     } else if (os === "windows") {
       exec(`taskkill /IM "chrome.exe" /F`);
     } else if (os === "mac") {
-
+      exec(`killall 'Google Chrome'`);
     }
   } catch (e) {
     console.log(e);
