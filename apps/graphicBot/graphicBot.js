@@ -270,23 +270,50 @@ GraphicBot.prototype.keypress = function (callback) {
 
 GraphicBot.prototype.chromeOpen = async function (url) {
   const instance = this;
-  const { exec } = this;
+  const { exec, os } = this;
   const { sleep } = this.mother;
-  return new Promise(function (resolve, reject) {
-    exec(`killall chrome`, (error, stdout, stderr) => {
-      exec(`google-chrome ${url} --start-maximized`);
-      setTimeout(function () {
-        resolve(stdout);
-      }, 3000);
+
+  if (os === "linux") {
+    return new Promise(function (resolve, reject) {
+      exec(`killall chrome`, (error, stdout, stderr) => {
+        exec(`google-chrome ${url} --start-maximized`);
+        setTimeout(function () {
+          resolve(stdout);
+        }, 3000);
+      });
     });
-  });
+
+  } else if (os === "windows") {
+    const path = require("path");
+    const { sep, normalize } = path;
+    const { exec, execFile } = require("child_process");
+    const chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe";
+    return new Promise(function(resolve, reject) {
+      exec(`taskkill /IM "chrome.exe" /F` function (error, stdout, stderr) {
+        execFile(normalize(chrome), [ "--start-maximized", url ], function (error, stdout, stderr) {
+          setTimeout(function () {
+            resolve(stdout);
+          }, 3000);
+        });
+      });
+    });
+
+  } else if (os === "mac") {
+
+  }
 }
 
 GraphicBot.prototype.chromeClose = async function () {
   const instance = this;
-  const { exec } = this;
+  const { exec, os } = this;
   try {
-    exec(`killall chrome`);
+    if (os === "linux") {
+      exec(`killall chrome`);
+    } else if (os === "windows") {
+      exec(`taskkill /IM "chrome.exe" /F`);
+    } else if (os === "mac") {
+
+    }
   } catch (e) {
     console.log(e);
   }
