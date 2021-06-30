@@ -74,6 +74,12 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let sumMargin;
   let sumCaseTop;
   let tempDate;
+  let ago, agoValue;
+  let greateStandard;
+
+  ago = new Date();
+  ago.setDate(ago.getDate() - 28);
+  agoValue = ago.valueOf();
 
   motherWidth = Number(mother.style.width.replace(/[^0-9\.\-]/g, ''));
   titleWidth = 69;
@@ -280,6 +286,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     if (!condition) {
       tempDate = designer.projects[i].proposal.date;
       tempDate.setDate(tempDate.getDate() + 1);
+      tempDate = (tempDate.valueOf() >= agoValue ? tempDate : ago);
       if (!/[프간]/gi.test(designer.information.business.businessInfo.classification)) {
         condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber, tempDate);
       } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {
@@ -379,6 +386,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
     if (!condition) {
       tempDate = designer.projects[i].process.calculation.payments.first.date;
       tempDate.setDate(tempDate.getDate() + 1);
+      tempDate = (tempDate.valueOf() >= agoValue ? tempDate : ago);
       if (!/[프간]/gi.test(designer.information.business.businessInfo.classification)) {
         condition = taxBill.search(designer.projects[i].process.calculation.payments.first.amount, designer.information.business.businessInfo.businessNumber, tempDate);
       } else if (/간이/gi.test(designer.information.business.businessInfo.classification)) {

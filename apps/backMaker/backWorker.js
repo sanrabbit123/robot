@@ -659,6 +659,12 @@ BackWorker.prototype.designerCalculation = async function () {
     let infoTong, infoDetail;
     let rows, boo;
     let tempDate;
+    let ago, agoValue;
+    let greateStandard;
+
+    ago = new Date();
+    ago.setDate(ago.getDate() - 28);
+    agoValue = ago.valueOf();
 
     whereQuery = {
       $and: [
@@ -755,7 +761,8 @@ BackWorker.prototype.designerCalculation = async function () {
     for (let { desid, designer, free, simple, business, first, remain } of infoTong) {
       if (business !== "") {
         for (let obj of first) {
-          rows = await back.mongoRead(collection, { date: { $gt: obj.proposal } }, { selfMongo: PYTHONMONGOC });
+          greateStandard = (obj.proposal.valueOf() >= agoValue ? obj.proposal : ago);
+          rows = await back.mongoRead(collection, { date: { $gt: greateStandard } }, { selfMongo: PYTHONMONGOC });
           rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
           boo = false;
           for (let i of rows) {
@@ -769,7 +776,7 @@ BackWorker.prototype.designerCalculation = async function () {
             }
           }
           if (simple) {
-            rows = await back.mongoRead(collection2, { $and: [ { method: 1 }, { date: { $gt: obj.proposal } } ] }, { selfMongo: PYTHONMONGOC });
+            rows = await back.mongoRead(collection2, { $and: [ { method: 1 }, { date: { $gt: greateStandard } } ] }, { selfMongo: PYTHONMONGOC });
             rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
             for (let i of rows) {
               if (i.who.business.replace(/-/g, '') === business) {
@@ -783,7 +790,8 @@ BackWorker.prototype.designerCalculation = async function () {
           obj.receipt = free ? true : boo;
         }
         for (let obj of remain) {
-          rows = await back.mongoRead(collection, { date: { $gt: obj.firstCalculation } }, { selfMongo: PYTHONMONGOC });
+          greateStandard = (obj.firstCalculation.valueOf() >= agoValue ? obj.firstCalculation : ago);
+          rows = await back.mongoRead(collection, { date: { $gt: greateStandard } }, { selfMongo: PYTHONMONGOC });
           rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
           boo = false;
           for (let i of rows) {
@@ -797,7 +805,7 @@ BackWorker.prototype.designerCalculation = async function () {
             }
           }
           if (simple) {
-            rows = await back.mongoRead(collection2, { $and: [ { method: 1 }, { date: { $gt: obj.firstCalculation } } ] }, { selfMongo: PYTHONMONGOC });
+            rows = await back.mongoRead(collection2, { $and: [ { method: 1 }, { date: { $gt: greateStandard } } ] }, { selfMongo: PYTHONMONGOC });
             rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
             for (let i of rows) {
               if (i.who.business.replace(/-/g, '') === business) {
