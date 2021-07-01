@@ -690,7 +690,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
-  //POST - robot will do
+  //POST - printer
   funcObj.post_printer = {
     link: [ "/printer", "/print" ],
     func: function (req, res) {

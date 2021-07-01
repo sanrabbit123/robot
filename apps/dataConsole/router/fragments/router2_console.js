@@ -1654,8 +1654,8 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
           second: Number(second),
         };
         command = [ "webProposal", proid ];
-        // message = await coreRequest("timer", { command, time });
-        await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
+        message = await coreRequest("timer", { command, time });
+        // await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "done" }));

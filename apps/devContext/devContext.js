@@ -56,9 +56,7 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
-    // await back.setInfoObj({ getMode: false })
-    // await back.setMemberObj({ getMode: false })
-
+    // await ghostRequest("/print");
 
 
 
@@ -93,7 +91,7 @@ DevContext.prototype.launching = async function () {
     //   arr.push(tempArr);
     // }
 
-    
+
 
 
 
@@ -1035,9 +1033,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박은경",
-    //     designer: "이혜진",
-    //     link: "https://drive.google.com/drive/folders/1JzGhpM15G4S9G1Aq6PxcppNPl6lyubxE",
+    //     client: "조가비",
+    //     designer: "정다연",
+    //     link: "https://drive.google.com/drive/folders/1NteGsjIgCOZ8RCkzB7w02Vmk0FLAdQWR",
     //   },
     // ]);
 

@@ -145,12 +145,16 @@ Robot.prototype.proposalMaker = function (button, arg) {
         cliid = project.cliid;
         return back.getClientById(cliid);
       }).then(function (client) {
-        name = client.name;
-        phone = client.phone;
+        // name = client.name;
+        // phone = client.phone;
+        name = "배창규";
+        phone = "010-2747-3403";
         kakaoInstance = new KakaoTalk();
         return kakaoInstance.ready();
       }).then(function () {
-        return kakaoInstance.sendTalk("designerProposal", "배창규", "010-2747-3403", { client: name, host, path, proid });
+        return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
+      }).then(function () {
+        return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": (new Date()) } ]);
       }).then(function () {
         instance.mother.slack_bot.chat.postMessage({ text: name + " 고객님께 제안서 알림톡을 전송하였습니다!\n" + host + "/" + path + "?proid=" + proid, channel: "#error_log" });
         console.log("web proposal done", name, phone, proid);

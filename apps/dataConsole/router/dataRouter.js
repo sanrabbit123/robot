@@ -2189,8 +2189,8 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
           second: Number(second),
         };
         command = [ "webProposal", proid ];
-        // message = await coreRequest("timer", { command, time });
-        await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
+        message = await coreRequest("timer", { command, time });
+        // await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
 
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ message: "done" }));
@@ -3328,9 +3328,11 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   obj.func = async function (req, res) {
     try {
       res.set({ "Content-Type": "application/json" });
-      const { cliid, proid, desid, name, phone, designer } = req.body;
+      let { cliid, proid, desid, name, phone, designer } = req.body;
+      name = "배창규";
+      phone = "010-2747-3403";
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#error_log" });
-      await instance.kakao.sendTalk("designerSelect", "배창규", "010-2747-3403", {
+      await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
         designer: designer,
         host: address.frontinfo.host,
