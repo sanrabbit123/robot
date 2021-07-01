@@ -3238,8 +3238,8 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   }
   processBlockPaddingBottom = <%% 16, 16, 16, 16, 0.5 %%>;
 
-  amountTextVisual = <%% 3, 3, 3, 3, 0.9 %%>;
-  amountTextTop = <%% 20, 20, 20, 18, 0.7 %%>;
+  amountTextVisual = <%% 3, 3, 3, 3, 0.8 %%>;
+  amountTextTop = <%% 20, 20, 20, 18, 0.1 %%>;
 
   [ whiteBlock, wordsTable ] = createNodes([
     {
@@ -3605,11 +3605,12 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
               text: "약 " + String(serviceObj.methods.contents[i].amount) + "일 소요",
               style: {
                 position: "absolute",
-                left: desktop ? String(1) + ea : String(serviceObj.methods.contents[i].mobileLeft) + ea,
+                left: desktop ? String(1) + ea : "",
                 fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
                 fontWeight: String(400),
                 lineHeight: String(1.5),
                 top: String(amountTextTop) + ea,
+                right: mobile ? String(0) + ea : "",
                 color: colorChip.green,
               }
             }
