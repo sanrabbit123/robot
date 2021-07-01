@@ -2177,23 +2177,30 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         res.send(JSON.stringify(resultObj));
 
       } else if (req.url === "/createProposalDocument") {
-        const { year, month, date, hour, minute, second, proid } = req.body;
-        let message, command, time;
 
-        time = {
-          year: Number(year),
-          month: Number(month),
-          date: Number(date),
-          hour: Number(hour),
-          minute: Number(minute),
-          second: Number(second),
-        };
-        command = [ "webProposal", proid ];
-        message = await coreRequest("timer", { command, time });
-        // await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
+        const { proid } = req.body;
+        const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid;
+        if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
+          const { year, month, date, hour, minute, second } = req.body;
+          let message, command, time;
+          time = {
+            year: Number(year),
+            month: Number(month),
+            date: Number(date),
+            hour: Number(hour),
+            minute: Number(minute),
+            second: Number(second),
+          };
+          command = [ "webProposal", proid ];
+          message = await coreRequest("timer", { command, time });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ link: proposalLink }));
+        } else {
+          await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ link: proposalLink }));
+        }
 
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ message: "done" }));
       }
 
     } catch (e) {
