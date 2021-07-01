@@ -145,10 +145,8 @@ Robot.prototype.proposalMaker = function (button, arg) {
         cliid = project.cliid;
         return back.getClientById(cliid);
       }).then(function (client) {
-        // name = client.name;
-        // phone = client.phone;
-        name = "배창규";
-        phone = "010-2747-3403";
+        name = client.name;
+        phone = client.phone;
         kakaoInstance = new KakaoTalk();
         return kakaoInstance.ready();
       }).then(function () {

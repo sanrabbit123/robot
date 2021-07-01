@@ -258,6 +258,21 @@ class WordsDictionary {
     }
     return result;
   }
+
+  getServiceWording() {
+    let obj;
+
+    obj = {
+      title: "홈리에종 서비스",
+      main: "디자이너와 새로운 방법으로 집을 꾸며보세요. 일단 시공부터 시작하는 방식이 아니라 공간, 시간, 예산을 어떻게 사용할지 <b%디자이너와 함께%b> 계획해서 건에 맞는 시공 범위를 정하고, 스타일링까지 마무리되어야 아늑하게 쉴 수 있는 공간을 경험하게 됩니다.",
+
+    };
+
+
+
+
+  }
+
 }
 
 const DesignerProposalJs = function () {
@@ -2725,7 +2740,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
     if (desktop) {
       if (num !== matrix.length - 1) {
         if (matrix[num + 1][0] !== '' && matrix[num][0] === '') {
-          div_clone.style.marginBottom = String(marginBottom * 5) + ea;
+          div_clone.style.marginBottom = String(marginBottom * 6) + ea;
         }
       }
     }
@@ -2852,6 +2867,296 @@ DesignerProposalJs.prototype.insertWordBox = function () {
 }
 
 DesignerProposalJs.prototype.insertCautionBox = function () {
+  const instance = this;
+  const { ea, media } = this;
+  const baseTong = this.baseTong;
+  const { topMargin, leftMargin } = this.whiteBoxNumbers;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  const words = new WordsDictionary();
+  const matrix = words.getCaution();
+  let whiteBlock;
+  let blockHeight, blockMarginBottom;
+  let wordsTable;
+  let marginBottom;
+  let nodeArr;
+  let wordSize, wordSpacing;
+  let box0Size, box1Size, box0Margin, box1Margin;
+  let top, bottom;
+  let grayHeight, grayTop, grayTong, grayTextScroll, grayTextTong, grayTextTop, grayTextLeft, grayTextSize;
+  let buttonTong, buttonHeight, buttonTongHeight;
+  let buttonOff = {}, buttonOn = {};
+  let finalBottom;
+
+  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
+  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
+
+  blockHeight = <%% 400, 400, 400, 400, 400 %%>;
+  blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
+  marginBottom = <%% 9, 9, 9, 9, 2 %%>;
+
+  wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+
+  box0Size = <%% 140, 140, 140, 120, 12 %%>;
+  box1Size = <%% 25, 25, 25, 25, 3 %%>;
+  box0Margin = <%% 55, 55, 55, 55, 3 %%>;
+  box1Margin = <%% 18, 18, 18, 18, 3 %%>;
+
+  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  grayTop = <%% topMargin - 4, topMargin - 4, topMargin - 4, topMargin - 4, 4.5 %%>;
+  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
+  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
+
+  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
+  buttonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
+
+  finalBottom = <%% -3, -4, -7, -9, 0 %%>;
+
+  [ whiteBlock, wordsTable ] = createNodes([
+    {
+      mother: baseTong,
+      style: {
+        position: "relative",
+        borderRadius: String(desktop ? 8 : 3) + "px",
+        width: String(100) + '%',
+        background: colorChip.white,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+        marginBottom: String(blockMarginBottom) + ea,
+        paddingTop: String(top) + ea,
+        paddingBottom: String(bottom) + ea,
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "relative",
+        marginLeft: String(desktop ? leftMargin : 0) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + '%',
+      }
+    }
+  ]);
+
+  for (let arr of matrix) {
+    nodeArr = [
+      {
+        mother: wordsTable,
+        style: {
+          position: "relative",
+          marginBottom: String(marginBottom) + ea,
+        }
+      }
+    ];
+
+    if (desktop) {
+      nodeArr.push({
+        mother: -1,
+        text: arr[0],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          width: String(box0Size) + ea,
+          marginRight: String(box0Margin) + ea,
+          fontWeight: String(600),
+          textAlign: "left",
+          color: colorChip.green,
+        }
+      });
+      nodeArr.push({
+        mother: -2,
+        text: arr[1],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          width: String(box1Size) + ea,
+          marginRight: String(box1Margin) + ea,
+          fontWeight: String(600),
+          color: colorChip.green,
+          textAlign: "right",
+        }
+      });
+      nodeArr.push({
+        mother: -3,
+        text: arr[2],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          width: "calc(100% - " + String(box0Size + box1Size + box0Margin + box1Margin) + ea + ")",
+          fontWeight: String(300),
+          textAlign: "left"
+        }
+      });
+    } else {
+      nodeArr.push({
+        mother: -1,
+        text: arr[0],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          left: String((this.subBoxMargin.left + 0.2)) + ea,
+          width: String(box0Size) + ea,
+          color: colorChip.green,
+        }
+      });
+      nodeArr.push({
+        mother: -2,
+        text: arr[2],
+        style: {
+          display: "inline-block",
+          fontSize: String(wordSize) + ea,
+          wordSpacing: String(wordSpacing) + "px",
+          position: "relative",
+          top: String(0) + ea,
+          verticalAlign: "top",
+          lineHeight: String(1.6),
+          left: String(box0Size - 3) + ea,
+          width: withOut(((this.subBoxMargin.left + 0.2) * 2) + box0Size + 4.5, ea),
+        }
+      });
+    }
+
+    createNodes(nodeArr);
+  }
+
+  [ grayTong, grayTextScroll, grayTextTong ] = createNodes([
+    {
+      mother: whiteBlock,
+      style: {
+        position: "relative",
+        left: String(desktop ? leftMargin : 4.5) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : withOut(4.5 * 2, ea),
+        marginTop: String(grayTop) + ea,
+        marginBottom: String(desktop ? 15 : 2.5) + ea,
+        height: String(grayHeight) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(3) + "px",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "absolute",
+        top: String(grayTextTop) + ea,
+        left: String(grayTextLeft) + ea,
+        width: withOut(grayTextLeft * 2, ea),
+        height: withOut(grayTextTop * 2, ea),
+        overflow: "scroll",
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        position: "absolute",
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(100) + '%',
+        height: "auto",
+        fontSize: String(grayTextSize) + ea,
+        fontWeight: String(300),
+        lineHeight: String(1.6),
+      }
+    },
+  ]);
+
+  [ buttonTong ] = createNodes([
+    {
+      mother: whiteBlock,
+      attribute: [
+        { toggle: "on" }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            if (buttonOn.style !== undefined) {
+              if (this.getAttribute("toggle") === "on") {
+                buttonOn.style.opacity = String(0);
+                this.setAttribute("toggle", "off");
+              } else {
+                buttonOn.style.opacity = String(1);
+                this.setAttribute("toggle", "on");
+              }
+            }
+          }
+        }
+      ],
+      style: {
+        position: "relative",
+        left: String(desktop ? leftMargin : 4.5) + ea,
+        width: desktop ? withOut(leftMargin * 2, ea) : withOut(4.5 * 2, ea),
+        marginBottom: String(finalBottom) + ea,
+        height: String(buttonTongHeight) + ea,
+        cursor: "pointer",
+      }
+    },
+  ]);
+
+  ajaxJson("/designerProposal_policy").then(function (res) {
+    const { policy, button } = res;
+    let bTags;
+
+    grayTextTong.insertAdjacentHTML("beforeend", policy);
+    bTags = grayTextTong.querySelectorAll("b");
+    for (let b of bTags) {
+      b.style.color = colorChip.black;
+      b.style.fontWeight = String(600);
+    }
+
+    [ buttonOff, buttonOn ] = createNodes([
+      {
+        mother: buttonTong,
+        mode: "svg",
+        source: button.off,
+        style: {
+          position: "absolute",
+          height: String(buttonHeight) + ea,
+          right: String(0) + ea,
+          top: String(0) + ea,
+        }
+      },
+      {
+        mother: buttonTong,
+        mode: "svg",
+        source: button.on,
+        style: {
+          position: "absolute",
+          height: String(buttonHeight) + ea,
+          right: String(0) + ea,
+          top: String(0) + ea,
+          background: colorChip.white,
+        }
+      },
+    ]);
+
+  }).catch(function (err) {
+    throw new Error(err);
+  });
+
+}
+
+DesignerProposalJs.prototype.insertServiceBox = function () {
   const instance = this;
   const { ea, media } = this;
   const baseTong = this.baseTong;
@@ -3450,10 +3755,8 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
   const instance = this;
   let name, phone;
-  // name = instance.client.name;
-  // phone = instance.client.phone;
-  name = "배창규";
-  phone = "010-2747-3403";
+  name = instance.client.name;
+  phone = instance.client.phone;
   this.mother.certificationBox(name, phone, async function (back, box) {
     try {
       await GeneralJs.ajaxJson({
@@ -3585,6 +3888,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     //insert contents
     this.insertInitBox();
     this.insertDesignerBoxes();
+    // this.insertServiceBox();
     this.insertWordBox();
     this.insertCautionBox();
     this.insertPannelBox();
