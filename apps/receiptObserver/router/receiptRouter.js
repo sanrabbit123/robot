@@ -302,7 +302,10 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
   obj.link = "/createStylingContract";
   obj.func = async function (req, res) {
     try {
-      const { proid } = req.body;
+      if (req.body.proid === undefined || req.body.contractName === undefined || req.body.contractAddress === undefined) {
+        throw new Error("invaild post");
+      }
+      const { proid, contractName, contractAddress } = req.body;
       const selfMongo = instance.mongo;
       const project = await back.getProjectById(proid, { selfMongo });
       const client = await back.getClientById(project.cliid, { selfMongo });
@@ -321,7 +324,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
 
       url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port) + "/form";
 
-      await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
+      await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName, contractAddress }, { headers: { "Content-type": "application/json" } });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",

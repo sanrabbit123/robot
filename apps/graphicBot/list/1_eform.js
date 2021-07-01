@@ -3,7 +3,7 @@ module.exports = function (proid, info) {
     "https://eform.io/signin",
     async function () {
       try {
-        const { requestNumber, client, project, designer } = equalJson(JSON.stringify(POSTCONST));
+        const { requestNumber, client, project, designer, contractName, contractAddress } = equalJson(JSON.stringify(POSTCONST));
         const { request, analytics } = client.requests[requestNumber];
         const today = new Date();
         const idId = "sign-in-id";
@@ -15,6 +15,18 @@ module.exports = function (proid, info) {
         let map;
         let tempArr;
         let data, raw;
+        let titleName;
+        let titleAddress;
+
+        titleName = client.name;
+        if (contractName.trim() !== "") {
+          titleName = contractName;
+        }
+
+        titleAddress = request.space.address;
+        if (contractAddress.trim() !== "") {
+          titleAddress = contractAddress;
+        }
 
         if (document.getElementById(idId) !== null) {
           await injectionInput(document.getElementById(idId), "info.eform.id");
@@ -46,8 +58,8 @@ module.exports = function (proid, info) {
         await sleep(1000);
 
         map = [
-          { id: "field_TEXT_5faa618f9da73962a9050ef4", value: client.name },
-          { id: "field_TEXT_5faa6196b3c0673961000001", value: request.space.address },
+          { id: "field_TEXT_5faa618f9da73962a9050ef4", value: titleName },
+          { id: "field_TEXT_5faa6196b3c0673961000001", value: titleAddress },
           { id: "field_TEXT_5faa618f9da73962a9050ef6", value: client.phone },
         ];
 
@@ -86,9 +98,9 @@ module.exports = function (proid, info) {
         }
 
         map = [
-          { id: "field_TEXT_5faa618f9da73962a9050ef5", value: client.name },
+          { id: "field_TEXT_5faa618f9da73962a9050ef5", value: titleName },
           { id: "field_TEXT_AREA_5faa618f9da73962a9050ef8", value: request.family },
-          { id: "field_TEXT_AREA_5faa618f9da73962a9050f04", value: request.space.address },
+          { id: "field_TEXT_AREA_5faa618f9da73962a9050f04", value: titleAddress },
           { id: "field_TEXT_5faa618f9da73962a9050f01", value: request.budget },
           { id: "field_TEXT_5faa618f9da73962a9050f02", value: designer.designer },
           { id: "field_TEXT_5faa618f9da73962a9050efb", value: request.space.contract },
@@ -118,10 +130,10 @@ module.exports = function (proid, info) {
         }
 
         map = [
-          { id: "field_TEXT_5faa618f9da73962a9050f16", value: client.name },
+          { id: "field_TEXT_5faa618f9da73962a9050f16", value: titleName },
           { id: "field_TEXT_5faa618f9da73962a9050f1a", value: client.phone },
-          { id: "field_TEXT_5faa61beb3c0673961000002", value: request.space.address },
-          { id: "field_TEXT_5faa618f9da73962a9050f19", value: client.name },
+          { id: "field_TEXT_5faa61beb3c0673961000002", value: titleAddress },
+          { id: "field_TEXT_5faa618f9da73962a9050f19", value: titleName },
         ];
 
         scrollTo(document.getElementById("canvasBox"), document.getElementById(map[0].id), document.getElementById("header").getBoundingClientRect().height * 3);
@@ -138,7 +150,7 @@ module.exports = function (proid, info) {
         await sleep(1000);
 
         tempArr = dateToString(today).split('-');
-        await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + client.name + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
+        await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + titleName + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
 
         tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
         while (tempArr.length < 3) {
@@ -146,7 +158,7 @@ module.exports = function (proid, info) {
           tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
         }
 
-        await injectionInput(tempArr[0], client.name, true);
+        await injectionInput(tempArr[0], titleName, true);
         await injectionInput(tempArr[1], client.email, true);
         await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
 
@@ -158,59 +170,59 @@ module.exports = function (proid, info) {
         }
         await clickElement(document.getElementById("react-select-9--option-3"));
 
-        await sleep(500);
-        document.querySelectorAll('.btn-router')[1].click();
-        await sleep(500);
-
-        while (document.querySelector(".confirm") === null) {
-          await sleep(500);
-        }
-        document.querySelector(".confirm").click();
-
-        await sleep(2000);
-
-        while (document.querySelector("ul.sc-kRqLsF") === null) {
-          await sleep(500);
-        }
-        while (document.querySelector("ul.sc-kRqLsF").children.length === 0) {
-          await sleep(500);
-        }
-        while (document.querySelectorAll("li.sc-iaUyKn").length === 0) {
-          await sleep(500);
-        }
-
-        document.querySelector("li.sc-iaUyKn").querySelector(".hTuXtU").children[1].click();
-        await sleep(500);
-
-        while (document.querySelector(".info-list") === null) {
-          await sleep(500);
-        }
-        await sleep(500);
-
-        tempArr = document.querySelector(".info-list").children;
-        data = {};
-        raw = [];
-        for (let dom of tempArr) {
-          raw.push(dom.textContent);
-        }
-        raw = raw.map((r) => { return r.split(':'); });
-        for (let arr of raw) {
-          if (/이름/gi.test(arr[0])) {
-            data.name = arr[1].trim();
-          }
-          if (/ID/gi.test(arr[0])) {
-            data.id = arr[1].trim();
-          }
-          if (/생성시간/gi.test(arr[0])) {
-            data.time = arr[1].trim();
-          }
-        }
-
-        data.requestNumber = requestNumber;
-        data.cliid = client.cliid;
-        data.proid = project.proid;
-
-        await ajaxPromise({ to: "python", path: "/receiveStylingContract", data, RECEIVECONST);
+        // await sleep(500);
+        // document.querySelectorAll('.btn-router')[1].click();
+        // await sleep(500);
+        //
+        // while (document.querySelector(".confirm") === null) {
+        //   await sleep(500);
+        // }
+        // document.querySelector(".confirm").click();
+        //
+        // await sleep(2000);
+        //
+        // while (document.querySelector("ul.sc-kRqLsF") === null) {
+        //   await sleep(500);
+        // }
+        // while (document.querySelector("ul.sc-kRqLsF").children.length === 0) {
+        //   await sleep(500);
+        // }
+        // while (document.querySelectorAll("li.sc-iaUyKn").length === 0) {
+        //   await sleep(500);
+        // }
+        //
+        // document.querySelector("li.sc-iaUyKn").querySelector(".hTuXtU").children[1].click();
+        // await sleep(500);
+        //
+        // while (document.querySelector(".info-list") === null) {
+        //   await sleep(500);
+        // }
+        // await sleep(500);
+        //
+        // tempArr = document.querySelector(".info-list").children;
+        // data = {};
+        // raw = [];
+        // for (let dom of tempArr) {
+        //   raw.push(dom.textContent);
+        // }
+        // raw = raw.map((r) => { return r.split(':'); });
+        // for (let arr of raw) {
+        //   if (/이름/gi.test(arr[0])) {
+        //     data.name = arr[1].trim();
+        //   }
+        //   if (/ID/gi.test(arr[0])) {
+        //     data.id = arr[1].trim();
+        //   }
+        //   if (/생성시간/gi.test(arr[0])) {
+        //     data.time = arr[1].trim();
+        //   }
+        // }
+        //
+        // data.requestNumber = requestNumber;
+        // data.cliid = client.cliid;
+        // data.proid = project.proid;
+        //
+        // await ajaxPromise({ to: "python", path: "/receiveStylingContract", data, RECEIVECONST);
 
       } catch (e) {
         console.log(e);
