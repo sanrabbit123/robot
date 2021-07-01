@@ -779,7 +779,8 @@ DesignerProposalJs.prototype.setBaseTong = function () {
 
 DesignerProposalJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { withOut } = GeneralJs;
+  const { withOut, returnGet } = GeneralJs;
+  const getObj = returnGet();
   const { client, ea, media, osException } = this;
   const mobile = media[4];
   const desktop = !mobile;
@@ -787,11 +788,19 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   const { request } = requests[0];
   const expectedToString = function (str) {
     const expected = new Date(str);
-    return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
+    if (getObj.mode === "test") {
+      return `00년 0월 0일`;
+    } else {
+      return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
+    }
   }
   const spaceToString = function (obj) {
     const { bathroom, room, valcony } = obj;
-    return `방 ${String(room)}${desktop ? "개" : ""}, 화장실 ${String(bathroom)}${desktop ? "개" : ""}`;
+    if (getObj.mode === "test") {
+      return `방 ${String(0)}${desktop ? "개" : ""}, 화장실 ${String(0)}${desktop ? "개" : ""}`;
+    } else {
+      return `방 ${String(room)}${desktop ? "개" : ""}, 화장실 ${String(bathroom)}${desktop ? "개" : ""}`;
+    }
   }
   let whiteBlock;
   let style;
@@ -4148,6 +4157,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
 
   if (getObj.mode === "test") {
     window.alert("검수 모드입니다!");
+    window.location.href = "https://home-liaison.com/payment.php?card=true";
   } else {
     this.mother.certificationBox(name, phone, async function (back, box) {
       try {
@@ -4266,6 +4276,13 @@ DesignerProposalJs.prototype.launching = async function (loading) {
 
     if (getObj.proid === undefined) {
       window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
+    }
+
+    if (proid === "p1806_aa01s" && getObj.mode !== "test") {
+      window.location.href = "https://home-liaison.com";
+    }
+    if (proid === "p1806_aa01s" && getObj.mode === "test") {
+      this.client.name = "홍길동";
     }
 
     //loading end
