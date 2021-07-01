@@ -307,7 +307,6 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
       }
       const { proid, contractName, contractAddress } = req.body;
       const selfMongo = instance.mongo;
-      instance.mother.slack_bot.chat.postMessage({ text: proid + contractName + contractAddress, channel: "#error_log" });
       const project = await back.getProjectById(proid, { selfMongo });
       const client = await back.getClientById(project.cliid, { selfMongo });
       const designer = await back.getDesignerById(project.desid, { selfMongo });
