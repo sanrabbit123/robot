@@ -160,7 +160,8 @@ class WordsDictionary {
         mother: "*주의 사항",
         children: [
           "계약한 서비스의 유형에서 서비스 유형 변경(시공 범위 추가) 및 기간 연장이 되고 있는 경우 디자인비가 추가됩니다.",
-          "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라 드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4 품목 중에서 셀렉은 가능합니다."
+          "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라 드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4 품목 중에서 셀렉은 가능합니다.",
+          "시공의 경우 공정별 계약은 진행하지 않습니다. 시공에 대해서는 계약한 업체에게 책임이 있고, 의사 소통과 AS, 업무 지시는 해당 업체의 담당자가 책임지고 진행합니다.",
         ]
       }
     ];
@@ -263,14 +264,7 @@ class WordsDictionary {
     let obj;
     obj = {
       name: "홈리에종 서비스",
-      contents: {
-        main: "디자이너와 새로운 방법으로 집을 꾸며보세요. 일단 시공부터 시작하는 방식이 아니라 공간, 시간, 예산을 어떻게 사용할 지 <b%디자이너와 함께%b> 계획해서 건에 맞는 시공 범위를 정하고, 스타일링까지 마무리되어야 아늑하게 쉴 수 있는 공간을 경험하게 됩니다.",
-        sub: [
-          "토탈 스타일링 이상은 시공의 복잡도, 난이도, 디자이너의 경력 등에 따라 시공사 가능 방식이 다릅니다. 제안서를 확인해주세요.",
-          "시공에 대해서 공정별 계약으로는 진행하지 않습니다. 하자보수, 업무 지시에 대한 책임 소재가 명확하지 않기 때문에 자재 발주, 일정 관리, 현장 정리 등을 책임지는 담당자가 있어야 하고, 디자이너는 자재 발주, 일정 관리, 현장 정리의 책임이 없습니다. 시공에 대해서는 계약한 업체에게 책임이 있고, 의사 소통은 해당 업체의 담당자가 진행합니다. (예: 홈리에종 시공사 계약시 홈리에종 책임으로 홈리에종 현장 소장님이 의사소통 진행)",
-          "디자이너는 시공 방향 제시 및 전체 마감재 선택, 결정한 디자인을 시공 담당자에게 업무 지시하는 디자인 감리의 책임이 있습니다.",
-        ],
-      },
+      contents: "디자이너와 새로운 방법으로 집을 꾸며보세요. 일단 시공부터 시작하는 방식이 아니라 공간, 시간, 예산을 어떻게 사용할 지 <b%디자이너와 함께%b> 계획해서 건에 맞는 시공 범위를 정하고, 스타일링까지 마무리되어야 아늑하게 쉴 수 있는 공간을 경험하게 됩니다.",
       items: {
         name: "제공 서비스",
         contents: [
@@ -3127,7 +3121,7 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
       });
       nodeArr.push({
         mother: -2,
-        text: arr[2],
+        text: "<b%-%b> " + arr[2],
         style: {
           display: "inline-block",
           fontSize: String(wordSize) + ea,
@@ -3138,6 +3132,10 @@ DesignerProposalJs.prototype.insertCautionBox = function () {
           lineHeight: String(1.6),
           left: String(box0Size - 3) + ea,
           width: withOut(((this.subBoxMargin.left + 0.2) * 2) + box0Size + 4.5, ea),
+          color: colorChip.black,
+        },
+        bold: {
+          color: colorChip.green,
         }
       });
     }
@@ -3313,9 +3311,9 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  box0Size = <%% 140, 140, 120, 82, 12 %%>;
-  box1Size = <%% 25, 25, 0, 0, 3 %%>;
-  box0Margin = <%% 55, 55, 55, 55, 3 %%>;
+  box0Size = <%% 140, 120, 120, 82, 12 %%>;
+  box1Size = <%% 25, 0, 0, 0, 3 %%>;
+  box0Margin = <%% 55, 55, 55, 45, 3 %%>;
   box1Margin = <%% 18, 18, 0, 0, 3 %%>;
 
   grayHeight = <%% 180, 180, 180, 180, 42 %%>;
@@ -3348,12 +3346,12 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   methodsThirdBlockBottom = <%% 9, 9, 9, 9, 1 %%>;
   methodsTextVisual = <%% 0, 0, 1, 1, 0 %%>;
 
-  processBlockMarginLeft = 8;
-  processBlockHeight = 22;
-  processArrowWidth = 25;
-  processArrowTop = 7;
-  processThirdBlockBottom = <%% 4, 4, 4, 4, 1 %%>;
-  processBlockPaddingBottom = <%% 16, 16, 16, 10, 0.5 %%>;
+  processBlockMarginLeft = <%% 8, 8, 8, 7, 1.5 %%>;
+  processBlockHeight = <%% 22, 22, 22, 18, 3 %%>;
+  processArrowWidth = <%% 25, 25, 25, 24, 5 %%>;
+  processArrowTop = <%% 7, 7, 7, 5, 1.3 %%>;
+  processThirdBlockBottom = <%% 4, 4, 4, 2, 0.5 %%>;
+  processBlockPaddingBottom = <%% 16, 16, 16, 16, 0.5 %%>;
 
   [ whiteBlock, wordsTable ] = createNodes([
     {
@@ -3429,7 +3427,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
     });
     nodeArr.push({
       mother: -3,
-      text: serviceObj.contents.main,
+      text: serviceObj.contents,
       style: {
         display: "inline-block",
         fontSize: String(wordSize) + ea,
@@ -3898,7 +3896,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
           fontWeight: String(300),
           color: colorChip.black,
           marginRight: String(processBlockMarginLeft) + ea,
-          marginBottom: String(j === serviceObj.process.contents[i].contents.length - 1 ? 0 : processThirdBlockBottom) + ea,
+          marginBottom: String(processThirdBlockBottom) + ea,
           lineHeight: String(1.5),
         },
         bold: {
@@ -3915,7 +3913,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
             height: String(processBlockHeight) + ea,
             marginRight: String(processBlockMarginLeft) + ea,
             verticalAlign: "top",
-            marginBottom: String(j === serviceObj.process.contents[i].contents.length - 1 ? 0 : processThirdBlockBottom) + ea,
+            marginBottom: String(processThirdBlockBottom) + ea,
           },
           children: [
             {
