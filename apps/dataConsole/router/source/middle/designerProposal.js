@@ -3754,27 +3754,33 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 
 DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
   const instance = this;
+  const getObj = GeneralJs.returnGet();
   let name, phone;
   name = instance.client.name;
   phone = instance.client.phone;
-  this.mother.certificationBox(name, phone, async function (back, box) {
-    try {
-      await GeneralJs.ajaxJson({
-        cliid: instance.client.cliid,
-        proid: instance.project.proid,
-        desid: desid,
-        name: name,
-        phone: phone,
-        designer: designer,
-      }, "/designerProposal_submit");
-      await GeneralJs.sleep(500);
-      document.body.removeChild(box);
-      document.body.removeChild(back);
-      window.location.href = "https://home-liaison.com/payment.php?card=true";
-    } catch (e) {
-      console.log(e);
-    }
-  });
+
+  if (getObj.mode === "test") {
+    window.alert("검수 모드입니다!");
+  } else {
+    this.mother.certificationBox(name, phone, async function (back, box) {
+      try {
+        await GeneralJs.ajaxJson({
+          cliid: instance.client.cliid,
+          proid: instance.project.proid,
+          desid: desid,
+          name: name,
+          phone: phone,
+          designer: designer,
+        }, "/designerProposal_submit");
+        await GeneralJs.sleep(500);
+        document.body.removeChild(box);
+        document.body.removeChild(back);
+        window.location.href = "https://home-liaison.com/payment.php?card=true";
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  }
 }
 
 DesignerProposalJs.prototype.launching = async function (loading) {

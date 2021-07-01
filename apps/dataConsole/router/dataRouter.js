@@ -3336,8 +3336,6 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
     try {
       res.set({ "Content-Type": "application/json" });
       let { cliid, proid, desid, name, phone, designer } = req.body;
-      name = "배창규";
-      phone = "010-2747-3403";
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#error_log" });
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
