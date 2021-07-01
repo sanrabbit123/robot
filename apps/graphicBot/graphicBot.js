@@ -434,6 +434,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     let tempArr, tempString;
     let frontFirst, frontEnd;
     let frontFirstLaunching;
+    let frontWaitingNumber;
 
     frontFirst = "\n\n";
     if (typeof arg === "string") {
@@ -466,6 +467,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontEnd += "await ajaxPromise({ to: 0, data: 0 }, ENDCONST);\n\n";
 
     frontFirstLaunching = 0;
+    frontWaitingNumber = 0;
 
     for (let i of arr) {
       if (Array.isArray(i)) {
@@ -531,14 +533,21 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         instance.front = 1;
         await this.pressKey("enter");
         frontFirstLaunching = 1;
+        frontWaitingNumber = 0;
         while (instance.front === 1) {
           console.log("front waiting...");
           await sleep(500);
+          frontWaitingNumber = frontWaitingNumber + 1;
+          if (frontWaitingNumber >= (2 * 60 * 60)) {
+            await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
+            await sleep(500);
+            return false;
+          }
         }
       }
     }
 
-    return "done";
+    return true;
   } catch (e) {
     console.log(e);
   }
@@ -566,7 +575,7 @@ GraphicBot.prototype.positionWatch = async function () {
 
 GraphicBot.prototype.startWork = function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, sleep } = this.mother;
   const isJson = function (str) {
     if (typeof str !== "string") {
       throw new Error("must be string input");
@@ -597,6 +606,7 @@ GraphicBot.prototype.startWork = function () {
       let workingList_name, workingList;
       let tempArr;
       let contents;
+      let workSuccess;
       workingList_name = await fileSystem(`readDir`, [ instance.tong ]);
       workingList_name = workingList_name.filter((n) => { return (new RegExp("^g_")).test(n); });
       workingList_name.sort((a, b) => { return Number(a.split('_')[2]) - Number(b.split('_')[2]); });
@@ -609,9 +619,15 @@ GraphicBot.prototype.startWork = function () {
       }
       for (let { task, contents } of workingList) {
         if (isJson(contents)) {
-          await instance.botOrders(task, JSON.parse(contents));
+          do {
+            workSuccess = await instance.botOrders(task, JSON.parse(contents));
+            await sleep(500);
+          } while (!workSuccess);
         } else {
-          await instance.botOrders(task, contents);
+          do {
+            workSuccess = await instance.botOrders(task, contents);
+            await sleep(500);
+          } while (workSuccess);
         }
       }
       instance.doing = 0;
