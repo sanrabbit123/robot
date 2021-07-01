@@ -3431,7 +3431,8 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
   // name = instance.client.name;
   // phone = instance.client.phone;
   name = "배창규";
-  name = "010-2747-3403";
+  phone = "010-2747-3403";
+  window.alert(name, phone);
   this.mother.certificationBox(name, phone, async function (back, box) {
     try {
       await GeneralJs.ajaxJson({
