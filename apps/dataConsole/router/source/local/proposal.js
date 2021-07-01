@@ -2776,7 +2776,7 @@ ProposalJs.prototype.list_menu = function () {
       { key: "pending", name: "작성중", },
       { key: "confirm", name: "컨펌 요청", },
       { key: "make", name: "제작 요청", },
-      { key: "send", name: "발송 대기", },
+      { key: "send", name: "발송 예약", },
       { key: "complete", name: "완료", },
       { key: "selected", name: "고객 선택", },
       { key: "delete", name: "삭제", }
@@ -2838,6 +2838,14 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       }
       break;
     case "make":
+      return_func = async function (e) {
+        const { link } = await GeneralJs.ajaxJson("proid=" + proid, "/createProposalDocument");
+        GeneralJs.blankHref(link);
+        await mother_name(obj);
+        reset_event(this);
+      }
+      break;
+    case "send":
       return_func = async function (e) {
         const recommendDate = function () {
           let dateObj = new Date();
@@ -3175,6 +3183,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                       proid,
                     };
                     await GeneralJs.ajaxJson(timeObj, "/createProposalDocument");
+                    window.alert(`${String(timeObj.month)}월 ${String(timeObj.date)}일 ${String(timeObj.hour)}시 ${String(timeObj.minute)}분에 링크 알림톡 발송이 예약되었습니다!`);
                     await mother_name(obj);
                     reset_event(that);
                     totalContents.removeChild(removeTargets[0]);
@@ -3263,12 +3272,6 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
           dateDom1.setAttribute("value", String(month) + "월 " + String(date) + "일");
         });
         calendarBox.appendChild(calendar.calendarBase);
-      }
-      break;
-    case "send":
-      return_func = async function (e) {
-        await mother_name(obj);
-        reset_event(this);
       }
       break;
     case "complete":
