@@ -465,7 +465,7 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
     ]
   }
   */
-  let dom_clone, targetStyle, ea, ratio, temp, boldObject, children;
+  let dom_clone, targetStyle, ea, ratio, temp, boldObject, underObject, children;
   children = [];
   if (mode === undefined && source === undefined && style === undefined) {
     throw new Error("arguments must be mode(dom node name), style");
@@ -558,6 +558,27 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
               }
               style.text = style.text.replace(/\<b\%/gi, "<b style=\"" + boldObject + "\">");
               style.text = style.text.replace(/\%b\>/gi, "</b>");
+            }
+          }
+          if (/\<u\%/gi.test(style.text)) {
+            if (style.under === undefined || typeof style.under !== "object") {
+              throw new Error("under option needs");
+            } else {
+              underObject = "";
+              for (let b in style.under) {
+                if (b === "fontSize") {
+                  underObject += "font-size";
+                } else if (b === "fontWeight") {
+                  underObject += "font-weight";
+                } else {
+                  underObject += b;
+                }
+                underObject += ':';
+                underObject += style.under[b];
+                underObject += ';';
+              }
+              style.text = style.text.replace(/\<u\%/gi, "<b style=\"" + underObject + "\">");
+              style.text = style.text.replace(/\%u\>/gi, "</b>");
             }
           }
           if (mode !== "textarea") {

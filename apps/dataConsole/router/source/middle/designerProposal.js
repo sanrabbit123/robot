@@ -132,6 +132,7 @@ class WordsDictionary {
           "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
           "가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 디자인 옵션(컬러 등) 등에 대해서 의논할 수 있습니다.",
           "생활 용품과 식기의 경우는 제안하지 않습니다.",
+          "거주 중인 경우 가구 이동, 수리, 폐기 등은 디자이너가 하지 않습니다.",
         ]
       },
       {
@@ -150,10 +151,25 @@ class WordsDictionary {
         ]
       },
       {
+        mother: "촬영 및 인터뷰 안내",
+        children: [
+          "서비스가 완료되면 촬영과 인터뷰를 진행합니다.(필수)",
+          "홈리에종과 디자이너는 공간의 사진과 인터뷰를 활용할 수 있습니다."
+        ]
+      },
+      {
         mother: "배송 및 설치 안내",
         children: [
           "배송된 제품의 수령, 언박싱, 조립, 1차 배치는 고객님께서 진행하시게 됩니다.",
           "제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다."
+        ]
+      },
+      {
+        mother: "결제 및 증빙 안내",
+        children: [
+          "현장 미팅 후에는 계약금을 환불하지 않습니다.",
+          "서비스 계약 후 이유 없이 서비스를 중단하거나 환불할 수 없습니다.",
+          "현금영수증(전화번호) 또는 전자세금계산서를 발행합니다."
         ]
       },
       {
@@ -246,23 +262,19 @@ class WordsDictionary {
 
   getSubWording() {
     let arr = [
-      "<b%*%b> 홈리에종의 홈스타일링 서비스는 <b%“인테리어의 완성된 상태”를 가구/패브릭/조명/소품이 다 자리 잡은 상태라고 정의%b>합니다.",
-      "<b%*%b> 홈리에종은 ‘디자인비’를 먼저 받는 방식으로 진행됩니다. <b%디자이너의 시간과 경험의 전문성에 대한 무형 서비스의 특징상%b> 미리 디자이너의 작업 기간을 확보하고 홈리에종은 마무리 단계를 확인하고 최종 정산함으로써 끝까지 책임감 있는 디자인 프로세스가 유지되도록 케어합니다.",
-      "<b%*%b> 턴키 공사 업체를 통해 리모델링을 하는 경우 소요되는 예산, 기간, 정성에 비해 기대하는 결과를 얻기 어렵습니다. <b%바탕 공사만 진행하고 가구/패브릭/조명/소품 등의 내부 스타일링은 전부 고객님의 몫%b>입니다. 그리고 턴키 디자인 업체의 경우에는 가격이 매우 높은 편이고, 일정을 잡기 어렵습니다.",
-      "<b%*%b> 한 명의 디자이너와 함께 적합한 시공과 스타일링을 끝까지 함께 하여, <b%합리적인 예산 운영과 높은 디자인적 완성도로%b> 아늑하게 누릴 수 있는 주거를 완성하는 것이 가장 좋은 방법입니다."
+      "<b%* 홈리에종%b>의 모든 서비스는 ‘인테리어의 완성된 상태’를 <u%가구/패브릭/조명/소품이 다 자리 잡은 상태%u>라고 정의합니다.",
+      "<b%*%b> 홈리에종은 ‘디자인비’를 먼저 받는 방식으로 진행됩니다. <b%디자이너의 시간과 경험의 전문성%b>에 대한 <b%무형 서비스%b>의 특징상 미리 <u%디자이너의 작업 기간을 확보%u>하고 홈리에종은 <u%마무리 단계를 확인하고 최종 정산함%u>으로써 끝까지 책임감 있는 디자인 프로세스가 유지되도록 케어합니다.",
+      "<b%*%b> 턴키 공사 업체를 통해 리모델링을 하는 경우 소요되는 예산, 기간, 정성에 비해 기대하는 결과를 얻기 어렵습니다. 바탕 공사만 진행하고 가구/패브릭/조명/소품 등의 내부 스타일링은 전부 고객님의 몫입니다. 그리고 턴키 디자인 업체의 경우에는 가격이 매우 높은 편이고, 일정을 잡기 어렵습니다.",
+      "<b%* 한 명의 디자이너%b>와 함께 <u%적합한 시공과 스타일링을 끝까지 함께 하여%u>, 합리적인 예산 운영과 높은 디자인적 완성도로 아늑하게 누릴 수 있는 주거를 완성하는 것이 가장 좋은 방법입니다."
     ];
-    let result = [];
-    for (let i of arr) {
-      result.push(this.colorMatching(i));
-    }
-    return result;
+    return arr;
   }
 
   getServiceWording() {
     let obj;
     obj = {
       name: "홈리에종 서비스",
-      contents: "디자이너와 새로운 방법으로 집을 꾸며보세요. 일단 시공부터 시작하고 보는 것이 아니라 공간, 시간, 예산을 어떻게 사용할지 <b%디자이너와 함께%b> 계획해서 <b%여건에 맞는 시공 범위%b>를 정하고, <b%스타일링까지 마무리%b>하여 오롯이 쉴 수 있는 나만의 공간 경험을 전해드립니다.",
+      contents: "디자이너와 새로운 방법으로 집을 꾸며보세요. 일단 시공부터 시작하고 보는 것이 아니라 공간, 시간, 예산을 어떻게 사용할지 <b%디자이너와 함께%b> 계획해서 <u%여건에 맞는 시공 범위%u>를 정하고, <u%스타일링까지 마무리%u>하여 오롯이 쉴 수 있는 나만의 공간 경험을 전해드립니다.",
       items: {
         name: "제공 서비스",
         contents: [
@@ -284,8 +296,13 @@ class WordsDictionary {
         contents: [
           {
             name: "홈퍼니싱",
-            contents: "시공 전혀 없이 기성 가구, 패브릭, 소품 등으로 제안",
-            children: [],
+            contents: "시공은 전혀 없이 기성 가구, 패브릭, 소품 등으로 제안",
+            children: [
+              "위치 변동 없는 조명 교체 포함",
+              "빌트인 가구 제작은 시공에 포함, 빌트인 가구 제작 시 홈스타일링 유형"
+            ],
+            amount: 45,
+            mobileLeft: 10.6,
           },
           {
             name: "홈스타일링",
@@ -295,16 +312,20 @@ class WordsDictionary {
               "공정 예시 : 도배, 필름, 중문, 조명 교체, 냉장고장 리폼, 타일 덧방 등",
               "고객님이 알아보신 시공사, 홈리에종 시공사 중에 선택 가능",
             ],
+            amount: 60,
+            mobileLeft: 13.2,
           },
           {
             name: "토탈 스타일링",
             contents: "욕실, 싱크대 교체를 포함한 전체 시공에 스타일링 마무리",
             children: [
-              "욕실 혹은 싱크대 교체 중 한 가지에 해당하는 경우",
+              "욕실 혹은 싱크대 교체 중 한 가지라도 해당하는 경우",
               "철거 제외 6가지 이상의 공정이 포함되는 경우",
               "공정 예시 : 목공사, 도배, 필름, 목공사, 중문, 조명 교체, 가구 제작, 타일, 금속 등",
               "고객님이 알아보신 시공사, 홈리에종 시공사 혹은 디자이너 시공사에서 시공 가능 (디자이너에 따라 가능한 방식이 다름)"
             ],
+            amount: 75,
+            mobileLeft: 16.1,
           },
           {
             name: "엑스트라 스타일링",
@@ -313,6 +334,8 @@ class WordsDictionary {
               "주방 구조 변경, 알파룸 혹은 발코니 디자인, 게이트 등 공간에 따른 디자인 시공",
               "홈리에종 시공사 혹은 디자이너 시공사에서 시공 가능 (디자이너에 따라 가능한 방식이 다름)",
             ],
+            amount: 90,
+            mobileLeft: 20.9,
           },
         ]
       },
@@ -2769,7 +2792,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
-  const { createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
   const words = new WordsDictionary();
   const matrix = words.getMatrix();
   const subWords = words.getSubWording();
@@ -2950,36 +2973,30 @@ DesignerProposalJs.prototype.insertWordBox = function () {
     whiteBlock.appendChild(grayBar);
 
     for (let z = 0; z < subWords.length; z++) {
-      wordBlock = GeneralJs.nodes.div.cloneNode(true);
-      wordBlock.insertAdjacentHTML("beforeend", subWords[z]);
-      style = {
-        position: "relative",
-        left: String(leftMargin) + ea,
-        width: "calc(100% - " + String(leftMargin * 2) + ea + ")",
-        fontSize: String(wordSize) + ea,
-        fontWeight: String(400),
-        wordSpacing: String(wordSpacing) + "px",
-        verticalAlign: "top",
-        lineHeight: String(1.6),
-        marginBottom: String(marginBottom * 1.5) + ea,
-      };
-      if (mobile) {
-        style = {
+      wordBlock = createNode({
+        mother: whiteBlock,
+        text: subWords[z],
+        style: {
           position: "relative",
-          left: String(0) + ea,
-          width: String(100) + '%',
+          left: String(desktop ? leftMargin : 0) + ea,
+          width: mobile ? String(100) + '%' : "calc(100% - " + String(leftMargin * 2) + ea + ")",
           fontSize: String(wordSize) + ea,
           fontWeight: String(400),
           wordSpacing: String(wordSpacing) + "px",
           verticalAlign: "top",
           lineHeight: String(1.6),
           marginBottom: String(marginBottom * 1.5) + ea,
-        };
-      }
-      for (let i in style) {
-        wordBlock.style[i] = style[i];
-      }
-      whiteBlock.appendChild(wordBlock);
+          color: colorChip.black,
+        },
+        bold: {
+          fontWeight: String(600),
+          color: colorChip.green,
+        },
+        under: {
+          "text-decoration": "underline",
+          color: colorChip.green,
+        },
+      });
     }
 
   }
@@ -3140,6 +3157,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   let processBlockHeight;
   let processBlockPaddingBottom;
   let processThirdBlockBottom;
+  let amountTextVisual, amountTextTop;
 
   top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
   bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
@@ -3210,6 +3228,9 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
     }
   }
   processBlockPaddingBottom = <%% 16, 16, 16, 16, 0.5 %%>;
+
+  amountTextVisual = <%% 3, 3, 3, 3, 0.9 %%>;
+  amountTextTop = <%% 20, 20, 20, 18, 0.7 %%>;
 
   [ whiteBlock, wordsTable ] = createNodes([
     {
@@ -3302,6 +3323,10 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
       bold: {
         fontWeight: String(600),
         color: colorChip.green,
+      },
+      under: {
+        "text-decoration": "underline",
+        color: colorChip.green,
       }
     });
   } else {
@@ -3325,7 +3350,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
     });
     nodeArr.push({
       mother: -2,
-      text: serviceObj.contents.main,
+      text: serviceObj.contents,
       style: {
         display: "block",
         fontSize: String(wordSize) + ea,
@@ -3339,6 +3364,10 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
       },
       bold: {
         fontWeight: String(600),
+        color: colorChip.green,
+      },
+      under: {
+        "text-decoration": "underline",
         color: colorChip.green,
       }
     });
@@ -3561,6 +3590,18 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
                 fontWeight: String(600),
                 lineHeight: String(1.5),
                 color: colorChip.black,
+              }
+            },
+            {
+              text: "약 " + String(serviceObj.methods.contents[i].amount) + "일 소요",
+              style: {
+                position: "absolute",
+                left: desktop ? String(1) + ea : String(serviceObj.methods.contents[i].mobileLeft) + ea,
+                fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
+                fontWeight: String(400),
+                lineHeight: String(1.5),
+                top: String(amountTextTop) + ea,
+                color: colorChip.green,
               }
             }
           ]
