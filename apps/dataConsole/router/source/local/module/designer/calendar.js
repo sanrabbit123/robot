@@ -225,7 +225,7 @@ DesignerJs.prototype.calendarMatrix = function () {
       }
     }
   }
-  const length = 8;
+  const length = 9;
   let past, future;
   let date, week;
   let dateMatrix;
@@ -243,7 +243,7 @@ DesignerJs.prototype.calendarMatrix = function () {
   date = (((((future - past) / 1000) / 60) / 60) / 24);
   week = Math.floor(date / 7);
 
-  today = new Date(2021, 4, 13);
+  today = new Date();
   dateMatrix = [];
   for (let i = 0; i < week; i++) {
     tempArr = [];
@@ -2381,7 +2381,7 @@ DesignerJs.prototype.calendarView = async function () {
     this.calendarBase(getObj.desid === undefined ? null : getObj.desid);
     this.calendarSearchEvent();
 
-    await sleep(800);
+    await sleep(500);
 
     loading.parentNode.removeChild(loading);
     this.totalMother.style.animation = "fadeup 0.3s ease forwards";
