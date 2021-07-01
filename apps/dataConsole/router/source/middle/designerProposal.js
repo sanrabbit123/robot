@@ -3360,6 +3360,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   if (desktop) {
     if (!isMac()) {
       processThirdBlockBottom = processThirdBlockBottom - 2;
+      processArrowWidth = processArrowWidth - 2;
     }
   }
   processBlockPaddingBottom = <%% 16, 16, 16, 16, 0.5 %%>;
