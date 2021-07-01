@@ -3357,6 +3357,11 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   processArrowWidth = <%% 25, 25, 25, 24, 5 %%>;
   processArrowTop = <%% 7, 7, 7, 5, 1.3 %%>;
   processThirdBlockBottom = <%% 4, 4, 4, 2, 0.5 %%>;
+  if (desktop) {
+    if (!isMac()) {
+      processThirdBlockBottom = processThirdBlockBottom - 2;
+    }
+  }
   processBlockPaddingBottom = <%% 16, 16, 16, 16, 0.5 %%>;
 
   [ whiteBlock, wordsTable ] = createNodes([
