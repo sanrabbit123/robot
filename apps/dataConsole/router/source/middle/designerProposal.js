@@ -3341,8 +3341,13 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   methodsBlockBottom = <%% 16, 16, 16, 16, 3.5 %%>;
   if (desktop) {
     if (!isMac()) {
-      methodsBlockPaddingBottom = methodsBlockPaddingBottom - 4;
-      methodsBlockBottom = methodsBlockBottom + 2;
+      if (media[3]) {
+        methodsBlockPaddingBottom = methodsBlockPaddingBottom - 2;
+        methodsBlockBottom = methodsBlockBottom + 1;
+      } else {
+        methodsBlockPaddingBottom = methodsBlockPaddingBottom - 4;
+        methodsBlockBottom = methodsBlockBottom + 2;
+      }
     }
   }
   methodsSecondBlockWidth = <%% 370, 170, 170, 116, 80 %%>;
@@ -3360,7 +3365,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   if (desktop) {
     if (!isMac()) {
       processThirdBlockBottom = processThirdBlockBottom - 2;
-      processArrowWidth = processArrowWidth - 2;
+      processArrowTop = processArrowTop - 2;
     }
   }
   processBlockPaddingBottom = <%% 16, 16, 16, 16, 0.5 %%>;
