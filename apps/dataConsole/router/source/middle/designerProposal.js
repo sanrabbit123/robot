@@ -3266,7 +3266,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, isMac } = GeneralJs;
   const words = new WordsDictionary();
   const serviceObj = words.getServiceWording();
   let whiteBlock;
@@ -3327,7 +3327,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
 
   finalBottom = <%% -3, -4, -7, -9, 0 %%>;
 
-  whiteBlockHeight = <%% 26, 26, 24, 20, 4.6 %%>;
+  whiteBlockHeight = <%% (isMac() ? 26 : 25), (isMac() ? 26 : 25), (isMac() ? 24 : 23), (isMac() ? 20 : 19), 4.6 %%>;
   whiteBlockMargin = <%% 6, 6, 6, 4, 1 %%>;
   whiteBlockPaddingTop = <%% 6, 6, 6, 4, 1 %%>;
   whiteBlockPaddingLeft = <%% 11, 11, 11, 9, 2 %%>;
@@ -3336,9 +3336,15 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   methodsTongTop = <%% 18, 18, 18, 18, 3.2 %%>;
   methodsTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   methodsTongLeft = <%% 24, 24, 22, 22, 4 %%>;
-  methodsBlockBottom = <%% 16, 16, 16, 16, 3.5 %%>;
   methodsTitleWidth = <%% 155, 140, 128, 110, 20 %%>;
   methodsBlockPaddingBottom = <%% 20, 20, 20, 16, 1.5 %%>;
+  methodsBlockBottom = <%% 16, 16, 16, 16, 3.5 %%>;
+  if (desktop) {
+    if (!isMac()) {
+      methodsBlockPaddingBottom = methodsBlockPaddingBottom - 4;
+      methodsBlockBottom = methodsBlockBottom + 2;
+    }
+  }
   methodsSecondBlockWidth = <%% 370, 170, 170, 116, 80 %%>;
   methodsSecondBlockRight = <%% 0, 32, 28, 28, 10 %%>;
   methodsTongClassName = "methodsDetailTong";
