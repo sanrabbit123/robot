@@ -148,7 +148,7 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
       });
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -286,7 +286,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -307,6 +307,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
       }
       const { proid, contractName, contractAddress } = req.body;
       const selfMongo = instance.mongo;
+      instance.mother.slack_bot.chat.postMessage({ text: proid + contractName + contractAddress, channel: "#error_log" });
       const project = await back.getProjectById(proid, { selfMongo });
       const client = await back.getClientById(project.cliid, { selfMongo });
       const designer = await back.getDesignerById(project.desid, { selfMongo });
@@ -333,7 +334,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -378,7 +379,7 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
