@@ -3206,6 +3206,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   for (let z = 0; z < this.proposal.detail.length; z++) {
     designerButton = GeneralJs.nodes.div.cloneNode(true);
     designerButton.setAttribute("desid", this.proposal.detail[z].desid);
+    designerButton.setAttribute("designer", this.proposal.detail[z].designer);
     style = {
       display: "inline-block",
       position: "relative",
@@ -3372,19 +3373,21 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
   designerButton.addEventListener("click", function (e) {
     let target = null;
     let desid = null;
+    let realName = null;
     for (let dom of instance.designerButtons) {
       if (dom.getAttribute("toggle") === "on") {
         target = dom;
         desid = dom.getAttribute("desid");
+        realName = dom.getAttribute("designer");
         break;
       }
     }
-    if (target === null || desid === null) {
+    if (target === null || desid === null || realName === null) {
       window.alert("디자이너를 선택해주세요!");
       return;
     } else {
       if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
-        instance.submitEvent(desid, target.textContent.trim());
+        instance.submitEvent(desid, realName);
       } else {
         return;
       }
@@ -3432,7 +3435,6 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
   // phone = instance.client.phone;
   name = "배창규";
   phone = "010-2747-3403";
-  window.alert(name, phone);
   this.mother.certificationBox(name, phone, async function (back, box) {
     try {
       await GeneralJs.ajaxJson({
