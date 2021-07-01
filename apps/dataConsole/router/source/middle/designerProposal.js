@@ -135,6 +135,13 @@ class WordsDictionary {
         ]
       },
       {
+        mother: "시공 범주",
+        children: [
+          "시공의 경우 공정별 계약은 진행하지 않습니다. 시공에 대해서는 계약한 업체에게 책임이 있고, 의사 소통과 AS, 업무 지시는 해당 업체의 담당자가 책임지고 진행합니다.",
+          "시공 진행시, 홈리에종 시공팀, 고객님이 알아보신 시공팀, 또는 디자이너 시공팀 중 하나를 선택하여 진행이 가능합니다.",
+        ]
+      },
+      {
         mother: "구매 안내",
         children: [
           "제품 구매는 고객님이 직접 진행합니다.",
@@ -154,14 +161,6 @@ class WordsDictionary {
         children: [
           "계약한 서비스의 유형에서 <b%서비스 유형 변경(시공 범위 추가)%b> 및 <b%기간 연장%b>이 되고 있는 경우 <b%디자인비가 추가%b>됩니다.",
           "디자이너와 고객의 기본 거리를 초과하는 지방 고객님의 경우 출장비가 발생하며 (1일 왕복 교통비 + 출장비) * 적용 일수로 계산합니다."
-        ]
-      },
-      {
-        mother: "*주의 사항",
-        children: [
-          "계약한 서비스의 유형에서 서비스 유형 변경(시공 범위 추가) 및 기간 연장이 되고 있는 경우 디자인비가 추가됩니다.",
-          "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라 드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4 품목 중에서 셀렉은 가능합니다.",
-          "시공의 경우 공정별 계약은 진행하지 않습니다. 시공에 대해서는 계약한 업체에게 책임이 있고, 의사 소통과 AS, 업무 지시는 해당 업체의 담당자가 책임지고 진행합니다.",
         ]
       }
     ];
@@ -184,7 +183,6 @@ class WordsDictionary {
     let target;
 
     target = this.words;
-    target.pop();
 
     result = [];
     num = 1;
@@ -264,7 +262,7 @@ class WordsDictionary {
     let obj;
     obj = {
       name: "홈리에종 서비스",
-      contents: "디자이너와 새로운 방법으로 집을 꾸며보세요. 일단 시공부터 시작하는 방식이 아니라 공간, 시간, 예산을 어떻게 사용할 지 <b%디자이너와 함께%b> 계획해서 건에 맞는 시공 범위를 정하고, 스타일링까지 마무리되어야 아늑하게 쉴 수 있는 공간을 경험하게 됩니다.",
+      contents: "디자이너와 새로운 방법으로 집을 꾸며보세요. 일단 시공부터 시작하고 보는 것이 아니라 공간, 시간, 예산을 어떻게 사용할지 <b%디자이너와 함께%b> 계획해서 <b%여건에 맞는 시공 범위%b>를 정하고, <b%스타일링까지 마무리%b>하여 오롯이 쉴 수 있는 나만의 공간 경험을 전해드립니다.",
       items: {
         name: "제공 서비스",
         contents: [
@@ -276,6 +274,9 @@ class WordsDictionary {
           "가구, 패브릭, 소품 제안",
           "세팅 및 촬영",
           "부가서비스 (입주 청소, 정리 수납 등)",
+          "디자이너 중재",
+          "프로젝트 케어",
+          "프로젝트 검수"
         ]
       },
       methods: {
@@ -2768,6 +2769,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { topMargin, leftMargin } = this.whiteBoxNumbers;
+  const { createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
   const words = new WordsDictionary();
   const matrix = words.getMatrix();
   const subWords = words.getSubWording();
@@ -2785,6 +2787,14 @@ DesignerProposalJs.prototype.insertWordBox = function () {
   let grayBar;
   let wordBlock;
   let num;
+  let grayHeight;
+  let grayTop;
+  let grayTextTop;
+  let grayTextLeft;
+  let grayTextSize;
+  let buttonTongHeight;
+  let buttonHeight;
+  let finalBottom;
 
   top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
   bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
@@ -2799,6 +2809,17 @@ DesignerProposalJs.prototype.insertWordBox = function () {
 
   marginBottom = <%% 3, 3, 3, 3, 1.8 %%>;
   wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
+
+  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  grayTop = <%% topMargin + 2, topMargin + 2, topMargin + 2, topMargin + 2, 5 %%>;
+  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
+  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
+
+  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
+  buttonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
+
+  finalBottom = <%% -3, -4, -7, -9, 0 %%>;
 
   whiteBlock = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2961,186 +2982,6 @@ DesignerProposalJs.prototype.insertWordBox = function () {
       whiteBlock.appendChild(wordBlock);
     }
 
-  }
-
-}
-
-DesignerProposalJs.prototype.insertCautionBox = function () {
-  const instance = this;
-  const { ea, media } = this;
-  const baseTong = this.baseTong;
-  const { topMargin, leftMargin } = this.whiteBoxNumbers;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
-  const words = new WordsDictionary();
-  const matrix = words.getCaution();
-  let whiteBlock;
-  let blockHeight, blockMarginBottom;
-  let wordsTable;
-  let marginBottom;
-  let nodeArr;
-  let wordSize, wordSpacing;
-  let box0Size, box1Size, box0Margin, box1Margin;
-  let top, bottom;
-  let grayHeight, grayTop, grayTong, grayTextScroll, grayTextTong, grayTextTop, grayTextLeft, grayTextSize;
-  let buttonTong, buttonHeight, buttonTongHeight;
-  let buttonOff = {}, buttonOn = {};
-  let finalBottom;
-
-  top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
-  bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
-
-  blockHeight = <%% 400, 400, 400, 400, 400 %%>;
-  blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
-  marginBottom = <%% 9, 9, 9, 9, 2 %%>;
-
-  wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
-  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-
-  box0Size = <%% 140, 140, 140, 120, 12 %%>;
-  box1Size = <%% 25, 25, 25, 25, 3 %%>;
-  box0Margin = <%% 55, 55, 55, 55, 3 %%>;
-  box1Margin = <%% 18, 18, 18, 18, 3 %%>;
-
-  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
-  grayTop = <%% topMargin - 4, topMargin - 4, topMargin - 4, topMargin - 4, 4.5 %%>;
-  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
-  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
-  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
-
-  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
-  buttonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
-
-  finalBottom = <%% -3, -4, -7, -9, 0 %%>;
-
-  [ whiteBlock, wordsTable ] = createNodes([
-    {
-      mother: baseTong,
-      style: {
-        position: "relative",
-        borderRadius: String(desktop ? 8 : 3) + "px",
-        width: String(100) + '%',
-        background: colorChip.white,
-        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-        marginBottom: String(blockMarginBottom) + ea,
-        paddingTop: String(top) + ea,
-        paddingBottom: String(bottom) + ea,
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        position: "relative",
-        marginLeft: String(desktop ? leftMargin : 0) + ea,
-        width: desktop ? withOut(leftMargin * 2, ea) : String(100) + '%',
-      }
-    }
-  ]);
-
-  for (let arr of matrix) {
-    nodeArr = [
-      {
-        mother: wordsTable,
-        style: {
-          position: "relative",
-          marginBottom: String(marginBottom) + ea,
-        }
-      }
-    ];
-
-    if (desktop) {
-      nodeArr.push({
-        mother: -1,
-        text: arr[0],
-        style: {
-          display: "inline-block",
-          fontSize: String(wordSize) + ea,
-          wordSpacing: String(wordSpacing) + "px",
-          position: "relative",
-          top: String(0) + ea,
-          verticalAlign: "top",
-          lineHeight: String(1.6),
-          width: String(box0Size) + ea,
-          marginRight: String(box0Margin) + ea,
-          fontWeight: String(600),
-          textAlign: "left",
-          color: colorChip.green,
-        }
-      });
-      nodeArr.push({
-        mother: -2,
-        text: arr[1],
-        style: {
-          display: "inline-block",
-          fontSize: String(wordSize) + ea,
-          wordSpacing: String(wordSpacing) + "px",
-          position: "relative",
-          top: String(0) + ea,
-          verticalAlign: "top",
-          lineHeight: String(1.6),
-          width: String(box1Size) + ea,
-          marginRight: String(box1Margin) + ea,
-          fontWeight: String(600),
-          color: colorChip.green,
-          textAlign: "right",
-        }
-      });
-      nodeArr.push({
-        mother: -3,
-        text: arr[2],
-        style: {
-          display: "inline-block",
-          fontSize: String(wordSize) + ea,
-          wordSpacing: String(wordSpacing) + "px",
-          position: "relative",
-          top: String(0) + ea,
-          verticalAlign: "top",
-          lineHeight: String(1.6),
-          width: "calc(100% - " + String(box0Size + box1Size + box0Margin + box1Margin) + ea + ")",
-          fontWeight: String(300),
-          textAlign: "left"
-        }
-      });
-    } else {
-      nodeArr.push({
-        mother: -1,
-        text: arr[0],
-        style: {
-          display: "inline-block",
-          fontSize: String(wordSize) + ea,
-          wordSpacing: String(wordSpacing) + "px",
-          position: "relative",
-          top: String(0) + ea,
-          verticalAlign: "top",
-          lineHeight: String(1.6),
-          left: String((this.subBoxMargin.left + 0.2)) + ea,
-          width: String(box0Size) + ea,
-          color: colorChip.green,
-        }
-      });
-      nodeArr.push({
-        mother: -2,
-        text: "<b%-%b> " + arr[2],
-        style: {
-          display: "inline-block",
-          fontSize: String(wordSize) + ea,
-          wordSpacing: String(wordSpacing) + "px",
-          position: "relative",
-          top: String(0) + ea,
-          verticalAlign: "top",
-          lineHeight: String(1.6),
-          left: String(box0Size - 3) + ea,
-          width: withOut(((this.subBoxMargin.left + 0.2) * 2) + box0Size + 4.5, ea),
-          color: colorChip.black,
-        },
-        bold: {
-          color: colorChip.green,
-        }
-      });
-    }
-
-    createNodes(nodeArr);
   }
 
   [ grayTong, grayTextScroll, grayTextTong ] = createNodes([
@@ -4401,7 +4242,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.insertDesignerBoxes();
     this.insertServiceBox();
     this.insertWordBox();
-    this.insertCautionBox();
     this.insertPannelBox();
 
     //set footer
