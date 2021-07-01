@@ -2179,7 +2179,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
       } else if (req.url === "/createProposalDocument") {
 
         const { proid } = req.body;
-        const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid;
+        const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid + "&mode=test";
         if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
           const { year, month, date, hour, minute, second } = req.body;
           let message, command, time;

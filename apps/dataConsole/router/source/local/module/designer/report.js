@@ -552,7 +552,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
 
           timeArr = new TimeArray();
           for (let i = 0; i < timeLength; i++) {
-            thisYear = today.getFullYear() - Math.ceil(i / 2);
+            thisYear = ((new Date()).getMonth() >= 6 ? (today.getFullYear() - Math.floor(i / 2)) : (today.getFullYear() - Math.ceil(i / 2)));
             thisHalf = i % 2 === 0 ? timeHalfFirst : 1 - timeHalfFirst;
             if (thisHalf === 0) {
               tempDate0 = new Date(thisYear, 0, 1);
@@ -562,6 +562,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
               tempDate1 = new Date(thisYear + 1, 0, 1);
             }
             tempTong = [];
+
             for (let p of proposal) {
               if (p.date.valueOf() >= tempDate0.valueOf() && p.date.valueOf() < tempDate1.valueOf()) {
                 tempTong.push(p);
@@ -773,7 +774,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
 
           timeArr = new TimeArray();
           for (let i = 0; i < timeLength; i++) {
-            thisYear = today.getFullYear() - Math.ceil(i / 2);
+            thisYear = ((new Date()).getMonth() >= 6 ? (today.getFullYear() - Math.floor(i / 2)) : (today.getFullYear() - Math.ceil(i / 2)));
             thisHalf = i % 2 === 0 ? timeHalfFirst : 1 - timeHalfFirst;
             if (thisHalf === 0) {
               tempDate0 = new Date(thisYear, 0, 1);
@@ -1050,7 +1051,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
 
           timeArr = new TimeArray();
           for (let i = 0; i < timeLength; i++) {
-            thisYear = today.getFullYear() - Math.ceil(i / 2);
+            thisYear = ((new Date()).getMonth() >= 6 ? (today.getFullYear() - Math.floor(i / 2)) : (today.getFullYear() - Math.ceil(i / 2)));
             thisHalf = i % 2 === 0 ? timeHalfFirst : 1 - timeHalfFirst;
             if (thisHalf === 0) {
               tempDate0 = new Date(thisYear, 0, 1);
