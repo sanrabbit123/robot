@@ -261,7 +261,7 @@ GeneralJs.ajaxForm = function (data, url) {
 
 GeneralJs.ajaxJson = function (data, url, option = { equal: null }) {
   if (typeof option !== "object") {
-    reject("invaild input");
+    throw new Error("invaild input");
   }
   return new Promise(function (resolve, reject) {
     GeneralJs.ajaxPromise(data, url).then(function (jsonString) {

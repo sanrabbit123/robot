@@ -3427,17 +3427,22 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 
 DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
   const instance = this;
-  this.mother.certificationBox("배창규", "010-2747-3403", async function (back, box) {
+  let name, phone;
+  // name = instance.client.name;
+  // phone = instance.client.phone;
+  name = "배창규";
+  name = "010-2747-3403";
+  this.mother.certificationBox(name, phone, async function (back, box) {
     try {
       await GeneralJs.ajaxJson({
         cliid: instance.client.cliid,
         proid: instance.project.proid,
         desid: desid,
-        name: instance.client.name,
-        phone: instance.client.phone,
+        name: name,
+        phone: phone,
         designer: designer,
       }, "/designerProposal_submit");
-      await GeneralJs.sleep(2000);
+      await GeneralJs.sleep(500);
       document.body.removeChild(box);
       document.body.removeChild(back);
       window.location.href = "https://home-liaison.com/payment.php?card=true";
