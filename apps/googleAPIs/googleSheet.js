@@ -248,11 +248,14 @@ GoogleSheet.prototype.get_value_inPython = async function (id, range) {
   }
 }
 
-GoogleSheet.prototype.update_value_inPython = async function (id, sheetName, values, startPoint) {
+GoogleSheet.prototype.update_value_inPython = async function (id, sheetName, values, startPoint = [ 0, 0 ]) {
   const instance = this;
   const mother = this.general;
   try {
     let range, result;
+    if (!Array.isArray(startPoint)) {
+      throw new Error("invaild start point");
+    }
     if (values.length > 0) {
       range = sheetName + "!";
       range += this.abc[startPoint[0]] + String(startPoint[1] + 1) + ':';

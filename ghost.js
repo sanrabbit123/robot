@@ -53,7 +53,7 @@ Ghost.prototype.setTimer = function (callback, timeObj) {
     targetDate = new Date(year, month - 1, date, hour, minute, second);
   }
 
-  logName = ".__timerCallback_waiting___at_" + dateToString(targetDate).replace(/ /gi, '_').replace(/\-/gi, '_').replace(/\:/gi, '_') + "__Dont_git_pull_yet___please__";
+  logName = ".__timerCallback_waiting___at_" + dateToString(targetDate, true).replace(/ /gi, '_').replace(/\-/gi, '_').replace(/\:/gi, '_') + "__Dont_git_pull_yet___please__";
   shell.exec(`touch ${shellLink(process.cwd())}/${logName}`);
   result = targetDate.valueOf() - nowDate.valueOf();
   if (result < 0) {
