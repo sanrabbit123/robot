@@ -2440,7 +2440,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: "#2fa678",
     fontSize: String(titleFontSize * (19 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
-    left: String(leftMargin * 3) + ea,
+    left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.5 : 3)) + ea,
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
