@@ -2849,16 +2849,25 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       return_func = async function (e) {
         const recommendDate = function () {
           let dateObj = new Date();
-          let day;
-          day = dateObj.getDay();
-          if (day === 5) {
-            dateObj.setDate(dateObj.getDate() + 3);
-          } else if (day === 6) {
-            dateObj.setDate(dateObj.getDate() + 2);
-          } else {
-            dateObj.setDate(dateObj.getDate() + 1);
+          let hours, minutes;
+          let dayBoo, day;
+          hours = dateObj.getHours();
+          minutes = dateObj.getMinutes();
+          dayBoo = false;
+          if (hours >= 19 || (hours === 18 && minutes >= 28)) {
+            dayBoo = true;
           }
-          dateObj.setHours(17);
+          if (dayBoo) {
+            day = dateObj.getDay();
+            if (day === 5) {
+              dateObj.setDate(dateObj.getDate() + 3);
+            } else if (day === 6) {
+              dateObj.setDate(dateObj.getDate() + 2);
+            } else {
+              dateObj.setDate(dateObj.getDate() + 1);
+            }
+          }
+          dateObj.setHours(18);
           dateObj.setMinutes(30);
           return dateObj;
         }
