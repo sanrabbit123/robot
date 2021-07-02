@@ -17,7 +17,6 @@ module.exports = function (arg, info) {
         id: "iptUserId",
         pwd: "iptUserPw"
       };
-      window.alert("안녕!");
 
       while (document.getElementById(iframeId) === null) {
         await sleep(500);
