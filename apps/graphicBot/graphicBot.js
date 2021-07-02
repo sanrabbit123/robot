@@ -619,6 +619,7 @@ GraphicBot.prototype.startWork = function () {
         shell.exec(`rm -rf ${shellLink(instance.tong + "/" + name)}`);
       }
       for (let { task, contents } of workingList) {
+        console.log(task, contents);
         if (isJson(contents)) {
           do {
             workSuccess = await instance.botOrders(task, JSON.parse(contents));
@@ -630,6 +631,7 @@ GraphicBot.prototype.startWork = function () {
             await sleep(500);
           } while (workSuccess);
         }
+        console.log("done");
       }
       instance.doing = 0;
     } catch (e) {
