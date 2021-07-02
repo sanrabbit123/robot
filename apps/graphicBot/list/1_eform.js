@@ -28,6 +28,8 @@ module.exports = function (proid, info) {
           titleAddress = contractAddress;
         }
 
+        window.alert("안녕!");
+
         if (document.getElementById(idId) !== null) {
           await injectionInput(document.getElementById(idId), "info.eform.id");
           await injectionInput(document.getElementById(passwordId), "info.eform.pwd");

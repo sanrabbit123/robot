@@ -536,9 +536,10 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         frontWaitingNumber = 0;
         while (instance.front === 1) {
           console.log("front waiting...");
+          console.log(frontWaitingNumber);
           await sleep(500);
           frontWaitingNumber = frontWaitingNumber + 1;
-          if (frontWaitingNumber >= (2 * 60 * 60)) {
+          if (frontWaitingNumber >= (30)) {
             await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
             await sleep(500);
             return false;
