@@ -780,15 +780,14 @@ DesignerProposalJs.prototype.setBaseTong = function () {
 DesignerProposalJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet } = GeneralJs;
-  const getObj = returnGet();
-  const { client, ea, media, osException } = this;
+  const { client, ea, media, osException, testMode } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { requests } = this.client;
   const { request } = requests[0];
   const expectedToString = function (str) {
     const expected = new Date(str);
-    if (getObj.mode === "test") {
+    if (testMode) {
       return `00년 0월 0일`;
     } else {
       return `${String(expected.getFullYear()).slice(2)}년 ${String(expected.getMonth() + 1)}월 ${String(expected.getDate())}일`;
@@ -796,7 +795,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   }
   const spaceToString = function (obj) {
     const { bathroom, room, valcony } = obj;
-    if (getObj.mode === "test") {
+    if (testMode) {
       return `방 ${String(0)}${desktop ? "개" : ""}, 화장실 ${String(0)}${desktop ? "개" : ""}`;
     } else {
       return `방 ${String(room)}${desktop ? "개" : ""}, 화장실 ${String(bathroom)}${desktop ? "개" : ""}`;
@@ -4204,6 +4203,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       proid = getObj.proid;
     }
 
+    this.testMode = false;
     this.mode = <%% "bigDesktop", "smallDesktop", "tablet", "tablet", "mobile" %%>;
     this.ea = <%% "px", "px", "px", "px", "vw" %%>;
     this.standardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
@@ -4284,6 +4284,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     }
     if (proid === "p1806_aa01s" && getObj.mode === "test") {
       this.client.name = "홍길동";
+      this.testMode = true;
     }
 
     //loading end
