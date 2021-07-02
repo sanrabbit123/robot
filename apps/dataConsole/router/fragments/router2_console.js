@@ -1657,6 +1657,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
             second: Number(second),
           };
           command = [ "webProposal", proid ];
+          console.log(command, time);
           message = await coreRequest("timer", { command, time });
           res.set("Content-Type", "application/json");
           res.send(JSON.stringify({ link: proposalLink }));
