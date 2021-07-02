@@ -55,7 +55,9 @@ module.exports = function (arg, info) {
       }
 
       buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
-      buttons[1].click();
+      buttons[2].click();
+
+      await sleep(500);
 
       document.getElementById(iframeId).contentWindow.document.getElementById("trigger1").click();
 
@@ -142,6 +144,8 @@ module.exports = function (arg, info) {
 
       buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
       buttons[2].click();
+
+      await sleep(500);
 
       document.getElementById(iframeId).contentWindow.document.getElementById("trigger1").click();
 
