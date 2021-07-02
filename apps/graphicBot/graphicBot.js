@@ -542,6 +542,8 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           if (frontWaitingNumber >= (30)) {
             await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
             await sleep(500);
+            await instance.chromeClose();
+            await sleep(500);
             return false;
           }
         }
@@ -608,6 +610,7 @@ GraphicBot.prototype.startWork = function () {
       let tempArr;
       let contents;
       let workSuccess;
+      let totalSuccess;
       workingList_name = await fileSystem(`readDir`, [ instance.tong ]);
       workingList_name = workingList_name.filter((n) => { return (new RegExp("^g_")).test(n); });
       workingList_name.sort((a, b) => { return Number(a.split('_')[2]) - Number(b.split('_')[2]); });
@@ -615,24 +618,31 @@ GraphicBot.prototype.startWork = function () {
       for (let name of workingList_name) {
         tempArr = name.split('_');
         contents = await fileSystem(`readString`, [ `${instance.tong}/${name}` ]);
-        workingList.push({ task: Number(tempArr[1]), contents });
-        shell.exec(`rm -rf ${shellLink(instance.tong + "/" + name)}`);
+        workingList.push({ task: Number(tempArr[1]), contents, name });
       }
-      for (let { task, contents } of workingList) {
-        console.log(task, contents);
+
+      totalSuccess = [];
+      for (let { task, contents, name } of workingList) {
         if (isJson(contents)) {
-          do {
-            workSuccess = await instance.botOrders(task, JSON.parse(contents));
-            await sleep(500);
-          } while (!workSuccess);
+          workSuccess = await instance.botOrders(task, JSON.parse(contents));
+          await sleep(500);
         } else {
-          do {
-            workSuccess = await instance.botOrders(task, contents);
-            await sleep(500);
-          } while (workSuccess);
+          workSuccess = await instance.botOrders(task, contents);
+          await sleep(500);
         }
-        console.log("done");
+        totalSuccess.push(workSuccess);
+        if (workSuccess) {
+          shell.exec(`rm -rf ${shellLink(instance.tong + "/" + name)}`);
+        }
       }
+
+      await instance.chromeClose();
+
+      totalSuccess = totalSuccess.filter((t) => { return !t; });
+      if (totalSuccess.length !== 0) {
+        instance.task = setTimeout(instance.startWork(), 2000);
+      }
+
       instance.doing = 0;
     } catch (e) {
       console.log(e);
