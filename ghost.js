@@ -20,10 +20,13 @@ Ghost.prototype.setTimer = function (callback, timeObj) {
   if (typeof timeObj !== "object" || typeof callback !== "function") {
     throw new Error("arguments must be Object: timeObj, Function: callback");
   }
+  const instance = this;
+  const { shell, shellLink, dateToString } = this.mother;
   const nowDate = new Date();
   let targetDate;
   let result, time;
   let timeoutObj;
+  let logName;
 
   if (timeObj instanceof Date) {
     targetDate = timeObj;
@@ -50,6 +53,8 @@ Ghost.prototype.setTimer = function (callback, timeObj) {
     targetDate = new Date(year, month - 1, date, hour, minute, second);
   }
 
+  logName = ".__timerCallback_waiting___at_" + dateToString(targetDate).replace(/ /gi, '_').replace(/\-/gi, '_').replace(/\:/gi, '_') + "__Dont_git_pull_yet___please__";
+  shell.exec(`touch ${shellLink(process.cwd())}/${logName}`);
   result = targetDate.valueOf() - nowDate.valueOf();
   if (result < 0) {
     time = 0;
@@ -60,6 +65,7 @@ Ghost.prototype.setTimer = function (callback, timeObj) {
   return new Promise(function (resolve, reject) {
     timeoutObj = setTimeout(function () {
       callback();
+      shell.exec(`rm -rf ${shellLink(process.cwd())}/${logName}`);
       resolve(time);
       clearTimeout(timeoutObj);
       timeoutObj = null;

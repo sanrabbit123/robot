@@ -154,7 +154,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
       }).then(function () {
         return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": (new Date()) } ]);
       }).then(function () {
-        instance.mother.slack_bot.chat.postMessage({ text: name + " 고객님께 제안서 알림톡을 전송하였습니다!\n" + host + "/" + path + "?proid=" + proid, channel: "#error_log" });
+        instance.mother.slack_bot.chat.postMessage({ text: name + " 고객님께 제안서 알림톡을 전송하였습니다!\nlink : https://" + host + "/middle/" + path + "?proid=" + proid, channel: "#400_customer" });
         console.log("web proposal done", name, phone, proid);
       }).catch(function (err) {
         reject(err);

@@ -3949,7 +3949,7 @@ GeneralJs.prototype.communicationBox = function () {
   this.communicationBox = {};
 
   const renderItem = function (mother, name, callback) {
-    const { createNode, colorChip, withOut } = GeneralJs;
+    const { createNode, colorChip, withOut, isMac } = GeneralJs;
     const ea = "px";
     let size;
     let width, height;
@@ -3961,7 +3961,7 @@ GeneralJs.prototype.communicationBox = function () {
     size = 14;
     width = 300;
     height = 32;
-    textTop = 5;
+    textTop = isMac() ? 5 : 7;
     innerMargin = 10;
 
     block = createNode({
@@ -4081,7 +4081,7 @@ GeneralJs.prototype.communicationBox = function () {
     emptyHeight = 48;
     emptyTextTop = 12;
 
-    innerMargin = 10;
+    innerMargin = 14;
 
     cancelBox = createNode({
       mother,

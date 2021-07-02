@@ -3180,6 +3180,56 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               {
                 type: "click",
                 event: async function (e) {
+                  console.log("this!");
+                  try {
+                    let timeObj;
+                    timeObj = {
+                      instant: true,
+                      proid,
+                    };
+                    await GeneralJs.ajaxJson(timeObj, "/createProposalDocument");
+                    window.alert(`알림톡 발송이 요청되었습니다!`);
+                    await mother_name(obj);
+                    reset_event(that);
+                    totalContents.removeChild(removeTargets[0]);
+                    totalContents.removeChild(removeTargets[1]);
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              width: String(89) + ea,
+              height: String(27) + ea,
+              borderRadius: String(3) + ea,
+              background: colorChip.green,
+              bottom: String(34) + ea,
+              right: String(147) + ea,
+              cursor: "pointer",
+            }
+          },
+          {
+            mother: -1,
+            text: "즉시 보내기",
+            style: {
+              position: "absolute",
+              fontSize: String(size2) + ea,
+              fontWeight: String(500),
+              color: colorChip.white,
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(GeneralJs.isMac() ? 3 : 5) + ea,
+              cursor: "pointer",
+            }
+          },
+          {
+            mother: whiteBox,
+            events: [
+              {
+                type: "click",
+                event: async function (e) {
                   try {
                     let timeObj;
                     timeObj = {

@@ -1660,6 +1660,12 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
           message = await coreRequest("timer", { command, time });
           res.set("Content-Type", "application/json");
           res.send(JSON.stringify({ link: proposalLink }));
+        } else if (req.body.instant !== undefined) {
+          let message, command;
+          command = [ "webProposal", proid ];
+          message = await coreRequest("robot", { command });
+          res.set("Content-Type", "application/json");
+          res.send(JSON.stringify({ link: proposalLink }));
         } else {
           await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
           res.set("Content-Type", "application/json");
