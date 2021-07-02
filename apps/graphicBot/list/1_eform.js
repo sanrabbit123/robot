@@ -222,7 +222,7 @@ module.exports = function (proid, info) {
         data.cliid = client.cliid;
         data.proid = project.proid;
 
-        await ajaxPromise({ to: "python", path: "/receiveStylingContract" }, data, RECEIVECONST);
+        await ajaxPromise({ to: "python", path: "/receiveStylingContract", data }, RECEIVECONST);
 
       } catch (e) {
         console.log(e);
