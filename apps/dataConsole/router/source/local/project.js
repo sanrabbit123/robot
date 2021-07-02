@@ -65,7 +65,7 @@ ProjectJs.prototype.standardBar = function (standard) {
     height: String(this.module.height + this.module.marginBottom) + ea,
     fontSize: String(14) + ea,
     fontWeight: String(600),
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
   };
 
   if (standard.search === null) {
@@ -345,7 +345,7 @@ ProjectJs.prototype.infoArea = function (info) {
     height: String(this.module.height) + ea,
     fontSize: String(14) + ea,
     fontWeight: String(600),
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     textAlign: "center",
     overflow: "hidden",
     cursor: "pointer",
@@ -373,7 +373,7 @@ ProjectJs.prototype.infoArea = function (info) {
         onOffObj[this.getAttribute("column")] = !onOffObj[this.getAttribute("column")];
         window.localStorage.setItem(thisId, JSON.stringify(onOffObj));
         if (onOffObj[this.getAttribute("column")]) {
-          this.style.color = "#2fa678";
+          this.style.color = GeneralJs.colorChip.green;
         }
       }
       const targets = document.querySelectorAll(".moveTarget");
@@ -396,12 +396,12 @@ ProjectJs.prototype.infoArea = function (info) {
     const thisIndex = this.parentElement.getAttribute("index");
     const proidChildren = instance.totalMother.children[0].children;
     for (let z = 0; z < mother.children.length; z++) {
-      mother.children[z].style.color = "#2fa678";
+      mother.children[z].style.color = GeneralJs.colorChip.green;
     }
     for (let z = 0; z < proidChildren.length; z++) {
       if (proidChildren[z].getAttribute("index") === thisIndex) {
         for (let y = 0; y < proidChildren[z].children.length; y++) {
-          proidChildren[z].children[y].style.color = "#2fa678";
+          proidChildren[z].children[y].style.color = GeneralJs.colorChip.green;
         }
       }
     }
@@ -425,7 +425,7 @@ ProjectJs.prototype.infoArea = function (info) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
         mother.children[z].style.color = finalColor;
       } else {
-        mother.children[z].style.color = "#2fa678";
+        mother.children[z].style.color = GeneralJs.colorChip.green;
       }
     }
     for (let z = 0; z < proidChildren.length; z++) {
@@ -452,7 +452,7 @@ ProjectJs.prototype.infoArea = function (info) {
       for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
         if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
           for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
-            instance.totalMother.children[0].children[z].children[y].style.color = "#2fa678";
+            instance.totalMother.children[0].children[z].children[y].style.color = GeneralJs.colorChip.green;
           }
         }
       }
@@ -476,7 +476,7 @@ ProjectJs.prototype.infoArea = function (info) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
                   standardArea.children[z].children[y].style.color = finalColor;
                 } else {
-                  standardArea.children[z].children[y].style.color = "#2fa678";
+                  standardArea.children[z].children[y].style.color = GeneralJs.colorChip.green;
                 }
               }
             }
@@ -668,7 +668,7 @@ ProjectJs.prototype.infoArea = function (info) {
           border: String(0) + ea,
           textAlign: "center",
           fontSize: "inherit",
-          color: "#2fa678",
+          color: GeneralJs.colorChip.green,
           paddingBottom: String(paddingBottom) + ea,
           zIndex: String(3),
         };
@@ -708,7 +708,7 @@ ProjectJs.prototype.infoArea = function (info) {
             background: "white",
             textAlign: "center",
             fontSize: "inherit",
-            color: "#2fa678",
+            color: GeneralJs.colorChip.green,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -967,7 +967,7 @@ ProjectJs.prototype.infoArea = function (info) {
         }, 10);
 
         originalDiv.style.overflow = "hidden";
-        originalDiv.style.color = "#2fa678";
+        originalDiv.style.color = GeneralJs.colorChip.green;
         originalDiv.style.transition = "";
       }
 
@@ -1088,7 +1088,7 @@ ProjectJs.prototype.infoArea = function (info) {
           width: String(width) + ea,
           paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
           height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-          background: "#2fa678",
+          background: GeneralJs.colorChip.green,
           textAlign: "center",
           fontSize: "inherit",
           fontWeight: String(500),
@@ -1448,7 +1448,7 @@ ProjectJs.prototype.infoArea = function (info) {
       }
       if (num !== 0) {
         if (thisOnOff[columns[z]]) {
-          div_clone3.style.color = "#2fa678";
+          div_clone3.style.color = GeneralJs.colorChip.green;
         }
       }
       div_clone3.style.width = String(widthArr[z]) + ea;
@@ -1729,7 +1729,7 @@ ProjectJs.prototype.cardViewMaker = function () {
         fontSize: String(fontSize) + ea,
         fontWeight: String(200),
         top: String(titleTop + (nameFontSize - fontSize + 2) + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        color: "#2fa678",
+        color: GeneralJs.colorChip.green,
         cursor: "pointer",
       };
 
@@ -2437,10 +2437,10 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     fontSize: String(titleFontSize * (19 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
-    left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.5 : 3)) + ea,
+    left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.6 : (thisCase[standard[0]].length === 2 ? 2.3 : 3))) + ea,
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
@@ -2449,7 +2449,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(div_clone3);
 
   //right arrow
-  rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", "#2fa678"));
+  rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", GeneralJs.colorChip.green));
   style = {
     position: "absolute",
     width: String(leftMargin * (12 / 60)) + ea,
@@ -2474,7 +2474,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(rightArrowBox);
 
   //left arrow
-  leftArrow = SvgTong.stringParsing(this.mother.returnArrow("left", "#2fa678"));
+  leftArrow = SvgTong.stringParsing(this.mother.returnArrow("left", GeneralJs.colorChip.green));
   for (let i in style) {
     leftArrow.style[i] = style[i];
   }
@@ -2493,7 +2493,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(leftArrowBox);
 
   //h initial icon
-  hInitial = SvgTong.stringParsing(this.mother.returnHinitial("#2fa678"));
+  hInitial = SvgTong.stringParsing(this.mother.returnHinitial(GeneralJs.colorChip.green));
   for (let i in style) {
     hInitial.style[i] = style[i];
   }
@@ -2513,7 +2513,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(hInitialBox);
 
   //r initial icon
-  rInitial = SvgTong.stringParsing(this.mother.returnRinitial("#2fa678"));
+  rInitial = SvgTong.stringParsing(this.mother.returnRinitial(GeneralJs.colorChip.green));
   for (let i in style) {
     rInitial.style[i] = style[i];
   }
@@ -2781,7 +2781,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           outline: String(0) + ea,
           border: String(0) + ea,
           fontSize: "inherit",
-          color: "#2fa678",
+          color: GeneralJs.colorChip.green,
           paddingBottom: String(paddingBottom) + ea,
           zIndex: String(3),
         };
@@ -2820,7 +2820,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             background: "white",
             textAlign: "center",
             fontSize: "inherit",
-            color: "#2fa678",
+            color: GeneralJs.colorChip.green,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -4280,7 +4280,7 @@ ProjectJs.prototype.whiteCancelMaker = function (callback = null, recycle = fals
         domTargets[0].style.color = domTargets[1].style.color = "#404040";
       } else {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#2fa678";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
       }
     }
 
@@ -4330,7 +4330,7 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
         domTargets[0].style.color = domTargets[1].style.color = "#cccccc";
       } else {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#2fa678";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
       }
     }
 
@@ -4686,7 +4686,7 @@ ProjectJs.prototype.reportScrollBox = function (data, motherWidth) {
         left: String(contentsBoxDetailContentsMargin) + ea,
         fontSize: String(contentsBoxDetailFontSize) + ea,
         fontWeight: String(200),
-        color: "#2fa678",
+        color: GeneralJs.colorChip.green,
       };
       for (let z in contentsBoxDetailProidStyle) {
         contentsBoxDetailProid.style[z] = contentsBoxDetailProidStyle[z];
@@ -4925,7 +4925,7 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
   input_clone.setAttribute("type", "text");
   input_clone.setAttribute("value", todayRange);
   input_clone.addEventListener("focus", function (e) {
-    input_clone.style.color = "#2fa678";
+    input_clone.style.color = GeneralJs.colorChip.green;
     GeneralJs.stacks.reportBoxStartDayInputValue = this.value;
   });
   input_clone.addEventListener("blur", function (e) {
@@ -4961,7 +4961,7 @@ ProjectJs.prototype.reportContents = function (data, mother, loadingIcon) {
     fontWeight: String(500) + ea,
     right: String(1) + ea,
     top: String(58) + ea,
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
   };
   for (let i in style) {
     div_clone2.style[i] = style[i];

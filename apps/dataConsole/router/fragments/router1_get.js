@@ -177,8 +177,6 @@ DataRouter.prototype.rou_get_First = function () {
           target = "analytics";
         } else if (/^con/i.test(req.params.id)) {
           target = "contents";
-        } else if (/^pho/i.test(req.params.id)) {
-          target = "photo";
         } else {
           target = "client";
         }
@@ -257,7 +255,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
   const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   let obj = {};
-  obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents", "/sse/get_photo" ];
+  obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents" ];
   obj.func = async function (req, res) {
     try {
       const thisPath = req.url.split('_')[1];

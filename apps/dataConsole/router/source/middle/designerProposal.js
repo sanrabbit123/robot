@@ -3669,7 +3669,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
           bold: {
             color: colorChip.green,
           }
-        })
+        });
       }
     }
   }

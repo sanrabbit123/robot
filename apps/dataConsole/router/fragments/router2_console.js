@@ -4,7 +4,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
   const { equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getPhotos" ];
+  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents" ];
   obj.func = async function (req, res) {
     try {
       let standard, raw_data, data, optionQuery, whereQuery;
@@ -47,7 +47,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
           }
           raw_data = await instance.back.getDesignersByQuery(equalJson(req.body.where), optionQuery);
         }
-      } else if (req.url === "/getProjects" || req.url === "/getPhotos") {
+      } else if (req.url === "/getProjects") {
         standard = instance.patch.projectStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
@@ -64,9 +64,6 @@ DataRouter.prototype.rou_post_getDocuments = function () {
             optionQuery.limit = Number(req.body.limit);
           }
           whereQuery = equalJson(req.body.where);
-          if (req.url === "/getPhotos") {
-            whereQuery["$and"].push({ "process.calculation.payments.first.date": { "$gt": (new Date(2000, 0, 1)) } });
-          }
           raw_data = await instance.back.getProjectsByQuery(whereQuery, optionQuery);
         }
       } else if (req.url === "/getContents") {
@@ -90,12 +87,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
       }
 
       if (req.body.noFlat === undefined) {
-        if (req.url !== "/getPhotos") {
-          data = raw_data.flatDeath();
-        } else {
-          standard = instance.patch.photoStandard();
-          data = raw_data.planeDeath();
-        }
+        data = raw_data.flatDeath();
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ standard, data }));
       } else {
@@ -113,7 +105,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
 DataRouter.prototype.rou_post_searchDocuments = function () {
   const instance = this;
   let obj = {};
-  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents", "/searchPhotos" ];
+  obj.link = [ "/searchClients", "/searchProjects", "/searchDesigners", "/searchContents" ];
   obj.func = async function (req, res) {
     try {
       let standard;
@@ -136,9 +128,6 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       } else if (req.url === "/searchContents") {
         standard = instance.patch.contentsStandard();
         map = instance.patch.contentsMap();
-      } else if (req.url === "/searchPhotos") {
-        standard = instance.patch.photoStandard();
-        map = instance.patch.photoMap();
       }
 
       mapArr = Object.values(map);
@@ -162,9 +151,9 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
       if (req.url === "/searchClients") {
         rawJson = await instance.back.getClientsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
-      } else if (req.url === "/searchProjects" || req.url === "/searchPhotos") {
+      } else if (req.url === "/searchProjects") {
         rawJson = await instance.back.getProjectsByQuery(searchQuery, { withTools: true, selfMongo: instance.mongo });
-        if (/\/project/g.test(req.headers.referer) || /\/photo/g.test(req.headers.referer)) {
+        if (/\/project/g.test(req.headers.referer)) {
 
           if (/^d/i.test(req.body.query)) {
             req.body.query = req.body.query.replace(/[\~\!\@\#\$\%\^\&\*\(\)\_\:\;\?\/\|\<\>\,\.\\\]\[\{\} \n\t]/g, '').replace(/^d/i, '');
@@ -321,11 +310,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       }
 
       if (req.body.noFlat === undefined) {
-        if (req.url !== "/searchPhotos") {
-          data = rawJson.flatDeath();
-        } else {
-          data = rawJson.planeDeath();
-        }
+        data = rawJson.flatDeath();
         res.set("Content-Type", "application/json");
         res.send(JSON.stringify({ standard, data }));
       } else {
@@ -344,7 +329,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   const { fileSystem, pythonExecute, shell, shellLink, equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents", "/updatePhoto" ];
+  obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res) {
     try {
       let { thisId, requestIndex, column, value, pastValue, user, thisCase } = req.body;
@@ -373,9 +358,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       } else if (req.url === "/updateContents") {
         thisPath = "contents";
         map = instance.patch.contentsMap();
-      } else if (req.url === "/updatePhoto") {
-        thisPath = "photo";
-        map = instance.patch.photoMap();
       }
 
       noUpdate = false;
@@ -467,8 +449,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           whereQuery[map.proid.position] = thisId;
         } else if (req.url === "/updateContents") {
           whereQuery[map.conid.position] = thisId;
-        } else if (req.url === "/updatePhoto") {
-          whereQuery[map.proid.position] = thisId;
         }
 
         if (map[column].isHistory !== undefined && map[column].isHistory !== null) {
@@ -480,8 +460,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
             message = await instance.back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
           } else if (req.url === "/updateContents") {
             message = await instance.back.updateHistory("contents", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-          } else if (req.url === "/updatePhoto") {
-            message = await instance.back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
           }
         } else {
           if (req.url === "/updateClient") {
@@ -492,8 +470,6 @@ DataRouter.prototype.rou_post_updateDocument = function () {
             message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
           } else if (req.url === "/updateContents") {
             message = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-          } else if (req.url === "/updatePhoto") {
-            message = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
           }
         }
 

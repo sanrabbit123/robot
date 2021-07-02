@@ -205,17 +205,9 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       //set data patch
       prototypes = Object.keys(DataPatch.prototype);
       dataPatchScript = `const DataPatch = new Function();\n`;
-      if (i.trim().replace(/\.js/gi, '') !== "photo") {
-        for (let p of prototypes) {
-          if ((new RegExp("^" + i.trim().replace(/\.js/gi, ''))).test(p) || /^tools/.test(p)) {
-            dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
-          }
-        }
-      } else {
-        for (let p of prototypes) {
-          if ((new RegExp("^photo")).test(p) || (new RegExp("^project")).test(p) || /^tools/.test(p)) {
-            dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
-          }
+      for (let p of prototypes) {
+        if ((new RegExp("^" + i.trim().replace(/\.js/gi, ''))).test(p) || /^tools/.test(p)) {
+          dataPatchScript += `DataPatch.${p} = ${DataPatch.prototype[p].toString().replace(/\n/g, '')};\n`;
         }
       }
 

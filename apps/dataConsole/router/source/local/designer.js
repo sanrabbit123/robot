@@ -89,7 +89,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
     height: String(this.module.height + this.module.marginBottom) + ea,
     fontSize: String(size) + ea,
     fontWeight: String(600),
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
   };
 
   if (standard.search === null) {
@@ -389,7 +389,7 @@ DesignerJs.prototype.infoArea = function (info) {
     height: String(this.module.height) + ea,
     fontSize: String(size) + ea,
     fontWeight: String(600),
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     textAlign: "center",
     overflow: "hidden",
     cursor: "pointer",
@@ -417,7 +417,7 @@ DesignerJs.prototype.infoArea = function (info) {
         onOffObj[this.getAttribute("column")] = !onOffObj[this.getAttribute("column")];
         window.localStorage.setItem(thisId, JSON.stringify(onOffObj));
         if (onOffObj[this.getAttribute("column")]) {
-          this.style.color = "#2fa678";
+          this.style.color = GeneralJs.colorChip.green;
         }
       }
       const targets = document.querySelectorAll(".moveTarget");
@@ -440,12 +440,12 @@ DesignerJs.prototype.infoArea = function (info) {
     const thisIndex = this.parentElement.getAttribute("index");
     const desidChildren = instance.totalMother.children[0].children;
     for (let z = 0; z < mother.children.length; z++) {
-      mother.children[z].style.color = "#2fa678";
+      mother.children[z].style.color = GeneralJs.colorChip.green;
     }
     for (let z = 0; z < desidChildren.length; z++) {
       if (desidChildren[z].getAttribute("index") === thisIndex) {
         for (let y = 0; y < desidChildren[z].children.length; y++) {
-          desidChildren[z].children[y].style.color = "#2fa678";
+          desidChildren[z].children[y].style.color = GeneralJs.colorChip.green;
         }
       }
     }
@@ -469,7 +469,7 @@ DesignerJs.prototype.infoArea = function (info) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
         mother.children[z].style.color = finalColor;
       } else {
-        mother.children[z].style.color = "#2fa678";
+        mother.children[z].style.color = GeneralJs.colorChip.green;
       }
     }
     for (let z = 0; z < desidChildren.length; z++) {
@@ -496,7 +496,7 @@ DesignerJs.prototype.infoArea = function (info) {
       for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
         if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
           for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
-            instance.totalMother.children[0].children[z].children[y].style.color = "#2fa678";
+            instance.totalMother.children[0].children[z].children[y].style.color = GeneralJs.colorChip.green;
           }
         }
       }
@@ -521,7 +521,7 @@ DesignerJs.prototype.infoArea = function (info) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
                   standardArea.children[z].children[y].style.color = finalColor;
                 } else {
-                  standardArea.children[z].children[y].style.color = "#2fa678";
+                  standardArea.children[z].children[y].style.color = GeneralJs.colorChip.green;
                 }
               }
             }
@@ -667,7 +667,7 @@ DesignerJs.prototype.infoArea = function (info) {
           border: String(0) + ea,
           textAlign: "center",
           fontSize: "inherit",
-          color: "#2fa678",
+          color: GeneralJs.colorChip.green,
           paddingBottom: String(paddingBottom) + ea,
           zIndex: String(3),
         };
@@ -707,7 +707,7 @@ DesignerJs.prototype.infoArea = function (info) {
             background: GeneralJs.colorChip.white,
             textAlign: "center",
             fontSize: "inherit",
-            color: "#2fa678",
+            color: GeneralJs.colorChip.green,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -966,7 +966,7 @@ DesignerJs.prototype.infoArea = function (info) {
         }, 10);
 
         originalDiv.style.overflow = "hidden";
-        originalDiv.style.color = "#2fa678";
+        originalDiv.style.color = GeneralJs.colorChip.green;
         originalDiv.style.transition = "";
       }
 
@@ -1087,7 +1087,7 @@ DesignerJs.prototype.infoArea = function (info) {
           width: String(width) + ea,
           paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
           height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-          background: "#2fa678",
+          background: GeneralJs.colorChip.green,
           textAlign: "center",
           fontSize: "inherit",
           fontWeight: String(500),
@@ -1437,7 +1437,7 @@ DesignerJs.prototype.infoArea = function (info) {
       }
       if (num !== 0) {
         if (thisOnOff[columns[z]]) {
-          div_clone3.style.color = "#2fa678";
+          div_clone3.style.color = GeneralJs.colorChip.green;
         }
       }
       div_clone3.style.width = String(widthArr[z]) + ea;
@@ -1897,7 +1897,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     color: GeneralJs.colorChip.green,
     fontSize: String(titleFontSize * (19 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
-    left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.5 : 3)) + ea,
+    left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.6 : (thisCase[standard[0]].length === 2 ? 2.3 : 3))) + ea,
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
@@ -2168,7 +2168,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           outline: String(0) + ea,
           border: String(0) + ea,
           fontSize: "inherit",
-          color: "#2fa678",
+          color: GeneralJs.colorChip.green,
           paddingBottom: String(paddingBottom) + ea,
           zIndex: String(3),
         };
@@ -2208,7 +2208,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             background: GeneralJs.colorChip.white,
             textAlign: "center",
             fontSize: "inherit",
-            color: "#2fa678",
+            color: GeneralJs.colorChip.green,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -3118,7 +3118,7 @@ DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
         domTargets[0].style.color = domTargets[1].style.color = "#404040";
       } else {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#2fa678";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
       }
     }
 
@@ -3181,7 +3181,7 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
         domTargets[0].style.color = domTargets[1].style.color = "#cccccc";
       } else {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#2fa678";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
       }
     }
 
