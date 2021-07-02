@@ -102,7 +102,7 @@ module.exports = function (proid, info) {
           { id: "field_TEXT_AREA_5faa618f9da73962a9050ef8", value: request.family },
           { id: "field_TEXT_AREA_5faa618f9da73962a9050f04", value: titleAddress },
           { id: "field_TEXT_5faa618f9da73962a9050f01", value: request.budget },
-          { id: "field_TEXT_5faa618f9da73962a9050f02", value: designer.designer },
+          { id: "field_TEXT_5faa618f9da73962a9050f02", value: designer.designer + ", " + designer.information.phone },
           { id: "field_TEXT_5faa618f9da73962a9050efb", value: request.space.contract },
           { id: "field_TEXT_5faa618f9da73962a9050efd", value: dateToString(analytics.date.space.precheck) },
           { id: "field_TEXT_5faa618f9da73962a9050efe", value: dateToString(analytics.date.space.empty) },
