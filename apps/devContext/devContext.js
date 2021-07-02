@@ -58,32 +58,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const matrix = await sheets.get_value_inPython("https://docs.google.com/spreadsheets/d/1B4BXJaupDLge_St7bF2ENfHGjNHv4leyuj1o7LzqtC4/edit#gid=0", "의견 제시!A2:K");
-    let arr, upload;
-
-    arr = [];
-    for (let [ , , , , , , a ] of matrix) {
-      arr.push(a);
-    }
-    arr = arr.filter((i) => { return i !== '-'; });
-    arr = Array.from(new Set(arr));
-    arr = arr.map((i) => { return { name: i, amount: 0 } });
-    for (let [ , , , , , , a ] of matrix) {
-      for (let obj of arr) {
-        if (a === obj.name) {
-          obj.amount = obj.amount + 1;
-        }
-      }
-    }
-    arr.sort((a, b) => { return b.amount - a.amount });
-    upload = arr.map((obj, index) => { return [ index + 1, obj.name, obj.amount ] });
-
-    upload.unshift([ "순번", "결과물 이름", "개수" ]);
-
-    await sheets.update_value_inPython("https://docs.google.com/spreadsheets/d/1B4BXJaupDLge_St7bF2ENfHGjNHv4leyuj1o7LzqtC4/edit#gid=0", "결과", upload);
-
-    console.log(arr);
-    console.log(upload);
 
 
 
