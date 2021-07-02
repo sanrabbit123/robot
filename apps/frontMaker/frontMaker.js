@@ -21,6 +21,17 @@ FrontMaker.prototype.links = {
   binary: `${process.env.HOME}/contentsMaker/result`,
 }
 
+FrontMaker.prototype.consoleQ = function (question) {
+  const readline = require(`readline`);
+  const rL = readline.createInterface({ input : process.stdin, output : process.stdout });
+  return new Promise(function(resolve, reject) {
+    rL.question(question, function (input) {
+      resolve(input);
+      rL.close();
+    });
+  });
+}
+
 FrontMaker.prototype.startChrome = function (link, newBoo = true) {
   const { exec } = require("child_process");
   const chromePath = `/Applications/'Google Chrome.app'/Contents/MacOS/'Google Chrome' ${newBoo ? "--new-window " : ""}${link}`;
@@ -49,6 +60,7 @@ FrontMaker.prototype.setStrings = async function () {
     }
   } catch (e) {
     console.log(e);
+    process.exit();
   }
 }
 
@@ -304,6 +316,7 @@ FrontMaker.prototype.jsToPoo = async function (dayString, webpack = false) {
     }}
   } catch (e) {
     console.log(e);
+    process.exit();
   }
 }
 
@@ -322,6 +335,7 @@ FrontMaker.prototype.phpExecToPoo = async function () {
     }
   } catch (e) {
     console.log(e);
+    process.exit();
   }
 }
 
@@ -340,6 +354,7 @@ FrontMaker.prototype.phpFunctionToPoo = async function () {
     }
   } catch (e) {
     console.log(e);
+    process.exit();
   }
 }
 
@@ -397,6 +412,7 @@ FrontMaker.prototype.phpGeneralToPoo = async function (dayString) {
 
   } catch (e) {
     console.log(e);
+    process.exit();
   }
 }
 
@@ -417,6 +433,7 @@ FrontMaker.prototype.tokenToPoo = async function () {
 
   } catch (e) {
     console.log(e);
+    process.exit();
   }
 }
 
@@ -449,6 +466,7 @@ FrontMaker.prototype.staticSetting = async function () {
 
   } catch (e) {
     console.log(e);
+    process.exit();
   }
 }
 
@@ -465,14 +483,9 @@ FrontMaker.prototype.totalLaunching = async function (webpack, update = false) {
     await this.phpGeneralToPoo(dayString);
     await this.tokenToPoo();
 
-    if (!update) {
-      await this.startChrome(`http://127.0.0.1`, false);
-      console.log(`done`);
-      process.exit();
-    }
-
   } catch (e) {
     console.log(e);
+    process.exit();
   }
 }
 
@@ -482,6 +495,7 @@ FrontMaker.prototype.totalUpdate = async function (test = true) {
   try {
     let totalOrder;
     let binaryTarget, binaryTargetDir;
+    let input;
 
     await this.totalLaunching(!test, true);
 
@@ -515,8 +529,12 @@ FrontMaker.prototype.totalUpdate = async function (test = true) {
       }
 
       shell.exec(`mv ${shellLink(this.links.server)} ${shellLink(process.env.HOME)}/www;`);
-      shell.exec(`scp -r ${shellLink(process.env.HOME)}/www miro81@home-liaison.com:/miro81/`);
-      console.log(`front update all done`);
+
+      input = await this.consoleQ(`is it OK? : (if no problem, press 'ok')\n`);
+      if (input === "done" || input === "a" || input === "o" || input === "ok" || input === "OK" || input === "Ok" || input === "oK" || input === "yes" || input === "y" || input === "yeah" || input === "Y") {
+        shell.exec(`scp -r ${shellLink(process.env.HOME)}/www miro81@home-liaison.com:/miro81/`);
+        console.log(`front update all done`);
+      }
 
     } else {
 

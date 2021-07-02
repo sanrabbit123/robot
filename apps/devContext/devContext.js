@@ -56,6 +56,11 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
+
+
+    // const matrix = await sheets.get_value_inPython("https://docs.google.com/spreadsheets/d/1B4BXJaupDLge_St7bF2ENfHGjNHv4leyuj1o7LzqtC4/edit#gid=0", "시트1!F2:J");
+    // console.log(matrix);
+
     // await ghostRequest("/print");
 
     // const selfMongo = this.MONGOLOCALC;
@@ -991,13 +996,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "박성창";
-    // const pid = "p97";
-    // const rid = "re091";
+    // const client = "김정선";
+    // const pid = "p93";
+    // const rid = "re087";
     // const links = [
-    //   "https://docs.google.com/document/d/1UIhhFBgUsZyklGAQdW9svlK_kmVhyJoQAQaLXHKLJV4/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/13NGZH4ux3oriPY2J7Dz9_JLiN_gPE7pq4dhHytMfjjE/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1QzWo1_LqGDnFvUzPM2yomC2QT5neR3EX",
+    //   "https://docs.google.com/document/d/1ExajQUGVaptfE6jzmHnvgwwjySSSg0sjW24oriTKxuU/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/18zb3uiMINz--fTNpJoeI9LYDtdfYANjeUhcuBF9jDQQ/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1EiJ7keh7e4wxP3e3mCbflrM-eE0GxR3h?usp=sharing",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1048,11 +1053,11 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p97");
+    // await this.spellCheck("p93");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p97");
+    // await this.getCorePortfolio("p93");
 
 
     // aspirant to designer
