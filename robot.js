@@ -88,10 +88,10 @@ Robot.prototype.memberUpdate = async function () {
   }
 }
 
-Robot.prototype.dataConsole = function (testMode = false) {
+Robot.prototype.dataConsole = function (noStatic = false) {
   const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
   let app = new DataConsole();
-  app.connect(testMode);
+  app.connect(noStatic);
 }
 
 Robot.prototype.staticUpload = function () {
@@ -674,7 +674,7 @@ const MENU = {
   },
   back: async function () {
     try {
-      if (process.argv[3] === "test") {
+      if (/nostatic/gi.test(process.argv[3])) {
         robot.dataConsole(true);
       } else {
         robot.dataConsole(false);

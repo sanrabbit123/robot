@@ -3,9 +3,16 @@ module.exports = {
     {
       name: "robot",
       script: "./robot.js",
-      instances: 4,
+      instances: 1,
       exec_mode: "cluster",
       args: [ "back" ]
+    },
+    {
+      name: "robot",
+      script: "./robot.js",
+      instances: 3,
+      exec_mode: "cluster",
+      args: [ "back", "--nostatic" ]
     },
     {
       name: "ghost",

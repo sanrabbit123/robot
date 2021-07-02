@@ -265,9 +265,11 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   try {
 
     //set static
-    const staticDir = `${this.dir}/router/source/middle`;
-    const staticDirList_raw = await fileSystem(`readDir`, [ staticDir ]);
-    const staticDirList = staticDirList_raw.filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
+    const staticTargets = [
+      `${this.dir}/router/source/middle`,
+      `${this.dir}/router/source/ghost/client`,
+      `${this.dir}/router/source/ghost/designer`,
+    ];
     const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
     if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
       await fileSystem(`mkdir`, [ staticFolder ]);
@@ -278,6 +280,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     }
     console.log(`set middle static`);
 
+    let staticDirList;
+    let staticTempDir, staticTempDirList_raw, staticTempDirList;
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString, frontWebString;
     let code0, code1, code2, code3;
     let result, moduleString;
@@ -292,6 +296,15 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let tempArr;
     let tempMediaResult;
     let trapString;
+
+    staticDirList = [];
+    for (let s of staticTargets) {
+      staticTempDir = s;
+      staticTempDirList_raw = await fileSystem(`readDir`, [ staticTempDir ]);
+      staticTempDirList_raw = staticTempDirList_raw.filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
+      staticTempDirList = staticTempDirList_raw.map((fileName) => { return { dir: staticTempDir, file: fileName }; });
+      staticDirList = staticDirList.concat(staticTempDirList);
+    }
 
     //module transform
     moduleTrans = async function (tree, name) {
@@ -357,7 +370,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     //write local js
     console.log(`set middle target :`, staticDirList);
     resultFromArr = [];
-    for (let i of staticDirList) {
+    for (let { file: i, dir: staticDir } of staticDirList) {
 
       result = '';
       code0 = '';
@@ -527,7 +540,7 @@ DataConsole.prototype.mergeRouter = async function (middle = true) {
         if (middle) {
           routerFragmentsDir.push(i);
         } else {
-          if (!/middle/gi.test(i.split('_')[1])) {
+          if (!/middle/gi.test(i.split('_')[1]) && !/ghost/gi.test(i.split('_')[1])) {
             routerFragmentsDir.push(i);
           }
         }
@@ -615,7 +628,7 @@ DataConsole.prototype.setBinary = async function () {
   }
 }
 
-DataConsole.prototype.connect = async function (testMode = false) {
+DataConsole.prototype.connect = async function (noStatic = false) {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   const https = require("https");
@@ -692,7 +705,7 @@ DataConsole.prototype.connect = async function (testMode = false) {
     let certDir, keyDir, caDir;
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + (testMode ? this.address.officeinfo.ghost.host : address.host);
+    pemsLink = process.cwd() + "/pems/" + address.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
@@ -719,7 +732,6 @@ DataConsole.prototype.connect = async function (testMode = false) {
     //set router
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
     const DataRouter = await this.mergeRouter(DataMiddle !== null);
-    const routerHash = await this.back.getAjaxAuthorization();
     const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isGhost, isLocal);
     await router.setMembers();
     const rouObj = router.getAll();
@@ -749,11 +761,6 @@ DataConsole.prototype.connect = async function (testMode = false) {
             }
           }
 
-          // if (__wallLogicBoo) {
-          //   __authorization = req.headers["authorization"] || req.headers["Authorization"];
-          //   __wallLogicBoo = (__authorization === routerHash);
-          // }
-
           if (!__wallLogicBoo) {
             res.set("Content-Type", "application/json");
             res.send(JSON.stringify({ message: "OK" }));
@@ -772,9 +779,11 @@ DataConsole.prototype.connect = async function (testMode = false) {
     console.log(`set router`);
 
     //set static
-    await this.renderStatic(staticFolder, address, DataPatch, isGhost);
-    if (DataMiddle !== null) {
-      await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
+    if (!noStatic) {
+      await this.renderStatic(staticFolder, address, DataPatch, isGhost);
+      if (DataMiddle !== null) {
+        await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
+      }
     }
 
     //set binary
@@ -789,11 +798,7 @@ DataConsole.prototype.connect = async function (testMode = false) {
     // });
 
     //server on
-    if (testMode) {
-      https.createServer(pems, app).listen(5000, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
-    } else {
-      https.createServer(pems, app).listen(3000, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
-    }
+    https.createServer(pems, app).listen(3000, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
 
   } catch (e) {
     console.log(e);
