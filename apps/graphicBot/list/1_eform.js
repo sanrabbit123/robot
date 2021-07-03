@@ -17,22 +17,22 @@ module.exports = function (proid, info) {
         let data, raw;
         let titleName;
         let titleAddress;
-        let rows
+        let rows;
 
-        rows = await ajaxJson({
-          to: "python",
-          path: "/generalMongo",
-          data: {
-            mode: "read",
-            db: "python",
-            collection: "stylingForm",
-            whereQuery: { proid: project.proid },
-          }
-        }, AJAXCONST);
-
-        console.log(rows);
+        // rows = await ajaxJson({
+        //   to: "python",
+        //   path: "/generalMongo",
+        //   data: {
+        //     mode: "read",
+        //     db: "python",
+        //     collection: "stylingForm",
+        //     whereQuery: { proid: project.proid },
+        //   }
+        // }, AJAXCONST);
+        //
+        // console.log(rows);
         window.alert("안녕?");
-        window.alert(rows);
+        // window.alert(rows);
 
         if (rows.length === 0) {
 
