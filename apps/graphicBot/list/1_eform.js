@@ -19,7 +19,7 @@ module.exports = function (proid, info) {
         let titleAddress;
         let rows;
 
-        rows = await ajaxJson({
+        rows = equalJson(await ajaxPromise({
           to: "python",
           path: "/generalMongo",
           data: {
@@ -28,11 +28,11 @@ module.exports = function (proid, info) {
             collection: "stylingForm",
             whereQuery: { proid: project.proid },
           }
-        }, AJAXCONST);
+        }, AJAXCONST));
 
         console.log(rows);
         window.alert("안녕?");
-        // window.alert(rows);
+        window.alert(rows);
 
         if (rows.length === 0) {
 
@@ -246,7 +246,6 @@ module.exports = function (proid, info) {
 
       } catch (e) {
         console.log(e);
-        window.alert(e);
       }
     }
   ];

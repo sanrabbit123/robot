@@ -450,7 +450,6 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const HOSTCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "\"\n\n";
     frontFirst += "const equalJson = " + this.frontGeneral.equalJson.toString() + ";\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
-    frontFirst += "const ajaxJson = " + this.frontGeneral.ajaxJson.toString() + ";\n\n";
     frontFirst += "const sleep = " + this.frontGeneral.sleep.toString() + ";\n\n";
     frontFirst += "const dateToString = " + this.frontGeneral.dateToString.toString() + ";\n\n";
     frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
