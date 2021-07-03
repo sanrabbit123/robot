@@ -329,8 +329,10 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
         url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port) + "/form";
 
         await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName, contractAddress }, { headers: { "Content-type": "application/json" } });
+      } else {
+        console.log("styling form cancel : " + proid);
+        instance.mother.slack_bot.chat.postMessage({ text: "프로젝트 " + proid + "의 스타일링 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer" });
       }
-
 
       res.set({
         "Content-Type": "application/json",
