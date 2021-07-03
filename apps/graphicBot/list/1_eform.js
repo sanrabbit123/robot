@@ -19,18 +19,18 @@ module.exports = function (proid, info) {
         let titleAddress;
         let rows;
 
-        // rows = await ajaxJson({
-        //   to: "python",
-        //   path: "/generalMongo",
-        //   data: {
-        //     mode: "read",
-        //     db: "python",
-        //     collection: "stylingForm",
-        //     whereQuery: { proid: project.proid },
-        //   }
-        // }, AJAXCONST);
-        //
-        // console.log(rows);
+        rows = await ajaxJson({
+          to: "python",
+          path: "/generalMongo",
+          data: {
+            mode: "read",
+            db: "python",
+            collection: "stylingForm",
+            whereQuery: { proid: project.proid },
+          }
+        }, AJAXCONST);
+
+        console.log(rows);
         window.alert("안녕?");
         // window.alert(rows);
 
@@ -246,6 +246,7 @@ module.exports = function (proid, info) {
 
       } catch (e) {
         console.log(e);
+        window.alert(e);
       }
     }
   ];
