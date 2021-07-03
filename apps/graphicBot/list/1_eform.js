@@ -29,10 +29,10 @@ module.exports = function (proid, info) {
             whereQuery: { proid: project.proid },
           }
         }, AJAXCONST);
+
         console.log(rows);
         window.alert("안녕?");
-
-        rows = [ 1 ];
+        window.alert(rows);
 
         if (rows.length === 0) {
 
