@@ -1214,6 +1214,7 @@ GraphicBot.prototype.botServer = async function () {
   try {
     let front, routerObj;
     let pems, pemsLink, certDir, keyDir, caDir;
+    let tongItems;
 
     await this.back.setInfoObj({ getMode: false });
 
@@ -1256,6 +1257,16 @@ GraphicBot.prototype.botServer = async function () {
     }
     for (let obj of routerObj.post) {
       app.post(obj.link, obj.func);
+    }
+
+    if (await fileSystem(`exist`, [ instance.tong ])) {
+      tongItems = await fileSystem(`readDir`, [ `${instance.tong}` ]);
+      tongItems = tongItems.filter((i) => { return /^g_/.test(i); });
+      console.log("tong item :", tongItems);
+      for (let i of tongItems) {
+        shell.exec(`rm -rf ${shellLink(instance.tong)}/${i}`);
+      }
+      console.log("tong clean success");
     }
 
     await this.getChromeSize();

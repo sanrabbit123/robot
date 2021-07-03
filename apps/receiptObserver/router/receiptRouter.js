@@ -306,25 +306,32 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
         throw new Error("invaild post");
       }
       const { proid, contractName, contractAddress } = req.body;
-      const selfMongo = instance.mongo;
-      const project = await back.getProjectById(proid, { selfMongo });
-      const client = await back.getClientById(project.cliid, { selfMongo });
-      const designer = await back.getDesignerById(project.desid, { selfMongo });
-      let url, requestNumber, proposalDate;
 
-      proposalDate = project.proposal.date.valueOf();
+      const rows = await back.mongoRead("stylingForm", { proid }, { selfMongo: instance.mongolocal });
 
-      requestNumber = 0;
-      for (let i = 0; i < client.requests.length; i++) {
-        if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
-          requestNumber = i;
-          break;
+      if (rows.length === 0) {
+        const selfMongo = instance.mongo;
+        const project = await back.getProjectById(proid, { selfMongo });
+        const client = await back.getClientById(project.cliid, { selfMongo });
+        const designer = await back.getDesignerById(project.desid, { selfMongo });
+        let url, requestNumber, proposalDate;
+
+        proposalDate = project.proposal.date.valueOf();
+
+        requestNumber = 0;
+        for (let i = 0; i < client.requests.length; i++) {
+          if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
+            requestNumber = i;
+            break;
+          }
         }
+
+        url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port) + "/form";
+
+        await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName, contractAddress }, { headers: { "Content-type": "application/json" } });
       }
 
-      url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port) + "/form";
 
-      await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName, contractAddress }, { headers: { "Content-type": "application/json" } });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
