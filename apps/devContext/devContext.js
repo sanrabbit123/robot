@@ -58,20 +58,6 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const proid = "p2106_aa17s"
-    const selfMongo = this.MONGOC;
-    const project = await back.getProjectById(proid, { selfMongo });
-    const client = await back.getClientById(project.cliid, { selfMongo });
-    const designer = await back.getDesignerById(project.desid, { selfMongo });
-    let url, requestNumber, proposalDate;
-
-    requestNumber = 0;
-
-    url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port) + "/form";
-
-    await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName: '', contractAddress: '' }, { headers: { "Content-type": "application/json" } });
-
-
 
 
 
