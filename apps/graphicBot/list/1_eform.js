@@ -30,10 +30,6 @@ module.exports = function (proid, info) {
           }
         }, AJAXCONST));
 
-        console.log(rows);
-        window.alert("안녕?");
-        window.alert(rows);
-
         if (rows.length === 0) {
 
           titleName = client.name;
