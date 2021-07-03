@@ -1598,12 +1598,18 @@ GeneralJs.protoPatch = async function (instance, modulePath, protoName = null) {
 }
 
 GeneralJs.equalJson = function (jsonString) {
-  let filtered;
-  filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
-  filtered = filtered.replace(/nbsp\;/g, "&nbsp;");
-  const tempFunc = new Function("const obj = " + filtered + "; return obj;");
-  const json = tempFunc();
-  return json;
+  if (typeof jsonString === "string") {
+    let filtered;
+    filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+    filtered = filtered.replace(/nbsp\;/g, "&nbsp;");
+    const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+    const json = tempFunc();
+    return json;
+  } else if (typeof jsonString === "object") {
+    return jsonString;
+  } else {
+    throw new Error("invaild input");
+  }
 }
 
 GeneralJs.autoComma = function (str) {
