@@ -445,10 +445,12 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       frontFirst += "const POSTCONST = " + String(arg) + "\n\n";
     }
     frontFirst += "const RECEIVECONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/receive\"\n\n";
+    frontFirst += "const AJAXCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/ajax\"\n\n";
     frontFirst += "const ENDCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/frontEnd\"\n\n";
     frontFirst += "const HOSTCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "\"\n\n";
     frontFirst += "const equalJson = " + this.frontGeneral.equalJson.toString() + ";\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
+    frontFirst += "const ajaxJson = " + this.frontGeneral.ajaxJson.toString() + ";\n\n";
     frontFirst += "const sleep = " + this.frontGeneral.sleep.toString() + ";\n\n";
     frontFirst += "const dateToString = " + this.frontGeneral.dateToString.toString() + ";\n\n";
     frontFirst += "const stringToDate = " + this.frontGeneral.stringToDate.toString() + ";\n\n";
@@ -717,6 +719,41 @@ GraphicBot.prototype.botRouter = function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send({ message: "OK" });
+    }
+  };
+
+  funcObj.post_ajax = {
+    link: [ "/ajax" ],
+    func: async function (req, res) {
+      try {
+        if (req.body.to === undefined || req.body.path === undefined || req.body.data === undefined) {
+          throw new Error("must be to, data, path");
+        }
+
+        let to, path, data;
+        let responseData_raw, responseData;
+
+        to = req.body.to;
+        path = req.body.path;
+        data = equalJson(req.body.data);
+
+        console.log(to, path, data);
+        console.log(JSON.stringify(data, null, 2));
+
+        responseData_raw = await requestSystem(map(to) + path, data, { headers: { "Content-Type": "application/json" } });
+        responseData = responseData_raw.data;
+
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send(JSON.stringify(responseData));
+
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 

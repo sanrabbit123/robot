@@ -2,8 +2,8 @@ module.exports = [
   {
     name: "cashReceipt",
     time: {
-      hour: 8,
-      minute: 40,
+      hour: 14,
+      minute: 30,
       second: 10,
     }
   },
