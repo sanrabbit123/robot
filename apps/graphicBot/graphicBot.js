@@ -607,30 +607,36 @@ GraphicBot.prototype.startWork = function () {
         await sleep(5000);
       }
       instance.doing = 1;
+      const now = new Date();
       let workingList_name, workingList;
       let tempArr;
       let contents;
       let workSuccess;
       let totalSuccess;
+      let thisWorkDate;
       workingList_name = await fileSystem(`readDir`, [ instance.tong ]);
       workingList_name = workingList_name.filter((n) => { return (new RegExp("^g_")).test(n); });
       workingList_name.sort((a, b) => { return Number(a.split('_')[2]) - Number(b.split('_')[2]); });
       workingList = [];
       for (let name of workingList_name) {
         tempArr = name.split('_');
-        contents = await fileSystem(`readString`, [ `${instance.tong}/${name}` ]);
-        workingList.push({ task: Number(tempArr[1]), contents, name });
+        thisWorkDate = new Date(Number(tempArr[2]));
+        if (now.valueOf() - thisWorkDate.valueOf() <= (1000 * 60 * 60 * 3)) {
+          contents = await fileSystem(`readString`, [ `${instance.tong}/${name}` ]);
+          workingList.push({ task: Number(tempArr[1]), contents, name });
+        } else {
+          shell.exec(`rm -rf ${shellLink(instance.tong + "/" + name)}`);
+        }
       }
 
       totalSuccess = [];
       for (let { task, contents, name } of workingList) {
         if (isJson(contents)) {
           workSuccess = await instance.botOrders(task, JSON.parse(contents));
-          await sleep(500);
         } else {
           workSuccess = await instance.botOrders(task, contents);
-          await sleep(500);
         }
+        await sleep(500);
         totalSuccess.push(workSuccess);
         if (workSuccess) {
           shell.exec(`rm -rf ${shellLink(instance.tong + "/" + name)}`);
