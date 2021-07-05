@@ -600,167 +600,6 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
   return map;
 }
 
-DesignerProposalJs.prototype.setBackground = function () {
-  const instance = this;
-  const { ea, media } = this;
-  const { backHeight } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let backGray, backImage;
-  let style;
-  let backgroundImageName;
-
-  backgroundImageName = "back.jpg";
-
-  backGray = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    top: String(0),
-    left: String(0),
-    width: String(100) + '%',
-    height: String(100) + '%',
-    background: desktop ? GeneralJs.colorChip.gray2 : GeneralJs.colorChip.gray1,
-    animation: "justfadeinoriginal 0.3s ease forwards",
-  };
-  for (let i in style) {
-    backGray.style[i] = style[i];
-  }
-  this.totalContents.appendChild(backGray);
-
-  backImage = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    top: String(0),
-    left: String(0),
-    width: String(100) + '%',
-    height: String(backHeight) + ea,
-    backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/" + backgroundImageName + "')",
-    backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
-    backgroundPosition: "top",
-    animation: "justfadeinoriginal 0.3s ease forwards",
-  };
-  for (let i in style) {
-    backImage.style[i] = style[i];
-  }
-  this.totalContents.appendChild(backImage);
-}
-
-DesignerProposalJs.prototype.setNavigator = function () {
-  const instance = this;
-  let { ea, standardWidth, media } = this;
-  let mobile = media[4];
-  let desktop = !mobile;
-  let naviBase, logo;
-  let style;
-  let iconHeight, iconTop;
-  let wordHeight, wordSize, wordTop;
-  let height, width;
-  let nameTong;
-  let mobileMargin;
-
-  iconHeight = <%% 22, 22, 20, 18, 16 %%>;
-  iconTop = <%% 21, 21, 20, 18, 20 %%>;
-  wordHeight = <%% 20, 20, 20, 20, 20 %%>;
-  wordSize = <%% 15, 15, 15, 14, 13 %%>;
-  wordTop = <%% 24, 24, 21, 19, 18 %%>;
-  ea = desktop ? ea : "px";
-  mobileMargin = 28;
-
-  if (desktop) {
-    wordTop = wordTop + (GeneralJs.isMac() ? 0 : 1);
-  }
-
-  naviBase = GeneralJs.nodes.div.cloneNode(true);
-  naviBase.classList.add("backblurdefault_lite");
-  style = {
-    position: "fixed",
-    background: GeneralJs.colorChip.gradientGray,
-    height: String(this.naviHeight) + ea,
-    width: String(100) + '%',
-    top: String(0),
-    left: String(0),
-    zIndex: String(1),
-  };
-  for (let i in style) {
-    naviBase.style[i] = style[i];
-  }
-
-  logo = SvgTong.stringParsing(this.mother.returnLogo(GeneralJs.colorChip.white, 0));
-  logo.classList.add("hoverDefault");
-  style = {
-    position: "absolute",
-    top: String(iconTop) + ea,
-    left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-    height: String(iconHeight) + ea,
-    width: String(iconHeight * SvgTong.getRatio(logo)) + ea,
-  };
-  if (mobile) {
-    style.left = String(mobileMargin) + ea;
-  }
-  for (let i in style) {
-    logo.style[i] = style[i];
-  }
-  logo.addEventListener("click", function (e) {
-    window.location.href = instance.frontPage;
-  });
-  naviBase.appendChild(logo);
-
-  nameTong = GeneralJs.nodes.div.cloneNode(true);
-  nameTong.textContent = this.client.name + " 고객님 제안서";
-  style = {
-    position: "absolute",
-    top: String(wordTop) + ea,
-    right: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-    height: String(wordHeight) + ea,
-    width: String(200) + ea,
-    fontSize: String(wordSize) + ea,
-    fontWeight: String(300),
-    textAlign: "right",
-    wordSpacing: String(-1) + ea,
-    color: GeneralJs.colorChip.white,
-  };
-  if (mobile) {
-    style.right = String(mobileMargin) + ea;
-  }
-  for (let i in style) {
-    nameTong.style[i] = style[i];
-  }
-  naviBase.appendChild(nameTong);
-
-  this.totalContents.appendChild(naviBase);
-
-}
-
-DesignerProposalJs.prototype.setBaseTong = function () {
-  const instance = this;
-  const { ea, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  let baseTong;
-  let style;
-  let baseTop;
-
-  baseTop = <%% 200, 200, 170, 140, 10 %%>;
-
-  baseTong = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    width: String(this.standardWidth) + ea,
-    left: "calc(50% - " + String(this.standardWidth / 2) + ea + ")",
-    paddingTop: String(baseTop) + ea,
-    animation: "fadeupdelay 0.5s ease forwards",
-  };
-  if (mobile) {
-    style.paddingTop = "calc(" + String(this.naviHeight) + "px" + " + " + String(baseTop) + ea + ")";
-  }
-  for (let i in style) {
-    baseTong.style[i] = style[i];
-  }
-
-  this.baseTong = baseTong;
-  this.totalContents.appendChild(baseTong);
-}
-
 DesignerProposalJs.prototype.insertInitBox = function () {
   const instance = this;
   const { withOut, returnGet } = GeneralJs;
@@ -4174,6 +4013,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
 DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
+
     this.mother.setGeneralProperties(this);
 
     const getObj = GeneralJs.returnGet();
@@ -4261,37 +4101,28 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       this.testMode = true;
     }
 
+    await this.mother.ghostClientLaunching({
+      base: {
+        instance: this,
+        binaryPath: DesignerProposalJs.binaryPath,
+        subTitle: (this.client.name + " 고객님 제안서"),
+      },
+      local: async () => {
+        try {
+          instance.insertInitBox();
+          instance.insertDesignerBoxes();
+          instance.insertServiceBox();
+          instance.insertWordBox();
+          instance.insertPannelBox();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    });
+
     //loading end
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
-
-    //base setting
-    this.setBackground();
-    this.setNavigator();
-    this.setBaseTong();
-
-    //insert contents
-    this.insertInitBox();
-    this.insertDesignerBoxes();
-    this.insertServiceBox();
-    this.insertWordBox();
-    this.insertPannelBox();
-
-    //set footer
-    if (this.media[4]) {
-      this.mother.footerMake('A', "gradientGreen", true);
-      belowTarget = document.querySelector(".mofooterbelow");
-      belowTarget.removeChild(belowTarget.firstChild);
-      removeTargets = belowTarget.querySelectorAll("a");
-      for (let dom of removeTargets) {
-        belowTarget.removeChild(dom);
-      }
-    } else {
-      this.mother.footerMake();
-      this.mother.homeliaisonTalk();
-    }
-
-    this.totalContents.style.height = "auto";
 
   } catch (e) {
     console.log(e);

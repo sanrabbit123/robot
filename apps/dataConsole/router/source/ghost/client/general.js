@@ -45,60 +45,54 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
 
 GeneralJs.prototype.setBackground = function (binaryPath) {
   const instance = this;
-  const { ea, media } = this;
-  const { backHeight } = this;
+  const { ea, media, backHeight, totalContents } = this;
+  const { createNodes, colorChip, withOut } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
-  let backGray, backImage;
-  let style;
-  let backgroundImageName;
+  const backgroundImageName = "back.jpg";
 
-  backgroundImageName = "back.jpg";
+  createNodes([
+    {
+      mother: totalContents,
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: desktop ? colorChip.gray2 : colorChip.gray1,
+        animation: "justfadeinoriginal 0.3s ease forwards",
+      }
+    },
+    {
+      mother: totalContents,
+      style: {
+        position: "absolute",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(backHeight) + ea,
+        backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
+        backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
+        backgroundPosition: "top",
+        animation: "justfadeinoriginal 0.3s ease forwards",
+      }
+    }
+  ]);
 
-  backGray = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    top: String(0),
-    left: String(0),
-    width: String(100) + '%',
-    height: String(100) + '%',
-    background: desktop ? GeneralJs.colorChip.gray2 : GeneralJs.colorChip.gray1,
-    animation: "justfadeinoriginal 0.3s ease forwards",
-  };
-  for (let i in style) {
-    backGray.style[i] = style[i];
-  }
-  this.totalContents.appendChild(backGray);
-
-  backImage = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "absolute",
-    top: String(0),
-    left: String(0),
-    width: String(100) + '%',
-    height: String(backHeight) + ea,
-    backgroundImage: "url('" + DesignerProposalJs.binaryPath + "/" + backgroundImageName + "')",
-    backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
-    backgroundPosition: "top",
-    animation: "justfadeinoriginal 0.3s ease forwards",
-  };
-  for (let i in style) {
-    backImage.style[i] = style[i];
-  }
-  this.totalContents.appendChild(backImage);
 }
 
-GeneralJs.prototype.setNavigator = function () {
+GeneralJs.prototype.setNavigator = function (subTitle) {
   const instance = this;
-  let { ea, standardWidth, media } = this;
+  const { standardWidth, media, totalContents, naviHeight, frontPage } = this;
+  const { createNode, createNodes, colorChip, withOut, blankHref } = GeneralJs;
+  let { ea } = this;
   let mobile = media[4];
   let desktop = !mobile;
-  let naviBase, logo;
-  let style;
+  let naviBase;
   let iconHeight, iconTop;
   let wordHeight, wordSize, wordTop;
   let height, width;
-  let nameTong;
   let mobileMargin;
 
   iconHeight = <%% 22, 22, 20, 18, 16 %%>;
@@ -113,70 +107,63 @@ GeneralJs.prototype.setNavigator = function () {
     wordTop = wordTop + (GeneralJs.isMac() ? 0 : 1);
   }
 
-  naviBase = GeneralJs.nodes.div.cloneNode(true);
-  naviBase.classList.add("backblurdefault_lite");
-  style = {
-    position: "fixed",
-    background: GeneralJs.colorChip.gradientGray,
-    height: String(this.naviHeight) + ea,
-    width: String(100) + '%',
-    top: String(0),
-    left: String(0),
-    zIndex: String(1),
-  };
-  for (let i in style) {
-    naviBase.style[i] = style[i];
-  }
-
-  logo = SvgTong.stringParsing(this.mother.returnLogo(GeneralJs.colorChip.white, 0));
-  logo.classList.add("hoverDefault");
-  style = {
-    position: "absolute",
-    top: String(iconTop) + ea,
-    left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-    height: String(iconHeight) + ea,
-    width: String(iconHeight * SvgTong.getRatio(logo)) + ea,
-  };
-  if (mobile) {
-    style.left = String(mobileMargin) + ea;
-  }
-  for (let i in style) {
-    logo.style[i] = style[i];
-  }
-  logo.addEventListener("click", function (e) {
-    window.location.href = instance.frontPage;
+  naviBase = createNode({
+    mother: totalContents,
+    class: [ "backblurdefault_lite" ],
+    style: {
+      position: "fixed",
+      background: colorChip.gradientGray,
+      height: String(naviHeight) + ea,
+      width: String(100) + '%',
+      top: String(0),
+      left: String(0),
+      zIndex: String(1),
+    }
   });
-  naviBase.appendChild(logo);
 
-  nameTong = GeneralJs.nodes.div.cloneNode(true);
-  nameTong.textContent = this.client.name + " 고객님 제안서";
-  style = {
-    position: "absolute",
-    top: String(wordTop) + ea,
-    right: "calc(50% - " + String(standardWidth / 2) + ea + ")",
-    height: String(wordHeight) + ea,
-    width: String(200) + ea,
-    fontSize: String(wordSize) + ea,
-    fontWeight: String(300),
-    textAlign: "right",
-    wordSpacing: String(-1) + ea,
-    color: GeneralJs.colorChip.white,
-  };
-  if (mobile) {
-    style.right = String(mobileMargin) + ea;
-  }
-  for (let i in style) {
-    nameTong.style[i] = style[i];
-  }
-  naviBase.appendChild(nameTong);
-
-  this.totalContents.appendChild(naviBase);
+  createNodes([
+    {
+      mother: naviBase,
+      mode: "svg",
+      source: this.returnLogo(colorChip.white, 0),
+      class: [ "hoverDefault" ],
+      events: {
+        type: "click",
+        event: (e) => {
+          blankHref(frontPage);
+        }
+      },
+      style: {
+        position: "absolute",
+        top: String(iconTop) + ea,
+        left: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(mobileMargin) + ea,
+        height: String(iconHeight) + ea,
+      }
+    },
+    {
+      mother: naviBase,
+      text: subTitle,
+      style: {
+        position: "absolute",
+        top: String(wordTop) + ea,
+        right: desktop ? "calc(50% - " + String(standardWidth / 2) + ea + ")" : String(mobileMargin) + ea,
+        height: String(wordHeight) + ea,
+        width: String(200) + ea,
+        fontSize: String(wordSize) + ea,
+        fontWeight: String(300),
+        textAlign: "right",
+        wordSpacing: String(-1) + ea,
+        color: colorChip.white,
+      }
+    }
+  ]);
 
 }
 
-GeneralJs.prototype.setBaseTong = function () {
+GeneralJs.prototype.setBaseTong = function (child) {
   const instance = this;
-  const { ea, media } = this;
+  const { ea, media, totalContents, standardWidth, naviHeight } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   let baseTong;
@@ -184,22 +171,66 @@ GeneralJs.prototype.setBaseTong = function () {
   let baseTop;
 
   baseTop = <%% 200, 200, 170, 140, 10 %%>;
+  baseTong = createNode({
+    mother: totalContents,
+    style: {
+      position: "relative",
+      width: String(standardWidth) + ea,
+      left: "calc(50% - " + String(standardWidth / 2) + ea + ")",
+      paddingTop: desktop ? String(baseTop) + ea : "calc(" + String(naviHeight) + "px" + " + " + String(baseTop) + ea + ")",
+      animation: "fadeupdelay 0.5s ease forwards",
+    }
+  });
 
-  baseTong = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    width: String(this.standardWidth) + ea,
-    left: "calc(50% - " + String(this.standardWidth / 2) + ea + ")",
-    paddingTop: String(baseTop) + ea,
-    animation: "fadeupdelay 0.5s ease forwards",
-  };
-  if (mobile) {
-    style.paddingTop = "calc(" + String(this.naviHeight) + "px" + " + " + String(baseTop) + ea + ")";
-  }
-  for (let i in style) {
-    baseTong.style[i] = style[i];
-  }
-
+  this.baseTop = baseTop;
   this.baseTong = baseTong;
-  this.totalContents.appendChild(baseTong);
+  child.baseTop = this.baseTop;
+  child.baseTong = this.baseTong;
+}
+
+GeneralJs.prototype.setGeneralBase = function (obj) {
+  if (typeof obj !== "object") {
+    throw new Error("must be object => { instance, binaryPath, subTitle }");
+  }
+  if (obj.instance === undefined || typeof obj.binaryPath !== "string" || typeof obj.subTitle !== "string") {
+    throw new Error("must be object => { instance, binaryPath, subTitle }");
+  }
+  const { instance, binaryPath, subTitle } = obj;
+  this.setBackground(binaryPath);
+  this.setNavigator(subTitle);
+  this.setBaseTong(instance);
+}
+
+GeneralJs.prototype.ghostClientLaunching = async function (obj) {
+  const instance = this;
+  try {
+    if (typeof obj !== "object") {
+      throw new Error("must be object => { base, local }");
+    }
+    if (typeof obj.base !== "object" || typeof obj.local !== "function") {
+      throw new Error("must be object => { base, local }");
+    }
+    const { base, local } = obj;
+    let belowTarget, removeTargets;
+
+    this.setGeneralBase(base);
+    await local();
+
+    if (this.media[4]) {
+      this.footerMake('A', "gradientGreen", true);
+      belowTarget = document.querySelector(".mofooterbelow");
+      belowTarget.removeChild(belowTarget.firstChild);
+      removeTargets = belowTarget.querySelectorAll("a");
+      for (let dom of removeTargets) {
+        belowTarget.removeChild(dom);
+      }
+    } else {
+      this.footerMake();
+      this.homeliaisonTalk();
+    }
+    this.totalContents.style.height = "auto";
+
+  } catch (e) {
+    console.log(e);
+  }
 }
