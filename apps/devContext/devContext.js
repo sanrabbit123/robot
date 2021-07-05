@@ -60,9 +60,15 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const target = process.env.HOME + "/tempwwwbinaries";
-    const res = await treeParsing(target, true, (i) => { return i.slice(("/Users/baechang-gyu/".length)) });
-    console.log(res);
+
+    // const kakaoInstance = new KakaoTalk();
+    // await kakaoInstance.ready();
+    // await kakaoInstance.sendTalk("complete", "임지민", "010-3412-1435");
+    // await kakaoInstance.sendTalk("photo", "임지민", "010-3412-1435");
+
+
+    
+
 
 
 

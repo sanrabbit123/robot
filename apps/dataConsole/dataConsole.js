@@ -818,7 +818,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     }
 
     //set binary
-    await this.setBinary();
+    // await this.setBinary();
 
     //error handle
     // app.use(function (req, res, next) {
