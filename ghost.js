@@ -1179,8 +1179,9 @@ Ghost.prototype.investRouter = function (needs) {
 Ghost.prototype.fileRouter = function (static) {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const staticDir = static;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash, treeParsing } = this.mother;
   let funcObj = {};
   const ghostWall = function (callback, binary = false) {
     const banCode = "<html><head><title>error</title></head><body><script>window.close();</script></body></html>"
@@ -1328,6 +1329,45 @@ Ghost.prototype.fileRouter = function (static) {
         shell.exec(command, { async: true });
         res.send(JSON.stringify({ message: "success" }));
       }
+    }
+  };
+
+  //POST - list
+  funcObj.post_list = {
+    binary: false,
+    link: [ "/list" ],
+    func: function (req, res) {
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+
+      let target;
+
+      if (typeof req.body.target !== "string") {
+        res.send(JSON.stringify({ message: "error" }));
+      } else {
+
+        target = req.body.target;
+        if (/\/$/.test(target)) {
+          target = target.slice(0, -1);
+        }
+        if (/^\//.test(target)) {
+          target = target.slice(1);
+        }
+        target = address.homeinfo.ghost.file.static + "/" + target;
+        treeParsing(target, true, (i) => {
+          return i.slice(address.homeinfo.ghost.file.static.length);
+        }).then((arr) => {
+          res.send(JSON.stringify(arr));
+        }).catch((err) => {
+          res.send(JSON.stringify({ message: "error" }));
+        });
+      }
+
     }
   };
 
