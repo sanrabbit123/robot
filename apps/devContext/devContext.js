@@ -60,11 +60,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const res = await ghostFileList("/designSource");
-    // console.log(res);
-
-
-
 
 
     // const targetFolder = process.cwd() + "/temp";
