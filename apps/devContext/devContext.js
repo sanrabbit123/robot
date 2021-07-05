@@ -61,7 +61,7 @@ DevContext.prototype.launching = async function () {
 
 
     const target = process.env.HOME + "/tempwwwbinaries";
-    const res = await treeParsing(target, true, (e) => { return e.slice(("/Users/baechang-gyu/".length)) });
+    const res = await treeParsing(target, true, (i) => { return i.slice(("/Users/baechang-gyu/".length)) });
     console.log(res);
 
 

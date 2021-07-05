@@ -1468,311 +1468,328 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
       });
     });
   }
-  try {
-    const makeFileArr = async function (target) {
-      try {
-        const stdout = await lsAl(target);
-        let fileList;
-        let tempArr, tempArr2, tempArr3, tempArr4, tempArr5;
-        let temp, str;
-        let newArr;
-
-        fileList = stdout.split("\n");
-        fileList.shift();
-        fileList.pop();
-
-        tempArr = [];
-        for (let i of fileList) {
-          newArr = [];
-          for (let j of i.split(" ")) {
-            if (j !== '' && j !== ' ') {
-              newArr.push(j);
-            }
-          }
-          tempArr.push(newArr);
-        }
-
-        tempArr2 = [];
-        for (let i of tempArr) {
-          temp = {};
-
-          if (i[0][0] === 'd') {
-            temp.directory = true;
-          } else {
-            temp.directory = false;
-          }
-
-          if (i.length > 9) {
-            str = '';
-            for (let j = 8; j < i.length; j++) {
-              str += i[j];
-              str += ' ';
-            }
-            temp.fileName = str.slice(0, -1);
-          } else {
-            temp.fileName = i[8];
-          }
-
-          if (temp.fileName[0] === '.') {
-            temp.hidden = true;
-          } else {
-            temp.hidden = false;
-          }
-
-          temp.absolute = target + "/" + temp.fileName;
-
-          temp.length = temp.absolute.split("/").length;
-
-          tempArr2.push(temp);
-        }
-
-        tempArr3 = [];
-        for (let i of tempArr2) {
-          if (i.fileName !== '.' && i.fileName !== ".." && !/\-\>/gi.test(i.fileName) && i.fileName !== ".DS_Store") {
-            tempArr3.push(i);
-          }
-        }
-
-        tempArr4 = [];
-        for (let i of tempArr3) {
-          if (i.directory) {
-            tempArr4.push(i);
-            tempArr5 = await makeFileArr(i.absolute);
-            for (let j of tempArr5) {
-              tempArr4.push(j);
-            }
-          } else {
-            tempArr4.push(i);
-          }
-        }
-
-        tempArr4.unshift({
-          directory: true,
-          fileName: targetFolderName,
-          hidden: (/^\./.test(targetFolderName)),
-          absolute: target,
-          length: target.split("/").length
-        });
-
-        return tempArr4;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    if (!liteMode) {
-      const setTree = async function (target) {
+  const exist = function (target) {
+    const fs = require('fs');
+    return new Promise(function (resolve, reject) {
+      fs.access(target, fs.constants.F_OK, function (err) {
         try {
-          const result = await makeFileArr(target);
-          class TreeArray extends Array {
+          if (!err) { resolve(true); }
+          else { resolve(false); }
+        } catch (e) {
+          resolve(false);
+        }
+      });
+    });
+  }
+  try {
+    if (await exist(target)) {
+      const makeFileArr = async function (target) {
+        try {
+          const stdout = await lsAl(target);
+          let fileList;
+          let tempArr, tempArr2, tempArr3, tempArr4, tempArr5;
+          let temp, str;
+          let newArr;
 
-            get data() {
-              return this[0];
-            }
+          fileList = stdout.split("\n");
+          fileList.shift();
+          fileList.pop();
 
-            get tree() {
-              return this[0];
-            }
-
-            get value() {
-              return this[0];
-            }
-
-            get target() {
-              return target;
-            }
-
-            async returnFlat() {
-              try {
-                const flatArr = await makeFileArr(target);
-                this.flatDeath = flatArr;
-                return flatArr;
-              } catch (e) {
-                console.log(e);
+          tempArr = [];
+          for (let i of fileList) {
+            newArr = [];
+            for (let j of i.split(" ")) {
+              if (j !== '' && j !== ' ') {
+                newArr.push(j);
               }
             }
-
-            async setLength() {
-              try {
-                let allFlats;
-                if (this.flatDeath === undefined || this.flatDeath === null) {
-                  allFlats = await this.returnFlat();
-                } else {
-                  allFlats = this.flatDeath;
-                }
-                allFlats.sort((a, b) => {
-                  return a.length - b.length;
-                });
-                this.minLength = allFlats[0].length;
-                this.maxLength = allFlats[allFlats.length - 1].length;
-                this.totalLength = this.maxLength - this.minLength + 1;
-              } catch (e) {
-                console.log(e);
-              }
-            }
-
-            async returnIndexFlat(index) {
-              try {
-                if (this.minLength === undefined) {
-                  await this.setLength();
-                }
-                if (index !== "min" && index !== "max") {
-                  if (typeof index !== "number") {
-                    throw new Error("input must be number");
-                  }
-                } else {
-                  index = (index === "min") ? this.minLength : this.maxLength;
-                }
-                if (this.flatDeath === undefined || this.flatDeath === null) {
-                  await this.returnFlat();
-                }
-                let arr = [];
-                for (let i of this.flatDeath) {
-                  if (i.length === index) {
-                    arr.push(i);
-                  }
-                }
-                return arr;
-              } catch (e) {
-                console.log(e);
-              }
-            }
-
-            async returnFlatMatrix() {
-              try {
-                if (this.minLength === undefined) {
-                  await this.setLength();
-                }
-                let result = [];
-                for (let i = this.minLength; i < this.maxLength + 1; i++) {
-                  result.push(await this.returnIndexFlat(i));
-                }
-                return result;
-              } catch (e) {
-                console.log(e);
-              }
-            }
-
-            setFromDir(dir) {
-              this.fromDir = dir;
-            }
-
-            setToDir(dir) {
-              this.toDir = dir;
-            }
-
+            tempArr.push(newArr);
           }
-          let absolutes, tempList;
-          let filter;
-          let filterSplit;
-          let filterSplitJoin;
-          let temp, temp2;
-          let finalJson;
-          let maxLength, minLength;
-          let lengthArr;
-          let tree;
-          let finalTree;
 
-          absolutes = [];
-          absolutes.push(target);
-          for (let i of result) {
+          tempArr2 = [];
+          for (let i of tempArr) {
+            temp = {};
+
+            if (i[0][0] === 'd') {
+              temp.directory = true;
+            } else {
+              temp.directory = false;
+            }
+
+            if (i.length > 9) {
+              str = '';
+              for (let j = 8; j < i.length; j++) {
+                str += i[j];
+                str += ' ';
+              }
+              temp.fileName = str.slice(0, -1);
+            } else {
+              temp.fileName = i[8];
+            }
+
+            if (temp.fileName[0] === '.') {
+              temp.hidden = true;
+            } else {
+              temp.hidden = false;
+            }
+
+            temp.absolute = target + "/" + temp.fileName;
+
+            temp.length = temp.absolute.split("/").length;
+
+            tempArr2.push(temp);
+          }
+
+          tempArr3 = [];
+          for (let i of tempArr2) {
+            if (i.fileName !== '.' && i.fileName !== ".." && !/\-\>/gi.test(i.fileName) && i.fileName !== ".DS_Store") {
+              tempArr3.push(i);
+            }
+          }
+
+          tempArr4 = [];
+          for (let i of tempArr3) {
             if (i.directory) {
-              absolutes.push(i.absolute);
+              tempArr4.push(i);
+              tempArr5 = await makeFileArr(i.absolute);
+              for (let j of tempArr5) {
+                tempArr4.push(j);
+              }
+            } else {
+              tempArr4.push(i);
             }
           }
 
-          filter = Array.from(new Set(absolutes));
-
-          filterSplit = [];
-          for (let i of filter) {
-            filterSplit.push(i.split("/"));
-          }
-
-          filterSplit.sort((a, b) => {
-            return a.length - b.length;
+          tempArr4.unshift({
+            directory: true,
+            fileName: targetFolderName,
+            hidden: (/^\./.test(targetFolderName)),
+            absolute: target,
+            length: target.split("/").length
           });
 
-          filterSplitJoin = [];
-          for (let i of filterSplit) {
-            temp = {
-              directory: true,
-              fileName: i[i.length - 1],
-              hidden: (i[i.length - 1][0] === '.'),
-              absolute: i.join("/"),
-              files: [],
-              length: i.length,
-            };
-            for (let j of result) {
-              temp2 = j.absolute.split("/");
-              if (!j.directory) {
-                if (temp2.length - 1 === i.length) {
-                  if ((new RegExp('^' + temp.absolute)).test(j.absolute)) {
-                    temp.files.push(j);
-                  }
-                }
-              }
-            }
-            filterSplitJoin.push(temp);
-          }
-
-          filterSplitJoin.sort((a, b) => {
-            return a.length - b.length;
-          });
-
-          maxLength = filterSplitJoin[filterSplitJoin.length - 1].length;
-          minLength = filterSplitJoin[0].length;
-
-          lengthArr = [];
-          for (let i = minLength; i < maxLength + 1; i++) {
-            temp = [];
-            for (let j of filterSplitJoin) {
-              if (j.length === i) {
-                temp.push(j);
-              }
-            }
-            lengthArr.push(temp);
-          }
-
-          finalJson = new TreeArray();
-          finalJson.push(filterSplitJoin[0]);
-
-          const directoryParsing = function (arr) {
-            for (let obj of arr) {
-              if (obj.directory) {
-                for (let i = 0; i < filterSplitJoin.length; i++) {
-                  if (filterSplitJoin[i].directory) {
-                    if ((new RegExp('^' + obj.absolute)).test(filterSplitJoin[i].absolute) && (obj.length + 1 === filterSplitJoin[i].length)) {
-                      obj.files.push(filterSplitJoin[i]);
-                    }
-                  }
-                }
-              }
-            }
-            for (let i of arr) {
-              if (i.files !== undefined) {
-                i.files = directoryParsing(i.files);
-              }
-            }
-            return arr;
-          }
-
-          finalTree = directoryParsing(finalJson);
-          await finalTree.setLength();
-
-          return finalTree;
-
+          return tempArr4;
         } catch (e) {
           console.log(e);
         }
       }
-      return (await setTree(target));
-    } else {
-      const resultArr = await makeFileArr(target);
-      const finalArr = resultArr.map((obj) => { return obj.absolute; });
-      if (typeof liteCallBack === "function") {
-        return finalArr.map(liteCallBack);
+      if (!liteMode) {
+        const setTree = async function (target) {
+          try {
+            const result = await makeFileArr(target);
+            class TreeArray extends Array {
+
+              get data() {
+                return this[0];
+              }
+
+              get tree() {
+                return this[0];
+              }
+
+              get value() {
+                return this[0];
+              }
+
+              get target() {
+                return target;
+              }
+
+              async returnFlat() {
+                try {
+                  const flatArr = await makeFileArr(target);
+                  this.flatDeath = flatArr;
+                  return flatArr;
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+
+              async setLength() {
+                try {
+                  let allFlats;
+                  if (this.flatDeath === undefined || this.flatDeath === null) {
+                    allFlats = await this.returnFlat();
+                  } else {
+                    allFlats = this.flatDeath;
+                  }
+                  allFlats.sort((a, b) => {
+                    return a.length - b.length;
+                  });
+                  this.minLength = allFlats[0].length;
+                  this.maxLength = allFlats[allFlats.length - 1].length;
+                  this.totalLength = this.maxLength - this.minLength + 1;
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+
+              async returnIndexFlat(index) {
+                try {
+                  if (this.minLength === undefined) {
+                    await this.setLength();
+                  }
+                  if (index !== "min" && index !== "max") {
+                    if (typeof index !== "number") {
+                      throw new Error("input must be number");
+                    }
+                  } else {
+                    index = (index === "min") ? this.minLength : this.maxLength;
+                  }
+                  if (this.flatDeath === undefined || this.flatDeath === null) {
+                    await this.returnFlat();
+                  }
+                  let arr = [];
+                  for (let i of this.flatDeath) {
+                    if (i.length === index) {
+                      arr.push(i);
+                    }
+                  }
+                  return arr;
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+
+              async returnFlatMatrix() {
+                try {
+                  if (this.minLength === undefined) {
+                    await this.setLength();
+                  }
+                  let result = [];
+                  for (let i = this.minLength; i < this.maxLength + 1; i++) {
+                    result.push(await this.returnIndexFlat(i));
+                  }
+                  return result;
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+
+              setFromDir(dir) {
+                this.fromDir = dir;
+              }
+
+              setToDir(dir) {
+                this.toDir = dir;
+              }
+
+            }
+            let absolutes, tempList;
+            let filter;
+            let filterSplit;
+            let filterSplitJoin;
+            let temp, temp2;
+            let finalJson;
+            let maxLength, minLength;
+            let lengthArr;
+            let tree;
+            let finalTree;
+
+            absolutes = [];
+            absolutes.push(target);
+            for (let i of result) {
+              if (i.directory) {
+                absolutes.push(i.absolute);
+              }
+            }
+
+            filter = Array.from(new Set(absolutes));
+
+            filterSplit = [];
+            for (let i of filter) {
+              filterSplit.push(i.split("/"));
+            }
+
+            filterSplit.sort((a, b) => {
+              return a.length - b.length;
+            });
+
+            filterSplitJoin = [];
+            for (let i of filterSplit) {
+              temp = {
+                directory: true,
+                fileName: i[i.length - 1],
+                hidden: (i[i.length - 1][0] === '.'),
+                absolute: i.join("/"),
+                files: [],
+                length: i.length,
+              };
+              for (let j of result) {
+                temp2 = j.absolute.split("/");
+                if (!j.directory) {
+                  if (temp2.length - 1 === i.length) {
+                    if ((new RegExp('^' + temp.absolute)).test(j.absolute)) {
+                      temp.files.push(j);
+                    }
+                  }
+                }
+              }
+              filterSplitJoin.push(temp);
+            }
+
+            filterSplitJoin.sort((a, b) => {
+              return a.length - b.length;
+            });
+
+            maxLength = filterSplitJoin[filterSplitJoin.length - 1].length;
+            minLength = filterSplitJoin[0].length;
+
+            lengthArr = [];
+            for (let i = minLength; i < maxLength + 1; i++) {
+              temp = [];
+              for (let j of filterSplitJoin) {
+                if (j.length === i) {
+                  temp.push(j);
+                }
+              }
+              lengthArr.push(temp);
+            }
+
+            finalJson = new TreeArray();
+            finalJson.push(filterSplitJoin[0]);
+
+            const directoryParsing = function (arr) {
+              for (let obj of arr) {
+                if (obj.directory) {
+                  for (let i = 0; i < filterSplitJoin.length; i++) {
+                    if (filterSplitJoin[i].directory) {
+                      if ((new RegExp('^' + obj.absolute)).test(filterSplitJoin[i].absolute) && (obj.length + 1 === filterSplitJoin[i].length)) {
+                        obj.files.push(filterSplitJoin[i]);
+                      }
+                    }
+                  }
+                }
+              }
+              for (let i of arr) {
+                if (i.files !== undefined) {
+                  i.files = directoryParsing(i.files);
+                }
+              }
+              return arr;
+            }
+
+            finalTree = directoryParsing(finalJson);
+            await finalTree.setLength();
+
+            return finalTree;
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        return (await setTree(target));
       } else {
-        return finalArr;
+        const resultArr = await makeFileArr(target);
+        const finalArr = resultArr.map((obj) => { return obj.absolute; });
+        if (typeof liteCallBack === "function") {
+          return finalArr.map(liteCallBack);
+        } else {
+          return finalArr;
+        }
       }
+    } else {
+      return [];
     }
   } catch (e) {
     console.log(e);
