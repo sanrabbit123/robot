@@ -818,9 +818,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     }
 
     //set binary
-    if (!/localhost/gi.test(address.host)) {
-      // await this.setBinary();
-    }
+    await this.setBinary();
 
     //error handle
     // app.use(function (req, res, next) {

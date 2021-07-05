@@ -47,7 +47,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, s3FileList, ghostFileUpload, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -59,7 +59,53 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
+    const target = process.env.HOME + "/tempwwwbinaries";
+    const res = await treeParsing(target, true, (e) => { return e.slice(("/Users/baechang-gyu/".length)) });
+    console.log(res);
+
+
+
+    // const targetFolder = process.cwd() + "/temp";
+    // const S3HOST = address["s3info"]["host"];
+    // const res = await s3FileList("frontMaker");
+    // let resFolders, resFiles, rawArray;
+    // let tempObject, tempArray;
+    //
+    // resFiles = res.filter((i) => { return !/\/$/.test(i); });
+    //
+    // rawArray = JSON.parse(JSON.stringify(resFiles));
+    // resFolders = [];
+    //
+    // do {
+    //   for (let f of rawArray) {
+    //     tempArray = f.split('/');
+    //     tempArray.pop();
+    //     resFolders.push(tempArray.join('/'));
+    //   }
+    //   resFolders = Array.from(new Set(resFolders));
+    //   rawArray = JSON.parse(JSON.stringify(resFolders));
+    // } while (rawArray.find((i) => { return !(/\//g.test(i)); }) === undefined);
+    //
+    // resFolders.sort((a, b) => { return a.length - b.length });
+    //
+    // for (let f of resFolders) {
+    //   if (!(await fileSystem(`exist`, [ targetFolder + "/" + f ]))) {
+    //     shell.exec(`mkdir ${shellLink(targetFolder)}/${shellLink(f)}`);
+    //   }
+    // }
+    // for (let f of resFiles) {
+    //   tempObject = await binaryRequest(S3HOST + "/" + f);
+    //   await fileSystem(`writeBinary`, [ targetFolder + "/" + f, tempObject ]);
+    //   console.log(`${f} download done`);
+    // }
+
+
+
+
+
+
+
 
 
     // await ghostRequest("/print");
