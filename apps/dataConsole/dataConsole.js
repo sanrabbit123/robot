@@ -211,17 +211,21 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
         }
       }
 
-      //set media query
-      if (/<%%/gi.test(fileString)) {
-        tempMediaResult = this.mediaQuery(fileString);
-        fileString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
-      }
-
       //merge
       code0 = svgTongString + "\n\n" + trapString + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n";
       code1 = dataPatchScript;
       code2 = generalString + "\n\n" + consoleGeneralString;
       code3 = fileString + "\n\n" + execString;
+
+      //set media query
+      if (/<%%/gi.test(code2)) {
+        tempMediaResult = this.mediaQuery(code2);
+        code2 = tempMediaResult.code;
+      }
+      if (/<%%/gi.test(code3)) {
+        tempMediaResult = this.mediaQuery(code3);
+        code3 = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
+      }
 
       result = '';
       result += code0;
@@ -264,50 +268,8 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   try {
 
-    //set static
-    const staticTargets = [
-      `${this.dir}/router/source/middle`,
-      `${this.dir}/router/source/ghost/client`,
-      `${this.dir}/router/source/ghost/designer`,
-    ];
-    const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
-    if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
-      await fileSystem(`mkdir`, [ staticFolder ]);
-    }
-    const targetStaticFolder = await fileSystem(`readDir`, [ staticFolder ]);
-    if (!targetStaticFolder.includes(`middle`)) {
-      await fileSystem(`mkdir`, [ `${staticFolder}/middle` ]);
-    }
-    console.log(`set middle static`);
-
-    let staticDirList;
-    let staticTempDir, staticTempDirList_raw, staticTempDirList;
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString, frontWebString;
-    let code0, code1, code2, code3;
-    let result, moduleString;
-    let prototypes, dataPatchScript, prototypeBoo;
-    let finalMinifyObj, finalMinifyString;
-    let generalSvg;
-    let treeArray;
-    let moduleBoo;
-    let moduleTrans;
-    let totalModuleObjectConst;
-    let resultFromArr;
-    let tempArr;
-    let tempMediaResult;
-    let trapString;
-
-    staticDirList = [];
-    for (let s of staticTargets) {
-      staticTempDir = s;
-      staticTempDirList_raw = await fileSystem(`readDir`, [ staticTempDir ]);
-      staticTempDirList_raw = staticTempDirList_raw.filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
-      staticTempDirList = staticTempDirList_raw.map((fileName) => { return { dir: staticTempDir, file: fileName }; });
-      staticDirList = staticDirList.concat(staticTempDirList);
-    }
-
-    //module transform
-    moduleTrans = async function (tree, name) {
+    //module transform function
+    const moduleTrans = async function (tree, name) {
       try {
         const thisModuleDir = await fileSystem(`readDir`, [ instance.middleModuleDir + "/" + name ]);
         const { flatDeath } = tree;
@@ -351,6 +313,63 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       }
     }
 
+    //set static
+    const staticTargets = [
+      `${this.dir}/router/source/middle`,
+      `${this.dir}/router/source/ghost/client`,
+      `${this.dir}/router/source/ghost/designer`,
+    ];
+    const homeDirList = await fileSystem(`readDir`, [ process.env.HOME ]);
+    if (!homeDirList.includes(staticFolder.split('/')[staticFolder.split('/').length - 1])) {
+      await fileSystem(`mkdir`, [ staticFolder ]);
+    }
+    const targetStaticFolder = await fileSystem(`readDir`, [ staticFolder ]);
+    if (!targetStaticFolder.includes(`middle`)) {
+      await fileSystem(`mkdir`, [ `${staticFolder}/middle` ]);
+    }
+    console.log(`set middle static`);
+
+    let staticDirList;
+    let staticTempDir, staticTempDirList_raw, staticTempDirList;
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, s3String, sseString, sseConsoleString, polyfillString, pythonString, frontClassString, bridgeString, frontWebString;
+    let code0, code1, code2, code3;
+    let result, moduleString;
+    let prototypes, dataPatchScript, prototypeBoo;
+    let finalMinifyObj, finalMinifyString;
+    let generalSvg;
+    let treeArray;
+    let moduleBoo;
+    let totalModuleObjectConst;
+    let resultFromArr;
+    let tempArr;
+    let tempMediaResult;
+    let trapString;
+    let ghostClientGeneral, ghostDesignerGeneral;
+    let ghostClientGeneralString, ghostDesignerGeneralString;
+
+    staticDirList = [];
+    for (let s of staticTargets) {
+      staticTempDir = s;
+      staticTempDirList_raw = await fileSystem(`readDir`, [ staticTempDir ]);
+      staticTempDirList_raw = staticTempDirList_raw.filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
+      staticTempDirList = staticTempDirList_raw.map((fileName) => { return { dir: staticTempDir, file: fileName, kinds: (/apps\/dataConsole\/router\/source\/ghost\/client/g.test(staticTempDir) ? "GHOST:CLIENT" : (/apps\/dataConsole\/router\/source\/ghost\/designer/g.test(staticTempDir) ? "GHOST:DESIGNER" : "MIDDLE")) }; });
+      staticDirList = staticDirList.concat(staticTempDirList);
+    }
+    ghostClientGeneralString = '';
+    ghostDesignerGeneralString = '';
+    for (let { kinds, dir, file } of staticDirList) {
+      if (kinds === "GHOST:CLIENT") {
+        if (file === "general.js") {
+          ghostClientGeneral = dir + "/" + file;
+          ghostClientGeneralString = await fileSystem(`readString`, [ ghostClientGeneral ]);
+        }
+      } else if (kinds === "GHOST:DESIGNER") {
+        ghostDesignerGeneral = dir + "/" + file;
+        ghostDesignerGeneralString = await fileSystem(`readString`, [ ghostDesignerGeneral ]);
+      }
+    }
+    staticDirList = staticDirList.filter((obj) => { return !(obj.file === "general.js" && /^GHOST/.test(obj.kinds)); });
+
     //set general js
     s3String = "const S3HOST = \"" + S3HOST + "\";";
     sseString = "const SSEHOST = \"" + SSEHOST + "\";";
@@ -370,7 +389,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     //write local js
     console.log(`set middle target :`, staticDirList);
     resultFromArr = [];
-    for (let { file: i, dir: staticDir } of staticDirList) {
+    for (let { file: i, dir: staticDir, kinds } of staticDirList) {
 
       result = '';
       code0 = '';
@@ -440,12 +459,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         }
       }
 
-      //set media query
-      if (/<%%/gi.test(fileString)) {
-        tempMediaResult = this.mediaQuery(fileString);
-        fileString = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
-      }
-
       //front class set
       frontClassString = '';
       for (let c in classOnOffObj) {
@@ -458,8 +471,26 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       //merge
       code0 = svgTongString + "\n\n" + trapString + "\n\n" + generalSvg + "\n\n" + s3String + "\n\n" + sseString + "\n\n" + sseConsoleString + "\n\n" + ghostString + "\n\n" + pythonString + "\n\n" + bridgeString + "\n\n" + frontWebString + "\n\n";
       code1 = dataPatchScript + "\n\n";
-      code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
+      if (kinds === "MIDDLE") {
+        code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + frontClassString + "\n\n";
+      } else {
+        if (/CLIENT/gi.test(kinds)) {
+          code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + ghostClientGeneralString + "\n\n" + frontClassString + "\n\n";
+        } else {
+          code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + ghostDesignerGeneralString + "\n\n" + frontClassString + "\n\n";
+        }
+      }
       code3 = fileString + "\n\n" + execString;
+
+      //set media query
+      if (/<%%/gi.test(code2)) {
+        tempMediaResult = this.mediaQuery(code2);
+        code2 = tempMediaResult.code;
+      }
+      if (/<%%/gi.test(code3)) {
+        tempMediaResult = this.mediaQuery(code3);
+        code3 = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
+      }
 
       result = '';
       result += code0;

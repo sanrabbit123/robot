@@ -400,15 +400,7 @@ class WordsDictionary {
 
 const DesignerProposalJs = function () {
   this.mother = new GeneralJs();
-  this.margin = 0;
-  this.mode = "desktop";
-  this.sero = false;
-  this.totalContents = document.getElementById("totalcontents");
-  this.frontPage = "https://home-liaison.com";
-  this.naviHeight = 72;
-  this.standardWidth = 1400;
   this.baseTong = null;
-  this.backHeight = 0;
   this.project = null;
   this.client = null;
   this.proposal = null;
@@ -417,11 +409,6 @@ const DesignerProposalJs = function () {
     topMargin: 0
   };
   this.whiteBlocks = [];
-  this.subBoxMargin = {
-    top: 0,
-    bottom: 0,
-    left: 0
-  };
   this.abc = [];
   for (let i = 'A'.charCodeAt(); i < 'Z'.charCodeAt() + 1; i++) {
     this.abc.push(String.fromCharCode(i));
@@ -429,7 +416,6 @@ const DesignerProposalJs = function () {
   this.abcStatic = 0;
   this.boxTops = [];
   this.designerButtons = [];
-  this.media = null;
 }
 
 //static
@@ -617,15 +603,13 @@ DesignerProposalJs.prototype.proposalMapGenerator = function (designer) {
 DesignerProposalJs.prototype.setBackground = function () {
   const instance = this;
   const { ea, media } = this;
+  const { backHeight } = this;
   const mobile = media[4];
   const desktop = !mobile;
   let backGray, backImage;
   let style;
-  let backHeight;
   let backgroundImageName;
 
-  backHeight = <%% 860, 860, 860, 800, 80 %%>;
-  this.backHeight = backHeight;
   backgroundImageName = "back.jpg";
 
   backGray = GeneralJs.nodes.div.cloneNode(true);
@@ -2352,7 +2336,7 @@ DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
 
 DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
   const instance = this;
-  const { ea, media } = this;
+  const { ea, media, frontPage } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
@@ -2360,8 +2344,8 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
   GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }) + "&limit=12", "/getContents", function (res) {
     const contentsArr = JSON.parse(res);
     const web = {
-      portfolio: "https://home-liaison.com/portdetail.php?qqq=",
-      review: "https://home-liaison.com/revdetail.php?qqq="
+      portfolio: frontPage + "/portdetail.php?qqq=",
+      review: frontPage + "/revdetail.php?qqq="
     };
     const dateToString = function (dateObject) {
       const zeroAddition = function (num) {
@@ -4156,6 +4140,7 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 
 DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
   const instance = this;
+  const { frontPage } = this;
   const getObj = GeneralJs.returnGet();
   let name, phone;
   name = instance.client.name;
@@ -4163,7 +4148,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
 
   if (getObj.mode === "test") {
     window.alert("검수 모드입니다!");
-    window.location.href = "https://home-liaison.com/payment.php?card=true";
+    window.location.href = frontPage + "/payment.php?card=true";
   } else {
     this.mother.certificationBox(name, phone, async function (back, box) {
       try {
@@ -4178,7 +4163,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
         await GeneralJs.sleep(500);
         document.body.removeChild(box);
         document.body.removeChild(back);
-        window.location.href = "https://home-liaison.com/payment.php?card=true";
+        window.location.href = frontPage + "/payment.php?card=true";
       } catch (e) {
         console.log(e);
       }
@@ -4189,10 +4174,12 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
 DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
+    this.mother.setGeneralProperties(this);
+
     const getObj = GeneralJs.returnGet();
     if (getObj.cliid === undefined && getObj.proid === undefined) {
       alert("잘못된 접근입니다!");
-      window.location.href = "https://home-liaison.com";
+      window.location.href = this.frontPage;
     }
     let proid, cliid;
     let projects, project;
@@ -4209,24 +4196,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       proid = getObj.proid;
     }
 
-    this.testMode = false;
-    this.mode = <%% "bigDesktop", "smallDesktop", "tablet", "tablet", "mobile" %%>;
-    this.ea = <%% "px", "px", "px", "px", "vw" %%>;
-    this.standardWidth = <%% 1400, 1050, 900, 720, 88 %%>;
-    this.sero = <%% false, false, false, false, true %%>;
-    this.modeMinus = <%% 0, 1, 1, 1, 1 %%>;
-    this.naviHeight = <%% 72, 72, 66, 60, 60 %%>;
-
-    this.subBoxMargin.top = <%% 30, 30, 26, 20, 10.5 %%>;
-    this.subBoxMargin.bottom = <%% 31, 31, 27, 26, 31 %%>;
-    this.subBoxMargin.left = <%% 30, 30, 30, 24, 4.5 %%>;
-
-    if (this.modeMinus !== 0) {
-      document.querySelector("style").insertAdjacentHTML("beforeend", "*{transition:all 0s ease}");
-    }
-    this.margin = 20;
-    this.margin = this.margin - this.modeMinus;
-
     //set proposal, client info
     if (cliid !== null) {
       projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getProjects"));
@@ -4242,12 +4211,12 @@ DesignerProposalJs.prototype.launching = async function (loading) {
 
     if (clients.length === 0) {
       alert("잘못된 접근입니다!");
-      window.location.href = "https://home-liaison.com";
+      window.location.href = this.frontPage;
     }
 
     if (projects.length === 0) {
       alert("아직 제안서가 만들어지지 않았습니다! 잠시만 기다려주세요 :)");
-      window.location.href = "https://home-liaison.com";
+      window.location.href = this.frontPage;
       project = null;
     } else {
 
@@ -4284,9 +4253,8 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     if (getObj.proid === undefined) {
       window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
     }
-
     if (proid === "p1806_aa01s" && getObj.mode !== "test") {
-      window.location.href = "https://home-liaison.com";
+      window.location.href = this.frontPage;
     }
     if (proid === "p1806_aa01s" && getObj.mode === "test") {
       this.client.name = "홍길동";
@@ -4296,7 +4264,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     //loading end
     await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
-    this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
 
     //base setting
     this.setBackground();

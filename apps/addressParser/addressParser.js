@@ -570,6 +570,7 @@ AddressParser.prototype.addressInspection = async function (addressArr) {
         for (let i = 0; i < addressArr.length; i++) {
           if (/[동로가리길]$/i.test(addressArr[i])) {
             targetIndex = i;
+            break;
           }
         }
         if (targetIndex === null) {
