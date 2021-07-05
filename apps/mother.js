@@ -1126,6 +1126,52 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   });
 }
 
+Mother.prototype.ghostFileList = function (dir) {
+  const shell = require('shelljs');
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const crypto = require('crypto');
+  const algorithm = 'aes-192-cbc';
+  let url, order, data;
+  let ddns, port, protocol;
+  data = { target: dir };
+  ddns = ADDRESS.homeinfo.ghost.ddns;
+  port = ADDRESS.homeinfo.ghost.file.port;
+  protocol = ADDRESS.homeinfo.ghost.protocol;
+  return new Promise(function (resolve, reject) {
+    crypto.scrypt("homeliaison", 'salt', 24, function (err, key) {
+      if (err) {
+        reject(err);
+      } else {
+        const cipher = crypto.createCipheriv(algorithm, key, Buffer.alloc(16, 0));
+        let encrypted = '';
+        cipher.setEncoding('hex');
+        cipher.on('data', function (chunk) {
+          encrypted += chunk;
+        });
+        cipher.on('end', function () {
+          data.hash = encrypted;
+          data.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
+          url = `${protocol}://${ddns}:${String(port)}/list`;
+          order = "curl -d '" + JSON.stringify(data) + "' -H \"Content-Type: application/json\" -X POST " + url;
+          shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+            if (err) {
+              reject(err);
+            } else {
+              if (/^[\[\{]/.test(stdout.trim())) {
+                resolve(JSON.parse(stdout.trim()));
+              } else {
+                resolve(stdout.trim());
+              }
+            }
+          });
+        });
+        cipher.write(ADDRESS.s3info.boto3.key);
+        cipher.end();
+      }
+    });
+  });
+}
+
 Mother.prototype.sleep = function (time) {
   let timeoutId = null;
   return new Promise(function (resolve, reject) {
@@ -1781,12 +1827,13 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
         return (await setTree(target));
       } else {
         const resultArr = await makeFileArr(target);
-        const finalArr = resultArr.map((obj) => { return obj.absolute; });
+        let finalArr;
+        finalArr = resultArr.map((obj) => { return obj.absolute + (obj.directory ? '/' : ''); });
         if (typeof liteCallBack === "function") {
-          return finalArr.map(liteCallBack);
-        } else {
-          return finalArr;
+          finalArr = finalArr.map(liteCallBack);
         }
+        finalArr = Array.from(new Set(finalArr));
+        return finalArr;
       }
     } else {
       return [];

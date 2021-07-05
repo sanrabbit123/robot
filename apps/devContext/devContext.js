@@ -47,7 +47,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, s3FileUpload, s3FileList, ghostFileUpload, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -60,14 +60,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const res = await ghostFileList("/designSource");
+    // console.log(res);
 
-    // const kakaoInstance = new KakaoTalk();
-    // await kakaoInstance.ready();
-    // await kakaoInstance.sendTalk("complete", "임지민", "010-3412-1435");
-    // await kakaoInstance.sendTalk("photo", "임지민", "010-3412-1435");
-
-
-    
 
 
 

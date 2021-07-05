@@ -1337,20 +1337,16 @@ Ghost.prototype.fileRouter = function (static) {
     binary: false,
     link: [ "/list" ],
     func: function (req, res) {
-
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-
       let target;
-
       if (typeof req.body.target !== "string") {
         res.send(JSON.stringify({ message: "error" }));
       } else {
-
         target = req.body.target;
         if (/\/$/.test(target)) {
           target = target.slice(0, -1);
@@ -1366,9 +1362,7 @@ Ghost.prototype.fileRouter = function (static) {
         }).catch((err) => {
           res.send(JSON.stringify({ message: "error" }));
         });
-        
       }
-
     }
   };
 
