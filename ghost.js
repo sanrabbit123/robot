@@ -1366,6 +1366,7 @@ Ghost.prototype.fileRouter = function (static) {
         }).catch((err) => {
           res.send(JSON.stringify({ message: "error" }));
         });
+        
       }
 
     }
