@@ -1794,7 +1794,7 @@ Ghost.prototype.wssLaunching = async function () {
         ws.on("message", (message) => {
           const clients = wss.clients;
           for (let c of clients) {
-            if (c.readyState === WebSocket.OPEN) {
+            if (c.readyState === WebSocket.OPEN && ws !== c) {
               c.send(message);
             }
           }
