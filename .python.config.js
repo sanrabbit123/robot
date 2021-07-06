@@ -6,6 +6,13 @@ module.exports = {
       instances: 1,
       exec_mode: "cluster",
       args: [ "pythonCloud" ]
+    },
+    {
+      name: "ghost",
+      script: "./ghost.js",
+      instances: 1,
+      exec_mode: "cluster",
+      args: [ "wss" ]
     }
   ]
 };

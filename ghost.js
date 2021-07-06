@@ -1762,6 +1762,128 @@ Ghost.prototype.robotPassLaunching = async function () {
   }
 }
 
+Ghost.prototype.wssLaunching = async function () {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+
+    const https = require("https");
+    const express = require("express");
+    const app = express();
+    const bodyParser = require("body-parser");
+    const useragent = require("express-useragent");
+    const WebSocket = require("ws");
+    const url = require("url");
+    const socketNumbers = 100;
+    const port = 8080;
+    let sockets, server;
+    let pems, pemsLink;
+    let certDir, keyDir, caDir;
+
+    app.use(useragent.express());
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+
+    sockets = [];
+    for (let i = 0; i < socketNumbers; i++) {
+      sockets.push(new WebSocket.Server({ noServer: true }));
+    }
+
+    for (let wss of sockets) {
+      wss.on("connection", function (ws) {
+        ws.on("message", (message) => {
+          const clients = wss.clients;
+          for (let c of clients) {
+            if (c.readyState === WebSocket.OPEN) {
+              c.send(message);
+            }
+          }
+        });
+        ws.send("something");
+      });
+    }
+
+    app.get("/view", (req, res) => {
+      let numbers;
+      numbers = [];
+      for (let wss of sockets) {
+        numbers.push(wss.clients.size);
+      }
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify(numbers));
+    });
+
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + this.address.pythoninfo.host;
+
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
+    server = https.createServer(pems, app);
+
+    server.on("upgrade", function (request, socket, head) {
+      const { pathname } = url.parse(request.url);
+      let number;
+      if (/client/gi.test(pathname)) {
+        number = null;
+        for (let i = 0; i < sockets.length; i++) {
+          if (sockets[i].clients.size === 0) {
+            number = i;
+            break;
+          }
+        }
+        if (number === null) {
+          socket.destroy();
+        } else {
+          sockets[number].handleUpgrade(request, socket, head, function (ws) {
+            sockets[number].emit("connection", ws, request);
+          });
+        }
+      } else if (/homeliaison/gi.test(pathname)) {
+        number = Number(pathname.replace(/[^0-9]/gi, ''));
+        if (sockets[number] !== undefined) {
+          sockets[number].handleUpgrade(request, socket, head, function (ws) {
+            sockets[number].emit("connection", ws, request);
+          });
+        } else {
+          socket.destroy();
+        }
+      } else {
+        socket.destroy();
+      }
+    });
+
+    server.listen(port, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nWss server running\n`); });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // EXE --------------------------------------------------------------------------------------
 
 const app = new Ghost();
@@ -1773,4 +1895,6 @@ if (process.argv[2] === "request") {
   app.fileLaunching();
 } else if (/ai/gi.test(process.argv[2]) || /robot/gi.test(process.argv[2]) || /pass/gi.test(process.argv[2])) {
   app.robotPassLaunching();
+} else if (/wss/gi.test(process.argv[2])) {
+  app.wssLaunching();
 }
