@@ -1767,7 +1767,7 @@ Ghost.prototype.wssLaunching = async function () {
   const { fileSystem } = this.mother;
   try {
 
-    const https = require("http");
+    const https = require("https");
     const express = require("express");
     const app = express();
     const bodyParser = require("body-parser");
@@ -1843,7 +1843,7 @@ Ghost.prototype.wssLaunching = async function () {
     }
     pems.allowHTTP1 = true;
 
-    server = https.createServer(app);
+    server = https.createServer(pems, app);
 
     server.on("upgrade", function (request, socket, head) {
       const { pathname } = url.parse(request.url);
