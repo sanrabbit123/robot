@@ -20,8 +20,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       "client",
       "contents",
       "designer",
-      "project",
-      "photo"
+      "project"
     ];
     const thisPath = window.location.pathname.split("?")[0].replace(/\//g, '');
     if (sseTarget.includes(thisPath)) {

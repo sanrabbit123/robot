@@ -1774,7 +1774,7 @@ Ghost.prototype.wssLaunching = async function () {
     const useragent = require("express-useragent");
     const WebSocket = require("ws");
     const url = require("url");
-    const socketNumbers = 100;
+    const socketNumbers = 50;
     const port = 8080;
     let sockets, server;
     let pems, pemsLink;
