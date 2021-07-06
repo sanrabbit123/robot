@@ -1799,7 +1799,6 @@ Ghost.prototype.wssLaunching = async function () {
             }
           }
         });
-        ws.send("something");
       });
     }
 
@@ -1816,6 +1815,31 @@ Ghost.prototype.wssLaunching = async function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify(numbers));
+    });
+
+    app.get("/viewSse", (req, res) => {
+      let numbers, pusher;
+      res.set({
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+
+      pusher = setInterval(function () {
+        numbers = [];
+        for (let wss of sockets) {
+          numbers.push(wss.clients.size);
+        }
+        res.write(`event: updateTong\ndata: ${JSON.stringify(numbers)}\n\n`);
+      }, 10 * 1000);
+
+      res.on('close', function () {
+        clearInterval(pusher);
+        res.end();
+      });
     });
 
     pems = {};

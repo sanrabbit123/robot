@@ -57,8 +57,7 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
-
-
+    // await this.frontDesignerSync();
 
 
 
@@ -1175,9 +1174,8 @@ DevContext.prototype.launching = async function () {
 DevContext.prototype.frontDesignerSync = async function () {
   const instance = this;
   const { mysqlQuery } = this.mother;
+  const back = this.back;
   try {
-    await this.MONGOC.connect();
-
     const selfMongo = this.MONGOC;
     const table = "deslist";
     let rows;
@@ -1186,6 +1184,7 @@ DevContext.prototype.frontDesignerSync = async function () {
     let query;
 
     rows = await mysqlQuery("SELECT * FROM " + table + ";");
+
     rows = rows.map((obj) => {
       let newObj;
       newObj = {};
@@ -1203,7 +1202,6 @@ DevContext.prototype.frontDesignerSync = async function () {
       console.log(query);
     }
 
-    await this.MONGOC.close();
   } catch (e) {
     console.log(e);
   }
