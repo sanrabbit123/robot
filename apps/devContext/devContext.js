@@ -61,50 +61,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    // const targetFolder = process.cwd() + "/temp";
-    // const S3HOST = address["s3info"]["host"];
-    // const res = await s3FileList("frontMaker");
-    // let resFolders, resFiles, rawArray;
-    // let tempObject, tempArray;
-    //
-    // resFiles = res.filter((i) => { return !/\/$/.test(i); });
-    //
-    // rawArray = JSON.parse(JSON.stringify(resFiles));
-    // resFolders = [];
-    //
-    // do {
-    //   for (let f of rawArray) {
-    //     tempArray = f.split('/');
-    //     tempArray.pop();
-    //     resFolders.push(tempArray.join('/'));
-    //   }
-    //   resFolders = Array.from(new Set(resFolders));
-    //   rawArray = JSON.parse(JSON.stringify(resFolders));
-    // } while (rawArray.find((i) => { return !(/\//g.test(i)); }) === undefined);
-    //
-    // resFolders.sort((a, b) => { return a.length - b.length });
-    //
-    // for (let f of resFolders) {
-    //   if (!(await fileSystem(`exist`, [ targetFolder + "/" + f ]))) {
-    //     shell.exec(`mkdir ${shellLink(targetFolder)}/${shellLink(f)}`);
-    //   }
-    // }
-    // for (let f of resFiles) {
-    //   tempObject = await binaryRequest(S3HOST + "/" + f);
-    //   await fileSystem(`writeBinary`, [ targetFolder + "/" + f, tempObject ]);
-    //   console.log(`${f} download done`);
-    // }
+    
 
 
 
 
 
-
-
-
-
-    // await ghostRequest("/print");
 
     // const selfMongo = this.MONGOLOCALC;
     //
@@ -1079,9 +1041,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "조가비",
-    //     designer: "정다연",
-    //     link: "https://drive.google.com/drive/folders/1NteGsjIgCOZ8RCkzB7w02Vmk0FLAdQWR",
+    //     client: "정다인",
+    //     designer: "손병준",
+    //     link: "https://drive.google.com/drive/folders/12u4hnsJ7Zgl9gwMBEeeD7BA9OhFTF_RM",
     //   },
     // ]);
 
