@@ -1088,8 +1088,8 @@ exampleSocket.onopen = (event) => {
 
 
     // get drive folder
-    const drive = new GoogleDrive();
-    await drive.get_folder("https://drive.google.com/drive/folders/1-yHNBnZ0ge1VvGe5CLBqsp-D7O5Ihca0?usp=sharing");
+    // const drive = new GoogleDrive();
+    // await drive.get_folder("https://drive.google.com/drive/folders/1-yHNBnZ0ge1VvGe5CLBqsp-D7O5Ihca0?usp=sharing");
 
 
     // naverBlog to json
