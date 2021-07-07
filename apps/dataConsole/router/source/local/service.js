@@ -44,7 +44,12 @@ ServiceJs.prototype.baseMaker = function () {
         event: function (e) {
           for (let dom of this.firstChild.children) {
             dom.firstChild.style.color = colorChip.realBlack;
+            if (instance.connections[Number(dom.getAttribute("index").replace(/^0/, ''))] !== null) {
+              instance.connections[Number(dom.getAttribute("index").replace(/^0/, ''))].close();
+              console.log(instance.connections[Number(dom.getAttribute("index").replace(/^0/, ''))]);
+            }
           }
+          console.log(instance.connections);
           instance.communicationBase.firstChild.textContent = "99";
         }
       }
@@ -180,17 +185,74 @@ ServiceJs.prototype.roomCardRender = function (arr) {
   const length = arr.length;
   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
 
-  const wordingBlock = function (mother, text, incoming = true) {
+  const wordingBlock = function (mother, text, incoming, index) {
+    let name, size, size2, height;
+    let motherPadding;
+    let nameRight;
+    let paddingTop, paddingBottom, paddingLeft;
+
+    if (text.trim() === '') {
+      return;
+    }
+
+    if (incoming) {
+      name = 'C' + index;
+    } else {
+      name = "HL";
+    }
+    height = 30;
+    motherPadding = 6;
+    size = 17;
+    size2 = 15;
+    nameRight = 11;
+    paddingTop = 5;
+    paddingBottom = 6;
+    paddingLeft = 10;
+
     createNode({
       mother,
-      text,
       style: {
         position: "relative",
-        padding: String(4) + ea,
-        background: colorChip[incoming ? "red" : "yellow"],
-        fontSize: String(15) + ea,
-        color: colorChip.white,
-      }
+        padding: String(motherPadding) + ea,
+      },
+      children: [
+        {
+          text: name,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(size) + ea,
+            color: colorChip.gray5,
+            fontFamily: "graphik",
+            fontWeight: String(400),
+            marginRight: String(nameRight) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            height: String(height * text.split('\n').length),
+            borderRadius: String(3) + "px",
+            background: colorChip.gray4,
+          },
+          children: [
+            {
+              text,
+              style: {
+                position: "relative",
+                fontSize: String(size2) + ea,
+                color: colorChip.black,
+                paddingTop: String(paddingTop) + ea,
+                paddingBottom: String(paddingBottom) + ea,
+                paddingLeft: String(paddingLeft) + ea,
+                paddingRight: String(paddingLeft) + ea,
+                fontWeight: String(400),
+              }
+            }
+          ]
+        }
+      ]
     });
   }
 
@@ -222,6 +284,9 @@ ServiceJs.prototype.roomCardRender = function (arr) {
             for (let dom of roomsBase.children) {
               if (dom !== this) {
                 dom.firstChild.style.color = colorChip.realBlack;
+                if (instance.connections[Number(dom.getAttribute("index").replace(/^0/, ''))] !== null) {
+                  instance.connections[Number(dom.getAttribute("index").replace(/^0/, ''))].close();
+                }
               }
             }
             this.firstChild.style.color = colorChip.gray5;
@@ -231,14 +296,11 @@ ServiceJs.prototype.roomCardRender = function (arr) {
 
             roomSocket.onopen = () => {
               roomSocket.onmessage = (event) => {
-                console.log(event.data);
-                // wordingBlock(whiteBase, event.data, true);
+                wordingBlock(instance.communicationTong, event.data, true, index);
               }
             }
 
-            //roomSocket.close();
-
-
+            instance.connections[Number(index.replace(/^0/, ''))] = roomSocket;
 
           }
         }

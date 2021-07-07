@@ -1806,7 +1806,7 @@ Ghost.prototype.wssLaunching = async function () {
       let numbers;
       numbers = [];
       for (let wss of sockets) {
-        numbers.push(wss.clients.size === 0 ? 0 : 1);
+        numbers.push(wss.clients.size);
       }
       res.set({
         "Content-Type": "application/json",
