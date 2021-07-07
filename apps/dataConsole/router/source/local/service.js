@@ -45,11 +45,13 @@ ServiceJs.prototype.roomsMaker = async function () {
 
     rooms = JSON.parse(await requestPromise(PYTHONHOST.replace(/\:3000$/, ":8080") + "/view"));
     this.rooms = rooms;
+    console.log(rooms);
 
     const es = new EventSource(PYTHONHOST.replace(/\:3000$/, ":8080") + "/viewSse");
     es.addEventListener("updateTong", function (e) {
       rooms = JSON.parse(e.data);
       instance.rooms = rooms;
+      console.log(rooms);
     });
 
   } catch (e) {

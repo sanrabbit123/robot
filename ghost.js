@@ -1774,7 +1774,7 @@ Ghost.prototype.wssLaunching = async function () {
     const useragent = require("express-useragent");
     const WebSocket = require("ws");
     const url = require("url");
-    const socketNumbers = 50;
+    const socketNumbers = 99;
     const port = 8080;
     let sockets, server;
     let pems, pemsLink;
@@ -1834,7 +1834,7 @@ Ghost.prototype.wssLaunching = async function () {
           numbers.push(wss.clients.size);
         }
         res.write(`event: updateTong\ndata: ${JSON.stringify(numbers)}\n\n`);
-      }, 10 * 1000);
+      }, 3 * 1000);
 
       res.on('close', function () {
         clearInterval(pusher);

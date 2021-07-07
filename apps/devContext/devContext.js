@@ -1277,10 +1277,27 @@ DevContext.prototype.frontDesignerSync = async function () {
   try {
     const selfMongo = this.MONGOC;
     const table = "deslist";
+    const calculation = function (designer) {
+      let yS, yM, rY, rM;
+      let monthResult;
+
+      yS = designer.information.business.career.startY;
+      yM = designer.information.business.career.startM;
+      rY = designer.information.business.career.relatedY;
+      rM = designer.information.business.career.relatedM;
+
+      monthResult = ((yS * 12) + yM) - ((rY * 12) + rM);
+
+      return {
+        year: Math.floor(monthResult / 12),
+        month: (monthResult % 12),
+      };
+    }
     let rows;
     let desid;
     let designer;
     let query;
+    let tempObj;
 
     rows = await mysqlQuery("SELECT * FROM " + table + ";");
 
@@ -1296,7 +1313,8 @@ DevContext.prototype.frontDesignerSync = async function () {
     for (let obj of rows) {
       desid = back.idFilter("designer").pastToNew(obj.desid);
       designer = await back.getDesignerById(desid, { selfMongo });
-      query = `UPDATE ${table} SET start_Y = '${String(designer.information.business.career.startY)}', start_M = '${String(designer.information.business.career.startM)}' WHERE desid = '${obj.desid}';`;
+      tempObj = calculation(designer);
+      query = `UPDATE ${table} SET start_Y = '${String(tempObj.year)}', start_M = '${String(tempObj.month)}' WHERE desid = '${obj.desid}';`;
       await mysqlQuery(query);
       console.log(query);
     }
