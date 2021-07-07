@@ -4236,4 +4236,62 @@ GeneralJs.prototype.communicationBox = function () {
 
   });
 
+  talkIcon.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const { createNode, colorChip, withOut } = GeneralJs;
+    const { belowHeight } = instance;
+    const ea = "px";
+    const mother = document.getElementById("totalcontents");
+    let margin;
+
+    margin = 30;
+
+    createNode({
+      mother,
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: withOut(belowHeight, ea),
+        background: colorChip.black,
+        zIndex: String(3),
+        animation: "justfadein 0.3s ease forwards",
+      }
+    });
+
+    createNode({
+      mother,
+      style: {
+        position: "fixed",
+        top: String(margin) + ea,
+        left: String(margin) + ea,
+        width: withOut(margin * 2, ea),
+        height: withOut(belowHeight + (margin * 2), ea),
+        background: colorChip.black,
+        zIndex: String(3),
+        animation: "fadeup 0.3s ease forwards",
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.black,
+        overflow: "hidden",
+      },
+      children: [
+        {
+          mode: "iframe",
+          attribute: [
+            { src: window.location.protocol + "//" + window.location.host + "/service" }
+          ],
+          style: {
+            position: "relative",
+            width: String(100) + '%',
+            height: String(100) + '%',
+            border: String(0),
+          }
+        }
+      ]
+    });
+
+  });
+
 }
