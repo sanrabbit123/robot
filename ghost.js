@@ -1806,7 +1806,7 @@ Ghost.prototype.wssLaunching = async function () {
       let numbers;
       numbers = [];
       for (let wss of sockets) {
-        numbers.push(wss.clients.size);
+        numbers.push(wss.clients.size === 0 ? 0 : 1);
       }
       res.set({
         "Content-Type": "application/json",
@@ -1831,7 +1831,7 @@ Ghost.prototype.wssLaunching = async function () {
       pusher = setInterval(function () {
         numbers = [];
         for (let wss of sockets) {
-          numbers.push(wss.clients.size);
+          numbers.push(wss.clients.size === 0 ? 0 : 1);
         }
         res.write(`event: updateTong\ndata: ${JSON.stringify(numbers)}\n\n`);
       }, 3 * 1000);
