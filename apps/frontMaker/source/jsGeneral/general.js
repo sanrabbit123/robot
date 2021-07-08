@@ -2362,6 +2362,10 @@ GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}) {
   for (let i = 0; i < interactionArr.length; i++) {
     interactionTarget = interaction[interactionArr[i]];
   }
+
+  if (interactionTarget === null) {
+    throw new Error("interaction patch first");
+  }
   const { behaviors } = interactionTarget;
   let icon, eventFunc;
   let finalNum = Math.abs(Math.round(Math.random() * ((behaviors.length - 1) + 0.5 - (-1 * 0.5)) - 0.5));
@@ -2418,7 +2422,7 @@ GeneralJs.prototype.homeliaisonTalk = function (local_instance = {}) {
     div_clone.appendChild(icon);
 
     //white wording
-    if (interactionArr.length !== 0) {
+    if (behaviors.length !== 0) {
 
       //white
       totalHeight = !Boolean(i) ? 48 : 10;

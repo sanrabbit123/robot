@@ -346,6 +346,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let trapString;
     let ghostClientGeneral, ghostDesignerGeneral;
     let ghostClientGeneralString, ghostDesignerGeneralString;
+    let generalMediaBoo;
 
     staticDirList = [];
     for (let s of staticTargets) {
@@ -483,13 +484,19 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       code3 = fileString + "\n\n" + execString;
 
       //set media query
+      generalMediaBoo = false;
       if (/<%%/gi.test(code2)) {
         tempMediaResult = this.mediaQuery(code2);
-        code2 = tempMediaResult.code;
+        code2 = tempMediaResult.code + "\n\n" + tempMediaResult.conditions;
+        generalMediaBoo = true;
       }
       if (/<%%/gi.test(code3)) {
         tempMediaResult = this.mediaQuery(code3);
-        code3 = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
+        if (generalMediaBoo) {
+          code3 = tempMediaResult.code;
+        } else {
+          code3 = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
+        }
       }
 
       result = '';

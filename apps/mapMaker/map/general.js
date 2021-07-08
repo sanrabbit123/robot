@@ -649,7 +649,7 @@ module.exports = {
           }
         ]
       },
-      "proposal": {
+      "designerProposal": {
         "behaviors": [
           {
             "wording": {
@@ -663,6 +663,9 @@ module.exports = {
             }
           }
         ]
+      },
+      "responseReservation": {
+        "behaviors": []
       }
     },
     "login": {
