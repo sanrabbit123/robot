@@ -55,6 +55,8 @@ const GraphicBot = function () {
   this.task = null;
   this.front = 0;
   this.frontGeneral = null;
+  this.frontProcess = null;
+  this.frontProblem = false;
   this.info = null;
   for (let obj of ADDRESS.homeinfo.map) {
     if (obj.name === "graphic") {
@@ -477,6 +479,9 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const calendarInput = " + this.frontGeneral.calendarInput.toString() + ";\n\n";
     frontFirst += "const endFront = async () => { await ajaxPromise({ to: 0, data: 0 }, ENDCONST); };\n\n";
 
+    frontFirst += "await ajaxPromise({ to: 0, data: 0 }, HOSTCONST + '/frontProcess');\n\n";
+    frontFirst += "setInterval(async () => { await ajaxPromise({ to: 0, data: 0 }, HOSTCONST + '/frontProcess'); }, 500);\n\n";
+
     frontEnd = "\n\n\n\n";
     frontEnd += "await ajaxPromise({ to: 0, data: 0 }, ENDCONST);\n\n";
 
@@ -484,6 +489,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontWaitingNumber = 0;
 
     for (let i of arr) {
+      instance.frontProblem = false;
       if (Array.isArray(i)) {
         if (i.length >= 3) {
           if (typeof i[2] === "number") {
@@ -545,6 +551,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         await sleep(500);
         await this.pasteText();
         instance.front = 1;
+        instance.frontProblem = false;
         await this.pressKey("enter");
         frontFirstLaunching = 1;
         frontWaitingNumber = 0;
@@ -553,6 +560,13 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           console.log(frontWaitingNumber);
           await sleep(500);
           frontWaitingNumber = frontWaitingNumber + 1;
+          if (instance.frontProblem) {
+            await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
+            await sleep(500);
+            await instance.chromeClose();
+            await sleep(500);
+            return false;
+          }
           if (frontWaitingNumber >= (2 * 60 * 30)) {
             await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
             await sleep(500);
@@ -698,6 +712,32 @@ GraphicBot.prototype.botRouter = function () {
     link: [ "/frontEnd" ],
     func: function (req, res) {
       instance.front = 0;
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send({ message: "OK" });
+    }
+  };
+
+  funcObj.post_frontProcess = {
+    link: [ "/frontProcess" ],
+    func: function (req, res) {
+
+      console.log("front working...");
+      instance.frontProblem = false;
+
+      if (instance.frontProcess !== null) {
+        clearTimeout(instance.frontProcess);
+        instance.frontProcess = null;
+      }
+      instance.frontProcess = setTimeout(function () {
+        console.log("something bad");
+        instance.frontProblem = true;
+      }, 20 * 1000);
+
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
