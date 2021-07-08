@@ -50,11 +50,26 @@ ResponseReservationJs.prototype.insertInitBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  let whiteBlock, whiteTong;
   let blockHeight, bottomMargin;
+  let margin;
   let calendar;
+  let initWordingBox;
+  let initWordingHeight;
+  let initWordingSize;
+  let initWordingLineHeight;
+  let calendarBox;
+  let calendarWidth;
 
-  blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
+  blockHeight = <%% this.backHeight - 160, this.backHeight - 170, this.backHeight - 190, this.backHeight - 240, this.backHeight - 160 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  margin = <%% 52, 52, 44, 32, 52 %%>;
+
+  initWordingHeight = <%% 20, 20, 20, 20, 20 %%>;
+  initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 15.5 %%>;
+  initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
+
+  calendarWidth = <%% 520, 520, 440, 320, 520 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -62,23 +77,73 @@ ResponseReservationJs.prototype.insertInitBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(this.backHeight) + ea,
+      height: String(blockHeight - (margin * 2)) + ea,
       background: colorChip.white,
+      paddingTop: String(margin) + ea,
+      paddingBottom: String(margin) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    }
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        top: String(0) + ea,
+        width: withOut(margin * 2, ea),
+        height: withOut(margin * 2, ea),
+        marginLeft: String(margin) + ea,
+      }
+    ]
   });
 
+  whiteTong = whiteBlock.firstChild;
+
+  [ initWordingBox, calendarBox ] = createNodes([
+    {
+      mother: whiteTong,
+      style :{
+        position: "relative",
+        width: String(100) + '%',
+        height: String(initWordingHeight) + ea,
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(400),
+      }
+    },
+    {
+      mother: whiteTong,
+      style: {
+        position: "relative",
+        width: String(100) + '%',
+        height: String(100) + '%',
+      },
+      children: [
+        {
+          style: {
+            display: "inline-block",
+            height: String(100) + '%',
+            width: String(calendarWidth) + ea,
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            height: String(100) + '%',
+            width: withOut(calendarWidth, ea),
+          }
+        }
+      ]
+    }
+  ])
 
   calendar = this.mother.makeCalendar(new Date(), function (e) {
     console.log(this.getAttribute("buttonValue"));
   }, {
     bigMode: true,
-    width: String(400) + ea,
-    height: String(300) + ea,
+    width: String(calendarWidth) + ea,
+    height: withOut(initWordingHeight, ea),
     events: [],
   });
-  whiteBlock.appendChild(calendar.calendarBase);
+  calendarBox.firstChild.appendChild(calendar.calendarBase);
 
 
 
