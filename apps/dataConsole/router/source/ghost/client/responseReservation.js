@@ -70,27 +70,27 @@ ResponseReservationJs.prototype.insertInitBox = function () {
   let buttonTop;
   let buttonPaddingTop;
 
-  blockHeight = <%% this.backHeight, this.backHeight, this.backHeight, this.backHeight, this.backHeight %%>;
+  blockHeight = <%% this.backHeight, this.backHeight - 100, this.backHeight - 100, this.backHeight - 220, this.backHeight %%>;
   bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
-  margin = <%% 52, 52, 44, 32, 52 %%>;
+  margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  initWordingHeight = <%% 20, 20, 20, 20, 20 %%>;
-  initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 15.5 %%>;
-  initWordingLineHeight = <%% 9, 9, 9, 9, 9 %%>;
+  initWordingHeight = <%% 20, 20, 20, 20, 5 %%>;
+  initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 2.8 %%>;
+  initWordingLineHeight = <%% 9, 9, 9, 9, 2 %%>;
 
-  middleMargin = <%% 25, 25, 25, 25, 25 %%>;
+  middleMargin = <%% 28, 28, 28, 15, 28 %%>;
 
   quoteTop = 0;
-  quoteHeight = <%% 12, 12, 12, 9, 2.5 %%>;
-  quoteMarginBottom = <%% 7, 7, 7, 6, 7 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 1.6 %%>;
+  quoteHeight = <%% 12, 12, 12, 9, 1.5 %%>;
+  quoteMarginBottom = <%% 7, 7, 7, 6, 1 %%>;
+  quoteLeft = <%% 2, 2, 2, 2, 0.1 %%>;
 
-  calendarWidth = <%% 1000, 800, 600, 600, 520 %%>;
+  calendarWidth = <%% 1000, 780, 640, 520, 80 %%>;
 
   buttonMargin = <%% 20, 20, 20, 20, 20 %%>;
-  buttonBetween = <%% 5, 5, 5, 5, 5 %%>;
-  buttonSize = <%% 19, 19, 19, 19, 19 %%>;
-  buttonTop = <%% 7, 7, 7, 7, 7 %%>;
+  buttonBetween = <%% 5, 5, 5, 4, 1 %%>;
+  buttonSize = <%% 19, 16, 16, 12, 2.8 %%>;
+  buttonTop = <%% 7, 5, 5, 4, 5 %%>;
   buttonPaddingTop = <%% 48, 48, 48, 48, 48 %%>;
 
   buttonValues = [
@@ -245,12 +245,12 @@ ResponseReservationJs.prototype.insertInitBox = function () {
 
   calendar = this.mother.makeCalendar(new Date(), function (e) {
     console.log(this.getAttribute("buttonValue"));
-  }, {
+  }, desktop ? {
     bigMode: true,
     width: String(calendarWidth) + ea,
     height: String(100) + '%',
     events: [],
-  });
+  } : {});
   calendarBox.firstChild.appendChild(calendar.calendarBase);
 
 }
@@ -281,6 +281,7 @@ ResponseReservationJs.prototype.insertPannelBox = function () {
   let wordSize;
   let box0Size, box1Size, box0Margin, box1Margin;
   let target;
+  let logoVisual, logoHeight;
 
   targetWords = [
     {
@@ -322,8 +323,8 @@ ResponseReservationJs.prototype.insertPannelBox = function () {
     }
   }
 
-  topMargin = <%% 52 + 6, 52 + 6, 44 + 6, 32 + 6, 52 %%>;
-  leftMargin = <%% 52, 52, 44, 32, 52 %%>;
+  topMargin = <%% 48, 48, 48, 32, 5.3 %%>;
+  leftMargin = <%% 52, 52, 44, 36, 52 %%>;
 
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
@@ -340,23 +341,26 @@ ResponseReservationJs.prototype.insertPannelBox = function () {
   }
 
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-  finalBottom = <%% 42, 42, 42, 20, 5 %%>;
+  finalBottom = <%% 50, 50, 50, 30, 5 %%>;
 
   marginBottom = <%% 3, 3, 3, 3, 1.8 %%>;
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
   wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
 
-  box0Size = <%% 140, 140, 140, 120, 4.5 %%>;
+  box0Size = <%% 140, 140, 130, 120, 4.5 %%>;
   box1Size = <%% 25, 25, 25, 25, 3 %%>;
   box0Margin = <%% 55, 55, 55, 55, 3 %%>;
   box1Margin = <%% 18, 18, 18, 18, 3 %%>;
+
+  logoVisual = <%% 4, 4, 4, 4, 4 %%>;
+  logoHeight = <%% 16, 16, 16, 16, 16 %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
-      paddingTop: String(desktop ? topMargin : 5.8) + ea,
+      paddingTop: String(topMargin) + ea,
       width: String(100) + '%',
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -461,6 +465,20 @@ ResponseReservationJs.prototype.insertPannelBox = function () {
   }
 
   whiteBlock.appendChild(wordsTable);
+
+  if (media[0] || media[1] || media[2]) {
+    createNode({
+      mother: whiteBlock,
+      mode: "svg",
+      source: this.mother.returnLogo(colorChip.green, 4),
+      style: {
+        position: "absolute",
+        bottom: String(finalBottom + logoVisual) + ea,
+        right: String(leftMargin) + ea,
+        height: String(logoHeight) + ea,
+      }
+    });
+  }
 
 }
 
