@@ -120,13 +120,12 @@ module.exports = function (proid, info) {
             calendarBox = {
               left: document.querySelectorAll('.MuiPickersCalendarHeader-iconButton')[0].getBoundingClientRect(),
               right: document.querySelectorAll('.MuiPickersCalendarHeader-iconButton')[1].getBoundingClientRect(),
-              cancel: document.querySelectorAll('.MuiButton-textPrimary')[1],
               return: document.querySelectorAll('.MuiButton-textPrimary')[2].getBoundingClientRect(),
               first: document.querySelector('.MuiPickersCalendar-week').firstChild.getBoundingClientRect()
             };
             calendarBox = JSON.parse(JSON.stringify(calendarBox));
             await sleep(200);
-            calendarBox.click();
+            document.querySelectorAll('.MuiButton-textPrimary')[1].click();
             await sleep(500);
           }
 
@@ -138,7 +137,6 @@ module.exports = function (proid, info) {
               await injectionInput(document.getElementById(id), value, true);
             }
           }
-
 
           // document.querySelectorAll("#header .btn-router")[1].click();
           //

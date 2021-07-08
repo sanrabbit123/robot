@@ -375,12 +375,16 @@ GraphicBot.prototype.copyText = async function () {
 GraphicBot.prototype.pasteText = async function () {
   const instance = this;
   const { bot } = this;
-  const { sleep } = this.mother;
+  const { sleep, pasteToClipboard } = this.mother;
   try {
-    bot.keyToggle("control", "down");
-    bot.keyTap("v");
+    let command;
+    if (this.os === "mac") {
+      command = "command";
+    } else {
+      command = "control";
+    }
+    bot.keyTap("v", command);
     await sleep(100);
-    bot.keyToggle("control", "up");
   } catch (e) {
     console.log(e);
   }
@@ -444,10 +448,19 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     } else {
       frontFirst += "const POSTCONST = " + String(arg) + "\n\n";
     }
-    frontFirst += "const RECEIVECONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/receive\"\n\n";
-    frontFirst += "const AJAXCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/ajax\"\n\n";
-    frontFirst += "const ENDCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/frontEnd\"\n\n";
-    frontFirst += "const HOSTCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "\"\n\n";
+
+    if (this.os !== "mac") {
+      frontFirst += "const RECEIVECONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/receive\"\n\n";
+      frontFirst += "const AJAXCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/ajax\"\n\n";
+      frontFirst += "const ENDCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/frontEnd\"\n\n";
+      frontFirst += "const HOSTCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "\"\n\n";
+    } else {
+      frontFirst += "const RECEIVECONST = \"http://localhost:3000/receive\"\n\n";
+      frontFirst += "const AJAXCONST = \"http://localhost:3000/ajax\"\n\n";
+      frontFirst += "const ENDCONST = \"http://localhost:3000/frontEnd\"\n\n";
+      frontFirst += "const HOSTCONST = \"http://localhost:3000\"\n\n";
+    }
+
     frontFirst += "const equalJson = " + this.frontGeneral.equalJson.toString() + ";\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
     frontFirst += "const sleep = " + this.frontGeneral.sleep.toString() + ";\n\n";
@@ -527,7 +540,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         } else {
           await sleep(2000);
         }
-        await this.moveAndClick(chromeSize.right + ((screenSize.width - chromeSize.right) / 2), screenSize.height - chromeSize.cursor, 500);
+        await this.moveAndClick(chromeSize.right + ((screenSize.width - chromeSize.right) / 2), chromeSize.bottom - chromeSize.cursor, 500);
         await this.clipBoard(tempString);
         await sleep(500);
         await this.pasteText();
@@ -1239,7 +1252,6 @@ GraphicBot.prototype.getChromeSize = async function () {
 GraphicBot.prototype.botServer = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
-  const https = require("https");
   const express = require("express");
   const bodyParser = require("body-parser");
   const multer = require("multer");
@@ -1257,6 +1269,13 @@ GraphicBot.prototype.botServer = async function () {
     let front, routerObj;
     let pems, pemsLink, certDir, keyDir, caDir;
     let tongItems;
+    let https;
+
+    if (this.os === "mac") {
+      https = require("http");
+    } else {
+      https = require("https");
+    }
 
     await this.back.setInfoObj({ getMode: false });
 
@@ -1313,9 +1332,15 @@ GraphicBot.prototype.botServer = async function () {
 
     await this.getChromeSize();
 
-    https.createServer(pems, app).listen(this.port, () => {
-      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
-    });
+    if (this.os === "mac") {
+      https.createServer(app).listen(this.port, () => {
+        console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+      });
+    } else {
+      https.createServer(pems, app).listen(this.port, () => {
+        console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+      });
+    }
 
   } catch (e) {
     console.log(e);

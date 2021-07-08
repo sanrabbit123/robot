@@ -1973,6 +1973,18 @@ Mother.prototype.copyToClipboard = function (data) {
   pbcopy.stdin.end();
 }
 
+Mother.prototype.pasteToClipboard = function (data) {
+  const os = require("os");
+  const { exec } = require('child_process');
+  let stdout;
+  if (os.type() === 'Darwin') {
+    stdout = execSync('pbpaste');
+  } else {
+    stdout = execSync('xclip -selection clipboard -o');
+  }
+  return stdout;
+}
+
 Mother.prototype.equalJson = function (jsonString) {
   if (typeof jsonString === "string") {
     const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
