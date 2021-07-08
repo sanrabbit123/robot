@@ -1238,6 +1238,14 @@ GraphicBot.prototype.getChromeSize = async function () {
     this.chromeSize.left = (xArr[0] === xArr[xArr.length - 1]) ? 0 : xArr[0];
     this.chromeSize.right = xArr[xArr.length - 1];
 
+    if (this.chromeSize.bottom === 0) {
+      this.chromeSize.bottom = this.screenSize.height;
+    }
+
+    if (this.chromeSize.right === 0) {
+      this.chromeSize.right = this.screenSize.width;
+    }
+
     console.log(xArr, yArr);
     console.log(this.screenSize);
     console.log(this.chromeSize);
