@@ -76,14 +76,14 @@ ResponseReservationJs.prototype.insertInitBox = function () {
 
   initWordingHeight = <%% 20, 20, 20, 20, 5 %%>;
   initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 2.8 %%>;
-  initWordingLineHeight = <%% 9, 9, 9, 9, 2 %%>;
+  initWordingLineHeight = <%% 9, 9, 9, 9, 1.5 %%>;
 
-  middleMargin = <%% 28, 28, 28, 15, 28 %%>;
+  middleMargin = <%% 28, 28, 28, 15, 2 %%>;
 
   quoteTop = 0;
-  quoteHeight = <%% 12, 12, 12, 9, 1.5 %%>;
-  quoteMarginBottom = <%% 7, 7, 7, 6, 1 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 0.1 %%>;
+  quoteHeight = <%% 12, 12, 12, 9, 1.8 %%>;
+  quoteMarginBottom = <%% 7, 7, 7, 6, 0.8 %%>;
+  quoteLeft = <%% 2, 2, 2, 2, 0.2 %%>;
 
   calendarWidth = <%% 1000, 780, 640, 520, 80 %%>;
 
@@ -158,7 +158,7 @@ ResponseReservationJs.prototype.insertInitBox = function () {
           }
         },
         {
-          text: `안녕하세요, ${this.client.name} 고객님! 1차 응대 전화 상담을 위한 예약 페이지입니다.`,
+          text: `안녕하세요, ${this.client.name} 고객님! 전화 상담을 위한 예약 페이지입니다.`,
           style: {
             position: "absolute",
             top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
@@ -170,7 +170,7 @@ ResponseReservationJs.prototype.insertInitBox = function () {
           }
         },
         {
-          text: `상담을 원하시는 날짜와 시간대를 선택해주시면, 해당 시간에 상담을 위한 통화를 진행해드리도록 하겠습니다 :)`,
+          text: desktop ? `상담을 원하시는 날짜와 시간대를 선택해주시면, 해당 시간에 상담을 위한 통화를 진행해드리도록 하겠습니다 :)` : `상담을 원하시는 날짜와 시간대를 선택해주세요!`,
           style: {
             position: "absolute",
             top: String(quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight) + ea,
@@ -245,12 +245,12 @@ ResponseReservationJs.prototype.insertInitBox = function () {
 
   calendar = this.mother.makeCalendar(new Date(), function (e) {
     console.log(this.getAttribute("buttonValue"));
-  }, desktop ? {
+  }, {
     bigMode: true,
     width: String(calendarWidth) + ea,
     height: String(100) + '%',
     events: [],
-  } : {});
+  });
   calendarBox.firstChild.appendChild(calendar.calendarBase);
 
 }

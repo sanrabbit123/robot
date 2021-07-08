@@ -133,7 +133,7 @@ module.exports = function (proid, info) {
           }
 
           map = [
-            { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.supply - project.process.contract.first.calculation.amount) },
+            { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
             { id: "field_TEXT_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) },
           ];
 

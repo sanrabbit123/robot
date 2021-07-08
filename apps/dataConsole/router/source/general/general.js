@@ -98,7 +98,7 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
 
   switch (map[column].type) {
     case "string":
-      finalValue = String(value).replace(/[\&\=]/g, '');
+      finalValue = String(value).replace(/[\&\=]/g, '').trim();
       break;
     case "number":
       if (typeof value !== "number") {
