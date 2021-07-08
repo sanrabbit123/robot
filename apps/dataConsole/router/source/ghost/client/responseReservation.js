@@ -69,29 +69,32 @@ ResponseReservationJs.prototype.insertInitBox = function () {
   let buttonSize;
   let buttonTop;
   let buttonPaddingTop;
+  let mobileCalendarHeight;
 
   blockHeight = <%% this.backHeight, this.backHeight - 100, this.backHeight - 100, this.backHeight - 220, this.backHeight %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 5 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 5 %%>;
   initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 2.8 %%>;
   initWordingLineHeight = <%% 9, 9, 9, 9, 1.5 %%>;
 
-  middleMargin = <%% 28, 28, 28, 15, 2 %%>;
+  middleMargin = <%% 28, 28, 28, 15, 1.5 %%>;
 
   quoteTop = 0;
-  quoteHeight = <%% 12, 12, 12, 9, 1.8 %%>;
+  quoteHeight = <%% 12, 12, 12, 9, 2 %%>;
   quoteMarginBottom = <%% 7, 7, 7, 6, 0.8 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 0.2 %%>;
+  quoteLeft = <%% 2, 2, 2, 2, 0.3 %%>;
 
   calendarWidth = <%% 1000, 780, 640, 520, 80 %%>;
 
   buttonMargin = <%% 20, 20, 20, 20, 20 %%>;
   buttonBetween = <%% 5, 5, 5, 4, 1 %%>;
-  buttonSize = <%% 19, 16, 16, 12, 2.8 %%>;
-  buttonTop = <%% 7, 5, 5, 4, 5 %%>;
-  buttonPaddingTop = <%% 48, 48, 48, 48, 48 %%>;
+  buttonSize = <%% 19, 16, 16, 12, 3 %%>;
+  buttonTop = <%% 7, 5, 5, 4, 1.4 %%>;
+  buttonPaddingTop = <%% 48, 48, 48, 48, 3 %%>;
+
+  mobileCalendarHeight = 64;
 
   buttonValues = [
     "11:00  ~  11:30",
@@ -116,10 +119,10 @@ ResponseReservationJs.prototype.insertInitBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight - (margin * 2)) + ea,
+      height: String(blockHeight + (desktop ? 0 : mobileCalendarHeight) - (margin * 2)) + ea,
       background: colorChip.white,
-      paddingTop: String(margin) + ea,
-      paddingBottom: String(margin) + ea,
+      paddingTop: String(margin + (desktop ? 0 : 1.3)) + ea,
+      paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -193,19 +196,19 @@ ResponseReservationJs.prototype.insertInitBox = function () {
       children: [
         {
           style: {
-            display: "inline-block",
-            height: String(100) + '%',
-            width: String(calendarWidth) + ea,
+            display: desktop ? "inline-block" : "block",
+            height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
+            width: desktop ? String(calendarWidth) + ea : String(100) + '%',
             verticalAlign: "top",
           }
         },
         {
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "block",
             paddingTop: String(buttonPaddingTop) + ea,
-            paddingLeft: String(buttonMargin) + ea,
-            width: withOut(calendarWidth + buttonMargin, ea),
-            height: withOut(buttonPaddingTop, ea)
+            paddingLeft: String(desktop ? buttonMargin : 0) + ea,
+            width: desktop ? withOut(calendarWidth + buttonMargin, ea) : String(100) + '%',
+            height: desktop ? withOut(buttonPaddingTop, ea) : withOut(buttonPaddingTop + mobileCalendarHeight, ea)
           }
         }
       ]
@@ -216,14 +219,16 @@ ResponseReservationJs.prototype.insertInitBox = function () {
     createNode({
       mother: calendarBox.lastChild,
       style: {
+        display: desktop ? "block" : "inline-block",
         position: "relative",
         borderRadius: String(5) + "px",
-        width: String(100) + '%',
-        height: "calc(calc(100% - " + String(buttonBetween * (buttonValues.length - 1)) + ea + ") / " + String(buttonValues.length) + ")",
+        width: desktop ? (String(100) + '%') : ("calc(calc(100% - " + String(buttonBetween) + ea + ") / 2)"),
+        height: "calc(calc(100% - " + String(buttonBetween * (desktop ? (buttonValues.length - 1) : ((buttonValues.length / 2) - 1))) + ea + ") / " + String(desktop ? (buttonValues.length) : (buttonValues.length / 2)) + ")",
         background: colorChip.white,
         marginBottom: String(buttonBetween) + ea,
         border: "1px solid " + colorChip.gray3,
         boxSizing: "border-box",
+        marginRight: desktop ? "" : (i % 2 === 0 ? String(buttonBetween) + ea : ""),
       },
       children: [
         {
@@ -247,8 +252,9 @@ ResponseReservationJs.prototype.insertInitBox = function () {
     console.log(this.getAttribute("buttonValue"));
   }, {
     bigMode: true,
-    width: String(calendarWidth) + ea,
-    height: String(100) + '%',
+    mobile: mobile,
+    width: desktop ? String(calendarWidth) + ea : String(100) + '%',
+    height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
     events: [],
   });
   calendarBox.firstChild.appendChild(calendar.calendarBase);
