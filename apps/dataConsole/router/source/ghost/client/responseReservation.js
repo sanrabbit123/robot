@@ -70,21 +70,22 @@ ResponseReservationJs.prototype.insertInitBox = function () {
   let buttonTop;
   let buttonPaddingTop;
   let mobileCalendarHeight;
+  let initWordings;
 
   blockHeight = <%% this.backHeight, this.backHeight - 100, this.backHeight - 100, this.backHeight - 220, this.backHeight %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
   initWordingHeight = <%% 20, 20, 20, 20, 5 %%>;
-  initWordingSize = <%% 15.5, 15.5, 15.5, 13.5, 2.8 %%>;
-  initWordingLineHeight = <%% 9, 9, 9, 9, 1.5 %%>;
+  initWordingSize = <%% 17, 17, 16, 14, 3.4 %%>;
+  initWordingLineHeight = <%% 10, 10, 10, 9, 1.7 %%>;
 
-  middleMargin = <%% 28, 28, 28, 15, 1.5 %%>;
+  middleMargin = <%% 30, 30, 30, 15, 3.2 %%>;
 
   quoteTop = 0;
-  quoteHeight = <%% 12, 12, 12, 9, 2 %%>;
-  quoteMarginBottom = <%% 7, 7, 7, 6, 0.8 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 0.3 %%>;
+  quoteHeight = <%% 12, 12, 11, 9, 2.2 %%>;
+  quoteMarginBottom = <%% 7, 7, 7, 6, 1.2 %%>;
+  quoteLeft = <%% 2, 2, 2, 2, 1 %%>;
 
   calendarWidth = <%% 1000, 780, 640, 520, 80 %%>;
 
@@ -111,6 +112,11 @@ ResponseReservationJs.prototype.insertInitBox = function () {
     "18:00  ~  18:30",
   ];
 
+  initWordings = [
+    (desktop ? `안녕하세요, ${this.client.name} 고객님! 전화 상담을 위한 <b%예약 페이지%b>입니다.` : `안녕하세요, ${this.client.name} 고객님.`),
+    (desktop ? `<b%상담을 원하시는 날짜와 시간대를 선택%b>해주시면, 해당 시간에 상담을 위한 통화를 진행해드리도록 하겠습니다 :)` : `<b%상담을 원하시는 날짜와 시간대%b>를 선택해주세요!`),
+  ];
+
   titleAreaHeight = quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight + initWordingHeight + middleMargin;
 
   whiteBlock = createNode({
@@ -121,7 +127,7 @@ ResponseReservationJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       height: String(blockHeight + (desktop ? 0 : mobileCalendarHeight) - (margin * 2)) + ea,
       background: colorChip.white,
-      paddingTop: String(margin + (desktop ? 0 : 1.3)) + ea,
+      paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
       paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -156,12 +162,12 @@ ResponseReservationJs.prototype.insertInitBox = function () {
           style: {
             position: "absolute",
             top: String(quoteTop) + ea,
-            left: String(quoteLeft) + ea,
+            left: desktop ? String(quoteLeft) + ea : "calc(50% - 1.3vw)",
             height: String(quoteHeight) + ea,
           }
         },
         {
-          text: `안녕하세요, ${this.client.name} 고객님! 전화 상담을 위한 예약 페이지입니다.`,
+          text: initWordings[0],
           style: {
             position: "absolute",
             top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
@@ -169,11 +175,17 @@ ResponseReservationJs.prototype.insertInitBox = function () {
             width: String(100) + '%',
             height: String(initWordingHeight) + ea,
             fontSize: String(initWordingSize) + ea,
-            fontWeight: String(400),
+            fontWeight: String(300),
+            textAlign: desktop ? "left" : "center",
+            color: colorChip.black
+          },
+          bold: {
+            fontWeight: String(500),
+            color: colorChip.black
           }
         },
         {
-          text: desktop ? `상담을 원하시는 날짜와 시간대를 선택해주시면, 해당 시간에 상담을 위한 통화를 진행해드리도록 하겠습니다 :)` : `상담을 원하시는 날짜와 시간대를 선택해주세요!`,
+          text: initWordings[1],
           style: {
             position: "absolute",
             top: String(quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight) + ea,
@@ -181,7 +193,13 @@ ResponseReservationJs.prototype.insertInitBox = function () {
             width: String(100) + '%',
             height: String(initWordingHeight) + ea,
             fontSize: String(initWordingSize) + ea,
-            fontWeight: String(400),
+            fontWeight: String(300),
+            textAlign: desktop ? "left" : "center",
+            color: colorChip.black
+          },
+          bold: {
+            fontWeight: String(500),
+            color: colorChip.black
           }
         }
       ]
