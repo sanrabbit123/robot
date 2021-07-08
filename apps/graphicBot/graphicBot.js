@@ -562,6 +562,10 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           frontWaitingNumber = frontWaitingNumber + 1;
           if (instance.frontProblem) {
             await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
+            if (instance.frontProcess !== null) {
+              clearTimeout(instance.frontProcess);
+              instance.frontProcess = null;
+            }
             await sleep(500);
             await instance.chromeClose();
             await sleep(500);
@@ -569,6 +573,10 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           }
           if (frontWaitingNumber >= (2 * 60 * 30)) {
             await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
+            if (instance.frontProcess !== null) {
+              clearTimeout(instance.frontProcess);
+              instance.frontProcess = null;
+            }
             await sleep(500);
             await instance.chromeClose();
             await sleep(500);
@@ -670,6 +678,11 @@ GraphicBot.prototype.startWork = function () {
         }
       }
 
+      if (instance.frontProcess !== null) {
+        clearTimeout(instance.frontProcess);
+        instance.frontProcess = null;
+      }
+      
       await instance.chromeClose();
 
       totalSuccess = totalSuccess.filter((t) => { return !t; });
