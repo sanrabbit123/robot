@@ -1348,10 +1348,12 @@ GraphicBot.prototype.botServer = async function () {
     front = new FrontMethods();
     this.frontGeneral = await front.addFrontMethods();
 
-    console.log(address);
-
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + address.ghost.host;
+    if (address.isGhost === true) {
+      pemsLink = process.cwd() + "/pems/" + address.host;
+    } else {
+      pemsLink = process.cwd() + "/pems/" + address.ghost.host;
+    }
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
