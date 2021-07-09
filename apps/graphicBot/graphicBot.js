@@ -1331,6 +1331,7 @@ GraphicBot.prototype.botServer = async function () {
     let pems, pemsLink, certDir, keyDir, caDir;
     let tongItems;
     let https;
+    let isGhost;
 
     if (this.os === "mac") {
       https = require("http");
@@ -1345,12 +1346,15 @@ GraphicBot.prototype.botServer = async function () {
     console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching graphic bot in ${name.replace(/info/i, '')} ==============`);
     console.log(``);
 
+    isGhost = (address.isGhost === true);
+
     front = new FrontMethods();
     this.frontGeneral = await front.addFrontMethods();
 
     pems = {};
-    if (address.isGhost === true) {
+    if (isGhost) {
       pemsLink = process.cwd() + "/pems/" + address.host;
+      this.port = 8080;
     } else {
       pemsLink = process.cwd() + "/pems/" + address.ghost.host;
     }
