@@ -125,11 +125,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const kakao = new KakaoTalk();
-    await kakao.ready();
-    await kakao.sendTalk("stylingForm", "배창규", "010-2747-3403", { client: "배창규" });
-
-
 
 
 

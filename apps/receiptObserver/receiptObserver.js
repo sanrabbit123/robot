@@ -630,6 +630,15 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
     await MONGOLOCALC.connect();
     console.log(`set db`);
 
+    //set kakao
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const kakaoInstance = new KakaoTalk();
+    await kakaoInstance.ready();
+
+    //set human
+    const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+    const humanInstance = new HumanPacket();
+
     //set cron
     const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
     const cron = new CronGhost();
@@ -666,7 +675,7 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
 
     //set router
     const ReceiptRouter = require(`${this.dir}/router/receiptRouter.js`);
-    const router = new ReceiptRouter(MONGOC, MONGOLOCALC);
+    const router = new ReceiptRouter(MONGOC, MONGOLOCALC, kakaoInstance, humanInstance);
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
       app.get(obj.link, obj.func);

@@ -1,4 +1,4 @@
-const ReceiptRouter = function (MONGOC, MONGOLOCALC) {
+const ReceiptRouter = function (MONGOC, MONGOLOCALC, kakaoInstance, humanInstance) {
   if (MONGOC === undefined || MONGOC === null || MONGOLOCALC === undefined || MONGOLOCALC === null) {
     throw new Error("must be mongo, mongo_local connection");
   }
@@ -16,6 +16,8 @@ const ReceiptRouter = function (MONGOC, MONGOLOCALC) {
   this.mongo = MONGOC;
   this.mongolocal = MONGOLOCALC;
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
+  this.kakao = kakaoInstance;
+  this.human = humanInstance;
 }
 
 ReceiptRouter.prototype.rou_get_Root = function () {
@@ -352,6 +354,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
 ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
   const instance = this;
   const back = this.back;
+  const kakao = this.kakao;
   const { equalJson, fileSystem, slack_bot, dateToString, autoComma } = this.mother;
   let obj = {};
   obj.link = "/receiveStylingContract";
@@ -364,6 +367,7 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       const collection = "stylingForm";
       const selfMongo = instance.mongolocal;
       let obj;
+      let client;
 
       obj = {
         id: json.id,
@@ -377,7 +381,11 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       };
 
       await back.mongoCreate(collection, obj, { selfMongo });
-      instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 완료 : " + obj.name, channel: "#400_customer" });
+      client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
+      if (client !== null) {
+        await kakao.sendTalk("stylingForm", client.name, client.phone, { client: client.name });
+        instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 및 알림톡 전송 완료 : " + obj.name, channel: "#400_customer" });
+      }
 
       res.set({
         "Content-Type": "application/json",
