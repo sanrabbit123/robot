@@ -1473,6 +1473,8 @@ Ghost.prototype.serverLaunching = async function () {
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
+  const WebSocket = require("ws");
+  const url = require("url");
 
   app.use(useragent.express());
   app.use(bodyParser.json());
@@ -1508,11 +1510,15 @@ Ghost.prototype.serverLaunching = async function () {
     let pemsLink = process.cwd() + "/pems/" + address.host;
     let certDir, keyDir, caDir;
     let routerObj;
+    let server;
+    let sockets;
     let routerTargets = [
       "client",
       "designer",
       "photo",
-      "invest"
+    ];
+    let wssTargets = [
+      "client",
     ];
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
@@ -1557,8 +1563,48 @@ Ghost.prototype.serverLaunching = async function () {
       }
     }
 
+    server = https.createServer(pems, app);
+
+    sockets = [];
+    for (let i = 0; i < wssTargets.length; i++) {
+      sockets.push(new WebSocket.Server({ noServer: true }));
+    }
+
+    for (let wss of sockets) {
+      wss.on("connection", function (ws) {
+        ws.on("message", (message) => {
+          const clients = wss.clients;
+          for (let c of clients) {
+            if (c.readyState === WebSocket.OPEN && ws !== c) {
+              c.send(message);
+            }
+          }
+        });
+      });
+    }
+
+    server.on("upgrade", function (request, socket, head) {
+      const { pathname } = url.parse(request.url);
+      let urlTargets, number;
+      urlTargets = wssTargets.map((i) => { return new RegExp(i, "gi"); });
+      number = null;
+      for (let i = 0; i < urlTargets.length; i++) {
+        if (urlTargets[i].test(pathname)) {
+          number = i;
+          break;
+        }
+      }
+      if (number !== null) {
+        sockets[number].handleUpgrade(request, socket, head, function (ws) {
+          sockets[number].emit("connection", ws, request);
+        });
+      } else {
+        socket.destroy();
+      }
+    });
+
     //server on
-    https.createServer(pems, app).listen(3000, address.ip.inner, () => {
+    server.listen(3000, address.ip.inner, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
     });
 
