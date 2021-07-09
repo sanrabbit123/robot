@@ -2454,7 +2454,7 @@ GeneralJs.prototype.dashboardBox = function () {
     right = 20;
     bottom = 158;
     topBarHeight = 14;
-    dragRatio = 0.5;
+    dragRatio = 1;
 
     dashboardWindow = createNode({
       mother: this.below,
@@ -2480,8 +2480,8 @@ GeneralJs.prototype.dashboardBox = function () {
           event: function (e) {
             e.preventDefault();
             const that = this;
-            that.style.bottom = String(window.innerHeight - (e.screenY + (height * dragRatio))) + ea;
-            that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+            that.style.bottom = String(window.innerHeight - (e.y + (height * dragRatio))) + ea;
+            that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
           }
         }
       ],
@@ -2509,7 +2509,7 @@ GeneralJs.prototype.dashboardBox = function () {
                 let style, ea;
 
                 GeneralJs.stacks["windowDragStartPoint"] = 0;
-                GeneralJs.stacks["windowDragStartPoint"] = e.screenX - that.offsetLeft;
+                GeneralJs.stacks["windowDragStartPoint"] = e.x - that.offsetLeft;
                 ea = "px";
 
                 div = GeneralJs.nodes.div.cloneNode(true);
@@ -2525,8 +2525,8 @@ GeneralJs.prototype.dashboardBox = function () {
                   div.style[i] = style[i];
                 }
                 div.addEventListener("dragover", function (e) {
-                  that.style.bottom = String(window.innerHeight - e.screenY - (height * dragRatio)) + ea;
-                  that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+                  that.style.bottom = String(window.innerHeight - e.y - (height * dragRatio)) + ea;
+                  that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
                   e.preventDefault();
                 });
                 GeneralJs.stacks["windowDragBack"] = div;
@@ -2558,8 +2558,8 @@ GeneralJs.prototype.dashboardBox = function () {
               event: function (e) {
                 e.preventDefault();
                 const that = this.parentNode;
-                that.style.bottom = String(window.innerHeight - (e.screenY + (height * dragRatio))) + ea;
-                that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+                that.style.bottom = String(window.innerHeight - (e.y + (height * dragRatio))) + ea;
+                that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
               }
             },
             {

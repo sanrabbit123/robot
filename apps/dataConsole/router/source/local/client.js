@@ -4847,24 +4847,45 @@ ClientJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
-ClientJs.prototype.dashboardBox = function (dashboardName, option) {
-  if (typeof dashboardName !== "string") {
+ClientJs.prototype.dashboardBox = function (option) {
+  if (typeof option !== "object") {
+    throw new Error("must be style object");
+  }
+  if (typeof option.name !== "string") {
     throw new Error("must be dashboard name");
   }
-  if (typeof option !== "object") {
-    throw new Error("must be style object => { number:  }");
+  if (typeof option.style !== "object") {
+    throw new Error("must be style object");
   }
-  if (option.right === undefined || option.bottom === undefined) {
-    throw new Error("must be style object => { number:  }");
+  if (typeof option.style.right !== "number" || typeof option.style.bottom !== "number" || typeof option.style.height !== "number") {
+    throw new Error("invaild style object");
+  }
+  if (typeof option.style.width !== "number") {
+    option.style.width = 340;
+  }
+  if (typeof option.title !== "object") {
+    throw new Error("must be title object");
+  }
+  if (typeof option.title.main !== "string" || typeof option.title.sub !== "string") {
+    throw new Error("invaild title object");
+  }
+  if (typeof option.callback !== "function") {
+    throw new Error("must be callback");
   }
   const instance = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
+  let { name: dashboardName, style: { width, right, bottom, height }, title: { main: mainTitle, sub: subTitle }, callback } = option;
   let ea;
-  let width, height;
   let dashboardBox, dashboardWindow;
-  let right, bottom;
   let topBarHeight;
   let dragRatio;
+  let paddingTop;
+  let titleSize;
+  let titleHeight;
+  let leftMargin;
+  let titleMargin;
+  let titleBetween;
+  let contentsSize;
 
   ea = "px";
   dashboardName = "__name__" + dashboardName;
@@ -4874,12 +4895,15 @@ ClientJs.prototype.dashboardBox = function (dashboardName, option) {
   GeneralJs.stacks["dashboardBoxMother" + dashboardName] = null;
   GeneralJs.stacks["dashboardBoxHeight" + dashboardName] = 0;
 
-  width = 340;
-  height = 500;
-  right = 620;
-  bottom = 158;
+  titleSize = 21;
+  titleHeight = 36;
+  leftMargin = 24;
+  paddingTop = 15;
   topBarHeight = 14;
-  dragRatio = 0.5;
+  dragRatio = 1;
+  titleMargin = 8;
+  titleBetween = 8;
+  contentsSize = 14;
 
   dashboardWindow = createNode({
     mother: this.mother.below,
@@ -4905,8 +4929,8 @@ ClientJs.prototype.dashboardBox = function (dashboardName, option) {
         event: function (e) {
           e.preventDefault();
           const that = this;
-          that.style.bottom = String(window.innerHeight - (e.screenY + (height * dragRatio))) + ea;
-          that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
+          that.style.bottom = String(window.innerHeight - (e.y + (height * dragRatio))) + ea;
+          that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
         }
       }
     ],
@@ -4934,7 +4958,7 @@ ClientJs.prototype.dashboardBox = function (dashboardName, option) {
               let style, ea;
 
               GeneralJs.stacks["windowDragStartPoint" + dashboardName] = 0;
-              GeneralJs.stacks["windowDragStartPoint" + dashboardName] = e.screenX - that.offsetLeft;
+              GeneralJs.stacks["windowDragStartPoint" + dashboardName] = e.x - that.offsetLeft;
               ea = "px";
 
               div = GeneralJs.nodes.div.cloneNode(true);
@@ -4950,8 +4974,8 @@ ClientJs.prototype.dashboardBox = function (dashboardName, option) {
                 div.style[i] = style[i];
               }
               div.addEventListener("dragover", function (e) {
-                that.style.bottom = String(window.innerHeight - e.screenY - (height * dragRatio)) + ea;
-                that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
+                that.style.bottom = String(window.innerHeight - e.y - (height * dragRatio)) + ea;
+                that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
                 e.preventDefault();
               });
               GeneralJs.stacks["windowDragBack" + dashboardName] = div;
@@ -4983,8 +5007,8 @@ ClientJs.prototype.dashboardBox = function (dashboardName, option) {
             event: function (e) {
               e.preventDefault();
               const that = this.parentNode;
-              that.style.bottom = String(window.innerHeight - (e.screenY + (height * dragRatio))) + ea;
-              that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
+              that.style.bottom = String(window.innerHeight - (e.y + (height * dragRatio))) + ea;
+              that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
             }
           },
           {
@@ -4997,7 +5021,7 @@ ClientJs.prototype.dashboardBox = function (dashboardName, option) {
               e.stopPropagation();
               e.preventDefault();
               if (GeneralJs.stacks["dashboardBoxMother" + dashboardName] !== null) {
-                instance.below.removeChild(GeneralJs.stacks["dashboardBoxMother" + dashboardName]);
+                instance.mother.below.removeChild(GeneralJs.stacks["dashboardBoxMother" + dashboardName]);
                 GeneralJs.stacks["dashboardBoxBoo" + dashboardName] = false;
                 GeneralJs.stacks["dashboardBox" + dashboardName] = null;
                 GeneralJs.stacks["dashboardBoxMother" + dashboardName] = null;
@@ -5018,8 +5042,56 @@ ClientJs.prototype.dashboardBox = function (dashboardName, option) {
       marginTop: String(topBarHeight + ((isMac()) ? 0 : 3)) + ea,
       background: colorChip.white,
       transition: "all 0s ease",
-    }
+      paddingTop: String(paddingTop) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          marginLeft: String(leftMargin) + ea,
+          width: withOut(leftMargin * 2, ea),
+          height: String(titleHeight) + ea,
+          marginBottom: String(titleBetween) + ea,
+        },
+        children: [
+          {
+            text: mainTitle,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(200),
+              color: colorChip.black,
+              marginRight: String(titleMargin) + ea,
+            }
+          },
+          {
+            text: subTitle,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(200),
+              color: colorChip.green,
+              marginRight: String(titleMargin) + ea,
+            }
+          },
+        ]
+      },
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          marginLeft: String(leftMargin) + ea,
+          width: withOut(leftMargin * 2, ea),
+          height: withOut(titleHeight + paddingTop + leftMargin + titleBetween, ea),
+        }
+      }
+    ]
   });
+
+  callback(dashboardBox.lastChild, contentsSize, ea);
 
   GeneralJs.stacks["dashboardBoxBoo" + dashboardName] = true;
   GeneralJs.stacks["dashboardBox" + dashboardName] = dashboardBox;
@@ -5031,6 +5103,8 @@ ClientJs.prototype.dashboardBox = function (dashboardName, option) {
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
+    const { dateToString, returnGet } = GeneralJs;
+
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -5041,9 +5115,7 @@ ClientJs.prototype.launching = async function () {
     this.addExtractEvent();
     this.whiteResize();
 
-    this.dashboardBox();
-
-    const getObj = GeneralJs.returnGet();
+    const getObj = returnGet();
     let getTarget;
     let tempFunction;
 
@@ -5070,6 +5142,233 @@ ClientJs.prototype.launching = async function () {
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    console.log(e);
+  }
+}
+
+ClientJs.prototype.lateLaunching = async function () {
+  const instance = this;
+  try {
+    const { dateToString, returnGet } = GeneralJs;
+    const blockMake = function (wording, tong, size, color, client, cliid) {
+      const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+      let marginBottom;
+      let height;
+      let padding;
+      let idMargin;
+      let ea;
+
+      ea = "px";
+      marginBottom = 10;
+      height = 17;
+      padding = 11;
+      idMargin = 2;
+
+      createNode({
+        mother: tong,
+        attribute: [
+          { cliid: (/^c0000/.test(cliid) ? "null" : cliid) }
+        ],
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          marginBottom: String(marginBottom) + ea,
+          height: String(height) + ea,
+          textAlign: "right",
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              width: String(98) + '%',
+              left: String(1) + '%',
+              top: String(height * 0.48) + ea,
+              borderBottom: "1px solid " + colorChip.gray2,
+            }
+          },
+          {
+            text: wording,
+            style: {
+              position: "absolute",
+              left: String(0),
+              top: String(0),
+              fontSize: String(size) + ea,
+              fontWeight: String(300),
+              color: colorChip[color],
+              paddingRight: String(padding) + ea,
+              background: colorChip.white,
+            }
+          },
+          {
+            text: `${client} <b%${cliid}%b>`,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              right: String(0),
+              top: String(0),
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip[color],
+              paddingLeft: String(padding) + ea,
+              background: colorChip.white,
+            },
+            bold: {
+              fontWeight: String(300),
+              color: colorChip["gray5"],
+              marginLeft: String(idMargin) + ea,
+              fontSize: String(size - 3) + ea,
+            }
+          },
+          {
+            text: "|",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              right: String(0),
+              top: String(0),
+              fontSize: String(size) + ea,
+              fontWeight: String(200),
+              color: colorChip.gray4,
+              paddingLeft: String(padding) + ea,
+              background: colorChip.white,
+            },
+          },
+          {
+            text: instance.mother.member.name,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              right: String(0),
+              top: String(0),
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip[color],
+              paddingLeft: String(padding) + ea,
+              background: colorChip.white,
+            },
+          },
+        ]
+      });
+    }
+
+    instance.dashboardBox({
+      name: "realtime",
+      style: { height: 410, right: 20, bottom: 388 },
+      title: {
+        main: "응대 예정",
+        sub: dateToString(new Date()),
+      },
+      callback: async (mother, size, ea) => {
+        try {
+          const { createNode, colorChip, cleanChildren, ajaxJson } = GeneralJs;
+          const times = [
+            "11:00  ~  11:30",
+            "11:30  ~  12:00",
+            "13:30  ~  14:00",
+            "14:00  ~  14:30",
+            "14:30  ~  15:00",
+            "15:00  ~  15:30",
+            "15:30  ~  16:00",
+            "16:00  ~  16:30",
+            "16:30  ~  17:00",
+            "17:00  ~  17:30",
+            "17:30  ~  18:00",
+            "18:00  ~  18:30",
+          ];
+          let tong;
+          let from, to;
+          let tempArr;
+          let tempArr2, tempArr3;
+          let color;
+          let tongMake;
+
+          mother.style.overflow = "scroll";
+          tong = createNode({
+            mother,
+            style: {
+              position: "relative",
+              width: String(100) + '%',
+            }
+          });
+
+          tongMake = (tong, now) => {
+            let ours = now.getHours();
+            cleanChildren(tong);
+            for (let t of times) {
+              tempArr = t.split(' ~ ');
+              tempArr2 = tempArr[0].split(':');
+              tempArr3 = tempArr[1].split(':');
+              from = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(tempArr2[0]), Number(tempArr2[1]));
+              to = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(tempArr3[0]), Number(tempArr3[1]));
+              if (from.valueOf() <= now.valueOf() && to.valueOf() > now.valueOf()) {
+                color = "green";
+              } else if (to.valueOf() <= now.valueOf()) {
+                color = "gray4";
+              } else {
+                color = "black";
+              }
+              blockMake(t, tong, size, color, "미정", "c0000_aa001");
+            }
+          }
+
+          tongMake(tong, new Date());
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+    });
+
+    instance.dashboardBox({
+      name: "notyet",
+      style: { height: 219, right: 372, bottom: 158 },
+      title: {
+        main: "응대 필요",
+        sub: "5"
+      },
+      callback: async (mother, size, ea) => {
+        try {
+          const { createNode, colorChip, cleanChildren, ajaxJson, stringToDate } = GeneralJs;
+          let tong, cases;
+          let cliidArr, historyObj;
+
+          mother.style.overflow = "scroll";
+          tong = createNode({
+            mother,
+            style: {
+              position: "relative",
+              width: String(100) + '%',
+            }
+          });
+
+
+          cases = JSON.parse(JSON.stringify(instance.cases));
+          cases = cases.filter((i) => { return i !== null });
+          cases = cases.filter((i) => { return i.status === "응대중" });
+
+          cliidArr = cases.map((i) => { return i.cliid });
+          historyObj = await ajaxJson({ method: "client", idArr: cliidArr }, "/getHistoryTotal");
+          cases.forEach((obj) => {
+            obj.manager = ((historyObj[obj.cliid].manager === '' || historyObj[obj.cliid].manager === '-') ? "미정" : historyObj[obj.cliid].manager);
+            obj.timelineValue = stringToDate(obj.timeline).valueOf();
+            obj.timeline = obj.timeline.split(' ')[0];
+            return obj;
+          });
+
+          console.log(cases);
+
+          for (let { name, cliid, status } of cases) {
+            blockMake("0000-00-00", tong, size, colorChip.black, name, cliid);
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+    });
+
+  } catch (e) {
     console.log(e);
   }
 }

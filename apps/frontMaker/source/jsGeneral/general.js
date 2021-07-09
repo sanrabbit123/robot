@@ -465,7 +465,7 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
     ]
   }
   */
-  let dom_clone, targetStyle, ea, ratio, temp, boldObject, underObject, children;
+  let dom_clone, targetStyle, ea, ratio, temp, boldObject, underObject, children, tempIndex;
   children = [];
   if (mode === undefined && source === undefined && style === undefined) {
     throw new Error("arguments must be mode(dom node name), style");
@@ -545,10 +545,19 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
             } else {
               boldObject = "";
               for (let b in style.bold) {
-                if (b === "fontSize") {
-                  boldObject += "font-size";
-                } else if (b === "fontWeight") {
-                  boldObject += "font-weight";
+                if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
+                  tempIndex = null;
+                  for (let z = 0; z < b.length; z++) {
+                    if (b.charCodeAt(z) < "a".charCodeAt(0)) {
+                      tempIndex = z;
+                      break;
+                    }
+                  }
+                  if (tempIndex !== null) {
+                    boldObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                  } else {
+                    boldObject += b;
+                  }
                 } else {
                   boldObject += b;
                 }
@@ -566,10 +575,19 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
             } else {
               underObject = "";
               for (let b in style.under) {
-                if (b === "fontSize") {
-                  underObject += "font-size";
-                } else if (b === "fontWeight") {
-                  underObject += "font-weight";
+                if (/^font/.test(b) || /^padding/.test(b) || /^margin/.test(b)) {
+                  tempIndex = null;
+                  for (let z = 0; z < b.length; z++) {
+                    if (b.charCodeAt(z) < "a".charCodeAt(0)) {
+                      tempIndex = z;
+                      break;
+                    }
+                  }
+                  if (tempIndex !== null) {
+                    underObject += b.slice(0, tempIndex) + '-' + b.slice(tempIndex).toLowerCase();
+                  } else {
+                    underObject += b;
+                  }
                 } else {
                   underObject += b;
                 }

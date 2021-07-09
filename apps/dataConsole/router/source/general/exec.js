@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     await local_funcs.mother.loginBox();
     local_funcs.mother.dashboardBox();
     local_funcs.mother.generalStacks();
+    if (typeof local_funcs.lateLaunching === "function") {
+      await local_funcs.lateLaunching();
+    }
 
     //SSE
     const sseTarget = [
