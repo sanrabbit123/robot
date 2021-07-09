@@ -120,6 +120,18 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    stylingForm: {
+      name: "스타일링 계약서 서명 요청",
+      id: "TF_0608",
+      needs: [
+        "client"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client }
+        ];
+      },
+    },
     designerPartnership: {
       name: "파트너십 신청",
       id: "TD_5890",

@@ -60,26 +60,26 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const proid = "p2105_aa10s"
-    const selfMongo = this.MONGOC;
-    const project = await back.getProjectById(proid, { selfMongo });
-    const client = await back.getClientById(project.cliid, { selfMongo });
-    const designer = await back.getDesignerById(project.desid, { selfMongo });
-    let url, requestNumber, proposalDate;
-
-    proposalDate = project.proposal.date.valueOf();
-
-    requestNumber = 0;
-    for (let i = 0; i < client.requests.length; i++) {
-      if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
-        requestNumber = i;
-        break;
-      }
-    }
-
-    url = "http://127.0.0.1:3000/form";
-
-    await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName: "", contractAddress: "" }, { headers: { "Content-type": "application/json" } });
+    // const proid = "p2105_aa10s"
+    // const selfMongo = this.MONGOC;
+    // const project = await back.getProjectById(proid, { selfMongo });
+    // const client = await back.getClientById(project.cliid, { selfMongo });
+    // const designer = await back.getDesignerById(project.desid, { selfMongo });
+    // let url, requestNumber, proposalDate;
+    //
+    // proposalDate = project.proposal.date.valueOf();
+    //
+    // requestNumber = 0;
+    // for (let i = 0; i < client.requests.length; i++) {
+    //   if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
+    //     requestNumber = i;
+    //     break;
+    //   }
+    // }
+    //
+    // url = "http://127.0.0.1:3000/form";
+    //
+    // await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName: "", contractAddress: "" }, { headers: { "Content-type": "application/json" } });
 
 
 
@@ -125,7 +125,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    const kakao = new KakaoTalk();
+    await kakao.ready();
+    await kakao.sendTalk("stylingForm", "배창규", "010-2747-3403", { client: "배창규" });
 
 
 
