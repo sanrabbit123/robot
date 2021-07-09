@@ -683,7 +683,7 @@ GraphicBot.prototype.startWork = function () {
         instance.frontProcess = null;
       }
 
-      await instance.chromeClose();
+      // await instance.chromeClose();
 
       totalSuccess = totalSuccess.filter((t) => { return !t; });
       if (totalSuccess.length !== 0) {
@@ -1063,14 +1063,12 @@ GraphicBot.prototype.botRouter = function () {
       try {
         const taskNumber = 0;
         let latest;
-        latest = Number(String(await fileSystem(`readString`, [ `${tong}/print/latest` ])).replace(/[^0-9]/g, ''));
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, String(latest + 1) ]);
-        await fileSystem(`write`, [ `${tong}/print/latest`, String(latest + 1) ]);
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, '' ]);
         if (instance.task !== null) {
           clearTimeout(instance.task);
           instance.task = null;
         }
-        instance.task = setTimeout(instance.startWork(), 3000);
+        instance.task = setTimeout(instance.startWork(), 1000);
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
