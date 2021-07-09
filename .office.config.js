@@ -6,6 +6,13 @@ module.exports = {
       instances: 1,
       exec_mode: "fork",
       args: [ "server" ]
+    },
+    {
+      name: "robot",
+      script: "./robot.js",
+      instances: 1,
+      exec_mode: "fork",
+      args: [ "graphicServer" ]
     }
   ]
 };
