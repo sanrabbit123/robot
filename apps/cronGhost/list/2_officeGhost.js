@@ -1,9 +1,25 @@
 module.exports = [
   {
-    name: "fixDir",
+    name: "mongoToJson",
+    time: {
+      hour: 5,
+      minute: 30,
+      second: 30,
+    }
+  },
+  {
+    name: "reflect",
+    time: {
+      hour: 6,
+      minute: 40,
+      second: 30,
+    }
+  },
+  {
+    name: "mysqlReflection",
     time: {
       hour: 7,
-      minute: 30,
+      minute: 40,
       second: 30,
     }
   },

@@ -13,6 +13,13 @@ module.exports = {
       instances: 1,
       exec_mode: "fork",
       args: [ "graphicServer" ]
+    },
+    {
+      name: "alien",
+      script: "./alien.js",
+      instances: 1,
+      exec_mode: "cluster",
+      args: [ "office" ]
     }
   ]
 };
