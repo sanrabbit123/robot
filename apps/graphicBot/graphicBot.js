@@ -682,7 +682,7 @@ GraphicBot.prototype.startWork = function () {
         clearTimeout(instance.frontProcess);
         instance.frontProcess = null;
       }
-      
+
       await instance.chromeClose();
 
       totalSuccess = totalSuccess.filter((t) => { return !t; });
@@ -1347,6 +1347,8 @@ GraphicBot.prototype.botServer = async function () {
 
     front = new FrontMethods();
     this.frontGeneral = await front.addFrontMethods();
+
+    console.log(address);
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.ghost.host;

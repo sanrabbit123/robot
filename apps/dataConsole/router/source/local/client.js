@@ -4902,7 +4902,7 @@ ClientJs.prototype.dashboardBox = function (option) {
   topBarHeight = 14;
   dragRatio = 1;
   titleMargin = 8;
-  titleBetween = 8;
+  titleBetween = 5;
   contentsSize = 14;
 
   dashboardWindow = createNode({
@@ -5150,24 +5150,139 @@ ClientJs.prototype.lateLaunching = async function () {
   const instance = this;
   try {
     const { dateToString, returnGet } = GeneralJs;
-    const blockMake = function (wording, tong, size, color, client, cliid) {
-      const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+
+    GeneralJs.stacks["realtimeClient"] = {
+      from: null,
+      to: null,
+    };
+
+    const blockMake = function (wording, tong, size, color, client, cliid, manager, fromTo) {
+      const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+      const textTargets = "textTargets";
+      const fromClass = "from";
+      const toClass = "to";
       let marginBottom;
       let height;
       let padding;
-      let idMargin;
+      let idMargin, idFixMargin;
       let ea;
+      let from;
 
+      from = (fromTo === "from");
       ea = "px";
       marginBottom = 10;
       height = 17;
       padding = 11;
       idMargin = 2;
+      idFixMargin = 4;
 
       createNode({
         mother: tong,
+        class: [ "hoverDefault_lite", (from ? fromClass : toClass) ],
         attribute: [
-          { cliid: (/^c0000/.test(cliid) ? "null" : cliid) }
+          { client },
+          { cliid },
+          { manager },
+          { toggle: "off" },
+        ],
+        events: [
+          {
+            type: "click",
+            event: async function (e) {
+              try {
+                const toggle = this.getAttribute("toggle");
+                const client = this.getAttribute("client");
+                const cliid = this.getAttribute("cliid");
+                const manager = this.getAttribute("manager");
+                const tong = GeneralJs.stacks["realtimeClient"];
+                let doms, bolds, siblings, opposite;
+                let oClient, oCliid, oManager;
+                siblings = document.querySelectorAll('.' + (from ? fromClass : toClass));
+                for (let s of siblings) {
+                  if (s !== this) {
+                    if (s.getAttribute("toggle") === "on") {
+                      doms = s.querySelectorAll('.' + textTargets);
+                      bolds = s.querySelectorAll('b');
+                      for (let dom of doms) {
+                        dom.style.color = dom.getAttribute("color");
+                      }
+                      for (let bold of bolds) {
+                        bold.style.color = bold.parentElement.getAttribute("bold");
+                      }
+                      s.setAttribute("toggle", "off");
+                    }
+                  }
+                }
+                doms = this.querySelectorAll('.' + textTargets);
+                bolds = this.querySelectorAll('b');
+                if (toggle === "off") {
+                  for (let dom of doms) {
+                    dom.style.color = colorChip.purple;
+                  }
+                  for (let bold of bolds) {
+                    bold.style.color = colorChip.purple;
+                  }
+                  tong[(from ? fromClass : toClass)] = this;
+                  if (tong[(!from ? fromClass : toClass)] !== null) {
+                    opposite = tong[(!from ? fromClass : toClass)];
+                    oClient = opposite.getAttribute("client");
+                    oCliid = opposite.getAttribute("cliid");
+                    oManager = opposite.getAttribute("manager");
+                    if (from) {
+                      opposite.setAttribute("client", client);
+                      opposite.setAttribute("cliid", cliid);
+                      this.setAttribute("manager", oManager);
+                      opposite.querySelector(".client").firstChild.textContent = client;
+                      opposite.querySelector(".client").querySelector('b').textContent = cliid;
+                      opposite.querySelector(".client").querySelector('b').style.marginLeft = String(idFixMargin) + ea;
+                      this.querySelector(".manager").firstChild.textContent = oManager;
+                    } else {
+                      this.setAttribute("client", oClient);
+                      this.setAttribute("cliid", oCliid);
+                      opposite.setAttribute("manager", manager);
+                      this.querySelector(".client").firstChild.textContent = oClient;
+                      this.querySelector(".client").querySelector('b').textContent = oCliid;
+                      this.querySelector(".client").querySelector('b').style.marginLeft = String(idFixMargin) + ea;
+                      opposite.querySelector(".manager").firstChild.textContent = manager;
+                    }
+
+                    for (let dom of doms) {
+                      dom.style.color = dom.getAttribute("color");
+                    }
+                    for (let bold of bolds) {
+                      bold.style.color = bold.parentElement.getAttribute("bold");
+                    }
+                    tong[(from ? fromClass : toClass)] = null;
+                    this.setAttribute("toggle", "off");
+
+                    doms = opposite.querySelectorAll('.' + textTargets);
+                    bolds = opposite.querySelectorAll('b');
+                    for (let dom of doms) {
+                      dom.style.color = dom.getAttribute("color");
+                    }
+                    for (let bold of bolds) {
+                      bold.style.color = bold.parentElement.getAttribute("bold");
+                    }
+                    tong[(!from ? fromClass : toClass)] = null;
+                    opposite.setAttribute("toggle", "off");
+
+                  }
+                  this.setAttribute("toggle", "on");
+                } else {
+                  for (let dom of doms) {
+                    dom.style.color = dom.getAttribute("color");
+                  }
+                  for (let bold of bolds) {
+                    bold.style.color = bold.parentElement.getAttribute("bold");
+                  }
+                  tong[(from ? fromClass : toClass)] = null;
+                  this.setAttribute("toggle", "off");
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
         ],
         style: {
           display: "block",
@@ -5189,6 +5304,10 @@ ClientJs.prototype.lateLaunching = async function () {
           },
           {
             text: wording,
+            class: [ textTargets ],
+            attribute: [
+              { color: colorChip[color] }
+            ],
             style: {
               position: "absolute",
               left: String(0),
@@ -5202,6 +5321,11 @@ ClientJs.prototype.lateLaunching = async function () {
           },
           {
             text: `${client} <b%${cliid}%b>`,
+            class: [ textTargets, "client" ],
+            attribute: [
+              { color: colorChip[color] },
+              { bold: colorChip.gray5 },
+            ],
             style: {
               display: "inline-block",
               position: "relative",
@@ -5222,6 +5346,10 @@ ClientJs.prototype.lateLaunching = async function () {
           },
           {
             text: "|",
+            class: [ textTargets ],
+            attribute: [
+              { color: colorChip.gray4 }
+            ],
             style: {
               display: "inline-block",
               position: "relative",
@@ -5235,7 +5363,11 @@ ClientJs.prototype.lateLaunching = async function () {
             },
           },
           {
-            text: instance.mother.member.name,
+            text: manager,
+            class: [ textTargets, "manager" ],
+            attribute: [
+              { color: colorChip[color] }
+            ],
             style: {
               display: "inline-block",
               position: "relative",
@@ -5261,7 +5393,7 @@ ClientJs.prototype.lateLaunching = async function () {
       },
       callback: async (mother, size, ea) => {
         try {
-          const { createNode, colorChip, cleanChildren, ajaxJson } = GeneralJs;
+          const { createNode, colorChip, cleanChildren, ajaxJson, dateToString } = GeneralJs;
           const times = [
             "11:00  ~  11:30",
             "11:30  ~  12:00",
@@ -5282,6 +5414,17 @@ ClientJs.prototype.lateLaunching = async function () {
           let tempArr2, tempArr3;
           let color;
           let tongMake;
+          let arrowWidth;
+          let arrowTop;
+          let arrowRight;
+          let arrowBoxWidth;
+
+          GeneralJs.stacks.thisDate = new Date();
+
+          arrowWidth = 10;
+          arrowTop = 10;
+          arrowRight = 18;
+          arrowBoxWidth = 15;
 
           mother.style.overflow = "scroll";
           tong = createNode({
@@ -5289,6 +5432,74 @@ ClientJs.prototype.lateLaunching = async function () {
             style: {
               position: "relative",
               width: String(100) + '%',
+            }
+          });
+
+          createNode({
+            mother: mother.parentElement.firstChild,
+            mode: "svg",
+            source: instance.mother.returnArrow("left", colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(arrowWidth) + ea,
+              top: String(arrowTop) + ea,
+              right: String(arrowRight) + ea,
+            }
+          });
+
+          createNode({
+            mother: mother.parentElement.firstChild,
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  GeneralJs.stacks.thisDate.setDate(GeneralJs.stacks.thisDate.getDate() - 1);
+                  mother.parentElement.firstChild.children[1].firstChild.textContent = dateToString(GeneralJs.stacks.thisDate);
+                  tongMake(tong, GeneralJs.stacks.thisDate);
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              width: String(arrowBoxWidth) + ea,
+              height: String(arrowBoxWidth) + ea,
+              top: String(arrowTop - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
+              right: String(arrowRight - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
+              cursor: "pointer",
+            }
+          });
+
+          createNode({
+            mother: mother.parentElement.firstChild,
+            mode: "svg",
+            source: instance.mother.returnArrow("right", colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(arrowWidth) + ea,
+              top: String(arrowTop) + ea,
+              right: String(0) + ea,
+            }
+          });
+
+          createNode({
+            mother: mother.parentElement.firstChild,
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  GeneralJs.stacks.thisDate.setDate(GeneralJs.stacks.thisDate.getDate() + 1);
+                  mother.parentElement.firstChild.children[1].firstChild.textContent = dateToString(GeneralJs.stacks.thisDate);
+                  tongMake(tong, GeneralJs.stacks.thisDate);
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              width: String(arrowBoxWidth) + ea,
+              height: String(arrowBoxWidth) + ea,
+              top: String(arrowTop - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
+              right: String(0) + ea,
+              cursor: "pointer",
             }
           });
 
@@ -5308,11 +5519,11 @@ ClientJs.prototype.lateLaunching = async function () {
               } else {
                 color = "black";
               }
-              blockMake(t, tong, size, color, "미정", "c0000_aa001");
+              blockMake(t, tong, size, color, "미정", "c0000_aa001", instance.mother.member.name, "to");
             }
           }
 
-          tongMake(tong, new Date());
+          tongMake(tong, GeneralJs.stacks.thisDate);
 
         } catch (e) {
           console.log(e);
@@ -5342,7 +5553,6 @@ ClientJs.prototype.lateLaunching = async function () {
             }
           });
 
-
           cases = JSON.parse(JSON.stringify(instance.cases));
           cases = cases.filter((i) => { return i !== null });
           cases = cases.filter((i) => { return i.status === "응대중" });
@@ -5356,11 +5566,13 @@ ClientJs.prototype.lateLaunching = async function () {
             return obj;
           });
 
-          console.log(cases);
+          cases.sort((a, b) => { return b.timelineValue - a.timelineValue; });
 
-          for (let { name, cliid, status } of cases) {
-            blockMake("0000-00-00", tong, size, colorChip.black, name, cliid);
+          for (let { name, cliid, timeline, manager } of cases) {
+            blockMake(timeline, tong, size, "black", name, cliid, manager, "from");
           }
+
+          mother.parentElement.firstChild.lastChild.textContent = String(cases.length);
 
         } catch (e) {
           console.log(e);

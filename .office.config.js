@@ -3,8 +3,8 @@ module.exports = {
     {
       name: "ghost",
       script: "./ghost.js",
-      instances: 4,
-      exec_mode: "cluster",
+      instances: 1,
+      exec_mode: "fork",
       args: [ "server" ]
     }
   ]
