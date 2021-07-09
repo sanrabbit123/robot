@@ -16,6 +16,9 @@ module.exports = function (order, info) {
       } catch (e) {
         console.log(e);
       }
-    }
+    },
+    [ 1450, 298, 500 ],
+    [ 1450, 343, 500 ],
+    [ 1569, 931, 500 ],
   ];
 };
