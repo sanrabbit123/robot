@@ -1752,6 +1752,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
   let style;
   let ea;
   let top, left, height;
+  let size, size2;
   let lineHeight;
   let standardDoms, caseDoms;
   let standardIndex;
@@ -1789,6 +1790,8 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
   }
   lineHeight = 26;
   titleValue = 0;
+  size = 21;
+  size2 = 14;
 
   for (let i = 1; i < caseDoms.length; i++) {
     if (caseDoms[i].children[standardIndex[0]].textContent === titleStandard) {
@@ -1826,7 +1829,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
   mainWording.textContent = titleStandard;
   style = {
     position: "absolute",
-    fontSize: String(21) + ea,
+    fontSize: String(size) + ea,
     fontWeight: String(200),
     height: String(height) + ea,
     left: String(0) + ea,
@@ -1841,7 +1844,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
   div_clone2.textContent = String(titleValue);
   style = {
     position: "absolute",
-    fontSize: String(21) + ea,
+    fontSize: String(size) + ea,
     fontWeight: String(200),
     height: String(height) + ea,
     top: String(0) + ea,
@@ -1874,7 +1877,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
     div_clone2.textContent = buttons[z];
     style = {
       position: "absolute",
-      fontSize: String(14) + ea,
+      fontSize: String(size2) + ea,
       fontWeight: String(500),
       height: String(height) + ea,
       left: String(0) + ea,
@@ -1889,7 +1892,7 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
     div_clone2.textContent = String(values[z]);
     style = {
       position: "absolute",
-      fontSize: String(14) + ea,
+      fontSize: String(size2) + ea,
       fontWeight: String(300),
       height: String(height) + ea,
       right: String(0) + ea,
@@ -2431,157 +2434,174 @@ GeneralJs.prototype.dashboardBox = function () {
     thisPathName = "project";
   }
   const { vaildTargets, standardColumn, titleStandard, buttons } = DataPatch.toolsDashboard(thisPathName);
-  let div_clone, div_clone2, div_clone3;
-  let style = {};
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   let ea = "px";
   let width, height;
-  let dashboardBox;
+  let dashboardBox, dashboardWindow;
+  let right, bottom;
+  let topBarHeight;
+  let dragRatio;
 
   GeneralJs.stacks["dashboardBoxBoo"] = false;
   GeneralJs.stacks["dashboardBox"] = null;
   GeneralJs.stacks["dashboardBoxMother"] = null;
+  GeneralJs.stacks["dashboardBoxHeight"] = 0;
 
   if (vaildTargets.includes(thisPathName)) {
+
     width = 340;
     height = (25 * (buttons.length / 2)) + 94;
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone2.classList.add("backblurdefault_lite");
-    style = {
-      position: "fixed",
-      background: GeneralJs.colorChip.white,
-      right: String(20) + ea,
-      width: String(width) + ea,
-      height: String(height) + ea,
-      borderRadius: String(5) + ea,
-      bottom: String(158) + ea,
-      overflow: "hidden",
-      opacity: String(0.9),
-      boxShadow: "-1px 4px 15px -9px #aaaaaa",
-      transition: "all 0s ease",
-      zIndex: String(102),
-      animation: "fadeuplite 0.3s ease forwards",
-    };
-    for (let i in style) {
-      div_clone2.style[i] = style[i];
-    }
+    right = 20;
+    bottom = 158;
+    topBarHeight = 14;
+    dragRatio = 0.5;
 
-    div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: String(100) + "%",
-      height: String(14) + ea,
-      top: String(0),
-      left: String(0),
-      background: GeneralJs.colorChip.gray2,
-      cursor: "move",
-      transition: "all 0s ease",
-    };
-    for (let i in style) {
-      div_clone3.style[i] = style[i];
-    }
-    div_clone2.appendChild(div_clone3);
-
-    div_clone3.setAttribute("draggable", "true");
-
-    div_clone3.addEventListener("dragstart", function (e) {
-      const that = this.parentNode;
-      let div;
-      let style, ea;
-
-      GeneralJs.stacks["windowDragStartPoint"] = 0;
-      GeneralJs.stacks["windowDragStartPoint"] = e.screenX - that.offsetLeft;
-      ea = "px";
-
-      div = GeneralJs.nodes.div.cloneNode(true);
-      style = {
+    dashboardWindow = createNode({
+      mother: this.below,
+      class: [ "backblurdefault_lite" ],
+      style: {
         position: "fixed",
-        background: "transparent",
-        width: String(100) + '%',
-        height: String(100) + '%',
-        top: String(0),
-        left: String(0)
-      };
-      for (let i in style) {
-        div.style[i] = style[i];
+        background: colorChip.white,
+        right: String(right) + ea,
+        width: String(width) + ea,
+        height: String(height) + ea,
+        borderRadius: String(5) + "px",
+        bottom: String(bottom) + ea,
+        overflow: "hidden",
+        opacity: String(0.9),
+        boxShadow: "-1px 4px 15px -9px " + colorChip.gray5,
+        transition: "all 0s ease",
+        zIndex: String(102),
+        animation: "fadeuplite 0.3s ease forwards",
+      },
+      events: [
+        {
+          type: "dragover",
+          event: function (e) {
+            e.preventDefault();
+            const that = this;
+            that.style.bottom = String(window.innerHeight - (e.screenY + (height * dragRatio))) + ea;
+            that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+          }
+        }
+      ],
+      children: [
+        {
+          attribute: [
+            { draggable: "true" }
+          ],
+          style: {
+            position: "absolute",
+            width: String(100) + "%",
+            height: String(topBarHeight) + ea,
+            top: String(0),
+            left: String(0),
+            background: colorChip.gray2,
+            cursor: "move",
+            transition: "all 0s ease",
+          },
+          events: [
+            {
+              type: "dragstart",
+              event: function (e) {
+                const that = this.parentNode;
+                let div;
+                let style, ea;
+
+                GeneralJs.stacks["windowDragStartPoint"] = 0;
+                GeneralJs.stacks["windowDragStartPoint"] = e.screenX - that.offsetLeft;
+                ea = "px";
+
+                div = GeneralJs.nodes.div.cloneNode(true);
+                style = {
+                  position: "fixed",
+                  background: "transparent",
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  top: String(0),
+                  left: String(0)
+                };
+                for (let i in style) {
+                  div.style[i] = style[i];
+                }
+                div.addEventListener("dragover", function (e) {
+                  that.style.bottom = String(window.innerHeight - e.screenY - (height * dragRatio)) + ea;
+                  that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+                  e.preventDefault();
+                });
+                GeneralJs.stacks["windowDragBack"] = div;
+                that.parentNode.insertBefore(div, that);
+
+                e.dataTransfer.setData("dragData", that);
+                const img = new Image();
+                e.dataTransfer.setDragImage(img, 1, 1);
+              }
+            },
+            {
+              type: "dragend",
+              event: function (e) {
+                e.preventDefault();
+                GeneralJs.stacks["windowDragBack"].parentElement.removeChild(GeneralJs.stacks["windowDragBack"]);
+                GeneralJs.stacks["windowDragBack"] = null;
+              }
+            },
+            {
+              type: "dragenter",
+              event: (e) => { e.preventDefault(); }
+            },
+            {
+              type: "dragleave",
+              event: (e) => { e.preventDefault(); }
+            },
+            {
+              type: "dragover",
+              event: function (e) {
+                e.preventDefault();
+                const that = this.parentNode;
+                that.style.bottom = String(window.innerHeight - (e.screenY + (height * dragRatio))) + ea;
+                that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
+              }
+            },
+            {
+              type: "drop",
+              event: (e) => { e.preventDefault(); e.stopPropagation(); }
+            },
+            {
+              type: "contextmenu",
+              event: function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                if (GeneralJs.stacks["dashboardBoxMother"] !== null) {
+                  instance.below.removeChild(GeneralJs.stacks["dashboardBoxMother"]);
+                  GeneralJs.stacks["dashboardBoxBoo"] = false;
+                  GeneralJs.stacks["dashboardBox"] = null;
+                  GeneralJs.stacks["dashboardBoxMother"] = null;
+                }
+              }
+            }
+          ]
+        }
+      ]
+    });
+
+    dashboardBox = createNode({
+      mother: dashboardWindow,
+      style: {
+        position: "relative",
+        width: String(100) + "%",
+        height: withOut(topBarHeight, ea),
+        marginTop: String(topBarHeight + ((isMac()) ? 0 : 3)) + ea,
+        background: colorChip.white,
+        transition: "all 0s ease",
       }
-      div.addEventListener("dragover", function (e) {
-        that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
-        that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
-        e.preventDefault();
-      });
-      GeneralJs.stacks["windowDragBack"] = div;
-      that.parentNode.insertBefore(div, that);
-
-      e.dataTransfer.setData("dragData", that);
-      const img = new Image();
-      e.dataTransfer.setDragImage(img, 1, 1);
     });
-
-    div_clone3.addEventListener("dragend", function (e) {
-      GeneralJs.stacks["windowDragBack"].parentElement.removeChild(GeneralJs.stacks["windowDragBack"]);
-      GeneralJs.stacks["windowDragBack"] = null;
-      e.preventDefault();
-    });
-
-    div_clone3.addEventListener("dragenter", function (e) {
-      e.preventDefault();
-    });
-
-    div_clone3.addEventListener("dragleave", function (e) {
-      e.preventDefault();
-    });
-
-    div_clone3.addEventListener("dragover", function (e) {
-      const that = this.parentNode;
-      that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
-      that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
-      e.preventDefault();
-    });
-
-    div_clone2.addEventListener("dragover", function (e) {
-      const that = this;
-      that.style.bottom = String(window.innerHeight - e.screenY - (height * 0.58)) + ea;
-      that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint"]) + ea;
-      e.preventDefault();
-    });
-
-    div_clone3.addEventListener("drop", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-
-    div_clone3.addEventListener("contextmenu", function (e) {
-      e.stopPropagation();
-      e.preventDefault();
-      if (GeneralJs.stacks["dashboardBoxMother"] !== null) {
-        instance.below.removeChild(GeneralJs.stacks["dashboardBoxMother"]);
-        GeneralJs.stacks["dashboardBoxBoo"] = false;
-        GeneralJs.stacks["dashboardBox"] = null;
-        GeneralJs.stacks["dashboardBoxMother"] = null;
-      }
-    });
-
-    dashboardBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "relative",
-      width: String(100) + "%",
-      height: "calc(100% - " + String(14) + ea + ")",
-      marginTop: String(14 + ((GeneralJs.isMac()) ? 0 : 3)) + ea,
-      background: GeneralJs.colorChip.white,
-      transition: "all 0s ease",
-    };
-    for (let i in style) {
-      dashboardBox.style[i] = style[i];
-    }
-    div_clone2.appendChild(dashboardBox);
-    this.below.appendChild(div_clone2);
 
     GeneralJs.stacks["dashboardBoxBoo"] = true;
     GeneralJs.stacks["dashboardBox"] = dashboardBox;
-    GeneralJs.stacks["dashboardBoxMother"] = div_clone2;
+    GeneralJs.stacks["dashboardBoxMother"] = dashboardWindow;
+    GeneralJs.stacks["dashboardBoxHeight"] = height;
 
     GeneralJs.dashboardBoxLaunching(dashboardBox);
-
   }
 }
 

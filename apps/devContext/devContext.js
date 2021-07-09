@@ -1020,13 +1020,13 @@ DevContext.prototype.launching = async function () {
 
 
     // contents upload
-    // const client = "김정선";
-    // const pid = "p93";
-    // const rid = "re087";
+    // const client = "장영일";
+    // const pid = "p103";
+    // const rid = "re097";
     // const links = [
-    //   "https://docs.google.com/document/d/1ExajQUGVaptfE6jzmHnvgwwjySSSg0sjW24oriTKxuU/edit?usp=sharing",
-    //   "https://docs.google.com/document/d/18zb3uiMINz--fTNpJoeI9LYDtdfYANjeUhcuBF9jDQQ/edit?usp=sharing",
-    //   "https://drive.google.com/drive/folders/1EiJ7keh7e4wxP3e3mCbflrM-eE0GxR3h?usp=sharing",
+    //   "https://docs.google.com/document/d/1ma6e779BwRIKq4ot3Nxm9nqjUnS7-j7F1JXwwo5OK24/edit?usp=sharing",
+    //   "https://docs.google.com/document/d/1tHJFVAgfq3I46EixeV3RTRvKWAB0p5QgtDUOpvIr2ww/edit?usp=sharing",
+    //   "https://drive.google.com/drive/folders/1TPuH5u2BXK7ucskONvmUzEQnwqMGUhgo",
     // ];
     // const webLinks = [
     //   "https://home-liaison.com/portdetail.php?qqq=" + pid,
@@ -1044,7 +1044,7 @@ DevContext.prototype.launching = async function () {
     // channel = "#200_web";
     // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[0]}`, channel });
     // await this.mother.slack_bot.chat.postMessage({ text: `${client} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${webLinks[1]}`, channel });
-    //
+
 
     // kakao token
     // const app = new KakaoTalk();
@@ -1082,11 +1082,11 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p93");
+    // await this.spellCheck("p103");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p93");
+    // await this.getCorePortfolio("p103");
 
 
     // aspirant to designer

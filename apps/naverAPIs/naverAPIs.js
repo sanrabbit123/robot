@@ -236,6 +236,10 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "고객님 다은", "고객님다운" ],
     [ "명품숍", "명품샵" ],
     [ "숍", "샵" ],
+    [ "수납려", "수납력" ],
+    [ "식탁 등", "식탁등" ],
+    [ "전 허", "전혀" ],
+    [ "차 드렸고", "짜드렸고" ],
   ];
   try {
     let resultArr = [];

@@ -4847,6 +4847,187 @@ ClientJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
+ClientJs.prototype.dashboardBox = function (dashboardName, option) {
+  if (typeof dashboardName !== "string") {
+    throw new Error("must be dashboard name");
+  }
+  if (typeof option !== "object") {
+    throw new Error("must be style object => { number:  }");
+  }
+  if (option.right === undefined || option.bottom === undefined) {
+    throw new Error("must be style object => { number:  }");
+  }
+  const instance = this;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
+  let ea;
+  let width, height;
+  let dashboardBox, dashboardWindow;
+  let right, bottom;
+  let topBarHeight;
+  let dragRatio;
+
+  ea = "px";
+  dashboardName = "__name__" + dashboardName;
+
+  GeneralJs.stacks["dashboardBoxBoo" + dashboardName] = false;
+  GeneralJs.stacks["dashboardBox" + dashboardName] = null;
+  GeneralJs.stacks["dashboardBoxMother" + dashboardName] = null;
+  GeneralJs.stacks["dashboardBoxHeight" + dashboardName] = 0;
+
+  width = 340;
+  height = 500;
+  right = 620;
+  bottom = 158;
+  topBarHeight = 14;
+  dragRatio = 0.5;
+
+  dashboardWindow = createNode({
+    mother: this.mother.below,
+    class: [ "backblurdefault_lite" ],
+    style: {
+      position: "fixed",
+      background: colorChip.white,
+      right: String(right) + ea,
+      width: String(width) + ea,
+      height: String(height) + ea,
+      borderRadius: String(5) + "px",
+      bottom: String(bottom) + ea,
+      overflow: "hidden",
+      opacity: String(0.9),
+      boxShadow: "-1px 4px 15px -9px " + colorChip.gray5,
+      transition: "all 0s ease",
+      zIndex: String(102),
+      animation: "fadeuplite 0.3s ease forwards",
+    },
+    events: [
+      {
+        type: "dragover",
+        event: function (e) {
+          e.preventDefault();
+          const that = this;
+          that.style.bottom = String(window.innerHeight - (e.screenY + (height * dragRatio))) + ea;
+          that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
+        }
+      }
+    ],
+    children: [
+      {
+        attribute: [
+          { draggable: "true" }
+        ],
+        style: {
+          position: "absolute",
+          width: String(100) + "%",
+          height: String(topBarHeight) + ea,
+          top: String(0),
+          left: String(0),
+          background: colorChip.gray2,
+          cursor: "move",
+          transition: "all 0s ease",
+        },
+        events: [
+          {
+            type: "dragstart",
+            event: function (e) {
+              const that = this.parentNode;
+              let div;
+              let style, ea;
+
+              GeneralJs.stacks["windowDragStartPoint" + dashboardName] = 0;
+              GeneralJs.stacks["windowDragStartPoint" + dashboardName] = e.screenX - that.offsetLeft;
+              ea = "px";
+
+              div = GeneralJs.nodes.div.cloneNode(true);
+              style = {
+                position: "fixed",
+                background: "transparent",
+                width: String(100) + '%',
+                height: String(100) + '%',
+                top: String(0),
+                left: String(0)
+              };
+              for (let i in style) {
+                div.style[i] = style[i];
+              }
+              div.addEventListener("dragover", function (e) {
+                that.style.bottom = String(window.innerHeight - e.screenY - (height * dragRatio)) + ea;
+                that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
+                e.preventDefault();
+              });
+              GeneralJs.stacks["windowDragBack" + dashboardName] = div;
+              that.parentNode.insertBefore(div, that);
+
+              e.dataTransfer.setData("dragData", that);
+              const img = new Image();
+              e.dataTransfer.setDragImage(img, 1, 1);
+            }
+          },
+          {
+            type: "dragend",
+            event: function (e) {
+              e.preventDefault();
+              GeneralJs.stacks["windowDragBack" + dashboardName].parentElement.removeChild(GeneralJs.stacks["windowDragBack" + dashboardName]);
+              GeneralJs.stacks["windowDragBack" + dashboardName] = null;
+            }
+          },
+          {
+            type: "dragenter",
+            event: (e) => { e.preventDefault(); }
+          },
+          {
+            type: "dragleave",
+            event: (e) => { e.preventDefault(); }
+          },
+          {
+            type: "dragover",
+            event: function (e) {
+              e.preventDefault();
+              const that = this.parentNode;
+              that.style.bottom = String(window.innerHeight - (e.screenY + (height * dragRatio))) + ea;
+              that.style.right = String(window.innerWidth - e.screenX - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
+            }
+          },
+          {
+            type: "drop",
+            event: (e) => { e.preventDefault(); e.stopPropagation(); }
+          },
+          {
+            type: "contextmenu",
+            event: function (e) {
+              e.stopPropagation();
+              e.preventDefault();
+              if (GeneralJs.stacks["dashboardBoxMother" + dashboardName] !== null) {
+                instance.below.removeChild(GeneralJs.stacks["dashboardBoxMother" + dashboardName]);
+                GeneralJs.stacks["dashboardBoxBoo" + dashboardName] = false;
+                GeneralJs.stacks["dashboardBox" + dashboardName] = null;
+                GeneralJs.stacks["dashboardBoxMother" + dashboardName] = null;
+              }
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+  dashboardBox = createNode({
+    mother: dashboardWindow,
+    style: {
+      position: "relative",
+      width: String(100) + "%",
+      height: withOut(topBarHeight, ea),
+      marginTop: String(topBarHeight + ((isMac()) ? 0 : 3)) + ea,
+      background: colorChip.white,
+      transition: "all 0s ease",
+    }
+  });
+
+  GeneralJs.stacks["dashboardBoxBoo" + dashboardName] = true;
+  GeneralJs.stacks["dashboardBox" + dashboardName] = dashboardBox;
+  GeneralJs.stacks["dashboardBoxMother" + dashboardName] = dashboardWindow;
+  GeneralJs.stacks["dashboardBoxHeight" + dashboardName] = height;
+
+}
+
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -4859,6 +5040,8 @@ ClientJs.prototype.launching = async function () {
     this.addSearchEvent();
     this.addExtractEvent();
     this.whiteResize();
+
+    this.dashboardBox();
 
     const getObj = GeneralJs.returnGet();
     let getTarget;
