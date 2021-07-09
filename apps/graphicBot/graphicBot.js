@@ -75,6 +75,7 @@ const GraphicBot = function () {
   this.timeout = {
     illustrator: null,
   };
+  this.localhost = null;
 }
 
 GraphicBot.prototype.keypress = function (callback) {
@@ -451,17 +452,10 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       frontFirst += "const POSTCONST = " + String(arg) + "\n\n";
     }
 
-    if (this.os !== "mac") {
-      frontFirst += "const RECEIVECONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/receive\"\n\n";
-      frontFirst += "const AJAXCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/ajax\"\n\n";
-      frontFirst += "const ENDCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "/frontEnd\"\n\n";
-      frontFirst += "const HOSTCONST = \"https://" + this.address.homeinfo.ghost.host + ":" + String(this.address.homeinfo.ghost.graphic.port) + "\"\n\n";
-    } else {
-      frontFirst += "const RECEIVECONST = \"http://localhost:3000/receive\"\n\n";
-      frontFirst += "const AJAXCONST = \"http://localhost:3000/ajax\"\n\n";
-      frontFirst += "const ENDCONST = \"http://localhost:3000/frontEnd\"\n\n";
-      frontFirst += "const HOSTCONST = \"http://localhost:3000\"\n\n";
-    }
+    frontFirst += "const RECEIVECONST = \"" + this.localhost + "/receive\";\n\n";
+    frontFirst += "const AJAXCONST = \"" + this.localhost + "/ajax\";\n\n";
+    frontFirst += "const ENDCONST = \"" + this.localhost + "/frontEnd\";\n\n";
+    frontFirst += "const HOSTCONST = \"" + this.localhost + "\";\n\n";
 
     frontFirst += "const equalJson = " + this.frontGeneral.equalJson.toString() + ";\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
@@ -683,7 +677,7 @@ GraphicBot.prototype.startWork = function () {
         instance.frontProcess = null;
       }
 
-      // await instance.chromeClose();
+      await instance.chromeClose();
 
       totalSuccess = totalSuccess.filter((t) => { return !t; });
       if (totalSuccess.length !== 0) {
@@ -1352,9 +1346,16 @@ GraphicBot.prototype.botServer = async function () {
     pems = {};
     if (isGhost) {
       pemsLink = process.cwd() + "/pems/" + address.host;
-      this.port = 8080;
+      this.port = address.graphic.port;
+      this.localhost = "https://" + address.host + ":" + String(this.port);
     } else {
       pemsLink = process.cwd() + "/pems/" + address.ghost.host;
+      this.port = address.ghost.graphic.port;
+      this.localhost = "https://" + address.ghost.host + ":" + String(this.port);
+    }
+
+    if (this.os === "mac") {
+      this.localhost = "http://localhost:3000";
     }
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
