@@ -331,7 +331,7 @@ MongoReflection.prototype.mysqlReflection = async function (to = "local") {
     console.log(`insert contents query`);
 
     //execute
-    await mysqlQuery(sqlList);
+    await mysqlQuery(sqlList, { local: true });
     console.log(`\x1b[33m%s\x1b[0m`, `mariaDB flat reflection success`);
     console.log(``);
 
