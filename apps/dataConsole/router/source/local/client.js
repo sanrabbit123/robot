@@ -5156,6 +5156,14 @@ ClientJs.prototype.lateLaunching = async function () {
       to: null,
     };
 
+    const wssSocket = new WebSocket(OFFICEHOST.replace(/^https/, "wss") + "/client");
+    wssSocket.onopen = () => {
+      instance.wssSocket = wssSocket;
+      wssSocket.onmessage = (event) => {
+        console.log(event.data);
+      }
+    }
+
     const blockMake = function (wording, tong, size, color, client, cliid, manager, fromTo) {
       const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
       const textTargets = "textTargets";
