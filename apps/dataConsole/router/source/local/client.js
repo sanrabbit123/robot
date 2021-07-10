@@ -5164,7 +5164,7 @@ ClientJs.prototype.lateLaunching = async function () {
       }
     }
 
-    const blockMake = function (wording, tong, size, color, client, cliid, manager, fromTo) {
+    const blockMake = function (wording, tong, size, color, client, cliid, manager, fromTo, index) {
       const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
       const textTargets = "textTargets";
       const fromClass = "from";
@@ -5191,6 +5191,7 @@ ClientJs.prototype.lateLaunching = async function () {
           { client },
           { cliid },
           { manager },
+          { index: String(index) },
           { toggle: "off" },
         ],
         events: [
@@ -5202,9 +5203,10 @@ ClientJs.prototype.lateLaunching = async function () {
                 const client = this.getAttribute("client");
                 const cliid = this.getAttribute("cliid");
                 const manager = this.getAttribute("manager");
+                const index = Number(this.getAttribute("index"));
                 const tong = GeneralJs.stacks["realtimeClient"];
                 let doms, bolds, siblings, opposite;
-                let oClient, oCliid, oManager;
+                let oClient, oCliid, oManager, oIndex;
                 siblings = document.querySelectorAll('.' + (from ? fromClass : toClass));
                 for (let s of siblings) {
                   if (s !== this) {
@@ -5236,6 +5238,7 @@ ClientJs.prototype.lateLaunching = async function () {
                     oClient = opposite.getAttribute("client");
                     oCliid = opposite.getAttribute("cliid");
                     oManager = opposite.getAttribute("manager");
+                    oIndex = Number(opposite.getAttribute("index"));
                     if (from) {
                       opposite.setAttribute("client", client);
                       opposite.setAttribute("cliid", cliid);
@@ -5244,6 +5247,11 @@ ClientJs.prototype.lateLaunching = async function () {
                       opposite.querySelector(".client").querySelector('b').textContent = cliid;
                       opposite.querySelector(".client").querySelector('b').style.marginLeft = String(idFixMargin) + ea;
                       this.querySelector(".manager").firstChild.textContent = oManager;
+                      await ajaxJson({ method: "update", date: GeneralJs.stacks.thisDate, update: {
+                        member: instance.mother.member.id,
+                        cliid: cliid,
+                        index: oIndex,
+                      } }, "/realtimeClient");
                     } else {
                       this.setAttribute("client", oClient);
                       this.setAttribute("cliid", oCliid);
@@ -5252,6 +5260,11 @@ ClientJs.prototype.lateLaunching = async function () {
                       this.querySelector(".client").querySelector('b').textContent = oCliid;
                       this.querySelector(".client").querySelector('b').style.marginLeft = String(idFixMargin) + ea;
                       opposite.querySelector(".manager").firstChild.textContent = manager;
+                      await ajaxJson({ method: "update", date: GeneralJs.stacks.thisDate, update: {
+                        member: instance.mother.member.id,
+                        cliid: oCliid,
+                        index: index,
+                      } }, "/realtimeClient");
                     }
 
                     for (let dom of doms) {
@@ -5401,21 +5414,8 @@ ClientJs.prototype.lateLaunching = async function () {
       },
       callback: async (mother, size, ea) => {
         try {
+          const path = "/realtimeClient";
           const { createNode, colorChip, cleanChildren, ajaxJson, dateToString } = GeneralJs;
-          const times = [
-            "11:00  ~  11:30",
-            "11:30  ~  12:00",
-            "13:30  ~  14:00",
-            "14:00  ~  14:30",
-            "14:30  ~  15:00",
-            "15:00  ~  15:30",
-            "15:30  ~  16:00",
-            "16:00  ~  16:30",
-            "16:30  ~  17:00",
-            "17:00  ~  17:30",
-            "17:30  ~  18:00",
-            "18:00  ~  18:30",
-          ];
           let tong;
           let from, to;
           let tempArr;
@@ -5442,6 +5442,31 @@ ClientJs.prototype.lateLaunching = async function () {
               width: String(100) + '%',
             }
           });
+
+          tongMake = async (tong, now) => {
+            try {
+              const { standard, matrix } = await ajaxJson({ method: "get", date: now }, path);
+              let ours = now.getHours();
+              cleanChildren(tong);
+              for (let i = 0; i < standard.length; i++) {
+                tempArr = standard[i].split('~').map((z) => { return z.trim(); });
+                tempArr2 = tempArr[0].split(':');
+                tempArr3 = tempArr[1].split(':');
+                from = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(tempArr2[0]), Number(tempArr2[1]));
+                to = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(tempArr3[0]), Number(tempArr3[1]));
+                if (from.valueOf() <= now.valueOf() && to.valueOf() > now.valueOf()) {
+                  color = "green";
+                } else if (to.valueOf() <= now.valueOf()) {
+                  color = "gray4";
+                } else {
+                  color = "black";
+                }
+                blockMake(standard[i], tong, size, color, matrix[i].name, matrix[i].cliid, instance.mother.member.name, "to", i);
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
 
           createNode({
             mother: mother.parentElement.firstChild,
@@ -5511,27 +5536,7 @@ ClientJs.prototype.lateLaunching = async function () {
             }
           });
 
-          tongMake = (tong, now) => {
-            let ours = now.getHours();
-            cleanChildren(tong);
-            for (let t of times) {
-              tempArr = t.split(' ~ ');
-              tempArr2 = tempArr[0].split(':');
-              tempArr3 = tempArr[1].split(':');
-              from = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(tempArr2[0]), Number(tempArr2[1]));
-              to = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(tempArr3[0]), Number(tempArr3[1]));
-              if (from.valueOf() <= now.valueOf() && to.valueOf() > now.valueOf()) {
-                color = "green";
-              } else if (to.valueOf() <= now.valueOf()) {
-                color = "gray4";
-              } else {
-                color = "black";
-              }
-              blockMake(t, tong, size, color, "미정", "c0000_aa001", instance.mother.member.name, "to");
-            }
-          }
-
-          tongMake(tong, GeneralJs.stacks.thisDate);
+          await tongMake(tong, GeneralJs.stacks.thisDate);
 
         } catch (e) {
           console.log(e);
@@ -5550,6 +5555,7 @@ ClientJs.prototype.lateLaunching = async function () {
           const { createNode, colorChip, cleanChildren, ajaxJson, stringToDate } = GeneralJs;
           let tong, cases;
           let cliidArr, historyObj;
+          let num;
 
           mother.style.overflow = "scroll";
           tong = createNode({
@@ -5566,7 +5572,7 @@ ClientJs.prototype.lateLaunching = async function () {
 
           cliidArr = cases.map((i) => { return i.cliid });
           historyObj = await ajaxJson({ method: "client", idArr: cliidArr }, "/getHistoryTotal");
-          cases.forEach((obj) => {
+          cases = cases.map((obj) => {
             obj.manager = ((historyObj[obj.cliid].manager === '' || historyObj[obj.cliid].manager === '-') ? "미정" : historyObj[obj.cliid].manager);
             obj.timelineValue = stringToDate(obj.timeline).valueOf();
             obj.timeline = obj.timeline.split(' ')[0];
@@ -5575,8 +5581,10 @@ ClientJs.prototype.lateLaunching = async function () {
 
           cases.sort((a, b) => { return b.timelineValue - a.timelineValue; });
 
+          num = 0;
           for (let { name, cliid, timeline, manager } of cases) {
-            blockMake(timeline, tong, size, "black", name, cliid, manager, "from");
+            blockMake(timeline, tong, size, "black", name, cliid, manager, "from", num);
+            num++;
           }
 
           mother.parentElement.firstChild.lastChild.textContent = String(cases.length);

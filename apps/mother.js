@@ -1989,16 +1989,13 @@ Mother.prototype.pasteToClipboard = function (data) {
 }
 
 Mother.prototype.equalJson = function (jsonString) {
-  if (typeof jsonString === "string") {
-    const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
-    const tempFunc = new Function("const obj = " + filtered + "; return obj;");
-    const json = tempFunc();
-    return json;
-  } else if (typeof jsonString === "object") {
-    return jsonString;
-  } else {
-    throw new Error("invaild input");
+  if (typeof jsonString === "object") {
+    jsonString = JSON.stringify(jsonString);
   }
+  const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+  const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+  const json = tempFunc();
+  return json;
 }
 
 Mother.prototype.copyJson = function (obj) {

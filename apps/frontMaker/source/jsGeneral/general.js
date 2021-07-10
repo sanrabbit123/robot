@@ -138,7 +138,11 @@ GeneralJs.ajax = function (data, url, callback) {
       dataString += i.replace(/[\=\&]/g, '');
       dataString += '=';
       if (typeof data[i] === "object") {
-        dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+        if (data[i] instanceof Date) {
+          dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
+        } else {
+          dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+        }
       } else {
         dataString += String(data[i]).replace(/[\=\&]/g, '');
       }
@@ -193,7 +197,11 @@ GeneralJs.ajaxPromise = function (data, url) {
       dataString += i.replace(/[\=\&]/g, '');
       dataString += '=';
       if (typeof data[i] === "object") {
-        dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+        if (data[i] instanceof Date) {
+          dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
+        } else {
+          dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+        }
       } else {
         dataString += String(data[i]).replace(/[\=\&]/g, '');
       }
@@ -1619,18 +1627,15 @@ GeneralJs.protoPatch = async function (instance, modulePath, protoName = null) {
 }
 
 GeneralJs.equalJson = function (jsonString) {
-  if (typeof jsonString === "string") {
-    let filtered;
-    filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
-    filtered = filtered.replace(/nbsp\;/g, "&nbsp;");
-    const tempFunc = new Function("const obj = " + filtered + "; return obj;");
-    const json = tempFunc();
-    return json;
-  } else if (typeof jsonString === "object") {
-    return jsonString;
-  } else {
-    throw new Error("invaild input");
+  if (typeof jsonString === "object") {
+    jsonString = JSON.stringify(jsonString);
   }
+  let filtered;
+  filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+  filtered = filtered.replace(/nbsp\;/g, "&nbsp;");
+  const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+  const json = tempFunc();
+  return json;
 }
 
 GeneralJs.autoComma = function (str) {

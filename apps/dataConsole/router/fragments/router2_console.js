@@ -2476,3 +2476,192 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_realtimeClient = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, fileSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/realtimeClient" ];
+  obj.func = async function (req, res) {
+    try {
+      if (!req.body.hasOwnProperty("method")) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { method } = req.body;
+      const members = instance.members;
+      const emptyCliid = "c0000_aa00s";
+      const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
+      const dateToKey = function (date) {
+        if (!(date instanceof Date)) {
+          throw new Error("input => Date: date");
+        }
+        return Number(String(date.getFullYear()) + zeroAddition(date.getMonth() + 1) + zeroAddition(date.getDate()));
+      }
+      const returnModel = function (date, standard, manager) {
+        if (!(date instanceof Date) || !Array.isArray(standard) || !Array.isArray(manager)) {
+          throw new Error("input => Date: date, Array: standard, Array: manager");
+        }
+        let key, caution, matrix;
+        key = dateToKey(date);
+        caution = (new Array(standard.length)).fill(0, 0);
+        matrix = caution.map((i) => { return (new Array(manager.length).fill(null, 0)); });
+        return { key, standard, caution, manager, matrix };
+      }
+      class SearchArray extends Array {
+        find(q) {
+          let target = null;
+          for (let i of this) {
+            if (i.cliid === q) {
+              target = q;
+              break;
+            }
+          }
+          return target;
+        }
+      }
+      const manager = [ "m1701_aa01s", "m1707_aa01s", "m1810_aa01s", "m2012_aa01s", "m2101_aa01s" ];
+      const standard = [
+        [
+          [ 11, 0 ],
+          [ 11, 30 ]
+        ],
+        [
+          [ 11, 30 ],
+          [ 12, 0 ]
+        ],
+        [
+          [ 13, 30 ],
+          [ 14, 0 ]
+        ],
+        [
+          [ 14, 0 ],
+          [ 14, 30 ]
+        ],
+        [
+          [ 14, 30 ],
+          [ 15, 0 ]
+        ],
+        [
+          [ 15, 0 ],
+          [ 15, 30 ]
+        ],
+        [
+          [ 15, 30 ],
+          [ 16, 0 ]
+        ],
+        [
+          [ 16, 0 ],
+          [ 16, 30 ]
+        ],
+        [
+          [ 16, 30 ],
+          [ 17, 0 ]
+        ],
+        [
+          [ 17, 0 ],
+          [ 17, 30 ]
+        ],
+        [
+          [ 17, 30 ],
+          [ 18, 0 ]
+        ],
+        [
+          [ 18, 0 ],
+          [ 18, 30 ]
+        ],
+      ];
+      const collection = "realtimeClient";
+      let result, rows, cliidArr, clients;
+      let updateIdIndex;
+
+      if (method === "get") {
+        if (req.body.date === undefined) {
+          throw new Error("invaild post");
+        }
+        const { date } = equalJson(req.body);
+        rows = await back.mongoRead(collection, { key: dateToKey(date) }, { selfMongo });
+        if (rows.length === 0) {
+          result = returnModel(date, standard, manager);
+          await back.mongoCreate(collection, result, { selfMongo });
+        } else {
+          result = rows[0];
+        }
+
+        result.standard = result.standard.map((arr) => {
+          const [ from, to ] = arr;
+          const arrToString = (a) => { return zeroAddition(a[0]) + ':' + zeroAddition(a[1]); }
+          return (arrToString(from) + "  ~  " + arrToString(to));
+        });
+
+        result.matrix = result.matrix.map((arr) => {
+          let r;
+          r = arr.find((z) => { return z !== null });
+          if (r !== undefined && r !== null) {
+            return r;
+          } else {
+            return emptyCliid;
+          }
+        });
+
+        cliidArr = result.matrix.filter((i) => { return i !== emptyCliid; });
+        cliidArr = cliidArr.map((id) => { return { cliid: id }; });
+        if (cliidArr.length !== 0) {
+          clients = await back.getClientsByQuery({ $or: cliidArr }, { selfMongo: instance.mongo });
+        } else {
+          clients = new SearchArray();
+        }
+
+        result.matrix = result.matrix.map((id) => {
+          let client;
+          client = clients.find(id);
+          if (client !== undefined && client !== null) {
+            return { name: client.name, cliid: client.cliid };
+          } else {
+            return { name: "미정", cliid: emptyCliid };
+          }
+        });
+
+      } else if (method === "update") {
+
+        if (req.body.date === undefined || req.body.update === undefined) {
+          throw new Error("invaild post");
+        }
+        let { date, update } = equalJson(req.body);
+        update = equalJson(update);
+        if (update.member === undefined || update.cliid === undefined || update.index === undefined) {
+          throw new Error("invaild update object");
+        }
+        const { member, cliid, index } = update;
+        rows = await back.mongoRead(collection, { key: dateToKey(date) }, { selfMongo });
+        if (rows.length !== 0) {
+          result = rows[0];
+          updateIdIndex = result.manager.findIndex((m) => { return m === member; });
+          if (updateIdIndex !== undefined && updateIdIndex !== null) {
+            if (updateIdIndex >= 0) {
+              result.matrix[index][updateIdIndex] = cliid;
+              await back.mongoUpdate(collection, [ { key: dateToKey(date) }, { matrix: result.matrix } ], { selfMongo });
+            }
+          }
+        } else {
+          throw new Error("invaild db");
+        }
+
+      } else if (method === "standard") {
+        result = standard.map((arr) => {
+          const [ from, to ] = arr;
+          const arrToString = (a) => { return zeroAddition(a[0]) + ':' + zeroAddition(a[1]); }
+          return (arrToString(from) + "  ~  " + arrToString(to));
+        });
+      }
+
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
