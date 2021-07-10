@@ -5158,14 +5158,34 @@ ClientJs.prototype.lateLaunching = async function () {
 
     const wssSocket = new WebSocket(OFFICEHOST.replace(/^https/, "wss") + "/client");
     wssSocket.onopen = () => {
+      const { dateToString } = GeneralJs;
       instance.wssSocket = wssSocket;
       wssSocket.onmessage = (event) => {
-        console.log(event.data);
+        const update = JSON.parse(event.data);
+        const { member, from, to, date } = update;
+        let fromChildren, toChildren;
+        let fromTarget, toTarget;
+        let idFixMargin, ea;
+        ea = "px";
+        idFixMargin = 4;
+        fromChildren = document.getElementById("fromTong").children;
+        toChildren = document.getElementById("toTong").children;
+        fromTarget = fromChildren[from.index];
+        toTarget = toChildren[to.index];
+        fromTarget.setAttribute("manager", to.manager);
+        fromTarget.querySelector(".manager").firstChild.textContent = to.manager;
+        if (member === instance.mother.member.id && date === dateToString(GeneralJs.stacks.thisDate)) {
+          toTarget.setAttribute("client", from.client);
+          toTarget.setAttribute("cliid", from.cliid);
+          toTarget.querySelector(".client").firstChild.textContent = from.client;
+          toTarget.querySelector(".client").querySelector('b').textContent = from.cliid;
+          toTarget.querySelector(".client").querySelector('b').style.marginLeft = String(idFixMargin) + ea;
+        }
       }
     }
 
     const blockMake = function (wording, tong, size, color, client, cliid, manager, fromTo, index) {
-      const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+      const { createNode, createNodes, colorChip, withOut, ajaxJson, dateToString } = GeneralJs;
       const textTargets = "textTargets";
       const fromClass = "from";
       const toClass = "to";
@@ -5266,6 +5286,12 @@ ClientJs.prototype.lateLaunching = async function () {
                         index: index,
                       } }, "/realtimeClient");
                     }
+                    instance.wssSocket.send(JSON.stringify({
+                      member: instance.mother.member.id,
+                      date: dateToString(GeneralJs.stacks.thisDate),
+                      from: { client: from ? client : oClient, cliid: from ? cliid : oCliid, manager: from ? oManager : manager, index: from ? index : oIndex },
+                      to: { client: from ? client : oClient, cliid: from ? cliid : oCliid, manager: from ? oManager : manager, index: from ? oIndex : index },
+                    }));
 
                     for (let dom of doms) {
                       dom.style.color = dom.getAttribute("color");
@@ -5415,7 +5441,7 @@ ClientJs.prototype.lateLaunching = async function () {
       callback: async (mother, size, ea) => {
         try {
           const path = "/realtimeClient";
-          const { createNode, colorChip, cleanChildren, ajaxJson, dateToString } = GeneralJs;
+          const { createNode, createNodes, colorChip, cleanChildren, ajaxJson, dateToString } = GeneralJs;
           let tong;
           let from, to;
           let tempArr;
@@ -5426,17 +5452,25 @@ ClientJs.prototype.lateLaunching = async function () {
           let arrowTop;
           let arrowRight;
           let arrowBoxWidth;
+          let hamburgerWidth;
+          let hamburgerTop;
+          let hamburgerRight;
 
           GeneralJs.stacks.thisDate = new Date();
 
           arrowWidth = 10;
           arrowTop = 10;
-          arrowRight = 18;
+          arrowRight = 17;
           arrowBoxWidth = 15;
+
+          hamburgerWidth = 11;
+          hamburgerTop = 11;
+          hamburgerRight = 16;
 
           mother.style.overflow = "scroll";
           tong = createNode({
             mother,
+            id: "toTong",
             style: {
               position: "relative",
               width: String(100) + '%',
@@ -5471,6 +5505,44 @@ ClientJs.prototype.lateLaunching = async function () {
           createNode({
             mother: mother.parentElement.firstChild,
             mode: "svg",
+            source: instance.mother.returnHamburger(colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(hamburgerWidth) + ea,
+              top: String(hamburgerTop) + ea,
+              right: String(arrowRight + hamburgerRight) + ea,
+            }
+          });
+          createNode({
+            mother: mother.parentElement.firstChild,
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  const toggle = GeneralJs.stacks.notyetBox.getAttribute("toggle");
+                  if (toggle === "off") {
+                    GeneralJs.stacks.notyetBox.style.display = "block";
+                    GeneralJs.stacks.notyetBox.setAttribute("toggle", "on");
+                  } else if (toggle === "on") {
+                    GeneralJs.stacks.notyetBox.style.display = "none";
+                    GeneralJs.stacks.notyetBox.setAttribute("toggle", "off");
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              width: String(arrowBoxWidth) + ea,
+              height: String(arrowBoxWidth) + ea,
+              top: String(hamburgerTop - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
+              right: String(arrowRight + hamburgerRight - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
+              cursor: "pointer",
+            }
+          });
+
+          createNode({
+            mother: mother.parentElement.firstChild,
+            mode: "svg",
             source: instance.mother.returnArrow("left", colorChip.green),
             style: {
               position: "absolute",
@@ -5479,7 +5551,6 @@ ClientJs.prototype.lateLaunching = async function () {
               right: String(arrowRight) + ea,
             }
           });
-
           createNode({
             mother: mother.parentElement.firstChild,
             events: [
@@ -5501,7 +5572,6 @@ ClientJs.prototype.lateLaunching = async function () {
               cursor: "pointer",
             }
           });
-
           createNode({
             mother: mother.parentElement.firstChild,
             mode: "svg",
@@ -5513,7 +5583,6 @@ ClientJs.prototype.lateLaunching = async function () {
               right: String(0) + ea,
             }
           });
-
           createNode({
             mother: mother.parentElement.firstChild,
             events: [
@@ -5543,9 +5612,10 @@ ClientJs.prototype.lateLaunching = async function () {
         }
       },
     });
+
     instance.dashboardBox({
       name: "notyet",
-      style: { height: 219, right: 372, bottom: 158 },
+      style: { height: 640, right: 372, bottom: 158 },
       title: {
         main: "응대 필요",
         sub: "5"
@@ -5557,9 +5627,13 @@ ClientJs.prototype.lateLaunching = async function () {
           let cliidArr, historyObj;
           let num;
 
+          GeneralJs.stacks.notyetBox = mother.parentElement.parentElement;
+          GeneralJs.stacks.notyetBox.setAttribute("toggle", "off");
+          GeneralJs.stacks.notyetBox.style.display = "none";
           mother.style.overflow = "scroll";
           tong = createNode({
             mother,
+            id: "fromTong",
             style: {
               position: "relative",
               width: String(100) + '%',
