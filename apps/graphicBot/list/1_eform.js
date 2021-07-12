@@ -21,6 +21,8 @@ module.exports = function (proid, info) {
         let dateBoo;
         let firstDateId;
         let calendarBox;
+        let idLimitNumber;
+        let idInformationButton;
 
         rows = equalJson(await ajaxPromise({
           to: "python",
@@ -187,36 +189,45 @@ module.exports = function (proid, info) {
             await sleep(500);
           }
 
-          document.querySelector("li.sc-iaUyKn").querySelector(".hTuXtU").children[1].click();
-          await sleep(500);
-
-          while (document.querySelector(".info-list") === null) {
+          idLimitNumber = -1;
+          do {
+            idInformationButton = document.querySelector("li.sc-iaUyKn").querySelector(".hTuXtU").children[1];
+            idInformationButton.click();
             await sleep(500);
-          }
-          await sleep(500);
 
-          tempArr = document.querySelector(".info-list").children;
-          data = {};
-          raw = [];
-          for (let dom of tempArr) {
-            raw.push(dom.textContent);
-          }
-          raw = raw.map((r) => { return r.split(':'); });
-          for (let arr of raw) {
-            if (/이름/gi.test(arr[0])) {
-              data.name = arr[1].trim();
+            while (document.querySelector(".info-list") === null) {
+              await sleep(500);
             }
-            if (/ID/gi.test(arr[0])) {
-              data.id = arr[1].trim();
-            }
-            if (/생성시간/gi.test(arr[0])) {
-              data.time = arr[1].trim();
-            }
-          }
+            await sleep(2000);
 
-          data.requestNumber = requestNumber;
-          data.cliid = client.cliid;
-          data.proid = project.proid;
+            tempArr = document.querySelector(".info-list").children;
+            data = {};
+            raw = [];
+            for (let dom of tempArr) {
+              raw.push(dom.textContent);
+            }
+            raw = raw.map((r) => { return r.split(':'); });
+            for (let arr of raw) {
+              if (/이름/gi.test(arr[0])) {
+                data.name = arr[1].trim();
+              }
+              if (/ID/gi.test(arr[0])) {
+                data.id = arr[1].trim();
+              }
+              if (/생성시간/gi.test(arr[0])) {
+                data.time = arr[1].trim();
+              }
+            }
+
+            data.requestNumber = requestNumber;
+            data.cliid = client.cliid;
+            data.proid = project.proid;
+
+            await clickElement(idInformationButton);
+            await sleep(1000);
+
+            idLimitNumber++;
+          } while (data.id === '' && idLimitNumber < 5);
 
           await ajaxPromise({ to: "python", path: "/receiveStylingContract", data }, RECEIVECONST);
 
