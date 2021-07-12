@@ -1355,9 +1355,9 @@ GraphicBot.prototype.botServer = async function () {
     } else {
       pemsLink = process.cwd() + "/pems/" + address.ghost.host;
       if (Array.isArray(address.ghost.graphic.port)) {
-        this.port = address.graphic.port[1];
+        this.port = address.ghost.graphic.port[1];
       } else {
-        this.port = address.graphic.port;
+        this.port = address.ghost.graphic.port;
       }
       this.localhost = "https://" + address.ghost.host + ":" + String(this.port);
     }
