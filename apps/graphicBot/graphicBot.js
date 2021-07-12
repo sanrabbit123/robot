@@ -1348,18 +1348,20 @@ GraphicBot.prototype.botServer = async function () {
       pemsLink = process.cwd() + "/pems/" + address.host;
       if (Array.isArray(address.graphic.port)) {
         this.port = address.graphic.port[1];
+        this.localhost = "https://" + address.host + ":" + String(address.graphic.port[0]);
       } else {
         this.port = address.graphic.port;
+        this.localhost = "https://" + address.host + ":" + String(address.graphic.port);
       }
-      this.localhost = "https://" + address.host + ":" + String(this.port);
     } else {
       pemsLink = process.cwd() + "/pems/" + address.ghost.host;
       if (Array.isArray(address.ghost.graphic.port)) {
         this.port = address.ghost.graphic.port[1];
+        this.localhost = "https://" + address.ghost.host + ":" + String(address.ghost.graphic.port[0]);
       } else {
         this.port = address.ghost.graphic.port;
+        this.localhost = "https://" + address.ghost.host + ":" + String(address.ghost.graphic.port);
       }
-      this.localhost = "https://" + address.ghost.host + ":" + String(this.port);
     }
 
     if (this.os === "mac") {
