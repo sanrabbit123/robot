@@ -382,7 +382,6 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
     buttonValues = await ajaxJson({ method: "get", date: new Date() }, "/realtimeClient");
     buttonMaker(new Date(), buttonValues.standard, buttonValues.matrix, buttonValues.clientSide);
 
-    window.alert("ho1!");
     calendar = this.mother.makeCalendar(new Date(), function (e) {
       const mother = this.parentElement.parentElement;
       const thisDate = stringToDate(this.getAttribute("buttonValue"));
@@ -436,7 +435,6 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       }
     });
     calendarBox.firstChild.appendChild(calendar.calendarBase);
-    window.alert("ya!");
 
   } catch (e) {
     console.log(e);
