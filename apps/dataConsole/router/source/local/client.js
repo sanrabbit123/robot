@@ -5722,7 +5722,7 @@ ClientJs.prototype.lateLaunching = async function () {
 
     instance.dashboardBox({
       name: "realtime",
-      style: { height: 410, right: 20, bottom: 388 },
+      style: { height: window.innerHeight - 388 - 83, right: 20, bottom: 388 },
       title: {
         main: "응대 예정",
         sub: dateToString(new Date()),
@@ -5742,7 +5742,7 @@ ClientJs.prototype.lateLaunching = async function () {
 
     instance.dashboardBox({
       name: "notyet",
-      style: { height: 640, right: 372, bottom: 158 },
+      style: { height: window.innerHeight - 158 - 83, right: 372, bottom: 158 },
       title: {
         main: "응대 필요",
         sub: "5"

@@ -2523,7 +2523,36 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
       }
       const manager = [ "m1701_aa01s", "m1707_aa01s", "m1810_aa01s", "m2012_aa01s", "m2101_aa01s" ];
       const managerMain = [ 3, 4 ];
+      const clientSide = [
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0
+      ];
       const standard = [
+        [
+          [ 10, 0 ],
+          [ 10, 30 ]
+        ],
+        [
+          [ 10, 30 ],
+          [ 11, 0 ]
+        ],
         [
           [ 11, 0 ],
           [ 11, 30 ]
@@ -2531,6 +2560,10 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         [
           [ 11, 30 ],
           [ 12, 0 ]
+        ],
+        [
+          [ 12, 0 ],
+          [ 12, 30 ]
         ],
         [
           [ 13, 30 ],
@@ -2571,6 +2604,22 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         [
           [ 18, 0 ],
           [ 18, 30 ]
+        ],
+        [
+          [ 18, 30 ],
+          [ 19, 0 ]
+        ],
+        [
+          [ 19, 0 ],
+          [ 19, 30 ]
+        ],
+        [
+          [ 19, 30 ],
+          [ 20, 0 ]
+        ],
+        [
+          [ 20, 0 ],
+          [ 20, 30 ]
         ],
       ];
       const listKey = 99999999;

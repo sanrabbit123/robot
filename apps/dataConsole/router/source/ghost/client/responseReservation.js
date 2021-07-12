@@ -469,7 +469,7 @@ ResponseReservationJs.prototype.insertPannelBox = function () {
 
   targetWords = [
     {
-      mother: "스타일링 범주",
+      mother: "상담 안내",
       children: [
         "상담 가능 시간은 평일 오전 11시부터 오후 6시 30분까지입니다.",
         "점심 시간은 12시부터 13시 30분으로, 해당 시간에 응대가 어려울 수 있습니다.",
