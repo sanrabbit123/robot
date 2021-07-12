@@ -11,6 +11,33 @@ module.exports = [
     name: "cashReceipt2",
     order: "cashReceipt",
     time: {
+      hour: 12,
+      minute: 30,
+      second: 10,
+    }
+  },
+  {
+    name: "cashReceipt3",
+    order: "cashReceipt",
+    time: {
+      hour: 16,
+      minute: 30,
+      second: 10,
+    }
+  },
+  {
+    name: "cashReceipt4",
+    order: "cashReceipt",
+    time: {
+      hour: 21,
+      minute: 30,
+      second: 10,
+    }
+  },
+  {
+    name: "cashReceipt5",
+    order: "cashReceipt",
+    time: {
       day_of_week: "mon",
       hour: 18,
       minute: 10,

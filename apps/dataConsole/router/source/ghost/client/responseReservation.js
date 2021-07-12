@@ -49,7 +49,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
   try {
     let whiteBlock, whiteTong;
     let blockHeight, bottomMargin;
@@ -220,21 +220,90 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       }
     ]);
 
-    buttonMaker = function (date, standard, matrix) {
+    buttonMaker = function (dateObject, standard, matrix) {
+      const now = new Date();
+      let buttons;
       let button, tempHeight, percentage, division, deactive;
       let from, to;
+      let times;
+      let year, month, date;
+
       percentage = 0.41;
       division = 3.5;
+      year = dateObject.getFullYear();
+      month = dateObject.getMonth() + 1;
+      date = dateObject.getDate();
 
-      console.log(date);
       cleanChildren(calendarBox.lastChild);
 
+      buttons = [];
       for (let i = 0; i < standard.length; i++) {
-        standard[i].split('~').map((s) => { return s.trim().split(':').map((z) => { return Number(z.replace(/^0/, '')); }); });
-        deactive = matrix[i].name !== "미정";
+        times = standard[i].split('~').map((s) => { return s.trim().split(':').map((z) => { return Number(z.replace(/^0/, '')); }); });
+        times = times.map((arr) => { return new Date(year, month - 1, date, arr[0], arr[1]) });
+        [ from, to ] = times;
+        deactive = (matrix[i].name !== "미정" || now.valueOf() > from.valueOf() - (1000 * 60 * 60));
         button = createNode({
           mother: calendarBox.lastChild,
           class: [ "hoverDefault_lite" ],
+          attribute: [
+            { year: String(year) },
+            { month: String(month) },
+            { date: String(date) },
+            { from: dateToString(from, true) },
+            { to: dateToString(to, true) },
+            { index: String(i) },
+            { deactive: deactive ? "true" : "false" },
+          ],
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                const { ajaxJson } = GeneralJs;
+                const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
+                const from = stringToDate(this.getAttribute("from"));
+                const to = stringToDate(this.getAttribute("to"));
+                const index = Number(this.getAttribute("index"));
+                const deactive = (this.getAttribute("deactive") === "true");
+                const year = Number(this.getAttribute("year"));
+                const month = Number(this.getAttribute("month"));
+                const date = Number(this.getAttribute("date"));
+                let confirm;
+
+                if (deactive) {
+                  window.alert("예약할 수 없는 시간입니다!");
+                } else {
+
+                  ajaxJson({ method: "get", date: from }, "/realtimeClient").then((obj) => {
+                    const { standard, matrix } = obj;
+                    const cancelPromise = new Promise(function (resolve, reject) {
+                      resolve(JSON.stringify({ message: "cancel" }));
+                    });
+                    if (matrix[index].name !== "미정") {
+                      window.alert("예약할 수 없는 시간입니다!");
+                      window.location.reload();
+                      return cancelPromise;
+                    } else {
+                      confirm = window.confirm(`${String(month)}월 ${String(date)}일 ${zeroAddition(from.getHours())}:${zeroAddition(from.getMinutes())} ~ ${zeroAddition(to.getHours())}:${zeroAddition(to.getMinutes())}에 예약을 진행하시겠습니까?`);
+                      if (confirm) {
+                        return ajaxJson({ method: "update", date: from, update: { cliid: instance.client.cliid, index, name: instance.client.name } }, "/realtimeClient");
+                      } else {
+                        return cancelPromise;
+                      }
+                    }
+                  }).then((obj) => {
+                    const { message } = obj;
+                    if (message === "done") {
+                      window.alert("성공적으로 예약되었습니다!");
+                      window.location.reload();
+                    }
+                  }).catch((err) => {
+                    console.log(err);
+                  });
+
+                }
+              }
+            }
+          ],
           style: {
             display: desktop ? "block" : "inline-block",
             position: "relative",
@@ -261,7 +330,51 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
             fontFamily: "graphik",
           }
         });
+        buttons.push(button);
       }
+
+      ajaxJson({ method: "list" }, "/realtimeClient").then((list) => {
+        const emptyProm = new Promise(function (resolve, reject) {
+          resolve({
+            standard: [],
+            caution: [],
+            matrix: [],
+          });
+        });
+        let thisListKey;
+        let thisListYear, thisListMonth, thisListDate;
+        if (list[instance.client.cliid] !== undefined) {
+          thisListKey = list[instance.client.cliid];
+          thisListYear = Number(String(thisListKey).slice(0, 4));
+          thisListMonth = Number(String(thisListKey).slice(4, 6));
+          thisListDate = Number(String(thisListKey).slice(6));
+          if (thisListYear === year && thisListMonth === month && thisListDate === date) {
+            return ajaxJson({ method: "get", date: stringToDate(`${String(thisListKey).slice(0, 4)}-${String(thisListKey).slice(4, 6)}-${String(thisListKey).slice(6)}`) }, "/realtimeClient");
+          } else {
+            return emptyProm;
+          }
+        } else {
+          return emptyProm;
+        }
+      }).then((obj) => {
+        const { standard, caution, matrix } = obj;
+        let index = null;
+        let cliidArr;
+        if (matrix.length !== 0) {
+          cliidArr = JSON.parse(JSON.stringify(matrix)).map((obj) => { return obj.cliid; });
+          index = caution.findIndex((id) => { return id === instance.client.cliid });
+          if (index === -1) {
+            index = cliidArr.findIndex((id) => { return id === instance.client.cliid });
+          }
+          if (index !== -1) {
+            buttons[index].style.background = colorChip.yellow;
+            buttons[index].firstChild.style.color = colorChip.white;
+          }
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+
     }
 
     buttonValues = await ajaxJson({ method: "get", date: new Date() }, "/realtimeClient");
@@ -355,13 +468,6 @@ ResponseReservationJs.prototype.insertPannelBox = function () {
   let logoVisual, logoHeight;
 
   targetWords = [
-    {
-      mother: "커뮤니케이션 & 컨설팅",
-      children: [
-        "디자이너와 카톡(문자) / 전화 / 메일 등의 채널을 통해 커뮤니케이션합니다. 적극적으로 참여해주실 때 더 좋은 결과물을 얻으실 수 있습니다.",
-        "집 상태, 기간, 예산, 취향, 생활 방식 등을 고려하여 진행해드립니다."
-      ]
-    },
     {
       mother: "스타일링 범주",
       children: [
@@ -572,7 +678,7 @@ ResponseReservationJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
 
-    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients");
+    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/getClients");
     if (clients.length === 0) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;

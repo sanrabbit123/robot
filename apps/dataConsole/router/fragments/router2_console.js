@@ -2505,7 +2505,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         }
         let key, caution, matrix;
         key = dateToKey(date);
-        caution = (new Array(standard.length)).fill(0, 0);
+        caution = (new Array(standard.length)).fill(null, 0);
         matrix = caution.map((i) => { return (new Array(manager.length).fill(null, 0)); });
         return { key, year: date.getFullYear(), month: date.getMonth() + 1, standard, caution, manager, matrix };
       }
@@ -2573,11 +2573,15 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
           [ 18, 30 ]
         ],
       ];
+      const listKey = 99999999;
       const collection = "realtimeClient";
       let result, rows, cliidArr, clients;
       let updateIdIndex;
       let tempDate;
       let boo, boo2, thisObj;
+      let bookList;
+      let tempRows, tempRow;
+      let memberIndex;
 
       if (method === "get") {
         if (req.body.date === undefined) {
@@ -2598,14 +2602,40 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
           return (arrToString(from) + "  ~  " + arrToString(to));
         });
 
-        result.matrix = result.matrix.map((arr) => {
-          let tong;
-          tong = [];
-          for (let number of managerMain) {
-            tong.push(arr[number]);
+        if (req.body.member === undefined) {
+
+          result.matrix = result.matrix.map((arr) => {
+            let tong;
+            tong = [];
+            for (let number of managerMain) {
+              tong.push(arr[number]);
+            }
+            return tong;
+          });
+
+        } else {
+
+          memberIndex = manager.findIndex((i) => { return i === req.body.member; });
+          if (memberIndex === undefined) {
+            memberIndex = 0;
           }
-          return tong;
-        });
+
+          for (let i = 0; i < result.caution.length; i++) {
+            if (typeof result.caution[i] === "string") {
+              if (!result.matrix[i].includes(result.caution[i])) {
+                result.matrix[i].fill(result.caution[i]);
+              }
+            }
+          }
+
+          result.matrix = result.matrix.map((arr) => {
+            let tong;
+            tong = [];
+            tong.push(arr[memberIndex]);
+            return tong;
+          });
+
+        }
 
         result.matrix = result.matrix.map((arr) => {
           let r;
@@ -2616,7 +2646,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
             return emptyCliid;
           }
         });
-
         cliidArr = result.matrix.filter((i) => { return i !== emptyCliid; });
         cliidArr = cliidArr.map((id) => { return { cliid: id }; });
         if (cliidArr.length !== 0) {
@@ -2624,7 +2653,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         } else {
           clients = new SearchArray();
         }
-
         result.matrix = result.matrix.map((id) => {
           let client;
           client = clients.find(id);
@@ -2642,23 +2670,82 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         }
         let { date, update } = equalJson(req.body);
         update = equalJson(update);
-        if (update.member === undefined || update.cliid === undefined || update.index === undefined) {
+        if (update.cliid === undefined || update.index === undefined) {
           throw new Error("invaild update object");
         }
-        const { member, cliid, index } = update;
+
+        const { cliid, index } = update;
+        let member = (update.member !== undefined ? update.member : null);
+
+        tempRows = await back.mongoRead(collection, { key: listKey }, { selfMongo });
+        if (tempRows.length === 0) {
+          throw new Error("invaild db");
+        }
+        bookList = tempRows[0];
+        if (member === null) {
+          if (bookList.book[cliid] !== undefined) {
+            tempRows = await back.mongoRead(collection, { key: bookList.book[cliid] }, { selfMongo });
+            if (tempRows.length === 0) {
+              throw new Error("invaild db");
+            }
+            tempRow = tempRows[0];
+            tempRow.caution = tempRow.caution.map((id) => {
+              if (id === cliid) {
+                return null;
+              } else {
+                return id;
+              }
+            });
+            tempRow.matrix = tempRow.matrix.map((arr) => {
+              if (arr.includes(cliid)) {
+                return arr.map((id) => {
+                  if (id === cliid) {
+                    return null;
+                  } else {
+                    return id;
+                  }
+                });
+              } else {
+                return arr;
+              }
+            });
+            await back.mongoUpdate(collection, [ { key: bookList.book[cliid] }, { caution: tempRow.caution, matrix: tempRow.matrix } ], { selfMongo });
+          }
+        }
+
         rows = await back.mongoRead(collection, { key: dateToKey(date) }, { selfMongo });
         if (rows.length !== 0) {
           result = rows[0];
-          updateIdIndex = result.manager.findIndex((m) => { return m === member; });
-          if (updateIdIndex !== undefined && updateIdIndex !== null) {
-            if (updateIdIndex >= 0) {
-              result.matrix[index][updateIdIndex] = cliid;
-              await back.mongoUpdate(collection, [ { key: dateToKey(date) }, { matrix: result.matrix } ], { selfMongo });
+          if (member !== null) {
+            updateIdIndex = result.manager.findIndex((m) => { return m === member; });
+            if (updateIdIndex !== undefined && updateIdIndex !== null) {
+              if (updateIdIndex >= 0) {
+                result.matrix[index][updateIdIndex] = cliid;
+                await back.mongoUpdate(collection, [ { key: dateToKey(date) }, { matrix: result.matrix } ], { selfMongo });
+              }
             }
+          } else {
+            if (update.name === undefined) {
+              throw new Error("invaild post");
+            }
+
+            result.standard = result.standard.map((arr) => {
+              const [ from, to ] = arr;
+              const arrToString = (a) => { return zeroAddition(a[0]) + ':' + zeroAddition(a[1]); }
+              return (arrToString(from) + " ~ " + arrToString(to));
+            });
+
+            await instance.mother.slack_bot.chat.postMessage({ text: `${update.name}(${cliid}) 고객님이 ${String(date.getMonth() + 1)}월 ${String(date.getDate())}일 ${result.standard[index]}에 응대 예약을 하셨습니다! 담당자 지정을 부탁드리겠습니다!`, channel: "#400_customer" });
+            result.caution[index] = cliid;
+            await back.mongoUpdate(collection, [ { key: dateToKey(date) }, { caution: result.caution } ], { selfMongo });
           }
+          bookList.book[cliid] = dateToKey(date);
+          await back.mongoUpdate(collection, [ { key: listKey }, { book: bookList.book } ], { selfMongo });
+
         } else {
           throw new Error("invaild db");
         }
+        result = { message: "done" };
 
       } else if (method === "standard") {
         result = standard.map((arr) => {
@@ -2707,9 +2794,14 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         }
 
       } else if (method === "manager") {
-
         result = manager;
-
+      } else if (method === "list") {
+        tempRows = await back.mongoRead(collection, { key: listKey }, { selfMongo });
+        if (tempRows.length === 0) {
+          throw new Error("invaild db");
+        }
+        const { book } = tempRows[0];
+        result = book;
       }
 
       res.set({ "Content-Type": "application/json" });
