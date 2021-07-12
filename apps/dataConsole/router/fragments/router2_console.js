@@ -2524,7 +2524,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
       const manager = [ "m1701_aa01s", "m1707_aa01s", "m1810_aa01s", "m2012_aa01s", "m2101_aa01s" ];
       const managerMain = [ 3, 4 ];
       const clientSide = [
-        0,
         1,
         1,
         1,
@@ -2542,10 +2541,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         0,
       ];
       const standard = [
-        [
-          [ 10, 30 ],
-          [ 11, 0 ]
-        ],
         [
           [ 11, 0 ],
           [ 11, 30 ]
