@@ -3032,7 +3032,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         }
         return Number(String(date.getFullYear()) + zeroAddition(date.getMonth() + 1) + zeroAddition(date.getDate()));
       }
-      const returnModel = function (date, standard, manager) {
+      const returnModel = function (date, standard, clientSide, manager) {
         if (!(date instanceof Date) || !Array.isArray(standard) || !Array.isArray(manager)) {
           throw new Error("input => Date: date, Array: standard, Array: manager");
         }
@@ -3040,7 +3040,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         key = dateToKey(date);
         caution = (new Array(standard.length)).fill(null, 0);
         matrix = caution.map((i) => { return (new Array(manager.length).fill(null, 0)); });
-        return { key, year: date.getFullYear(), month: date.getMonth() + 1, standard, caution, manager, matrix };
+        return { key, year: date.getFullYear(), month: date.getMonth() + 1, standard, clientSide, caution, manager, matrix };
       }
       class SearchArray extends Array {
         find(q) {
@@ -3057,11 +3057,8 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
       const manager = [ "m1701_aa01s", "m1707_aa01s", "m1810_aa01s", "m2012_aa01s", "m2101_aa01s" ];
       const managerMain = [ 3, 4 ];
       const clientSide = [
-        0,
-        0,
         1,
         1,
-        0,
         1,
         1,
         1,
@@ -3075,17 +3072,8 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         0,
         0,
         0,
-        0
       ];
       const standard = [
-        [
-          [ 10, 0 ],
-          [ 10, 30 ]
-        ],
-        [
-          [ 10, 30 ],
-          [ 11, 0 ]
-        ],
         [
           [ 11, 0 ],
           [ 11, 30 ]
@@ -3093,10 +3081,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         [
           [ 11, 30 ],
           [ 12, 0 ]
-        ],
-        [
-          [ 12, 0 ],
-          [ 12, 30 ]
         ],
         [
           [ 13, 30 ],
@@ -3150,10 +3134,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
           [ 19, 30 ],
           [ 20, 0 ]
         ],
-        [
-          [ 20, 0 ],
-          [ 20, 30 ]
-        ],
       ];
       const listKey = 99999999;
       const collection = "realtimeClient";
@@ -3165,8 +3145,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
       let tempRows, tempRow;
       let memberIndex;
 
-      console.log(clientSide.length === standard.length);
-
       if (method === "get") {
         if (req.body.date === undefined) {
           throw new Error("invaild post");
@@ -3174,7 +3152,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         const { date } = equalJson(req.body);
         rows = await back.mongoRead(collection, { key: dateToKey(date) }, { selfMongo });
         if (rows.length === 0) {
-          result = returnModel(date, standard, manager);
+          result = returnModel(date, standard, clientSide, manager);
           await back.mongoCreate(collection, result, { selfMongo });
         } else {
           result = rows[0];

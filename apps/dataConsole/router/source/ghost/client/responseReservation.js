@@ -220,19 +220,21 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       }
     ]);
 
-    buttonMaker = function (dateObject, standard, matrix) {
+    buttonMaker = function (dateObject, standard, matrix, clientSide) {
       const now = new Date();
       let buttons;
       let button, tempHeight, percentage, division, deactive;
       let from, to;
       let times;
       let year, month, date;
+      let length;
 
       percentage = 0.41;
       division = 3.5;
       year = dateObject.getFullYear();
       month = dateObject.getMonth() + 1;
       date = dateObject.getDate();
+      length = standard.length - clientSide.filter((i) => { return i !== 1; }).length;
 
       cleanChildren(calendarBox.lastChild);
 
@@ -305,11 +307,11 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
             }
           ],
           style: {
-            display: desktop ? "block" : "inline-block",
+            display: (clientSide[i] === 1 ? (desktop ? "block" : "inline-block") : "none"),
             position: "relative",
             borderRadius: String(5) + "px",
             width: desktop ? (String(100) + '%') : ("calc(calc(100% - " + String(buttonBetween) + ea + ") / 2)"),
-            height: "calc(calc(100% - " + String(buttonBetween * (desktop ? (standard.length - 1) : ((standard.length / 2) - 1))) + ea + ") / " + String(desktop ? (standard.length) : (standard.length / 2)) + ")",
+            height: "calc(calc(100% - " + String(buttonBetween * (desktop ? (length - 1) : ((length / 2) - 1))) + ea + ") / " + String(desktop ? length : (length / 2)) + ")",
             background: colorChip[deactive ? "gray0" : "green"],
             marginBottom: String(buttonBetween) + ea,
             marginRight: desktop ? "" : (i % 2 === 0 ? String(buttonBetween) + ea : ""),
@@ -378,7 +380,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
     }
 
     buttonValues = await ajaxJson({ method: "get", date: new Date() }, "/realtimeClient");
-    buttonMaker(new Date(), buttonValues.standard, buttonValues.matrix);
+    buttonMaker(new Date(), buttonValues.standard, buttonValues.matrix, buttonValues.clientSide);
 
     calendar = this.mother.makeCalendar(new Date(), function (e) {
       const mother = this.parentElement.parentElement;
@@ -411,8 +413,8 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       }
 
       ajaxJson({ method: "get", date: thisDate }, "/realtimeClient").then((obj) => {
-        const { standard, matrix } = obj;
-        buttonMaker(thisDate, standard, matrix);
+        const { standard, matrix, clientSide } = obj;
+        buttonMaker(thisDate, standard, matrix, clientSide);
       }).catch((err) => {
         console.log(err);
       });
