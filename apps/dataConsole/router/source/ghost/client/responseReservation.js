@@ -42,241 +42,232 @@ const ResponseReservationJs = function () {
   this.client = null;
 }
 
-ResponseReservationJs.binaryPath = "/middle/proposal";
+ResponseReservationJs.binaryPath = "/middle/reservation";
 
-ResponseReservationJs.prototype.insertInitBox = function () {
+ResponseReservationJs.prototype.insertInitBox = async function () {
   const instance = this;
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
-  let whiteBlock, whiteTong;
-  let blockHeight, bottomMargin;
-  let margin;
-  let calendar;
-  let initWordingBox;
-  let initWordingHeight;
-  let initWordingSize;
-  let initWordingLineHeight;
-  let calendarBox;
-  let calendarWidth;
-  let quoteTop, quoteHeight, quoteMarginBottom, quoteLeft;
-  let titleAreaHeight;
-  let middleMargin;
-  let buttonMargin;
-  let buttonValues;
-  let buttonBetween;
-  let buttonSize;
-  let buttonTop;
-  let buttonPaddingTop;
-  let mobileCalendarHeight;
-  let initWordings;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
+  try {
+    let whiteBlock, whiteTong;
+    let blockHeight, bottomMargin;
+    let margin;
+    let calendar;
+    let initWordingBox;
+    let initWordingHeight;
+    let initWordingSize;
+    let initWordingLineHeight;
+    let calendarBox;
+    let calendarWidth;
+    let quoteTop, quoteHeight, quoteMarginBottom, quoteLeft;
+    let titleAreaHeight;
+    let middleMargin;
+    let buttonMargin;
+    let buttonValues;
+    let buttonBetween;
+    let buttonSize;
+    let buttonTop;
+    let buttonPaddingTop;
+    let mobileCalendarHeight;
+    let initWordings;
 
-  blockHeight = <%% this.backHeight, this.backHeight - 100, this.backHeight - 100, this.backHeight - 220, this.backHeight %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
+    blockHeight = <%% this.backHeight, this.backHeight - 100, this.backHeight - 100, this.backHeight - 220, this.backHeight %%>;
+    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+    margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  initWordingHeight = <%% 20, 20, 20, 20, 5 %%>;
-  initWordingSize = <%% 17, 17, 16, 14, 3.4 %%>;
-  initWordingLineHeight = <%% 10, 10, 10, 9, 1.7 %%>;
+    initWordingHeight = <%% 20, 20, 20, 20, 5 %%>;
+    initWordingSize = <%% 17, 17, 16, 14, 3.4 %%>;
+    initWordingLineHeight = <%% 10, 10, 10, 9, 1.7 %%>;
 
-  middleMargin = <%% 30, 30, 30, 15, 3.2 %%>;
+    middleMargin = <%% 30, 30, 30, 15, 3.2 %%>;
 
-  quoteTop = 0;
-  quoteHeight = <%% 12, 12, 11, 9, 2.2 %%>;
-  quoteMarginBottom = <%% 7, 7, 7, 6, 1.2 %%>;
-  quoteLeft = <%% 2, 2, 2, 2, 1 %%>;
+    quoteTop = 0;
+    quoteHeight = <%% 12, 12, 11, 9, 2.2 %%>;
+    quoteMarginBottom = <%% 7, 7, 7, 6, 1.2 %%>;
+    quoteLeft = <%% 2, 2, 2, 2, 1 %%>;
 
-  calendarWidth = <%% 1000, 780, 640, 520, 80 %%>;
+    calendarWidth = <%% 1000, 780, 640, 520, 80 %%>;
 
-  buttonMargin = <%% 20, 20, 20, 20, 20 %%>;
-  buttonBetween = <%% 5, 5, 5, 4, 1 %%>;
-  buttonSize = <%% 19, 16, 16, 12, 3 %%>;
-  buttonTop = <%% 7, 5, 5, 4, 1.4 %%>;
-  buttonPaddingTop = <%% 48, 48, 48, 48, 3 %%>;
+    buttonMargin = <%% 20, 20, 20, 20, 20 %%>;
+    buttonBetween = <%% 5, 5, 5, 4, 1 %%>;
+    buttonSize = <%% 19, 16, 16, 12, 3 %%>;
+    buttonTop = <%% 7, 5, 5, 4, 1.4 %%>;
+    buttonPaddingTop = <%% 48, 48, 48, 48, 3 %%>;
 
-  mobileCalendarHeight = 64;
+    mobileCalendarHeight = 64;
 
-  buttonValues = [
-    "11:00  ~  11:30",
-    "11:30  ~  12:00",
-    "13:30  ~  14:00",
-    "14:00  ~  14:30",
-    "14:30  ~  15:00",
-    "15:00  ~  15:30",
-    "15:30  ~  16:00",
-    "16:00  ~  16:30",
-    "16:30  ~  17:00",
-    "17:00  ~  17:30",
-    "17:30  ~  18:00",
-    "18:00  ~  18:30",
-  ];
+    buttonValues = await ajaxJson({ method: "standard" }, "/realtimeClient");
 
-  initWordings = [
-    (desktop ? `안녕하세요, ${this.client.name} 고객님! 전화 상담을 위한 <b%예약 페이지%b>입니다.` : `안녕하세요, ${this.client.name} 고객님.`),
-    (desktop ? `<b%상담을 원하시는 날짜와 시간대를 선택%b>해주시면, 해당 시간에 상담을 위한 통화를 진행해드리도록 하겠습니다 :)` : `<b%상담을 원하시는 날짜와 시간대%b>를 선택해주세요!`),
-  ];
+    initWordings = [
+      (desktop ? `안녕하세요, ${this.client.name} 고객님! 전화 상담을 위한 <b%예약 페이지%b>입니다.` : `안녕하세요, ${this.client.name} 고객님.`),
+      (desktop ? `<b%상담을 원하시는 날짜와 시간대를 선택%b>해주시면, 해당 시간에 상담을 위한 통화를 진행해드리도록 하겠습니다 :)` : `<b%상담을 원하시는 날짜와 시간대%b>를 선택해주세요!`),
+    ];
 
-  titleAreaHeight = quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight + initWordingHeight + middleMargin;
+    titleAreaHeight = quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight + initWordingHeight + middleMargin;
 
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      height: String(blockHeight + (desktop ? 0 : mobileCalendarHeight) - (margin * 2)) + ea,
-      background: colorChip.white,
-      paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
-      paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    children: [
-      {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
-      }
-    ]
-  });
-
-  whiteTong = whiteBlock.firstChild;
-
-  [ initWordingBox, calendarBox ] = createNodes([
-    {
-      mother: whiteTong,
-      style :{
-        position: "relative",
-        width: String(100) + '%',
-        height: String(titleAreaHeight) + ea,
-        fontSize: String(initWordingSize) + ea,
-        fontWeight: String(400),
-      },
-      children: [
-        {
-          mode: "svg",
-          source: this.mother.returnQuotes(colorChip.green),
-          style: {
-            position: "absolute",
-            top: String(quoteTop) + ea,
-            left: desktop ? String(quoteLeft) + ea : "calc(50% - 1.3vw)",
-            height: String(quoteHeight) + ea,
-          }
-        },
-        {
-          text: initWordings[0],
-          style: {
-            position: "absolute",
-            top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
-            left: String(0) + ea,
-            width: String(100) + '%',
-            height: String(initWordingHeight) + ea,
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(300),
-            textAlign: desktop ? "left" : "center",
-            color: colorChip.black
-          },
-          bold: {
-            fontWeight: String(500),
-            color: colorChip.black
-          }
-        },
-        {
-          text: initWordings[1],
-          style: {
-            position: "absolute",
-            top: String(quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight) + ea,
-            left: String(0) + ea,
-            width: String(100) + '%',
-            height: String(initWordingHeight) + ea,
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(300),
-            textAlign: desktop ? "left" : "center",
-            color: colorChip.black
-          },
-          bold: {
-            fontWeight: String(500),
-            color: colorChip.black
-          }
-        }
-      ]
-    },
-    {
-      mother: whiteTong,
+    whiteBlock = createNode({
+      mother: baseTong,
       style: {
         position: "relative",
+        borderRadius: String(desktop ? 8 : 1) + ea,
         width: String(100) + '%',
-        height: withOut(titleAreaHeight, ea),
-      },
-      children: [
-        {
-          style: {
-            display: desktop ? "inline-block" : "block",
-            height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
-            width: desktop ? String(calendarWidth) + ea : String(100) + '%',
-            verticalAlign: "top",
-          }
-        },
-        {
-          style: {
-            display: desktop ? "inline-block" : "block",
-            paddingTop: String(buttonPaddingTop) + ea,
-            paddingLeft: String(desktop ? buttonMargin : 0) + ea,
-            width: desktop ? withOut(calendarWidth + buttonMargin, ea) : String(100) + '%',
-            height: desktop ? withOut(buttonPaddingTop, ea) : withOut(buttonPaddingTop + mobileCalendarHeight, ea)
-          }
-        }
-      ]
-    }
-  ]);
-
-  for (let i = 0; i < buttonValues.length; i++) {
-    createNode({
-      mother: calendarBox.lastChild,
-      style: {
-        display: desktop ? "block" : "inline-block",
-        position: "relative",
-        borderRadius: String(5) + "px",
-        width: desktop ? (String(100) + '%') : ("calc(calc(100% - " + String(buttonBetween) + ea + ") / 2)"),
-        height: "calc(calc(100% - " + String(buttonBetween * (desktop ? (buttonValues.length - 1) : ((buttonValues.length / 2) - 1))) + ea + ") / " + String(desktop ? (buttonValues.length) : (buttonValues.length / 2)) + ")",
+        height: String(blockHeight + (desktop ? 0 : mobileCalendarHeight) - (margin * 2)) + ea,
         background: colorChip.white,
-        marginBottom: String(buttonBetween) + ea,
-        border: "1px solid " + colorChip.gray3,
-        boxSizing: "border-box",
-        marginRight: desktop ? "" : (i % 2 === 0 ? String(buttonBetween) + ea : ""),
+        paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
+        paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
+        marginBottom: String(bottomMargin) + ea,
+        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       },
       children: [
         {
-          text: buttonValues[i],
-          style: {
-            position: "absolute",
-            fontSize: String(buttonSize) + ea,
-            fontWeight: String(200),
-            color: colorChip.black,
-            width: String(100) + '%',
-            textAlign: "center",
-            top: String(buttonTop) + ea,
-            fontFamily: "graphik",
-          }
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
         }
       ]
     });
+
+    whiteTong = whiteBlock.firstChild;
+
+    [ initWordingBox, calendarBox ] = createNodes([
+      {
+        mother: whiteTong,
+        style :{
+          position: "relative",
+          width: String(100) + '%',
+          height: String(titleAreaHeight) + ea,
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(400),
+        },
+        children: [
+          {
+            mode: "svg",
+            source: this.mother.returnQuotes(colorChip.green),
+            style: {
+              position: "absolute",
+              top: String(quoteTop) + ea,
+              left: desktop ? String(quoteLeft) + ea : "calc(50% - 1.3vw)",
+              height: String(quoteHeight) + ea,
+            }
+          },
+          {
+            text: initWordings[0],
+            style: {
+              position: "absolute",
+              top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: String(initWordingHeight) + ea,
+              fontSize: String(initWordingSize) + ea,
+              fontWeight: String(300),
+              textAlign: desktop ? "left" : "center",
+              color: colorChip.black
+            },
+            bold: {
+              fontWeight: String(500),
+              color: colorChip.black
+            }
+          },
+          {
+            text: initWordings[1],
+            style: {
+              position: "absolute",
+              top: String(quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: String(initWordingHeight) + ea,
+              fontSize: String(initWordingSize) + ea,
+              fontWeight: String(300),
+              textAlign: desktop ? "left" : "center",
+              color: colorChip.black
+            },
+            bold: {
+              fontWeight: String(500),
+              color: colorChip.black
+            }
+          }
+        ]
+      },
+      {
+        mother: whiteTong,
+        style: {
+          position: "relative",
+          width: String(100) + '%',
+          height: withOut(titleAreaHeight, ea),
+        },
+        children: [
+          {
+            style: {
+              display: desktop ? "inline-block" : "block",
+              height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
+              width: desktop ? String(calendarWidth) + ea : String(100) + '%',
+              verticalAlign: "top",
+            }
+          },
+          {
+            style: {
+              display: desktop ? "inline-block" : "block",
+              paddingTop: String(buttonPaddingTop) + ea,
+              paddingLeft: String(desktop ? buttonMargin : 0) + ea,
+              width: desktop ? withOut(calendarWidth + buttonMargin, ea) : String(100) + '%',
+              height: desktop ? withOut(buttonPaddingTop, ea) : withOut(buttonPaddingTop + mobileCalendarHeight, ea)
+            }
+          }
+        ]
+      }
+    ]);
+
+    for (let i = 0; i < buttonValues.length; i++) {
+      createNode({
+        mother: calendarBox.lastChild,
+        style: {
+          display: desktop ? "block" : "inline-block",
+          position: "relative",
+          borderRadius: String(5) + "px",
+          width: desktop ? (String(100) + '%') : ("calc(calc(100% - " + String(buttonBetween) + ea + ") / 2)"),
+          height: "calc(calc(100% - " + String(buttonBetween * (desktop ? (buttonValues.length - 1) : ((buttonValues.length / 2) - 1))) + ea + ") / " + String(desktop ? (buttonValues.length) : (buttonValues.length / 2)) + ")",
+          background: colorChip.white,
+          marginBottom: String(buttonBetween) + ea,
+          border: "1px solid " + colorChip.gray3,
+          boxSizing: "border-box",
+          marginRight: desktop ? "" : (i % 2 === 0 ? String(buttonBetween) + ea : ""),
+        },
+        children: [
+          {
+            text: buttonValues[i],
+            style: {
+              position: "absolute",
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(200),
+              color: colorChip.black,
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(buttonTop) + ea,
+              fontFamily: "graphik",
+            }
+          }
+        ]
+      });
+    }
+
+    calendar = this.mother.makeCalendar(new Date(), function (e) {
+      console.log(this.getAttribute("buttonValue"));
+    }, {
+      bigMode: true,
+      mobile: mobile,
+      width: desktop ? String(calendarWidth) + ea : String(100) + '%',
+      height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
+      events: [],
+    });
+    calendarBox.firstChild.appendChild(calendar.calendarBase);
+
+  } catch (e) {
+    console.log(e);
   }
-
-  calendar = this.mother.makeCalendar(new Date(), function (e) {
-    console.log(this.getAttribute("buttonValue"));
-  }, {
-    bigMode: true,
-    mobile: mobile,
-    width: desktop ? String(calendarWidth) + ea : String(100) + '%',
-    height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
-    events: [],
-  });
-  calendarBox.firstChild.appendChild(calendar.calendarBase);
-
 }
 
 ResponseReservationJs.prototype.insertPannelBox = function () {
@@ -541,7 +532,7 @@ ResponseReservationJs.prototype.launching = async function (loading) {
       },
       local: async () => {
         try {
-          instance.insertInitBox();
+          await instance.insertInitBox();
           instance.insertPannelBox();
         } catch (e) {
           console.log(e);

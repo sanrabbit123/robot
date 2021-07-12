@@ -2507,7 +2507,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         key = dateToKey(date);
         caution = (new Array(standard.length)).fill(0, 0);
         matrix = caution.map((i) => { return (new Array(manager.length).fill(null, 0)); });
-        return { key, standard, caution, manager, matrix };
+        return { key, year: date.getFullYear(), month: date.getMonth() + 1, standard, caution, manager, matrix };
       }
       class SearchArray extends Array {
         find(q) {
