@@ -230,7 +230,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       let length;
 
       percentage = 0.41;
-      division = 3.5;
+      division = desktop ? 3.5 : 4;
       year = dateObject.getFullYear();
       month = dateObject.getMonth() + 1;
       date = dateObject.getDate();
@@ -422,7 +422,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
     }, {
       bigMode: true,
       mobile: mobile,
-      width: desktop ? String(calendarWidth) + ea : String(100) + '%',
+      width: desktop ? String(calendarWidth) + ea : String(200) + "px",
       height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
       events: [],
       grayMode: async function (year, month) {
