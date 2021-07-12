@@ -3165,6 +3165,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     let circleEventInitTop, circleEventLeft;
     let mobile, desktop;
     let headHeight;
+    let childrenDoms;
+    let childrenDomsEmpty;
 
     mobile = (option.mobile === true);
     desktop = !mobile;
@@ -3328,6 +3330,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           borderBottom: ((option.bigMode !== true) ? String(0) : "1px solid " + GeneralJs.colorChip.gray3),
           borderRight: ((option.bigMode !== true) ? String(0) : "1px solid " + GeneralJs.colorChip.gray3),
           boxSizing: ((option.bigMode !== true) ? "initial" : "border-box"),
+          transition: "all 0.2s ease",
         };
         for (let k in style) {
           div_clone2.style[k] = style[k];
@@ -3368,11 +3371,12 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           position: "absolute",
           fontFamily: "graphik",
           fontSize: String(titleHeight * 0.25 * ((option.factorFont !== undefined) ? option.factorFont : 1)) + ea,
-          fontWeight: ((i === 0) ? String(500) : String(200)),
+          fontWeight: ((i === 0) ? String(500) : String(option.bigMode === true ? 300 : 200)),
           width: "100%",
           textAlign: ((option.bigMode !== true) ? "center" : "left"),
           color: ((j < 5) ? GeneralJs.colorChip.black : GeneralJs.colorChip.green),
           cursor: "pointer",
+          transition: "all 0.2s ease",
         };
         for (let k in style) {
           div_clone3.style[k] = style[k];
@@ -3418,8 +3422,54 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
       mother.appendChild(div_clone);
     }
 
-    if (option.bigMode === true) {
-      console.log(mother);
+    if (option.bigMode === true && typeof option.grayMode === "function") {
+      childrenDoms = Array.from(mother.children);
+      childrenDoms.shift();
+      childrenDoms = childrenDoms.map((dom) => {
+        return Array.from(dom.children);
+      });
+      childrenDoms = childrenDoms.flat();
+      childrenDoms = childrenDoms.filter((dom) => {
+        return dom.hasAttribute("date");
+      })
+
+      option.grayMode(year, month + 1).then((booArr) => {
+        childrenDoms = Array.from(mother.children);
+        childrenDoms.shift();
+        childrenDoms = childrenDoms.map((dom) => {
+          return Array.from(dom.children);
+        });
+        childrenDoms = childrenDoms.flat();
+        childrenDomsEmpty = childrenDoms.filter((dom) => {
+          return !dom.hasAttribute("date");
+        });
+        childrenDoms = childrenDoms.filter((dom) => {
+          return dom.hasAttribute("date");
+        });
+
+        if (booArr.length !== childrenDoms.length) {
+          throw new Error("invaild boolean array");
+        }
+
+        for (let i = 0; i < booArr.length; i++) {
+          childrenDoms[i].setAttribute("color", childrenDoms[i].firstChild.style.color);
+          if (!booArr[i]) {
+            childrenDoms[i].setAttribute("deactive", "true");
+            childrenDoms[i].style.background = GeneralJs.colorChip.gray0;
+            childrenDoms[i].firstChild.style.color = GeneralJs.colorChip.deactive;
+          } else {
+            childrenDoms[i].setAttribute("deactive", "false");
+          }
+        }
+
+        for (let dom of childrenDomsEmpty) {
+          dom.style.background = GeneralJs.colorChip.gray0;
+        }
+
+      }).catch((err) => {
+        console.log(err);
+      });
+
     }
   }
 

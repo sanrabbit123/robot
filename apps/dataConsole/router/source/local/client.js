@@ -5456,6 +5456,9 @@ ClientJs.prototype.lateLaunching = async function () {
           let hamburgerTop;
           let hamburgerRight;
 
+          if (!((await ajaxJson({ method: "manager" }, "/realtimeClient")).includes(instance.mother.member.id))) {
+            mother.parentElement.parentElement.style.display = "none";
+          }
           GeneralJs.stacks.thisDate = new Date();
 
           arrowWidth = 10;

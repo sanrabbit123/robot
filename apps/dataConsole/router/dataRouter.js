@@ -2141,7 +2141,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
             if (project.process.contract.meeting.date.getFullYear() < 1900) {
               resultObj = { "alert": "현장 미팅에 대한 정보가 없습니다!" };
             } else {
-              await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "request", id: req.body.id }, { headers: { "Content-Type": "application/json" } });
+              await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port[0]) + "/toAiServer", { type: "request", id: req.body.id }, { headers: { "Content-Type": "application/json" } });
               resultObj = { "alert": "의뢰서 제작 요청이 완료되었습니다!" };
             }
           }
@@ -2176,7 +2176,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
           res.set("Content-Type", "application/json");
           res.send(JSON.stringify({ link: proposalLink }));
         } else {
-          await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
+          await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port[0]) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
           res.set("Content-Type", "application/json");
           res.send(JSON.stringify({ link: proposalLink }));
         }
@@ -3055,7 +3055,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         }
       }
       const manager = [ "m1701_aa01s", "m1707_aa01s", "m1810_aa01s", "m2012_aa01s", "m2101_aa01s" ];
-      const managerMains = [ 3, 4 ];
+      const managerMain = [ 3, 4 ];
       const standard = [
         [
           [ 11, 0 ],
@@ -3132,6 +3132,15 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         });
 
         result.matrix = result.matrix.map((arr) => {
+          let tong;
+          tong = [];
+          for (let number of managerMain) {
+            tong.push(arr[number]);
+          }
+          return tong;
+        });
+
+        result.matrix = result.matrix.map((arr) => {
           let r;
           r = arr.find((z) => { return z !== null });
           if (r !== undefined && r !== null) {
@@ -3201,10 +3210,10 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         rows = await back.mongoRead(collection, { $and: [ { year }, { month } ] }, { selfMongo });
         result = [];
         for (let i = 0; i < 31; i++) {
-          tempDate = new Date(year, month - 1, i + 1);
+          tempDate = new Date(year, month - 1, i + 1, standard.flat(2)[standard.flat(2).length - 2], standard.flat(2)[standard.flat(2).length - 1]);
           if (tempDate.getMonth() + 1 === month) {
 
-            if (tempDate.getDay() === 0 || tempDate.getDay() === 6 || today.getDate() > i + 1) {
+            if (tempDate.getDay() === 0 || tempDate.getDay() === 6 || today.valueOf() > tempDate.valueOf()) {
               result.push(false);
             } else {
               boo = false;
@@ -3216,7 +3225,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
               }
               if (boo) {
                 boo2 = false;
-                for (let number of managerMains) {
+                for (let number of managerMain) {
                   boo2 = thisObj.matrix[number].includes(null);
                   if (boo2) {
                     break;

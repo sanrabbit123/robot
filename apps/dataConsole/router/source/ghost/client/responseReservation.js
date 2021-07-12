@@ -49,7 +49,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, cleanChildren } = GeneralJs;
   try {
     let whiteBlock, whiteTong;
     let blockHeight, bottomMargin;
@@ -72,6 +72,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
     let buttonPaddingTop;
     let mobileCalendarHeight;
     let initWordings;
+    let buttonMaker;
 
     blockHeight = <%% this.backHeight, this.backHeight - 100, this.backHeight - 100, this.backHeight - 220, this.backHeight %%>;
     bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -97,8 +98,6 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
     buttonPaddingTop = <%% 48, 48, 48, 48, 3 %%>;
 
     mobileCalendarHeight = 64;
-
-    buttonValues = await ajaxJson({ method: "standard" }, "/realtimeClient");
 
     initWordings = [
       (desktop ? `안녕하세요, ${this.client.name} 고객님! 전화 상담을 위한 <b%예약 페이지%b>입니다.` : `안녕하세요, ${this.client.name} 고객님.`),
@@ -221,41 +220,90 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       }
     ]);
 
-    for (let i = 0; i < buttonValues.length; i++) {
-      createNode({
-        mother: calendarBox.lastChild,
-        style: {
-          display: desktop ? "block" : "inline-block",
-          position: "relative",
-          borderRadius: String(5) + "px",
-          width: desktop ? (String(100) + '%') : ("calc(calc(100% - " + String(buttonBetween) + ea + ") / 2)"),
-          height: "calc(calc(100% - " + String(buttonBetween * (desktop ? (buttonValues.length - 1) : ((buttonValues.length / 2) - 1))) + ea + ") / " + String(desktop ? (buttonValues.length) : (buttonValues.length / 2)) + ")",
-          background: colorChip.white,
-          marginBottom: String(buttonBetween) + ea,
-          border: "1px solid " + colorChip.gray3,
-          boxSizing: "border-box",
-          marginRight: desktop ? "" : (i % 2 === 0 ? String(buttonBetween) + ea : ""),
-        },
-        children: [
-          {
-            text: buttonValues[i],
-            style: {
-              position: "absolute",
-              fontSize: String(buttonSize) + ea,
-              fontWeight: String(200),
-              color: colorChip.black,
-              width: String(100) + '%',
-              textAlign: "center",
-              top: String(buttonTop) + ea,
-              fontFamily: "graphik",
-            }
+    buttonMaker = function (date, standard, matrix) {
+      let button, tempHeight, percentage, division, deactive;
+      let from, to;
+      percentage = 0.41;
+      division = 3.5;
+
+      console.log(date);
+      cleanChildren(calendarBox.lastChild);
+
+      for (let i = 0; i < standard.length; i++) {
+        standard[i].split('~').map((s) => { return s.trim().split(':').map((z) => { return Number(z.replace(/^0/, '')); }); });
+        deactive = matrix[i].name !== "미정";
+        button = createNode({
+          mother: calendarBox.lastChild,
+          class: [ "hoverDefault_lite" ],
+          style: {
+            display: desktop ? "block" : "inline-block",
+            position: "relative",
+            borderRadius: String(5) + "px",
+            width: desktop ? (String(100) + '%') : ("calc(calc(100% - " + String(buttonBetween) + ea + ") / 2)"),
+            height: "calc(calc(100% - " + String(buttonBetween * (desktop ? (standard.length - 1) : ((standard.length / 2) - 1))) + ea + ") / " + String(desktop ? (standard.length) : (standard.length / 2)) + ")",
+            background: colorChip[deactive ? "gray0" : "green"],
+            marginBottom: String(buttonBetween) + ea,
+            marginRight: desktop ? "" : (i % 2 === 0 ? String(buttonBetween) + ea : ""),
+          },
+        });
+        tempHeight = button.getBoundingClientRect().height;
+        createNode({
+          mother: button,
+          text: standard[i],
+          style: {
+            position: "absolute",
+            fontSize: String(tempHeight * percentage) + "px",
+            fontWeight: String(300),
+            color: colorChip[deactive ? "deactive" : "white"],
+            width: String(100) + '%',
+            textAlign: "center",
+            top: String(tempHeight * ((1 - percentage) / division)) + "px",
+            fontFamily: "graphik",
           }
-        ]
-      });
+        });
+      }
     }
 
+    buttonValues = await ajaxJson({ method: "get", date: new Date() }, "/realtimeClient");
+    buttonMaker(new Date(), buttonValues.standard, buttonValues.matrix);
+
     calendar = this.mother.makeCalendar(new Date(), function (e) {
-      console.log(this.getAttribute("buttonValue"));
+      const mother = this.parentElement.parentElement;
+      const thisDate = stringToDate(this.getAttribute("buttonValue"));
+      let childrenDoms;
+
+      childrenDoms = Array.from(mother.children);
+      childrenDoms.shift();
+      childrenDoms = childrenDoms.map((dom) => {
+        return Array.from(dom.children);
+      });
+      childrenDoms = childrenDoms.flat();
+      childrenDoms = childrenDoms.filter((dom) => {
+        return dom.hasAttribute("date");
+      });
+
+      for (let dom of childrenDoms) {
+        if (dom === this) {
+          dom.style.background = GeneralJs.colorChip.green;
+          dom.firstChild.style.color = GeneralJs.colorChip.white;
+        } else {
+          if (dom.getAttribute("deactive") === "true") {
+            dom.style.background = GeneralJs.colorChip.gray0;
+            dom.firstChild.style.color = GeneralJs.colorChip.deactive;
+          } else {
+            dom.style.background = GeneralJs.colorChip.white;
+            dom.firstChild.style.color = dom.getAttribute("color");
+          }
+        }
+      }
+
+      ajaxJson({ method: "get", date: thisDate }, "/realtimeClient").then((obj) => {
+        const { standard, matrix } = obj;
+        buttonMaker(thisDate, standard, matrix);
+      }).catch((err) => {
+        console.log(err);
+      });
+
     }, {
       bigMode: true,
       mobile: mobile,
