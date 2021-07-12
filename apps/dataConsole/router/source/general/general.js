@@ -3417,6 +3417,10 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
 
       mother.appendChild(div_clone);
     }
+
+    if (option.bigMode === true) {
+      console.log(mother);
+    }
   }
 
   //base maker

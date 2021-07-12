@@ -262,6 +262,14 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       width: desktop ? String(calendarWidth) + ea : String(100) + '%',
       height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
       events: [],
+      grayMode: async function (year, month) {
+        try {
+          const boos = await GeneralJs.ajaxJson({ method: "range", year, month }, "/realtimeClient");
+          return boos;
+        } catch (e) {
+          console.log(e);
+        }
+      }
     });
     calendarBox.firstChild.appendChild(calendar.calendarBase);
 

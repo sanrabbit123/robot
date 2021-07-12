@@ -3040,7 +3040,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         key = dateToKey(date);
         caution = (new Array(standard.length)).fill(0, 0);
         matrix = caution.map((i) => { return (new Array(manager.length).fill(null, 0)); });
-        return { key, standard, caution, manager, matrix };
+        return { key, year: date.getFullYear(), month: date.getMonth() + 1, standard, caution, manager, matrix };
       }
       class SearchArray extends Array {
         find(q) {
@@ -3055,6 +3055,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         }
       }
       const manager = [ "m1701_aa01s", "m1707_aa01s", "m1810_aa01s", "m2012_aa01s", "m2101_aa01s" ];
+      const managerMains = [ 3, 4 ];
       const standard = [
         [
           [ 11, 0 ],
@@ -3108,6 +3109,8 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
       const collection = "realtimeClient";
       let result, rows, cliidArr, clients;
       let updateIdIndex;
+      let tempDate;
+      let boo, boo2, thisObj;
 
       if (method === "get") {
         if (req.body.date === undefined) {
@@ -3187,6 +3190,46 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
           const arrToString = (a) => { return zeroAddition(a[0]) + ':' + zeroAddition(a[1]); }
           return (arrToString(from) + "  ~  " + arrToString(to));
         });
+      } else if (method === "range") {
+
+        if (req.body.year === undefined || req.body.month === undefined) {
+          throw new Error("invaild post");
+        }
+        const year = Number(req.body.year);
+        const month = Number(req.body.month);
+        const today = new Date();
+        rows = await back.mongoRead(collection, { $and: [ { year }, { month } ] }, { selfMongo });
+        result = [];
+        for (let i = 0; i < 31; i++) {
+          tempDate = new Date(year, month - 1, i + 1);
+          if (tempDate.getMonth() + 1 === month) {
+
+            if (tempDate.getDay() === 0 || tempDate.getDay() === 6 || today.getDate() > i + 1) {
+              result.push(false);
+            } else {
+              boo = false;
+              for (let r of rows) {
+                if (r.key === dateToKey(tempDate)) {
+                  thisObj = r;
+                  boo = true;
+                }
+              }
+              if (boo) {
+                boo2 = false;
+                for (let number of managerMains) {
+                  boo2 = thisObj.matrix[number].includes(null);
+                  if (boo2) {
+                    break;
+                  }
+                }
+                result.push(boo2);
+              } else {
+                result.push(true);
+              }
+            }
+          }
+        }
+
       }
 
       res.set({ "Content-Type": "application/json" });

@@ -1346,11 +1346,19 @@ GraphicBot.prototype.botServer = async function () {
     pems = {};
     if (isGhost) {
       pemsLink = process.cwd() + "/pems/" + address.host;
-      this.port = address.graphic.port;
+      if (Array.isArray(address.graphic.port)) {
+        this.port = address.graphic.port[1];
+      } else {
+        this.port = address.graphic.port;
+      }
       this.localhost = "https://" + address.host + ":" + String(this.port);
     } else {
       pemsLink = process.cwd() + "/pems/" + address.ghost.host;
-      this.port = address.ghost.graphic.port;
+      if (Array.isArray(address.ghost.graphic.port)) {
+        this.port = address.graphic.port[1];
+      } else {
+        this.port = address.graphic.port;
+      }
       this.localhost = "https://" + address.ghost.host + ":" + String(this.port);
     }
 
@@ -1402,11 +1410,11 @@ GraphicBot.prototype.botServer = async function () {
 
     if (this.os === "mac") {
       https.createServer(app).listen(this.port, () => {
-        console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+        console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
       });
     } else {
       https.createServer(pems, app).listen(this.port, () => {
-        console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+        console.log(`\x1b[33m%s\x1b[0m`, `Server running in ${String(this.port)}`);
       });
     }
 

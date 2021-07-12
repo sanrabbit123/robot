@@ -707,7 +707,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Headers": '*',
       });
       let target;
-      target = "https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port);
+      target = "https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port[0]);
       headRequest(target + "/confirm").then(async (response) => {
         const { statusCode } = response;
         let raw, res, doing;
