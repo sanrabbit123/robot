@@ -230,7 +230,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       let length;
 
       percentage = 0.41;
-      division = desktop ? 3.5 : 4;
+      division = desktop ? 3.5 : 5;
       year = dateObject.getFullYear();
       month = dateObject.getMonth() + 1;
       date = dateObject.getDate();
@@ -422,7 +422,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
     }, {
       bigMode: true,
       mobile: mobile,
-      width: desktop ? String(calendarWidth) + ea : String(200) + "px",
+      width: desktop ? String(calendarWidth) + ea : String(100) + "%",
       height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
       events: [],
       grayMode: async function (year, month) {
@@ -435,6 +435,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
       }
     });
     calendarBox.firstChild.appendChild(calendar.calendarBase);
+    window.alert("ya!");
 
   } catch (e) {
     console.log(e);
