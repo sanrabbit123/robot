@@ -58,7 +58,7 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    
+
 
 
     // const proid = "p2105_aa10s"
@@ -1007,7 +1007,7 @@ DevContext.prototype.launching = async function () {
 
     // get drive folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/1-yHNBnZ0ge1VvGe5CLBqsp-D7O5Ihca0?usp=sharing");
+    // await drive.get_folder("https://drive.google.com/drive/folders/1RnYBRTxigMj6Nm86VwJ4WPnVfal-Wcoe");
 
 
     // naverBlog to json
