@@ -3167,6 +3167,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     let headHeight;
     let childrenDoms;
     let childrenDomsEmpty;
+    let setDateEvents;
 
     mobile = (option.mobile === true);
     desktop = !mobile;
@@ -3202,100 +3203,76 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
       left: String(eventLeft) + ea,
     };
 
-    class MatrixDiv extends HTMLDivElement {
+    setDateEvents = function (eventArr, hourOutput = true) {
+      const year = Number(this.getAttribute("year"));
+      const month = Number(this.getAttribute("month"));
+      const thisDate = Number(this.getAttribute("date"));
+      const that = this;
+      let svg_clone;
+      let div_clone3;
+      let indexNumber;
+      let ea = "px";
+      let date, title, eventFunc;
 
-      constructor() {
-        super();
+      eventArr.sort((a, b) => {
+        return a.date.valueOf() - b.date.valueOf();
+      });
+
+      if (this.indexNumber !== undefined) {
+        indexNumber = this.indexNumber;
+      } else {
+        indexNumber = 0;
       }
 
-      setYear(year) {
-        this.year = year;
-      }
+      if (this.getAttribute("date") !== null) {
+        for (let obj of eventArr) {
 
-      setMonth(month) {
-        this.month = month;
-      }
+          date = obj.date;
+          title = obj.title;
+          eventFunc = obj.eventFunc;
 
-      setDate(date) {
-        this.date = date;
-      }
-
-      setDateEvents(eventArr, hourOutput = true) {
-        const that = this;
-        let svg_clone;
-        let div_clone3;
-        let indexNumber;
-        let ea = "px";
-        let date, title, eventFunc;
-
-        eventArr.sort((a, b) => {
-          return a.date.valueOf() - b.date.valueOf();
-        });
-
-        if (this.indexNumber !== undefined) {
-          indexNumber = this.indexNumber;
-        } else {
-          indexNumber = 0;
-        }
-
-        if (this.getAttribute("date") !== null) {
-          for (let obj of eventArr) {
-
-            date = obj.date;
-            title = obj.title;
-            eventFunc = obj.eventFunc;
-
-            if (date.getFullYear() === this.year && date.getMonth() === this.month && date.getDate() === this.date) {
-              svg_clone = SvgTong.stringParsing(instance.returnCircle("", GeneralJs.colorChip.green));
-              for (let k in circleEventStyle) {
-                svg_clone.style[k] = circleEventStyle[k];
-              }
-              svg_clone.style.top = String(circleEventInitTop + (lineHeight * indexNumber)) + ea;
-              this.appendChild(svg_clone);
-
-              div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-              div_clone3.classList.add("hoverDefault_lite");
-              for (let k in eventStyle) {
-                div_clone3.style[k] = eventStyle[k];
-              }
-              div_clone3.style.top = String(eventInitTop + (lineHeight * indexNumber)) + ea;
-              if (hourOutput) {
-                if (obj.hours !== undefined) {
-                  div_clone3.textContent = title;
-                } else {
-                  div_clone3.textContent = String(date.getHours()) + '시' + " : " + title;
-                }
-              } else {
-                div_clone3.textContent = title;
-              }
-              div_clone3.addEventListener("click", function (e) {
-                e.stopPropagation();
-                eventFunc.call(this, e);
-              });
-              div_clone3.addEventListener("contextmenu", function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                this.parentNode.removeChild(this.previousElementSibling);
-                this.parentNode.removeChild(this);
-                that.indexNumber = that.indexNumber - 1;
-              });
-              this.appendChild(div_clone3);
-
-              indexNumber++;
+          if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === thisDate) {
+            svg_clone = SvgTong.stringParsing(instance.returnCircle("", GeneralJs.colorChip.green));
+            for (let k in circleEventStyle) {
+              svg_clone.style[k] = circleEventStyle[k];
             }
+            svg_clone.style.top = String(circleEventInitTop + (lineHeight * indexNumber)) + ea;
+            this.appendChild(svg_clone);
+
+            div_clone3 = GeneralJs.nodes.div.cloneNode(true);
+            div_clone3.classList.add("hoverDefault_lite");
+            for (let k in eventStyle) {
+              div_clone3.style[k] = eventStyle[k];
+            }
+            div_clone3.style.top = String(eventInitTop + (lineHeight * indexNumber)) + ea;
+            if (hourOutput) {
+              if (obj.hours !== undefined) {
+                div_clone3.textContent = title;
+              } else {
+                div_clone3.textContent = String(date.getHours()) + '시' + " : " + title;
+              }
+            } else {
+              div_clone3.textContent = title;
+            }
+            div_clone3.addEventListener("click", function (e) {
+              e.stopPropagation();
+              eventFunc.call(this, e);
+            });
+            div_clone3.addEventListener("contextmenu", function (e) {
+              e.stopPropagation();
+              e.preventDefault();
+              this.parentNode.removeChild(this.previousElementSibling);
+              this.parentNode.removeChild(this);
+              that.indexNumber = that.indexNumber - 1;
+            });
+            this.appendChild(div_clone3);
+
+            indexNumber++;
           }
-          this.indexNumber = indexNumber;
         }
-
+        this.indexNumber = indexNumber;
       }
-
-    }
-    if (customElements.get("matrix-div") === undefined) {
-      customElements.define("matrix-div", MatrixDiv, { extends: "div" });
-    }
-    matrixField = document.createElement("div", { is : "matrix-div" });
-
-    window.alert("ho14!");
+    };
 
     for (let i = 0; i < matrix.length + 1; i++) {
       div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -3317,12 +3294,10 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         div_clone.style.height = String(headHeight) + ea;
       }
 
-      window.alert("ho15!");
-
       for (let j = 0; j < 7; j++) {
-        div_clone2 = matrixField.cloneNode(true);
-        div_clone2.setYear(year);
-        div_clone2.setMonth(month);
+        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+        div_clone2.setAttribute("year", String(year));
+        div_clone2.setAttribute("month", String(month));
         style = {
           display: "inline-block",
           position: "relative",
@@ -3340,8 +3315,6 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           div_clone2.style[k] = style[k];
         }
 
-        window.alert("ho16!");
-
         if (option.bigMode === true && i === 0) {
           div_clone2.style.background = GeneralJs.colorChip.gray0;
           div_clone2.style.borderTop = "1px solid " + GeneralJs.colorChip.gray3;
@@ -3351,8 +3324,6 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
             div_clone2.style.borderTopRightRadius = String(5) + "px";
           }
         }
-
-        window.alert("ho17!");
 
         if (option.bigMode === true && j === 0) {
           div_clone2.style.borderLeft = "1px solid " + GeneralJs.colorChip.gray3;
@@ -3366,10 +3337,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
           }
         }
 
-        window.alert("ho18!");
-
         if (i !== 0 && matrix[i - 1][j] !== null) {
-          div_clone2.setDate(matrix[i - 1][j].date);
           div_clone2.setAttribute("date", String(matrix[i - 1][j].date));
           div_clone2.setAttribute("buttonValue", dateToString(year, month, matrix[i - 1][j].date));
           div_clone2.setAttribute("dateEventMethod", "true");
@@ -3391,8 +3359,6 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         for (let k in style) {
           div_clone3.style[k] = style[k];
         }
-
-        window.alert("ho19!");
 
         if (i === 0) {
           div_clone3.textContent = ([ 'M', 'T', 'W', 'T', 'F', 'S', 'S' ])[j];
@@ -3421,25 +3387,19 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         }
         div_clone2.appendChild(div_clone3);
 
-        window.alert("ho20!");
-
         if (option.events !== undefined) {
           if (i !== 0) {
             if (matrix[i - 1][j] !== null) {
-              div_clone2.setDateEvents(option.events)
+              setDateEvents.call(div_clone2, option.events);
             }
           }
         }
-
-        window.alert("ho21!");
 
         div_clone.appendChild(div_clone2);
       }
 
       mother.appendChild(div_clone);
     }
-
-    window.alert("ho15!");
 
     if (option.bigMode === true && typeof option.grayMode === "function") {
       childrenDoms = Array.from(mother.children);
@@ -3451,8 +3411,6 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
       childrenDoms = childrenDoms.filter((dom) => {
         return dom.hasAttribute("date");
       })
-
-      window.alert("ho16!");
 
       option.grayMode(year, month + 1).then((booArr) => {
         childrenDoms = Array.from(mother.children);
@@ -3471,8 +3429,6 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
         if (booArr.length !== childrenDoms.length) {
           throw new Error("invaild boolean array");
         }
-
-        window.alert("ho17!");
 
         for (let i = 0; i < booArr.length; i++) {
           childrenDoms[i].setAttribute("color", childrenDoms[i].firstChild.style.color);
@@ -3704,8 +3660,6 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   }
   resultObj.setHeight(finalHeight0 + finalHeight1 + finalHeight2);
   resultObj.setDoms(calendarBase, titleZone, contentsZone);
-
-  window.alert("ho12!");
 
   return resultObj;
 }
