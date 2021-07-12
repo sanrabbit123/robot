@@ -2499,7 +2499,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         }
         return Number(String(date.getFullYear()) + zeroAddition(date.getMonth() + 1) + zeroAddition(date.getDate()));
       }
-      const returnModel = function (date, standard, manager) {
+      const returnModel = function (date, standard, clientSide, manager) {
         if (!(date instanceof Date) || !Array.isArray(standard) || !Array.isArray(manager)) {
           throw new Error("input => Date: date, Array: standard, Array: manager");
         }
@@ -2507,7 +2507,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         key = dateToKey(date);
         caution = (new Array(standard.length)).fill(null, 0);
         matrix = caution.map((i) => { return (new Array(manager.length).fill(null, 0)); });
-        return { key, year: date.getFullYear(), month: date.getMonth() + 1, standard, caution, manager, matrix };
+        return { key, year: date.getFullYear(), month: date.getMonth() + 1, standard, clientSide, caution, manager, matrix };
       }
       class SearchArray extends Array {
         find(q) {
@@ -2639,7 +2639,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         const { date } = equalJson(req.body);
         rows = await back.mongoRead(collection, { key: dateToKey(date) }, { selfMongo });
         if (rows.length === 0) {
-          result = returnModel(date, standard, manager);
+          result = returnModel(date, standard, clientSide, manager);
           await back.mongoCreate(collection, result, { selfMongo });
         } else {
           result = rows[0];
