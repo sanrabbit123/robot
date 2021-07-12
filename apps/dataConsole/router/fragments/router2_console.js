@@ -2525,10 +2525,8 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
       const managerMain = [ 3, 4 ];
       const clientSide = [
         0,
-        0,
         1,
         1,
-        0,
         1,
         1,
         1,
@@ -2542,13 +2540,8 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         0,
         0,
         0,
-        0
       ];
       const standard = [
-        [
-          [ 10, 0 ],
-          [ 10, 30 ]
-        ],
         [
           [ 10, 30 ],
           [ 11, 0 ]
@@ -2560,10 +2553,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         [
           [ 11, 30 ],
           [ 12, 0 ]
-        ],
-        [
-          [ 12, 0 ],
-          [ 12, 30 ]
         ],
         [
           [ 13, 30 ],
@@ -2616,10 +2605,6 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
         [
           [ 19, 30 ],
           [ 20, 0 ]
-        ],
-        [
-          [ 20, 0 ],
-          [ 20, 30 ]
         ],
       ];
       const listKey = 99999999;
