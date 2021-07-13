@@ -1032,17 +1032,14 @@ Ghost.prototype.photoRouter = function (needs) {
           } else {
             throw new Error("invaild post");
           }
-          shareName += '_' + dateToString(new Date()).slice(2).replace('-', '') + ".zip";
+          shareName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
-          command = `zip -r ${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share + "/" + shareName)} ${shellLink(sambaDir + "/" + folderName + "/" + c780)}`;
+          command = `zip ${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share + "/" + shareName)} ${shellLink(sambaDir + "/" + folderName + "/" + c780)}/*`;
           shell.exec(command);
 
           zipId = await drive.searchId_inPython(shareName);
           while (zipId === null) {
-            for (let z = 0; z < 5; z++) {
-              console.log(`insync waiting... ${String(5 - z)}s`);
-              await sleep(1000);
-            }
+            await sleep(1000);
             zipId = await drive.searchId_inPython(shareName);
           }
 
