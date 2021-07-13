@@ -5,6 +5,7 @@ const AiContents = function (arg = "g00") {
   this.general = new ContentsMaker();
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
 
   this.text = {};
   this.portfolioNum = arg;
@@ -405,11 +406,17 @@ AiContents.prototype.to_mysql = async function () {
     let tempResult, row;
 
     pidResultarr = await fileSystem(`readDir`, [ `${home_dir}/result` ]);
+    p_id = null;
     for (let i = 0; i < pidResultarr.length; i++) {
       if (/^[a|p][0-9]+/g.test(pidResultarr[i])) {
         p_id = pidResultarr[i].replace(/code/g, '');
       }
     }
+
+    if (p_id === null) {
+      throw new Error("cannot found pid");
+    }
+
     queryObj = JSON.parse(await fileSystem(`readString`, [ `${home_dir}/result/query_${p_id}.js` ]));
     subQueryObj = transQueryObj(queryObj);
 
@@ -457,6 +464,8 @@ AiContents.prototype.to_mysql = async function () {
         console.log(`update revlist done`);
       }
     }
+
+    await this.to_google(p_id);
 
   } catch (e) {
     console.log(e.message);
@@ -585,6 +594,113 @@ AiContents.prototype.to_poo = async function () {
     console.log(e.message);
   } finally {
     process.exit();
+  }
+}
+
+AiContents.prototype.to_google = async function (pid) {
+  const instance = this;
+  const { mongo, mongoinfo, dateToString } = this.mother;
+  const back = this.back;
+  try {
+    const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
+    const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+    const selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+    const motherId = "1T21kQ06QXEQw50P8T4Pov2yvbS6G88Ip";
+    const docs = new GoogleDocs();
+    const drive = new GoogleDrive();
+    const today = new Date();
+    const server = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
+    const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?qqq=";
+    const reviewLink = "https://" + this.address.frontinfo.host + "/revdetail.php?qqq=";
+    const makeLink = (id) => { return `https://docs.google.com/document/d/${id}/edit?usp=sharing`; };
+    let cliid, desid;
+    let client, designer;
+    let portfolioId, reviewId;
+    let contents, contentsArr;
+    let motherObj;
+    let portfolio, review;
+    let portfolioTitle, reviewTitle;
+    let rid;
+    let channel;
+    let photoFolderId;
+    let photoLink;
+
+    await selfMongo.connect();
+
+    contentsArr = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo });
+    contents = contentsArr[0];
+
+    rid = contents.contents.review.rid;
+    desid = contents.desid;
+    cliid = null;
+    if (contents.cliid !== '') {
+      cliid = contents.cliid;
+    }
+
+    designer = await back.getDesignerById(desid, { selfMongo });
+    client = null;
+    if (cliid !== null) {
+      client = await back.getClientById(cliid, { selfMongo });
+    }
+
+    await selfMongo.close();
+
+    photoFolderId = await drive.searchId_inPython(pid + "_" + designer.designer + "_");
+    photoLink = await drive.read_webView_inPython(photoFolderId);
+
+    portfolioTitle = designer.designer + "D_";
+    if (client !== null) {
+      portfolioTitle += client.name + "C_";
+    }
+    reviewTitle = portfolioTitle;
+    portfolioTitle += "디자이너글_";
+    reviewTitle += "고객리뷰_";
+    portfolioTitle += dateToString(today).replace(/-/g, '').slice(2);
+    reviewTitle += dateToString(today).replace(/-/g, '').slice(2);
+
+    motherObj = contents.getGoogleDocsDetail(server);
+    portfolio = motherObj.portfolio;
+    review = motherObj.review;
+
+    portfolioId = await docs.create_newDocs_inPython(portfolioTitle, motherId);
+    await docs.update_contents_inPython(portfolioId, portfolio);
+
+    if (review.length !== 0) {
+      reviewId = await docs.create_newDocs_inPython(reviewTitle, motherId);
+      await docs.update_contents_inPython(reviewId, review);
+    } else {
+      reviewId = null;
+    }
+
+
+    if (reviewId !== null && client !== null) {
+
+      // channel = "#502_sns_contents";
+      channel = "#error_log";
+      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
+      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(reviewId)}`, channel });
+      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 세팅 사진 원본 link : ${photoLink}`, channel });
+
+      // channel = "#200_web";
+      channel = "#error_log";
+      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${reviewLink + rid}`, channel });
+
+    } else {
+
+      // channel = "#502_sns_contents";
+      channel = "#error_log";
+      await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
+      await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 사진 원본 link : ${photoLink}`, channel });
+
+      // channel = "#200_web";
+      channel = "#error_log";
+      await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+
+    }
+
+  } catch (e) {
+    console.log(e);
   }
 }
 

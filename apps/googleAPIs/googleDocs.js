@@ -123,8 +123,41 @@ GoogleDocs.prototype.update_value_inPython = async function (id, longText) {
   const instance = this;
   const mother = this.general;
   try {
+    if (id === undefined || typeof longText !== "string") {
+      throw new Error("invaild input");
+    }
     id = this.general.parsingId(id);
     let result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertText" ], { id, longText });
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleDocs.prototype.update_image_inPython = async function (id, index, url) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    if (id === undefined || typeof index !== "number" || typeof url !== "string") {
+      throw new Error("invaild input");
+    }
+    id = this.general.parsingId(id);
+    let result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertImage" ], { id, index, url });
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+GoogleDocs.prototype.update_contents_inPython = async function (id, contentsArr) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    if (id === undefined || !Array.isArray(contentsArr)) {
+      throw new Error("invaild input");
+    }
+    id = this.general.parsingId(id);
+    let result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertContents" ], { id, contents: contentsArr });
     return result;
   } catch (e) {
     console.log(e);

@@ -184,6 +184,16 @@ try:
         docsApp.insertText(data["id"], data["longText"])
         print(dumps({ "id": data["id"] }))
 
+    elif argv[1] == 'docs' and argv[2] == 'insertImage':
+        docsApp = GoogleDocs()
+        docsApp.insertImage(data["id"], data["index"], data["url"])
+        print(dumps({ "id": data["id"] }))
+
+    elif argv[1] == 'docs' and argv[2] == 'insertContents':
+        docsApp = GoogleDocs()
+        docsApp.insertContents(data["id"], data["contents"])
+        print(dumps({ "id": data["id"] }))
+
     elif argv[1] == 'test' and argv[2] == 'test':
         sheetsApp = GoogleSheet()
         result = sheetsApp.test("1AAhENYhHmPhpau9cUmO7SjR0w5ssgLHJvVufZN5MkJc")

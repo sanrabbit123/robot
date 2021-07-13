@@ -52,3 +52,48 @@ class GoogleDocs:
             requests.append({ "insertText": { "location": { "index": num, }, "text": i + "\n" } })
             num = num + i.__len__() + 1
         self.app.batchUpdate(documentId=id, body={ "requests": requests }).execute()
+
+    def insertWords(self, id, index, text):
+        requests = []
+        requests.append({ "insertText": { "location": { "index": index, }, "text": text + "\n" } })
+        self.app.batchUpdate(documentId=id, body={ "requests": requests }).execute()
+        return index + text.__len__() + 1
+
+    def insertImage(self, id, index, url, gs="g"):
+        seroUnit = 222
+        garoUnit = 448
+
+        unit = garoUnit
+        if gs == "g":
+            unit = garoUnit
+        else:
+            unit = seroUnit
+
+        requests = []
+        requests.append({
+            "insertInlineImage": {
+                "location": { "index": index },
+                "uri": url,
+                "objectSize": {
+                    "width": { "magnitude": unit, "unit": "PT" }
+                }
+            }
+        })
+        self.app.batchUpdate(documentId=id, body={ "requests": requests }).execute()
+        return index + 1
+
+    def insertContents(self, id, arr):
+        index = 1
+        num = 0
+        for i in arr:
+            if isinstance(i, list):
+                index = self.insertImage(id, index, i[0], i[1])
+                if i[1] == 'g':
+                    index = self.insertWords(id, index, "\n")
+                else:
+                    num = num + 1
+                    num = num % 2
+                    if num == 0:
+                        index = self.insertWords(id, index, "\n")
+            else:
+                index = self.insertWords(id, index, i)

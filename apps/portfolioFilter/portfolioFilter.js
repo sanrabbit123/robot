@@ -13,13 +13,13 @@ const PortfolioFilter = function (clientName = "", apartName = "", designer = ""
 
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/portfolioFilter`;
   this.generator = {
     factory: require(this.dir + "/factory/generator.js"),
   }
   this.clientName = clientName;
   this.designer = designer;
-  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.apartName = apart(apartName);
   this.pid = pid;
   this.resourceFolderName = "resource";
@@ -350,7 +350,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   }
   try {
     const photoFolderConst = "사진_등록_포트폴리오";
-    const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/${photoFolderConst}`;
+    const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
@@ -382,7 +382,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       }
     }
 
-    scpTarget = `${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:/home/${shellLink(this.address.officeinfo.ghost.user + sambaPhotoPath + "/" + this.folderName)}/`;
+    scpTarget = `${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + this.folderName)}/`;
 
     if (!liteMode) {
       shell.exec(`scp -r ${shellLink(fileList_original[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
@@ -635,7 +635,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
   const errorMessage = `argument must be => [ { client: "", designer: "", link: "" } ... ]`;
   const photoFolderConst = "사진_등록_포트폴리오";
-  const sambaPhotoPath = `/samba/drive/HomeLiaisonServer/${photoFolderConst}`;
+  const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
   const foreCastContant = `/corePortfolio/forecast`;
   const forecastPath = this.address.homeinfo.ghost.file.static + foreCastContant;
   class RawArray extends Array {
@@ -756,7 +756,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         ghostPhotos = await photoRequest("ls");
       }
 
-      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:/home/${shellLink(this.address.officeinfo.ghost.user + sambaPhotoPath + "/" + googleFolderName)}/`);
+      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
 
       for (let item of folderPathList) {
         await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);

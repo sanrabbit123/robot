@@ -18,7 +18,7 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 응대 예약 페이지 | 홈리에종');"
+      "return (thisPerson.name + ' 고객님 응대 예약 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
@@ -446,7 +446,7 @@ ResponseReservationJs.prototype.insertPannelBox = function () {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, isMac } = GeneralJs;
   let topMargin, leftMargin;
   let blockHeight, blockMarginBottom;
   let whiteBlock;
@@ -582,7 +582,7 @@ ResponseReservationJs.prototype.insertPannelBox = function () {
         fontSize: String(wordSize) + ea,
         wordSpacing: String(wordSpacing) + "px",
         position: "relative",
-        top: String(0) + ea,
+        top: String(isMac() ? 0 : 2) + ea,
         verticalAlign: "top",
         lineHeight: String(1.6),
       };

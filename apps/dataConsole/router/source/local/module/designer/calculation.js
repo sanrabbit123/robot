@@ -673,17 +673,19 @@ DesignerJs.prototype.calculationExtractEvent = function () {
       const today = new Date();
       const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
       const designerDoms = instance.designerDoms;
-      const bar = "---------------------------";
       let title, contents, sum;
       let projectWhites, projectWhite, clientName, firstAmount, firstDate, remainAmount, remainDate;
       let designer;
       let matrix;
+      let matrix2;
       let tempArr;
       let div_clone, svg_clone;
       let style;
       let width;
+      let num0, num1;
+      let total;
 
-      matrix = [ [ "디자이너", "고객", "선금", "입금일", "잔금", "입금일" ] ];
+      matrix = [];
       for (let i of designerDoms) {
         title = i.querySelector(".title");
         contents = i.querySelector(".list");
@@ -698,10 +700,24 @@ DesignerJs.prototype.calculationExtractEvent = function () {
           remainDate = projectWhites[j].querySelector(".remainDate").textContent.trim();
           matrix.push([ designer, clientName, firstAmount, firstDate, remainAmount, remainDate ]);
         }
-        tempArr = sum.textContent.split("잔금");
-        matrix.push([ "합계", "", (autoComma(Number(tempArr[0].replace(/[^0-9]/g, ''))) + '원'), "", (autoComma(Number(tempArr[1].replace(/[^0-9]/g, ''))) + '원'), "" ]);
-        matrix.push([ bar, bar, bar, bar, bar, bar ]);
       }
+
+      matrix2 = [ [ "디자이너", "고객", "정산대기액", "종류" ] ];
+      total = 0;
+      for (let arr of matrix) {
+        if (arr[3].split('/').map((i) => { return Number(i.trim()); }).every((i) => { return i === 0; })) {
+          matrix2.push([ arr[0], arr[1], Number(arr[2].replace(/[^0-9]/g, '')), "선금" ]);
+          total += Number(arr[2].replace(/[^0-9]/g, ''));
+        }
+        if (arr[5].split('/').map((i) => { return Number(i.trim()); }).every((i) => { return i === 0; })) {
+          matrix2.push([ arr[0], arr[1], Number(arr[4].replace(/[^0-9]/g, '')), "잔금" ]);
+          total += Number(arr[4].replace(/[^0-9]/g, ''));
+        }
+      }
+
+      matrix2.push([ "", "", "", "" ]);
+      matrix2.push([ "합계", "", total, "" ]);
+      matrix = matrix2;
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       div_clone.classList.add("justfadein");

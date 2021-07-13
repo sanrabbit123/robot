@@ -247,4 +247,77 @@ Contents.prototype.getContentsFlatDetail = function () {
   return { portfolio, review };
 }
 
+Contents.prototype.getGoogleDocsDetail = function (server) {
+  if (typeof server !== "string") {
+    throw new Error("server address must")
+  }
+  const self = this;
+  const corePortfolio = "/corePortfolio/listImage";
+  const photoChar = 't';
+  const { portfolio, review } = this.getContentsFlatDetail();
+  const token = "___split___";
+  let tempArr, tempArr2, result;
+
+  result = {};
+
+  tempArr = portfolio.split('\n').map((i) => { return (i === '' ? "\n" : i.trim()); }).map((i) => {
+    let arr0, arr1;
+    if (/^[0-9]/.test(i) && /\-/gi.test(i)) {
+      arr0 = i.split('-').map((j) => { return Number(j.trim()); });
+      if (arr0.length !== 2) {
+        throw new Error("invaild text");
+      }
+      arr1 = [];
+      for (let z = arr0[0]; z < arr0[1] + 1; z++) {
+        arr1.push(server + corePortfolio + "/" + self.contents.portfolio.pid + "/" + photoChar + String(z) + self.contents.portfolio.pid + ".jpg" + token + String(z));
+      }
+      return arr1;
+    } else {
+      return i;
+    }
+  });
+
+  tempArr = tempArr.flat().map((i) => {
+    if (/^http/.test(i)) {
+      return [ i.split(token)[0], self.photos.detail[Number(i.split(token)[1]) - 1].gs ];
+    } else {
+      return i;
+    }
+  });
+
+  tempArr.unshift("\n");
+  tempArr.unshift(self.contents.portfolio.title.main);
+  result.portfolio = tempArr;
+
+  result.review = [];
+  if (review !== '') {
+    tempArr2 = review.split('\n').map((i) => { return (i === '' ? "\n" : i.trim()); }).map((i) => {
+      let arr0;
+      if (/^[0-9]/.test(i)) {
+        arr0 = i.split(' ').map((j) => { return Number(j.trim()); });
+        arr0 = arr0.map((z) => {
+          return server + corePortfolio + "/" + self.contents.portfolio.pid + "/" + photoChar + String(z) + self.contents.portfolio.pid + ".jpg" + token + String(z);
+        });
+        return arr0;
+      } else {
+        return i;
+      }
+    });
+
+    tempArr2 = tempArr2.flat().map((i) => {
+      if (/^http/.test(i)) {
+        return [ i.split(token)[0], self.photos.detail[Number(i.split(token)[1]) - 1].gs ];
+      } else {
+        return i;
+      }
+    });
+
+    tempArr2.unshift("\n");
+    tempArr2.unshift(self.contents.review.title.main);
+    result.review = tempArr2;
+  }
+
+  return result;
+}
+
 module.exports = Contents;
