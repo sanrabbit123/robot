@@ -4,6 +4,7 @@ const SpawnCatfish = function () {
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = process.cwd() + "/apps/spawnCatfish";
   this.sheets = new GoogleSheet();
   this.applicationName = "catfish";
@@ -27,6 +28,15 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
   const instance = this;
   const { shell, shellLink, fileSystem, todayMaker } = this.mother;
   try {
+    const address = this.address;
+    const mongoInfo = "mongodb://" + address.officeinfo.user + ':' + address.officeinfo.password + '@' + address.officeinfo.ghost.host + ':' + String(address.officeinfo.port) + "/admin";
+    const mysqlInfo = {
+      host: address.officeinfo.ghost.host,
+      user: address.officeinfo.mysql.user,
+      password: address.officeinfo.mysql.password,
+      port: address.officeinfo.mysql.port,
+      database: address.officeinfo.mysql.database
+    };
     const home = process.env.HOME;
     const homeDir = await fileSystem(`readDir`, [ home ]);
     const googleList = [
@@ -38,40 +48,20 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
     ];
     let command, key;
 
-    key = JSON.parse(await fileSystem(`readString`, [ `${this.app}/jsondata/mongoKey.json` ]));
-
-    key.mongo.hash = await this.mother.cryptoString(key.mongo.password, this.mother.mongopythoninfo);
-    key.mysql.hash = await this.mother.cryptoString(key.mongo.password, JSON.stringify(this.mother.mysqlpythoninfo));
+    key = await fileSystem(`readJson`, [ `${this.app}/jsondata/mongoKey.json` ]);
+    key.mongo.hash = await this.mother.cryptoString(key.mongo.password, mongoInfo);
+    key.mysql.hash = await this.mother.cryptoString(key.mongo.password, JSON.stringify(mysqlInfo));
 
     command = '';
 
-    if (reload) {
-      if (homeDir.includes(this.applicationName)) {
-        shell.exec(`rm -rf ${shellLink(home)}/${this.applicationName};`);
-      }
-      command += `mkdir ${shellLink(home)}/${this.applicationName};`;
-      // command += `cd ${shellLink(home)};`;
-      // command += `git clone git@gitlab.com:uragen/${this.applicationName}.git;`;
-      // command += `cd ${shellLink(home)}/${this.applicationName};`;
-      // command += `git pull;`;
-    } else {
-      if (!homeDir.includes(this.applicationName)) {
-        throw new Error("There is no " + this.applicationName);
-      } else {
-        command += `cd ${shellLink(home)}/${this.applicationName};`;
-        command += `git pull;`;
-      }
+    if (homeDir.includes(this.applicationName)) {
+      shell.exec(`rm -rf ${shellLink(home)}/${this.applicationName};`);
     }
-
+    command += `mkdir ${shellLink(home)}/${this.applicationName};`;
     command += `cp -r ${shellLink(this.app)} ${shellLink(home)};`;
     for (let g of googleList) {
       command += `cp ${shellLink(process.cwd())}/apps/googleAPIs/${g} ${shellLink(home)}/${this.applicationName}/${this.nodeAppName}/googleAPIs;`;
     }
-    // command += `cd ${shellLink(home)}/${this.applicationName};`;
-    // command += `git add -A;`;
-    // command += `git commit -m "CatfishAutoUpdate_${todayMaker("total")}";`;
-    // command += `git push;`;
-
     command += `cd ${shellLink(home)}/${this.applicationName};`;
     command += `npm install;`;
 
