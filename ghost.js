@@ -960,11 +960,12 @@ Ghost.prototype.designerRouter = function (needs) {
 Ghost.prototype.photoRouter = function (needs) {
   const instance = this;
   const back = this.back;
+  const drive = this.drive;
   const [ MONGOC, MONGOLOCALC ] = needs;
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, dateToString } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, dateToString, sleep } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -992,25 +993,28 @@ Ghost.prototype.photoRouter = function (needs) {
   //POST - zip
   funcObj.post_zip = {
     link: [ "/zip" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      if (req.body.pid === undefined) {
-        res.send(JSON.stringify({ message: "invaild body : must be 'pid'" }));
-      } else {
-        const { pid } = req.body;
-        const c780 = "780";
+    func: async function (req, res) {
+      try {
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.pid === undefined) {
+          res.send(JSON.stringify({ message: "invaild body : must be 'pid'" }));
+        } else {
 
-        fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+          const { pid } = req.body;
+          const c780 = "780";
+          const list = await fileSystem(`readDir`, [ sambaDir ]);
           let list_refined = [];
           let folderName;
           let shareName;
           let tempArr;
           let command;
+          let zipId;
+          let zipLink;
 
           for (let i of list) {
             if (!/^\./.test(i) && !/DS_Store/gi.test(i)) {
@@ -1028,14 +1032,25 @@ Ghost.prototype.photoRouter = function (needs) {
           } else {
             throw new Error("invaild post");
           }
-          shareName += dateToString(new Date()).slice(2);
+          shareName += '_' + dateToString(new Date()).slice(2).replace('-', '') + ".zip";
 
-          command = `zip -r ${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share + "/" + folderName + ".zip")} ${shellLink(sambaDir + "/" + folderName + "/" + c780)}`
+          command = `zip -r ${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share + "/" + shareName)} ${shellLink(sambaDir + "/" + folderName + "/" + c780)}`;
           shell.exec(command);
 
-          res.send(JSON.stringify({ command, shareName }));
-        }).catch((e) => { throw new Error(e); });
+          zipId = await drive.searchId_inPython(shareName);
+          while (zipId === null) {
+            for (let z = 0; z < 5; z++) {
+              console.log(`insync waiting... ${String(5 - z)}s`);
+              await sleep(1000);
+            }
+            zipId = await drive.searchId_inPython(shareName);
+          }
 
+          zipLink = await drive.read_webView_inPython(zipId);
+          res.send(JSON.stringify({ link: zipLink }));
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
   };
