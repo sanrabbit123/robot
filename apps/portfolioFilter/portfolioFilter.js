@@ -652,12 +652,17 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       }
     }
   }
+  const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+  const kakaoInstance = new KakaoTalk();
+  const drive = new GoogleDrive();
   try {
     if (!Array.isArray(arr)) {
       throw new Error(errorMessage);
     }
     arr = new RawArray(arr);
-    const drive = new GoogleDrive();
+
+    await kakaoInstance.ready();
+
     let folderPath;
     let designers, consoleInput, targetDesigner, googleFolderName;
     let adobe, tempAppList;
@@ -670,6 +675,9 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let note;
     let projects, project;
     let totalMakeResult;
+    let shareLink;
+    let shareGoogleId;
+    let clientObj, designerObj;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -771,17 +779,37 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
 
       shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
 
-      for (let z = 0; z < 3; z++) {
+      for (let z = 0; z < 5; z++) {
         console.log(`scp waiting... ${String(3 - z)}s`);
         await sleep(1000);
       }
+
+      shareLink = (await photoRequest("zip", { pid: nextPid })).link;
+      shareGoogleId = drive.general.parsingId(shareLink);
 
       shell.exec(`rm -rf ${shellLink(folderPath)};`);
 
       projects = await back.getProjectsByNames([ client.trim(), designer.trim() ]);
       if (projects.length > 0) {
         project = projects[0];
-        await back.updateProject([ { proid: project.proid }, { "contents.raw.photo.status": "원본 보정 완료", "contents.raw.photo.link": totalMakeResult.webViewLink } ]);
+        await back.updateProject([
+          { proid: project.proid },
+          {
+            "contents.raw.photo.status": "원본 보정 완료",
+            "contents.raw.photo.link": totalMakeResult.webViewLink,
+            "contents.share.client.photo": new Date(),
+            "contents.share.designer.photo": new Date(),
+          }
+        ]);
+        clientObj = await back.getClientById(project.cliid);
+        designerObj = await back.getDesignerById(project.desid);
+
+        if (clientObj !== null && designerObj !== null) {
+          await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleId });
+          await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleId });
+          await this.mother.slack_bot.chat.postMessage({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+        }
+
       }
 
       console.log(`${client}C ${designer}D raw to raw done`);

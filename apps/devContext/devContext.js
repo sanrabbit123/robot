@@ -59,9 +59,10 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const photoRequest = ghostRequest().bind("photo");
-    const res = await photoRequest("zip", { pid: "p103" });
-    console.log(res);
+    
+
+
+
 
 
     // const proid = "p2105_aa10s"

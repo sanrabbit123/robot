@@ -246,6 +246,36 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    photoShareClient: {
+      name: "사진 공유 고객",
+      id: "TF_1157",
+      needs: [
+        "client",
+        "file"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "file", to: obj.file }
+        ];
+      },
+    },
+    photoShareDesigner: {
+      name: "사진 공유 디자이너",
+      id: "TF_1158",
+      needs: [
+        "client",
+        "designer",
+        "file"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "designer", to: obj.designer },
+          { from: "file", to: obj.file }
+        ];
+      },
+    },
   };
   return tong[target];
 }
