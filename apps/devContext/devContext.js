@@ -62,8 +62,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
     // const proid = "p2105_aa10s"
     // const selfMongo = this.MONGOC;
     // const project = await back.getProjectById(proid, { selfMongo });
@@ -1021,7 +1019,7 @@ DevContext.prototype.launching = async function () {
     // spawn catfish
     // const app = new SpawnCatfish();
     // await app.spawnLaunching(true);
-    
+
 
     // kakao token
     // const app = new KakaoTalk();

@@ -216,6 +216,36 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    contentsShareClient: {
+      name: "컨텐츠 공유 고객",
+      id: "TF_0642",
+      needs: [
+        "client",
+        "rid"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "rid", to: obj.rid }
+        ];
+      },
+    },
+    contentsShareDesigner: {
+      name: "컨텐츠 공유 디자이너",
+      id: "TF_0643",
+      needs: [
+        "client",
+        "designer",
+        "pid"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "designer", to: obj.designer },
+          { from: "pid", to: obj.pid }
+        ];
+      },
+    },
   };
   return tong[target];
 }

@@ -9,7 +9,7 @@ const Ghost = function () {
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
   this.address = ADDRESS;
-  this.homeliaisonServer = process.env.HOME + "/samba/drive/HomeLiaisonServer";
+  this.homeliaisonServer = this.address.officeinfo.ghost.file.static + "/" + this.address.officeinfo.ghost.file.office;
   this.alien = process.cwd() + "/alien.js";
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
@@ -964,7 +964,7 @@ Ghost.prototype.photoRouter = function (needs) {
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, dateToString } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -986,6 +986,57 @@ Ghost.prototype.photoRouter = function (needs) {
         }
         res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
+    }
+  };
+
+  //POST - zip
+  funcObj.post_zip = {
+    link: [ "/zip" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.pid === undefined) {
+        res.send(JSON.stringify({ message: "invaild body : must be 'pid'" }));
+      } else {
+        const { pid } = req.body;
+        const c780 = "780";
+
+        fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+          let list_refined = [];
+          let folderName;
+          let shareName;
+          let tempArr;
+          let command;
+
+          for (let i of list) {
+            if (!/^\./.test(i) && !/DS_Store/gi.test(i)) {
+              list_refined.push(i);
+            }
+          }
+          folderName = list_refined.find((i) => { return (new RegExp('^' + pid)).test(i); });
+          tempArr = folderName.split('_');
+          shareName = "HL_";
+          if (tempArr.length === 4) {
+            shareName += tempArr[2] + "_고객님_";
+            shareName += tempArr[1] + "_디자이너님";
+          } else if (tempArr.length === 3) {
+            shareName += tempArr[1] + "_디자이너님";
+          } else {
+            throw new Error("invaild post");
+          }
+          shareName += dateToString(new Date()).slice(2);
+
+          command = `zip -r ${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share + "/" + folderName + ".zip")} ${shellLink(sambaDir + "/" + folderName + "/" + c780)}`
+          shell.exec(command);
+
+          res.send(JSON.stringify({ command, shareName }));
+        }).catch((e) => { throw new Error(e); });
+
+      }
     }
   };
 

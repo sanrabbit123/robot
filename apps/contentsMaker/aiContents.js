@@ -602,10 +602,13 @@ AiContents.prototype.to_google = async function (pid) {
   const { mongo, mongoinfo, dateToString } = this.mother;
   const back = this.back;
   try {
+    if (typeof pid !== "string") {
+      throw new Error("invaild input");
+    }
     const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
     const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
     const selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
-    const motherId = "1T21kQ06QXEQw50P8T4Pov2yvbS6G88Ip";
+    const motherId = "1LsaEknT_IWJGenE2ziTz3QB26AKgzNtE";
     const docs = new GoogleDocs();
     const drive = new GoogleDrive();
     const today = new Date();
@@ -613,6 +616,8 @@ AiContents.prototype.to_google = async function (pid) {
     const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?qqq=";
     const reviewLink = "https://" + this.address.frontinfo.host + "/revdetail.php?qqq=";
     const makeLink = (id) => { return `https://docs.google.com/document/d/${id}/edit?usp=sharing`; };
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    const kakaoInstance = new KakaoTalk();
     let cliid, desid;
     let client, designer;
     let portfolioId, reviewId;
@@ -624,8 +629,11 @@ AiContents.prototype.to_google = async function (pid) {
     let channel;
     let photoFolderId;
     let photoLink;
+    let proid;
+    let project;
 
     await selfMongo.connect();
+    await kakaoInstance.ready();
 
     contentsArr = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo });
     contents = contentsArr[0];
@@ -636,6 +644,7 @@ AiContents.prototype.to_google = async function (pid) {
     if (contents.cliid !== '') {
       cliid = contents.cliid;
     }
+    proid = contents.proid;
 
     designer = await back.getDesignerById(desid, { selfMongo });
     client = null;
@@ -643,12 +652,10 @@ AiContents.prototype.to_google = async function (pid) {
       client = await back.getClientById(cliid, { selfMongo });
     }
 
-    await selfMongo.close();
-
     photoFolderId = await drive.searchId_inPython(pid + "_" + designer.designer + "_");
     photoLink = await drive.read_webView_inPython(photoFolderId);
 
-    portfolioTitle = designer.designer + "D_";
+    portfolioTitle = pid + "_" + designer.designer + "D_";
     if (client !== null) {
       portfolioTitle += client.name + "C_";
     }
@@ -672,32 +679,46 @@ AiContents.prototype.to_google = async function (pid) {
       reviewId = null;
     }
 
-
     if (reviewId !== null && client !== null) {
 
-      // channel = "#502_sns_contents";
-      channel = "#error_log";
+      channel = "#502_sns_contents";
       await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
       await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(reviewId)}`, channel });
       await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 세팅 사진 원본 link : ${photoLink}`, channel });
 
-      // channel = "#200_web";
-      channel = "#error_log";
+      channel = "#200_web";
       await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
       await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${reviewLink + rid}`, channel });
 
+      await kakaoInstance.sendTalk("contentsShareClient", client.name, client.phone, { client: client.name, rid });
+      await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, { client: client.name, designer: designer.designer, pid });
+
+      project = await back.getProjectById(proid, { selfMongo });
+      if (project !== null) {
+        await back.updateProject([ { proid }, { "contents.share.client.contents": new Date(),  "contents.share.designer.contents": new Date() } ]);
+      }
+
     } else {
 
-      // channel = "#502_sns_contents";
-      channel = "#error_log";
+      channel = "#502_sns_contents";
       await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
       await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 사진 원본 link : ${photoLink}`, channel });
 
-      // channel = "#200_web";
-      channel = "#error_log";
+      channel = "#200_web";
       await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
 
+      await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, { client: client.name, designer: designer.designer, pid });
+
+      if (proid !== '') {
+        project = await back.getProjectById(proid, { selfMongo });
+        if (project !== null) {
+          await back.updateProject([ { proid }, { "contents.share.designer.contents": new Date() } ]);
+        }
+      }
+
     }
+
+    await selfMongo.close();
 
   } catch (e) {
     console.log(e);
