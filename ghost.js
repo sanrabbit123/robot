@@ -1034,7 +1034,7 @@ Ghost.prototype.photoRouter = function (needs) {
           }
           shareName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
-          command = `zip ${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share + "/" + shareName)} ${shellLink(sambaDir + "/" + folderName + "/" + c780)}/*`;
+          command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};zip ${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share + "/" + shareName)} ./*`;
           shell.exec(command);
 
           zipId = await drive.searchId_inPython(shareName);
