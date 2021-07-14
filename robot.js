@@ -541,11 +541,11 @@ Robot.prototype.designerCalculation = async function () {
   }
 }
 
-Robot.prototype.spawnCatfish = async function () {
+Robot.prototype.spawnBoradoli = async function () {
   try {
-    const SpawnCatfish = require(`${process.cwd()}/apps/spawnCatfish/spawnCatfish.js`);
-    const app = new SpawnCatfish();
-    await app.spawnLaunching(true);
+    const SpawnBoradoli = require(`${process.cwd()}/apps/spawnBoradoli/spawnBoradoli.js`);
+    const app = new SpawnBoradoli();
+    await app.spawnLaunching();
   } catch (e) {
     console.log(e);
   }
@@ -939,9 +939,9 @@ const MENU = {
       console.log(e);
     }
   },
-  spawnCatfish: async function () {
+  spawnBoradoli: async function () {
     try {
-      await robot.spawnCatfish();
+      await robot.spawnBoradoli();
     } catch (e) {
       console.log(e);
     }

@@ -27,7 +27,7 @@ const DataRouter = require(APP_PATH + "/dataConsole/router/dataRouter.js");
 const ParsingHangul = require(APP_PATH + "/parsingHangul/parsingHangul.js");
 const SnsParsing = require(APP_PATH + "/snsParsing/snsParsing.js");
 const PlayAudio = require(APP_PATH + "/playAudio/playAudio.js");
-const SpawnCatfish = require(APP_PATH + "/spawnCatfish/spawnCatfish.js");
+const SpawnBoradoli = require(APP_PATH + "/spawnBoradoli/spawnBoradoli.js");
 const MongoReflection = require(APP_PATH + "/mongoReflection/mongoReflection.js");
 const SvgOptimizer = require(APP_PATH + "/svgOptimizer/svgOptimizer.js");
 const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
@@ -61,11 +61,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
+    // console.log(await requestSystem("https://home-liaison.xyz:3000/generalMongo", {
+    //   mode: "read",
+    //   collection: "stylingForm",
+    //   db: "python",
+    //   whereQuery: {},
+    // }, { headers: { "Content-Type": "application/json" } }));
 
 
     // const proid = "p2105_aa10s"
@@ -1023,9 +1024,10 @@ DevContext.prototype.launching = async function () {
 
 
     // spawn catfish
-    // const app = new SpawnCatfish();
-    // await app.spawnLaunching();
+    const app = new SpawnBoradoli();
+    await app.spawnLaunching();
 
+    
 
     // kakao token
     // const app = new KakaoTalk();

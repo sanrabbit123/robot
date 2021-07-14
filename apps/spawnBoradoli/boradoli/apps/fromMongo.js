@@ -70,6 +70,41 @@ const fileSystem = function (sw, arr) {
       break;
   }
 }
+const getData = async function () {
+  try {
+    const currentNode = process.cwd();
+    const currentNodeArr = currentNode.split("/");
+    let targetDir, targetDirList, targetDirList_filtered;
+    let jsonString;
+
+    if (currentNodeArr[currentNodeArr.length - 1] === "apps") {
+      currentNodeArr.pop();
+      currentNodeArr.push("jsondata");
+    } else {
+      currentNodeArr.push("jsondata");
+    }
+
+    targetDir = currentNodeArr.join("/");
+
+    targetDirList = await fileSystem(`readDir`, [ targetDir ]);
+    targetDirList_filtered = [];
+    for (let i of targetDirList) {
+      if (i !== `.DS_Store`) {
+        targetDirList_filtered.push(i);
+      }
+    }
+
+    targetDirList_filtered.sort((a, b) => {
+      return Number(b.replace(/[^0-9]/g, '')) - Number(a.replace(/[^0-9]/g, ''));
+    });
+
+    jsonString = JSON.parse(await fileSystem(`readString`, [ targetDir + "/" + targetDirList_filtered[0] ]));
+
+    return { json: jsonString, name: targetDir + "/" + targetDirList_filtered[0] };
+  } catch (e) {
+    console.log(e);
+  }
+}
 const cryptoString = function (password, string) {
   const crypto = require('crypto');
   const algorithm = 'aes-192-cbc';
@@ -117,116 +152,39 @@ const decryptoHash = function (password, hash) {
     });
   });
 }
-const mysqlQuery = function (query, mysqlStandard) {
-  const mysql = require('mysql2');
-  const { host, user, password, database } = mysqlStandard;
-  const connection = mysql.createConnection({ host, user, password, database });
-  let tong = {};
-  if (Array.isArray(query)) {
-    let promiseList;
-    promiseList = [];
-    for (let i of query) {
-      promiseList.push(connection.promise().query(i));
-    }
-    return new Promise(function (resolve, reject) {
-      Promise.all(promiseList).then((values) => {
-        tong = values;
-        connection.end();
-        resolve(tong);
-      }).catch(function (err) {
-        reject(err);
-      });
-    });
-  } else {
-    return new Promise(function (resolve, reject) {
-      connection.promise().query(query).then(function (response) {
-        tong = response;
-      }).then(function () {
-        connection.end();
-        if (Array.isArray(tong)) {
-          if (tong.length > 0) {
-            resolve(tong[0]);
-          } else {
-            resolve("done");
-          }
-        } else {
-          resolve("done");
-        }
-      }).catch(function (err) {
-        reject(err);
-      });
-    });
-  }
-}
 
 async function main() {
   try {
     const current = process.cwd();
     const currentDir = current.split("/");
+
     if (currentDir[currentDir.length - 1] === "apps") {
       currentDir.pop();
       currentDir.push("jsondata");
-    } else if (currentDir[currentDir.length - 1] === "catfish")  {
+    } else if (currentDir[currentDir.length - 1] === "boradoli")  {
       currentDir.push("jsondata");
     } else {
       throw new Error("invalid cwd");
     }
+
     const targetDir = currentDir.join("/");
     const targetDirArr = await fileSystem("readDir", [ targetDir ]);
-    const { mysql: { password, hash } } = JSON.parse(await fileSystem("readString", [ `${targetDir}/mongoKey.json` ]));
-    const mysqlInfoObj = JSON.parse(await decryptoHash(password, hash));
+    const { mongo: { password, hash } } = JSON.parse(await fileSystem("readString", [ `${targetDir}/mongoKey.json` ]));
+    const { MongoClient } = require("mongodb");
+    const MONGOC = new MongoClient((await decryptoHash(password, hash)), { useUnifiedTopology: true });
+    await MONGOC.connect();
 
-    currentDir.pop();
-    currentDir.push("apps");
-    currentDir.push("googleAPIs");
+    let fileName;
+    let collection, whereQuery;
+    let result;
 
-    const googleDir = currentDir.join("/");
-    const GoogleAPIs = require(`${googleDir}/googleAPIs.js`);
-    const GoogleAnalytics = require(`${googleDir}/googleAnalytics.js`);
-    const GoogleCalendar = require(`${googleDir}/googleCalendar.js`);
-    const GoogleDocs = require(`${googleDir}/googleDocs.js`);
-    const GoogleDrive = require(`${googleDir}/googleDrive.js`);
-    const GoogleSheet = require(`${googleDir}/googleSheet.js`);
+    fileName = process.argv[2] + ".json";
+    [ collection, whereQuery ] = JSON.parse(await fileSystem(`readString`, [ `${targetDir}/${process.argv[2]}.json` ]));
 
-    const sheets = new GoogleSheet();
-    let response;
+    result = await MONGOC.db(`miro81`).collection(collection).find(whereQuery).toArray();
+    await fileSystem(`write`, [ `${targetDir}/result_${process.argv[2]}.json`, JSON.stringify(result, null, 2) ]);
 
-    if (process.argv[2] !== `fileRead`) {
-      response = await mysqlQuery(process.argv[2], mysqlInfoObj);
-      await fileSystem(`write`, [ `${targetDir}/mysqlQueryResult.json`, JSON.stringify(response, null, 2) ]);
-    } else {
-      response = JSON.parse(await fileSystem(`readString`, [ `${targetDir}/mysqlQueryResultPython.json` ]));
-    }
-
-    const parentId = "13VAWhasw0UnYV4YdNXfm_EyRSrfM4xsq";
-    let matrix, tempArr;
-    let keyArr;
-    let sheetsId;
-
-    matrix = [];
-
-    if (response.length > 0) {
-      keyArr = Object.keys(response[0]);
-      tempArr = [];
-      for (let k of keyArr) {
-        tempArr.push(k);
-      }
-      matrix.push(tempArr);
-      for (let arr of response) {
-        tempArr = [];
-        for (let k of keyArr) {
-          tempArr.push(arr[k]);
-        }
-        matrix.push(tempArr);
-      }
-    }
-
-    sheetsId = await sheets.create_newSheets("extract", parentId);
-    await sheets.setting_cleanView(sheetsId);
-    await sheets.update_value(sheetsId, "", matrix, [ 0, 0 ]);
-
-    await fileSystem(`write`, [ `${targetDir}/mysqlQuerySheetsResult.json`, `https://docs.google.com/spreadsheets/d/${sheetsId}/edit?usp=sharing` ]);
-
+    await MONGOC.close();
   } catch (e) {
     console.log(e);
   }

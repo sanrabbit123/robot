@@ -19,9 +19,11 @@ const GoogleAPIs = function (credentials = "default") {
 
 GoogleAPIs.prototype.fileSystem = function (sw, arr) {
   const fs = require('fs');
+  if (!Array.isArray(arr)) { throw new Error("second argument must be array"); return; }
   switch (sw) {
     case "read":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.readFile(arr[0], (err, data) => {
           if (err) { reject(err); }
           else { resolve(data); }
@@ -30,7 +32,17 @@ GoogleAPIs.prototype.fileSystem = function (sw, arr) {
       break;
     case "readString":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.readFile(arr[0], "utf8", (err, data) => {
+          if (err) { reject(err); }
+          else { resolve(data); }
+        });
+      });
+      break;
+    case "readBinary":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        fs.readFile(arr[0], "binary", (err, data) => {
           if (err) { reject(err); }
           else { resolve(data); }
         });
@@ -38,6 +50,7 @@ GoogleAPIs.prototype.fileSystem = function (sw, arr) {
       break;
     case "readDir":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
         fs.readdir(arr[0], function (err, filelist) {
           if (err) { reject(err); }
           else { resolve(filelist); }
@@ -46,12 +59,56 @@ GoogleAPIs.prototype.fileSystem = function (sw, arr) {
       break;
     case "write":
       return new Promise(function (resolve, reject) {
+        if (arr.length !== 2) { reject("second argument must be length 2 array"); }
         fs.writeFile(arr[0], arr[1], "utf8", (err) => {
           if (err) { reject(err); }
           else { resolve("success"); }
         });
       });
       break;
+    case "writeBinary":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 2) { reject("second argument must be length 2 array"); }
+        fs.writeFile(arr[0], arr[1], "binary", (err) => {
+          if (err) { reject(err); }
+          else { resolve("success"); }
+        });
+      });
+      break;
+    case "size":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        const { spawn } = require("child_process");
+        const du = spawn("du", [ "-sk", arr[0] ]);
+        let out;
+        out = "";
+        du.stdout.on("data", (data) => { out += String(data); });
+        du.stderr.on("data", (data) => { reject(String(data)); });
+        du.on("close", (code) => { resolve(Number((String(out).split("\t"))[0]) * 1000); });
+      });
+    case "mkdir":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        const { spawn } = require("child_process");
+        const mkdir = spawn("mkdir", [ arr[0] ]);
+        let out;
+        out = "";
+        mkdir.stdout.on("data", (data) => { out += String(data); });
+        mkdir.stderr.on("data", (data) => { reject(String(data)); });
+        mkdir.on("close", (code) => { resolve(arr[0]); });
+      });
+    case "exist":
+      return new Promise(function(resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        fs.access(arr[0], fs.constants.F_OK, function (err) {
+          try {
+            if (!err) { resolve(true); }
+            else { resolve(false); }
+          } catch (e) {
+            resolve(false);
+          }
+        });
+      });
   }
 }
 
@@ -191,6 +248,41 @@ GoogleAPIs.prototype.pythonExecute = function (target, args = [], inputObj) {
       resolve(result);
     });
   });
+}
+
+GoogleAPIs.prototype.shellLink = function (str) {
+  let arr = str.split('/');
+  let newStr = '';
+  for (let i of arr) {
+    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+      newStr += i + '/';
+    } else if (!/'/g.test(i)) {
+      newStr += "'" + i + "'" + '/';
+    } else if (!/"/g.test(i)) {
+      newStr += '"' + i + '"' + '/';
+    } else {
+      newStr += i + '/';
+    }
+  }
+  newStr = newStr.slice(0, -1);
+  return newStr;
+}
+
+GoogleAPIs.prototype.parsingId = function (link) {
+  let linkArr, target;
+  if (/^http/i.test(link)) {
+    linkArr = (link.split('?'))[0].split('/');
+    for (let i of linkArr) {
+      if (!/docs/gi.test(i) && !/document/gi.test(i) && !/spreadsheets/gi.test(i) && !/drive/gi.test(i) && !/google/gi.test(i) && !/file/gi.test(i) && !/folders/gi.test(i) && !/view/gi.test(i)) {
+        if (i.length > 12) {
+          target = i;
+        }
+      }
+    }
+  } else {
+    target = link;
+  }
+  return target;
 }
 
 module.exports = GoogleAPIs;

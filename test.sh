@@ -1,0 +1,1 @@
+command="node robot.js "

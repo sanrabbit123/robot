@@ -666,6 +666,9 @@ module.exports = {
       },
       "responseReservation": {
         "behaviors": []
+      },
+      "detailSurvey": {
+        "behaviors": []
       }
     },
     "login": {

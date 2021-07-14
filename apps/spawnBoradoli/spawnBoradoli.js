@@ -1,30 +1,29 @@
-const SpawnCatfish = function () {
+const SpawnBoradoli = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
-  this.dir = process.cwd() + "/apps/spawnCatfish";
+  this.dir = process.cwd() + "/apps/spawnBoradoli";
   this.sheets = new GoogleSheet();
-  this.applicationName = "catfish";
+  this.applicationName = "boradoli";
   this.app = this.dir + "/" + this.applicationName;
   this.nodeAppName = "apps";
 }
 
-SpawnCatfish.prototype.viewTree = async function () {
+SpawnBoradoli.prototype.viewTree = async function () {
   const instance = this;
   const { treeParsing } = this.mother;
   try {
     const tree = await treeParsing(this.app);
-
     return tree;
   } catch (e) {
     console.log(e);
   }
 }
 
-SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
+SpawnBoradoli.prototype.spawnLaunching = async function () {
   const instance = this;
   const { shell, shellLink, fileSystem, todayMaker } = this.mother;
   try {
@@ -75,4 +74,4 @@ SpawnCatfish.prototype.spawnLaunching = async function (reload = true) {
   }
 }
 
-module.exports = SpawnCatfish;
+module.exports = SpawnBoradoli;
