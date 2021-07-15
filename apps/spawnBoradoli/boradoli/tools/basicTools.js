@@ -758,6 +758,9 @@ const promiseToSync = function (promiseFunc, input, tempFolder = null) {
   return result;
 }
 
+
+const BasicTools = function () {}
+
 const JsonArrayFactor = function (obj) {
   if (typeof obj !== "object") {
     throw new Error("invaild input");
@@ -765,6 +768,32 @@ const JsonArrayFactor = function (obj) {
   for (let i in obj) {
     this[i] = obj[i];
   }
+}
+
+JsonArrayFactor.prototype.timeStandard = function () {
+  let key = null;
+  for (let i in this) {
+    if (/^[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z$/.test(this[i])) {
+      key = i;
+      break;
+    } else if (/^\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\"$/.test(this[i])) {
+      key = i;
+      break;
+    } else if (/^[0-9][0-9][0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9]$/.test(this[i])) {
+      key = i;
+      break;
+    } else if (/^[0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9]$/.test(this[i])) {
+      key = i;
+      break;
+    } else if (/^[0-9][0-9][0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/.test(this[i])) {
+      key = i;
+      break;
+    } else if (/^[0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/.test(this[i])) {
+      key = i;
+      break;
+    }
+  }
+  return key;
 }
 
 class SearchArray extends Array {
@@ -853,9 +882,64 @@ class JsonArray extends Array {
     }
     return new JsonArray(result);
   }
+  getDate(i) {
+    if (typeof i === "object" && i instanceof Date) {
+      return i;
+    } else if (typeof i === "string") {
+      return stringToDate(i);
+    } else if (typeof i === "number" && Array.from(arguments).length >= 3) {
+      let inputs = Array.from(arguments);
+      if (inputs.every((j) => { return typeof j === "number"; })) {
+        inputs[1] = inputs[1] - 1;
+        return new Date(...inputs);
+      }
+    } else {
+      throw new Error("invaild input");
+    }
+  }
+  timeStandard(str) {
+    const self = this;
+    let targetDate, standardKey;
+    if (typeof str === "string") {
+      targetDate = stringToDate(str);
+    } else if (typeof str === "number" && Array.from(arguments).length >= 3) {
+      let inputs = Array.from(arguments);
+      if (inputs.every((i) => { return typeof i === "number" })) {
+        inputs[1] = inputs[1] - 1;
+        targetDate = new Date(...inputs);
+      }
+    } else if (typeof str === "object" && str instanceof Date) {
+      targetDate = str;
+    } else {
+      return null;
+    }
+    if (this.length > 0) {
+      if (this[0].timeStandard() !== null) {
+        standardKey = this[0].timeStandard();
+        this.sort((a, b) => { return self.getDate(b[standardKey]).valueOf() - self.getDate(a[standardKey]).valueOf(); });
+        return { standard: targetDate, key: standardKey };
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+  from(str) {
+    if (this.timeStandard(str) !== null) {
+      const { standard, key } = this.timeStandard(str);
+      const standardValue = standard.valueOf();
+      let index;
+      for (let i = 0; i < this.length; i++) {
+        if (this.getDate(this[i][key]).valueOf() < standardValue) {
+          index = i;
+          break;
+        }
+      }
+      return new JsonArray(this.slice(index + 1));
+    }
+  }
 }
-
-const BasicTools = function () {}
 
 BasicTools.print = function (i) {
   console.table(i);
@@ -1063,6 +1147,12 @@ BasicTools.date = function (i) {
     return dateToString(i);
   } else if (typeof i === "string") {
     return stringToDate(i);
+  } else if (typeof i === "number" && Array.from(arguments).length >= 3) {
+    let inputs = Array.from(arguments);
+    if (inputs.every((j) => { return typeof j === "number"; })) {
+      inputs[1] = inputs[1] - 1;
+      return new Date(...inputs);
+    }
   }
 }
 
