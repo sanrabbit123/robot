@@ -1024,10 +1024,10 @@ DevContext.prototype.launching = async function () {
 
 
     // spawn catfish
-    const app = new SpawnBoradoli();
-    await app.spawnLaunching();
+    // const app = new SpawnBoradoli();
+    // await app.spawnLaunching();
 
-    
+
 
     // kakao token
     // const app = new KakaoTalk();
@@ -1069,7 +1069,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p103");
+    // await this.getCorePortfolio("p102");
 
 
     // aspirant to designer
