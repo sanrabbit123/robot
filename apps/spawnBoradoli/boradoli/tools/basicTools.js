@@ -870,8 +870,8 @@ class JsonArray extends Array {
       key: [
         "cliid",
         "desid",
-        "proid",
         "aspid",
+        "proid",
         "conid"
       ],
       char: [
@@ -979,9 +979,9 @@ class JsonArray extends Array {
       return null;
     }
   }
-  to(str) {
-    if (this.timeStandard(str) !== null) {
-      const { standard, key } = this.timeStandard(str);
+  to() {
+    if (this.timeStandard(...Array.from(arguments)) !== null) {
+      const { standard, key } = this.timeStandard(...Array.from(arguments));
       const standardValue = standard.valueOf();
       let index;
       for (let i = 0; i < this.length; i++) {
@@ -996,9 +996,9 @@ class JsonArray extends Array {
       return new JsonArray([]);
     }
   }
-  from(str) {
-    if (this.timeStandard(str) !== null) {
-      const { standard, key } = this.timeStandard(str);
+  from() {
+    if (this.timeStandard(...Array.from(arguments)) !== null) {
+      const { standard, key } = this.timeStandard(...Array.from(arguments));
       const standardValue = standard.valueOf();
       let index;
       for (let i = 0; i < this.length; i++) {
@@ -1198,11 +1198,26 @@ BasicTools.exist = function (file) {
   return promiseToSync(fileSystem, [ "exist", [ file ] ]);
 }
 
+BasicTools.mongo = function (collection, whereQuery) {
+  if (typeof collection !== "string" || typeof whereQuery !== "object") {
+    throw new Error("invaild input");
+  }
+  const order = "tempMongo";
+  const result = "result_" + order;
+  fs.writeFileSync(normalize(jsonDirRoot + sep + order + ".json"), JSON.stringify([ collection, whereQuery ]), { encoding: "utf8" });
+  shell.exec(`node ${shellLink(normalize(appDirRoot + sep + "fromMongo"))} ${order}`, { silent: true });
+  const json = equalJson(BasicTools.read(normalize(jsonDirRoot + sep + result + ".json")));
+  shell.exec(`rm -rf ${shellLink(normalize(jsonDirRoot + sep + order + ".json"))}`, { silent: true });
+  shell.exec(`rm -rf ${shellLink(normalize(jsonDirRoot + sep + result + ".json"))}`, { silent: true });
+  // BasicTools.print(json);
+  return new JsonArray(json);
+}
+
 BasicTools.query = function (q, idList = null) {
   const order = "tempQuery";
   const result = "mysqlQueryResult";
   const { key, char } = JsonArray.idList();
-  let index;
+  let index, final, temp, temp2, boo;
   if (idList !== null) {
     if (Array.isArray(idList)) {
       if (idList.length !== 0) {
@@ -1237,8 +1252,123 @@ BasicTools.query = function (q, idList = null) {
   fs.writeFileSync(normalize(jsonDirRoot + sep + order + ".sql"), q, { encoding: "utf8" });
   shell.exec(`node ${shellLink(normalize(appDirRoot + sep + "fromMysql"))} file_${order}`, { silent: true });
   const json = equalJson(BasicTools.read(normalize(jsonDirRoot + sep + result + ".json")));
-  // BasicTools.print(json);
-  return new JsonArray(json);
+  final = new JsonArray(json);
+  if (json.length > 0) {
+    temp2 = new JsonArray(json);
+    if (/FROM client/gi.test(q) && /^SELECT/i.test(q)) {
+      if (/\*/gi.test(q) || /cliid/g.test(q)) {
+        if (/\*/gi.test(q) || /proid/g.test(q)) {
+          temp = BasicTools.query("SELECT proid, cliid FROM project", Array.from(temp2.cliid));
+          final = [];
+          for (let obj of temp2) {
+            obj.proid = [];
+            for (let obj2 of temp) {
+              if (obj.cliid === obj2.cliid) {
+                obj.proid.push(obj2.proid);
+              }
+            }
+            final.push(obj);
+          }
+          final = new JsonArray(final);
+        }
+      }
+    } else if (/FROM project/.test(q) && /^SELECT/i.test(q)) {
+
+      if (/proid/g.test(q)) {
+        final = [];
+        for (let obj of temp2) {
+          final.push(obj);
+        }
+        boo = false;
+
+        if (/cliid/g.test(q) && /name/g.test(q)) {
+          temp = BasicTools.query("SELECT name, cliid FROM client", Array.from(new Set(Array.from(temp2.cliid))).map((o) => { return o !== ''; }));
+          for (let obj of final) {
+            for (let obj2 of temp) {
+              if (obj.cliid === obj2.cliid) {
+                obj.name = obj2.name;
+              }
+            }
+          }
+          boo = true;
+        }
+
+        if (/desid/g.test(q) && /designer/g.test(q)) {
+          temp = BasicTools.query("SELECT desid, designer FROM designer", Array.from(new Set(Array.from(temp2.desid))).map((o) => { return o !== ''; }));
+          for (let obj of final) {
+            obj.designer = "";
+            for (let obj2 of temp) {
+              if (obj.desid === obj2.desid) {
+                obj.designer = obj2.designer;
+              }
+            }
+          }
+          boo = true;
+        }
+
+        if (/serid/g.test(q)) {
+          for (let obj of final) {
+            if (/aa01/gi.test(obj.serid)) {
+              obj.service = "홈퍼니싱";
+            } else if (/aa02/gi.test(obj.serid)) {
+              obj.service = "홈스타일링";
+            } else if (/aa03/gi.test(obj.serid)) {
+              obj.service = "토탈 스타일링";
+            } else if (/aa04/gi.test(obj.serid)) {
+              obj.service = "설계 변경";
+            }
+          }
+          boo = true;
+        }
+
+        if (boo) {
+          final = new JsonArray(final);
+        } else {
+          final = temp2;
+        }
+
+      } else if (/\*/gi.test(q)) {
+
+        final = [];
+        for (let obj of temp2) {
+          final.push(obj);
+        }
+        temp = BasicTools.query("SELECT name, cliid FROM client", Array.from(new Set(Array.from(temp2.cliid))).map((o) => { return o !== ''; }));
+        for (let obj of final) {
+          for (let obj2 of temp) {
+            if (obj.cliid === obj2.cliid) {
+              obj.name = obj2.name;
+            }
+          }
+        }
+        temp = BasicTools.query("SELECT desid, designer FROM designer", Array.from(new Set(Array.from(temp2.desid))).map((o) => { return o !== ''; }));
+        for (let obj of final) {
+          obj.designer = "";
+          for (let obj2 of temp) {
+            if (obj.desid === obj2.desid) {
+              obj.designer = obj2.designer;
+            }
+          }
+        }
+        for (let obj of final) {
+          if (/aa01/gi.test(obj.serid)) {
+            obj.service = "홈퍼니싱";
+          } else if (/aa02/gi.test(obj.serid)) {
+            obj.service = "홈스타일링";
+          } else if (/aa03/gi.test(obj.serid)) {
+            obj.service = "토탈 스타일링";
+          } else if (/aa04/gi.test(obj.serid)) {
+            obj.service = "설계 변경";
+          }
+        }
+
+        final = new JsonArray(final);
+      }
+
+    }
+  }
+
+  return final;
 }
 
 BasicTools.client = function (idList = null) {
@@ -1255,21 +1385,6 @@ BasicTools.designer = function (idList = null) {
 
 BasicTools.contents = function (idList = null) {
   return BasicTools.query("SELECT * FROM contents", idList);
-}
-
-BasicTools.mongo = function (collection, whereQuery) {
-  if (typeof collection !== "string" || typeof whereQuery !== "object") {
-    throw new Error("invaild input");
-  }
-  const order = "tempMongo";
-  const result = "result_" + order;
-  fs.writeFileSync(normalize(jsonDirRoot + sep + order + ".json"), JSON.stringify([ collection, whereQuery ]), { encoding: "utf8" });
-  shell.exec(`node ${shellLink(normalize(appDirRoot + sep + "fromMongo"))} ${order}`, { silent: true });
-  const json = equalJson(BasicTools.read(normalize(jsonDirRoot + sep + result + ".json")));
-  shell.exec(`rm -rf ${shellLink(normalize(jsonDirRoot + sep + order + ".json"))}`, { silent: true });
-  shell.exec(`rm -rf ${shellLink(normalize(jsonDirRoot + sep + result + ".json"))}`, { silent: true });
-  // BasicTools.print(json);
-  return new JsonArray(json);
 }
 
 BasicTools.chrome = function (url) {
@@ -1334,7 +1449,13 @@ BasicTools.sheets = function (title, json) {
         if (Array.isArray(obj[key])) {
           obj[key] = obj[key].flat(Infinity);
           obj[key] = obj[key].map((i) => { return String(i); });
-          obj[key] = obj[key].join(", ");
+          if (obj[key].length === 0) {
+            obj[key] = "";
+          } else if (obj[key].length === 1) {
+            obj[key] = obj[key][0];
+          } else {
+            obj[key] = obj[key].join(", ");
+          }
         }
       }
     }

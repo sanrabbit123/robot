@@ -28,6 +28,7 @@
     valcony: 발코티 확장 (0:확장 안 함 1:확장함)
     family: 가족 구성원
     comment: 요청 사항
+    project: 프로젝트 아이디 (배열)
 
 2. 프로젝트 (CA)
   - 표 이름 : project
@@ -36,6 +37,9 @@
     cliid: 고객 아이디
     desid: 디자이너 아이디
     serid: 서비스 아이디
+    name: 고객명
+    designer: 디자이너명
+    service: 서비스명
     xValue: 서비스 종류
     online: 온라인 여부
     status: 상태
@@ -73,6 +77,28 @@
     paymentsRemainRefund: 잔금 확수액
     photoStatus: 촬영 상태
     contentsPhotoDate: 촬영 일자
+    proposalDate: 제안 날짜
+    proposalDesigner0: 제안 디자이너
+    proposalFee0: 제안 금액
+    proposalDesigner1: 제안 디자이너
+    proposalFee1: 제안 금액
+    proposalDesigner2: 제안 디자이너
+    proposalFee2: 제안 금액
+    proposalDesigner3: 제안 디자이너
+    proposalFee3: 제안 금액
+    proposalDesigner4: 제안 디자이너
+    proposalFee4: 제안 금액
+    proposalDesigner5: 제안 디자이너
+    proposalFee5: 제안 금액
+    proposalDesigner6: 제안 디자이너
+    proposalFee6: 제안 금액
+    proposalDesigner7: 제안 디자이너
+    proposalFee7: 제안 금액
+    proposalDesigner8: 제안 디자이너
+    proposalFee8: 제안 금액
+    proposalDesigner9: 제안 디자이너
+    proposalFee9: 제안 금액
+    proposalAverage: 제안 금액 평균
 
 3. 디자이너 (DE)
   - 표 이름 : designer

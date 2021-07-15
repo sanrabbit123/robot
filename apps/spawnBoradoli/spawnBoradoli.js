@@ -28,9 +28,9 @@ SpawnBoradoli.prototype.spawnLaunching = async function () {
   const { shell, shellLink, fileSystem, todayMaker } = this.mother;
   try {
     const address = this.address;
-    const mongoInfo = "mongodb://" + address.officeinfo.user + ':' + address.officeinfo.password + '@' + address.officeinfo.ghost.host + ':' + String(address.officeinfo.port) + "/admin";
+    const mongoInfo = "mongodb://" + address.officeinfo.user + ':' + address.officeinfo.password + '@' + address.officeinfo.ghost.inner + ':' + String(address.officeinfo.port) + "/admin";
     const mysqlInfo = {
-      host: address.officeinfo.ghost.host,
+      host: address.officeinfo.ghost.inner,
       user: address.officeinfo.mysql.user,
       password: address.officeinfo.mysql.password,
       port: address.officeinfo.mysql.port,
