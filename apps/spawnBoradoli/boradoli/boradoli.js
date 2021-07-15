@@ -4,6 +4,6 @@ const { query, print, view, request, read, write, exist, sleep, tree, shell, mon
 
 let x;
 
-x = query("SELECT timeline, cliid, name, outreason FROM client LIMIT 200");
+x = query("SELECT timeline, cliid, name, outreason FROM client LIMIT 200").filter("드랍");
 print(x);
-print(x.from("2021-07-01"));
+print(x.table("outreason"));

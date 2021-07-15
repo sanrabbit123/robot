@@ -761,39 +761,40 @@ const promiseToSync = function (promiseFunc, input, tempFolder = null) {
 
 const BasicTools = function () {}
 
-const JsonArrayFactor = function (obj) {
-  if (typeof obj !== "object") {
-    throw new Error("invaild input");
-  }
-  for (let i in obj) {
-    this[i] = obj[i];
-  }
-}
-
-JsonArrayFactor.prototype.timeStandard = function () {
-  let key = null;
-  for (let i in this) {
-    if (/^[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z$/.test(this[i])) {
-      key = i;
-      break;
-    } else if (/^\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\"$/.test(this[i])) {
-      key = i;
-      break;
-    } else if (/^[0-9][0-9][0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9]$/.test(this[i])) {
-      key = i;
-      break;
-    } else if (/^[0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9]$/.test(this[i])) {
-      key = i;
-      break;
-    } else if (/^[0-9][0-9][0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/.test(this[i])) {
-      key = i;
-      break;
-    } else if (/^[0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/.test(this[i])) {
-      key = i;
-      break;
+class JsonArrayFactor {
+  constructor(obj) {
+    if (typeof obj !== "object") {
+      throw new Error("invaild input");
+    }
+    for (let i in obj) {
+      this[i] = obj[i];
     }
   }
-  return key;
+  timeStandard() {
+    let key = null;
+    for (let i in this) {
+      if (/^[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z$/.test(this[i])) {
+        key = i;
+        break;
+      } else if (/^\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\"$/.test(this[i])) {
+        key = i;
+        break;
+      } else if (/^[0-9][0-9][0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9]$/.test(this[i])) {
+        key = i;
+        break;
+      } else if (/^[0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9]$/.test(this[i])) {
+        key = i;
+        break;
+      } else if (/^[0-9][0-9][0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/.test(this[i])) {
+        key = i;
+        break;
+      } else if (/^[0-9][0-9][\-\/ \.][0-9][0-9][\-\/ \.][0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/.test(this[i])) {
+        key = i;
+        break;
+      }
+    }
+    return key;
+  }
 }
 
 class SearchArray extends Array {
@@ -832,12 +833,13 @@ class JsonArray extends Array {
   constructor(arr) {
     super();
     if (!Array.isArray(arr)) {
+      console.log(arr);
       throw new Error("must be array");
     }
-    if (!arr.every((obj) => { return typeof obj === "object" })) {
-      throw new Error("must be object array");
-    }
     if (arr.length !== 0) {
+      if (!arr.every((obj) => { return typeof obj === "object" })) {
+        throw new Error("must be object array");
+      }
       const self = this;
       let keys, tempKeys;
       keys = Object.keys(arr[0]);
@@ -863,6 +865,24 @@ class JsonArray extends Array {
       }
     }
   }
+  static idList() {
+    return {
+      key: [
+        "cliid",
+        "desid",
+        "proid",
+        "aspid",
+        "conid"
+      ],
+      char: [
+        'c',
+        'd',
+        'p',
+        'a',
+        't'
+      ]
+    }
+  }
   search(query) {
     if (typeof query !== "string") {
       throw new Error("must be string");
@@ -881,6 +901,40 @@ class JsonArray extends Array {
       }
     }
     return new JsonArray(result);
+  }
+  filter(query) {
+    return this.search(query);
+  }
+  x(query) {
+    return this.search(query);
+  }
+  columns() {
+    const columns = Array.from(arguments);
+    if (!columns.every((i) => { return typeof i === "string" })) {
+      throw new Error("invaild arguments");
+    }
+    let result = [];
+    let tempObj;
+    for (let obj of this) {
+      tempObj = {};
+      for (let c of columns) {
+        if (obj[c] !== undefined) {
+          tempObj[c] = obj[c];
+        }
+      }
+      if (Object.keys(tempObj).length !== 0) {
+        result.push(new JsonArrayFactor(tempObj));
+      }
+    }
+    return new JsonArray(result);
+  }
+  column() {
+    const columns = Array.from(arguments);
+    return this.columns(...columns);
+  }
+  y() {
+    const columns = Array.from(arguments);
+    return this.columns(...columns);
   }
   getDate(i) {
     if (typeof i === "object" && i instanceof Date) {
@@ -925,6 +979,23 @@ class JsonArray extends Array {
       return null;
     }
   }
+  to(str) {
+    if (this.timeStandard(str) !== null) {
+      const { standard, key } = this.timeStandard(str);
+      const standardValue = standard.valueOf();
+      let index;
+      for (let i = 0; i < this.length; i++) {
+        if (this.getDate(this[i][key]).valueOf() < standardValue) {
+          index = i;
+          break;
+        }
+      }
+      const arr = Array.from(this);
+      return new JsonArray(arr.slice(index));
+    } else {
+      return new JsonArray([]);
+    }
+  }
   from(str) {
     if (this.timeStandard(str) !== null) {
       const { standard, key } = this.timeStandard(str);
@@ -936,7 +1007,147 @@ class JsonArray extends Array {
           break;
         }
       }
-      return new JsonArray(this.slice(index + 1));
+      const arr = Array.from(this);
+      return new JsonArray(arr.slice(0, index));
+    } else {
+      return new JsonArray([]);
+    }
+  }
+  table(key) {
+    if (typeof key !== "string") {
+      throw new Error("invaild input");
+    }
+    if (this.length === 0) {
+      throw new Error("unable in zero array");
+    }
+    if (this[0][key] === undefined) {
+      throw new Error("invaild key");
+    }
+    const self = this;
+    const idList = JsonArray.idList().key;
+    let targetArr, standard, result, resultArr, sum, temp, thisId;
+
+    targetArr = Array.from(this[key]);
+    standard = Array.from(new Set(JSON.parse(JSON.stringify(targetArr))));
+    if (!standard.every((i) => { return typeof i === "string"; })) {
+      throw new Error("invaild key");
+    }
+    if (standard.some((i) => { return /, /g.test(i); })) {
+      targetArr = targetArr.map((i) => { return i.split(', '); });
+      targetArr = targetArr.flat();
+      standard = Array.from(new Set(JSON.parse(JSON.stringify(targetArr))));
+    }
+
+    standard = standard.map((i) => {
+      let r = i.trim();
+      if (r === '') {
+        return "unknown";
+      } else {
+        return r;
+      }
+    })
+
+    result = {};
+    for (let i of standard) {
+      result[i] = 0;
+    }
+    for (let str of targetArr) {
+      temp = str.trim();
+      if (temp === '') {
+        result.unknown = result.unknown + 1;
+      } else {
+        result[temp] = result[temp] + 1;
+      }
+    }
+
+    resultArr = [];
+    sum = 0;
+    for (let i in result) {
+      resultArr.push({ name: i, value: result[i], percentage: 0, id: [] });
+      sum += result[i];
+    }
+    for (let obj of resultArr) {
+      obj.percentage = Math.round((obj.value / sum) * 10000) / 100;
+    }
+    resultArr.sort((a, b) => { return b.value - a.value; });
+
+    if (idList.some((id) => { return self[0][id] !== undefined; })) {
+      for (let id of idList) {
+        if (this[0][id] !== undefined) {
+          thisId = id;
+        }
+      }
+      for (let obj of resultArr) {
+        if (obj.name === "unknown") {
+          for (let t of this) {
+            if (t[key] === '') {
+              obj.id.push(t[thisId]);
+            }
+          }
+        } else {
+          for (let t of this) {
+            if ((new RegExp(obj.name, "gi")).test(t[key])) {
+              obj.id.push(t[thisId]);
+            }
+          }
+        }
+      }
+    }
+
+    return new JsonArray(resultArr);
+  }
+  sum() {
+    if (this.length === 0) {
+      throw new Error("unable in zero array");
+    }
+    if (this[0].value === undefined) {
+      throw new Error("unable in this array");
+    }
+    if (typeof this[0].value !== "number") {
+      throw new Error("unable in this array");
+    }
+    let sum;
+    sum = 0;
+    for (let { value } of this) {
+      sum += value;
+    }
+    return sum;
+  }
+  id(q) {
+    const self = this;
+    const idList = JsonArray.idList().key;
+    let thisId;
+    let result;
+    if (this.length === 0) {
+      throw new Error("unable in this array");
+    }
+    if (!idList.some((id) => { return self[0][id] !== undefined; })) {
+      throw new Error("unable in this array");
+    }
+    for (let id of idList) {
+      if (this[0][id] !== undefined) {
+        thisId = id;
+      }
+    }
+    if (typeof q === "string") {
+      result = null;
+      for (let i of this) {
+        if (i[thisId] === q) {
+          result = i;
+          break;
+        }
+      }
+      return result;
+    } else if (Array.isArray(q)) {
+      result = [];
+      for (let i of this) {
+        if (q.includes(i[thisId])) {
+          result.push(i);
+        }
+      }
+      return new JsonArray(result);
+    } else {
+      throw new Error("invaild input");
     }
   }
 }
@@ -987,14 +1198,63 @@ BasicTools.exist = function (file) {
   return promiseToSync(fileSystem, [ "exist", [ file ] ]);
 }
 
-BasicTools.query = function (q) {
+BasicTools.query = function (q, idList = null) {
   const order = "tempQuery";
   const result = "mysqlQueryResult";
+  const { key, char } = JsonArray.idList();
+  let index;
+  if (idList !== null) {
+    if (Array.isArray(idList)) {
+      if (idList.length !== 0) {
+        if (typeof idList[0] === "object" && idList[0].id !== undefined && Array.isArray(idList[0].id)) {
+          idList = idList[0].id;
+        }
+        if (idList.every((i) => { return typeof i === "string" })) {
+          index = null;
+          for (let i = 0; i < char.length; i++) {
+            if ((new RegExp('^' + char[i])).test(idList[0])) {
+              index = i;
+            }
+          }
+          if (index !== null) {
+            if (!/WHERE/gi.test(q) && !/LIMIT/gi.test(q)) {
+              if (/;$/.test(q.trim())) {
+                q = q.trim().slice(0, -1);
+              }
+              q += " ";
+              q += "WHERE ";
+              for (let id of idList) {
+                q += key[index] + " = '" + id + "'";
+                q += " OR ";
+              }
+              q = q.slice(0, -4) + ';';
+            }
+          }
+        }
+      }
+    }
+  }
   fs.writeFileSync(normalize(jsonDirRoot + sep + order + ".sql"), q, { encoding: "utf8" });
   shell.exec(`node ${shellLink(normalize(appDirRoot + sep + "fromMysql"))} file_${order}`, { silent: true });
   const json = equalJson(BasicTools.read(normalize(jsonDirRoot + sep + result + ".json")));
   // BasicTools.print(json);
   return new JsonArray(json);
+}
+
+BasicTools.client = function (idList = null) {
+  return BasicTools.query("SELECT * FROM client", idList);
+}
+
+BasicTools.project = function (idList = null) {
+  return BasicTools.query("SELECT * FROM project", idList);
+}
+
+BasicTools.designer = function (idList = null) {
+  return BasicTools.query("SELECT * FROM designer", idList);
+}
+
+BasicTools.contents = function (idList = null) {
+  return BasicTools.query("SELECT * FROM contents", idList);
 }
 
 BasicTools.mongo = function (collection, whereQuery) {
@@ -1065,6 +1325,18 @@ BasicTools.sheets = function (title, json) {
       }
     } else {
       throw new Error("must be object-array 3");
+    }
+  }
+
+  if (Object.values(json[0]).some((v) => { return Array.isArray(v); })) {
+    for (let key in json[0]) {
+      for (let obj of json) {
+        if (Array.isArray(obj[key])) {
+          obj[key] = obj[key].flat(Infinity);
+          obj[key] = obj[key].map((i) => { return String(i); });
+          obj[key] = obj[key].join(", ");
+        }
+      }
     }
   }
 

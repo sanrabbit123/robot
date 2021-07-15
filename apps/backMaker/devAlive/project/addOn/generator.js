@@ -96,10 +96,21 @@ const withTools = function (Project) {
 
     let tong = [];
     let temp;
+    let proposalDetailLength, proposalAverage;
 
     const { proid, cliid, desid, service: { serid, xValue, online } } = project;
+    const { date: proposalDate, detail: proposalDetail } = project.proposal;
     const { status, action, outreason, call: { next, history: callHistory }, contract: { first: { guide: firstGuide, date: firstDate, cancel: firstCancel, calculation: { amount: firstAmount, info: firstInfo, refund: firstRefund, } }, remain: { guide: remainGuide, date: remainDate, cancel: remainCancel, calculation: { amount: { supply: remainSupply, vat: remainVat, consumer: remainConsumer }, info: remainInfo, refund: remainRefund, } }, form: { guide: formGuide, date: { from: formDateFrom, to: formDateTo, cancel: formDateCancel, } }, meeting: { date: meetingDate } }, calculation: { method, percentage, info: calculationInfo, payments: { totalAmount: paymentsTotalAmount, first: { amount: paymentsFirstAmount, date: paymentsFirstDate, cancel: paymentsFirstCancel, refund: paymentsFirstRefund, }, remain: { amount: paymentsRemainAmount, date: paymentsRemainDate, cancel: paymentsRemainCancel, refund: paymentsRemainRefund, } } } } = project.process;
     const { photo: { boo: photoBoo, status: photoStatus, date: contentsPhotoDate, info: { photographer, interviewer } }, raw: { portfolio: { status: rawPortfolioStatus }, interview: { status: rawInterviewStatus }, photo: { status: rawPhotoStatus } }, share: { client: { photo: shareClientPhoto, contents: shareClientContents }, designer: { photo: shareDesignerPhoto, contents: shareDesignerContents } } } = project.contents;
+
+    proposalDetailLength = proposalDetail.length;
+    proposalAverage = 0;
+    for (let i = 0; i < proposalDetailLength; i++) {
+      proposalAverage += proposalDetail[i].fee[0].amount;
+    }
+    if (proposalDetailLength !== 0) {
+      proposalAverage = Math.round(Math.round(proposalAverage / proposalDetailLength) / 1000) * 1000;
+    }
 
     temp = {};
 
@@ -151,6 +162,28 @@ const withTools = function (Project) {
       paymentsRemainRefund: String(paymentsRemainRefund),
       photoStatus,
       contentsPhotoDate: dateToString(contentsPhotoDate),
+      proposalDate: dateToString(proposalDate),
+      proposalDesigner0: (proposalDetailLength > 0 ? proposalDetail[0].desid : ''),
+      proposalFee0: (proposalDetailLength > 0 ? proposalDetail[0].fee[0].amount : 0),
+      proposalDesigner1: (proposalDetailLength > 1 ? proposalDetail[1].desid : ''),
+      proposalFee1: (proposalDetailLength > 1 ? proposalDetail[1].fee[0].amount : 0),
+      proposalDesigner2: (proposalDetailLength > 2 ? proposalDetail[2].desid : ''),
+      proposalFee2: (proposalDetailLength > 2 ? proposalDetail[2].fee[0].amount : 0),
+      proposalDesigner3: (proposalDetailLength > 3 ? proposalDetail[3].desid : ''),
+      proposalFee3: (proposalDetailLength > 3 ? proposalDetail[3].fee[0].amount : 0),
+      proposalDesigner4: (proposalDetailLength > 4 ? proposalDetail[4].desid : ''),
+      proposalFee4: (proposalDetailLength > 4 ? proposalDetail[4].fee[0].amount : 0),
+      proposalDesigner5: (proposalDetailLength > 5 ? proposalDetail[5].desid : ''),
+      proposalFee5: (proposalDetailLength > 5 ? proposalDetail[5].fee[0].amount : 0),
+      proposalDesigner6: (proposalDetailLength > 6 ? proposalDetail[6].desid : ''),
+      proposalFee6: (proposalDetailLength > 6 ? proposalDetail[6].fee[0].amount : 0),
+      proposalDesigner7: (proposalDetailLength > 7 ? proposalDetail[7].desid : ''),
+      proposalFee7: (proposalDetailLength > 7 ? proposalDetail[7].fee[0].amount : 0),
+      proposalDesigner8: (proposalDetailLength > 8 ? proposalDetail[8].desid : ''),
+      proposalFee8: (proposalDetailLength > 8 ? proposalDetail[8].fee[0].amount : 0),
+      proposalDesigner9: (proposalDetailLength > 9 ? proposalDetail[9].desid : ''),
+      proposalFee9: (proposalDetailLength > 9 ? proposalDetail[9].fee[0].amount : 0),
+      proposalAverage,
     };
 
     tong.push(temp);
