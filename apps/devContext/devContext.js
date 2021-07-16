@@ -48,18 +48,102 @@ const DevContext = function () {
 DevContext.prototype.randomPictures = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { copyJson, mongo, mongolocalinfo } = this.mother;
+  const MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
+    await MONGOC.connect();
 
-    const contents = await back.getContentsArrByQuery({});
+    const returnRandoms = function (length, max) {
+      if (typeof length !== "number" || typeof max !== "number") {
+        throw new Error("invaild input");
+      }
+      let result, temp;
+      result = [];
+      while (true) {
+        if (result.length === length) {
+          break;
+        }
+        temp = Math.floor(Math.random() * max);
+        if (!result.includes(temp) && max >= temp) {
+          result.push(temp);
+        }
+      }
+      result = result.sort((a, b) => { return a - b; })
+      return result;
+    }
+    const selfMongo = MONGOC;
+    const pictureNumber = 8;
+    const addConst = 5;
+    const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
+    const photos = contentsArr.getAllPhotos();
+    const photoLength = photos.length;
+    let randoms, mother;
+    let conidArr, roomArr;
+    let randomPick, contentsPick;
+    let num;
+    let whereQuery;
+    let temp, tempArr;
+    let rooms, room;
+    let accumulation;
 
-    console.log(contents[0]);
-
-    // console.log(contents.map((obj) => { return obj.photos; }).map((obj) => { return obj.detail.toNormal(); }));
-
+    conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
+    roomArr = Array.from(new Set(photos.map((obj) => { return obj.room })));
 
 
+    let start, end;
 
+    start = (new Date()).valueOf();
+    for (var ac = 0; ac < 1000; ac++) {
+      do {
+        do {
+          randoms = returnRandoms(pictureNumber + addConst, conidArr.length).map((n) => { return conidArr[n]; });
+          contentsPick = contentsArr.conidArr(randoms);
+          rooms = contentsPick.toNormal().map((obj) => { return obj.contents.portfolio.contents.detail.map((z) => { return z.title; }).filter((z) => { return z !== "init"; }) });
+          accumulation = [];
+          for (let arr of rooms) {
+            tempArr = [];
+            for (let a of arr) {
+              if (!accumulation.includes(a)) {
+                tempArr.push(a);
+              }
+            }
+            if (tempArr.length > 0) {
+              room = tempArr[Math.floor(Math.random() * tempArr.length)];
+              accumulation.push(room);
+            }
+          }
+        } while (accumulation.length < pictureNumber);
+
+        for (let k = 0; k < array.length; k++) {
+          
+        }
+
+
+        randomPick = randoms.map((c, i) => { return { conid: c, room: accumulation[i] }; });
+        temp = contentsPick.toNormal().map((obj) => { return { conid: obj.conid, rooms: obj.contents.portfolio.contents.detail.map((z) => { return z.title; }).filter((z) => { return z !== "init"; }) } });
+
+        randomPick = randomPick.map((obj, i) => {
+          let tempArr;
+          tempArr = photos.searchByConid(obj.conid).searchByRoom(obj.room);
+          tempArr = tempArr.filter((obj) => { return obj.gs === 'g'; });
+          if (tempArr.length === 0) {
+            return null;
+          } else {
+            return tempArr[0];
+          }
+        }).filter((obj) => { return obj !== null; });
+      } while (randomPick.length < pictureNumber);
+      console.log(ac);
+    }
+
+    end = (new Date()).valueOf();
+    console.log('');
+    console.log(end - start);
+
+
+
+
+    await MONGOC.close();
 
   } catch (e) {
     console.log(e);

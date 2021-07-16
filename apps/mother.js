@@ -1849,16 +1849,39 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
   }
 }
 
-Mother.prototype.returnRandoms = function () {
+Mother.prototype.returnRandoms = function (num = 10, length = false) {
+  const crypto = require('crypto');
+  const password = "eorgghseGehfwi3r2";
+  if (typeof num === "boolean") {
+    length = num;
+    num = 10;
+  }
+  if (typeof num !== "number") {
+    num = 10;
+  }
+  if (typeof length !== "boolean") {
+    length = false;
+  }
+  if (num === 0) {
+    num = 10;
+  }
   return new Promise(function (resolve, reject) {
-    const crypto = require('crypto');
-    crypto.scrypt('eorgghseGehfwi3r2', 'salt', 24, (err, key) => {
+    crypto.scrypt(password, "salt", 24, (err, key) => {
       if (err) throw err;
-      crypto.randomFill(new Uint32Array(10), (err, iv) => {
+      crypto.randomFill(new Uint32Array(num), (err, iv) => {
         if (err) {
           reject(err);
         } else {
-          resolve(iv);
+          if (!length) {
+            resolve(iv);
+          } else {
+            let resultArr, minLength;
+            resultArr = Array.from(iv).map((n) => { return String(n); });
+            resultArr.sort((a, b) => { return a.length - b.length; });
+            minLength = resultArr[0].length;
+            resultArr = resultArr.map((n) => { return Number(n.slice(0, minLength).replace(/^0/, '1')); });
+            resolve(resultArr);
+          }
         }
       });
     });

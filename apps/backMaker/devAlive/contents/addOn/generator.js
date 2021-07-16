@@ -12,6 +12,64 @@ class ContentsArr extends Array {
     return tong;
   }
 
+  getAllPhotos() {
+    const path = "/corePortfolio/listImage";
+    class PhotoArray extends Array {
+      searchByConid(conid) {
+        if (typeof conid !== "string") {
+          throw new Error("must be conid");
+        }
+        let result = new PhotoArray();
+        for (let i of this) {
+          if (i.conid === conid) {
+            result.push(i);
+          }
+        }
+        return result;
+      }
+      searchByRoom(room) {
+        if (typeof room !== "string") {
+          throw new Error("must be room");
+        }
+        let result = new PhotoArray();
+        for (let i of this) {
+          if (i.room === room) {
+            result.push(i);
+          }
+        }
+        return result;
+      }
+    }
+    let temp, result;
+    result = new PhotoArray();
+    for (let { conid, desid, contents: { portfolio, review }, photos } of this) {
+      temp = JSON.parse(JSON.stringify(photos)).detail;
+      for (let obj of temp) {
+        obj.conid = conid;
+        obj.desid = desid;
+        obj.pid = portfolio.pid;
+        obj.pyeong = portfolio.spaceInfo.pyeong;
+        obj.room = "review";
+        for (let i = 1; i < portfolio.contents.detail.length; i++) {
+          if (portfolio.contents.detail[i - 1].photoKey < obj.index && obj.index <= portfolio.contents.detail[i].photoKey) {
+            obj.room = portfolio.contents.detail[i].title;
+          }
+        }
+        obj.keywords = [];
+        for (let t of portfolio.detailInfo.tag) {
+          obj.keywords.push(t);
+        }
+        obj.keywords.push(portfolio.detailInfo.service);
+        obj.keywords = obj.keywords.filter((z) => { return z !== '' && z !== "all"; });
+        obj.file = `t${String(obj.index)}${obj.pid}.jpg`;
+        obj.path = path + "/" + obj.pid + "/" + obj.file;
+      }
+      result.push(temp);
+    }
+    result = result.flat();
+    return result;
+  }
+
 }
 
 const withTools = function (Contents) {

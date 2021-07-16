@@ -1749,6 +1749,8 @@ GeneralJs.serviceParsing = function (serviceObj) {
     finalWords += "홈스타일링 ";
   } else if (/aa03s/gi.test(serid)) {
     finalWords += "토탈 스타일링 ";
+  } else if (/aa04s/gi.test(serid)) {
+    finalWords += "엑스트라 스타일링 ";
   } else {
     throw new Error("invaild service object");
   }
