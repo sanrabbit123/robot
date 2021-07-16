@@ -1366,6 +1366,7 @@ GraphicBot.prototype.botServer = async function () {
 
     if (this.os === "mac") {
       this.localhost = "http://localhost:3000";
+      this.port = 3000;
     }
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);

@@ -85,7 +85,7 @@ module.exports = function (arg, info) {
 
         timeIndex = [];
         for (let j = 0; j < textArr.length; j++) {
-          if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/g.test(textArr[j].trim())) {
+          if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(textArr[j].trim())) {
             timeIndex.push(j);
           }
         }
@@ -175,7 +175,7 @@ module.exports = function (arg, info) {
 
         timeIndex = [];
         for (let j = 0; j < textArr.length; j++) {
-          if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/g.test(textArr[j].trim())) {
+          if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(textArr[j].trim())) {
             timeIndex.push(j);
           }
         }
