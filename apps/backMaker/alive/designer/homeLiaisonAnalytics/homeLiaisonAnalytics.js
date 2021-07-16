@@ -271,6 +271,42 @@ StylingTendency.prototype.toNormal = function () {
   return obj;
 }
 
+StylingTendency.prototype.toMatrix = function () {
+  const keys = [ "style", "texture", "color", "density" ];
+  const keyArr = [
+    [
+      'modern',
+      'classic',
+      'natural',
+      'mixmatch',
+      'scandinavian',
+      'vintage',
+      'oriental',
+      'exotic'
+    ],
+    [ 'darkWood', 'whiteWood', 'coating', 'metal' ],
+    [
+      'darkWood',
+      'whiteWood',
+      'highContrast',
+      'vivid',
+      'white',
+      'mono',
+      'bright',
+      'dark'
+    ],
+    [ 'maximun', 'minimum' ]
+  ];
+  let result;
+  result = [];
+  for (let i = 0; i < keys.length; i++) {
+    for (let key of keyArr[i]) {
+      result.push(this[keys[i]][key]);
+    }
+  }
+  return result;
+}
+
 const StylingAnalytics = function (json) {
   this.level = json.level;
   this.method = new Menu(json.method, [

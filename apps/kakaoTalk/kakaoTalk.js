@@ -248,7 +248,7 @@ KakaoTalk.prototype.templateTong = function (target) {
     },
     photoShareClient: {
       name: "사진 공유 고객",
-      id: "TF_1157",
+      id: "TF_1248",
       needs: [
         "client",
         "file"

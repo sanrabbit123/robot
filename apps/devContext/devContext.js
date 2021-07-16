@@ -53,32 +53,12 @@ DevContext.prototype.randomPictures = async function () {
   try {
     await MONGOC.connect();
 
-    const returnRandoms = function (length, max) {
-      if (typeof length !== "number" || typeof max !== "number") {
-        throw new Error("invaild input");
-      }
-      let result, temp;
-      result = [];
-      while (true) {
-        if (result.length === length) {
-          break;
-        }
-        temp = Math.floor(Math.random() * max);
-        if (!result.includes(temp) && max >= temp) {
-          result.push(temp);
-        }
-      }
-      result = result.sort((a, b) => { return a - b; })
-      return result;
-    }
     const selfMongo = MONGOC;
     const pictureNumber = 8;
     const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
-    const photos = contentsArr.getAllPhotos();
-    const photoLength = photos.length;
+    const designers = await back.getDesignersByQuery({}, { selfMongo });
     const max = contentsArr.length;
     let randoms, mother;
-    let conidArr;
     let randomPick, contentsPick;
     let num;
     let whereQuery;
@@ -86,63 +66,167 @@ DevContext.prototype.randomPictures = async function () {
     let rooms, room;
     let accumulation;
     let obj;
+    let photos, photoLength, conidArr;
+
+    photos = contentsArr.getAllPhotos();
+    photoLength = photos.length;
+    for (let obj of photos) {
+      for (let designer of designers) {
+        if (obj.desid === designer.desid) {
+          obj.tendency = designer.analytics.styling.tendency.toMatrix();
+          break;
+        }
+      }
+    }
+    photos = photos.map((obj) => {
+      obj.keywords = obj.keywords.filter((s) => { return !/아파트/gi.test(s) && !/거주중/gi.test(s) && !/아기/gi.test(s) && !/아이/gi.test(s) && !/부부/gi.test(s) && !/가족/gi.test(s) && !/소품/gi.test(s) && !/거실/gi.test(s) && !/주방/gi.test(s) && !/신축/gi.test(s) && !/서재/gi.test(s) && !/톤앤/gi.test(s) && !/스타일링/gi.test(s) && !/조명/gi.test(s) && !/오피스텔/gi.test(s) && !/홈스타일링/gi.test(s) && !/홈퍼니싱/gi.test(s) && !/토탈/gi.test(s) && !/인테리어/gi.test(s) && !/인가구/gi.test(s) && !/다이닝/gi.test(s) && !/깔끔/gi.test(s) && !/인스타/gi.test(s) && !/아이/gi.test(s); });
+      return obj;
+    });
 
     conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
 
-    do {
+    function random() {
+      let randomPick;
       do {
-        temp = [];
-        while (true) {
-          if (temp.length === pictureNumber) {
-            break;
-          }
-          temp2 = Math.floor(Math.random() * max);
-          if (!temp.includes(temp2) && max >= temp2) {
-            temp.push(temp2);
-          }
-        }
-        temp.sort((a, b) => { return a - b; });
-        randoms = [];
-        for (let n of temp) {
-          randoms.push(conidArr[n]);
-        }
-        contentsPick = contentsArr.conidArr(randoms);
-        rooms = [];
-        for (let obj of contentsPick) {
-          tempArr = [];
-          for (let { title } of obj.contents.portfolio.contents.detail) {
-            if (title !== "init") {
-              tempArr.push(title);
+        do {
+          temp = [];
+          while (true) {
+            if (temp.length === pictureNumber) {
+              break;
+            }
+            temp2 = Math.floor(Math.random() * max);
+            if (!temp.includes(temp2) && max >= temp2) {
+              temp.push(temp2);
             }
           }
-          rooms.push(tempArr);
-        }
-        accumulation = [];
-        for (let arr of rooms) {
-          tempArr = [];
-          for (let a of arr) {
-            if (!accumulation.includes(a)) {
-              tempArr.push(a);
+          temp.sort((a, b) => { return a - b; });
+          randoms = [];
+          for (let n of temp) {
+            randoms.push(conidArr[n]);
+          }
+          contentsPick = contentsArr.conidArr(randoms);
+          rooms = [];
+          for (let obj of contentsPick) {
+            tempArr = [];
+            for (let { title } of obj.contents.portfolio.contents.detail) {
+              if (title !== "init") {
+                tempArr.push(title);
+              }
+            }
+            rooms.push(tempArr);
+          }
+          accumulation = [];
+          for (let arr of rooms) {
+            tempArr = [];
+            for (let a of arr) {
+              if (!accumulation.includes(a)) {
+                tempArr.push(a);
+              }
+            }
+            if (tempArr.length > 0) {
+              room = tempArr[Math.floor(Math.random() * tempArr.length)];
+              accumulation.push(room);
             }
           }
-          if (tempArr.length > 0) {
-            room = tempArr[Math.floor(Math.random() * tempArr.length)];
-            accumulation.push(room);
+        } while (accumulation.length !== randoms.length);
+        randomPick = [];
+        for (let i = 0; i < randoms.length; i++) {
+          for (let obj of photos) {
+            if (obj.conid === randoms[i] && obj.room === accumulation[i] && obj.gs === 'g') {
+              randomPick.push(obj);
+              break;
+            }
           }
         }
-      } while (accumulation.length !== randoms.length);
-      randomPick = [];
-      for (let i = 0; i < randoms.length; i++) {
-        for (let obj of photos) {
-          if (obj.conid === randoms[i] && obj.room === accumulation[i] && obj.gs === 'g') {
-            randomPick.push(obj);
-            break;
-          }
+      } while (randomPick.length !== pictureNumber);
+      return randomPick;
+    }
+
+
+
+
+
+    let threePick;
+    let pick0, pick1, pick2;
+    let set0, set1, set2;
+    let tendencyMatrix;
+
+    Set.prototype.intersection = function(setB) {
+      let intersection = new Set();
+      for (let elem of setB) {
+        if (this.has(elem)) {
+          intersection.add(elem);
         }
       }
-    } while (randomPick.length !== pictureNumber);
+      return intersection;
+    }
+    Set.prototype.union = function(setB) {
+      let union = new Set(this);
+      for (let elem of setB) {
+        union.add(elem);
+      }
+      return union;
+    }
 
-    console.log(randomPick);
+
+    for (let za = 0; za < 5; za++) {
+
+      randomPick = random();
+
+      pick0 = randomPick[0];
+      pick1 = randomPick[1];
+      pick2 = randomPick[2];
+
+      set0 = new Set(pick0.keywords);
+      set1 = new Set(pick1.keywords);
+      set2 = new Set(pick2.keywords);
+
+      threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)));
+      if (threePick.length < 5) {
+        threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set0));
+      }
+      if (threePick.length < 5) {
+        threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set1));
+      }
+      if (threePick.length < 5) {
+        threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set2));
+      }
+
+      console.log(threePick);
+      console.log(photos.length)
+
+      photos = photos.filter((obj) => { return obj.keywords.some((s) => { return threePick.includes(s); }) });
+
+      tendencyMatrix = new Array(pick0.tendency.length);
+      for (let i = 0; i < tendencyMatrix.length; i++) {
+        tendencyMatrix[i] = Math.round(((pick0.tendency[i] + pick1.tendency[i] + pick2.tendency[i]) / 3) * 100) / 100;
+      }
+
+      photos.sort((a, b) => {
+        const length = tendencyMatrix.length;
+        let sum0, sum1;
+        sum0 = 0;
+        sum1 = 0;
+        for (let i = 0; i < length; i++) {
+          sum0 += Math.abs(a.tendency[i] - tendencyMatrix[i]);
+          sum1 += Math.abs(b.tendency[i] - tendencyMatrix[i]);
+        }
+        sum0 = sum0 / length;
+        sum1 = sum1 / length;
+        return sum0 - sum1;
+      });
+
+      photos = photos.slice(0, Math.floor(photos.length * 0.6));
+
+      console.log(photos.length)
+
+
+    }
+
+
+
+
+
 
     await MONGOC.close();
 
