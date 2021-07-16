@@ -45,6 +45,27 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
+DevContext.prototype.randomPictures = async function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, shell, shellLink } = this.mother;
+  try {
+
+    const contents = await back.getContentsArrByQuery({});
+
+    console.log(contents[0]);
+
+    // console.log(contents.map((obj) => { return obj.photos; }).map((obj) => { return obj.detail.toNormal(); }));
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
@@ -59,6 +80,8 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+
+    await this.randomPictures();
 
 
     // console.log(await requestSystem("https://home-liaison.xyz:3000/generalMongo", {
@@ -1065,7 +1088,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p103");
+    // await this.spellCheck("p102");
 
 
     // get corePortfolio by pid

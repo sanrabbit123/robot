@@ -240,6 +240,11 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "식탁 등", "식탁등" ],
     [ "전 허", "전혀" ],
     [ "차 드렸고", "짜드렸고" ],
+    [ "북 카페", "북카페" ],
+    [ "티브이 장", "티비장" ],
+    [ "타곤", "타공" ],
+    [ "타곤 판", "타공판" ],
+    [ "타공 판", "타공판" ],
   ];
   try {
     let resultArr = [];

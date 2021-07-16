@@ -533,12 +533,15 @@ Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
   if (/^https:\/\//.test(to)) {
     target = to.slice(8);
     http = require("https");
+    port = 443;
   } else if (/^http:\/\//.test(to)) {
     target = to.slice(7);
     http = require("http");
+    port = 80;
   } else {
     target = to;
     http = require("http");
+    port = 80;
   }
   pathArr = target.split('/');
   pathString = '/';

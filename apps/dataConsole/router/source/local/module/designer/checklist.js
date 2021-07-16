@@ -2455,6 +2455,13 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                           GeneralJs.stacks["designer_possible"] = possible;
                         }
 
+                        // GeneralJs.ajaxJson({
+                        //   mode: "read",
+                        //   db: "console",
+                        //   collection: "realtimeDesigner",
+                        //   whereQuery: {},
+                        // }, "/generalMongo").then((result));
+
                         GeneralJs.ajaxJson({
                           mode: "update",
                           db: "console",

@@ -158,6 +158,12 @@ GoogleDocs.prototype.update_contents_inPython = async function (id, contentsArr)
     }
     id = this.general.parsingId(id);
     let result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertContents" ], { id, contents: contentsArr });
+    while (typeof result !== "object") {
+      result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertContents" ], { id, contents: contentsArr });
+    }
+    while (result.id === undefined) {
+      result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertContents" ], { id, contents: contentsArr });
+    }
     return result;
   } catch (e) {
     console.log(e);
