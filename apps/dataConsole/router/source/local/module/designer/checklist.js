@@ -2455,20 +2455,25 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                           GeneralJs.stacks["designer_possible"] = possible;
                         }
 
-                        // GeneralJs.ajaxJson({
-                        //   mode: "read",
-                        //   db: "console",
-                        //   collection: "realtimeDesigner",
-                        //   whereQuery: {},
-                        // }, "/generalMongo").then((result));
-
                         GeneralJs.ajaxJson({
-                          mode: "update",
+                          mode: "read",
                           db: "console",
                           collection: "realtimeDesigner",
                           whereQuery: { desid: instance.desid },
-                          updateQuery: { possible }
-                        }, "/generalMongo").then(() => {
+                        }, "/generalMongo").then((rawRows) => {
+                          if (rawRows.length === 0) {
+                            window.alert("디자이너 일정 관리 콘솔에서 관리해주세요!");
+                            window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=calendar";
+                          } else {
+                            return GeneralJs.ajaxJson({
+                              mode: "update",
+                              db: "console",
+                              collection: "realtimeDesigner",
+                              whereQuery: { desid: instance.desid },
+                              updateQuery: { possible }
+                            }, "/generalMongo");
+                          }
+                        }).then(() => {
                           return GeneralJs.ajaxJson({
                             mode: "sse",
                             db: "console",

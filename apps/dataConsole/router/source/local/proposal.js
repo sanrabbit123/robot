@@ -3834,6 +3834,7 @@ ProposalJs.save_init = async function (update = false) {
     let loadingWidth;
     let belowHeight;
     let loadingCancelBox, loadingLoadingIcon;
+    let methodOnlineBoo;
 
     loadingWidth = 50;
     belowHeight = 123;
@@ -3965,12 +3966,15 @@ ProposalJs.save_init = async function (update = false) {
 
         result_obj["proposal.detail"][i].fee = new Array(temp_num);
 
+        methodOnlineBoo = false;
         for (let f = 0; f < temp_num; f++) {
           result_obj["proposal.detail"][i].fee[f] = {};
           result_obj["proposal.detail"][i].fee[f].method = (temp_arr[f] === "오프라인") ? "offline" : "online";
           result_obj["proposal.detail"][i].fee[f].partial = (temp_arr.indexOf("부분 공간") !== -1) ? true : false;
           result_obj["proposal.detail"][i].fee[f].amount = 0;
-
+          if (result_obj["proposal.detail"][i].fee[f].method === "online") {
+            methodOnlineBoo = true;
+          }
           temp2 = temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[f];
           if (temp2.querySelector(".pp_designer_selected_box_contents_money_text").textContent === temp_arr[f]) {
             result_obj["proposal.detail"][i].fee[f].amount = Number(temp2.querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
@@ -3982,6 +3986,8 @@ ProposalJs.save_init = async function (update = false) {
             }
           }
         }
+
+        result_obj["service.online"] = methodOnlineBoo;
 
         temp_num = 0;
         temp_arr = [];
