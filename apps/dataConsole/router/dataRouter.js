@@ -2819,9 +2819,7 @@ DataRouter.prototype.rou_post_generalMongo = function () {
         whereQuery = equalJson(req.body.whereQuery);
         updateQuery = equalJson(req.body.updateQuery);
         result = await back.mongoRead(collection, whereQuery, { selfMongo });
-        if (result.length === 0) {
-          await back.mongoCreate(collection, updateQuery, { selfMongo });
-        } else {
+        if (result.length !== 0) {
           await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
         }
         result = { message: "done" };

@@ -73,75 +73,76 @@ DevContext.prototype.randomPictures = async function () {
     }
     const selfMongo = MONGOC;
     const pictureNumber = 8;
-    const addConst = 5;
     const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
     const photos = contentsArr.getAllPhotos();
     const photoLength = photos.length;
+    const max = contentsArr.length;
     let randoms, mother;
-    let conidArr, roomArr;
+    let conidArr;
     let randomPick, contentsPick;
     let num;
     let whereQuery;
-    let temp, tempArr;
+    let temp, temp2, tempArr;
     let rooms, room;
     let accumulation;
+    let obj;
 
     conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
-    roomArr = Array.from(new Set(photos.map((obj) => { return obj.room })));
 
-
-    let start, end;
-
-    start = (new Date()).valueOf();
-    for (var ac = 0; ac < 1000; ac++) {
+    do {
       do {
-        do {
-          randoms = returnRandoms(pictureNumber + addConst, conidArr.length).map((n) => { return conidArr[n]; });
-          contentsPick = contentsArr.conidArr(randoms);
-          rooms = contentsPick.toNormal().map((obj) => { return obj.contents.portfolio.contents.detail.map((z) => { return z.title; }).filter((z) => { return z !== "init"; }) });
-          accumulation = [];
-          for (let arr of rooms) {
-            tempArr = [];
-            for (let a of arr) {
-              if (!accumulation.includes(a)) {
-                tempArr.push(a);
-              }
-            }
-            if (tempArr.length > 0) {
-              room = tempArr[Math.floor(Math.random() * tempArr.length)];
-              accumulation.push(room);
-            }
+        temp = [];
+        while (true) {
+          if (temp.length === pictureNumber) {
+            break;
           }
-        } while (accumulation.length < pictureNumber);
-
-        for (let k = 0; k < array.length; k++) {
-          
+          temp2 = Math.floor(Math.random() * max);
+          if (!temp.includes(temp2) && max >= temp2) {
+            temp.push(temp2);
+          }
         }
-
-
-        randomPick = randoms.map((c, i) => { return { conid: c, room: accumulation[i] }; });
-        temp = contentsPick.toNormal().map((obj) => { return { conid: obj.conid, rooms: obj.contents.portfolio.contents.detail.map((z) => { return z.title; }).filter((z) => { return z !== "init"; }) } });
-
-        randomPick = randomPick.map((obj, i) => {
-          let tempArr;
-          tempArr = photos.searchByConid(obj.conid).searchByRoom(obj.room);
-          tempArr = tempArr.filter((obj) => { return obj.gs === 'g'; });
-          if (tempArr.length === 0) {
-            return null;
-          } else {
-            return tempArr[0];
+        temp.sort((a, b) => { return a - b; });
+        randoms = [];
+        for (let n of temp) {
+          randoms.push(conidArr[n]);
+        }
+        contentsPick = contentsArr.conidArr(randoms);
+        rooms = [];
+        for (let obj of contentsPick) {
+          tempArr = [];
+          for (let { title } of obj.contents.portfolio.contents.detail) {
+            if (title !== "init") {
+              tempArr.push(title);
+            }
           }
-        }).filter((obj) => { return obj !== null; });
-      } while (randomPick.length < pictureNumber);
-      console.log(ac);
-    }
+          rooms.push(tempArr);
+        }
+        accumulation = [];
+        for (let arr of rooms) {
+          tempArr = [];
+          for (let a of arr) {
+            if (!accumulation.includes(a)) {
+              tempArr.push(a);
+            }
+          }
+          if (tempArr.length > 0) {
+            room = tempArr[Math.floor(Math.random() * tempArr.length)];
+            accumulation.push(room);
+          }
+        }
+      } while (accumulation.length !== randoms.length);
+      randomPick = [];
+      for (let i = 0; i < randoms.length; i++) {
+        for (let obj of photos) {
+          if (obj.conid === randoms[i] && obj.room === accumulation[i] && obj.gs === 'g') {
+            randomPick.push(obj);
+            break;
+          }
+        }
+      }
+    } while (randomPick.length !== pictureNumber);
 
-    end = (new Date()).valueOf();
-    console.log('');
-    console.log(end - start);
-
-
-
+    console.log(randomPick);
 
     await MONGOC.close();
 
