@@ -70,17 +70,29 @@ class ContentsArr extends Array {
     return result;
   }
 
-  conidArr(arr) {
+  conidArr(arr, normalMode = false) {
     if (!Array.isArray(arr)) {
       throw new Error("invaild input");
     }
     if (!arr.every((c) => { return typeof c === "string"; })) {
       throw new Error("invaild input");
     }
-    let result = new ContentsArr();
-    for (let obj of this) {
-      if (arr.includes(obj.conid)) {
-        result.push(obj);
+    let result;
+    if (!normalMode) {
+      result = new ContentsArr();
+      for (let obj of this) {
+        if (arr.includes(obj.conid)) {
+          result.push(obj);
+        }
+      }
+    } else {
+      result = [];
+      for (let conid of arr) {
+        for (let obj of this) {
+          if (conid === obj.conid) {
+            result.push(obj.toNormal());
+          }
+        }
       }
     }
     return result;

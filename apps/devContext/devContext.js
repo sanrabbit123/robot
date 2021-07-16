@@ -50,6 +50,22 @@ DevContext.prototype.randomPictures = async function () {
   const back = this.back;
   const { copyJson, mongo, mongolocalinfo } = this.mother;
   const MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  Set.prototype.intersection = function(setB) {
+    let intersection = new Set();
+    for (let elem of setB) {
+      if (this.has(elem)) {
+        intersection.add(elem);
+      }
+    }
+    return intersection;
+  }
+  Set.prototype.union = function(setB) {
+    let union = new Set(this);
+    for (let elem of setB) {
+      union.add(elem);
+    }
+    return union;
+  }
   try {
     await MONGOC.connect();
 
@@ -57,19 +73,7 @@ DevContext.prototype.randomPictures = async function () {
     const pictureNumber = 8;
     const contentsArr = await back.getContentsArrByQuery({}, { selfMongo });
     const designers = await back.getDesignersByQuery({}, { selfMongo });
-    const max = contentsArr.length;
-    let randoms, mother;
-    let randomPick, contentsPick;
-    let num;
-    let whereQuery;
-    let temp, temp2, tempArr;
-    let rooms, room;
-    let accumulation;
-    let obj;
-    let photos, photoLength, conidArr;
-
-    photos = contentsArr.getAllPhotos();
-    photoLength = photos.length;
+    let photos = contentsArr.getAllPhotos();
     for (let obj of photos) {
       for (let designer of designers) {
         if (obj.desid === designer.desid) {
@@ -83,95 +87,105 @@ DevContext.prototype.randomPictures = async function () {
       return obj;
     });
 
-    conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
 
-    function random() {
-      let randomPick;
-      do {
+    const photoFilter = function (photos, contentsArr, first = false) {
+      if (typeof photos !== "object" || typeof contentsArr !== "object" || typeof first !== "boolean") {
+        throw new Error("invaild input");
+      }
+      const random = function (photos, first) {
+        const photoLength = photos.length;
+        const conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
+        const standard = 50;
+        let randoms;
+        let randomPick, contentsPick;
+        let temp, temp2, tempArr;
+        let rooms, room;
+        let accumulation;
+        let num, num2;
+
+        num2 = 0;
         do {
-          temp = [];
-          while (true) {
-            if (temp.length === pictureNumber) {
-              break;
-            }
-            temp2 = Math.floor(Math.random() * max);
-            if (!temp.includes(temp2) && max >= temp2) {
-              temp.push(temp2);
-            }
+          if (num >= standard) {
+            break;
           }
-          temp.sort((a, b) => { return a - b; });
-          randoms = [];
-          for (let n of temp) {
-            randoms.push(conidArr[n]);
-          }
-          contentsPick = contentsArr.conidArr(randoms);
-          rooms = [];
-          for (let obj of contentsPick) {
-            tempArr = [];
-            for (let { title } of obj.contents.portfolio.contents.detail) {
-              if (title !== "init") {
-                tempArr.push(title);
+          do {
+            temp = [];
+            num = 0;
+            while (num < standard + pictureNumber) {
+              if (temp.length === pictureNumber) {
+                break;
+              }
+              temp2 = Math.floor(Math.random() * conidArr.length);
+              if (num < standard) {
+                if (!temp.includes(temp2) && conidArr.length >= temp2) {
+                  temp.push(temp2);
+                }
+              } else {
+                if (conidArr.length >= temp2) {
+                  temp.push(temp2);
+                }
+              }
+              num++;
+            }
+            temp.sort((a, b) => { return a - b; });
+            randoms = [];
+            for (let n of temp) {
+              randoms.push(conidArr[n]);
+            }
+            contentsPick = contentsArr.conidArr(randoms, true);
+            rooms = [];
+            for (let obj of contentsPick) {
+              tempArr = [];
+              for (let { title } of obj.contents.portfolio.contents.detail) {
+                if (title !== "init") {
+                  tempArr.push(title);
+                }
+              }
+              rooms.push(tempArr);
+            }
+            accumulation = [];
+            for (let arr of rooms) {
+              tempArr = [];
+              for (let a of arr) {
+                if (first) {
+                  if (!accumulation.includes(a)) {
+                    tempArr.push(a);
+                  }
+                } else {
+                  tempArr.push(a);
+                }
+              }
+              if (tempArr.length > 0) {
+                room = tempArr[Math.floor(Math.random() * tempArr.length)];
+                accumulation.push(room);
               }
             }
-            rooms.push(tempArr);
-          }
-          accumulation = [];
-          for (let arr of rooms) {
-            tempArr = [];
-            for (let a of arr) {
-              if (!accumulation.includes(a)) {
-                tempArr.push(a);
+          } while (accumulation.length !== randoms.length);
+          randomPick = [];
+          for (let i = 0; i < randoms.length; i++) {
+            for (let obj of photos) {
+              if (obj.conid === randoms[i] && obj.room === accumulation[i] && obj.gs === 'g') {
+                randomPick.push(obj);
+                break;
               }
             }
-            if (tempArr.length > 0) {
-              room = tempArr[Math.floor(Math.random() * tempArr.length)];
-              accumulation.push(room);
-            }
           }
-        } while (accumulation.length !== randoms.length);
-        randomPick = [];
-        for (let i = 0; i < randoms.length; i++) {
-          for (let obj of photos) {
-            if (obj.conid === randoms[i] && obj.room === accumulation[i] && obj.gs === 'g') {
-              randomPick.push(obj);
-              break;
-            }
-          }
-        }
-      } while (randomPick.length !== pictureNumber);
-      return randomPick;
-    }
-
-
-
-
-
-    let threePick;
-    let pick0, pick1, pick2;
-    let set0, set1, set2;
-    let tendencyMatrix;
-
-    Set.prototype.intersection = function(setB) {
-      let intersection = new Set();
-      for (let elem of setB) {
-        if (this.has(elem)) {
-          intersection.add(elem);
-        }
+          num2++;
+        } while (randomPick.length !== pictureNumber);
+        return randomPick;
       }
-      return intersection;
-    }
-    Set.prototype.union = function(setB) {
-      let union = new Set(this);
-      for (let elem of setB) {
-        union.add(elem);
+      const ratio = 0.5;
+      let threePick;
+      let pick0, pick1, pick2;
+      let set0, set1, set2;
+      let tendencyMatrix;
+      let randomPick;
+
+      randomPick = random(photos, first);
+
+      if (randomPick.length < 3) {
+        return photos;
       }
-      return union;
-    }
-
-
-    for (let za = 0; za < 5; za++) {
-
-      randomPick = random();
 
       pick0 = randomPick[0];
       pick1 = randomPick[1];
@@ -191,9 +205,6 @@ DevContext.prototype.randomPictures = async function () {
       if (threePick.length < 5) {
         threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set2));
       }
-
-      console.log(threePick);
-      console.log(photos.length)
 
       photos = photos.filter((obj) => { return obj.keywords.some((s) => { return threePick.includes(s); }) });
 
@@ -216,14 +227,13 @@ DevContext.prototype.randomPictures = async function () {
         return sum0 - sum1;
       });
 
-      photos = photos.slice(0, Math.floor(photos.length * 0.6));
-
-      console.log(photos.length)
-
-
+      return photos.slice(0, Math.floor(photos.length * ratio));
     }
 
-
+    for (let i = 0; i < 5; i++) {
+      photos = photoFilter(photos, contentsArr, (i === 0));
+      console.log(photos.length);
+    }
 
 
 
