@@ -87,7 +87,6 @@ DevContext.prototype.randomPictures = async function () {
       return obj;
     });
 
-
     const photoFilter = function (photos, contentsArr, first = false) {
       if (typeof photos !== "object" || typeof contentsArr !== "object" || typeof first !== "boolean") {
         throw new Error("invaild input");
@@ -230,13 +229,44 @@ DevContext.prototype.randomPictures = async function () {
       return photos.slice(0, Math.floor(photos.length * ratio));
     }
 
+    const sortDesigner = function (photos, designers) {
+      if (typeof photos !== "object" || typeof designers !== "object") {
+        throw new Error("invaild input");
+      }
+      const photoLength = photos.length;
+      if (photoLength !== 0) {
+        let tendency, designersTendency, matrix, length, num;
+        tendency = (new Array(photos[0].tendency.length)).fill(0);
+        for (let i = 0; i < photoLength; i++) {
+          for (let j = 0; j < photos[i].tendency.length; j++) {
+            tendency[j] += photos[i].tendency[j];
+          }
+        }
+        tendency = tendency.map((n) => { return Math.round((n / photoLength) * 100) / 100; });
+
+        designersTendency = [];
+        for (let designer of designers) {
+          matrix = designer.analytics.styling.tendency.toMatrix();
+          num = 0;
+          for (let i = 0; i < matrix.length; i++) {
+            num += Math.abs(matrix[i] - tendency[i]);
+          }
+          designersTendency.push({ desid: designer.desid, tendency: matrix, length: Math.round((num / matrix.length) * 100) / 100 });
+        }
+
+        designersTendency.sort((a, b) => { return a.length - b.length });
+
+        return designersTendency.slice(0, 10).map((obj) => { return obj.desid; });
+      } else {
+        return [];
+      }
+    }
+
     for (let i = 0; i < 5; i++) {
       photos = photoFilter(photos, contentsArr, (i === 0));
       console.log(photos.length);
     }
-
-
-
+    console.log(sortDesigner(photos, designers));
 
     await MONGOC.close();
 

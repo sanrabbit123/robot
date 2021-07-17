@@ -30,204 +30,299 @@
     ],
     "module": false
   },
-  "name": "detailSurvey",
+  "name": "styleCuration",
   "route": [
-    "survey",
-    "DS"
+    "curation",
+    "SC"
   ]
 } %/%/g
 
-const DetailSurveyJs = function () {
+const StyleCurationJs = function () {
   this.mother = new GeneralJs();
   this.client = null;
 }
 
-DetailSurveyJs.binaryPath = "/middle/survey";
+StyleCurationJs.binaryPath = "/middle/curation";
 
-DetailSurveyJs.prototype.insertInitBox = async function () {
+StyleCurationJs.prototype.insertInitBox = function () {
   const instance = this;
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
-  try {
-    let whiteBlock, whiteTong;
-    let blockHeight, bottomMargin;
-    let margin;
-    let calendar;
-    let initWordingBox;
-    let initWordingHeight;
-    let initWordingSize;
-    let initWordingLineHeight;
-    let calendarBox;
-    let calendarWidth;
-    let quoteTop, quoteHeight, quoteMarginBottom, quoteLeft;
-    let titleAreaHeight;
-    let middleMargin;
-    let buttonMargin;
-    let buttonValues;
-    let buttonBetween;
-    let buttonSize;
-    let buttonTop;
-    let buttonPaddingTop;
-    let mobileCalendarHeight;
-    let initWordings;
-    let buttonMaker;
+  let wordings;
+  let whiteBlock, whiteTong;
+  let blockHeight, bottomMargin;
+  let margin;
+  let titleFontTop, titleFontSize, titleFontWeight, titleFontLineHeight, titleFontLeft;
+  let firstBlock, secondBlock, thirdBlock;
+  let firstBlockWidth, secondBlockWidth;
+  let greenBoxTop, greenBoxWidth, greenBoxHeight;
+  let initWordingSize, initWordingWidth;
+  let lineHeight;
+  let initWordingMargin;
 
-    blockHeight = <%% this.backHeight, this.backHeight - 100, this.backHeight - 100, this.backHeight - 220, this.backHeight %%>;
-    bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-    margin = <%% 52, 52, 44, 36, 4.7 %%>;
+  wordings = {
+    title: [
+      "홈리에종",
+      "큐레이션",
+    ],
+    contents: [
+      [
+        "홈리에종은 체계화된 정보과 취향 분석 기능을",
+        "활용해서 <b%고객님의 스타일과 조건에 딱 맞는%b>",
+        "<b%서비스를 제안하고, 디자이너를 추천%b>해드립니다.",
+      ],
+      [
+        "아래 간단한 상세 큐레이팅 설문에 응답해주시면",
+        "<b%예상 서비스 및 서비스 금액%b>을 알려드릴 수 있으니,",
+        "작성 부탁드립니다. 감사합니다!",
+      ]
+    ]
+  }
 
-    initWordingHeight = <%% 20, 20, 20, 20, 5 %%>;
-    initWordingSize = <%% 17, 17, 16, 14, 3.4 %%>;
-    initWordingLineHeight = <%% 10, 10, 10, 9, 1.7 %%>;
+  blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-    middleMargin = <%% 30, 30, 30, 15, 3.2 %%>;
+  titleFontTop = <%% -3, -3, -3, -3, -3 %%>;
+  titleFontSize = <%% 33, 33, 33, 33, 5.7 %%>;
+  titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
+  titleFontLineHeight = <%% 42, 41, 41, 41, 5.7 %%>;
+  titleFontLeft = <%% 3, 3, 3, 3, 3 %%>;
 
-    quoteTop = 0;
-    quoteHeight = <%% 12, 12, 11, 9, 2.2 %%>;
-    quoteMarginBottom = <%% 7, 7, 7, 6, 1.2 %%>;
-    quoteLeft = <%% 2, 2, 2, 2, 1 %%>;
+  firstBlockWidth = <%% 140, 140, 140, 140, 140 %%>;
+  secondBlockWidth = <%% 420, 420, 420, 420, 420 %%>;
 
-    calendarWidth = <%% 1000, 780, 640, 520, 80 %%>;
+  greenBoxTop = <%% 96, 95, 95, 95, 95 %%>;
+  greenBoxWidth = <%% 26, 26, 26, 26, 26 %%>;
+  greenBoxHeight = <%% 4, 4, 4, 4, 4 %%>;
 
-    buttonMargin = <%% 20, 20, 20, 20, 20 %%>;
-    buttonBetween = <%% 5, 5, 5, 4, 1 %%>;
-    buttonSize = <%% 19, 16, 16, 12, 3 %%>;
-    buttonTop = <%% 7, 5, 5, 4, 1.4 %%>;
-    buttonPaddingTop = <%% 48, 48, 48, 48, 3 %%>;
+  initWordingSize = <%% 15, 15, 15, 13, 15 %%>;
+  initWordingWidth = <%% 290, 290, 290, 290, 290 %%>;
+  initWordingMargin = <%% 15, 15, 15, 15, 15 %%>;
 
-    mobileCalendarHeight = 64;
+  lineHeight = 1.6;
 
-    initWordings = [
-      (desktop ? `안녕하세요, ${this.client.name} 고객님! 전화 상담을 위한 <b%예약 페이지%b>입니다.` : `안녕하세요, ${this.client.name} 고객님.`),
-      (desktop ? `<b%상담을 원하시는 날짜와 시간대를 선택%b>해주시면, 해당 시간에 상담을 위한 통화를 진행해드리도록 하겠습니다 :)` : `<b%상담을 원하시는 날짜와 시간대%b>를 선택해주세요!`),
-    ];
-
-    titleAreaHeight = quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight + initWordingHeight + middleMargin;
-
-    whiteBlock = createNode({
-      mother: baseTong,
-      style: {
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      height: String(blockHeight + (desktop ? 0 : 0) - (margin * 2)) + ea,
+      background: colorChip.white,
+      paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
+      paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
         position: "relative",
-        borderRadius: String(desktop ? 8 : 1) + ea,
-        width: String(100) + '%',
-        height: String(blockHeight + (desktop ? 0 : mobileCalendarHeight) - (margin * 2)) + ea,
-        background: colorChip.white,
-        paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
-        paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
-        marginBottom: String(bottomMargin) + ea,
-        boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  [ firstBlock, secondBlock, thirdBlock ] = createNodes([
+    {
+      mother: whiteTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(firstBlockWidth) + ea,
+        height: String(100) + '%',
+        verticalAlign: "top",
       },
       children: [
         {
-          display: "block",
-          position: "relative",
-          width: withOut(margin * 2, ea),
-          height: String(100) + '%',
-          marginLeft: String(margin) + ea,
+          text: wordings.title[0],
+          style: {
+            fontSize: String(titleFontSize) + ea,
+            fontWeight: String(titleFontWeight),
+            position: "absolute",
+            top: String(titleFontTop) + ea,
+            left: String(titleFontLeft) + ea,
+            fontFamily: "sandoll",
+          }
+        },
+        {
+          text: wordings.title[1],
+          style: {
+            fontSize: String(titleFontSize) + ea,
+            fontWeight: String(titleFontWeight),
+            position: "absolute",
+            top: String(titleFontTop + titleFontLineHeight) + ea,
+            left: String(titleFontLeft) + ea,
+            fontFamily: "sandoll",
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            width: String(greenBoxWidth) + ea,
+            height: String(greenBoxHeight) + ea,
+            borderRadius: String(3) + "px",
+            background: colorChip.green,
+            top: String(greenBoxTop) + ea,
+            left: String(titleFontLeft) + ea,
+          }
         }
       ]
-    });
-
-    whiteTong = whiteBlock.firstChild;
-
-    [ initWordingBox, calendarBox ] = createNodes([
-      {
-        mother: whiteTong,
-        style :{
-          position: "relative",
-          width: String(100) + '%',
-          height: String(titleAreaHeight) + ea,
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(400),
-        },
-        children: [
-          {
-            mode: "svg",
-            source: this.mother.returnQuotes(colorChip.green),
-            style: {
-              position: "absolute",
-              top: String(quoteTop) + ea,
-              left: desktop ? String(quoteLeft) + ea : "calc(50% - 1.3vw)",
-              height: String(quoteHeight) + ea,
-            }
-          },
-          {
-            text: initWordings[0],
-            style: {
-              position: "absolute",
-              top: String(quoteTop + quoteHeight + quoteMarginBottom) + ea,
-              left: String(0) + ea,
-              width: String(100) + '%',
-              height: String(initWordingHeight) + ea,
-              fontSize: String(initWordingSize) + ea,
-              fontWeight: String(300),
-              textAlign: desktop ? "left" : "center",
-              color: colorChip.black
-            },
-            bold: {
-              fontWeight: String(500),
-              color: colorChip.black
-            }
-          },
-          {
-            text: initWordings[1],
-            style: {
-              position: "absolute",
-              top: String(quoteTop + quoteHeight + quoteMarginBottom + initWordingSize + initWordingLineHeight) + ea,
-              left: String(0) + ea,
-              width: String(100) + '%',
-              height: String(initWordingHeight) + ea,
-              fontSize: String(initWordingSize) + ea,
-              fontWeight: String(300),
-              textAlign: desktop ? "left" : "center",
-              color: colorChip.black
-            },
-            bold: {
-              fontWeight: String(500),
-              color: colorChip.black
-            }
-          }
-        ]
+    },
+    {
+      mother: whiteTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(secondBlockWidth) + ea,
+        verticalAlign: "bottom",
       },
-      {
-        mother: whiteTong,
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: withOut(titleAreaHeight, ea),
-        },
-        children: [
-          {
-            style: {
-              display: desktop ? "inline-block" : "block",
-              height: desktop ? String(100) + '%' : String(mobileCalendarHeight) + ea,
-              width: desktop ? String(calendarWidth) + ea : String(100) + '%',
-              verticalAlign: "top",
-            }
+      children: [
+        {
+          style: {
+            position: "relative",
+            width: String(initWordingWidth) + ea,
+            verticalAlign: "bottom",
           },
-          {
-            style: {
-              display: desktop ? "inline-block" : "block",
-              paddingTop: String(buttonPaddingTop) + ea,
-              paddingLeft: String(desktop ? buttonMargin : 0) + ea,
-              width: desktop ? withOut(calendarWidth + buttonMargin, ea) : String(100) + '%',
-              height: desktop ? withOut(buttonPaddingTop, ea) : withOut(buttonPaddingTop + mobileCalendarHeight, ea)
-            }
-          }
-        ]
+          children: [
+            {
+              text: wordings.contents[0].join("\n"),
+              style: {
+                position: "relative",
+                width: String(100) + '%',
+                display: "block",
+                lineHeight: String(lineHeight),
+                marginBottom: String(initWordingMargin) + ea,
+                fontSize: String(initWordingSize) + ea,
+                fontWeight: String(300),
+                color: colorChip.black,
+              },
+              bold: {
+                fontSize: String(initWordingSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+              }
+            },
+            {
+              text: wordings.contents[1].join("\n"),
+              style: {
+                position: "relative",
+                width: String(100) + '%',
+                display: "block",
+                lineHeight: String(lineHeight),
+                fontSize: String(initWordingSize) + ea,
+                fontWeight: String(300),
+                color: colorChip.black,
+              },
+              bold: {
+                fontSize: String(initWordingSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+              }
+            },
+          ]
+        },
+      ]
+    },
+    {
+      mother: whiteTong,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: withOut(firstBlockWidth + secondBlockWidth, ea),
+        height: String(100) + '%',
+        borderRadius: String(5) + "px",
+        background: colorChip.green
       }
-    ]);
+    }
+  ]);
 
-
-
-  } catch (e) {
-    console.log(e);
-  }
 }
 
-DetailSurveyJs.prototype.insertPannelBox = function () {
+StyleCurationJs.prototype.insertCenterBox = function () {
+  const instance = this;
+  const { client, ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
+  let wordings;
+  let block;
+  let whiteBlock, whiteTong;
+  let blockHeight, bottomMargin;
+
+  wordings = [
+    { name: "스타일", contents: function () {} },
+    { name: "공간", contents: function () {} },
+    { name: "가구", contents: function () {} },
+    { name: "시공", contents: function () {} },
+  ];
+
+  blockHeight = <%% this.backHeight, this.backHeight, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 52, 52, 44, 36, 4.7 %%>;
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      height: String(blockHeight + (desktop ? 0 : 0) - (margin * 2)) + ea,
+      background: colorChip.white,
+      paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
+      paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  for (let { name, contents } of wordings) {
+    block = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+          },
+        },
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+          }
+        },
+      ]
+    });
+    contents(block.lastChild);
+  }
+
+}
+
+StyleCurationJs.prototype.insertPannelBox = function () {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -446,7 +541,7 @@ DetailSurveyJs.prototype.insertPannelBox = function () {
 
 }
 
-DetailSurveyJs.prototype.launching = async function (loading) {
+StyleCurationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     this.mother.setGeneralProperties(this);
@@ -476,12 +571,13 @@ DetailSurveyJs.prototype.launching = async function (loading) {
     await this.mother.ghostClientLaunching({
       base: {
         instance: this,
-        binaryPath: DetailSurveyJs.binaryPath,
+        binaryPath: StyleCurationJs.binaryPath,
         subTitle: (this.client.name + " 고객님 서비스 안내"),
       },
       local: async () => {
         try {
-          await instance.insertInitBox();
+          instance.insertInitBox();
+          instance.insertCenterBox();
           instance.insertPannelBox();
         } catch (e) {
           console.log(e);
@@ -489,8 +585,6 @@ DetailSurveyJs.prototype.launching = async function (loading) {
       }
     });
 
-    //loading end
-    await GeneralJs.sleep(500);
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
