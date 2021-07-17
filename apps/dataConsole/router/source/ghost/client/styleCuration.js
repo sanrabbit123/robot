@@ -37,12 +37,340 @@
   ]
 } %/%/g
 
+Set.prototype.intersection = function(setB) {
+  let intersection = new Set();
+  for (let elem of setB) {
+    if (this.has(elem)) {
+      intersection.add(elem);
+    }
+  }
+  return intersection;
+}
+
+Set.prototype.union = function(setB) {
+  let union = new Set(this);
+  for (let elem of setB) {
+    union.add(elem);
+  }
+  return union;
+}
+
 const StyleCurationJs = function () {
   this.mother = new GeneralJs();
   this.client = null;
 }
 
 StyleCurationJs.binaryPath = "/middle/curation";
+
+StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, roomsIntersection = false) {
+  if (typeof photos !== "object" || typeof contentsArr !== "object" || typeof pictureNumber !== "number" || typeof roomsIntersection !== "boolean") {
+    throw new Error("invaild input");
+  }
+  const photoLength = photos.length;
+  const conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
+  const standard = 50;
+  let randoms;
+  let randomPick, contentsPick;
+  let temp, temp2, tempArr;
+  let rooms, room;
+  let accumulation;
+  let num, num2;
+
+  num2 = 0;
+  do {
+    if (num >= standard) {
+      break;
+    }
+    do {
+      temp = [];
+      num = 0;
+      while (num < standard + pictureNumber) {
+        if (temp.length === pictureNumber) {
+          break;
+        }
+        temp2 = Math.floor(Math.random() * conidArr.length);
+        if (num < standard) {
+          if (!temp.includes(temp2) && conidArr.length >= temp2) {
+            temp.push(temp2);
+          }
+        } else {
+          if (conidArr.length >= temp2) {
+            temp.push(temp2);
+          }
+        }
+        num++;
+      }
+      temp.sort((a, b) => { return a - b; });
+      randoms = [];
+      for (let n of temp) {
+        randoms.push(conidArr[n]);
+      }
+      contentsPick = [];
+      for (let conid of randoms) {
+        for (let obj of contentsArr) {
+          if (conid === obj.conid) {
+            contentsPick.push(obj);
+          }
+        }
+      }
+      rooms = [];
+      for (let obj of contentsPick) {
+        tempArr = [];
+        for (let { title } of obj.contents.portfolio.contents.detail) {
+          if (title !== "init") {
+            tempArr.push(title);
+          }
+        }
+        rooms.push(tempArr);
+      }
+      accumulation = [];
+      for (let arr of rooms) {
+        tempArr = [];
+        for (let a of arr) {
+          if (roomsIntersection) {
+            if (!accumulation.includes(a)) {
+              tempArr.push(a);
+            }
+          } else {
+            tempArr.push(a);
+          }
+        }
+        if (tempArr.length > 0) {
+          room = tempArr[Math.floor(Math.random() * tempArr.length)];
+          accumulation.push(room);
+        }
+      }
+    } while (accumulation.length !== randoms.length);
+    randomPick = [];
+    for (let i = 0; i < randoms.length; i++) {
+      for (let obj of photos) {
+        if (obj.conid === randoms[i] && obj.room === accumulation[i] && obj.gs === 'g') {
+          randomPick.push(obj);
+          break;
+        }
+      }
+    }
+    num2++;
+  } while (randomPick.length !== pictureNumber);
+  return randomPick;
+}
+
+StyleCurationJs.photoFilter = function (photos, picks) {
+  if (typeof photos !== "object" || !Array.isArray(picks)) {
+    throw new Error("invaild input");
+  }
+  if (picks.length < 3) {
+    throw new Error("invaild picks");
+  }
+  const ratio = 0.7;
+  const [ pick0, pick1, pick2 ] = picks;
+  let threePick;
+  let set0, set1, set2;
+  let tendencyMatrix;
+  let files;
+
+  files = [];
+  for (let obj of picks) {
+    files.push(obj.file);
+  }
+
+  set0 = new Set(pick0.keywords);
+  set1 = new Set(pick1.keywords);
+  set2 = new Set(pick2.keywords);
+
+  threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)));
+  if (threePick.length < 5) {
+    threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set0));
+  }
+  if (threePick.length < 5) {
+    threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set1));
+  }
+  if (threePick.length < 5) {
+    threePick = Array.from(set0.intersection(set1).union(set0.intersection(set2)).union(set1.intersection(set2)).union(set2));
+  }
+
+  photos = photos.filter((obj) => { return obj.keywords.some((s) => { return threePick.includes(s); }) });
+  photos = photos.filter((obj) => { return !files.includes(obj.file); });
+
+  tendencyMatrix = new Array(pick0.tendency.length);
+  for (let i = 0; i < tendencyMatrix.length; i++) {
+    tendencyMatrix[i] = Math.round(((pick0.tendency[i] + pick1.tendency[i] + pick2.tendency[i]) / 3) * 100) / 100;
+  }
+
+  photos.sort((a, b) => {
+    const length = tendencyMatrix.length;
+    let sum0, sum1;
+    sum0 = 0;
+    sum1 = 0;
+    for (let i = 0; i < length; i++) {
+      sum0 += Math.abs(a.tendency[i] - tendencyMatrix[i]);
+      sum1 += Math.abs(b.tendency[i] - tendencyMatrix[i]);
+    }
+    sum0 = sum0 / length;
+    sum1 = sum1 / length;
+    return sum0 - sum1;
+  });
+
+  return photos.slice(0, Math.floor(photos.length * ratio));
+}
+
+StyleCurationJs.prototype.styleCheck = function (mother) {
+  const instance = this;
+  const { client, ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, cleanChildren } = GeneralJs;
+  const { photos, contentsArr, designers } = this;
+  const pictureNumber = 12;
+  const columnNumber = 4;
+  const pictureRatio = (297 / 210);
+  let randomPick, targetPhotos;
+  let pictureBox;
+  let innerMargin;
+  let pictureMargin;
+
+  innerMargin = 25;
+  pictureMargin = 8;
+
+  cleanChildren(mother);
+
+  randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
+  this.randomPick = randomPick;
+  targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
+
+  mother.style.paddingTop = String(innerMargin) + ea;
+  pictureBox = createNode({
+    mother,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(innerMargin) + ea,
+      width: withOut(innerMargin * 2, ea),
+    }
+  });
+
+  for (let i = 0; i < pictureNumber; i++) {
+    createNode({
+      mother: pictureBox,
+      mode: "img",
+      class: [ "hoverDefault_lite" ],
+      attribute: [
+        { src: targetPhotos[i], },
+        { index: String(i) },
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            const index = Number(this.getAttribute("index"));
+            const mother = this.parentNode;
+            const motherRect = mother.getBoundingClientRect();
+            const rect = this.getBoundingClientRect();
+            let radius, circleVisual;
+            radius = 22;
+            circleVisual = 4;
+            createNode({
+              mother,
+              attribute: [
+                { file: instance.randomPick[index].file }
+              ],
+              events: [
+                {
+                  type: "click",
+                  event: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const file = this.getAttribute("file");
+                    let index;
+                    index = null;
+                    for (let i = 0; i < instance.selectPhotos.length; i++) {
+                      if (instance.selectPhotos[i].file === file) {
+                        index = i;
+                        break;
+                      }
+                    }
+                    if (index !== null) {
+                      instance.selectPhotos.splice(index, 1);
+                    }
+                    mother.removeChild(this);
+                  },
+                }
+              ],
+              style: {
+                position: "absolute",
+                width: String(rect.width) + ea,
+                height: String(rect.height) + ea,
+                top: String(rect.top - motherRect.top) + ea,
+                left: String(rect.left - motherRect.left) + ea,
+                borderRadius: String(3) + "px",
+                animation: "justfadeinoriginal 0.2s ease forwards",
+                cursor: "pointer",
+                overflow: "hidden",
+                background: colorChip.green,
+                "mix-blend-mode": "multiply",
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckCircle(colorChip.white),
+                  style: {
+                    position: "absolute",
+                    width: String(radius * 2) + ea,
+                    top: withOut(50, radius + circleVisual, ea),
+                    left: withOut(50, radius, ea),
+                  }
+                }
+              ]
+            });
+            instance.selectPhotos.push(instance.randomPick[index]);
+            if (instance.selectPhotos.length >= 3) {
+              instance.photos = StyleCurationJs.photoFilter(instance.photos, instance.selectPhotos);
+              instance.selectPhotos = [];
+              instance.styleCheck(mother.parentNode);
+            }
+          }
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: "calc(calc(100% - " + String(pictureMargin * (columnNumber - 1)) + ea + ") / " + String(columnNumber) + ")",
+        height: "auto",
+        borderRadius: String(3) + "px",
+        marginRight: String(i % columnNumber === 3 ? 0 : pictureMargin) + ea,
+        marginBottom: String(pictureMargin) + ea,
+      }
+    });
+  }
+
+}
+
+StyleCurationJs.prototype.spaceCheck = function (mother) {
+  const instance = this;
+  const { client, ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+
+}
+
+StyleCurationJs.prototype.furnitureCheck = function (mother) {
+  const instance = this;
+  const { client, ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+
+}
+
+StyleCurationJs.prototype.constructCheck = function (mother) {
+  const instance = this;
+  const { client, ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+
+}
 
 StyleCurationJs.prototype.insertInitBox = function () {
   const instance = this;
@@ -57,10 +385,10 @@ StyleCurationJs.prototype.insertInitBox = function () {
   let titleFontTop, titleFontSize, titleFontWeight, titleFontLineHeight, titleFontLeft;
   let firstBlock, secondBlock, thirdBlock;
   let firstBlockWidth, secondBlockWidth;
-  let greenBoxTop, greenBoxWidth, greenBoxHeight;
+  let greenBoxTop, greenBoxWidth, greenBoxHeight, greenBoxVisual;
   let initWordingSize, initWordingWidth;
   let lineHeight;
-  let initWordingMargin;
+  let initWordingMargin, initWordingBottom;
 
   wordings = {
     title: [
@@ -89,18 +417,20 @@ StyleCurationJs.prototype.insertInitBox = function () {
   titleFontSize = <%% 33, 33, 33, 33, 5.7 %%>;
   titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleFontLineHeight = <%% 42, 41, 41, 41, 5.7 %%>;
-  titleFontLeft = <%% 3, 3, 3, 3, 3 %%>;
+  titleFontLeft = <%% 5, 5, 5, 5, 5 %%>;
 
-  firstBlockWidth = <%% 140, 140, 140, 140, 140 %%>;
+  firstBlockWidth = <%% 142, 142, 142, 142, 142 %%>;
   secondBlockWidth = <%% 420, 420, 420, 420, 420 %%>;
 
-  greenBoxTop = <%% 96, 95, 95, 95, 95 %%>;
-  greenBoxWidth = <%% 26, 26, 26, 26, 26 %%>;
+  greenBoxTop = <%% 1, 1, 1, 1, 1 %%>;
+  greenBoxWidth = <%% 25, 25, 25, 25, 25 %%>;
   greenBoxHeight = <%% 4, 4, 4, 4, 4 %%>;
+  greenBoxVisual = 1;
 
   initWordingSize = <%% 15, 15, 15, 13, 15 %%>;
   initWordingWidth = <%% 290, 290, 290, 290, 290 %%>;
   initWordingMargin = <%% 15, 15, 15, 15, 15 %%>;
+  initWordingBottom = <%% 27, 27, 27, 27, 27 %%>;
 
   lineHeight = 1.6;
 
@@ -161,17 +491,6 @@ StyleCurationJs.prototype.insertInitBox = function () {
             left: String(titleFontLeft) + ea,
             fontFamily: "sandoll",
           }
-        },
-        {
-          style: {
-            position: "absolute",
-            width: String(greenBoxWidth) + ea,
-            height: String(greenBoxHeight) + ea,
-            borderRadius: String(3) + "px",
-            background: colorChip.green,
-            top: String(greenBoxTop) + ea,
-            left: String(titleFontLeft) + ea,
-          }
         }
       ]
     },
@@ -184,6 +503,17 @@ StyleCurationJs.prototype.insertInitBox = function () {
         verticalAlign: "bottom",
       },
       children: [
+        {
+          style: {
+            position: "absolute",
+            width: String(greenBoxWidth) + ea,
+            height: String(greenBoxHeight) + ea,
+            borderRadius: String(3) + "px",
+            background: colorChip.green,
+            bottom: String(greenBoxTop) + ea,
+            left: String(0) + ea,
+          }
+        },
         {
           style: {
             position: "relative",
@@ -218,6 +548,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
                 lineHeight: String(lineHeight),
                 fontSize: String(initWordingSize) + ea,
                 fontWeight: String(300),
+                marginBottom: String(initWordingBottom) + ea,
                 color: colorChip.black,
               },
               bold: {
@@ -252,20 +583,57 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
   let wordings;
+  let paddingTop;
   let block;
   let whiteBlock, whiteTong;
-  let blockHeight, bottomMargin;
+  let bottomMargin;
+  let titleFontSize;
+  let num;
+  let numberRight;
+  let titleTop;
+  let barTop;
+  let titleBottom, blockBottom;
 
   wordings = [
-    { name: "스타일", contents: function () {} },
-    { name: "공간", contents: function () {} },
-    { name: "가구", contents: function () {} },
-    { name: "시공", contents: function () {} },
+    {
+      name: "스타일",
+      contents: (mother) => {
+        instance.styleCheck(mother);
+      }
+    },
+    {
+      name: "공간",
+      contents: (mother) => {
+        instance.spaceCheck(mother);
+      }
+    },
+    {
+      name: "가구",
+      contents: (mother) => {
+        instance.furnitureCheck(mother);
+      }
+    },
+    {
+      name: "시공",
+      contents: (mother) => {
+        instance.constructCheck(mother);
+      }
+    },
   ];
 
-  blockHeight = <%% this.backHeight, this.backHeight, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
+  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
+
+  titleFontSize = <%% 21, 21, 21, 21, 5.7 %%>;
+  numberRight = <%% 12, 12, 12, 12, 5.7 %%>;
+
+  titleTop = <%% 1, 1, 1, 1, 0 %%>;
+
+  barTop = <%% 15, 15, 15, 15, 0 %%>;
+
+  titleBottom = <%% 15, 15, 15, 15, 0 %%>;
+  blockBottom = <%% 30, 30, 30, 30, 0 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -273,9 +641,8 @@ StyleCurationJs.prototype.insertCenterBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight + (desktop ? 0 : 0) - (margin * 2)) + ea,
       background: colorChip.white,
-      paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
+      paddingTop: String(paddingTop + (desktop ? 0 : 1.7)) + ea,
       paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
@@ -292,6 +659,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
+  num = 1;
   for (let { name, contents } of wordings) {
     block = createNode({
       mother: whiteTong,
@@ -306,18 +674,58 @@ StyleCurationJs.prototype.insertCenterBox = function () {
             display: "block",
             position: "relative",
             width: String(100) + '%',
+            marginBottom: String(titleBottom) + ea,
           },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                top: String(barTop) + ea,
+                width: String(100) + '%',
+                borderBottom: "1px solid " + colorChip.gray2,
+              }
+            },
+            {
+              text: String(num),
+              style: {
+                position: "relative",
+                display: "inline-block",
+                top: String(0),
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(200),
+                background: colorChip.white,
+                paddingRight: String(numberRight) + ea,
+              }
+            },
+            {
+              text: name,
+              style: {
+                position: "absolute",
+                right: String(0),
+                top: String(titleTop) + ea,
+                fontSize: String(titleFontSize) + ea,
+                fontWeight: String(600),
+                background: colorChip.white,
+                paddingLeft: String(numberRight) + ea,
+              }
+            },
+          ]
         },
         {
           style: {
             display: "block",
             position: "relative",
             width: String(100) + '%',
+            border: "1px solid " + colorChip.gray2,
+            borderRadius: String(5) + "px",
+            overflow: "hidden",
+            marginBottom: String(num !== wordings.length ? blockBottom : 0) + ea,
           }
         },
       ]
     });
     contents(block.lastChild);
+    num++;
   }
 
 }
@@ -548,12 +956,10 @@ StyleCurationJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
-    let proid, cliid;
-    let projects, project;
+    let cliid;
     let clients, client;
-    let designers, designer;
     let whereQuery;
-    let belowTarget, removeTargets;
+    let contentsPhotoObj;
 
     if (getObj.cliid === undefined) {
       alert("잘못된 접근입니다!");
@@ -566,6 +972,13 @@ StyleCurationJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
     client = clients[0];
+
+    contentsPhotoObj = await ajaxJson({}, "/styleCuration_getPhotos", { equal: true });
+    this.selectPhotos = [];
+    this.randomPick = [];
+    this.photos = contentsPhotoObj.photos;
+    this.contentsArr = contentsPhotoObj.contentsArr;
+    this.designers = contentsPhotoObj.designers;
     this.client = client;
 
     await this.mother.ghostClientLaunching({
