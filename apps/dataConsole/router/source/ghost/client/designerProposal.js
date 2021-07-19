@@ -2658,6 +2658,7 @@ DesignerProposalJs.prototype.insertWordBox = function () {
   let buttonTongHeight;
   let buttonHeight;
   let finalBottom;
+  let buttonTong;
 
   top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
   bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;

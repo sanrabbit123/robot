@@ -63,7 +63,15 @@ class StyleCurationWordings {
           name: "style",
           title: "스타일",
           callback: "styleCheck",
-          children: []
+          children: [
+            {
+              type: "style",
+              half: false,
+              question: [
+                "선호하는 스타일을 <b%3장%b> 골라주세요!",
+              ],
+            }
+          ]
         },
         {
           name: "space",
@@ -237,7 +245,11 @@ class StyleCurationWordings {
                 "공실 상태",
               ],
               multiple: false,
-              notice: "거주중일 경우 시공에 한계가 있습니다."
+              notice: "거주중일 경우 시공에 한계가 있습니다.",
+              exception: function (items, media) {
+                const ea = "px";
+                items[0].style.marginRight = String(20) + ea;
+              }
             },
           ]
         },
@@ -448,16 +460,32 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const { photos, contentsArr, designers } = this;
   const pictureNumber = 12;
   const columnNumber = 4;
-  const pictureRatio = (297 / 210);
   let randomPick, targetPhotos;
   let pictureBox;
   let innerMargin;
   let pictureMargin;
-
-  innerMargin = 25;
-  pictureMargin = 8;
+  let questionWording;
+  let pannelHeight;
+  let pannelWordsSize;
+  let pannelWordsPadding;
+  let pannelLineTop;
+  let arrowTop, arrowWidth;
 
   cleanChildren(mother);
+
+  innerMargin = <%% 35, 35, 35, 35, 35 %%>;
+  pictureMargin = <%% 10, 10, 10, 10, 10 %%>;
+
+  pannelHeight = <%% 94, 94, 94, 94, 94 %%>;
+  pannelPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
+  pannelWordsSize = <%% 23, 23, 23, 23, 23 %%>;
+  pannelWordsPadding = <%% 16, 16, 16, 16, 16 %%>;
+  pannelLineTop = <%% 31, 31, 31, 31, 31 %%>;
+
+  arrowTop = <%% 27, 27, 27, 27, 27 %%>;
+  arrowWidth = <%% 10, 10, 10, 10, 10 %%>;
+
+  questionWording = wordings[0].question[0] + " ( 1 / 5 )";
 
   randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
   this.randomPick = randomPick;
@@ -568,6 +596,74 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
     });
   }
 
+  createNode({
+    mother,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(pannelHeight - pannelPaddingTop) + ea,
+      paddingTop: String(pannelPaddingTop) + ea,
+      textAlign: "center",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: withOut(innerMargin * 2, ea),
+          left: String(innerMargin) + ea,
+          top: String(0) + ea,
+          height: String(31) + ea,
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      },
+      {
+        mode: "svg",
+        class: [ "hoverDefault" ],
+        source: this.mother.returnArrow("left", colorChip.green),
+        style: {
+          position: "absolute",
+          left: String(innerMargin) + ea,
+          top: String(arrowTop) + ea,
+          width: String(arrowWidth) + ea,
+          paddingRight: String(pannelWordsPadding) + ea,
+          background: colorChip.white,
+        }
+      },
+      {
+        mode: "svg",
+        class: [ "hoverDefault" ],
+        source: this.mother.returnArrow("right", colorChip.green),
+        style: {
+          position: "absolute",
+          right: String(innerMargin) + ea,
+          top: String(arrowTop) + ea,
+          width: String(arrowWidth) + ea,
+          paddingLeft: String(pannelWordsPadding) + ea,
+          background: colorChip.white,
+        }
+      },
+      {
+        text: questionWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(pannelWordsSize) + ea,
+          fontWeight: String(200),
+          color: colorChip.green,
+          paddingRight: String(pannelWordsPadding) + ea,
+          paddingLeft: String(pannelWordsPadding) + ea,
+          background: colorChip.white,
+        },
+        bold: {
+          fontWeight: String(600),
+          color: colorChip.green,
+        }
+      }
+    ]
+  });
+
 }
 
 StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
@@ -607,15 +703,23 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   let barButtonRadius;
   let barButton;
   let thisName;
+  let listRightMargin;
+  let listBottomMargin;
+  let listColumnsLength;
+  let listFullWidth;
+  let listHypenWidth;
+  let listColumWidth, listColumPaddingLeft;
+  let listNum;
+  let listAreaPaddingTop;
 
   lineHeight = 1.6;
 
   wordingSize = <%% 15, 15, 15, 13, 15 %%>;
   standardSize = <%% 13, 13, 13, 13, 13 %%>;
 
-  paddingTop = <%% 25, 25, 25, 25, 25 %%>;
-  paddingBottom = <%% 31, 31, 31, 31, 31 %%>;
-  marginLeft = <%% 33, 33, 33, 33, 33 %%>;
+  paddingTop = <%% 30, 30, 30, 30, 30 %%>;
+  paddingBottom = <%% 35, 35, 35, 35, 35 %%>;
+  marginLeft = <%% 35, 35, 35, 35, 35 %%>;
   questionMargin = <%% 30, 30, 30, 30, 30 %%>;
   blockMargin = <%% 19, 19, 19, 19, 19 %%>;
   qWidth = <%% 19, 19, 19, 19, 19 %%>;
@@ -640,6 +744,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
   barButtonTop = <%% 12, 12, 12, 12, 12 %%>;
   barButtonRadius = <%% 5.5, 5.5, 5.5, 5.5, 5.5 %%>;
+
+  listAreaPaddingTop = <%% 13, 13, 13, 13, 13 %%>;
+  listRightMargin = <%% 10, 10, 10, 10, 10 %%>;
+  listBottomMargin = <%% 8, 8, 8, 8, 8 %%>;
+  listColumnsLength = <%% 4, 4, 4, 4, 4 %%>;
+  listFullWidth = <%% 400, 400, 400, 400, 400 %%>;
+  listHypenWidth = <%% 10, 10, 10, 10, 10 %%>;
+  listColumWidth = <%% 10, 10, 10, 10, 10 %%>;
+  listColumPaddingLeft = <%% 2, 2, 2, 2, 2 %%>;
 
   mother.style.paddingTop = String(paddingTop) + ea;
   mother.style.paddingBottom = String(paddingBottom) + ea;
@@ -881,7 +994,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           left: String(0) + ea,
         }
       });
-
       barText0 = createNode({
         mother: answerArea,
         text: obj.items[0],
@@ -894,7 +1006,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           top: String(barTextTop) + ea,
         }
       });
-
       barText1 = createNode({
         mother: answerArea,
         text: obj.items[1],
@@ -924,7 +1035,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           transition: "all 0s ease",
         }
       });
-
       barBox.style.width = String(barBox.getBoundingClientRect().width) + ea;
       barBox.setAttribute("width", String(barBox.getBoundingClientRect().width));
       barBox.setAttribute("entire", String(barBox.getBoundingClientRect().width * 2));
@@ -952,11 +1062,9 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       });
 
       thisName = name + token + String(y);
-
       GeneralJs.stacks[thisName + "_isDown"] = false;
       GeneralJs.stacks[thisName + "_startX"] = false;
       GeneralJs.stacks[thisName + "_scrollLeft"] = false;
-
       barButton.addEventListener("mousedown", function (e) {
         GeneralJs.stacks[thisName + "_isDown"] = true;
         GeneralJs.stacks[thisName + "_startX"] = e.pageX - this.offsetLeft;
@@ -965,21 +1073,18 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         barBox.style.cursor = "grabbing";
         barButton.style.cursor = "grabbing";
       });
-
       answerArea.addEventListener("mouseleave", function (e) {
         GeneralJs.stacks[thisName + "_isDown"] = false;
         answerArea.style.cursor = "pointer";
         barBox.style.cursor = "pointer";
         barButton.style.cursor = "pointer";
       });
-
       answerArea.addEventListener("mouseup", function (e) {
         GeneralJs.stacks[thisName + "_isDown"] = false;
         answerArea.style.cursor = "pointer";
         barBox.style.cursor = "pointer";
         barButton.style.cursor = "pointer";
       });
-
       answerArea.addEventListener("mousemove", function (e) {
         let x, walk, newWidth;
         if (!GeneralJs.stacks[thisName + "_isDown"]) {
@@ -998,6 +1103,131 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         barBox.style.cursor = "grabbing";
         barButton.style.cursor = "grabbing";
       });
+
+    } else if (obj.type === "list") {
+
+      answerArea.style.display = "block";
+      answerArea.style.width = String(100) + '%';
+      answerArea.style.paddingTop = String(listAreaPaddingTop) + ea;
+
+      listNum = 0;
+      for (let obj2 of obj.items) {
+
+        createNode({
+          mother: answerArea,
+          class: [ "hoverDefault_lite" ],
+          attribute: [
+            { toggle: "off" },
+            { x: name },
+            { y: String(y) },
+            { z: String(listNum) },
+          ],
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                const toggle = this.getAttribute("toggle");
+                const x = this.getAttribute("name");
+                const y = Number(this.getAttribute('y'));
+                const z = Number(this.getAttribute('z'));
+                const children = this.firstChild.children;
+                if (toggle === "off") {
+                  for (let dom of children) {
+                    dom.style.color = dom.getAttribute("active");
+                  }
+                  this.setAttribute("toggle", "on");
+                } else {
+                  for (let dom of children) {
+                    dom.style.color = dom.getAttribute("deactive");
+                  }
+                  this.setAttribute("toggle", "off");
+                }
+              }
+            }
+          ],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            marginRight: String(listNum % listColumnsLength === listColumnsLength - 1 ? 0 : listRightMargin) + ea,
+            marginBottom: String(listBottomMargin) + ea,
+            width: "calc(calc(100% - " + String(listRightMargin * (listColumnsLength - 1)) + ea + ") / " + String(listColumnsLength) + ")",
+            overflow: "hidden",
+          },
+          children: [
+            {
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(wordingSize) + ea,
+                width: String(listFullWidth) + ea,
+              },
+              children: [
+                {
+                  text: '- ',
+                  attribute: [
+                    { deactive: colorChip.gray5 },
+                    { active: colorChip.green }
+                  ],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(listHypenWidth) + ea,
+                    fontSize: "inherit",
+                    fontWeight: String(200),
+                    color: colorChip.gray5,
+                  }
+                },
+                {
+                  text: obj2.name,
+                  attribute: [
+                    { deactive: colorChip.deactive },
+                    { active: colorChip.green }
+                  ],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: "inherit",
+                    fontWeight: String(600),
+                    color: colorChip.deactive,
+                  }
+                },
+                {
+                  text: obj2.contents === '' ? '' : ':',
+                  attribute: [
+                    { deactive: colorChip.gray5 },
+                    { active: colorChip.gray5 }
+                  ],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(listColumWidth) + ea,
+                    paddingLeft: String(listColumPaddingLeft) + ea,
+                    fontSize: "inherit",
+                    fontWeight: String(200),
+                    color: colorChip.gray5,
+                  }
+                },
+                {
+                  text: obj2.contents,
+                  attribute: [
+                    { deactive: colorChip.deactive },
+                    { active: colorChip.green }
+                  ],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: "inherit",
+                    fontWeight: String(200),
+                    color: colorChip.deactive,
+                  }
+                },
+              ]
+            }
+          ]
+        });
+        listNum++;
+      }
+
 
     }
 
@@ -1025,6 +1255,8 @@ StyleCurationJs.prototype.insertInitBox = function () {
   let initWordingSize, initWordingWidth;
   let lineHeight;
   let initWordingMargin, initWordingBottom;
+  let wordsPaddingTop;
+  let initPhoto;
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -1036,7 +1268,6 @@ StyleCurationJs.prototype.insertInitBox = function () {
   titleFontLineHeight = <%% 42, 41, 41, 41, 5.7 %%>;
   titleFontLeft = <%% 5, 5, 5, 5, 5 %%>;
 
-  firstBlockWidth = <%% 142, 142, 142, 142, 142 %%>;
   secondBlockWidth = <%% 420, 420, 420, 420, 420 %%>;
 
   greenBoxTop = <%% 1, 1, 1, 1, 1 %%>;
@@ -1048,6 +1279,10 @@ StyleCurationJs.prototype.insertInitBox = function () {
   initWordingWidth = <%% 290, 290, 290, 290, 290 %%>;
   initWordingMargin = <%% 15, 15, 15, 15, 15 %%>;
   initWordingBottom = <%% 27, 27, 27, 27, 27 %%>;
+
+  wordsPaddingTop = <%% 105, 105, 105, 105, 105 %%>;
+
+  initPhoto = "/secondConsulting.jpg";
 
   lineHeight = 1.6;
 
@@ -1082,7 +1317,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        width: String(firstBlockWidth) + ea,
+        width: String(secondBlockWidth) + ea,
         height: String(100) + '%',
         verticalAlign: "top",
       },
@@ -1114,10 +1349,13 @@ StyleCurationJs.prototype.insertInitBox = function () {
     {
       mother: whiteTong,
       style: {
-        display: "inline-block",
-        position: "relative",
+        position: "absolute",
         width: String(secondBlockWidth) + ea,
         verticalAlign: "bottom",
+        paddingTop: String(wordsPaddingTop) + ea,
+        height: withOut(wordsPaddingTop, ea),
+        top: String(0),
+        left: String(titleFontLeft + 1) + ea,
       },
       children: [
         {
@@ -1183,10 +1421,12 @@ StyleCurationJs.prototype.insertInitBox = function () {
       style: {
         display: "inline-block",
         position: "relative",
-        width: withOut(firstBlockWidth + secondBlockWidth, ea),
+        width: withOut(secondBlockWidth, ea),
         height: String(100) + '%',
         borderRadius: String(5) + "px",
-        background: colorChip.green
+        backgroundImage: "url('" + StyleCurationJs.binaryPath + initPhoto + "')",
+        backgroundSize: "auto 100%",
+        backgroundPosition: "50% 50%",
       }
     }
   ]);
@@ -1285,7 +1525,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
                 position: "absolute",
                 top: String(barTop) + ea,
                 width: String(100) + '%',
-                borderBottom: "1px solid " + colorChip.gray2,
+                borderBottom: "1px dashed " + colorChip.gray2,
               }
             },
             {
@@ -1335,72 +1575,39 @@ StyleCurationJs.prototype.insertCenterBox = function () {
 
 StyleCurationJs.prototype.insertPannelBox = function () {
   const instance = this;
-  const { ea, media } = this;
+  const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, isMac } = GeneralJs;
-  let topMargin, leftMargin;
-  let blockHeight, blockMarginBottom;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
   let whiteBlock;
+  let style;
+  let blockHeight, blockMarginBottom;
+  let designerButtonTong;
+  let designerButtonBar;
+  let designerButtonBarHead;
+  let designerButton;
+  let designerButtonText;
   let buttonHeight, buttonWidth;
   let buttonMargin;
   let buttonTextTop, buttonTextSize;
+  let headWidth, headVisual;
+  let informationArea;
   let wordSpacing;
   let finalBottom;
-  let targetWords;
-  let matrix;
-  let temp;
-  let past;
-  let style;
-  let wordsTable;
-  let num;
-  let div_clone, div_clone2;
-  let marginBottom;
-  let wordSize;
-  let box0Size, box1Size, box0Margin, box1Margin;
-  let target;
-  let logoVisual, logoHeight;
+  let grayTong, grayTextScroll, grayTextTong;
+  let grayHeight, grayTop, grayTextTop, grayTextLeft, grayTextSize;
+  let buttonOff, buttonOn;
+  let buttonTongHeight, grayButtonHeight;
+  let margin, paddingTop;
 
-  targetWords = [
-    {
-      mother: "상담 안내",
-      children: [
-        "상담 가능 시간은 평일 오전 11시부터 오후 6시 30분까지입니다.",
-        "점심 시간은 12시부터 13시 30분으로, 해당 시간에 응대가 어려울 수 있습니다.",
-        "짧게는 5분, 평균 10분, 길게는 30분 이하로 진행됩니다.",
-        "본 응대는 디자이너 추천을 위한 응대로, 구체적인 견적과 디자인 사항이 나오기 전 서비스 설명과 프로세스 소개를 위한 응대입니다.",
-        "구체적인 디자인 제안 및 견적 사항은 디자이너 선택을 하신 후, 응대받으실 수 있습니다."
-      ]
-    },
-  ];
-
-  matrix = [];
-  num = 1;
-  past = "";
-  for (let i = 0; i < targetWords.length; i++) {
-    for (let j = 0; j < targetWords[i].children.length; j++) {
-      temp = new Array(3);
-      if (past !== String(targetWords[i].mother)) {
-        temp[0] = String(targetWords[i].mother);
-      } else {
-        temp[0] = "";
-      }
-      temp[1] = String(num);
-      temp[2] = targetWords[i].children[j];
-      matrix.push(temp);
-      past = String(targetWords[i].mother);
-      num++;
-    }
-  }
-
-  topMargin = <%% 48, 48, 48, 32, 5.3 %%>;
-  leftMargin = <%% 52, 52, 44, 36, 52 %%>;
+  margin = <%% 52, 52, 44, 36, 4.7 %%>;
+  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
 
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
   buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 92, 92, 92, 74, 17 %%>;
+  buttonWidth = <%% 156, 156, 156, 156, 17 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
   buttonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
@@ -1410,145 +1617,196 @@ StyleCurationJs.prototype.insertPannelBox = function () {
     buttonTextTop = buttonTextTop + (GeneralJs.isMac() ? 0 : 2);
   }
 
+  headWidth = <%% 10, 10, 10, 10, 2 %%>;
+  headVisual = <%% 11, 11, 11, 11, 11 %%>;
+
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-  finalBottom = <%% 50, 50, 50, 30, 5 %%>;
 
-  marginBottom = <%% 3, 3, 3, 3, 1.8 %%>;
-  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
-  wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
+  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6 %%>;
 
-  box0Size = <%% 140, 140, 130, 120, 4.5 %%>;
-  box1Size = <%% 25, 25, 25, 25, 3 %%>;
-  box0Margin = <%% 55, 55, 55, 55, 3 %%>;
-  box1Margin = <%% 18, 18, 18, 18, 3 %%>;
+  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  grayTop = <%% 5, 5, 5, 5, 5 %%>;
+  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
+  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
 
-  logoVisual = <%% 4, 4, 4, 4, 4 %%>;
-  logoHeight = <%% 16, 16, 16, 16, 16 %%>;
+  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
+  grayButtonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
+
+  buttonOn = {};
 
   whiteBlock = createNode({
     mother: this.baseTong,
     style: {
       position: "relative",
       borderRadius: String(desktop ? 8 : 3) + "px",
-      paddingTop: String(topMargin) + ea,
-      width: String(100) + '%',
+      paddingTop: String(paddingTop) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+      height: String(blockHeight) + ea,
       background: colorChip.white,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
-      paddingBottom: String(finalBottom) + ea
     }
   });
 
-  wordsTable = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    marginLeft: String(desktop ? leftMargin : 0) + ea,
-    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
-  };
-  for (let i in style) {
-    wordsTable.style[i] = style[i];
-  }
-
-  num = 0;
-  for (let arr of matrix) {
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "relative",
-      marginBottom: String(marginBottom) + ea,
-    };
-    for (let j in style) {
-      div_clone.style[j] = style[j];
-    }
-    if (desktop) {
-      if (num !== matrix.length - 1) {
-        if (matrix[num + 1][0] !== '' && matrix[num][0] === '') {
-          div_clone.style.marginBottom = String(marginBottom * 6) + ea;
-        }
-      }
-    }
-
-    for (let z = 0; z < arr.length; z++) {
-      div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        display: "inline-block",
-        fontSize: String(wordSize) + ea,
-        wordSpacing: String(wordSpacing) + "px",
-        position: "relative",
-        top: String(isMac() ? 0 : 2) + ea,
-        verticalAlign: "top",
-        lineHeight: String(1.6),
-      };
-      if (z === 0) {
-        style.width = String(box0Size) + ea;
-        style.marginRight = String(box0Margin) + ea;
-        style.fontWeight = String(600);
-        style.textAlign = "left";
-      } else if (z === 1) {
-        style.width = String(box1Size) + ea;
-        style.marginRight = String(box1Margin) + ea;
-        style.fontWeight = String(600);
-        style.color = GeneralJs.colorChip.green;
-        style.textAlign = "right";
-      } else {
-        style.width = "calc(100% - " + String(box0Size + box1Size + box0Margin + box1Margin) + ea + ")";
-        style.fontWeight = String(300);
-        style.textAlign = "left";
-      }
-      if (mobile) {
-        style = {
-          display: "inline-block",
-          fontSize: String(wordSize) + ea,
-          wordSpacing: String(wordSpacing) + "px",
-          position: "relative",
-          top: String(0) + ea,
-          verticalAlign: "top",
-          lineHeight: String(1.6),
-          left: String((this.subBoxMargin.left + 0.2)) + ea,
-          width: GeneralJs.withOut((this.subBoxMargin.left + 0.2) * 2, ea),
-        };
-        if (z === 0) {
-          continue;
-        }
-        if (z === 1) {
-          style.width = String(box0Size) + ea;
-          style.color = GeneralJs.colorChip.green;
-        }
-        if (z === 2) {
-          style.width = GeneralJs.withOut(((this.subBoxMargin.left + 0.2) * 2) + box0Size, ea);
-          style.left = String(box0Size) + ea;
-        }
-      }
-      for (let j in style) {
-        div_clone2.style[j] = style[j];
-      }
-      if (/\<b\%/gi.test(arr[z])) {
-        arr[z] = arr[z].replace(/\<b\%/gi, "<b style=\"color:" + GeneralJs.colorChip.green + "\">");
-        arr[z] = arr[z].replace(/\%b\>/gi, "</b>");
-      }
-      div_clone2.insertAdjacentHTML("beforeend", arr[z]);
-      div_clone.appendChild(div_clone2);
-    }
-
-    wordsTable.appendChild(div_clone);
-
-    num++;
-  }
-
-  whiteBlock.appendChild(wordsTable);
-
-  if (media[0] || media[1] || media[2]) {
-    createNode({
+  [ grayTong, grayTextScroll, grayTextTong ] = createNodes([
+    {
       mother: whiteBlock,
-      mode: "svg",
-      source: this.mother.returnLogo(colorChip.green, 4),
+      style: {
+        position: "relative",
+        left: String(desktop ? 0 : 4.5) + ea,
+        width: desktop ? withOut(0 * 2, ea) : withOut(4.5 * 2, ea),
+        marginTop: String(grayTop) + ea,
+        marginBottom: String(desktop ? 15 : 2.5) + ea,
+        height: String(grayHeight) + ea,
+        background: colorChip.gray1,
+        borderRadius: String(3) + "px",
+      }
+    },
+    {
+      mother: -1,
       style: {
         position: "absolute",
-        bottom: String(finalBottom + logoVisual) + ea,
-        right: String(leftMargin) + ea,
-        height: String(logoHeight) + ea,
+        top: String(grayTextTop) + ea,
+        left: String(grayTextLeft) + ea,
+        width: withOut(grayTextLeft * 2, ea),
+        height: withOut(grayTextTop * 2, ea),
+        overflow: "scroll",
       }
-    });
+    },
+    {
+      mother: -1,
+      style: {
+        position: "absolute",
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(100) + '%',
+        height: "auto",
+        fontSize: String(grayTextSize) + ea,
+        fontWeight: String(300),
+        lineHeight: String(1.6),
+      }
+    },
+  ]);
+
+  [ buttonTong ] = createNodes([
+    {
+      mother: whiteBlock,
+      attribute: [
+        { toggle: "on" }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            if (buttonOn.style !== undefined) {
+              if (this.getAttribute("toggle") === "on") {
+                buttonOn.style.opacity = String(0);
+                this.setAttribute("toggle", "off");
+              } else {
+                buttonOn.style.opacity = String(1);
+                this.setAttribute("toggle", "on");
+              }
+            }
+          }
+        }
+      ],
+      style: {
+        position: "relative",
+        left: String(desktop ? 0 : 4.5) + ea,
+        width: desktop ? withOut(0 * 2, ea) : withOut(4.5 * 2, ea),
+        height: String(buttonTongHeight) + ea,
+        cursor: "pointer",
+      }
+    },
+  ]);
+
+  ajaxJson("/designerProposal_policy").then(function (res) {
+    const { policy, button } = res;
+    let bTags;
+
+    grayTextTong.insertAdjacentHTML("beforeend", policy);
+    bTags = grayTextTong.querySelectorAll("b");
+    for (let b of bTags) {
+      b.style.color = colorChip.black;
+      b.style.fontWeight = String(600);
+    }
+
+    [ buttonOff, buttonOn ] = createNodes([
+      {
+        mother: buttonTong,
+        mode: "svg",
+        source: button.off,
+        style: {
+          position: "absolute",
+          height: String(grayButtonHeight) + ea,
+          right: String(0) + ea,
+          top: String(0) + ea,
+        }
+      },
+      {
+        mother: buttonTong,
+        mode: "svg",
+        source: button.on,
+        style: {
+          position: "absolute",
+          height: String(grayButtonHeight) + ea,
+          right: String(0) + ea,
+          top: String(0) + ea,
+          background: colorChip.white,
+        }
+      },
+    ]);
+
+  }).catch(function (err) {
+    throw new Error(err);
+  });
+
+  designerButtonTong = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    height: String(buttonHeight) + ea,
+    textAlign: "center",
+  };
+  for (let i in style) {
+    designerButtonTong.style[i] = style[i];
   }
+
+  designerButton = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    display: "inline-block",
+    position: "relative",
+    width: String(buttonWidth) + ea,
+    height: String(100) + '%',
+    background: colorChip.green,
+    borderRadius: String(3) + "px",
+    cursor: "pointer",
+  };
+  for (let i in style) {
+    designerButton.style[i] = style[i];
+  }
+  designerButtonText = GeneralJs.nodes.div.cloneNode(true);
+  designerButtonText.textContent = "금액 알아보기";
+  style = {
+    position: "absolute",
+    top: String(buttonTextTop) + ea,
+    fontSize: String(buttonTextSize) + ea,
+    fontWeight: String(400),
+    color: colorChip.white,
+    width: String(100) + '%',
+    textAlign: "center",
+  };
+  for (let i in style) {
+    designerButtonText.style[i] = style[i];
+  }
+  designerButton.appendChild(designerButtonText);
+  designerButtonTong.appendChild(designerButton);
+
+  whiteBlock.appendChild(designerButtonTong);
+  whiteBlock.style.paddingBottom = String(finalBottom) + ea;
+  whiteBlock.style.height = "";
 
 }
 
