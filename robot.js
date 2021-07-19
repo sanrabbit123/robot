@@ -155,8 +155,7 @@ Robot.prototype.aliveTest = function () {
             boo = true;
             if (successNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "all alive");
-              message += "\n======================================";
-              message += "\nall alive";
+              message = "server all alive";
               instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
             } else if (successNum + failNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "something death");

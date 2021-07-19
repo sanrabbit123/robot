@@ -75,7 +75,7 @@ class StyleCurationWordings {
               half: false,
               question: [
                 "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
-                "해당 공간의 주소가 아니라면, 스타일링 받을 공간의 주소로 고쳐주세요!"
+                "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
               ],
             },
             {
@@ -605,6 +605,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   let barMotherHeight;
   let barButtonTop;
   let barButtonRadius;
+  let barButton;
+  let thisName;
 
   lineHeight = 1.6;
 
@@ -631,7 +633,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
   barTop = <%% 16, 16, 16, 16, 16 %%>;
   barHeight = <%% 4, 4, 4, 4, 4 %%>;
-  barTextTop = <%% 10, 10, 10, 10, 10 %%>;
+  barTextTop = <%% 10.5, 10.5, 10.5, 10.5, 10.5 %%>;
   barTextMargin = <%% 10, 10, 10, 10, 10 %%>;
 
   barMotherHeight = <%% 30, 30, 30, 30, 30 %%>;
@@ -650,7 +652,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       questionRatio = 0.5;
       num = num + 1;
     } else {
-      questionRatio = 0.4;
+      questionRatio = 0.318;
     }
 
     if (!obj.half || num % 2 === 1) {
@@ -865,6 +867,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
       answerArea.style.textAlign = "left";
       answerArea.style.height = String(barMotherHeight) + ea;
+      answerArea.style.cursor = "pointer";
 
       bar = createNode({
         mother: answerArea,
@@ -918,8 +921,14 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           width: "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + ea + ") / 2)",
           height: String(100) + '%',
           background: colorChip.white,
+          transition: "all 0s ease",
         }
       });
+
+      barBox.style.width = String(barBox.getBoundingClientRect().width) + ea;
+      barBox.setAttribute("width", String(barBox.getBoundingClientRect().width));
+      barBox.setAttribute("entire", String(barBox.getBoundingClientRect().width * 2));
+      barBox.setAttribute("value", String(50));
 
       barClone = bar.cloneNode(true);
       barClone.style.width = String(100) + '%';
@@ -927,7 +936,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       barClone.style.background = colorChip.gray3;
       barBox.appendChild(barClone);
 
-      createNode({
+      barButton = createNode({
         mother: barBox,
         style: {
           position: "absolute",
@@ -940,6 +949,54 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           border: "1px solid " + colorChip.gray4,
           cursor: "pointer",
         }
+      });
+
+      thisName = name + token + String(y);
+
+      GeneralJs.stacks[thisName + "_isDown"] = false;
+      GeneralJs.stacks[thisName + "_startX"] = false;
+      GeneralJs.stacks[thisName + "_scrollLeft"] = false;
+
+      barButton.addEventListener("mousedown", function (e) {
+        GeneralJs.stacks[thisName + "_isDown"] = true;
+        GeneralJs.stacks[thisName + "_startX"] = e.pageX - this.offsetLeft;
+        GeneralJs.stacks[thisName + "_scrollLeft"] = this.scrollLeft;
+        answerArea.style.cursor = "grabbing";
+        barBox.style.cursor = "grabbing";
+        barButton.style.cursor = "grabbing";
+      });
+
+      answerArea.addEventListener("mouseleave", function (e) {
+        GeneralJs.stacks[thisName + "_isDown"] = false;
+        answerArea.style.cursor = "pointer";
+        barBox.style.cursor = "pointer";
+        barButton.style.cursor = "pointer";
+      });
+
+      answerArea.addEventListener("mouseup", function (e) {
+        GeneralJs.stacks[thisName + "_isDown"] = false;
+        answerArea.style.cursor = "pointer";
+        barBox.style.cursor = "pointer";
+        barButton.style.cursor = "pointer";
+      });
+
+      answerArea.addEventListener("mousemove", function (e) {
+        let x, walk, newWidth;
+        if (!GeneralJs.stacks[thisName + "_isDown"]) {
+          return;
+        }
+        e.preventDefault();
+        x = e.pageX - barButton.offsetLeft;
+        walk = x - GeneralJs.stacks[thisName + "_startX"];
+
+        newWidth = Number(barBox.getAttribute("width")) + walk;
+        barBox.style.width = String(newWidth) + ea;
+        barBox.setAttribute("width", String(newWidth));
+        barBox.setAttribute("value", String(Math.round(Math.round((newWidth / Number(barBox.getAttribute("entire"))) * 10000) / 100)));
+
+        answerArea.style.cursor = "grabbing";
+        barBox.style.cursor = "grabbing";
+        barButton.style.cursor = "grabbing";
       });
 
     }
