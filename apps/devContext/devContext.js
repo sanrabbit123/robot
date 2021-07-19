@@ -293,6 +293,14 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+
+    // await requestSystem("http://172.30.1.40:3000/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
+
+
+
+
+
+
     // console.log(await requestSystem("https://home-liaison.xyz:3000/generalMongo", {
     //   mode: "read",
     //   collection: "stylingForm",

@@ -884,23 +884,37 @@ class JsonArray extends Array {
     }
   }
   search(query) {
-    if (typeof query !== "string") {
-      throw new Error("must be string");
-    }
-    let result = [];
-    let boo;
-    for (let obj of this) {
-      boo = false;
-      for (let i in obj) {
-        if ((new RegExp(query, "gi")).test(obj[i]) || (new RegExp(query, "gi")).test(i)) {
-          boo = true;
+    if (typeof query === "string") {
+      let result = [];
+      let boo;
+      for (let obj of this) {
+        boo = false;
+        for (let i in obj) {
+          if ((new RegExp(query, "gi")).test(obj[i]) || (new RegExp(query, "gi")).test(i)) {
+            boo = true;
+          }
+        }
+        if (boo) {
+          result.push(obj);
         }
       }
-      if (boo) {
-        result.push(obj);
+      return new JsonArray(result);
+    } else if (typeof query === "object" && query instanceof RegExp) {
+      let result = [];
+      let boo;
+      for (let obj of this) {
+        boo = false;
+        for (let i in obj) {
+          if (query.test(obj[i])) {
+            boo = true;
+          }
+        }
+        if (boo) {
+          result.push(obj);
+        }
       }
+      return new JsonArray(result);
     }
-    return new JsonArray(result);
   }
   filter(query) {
     return this.search(query);

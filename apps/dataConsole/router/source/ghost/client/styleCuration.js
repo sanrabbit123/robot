@@ -60,12 +60,14 @@ class StyleCurationWordings {
       },
       center: [
         {
-          name: "스타일",
+          name: "style",
+          title: "스타일",
           callback: "styleCheck",
           children: []
         },
         {
-          name: "공간",
+          name: "space",
+          title: "공간",
           callback: "blockCheck",
           children: [
             {
@@ -90,6 +92,14 @@ class StyleCurationWordings {
                 "단독 주택"
               ],
               multiple: false,
+              exception: function (items, media) {
+                const ea = "px";
+                let padding, subtract;
+                padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
+                subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
+                items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
+                items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
+              }
             },
             {
               type: "checkbox",
@@ -105,11 +115,20 @@ class StyleCurationWordings {
                 "단독 주택"
               ],
               multiple: false,
+              exception: function (items, media) {
+                const ea = "px";
+                let padding, subtract;
+                padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
+                subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
+                items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
+                items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
+              }
             },
           ]
         },
         {
-          name: "가구",
+          name: "furniture",
+          title: "가구",
           callback: "blockCheck",
           children: [
             {
@@ -144,7 +163,7 @@ class StyleCurationWordings {
               type: "checkbox",
               half: true,
               question: [
-                "<b%커튼 또는 베딩의 패브릭 제작 니즈%b>가 있으신가요?"
+                "<b%커튼, 베딩 패브릭 제작 니즈%b>가 있으신가요?"
               ],
               items: [
                 "있다",
@@ -156,7 +175,8 @@ class StyleCurationWordings {
           ]
         },
         {
-          name: "시공",
+          name: "construct",
+          title: "시공",
           callback: "blockCheck",
           children: [
             {
@@ -172,6 +192,13 @@ class StyleCurationWordings {
                 "전체 리모델링과 전체 스타일링",
                 "구조 변경을 포함한 고급 시공"
               ],
+              exception: function (items, media) {
+                const mother = items[0].parentNode;
+                const grandMother = mother.parentNode;
+                const ratio = 30;
+                grandMother.firstChild.style.width = String(ratio) + '%';
+                grandMother.lastChild.style.width = String(100 - ratio) + '%';
+              }
             },
             {
               type: "list",
@@ -412,7 +439,7 @@ StyleCurationJs.photoFilter = function (photos, picks) {
   return photos.slice(0, Math.floor(photos.length * ratio));
 }
 
-StyleCurationJs.prototype.styleCheck = function (mother, wordings) {
+StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const instance = this;
   const { client, ea, media } = this;
   const mobile = media[4];
@@ -543,12 +570,13 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings) {
 
 }
 
-StyleCurationJs.prototype.blockCheck = function (mother, wordings) {
+StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   const instance = this;
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  const token = '_';
   let wordingSize;
   let paddingTop, paddingBottom, marginLeft;
   let blockMother, block;
@@ -562,24 +590,59 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings) {
   let addressWordingSize;
   let addressWordingTextTop;
   let addressBottomLineHeight;
+  let itemDoms;
+  let itemPaddingLeft, itemMarginBottom;
+  let itemRadius, itemCircleLeft, itemCircleTop;
+  let y, z;
+  let barTop, barHeight;
+  let barTextTop;
+  let bar, barText0, barText1;
+  let barTextMargin;
+  let barLeft;
+  let standardSize;
+  let barBox;
+  let barClone;
+  let barMotherHeight;
+  let barButtonTop;
+  let barButtonRadius;
 
   lineHeight = 1.6;
 
   wordingSize = <%% 15, 15, 15, 13, 15 %%>;
+  standardSize = <%% 13, 13, 13, 13, 13 %%>;
+
   paddingTop = <%% 25, 25, 25, 25, 25 %%>;
   paddingBottom = <%% 31, 31, 31, 31, 31 %%>;
   marginLeft = <%% 33, 33, 33, 33, 33 %%>;
-  questionMargin = <%% 15, 15, 15, 13, 15 %%>;
+  questionMargin = <%% 30, 30, 30, 30, 30 %%>;
   blockMargin = <%% 19, 19, 19, 19, 19 %%>;
   qWidth = <%% 19, 19, 19, 19, 19 %%>;
 
-  addressWordingTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  addressWordingTextTop = <%% -1, -1, -1, -1, -1 %%>;
   addressWordingSize = <%% 22, 22, 22, 22, 22 %%>;
   addressBottomLineHeight = <%% 38, 38, 38, 38, 38 %%>;
+
+  itemPaddingLeft = <%% 40, 40, 40, 40, 40 %%>;
+  itemMarginBottom = <%% 5, 5, 5, 5, 5 %%>;
+
+  itemRadius = <%% 3, 3, 3, 3, 3 %%>;
+  itemCircleLeft = <%% -5, -5, -5, -5, -5 %%>;
+  itemCircleTop = <%% 7, 7, 7, 7, 7 %%>;
+
+  barTop = <%% 16, 16, 16, 16, 16 %%>;
+  barHeight = <%% 4, 4, 4, 4, 4 %%>;
+  barTextTop = <%% 10, 10, 10, 10, 10 %%>;
+  barTextMargin = <%% 10, 10, 10, 10, 10 %%>;
+
+  barMotherHeight = <%% 30, 30, 30, 30, 30 %%>;
+
+  barButtonTop = <%% 12, 12, 12, 12, 12 %%>;
+  barButtonRadius = <%% 5.5, 5.5, 5.5, 5.5, 5.5 %%>;
 
   mother.style.paddingTop = String(paddingTop) + ea;
   mother.style.paddingBottom = String(paddingBottom) + ea;
 
+  y = 0;
   num = 0;
   for (let obj of wordings) {
 
@@ -603,16 +666,26 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings) {
           marginBottom: String(blockMargin) + ea,
         }
       });
+      block = createNode({
+        mother: blockMother,
+        style: {
+          display: !obj.half ? "block" : "inline-block",
+          position: "relative",
+          width: !obj.half ? String(100) + '%' : withOut(50, questionMargin, ea),
+          paddingRight: !obj.half ? "" : String(questionMargin) + ea,
+        }
+      });
+    } else {
+      block = createNode({
+        mother: blockMother,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: withOut(50, questionMargin, ea),
+          paddingLeft: String(questionMargin) + ea,
+        }
+      });
     }
-
-    block = createNode({
-      mother: blockMother,
-      style: {
-        display: obj.half ? "inline-block" : "block",
-        position: "relative",
-        width: String(obj.half ? 50 : 100) + '%',
-      }
-    });
 
     questionArea = createNode({
       mother: block,
@@ -667,7 +740,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings) {
     });
 
     if (obj.type === "address") {
-
       createNodes([
         {
           mother: answerArea,
@@ -701,8 +773,178 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings) {
           }
         }
       ]);
+    } else if (obj.type === "checkbox") {
+      itemDoms = [];
+      answerArea.style.textAlign = "right";
+      answerArea.style.paddingTop = String(1) + ea;
+      z = 0;
+      for (let i of obj.items) {
+        itemDoms.push(createNode({
+          mother: answerArea,
+          class: [ "hoverDefault_lite", name + token + String(y) + token + String(z), name + token + String(y) ],
+          attribute: [
+            { toggle: "off" },
+            { name: name },
+            { y: String(y) },
+            { z: String(z) },
+            { multiple: obj.multiple ? "true" : "false" },
+          ],
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                const toggle = this.getAttribute("toggle");
+                const name = this.getAttribute("name");
+                const y = String(this.getAttribute("y"));
+                const z = String(this.getAttribute("z"));
+                const multiple = (this.getAttribute("multiple") === "true");
+                const siblings = document.querySelectorAll('.' + name + token + String(y));
+                let items;
+                if (toggle === "on") {
+                  this.children[0].style.color = colorChip.deactive;
+                  this.children[1].style.background = colorChip.gray3;
+                  this.setAttribute("toggle", "off");
+                } else {
+                  if (!multiple) {
+                    for (let s of siblings) {
+                      if (s !== this) {
+                        s.children[0].style.color = colorChip.deactive;
+                        s.children[1].style.background = colorChip.gray3;
+                        s.setAttribute("toggle", "off");
+                      } else {
+                        this.children[0].style.color = colorChip.green;
+                        this.children[1].style.background = colorChip.green;
+                        this.setAttribute("toggle", "on");
+                      }
+                    }
+                  } else {
+                    this.children[0].style.color = colorChip.green;
+                    this.children[1].style.background = colorChip.green;
+                    this.setAttribute("toggle", "on");
+                  }
+                }
+              }
+            }
+          ],
+          style: {
+            display: "inline-block",
+            position: "relative",
+            paddingLeft: String(itemPaddingLeft) + ea,
+          },
+          children: [
+            {
+              text: i,
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(wordingSize) + ea,
+                fontWeight: String(200),
+                color: colorChip.deactive,
+                marginBottom: String(itemMarginBottom) + ea,
+              }
+            },
+            {
+              style: {
+                position: "absolute",
+                width: String(itemRadius * 2) + ea,
+                height: String(itemRadius * 2) + ea,
+                borderRadius: String(itemRadius + 1) + ea,
+                background: colorChip.gray3,
+                left: String(itemPaddingLeft - (itemRadius * 2) + itemCircleLeft) + ea,
+                top: String(itemCircleTop) + ea,
+              }
+            }
+          ]
+        }));
+        z++;
+      }
+      if (typeof obj.exception === "function") {
+        obj.exception(itemDoms, media);
+      }
+    } else if (obj.type === "opposite") {
+
+      answerArea.style.textAlign = "left";
+      answerArea.style.height = String(barMotherHeight) + ea;
+
+      bar = createNode({
+        mother: answerArea,
+        style: {
+          position: "absolute",
+          top: String(barTop) + ea,
+          height: String(barHeight) + ea,
+          borderRadius: String(barHeight + 1) + ea,
+          background: colorChip.green,
+          width: String(100) + '%',
+          left: String(0) + ea,
+        }
+      });
+
+      barText0 = createNode({
+        mother: answerArea,
+        text: obj.items[0],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontSize: String(standardSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.shadow,
+          top: String(barTextTop) + ea,
+        }
+      });
+
+      barText1 = createNode({
+        mother: answerArea,
+        text: obj.items[1],
+        style: {
+          position: "absolute",
+          fontSize: String(standardSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.green,
+          right: String(0) + ea,
+          top: String(barTextTop) + ea,
+        }
+      });
+
+      bar.style.width = withOut(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2), ea);
+      barLeft = barText0.getBoundingClientRect().width + barTextMargin;
+      bar.style.left = String(barLeft) + ea;
+
+      barBox = createNode({
+        mother: answerArea,
+        style: {
+          position: "absolute",
+          left: String(barLeft) + ea,
+          top: String(0) + ea,
+          width: "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + ea + ") / 2)",
+          height: String(100) + '%',
+          background: colorChip.white,
+        }
+      });
+
+      barClone = bar.cloneNode(true);
+      barClone.style.width = String(100) + '%';
+      barClone.style.left = String(0) + ea;
+      barClone.style.background = colorChip.gray3;
+      barBox.appendChild(barClone);
+
+      createNode({
+        mother: barBox,
+        style: {
+          position: "absolute",
+          top: String(barButtonTop) + ea,
+          right: String(-1 * barButtonRadius) + ea,
+          width: String(barButtonRadius * 2) + ea,
+          height: String(barButtonRadius * 2) + ea,
+          borderRadius: String(barButtonRadius + 1) + ea,
+          background: colorChip.white,
+          border: "1px solid " + colorChip.gray4,
+          cursor: "pointer",
+        }
+      });
+
     }
 
+    y++;
   }
 
   blockMother.style.marginBottom = String(0) + ea;
@@ -912,14 +1154,15 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   let titleTop;
   let barTop;
   let titleBottom, blockBottom;
+  let index;
 
   center = this.wordings.centerWordings;
   wordings = [];
-  for (let { name, callback, children } of center) {
+  for (let { name, title, callback, children } of center) {
     wordings.push({
-      name,
+      name: title,
       contents: (mother) => {
-        (instance[callback])(mother, children);
+        (instance[callback])(mother, children, name);
       }
     });
   }
