@@ -229,7 +229,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
       shell.exec(`osascript ${this.options.home_dir}/factory/applescript/to_png.scpt`);
     }
 
-    shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
+    // shell.exec(`osascript ${this.options.home_dir}/factory/applescript/return_terminal.scpt`);
 
     return resultFolder;
 
@@ -780,7 +780,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
 
       for (let z = 0; z < 5; z++) {
-        console.log(`scp waiting... ${String(3 - z)}s`);
+        console.log(`scp waiting... ${String(5 - z)}s`);
         await sleep(1000);
       }
 

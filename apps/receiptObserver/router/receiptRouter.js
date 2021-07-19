@@ -41,6 +41,26 @@ ReceiptRouter.prototype.rou_get_Root = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_get_Ssl = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = '/ssl';
+  obj.func = async function (req, res) {
+    try {
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send("hi");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_get_bluePrint = function () {
   const instance = this;
   let obj = {};

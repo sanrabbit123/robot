@@ -1,4 +1,4 @@
-command="node /Users/baechang-gyu/uragen/homeRobot/robot/robot.js"
+command="node "$HOME"/uragen/homeRobot/robot/robot.js"
 robotPath=$HOME"/uragen/homeRobot/robot"
 
 cd $robotPath

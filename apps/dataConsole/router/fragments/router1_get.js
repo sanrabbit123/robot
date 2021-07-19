@@ -154,39 +154,48 @@ DataRouter.prototype.rou_get_First = function () {
         }
       }
 
-      if (!pass) {
+      if (req.params.id === "ssl") {
 
-        res.set("Content-Type", "text/html");
-        res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
-          alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
-          window.location.href = "https://home-liaison.com";</script></body></html>`);
+        res.set({ "Content-Type": "text/plain" });
+        res.send("hi");
 
       } else {
 
-        if (/^cl/i.test(req.params.id)) {
-          target = "client";
-        } else if (/^de/i.test(req.params.id)) {
-          target = "designer";
-        } else if (/^ser/i.test(req.params.id)) {
-          target = "service";
-        } else if (/^proj/i.test(req.params.id)) {
-          target = "project";
-        } else if (/^prop/i.test(req.params.id)) {
-          target = "proposal";
-        } else if (/^ana/i.test(req.params.id)) {
-          target = "analytics";
-        } else if (/^con/i.test(req.params.id)) {
-          target = "contents";
-        } else {
-          target = "client";
-        }
+        if (!pass) {
 
-        instance.baseMaker(target, "first", null).then(function (html) {
           res.set("Content-Type", "text/html");
-          res.send(html);
-        }).catch(function (err) {
-          throw new Error(err);
-        });
+          res.send(`<html><head><title>알 수 없는 ip</title></head><body><script>
+            alert("알 수 없는 아이피 주소 입니다. 관리자에게 문의해주세요!\\n접근 아이피 주소 : ${ip.trim()}");
+            window.location.href = "https://home-liaison.com";</script></body></html>`);
+
+        } else {
+
+          if (/^cl/i.test(req.params.id)) {
+            target = "client";
+          } else if (/^de/i.test(req.params.id)) {
+            target = "designer";
+          } else if (/^ser/i.test(req.params.id)) {
+            target = "service";
+          } else if (/^proj/i.test(req.params.id)) {
+            target = "project";
+          } else if (/^prop/i.test(req.params.id)) {
+            target = "proposal";
+          } else if (/^ana/i.test(req.params.id)) {
+            target = "analytics";
+          } else if (/^con/i.test(req.params.id)) {
+            target = "contents";
+          } else {
+            target = "client";
+          }
+
+          instance.baseMaker(target, "first", null).then(function (html) {
+            res.set("Content-Type", "text/html");
+            res.send(html);
+          }).catch(function (err) {
+            throw new Error(err);
+          });
+
+        }
 
       }
 

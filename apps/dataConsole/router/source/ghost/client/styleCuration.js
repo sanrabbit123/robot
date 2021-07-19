@@ -351,6 +351,47 @@ StyleCurationJs.prototype.spaceCheck = function (mother) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  let wordings;
+
+  wordings = [
+    {
+      type: "address",
+      question: [
+        "<b%이사할 곳의 주소가 맞나요?%b>",
+        "스타일링을 받으실 공간의 주소가 아니라면, 스타일링 받을 공간의 주소로 고쳐주세요!"
+      ],
+    },
+    {
+      type: "checkbox",
+      question: [
+        "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
+      ],
+      items: [
+        "아파트",
+        "오피스텔",
+        "타운하우스",
+        "빌라",
+        "단독 주택"
+      ],
+      multiple: false,
+    },
+    {
+      type: "checkbox",
+      question: [
+        "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
+      ],
+      items: [
+        "아파트",
+        "오피스텔",
+        "타운하우스",
+        "빌라",
+        "단독 주택"
+      ],
+      multiple: false,
+    },
+  ]
+
+
 
 }
 
@@ -360,6 +401,8 @@ StyleCurationJs.prototype.furnitureCheck = function (mother) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  let wordings;
+
 
 }
 
@@ -369,6 +412,8 @@ StyleCurationJs.prototype.constructCheck = function (mother) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  let wordings;
+
 
 }
 

@@ -294,7 +294,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await this.randomPictures();
+    // await this.randomPictures();
 
 
     // console.log(await requestSystem("https://home-liaison.xyz:3000/generalMongo", {
@@ -1279,14 +1279,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "윤슬아",
-    //     designer: "정다연",
-    //     link: "https://drive.google.com/drive/folders/1tGyHQtxqLti7iMHGpAgNvIA5x8LBgbi6",
-    //   },
-    //   {
-    //     client: "박혜성",
-    //     designer: "오정수",
-    //     link: "https://drive.google.com/drive/folders/1VNwojg_chUAR6zxf7P4wH3ImQI1ichKJ",
+    //     client: "함혜선",
+    //     designer: "윤보라",
+    //     link: "https://drive.google.com/drive/folders/1YdphJwUEXCkJEJDAgtvYps0QjNBr9KuO",
     //   },
     // ]);
 
