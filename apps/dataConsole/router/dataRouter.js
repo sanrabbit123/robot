@@ -303,7 +303,7 @@ DataRouter.prototype.rou_get_First = function () {
       if (req.params.id === "ssl") {
 
         res.set({ "Content-Type": "text/plain" });
-        res.send(ip);
+        res.send("hi");
 
       } else {
 

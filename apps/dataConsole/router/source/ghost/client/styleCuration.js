@@ -37,6 +37,204 @@
   ]
 } %/%/g
 
+class StyleCurationWordings {
+  constructor() {
+    this.wordings = {
+      init: {
+        title: [
+          "홈리에종",
+          "큐레이션",
+        ],
+        contents: [
+          [
+            "홈리에종은 체계화된 정보과 취향 분석 기능을",
+            "활용해서 <b%고객님의 스타일과 조건에 딱 맞는%b>",
+            "<b%서비스를 제안하고, 디자이너를 추천%b>해드립니다.",
+          ],
+          [
+            "아래 간단한 상세 큐레이팅 설문에 응답해주시면",
+            "<b%예상 서비스 및 서비스 금액%b>을 알려드릴 수 있으니,",
+            "작성 부탁드립니다. 감사합니다!",
+          ]
+        ]
+      },
+      center: [
+        {
+          name: "스타일",
+          callback: "styleCheck",
+          children: []
+        },
+        {
+          name: "공간",
+          callback: "blockCheck",
+          children: [
+            {
+              type: "address",
+              half: false,
+              question: [
+                "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
+                "해당 공간의 주소가 아니라면, 스타일링 받을 공간의 주소로 고쳐주세요!"
+              ],
+            },
+            {
+              type: "checkbox",
+              half: true,
+              question: [
+                "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
+              ],
+              items: [
+                "아파트",
+                "오피스텔",
+                "타운하우스",
+                "빌라",
+                "단독 주택"
+              ],
+              multiple: false,
+            },
+            {
+              type: "checkbox",
+              half: true,
+              question: [
+                "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
+              ],
+              items: [
+                "아파트",
+                "오피스텔",
+                "타운하우스",
+                "빌라",
+                "단독 주택"
+              ],
+              multiple: false,
+            },
+          ]
+        },
+        {
+          name: "가구",
+          callback: "blockCheck",
+          children: [
+            {
+              type: "opposite",
+              half: false,
+              question: [
+                "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
+                "<b%비율%b>을 알려주세요!"
+              ],
+              items: [
+                "재사용",
+                "새로 구입",
+              ],
+              total: 100,
+              ea: '%',
+            },
+            {
+              type: "checkbox",
+              half: true,
+              question: [
+                "<b%맞춤형 제작 가구 니즈%b>가 있으신가요?"
+              ],
+              items: [
+                "있다",
+                "없다",
+                "모르겠다",
+              ],
+              multiple: false,
+              notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
+            },
+            {
+              type: "checkbox",
+              half: true,
+              question: [
+                "<b%커튼 또는 베딩의 패브릭 제작 니즈%b>가 있으신가요?"
+              ],
+              items: [
+                "있다",
+                "없다",
+                "모르겠다",
+              ],
+              multiple: false,
+            },
+          ]
+        },
+        {
+          name: "시공",
+          callback: "blockCheck",
+          children: [
+            {
+              type: "checkbox",
+              half: false,
+              question: [
+                "<b%생각하는 시공 정도%b>를 알려주세요!",
+              ],
+              multiple: true,
+              items: [
+                "시공 없이 홈퍼니싱만",
+                "5개 이내의 부분 시공과 홈퍼니싱",
+                "전체 리모델링과 전체 스타일링",
+                "구조 변경을 포함한 고급 시공"
+              ],
+            },
+            {
+              type: "list",
+              half: false,
+              question: [
+                "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
+              ],
+              items: [
+                { name: "철거", contents: "마감재, 벽지 등 일부" },
+                { name: "전기/조명 공사", contents: "배선, 이동추가, 조명 교체" },
+                { name: "설비", contents: "수도/배관, 난방, 에어컨 배관" },
+                { name: "주방 공사", contents: "싱크 등 주방 가구 전체 교체" },
+                { name: "창호 공사", contents: "방문, 중문" },
+                { name: "도장 공사", contents: "부분 페인팅, 탄성코트 등" },
+                { name: "바닥 공사", contents: "마루, 타일, 장판 등" },
+                { name: "금속 공사", contents: "" },
+                { name: "목공사", contents: "간접등 박스, 웨인스 코팅 등" },
+                { name: "욕실 공사", contents: "도기 교체 등" },
+                { name: "샤시", contents: "" },
+                { name: "필름 공사", contents: "면적 및 난이도에 따라 금액 상이" },
+                { name: "철거", contents: "마감재, 벽지 등 일부" },
+                { name: "발코니 확장", contents: "거실, 주방, 방 등 확장 예정 발코니" },
+                { name: "타일 공사", contents: "현관, 주방, 다용도실, 발코니 등" },
+                { name: "도배 공사", contents: "이전 상태에 따라 밑작업 난이도 상이" },
+              ],
+              multiple: true,
+            },
+            {
+              type: "checkbox",
+              half: false,
+              question: [
+                "시공 당일에 예상되는 <b%주거 환경을 알려주세요!%b>"
+              ],
+              items: [
+                "거주중, 가구가 있는 상태",
+                "공실 상태",
+              ],
+              multiple: false,
+              notice: "거주중일 경우 시공에 한계가 있습니다."
+            },
+          ]
+        },
+      ],
+      pannel: {
+        button: "서비스 금액 알아보기"
+      }
+    };
+
+  }
+
+  get initWordings() {
+    return this.wordings.init;
+  }
+
+  get centerWordings() {
+    return this.wordings.center;
+  }
+
+  get pannelWordings() {
+    return this.wordings.pannel;
+  }
+}
+
 Set.prototype.intersection = function(setB) {
   let intersection = new Set();
   for (let elem of setB) {
@@ -214,7 +412,7 @@ StyleCurationJs.photoFilter = function (photos, picks) {
   return photos.slice(0, Math.floor(photos.length * ratio));
 }
 
-StyleCurationJs.prototype.styleCheck = function (mother) {
+StyleCurationJs.prototype.styleCheck = function (mother, wordings) {
   const instance = this;
   const { client, ea, media } = this;
   const mobile = media[4];
@@ -345,75 +543,169 @@ StyleCurationJs.prototype.styleCheck = function (mother) {
 
 }
 
-StyleCurationJs.prototype.spaceCheck = function (mother) {
+StyleCurationJs.prototype.blockCheck = function (mother, wordings) {
   const instance = this;
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip } = GeneralJs;
-  let wordings;
+  let wordingSize;
+  let paddingTop, paddingBottom, marginLeft;
+  let blockMother, block;
+  let questionMargin;
+  let questionArea, answerArea;
+  let questionRatio;
+  let qWidth;
+  let num;
+  let lineHeight;
+  let blockMargin;
+  let addressWordingSize;
+  let addressWordingTextTop;
+  let addressBottomLineHeight;
 
-  wordings = [
-    {
-      type: "address",
-      question: [
-        "<b%이사할 곳의 주소가 맞나요?%b>",
-        "스타일링을 받으실 공간의 주소가 아니라면, 스타일링 받을 공간의 주소로 고쳐주세요!"
-      ],
-    },
-    {
-      type: "checkbox",
-      question: [
-        "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
-      ],
-      items: [
-        "아파트",
-        "오피스텔",
-        "타운하우스",
-        "빌라",
-        "단독 주택"
-      ],
-      multiple: false,
-    },
-    {
-      type: "checkbox",
-      question: [
-        "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
-      ],
-      items: [
-        "아파트",
-        "오피스텔",
-        "타운하우스",
-        "빌라",
-        "단독 주택"
-      ],
-      multiple: false,
-    },
-  ]
+  lineHeight = 1.6;
 
+  wordingSize = <%% 15, 15, 15, 13, 15 %%>;
+  paddingTop = <%% 25, 25, 25, 25, 25 %%>;
+  paddingBottom = <%% 31, 31, 31, 31, 31 %%>;
+  marginLeft = <%% 33, 33, 33, 33, 33 %%>;
+  questionMargin = <%% 15, 15, 15, 13, 15 %%>;
+  blockMargin = <%% 19, 19, 19, 19, 19 %%>;
+  qWidth = <%% 19, 19, 19, 19, 19 %%>;
 
+  addressWordingTextTop = <%% -2, -2, -2, -2, -2 %%>;
+  addressWordingSize = <%% 22, 22, 22, 22, 22 %%>;
+  addressBottomLineHeight = <%% 38, 38, 38, 38, 38 %%>;
 
-}
+  mother.style.paddingTop = String(paddingTop) + ea;
+  mother.style.paddingBottom = String(paddingBottom) + ea;
 
-StyleCurationJs.prototype.furnitureCheck = function (mother) {
-  const instance = this;
-  const { client, ea, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
-  let wordings;
+  num = 0;
+  for (let obj of wordings) {
 
+    if (obj.half) {
+      questionRatio = 0.5;
+      num = num + 1;
+    } else {
+      questionRatio = 0.4;
+    }
 
-}
+    if (!obj.half || num % 2 === 1) {
+      blockMother = createNode({
+        mother,
+        style: {
+          display: "block",
+          position: "relative",
+          marginLeft: String(marginLeft) + ea,
+          marginRight: String(marginLeft) + ea,
+          width: withOut(marginLeft * 2, ea),
+          verticalAlign: "top",
+          marginBottom: String(blockMargin) + ea,
+        }
+      });
+    }
 
-StyleCurationJs.prototype.constructCheck = function (mother) {
-  const instance = this;
-  const { client, ea, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
-  let wordings;
+    block = createNode({
+      mother: blockMother,
+      style: {
+        display: obj.half ? "inline-block" : "block",
+        position: "relative",
+        width: String(obj.half ? 50 : 100) + '%',
+      }
+    });
 
+    questionArea = createNode({
+      mother: block,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(100 * questionRatio) + '%',
+        verticalAlign: "top",
+      },
+      children: [
+        {
+          text: "Q. ",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(qWidth) + ea,
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(200),
+            color: colorChip.shadow,
+            verticalAlign: "top",
+            lineHeight: String(lineHeight),
+          }
+        },
+        {
+          text: obj.question.join("\n"),
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut(qWidth, ea),
+            fontSize: String(wordingSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.black,
+            verticalAlign: "top",
+            lineHeight: String(lineHeight),
+          },
+          bold: {
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        },
+      ]
+    });
+
+    answerArea = createNode({
+      mother: block,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(100 * (1 - questionRatio)) + '%',
+        verticalAlign: "top",
+      }
+    });
+
+    if (obj.type === "address") {
+
+      createNodes([
+        {
+          mother: answerArea,
+          style: {
+            position: "absolute",
+            width: String(100) + '%',
+            height: String(addressBottomLineHeight) + ea,
+            top: String(0) + ea,
+            left: String(0) + ea,
+            borderBottom: "1px solid " + colorChip.gray3,
+          }
+        },
+        {
+          mother: answerArea,
+          mode: "input",
+          attribute: [
+            { type: "text" },
+            { value: this.client.requests[0].request.space.address }
+          ],
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(addressWordingSize) + ea,
+            fontWeight: String(200),
+            color: colorChip.green,
+            top: String(addressWordingTextTop) + ea,
+            border: String(0),
+            outline: String(0),
+            background: "transparent",
+            width: String(100) + '%',
+          }
+        }
+      ]);
+    }
+
+  }
+
+  blockMother.style.marginBottom = String(0) + ea;
 
 }
 
@@ -423,7 +715,7 @@ StyleCurationJs.prototype.insertInitBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
-  let wordings;
+  const wordings = this.wordings.initWordings;
   let whiteBlock, whiteTong;
   let blockHeight, bottomMargin;
   let margin;
@@ -434,25 +726,6 @@ StyleCurationJs.prototype.insertInitBox = function () {
   let initWordingSize, initWordingWidth;
   let lineHeight;
   let initWordingMargin, initWordingBottom;
-
-  wordings = {
-    title: [
-      "홈리에종",
-      "큐레이션",
-    ],
-    contents: [
-      [
-        "홈리에종은 체계화된 정보과 취향 분석 기능을",
-        "활용해서 <b%고객님의 스타일과 조건에 딱 맞는%b>",
-        "<b%서비스를 제안하고, 디자이너를 추천%b>해드립니다.",
-      ],
-      [
-        "아래 간단한 상세 큐레이팅 설문에 응답해주시면",
-        "<b%예상 서비스 및 서비스 금액%b>을 알려드릴 수 있으니,",
-        "작성 부탁드립니다. 감사합니다!",
-      ]
-    ]
-  }
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -627,6 +900,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
+  let center;
   let wordings;
   let paddingTop;
   let block;
@@ -639,32 +913,16 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   let barTop;
   let titleBottom, blockBottom;
 
-  wordings = [
-    {
-      name: "스타일",
+  center = this.wordings.centerWordings;
+  wordings = [];
+  for (let { name, callback, children } of center) {
+    wordings.push({
+      name,
       contents: (mother) => {
-        instance.styleCheck(mother);
+        (instance[callback])(mother, children);
       }
-    },
-    {
-      name: "공간",
-      contents: (mother) => {
-        instance.spaceCheck(mother);
-      }
-    },
-    {
-      name: "가구",
-      contents: (mother) => {
-        instance.furnitureCheck(mother);
-      }
-    },
-    {
-      name: "시공",
-      contents: (mother) => {
-        instance.constructCheck(mother);
-      }
-    },
-  ];
+    });
+  }
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -1025,6 +1283,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     this.contentsArr = contentsPhotoObj.contentsArr;
     this.designers = contentsPhotoObj.designers;
     this.client = client;
+    this.wordings = new StyleCurationWordings();
 
     await this.mother.ghostClientLaunching({
       base: {

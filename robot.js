@@ -416,14 +416,35 @@ Robot.prototype.analyticsParsing = async function () {
   }
 }
 
-Robot.prototype.tellVoice = async function (text) {
+Robot.prototype.tellVoice = async function () {
   try {
     const PlayAudio = require(`${process.cwd()}/apps/playAudio/playAudio.js`);
     const voice = new PlayAudio();
-    if (/__split__/gi.test(text)) {
-      text = text.replace(/__split__/gi, "\n");
-    }
-    await voice.textToVoice(text);
+    const http = require("http");
+    const express = require("express");
+    const app = express();
+    const bodyParser = require("body-parser");
+
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+
+    app.post("/voice", async (req, res) => {
+      if (req.body.text === undefined) {
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ message: "invaild post" }));
+      } else {
+        voice.textToVoice(String(req.body.text));
+        res.set("Content-Type", "application/json");
+        res.send(JSON.stringify({ message: "will do" }));
+      }
+    });
+
+    http.createServer(app).listen(3000, () => {
+      console.log(``);
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+      console.log(``);
+    });
+
   } catch (e) {
     console.log(e);
   }
@@ -876,9 +897,9 @@ const MENU = {
       console.log(e);
     }
   },
-  voice: async function () {
+  tellVoice: async function () {
     try {
-      await robot.tellVoice(process.argv[3]);
+      await robot.tellVoice();
     } catch (e) {
       console.log(e);
     }
