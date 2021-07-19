@@ -119,6 +119,80 @@ Robot.prototype.contentsMaker = function (button, arg) {
   }
 }
 
+Robot.prototype.aliveTest = function () {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  const generalPort = 3000;
+  const controlPath = "/ssl";
+  const protocol = "https:";
+  let res, targets, targetNumber, successNum, failNum, message;
+
+  targets = [
+    { name: "python", host: address.pythoninfo.host, port: generalPort, },
+    { name: "console", host: address.backinfo.host, port: generalPort, },
+    { name: "bridge", host: address.bridgeinfo.host, port: generalPort, },
+    { name: "home", host: address.homeinfo.ghost.host, port: generalPort, },
+    { name: "office", host: address.officeinfo.ghost.host, port: generalPort, },
+    { name: "homeGraphic", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
+  ];
+
+  targetNumber = targets.length;
+  successNum = 0;
+  failNum = 0;
+  message = '';
+
+  for (let { name, host, port } of targets) {
+    requestSystem(protocol + "//" + host + ':' + String(port) + controlPath).then((res) => {
+      let boo = false;
+      let timeoutTime = 1000 * 20;
+      if (typeof res === "object") {
+        if (res.status !== undefined && typeof res.status === "number") {
+          if (res.status === 200) {
+            console.log("\x1b[32m%s\x1b[0m", name + " server alive");
+            successNum = successNum + 1;
+            message += "\n" +  name + " server alive";
+            boo = true;
+            if (successNum === targetNumber) {
+              console.log("\x1b[33m%s\x1b[0m", "all alive");
+              message += "\n======================================";
+              message += "\nall alive";
+              instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+            } else if (successNum + failNum === targetNumber) {
+              console.log("\x1b[33m%s\x1b[0m", "something death");
+              message += "\n======================================";
+              message += "\nsomething death";
+              instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+            }
+          }
+        }
+      }
+      if (!boo) {
+        failNum = failNum + 1;
+        console.log("\x1b[32m%s\x1b[0m", name + " server death");
+        message += "\n" +  name + " server death";
+        if (successNum + failNum === targetNumber) {
+          console.log("\x1b[33m%s\x1b[0m", "something death");
+          message += "\n======================================";
+          message += "\nsomething death";
+          instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+        }
+      }
+    }).catch((e) => {
+      failNum = failNum + 1;
+      console.log("\x1b[32m%s\x1b[0m", name + " server death");
+      message += "\n" +  name + " server death";
+      if (successNum + failNum === targetNumber) {
+        console.log("\x1b[33m%s\x1b[0m", "something death");
+        message += "\n======================================";
+        message += "\nsomething death";
+        instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+      }
+    });
+  }
+
+}
+
 Robot.prototype.proposalMaker = function (button, arg) {
   if (arg === undefined) {
     throw new Error("proposal must be id");
@@ -299,6 +373,7 @@ Robot.prototype.taxBill = async function () {
     const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
     const app = new ReceiptObserver();
     await app.taxBill();
+    this.aliveTest();
   } catch (e) {
     console.log(e);
   }
@@ -1009,6 +1084,9 @@ const MENU = {
       console.log(e);
     }
   },
+  aliveTest: function () {
+    robot.aliveTest();
+  }
 };
 let launchingFunc;
 

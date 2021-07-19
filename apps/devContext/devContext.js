@@ -293,10 +293,6 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-
-    // await this.randomPictures();
-
-
     // console.log(await requestSystem("https://home-liaison.xyz:3000/generalMongo", {
     //   mode: "read",
     //   collection: "stylingForm",
