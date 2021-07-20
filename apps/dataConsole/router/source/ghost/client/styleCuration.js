@@ -1439,16 +1439,16 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   let wordings, initPhoto;
   let greenBarWidth, greenBarHeight;
 
-  blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
+  blockHeight = <%% 434, 434, 434, 434, 434 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  titleFontTop = <%% 12, 12, 12, 12, 48 %%>;
-  titleFontSize = <%% 29, 29, 29, 29, 5.7 %%>;
+  titleFontTop = <%% 22, 22, 22, 22, 48 %%>;
+  titleFontSize = <%% 30, 30, 30, 30, 5.7 %%>;
   titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleFontLineHeight = <%% 37, 37, 37, 37, 5.7 %%>;
+  titleFontLineHeight = <%% 38, 38, 38, 38, 5.7 %%>;
 
-  secondBlockWidth = <%% 330, 330, 330, 330, 330 %%>;
+  secondBlockWidth = <%% 340, 340, 340, 340, 340 %%>;
 
   greenBoxTop = <%% 1, 1, 1, 1, 1 %%>;
   greenBoxWidth = <%% 25, 25, 25, 25, 25 %%>;
@@ -1458,7 +1458,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   initWordingSize = <%% 14.5, 14.5, 14.5, 13, 15 %%>;
   initWordingWidth = <%% 300, 300, 300, 300, 300 %%>;
   initWordingMargin = <%% 15, 15, 15, 15, 15 %%>;
-  initWordingBottomVisual = <%% 39, 39, 39, 39, 39 %%>;
+  initWordingBottomVisual = <%% 58, 58, 58, 58, 58 %%>;
   initWordingLeft = <%% 1, 1, 1, 1, 1 %%>;
 
   wordsPaddingTop = <%% 105, 105, 105, 105, 105 %%>;
@@ -1477,7 +1477,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight + (desktop ? 0 : 0) - (margin * 2)) + ea,
+      height: String(blockHeight - (margin * 2)) + ea,
       background: colorChip.white,
       paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
       paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
@@ -1613,7 +1613,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
         height: String(100) + '%',
         borderRadius: String(5) + "px",
         backgroundImage: "url('" + StyleCurationJs.binaryPath + initPhoto + "')",
-        backgroundSize: "100% auto",
+        backgroundSize: "auto 100%",
         backgroundPosition: "50% 50%",
       }
     }

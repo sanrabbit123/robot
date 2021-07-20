@@ -15,6 +15,7 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
         "t1a20.jpg",
         "t2a33.jpg",
         "t5a27.jpg",
+        "t8p9.jpg",
       ];
       let photos;
 
