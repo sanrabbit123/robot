@@ -703,6 +703,7 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes fadeuplite{from{opacity:0;transform:translateY(5px);}to{opacity:0.95;transform:translateY(0px);}}
   @keyframes fadedownlite{from{opacity:0.95;transform:translateY(0px);}to{opacity:0;transform:translateY(5px);}}
   @keyframes fadeupmiddle{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
+  @keyframes fadedownmiddle{from{opacity:1;transform:translateY(0px);}to{opacity:0;transform:translateY(10px);}}
   @keyframes fadeupbacklite{from{opacity:0;transform:translateY(5px);}to{opacity:0.2;transform:translateY(0px);}}
   @keyframes loginfadeup0{from{opacity:0;}to{opacity:0.1;}}
   @keyframes loginfadeup1{from{opacity:0;backdrop-filter: blur(0px);}to{opacity:0.6;backdrop-filter: blur(4px);}}
@@ -780,6 +781,10 @@ GeneralJs.prototype.returnPoint = function (radius, color) {
 
 GeneralJs.prototype.returnBigArrow = function (color) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140.316 226.772"><path d="M139.316 110.452l-8.145-10.556c0 0 0 0 0-0.001l-53.754-69.665 0 0L56.375 2.962C54.934 1.094 52.709 0 50.35 0h-7.215H28.485 1.886c-1.563 0-2.445 1.795-1.49 3.032l25.144 32.586c0.001 0.001 0.002 0.003 0.003 0.004l58.653 76.015c0.795 1.03 0.795 2.467 0 3.497l-41.894 54.294h0L0.396 223.739c-0.955 1.237-0.073 3.032 1.49 3.032h26.599 14.65 7.215c2.359 0 4.585-1.094 6.026-2.962l4.383-5.681c0 0 0 0 0 0l45.021-58.347v0l2.329-3.019 23.061-29.887c0.001-0.001 0.002-0.003 0.003-0.004l8.142-10.553C140.649 114.591 140.649 112.181 139.316 110.452z" fill="${color}"/></svg>`;
+}
+
+GeneralJs.prototype.returnPlus = function (color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35.745 36.805"><path d="M14.19 21.85H0v-6.896h14.19V0h7.287v14.954h14.267v6.896H21.478v14.955h-7.287V21.85z" fill="${color}"/></svg>`;
 }
 
 GeneralJs.prototype.returnArrow = function (direction, color) {

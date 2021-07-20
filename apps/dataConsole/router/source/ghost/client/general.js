@@ -43,42 +43,96 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   instance.media = this.media;
 }
 
-GeneralJs.prototype.setBackground = function (binaryPath) {
+GeneralJs.prototype.setBackground = function (binaryPath, second = false) {
   const instance = this;
   const { ea, media, backHeight, totalContents } = this;
   const { createNodes, colorChip, withOut } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const backgroundImageName = "back.jpg";
+  const secondBackgroundImageName = "back2.jpg";
+  let backgroundGray, backgroundImageBox, backgroundImageBox2;
 
-  createNodes([
-    {
-      mother: totalContents,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        background: desktop ? colorChip.gray2 : colorChip.gray1,
-        animation: "justfadeinoriginal 0.3s ease forwards",
+  if (!second) {
+    [ backgroundGray, backgroundImageBox ] = createNodes([
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: desktop ? colorChip.gray2 : colorChip.gray1,
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
+      },
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(backHeight) + ea,
+          backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
+          backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
+          backgroundPosition: "top",
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
       }
-    },
-    {
-      mother: totalContents,
-      style: {
-        position: "absolute",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(backHeight) + ea,
-        backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
-        backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
-        backgroundPosition: "top",
-        animation: "justfadeinoriginal 0.3s ease forwards",
+    ]);
+    this.backgroundGray = backgroundGray;
+    this.backgroundImageBox = backgroundImageBox;
+    this.backgroundImageBox2 = null;
+  } else {
+    [ backgroundGray, backgroundImageBox2, backgroundImageBox ] = createNodes([
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: desktop ? colorChip.gray2 : colorChip.gray1,
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
+      },
+      {
+        mother: totalContents,
+        style: {
+          opacity: "0",
+          transition: "all 0s ease",
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(backHeight) + ea,
+          backgroundImage: "url('" + binaryPath + "/" + secondBackgroundImageName + "')",
+          backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
+          backgroundPosition: "top",
+        }
+      },
+      {
+        mother: totalContents,
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(backHeight) + ea,
+          backgroundImage: "url('" + binaryPath + "/" + backgroundImageName + "')",
+          backgroundSize: (!media[3] && !media[4]) ? "100% auto" : "auto 100%",
+          backgroundPosition: "top",
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
       }
-    }
-  ]);
+    ]);
+    this.backgroundGray = backgroundGray;
+    this.backgroundImageBox = backgroundImageBox;
+    this.backgroundImageBox2 = backgroundImageBox2;
+  }
 
 }
 
@@ -196,7 +250,7 @@ GeneralJs.prototype.setGeneralBase = function (obj) {
     throw new Error("must be object => { instance, binaryPath, subTitle }");
   }
   const { instance, binaryPath, subTitle } = obj;
-  this.setBackground(binaryPath);
+  this.setBackground(binaryPath, obj.secondBackground === true);
   this.setNavigator(subTitle);
   this.setBaseTong(instance);
 }

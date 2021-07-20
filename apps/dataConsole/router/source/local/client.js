@@ -3612,13 +3612,13 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
 
     motherBoo = (instance.onView === "mother") ? true : false;
 
-    for (let z = 0; z < instance.standardDoms.length; z++) {
-      if (z !== index && z !== 0) {
-        domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#cccccc";
-      } else {
+    for (let z = 1; z < instance.standardDoms.length; z++) {
+      if (instance.standardDoms[z].firstChild.textContent === thisCase.cliid) {
         domTargets = instance.standardDoms[z].children;
         domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
+      } else {
+        domTargets = instance.standardDoms[z].children;
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.gray4;
       }
     }
 
