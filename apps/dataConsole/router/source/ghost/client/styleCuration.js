@@ -138,21 +138,10 @@ class StyleCurationWordings {
                 "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
               ],
               items: [
-                "아파트",
-                "오피스텔",
-                "타운하우스",
-                "빌라",
-                "단독 주택"
+                "분양 면적 (공급 면적)",
+                "전용 면적",
               ],
               multiple: false,
-              exception: function (items, media) {
-                const ea = "px";
-                let padding, subtract;
-                padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
-                subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
-                items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
-                items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
-              }
             },
           ]
         },
@@ -663,7 +652,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
 
   cleanChildren(mother);
 
-  innerMargin = <%% 35, 35, 35, 35, 35 %%>;
+  innerMargin = <%% 42, 42, 42, 42, 42 %%>;
   pictureMargin = <%% 10, 10, 10, 10, 10 %%>;
 
   pannelHeight = <%% 94, 94, 94, 94, 94 %%>;
@@ -907,11 +896,11 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   wordingSize = <%% 15, 15, 15, 13, 15 %%>;
   standardSize = <%% 13, 13, 13, 13, 13 %%>;
 
-  paddingTop = <%% 30, 30, 30, 30, 30 %%>;
-  paddingBottom = <%% 35, 35, 35, 35, 35 %%>;
-  marginLeft = <%% 35, 35, 35, 35, 35 %%>;
-  questionMargin = <%% 30, 30, 30, 30, 30 %%>;
-  blockMargin = <%% 19, 19, 19, 19, 19 %%>;
+  paddingTop = <%% 38, 38, 38, 38, 38 %%>;
+  paddingBottom = <%% 40, 40, 40, 40, 40 %%>;
+  marginLeft = <%% 42, 42, 42, 42, 42 %%>;
+  questionMargin = <%% 50, 50, 50, 50, 50 %%>;
+  blockMargin = <%% 28, 28, 28, 28, 28 %%>;
   qWidth = <%% 19, 19, 19, 19, 19 %%>;
 
   addressWordingTextTop = <%% -1, -1, -1, -1, -1 %%>;
@@ -1437,33 +1426,29 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   let whiteBlock, whiteTong;
   let blockHeight, bottomMargin;
   let margin;
-  let titleFontTop, titleFontSize, titleFontWeight, titleFontLineHeight, titleFontLeft;
+  let titleFontTop, titleFontSize, titleFontWeight, titleFontLineHeight;
   let firstBlock, secondBlock, thirdBlock;
   let firstBlockWidth, secondBlockWidth;
   let greenBoxTop, greenBoxWidth, greenBoxHeight, greenBoxVisual;
   let initWordingSize, initWordingWidth;
   let lineHeight;
-  let initWordingMargin, initWordingBetween;
+  let initWordingMargin;
   let initWordingBottomVisual;
   let wordsPaddingTop;
+  let initWordingLeft;
   let wordings, initPhoto;
-  let numberSize, numberTop;
-  let greenRadius, greenCircleTop, greenCircleRight;
+  let greenBarWidth, greenBarHeight;
 
   blockHeight = <%% this.backHeight - 460, this.backHeight - 470, this.backHeight - 490, this.backHeight - 540, this.backHeight - 460 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  numberSize = <%% 23, 23, 23, 23, 3 %%>;
-  numberTop = <%% -4, -4, -4, -4, -4 %%>;
-
-  titleFontTop = <%% 57, 57, 57, 57, 48 %%>;
+  titleFontTop = <%% 12, 12, 12, 12, 48 %%>;
   titleFontSize = <%% 29, 29, 29, 29, 5.7 %%>;
   titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
   titleFontLineHeight = <%% 37, 37, 37, 37, 5.7 %%>;
-  titleFontLeft = <%% 5, 5, 5, 5, 5 %%>;
 
-  secondBlockWidth = <%% 420, 420, 420, 420, 420 %%>;
+  secondBlockWidth = <%% 330, 330, 330, 330, 330 %%>;
 
   greenBoxTop = <%% 1, 1, 1, 1, 1 %%>;
   greenBoxWidth = <%% 25, 25, 25, 25, 25 %%>;
@@ -1473,14 +1458,13 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   initWordingSize = <%% 14.5, 14.5, 14.5, 13, 15 %%>;
   initWordingWidth = <%% 300, 300, 300, 300, 300 %%>;
   initWordingMargin = <%% 15, 15, 15, 15, 15 %%>;
-  initWordingBetween = <%% 43, 43, 43, 43, 43 %%>;
-  initWordingBottomVisual = <%% -6, -6, -6, -6, -6 %%>;
-
-  greenRadius = <%% 2, 2, 2, 2, 2 %%>;
-  greenCircleTop = titleFontTop + 5;
-  greenCircleRight = <%% initWordingBetween + 100, initWordingBetween + 100, initWordingBetween + 100, initWordingBetween + 100, initWordingBetween + 100 %%>;
+  initWordingBottomVisual = <%% 39, 39, 39, 39, 39 %%>;
+  initWordingLeft = <%% 1, 1, 1, 1, 1 %%>;
 
   wordsPaddingTop = <%% 105, 105, 105, 105, 105 %%>;
+
+  greenBarWidth = <%% 24, 24, 24, 24, 24 %%>;
+  greenBarHeight = <%% 3, 3, 3, 3, 3 %%>;
 
   wordings = this.wordings.initWordings[curation ? "curation" : "service"];
   initPhoto = this.wordings.initWordings[curation ? "curation" : "service"].image;
@@ -1524,35 +1508,13 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
       },
       children: [
         {
-          text: String(0),
-          style: {
-            fontSize: String(numberSize) + ea,
-            fontWeight: String(200),
-            color: colorChip.darkShadow,
-            position: "absolute",
-            top: String(numberTop) + ea,
-            left: String(0) + ea,
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            width: String(greenRadius * 2) + ea,
-            height: String(greenRadius * 2) + ea,
-            borderRadius: String(greenRadius + 1) + ea,
-            top: String(greenCircleTop) + ea,
-            right: String(greenCircleRight) + ea,
-            background: colorChip.green,
-          }
-        },
-        {
           text: wordings.title[0],
           style: {
             fontSize: String(titleFontSize) + ea,
             fontWeight: String(titleFontWeight),
             position: "absolute",
             top: String(titleFontTop) + ea,
-            right: String(initWordingBetween) + ea,
+            left: String(0) + ea,
             fontFamily: "sandoll",
           }
         },
@@ -1563,7 +1525,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
             fontWeight: String(titleFontWeight),
             position: "absolute",
             top: String(titleFontTop + titleFontLineHeight) + ea,
-            right: String(initWordingBetween) + ea,
+            left: String(0) + ea,
             fontFamily: "sandoll",
           }
         }
@@ -1587,7 +1549,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
             width: String(initWordingWidth) + ea,
             verticalAlign: "bottom",
             bottom: String(initWordingBottomVisual) + ea,
-            right: String(initWordingBetween) + ea,
+            left: String(initWordingLeft) + ea,
           },
           children: [
             {
@@ -1601,7 +1563,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
                 fontSize: String(initWordingSize) + ea,
                 fontWeight: String(300),
                 color: colorChip.black,
-                textAlign: "right",
+                textAlign: "left",
               },
               bold: {
                 fontSize: String(initWordingSize) + ea,
@@ -1619,7 +1581,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
                 fontSize: String(initWordingSize) + ea,
                 fontWeight: String(300),
                 color: colorChip.black,
-                textAlign: "right",
+                textAlign: "left",
               },
               bold: {
                 fontSize: String(initWordingSize) + ea,
@@ -1629,6 +1591,17 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
             },
           ]
         },
+        {
+          style: {
+            position: "absolute",
+            width: String(greenBarWidth) + ea,
+            height: String(greenBarHeight) + ea,
+            borderRadius: String(3) + "px",
+            background: colorChip.green,
+            bottom: String(0),
+            left: String(initWordingLeft) + ea,
+          }
+        }
       ]
     },
     {
@@ -1640,7 +1613,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
         height: String(100) + '%',
         borderRadius: String(5) + "px",
         backgroundImage: "url('" + StyleCurationJs.binaryPath + initPhoto + "')",
-        backgroundSize: "auto 100%",
+        backgroundSize: "100% auto",
         backgroundPosition: "50% 50%",
       }
     }
@@ -1691,7 +1664,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   barTop = <%% 15, 15, 15, 15, 0 %%>;
 
   titleBottom = <%% 15, 15, 15, 15, 0 %%>;
-  blockBottom = <%% 30, 30, 30, 30, 0 %%>;
+  blockBottom = <%% 40, 40, 40, 40, 0 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -2885,7 +2858,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   let plusWidth, plusBottom;
 
   margin = <%% 50, 50, 50, 50, 4.7 %%>;
-  paddingTop =  <%% 54, 54, 54, 54, 4.7 %%>;
+  paddingTop =  <%% 60, 60, 60, 60, 4.7 %%>;
 
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
@@ -2909,7 +2882,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   textTitleSize = <%% 27, 27, 27, 27, 11 %%>;
   textContentsSize = <%% 15, 15, 15, 15, 11 %%>;
 
-  textBoxMarginTop = <%% 45, 45, 45, 45, 11 %%>;
+  textBoxMarginTop = <%% 60, 60, 60, 60, 11 %%>;
   textBoxMarginBottom = <%% 10, 10, 10, 10, 11 %%>;
 
   contentsRatioFirst = <%% 41, 41, 41, 41, 11 %%>;
