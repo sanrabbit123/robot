@@ -1537,7 +1537,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   titleFontLineHeight = <%% 40, 40, 38, 32, 5.7 %%>;
 
-  secondBlockWidth = <%% 330, 330, 320, 285, 330 %%>;
+  secondBlockWidth = <%% 350, 330, 320, 285, 330 %%>;
 
   greenBoxTop = <%% 1, 1, 1, 1, 1 %%>;
   greenBoxWidth = <%% 25, 25, 25, 25, 25 %%>;
@@ -1555,7 +1555,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   greenBarWidth = <%% 24, 24, 24, 24, 7 %%>;
   greenBarHeight = <%% 3, 3, 3, 3, 0.6 %%>;
 
-  rightMargin = <%% 40, 40, 38, 32, 40 %%>;
+  rightMargin = <%% 42, 40, 38, 32, 40 %%>;
 
   zeroWordingSize = <%% 22, 22, 22, 22, 22 %%>;
   zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
@@ -2175,6 +2175,10 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   let serviceWordingBetween;
   let serviceWordingBottom;
   let data;
+  let feeSize;
+  let feeMarginRight, feeMarginBottomLast, feeMarginBottomInit;
+  let feeMargin0, feeMargin1, feeMargin2;
+  let feeTongPaddingTop;
 
   data = {
     selected: [ 0, 1 ],
@@ -2190,7 +2194,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
 
   blockHeight = <%% 400, 400, 400, 400, 400 %%>;
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
-  marginBottom = <%% 13, 13, 13, 13, 3 %%>;
+  marginBottom = <%% 13, 13, 13, 13, 4 %%>;
 
   mobileTitleSize = 3.5;
   wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
@@ -2202,7 +2206,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   box1Margin = <%% 18, 18, 0, 0, 3 %%>;
 
   grayHeight = <%% 180, 180, 180, 180, 42 %%>;
-  grayTop = <%% 4, 4, 4, 4, 0 %%>;
+  grayTop = <%% 4, 4, 4, 4, 2.3 %%>;
   grayTextTop = <%% 12, 12, 10, 9, 1.8 %%>;
   grayTextLeft = <%% 12, 12, 10, 9, 1.8 %%>;
   grayTextSize = <%% 14, 14, 13, 11, 2.3 %%>;
@@ -2258,9 +2262,20 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   amountTextVisual = <%% 3, 3, 3, 3, 0.8 %%>;
   amountTextTop = <%% 20, 20, 20, 18, 0.1 %%>;
 
-  servicePhotoBetween = <%% 10, 10, 10, 10, 3.5 %%>;
+  servicePhotoBetween = <%% 10, 10, 10, 10, 1 %%>;
   serviceWordingBetween = <%% 8, 8, 8, 8, 3.5 %%>;
-  serviceWordingBottom = <%% 2, 2, 2, 2, 3.5 %%>;
+  serviceWordingBottom = <%% 2, 2, 2, 2, 2.1 %%>;
+
+  feeSize = <%% 22, 22, 22, 22, 3.5 %%>;
+  feeMarginRight = <%% 30, 30, 30, 30, 1 %%>;
+  feeMarginBottomInit = <%% 4, 4, 4, 4, 0.5 %%>;
+  feeMarginBottomLast = <%% 4, 4, 4, 4, 0 %%>;
+
+  feeMargin0 = <%% 5, 5, 5, 5, 1 %%>;
+  feeMargin1 = <%% 12, 12, 12, 12, 2 %%>;
+  feeMargin2 = <%% 6, 6, 6, 6, 1 %%>;
+
+  feeTongPaddingTop = <%% 4, 4, 4, 4, 0.5 %%>;
 
   [ whiteBlock, wordsTable ] = createNodes([
     {
@@ -2367,9 +2382,9 @@ StyleCurationJs.prototype.insertServiceBox = function () {
       style: {
         position: "relative",
         display: "inline-block",
-        width: "calc(calc(100% - " + String((serviceObj.service.contents.length - 1) * servicePhotoBetween) + ea + ") / " + String(serviceObj.service.contents.length) + ")",
-        marginRight: String(serviceObj.service.contents.length - 1 === i ? 0 : servicePhotoBetween) + ea,
-        paddingBottom: String(serviceWordingBottom) + ea,
+        width: desktop ? "calc(calc(100% - " + String((serviceObj.service.contents.length - 1) * servicePhotoBetween) + ea + ") / " + String(serviceObj.service.contents.length) + ")" : "calc(calc(100% - " + String(servicePhotoBetween) + ea + ") / 2)",
+        marginRight: desktop ? String(serviceObj.service.contents.length - 1 === i ? 0 : servicePhotoBetween) + ea : String(i % 2 === 1 ? 0 : servicePhotoBetween) + ea,
+        paddingBottom: desktop ? String(serviceWordingBottom) + ea : ((i >= 2) ? 0 : serviceWordingBottom) + ea,
       },
       children: [
         {
@@ -2390,10 +2405,10 @@ StyleCurationJs.prototype.insertServiceBox = function () {
             position: "relative",
             width: String(100) + '%',
             textAlign: "center",
-            fontSize: String(wordSize) + ea,
+            fontSize: String(desktop ? wordSize : 3) + ea,
             fontWeight: String(600),
             color: data.selected.includes(i) ? colorChip.green : colorChip.black,
-            marginTop: String(serviceWordingBetween) + ea,
+            marginTop: String(desktop ? serviceWordingBetween : 1.5) + ea,
           }
         },
         {
@@ -2534,9 +2549,11 @@ StyleCurationJs.prototype.insertServiceBox = function () {
     ]
   });
 
-  tempChild.children[1].style.height = String(tempChild.children[0].getBoundingClientRect().height - 4) + ea;
-  tempChild.children[1].style.paddingTop = String(4) + ea;
-  tempChild.children[1].style.overflow = "scroll";
+  if (desktop) {
+    tempChild.children[1].style.height = String(tempChild.children[0].getBoundingClientRect().height - 4) + ea;
+    tempChild.children[1].style.overflow = "scroll";
+  }
+  tempChild.children[1].style.paddingTop = String(feeTongPaddingTop) + ea;
 
   for (let i = 0; i < data.range.length; i++) {
 
@@ -2544,9 +2561,9 @@ StyleCurationJs.prototype.insertServiceBox = function () {
       mother: tempChild.children[1],
       style: {
         display: "inline-block",
-        fontSize: String(22) + ea,
-        marginRight: String(i === data.range.length - 1 ? 0 : 30) + ea,
-        marginBottom: String(4 + (i === data.range.length - 1 ? 4 : 0)) + ea,
+        fontSize: String(feeSize) + ea,
+        marginRight: String(i === data.range.length - 1 ? 0 : feeMarginRight) + ea,
+        marginBottom: String(feeMarginBottomInit + (i === data.range.length - 1 ? feeMarginBottomLast : 0)) + ea,
       },
       children: [
         {
@@ -2565,7 +2582,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
             fontSize: "inherit",
             fontWeight: String(200),
             color: colorChip.gray5,
-            marginLeft: String(5) + ea,
+            marginLeft: String(feeMargin0) + ea,
           }
         },
         {
@@ -2575,7 +2592,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
             fontSize: "inherit",
             fontWeight: String(200),
             color: colorChip.green,
-            marginLeft: String(12) + ea,
+            marginLeft: String(feeMargin1) + ea,
           }
         },
         {
@@ -2585,7 +2602,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
             fontSize: "inherit",
             fontWeight: String(200),
             color: colorChip.green,
-            marginLeft: String(6) + ea,
+            marginLeft: String(feeMargin2) + ea,
           }
         },
         {
@@ -2595,7 +2612,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
             fontSize: "inherit",
             fontWeight: String(200),
             color: colorChip.green,
-            marginLeft: String(6) + ea,
+            marginLeft: String(feeMargin2) + ea,
           }
         },
       ]
@@ -2985,7 +3002,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   let textLineHeight;
   let plusWidth, plusBottom;
 
-  margin = <%% 50, 50, 50, 50, 4.7 %%>;
+  margin = <%% 50, 50, 50, 50, 6 %%>;
   paddingTop =  <%% 60, 60, 60, 60, 4.7 %%>;
 
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
@@ -3005,27 +3022,27 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   headWidth = <%% 10, 10, 10, 10, 2 %%>;
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
-  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6 %%>;
+  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, 9.7 %%>;
 
-  textTitleSize = <%% 27, 27, 27, 27, 11 %%>;
-  textContentsSize = <%% 15, 15, 15, 15, 11 %%>;
+  textTitleSize = <%% 27, 27, 27, 27, 4.2 %%>;
+  textContentsSize = <%% 15, 15, 15, 15, 3.3 %%>;
 
   textBoxMarginTop = <%% 60, 60, 60, 60, 11 %%>;
-  textBoxMarginBottom = <%% 10, 10, 10, 10, 11 %%>;
+  textBoxMarginBottom = <%% 10, 10, 10, 10, 0 %%>;
 
   contentsRatioFirst = <%% 41, 41, 41, 41, 11 %%>;
   contentsRatioSecond = <%% 46.2, 46.2, 46.2, 46.2, 11 %%>;
 
-  titleBetween = <%% 12, 12, 12, 12, 12 %%>;
+  titleBetween = <%% 12, 12, 12, 12, 2.5 %%>;
   titleVisual = <%% 1, 1, 1, 1, 1 %%>;
 
   titleLeftFirst = <%% 22, 22, 22, 22, 11 %%>;
   titleLeftSecond = <%% 62, 62, 62, 62, 11 %%>;
 
-  textLineHeight = <%% 6, 6, 6, 6, 6 %%>;
+  textLineHeight = <%% 6, 6, 6, 6, 12 %%>;
 
-  plusWidth = <%% 24, 24, 24, 24, 24 %%>;
-  plusBottom = <%% 37, 37, 37, 37, 37 %%>;
+  plusWidth = <%% 24, 24, 24, 24, 4 %%>;
+  plusBottom = <%% 37, 37, 37, 37, 43.5 %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -3102,34 +3119,76 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
       {
         mother: textBox,
         style: {
-          width: String(contentsRatio) + '%',
-          display: "inline-block",
+          width: desktop ? String(contentsRatio) + '%' : String(100) + '%',
+          display: desktop ? "inline-block" : "block",
           position: "relative",
           marginBottom: String(titleBetween) + ea,
-          top: String((num === 0 ? -2 : 1) * titleVisual) + ea,
+          top: desktop ? String((num === 0 ? -2 : 1) * titleVisual) + ea : "",
         }
       },
       {
         mother: textBox,
         style: {
-          width: String(100 - contentsRatio) + '%',
-          display: "inline-block",
+          width: desktop ? String(100 - contentsRatio) + '%' : String(100) + '%',
+          display: desktop ? "inline-block" : "block",
           position: "relative",
         }
       },
     ]);
 
-    for (let t of title) {
+    if (desktop) {
+      for (let t of title) {
+        createNode({
+          mother: titleArea,
+          text: t,
+          style: {
+            position: "relative",
+            display: "block",
+            fontSize: String(textTitleSize) + ea,
+            fontWeight: String(200),
+            color: colorChip.black,
+            marginLeft: desktop ? String(num === 0 ? titleLeftFirst : titleLeftSecond) + ea : "",
+            textAlign: desktop ? "left" : "center",
+          },
+          bold: {
+            fontSize: String(textTitleSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black
+          }
+        });
+      }
+      for (let c of contents) {
+        createNode({
+          mother: contentsArea,
+          text: c,
+          style: {
+            position: "relative",
+            display: "block",
+            fontSize: String(textContentsSize) + ea,
+            fontWeight: String(300),
+            marginBottom: String(textLineHeight) + ea,
+            color: colorChip.black,
+          },
+          bold: {
+            fontSize: String(textContentsSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black
+          }
+        });
+      }
+    } else {
+
       createNode({
         mother: titleArea,
-        text: t,
+        text: title.join(" "),
         style: {
           position: "relative",
           display: "block",
           fontSize: String(textTitleSize) + ea,
           fontWeight: String(200),
           color: colorChip.black,
-          marginLeft: String(num === 0 ? titleLeftFirst : titleLeftSecond) + ea,
+          marginLeft: desktop ? String(num === 0 ? titleLeftFirst : titleLeftSecond) + ea : "",
+          textAlign: desktop ? "left" : "center",
         },
         bold: {
           fontSize: String(textTitleSize) + ea,
@@ -3137,19 +3196,19 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
           color: colorChip.black
         }
       });
-    }
 
-    for (let c of contents) {
       createNode({
         mother: contentsArea,
-        text: c,
+        text: contents.join(" "),
         style: {
           position: "relative",
           display: "block",
           fontSize: String(textContentsSize) + ea,
           fontWeight: String(300),
-          marginBottom: String(textLineHeight) + ea,
-          color: colorChip.black
+          marginBottom: String(num === addtionArr.length - 1 ? 0 : textLineHeight) + ea,
+          color: colorChip.black,
+          lineHeight: String(1.6),
+          textAlign: "center",
         },
         bold: {
           fontSize: String(textContentsSize) + ea,
@@ -3168,7 +3227,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
     source: this.mother.returnPlus(colorChip.green),
     width: String(plusWidth) + ea,
     position: "absolute",
-    left: String(titleLeftFirst) + ea,
+    left: String(desktop ? titleLeftFirst : 36) + ea,
     bottom: String(plusBottom) + ea,
   });
 
