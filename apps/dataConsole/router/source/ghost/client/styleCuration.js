@@ -135,11 +135,20 @@ class StyleCurationWordings {
                 const mobile = media[4];
                 const desktop = !mobile;
                 let padding, subtract;
+                let paddingLeft, left;
                 if (desktop) {
                   padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
                   subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
                   items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
                   items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
+                } else {
+                  paddingLeft = 5.6;
+                  left = paddingLeft - 1.2 - 1;
+                  for (let dom of items) {
+                    dom.style.paddingLeft = String(paddingLeft) + "vw";
+                    dom.lastChild.style.left = String(left) + "vw";
+                    items[4].children[0].textContent = "주택";
+                  }
                 }
               }
             },
@@ -235,6 +244,10 @@ class StyleCurationWordings {
                 if (desktop) {
                   grandMother.firstChild.style.width = String(ratio) + '%';
                   grandMother.lastChild.style.width = String(100 - ratio) + '%';
+                } else {
+                  mother.style.textAlign = "left";
+                  mother.style.left = String(-0.4) + "vw";
+                  mother.style.paddingTop = String(0.5) + "vw";
                 }
               }
             },
@@ -278,7 +291,11 @@ class StyleCurationWordings {
               notice: "거주중일 경우 시공에 한계가 있습니다.",
               exception: function (items, media) {
                 const ea = "px";
-                items[0].style.marginRight = String(20) + ea;
+                const mobile = media[4];
+                const desktop = !mobile;
+                if (desktop) {
+                  items[0].style.marginRight = String(20) + ea;
+                }
               }
             },
           ]
@@ -677,7 +694,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
 
   pannelHeight = <%% 114, 114, 114, 90, 15.4 %%>;
-  pannelPaddingTop = <%% 32, 32, 32, 22, 2.4 %%>;
+  pannelPaddingTop = <%% 32, 32, 32, 22, 4.2 %%>;
   pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
   pannelWordsPadding = <%% 16, 16, 16, 12, 16 %%>;
   pannelLineTop = <%% 47, 47, 47, 38, 47 %%>;
@@ -691,14 +708,19 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   this.randomPick = randomPick;
   targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
 
-  mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(13.5) + ea;
+  mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(0) + ea;
+  if (mobile) {
+    mother.style.background = "";
+    mother.style.boxShadow = "";
+  }
+
   pictureBox = createNode({
     mother,
     style: {
       display: "block",
       position: "relative",
-      marginLeft: String(innerMargin) + ea,
-      width: withOut(innerMargin * 2, ea),
+      marginLeft: desktop ? String(innerMargin) + ea : "",
+      width: desktop ? withOut(innerMargin * 2, ea) : "",
     }
   });
 
@@ -805,6 +827,9 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       height: String(pannelHeight - pannelPaddingTop) + ea,
       paddingTop: String(pannelPaddingTop) + ea,
       textAlign: "center",
+      background: mobile ? colorChip.white : "",
+      boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      borderRadius: mobile ? String(5) + "px" : "",
     },
     children: [
       {
@@ -919,45 +944,45 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   lineHeight = 1.6;
 
   wordingSize = <%% 15, 15, 15, 13, 3.5 %%>;
-  standardSize = <%% 13, 13, 13, 13, 3.5 %%>;
+  standardSize = <%% 13, 13, 13, 13, 2.5 %%>;
   listWordingSize = <%% 14, 13, 12, 12, 3 %%>;
 
-  paddingTop = <%% 38, 36, 36, 28, 14 %%>;
-  paddingBottom = <%% 40, 38, 38, 30, 4 %%>;
-  marginLeft = <%% 42, 36, 36, 28, 4.5 %%>;
+  paddingTop = <%% 38, 36, 36, 28, 7 %%>;
+  paddingBottom = <%% 40, 38, 38, 30, 3 %%>;
+  marginLeft = <%% 42, 36, 36, 28, 5.5 %%>;
   questionMargin = <%% 50, 30, 30, 15, 2 %%>;
-  blockMargin = <%% 28, 28, 28, 20, 6 %%>;
+  blockMargin = <%% 28, 28, 28, 20, 7 %%>;
   qWidth = <%% 19, 19, 19, 18, 4 %%>;
 
   addressWordingTextTop = <%% -1, -1, -1, -1, -1 %%>;
   addressWordingSize = <%% 22, 22, 22, 18, 4 %%>;
   addressBottomLineHeight = <%% 38, 38, 38, 32, 5.5 %%>;
 
-  itemPaddingLeft = <%% 40, 32, 28, 28, 4 %%>;
+  itemPaddingLeft = <%% 40, 32, 28, 28, 6.8 %%>;
   itemMarginBottom = <%% 5, 5, 5, 5, 1 %%>;
 
-  itemRadius = <%% 3, 3, 3, 3, 0.5 %%>;
-  itemCircleLeft = <%% -5, -5, -5, -5, 0 %%>;
-  itemCircleTop = <%% 7, 7, 7, 7, 2 %%>;
+  itemRadius = <%% 3, 3, 3, 3, 0.6 %%>;
+  itemCircleLeft = <%% -5, -5, -5, -5, -1 %%>;
+  itemCircleTop = <%% 7, 7, 7, 7, 1.9 %%>;
 
-  barTop = <%% 16, 16, 16, 16, 2 %%>;
-  barHeight = <%% 4, 4, 4, 4, 4 %%>;
-  barTextTop = <%% 10.5, 10.5, 10.5, 10.5, 10.5 %%>;
-  barTextMargin = <%% 10, 10, 10, 10, 10 %%>;
+  barTop = <%% 16, 16, 16, 16, 1.5 %%>;
+  barHeight = <%% 4, 4, 4, 4, 2 %%>;
+  barTextTop = <%% 10.5, 10.5, 10.5, 10.5, 4.5 %%>;
+  barTextMargin = <%% 10, 10, 10, 10, 5 %%>;
 
-  barMotherHeight = <%% 30, 30, 30, 30, 30 %%>;
+  barMotherHeight = <%% 30, 30, 30, 30, 5 %%>;
 
-  barButtonTop = <%% 12, 12, 12, 12, 12 %%>;
-  barButtonRadius = <%% 5.5, 5.5, 5.5, 5.5, 5.5 %%>;
+  barButtonTop = <%% 12, 12, 12, 12, 1 %%>;
+  barButtonRadius = <%% 5.5, 5.5, 5.5, 5.5, 1.3 %%>;
 
-  listAreaPaddingTop = <%% 13, 13, 13, 13, 13 %%>;
-  listRightMargin = <%% 10, 10, 10, 10, 10 %%>;
-  listBottomMargin = <%% 8, 8, 8, 8, 8 %%>;
-  listColumnsLength = <%% 4, 4, 4, 4, 4 %%>;
-  listFullWidth = <%% 400, 400, 400, 400, 400 %%>;
-  listHypenWidth = <%% 10, 10, 10, 10, 10 %%>;
-  listColumWidth = <%% 10, 10, 10, 10, 10 %%>;
-  listColumPaddingLeft = <%% 2, 2, 2, 2, 2 %%>;
+  listAreaPaddingTop = <%% 13, 13, 13, 13, 1 %%>;
+  listRightMargin = <%% 10, 10, 10, 10, 3.6 %%>;
+  listBottomMargin = <%% 8, 8, 8, 8, 1 %%>;
+  listColumnsLength = <%% 4, 4, 4, 4, 2 %%>;
+  listFullWidth = <%% 400, 400, 400, 400, 60 %%>;
+  listHypenWidth = <%% 10, 10, 10, 10, 2 %%>;
+  listColumWidth = <%% 10, 10, 10, 10, 2 %%>;
+  listColumPaddingLeft = <%% 2, 2, 2, 2, 1 %%>;
 
   mother.style.paddingTop = String(paddingTop) + ea;
   mother.style.paddingBottom = String(paddingBottom) + ea;
@@ -1080,7 +1105,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         answerArea.style.marginTop = String(3) + ea;
         answerArea.style.marginLeft = String(qWidth) + ea;
         answerArea.style.width = withOut(qWidth, ea);
-        block.style.marginBottom = String(7) + ea;
       }
       createNodes([
         {
@@ -1207,6 +1231,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       }
     } else if (obj.type === "opposite") {
 
+      if (mobile) {
+        answerArea.style.marginLeft = String(qWidth) + ea;
+        answerArea.style.width = withOut(qWidth, ea);
+        answerArea.style.marginBottom = String(10) + ea;
+      }
+
       answerArea.style.textAlign = "left";
       answerArea.style.height = String(barMotherHeight) + ea;
       answerArea.style.cursor = "pointer";
@@ -1248,9 +1278,11 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         }
       });
 
-      bar.style.width = withOut(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2), ea);
-      barLeft = barText0.getBoundingClientRect().width + barTextMargin;
-      bar.style.left = String(barLeft) + ea;
+      if (desktop) {
+        bar.style.width = withOut(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2), "px");
+        barLeft = barText0.getBoundingClientRect().width + barTextMargin;
+        bar.style.left = String(barLeft) + "px";
+      }
 
       barBox = createNode({
         mother: answerArea,
@@ -1258,13 +1290,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           position: "absolute",
           left: String(barLeft) + ea,
           top: String(0) + ea,
-          width: "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + ea + ") / 2)",
+          width: desktop ? "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + "px" + ") / 2)" : String(50) + '%',
           height: String(100) + '%',
           background: colorChip.white,
           transition: "all 0s ease",
         }
       });
-      barBox.style.width = String(barBox.getBoundingClientRect().width) + ea;
+      if (desktop) {
+        barBox.style.width = String(barBox.getBoundingClientRect().width) + "px";
+      }
       barBox.setAttribute("width", String(barBox.getBoundingClientRect().width));
       barBox.setAttribute("entire", String(barBox.getBoundingClientRect().width * 2));
       barBox.setAttribute("value", String(50));
@@ -1721,6 +1755,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   let barTop;
   let titleBottom, blockBottom;
   let index;
+  let mobileTitleLeft, mobileTitleTop;
 
   center = this.wordings.centerWordings;
   wordings = [];
@@ -1737,7 +1772,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
 
-  titleFontSize = <%% 21, 21, 21, 21, 4.2 %%>;
+  titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTop = <%% 1, 1, 1, 1, 0 %%>;
@@ -1746,6 +1781,9 @@ StyleCurationJs.prototype.insertCenterBox = function () {
 
   titleBottom = <%% 15, 15, 15, 15, 0 %%>;
   blockBottom = <%% 40, 40, 40, 40, 3 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -1785,9 +1823,9 @@ StyleCurationJs.prototype.insertCenterBox = function () {
           style: {
             display: "block",
             position: mobile ? "absolute" : "relative",
-            left: desktop ? "" : String(4.5) + ea,
-            top: desktop ? "" : String(4) + ea,
-            width: desktop ? String(100) + '%' : withOut((4.5 * 2), ea),
+            left: desktop ? "" : String(mobileTitleLeft) + ea,
+            top: desktop ? "" : String(mobileTitleTop) + ea,
+            width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
             marginBottom: String(titleBottom) + ea,
             zIndex: mobile ? String(1) : "",
           },
@@ -1797,7 +1835,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
                 position: "absolute",
                 top: String(barTop) + ea,
                 width: String(100) + '%',
-                borderBottom: desktop ? "1px dashed " + colorChip.gray2 : "1px solid " + colorChip.gray2,
+                borderBottom: desktop ? "1px dashed " + colorChip.gray2 : "1px solid " + colorChip.gray3,
               }
             },
             {
@@ -1808,8 +1846,9 @@ StyleCurationJs.prototype.insertCenterBox = function () {
                 top: String(0),
                 fontSize: String(titleFontSize) + ea,
                 fontWeight: String(200),
-                background: colorChip.white,
+                background: desktop ? colorChip.white : colorChip.gray1,
                 paddingRight: String(numberRight) + ea,
+                color: desktop ? colorChip.black : colorChip.green,
               }
             },
             {
@@ -1820,8 +1859,9 @@ StyleCurationJs.prototype.insertCenterBox = function () {
                 top: String(titleTop) + ea,
                 fontSize: String(titleFontSize) + ea,
                 fontWeight: String(600),
-                background: colorChip.white,
+                background: desktop ? colorChip.white : colorChip.gray1,
                 paddingLeft: String(numberRight) + ea,
+                color: colorChip.black,
               }
             },
           ]
@@ -1837,6 +1877,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
             borderRadius: String(5) + "px",
             overflow: "hidden",
             marginBottom: String(num !== wordings.length ? blockBottom : 0) + ea,
+            marginTop: desktop ? "" : String(14) + ea,
           }
         },
       ]
@@ -1881,10 +1922,10 @@ StyleCurationJs.prototype.insertPannelBox = function () {
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
   buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 156, 156, 156, 156, 17 %%>;
+  buttonWidth = <%% 156, 156, 156, 156, 28 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
-  buttonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
+  buttonTextTop = <%% 9, 9, 9, 9, 1.3 %%>;
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
@@ -1896,10 +1937,10 @@ StyleCurationJs.prototype.insertPannelBox = function () {
 
   wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
 
-  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6 %%>;
+  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, 8 %%>;
 
   grayHeight = <%% 180, 180, 180, 180, 42 %%>;
-  grayTop = <%% 5, 5, 5, 5, 5 %%>;
+  grayTop = <%% 5, 5, 5, 5, 0 %%>;
   grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
   grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
   grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
@@ -1930,8 +1971,8 @@ StyleCurationJs.prototype.insertPannelBox = function () {
       mother: whiteBlock,
       style: {
         position: "relative",
-        left: String(desktop ? 0 : 4.5) + ea,
-        width: desktop ? withOut(0 * 2, ea) : withOut(4.5 * 2, ea),
+        left: String(0) + ea,
+        width: withOut(0 * 2, ea),
         marginTop: String(grayTop) + ea,
         marginBottom: String(desktop ? 15 : 2.5) + ea,
         height: String(grayHeight) + ea,
@@ -1989,8 +2030,8 @@ StyleCurationJs.prototype.insertPannelBox = function () {
       ],
       style: {
         position: "relative",
-        left: String(desktop ? 0 : 4.5) + ea,
-        width: desktop ? withOut(0 * 2, ea) : withOut(4.5 * 2, ea),
+        left: String(0) + ea,
+        width: withOut(0 * 2, ea),
         height: String(buttonTongHeight) + ea,
         cursor: "pointer",
       }
@@ -2044,6 +2085,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
       position: "relative",
       height: String(buttonHeight) + ea,
       textAlign: "center",
+      marginTop: desktop ? "" : String(3) + ea,
     },
     children: [
       {
