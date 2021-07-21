@@ -3748,7 +3748,10 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
         "t2a33.jpg",
         "t5a27.jpg",
         "t8p9.jpg",
+        "t13a27.jpg",
+        "t19a41.jpg",
       ];
+
       let photos;
 
       photos = contentsArr.getAllPhotos();

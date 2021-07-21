@@ -58,7 +58,11 @@ class StyleCurationWordings {
               "작성 부탁드립니다. 감사합니다!",
             ]
           ],
-          image: "/secondConsulting.jpg"
+          image: [
+            "/secondConsulting.jpg",
+            "/secondConsultingb.jpg",
+            "/secondConsultingc.jpg",
+          ]
         },
         service: {
           title: [
@@ -77,7 +81,11 @@ class StyleCurationWordings {
               "새로운 방식으로 나에게 맞는 집을 만들어 보세요!",
             ]
           ],
-          image: "/secondConsulting2.jpg"
+          image: [
+            "/secondConsulting2.jpg",
+            "/secondConsulting2b.jpg",
+            "/secondConsulting2c.jpg",
+          ]
         }
       },
       center: [
@@ -124,11 +132,15 @@ class StyleCurationWordings {
               multiple: false,
               exception: function (items, media) {
                 const ea = "px";
+                const mobile = media[4];
+                const desktop = !mobile;
                 let padding, subtract;
-                padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
-                subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
-                items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
-                items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
+                if (desktop) {
+                  padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
+                  subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
+                  items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
+                  items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
+                }
               }
             },
             {
@@ -214,9 +226,16 @@ class StyleCurationWordings {
               exception: function (items, media) {
                 const mother = items[0].parentNode;
                 const grandMother = mother.parentNode;
-                const ratio = 30;
-                grandMother.firstChild.style.width = String(ratio) + '%';
-                grandMother.lastChild.style.width = String(100 - ratio) + '%';
+                const mobile = media[4];
+                const desktop = !mobile;
+                let ratio = 30;
+                if (media[3]) {
+                  ratio = 40;
+                }
+                if (desktop) {
+                  grandMother.firstChild.style.width = String(ratio) + '%';
+                  grandMother.lastChild.style.width = String(100 - ratio) + '%';
+                }
               }
             },
             {
@@ -637,8 +656,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, cleanChildren } = GeneralJs;
   const { photos, contentsArr, designers } = this;
-  const pictureNumber = 12;
-  const columnNumber = 4;
+  let pictureNumber, columnNumber;
   let randomPick, targetPhotos;
   let pictureBox;
   let innerMargin;
@@ -652,17 +670,20 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
 
   cleanChildren(mother);
 
-  innerMargin = <%% 42, 42, 42, 42, 42 %%>;
-  pictureMargin = <%% 10, 10, 10, 10, 10 %%>;
+  pictureNumber = <%% 10, 10, 10, 10, 8 %%>;
+  columnNumber = <%% 5, 5, 5, 5, 2 %%>;
 
-  pannelHeight = <%% 94, 94, 94, 94, 94 %%>;
-  pannelPaddingTop = <%% 16, 16, 16, 16, 16 %%>;
-  pannelWordsSize = <%% 23, 23, 23, 23, 23 %%>;
-  pannelWordsPadding = <%% 16, 16, 16, 16, 16 %%>;
-  pannelLineTop = <%% 31, 31, 31, 31, 31 %%>;
+  innerMargin = <%% 42, 36, 36, 28, 4.5 %%>;
+  pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
 
-  arrowTop = <%% 27, 27, 27, 27, 27 %%>;
-  arrowWidth = <%% 10, 10, 10, 10, 10 %%>;
+  pannelHeight = <%% 114, 114, 114, 90, 15.4 %%>;
+  pannelPaddingTop = <%% 32, 32, 32, 22, 2.4 %%>;
+  pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
+  pannelWordsPadding = <%% 16, 16, 16, 12, 16 %%>;
+  pannelLineTop = <%% 47, 47, 47, 38, 47 %%>;
+
+  arrowTop = <%% 43, 43, 43, 35, 2 %%>;
+  arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
 
   questionWording = wordings[0].question[0] + " ( 1 / 5 )";
 
@@ -670,7 +691,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   this.randomPick = randomPick;
   targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
 
-  mother.style.paddingTop = String(innerMargin) + ea;
+  mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(13.5) + ea;
   pictureBox = createNode({
     mother,
     style: {
@@ -769,7 +790,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
         width: "calc(calc(100% - " + String(pictureMargin * (columnNumber - 1)) + ea + ") / " + String(columnNumber) + ")",
         height: "auto",
         borderRadius: String(3) + "px",
-        marginRight: String(i % columnNumber === 3 ? 0 : pictureMargin) + ea,
+        marginRight: String(i % columnNumber === (columnNumber - 1) ? 0 : pictureMargin) + ea,
         marginBottom: String(pictureMargin) + ea,
       }
     });
@@ -788,11 +809,12 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
     children: [
       {
         style: {
+          display: desktop ? "block" : "none",
           position: "absolute",
           width: withOut(innerMargin * 2, ea),
           left: String(innerMargin) + ea,
           top: String(0) + ea,
-          height: String(31) + ea,
+          height: String(pannelLineTop) + ea,
           borderBottom: "1px dashed " + colorChip.gray3,
         }
       },
@@ -801,6 +823,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
         class: [ "hoverDefault" ],
         source: this.mother.returnArrow("left", colorChip.green),
         style: {
+          display: desktop ? "block" : "none",
           position: "absolute",
           left: String(innerMargin) + ea,
           top: String(arrowTop) + ea,
@@ -814,6 +837,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
         class: [ "hoverDefault" ],
         source: this.mother.returnArrow("right", colorChip.green),
         style: {
+          display: desktop ? "block" : "none",
           position: "absolute",
           right: String(innerMargin) + ea,
           top: String(arrowTop) + ea,
@@ -831,8 +855,8 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           fontSize: String(pannelWordsSize) + ea,
           fontWeight: String(200),
           color: colorChip.green,
-          paddingRight: String(pannelWordsPadding) + ea,
-          paddingLeft: String(pannelWordsPadding) + ea,
+          paddingRight: desktop ? String(pannelWordsPadding) + ea : "",
+          paddingLeft: desktop ? String(pannelWordsPadding) + ea : "",
           background: colorChip.white,
         },
         bold: {
@@ -890,31 +914,33 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   let listColumWidth, listColumPaddingLeft;
   let listNum;
   let listAreaPaddingTop;
+  let listWordingSize;
 
   lineHeight = 1.6;
 
-  wordingSize = <%% 15, 15, 15, 13, 15 %%>;
-  standardSize = <%% 13, 13, 13, 13, 13 %%>;
+  wordingSize = <%% 15, 15, 15, 13, 3.5 %%>;
+  standardSize = <%% 13, 13, 13, 13, 3.5 %%>;
+  listWordingSize = <%% 14, 13, 12, 12, 3 %%>;
 
-  paddingTop = <%% 38, 38, 38, 38, 38 %%>;
-  paddingBottom = <%% 40, 40, 40, 40, 40 %%>;
-  marginLeft = <%% 42, 42, 42, 42, 42 %%>;
-  questionMargin = <%% 50, 50, 50, 50, 50 %%>;
-  blockMargin = <%% 28, 28, 28, 28, 28 %%>;
-  qWidth = <%% 19, 19, 19, 19, 19 %%>;
+  paddingTop = <%% 38, 36, 36, 28, 14 %%>;
+  paddingBottom = <%% 40, 38, 38, 30, 4 %%>;
+  marginLeft = <%% 42, 36, 36, 28, 4.5 %%>;
+  questionMargin = <%% 50, 30, 30, 15, 2 %%>;
+  blockMargin = <%% 28, 28, 28, 20, 6 %%>;
+  qWidth = <%% 19, 19, 19, 18, 4 %%>;
 
   addressWordingTextTop = <%% -1, -1, -1, -1, -1 %%>;
-  addressWordingSize = <%% 22, 22, 22, 22, 22 %%>;
-  addressBottomLineHeight = <%% 38, 38, 38, 38, 38 %%>;
+  addressWordingSize = <%% 22, 22, 22, 18, 4 %%>;
+  addressBottomLineHeight = <%% 38, 38, 38, 32, 5.5 %%>;
 
-  itemPaddingLeft = <%% 40, 40, 40, 40, 40 %%>;
-  itemMarginBottom = <%% 5, 5, 5, 5, 5 %%>;
+  itemPaddingLeft = <%% 40, 32, 28, 28, 4 %%>;
+  itemMarginBottom = <%% 5, 5, 5, 5, 1 %%>;
 
-  itemRadius = <%% 3, 3, 3, 3, 3 %%>;
-  itemCircleLeft = <%% -5, -5, -5, -5, -5 %%>;
-  itemCircleTop = <%% 7, 7, 7, 7, 7 %%>;
+  itemRadius = <%% 3, 3, 3, 3, 0.5 %%>;
+  itemCircleLeft = <%% -5, -5, -5, -5, 0 %%>;
+  itemCircleTop = <%% 7, 7, 7, 7, 2 %%>;
 
-  barTop = <%% 16, 16, 16, 16, 16 %%>;
+  barTop = <%% 16, 16, 16, 16, 2 %%>;
   barHeight = <%% 4, 4, 4, 4, 4 %%>;
   barTextTop = <%% 10.5, 10.5, 10.5, 10.5, 10.5 %%>;
   barTextMargin = <%% 10, 10, 10, 10, 10 %%>;
@@ -941,14 +967,48 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   for (let obj of wordings) {
 
     if (obj.half) {
-      questionRatio = 0.5;
+      questionRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
       num = num + 1;
     } else {
-      questionRatio = 0.318;
+      questionRatio = <%% 0.318, 0.38, 0.42, 0.45, 0.318 %%>;
     }
 
-    if (!obj.half || num % 2 === 1) {
-      blockMother = createNode({
+    if (desktop) {
+      if (!obj.half || num % 2 === 1) {
+        blockMother = createNode({
+          mother,
+          style: {
+            display: "block",
+            position: "relative",
+            marginLeft: String(marginLeft) + ea,
+            marginRight: String(marginLeft) + ea,
+            width: withOut(marginLeft * 2, ea),
+            verticalAlign: "top",
+            marginBottom: String(blockMargin) + ea,
+          }
+        });
+        block = createNode({
+          mother: blockMother,
+          style: {
+            display: !obj.half ? "block" : "inline-block",
+            position: "relative",
+            width: !obj.half ? String(100) + '%' : withOut(50, questionMargin, ea),
+            paddingRight: !obj.half ? "" : String(questionMargin) + ea,
+          }
+        });
+      } else {
+        block = createNode({
+          mother: blockMother,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut(50, questionMargin, ea),
+            paddingLeft: String(questionMargin) + ea,
+          }
+        });
+      }
+    } else {
+      block = createNode({
         mother,
         style: {
           display: "block",
@@ -956,27 +1016,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           marginLeft: String(marginLeft) + ea,
           marginRight: String(marginLeft) + ea,
           width: withOut(marginLeft * 2, ea),
-          verticalAlign: "top",
           marginBottom: String(blockMargin) + ea,
-        }
-      });
-      block = createNode({
-        mother: blockMother,
-        style: {
-          display: !obj.half ? "block" : "inline-block",
-          position: "relative",
-          width: !obj.half ? String(100) + '%' : withOut(50, questionMargin, ea),
-          paddingRight: !obj.half ? "" : String(questionMargin) + ea,
-        }
-      });
-    } else {
-      block = createNode({
-        mother: blockMother,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          width: withOut(50, questionMargin, ea),
-          paddingLeft: String(questionMargin) + ea,
         }
       });
     }
@@ -984,10 +1024,11 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
     questionArea = createNode({
       mother: block,
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "block",
         position: "relative",
-        width: String(100 * questionRatio) + '%',
+        width: desktop ? String(100 * questionRatio) + '%' : String(100) + '%',
         verticalAlign: "top",
+        marginBottom: desktop ? "" : String(1.5) + ea,
       },
       children: [
         {
@@ -1001,6 +1042,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             color: colorChip.shadow,
             verticalAlign: "top",
             lineHeight: String(lineHeight),
+            top: mobile ? String(-0.1) + ea : "",
           }
         },
         {
@@ -1026,14 +1068,20 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
     answerArea = createNode({
       mother: block,
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "block",
         position: "relative",
-        width: String(100 * (1 - questionRatio)) + '%',
+        width: desktop ? String(100 * (1 - questionRatio)) + '%' : String(100) + '%',
         verticalAlign: "top",
       }
     });
 
     if (obj.type === "address") {
+      if (mobile) {
+        answerArea.style.marginTop = String(3) + ea;
+        answerArea.style.marginLeft = String(qWidth) + ea;
+        answerArea.style.width = withOut(qWidth, ea);
+        block.style.marginBottom = String(7) + ea;
+      }
       createNodes([
         {
           mother: answerArea,
@@ -1070,7 +1118,9 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
     } else if (obj.type === "checkbox") {
       itemDoms = [];
       answerArea.style.textAlign = "right";
-      answerArea.style.paddingTop = String(1) + ea;
+      if (desktop) {
+        answerArea.style.paddingTop = String(1) + ea;
+      }
       z = 0;
       for (let i of obj.items) {
         itemDoms.push(createNode({
@@ -1337,7 +1387,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               style: {
                 display: "inline-block",
                 position: "relative",
-                fontSize: String(wordingSize) + ea,
+                fontSize: String(listWordingSize) + ea,
                 width: String(listFullWidth) + ea,
               },
               children: [
@@ -1413,7 +1463,9 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
     y++;
   }
 
-  blockMother.style.marginBottom = String(0) + ea;
+  if (desktop) {
+    blockMother.style.marginBottom = String(0) + ea;
+  }
 
 }
 
@@ -1433,41 +1485,51 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   let initWordingSize, initWordingWidth;
   let lineHeight;
   let initWordingMargin;
-  let initWordingBottomVisual;
   let wordsPaddingTop;
   let initWordingLeft;
   let wordings, initPhoto;
   let greenBarWidth, greenBarHeight;
+  let rightMargin;
+  let initWordingTitleBetween;
+  let zeroWordingSize, zeroWordingTop;
+  let mobileWordingBetween;
 
-  blockHeight = <%% 434, 434, 434, 434, 434 %%>;
+  blockHeight = <%% 444, 424, 404, 350, 424 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  titleFontTop = <%% 22, 22, 22, 22, 48 %%>;
-  titleFontSize = <%% 30, 30, 30, 30, 5.7 %%>;
-  titleFontWeight = <%% 600, 600, 600, 600, 600 %%>;
-  titleFontLineHeight = <%% 38, 38, 38, 38, 5.7 %%>;
+  titleFontTop = <%% 36, 30, 30, 26, 48 %%>;
+  titleFontSize = <%% 32, 31, 30, 28, 5.7 %%>;
+  titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  titleFontLineHeight = <%% 40, 40, 38, 32, 5.7 %%>;
 
-  secondBlockWidth = <%% 340, 340, 340, 340, 340 %%>;
+  secondBlockWidth = <%% 330, 330, 320, 285, 330 %%>;
 
   greenBoxTop = <%% 1, 1, 1, 1, 1 %%>;
   greenBoxWidth = <%% 25, 25, 25, 25, 25 %%>;
   greenBoxHeight = <%% 4, 4, 4, 4, 4 %%>;
   greenBoxVisual = 1;
 
-  initWordingSize = <%% 14.5, 14.5, 14.5, 13, 15 %%>;
+  initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
   initWordingWidth = <%% 300, 300, 300, 300, 300 %%>;
-  initWordingMargin = <%% 15, 15, 15, 15, 15 %%>;
-  initWordingBottomVisual = <%% 58, 58, 58, 58, 58 %%>;
+  initWordingMargin = <%% 15, 15, 15, 13, 2 %%>;
   initWordingLeft = <%% 1, 1, 1, 1, 1 %%>;
+  initWordingTitleBetween = <%% 98, 96, 94, 82, 98 %%>;
 
-  wordsPaddingTop = <%% 105, 105, 105, 105, 105 %%>;
+  wordsPaddingTop = <%% 105, 105, 105, 105, 6 %%>;
 
-  greenBarWidth = <%% 24, 24, 24, 24, 24 %%>;
-  greenBarHeight = <%% 3, 3, 3, 3, 3 %%>;
+  greenBarWidth = <%% 24, 24, 24, 24, 7 %%>;
+  greenBarHeight = <%% 3, 3, 3, 3, 0.6 %%>;
+
+  rightMargin = <%% 40, 40, 38, 32, 40 %%>;
+
+  zeroWordingSize = <%% 22, 22, 22, 22, 22 %%>;
+  zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
+
+  mobileWordingBetween = 0.6;
 
   wordings = this.wordings.initWordings[curation ? "curation" : "service"];
-  initPhoto = this.wordings.initWordings[curation ? "curation" : "service"].image;
+  initPhoto = <%% this.wordings.initWordings[curation ? "curation" : "service"].image[0], this.wordings.initWordings[curation ? "curation" : "service"].image[1], this.wordings.initWordings[curation ? "curation" : "service"].image[1], this.wordings.initWordings[curation ? "curation" : "service"].image[1], this.wordings.initWordings[curation ? "curation" : "service"].image[2] %%>;
 
   lineHeight = 1.6;
 
@@ -1477,10 +1539,10 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      height: String(blockHeight - (margin * 2)) + ea,
+      height: desktop ? String(blockHeight - (margin * 2)) + ea : "auto",
       background: colorChip.white,
-      paddingTop: String(margin + (desktop ? 0 : 1.7)) + ea,
-      paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
+      paddingTop: String(desktop ? margin : 9) + ea,
+      paddingBottom: String(desktop ? margin : 10.5) + ea,
       marginBottom: String(bottomMargin) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -1500,33 +1562,50 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
     {
       mother: whiteTong,
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "block",
         position: "relative",
-        width: String(secondBlockWidth) + ea,
-        height: String(100) + '%',
+        width: desktop ? String(secondBlockWidth) + ea : String(100) + '%',
+        height: desktop ? String(100) + '%' : '',
         verticalAlign: "top",
+        textAlign: desktop ? "" : "center",
       },
       children: [
         {
+          text: String(0),
+          style: {
+            display: desktop ? "block" : "none",
+            fontSize: String(zeroWordingSize) + ea,
+            fontWeight: String(200),
+            position: "absolute",
+            top: String(zeroWordingTop) + ea,
+            left: String(0) + ea,
+            color: colorChip.gray4,
+          }
+        },
+        {
           text: wordings.title[0],
           style: {
+            display: desktop ? "block" : "inline-block",
             fontSize: String(titleFontSize) + ea,
             fontWeight: String(titleFontWeight),
-            position: "absolute",
-            top: String(titleFontTop) + ea,
-            left: String(0) + ea,
+            position: desktop ? "absolute" : "relative",
+            top: desktop ? String(titleFontTop) + ea : "",
+            right: desktop ? String(rightMargin) + ea : "",
             fontFamily: "sandoll",
+            paddingRight: desktop ? "" : String(mobileWordingBetween) + ea,
           }
         },
         {
           text: wordings.title[1],
           style: {
+            display: desktop ? "block" : "inline-block",
             fontSize: String(titleFontSize) + ea,
             fontWeight: String(titleFontWeight),
-            position: "absolute",
-            top: String(titleFontTop + titleFontLineHeight) + ea,
-            left: String(0) + ea,
+            position: desktop ? "absolute" : "relative",
+            top: desktop ? String(titleFontTop + titleFontLineHeight) + ea : "",
+            right: desktop ? String(rightMargin) + ea : "",
             fontFamily: "sandoll",
+            paddingLeft: desktop ? "" : String(mobileWordingBetween) + ea,
           }
         }
       ]
@@ -1534,22 +1613,22 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
     {
       mother: whiteTong,
       style: {
-        position: "absolute",
-        width: String(secondBlockWidth) + ea,
+        position: desktop ? "absolute" : "relative",
+        width: desktop ? String(secondBlockWidth) + ea : String(100) + '%',
         verticalAlign: "bottom",
         paddingTop: String(wordsPaddingTop) + ea,
-        height: withOut(wordsPaddingTop, ea),
-        top: String(0),
-        left: String(0),
+        height: desktop ? withOut(wordsPaddingTop, ea) : "",
+        top: desktop ? String(0) : "",
+        left: desktop ? String(0) : "",
       },
       children: [
         {
           style: {
-            position: "absolute",
-            width: String(initWordingWidth) + ea,
-            verticalAlign: "bottom",
-            bottom: String(initWordingBottomVisual) + ea,
-            left: String(initWordingLeft) + ea,
+            position: desktop ? "absolute" : "relative",
+            width: desktop ? String(initWordingWidth) + ea : String(100) + '%',
+            verticalAlign: desktop ? "bottom" : "",
+            top: desktop ? String(titleFontTop + initWordingTitleBetween) + ea : "",
+            right: desktop ? String(rightMargin) + ea : "",
           },
           children: [
             {
@@ -1563,7 +1642,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
                 fontSize: String(initWordingSize) + ea,
                 fontWeight: String(300),
                 color: colorChip.black,
-                textAlign: "left",
+                textAlign: desktop ? "right" : "center",
               },
               bold: {
                 fontSize: String(initWordingSize) + ea,
@@ -1581,7 +1660,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
                 fontSize: String(initWordingSize) + ea,
                 fontWeight: String(300),
                 color: colorChip.black,
-                textAlign: "left",
+                textAlign: desktop ? "right" : "center",
               },
               bold: {
                 fontSize: String(initWordingSize) + ea,
@@ -1598,8 +1677,10 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
             height: String(greenBarHeight) + ea,
             borderRadius: String(3) + "px",
             background: colorChip.green,
-            bottom: String(0),
-            left: String(initWordingLeft) + ea,
+            bottom: desktop ? String(0) : "",
+            right: desktop ? String(rightMargin + 1) + ea : "",
+            top: desktop ? "" : String(2.5) + ea,
+            left: desktop ? "" : String(35) + ea,
           }
         }
       ]
@@ -1607,7 +1688,7 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
     {
       mother: whiteTong,
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "none",
         position: "relative",
         width: withOut(secondBlockWidth, ea),
         height: String(100) + '%',
@@ -1656,15 +1737,15 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
 
-  titleFontSize = <%% 21, 21, 21, 21, 5.7 %%>;
-  numberRight = <%% 12, 12, 12, 12, 5.7 %%>;
+  titleFontSize = <%% 21, 21, 21, 21, 4.2 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTop = <%% 1, 1, 1, 1, 0 %%>;
 
-  barTop = <%% 15, 15, 15, 15, 0 %%>;
+  barTop = <%% 15, 15, 15, 15, 2.6 %%>;
 
   titleBottom = <%% 15, 15, 15, 15, 0 %%>;
-  blockBottom = <%% 40, 40, 40, 40, 0 %%>;
+  blockBottom = <%% 40, 40, 40, 40, 3 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -1672,19 +1753,19 @@ StyleCurationJs.prototype.insertCenterBox = function () {
       position: "relative",
       borderRadius: String(desktop ? 8 : 1) + ea,
       width: String(100) + '%',
-      background: colorChip.white,
-      paddingTop: String(paddingTop + (desktop ? 0 : 1.7)) + ea,
-      paddingBottom: String(margin + (desktop ? 0 : 1.3)) + ea,
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(margin + (desktop ? 0 : 1.3)) + ea : "",
       marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
     },
     children: [
       {
         display: "block",
         position: "relative",
-        width: withOut(margin * 2, ea),
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
         height: String(100) + '%',
-        marginLeft: String(margin) + ea,
+        marginLeft: String(desktop ? margin : 0) + ea,
       }
     ]
   });
@@ -1703,9 +1784,12 @@ StyleCurationJs.prototype.insertCenterBox = function () {
         {
           style: {
             display: "block",
-            position: "relative",
-            width: String(100) + '%',
+            position: mobile ? "absolute" : "relative",
+            left: desktop ? "" : String(4.5) + ea,
+            top: desktop ? "" : String(4) + ea,
+            width: desktop ? String(100) + '%' : withOut((4.5 * 2), ea),
             marginBottom: String(titleBottom) + ea,
+            zIndex: mobile ? String(1) : "",
           },
           children: [
             {
@@ -1713,7 +1797,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
                 position: "absolute",
                 top: String(barTop) + ea,
                 width: String(100) + '%',
-                borderBottom: "1px dashed " + colorChip.gray2,
+                borderBottom: desktop ? "1px dashed " + colorChip.gray2 : "1px solid " + colorChip.gray2,
               }
             },
             {
@@ -1747,7 +1831,9 @@ StyleCurationJs.prototype.insertCenterBox = function () {
             display: "block",
             position: "relative",
             width: String(100) + '%',
-            border: "1px solid " + colorChip.gray2,
+            border: desktop ? "1px solid " + colorChip.gray2 : "",
+            background: desktop ? "" : colorChip.white,
+            boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
             borderRadius: String(5) + "px",
             overflow: "hidden",
             marginBottom: String(num !== wordings.length ? blockBottom : 0) + ea,
