@@ -3176,16 +3176,10 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   textLineHeight = <%% 6, 6, 6, 6, 11 %%>;
 
   plusWidth = <%% 24, 24, 24, 21, 4 %%>;
-  plusBottom = <%% 39, 48, 47, 41, 33 %%>;
+  plusBottom = <%% (isMac() ? 39 : 44), (isMac() ? 48 : 50), (isMac() ? 47 : 49), (isMac() ? 41 : 43), 33 %%>;
 
-  if (desktop) {
-    if (!isMac()) {
-      plusBottom = plusBottom + 5;
-    }
-  }
-
-  titleTopVisualFirst = <%% -2, -3, -4, -4, 0 %%>;
-  titleTopVisualSecond = <%% -1, -4, -5, -4, 0 %%>;
+  titleTopVisualFirst = <%% -2, (isMac() ? -3 : -1), (isMac() ? -4 : -2), (isMac() ? -4 : -2), 0 %%>;
+  titleTopVisualSecond = <%% -1, (isMac() ? -4 : -2), (isMac() ? -5 : -3), (isMac() ? -4 : -2), 0 %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,
