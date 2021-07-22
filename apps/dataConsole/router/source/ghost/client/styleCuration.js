@@ -773,7 +773,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac } = GeneralJs;
   const { photos, contentsArr, designers } = this;
   let pictureNumber, columnNumber;
   let randomPick, targetPhotos;
@@ -984,6 +984,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           color: colorChip.green,
           paddingRight: desktop ? String(pannelWordsPadding) + ea : "",
           paddingLeft: desktop ? String(pannelWordsPadding) + ea : "",
+          paddingTop: desktop ? (isMac() ? "" : String(2) + ea) : "",
           background: colorChip.white,
         },
         bold: {
@@ -1001,7 +1002,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, isMac } = GeneralJs;
   const token = '_';
   let wordingSize;
   let paddingTop, paddingBottom, marginLeft;
@@ -1051,6 +1052,13 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
   paddingTop = <%% 38, 36, 36, 28, 7 %%>;
   paddingBottom = <%% 40, 38, 38, 30, 3 %%>;
+
+  if (desktop) {
+    if (!isMac()) {
+      paddingBottom = paddingBottom - 2;
+    }
+  }
+
   marginLeft = <%% 42, 36, 36, 28, 5.5 %%>;
   questionMargin = <%% 50, 30, 30, 15, 2 %%>;
   blockMargin = <%% 28, 28, 28, 20, 7 %%>;
@@ -1067,9 +1075,20 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   itemCircleLeft = <%% -5, -5, -5, -5, -1 %%>;
   itemCircleTop = <%% 7, 7, 7, 7, 1.9 %%>;
 
+  if (desktop) {
+    if (!isMac()) {
+      itemCircleTop = itemCircleTop - 1;
+    }
+  }
+
   barTop = <%% 16, 16, 16, 16, 1.5 %%>;
   barHeight = <%% 4, 4, 4, 4, 2 %%>;
   barTextTop = <%% 10.5, 10.5, 10.5, 10.5, 4.5 %%>;
+  if (desktop) {
+    if (!isMac()) {
+      barTextTop = barTextTop + 1;
+    }
+  }
   barTextMargin = <%% 10, 10, 10, 10, 5 %%>;
 
   barMotherHeight = <%% 30, 30, 30, 30, 5 %%>;
@@ -1170,6 +1189,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             verticalAlign: "top",
             lineHeight: String(lineHeight),
             top: mobile ? String(-0.1) + ea : "",
+            paddingTop: mobile ? "" : (isMac() ? "" : String(1) + ea),
           }
         },
         {
@@ -1183,6 +1203,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             color: colorChip.black,
             verticalAlign: "top",
             lineHeight: String(lineHeight),
+            paddingTop: mobile ? "" : (isMac() ? "" : String(1) + ea),
           },
           bold: {
             fontWeight: String(600),
@@ -1843,7 +1864,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
   let center;
   let wordings;
   let paddingTop;
@@ -1853,7 +1874,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   let titleFontSize;
   let num;
   let numberRight;
-  let titleTop;
+  let titleTop, titleTopNumber;
   let barTop;
   let titleBottom, blockBottom;
   let index;
@@ -1877,7 +1898,8 @@ StyleCurationJs.prototype.insertCenterBox = function () {
   titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
-  titleTop = <%% 1, 1, 1, 1, 0 %%>;
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   barTop = <%% 15, 15, 15, 15, 2.6 %%>;
 
@@ -1945,7 +1967,7 @@ StyleCurationJs.prototype.insertCenterBox = function () {
               style: {
                 position: "relative",
                 display: "inline-block",
-                top: String(0),
+                top: String(titleTopNumber) + ea,
                 fontSize: String(titleFontSize) + ea,
                 fontWeight: String(200),
                 background: desktop ? colorChip.white : colorChip.gray1,
@@ -1995,7 +2017,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
   let whiteBlock;
   let style;
   let blockHeight, blockMarginBottom;
@@ -2031,7 +2053,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
-    buttonTextTop = buttonTextTop + (GeneralJs.isMac() ? 0 : 2);
+    buttonTextTop = buttonTextTop + (isMac() ? 0 : 1);
   }
 
   headWidth = <%% 10, 10, 10, 10, 2 %%>;
