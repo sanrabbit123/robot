@@ -58,8 +58,7 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
-    const photoRequest = ghostRequest().bind("photo");
-    console.log(await photoRequest("ls"));
+
 
     // await requestSystem("http://172.30.1.40:3000/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
 
@@ -1067,7 +1066,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p102");
+    // await this.getCorePortfolio("p123");
 
 
     // aspirant to designer
