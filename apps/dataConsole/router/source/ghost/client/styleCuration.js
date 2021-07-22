@@ -799,9 +799,9 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   pannelPaddingTop = <%% 32, 32, 32, 22, 4.2 %%>;
   pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
   pannelWordsPadding = <%% 16, 16, 16, 12, 16 %%>;
-  pannelLineTop = <%% 47, 47, 47, 38, 47 %%>;
+  pannelLineTop = <%% 47, 47, 47, 36, 47 %%>;
 
-  arrowTop = <%% 43, 43, 43, 35, 2 %%>;
+  arrowTop = <%% 43, 43, 43, 33, 2 %%>;
   arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
 
   questionWording = wordings[0].question[0] + " ( 1 / 5 )";
@@ -2347,7 +2347,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   whiteBlockPaddingLeft = <%% 11, 11, 11, 9, 2 %%>;
   whiteBlockVisual = <%% 1, 1, 1, 1, 0 %%>;
 
-  methodsTongTop = <%% 18, 18, 18, 12, 3.2 %%>;
+  methodsTongTop = <%% 18, 18, 18, (isMac() ? 14 : 16), 3.2 %%>;
   methodsTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   methodsTongLeft = <%% 24, 24, 22, 22, 4 %%>;
   methodsTitleWidth = <%% 155, 140, 128, 110, 20 %%>;
@@ -2400,7 +2400,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   feeMargin1 = <%% 12, 12, 12, 9, 2 %%>;
   feeMargin2 = <%% 6, 6, 6, 5, 1 %%>;
 
-  feeTongPaddingTop = <%% 4, 4, 4, 3, 0.5 %%>;
+  feeTongPaddingTop = <%% 4, 4, 4, 2, 0.5 %%>;
 
   servicePhotoMarginBottom = <%% 6, 0, 0, 0, 2.5 %%>;
 
