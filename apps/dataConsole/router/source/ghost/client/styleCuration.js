@@ -3163,7 +3163,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   contentsRatioFirst = <%% 41, 24, 27, 29, 11 %%>;
   contentsRatioSecond = <%% 46.2, 31, 31.6, 33.8, 11 %%>;
 
-  titleBetween = <%% 12, 24, 22, 20, 2.5 %%>;
+  titleBetween = <%% 12, 24, 22, 20, 2 %%>;
   titleVisual = <%% 1, 1, 1, 1, 1 %%>;
   if (desktop) {
     if (!isMac()) {
