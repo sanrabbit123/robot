@@ -2687,6 +2687,8 @@ StyleCurationJs.prototype.insertServiceBox = function () {
       mother: tempChild.children[1],
       style: {
         display: "inline-block",
+        position: "relative",
+        top: mobile ? "" : (isMac() ? "" : String(2) + ea),
         fontSize: String(feeSize) + ea,
         marginRight: String(i === data.range.length - 1 ? 0 : feeMarginRight) + ea,
         marginBottom: String(feeMarginBottomInit + (i === data.range.length - 1 ? feeMarginBottomLast : 0)) + ea,
@@ -3102,7 +3104,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
   const words = new WordsDictionary();
   const addtionObj = words.getAdditionWording();
   const addtionArr = addtionObj.wordings[media.findIndex((i) => { return i === true; })];
@@ -3143,7 +3145,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   buttonTextSize = <%% 20, 20, 20, 16, 3.8 %%>;
 
   if (desktop) {
-    buttonTextTop = buttonTextTop + (GeneralJs.isMac() ? 0 : 2);
+    buttonTextTop = buttonTextTop + (isMac() ? 0 : 1);
   }
 
   headWidth = <%% 10, 10, 10, 10, 2 %%>;
@@ -3162,6 +3164,11 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
 
   titleBetween = <%% 12, 24, 22, 20, 2.5 %%>;
   titleVisual = <%% 1, 1, 1, 1, 1 %%>;
+  if (desktop) {
+    if (!isMac()) {
+      titleBetween = titleBetween + 2;
+    }
+  }
 
   titleLeftFirst = <%% 22, 0, 0, 0, 11 %%>;
   titleLeftSecond = <%% 62, 40, 39, 34, 11 %%>;
@@ -3169,10 +3176,10 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   textLineHeight = <%% 6, 6, 6, 6, 11 %%>;
 
   plusWidth = <%% 24, 24, 24, 21, 4 %%>;
-  plusBottom = <%% 37, 48, 47, 41, 33 %%>;
+  plusBottom = <%% 39, 48, 47, 41, 33 %%>;
 
   titleTopVisualFirst = <%% -2, -3, -4, -4, 0 %%>;
-  titleTopVisualSecond = <%% 1, -4, -5, -4, 0 %%>;
+  titleTopVisualSecond = <%% -1, -4, -5, -4, 0 %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,
