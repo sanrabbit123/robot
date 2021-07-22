@@ -58,10 +58,8 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
-
-    console.log(await ghostRequest("ls"));
-
-
+    const photoRequest = ghostRequest().bind("photo");
+    console.log(await photoRequest("ls"));
 
     // await requestSystem("http://172.30.1.40:3000/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
 
