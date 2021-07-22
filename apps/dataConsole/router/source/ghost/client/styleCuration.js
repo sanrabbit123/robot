@@ -1074,7 +1074,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
   itemRadius = <%% 3, 3, 3, 3, 0.6 %%>;
   itemCircleLeft = <%% -5, -5, -5, -5, -1 %%>;
-  itemCircleTop = <%% 7, 7, 7, 7, 2.1 %%>;
+  itemCircleTop = <%% 7, 7, 7, 7, 2.3 %%>;
 
   if (desktop) {
     if (!isMac()) {
@@ -1175,7 +1175,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         position: "relative",
         width: desktop ? String(100 * questionRatio) + '%' : String(100) + '%',
         verticalAlign: "top",
-        marginBottom: desktop ? "" : String(1) + ea,
+        marginBottom: desktop ? "" : String(0.5) + ea,
       },
       children: [
         {
@@ -1226,7 +1226,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
     if (obj.type === "address") {
       if (mobile) {
-        answerArea.style.marginTop = String(2.5) + ea;
+        answerArea.style.marginTop = String(2) + ea;
         answerArea.style.marginLeft = String(qWidth) + ea;
         answerArea.style.width = withOut(qWidth, ea);
       }
