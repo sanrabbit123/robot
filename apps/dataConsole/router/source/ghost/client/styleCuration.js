@@ -460,30 +460,132 @@ class WordsDictionary {
 
   getAdditionWording() {
     let obj;
-    obj = [
-      {
-        title: [
-          "<b%한 명의 디자이너가%b>",
-          "처음부터 끝까지"
+    obj = {
+      image: "serviceDiagram",
+      wordings: [
+        [
+          {
+            title: [
+              "<b%한 명의 디자이너가%b>",
+              "처음부터 끝까지"
+            ],
+            contents: [
+              "무엇보다 <b%홈스타일링 디자이너가 프로젝트의 총괄 관리자%b>가 되어, 공간 기획부터 시공 범위 계획, 그리고 구매 계획까지 한 번에",
+              "진행해주기에, 인테리어 산업에서 흔히 일어나는 작업 혼선과 책임 회피, 관리 떠넘기기 등의 난처한 상황들을 만나지 않을 수 있으며",
+              "우리집과 내 생활에 딱 맞게 최적화된 형태로 인테리어 프로젝트가 진행될 수 있어 가장 합리적이고 효과적인 결과를 낼 수 있습니다."
+            ]
+          },
+          {
+            title: [
+              "<b%홈리에종 플랫폼과%b>",
+              "안정감 있게"
+            ],
+            contents: [
+              "홈리에종에서는 다양한 스타일의 포트폴리오와 홈스타일링 디자이너를 한 번에 만나보실 수 있습니다! 전담 디자이너를",
+              "만나서 시공사를 결정하세요. <b%디자이너의 감성에 홈리에종의 지원을 더해 현실적으로 후회 없는 인테리어를 경험%b>하세요!",
+              "홈리에종은 고객님들의 실제 생활을 위한 디자인으로 바꾸어, 공간이 줄 수 있는 풍성함과 편안함을 전하고자 합니다."
+            ]
+          }
         ],
-        contents: [
-          "무엇보다 <b%홈스타일링 디자이너가 프로젝트의 총괄 관리자%b>가 되어, 공간 기획부터 시공 범위 계획, 그리고 구매 계획까지 한 번에",
-          "진행해주기에, 인테리어 산업에서 흔히 일어나는 작업 혼선과 책임 회피, 관리 떠넘기기 등의 난처한 상황들을 만나지 않을 수 있으며",
-          "우리집과 내 생활에 딱 맞게 최적화된 형태로 인테리어 프로젝트가 진행될 수 있어 가장 합리적이고 효과적인 결과를 낼 수 있습니다."
-        ]
-      },
-      {
-        title: [
-          "<b%홈리에종 플랫폼과%b>",
-          "안정감 있게"
+        [
+          {
+            title: [
+              "<b%한 명의 디자이너가%b>",
+              "처음부터 끝까지"
+            ],
+            contents: [
+              "무엇보다 <b%홈스타일링 디자이너가 프로젝트의 총괄 관리자%b>가 되어, 공간 기획부터 시공 범위 계획, 그리고 구매 계획까지 한 번에",
+              "진행해주기에, 인테리어 산업에서 흔히 일어나는 작업 혼선과 책임 회피, 관리 떠넘기기 등의 난처한 상황들을 만나지 않을 수 있으며",
+              "우리집과 내 생활에 딱 맞게 최적화된 형태로 인테리어 프로젝트가 진행될 수 있어 가장 합리적이고 효과적인 결과를 낼 수 있습니다."
+            ]
+          },
+          {
+            title: [
+              "<b%홈리에종 플랫폼과%b>",
+              "안정감 있게"
+            ],
+            contents: [
+              "홈리에종에서는 다양한 스타일의 포트폴리오와 홈스타일링 디자이너를 한 번에 만나보실 수 있습니다! 전담 디자이너를",
+              "만나서 시공사를 결정하세요. <b%디자이너의 감성에 홈리에종의 지원을 더해 현실적으로 후회 없는 인테리어를 경험%b>하세요!",
+              "홈리에종은 고객님들의 실제 생활을 위한 디자인으로 바꾸어, 공간이 줄 수 있는 풍성함과 편안함을 전하고자 합니다."
+            ]
+          }
         ],
-        contents: [
-          "홈리에종에서는 다양한 스타일의 포트폴리오와 홈스타일링 디자이너를 한 번에 만나보실 수 있습니다! 전담 디자이너를",
-          "만나서 시공사를 결정하세요. <b%디자이너의 감성에 홈리에종의 지원을 더해 현실적으로 후회 없는 인테리어를 경험%b>하세요!",
-          "홈리에종은 고객님들의 실제 생활을 위한 디자인으로 바꾸어, 공간이 줄 수 있는 풍성함과 편안함을 전하고자 합니다."
-        ]
-      }
-    ];
+        [
+          {
+            title: [
+              "<b%한 명의 디자이너가%b>",
+              "처음부터 끝까지"
+            ],
+            contents: [
+              "<b%홈스타일링 디자이너가 프로젝트의 총괄 관리자%b>가 되어, 기획부터 시공 범위 계획, 구매 계획까지 한 번에",
+              "진행해주기에, 흔히 일어나는 작업 혼선과 책임 회피, 관리 떠넘기기 등 난처한 상황들을 만나지 않을 수 있으며",
+              "우리집에 최적화된 형태로 프로젝트가 진행될 수 있어 가장 합리적이고 효과적인 결과를 낼 수 있습니다."
+            ]
+          },
+          {
+            title: [
+              "<b%홈리에종 플랫폼과%b>",
+              "안정감 있게"
+            ],
+            contents: [
+              "홈리에종에서는 다양한 포트폴리오와 디자이너를 한 번에 만나보실 수 있습니다! 디자이너를 만나",
+              "시공사를 결정하세요. <b%디자이너의 감성에 홈리에종의 지원을 더해 후회 없는 인테리어를 경험%b>하세요!",
+              "홈리에종은 고객님의 실생활을 위한 디자인으로 공간이 줄 수 있는 풍성함과 편안함을 전하고자 합니다."
+            ]
+          }
+        ],
+        [
+          {
+            title: [
+              "<b%한 명의 디자이너가%b>",
+              "처음부터 끝까지"
+            ],
+            contents: [
+              "<b%홈스타일링 디자이너가 프로젝트 관리자%b>가 되어, 기획부터 시공, 구매 계획까지 한 번에",
+              "진행해주어, 흔히 일어나는 작업 혼선과 책임 회피 등 난처한 상황들을 만나지 않을 수 있고",
+              "우리집에 최적화된 형태로 진행할 수 있어 합리적이고 효과적인 결과를 낼 수 있습니다."
+            ]
+          },
+          {
+            title: [
+              "<b%홈리에종 플랫폼과%b>",
+              "안정감 있게"
+            ],
+            contents: [
+              "홈리에종에서는 다양한 포트폴리오와 디자이너를 한 번에 만나보실 수 있습니다!",
+              "<b%디자이너의 감성에 홈리에종의 지원을 더해 후회 없는 인테리어를 경험%b>하세요.",
+              "홈리에종은 고객님을 위한 디자인으로 공간이 줄 수 있는 풍성함을 전하고자 합니다."
+            ]
+          }
+        ],
+        [
+          {
+            title: [
+              "<b%한 명의 디자이너가%b>",
+              "처음부터 끝까지"
+            ],
+            contents: [
+              "<b%디자이너가 프로젝트 관리자%b>가 되어, 기획, 시공, 구매 계획까지 한 번에",
+              "진행해, 흔히 일어나는 작업 혼선과 책임 회피 등 난처한 상황들을 만나지 않을 수 있고",
+              "집에 최적화된 형태로 진행할 수 있어 합리적이고 효과적인 결과를 낼 수 있습니다."
+            ]
+          },
+          {
+            title: [
+              "<b%홈리에종 플랫폼과%b>",
+              "안정감 있게"
+            ],
+            contents: [
+              "홈리에종에서는 다양한 디자이너를 한 번에 만나보실 수 있습니다!",
+              "<b%디자이너의 감성에 홈리에종 지원을 더해 후회 없는 인테리어를 경험%b>하세요.",
+              "홈리에종은 고객님을 위한 디자인으로 공간이 줄 수 있는 풍성함을 편안함을 전하고자 합니다."
+            ]
+          }
+        ],
+      ]
+    };
+
     return obj;
   }
 
@@ -687,8 +789,8 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
 
   cleanChildren(mother);
 
-  pictureNumber = <%% 10, 10, 10, 10, 8 %%>;
-  columnNumber = <%% 5, 5, 5, 5, 2 %%>;
+  pictureNumber = <%% 10, 10, 12, 12, 8 %%>;
+  columnNumber = <%% 5, 5, 4, 4, 2 %%>;
 
   innerMargin = <%% 42, 36, 36, 28, 4.5 %%>;
   pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
@@ -1528,16 +1630,16 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   let zeroWordingSize, zeroWordingTop;
   let mobileWordingBetween;
 
-  blockHeight = <%% 444, 424, 404, 350, 424 %%>;
+  blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  titleFontTop = <%% 36, 30, 30, 26, 48 %%>;
-  titleFontSize = <%% 32, 31, 30, 28, 5.7 %%>;
+  titleFontTop = <%% 36, 30, 23, 20, 48 %%>;
+  titleFontSize = <%% 32, 31, 29, 26, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titleFontLineHeight = <%% 40, 40, 38, 32, 5.7 %%>;
+  titleFontLineHeight = <%% 40, 40, 37, 32, 5.7 %%>;
 
-  secondBlockWidth = <%% 350, 330, 320, 285, 330 %%>;
+  secondBlockWidth = <%% 350, 330, 320, 305, 330 %%>;
 
   greenBoxTop = <%% 1, 1, 1, 1, 1 %%>;
   greenBoxWidth = <%% 25, 25, 25, 25, 25 %%>;
@@ -1548,9 +1650,9 @@ StyleCurationJs.prototype.insertInitBox = function (curation = true) {
   initWordingWidth = <%% 300, 300, 300, 300, 300 %%>;
   initWordingMargin = <%% 15, 15, 15, 13, 2 %%>;
   initWordingLeft = <%% 1, 1, 1, 1, 1 %%>;
-  initWordingTitleBetween = <%% 98, 96, 94, 82, 98 %%>;
+  initWordingTitleBetween = <%% 98, 96, 92, 78, 98 %%>;
 
-  wordsPaddingTop = <%% 105, 105, 105, 105, 6 %%>;
+  wordsPaddingTop = <%% 105, 105, 100, 95, 6 %%>;
 
   greenBarWidth = <%% 24, 24, 24, 24, 7 %%>;
   greenBarHeight = <%% 3, 3, 3, 3, 0.6 %%>;
@@ -1922,7 +2024,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
   buttonHeight = <%% 47, 48, 48, 40, 8.4 %%>;
-  buttonWidth = <%% 156, 156, 156, 156, 28 %%>;
+  buttonWidth = <%% 156, 156, 156, 126, 28 %%>;
   buttonMargin = <%% 8, 8, 8, 5, 2 %%>;
 
   buttonTextTop = <%% 9, 9, 9, 9, 1.3 %%>;
@@ -2179,6 +2281,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   let feeMarginRight, feeMarginBottomLast, feeMarginBottomInit;
   let feeMargin0, feeMargin1, feeMargin2;
   let feeTongPaddingTop;
+  let servicePhotoMarginBottom;
 
   data = {
     selected: [ 0, 1 ],
@@ -2194,7 +2297,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
 
   blockHeight = <%% 400, 400, 400, 400, 400 %%>;
   blockMarginBottom = <%% 16, 16, 16, 16, 2 %%>;
-  marginBottom = <%% 13, 13, 13, 13, 4 %%>;
+  marginBottom = <%% 13, 13, 13, 9, 4 %%>;
 
   mobileTitleSize = 3.5;
   wordSize = <%% 15, 15, 15, 13, 2.8 %%>;
@@ -2222,7 +2325,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   whiteBlockPaddingLeft = <%% 11, 11, 11, 9, 2 %%>;
   whiteBlockVisual = <%% 1, 1, 1, 1, 0 %%>;
 
-  methodsTongTop = <%% 18, 18, 18, 18, 3.2 %%>;
+  methodsTongTop = <%% 18, 18, 18, 12, 3.2 %%>;
   methodsTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   methodsTongLeft = <%% 24, 24, 22, 22, 4 %%>;
   methodsTitleWidth = <%% 155, 140, 128, 110, 20 %%>;
@@ -2262,20 +2365,22 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   amountTextVisual = <%% 3, 3, 3, 3, 0.8 %%>;
   amountTextTop = <%% 20, 20, 20, 18, 0.1 %%>;
 
-  servicePhotoBetween = <%% 10, 10, 10, 10, 1 %%>;
+  servicePhotoBetween = <%% 10, 9, 8, 7, 1 %%>;
   serviceWordingBetween = <%% 8, 8, 8, 8, 3.5 %%>;
   serviceWordingBottom = <%% 2, 2, 2, 2, 2.1 %%>;
 
-  feeSize = <%% 22, 22, 22, 22, 3.5 %%>;
+  feeSize = <%% 22, 22, 22, 20, 3.5 %%>;
   feeMarginRight = <%% 30, 30, 30, 30, 1 %%>;
   feeMarginBottomInit = <%% 4, 4, 4, 4, 0.5 %%>;
   feeMarginBottomLast = <%% 4, 4, 4, 4, 0 %%>;
 
-  feeMargin0 = <%% 5, 5, 5, 5, 1 %%>;
-  feeMargin1 = <%% 12, 12, 12, 12, 2 %%>;
-  feeMargin2 = <%% 6, 6, 6, 6, 1 %%>;
+  feeMargin0 = <%% 5, 5, 5, 3, 1 %%>;
+  feeMargin1 = <%% 12, 12, 12, 9, 2 %%>;
+  feeMargin2 = <%% 6, 6, 6, 5, 1 %%>;
 
-  feeTongPaddingTop = <%% 4, 4, 4, 4, 0.5 %%>;
+  feeTongPaddingTop = <%% 4, 4, 4, 3, 0.5 %%>;
+
+  servicePhotoMarginBottom = <%% 6, 0, 0, 0, 2.5 %%>;
 
   [ whiteBlock, wordsTable ] = createNodes([
     {
@@ -2361,7 +2466,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
         left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
         width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
         marginTop: String(grayTop) + ea,
-        marginBottom: String(desktop ? 6 : 2.5) + ea,
+        marginBottom: String(servicePhotoMarginBottom) + ea,
         paddingBottom: String(methodsTongBottom) + ea,
         borderRadius: String(3) + "px",
         boxSizing: "border-box",
@@ -2487,7 +2592,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
         left: desktop ? "" : String((this.subBoxMargin.left + 0.2)) + ea,
         width: desktop ? withOut(box0Size + box1Size + box0Margin + box1Margin, ea) : withOut(((this.subBoxMargin.left + 0.2) * 2), ea),
         marginTop: String(grayTop) + ea,
-        marginBottom: String(desktop ? 6 : 2.5) + ea,
+        marginBottom: String(servicePhotoMarginBottom) + ea,
         paddingTop: String(methodsTongTop) + ea,
         paddingBottom: String(methodsTongBottom) + ea,
         borderRadius: String(3) + "px",
@@ -2542,7 +2647,6 @@ StyleCurationJs.prototype.insertServiceBox = function () {
           position: "relative",
           width: desktop ? withOut(methodsTitleWidth, ea) : "",
           verticalAlign: "top",
-          marginRight: desktop ? String(methodsSecondBlockRight) + ea : "",
           marginBottom: desktop ? "" : String(2.5) + ea,
         }
       }
@@ -2619,7 +2723,6 @@ StyleCurationJs.prototype.insertServiceBox = function () {
     });
 
   }
-
 
   //methods
   tempBlock = createNode({
@@ -2979,7 +3082,8 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
   const words = new WordsDictionary();
-  const addtionArr = words.getAdditionWording();
+  const addtionObj = words.getAdditionWording();
+  const addtionArr = addtionObj.wordings[media.findIndex((i) => { return i === true; })];
   let whiteBlock;
   let style;
   let blockHeight, blockMarginBottom;
@@ -3001,9 +3105,10 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   let titleLeftFirst, titleLeftSecond;
   let textLineHeight;
   let plusWidth, plusBottom;
+  let titleTopVisualFirst, titleTopVisualSecond;
 
   margin = <%% 50, 50, 50, 50, 6 %%>;
-  paddingTop =  <%% 60, 60, 60, 60, 4.7 %%>;
+  paddingTop =  <%% 60, 54, 54, 54, 6.7 %%>;
 
   blockHeight = <%% 820, 820, 820, 820, 820 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
@@ -3022,27 +3127,30 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
   headWidth = <%% 10, 10, 10, 10, 2 %%>;
   headVisual = <%% 11, 11, 11, 11, 11 %%>;
 
-  finalBottom = <%% paddingTop + 6, paddingTop + 6, paddingTop + 6, paddingTop + 6, 9.7 %%>;
+  finalBottom = <%% paddingTop + 6, 40, 30, 30, 9.7 %%>;
 
-  textTitleSize = <%% 27, 27, 27, 27, 4.2 %%>;
-  textContentsSize = <%% 15, 15, 15, 15, 3.3 %%>;
+  textTitleSize = <%% 27, 23, 22, 20, 4.2 %%>;
+  textContentsSize = <%% 15, 14.5, 14, 13, 3.3 %%>;
 
-  textBoxMarginTop = <%% 60, 60, 60, 60, 11 %%>;
+  textBoxMarginTop = <%% 54, 40, 36, 32, 5.5 %%>;
   textBoxMarginBottom = <%% 10, 10, 10, 10, 0 %%>;
 
-  contentsRatioFirst = <%% 41, 41, 41, 41, 11 %%>;
-  contentsRatioSecond = <%% 46.2, 46.2, 46.2, 46.2, 11 %%>;
+  contentsRatioFirst = <%% 41, 24, 27, 29, 11 %%>;
+  contentsRatioSecond = <%% 46.2, 31, 31.6, 33.8, 11 %%>;
 
-  titleBetween = <%% 12, 12, 12, 12, 2.5 %%>;
+  titleBetween = <%% 12, 24, 22, 20, 2.5 %%>;
   titleVisual = <%% 1, 1, 1, 1, 1 %%>;
 
-  titleLeftFirst = <%% 22, 22, 22, 22, 11 %%>;
-  titleLeftSecond = <%% 62, 62, 62, 62, 11 %%>;
+  titleLeftFirst = <%% 22, 0, 0, 0, 11 %%>;
+  titleLeftSecond = <%% 62, 40, 39, 34, 11 %%>;
 
-  textLineHeight = <%% 6, 6, 6, 6, 12 %%>;
+  textLineHeight = <%% 6, 6, 6, 6, 11 %%>;
 
-  plusWidth = <%% 24, 24, 24, 24, 4 %%>;
-  plusBottom = <%% 37, 37, 37, 37, 43.5 %%>;
+  plusWidth = <%% 24, 24, 24, 21, 4 %%>;
+  plusBottom = <%% 37, 48, 47, 41, 33 %%>;
+
+  titleTopVisualFirst = <%% -2, -3, -4, -4, 0 %%>;
+  titleTopVisualSecond = <%% 1, -4, -5, -4, 0 %%>;
 
   whiteBlock = createNode({
     mother: this.baseTong,
@@ -3072,7 +3180,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
       {
         mode: "img",
         attribute: [
-          { src: StyleCurationJs.binaryPath + "/serviceDiagram.png" }
+          { src: StyleCurationJs.binaryPath + "/" + addtionObj.image + String(media.findIndex((i) => { return i === true; })) + ".png" }
         ],
         style: {
           display: "block",
@@ -3085,7 +3193,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
       {
         mode: "img",
         attribute: [
-          { src: StyleCurationJs.binaryPath + "/serviceDiagram.svg" }
+          { src: StyleCurationJs.binaryPath + "/" + addtionObj.image + String(media.findIndex((i) => { return i === true; })) + ".svg" }
         ],
         style: {
           display: "block",
@@ -3123,7 +3231,8 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
           display: desktop ? "inline-block" : "block",
           position: "relative",
           marginBottom: String(titleBetween) + ea,
-          top: desktop ? String((num === 0 ? -2 : 1) * titleVisual) + ea : "",
+          top: desktop ? String((num === 0 ? titleTopVisualFirst : titleTopVisualSecond) * titleVisual) + ea : "",
+          verticalAlign: "top",
         }
       },
       {
@@ -3132,6 +3241,7 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
           width: desktop ? String(100 - contentsRatio) + '%' : String(100) + '%',
           display: desktop ? "inline-block" : "block",
           position: "relative",
+          verticalAlign: "top",
         }
       },
     ]);
