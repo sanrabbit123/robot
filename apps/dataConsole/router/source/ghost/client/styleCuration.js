@@ -796,7 +796,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
 
   pannelHeight = <%% 114, 114, 114, 90, 15.4 %%>;
-  pannelPaddingTop = <%% 32, 32, 32, 22, 4.2 %%>;
+  pannelPaddingTop = <%% 32, 32, 32, 22, 4 %%>;
   pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
   pannelWordsPadding = <%% 16, 16, 16, 12, 16 %%>;
   pannelLineTop = <%% 47, 47, 47, 36, 47 %%>;
@@ -986,6 +986,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           paddingLeft: desktop ? String(pannelWordsPadding) + ea : "",
           paddingTop: desktop ? (isMac() ? "" : String(2) + ea) : "",
           background: colorChip.white,
+          width: desktop ? "" : String(100) + '%',
         },
         bold: {
           fontWeight: String(600),
@@ -1073,7 +1074,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
   itemRadius = <%% 3, 3, 3, 3, 0.6 %%>;
   itemCircleLeft = <%% -5, -5, -5, -5, -1 %%>;
-  itemCircleTop = <%% 7, 7, 7, 7, 1.9 %%>;
+  itemCircleTop = <%% 7, 7, 7, 7, 2.1 %%>;
 
   if (desktop) {
     if (!isMac()) {
@@ -1174,7 +1175,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         position: "relative",
         width: desktop ? String(100 * questionRatio) + '%' : String(100) + '%',
         verticalAlign: "top",
-        marginBottom: desktop ? "" : String(1.5) + ea,
+        marginBottom: desktop ? "" : String(1) + ea,
       },
       children: [
         {
@@ -1225,7 +1226,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
     if (obj.type === "address") {
       if (mobile) {
-        answerArea.style.marginTop = String(3) + ea;
+        answerArea.style.marginTop = String(2.5) + ea;
         answerArea.style.marginLeft = String(qWidth) + ea;
         answerArea.style.width = withOut(qWidth, ea);
       }
@@ -2347,7 +2348,7 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   whiteBlockPaddingLeft = <%% 11, 11, 11, 9, 2 %%>;
   whiteBlockVisual = <%% 1, 1, 1, 1, 0 %%>;
 
-  methodsTongTop = <%% 18, 18, 18, (isMac() ? 14 : 16), 3.2 %%>;
+  methodsTongTop = <%% 18, (isMac() ? 18 : 17), (isMac() ? 18 : 17), (isMac() ? 14 : 16), 3.2 %%>;
   methodsTongBottom = <%% 1, 1, 1, 1, 0 %%>;
   methodsTongLeft = <%% 24, 24, 22, 22, 4 %%>;
   methodsTitleWidth = <%% 155, 140, 128, 110, 20 %%>;
