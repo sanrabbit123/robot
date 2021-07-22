@@ -385,12 +385,12 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     scpTarget = `${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + this.folderName)}/`;
 
     if (!liteMode) {
-      shell.exec(`scp -r ${shellLink(fileList_original[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
+      shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(fileList_original[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
       for (let f of fileList_png) {
-        shell.exec(`scp ${shellLink(f)} ${scpTarget}`);
+        shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} ${shellLink(f)} ${scpTarget}`);
       }
     } else {
-      shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
+      shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
     }
 
     console.log(await photoRequest("fixDir", { target: this.folderName }));
@@ -764,7 +764,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         ghostPhotos = await photoRequest("ls");
       }
 
-      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
+      shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
 
       for (let item of folderPathList) {
         await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);
@@ -777,7 +777,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       finalObj = { pid: nextPid, desid: targetDesigner.desid, forecast };
       await back.mongoCreate("foreContents", finalObj, { console: true });
 
-      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
+      shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
 
       for (let z = 0; z < 5; z++) {
         console.log(`scp waiting... ${String(5 - z)}s`);

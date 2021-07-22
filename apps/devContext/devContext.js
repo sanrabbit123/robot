@@ -59,6 +59,9 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+    console.log(await ghostRequest("ls"));
+
+
 
     // await requestSystem("http://172.30.1.40:3000/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
 
