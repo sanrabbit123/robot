@@ -1748,6 +1748,7 @@ DevContext.prototype.getRawPortfolio = async function (pid) {
     const photoRequest = ghostRequest().bind("photo");
     let photoList, tempArr;
     let target;
+    let targetLink;
 
     photoList = await photoRequest("ls");
     photoList = photoList.filter((f) => { return /^[ap]/.test(f) && /_/gi.test(f); });
@@ -1762,7 +1763,10 @@ DevContext.prototype.getRawPortfolio = async function (pid) {
     }
 
     if (target !== null) {
-      console.log(target);
+      photoList = await photoRequest("ls", { target });
+      if (photoList.includes(pid)) {
+        
+      }
     }
 
   } catch (e) {

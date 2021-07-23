@@ -996,6 +996,26 @@ Ghost.prototype.photoRouter = function (needs) {
     }
   };
 
+  //POST - pwd
+  funcObj.post_pwd = {
+    link: [ "/pwd" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      let target;
+      if (req.body.target === undefined) {
+        target = sambaDir;
+      } else {
+        target = sambaDir + "/" + req.body.target;
+      }
+      res.send(JSON.stringify({ absolute: target }));
+    }
+  };
+
   //POST - zip
   funcObj.post_zip = {
     link: [ "/zip" ],
