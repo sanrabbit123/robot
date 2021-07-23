@@ -60,12 +60,9 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const photoRequest = ghostRequest().bind("photo");
-    //
-    // await photoRequest("fixDir", { target: "p123_김지은_김법정_210531" });
 
 
-    
+
 
 
 
@@ -1074,6 +1071,9 @@ DevContext.prototype.launching = async function () {
     // await this.spellCheck("p123");
 
 
+    // get rawPortfolio by pid
+    await this.getRawPortfolio("p101");
+
     // get corePortfolio by pid
     // await this.getCorePortfolio("p123");
 
@@ -1733,6 +1733,38 @@ DevContext.prototype.getCorePortfolio = async function (pid) {
     scpFrom = this.address.homeinfo.ghost.user + "@" + this.address.homeinfo.ghost.host + ":" + shellLink(staticConst + portfolioConst + "/" + pid);
     scpTo = shellLink(process.cwd() + "/temp");
     shell.exec(`scp -r ${scpFrom} ${scpTo}`);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DevContext.prototype.getRawPortfolio = async function (pid) {
+  const instance = this;
+  const { ghostRequest } = this.mother;
+  try {
+    if (pid === undefined) {
+      throw new Error("must be pid");
+    }
+    const photoRequest = ghostRequest().bind("photo");
+    let photoList, tempArr;
+    let target;
+
+    photoList = await photoRequest("ls");
+    photoList = photoList.filter((f) => { return /^[ap]/.test(f) && /_/gi.test(f); });
+
+    target = null;
+    for (let fileName of photoList) {
+      tempArr = fileName.split('_').map((f => { return f.trim(); }));
+      if (pid === tempArr[0]) {
+        target = fileName;
+        break;
+      }
+    }
+
+    if (target !== null) {
+      console.log(target);
+    }
+
   } catch (e) {
     console.log(e);
   }

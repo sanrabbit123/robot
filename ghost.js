@@ -978,7 +978,13 @@ Ghost.prototype.photoRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
+      let target;
+      if (req.body.target === undefined) {
+        target = sambaDir;
+      } else {
+        target = sambaDir + "/" + req.body.target;
+      }
+      fileSystem(`readDir`, [ target ]).then((list) => {
         let list_refined = [];
         for (let i of list) {
           if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
@@ -1114,7 +1120,7 @@ Ghost.prototype.photoRouter = function (needs) {
 
       let target;
       if (req.body.target === undefined) {
-        res.send(JSON.stringify({ message: "invaild body : must be 'target'" }));
+        target = sambaDir;
       } else {
         target = sambaDir + "/" + req.body.target;
       }
