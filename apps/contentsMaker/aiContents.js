@@ -670,10 +670,12 @@ AiContents.prototype.to_google = async function (pid) {
     review = motherObj.review;
 
     portfolioId = await docs.create_newDocs_inPython(portfolioTitle, motherId);
+    console.log(portfolio);
     await docs.update_contents_inPython(portfolioId, portfolio);
 
     if (review.length !== 0) {
       reviewId = await docs.create_newDocs_inPython(reviewTitle, motherId);
+      console.log(review);
       await docs.update_contents_inPython(reviewId, review);
     } else {
       reviewId = null;

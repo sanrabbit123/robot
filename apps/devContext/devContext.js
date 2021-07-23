@@ -60,6 +60,91 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    const pid = "p123";
+    const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
+    const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+    const selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+    const motherId = "1LsaEknT_IWJGenE2ziTz3QB26AKgzNtE";
+    const docs = new GoogleDocs();
+    const drive = new GoogleDrive();
+    const today = new Date();
+    const server = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
+    const portfolioLink = "https://" + this.address.frontinfo.host + "/portdetail.php?qqq=";
+    const reviewLink = "https://" + this.address.frontinfo.host + "/revdetail.php?qqq=";
+    const makeLink = (id) => { return `https://docs.google.com/document/d/${id}/edit?usp=sharing`; };
+    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+    let cliid, desid;
+    let client, designer;
+    let portfolioId, reviewId;
+    let contents, contentsArr;
+    let motherObj;
+    let portfolio, review;
+    let portfolioTitle, reviewTitle;
+    let rid;
+    let channel;
+    let photoFolderId;
+    let photoLink;
+    let proid;
+    let project;
+
+    await selfMongo.connect();
+
+    contentsArr = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo });
+    contents = contentsArr[0];
+
+    rid = contents.contents.review.rid;
+    desid = contents.desid;
+    cliid = null;
+    if (contents.cliid !== '') {
+      cliid = contents.cliid;
+    }
+    proid = contents.proid;
+
+    designer = await back.getDesignerById(desid, { selfMongo });
+    client = null;
+    if (cliid !== null) {
+      client = await back.getClientById(cliid, { selfMongo });
+    }
+
+    // photoFolderId = await drive.searchId_inPython(pid + "_" + designer.designer + "_");
+    // photoLink = await drive.read_webView_inPython(photoFolderId);
+
+    portfolioTitle = pid + "_" + designer.designer + "D_";
+    if (client !== null) {
+      portfolioTitle += client.name + "C_";
+    }
+    reviewTitle = portfolioTitle;
+    portfolioTitle += "디자이너글_";
+    reviewTitle += "고객리뷰_";
+    portfolioTitle += dateToString(today).replace(/-/g, '').slice(2);
+    reviewTitle += dateToString(today).replace(/-/g, '').slice(2);
+
+    motherObj = contents.getGoogleDocsDetail(server);
+    portfolio = motherObj.portfolio;
+    review = motherObj.review;
+
+    // portfolioId = await docs.create_newDocs_inPython(portfolioTitle, motherId);
+    // console.log(portfolio);
+    // await docs.update_contents_inPython(portfolioId, portfolio);
+
+    if (review.length !== 0) {
+      // reviewId = await docs.create_newDocs_inPython(reviewTitle, motherId);
+      console.log(review);
+      await docs.update_contents_inPython("1ENi-RrtrNrsKiFzX8Xh0paYTYP7Plupv1ug4FalE3zM", review);
+    } else {
+      reviewId = null;
+    }
+
+
+
+    await selfMongo.close();
+
+
+
+
+
+
     // await requestSystem("http://172.30.1.40:3000/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
 
 
@@ -1062,7 +1147,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p102");
+    // await this.spellCheck("p123");
 
 
     // get corePortfolio by pid

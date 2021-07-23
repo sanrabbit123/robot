@@ -5364,6 +5364,8 @@ ProjectJs.prototype.addExtractEvent = function () {
       for (let i of temp2) {
         if (i === "name") {
           temp.push("성함");
+        } else if (map[i] === undefined || typeof map[i] !== "object") {
+          temp.push("알 수 없음");
         } else {
           temp.push(map[i].name);
         }

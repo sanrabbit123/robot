@@ -4657,7 +4657,11 @@ ClientJs.prototype.addExtractEvent = function () {
       temp2 = Object.keys(caseCopied[0]);
       temp = [];
       for (let i of temp2) {
-        temp.push(map[i].name);
+        if (map[i] === undefined || typeof map[i] !== "object") {
+          temp.push("알 수 없음");
+        } else {
+          temp.push(map[i].name);
+        }
       }
       valuesArr.push(temp);
 
