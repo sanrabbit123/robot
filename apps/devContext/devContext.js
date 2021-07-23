@@ -61,154 +61,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
 
-
-
-
-
-    // await requestSystem("http://172.30.1.40:3000/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
-
-
-    // console.log(await requestSystem("https://home-liaison.xyz:3000/generalMongo", {
-    //   mode: "read",
-    //   collection: "stylingForm",
-    //   db: "python",
-    //   whereQuery: {},
-    // }, { headers: { "Content-Type": "application/json" } }));
-
-
-    // const proid = "p2105_aa10s"
-    // const selfMongo = this.MONGOC;
-    // const project = await back.getProjectById(proid, { selfMongo });
-    // const client = await back.getClientById(project.cliid, { selfMongo });
-    // const designer = await back.getDesignerById(project.desid, { selfMongo });
-    // let url, requestNumber, proposalDate;
-    //
-    // proposalDate = project.proposal.date.valueOf();
-    //
-    // requestNumber = 0;
-    // for (let i = 0; i < client.requests.length; i++) {
-    //   if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
-    //     requestNumber = i;
-    //     break;
-    //   }
-    // }
-    //
-    // url = "http://127.0.0.1:3000/form";
-    //
-    // await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName: "", contractAddress: "" }, { headers: { "Content-type": "application/json" } });
-
-
-
-
-
-
-
-
-    // await this.frontDesignerSync();
-
-    // const selfMongo = this.MONGOLOCALC;
-    //
-    // "인스타그램"
-    // "유튜브"
-    // "블로그"
-    //
-    // const clients = await back.getClientsByQuery({}, { selfMongo, withTools: true });
-    // const requests = clients.getRequestsTongsMonthly();
-    // let tong;
-    // let a1, a2, a3;
-    // let tempArr, arr;
-    //
-    // arr = [];
-    // for (let z = 0; z < 6; z++) {
-    //   tong = requests.select(new Date(2021, z)).tong;
-    //   a1 = 0;
-    //   a2 = 0;
-    //   a3 = 0;
-    //   for (let i of tong) {
-    //     if (/인스타/gi.test(i.request.etc.channel)) {
-    //       a1 = a1 + 1;
-    //     } else if (/유튜/gi.test(i.request.etc.channel)) {
-    //       a2 = a2 + 1;
-    //     } else if (/블/gi.test(i.request.etc.channel)) {
-    //       a3 = a3 + 1;
-    //     }
-    //   }
-    //   tempArr = [ a1, a2, a3 ];
-    //   arr.push(tempArr);
-    // }
-
-
-
-
-
-
-
-
-
-
-
-    // const selfMongo = this.MONGOLOCALC;
-    // const project = await back.getProjectById("p2106_aa16s", { selfMongo });
-    // const client = await back.getClientById(project.cliid, { selfMongo });
-    // const designer = await back.getDesignerById(project.desid, { selfMongo });
-    // const res = await requestSystem("https://home-liaison.servehttp.com:55556/form", { requestNumber: 0, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
-    // console.log(res);
-
-    // console.log(await requestSystem("https://home-liaison.servehttp.com:55556/cash"));
-
-    // const res = await requestSystem("https://home-liaison.servehttp.com:55556/toAiServer", { type: "proposal", id: "p2106_aa59s" }, { headers: { "Content-type": "application/json" } });
-    // console.log(res);
-
-    /*
-
-    const MONGOC = this.MONGOC;
-
-    const designers = await MONGOC.db(`miro81`).collection(`designer`).find({}).toArray();
-    let whereQuery, updateQuery;
-    let tempArr, tempObj;
-
-    for (let designer of designers) {
-      whereQuery = { desid: designer.desid };
-      updateQuery = {};
-      updateQuery["analytics.region.construct"] = 50;
-
-      tempArr = designer.analytics.styling.fabric.curtain ? [ "직접 제작" ] : [];
-      if (designer.analytics.styling.fabric.method !== "") {
-        tempArr.push(designer.analytics.styling.fabric.method);
-      }
-      tempArr = Array.from(new Set(tempArr));
-      updateQuery["analytics.styling.fabric.curtain"] = JSON.parse(JSON.stringify(tempArr));
-
-      tempArr = designer.analytics.styling.fabric.bedding ? [ "직접 제작" ] : [];
-      if (designer.analytics.styling.fabric.method !== "") {
-        tempArr.push(designer.analytics.styling.fabric.method);
-      }
-      tempArr = Array.from(new Set(tempArr));
-      updateQuery["analytics.styling.fabric.bedding"] = JSON.parse(JSON.stringify(tempArr));
-
-      tempObj = JSON.parse(JSON.stringify(designer.analytics.etc.personality[1]));
-      designer.analytics.etc.personality.splice(1, 1);
-      designer.analytics.etc.personality.unshift(tempObj);
-
-      updateQuery["analytics.etc.personality"] = designer.analytics.etc.personality;
-
-      await MONGOC.db(`miro81`).collection(`designer`).updateOne(whereQuery, { $set: updateQuery });
-      console.log(whereQuery);
-
-      updateQuery = {};
-      updateQuery["analytics.styling.fabric.method"] = "";
-      await MONGOC.db(`miro81`).collection(`designer`).updateOne(whereQuery, { $unset: updateQuery });
-      console.log(whereQuery);
-    }
-
-
-    */
-
-    // const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC });
-    // console.log(designers)
-    // console.log(designers[0])
-    // console.log(designers[0].analytics.etc.personality)
 
 
 
@@ -697,55 +551,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    //eform
-
-    // const id = "8tYXXpqfLD";
-    // const key = "pmXpXXlzgtsJGLIYHNfOgrBHm5XCbmixvF7hnRyd";
-    // const { data: { access_token } } = await requestSystem("https://api.eform.io/v2/token", {}, { headers: { "x-api-id": id, "x-api-key": key } });
-    // const getUrl = function (url, params) {
-    //   if (typeof url !== "string" || typeof params !== "object") {
-    //     throw new Error("invaild input");
-    //   }
-    //   if (!/^http/.test(url)) {
-    //     throw new Error("invaild input");
-    //   }
-    //   let str = '';
-    //   for (let i in params) {
-    //     str += i.replace(/[\=\&]/g, '');
-    //     str += '=';
-    //     str += params[i].replace(/[\=\&]/g, '');
-    //     str += '&';
-    //   }
-    //   if (str.length > 0) {
-    //     str = str.slice(0, -1);
-    //   }
-    //   return url + "?" + str;
-    // }
-    // let response, headers, url, data, config;
-    // headers = { "x-api-key": key, "x-access-token": access_token };
-    // data = {};
-    // config = { headers };
-    // url = "https://api.eform.io/v2/form";
-    // response = await requestSystem(getUrl(url, {}), data, config);
-    // console.log(response.data);
-    // url = "https://api.eform.io/v2/form/detail";
-    // response = await requestSystem(getUrl(url, { form_id: "60b6d531bb0e68efedc5c1f1" }), data, config);
-    // console.log(JSON.stringify(response.data, null, 2));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // let resultObj, res;
     // resultObj = {};
     // resultObj["pretext"] = "김주연";
@@ -762,204 +567,6 @@ DevContext.prototype.launching = async function () {
     // resultObj["wayto"] = "인터넷 검색";
     // res = await requestSystem("https://homeliaison-bridgecloud.xyz:3000/submit", resultObj, { "Content-Type": "application/json" });
     // console.log(res);
-
-
-
-
-
-
-
-    /*
-
-    const sheetsId = "1Clrbaub3Ztn5l2FYWIkGKrYL2_lP0B6QBGDzOXTRqw8";
-    const matrix = await sheets.get_value_inPython(sheetsId, "총괄 시트!B2:V");
-    const columns = [ "name", "null0", "boo", "status", "designer", "photographer", "interviewer", "date", "hours", "memo", "rawInterview", "rawPortfolio", "rawPhoto", "blogInterview", "blogPortfolio", "instaInterview", "instaPortfolio", "web", "sharePhotoDesigner", "sharePhotoClient", "shareContents" ];
-    const matrix_clone = JSON.parse(JSON.stringify(matrix));
-    const selfMongo = this.MONGOC;
-    const convertStatus_photo = (str) => {
-      if (/대기/gi.test(str)) {
-        return '세팅 대기';
-      } else if (/요망/gi.test(str)) {
-        return '촬영 컨택 요망';
-      } else if (/컨택중/gi.test(str)) {
-        return '촬영 컨택중';
-      } else if (/확정/gi.test(str)) {
-        return '촬영 일정 확정';
-      } else if (/완료/gi.test(str)) {
-        return '촬영 완료';
-      } else if (/홀딩/gi.test(str)) {
-        return '촬영 홀딩';
-      } else if (/없음/gi.test(str)) {
-        return '해당 없음';
-      } else {
-        console.log("photo", str);
-        throw new Error("invaild input");
-      }
-    }
-    const convertStatus_rawPortfolio = (str) => {
-      if (/대기/gi.test(str)) {
-        return '세팅 대기';
-      } else if (/요망/gi.test(str)) {
-        return '원본 요청 요망';
-      } else if (/요청 완료/gi.test(str)) {
-        return '원본 요청 완료';
-      } else if (/수집 완료/gi.test(str)) {
-        return '원본 수집 완료';
-      } else if (/편집중/gi.test(str)) {
-        return '원본 편집중';
-      } else if (/편집 완료/gi.test(str)) {
-        return '원본 편집 완료';
-      } else if (/없음/gi.test(str)) {
-        return '해당 없음';
-      } else {
-        console.log("portfolio", str);
-        throw new Error("invaild input");
-      }
-    }
-    const convertStatus_rawInterview = (str) => {
-      if (/대기/gi.test(str)) {
-        return '세팅 대기';
-      } else if (/요망/gi.test(str)) {
-        return '인터뷰 요망';
-      } else if (/인터뷰 완료/gi.test(str)) {
-        return '인터뷰 완료';
-      } else if (/편집중/gi.test(str)) {
-        return '원본 편집중';
-      } else if (/편집 완료/gi.test(str)) {
-        return '원본 편집 완료';
-      } else if (/없음/gi.test(str)) {
-        return '해당 없음';
-      } else {
-        console.log("interview", str);
-        throw new Error("invaild input");
-      }
-    }
-    const convertStatus_rawPhoto = (str) => {
-      if (/대기/gi.test(str)) {
-        return '촬영 대기';
-      } else if (/요망/gi.test(str)) {
-        return '원본 요청 요망';
-      } else if (/요청 완료/gi.test(str)) {
-        return '원본 요청 완료';
-      } else if (/수집 완료/gi.test(str)) {
-        return '원본 수집 완료';
-      } else if (/보정중/gi.test(str)) {
-        return '원본 보정중';
-      } else if (/보정 완료/gi.test(str)) {
-        return '원본 보정 완료';
-      } else if (/없음/gi.test(str)) {
-        return '해당 없음';
-      } else {
-        console.log("rawphoto", str);
-        throw new Error("invaild input");
-      }
-    }
-    const stringToDate = (dateString, hours = null) => {
-      let tempArr, hoursArr, h;
-      tempArr = dateString.split('-');
-      if (hours === null) {
-        return new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-      } else {
-        hoursArr = hours.split(':');
-        if (/후/.test(hoursArr[0])) {
-          h = Number(hoursArr[0].replace(/[^0-9]/g, '')) + 12;
-        } else {
-          h = Number(hoursArr[0].replace(/[^0-9]/g, ''));
-        }
-        return new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), h);
-      }
-    }
-    let tong, tempObj;
-    let filteredTong;
-    let projects, project;
-    let convertingDictionary;
-    let whereQuery, updateQuery;
-    let tempDate;
-    let contents;
-    let tempContentsDate;
-
-    matrix_clone.sort((a, b) => { return b.length - a.length });
-
-    tong = [];
-    for (let arr of matrix) {
-      tempObj = {};
-      for (let i = 0; i < columns.length; i++) {
-        tempObj[columns[i]] = arr[i] === undefined ? "" : arr[i].trim();
-      }
-      tong.push(tempObj);
-    }
-
-    filteredTong = [];
-    for (let obj of tong) {
-      projects = await back.getProjectsByNames([ obj.name, obj.designer ], { selfMongo });
-      contents = await back.getContentsArrByQuery({ proid: projects[0].proid }, { selfMongo });
-      tempContentsDate = new Date(3800, 0, 1);
-      if (contents.length !== 0) {
-        tempContentsDate = contents[0].contents.portfolio.date.toNormal();
-      }
-      tempDate = stringToDate(obj.date, obj.hours);
-      tempDate.setDate(tempDate.getDate() + 3);
-      tempObj = {
-        proid: projects[0].proid,
-        cliid: projects[0].cliid,
-        desid: projects[0].desid,
-        boo: (obj.boo.trim() === 'X' || obj.boo.trim() === 'x') ? false : true,
-        status: convertStatus_photo(obj.status),
-        photographer: obj.photographer.trim(),
-        interviewer: obj.interviewer.trim(),
-        date: stringToDate(obj.date, obj.hours),
-        memo: obj.memo,
-        rawInterview: convertStatus_rawInterview(obj.rawInterview),
-        rawPortfolio: convertStatus_rawPortfolio(obj.rawPortfolio),
-        rawPhoto: convertStatus_rawPhoto(obj.rawPhoto),
-        blogInterview: stringToDate(obj.blogInterview),
-        blogPortfolio: stringToDate(obj.blogPortfolio),
-        instaInterview: stringToDate(obj.instaInterview),
-        instaPortfolio: stringToDate(obj.instaPortfolio),
-        sharePhotoDesigner: obj.sharePhotoDesigner === 'O' ? tempDate : new Date(3800, 0, 1),
-        sharePhotoClient: obj.sharePhotoClient === 'O' ? tempDate : new Date(3800, 0, 1),
-        shareContentsDesigner: obj.shareContents === 'O' ? tempContentsDate : new Date(3800, 0, 1),
-        shareContentsClient: obj.shareContents === 'O' ? tempContentsDate : new Date(3800, 0, 1),
-      };
-      filteredTong.push(tempObj);
-    }
-
-    convertingDictionary = {
-      boo: "contents.photo.boo",
-      status: "contents.photo.status",
-      photographer: "contents.photo.info.photographer",
-      interviewer: "contents.photo.info.interviewer",
-      date: "contents.photo.date",
-      rawInterview: "contents.raw.interview.status",
-      rawPortfolio: "contents.raw.portfolio.status",
-      rawPhoto: "contents.raw.photo.status",
-      blogInterview: "contents.sns.interview.long",
-      blogPortfolio: "contents.sns.portfolio.long",
-      instaInterview: "contents.sns.interview.short",
-      instaPortfolio: "contents.sns.portfolio.short",
-      sharePhotoDesigner: "contents.share.designer.photo",
-      sharePhotoClient: "contents.share.client.photo",
-      shareContentsDesigner: "contents.share.designer.contents",
-      shareContentsClient: "contents.share.client.contents",
-    };
-
-    console.log(filteredTong);
-
-    for (let obj of filteredTong) {
-      whereQuery = { proid: obj.proid };
-      updateQuery = {};
-      for (let i in convertingDictionary) {
-        updateQuery[convertingDictionary[i]] = obj[i];
-      }
-      await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
-      console.log(whereQuery);
-    }
-
-    */
-
-
-
-
 
 
 
@@ -1072,7 +679,8 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    await this.getRawPortfolio("p101");
+    // await this.getRawPortfolio("p101");
+
 
     // get corePortfolio by pid
     // await this.getCorePortfolio("p123");
@@ -1740,7 +1348,7 @@ DevContext.prototype.getCorePortfolio = async function (pid) {
 
 DevContext.prototype.getRawPortfolio = async function (pid) {
   const instance = this;
-  const { ghostRequest } = this.mother;
+  const { ghostRequest, shell, shellLink } = this.mother;
   try {
     if (pid === undefined) {
       throw new Error("must be pid");
@@ -1749,6 +1357,7 @@ DevContext.prototype.getRawPortfolio = async function (pid) {
     let photoList, tempArr;
     let target;
     let targetLink;
+    let scpFrom, scpTo;
 
     photoList = await photoRequest("ls");
     photoList = photoList.filter((f) => { return /^[ap]/.test(f) && /_/gi.test(f); });
@@ -1765,7 +1374,10 @@ DevContext.prototype.getRawPortfolio = async function (pid) {
     if (target !== null) {
       photoList = await photoRequest("ls", { target });
       if (photoList.includes(pid)) {
-        
+        targetLink = shellLink((await photoRequest("pwd", { target })).absolute + "/" + pid);
+        scpFrom = this.address.officeinfo.ghost.user + "@" + this.address.officeinfo.ghost.host + ":" + targetLink;
+        scpTo = shellLink(process.cwd() + "/temp");
+        shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${scpFrom} ${scpTo}`);
       }
     }
 

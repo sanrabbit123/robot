@@ -397,7 +397,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-
       let target;
       if (req.body.target === undefined) {
         target = "__samba__";
@@ -416,6 +415,27 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
 
+    }
+  };
+
+  //POST - pwd
+  funcObj.post_pwd = {
+    link: [ "/pwd" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      let target;
+      if (req.body.target === undefined) {
+        target = "__samba__";
+      } else {
+        target = "__samba__" + "/" + req.body.target;
+      }
+      target = instance.dirParsing(target);
+      res.send(JSON.stringify({ absolute: target }));
     }
   };
 
@@ -611,7 +631,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   };
 
   //POST - createSheets
-  funcObj.post_updateSheets = {
+  funcObj.post_sendSheets = {
     link: [ "/sendSheets" ],
     func: function (req, res) {
       const sheets = instance.sheets;
