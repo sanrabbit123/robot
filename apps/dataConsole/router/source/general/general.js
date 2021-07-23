@@ -692,6 +692,10 @@ GeneralJs.prototype.generalCss = function () {
   }
   @keyframes justfadeinoriginal{from{opacity:0;}to{opacity:1;}}
   @keyframes justfadeoutoriginal{from{opacity:1;}to{opacity:0;}}
+  @keyframes justfadeinnine{from{opacity:0;}to{opacity:0.9;}}
+  @keyframes justfadeoutnine{from{opacity:0.9;}to{opacity:0;}}
+  @keyframes justfadeineight{from{opacity:0;}to{opacity:0.8;}}
+  @keyframes justfadeouteight{from{opacity:0.8;}to{opacity:0;}}
   @keyframes justfadeinmiddle{from{opacity:0;}to{opacity:0.6;}}
   @keyframes justfadeoutmiddle{from{opacity:0.6;}to{opacity:0;}}
   @keyframes justfadein{from{opacity:0;}to{opacity:0.3;}}

@@ -100,7 +100,14 @@ class StyleCurationWordings {
               question: [
                 "선호하는 스타일을 <b%3장%b> 골라주세요!",
               ],
-            }
+            },
+            {
+              type: "style",
+              half: false,
+              question: [
+                "스타일 분석이 완료되었습니다!",
+              ],
+            },
           ]
         },
         {
@@ -623,12 +630,20 @@ StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, rooms
   const photoLength = photos.length;
   const conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
   const standard = 50;
+  const stackName = "styleCheckNum";
+  const limit = 6;
   let randoms;
-  let randomPick, contentsPick;
+  let randomPick, randomPick_raw, contentsPick;
+  let randomPickFiles, randomPickFiles_new;
   let temp, temp2, tempArr;
   let rooms, room;
   let accumulation;
   let num, num2;
+  let length0, length1;
+
+  if (typeof GeneralJs.stacks[stackName] !== "number") {
+    throw new Error("stack first");
+  }
 
   num2 = 0;
   do {
@@ -695,18 +710,41 @@ StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, rooms
         }
       }
     } while (accumulation.length !== randoms.length);
-    randomPick = [];
+    randomPick_raw = [];
     for (let i = 0; i < randoms.length; i++) {
       for (let obj of photos) {
         if (obj.conid === randoms[i] && obj.room === accumulation[i] && obj.gs === 'g') {
-          randomPick.push(obj);
+          randomPick_raw.push(obj);
           break;
         }
       }
     }
+
+    randomPickFiles = randomPick_raw.map((obj) => { return obj.file; });
+    randomPick = [];
+    for (let obj of randomPick_raw) {
+      randomPickFiles_new = [];
+      length0 = randomPickFiles.length;
+      for (let file of randomPickFiles) {
+        if (obj.file !== file) {
+          randomPickFiles_new.push(file);
+        }
+      }
+      randomPickFiles = JSON.parse(JSON.stringify(randomPickFiles_new));
+      length1 = randomPickFiles.length;
+      if (length0 !== length1) {
+        randomPick.push(obj);
+      }
+    }
+
     num2++;
   } while (randomPick.length !== pictureNumber);
-  return randomPick;
+
+  if (randomPick.length !== pictureNumber || GeneralJs.stacks[stackName] > limit) {
+    return { complete: true, photos };
+  } else {
+    return randomPick;
+  }
 }
 
 StyleCurationJs.photoFilter = function (photos, picks) {
@@ -773,24 +811,32 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac, sleep } = GeneralJs;
   const { photos, contentsArr, designers } = this;
+  const greenClassName = "greenRemoveTarget";
+  const stackName = "styleCheckNum";
+  const loadingName = "loading";
   let pictureNumber, columnNumber;
   let randomPick, targetPhotos;
   let pictureBox;
   let innerMargin;
   let pictureMargin;
-  let questionWording;
+  let questionWording, completeWording;
   let pannelHeight;
   let pannelWordsSize;
   let pannelWordsPadding;
   let pannelLineTop;
   let arrowTop, arrowWidth;
+  let tempDom;
+  let photoHeight, photoWidth, photoWidthCss, photoHeightCss;
+  let resetEvent;
+  let arrowEvent;
 
-  cleanChildren(mother);
+  GeneralJs.stacks[stackName] = 0;
+  GeneralJs.stacks[loadingName] = false;
 
-  pictureNumber = <%% 10, 10, 12, 12, 8 %%>;
-  columnNumber = <%% 5, 5, 4, 4, 2 %%>;
+  pictureNumber = <%% 15, 12, 12, 12, 8 %%>;
+  columnNumber = <%% 5, 4, 4, 4, 2 %%>;
 
   innerMargin = <%% 42, 36, 36, 28, 4.5 %%>;
   pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
@@ -804,16 +850,137 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   arrowTop = <%% 43, 43, 43, 33, 2 %%>;
   arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
 
-  questionWording = wordings[0].question[0] + " ( 1 / 5 )";
+  questionWording = wordings[0].question[0];
+  completeWording = wordings[1].question[0];
 
   randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
   this.randomPick = randomPick;
   targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
+  this.photoPosition = [];
 
   mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(0) + ea;
   if (mobile) {
     mother.style.background = "";
     mother.style.boxShadow = "";
+  }
+
+  if (desktop) {
+    photoWidth = (this.mother.standardWidth - (this.whiteMargin * 2) - (innerMargin * 2) - (pictureMargin * (columnNumber - 1))) / columnNumber;
+  } else {
+    photoWidth = (this.mother.standardWidth - (this.whiteMargin * 2) - (0 * 2) - (pictureMargin * (columnNumber - 1))) / columnNumber;
+  }
+  photoWidthCss = "calc(calc(100% - " + String(pictureMargin * (columnNumber - 1)) + ea + ") / " + String(columnNumber) + ")";
+  photoHeight = (205 / 297) * (photoWidth);
+  photoHeightCss = String(photoHeight) + ea;
+
+  resetEvent = function () {
+    let rowLength, thisTime;
+    let greenTargets;
+    let style;
+    let loading;
+    let loadingWidth, completePaddingTop;
+    let animationTime, delayTime, animationTimes, animationTimesTemp;
+    let targetPhotos;
+
+    loadingWidth = <%% 40, 40, 36, 30, 10 %%>;
+    completePaddingTop = <%% 10, 10, 9, 8, 0 %%>;
+    animationTime = 0.3;
+    delayTime = 0.2;
+    animationTimes = [];
+
+    greenTargets = mother.querySelectorAll('.' + greenClassName);
+    for (let dom of greenTargets) {
+      dom.style.animation = "justfadeoutnine 0.6s ease forwards";
+    }
+
+    rowLength = Math.round(pictureNumber / columnNumber);
+    animationTimesTemp = [];
+    for (let i = 0; i < instance.photoPosition.length; i++) {
+      animationTimesTemp.push(animationTime + ((i % rowLength) * delayTime));
+      if (animationTimesTemp.length === columnNumber) {
+        animationTimes.push(animationTimesTemp);
+        animationTimesTemp = [];
+      }
+    }
+    if (Math.random() > 0.5) {
+      animationTimes = animationTimes.map((arr) => { return arr.reverse(); });
+    }
+    animationTimes = animationTimes.flat();
+
+    for (let i = 0; i < instance.photoPosition.length; i++) {
+      thisTime = String(animationTimes[i]) + 's';
+      instance.photoPosition[i].style.animation = "fadedownlite " + String(animationTime) + "s ease " + thisTime + " forwards";
+    }
+
+    animationTimes.sort((a, b) => { return b - a; });
+
+    loading = instance.mother.returnLoadingIcon();
+    style = {
+      position: "absolute",
+      width: String(loadingWidth) + ea,
+      height: String(loadingWidth) + ea,
+      top: withOut(50, loadingWidth * (desktop ? (3 / 4) : 0.55), ea),
+      left: withOut(50, loadingWidth * (1 / 2), ea),
+    };
+    for (let i in style) {
+      loading.style[i] = style[i];
+    }
+    mother.firstChild.appendChild(loading);
+
+    instance.randomPick = StyleCurationJs.randomPick(instance.photos, contentsArr, pictureNumber);
+    if (!Array.isArray(instance.randomPick)) {
+      sleep((animationTimes[0] * 1000) + 100).then(async () => {
+        try {
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.backgroundImage = "";
+            instance.photoPosition[i].style.height = String(0);
+            instance.photoPosition[i].setAttribute("complete", "true");
+          }
+          mother.style.paddingTop = String(completePaddingTop) + ea;
+          mother.firstChild.removeChild(loading);
+          mother.lastChild.lastChild.textContent = completeWording;
+          for (let dom of greenTargets) {
+            dom.remove();
+          }
+          await sleep(100);
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.display = "none";
+          }
+          GeneralJs.stacks[loadingName] = false;
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    } else {
+      targetPhotos = instance.randomPick.map((obj) => { return S3HOST + obj.path; });
+      sleep((animationTimes[0] * 1000) + (animationTime * 1000)).then(async () => {
+        try {
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.backgroundImage = "url('" + targetPhotos[i] + "')";
+          }
+          await sleep(animationTime * 1000);
+          mother.firstChild.removeChild(loading);
+          for (let dom of greenTargets) {
+            dom.remove();
+          }
+          await sleep(100);
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.animation = "fadeupmiddle " + String(animationTime) + "s ease forwards";
+          }
+          GeneralJs.stacks[loadingName] = false;
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+  }
+
+  arrowEvent = function () {
+    instance.selectPhotos = [];
+    GeneralJs.stacks[loadingName] = true;
+    GeneralJs.setTimeout(() => {
+      resetEvent();
+    }, 201);
   }
 
   pictureBox = createNode({
@@ -827,83 +994,130 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   });
 
   for (let i = 0; i < pictureNumber; i++) {
-    createNode({
+    tempDom = createNode({
       mother: pictureBox,
-      mode: "img",
       class: [ "hoverDefault_lite" ],
       attribute: [
-        { src: targetPhotos[i], },
         { index: String(i) },
+        { complete: "false" },
       ],
       events: [
         {
           type: "click",
           event: function (e) {
-            const index = Number(this.getAttribute("index"));
-            const mother = this.parentNode;
-            const motherRect = mother.getBoundingClientRect();
-            const rect = this.getBoundingClientRect();
-            let radius, circleVisual;
-            radius = 22;
-            circleVisual = 4;
-            createNode({
-              mother,
-              attribute: [
-                { file: instance.randomPick[index].file }
-              ],
-              events: [
-                {
-                  type: "click",
-                  event: function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const file = this.getAttribute("file");
-                    let index;
-                    index = null;
-                    for (let i = 0; i < instance.selectPhotos.length; i++) {
-                      if (instance.selectPhotos[i].file === file) {
-                        index = i;
-                        break;
+            if (this.getAttribute("complete") === "false" && !GeneralJs.stacks[loadingName]) {
+              const index = Number(this.getAttribute("index"));
+              const mother = this.parentNode;
+              let radius, circleVisual;
+              let greenTop, greenLeft;
+
+              radius = <%% 22, 18, 17, 14, 4 %%>;
+              circleVisual = <%% 4, 3, 3, 2, 0.5 %%>;
+
+              greenTop = Math.floor(index / columnNumber) * (photoHeight + pictureMargin);
+              greenLeft = (index % columnNumber) * (photoWidth + pictureMargin);
+
+              createNode({
+                mother,
+                class: [ greenClassName, greenClassName + "_" + String(index) ],
+                attribute: [
+                  { file: instance.randomPick[index].file },
+                  { index: String(index) }
+                ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const file = this.getAttribute("file");
+                      const thisIndex = this.getAttribute("index");
+                      let index, removeTargets;
+                      index = null;
+                      for (let i = 0; i < instance.selectPhotos.length; i++) {
+                        if (instance.selectPhotos[i].file === file) {
+                          index = i;
+                          break;
+                        }
                       }
-                    }
-                    if (index !== null) {
-                      instance.selectPhotos.splice(index, 1);
-                    }
-                    mother.removeChild(this);
-                  },
-                }
-              ],
-              style: {
-                position: "absolute",
-                width: String(rect.width) + ea,
-                height: String(rect.height) + ea,
-                top: String(rect.top - motherRect.top) + ea,
-                left: String(rect.left - motherRect.left) + ea,
-                borderRadius: String(3) + "px",
-                animation: "justfadeinoriginal 0.2s ease forwards",
-                cursor: "pointer",
-                overflow: "hidden",
-                background: colorChip.green,
-                "mix-blend-mode": "multiply",
-              },
-              children: [
-                {
-                  mode: "svg",
-                  source: instance.mother.returnCheckCircle(colorChip.white),
-                  style: {
-                    position: "absolute",
-                    width: String(radius * 2) + ea,
-                    top: withOut(50, radius + circleVisual, ea),
-                    left: withOut(50, radius, ea),
+                      if (index !== null) {
+                        instance.selectPhotos.splice(index, 1);
+                      }
+                      removeTargets = mother.querySelectorAll('.' + greenClassName + "_" + thisIndex);
+                      for (let dom of removeTargets) {
+                        mother.removeChild(dom);
+                      }
+                    },
                   }
+                ],
+                style: {
+                  position: "absolute",
+                  width: photoWidthCss,
+                  height: photoHeightCss,
+                  top: String(greenTop) + ea,
+                  left: String(greenLeft) + ea,
+                  borderRadius: String(3) + "px",
+                  animation: "justfadeinnine 0.2s ease forwards",
+                  cursor: "pointer",
+                  overflow: "hidden",
+                  background: colorChip.green,
+                  "mix-blend-mode": "multiply",
                 }
-              ]
-            });
-            instance.selectPhotos.push(instance.randomPick[index]);
-            if (instance.selectPhotos.length >= 3) {
-              instance.photos = StyleCurationJs.photoFilter(instance.photos, instance.selectPhotos);
-              instance.selectPhotos = [];
-              instance.styleCheck(mother.parentNode);
+              });
+              createNode({
+                mother,
+                class: [ greenClassName, greenClassName + "_" + String(index) ],
+                attribute: [
+                  { file: instance.randomPick[index].file },
+                  { index: String(index) }
+                ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const file = this.getAttribute("file");
+                      const thisIndex = this.getAttribute("index");
+                      let index, removeTargets;
+                      index = null;
+                      for (let i = 0; i < instance.selectPhotos.length; i++) {
+                        if (instance.selectPhotos[i].file === file) {
+                          index = i;
+                          break;
+                        }
+                      }
+                      if (index !== null) {
+                        instance.selectPhotos.splice(index, 1);
+                      }
+                      removeTargets = mother.querySelectorAll('.' + greenClassName + "_" + thisIndex);
+                      for (let dom of removeTargets) {
+                        mother.removeChild(dom);
+                      }
+                    },
+                  }
+                ],
+                mode: "svg",
+                source: instance.mother.returnCheckCircle(colorChip.white),
+                style: {
+                  position: "absolute",
+                  width: String(radius * 2) + ea,
+                  top: String(greenTop + (photoHeight / 2) - (radius + circleVisual)) + ea,
+                  left: String(greenLeft + (photoWidth / 2) - radius) + ea,
+                  animation: "justfadeinnine 0.2s ease forwards",
+                  cursor: "pointer",
+                },
+              });
+              instance.selectPhotos.push(instance.randomPick[index]);
+              if (instance.selectPhotos.length >= 3) {
+                instance.photos = StyleCurationJs.photoFilter(instance.photos, instance.selectPhotos);
+                instance.selectPhotos = [];
+                GeneralJs.stacks[loadingName] = true;
+                GeneralJs.setTimeout(() => {
+                  GeneralJs.stacks[stackName] = GeneralJs.stacks[stackName] + 1;
+                  resetEvent();
+                }, 201);
+              }
             }
           }
         }
@@ -911,13 +1125,22 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       style: {
         display: "inline-block",
         position: "relative",
-        width: "calc(calc(100% - " + String(pictureMargin * (columnNumber - 1)) + ea + ") / " + String(columnNumber) + ")",
-        height: "auto",
+        width: photoWidthCss,
+        height: photoHeightCss,
         borderRadius: String(3) + "px",
         marginRight: String(i % columnNumber === (columnNumber - 1) ? 0 : pictureMargin) + ea,
         marginBottom: String(pictureMargin) + ea,
+        overflow: "hidden",
+        background: colorChip.gray2
       }
     });
+    this.photoPosition.push(tempDom);
+  }
+
+  for (let i = 0; i < pictureNumber; i++) {
+    this.photoPosition[i].style.backgroundImage = "url('" + targetPhotos[i] + "')";
+    this.photoPosition[i].style.backgroundPosition = "50% 50%";
+    this.photoPosition[i].style.backgroundSize = "100% auto";
   }
 
   createNode({
@@ -947,8 +1170,13 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       },
       {
         mode: "svg",
-        class: [ "hoverDefault" ],
         source: this.mother.returnArrow("left", colorChip.green),
+        events: [
+          {
+            type: "click",
+            event: arrowEvent
+          }
+        ],
         style: {
           display: desktop ? "block" : "none",
           position: "absolute",
@@ -957,12 +1185,18 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           width: String(arrowWidth) + ea,
           paddingRight: String(pannelWordsPadding) + ea,
           background: colorChip.white,
+          cursor: "pointer"
         }
       },
       {
         mode: "svg",
-        class: [ "hoverDefault" ],
         source: this.mother.returnArrow("right", colorChip.green),
+        events: [
+          {
+            type: "click",
+            event: arrowEvent
+          }
+        ],
         style: {
           display: desktop ? "block" : "none",
           position: "absolute",
@@ -971,6 +1205,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           width: String(arrowWidth) + ea,
           paddingLeft: String(pannelWordsPadding) + ea,
           background: colorChip.white,
+          cursor: "pointer"
         }
       },
       {
@@ -1909,6 +2144,8 @@ StyleCurationJs.prototype.insertCenterBox = function () {
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
+
+  this.whiteMargin = (desktop ? margin : 0);
 
   whiteBlock = createNode({
     mother: baseTong,

@@ -156,24 +156,9 @@ GoogleDocs.prototype.update_contents_inPython = async function (id, contentsArr)
     if (id === undefined || !Array.isArray(contentsArr)) {
       throw new Error("invaild input");
     }
-    let result, num;
+    let result;
     id = this.general.parsingId(id);
     result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertContents" ], { id, contents: contentsArr });
-    num = 0;
-    while (typeof result !== "object") {
-      result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertContents" ], { id, contents: contentsArr });
-      if (num > 3) {
-        break;
-      }
-      num++;
-    }
-    while (result.id === undefined) {
-      result = await mother.pythonExecute(this.pythonApp, [ "docs", "insertContents" ], { id, contents: contentsArr });
-      if (num > 3) {
-        break;
-      }
-      num++;
-    }
     return result;
   } catch (e) {
     console.log(e);

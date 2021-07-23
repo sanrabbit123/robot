@@ -5,6 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from json import dumps
 from os import path as osPath
+import time
 
 class GoogleDocs:
 
@@ -54,46 +55,71 @@ class GoogleDocs:
         self.app.batchUpdate(documentId=id, body={ "requests": requests }).execute()
 
     def insertWords(self, id, index, text):
-        requests = []
-        requests.append({ "insertText": { "location": { "index": index, }, "text": text + "\n" } })
-        self.app.batchUpdate(documentId=id, body={ "requests": requests }).execute()
-        return index + text.__len__() + 1
+        try:
+            requests = []
+            requests.append({ "insertText": { "location": { "index": index, }, "text": text + "\n" } })
+            self.app.batchUpdate(documentId=id, body={ "requests": requests }).execute()
+            return index + text.__len__() + 1
+        except Exception as e:
+            return "error"
 
     def insertImage(self, id, index, url, gs="g"):
-        seroUnit = 222
-        garoUnit = 448
-
-        unit = garoUnit
-        if gs == "g":
+        try:
+            seroUnit = 222
+            garoUnit = 448
             unit = garoUnit
-        else:
-            unit = seroUnit
-
-        requests = []
-        requests.append({
-            "insertInlineImage": {
-                "location": { "index": index },
-                "uri": url,
-                "objectSize": {
-                    "width": { "magnitude": unit, "unit": "PT" }
+            if gs == "g":
+                unit = garoUnit
+            else:
+                unit = seroUnit
+            requests = []
+            requests.append({
+                "insertInlineImage": {
+                    "location": { "index": index },
+                    "uri": url,
+                    "objectSize": {
+                        "width": { "magnitude": unit, "unit": "PT" }
+                    }
                 }
-            }
-        })
-        self.app.batchUpdate(documentId=id, body={ "requests": requests }).execute()
-        return index + 1
+            })
+            self.app.batchUpdate(documentId=id, body={ "requests": requests }).execute()
+            return index + 1
+        except Exception as e:
+            return "error"
 
     def insertContents(self, id, arr):
         index = 1
+        pastIndex = 1
         num = 0
         for i in arr:
             if isinstance(i, list):
+                pastIndex = index
                 index = self.insertImage(id, index, i[0], i[1])
+                while index == "error":
+                    time.sleep(10)
+                    index = pastIndex
+                    index = self.insertImage(id, index, i[0], i[1])
                 if i[1] == 'g':
+                    pastIndex = index
                     index = self.insertWords(id, index, "\n")
+                    while index == "error":
+                        time.sleep(10)
+                        index = pastIndex
+                        index = self.insertWords(id, index, "\n")
                 else:
                     num = num + 1
                     num = num % 2
                     if num == 0:
+                        pastIndex = index
                         index = self.insertWords(id, index, "\n")
+                        while index == "error":
+                            time.sleep(10)
+                            index = pastIndex
+                            index = self.insertWords(id, index, "\n")
             else:
+                pastIndex = index
                 index = self.insertWords(id, index, i)
+                while index == "error":
+                    time.sleep(10)
+                    index = pastIndex
+                    index = self.insertWords(id, index, i)
