@@ -60,10 +60,12 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const photoRequest = ghostRequest().bind("photo");
+    //
+    // await photoRequest("fixDir", { target: "p123_김지은_김법정_210531" });
 
 
-
-
+    
 
 
 
