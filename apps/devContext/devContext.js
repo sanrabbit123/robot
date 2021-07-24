@@ -61,7 +61,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 
@@ -639,9 +639,8 @@ DevContext.prototype.launching = async function () {
 
 
     // spawn catfish
-    // const app = new SpawnBoradoli();
-    // await app.spawnLaunching();
-
+    const app = new SpawnBoradoli();
+    await app.spawnPython("copyTemplate");
 
 
     // kakao token
@@ -679,7 +678,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p101");
+    // await this.getRawPortfolio("p105");
 
 
     // get corePortfolio by pid

@@ -128,8 +128,8 @@ AiProposal.prototype.proposalLaunching = async function () {
     }
     await this.mother.ghostFileUpload(fromArr, toArr);
 
-    await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님의 제안서가 완료되었습니다! 확인부탁드립니다! : ${gres}`, channel: `#403_proposal` });
-    await this.back.updateProject([ { proid: this.text.proid }, { "proposal.status": "발송 대기", "proposal.date": new Date() } ]);
+    // await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님의 제안서가 완료되었습니다! 확인부탁드립니다! : ${gres}`, channel: `#403_proposal` });
+    // await this.back.updateProject([ { proid: this.text.proid }, { "proposal.status": "발송 대기", "proposal.date": new Date() } ]);
 
     if (await fileSystem(`exist`, [ process.env.HOME + "/safe.mp4" ])) {
       shell.exec(`open ${shellLink(process.env.HOME)}/safe.mp4`);
