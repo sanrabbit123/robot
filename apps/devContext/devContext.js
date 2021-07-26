@@ -59,9 +59,9 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+    const photoRequest = ghostRequest().bind("photo");
 
-
-
+    console.log(await photoRequest("zip", { pid: "p135" }))
 
 
 
@@ -639,8 +639,8 @@ DevContext.prototype.launching = async function () {
 
 
     // spawn catfish
-    const app = new SpawnBoradoli();
-    await app.spawnPython("copyTemplate");
+    // const app = new SpawnBoradoli();
+    // await app.spawnPython("copyTemplate");
 
 
     // kakao token
@@ -657,9 +657,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "함혜선",
-    //     designer: "윤보라",
-    //     link: "https://drive.google.com/drive/folders/1YdphJwUEXCkJEJDAgtvYps0QjNBr9KuO",
+    //     client: "이재봉",
+    //     designer: "정다연",
+    //     link: "https://drive.google.com/drive/folders/1IT7ac1mRyDnXi76Cwf2nazu3asqIMFsZ",
     //   },
     // ]);
 

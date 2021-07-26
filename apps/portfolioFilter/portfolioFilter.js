@@ -777,7 +777,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       finalObj = { pid: nextPid, desid: targetDesigner.desid, forecast };
       await back.mongoCreate("foreContents", finalObj, { console: true });
 
-      shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
+      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
 
       for (let z = 0; z < 5; z++) {
         console.log(`scp waiting... ${String(5 - z)}s`);

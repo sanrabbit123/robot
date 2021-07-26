@@ -1054,6 +1054,8 @@ Ghost.prototype.photoRouter = function (needs) {
           const { pid } = req.body;
           const c780 = "780";
           const list = await fileSystem(`readDir`, [ sambaDir ]);
+          const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
+          const tempFolderName = "temp";
           let list_refined = [];
           let folderName;
           let shareName;
@@ -1061,36 +1063,61 @@ Ghost.prototype.photoRouter = function (needs) {
           let command;
           let zipId;
           let zipLink;
+          let fileServerIp, fileServerUser;
 
-          for (let i of list) {
-            if (!/^\./.test(i) && !/DS_Store/gi.test(i)) {
-              list_refined.push(i);
+          if (!homeFolder.includes(tempFolderName)) {
+            shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
+          }
+
+          fileServerIp = null;
+          fileServerUser = null;
+          for (let obj of instance.address.officeinfo.map) {
+            if (obj.name === "samba") {
+              fileServerIp = obj.ip;
+              fileServerUser = obj.user;
             }
           }
-          folderName = list_refined.find((i) => { return (new RegExp('^' + pid)).test(i); });
-          tempArr = folderName.split('_');
-          shareName = "HL_";
-          if (tempArr.length === 4) {
-            shareName += tempArr[2] + "_고객님_";
-            shareName += tempArr[1] + "_디자이너님";
-          } else if (tempArr.length === 3) {
-            shareName += tempArr[1] + "_디자이너님";
+
+          if (fileServerIp === null || fileServerUser === null) {
+            res.send(JSON.stringify({ message: "invaild office address map" }));
           } else {
-            throw new Error("invaild post");
-          }
-          shareName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
-          command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};zip ${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share + "/" + shareName)} ./*`;
-          shell.exec(command);
+            for (let i of list) {
+              if (!/^\./.test(i) && !/DS_Store/gi.test(i)) {
+                list_refined.push(i);
+              }
+            }
+            folderName = list_refined.find((i) => { return (new RegExp('^' + pid)).test(i); });
+            tempArr = folderName.split('_');
+            shareName = "HL_";
+            if (tempArr.length === 4) {
+              shareName += tempArr[2] + "_고객님_";
+              shareName += tempArr[1] + "_디자이너님";
+            } else if (tempArr.length === 3) {
+              shareName += tempArr[1] + "_디자이너님";
+            } else {
+              throw new Error("invaild post");
+            }
+            shareName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
-          zipId = await drive.searchId_inPython(shareName);
-          while (zipId === null) {
-            await sleep(1000);
+            command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};
+            zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;
+            scp ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ${fileServerUser}@${fileServerIp}:${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share)};`;
+            shell.exec(command);
+
             zipId = await drive.searchId_inPython(shareName);
+            while (zipId === null) {
+              await sleep(1000);
+              zipId = await drive.searchId_inPython(shareName);
+            }
+
+            shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+
+            zipLink = await drive.read_webView_inPython(zipId);
+            res.send(JSON.stringify({ link: zipLink }));
+
           }
 
-          zipLink = await drive.read_webView_inPython(zipId);
-          res.send(JSON.stringify({ link: zipLink }));
         }
       } catch (e) {
         console.log(e);
