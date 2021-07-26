@@ -203,9 +203,9 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     }
 
     if (!this.clientNullATarget.includes(this.clientName) && !/없/gi.test(this.clientName)) {
-      this.folderName = `${this.pid}_${this.designer}_${this.clientName}_${todayMaker("year")}`;
+      this.folderName = `${this.pid}_${this.designer}_${this.clientName}_${todayMaker("total")}`;
     } else {
-      this.folderName = `${this.pid}_${this.designer}_${todayMaker("year")}`;
+      this.folderName = `${this.pid}_${this.designer}_${todayMaker("total")}`;
     }
     resultFolder = `${this.options.result_dir}/${this.folderName}`;
     this.resultFolder = resultFolder;
@@ -745,6 +745,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
       folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 
+      console.log(folderPath);
+
       shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
       shell.exec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
 
@@ -765,6 +767,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       }
 
       shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
+      console.log(`original copy done`);
 
       for (let item of folderPathList) {
         await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);

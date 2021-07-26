@@ -59,20 +59,17 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
-    const photoRequest = ghostRequest().bind("photo");
-
-    console.log(await photoRequest("zip", { pid: "p135" }))
 
 
 
 
 
-
-    // const tong = await work.getDesignerFee("p2106_aa49s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
-    // console.log(tong);
+    // const tong = await work.getDesignerFee("p2104_aa08s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
     // for (let obj of tong) {
     //   console.log(obj);
     // }
+
+
 
     // const clientTargets = [
     //   "전라북도 익산시 무왕로 1195",
@@ -553,19 +550,19 @@ DevContext.prototype.launching = async function () {
 
     // let resultObj, res;
     // resultObj = {};
-    // resultObj["pretext"] = "김주연";
-    // resultObj["cellphone"] = "070-7558-9269";
-    // resultObj["email"] = "j05sup@hanmail.net";
-    // resultObj["dwelling"] = "서울시 노원구 노원로 38길 포레나노원 아파트";
-    // resultObj["folk"] = "부부, 딸 2명(6학년, 4학년)";
-    // resultObj["money"] = "1,000만원";
+    // resultObj["pretext"] = "이지영";
+    // resultObj["cellphone"] = "601-7213-0519";
+    // resultObj["email"] = "cmeasy@gmail.com";
+    // resultObj["dwelling"] = "서울 서초구 사임당로17길 116 삼성래미안 101동 1102호";
+    // resultObj["folk"] = "예비초 쌍둥이 딸2, 부부";
+    // resultObj["money"] = "2,000만원";
     // resultObj["area"] = "34";
-    // resultObj["movingdate"] = "2021-08-16";
+    // resultObj["movingdate"] = "2022-01-01";
     // resultObj["myhomeboo"] = "자가";
     // resultObj["spotspec"] = "방 3개 / 화장실 2개 / 발코니 확장";
-    // resultObj["description"] = "방3개, 화장실 2개, 다용도실1, 거실, ,주방, 거실에 딸린 알파 공간, 안방 베란다1, 작은 방에 딸린 실외기실\n1) 홈스타일링 요청. (가구, 조명, 침구 패브릭, 액자, 소품 등)\n2) 새아파트 입주.\n3) 거의 모든 가구 구매 예정.\n4) 가전은 제가 선택하나 디자인은 함께 봐 주길 희망함.\n5) 가구는 가성비 좋은 합리적 가구를 원함.\n6) 상의 후 제작 가구가 필요하다면 제작 가구도 들일 생각 있으므로 제작 가구를 해 주실 수 있는 디자이너 추천 바람.\n7) 인테리어나 홈스타일에 대한 지식이 없으므로 성향 잘 캐치하여 알아서 잘 해주시는 분 추천 해주시길 바람.\n8) 풍수 인테리어에 관심 있음. 그런 쪽을 잘 알고 해주시는 디자이너 선생님이면 좋겠음.\n9) 홈스타일링 비용은 100만원 후반대에서 200만원까지 생각하고 있음.";
+    // resultObj["description"] = "공사 시작시 해외 체류 예정. 디자이너가 담당하여 스타일링 해주셨으면 합니다.";
     // resultObj["wayto"] = "인터넷 검색";
-    // res = await requestSystem("https://homeliaison-bridgecloud.xyz:3000/submit", resultObj, { "Content-Type": "application/json" });
+    // res = await requestSystem("https://homeliaison-bridge.xyz:3000/submit", resultObj, { "Content-Type": "application/json" });
     // console.log(res);
 
 
@@ -678,7 +675,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p105");
+    // await this.getRawPortfolio("p127");
 
 
     // get corePortfolio by pid

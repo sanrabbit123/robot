@@ -99,6 +99,7 @@ class StyleCurationWordings {
               half: false,
               question: [
                 "선호하는 스타일을 <b%3장%b> 골라주세요!",
+                "스타일 분석이 완료되었습니다!"
               ],
             },
             {
@@ -831,6 +832,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   let photoHeight, photoWidth, photoWidthCss, photoHeightCss;
   let resetEvent;
   let arrowEvent;
+  let pickupDesigners;
 
   GeneralJs.stacks[stackName] = 0;
   GeneralJs.stacks[loadingName] = false;
@@ -872,6 +874,38 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   photoWidthCss = "calc(calc(100% - " + String(pictureMargin * (columnNumber - 1)) + ea + ") / " + String(columnNumber) + ")";
   photoHeight = (205 / 297) * (photoWidth);
   photoHeightCss = String(photoHeight) + ea;
+
+  pickupDesigners = function () {
+    const photos = instance.photos;
+    if (photos.length !== 0) {
+      let tendencyAverage, designers, average;
+      designers = JSON.parse(JSON.stringify(instance.designers));
+      tendencyAverage = (new Array(photos[0].tendency.length)).fill(0, 0);
+      for (let { tendency } of photos) {
+        for (let i = 0; i < tendency.length; i++) {
+          tendencyAverage[i] += tendency[i];
+        }
+      }
+      tendencyAverage = tendencyAverage.map((n) => { return Math.round((n / photos.length) * 100) / 100; });
+
+      for (let designer of designers) {
+        average = 0;
+        for (let i = 0; i < tendencyAverage.length; i++) {
+          average += Math.abs(tendencyAverage[i] - designer.tendency[i]);
+        }
+        designer.tendencyLength = average;
+      }
+
+      designers.sort((a, b) => { return a.tendencyLength - b.tendencyLength });
+      designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status); });
+      designers = designers.map((obj) => { return obj.desid; });
+      instance.values.style = [
+        {
+          value: designers
+        }
+      ];
+    }
+  }
 
   resetEvent = function () {
     let rowLength, thisTime;
@@ -947,6 +981,9 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
             instance.photoPosition[i].style.display = "none";
           }
           GeneralJs.stacks[loadingName] = false;
+
+          pickupDesigners();
+
         } catch (e) {
           console.log(e);
         }
@@ -1240,6 +1277,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, isMac } = GeneralJs;
   const token = '_';
+  const listToken = '__list__';
   let wordingSize;
   let paddingTop, paddingBottom, marginLeft;
   let blockMother, block;
@@ -1279,8 +1317,11 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   let listNum;
   let listAreaPaddingTop;
   let listWordingSize;
+  let barEntireValue;
+  let barEndEvent;
 
   lineHeight = 1.6;
+  barEntireValue = 100;
 
   wordingSize = <%% 15, 15, 15, 13, 3.5 %%>;
   standardSize = <%% 13, 13, 13, 13, 2.5 %%>;
@@ -1347,7 +1388,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   y = 0;
   num = 0;
   for (let obj of wordings) {
-
     if (obj.half) {
       questionRatio = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
       num = num + 1;
@@ -1482,7 +1522,146 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           mode: "input",
           attribute: [
             { type: "text" },
-            { value: this.client.requests[0].request.space.address }
+            { value: this.client.requests[0].request.space.address },
+            { x: name },
+            { y: String(y) },
+          ],
+          events: [
+            {
+              type: "focus",
+              event: function (e) {
+                const self = this;
+                const targetMother = this.parentNode;
+                const grandMother = targetMother.parentNode.parentNode.parentNode;
+                const x = this.getAttribute("x");
+                const y = Number(this.getAttribute("y"));
+                let addressFrame, removeTargets, inspectionArr;
+                grandMother.style.overflow = "";
+                if (targetMother.querySelector("aside") === null) {
+                  this.style.zIndex = String(2);
+                  createNode({
+                    mother: targetMother,
+                    mode: "aside",
+                    events: [
+                      {
+                        type: "click",
+                        event: function (e) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const targets = targetMother.querySelectorAll("aside");
+                          for (let t of targets) {
+                            targetMother.removeChild(t);
+                          }
+                          if (GeneralJs.stacks["addressEvent"] !== null) {
+                            window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+                            GeneralJs.stacks["addressEvent"] = null;
+                          }
+                        }
+                      }
+                    ],
+                    style: {
+                      position: "fixed",
+                      top: String(0) + ea,
+                      left: String(0) + ea,
+                      width: String(100) + '%',
+                      height: String(100) + '%',
+                      zIndex: String(1),
+                      background: "transparent",
+                    }
+                  });
+                  addressFrame = createNode({
+                    mother: targetMother,
+                    mode: "aside",
+                    events: [
+                      {
+                        type: "click",
+                        event: (e) => { e.preventDefault(); e.stopPropagation(); }
+                      }
+                    ],
+                    style: {
+                      position: "absolute",
+                      top: String(48) + ea,
+                      left: String(0) + ea,
+                      width: String(580) + ea,
+                      height: String(440) + ea,
+                      borderRadius: String(3) + "px",
+                      overflow: "hidden",
+                      zIndex: String(2),
+                      background: colorChip.white,
+                      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                      animation: "fadeuplite 0.3s ease forwards",
+                    },
+                    children: [
+                      {
+                        mode: "iframe",
+                        attribute: [
+                          { src: window.location.protocol + "//" + window.location.host + "/tools/address" },
+                          { width: String(100) + '%' },
+                          { height: String(100) + '%' },
+                        ],
+                        style: {
+                          position: "absolute",
+                          top: String(0) + ea,
+                          left: String(0) + ea,
+                          border: String(0),
+                        }
+                      }
+                    ]
+                  });
+                  GeneralJs.stacks["addressEvent"] = async function (e) {
+                    try {
+                      self.value = e.data.trim();
+                      instance.values[x][y].value = self.value.trim();
+                      removeTargets = targetMother.querySelectorAll("aside");
+                      for (let t of removeTargets) {
+                        targetMother.removeChild(t);
+                      }
+                      window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
+                      GeneralJs.stacks["addressEvent"] = null;
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                  window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
+                } else {
+                  removeTargets = targetMother.querySelectorAll("aside");
+                  for (let t of removeTargets) {
+                    targetMother.removeChild(t);
+                  }
+                  if (GeneralJs.stacks["addressEvent"] !== null) {
+                    window.removeEventListener('message', GeneralJs.stacks["addressEvent"]);
+                    GeneralJs.stacks["addressEvent"] = null;
+                  }
+                }
+              }
+            },
+            {
+              type: "blur",
+              event: async function (e) {
+                const self = this;
+                try {
+                  if (e.type === "blur") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const x = this.getAttribute("x");
+                    const y = Number(this.getAttribute("y"));
+                    instance.values[x][y].value = self.value.trim();
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            {
+              type: "keypress",
+              event: function (e) {
+                if (e.type === "keypress" && e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  this.blur();
+                }
+              }
+            }
           ],
           style: {
             display: "block",
@@ -1512,9 +1691,11 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           attribute: [
             { toggle: "off" },
             { name: name },
+            { x: name },
             { y: String(y) },
             { z: String(z) },
             { multiple: obj.multiple ? "true" : "false" },
+            { value: i },
           ],
           events: [
             {
@@ -1522,10 +1703,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               event: function (e) {
                 const toggle = this.getAttribute("toggle");
                 const name = this.getAttribute("name");
-                const y = String(this.getAttribute("y"));
-                const z = String(this.getAttribute("z"));
+                const x = name;
+                const y = Number(this.getAttribute("y"));
+                const z = Number(this.getAttribute("z"));
                 const multiple = (this.getAttribute("multiple") === "true");
                 const siblings = document.querySelectorAll('.' + name + token + String(y));
+                const value = this.getAttribute("value");
                 let items;
                 if (toggle === "on") {
                   this.children[0].style.color = colorChip.deactive;
@@ -1548,6 +1731,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     this.children[0].style.color = colorChip.green;
                     this.children[1].style.background = colorChip.green;
                     this.setAttribute("toggle", "on");
+                  }
+                }
+                instance.values[x][y].value = [];
+                for (let s of siblings) {
+                  if (s.getAttribute("toggle") === "on") {
+                    instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
                   }
                 }
               }
@@ -1660,7 +1849,9 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       }
       barBox.setAttribute("width", String(barBox.getBoundingClientRect().width));
       barBox.setAttribute("entire", String(barBox.getBoundingClientRect().width * 2));
-      barBox.setAttribute("value", String(50));
+      barBox.setAttribute("value", String(barEntireValue / 2));
+      barBox.setAttribute("x", name);
+      barBox.setAttribute("y", String(y));
 
       barClone = bar.cloneNode(true);
       barClone.style.width = String(100) + '%';
@@ -1695,18 +1886,31 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         barBox.style.cursor = "grabbing";
         barButton.style.cursor = "grabbing";
       });
-      answerArea.addEventListener("mouseleave", function (e) {
+
+      barEndEvent = function (e) {
         GeneralJs.stacks[thisName + "_isDown"] = false;
         answerArea.style.cursor = "pointer";
         barBox.style.cursor = "pointer";
         barButton.style.cursor = "pointer";
-      });
-      answerArea.addEventListener("mouseup", function (e) {
-        GeneralJs.stacks[thisName + "_isDown"] = false;
-        answerArea.style.cursor = "pointer";
-        barBox.style.cursor = "pointer";
-        barButton.style.cursor = "pointer";
-      });
+
+        const x = barBox.getAttribute('x');
+        const y = Number(barBox.getAttribute('y'));
+        let thisValue, oppositeValue;
+
+        thisValue = Number(barBox.getAttribute("value"));
+        oppositeValue = barEntireValue - thisValue;
+
+        instance.values[x][y].value = {
+          entire: barEntireValue,
+          value: thisValue,
+          opposite: oppositeValue,
+          values: [ thisValue, oppositeValue ]
+        };
+
+      }
+
+      answerArea.addEventListener("mouseleave", barEndEvent);
+      answerArea.addEventListener("mouseup", barEndEvent);
       answerArea.addEventListener("mousemove", function (e) {
         let x, walk, newWidth;
         if (!GeneralJs.stacks[thisName + "_isDown"]) {
@@ -1737,12 +1941,14 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
         createNode({
           mother: answerArea,
-          class: [ "hoverDefault_lite" ],
+          class: [ "hoverDefault_lite", name + listToken + String(y) + listToken + String(z), name + listToken + String(y) ],
           attribute: [
             { toggle: "off" },
+            { name: name },
             { x: name },
             { y: String(y) },
             { z: String(listNum) },
+            { value: obj2.name }
           ],
           events: [
             {
@@ -1752,6 +1958,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 const x = this.getAttribute("name");
                 const y = Number(this.getAttribute('y'));
                 const z = Number(this.getAttribute('z'));
+                const siblings = document.querySelectorAll('.' + name + listToken + String(y));
                 const children = this.firstChild.children;
                 if (toggle === "off") {
                   for (let dom of children) {
@@ -1763,6 +1970,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     dom.style.color = dom.getAttribute("deactive");
                   }
                   this.setAttribute("toggle", "off");
+                }
+                instance.values[x][y].value = [];
+                for (let s of siblings) {
+                  if (s.getAttribute("toggle") === "on") {
+                    instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
+                  }
                 }
               }
             }
@@ -1849,7 +2062,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         });
         listNum++;
       }
-
 
     }
 
@@ -3646,6 +3858,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     let clients, client;
     let whereQuery;
     let contentsPhotoObj;
+    let tempArr, valueObj;
 
     if (getObj.cliid === undefined) {
       alert("잘못된 접근입니다!");
@@ -3667,6 +3880,23 @@ StyleCurationJs.prototype.launching = async function (loading) {
     this.designers = contentsPhotoObj.designers;
     this.client = client;
     this.wordings = new StyleCurationWordings();
+
+    tempArr = this.wordings.wordings.center.map((obj) => {
+      return {
+        name: obj.name,
+        children: obj.children.map((obj2) => { return { type: obj2.type, value: null }; })
+      };
+    });
+
+    valueObj = {};
+    for (let obj of tempArr) {
+      if (obj.name === "style") {
+        valueObj[obj.name] = [];
+      } else {
+        valueObj[obj.name] = obj.children;
+      }
+    }
+    this.values = valueObj;
 
     await this.mother.ghostClientLaunching({
       base: {
