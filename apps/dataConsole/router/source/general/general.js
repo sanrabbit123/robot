@@ -3097,7 +3097,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   const instance = this;
   const thisMatrix = GeneralJs.getDateMatrix(date);
   this.dateMatrix = thisMatrix;
-  let thisDate = null;
+  let thisDate;
   if (typeof date === "string") {
     if (date.length === 10) {
       thisDate = Number(((date.split("-"))[2]).replace(/^0/, ''));
@@ -3107,14 +3107,6 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   } else if (typeof date === "object") {
     thisDate = date.getDate();
   }
-  const { year, month, matrix } = this.dateMatrix;
-  let [ width, height ] = [ 260, (280 * ((option.height !== undefined) ? option.height : 1)) ];
-
-  if (option.scaleUp !== undefined) {
-    width = width * option.scaleUp;
-    height = height * option.scaleUp;
-  }
-
   const CalendarMatrix = function (matrix) {
     this.calendarBase = null;
     this.titleZone = null;
@@ -3122,37 +3114,106 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     this.matrix = matrix;
     this.calendarHeight = 0;
   }
-
   CalendarMatrix.prototype.setHeight = function (calendarHeight) {
     this.calendarHeight = calendarHeight;
   }
-
   CalendarMatrix.prototype.setDoms = function (calendarBase, titleZone, contentsZone) {
     this.calendarBase = calendarBase;
     this.titleZone = titleZone;
     this.contentsZone = contentsZone;
   }
-
+  const { year, month, matrix } = this.dateMatrix;
+  let width, height;
   let calendarBase, titleZone, contentsZone;
   let div_clone, div_clone2, svg_clone, svg_zone;
   let style;
   let titleZoneStyle, contentsZoneStyle;
   let ea;
   let titleHeight;
-  let visualSpecific;
-  let arrowWidth, leftMargin;
+  let arrowWidth;
+  let arrowBottom;
+  let arrowLeft;
+  let arrowZoneWidth;
+  let arrowZoneBottom;
+  let arrowZoneLeft;
+  let leftMargin;
   let finalHeight0, finalHeight1, finalHeight2;
   let resultObj;
   let mobile, desktop;
+  let motherRatio, ratio;
+  let titleBottom;
+  let contentsMarginTop;
 
   mobile = (option.mobile === true);
   desktop = !mobile;
+  ea = desktop ? "px" : "vw";
+  ratio = 0.38;
+
+  width = 260;
+  height = 280;
+  motherRatio = (num) => { return (num / 260); };
+  if (typeof option.width === "number") {
+    width = option.width;
+    height = width * motherRatio(height);
+  }
+  if (option.scaleUp !== undefined) {
+    width = width * option.scaleUp;
+    height = height * option.scaleUp;
+  }
 
   resultObj = new CalendarMatrix(this.dateMatrix);
-  ea = (option.mobile !== true) ? "px" : "vw";
-  titleHeight = (option.bigMode !== true) ? height * 0.2 : (desktop ? 48 : 8);
+  if (option.bigMode === true) {
+    titleHeight = desktop ? 48 : 8;
+  } else {
+    titleHeight = height * 0.2;
+  }
   finalHeight0 = titleHeight;
-  finalHeight2 = finalHeight0 * 0.38;
+  finalHeight2 = finalHeight0 * ratio;
+  if (option.titleBottom !== undefined) {
+    titleBottom = width * motherRatio(option.titleBottom);
+  } else {
+    titleBottom = width * motherRatio(desktop ? 9 : 9);
+  }
+
+  arrowWidth = width * motherRatio(9);
+  if (option.arrow !== undefined) {
+    if (option.arrow.width !== undefined) {
+      arrowWidth = width * motherRatio(option.arrow.width);
+    }
+  }
+  if (option.bigMode === true) {
+    arrowWidth = desktop ? 11 : 2;
+  }
+  if (option.bigMode === true) {
+    arrowBottom = desktop ? 24.5 : 3.6;
+  } else {
+    arrowBottom = width * motherRatio(desktop ? 17 : 16);
+  }
+  if (option.bigMode === true) {
+    arrowLeft = (desktop ? 1 : 0.2);
+  } else {
+    arrowLeft = width * motherRatio(desktop ? 23 : 24);
+  }
+  arrowZoneWidth = arrowWidth + (width * motherRatio(desktop ? 15 : 6));
+  if (option.bigMode === true) {
+    arrowZoneBottom = desktop ? 16.5 : 2.6;
+  } else {
+    arrowZoneBottom = width * motherRatio(desktop ? 9 : 13);
+  }
+  if (option.bigMode === true) {
+    arrowZoneLeft = (desktop ? 1 : 0.2);
+  } else {
+    arrowZoneLeft = width * motherRatio(desktop ? 16 : 22);
+  }
+
+  if (option.margin !== undefined) {
+    contentsMarginTop = option.margin;
+  } else {
+    contentsMarginTop = desktop ? 6 : 1.2;
+  }
+  if (option.bigMode === true) {
+    contentsMarginTop = 0;
+  }
 
   //matrix make function
   const matrixMaker = function (mother, year, month, matrix, thisDate, width, height, titleHeight) {
@@ -3186,7 +3247,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     desktop = !mobile;
 
     ea = desktop ? "px" : "vw";
-    leftMargin = 12;
+    leftMargin = desktop ? 12 : 3;
     lineHeight = 20;
 
     indexNumber = 0;
@@ -3486,11 +3547,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   contentsZoneStyle = {
     position: "relative",
     height: "calc(100% - " + String(titleHeight) + ea + ")",
-    marginTop: String(6 * ((option.margin !== undefined) ? option.margin : 1)) + ea,
+    marginTop: String(contentsMarginTop) + ea,
   };
-  if (option.bigMode === true) {
-    contentsZoneStyle.marginTop = String(0) + ea;
-  }
 
   //title zone -------------------------------------------------------------- start
   titleZone = GeneralJs.nodes.div.cloneNode(true);
@@ -3499,15 +3557,14 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   }
 
   //year month number
-  visualSpecific = 1.5;
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
     height: String(titleHeight / 2) + ea,
     fontFamily: "graphik",
-    fontSize: String(titleHeight * 0.38 * ((option.title !== undefined) ? option.title : 1)) + ea,
+    fontSize: String(titleHeight * ratio * ((option.title !== undefined) ? option.title : 1)) + ea,
     fontWeight: String(300),
-    bottom: String(8 + ((option.titleBottom !== undefined) ? option.titleBottom : 1)) + ea,
+    bottom: String(titleBottom) + ea,
     width: "100%",
     textAlign: "center",
   };
@@ -3525,23 +3582,13 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   titleZone.appendChild(div_clone);
 
   //previous arrow
-  if (option.arrow !== undefined) {
-    arrowWidth = (option.arrow.width !== undefined) ? option.arrow.width : 9;
-  } else {
-    arrowWidth = 9;
-  }
-
-  if (option.bigMode === true) {
-    arrowWidth = desktop ? 11 : 2;
-  }
-
   svg_clone = SvgTong.stringParsing(this.returnArrow("left", GeneralJs.colorChip.green));
   style = {
     position: "absolute",
     width: String(arrowWidth) + ea,
     height: String(arrowWidth * SvgTong.getRatio(svg_clone)) + ea,
-    bottom: String(desktop ? 17 + ((option.bigMode !== true) ? 0 : 7.5) : 3.6) + ea,
-    left: String((option.bigMode !== true) ? 23 : (desktop ? 1 : 0.2)) + ea,
+    bottom: String(arrowBottom) + ea,
+    left: String(arrowLeft) + ea,
   };
   if (option.arrow !== undefined) {
     if (option.arrow.bottom !== undefined) {
@@ -3559,10 +3606,10 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   svg_zone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    width: String(arrowWidth + (desktop ? 15 : 2)) + ea,
-    height: String(arrowWidth + (desktop ? 15 : 2)) + ea,
-    bottom: String(desktop ? 9 + ((option.bigMode !== true) ? 0 : 7.5) : 2.6) + ea,
-    left: String((option.bigMode !== true) ? 16 : (desktop ? 1 : 0.2)) + ea,
+    width: String(arrowZoneWidth) + ea,
+    height: String(arrowZoneWidth) + ea,
+    bottom: String(arrowZoneBottom) + ea,
+    left: String(arrowZoneLeft) + ea,
     cursor: "pointer",
   };
   for (let i in style) {
@@ -3599,8 +3646,8 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
     position: "absolute",
     width: String(arrowWidth) + ea,
     height: String(arrowWidth * SvgTong.getRatio(svg_clone)) + ea,
-    bottom: String(desktop ? 17 + ((option.bigMode !== true) ? 0 : 7.5) : 3.6) + ea,
-    right: String((option.bigMode !== true) ? 23 : (desktop ? 1 : 0.2)) + ea,
+    bottom: String(arrowBottom) + ea,
+    right: String(arrowLeft) + ea,
   };
   if (option.arrow !== undefined) {
     if (option.arrow.bottom !== undefined) {
@@ -3618,10 +3665,10 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   svg_zone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    width: String(arrowWidth + (desktop ? 15 : 2)) + ea,
-    height: String(arrowWidth + (desktop ? 15 : 2)) + ea,
-    bottom: String(desktop ? 9 + ((option.bigMode !== true) ? 0 : 7.5) : 2.6) + ea,
-    right: String((option.bigMode !== true) ? 16 : (desktop ? 1 : 0.2)) + ea,
+    width: String(arrowZoneWidth) + ea,
+    height: String(arrowZoneWidth) + ea,
+    bottom: String(arrowZoneBottom) + ea,
+    right: String(arrowZoneLeft) + ea,
     cursor: "pointer",
   };
   for (let i in style) {

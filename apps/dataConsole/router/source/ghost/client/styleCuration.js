@@ -125,6 +125,22 @@ class StyleCurationWordings {
               ],
             },
             {
+              type: "calendar",
+              half: true,
+              question: [
+                "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
+              ],
+              item: "사전 점검일",
+            },
+            {
+              type: "calendar",
+              half: true,
+              question: [
+                "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
+              ],
+              item: "집 비는 날",
+            },
+            {
               type: "checkbox",
               half: true,
               question: [
@@ -136,6 +152,13 @@ class StyleCurationWordings {
                 "타운하우스",
                 "빌라",
                 "단독 주택"
+              ],
+              realItems: [
+                100 / 75,
+                100 / 50,
+                100 / 70,
+                100 / 65,
+                100 / 70
               ],
               multiple: false,
               exception: function (items, media) {
@@ -169,6 +192,10 @@ class StyleCurationWordings {
               items: [
                 "분양 면적 (공급 면적)",
                 "전용 면적",
+              ],
+              realItems: [
+                false,
+                true,
               ],
               multiple: false,
             },
@@ -1275,7 +1302,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, isMac, dateToString, stringToDate } = GeneralJs;
   const token = '_';
   const listToken = '__list__';
   let wordingSize;
@@ -1319,6 +1346,14 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   let listWordingSize;
   let barEntireValue;
   let barEndEvent;
+  let today;
+  let calendarMarginLeft;
+  let calendarTop;
+  let calendarWidth;
+  let addressBoxTop;
+  let addressBoxLeft;
+  let addressBoxWidth;
+  let addressBoxHeight;
 
   lineHeight = 1.6;
   barEntireValue = 100;
@@ -1381,6 +1416,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   listHypenWidth = <%% 10, 10, 10, 10, 2 %%>;
   listColumWidth = <%% 10, 10, 10, 10, 2 %%>;
   listColumPaddingLeft = <%% 2, 2, 2, 2, 1 %%>;
+
+  calendarMarginLeft = <%% 6, 6, 5, 4, 1.8 %%>;
+  calendarTop = <%% 15, 15, 15, 13, 3 %%>;
+  calendarWidth = <%% 260, 250, 230, 210, 60 %%>;
+
+  addressBoxTop = <%% 48, 48, 48, 48, 8 %%>;
+  addressBoxLeft = <%% 0, 0, 0, 0, -6 %%>;
+  addressBoxWidth = <%% 580, 580, 480, 370, 81 %%>;
+  addressBoxHeight = <%% 440, 440, 450, 470, 77.8 %%>;
 
   mother.style.paddingTop = String(paddingTop) + ea;
   mother.style.paddingBottom = String(paddingBottom) + ea;
@@ -1580,10 +1624,10 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     ],
                     style: {
                       position: "absolute",
-                      top: String(48) + ea,
-                      left: String(0) + ea,
-                      width: String(580) + ea,
-                      height: String(440) + ea,
+                      top: String(addressBoxTop) + ea,
+                      left: String(addressBoxLeft) + ea,
+                      width: String(addressBoxWidth) + ea,
+                      height: String(addressBoxHeight) + ea,
                       borderRadius: String(3) + "px",
                       overflow: "hidden",
                       zIndex: String(2),
@@ -1921,7 +1965,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         walk = x - GeneralJs.stacks[thisName + "_startX"];
 
         newWidth = Number(barBox.getAttribute("width")) + walk;
-        barBox.style.width = String(newWidth) + ea;
+        barBox.style.width = String(newWidth) + "px";
         barBox.setAttribute("width", String(newWidth));
         barBox.setAttribute("value", String(Math.round(Math.round((newWidth / Number(barBox.getAttribute("entire"))) * 10000) / 100)));
 
@@ -2062,6 +2106,148 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         });
         listNum++;
       }
+
+    } else if (obj.type === "calendar") {
+
+      today = new Date();
+
+      createNode({
+        mother: answerArea,
+        attribute: [
+          { toggle: "off" },
+          { name: name },
+          { x: name },
+          { y: String(y) },
+          { value: dateToString(today) },
+        ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              const self = this;
+              const targetMother = this.parentNode;
+              const grandMother = targetMother.parentNode.parentNode.parentNode;
+              const x = this.getAttribute('x');
+              const y = Number(this.getAttribute('y'));
+              const toggle = this.getAttribute("toggle");
+              const value = this.getAttribute("value");
+              const calendar = instance.mother.makeCalendar(stringToDate(value), function (e) {
+                const value = this.getAttribute("buttonValue");
+                const dateValue = stringToDate(value);
+                const removeTargets = targetMother.querySelectorAll("aside");
+                const children = self.children;
+                let text;
+                text = '';
+                text += String(dateValue.getFullYear()) + "년 ";
+                text += String(dateValue.getMonth() + 1) + "월 ";
+                text += String(dateValue.getDate()) + "일";
+                children[children.length - 1].textContent = text;
+                self.setAttribute("toggle", "on");
+                self.setAttribute("value", dateToString(dateValue));
+                for (let c of children) {
+                  c.style.color = colorChip.green;
+                }
+                for (let dom of removeTargets) {
+                  targetMother.removeChild(dom);
+                }
+              }, { width: calendarWidth, mobile });
+              let cancelBox, whiteBox;
+              grandMother.style.overflow = "";
+              if (mobile) {
+                targetMother.parentNode.parentNode.style.overflow = "";
+              }
+              cancelBox = createNode({
+                mother: targetMother,
+                mode: "aside",
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const targets = targetMother.querySelectorAll("aside");
+                      for (let t of targets) {
+                        targetMother.removeChild(t);
+                      }
+                    }
+                  }
+                ],
+                style: {
+                  position: "fixed",
+                  top: String(0) + ea,
+                  left: String(0) + ea,
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  zIndex: String(2),
+                  background: "transparent",
+                }
+              });
+              whiteBox = createNode({
+                mother: targetMother,
+                mode: "aside",
+                events: {
+                  type: "click",
+                  event: (e) => { e.stopPropagation(); }
+                },
+                style: {
+                  position: "absolute",
+                  top: String(wordingSize + calendarTop) + ea,
+                  right: String(0) + ea,
+                  width: String(calendarWidth) + ea,
+                  borderRadius: String(3) + "px",
+                  background: colorChip.white,
+                  cursor: "pointer",
+                  boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                  animation: "fadeupmiddle 0.3s ease forwards",
+                  zIndex: String(2),
+                  transition: "all 0s",
+                }
+              });
+              calendar.calendarBase.addEventListener("click", (e) => { e.stopPropagation(); });
+              whiteBox.appendChild(calendar.calendarBase);
+            }
+          }
+        ],
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          verticalAlign: "top",
+          textAlign: "right",
+          zIndex: String(1),
+        },
+        children: [
+          {
+            text: obj.item + " : ",
+            style: {
+              display: (media[0] || media[4]) ? "inline-block" : "none",
+              position: "relative",
+              fontSize: String(wordingSize) + ea,
+              fontWeight: String(200),
+              color: colorChip.deactive,
+              verticalAlign: "top",
+              lineHeight: String(lineHeight),
+              marginRight: String(calendarMarginLeft) + ea,
+              textAlign: "right",
+              cursor: "pointer",
+            }
+          },
+          {
+            text: String(today.getFullYear()) + "년 " + String(today.getMonth() + 1) + "월 " + String(today.getDate()) + "일",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(wordingSize) + ea,
+              fontWeight: String((media[0] || media[4]) ? 400 : 200),
+              color: colorChip.deactive,
+              verticalAlign: "top",
+              lineHeight: String(lineHeight),
+              textAlign: "right",
+              cursor: "pointer",
+            }
+          }
+        ]
+      });
 
     }
 
