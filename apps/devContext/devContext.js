@@ -64,10 +64,19 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const tong = await work.getDesignerFee("p2107_aa46s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
-    // for (let obj of tong) {
-    //   console.log(obj);
-    // }
+    const tong = await work.getDesignerFee("p2107_aa46s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
+    for (let obj of tong) {
+      console.log(obj);
+    }
+
+    // console.log(await work.getDesignerFee("d1907_aa01s", "c2107_aa69s", "s2011_aa02s", "B", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC }));
+
+
+
+
+    // console.log(await requestSystem("http://localhost:3000/designerFee", { matrix: test }, { headers: { "Content-Type": "application/json", "origin": "https://localhost:3000" } }));
+
+
 
 
 

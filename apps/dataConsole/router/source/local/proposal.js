@@ -13,9 +13,35 @@ const ProposalJs = function () {
   this.below_tong = new Map();
   this.list_domBox = new Map();
   this.listSearchInput = null;
+  this.designerFee = new Map();
+  this.designers = [];
+  this.client = null;
+  this.cliid = null;
+  this.serid = null;
+  this.xValue = null;
 
   //auto-make proposal function property
   this.firstDo_secondToggle = true;
+}
+
+ProposalJs.feeKeyMaker = function (desid, cliid, serid, xValue) {
+  if (typeof desid !== "string" || typeof cliid !== "string" || typeof serid !== "string" || typeof xValue !== "string") {
+    throw new Error("input must be desid, cliid, serid, xValue");
+  }
+  if (/\_/gi.test(serid)) {
+    if (serid.split('_').length !== 2) {
+      throw new Error("invaild serid");
+    }
+    serid = serid.split('_')[1].replace(/[^0-9]/gi, '');
+  } else {
+    serid = serid.replace(/[^0-9]/gi, '');
+  }
+  for (let i = 0; i < 10; i++) {
+    serid = serid.replace(/^0/, '');
+  }
+  serid = String(Number(serid));
+  const token = "__split__";
+  return `${desid}${token}${cliid}${token}${serid}${token}${xValue}`;
 }
 
 ProposalJs.prototype.totalInitial = function () {
@@ -703,57 +729,65 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
       const address = this.getAttribute("cus_address");
       GeneralJs.ajaxJson({
         mode: "inspection",
-        addressArr: [ { id, address } ]
+        addressArr: [ { id, address } ],
+        liteMode: false,
       }, "/parsingAddress").then((inspectionArr) => {
         if (inspectionArr.length !== 0) {
           window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
           window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionArr[0].id;
         } else {
           if (instance.toggleSetting.first === 0) {
-            ProposalJs.toggleTimeout.first = setTimeout(function () {
+            ProposalJs.toggleTimeout.first = setTimeout(async function () {
+              try {
 
-              instance.below_launching("second", button);
-              domBox.get("고객 선택").style.height = "3.2vh";
-              domBox.get("고객 선택").style.borderBottom = "1px solid #ececec";
+                instance.below_launching("second", button);
+                domBox.get("고객 선택").style.height = "3.2vh";
+                domBox.get("고객 선택").style.borderBottom = "1px solid #ececec";
 
-              domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
-              domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
-              domBox.get("서비스 선택").children[1].style.marginTop = "-0.9vh";
+                domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
+                domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
+                domBox.get("서비스 선택").children[1].style.marginTop = "-0.9vh";
 
-              service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
-              for (let i of service) {
-                i.style.background = "white";
-                i.children[0].style.color = "#2fa678";
-                i.children[0].style.fontSize = "1.7vh";
-              }
-
-              if (/^M/g.test(window.navigator.platform)) {
-                for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
-                for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
-                for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
-              } else {
-                for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "0px"; }
-                for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-1px"; }
-                for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-4px"; }
-              }
-
-              service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
-              for (let i of service_input) {
-                if (i.checked) {
-                  i.nextElementSibling.style.background = "#2fa678";
-                  i.nextElementSibling.children[0].style.color = "white";
+                service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
+                for (let i of service) {
+                  i.style.background = "white";
+                  i.children[0].style.color = "#2fa678";
+                  i.children[0].style.fontSize = "1.7vh";
                 }
+
+                if (/^M/g.test(window.navigator.platform)) {
+                  for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
+                  for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
+                  for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
+                } else {
+                  for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "0px"; }
+                  for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-1px"; }
+                  for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-4px"; }
+                }
+
+                service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
+                for (let i of service_input) {
+                  if (i.checked) {
+                    i.nextElementSibling.style.background = GeneralJs.colorChip.green;
+                    i.nextElementSibling.children[0].style.color = GeneralJs.colorChip.white;
+                  }
+                }
+                title.style.color = "#2fa678";
+                contents.style.background = "white";
+
+                if (document.querySelector("#pp_title_sub_b") !== null) {
+                  document.querySelector("#pp_title_sub_b").remove();
+                }
+
+                title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_address="' + address + '" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+                instance.cliid = e.target.parentElement.getAttribute("cus_id");
+                instance.client = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { cliid: instance.cliid } }, "/getClients", { equal: true }))[0];
+
+                instance.toggleSetting.first = 1;
+
+              } catch (e) {
+                console.log(e);
               }
-              title.style.color = "#2fa678";
-              contents.style.background = "white";
-
-              if (document.querySelector("#pp_title_sub_b") !== null) {
-                document.querySelector("#pp_title_sub_b").remove();
-              }
-
-              title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_address="' + address + '" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
-
-              instance.toggleSetting.first = 1;
             }, 300);
           }
         }
@@ -916,13 +950,15 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
   if (button === "on") {
     return function (e) {
       let selectionBoxBack, selectionBoxWording;
+      let thisValue;
+      let serid, xValue;
 
       if (instance.toggleSetting.first === 1 && instance.toggleSetting.second === 0) {
 
         service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
         for (let i of service) {
-          i.style.background = "white";
-          i.children[0].style.color = "#2fa678";
+          i.style.background = GeneralJs.colorChip.white;
+          i.children[0].style.color = GeneralJs.colorChip.green;
           i.children[0].style.fontSize = "1.7vh";
         }
 
@@ -939,8 +975,12 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
         selectionBoxBack = e.target.parentNode.parentNode;
         selectionBoxWording = e.target.parentNode.parentNode.children[0];
 
-        selectionBoxBack.style.background = "#2fa678";
-        selectionBoxWording.style.color = "white";
+        selectionBoxBack.style.background = GeneralJs.colorChip.green;
+        selectionBoxWording.style.color = GeneralJs.colorChip.white;
+
+        thisValue = e.target.parentElement.getAttribute("cus_value");
+        serid = e.target.parentElement.getAttribute("serid");
+        xValue = e.target.parentElement.getAttribute("xValue");
 
         ProposalJs.toggleTimeout.second = setTimeout(function () {
 
@@ -953,9 +993,12 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
             document.querySelector("#pp_title2_sub_b").remove();
           }
 
-          domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title2_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_value") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+          domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', `<b id="pp_title2_sub_b" serid="${serid}" xValue="${xValue}" cus_id="${thisValue}" cus_id="${thisValue}" style="color:${GeneralJs.colorChip.green};font-weight:300"> : ${thisValue}</b>`);
           domBox.get("서비스 선택").style.height = "3.2vh";
           domBox.get("서비스 선택").style.borderBottom = "1px solid #ececec";
+
+          instance.serid = serid;
+          instance.xValue = xValue;
 
           for (let i of service) {
             i.style.opacity = "0";
@@ -1064,7 +1107,7 @@ ProposalJs.prototype.secondProcess = async function () {
   let second = {};
   let h;
   let div_clone, div_clone2, div_clone3, div_clone4, input_clone, label_clone;
-  let serviceX, serviceY;
+  let serviceX, serviceY, xValue;
   let style;
   let ea = "px";
 
@@ -1075,6 +1118,7 @@ ProposalJs.prototype.secondProcess = async function () {
   h = document.createDocumentFragment();
   serviceX = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "설계 변경" ];
   serviceY = [ "mini", "basic", "premium" ];
+  xValue = [ "M", "B", "P" ];
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   div_clone.classList.add("pp_contents_inbox");
@@ -1107,6 +1151,8 @@ ProposalJs.prototype.secondProcess = async function () {
       label_clone.classList.add("pp_clients_label");
       label_clone.setAttribute("for", "pp_service_input" + String(j) + String(i));
       label_clone.setAttribute("cus_value", serviceX[j] + ' ' + serviceY[i]);
+      label_clone.setAttribute("serid", String(j + 1));
+      label_clone.setAttribute("xValue", xValue[i]);
       label_clone.addEventListener("click", this.secondToggle("on", this.domBox));
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
       div_clone3.classList.add("garim");
@@ -1238,7 +1284,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     }
   }
 
-  money_set = function (onoff, s = 0) {
+  money_set = function (onoff, s, feeObject = null) {
     let div_clone, div_clone2, div_clone3, input_clone;
 
     //set
@@ -1265,7 +1311,15 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     input_clone.setAttribute("type", "text");
     input_clone.classList.add("pp_designer_selected_box_contents_money_input");
     if (typeof onoff === "string") {
-      input_clone.value = "2,000,000";
+      if (feeObject === null) {
+        input_clone.value = GeneralJs.autoComma(2000000);
+      } else {
+        if (/오프/gi.test(onoff) || /off/gi.test(onoff)) {
+          input_clone.value = GeneralJs.autoComma(feeObject.detail.offline);
+        } else {
+          input_clone.value = GeneralJs.autoComma(feeObject.detail.online);
+        }
+      }
     } else {
       input_clone.value = GeneralJs.autoComma(String(onoff.fee[s].amount));
     }
@@ -1284,107 +1338,108 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   }
 
   fourth.events.designer = function (e) {
+    const card = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
     const desid = this.getAttribute("cus_desid");
-    const thisNum = this.getAttribute("cus_num");
+    const cliid = instance.cliid;
+    const serid = instance.serid;
+    const xValue = instance.xValue;
     const address = this.getAttribute("cus_address");
-    const getnode = function (num, boo = true) {
+    const getnode = (num, boo = true) => {
       if (boo) {
         return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[num].style;
       } else {
         return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[1].children[0].style;
       }
     }
+    const inputTargets = card.querySelectorAll(".pp_designer_selected_box_contents_money_set");
 
-    GeneralJs.ajaxJson({
-      mode: "inspection",
-      addressArr: [ { id: desid, address: address } ]
-    }, "/parsingAddress").then((inspectionArr) => {
-      if (inspectionArr.length !== 0) {
-        window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionArr[0].id;
-      } else {
-
-        this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.setAttribute("desid", desid);
-        this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.setAttribute("address", address);
-
-        getnode(0).color = "#2fa678";
-        getnode(1).background = "#2fa678";
-        getnode(1, false).color = "white";
-
-        let target;
-        if ((target = document.getElementById("pp_designer_selected_box_contents_selection" + this.getAttribute("cus_num"))) !== null) {
-          while (target.firstChild) {
-            target.removeChild(target.lastChild);
-          }
-          target.textContent = this.getAttribute("cus_value") + " 디자이너의 사진 선택";
-        }
-
-        target = document.querySelectorAll('.pp_designer_selected_box_value')[Number(this.getAttribute("cus_num"))];
-        if (target.textContent !== "") {
-          target.textContent = '';
-        }
-
-        GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ desid }), "/getDesigners", function (raw_designers) {
-          const { information: { business: { service: { cost: { matrix: { service } } } } } } = JSON.parse(raw_designers)[0];
-          const inputTargets = document.querySelectorAll(".pp_designer_selected_box_contents_money_input");
-          const inputTarget = inputTargets[Number(thisNum)];
-          if (service.length > 0) {
-            GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ cliid: document.getElementById("pp_title_sub_b").getAttribute("cus_id") }), "/getClients", function (raw_clients) {
-              const client = JSON.parse(raw_clients)[0];
-              let data = '';
-              let rawService, serviceTarget;
-
-              rawService = document.getElementById("pp_title2_sub_b").getAttribute("cus_id");
-              serviceTarget = [];
-              if (/홈퍼/g.test(rawService)) {
-                serviceTarget.push(0);
-              } else if (/홈스/g.test(rawService)) {
-                serviceTarget.push(1);
-              } else if (/토탈/g.test(rawService) || /설계/g.test(rawService)) {
-                serviceTarget.push(2);
-              }
-              if (/mini/g.test(rawService)) {
-                serviceTarget.push('M');
-              } else if (/basic/g.test(rawService)) {
-                serviceTarget.push('B');
-              } else if (/pre/g.test(rawService)) {
-                serviceTarget.push('P');
-              }
-
-              data += "serviceArr=";
-              data += JSON.stringify(service);
-              data += "&pyeong=";
-              data += String(client.requests[0].request.space.pyeong);
-              data += "&thisService=";
-              data += JSON.stringify(serviceTarget);
-
-              GeneralJs.ajax(data, "/calculateService", function (raw_result) {
-                const { result } = JSON.parse(raw_result);
-                inputTarget.value = GeneralJs.autoComma(result);
-              });
-            });
-          } else {
-            inputTarget.value = GeneralJs.autoComma(0);
-          }
-
-        });
-
+    (new Promise(function(resolve, reject) {
+      resolve(null);
+    })).then(() => {
+      for (let dom of inputTargets) {
+        dom.querySelector("input").value = "연산중";
       }
+
+      card.setAttribute("desid", desid);
+      card.setAttribute("address", address);
+      getnode(0).color = GeneralJs.colorChip.green;
+      getnode(1).background = GeneralJs.colorChip.green;
+      getnode(1, false).color = GeneralJs.colorChip.white;
+      let target;
+      if ((target = document.getElementById("pp_designer_selected_box_contents_selection" + this.getAttribute("cus_num"))) !== null) {
+        while (target.firstChild) {
+          target.removeChild(target.lastChild);
+        }
+        target.textContent = this.getAttribute("cus_value") + " 디자이너의 사진 선택";
+      }
+      target = document.querySelectorAll('.pp_designer_selected_box_value')[Number(this.getAttribute("cus_num"))];
+      if (target.textContent !== "") {
+        target.textContent = '';
+      }
+
+      if (instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
+        return new Promise((resolve, reject) => { resolve([ instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) ]); });
+      } else {
+        return GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee");
+      }
+    }).then((raw_fee) => {
+      if (!Array.isArray(raw_fee)) {
+        window.alert("오류 발생, 관리자에게 문의하세요!");
+        window.location.reload();
+      }
+      if (raw_fee.length === 0) {
+        window.alert("오류 발생, 관리자에게 문의하세요!");
+        window.location.reload();
+      }
+      const result = raw_fee[0];
+
+      if (!instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
+        instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
+      }
+
+      for (let dom of inputTargets) {
+        if (/online/g.test(dom.className)) {
+          dom.querySelector("input").value = GeneralJs.autoComma(result.detail.online);
+        } else {
+          dom.querySelector("input").value = GeneralJs.autoComma(result.detail.offline);
+        }
+      }
+
     }).catch((err) => {
       console.log(err);
     });
   }
 
-  fourth.events.service = function (e) {
-    let n = this.getAttribute("cus_id").replace(/[^0-9]/g, '');
-    if (document.getElementById(this.parentElement.getAttribute("for")).checked) {
-      if (document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)) !== null) {
-        document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)).querySelector(".pp_designer_selected_box_contents_money_set" + ((this.getAttribute("cus_value") === "오프라인") ? "_offline" : "_online")).remove();
+  fourth.events.service = async function (e) {
+    try {
+
+      const card = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+      let n = this.getAttribute("cus_id").replace(/[^0-9]/g, '');
+      let desid, cliid, serid, xValue;
+      let result;
+
+      if (document.getElementById(this.parentElement.getAttribute("for")).checked) {
+        if (document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)) !== null) {
+          document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)).querySelector(".pp_designer_selected_box_contents_money_set" + ((this.getAttribute("cus_value") === "오프라인") ? "_offline" : "_online")).remove();
+        }
+      } else {
+        if (document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)) !== null) {
+          desid = card.getAttribute("desid");
+          cliid = instance.cliid;
+          serid = instance.serid;
+          xValue = instance.xValue;
+          if (instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
+            result = instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
+          } else {
+            result = (await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee"))[0];
+            instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
+          }
+          document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)).appendChild(money_set(this.getAttribute("cus_value"), 0, result));
+        }
       }
-    } else {
-      if (document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)) !== null) {
-        document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)).appendChild(money_set(this.getAttribute("cus_value")));
-      }
+
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -1412,8 +1467,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   }
 
   //디자이너 이름
-  designers = await GeneralJs.ajaxJson("", "/getDesigners");
-  designers = designers.data;
+  designers = instance.designers;
 
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
     let input, div_clone, div_clone2, div_clone3, input_clone, label_clone;
@@ -1433,22 +1487,22 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
 
       input_clone = input.cloneNode(true);
       input_clone.id = "pp_designer_selected_box_contents_designers_input" + String(n) + String(i);
-      input_clone.value = designer.standard.desid;
+      input_clone.value = designer.desid;
 
       div_clone.appendChild(input_clone);
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       div_clone2.classList.add("pp_designer_selected_box_contents_designers");
-      div_clone2.textContent = designer.standard.designer;
+      div_clone2.textContent = designer.designer;
 
       label_clone = GeneralJs.nodes.label.cloneNode(true);
       label_clone.setAttribute("for", "pp_designer_selected_box_contents_designers_input" + String(n) + String(i));
 
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
       div_clone3.classList.add("garim");
-      div_clone3.setAttribute("cus_desid", designer.standard.desid);
-      div_clone3.setAttribute("cus_value", designer.standard.designer);
+      div_clone3.setAttribute("cus_desid", designer.desid);
+      div_clone3.setAttribute("cus_value", designer.designer);
       div_clone3.setAttribute("cus_num", String(n));
-      div_clone3.setAttribute("cus_address", designer.info.address);
+      div_clone3.setAttribute("cus_address", designer.information.address.length === 0 ? "" : designer.information.address[0]);
       div_clone3.addEventListener("click", fourth.events.designer);
 
       label_clone.appendChild(div_clone3);
@@ -1457,7 +1511,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
       div_clone.appendChild(div_clone2);
 
       if (obj.proposal !== undefined) {
-        if (designer.standard.desid === obj.proposal[n].desid) {
+        if (designer.desid === obj.proposal[n].desid) {
           input_clone.checked = true;
         }
       }
@@ -1487,7 +1541,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     let div_clone, div_clone2, div_clone3, input_clone, label_clone;
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_designer_selected_box_contents_service_total");
-    let service = [ "오프라인", "온라인", "부분 공간" ];
+    let service = [ "오프라인", "온라인" ];
 
     for (let i = 0; i < service.length; i++) {
       input_clone = input.cloneNode(true);
@@ -1509,7 +1563,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
       div_clone3.classList.add("garim");
       div_clone3.setAttribute("cus_value", service[i]);
       div_clone3.setAttribute("cus_id", 's' + String(n));
-      if (i !== 2) { div_clone3.addEventListener("click", fourth.events.service); }
+      if (i !== 2) {
+        div_clone3.addEventListener("click", fourth.events.service);
+      }
       label_clone.appendChild(div_clone3);
       div_clone2.appendChild(label_clone);
       div_clone.appendChild(div_clone2);
@@ -1544,7 +1600,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     div_clone.id = "pp_designer_selected_box_contents_money" + String(n);
     //------------------------------------------------------------------------
     if (obj.proposal === undefined) {
-      div_clone.appendChild(money_set("오프라인"));
+      div_clone.appendChild(money_set("오프라인", 0));
     } else {
       for (let i = 0; i < obj.proposal[n].fee.length; i++) {
         div_clone.appendChild(money_set(obj.proposal[n], i));
@@ -1564,8 +1620,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
     //------------------------------------------------------------------------
     if (obj.proposal !== undefined) {
       for (let d of designers) {
-        if (d.standard.desid === obj.proposal[n].desid) {
-          div_clone.textContent = d.standard.designer + " 디자이너의 사진 선택";
+        if (d.desid === obj.proposal[n].desid) {
+          div_clone.textContent = d.designer + " 디자이너의 사진 선택";
         }
       }
       div_clone.style.color = "white";
@@ -2229,10 +2285,10 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
   let contents;
 
   popupDom = new Map();
-  designer = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
-  contents = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: designer[0].desid }), "/getContents"));
-  ghost = JSON.parse(await GeneralJs.ajaxPromise("desid=" + designer[0].desid, "/getDesignerGhost"));
-  ghost.push(designer[0].setting.ghost);
+  designer = this.designers.pick(desid);
+  contents = await GeneralJs.ajaxJson("noFlat=true&where=" + JSON.stringify({ desid: designer.desid }), "/getContents");
+  ghost = await GeneralJs.ajaxJson("desid=" + designer.desid, "/getDesignerGhost");
+  ghost.push(designer.setting.ghost);
 
   return function () {
     let div_clone;
@@ -2245,13 +2301,13 @@ ProposalJs.prototype.fifthProcess = async function (desid, id) {
     popupDom.set("cancelBack", div_clone);
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_fifth_whitebox");
-    div_clone.setAttribute("cus_designer", designer[0].designer);
-    div_clone.setAttribute("cus_desid", designer[0].desid);
+    div_clone.setAttribute("cus_designer", designer.designer);
+    div_clone.setAttribute("cus_desid", designer.desid);
     div_clone.setAttribute("cus_boxid", String(id));
     total.appendChild(div_clone);
 
     popupDom.set("whiteBox", div_clone);
-    instance.fifthWhiteup(div_clone, contents, id, ghost, designer[0].setting.proposal);
+    instance.fifthWhiteup(div_clone, contents, id, ghost, designer.setting.proposal);
     instance.fifthChildren = popupDom;
   }
 }
@@ -2620,7 +2676,7 @@ ProposalJs.prototype.list_mainArea = async function (searchQuery = null, limit =
     xValueMap.set("B", "basic");
     xValueMap.set("P", "premium");
 
-    designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true", "/getDesigners"));
+    designers = this.designers;
     designersObj = {};
     for (let d of designers) {
       designersObj[d.desid] = d.designer;
@@ -3432,12 +3488,10 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               let method;
               let updateQuery;
               let thisProject_raw;
-              let selectedDesigner_raw, selectedDesigner;
+              let selectedDesigner;
               try {
-                selectedDesigner_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ desid: desid }), "/getDesigners"));
+                selectedDesigner = instance.designers.pick(desid);
                 thisProject_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: proid }), "/getProjects"));
-
-                selectedDesigner = selectedDesigner_raw[0];
 
                 updateQuery = { desid: desid, "service.serid": serid, "service.xValue": xValue, "service.online": onoffLine, "process.status": "대기" };
 
@@ -3882,7 +3936,7 @@ ProposalJs.save_init = async function (update = false) {
       } else {
         target = target.querySelector("#pp_title_sub_b");
         result_obj["cliid"] = target.getAttribute("cus_id");
-        inspectionResult = await GeneralJs.ajaxJson({ mode: "inspection", addressArr: [ { id: result_obj["cliid"], address: target.getAttribute("cus_address") } ] }, "/parsingAddress");
+        inspectionResult = await GeneralJs.ajaxJson({ mode: "inspection", addressArr: [ { id: result_obj["cliid"], address: target.getAttribute("cus_address"), liteMode: false } ] }, "/parsingAddress");
         if (inspectionResult.length !== 0) {
           window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionResult[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
           window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionResult[0].id;
@@ -4008,14 +4062,6 @@ ProposalJs.save_init = async function (update = false) {
         result_obj["proposal.detail"][i].pictureSettings = tagParsingObj;
         result_obj["proposal.detail"][i].description = descriptionArr;
       }
-      // inspectionResult = await GeneralJs.ajaxJson({ mode: "inspection", addressArr }, "/parsingAddress");
-      // if (inspectionResult.length !== 0) {
-      //   window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + JSON.stringify(inspectionResult, null, 2) + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
-      //   window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionResult[0].id;
-      //   loadingCancelBox.remove();
-      //   loadingLoadingIcon.remove();
-      //   return "fail";
-      // }
 
     }
 
@@ -4423,7 +4469,7 @@ ProposalJs.prototype.cssInjection = function () {
     height: 6px;
     background: #bbbbbb;
     border-radius: 10px;
-    top: calc(50% - 3px);
+    top: calc(50% - 4px);
     left: -2px;
   }
 
@@ -5129,10 +5175,13 @@ ProposalJs.prototype.cssInjection = function () {
 ProposalJs.prototype.launching = async function () {
   const instance = this;
   const { arrow: { left, right }, square: { up, down, reportIcon, returnIcon }, sub: { extractIcon } } = this.mother.belowButtons;
+  const { ajaxJson } = GeneralJs;
   try {
 
-    left.style.display = 'none';
-    right.style.display = 'none';
+    this.designers = new Designers(await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $regex: "완료" } } }, "/getDesigners", { equal: true }));
+
+    left.style.display = "none";
+    right.style.display = "none";
 
     this.mother.below.removeChild(this.mother.belowButtons.moveArea.left);
     this.mother.below.removeChild(this.mother.belowButtons.moveArea.right);
@@ -5142,6 +5191,18 @@ ProposalJs.prototype.launching = async function () {
     this.domBox = await this.firstProcess();
     this.thirdChildren = await this.thirdProcess();
     await this.secondProcess();
+
+    GeneralJs.ajaxJson({
+      mode: "inspection",
+      addressArr: Array.from(this.designers).map((designer) => { return { id: designer.desid, address: designer.information.address.length === 0 ? "" : designer.information.address[0] } })
+    }, "/parsingAddress").then((inspectionArr) => {
+      if (inspectionArr.length !== 0) {
+        window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionArr[0].id;
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
 
     let query = GeneralJs.returnGet();
     let proposal_list_raw, proposal_obj;

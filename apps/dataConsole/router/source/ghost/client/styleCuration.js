@@ -1986,6 +1986,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 const { left, width } = bar.getBoundingClientRect();
                 let percentage;
                 percentage = ((x - left) / width) * 100;
+                barBox.style.transition = "all 0.3s ease";
                 barBox.style.width = String(percentage) + '%';
                 barBox.setAttribute("value", String(percentage));
               }

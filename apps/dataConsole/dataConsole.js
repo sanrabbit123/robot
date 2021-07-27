@@ -69,6 +69,9 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
   const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
+  const classException = {
+    proposal: [ "designer.js" ],
+  };
   try {
 
     //set static
@@ -202,6 +205,12 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       if (await fileSystem(`exist`, [ `${this.dir}/router/source/class/${i}` ])) {
         classString = await fileSystem(`readString`, [ `${this.dir}/router/source/class/${i}` ]);
         fileString = classString.replace(/module\.exports \= [^\n]+/gi, '') + "\n\n" + fileString;
+      }
+      if (classException[i.replace(/\.js$/, '')] !== undefined) {
+        for (let add of classException[i.replace(/\.js$/, '')]) {
+          classString = await fileSystem(`readString`, [ `${this.dir}/router/source/class/${add}` ]);
+          fileString = classString.replace(/module\.exports \= [^\n]+/gi, '') + "\n\n" + fileString;
+        }
       }
 
       //set data patch

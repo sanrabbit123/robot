@@ -1512,67 +1512,6 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_calculateService = function () {
-  const instance = this;
-  const back = this.back;
-  const sheets = this.sheets;
-  const drive = this.drive;
-  let obj = {};
-  obj.link = "/calculateService";
-  obj.func = async function (req, res) {
-    try {
-      let { serviceArr, pyeong, thisService } = req.body;
-
-      serviceArr = JSON.parse(serviceArr);
-      pyeong = Number(pyeong);
-      thisService = JSON.parse(thisService);
-
-      const service = await instance.back.getServiceById(serviceArr[thisService[0]].serid);
-      const { x, y } = service.standard;
-      const matrix = service.getMatrixByNumber(serviceArr[thisService[0]].case);
-      let xNum, yNum;
-      let result;
-
-      for (let i = 0; i < x.length; i++) {
-        if (x[i] === thisService[1]) {
-          xNum = i;
-        }
-      }
-
-      for (let i = 0; i < y.length; i++) {
-        if (y[i][0] <= pyeong) {
-          if (y[i][1] > pyeong) {
-            yNum = i;
-          }
-        }
-      }
-
-      if (matrix[yNum] !== undefined) {
-        if (typeof matrix[yNum][xNum] === "string") {
-          result = pyeong * Number(matrix[yNum][xNum].replace(/py/gi, ''));
-        } else {
-          result = matrix[yNum][xNum];
-        }
-      } else {
-        result = 0;
-      }
-
-      if (Math.floor(result) === 0) {
-        result = 0;
-      } else {
-        result = Math.round(result) * 10000;
-      }
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ result }));
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_createAiDocument = function () {
   const instance = this;
   const back = this.back;
@@ -2421,11 +2360,12 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
           throw new Error("must be addressArr");
         }
         const addressArr = JSON.parse(req.body.addressArr);
+        const liteMode = req.body.liteMode === undefined ? true : (typeof req.body.liteMode === "string" ? req.body.liteMode === "true" : req.body.liteMode);
         for (let obj of addressArr) {
           if (obj.id === undefined || obj.address === undefined) {
             throw new Error("invaild address array => [ { id, address }... ]");
           }
-          result = await addressApp.addressInspection(addressArr);
+          result = await addressApp.addressInspection(addressArr, liteMode);
         }
       } else if (mode === "distance") {
         if (req.body.from === undefined || req.body.to === undefined) {
@@ -2836,6 +2776,52 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_designerFee = function () {
+  const instance = this;
+  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+  const work = new BackWorker();
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/designerFee" ];
+  obj.func = async function (req, res) {
+    try {
+      const option = { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal };
+      if (req.body.matrix === undefined) {
+        throw new Error("must be matrix");
+      }
+      const matrix = equalJson(req.body.matrix);
+      let resultObj, temp;
+
+      if (!Array.isArray(matrix)) {
+        throw new Error("invaild post");
+      }
+
+      if (matrix.every((a) => { return typeof a === "string" && /^p/.test(a); })) {
+        resultObj = {};
+        for (let proid of matrix) {
+          resultObj[proid] = await work.getDesignerFee(proid, option);
+        }
+      } else if (matrix.every((a) => { return Array.isArray(a) && a.length === 4; })) {
+        resultObj = [];
+        for (let [ desid, cliid, serid, xValue ] of matrix) {
+          temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
+          resultObj.push(temp);
+        }
+      } else {
+        throw new Error("invaild matrix");
+      }
+
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify(resultObj));
+    } catch (e) {
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify([ null ]));
     }
   }
   return obj;

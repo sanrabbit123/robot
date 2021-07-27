@@ -851,13 +851,30 @@ BackWorker.prototype.designerCalculation = async function () {
   }
 }
 
-BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMongo: null, selfLocalMongo: null }) {
-  if (typeof proid !== "string") {
-    throw new Error("invaild proid");
-  } else {
-    if (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid)) {
-      throw new Error("invaild proid");
+BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null, xValue = null, option = { selfMongo: null, selfLocalMongo: null }) {
+  if (typeof proid === "string" && /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid)) {
+    if (typeof cliid !== "object" || cliid === null) {
+      cliid = { selfMongo: null, selfLocalMongo: null };
     }
+    option = cliid;
+  } else if (typeof proid === "string" && /^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid)) {
+    if (typeof cliid !== "string" || typeof serid !== "string" || typeof xValue !== "string") {
+      throw new Error("invaild input");
+    }
+    if (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid)) {
+      throw new Error("invaild input");
+    }
+    if (!/[0-9]/gi.test(serid)) {
+      throw new Error("invaild input");
+    }
+    if (!/\_/g.test(serid)) {
+      serid = "s_" + serid.replace(/[^0-9]/gi, '');
+    }
+    if (typeof option !== "object" || option === null) {
+      option = { selfMongo: null, selfLocalMongo: null };
+    }
+  } else {
+    throw new Error("invaild proid");
   }
   const newcomers = [ "곽수빈" ];
   const instance = this;
@@ -871,6 +888,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
     let MONGOC, MONGOLOCALC;
     let requestNumber;
     let designers, desidArr;
+    let desid;
     let client, project;
     let priceStandard, price;
     let priceStandardConst, priceStandardCollection;
@@ -886,10 +904,24 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
     let homeliaison, alpha, alphaPercentage;
     let onlineFee;
     let relationItems;
+    let mode;
+    let offlineFeeCase;
+    let onlineFeeCase;
+    let toMoney;
 
     priceStandardCollection = "designerPrice";
     priceStandardConst = 33;
     onlineRatio = 0.8;
+
+    if (typeof cliid === "object") {
+      mode = 0;
+    } else {
+      mode = 1;
+      desid = proid;
+      if (typeof desid !== "string" || typeof cliid !== "string" || typeof serid !== "string" || typeof xValue !== "string") {
+        throw new Error("invaild input");
+      }
+    }
 
     if (option.selfMongo === null || option.selfMongo === undefined) {
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -905,28 +937,41 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
       MONGOLOCALC = option.selfLocalMongo;
     }
 
-    project = await back.getProjectById(proid, { selfMongo: MONGOC });
-    if (project === null) {
-      throw new Error("invaild designer or client");
-    }
-    client = await back.getClientById(project.cliid, { selfMongo: MONGOC });
-    requestNumber = 0;
-    proposalDate = project.proposal.date.valueOf();
-    for (let i = 0; i < client.requests.length; i++) {
-      if (i === 0) {
-        if (proposalDate >= client.requests[i].request.timeline.valueOf()) {
-          requestNumber = i;
-        }
-      } else {
-        if (proposalDate <= client.requests[i - 1].request.timeline.valueOf() && proposalDate >= client.requests[i].request.timeline.valueOf()) {
-          requestNumber = i;
+
+    if (mode === 0) {
+
+      project = await back.getProjectById(proid, { selfMongo: MONGOC });
+      if (project === null) {
+        throw new Error("invaild project");
+      }
+      client = await back.getClientById(project.cliid, { selfMongo: MONGOC });
+      requestNumber = 0;
+      proposalDate = project.proposal.date.valueOf();
+      for (let i = 0; i < client.requests.length; i++) {
+        if (i === 0) {
+          if (proposalDate >= client.requests[i].request.timeline.valueOf()) {
+            requestNumber = i;
+          }
+        } else {
+          if (proposalDate <= client.requests[i - 1].request.timeline.valueOf() && proposalDate >= client.requests[i].request.timeline.valueOf()) {
+            requestNumber = i;
+          }
         }
       }
+      if (client.requests[requestNumber] === undefined) {
+        throw new Error("invaild client request number");
+      }
+      request = client.requests[requestNumber].request;
+
+    } else if (mode === 1) {
+
+      client = await back.getClientById(cliid, { selfMongo: MONGOC });
+      requestNumber = 0;
+      request = client.requests[requestNumber].request;
+
+    } else {
+      throw new Error("mode Error");
     }
-    if (client.requests[requestNumber] === undefined) {
-      throw new Error("invaild client request number");
-    }
-    request = client.requests[requestNumber].request;
 
     clientAddress = await addressApp.getAddress(request.space.address.value);
     if (clientAddress === null) {
@@ -941,23 +986,37 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
 
     x = null;
     for (let i = 0; i < priceStandard.standard.x.value.length; i++) {
-      if (priceStandard.standard.x.value[i][0] <= request.space.pyeong.value && request.space.pyeong.value <= priceStandard.standard.x.value[i][1]) {
-        x = i;
+      if (i !== priceStandard.standard.x.value.length - 1) {
+        if (priceStandard.standard.x.value[i][0] <= request.space.pyeong.value && request.space.pyeong.value < priceStandard.standard.x.value[i + 1][0]) {
+          x = i;
+        }
+      } else {
+        if (priceStandard.standard.x.value[i][0] <= request.space.pyeong.value) {
+          x = i;
+        }
       }
     }
     if (x === null) {
       throw new Error("pyeong error");
     }
 
-    y = Number((project.service.serid.split('_'))[1].replace(/[^0-9]/g, '').replace(/^0/, '').replace(/^0/, '').replace(/^0/, '')) - 1;
-    if (Number.isNaN(y)) {
-      throw new Error("service error");
+    if (mode === 0) {
+      y = Number((project.service.serid.split('_'))[1].replace(/[^0-9]/g, '').replace(/^0/, '').replace(/^0/, '').replace(/^0/, '')) - 1;
+      if (Number.isNaN(y)) {
+        throw new Error("service error");
+      }
+      desidArr = [];
+      for (let { desid } of project.proposal.detail) {
+        desidArr.push({ desid });
+      }
+    } else {
+      y = Number((serid.split('_'))[1].replace(/[^0-9]/g, '').replace(/^0/, '').replace(/^0/, '').replace(/^0/, '')) - 1;
+      if (Number.isNaN(y)) {
+        throw new Error("service error");
+      }
+      desidArr = [ { desid } ];
     }
 
-    desidArr = [];
-    for (let { desid } of project.proposal.detail) {
-      desidArr.push({ desid });
-    }
     designers = await back.getDesignersByQuery({ $or: desidArr }, { selfMongo: MONGOC });
     if (designers.length === 0) {
       throw new Error("no designer error");
@@ -966,18 +1025,24 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
     tong = [];
     for (let designer of designers) {
 
-      proposal = project.selectProposal(designer.desid);
-      if (proposal === null) {
-        throw new Error("invaild desid");
+      if (mode === 0) {
+        proposal = project.selectProposal(designer.desid);
+        if (proposal === null) {
+          throw new Error("invaild desid");
+        }
+
+        onlineBoo = false;
+        for (let obj of proposal.fee) {
+          if (/online/.test(obj.method)) {
+            onlineBoo = true;
+          }
+        }
+        premiumBoo = (project.service.xValue === 'P');
+      } else if (mode === 1) {
+        onlineBoo = false;
+        premiumBoo = (xValue === 'P');
       }
 
-      onlineBoo = false;
-      for (let obj of proposal.fee) {
-        if (/online/.test(obj.method)) {
-          onlineBoo = true;
-        }
-      }
-      premiumBoo = (project.service.xValue === 'P');
       newcomerBoo = newcomers.includes(designer.designer);
 
       designerAddress = await addressApp.getAddress(designer.information.address[0].value);
@@ -1030,6 +1095,8 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
       fee = alphaPercentage * fee;
 
       if (onlineBoo) {
+        distanceBoo = false;
+        offlineFeeCase = fee;
         onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
         if (priceStandard.online.minus.min > onlineFee) {
           onlineFee = priceStandard.online.minus.min;
@@ -1041,25 +1108,43 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
         if (priceStandard.online.absolute.min > fee) {
           fee = priceStandard.online.absolute.min;
         }
+      } else {
+        onlineFeeCase = fee;
+        onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
+        if (priceStandard.online.minus.min > onlineFee) {
+          onlineFee = priceStandard.online.minus.min;
+        }
+        if (priceStandard.online.minus.max < onlineFee) {
+          onlineFee = priceStandard.online.minus.max;
+        }
+        onlineFeeCase = onlineFeeCase - onlineFee;
+        if (priceStandard.online.absolute.min > onlineFeeCase) {
+          onlineFeeCase = priceStandard.online.absolute.min;
+        }
       }
 
       if (distanceBoo) {
         fee = fee + travelInfo.amount;
       }
 
+      toMoney = (num) => { return (Math.round(num / 10000) * 10000); }
+
       tong.push({
         desid: designer.desid,
         designer: designer.designer,
         cliid: client.cliid,
         client: client.name,
-        proid: project.proid,
+        proid: mode === 0 ? project.proid : "",
         detail: {
           original: fee,
           alpha: alpha,
+          serid: mode === 0 ? project.service.serid : serid,
+          xValue: mode === 0 ? project.service.xValue : xValue,
           newcomer: newcomerBoo,
           premium: premiumBoo,
-          online: onlineBoo,
-          distance: (distanceBoo ? travelInfo.amount : 0),
+          online: onlineBoo ? toMoney(fee) : toMoney(onlineFeeCase),
+          offline: onlineBoo ? toMoney(offlineFeeCase) : toMoney(fee),
+          distance: travelInfo.amount,
           xy: { x, y },
           pyeong: request.space.pyeong.value,
           level: {
@@ -1067,7 +1152,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
             styling: designer.analytics.styling.level,
           },
         },
-        fee: (Math.round(fee / 10000) * 10000)
+        fee: toMoney(fee)
       });
     }
 
@@ -1079,7 +1164,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, option = { selfMong
       await MONGOLOCALC.close();
     }
 
-    return tong;
+    if (mode === 0) {
+      return tong;
+    } else if (mode === 1) {
+      return tong[0];
+    }
 
   } catch (e) {
     console.log(e);

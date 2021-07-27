@@ -536,7 +536,7 @@ AddressParser.prototype.getAllImmovables = async function () {
   }
 }
 
-AddressParser.prototype.addressInspection = async function (addressArr) {
+AddressParser.prototype.addressInspection = async function (addressArr, liteMode = false) {
   if (!Array.isArray(addressArr)) {
     throw new Error("input must be address array");
   }
@@ -548,7 +548,7 @@ AddressParser.prototype.addressInspection = async function (addressArr) {
   const instance = this;
   const { fileSystem } = this.mother;
   try {
-    const inspection = async function (id, address) {
+    const inspection = async function (id, address, liteMode = false) {
       if (id === undefined || address === undefined) {
         throw new Error("invaild input");
       }
@@ -585,16 +585,18 @@ AddressParser.prototype.addressInspection = async function (addressArr) {
           }
         }
 
-        searchResult = await instance.getAddress(address);
-        if (searchResult === null) {
-          return { boo: false, message: "ERROR: 검색 결과가 없음" };
-        }
+        if (!liteMode) {
+          searchResult = await instance.getAddress(address);
+          if (searchResult === null) {
+            return { boo: false, message: "ERROR: 검색 결과가 없음" };
+          }
 
-        first = addressArr[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
-        road = searchResult.address.road.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
-        parcel = searchResult.address.parcel.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
-        if (first !== road && first !== parcel) {
-          return { boo: false, message: "ERROR: 광역 단계 일치하지 않음" };
+          first = addressArr[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
+          road = searchResult.address.road.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
+          parcel = searchResult.address.parcel.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
+          if (first !== road && first !== parcel) {
+            return { boo: false, message: "ERROR: 광역 단계 일치하지 않음" };
+          }
         }
 
         return { boo: true, message: "SUCCESS" };
@@ -606,7 +608,7 @@ AddressParser.prototype.addressInspection = async function (addressArr) {
 
     failAddress = [];
     for (let { id, address } of addressArr) {
-      inspectionResult = await inspection(id, address);
+      inspectionResult = await inspection(id, address, liteMode);
       if (!inspectionResult.boo) {
         failAddress.push({ id, address, message: inspectionResult.message });
       }
