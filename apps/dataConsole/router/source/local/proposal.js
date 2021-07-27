@@ -986,8 +986,8 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
 
           instance.below_launching("third", button);
 
-          domBox.get("서비스 선택").children[0].style.color = "#2fa678";
-          domBox.get("서비스 선택").children[1].style.background = "white";
+          domBox.get("서비스 선택").children[0].style.color = GeneralJs.colorChip.green;
+          domBox.get("서비스 선택").children[1].style.background = GeneralJs.colorChip.white;
 
           if (document.querySelector("#pp_title2_sub_b") !== null) {
             document.querySelector("#pp_title2_sub_b").remove();
@@ -1029,12 +1029,13 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
             GeneralJs.ajax("id=" + instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id"), "/parsingProposal", function (obj) {
               let { result } = JSON.parse(obj);
               instance.firstDo_secondToggle = false;
+              instance.clickTargets = [];
               if (result !== null) {
                 result.client = instance.domBox.get("고객 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
                 result.cliid = instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id");
                 result.service = instance.domBox.get("서비스 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
                 instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(result.proposal.length) + "명");
-                (instance.load_processLoad_third())(result);
+                (instance.load_processLoad_third())(result, true);
               }
             });
           }
@@ -1245,7 +1246,7 @@ ProposalJs.prototype.thirdProcess = async function () {
 
 // Create process 4 ------------------------------------------------------------
 
-ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
+ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = false) {
   const instance = this;
   const domBox = this.domBox;
   let fourthChildren;
@@ -1253,6 +1254,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
   let fourth;
   let money_set;
   let designers;
+  let clickTargets;
 
   fourthChildren = new Map();
   thirdChildren = this.thirdChildren;
@@ -1513,10 +1515,32 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj = {}) {
       if (obj.proposal !== undefined) {
         if (designer.desid === obj.proposal[n].desid) {
           input_clone.checked = true;
+          instance.clickTargets.push(input_clone.nextElementSibling);
         }
       }
 
       i = i + 1;
+    }
+
+    if (clickMode) {
+      if (GeneralJs.timeouts["firstClick"] !== undefined && GeneralJs.timeouts["firstClick"] !== null) {
+        clearTimeout(GeneralJs.timeouts["firstClick"]);
+      }
+      GeneralJs.timeouts["firstClick"] = setTimeout(async () => {
+        try {
+          console.log(instance.clickTargets);
+          for (let dom of instance.clickTargets) {
+            console.log(dom);
+            dom.querySelector("label").querySelector("div").click();
+            await GeneralJs.sleep(600);
+          }
+          instance.clickTargets = [];
+          clearTimeout(GeneralJs.timeouts["firstClick"]);
+          GeneralJs.timeouts["firstClick"] = null;
+        } catch (e) {
+          console.log(e);
+        }
+      }, 1000);
     }
 
     for (let j = 0; j < 10; j++) {
@@ -1929,7 +1953,7 @@ ProposalJs.prototype.fourthProcess = async function (num) {
     for (let i = 0; i < 3; i++) {
       this.thirdChildren.get("box" + String(i)).style.opacity = "0";
     }
-    setTimeout_func = await this.fourthsetTimeout(num);
+    setTimeout_func = await this.fourthsetTimeout(num, {}, false);
     ProposalJs.toggleTimeout.fourth = setTimeout(setTimeout_func, 550);
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
@@ -3848,21 +3872,21 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
       instance.thirdChildren.get("box1").style.border = "1px solid #dddddd";
     }
     ProposalJs.toggleTimeout.load_third = setTimeout(function () {
-      third(obj);
+      third(obj, false);
     }, 500);
   }, 550);
 }
 
 ProposalJs.prototype.load_processLoad_third = function () {
   const instance = this;
-  return async function (obj) {
+  return async function (obj, clickMode = false) {
     clearTimeout(ProposalJs.toggleTimeout.load_third);
     clearTimeout(ProposalJs.toggleTimeout.load_second);
     for (let i = 0; i < 3; i++) {
       instance.thirdChildren.get("box" + String(i)).style.opacity = "0";
     }
     let num = Number(instance.thirdChildren.get("box1_designerInput").getAttribute("value").replace(/[^0-9]/g, ''));
-    let setTimeout_func = await instance.fourthsetTimeout(num, obj);
+    let setTimeout_func = await instance.fourthsetTimeout(num, obj, clickMode);
     instance.toggleSetting.first = 1;
     instance.toggleSetting.second = 1;
     instance.toggleSetting.third = 1;
