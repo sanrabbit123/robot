@@ -1874,6 +1874,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         bar.style.width = withOut(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2), "px");
         barLeft = barText0.getBoundingClientRect().width + barTextMargin;
         bar.style.left = String(barLeft) + "px";
+      } else {
+        barLeft = 0;
       }
 
       barBox = createNode({
@@ -1918,61 +1920,88 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         }
       });
 
-      thisName = name + token + String(y);
-      GeneralJs.stacks[thisName + "_isDown"] = false;
-      GeneralJs.stacks[thisName + "_startX"] = false;
-      GeneralJs.stacks[thisName + "_scrollLeft"] = false;
-      barButton.addEventListener("mousedown", function (e) {
-        GeneralJs.stacks[thisName + "_isDown"] = true;
-        GeneralJs.stacks[thisName + "_startX"] = e.pageX - this.offsetLeft;
-        GeneralJs.stacks[thisName + "_scrollLeft"] = this.scrollLeft;
-        answerArea.style.cursor = "grabbing";
-        barBox.style.cursor = "grabbing";
-        barButton.style.cursor = "grabbing";
-      });
-
-      barEndEvent = function (e) {
+      if (desktop) {
+        thisName = name + token + String(y);
         GeneralJs.stacks[thisName + "_isDown"] = false;
-        answerArea.style.cursor = "pointer";
-        barBox.style.cursor = "pointer";
-        barButton.style.cursor = "pointer";
+        GeneralJs.stacks[thisName + "_startX"] = false;
+        GeneralJs.stacks[thisName + "_scrollLeft"] = false;
+        barButton.addEventListener("mousedown", function (e) {
+          GeneralJs.stacks[thisName + "_isDown"] = true;
+          GeneralJs.stacks[thisName + "_startX"] = e.pageX - this.offsetLeft;
+          GeneralJs.stacks[thisName + "_scrollLeft"] = this.scrollLeft;
+          answerArea.style.cursor = "grabbing";
+          barBox.style.cursor = "grabbing";
+          barButton.style.cursor = "grabbing";
+        });
+        barEndEvent = function (e) {
+          GeneralJs.stacks[thisName + "_isDown"] = false;
+          answerArea.style.cursor = "pointer";
+          barBox.style.cursor = "pointer";
+          barButton.style.cursor = "pointer";
 
-        const x = barBox.getAttribute('x');
-        const y = Number(barBox.getAttribute('y'));
-        let thisValue, oppositeValue;
+          const x = barBox.getAttribute('x');
+          const y = Number(barBox.getAttribute('y'));
+          let thisValue, oppositeValue;
 
-        thisValue = Number(barBox.getAttribute("value"));
-        oppositeValue = barEntireValue - thisValue;
+          thisValue = Number(barBox.getAttribute("value"));
+          oppositeValue = barEntireValue - thisValue;
 
-        instance.values[x][y].value = {
-          entire: barEntireValue,
-          value: thisValue,
-          opposite: oppositeValue,
-          values: [ thisValue, oppositeValue ]
-        };
+          instance.values[x][y].value = {
+            entire: barEntireValue,
+            value: thisValue,
+            opposite: oppositeValue,
+            values: [ thisValue, oppositeValue ]
+          };
 
-      }
-
-      answerArea.addEventListener("mouseleave", barEndEvent);
-      answerArea.addEventListener("mouseup", barEndEvent);
-      answerArea.addEventListener("mousemove", function (e) {
-        let x, walk, newWidth;
-        if (!GeneralJs.stacks[thisName + "_isDown"]) {
-          return;
         }
-        e.preventDefault();
-        x = e.pageX - barButton.offsetLeft;
-        walk = x - GeneralJs.stacks[thisName + "_startX"];
+        answerArea.addEventListener("mouseleave", barEndEvent);
+        answerArea.addEventListener("mouseup", barEndEvent);
+        answerArea.addEventListener("mousemove", function (e) {
+          let x, walk, newWidth;
+          if (!GeneralJs.stacks[thisName + "_isDown"]) {
+            return;
+          }
+          e.preventDefault();
+          x = e.pageX - barButton.offsetLeft;
+          walk = x - GeneralJs.stacks[thisName + "_startX"];
 
-        newWidth = Number(barBox.getAttribute("width")) + walk;
-        barBox.style.width = String(newWidth) + "px";
-        barBox.setAttribute("width", String(newWidth));
-        barBox.setAttribute("value", String(Math.round(Math.round((newWidth / Number(barBox.getAttribute("entire"))) * 10000) / 100)));
+          newWidth = Number(barBox.getAttribute("width")) + walk;
+          barBox.style.width = String(newWidth) + "px";
+          barBox.setAttribute("width", String(newWidth));
+          barBox.setAttribute("value", String(Math.round(Math.round((newWidth / Number(barBox.getAttribute("entire"))) * 10000) / 100)));
 
-        answerArea.style.cursor = "grabbing";
-        barBox.style.cursor = "grabbing";
-        barButton.style.cursor = "grabbing";
-      });
+          answerArea.style.cursor = "grabbing";
+          barBox.style.cursor = "grabbing";
+          barButton.style.cursor = "grabbing";
+        });
+      }
+      if (mobile) {
+        createNode({
+          mother: answerArea,
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                const x = e.x;
+                const { left, width } = bar.getBoundingClientRect();
+                let percentage;
+                percentage = ((x - left) / width) * 100;
+                barBox.style.width = String(percentage) + '%';
+                barBox.setAttribute("value", String(percentage));
+              }
+            }
+          ],
+          style: {
+            position: "absolute",
+            top: String(barTop) + ea,
+            height: String(barHeight) + ea,
+            borderRadius: String(barHeight + 1) + ea,
+            background: "transparent",
+            width: String(100) + '%',
+            left: String(0) + ea,
+          }
+        });
+      }
 
     } else if (obj.type === "list") {
 
