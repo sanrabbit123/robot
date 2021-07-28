@@ -2842,7 +2842,27 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         progress: "",
         important: false,
         issue: "",
-        manager: "-"
+        manager: "-",
+        curation: {
+          style: [],
+          service: {
+            serid: "",
+          },
+          building: {
+            type: "",
+          },
+          furniture: {
+            ratio: 50,
+            makeNeeds: {
+              furniture: false,
+              fabric: false,
+            }
+          },
+          construct: {
+            living: false,
+            items: []
+          }
+        }
       };
     } else if (/designer/gi.test(method)) {
       collection = "designerHistory";

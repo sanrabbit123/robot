@@ -1317,7 +1317,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     bottom = 56;
     paddingTop = 14;
     paddingLeft = 18;
-    paddingBottom = isMac() ? 13 : 11;
+    paddingBottom = isMac() ? 13 : 10;
     titleVisual = 1;
 
     createNode({

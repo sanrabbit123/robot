@@ -103,6 +103,15 @@ class StyleCurationWordings {
                 "선호하는 스타일을 <b%3장%b> 골라주세요!",
                 "스타일 분석이 완료되었습니다!"
               ],
+              update: function (value, siblings, family) {
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.style"] = value;
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              }
             }
           ]
         },
@@ -119,6 +128,19 @@ class StyleCurationWordings {
                 "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
                 "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
               ],
+              update: function (value, siblings, family) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["requests.0.request.space.address"] = value;
+                  return {
+                    history: null,
+                    core: updateQuery
+                  };
+                }
+              }
             },
             {
               type: "calendar",
@@ -128,6 +150,19 @@ class StyleCurationWordings {
                 "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
               ],
               item: "사전 점검일",
+              update: function (value, siblings, family) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["requests.0.analytics.date.space.precheck"] = value;
+                  return {
+                    history: null,
+                    core: updateQuery
+                  };
+                }
+              }
             },
             {
               type: "calendar",
@@ -137,12 +172,25 @@ class StyleCurationWordings {
                 "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
               ],
               item: "집 비는 날",
+              update: function (value, siblings, family) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["requests.0.analytics.date.space.empty"] = value;
+                  return {
+                    history: null,
+                    core: updateQuery
+                  };
+                }
+              }
             },
             {
               type: "checkbox",
               half: true,
               required: true,
-              rewind: "건물 유형을 체크해주세요! (상가 건물일시 오피스텔로 체크해주세요!)",
+              rewind: "건물 유형을 체크해주세요! (상가일 시, 오피스텔로 체크해주세요!)",
               question: [
                 "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
               ],
@@ -2304,7 +2352,7 @@ StyleCurationJs.prototype.parseValues = function () {
   const instance = this;
 
   console.log(instance.values);
-  
+
 
 
 }
