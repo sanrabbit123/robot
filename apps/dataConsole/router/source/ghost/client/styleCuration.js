@@ -2348,7 +2348,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
 }
 
-StyleCurationJs.prototype.parseValues = function () {
+StyleCurationJs.prototype.parsingValues = function () {
   const instance = this;
 
   console.log(instance.values);
@@ -2970,7 +2970,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
               if (pass) {
                 GeneralJs.scrollTo(window, 0);
                 GeneralJs.setTimeout(() => {
-                  instance.parseValues();
+                  instance.parsingValues();
                   instance.serviceConverting();
                 }, 1000);
               }
