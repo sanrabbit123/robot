@@ -78,7 +78,7 @@ ContentsJs.prototype.standardBar = function (standard) {
     height: String(this.module.height + this.module.marginBottom) + ea,
     fontSize: String(14) + ea,
     fontWeight: String(600),
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
   };
 
   if (standard.search === null) {
@@ -327,7 +327,7 @@ ContentsJs.prototype.infoArea = function (info) {
     height: String(this.module.height) + ea,
     fontSize: String(14) + ea,
     fontWeight: String(600),
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     textAlign: "center",
     overflow: "hidden",
     cursor: "pointer",
@@ -355,7 +355,7 @@ ContentsJs.prototype.infoArea = function (info) {
         onOffObj[this.getAttribute("column")] = !onOffObj[this.getAttribute("column")];
         window.localStorage.setItem(thisId, JSON.stringify(onOffObj));
         if (onOffObj[this.getAttribute("column")]) {
-          this.style.color = "#2fa678";
+          this.style.color = GeneralJs.colorChip.green;
         }
       }
       const targets = document.querySelectorAll(".moveTarget");
@@ -378,12 +378,12 @@ ContentsJs.prototype.infoArea = function (info) {
     const thisIndex = this.parentElement.getAttribute("index");
     const conidChildren = instance.totalMother.children[0].children;
     for (let z = 0; z < mother.children.length; z++) {
-      mother.children[z].style.color = "#2fa678";
+      mother.children[z].style.color = GeneralJs.colorChip.green;
     }
     for (let z = 0; z < conidChildren.length; z++) {
       if (conidChildren[z].getAttribute("index") === thisIndex) {
         for (let y = 0; y < conidChildren[z].children.length; y++) {
-          conidChildren[z].children[y].style.color = "#2fa678";
+          conidChildren[z].children[y].style.color = GeneralJs.colorChip.green;
         }
       }
     }
@@ -400,7 +400,7 @@ ContentsJs.prototype.infoArea = function (info) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
         mother.children[z].style.color = finalColor;
       } else {
-        mother.children[z].style.color = "#2fa678";
+        mother.children[z].style.color = GeneralJs.colorChip.green;
       }
     }
     for (let z = 0; z < conidChildren.length; z++) {
@@ -427,7 +427,7 @@ ContentsJs.prototype.infoArea = function (info) {
       for (let z = 0; z < instance.totalMother.children[0].children.length; z++) {
         if (instance.totalMother.children[0].children[z].getAttribute("index") === thisIndex) {
           for (let y = 0; y < instance.totalMother.children[0].children[z].children.length; y++) {
-            instance.totalMother.children[0].children[z].children[y].style.color = "#2fa678";
+            instance.totalMother.children[0].children[z].children[y].style.color = GeneralJs.colorChip.green;
           }
         }
       }
@@ -450,7 +450,7 @@ ContentsJs.prototype.infoArea = function (info) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
                   standardArea.children[z].children[y].style.color = finalColor;
                 } else {
-                  standardArea.children[z].children[y].style.color = "#2fa678";
+                  standardArea.children[z].children[y].style.color = GeneralJs.colorChip.green;
                 }
               }
             }
@@ -598,7 +598,7 @@ ContentsJs.prototype.infoArea = function (info) {
           border: String(0) + ea,
           textAlign: "center",
           fontSize: "inherit",
-          color: "#2fa678",
+          color: GeneralJs.colorChip.green,
           paddingBottom: String(paddingBottom) + ea,
           zIndex: String(3),
         };
@@ -638,7 +638,7 @@ ContentsJs.prototype.infoArea = function (info) {
             background: "white",
             textAlign: "center",
             fontSize: "inherit",
-            color: "#2fa678",
+            color: GeneralJs.colorChip.green,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -897,7 +897,7 @@ ContentsJs.prototype.infoArea = function (info) {
         }, 10);
 
         originalDiv.style.overflow = "hidden";
-        originalDiv.style.color = "#2fa678";
+        originalDiv.style.color = GeneralJs.colorChip.green;
         originalDiv.style.transition = "";
       }
 
@@ -1018,7 +1018,7 @@ ContentsJs.prototype.infoArea = function (info) {
           width: String(width) + ea,
           paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
           height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-          background: "#2fa678",
+          background: GeneralJs.colorChip.green,
           textAlign: "center",
           fontSize: "inherit",
           fontWeight: String(500),
@@ -1345,7 +1345,7 @@ ContentsJs.prototype.infoArea = function (info) {
       }
       if (num !== 0) {
         if (thisOnOff[columns[z]]) {
-          div_clone3.style.color = "#2fa678";
+          div_clone3.style.color = GeneralJs.colorChip.green;
         }
       }
       div_clone3.style.width = String(widthArr[z]) + ea;
@@ -1488,12 +1488,12 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
               GeneralJs.stacks["snsAdjustDom0"][i].onoff = "off";
               temp.style.background = "white";
               temp.firstChild.style.color = "#202020";
-              temp.lastChild.style.color = "#2fa678";
+              temp.lastChild.style.color = GeneralJs.colorChip.green;
             } else {
               temp = GeneralJs.stacks["snsAdjustDom0"][thisIndex].dom;
               GeneralJs.stacks["snsAdjustDom0"][thisIndex].onoff = "on";
               GeneralJs.stacks["snsAdjustDom0"].target = GeneralJs.stacks["snsAdjustDom0"][thisIndex].dom;
-              temp.style.background = "#2fa678";
+              temp.style.background = GeneralJs.colorChip.green;
               for (let j of temp.children) {
                 j.style.color = "white";
               }
@@ -1528,12 +1528,12 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
               GeneralJs.stacks["snsAdjustDom1"][i].onoff = "off";
               temp.style.background = "white";
               temp.firstChild.style.color = "#202020";
-              temp.lastChild.style.color = "#2fa678";
+              temp.lastChild.style.color = GeneralJs.colorChip.green;
             } else {
               temp = GeneralJs.stacks["snsAdjustDom1"][thisIndex].dom;
               GeneralJs.stacks["snsAdjustDom1"][thisIndex].onoff = "on";
               GeneralJs.stacks["snsAdjustDom1"].target = GeneralJs.stacks["snsAdjustDom1"][thisIndex].dom;
-              temp.style.background = "#2fa678";
+              temp.style.background = GeneralJs.colorChip.green;
               for (let j of temp.children) {
                 j.style.color = "white";
               }
@@ -1567,12 +1567,12 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
               GeneralJs.stacks["snsAdjustDom2"][i].onoff = "off";
               temp.style.background = "white";
               temp.firstChild.style.color = "#202020";
-              temp.lastChild.style.color = "#2fa678";
+              temp.lastChild.style.color = GeneralJs.colorChip.green;
             } else {
               temp = GeneralJs.stacks["snsAdjustDom2"][thisIndex].dom;
               GeneralJs.stacks["snsAdjustDom2"][thisIndex].onoff = "on";
               GeneralJs.stacks["snsAdjustDom2"].target = GeneralJs.stacks["snsAdjustDom2"][thisIndex].dom;
-              temp.style.background = "#2fa678";
+              temp.style.background = GeneralJs.colorChip.green;
               for (let j of temp.children) {
                 j.style.color = "white";
               }
@@ -1687,7 +1687,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
     position: "absolute",
     top: String(11.5) + ea,
     right: String(13) + ea,
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     cursor: "pointer",
     transition: "all 0s ease",
   };
@@ -1844,10 +1844,10 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
       const offStandard = [
         "white",
         "rgb(32, 32, 32)",
-        "#2fa678",
+        GeneralJs.colorChip.green,
       ];
       const onStandard = [
-        "#2fa678",
+        GeneralJs.colorChip.green,
         "white",
         "white",
       ];
@@ -2248,7 +2248,7 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
     position: "absolute",
     top: String(11.5) + ea,
     right: String(13) + ea,
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     cursor: "pointer",
     transition: "all 0s ease",
   };
@@ -2352,10 +2352,10 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
       const offStandard = [
         "white",
         "rgb(32, 32, 32)",
-        "#2fa678",
+        GeneralJs.colorChip.green,
       ];
       const onStandard = [
-        "#2fa678",
+        GeneralJs.colorChip.green,
         "white",
         "white",
       ];
@@ -2651,10 +2651,10 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
           if (allDates[i].dom.firstChild.textContent !== '') {
             if (allDates[i].dom !== this) {
               allDates[i].dom.firstChild.style.fontWeight = String(200);
-              allDates[i].dom.firstChild.style.color = (allDates[i].day > 4) ? "#2fa678" : "#404040";
+              allDates[i].dom.firstChild.style.color = (allDates[i].day > 4) ? GeneralJs.colorChip.green : "#404040";
             } else {
               allDates[i].dom.firstChild.style.fontWeight = String(400);
-              allDates[i].dom.firstChild.style.color = "#2fa678";
+              allDates[i].dom.firstChild.style.color = GeneralJs.colorChip.green;
             }
           }
         }
@@ -2802,7 +2802,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
         right: String(199) + ea,
         width: String(44.5) + ea,
         height: String(30) + ea,
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         borderRadius: String(3) + ea,
       };
       for (let j in style) {
@@ -2921,7 +2921,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
         right: String(123) + ea,
         width: String(72) + ea,
         height: String(30) + ea,
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         borderRadius: String(3) + ea,
       };
       for (let j in style) {
@@ -2958,7 +2958,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
         right: String(46) + ea,
         width: String(73.5) + ea,
         height: String(30) + ea,
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         borderRadius: String(3) + ea,
       };
       for (let j in style) {
@@ -3376,7 +3376,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
         for (let i of GeneralJs.stacks.firstContentsCreateViewDoms) {
           if (i.getAttribute("index") === this.getAttribute("index")) {
-            i.style.background = "#2fa678";
+            i.style.background = GeneralJs.colorChip.green;
             i.style.color = "#ffffff";
             cliid = this.getAttribute("cliid");
             proid = this.getAttribute("proid");
@@ -3404,9 +3404,9 @@ ContentsJs.prototype.cardViewMaker = function () {
         }
 
         if (/\:/.test(title.textContent)) {
-          inputHtml = (title.textContent.split(" : "))[0] + appendHtml("#2fa678");
+          inputHtml = (title.textContent.split(" : "))[0] + appendHtml(GeneralJs.colorChip.green);
         } else {
-          inputHtml = title.textContent + appendHtml("#2fa678");
+          inputHtml = title.textContent + appendHtml(GeneralJs.colorChip.green);
         }
         title.removeChild(title.firstChild);
         if (title.firstChild.nodeName === 'B') {
@@ -3418,12 +3418,12 @@ ContentsJs.prototype.cardViewMaker = function () {
         title.setAttribute("name", name);
         title.setAttribute("desid", desid);
         title.setAttribute("designer", designer);
-        title.style.color = "#2fa678";
+        title.style.color = GeneralJs.colorChip.green;
 
         if (/\:/.test(title2.textContent)) {
-          inputHtml = (title2.textContent.split(" : "))[0] + appendHtml("#2fa678", true);
+          inputHtml = (title2.textContent.split(" : "))[0] + appendHtml(GeneralJs.colorChip.green, true);
         } else {
-          inputHtml = title2.textContent + appendHtml("#2fa678", true);
+          inputHtml = title2.textContent + appendHtml(GeneralJs.colorChip.green, true);
         }
         title2.removeChild(title2.firstChild);
         if (title2.firstChild.nodeName === 'B') {
@@ -3435,7 +3435,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         title2.setAttribute("name", name);
         title2.setAttribute("desid", desid);
         title2.setAttribute("designer", designer);
-        title2.style.color = "#2fa678";
+        title2.style.color = GeneralJs.colorChip.green;
 
         if (/\:/.test(title3.textContent)) {
           inputHtml = (title3.textContent.split(" : "))[0];
@@ -3472,11 +3472,11 @@ ContentsJs.prototype.cardViewMaker = function () {
           for (let z of gray1.firstChild.children) {
             z.style.background = "white";
             if (zNum === 0) {
-              z.firstChild.style.color = that.getAttribute("portfolioExist") === "true" ? "#2fa678" : "#dddddd";
+              z.firstChild.style.color = that.getAttribute("portfolioExist") === "true" ? GeneralJs.colorChip.green : "#dddddd";
             } else if (zNum === 1) {
-              z.firstChild.style.color = that.getAttribute("reviewExist") === "true" ? "#2fa678" : "#dddddd";
+              z.firstChild.style.color = that.getAttribute("reviewExist") === "true" ? GeneralJs.colorChip.green : "#dddddd";
             } else {
-              z.firstChild.style.color = that.getAttribute("rawLink") !== '' ? "#2fa678" : "#dddddd";
+              z.firstChild.style.color = that.getAttribute("rawLink") !== '' ? GeneralJs.colorChip.green : "#dddddd";
             }
             z.firstChild.style.fontSize = String(2.5) + "vh";
 
@@ -3730,7 +3730,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             buttonStyle = {
               width: String(buttonWidth) + ea,
               height: String(buttonHeight) + ea,
-              color: "#2fa678",
+              color: GeneralJs.colorChip.green,
               position: "absolute",
               top: String(buttonMargin * 2) + ea,
               right: String(buttonMargin * 2) + ea,
@@ -3743,7 +3743,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               width: String(100) + "%",
               fontSize: String(13) + ea,
               fontWeight: String(600),
-              color: "#2fa678",
+              color: GeneralJs.colorChip.green,
               position: "absolute",
               top: String(GeneralJs.isMac() ? 7.1 : 8.5) + ea,
               textAlign: "center",
@@ -3872,9 +3872,9 @@ ContentsJs.prototype.cardViewMaker = function () {
                 }
 
                 if (textArea_clone.value !== "") {
-                  that.style.color = "#2fa678";
+                  that.style.color = GeneralJs.colorChip.green;
                   if (that.firstChild !== null) {
-                    that.firstChild.style.color = "#2fa678";
+                    that.firstChild.style.color = GeneralJs.colorChip.green;
                   }
                   forefather.setAttribute(method + "Exist", "true");
                 } else {
@@ -3981,7 +3981,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                 width: "100%",
                 textAlign: "center",
                 fontSize: String(15) + ea,
-                color: "#2fa678",
+                color: GeneralJs.colorChip.green,
                 top: String(GeneralJs.isMac() ? 83 : 85) + ea,
               };
               for (let i in style) {
@@ -4035,7 +4035,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                 bottom: String(GeneralJs.isMac() ? 50 : 49) + ea,
                 width: String(47) + ea,
                 height: String(32) + ea,
-                background: "#2fa678",
+                background: GeneralJs.colorChip.green,
                 color: "white",
                 borderRadius: String(3) + ea,
                 left: "calc(50% - " + String(113) + ea + ")",
@@ -4075,9 +4075,9 @@ ContentsJs.prototype.cardViewMaker = function () {
                     instance.mother.greenAlert(`${name} 고객님의 원본 사진이 저장되었습니다!`);
 
                     if (final !== "") {
-                      that.style.color = "#2fa678";
+                      that.style.color = GeneralJs.colorChip.green;
                       if (that.firstChild !== null) {
-                        that.firstChild.style.color = "#2fa678";
+                        that.firstChild.style.color = GeneralJs.colorChip.green;
                       }
                       forefather.setAttribute("rawLink", "true");
                     } else {
@@ -4242,7 +4242,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
         for (let i of GeneralJs.stacks.thirdContentsCreateViewDoms) {
           if (i.getAttribute("index") === this.getAttribute("index")) {
-            i.style.background = "#2fa678";
+            i.style.background = GeneralJs.colorChip.green;
             i.style.color = "#ffffff";
             cliid = this.getAttribute("cliid");
             proid = this.getAttribute("proid");
@@ -4266,9 +4266,9 @@ ContentsJs.prototype.cardViewMaker = function () {
         }
 
         if (/\:/.test(title.textContent)) {
-          inputHtml = (title.textContent.split(" : "))[0] + appendHtml("#2fa678");
+          inputHtml = (title.textContent.split(" : "))[0] + appendHtml(GeneralJs.colorChip.green);
         } else {
-          inputHtml = title.textContent + appendHtml("#2fa678");
+          inputHtml = title.textContent + appendHtml(GeneralJs.colorChip.green);
         }
 
         title.removeChild(title.firstChild);
@@ -4281,12 +4281,12 @@ ContentsJs.prototype.cardViewMaker = function () {
         title.setAttribute("name", name);
         title.setAttribute("desid", desid);
         title.setAttribute("designer", designer);
-        title.style.color = "#2fa678";
+        title.style.color = GeneralJs.colorChip.green;
 
         if (/\:/.test(title2.textContent)) {
-          inputHtml = (title2.textContent.split(" : "))[0] + appendHtml("#2fa678", true);
+          inputHtml = (title2.textContent.split(" : "))[0] + appendHtml(GeneralJs.colorChip.green, true);
         } else {
-          inputHtml = title2.textContent + appendHtml("#2fa678", true);
+          inputHtml = title2.textContent + appendHtml(GeneralJs.colorChip.green, true);
         }
 
         title2.removeChild(title2.firstChild);
@@ -4299,7 +4299,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         title2.setAttribute("name", name);
         title2.setAttribute("desid", desid);
         title2.setAttribute("designer", designer);
-        title2.style.color = "#2fa678";
+        title2.style.color = GeneralJs.colorChip.green;
 
         if (/\:/.test(title3.textContent)) {
           inputHtml = (title3.textContent.split(" : "))[0] ;
@@ -4336,11 +4336,11 @@ ContentsJs.prototype.cardViewMaker = function () {
           for (let z of gray1.children[0].children) {
             z.style.background = "white";
             if (zNum === 0) {
-              z.firstChild.style.color = that.getAttribute("portfolioExist") === "true" ? "#2fa678" : "#dddddd";
+              z.firstChild.style.color = that.getAttribute("portfolioExist") === "true" ? GeneralJs.colorChip.green : "#dddddd";
             } else if (zNum === 1) {
-              z.firstChild.style.color = that.getAttribute("reviewExist") === "true" ? "#2fa678" : "#dddddd";
+              z.firstChild.style.color = that.getAttribute("reviewExist") === "true" ? GeneralJs.colorChip.green : "#dddddd";
             } else {
-              z.firstChild.style.color = that.getAttribute("rawLink") !== '' ? "#2fa678" : "#dddddd";
+              z.firstChild.style.color = that.getAttribute("rawLink") !== '' ? GeneralJs.colorChip.green : "#dddddd";
             }
             z.firstChild.style.fontSize = String(2.5) + "vh";
 
@@ -4537,7 +4537,7 @@ ContentsJs.prototype.viewDetail = async function (mother, leftMargin, fontSize, 
     titleStyle.fontSize = String(fontSize + 2) + ea;
     titleStyle.marginBottom = String(2) + ea;
 
-    smallTalkTitleStyle.color = "#2fa678";
+    smallTalkTitleStyle.color = GeneralJs.colorChip.green;
     smallTalkTitleStyle.fontWeight = "600";
     smallTalkTitleStyle.marginBottom = String(1) + ea;
     smallTalkTitleStyle.fontSize = String(fontSize - 2) + ea;
@@ -4823,7 +4823,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     fontSize: String(titleFontSize * (19 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * 2.3) + ea,
@@ -4835,7 +4835,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(div_clone3);
 
   //right arrow
-  rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", "#2fa678"));
+  rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", GeneralJs.colorChip.green));
   style = {
     position: "absolute",
     width: String(leftMargin * (12 / 60)) + ea,
@@ -4860,7 +4860,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(rightArrowBox);
 
   //left arrow
-  leftArrow = SvgTong.stringParsing(this.mother.returnArrow("left", "#2fa678"));
+  leftArrow = SvgTong.stringParsing(this.mother.returnArrow("left", GeneralJs.colorChip.green));
   for (let i in style) {
     leftArrow.style[i] = style[i];
   }
@@ -4879,7 +4879,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(leftArrowBox);
 
   //h initial icon
-  hInitial = SvgTong.stringParsing(this.mother.returnHinitial("#2fa678"));
+  hInitial = SvgTong.stringParsing(this.mother.returnHinitial(GeneralJs.colorChip.green));
   for (let i in style) {
     hInitial.style[i] = style[i];
   }
@@ -4902,7 +4902,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(hInitialBox);
 
   //m initial icon
-  mInitial = SvgTong.stringParsing(this.mother.returnMinitial("#2fa678"));
+  mInitial = SvgTong.stringParsing(this.mother.returnMinitial(GeneralJs.colorChip.green));
   for (let i in style) {
     mInitial.style[i] = style[i];
   }
@@ -5101,7 +5101,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           outline: String(0) + ea,
           border: String(0) + ea,
           fontSize: "inherit",
-          color: "#2fa678",
+          color: GeneralJs.colorChip.green,
           paddingBottom: String(paddingBottom) + ea,
           zIndex: String(3),
         };
@@ -5141,7 +5141,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             background: "white",
             textAlign: "center",
             fontSize: "inherit",
-            color: "#2fa678",
+            color: GeneralJs.colorChip.green,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -5959,7 +5959,7 @@ ContentsJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             }
 
             if (matrixNum === 0 && num === 0) {
-              formBox.style.background = "#2fa678";
+              formBox.style.background = GeneralJs.colorChip.green;
             }
 
             formBox.style.width = String(widthArr[matrixNum]) + ea;
@@ -6290,7 +6290,7 @@ ContentsJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
         domTargets[0].style.color = domTargets[1].style.color = "#404040";
       } else {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#2fa678";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
       }
     }
 
@@ -6340,7 +6340,7 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
         domTargets[0].style.color = domTargets[1].style.color = "#cccccc";
       } else {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#2fa678";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
       }
     }
 
@@ -6738,7 +6738,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
       this,
     ];
     for (let i of targets) {
-      i.style.color = "#2fa678";
+      i.style.color = GeneralJs.colorChip.green;
     }
 
     if (GeneralJs.stacks["matrixCaseTitlePopup"] !== null) {

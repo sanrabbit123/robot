@@ -2304,7 +2304,7 @@ StyleCurationJs.prototype.parseValues = function () {
   const instance = this;
 
   console.log(instance.values);
-
+  
 
 
 }

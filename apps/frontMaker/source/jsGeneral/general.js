@@ -23,6 +23,7 @@ GeneralJs.boos = {
 GeneralJs.colorChip = {
   white: "#ffffff",
   whiteIcon: "#ffffff",
+  whiteGray: "#fbfbfb",
   gray0: "#f7f7f7",
   gray1: "#f2f2f2",
   gray2: "#ececec",
@@ -42,6 +43,7 @@ GeneralJs.colorChip = {
   green: "#2fa678",
   darkGreen: "#009b6a",
   whiteGreen: "#bedacb",
+  middleGreen: "#83cea7",
   gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
   gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
   gradientGreen3: "linear-gradient(172deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",

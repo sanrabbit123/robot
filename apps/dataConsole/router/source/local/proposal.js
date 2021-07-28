@@ -448,7 +448,7 @@ ProposalJs.prototype.below_initial = function () {
     fontWeight: String(500) + ea,
     textAlign: "center",
     paddingTop: String(GeneralJs.isMac() ? 15 : 16) + ea,
-    color: "#2fa678",
+    color: GeneralJs.colorChip.green,
     cursor: "pointer",
     animation: "justfadeinoriginal 0.4s ease forwards",
   };
@@ -748,7 +748,7 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
 
                 instance.below_launching("second", button);
                 domBox.get("고객 선택").style.height = "3.2vh";
-                domBox.get("고객 선택").style.borderBottom = "1px solid #ececec";
+                domBox.get("고객 선택").style.borderBottom = "1px solid " + GeneralJs.colorChip.gray2;
 
                 domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
                 domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
@@ -756,8 +756,8 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
 
                 service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
                 for (let i of service) {
-                  i.style.background = "white";
-                  i.children[0].style.color = "#2fa678";
+                  i.style.background = GeneralJs.colorChip.white;
+                  i.children[0].style.color = GeneralJs.colorChip.green;
                   i.children[0].style.fontSize = "1.7vh";
                 }
 
@@ -778,14 +778,14 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
                     i.nextElementSibling.children[0].style.color = GeneralJs.colorChip.white;
                   }
                 }
-                title.style.color = "#2fa678";
-                contents.style.background = "white";
+                title.style.color = GeneralJs.colorChip.green;
+                contents.style.background = GeneralJs.colorChip.white;
 
                 if (document.querySelector("#pp_title_sub_b") !== null) {
                   document.querySelector("#pp_title_sub_b").remove();
                 }
 
-                title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_address="' + address + '" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+                title.insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_address="' + address + '" cus_id="' + e.target.parentElement.getAttribute("cus_id") + '" style="color:' + GeneralJs.colorChip.green + ';font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
                 instance.cliid = e.target.parentElement.getAttribute("cus_id");
                 instance.client = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { cliid: instance.cliid } }, "/getClients", { equal: true }))[0];
 
@@ -823,8 +823,8 @@ ProposalJs.prototype.firstToggle = function (button, domBox) {
           i.children[0].style.fontSize = "";
           i.children[0].style.marginTop = "";
         }
-        title.style.color = "#404040";
-        contents.style.background = "#f7f7f7";
+        title.style.color = GeneralJs.colorChip.black;
+        contents.style.background = GeneralJs.colorChip.gray0;
         instance.toggleSetting.first = 0;
       }
     }
@@ -882,7 +882,7 @@ ProposalJs.prototype.firstProcess = async function () {
       display: "block",
       height: "calc(90% - 10px)",
       marginTop: "10px",
-      background: "#f7f7f7",
+      background: GeneralJs.colorChip.gray0,
       borderRadius: "10px",
       paddingRight: "30px",
       paddingLeft: "30px",
@@ -1001,7 +1001,7 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
 
           domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', `<b id="pp_title2_sub_b" serid="${serid}" xValue="${xValue}" cus_id="${thisValue}" cus_id="${thisValue}" style="color:${GeneralJs.colorChip.green};font-weight:300"> : ${thisValue}</b>`);
           domBox.get("서비스 선택").style.height = "3.2vh";
-          domBox.get("서비스 선택").style.borderBottom = "1px solid #ececec";
+          domBox.get("서비스 선택").style.borderBottom = "1px solid " + GeneralJs.colorChip.gray2;
 
           instance.serid = serid;
           instance.xValue = xValue;
@@ -1019,12 +1019,12 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
           domBox.get("디자이너 선택").children[1].style.marginTop = "-2.7vh";
 
           instance.thirdChildren.get("box1_designerInput").focus();
-          instance.thirdChildren.get("box1_designerInput").style.color = "#2fa678";
-          instance.thirdChildren.get("box1_title").style.color = "#2fa678";
+          instance.thirdChildren.get("box1_designerInput").style.color = GeneralJs.colorChip.green;
+          instance.thirdChildren.get("box1_title").style.color = GeneralJs.colorChip.green;
           instance.thirdChildren.get("box1_designerInput").style.fontSize = "24px";
           instance.thirdChildren.get("box1_title").style.fontSize = "24px";
-          instance.thirdChildren.get("box1").style.background = "white";
-          instance.thirdChildren.get("box1").style.border = "1px solid #dddddd";
+          instance.thirdChildren.get("box1").style.background = GeneralJs.colorChip.white;
+          instance.thirdChildren.get("box1").style.border = "1px solid " + GeneralJs.colorChip.gray3;
 
           document.querySelector(".pp_designer_question").classList.remove("pp_designer_question_remove");
           document.querySelector(".pp_designer_question").classList.add("pp_designer_question_add");
@@ -1061,8 +1061,8 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
 
         instance.below_launching("third", button);
 
-        domBox.get("서비스 선택").children[0].style.color = "#404040";
-        domBox.get("서비스 선택").children[1].style.background = "#f7f7f7";
+        domBox.get("서비스 선택").children[0].style.color = GeneralJs.colorChip.black;
+        domBox.get("서비스 선택").children[1].style.background = GeneralJs.colorChip.gray0;
         domBox.get("서비스 선택").style.height = "calc(calc(100% / 3) - 21px)";
         domBox.get("서비스 선택").style.borderBottom = "";
         instance.toggleSetting.second = 0;
@@ -1073,8 +1073,8 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
         service = domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
         for (let i of service) {
           i.style.opacity = "";
-          i.style.background = "white";
-          i.children[0].style.color = "#2fa678";
+          i.style.background = GeneralJs.colorChip.white;
+          i.children[0].style.color = GeneralJs.colorChip.green;
           i.children[0].style.fontSize = "1.7vh";
         }
 
@@ -1089,7 +1089,12 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
         }
 
         service_input = domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
-        for (let i of service_input) { if (i.checked) { i.nextElementSibling.style.background = "#2fa678";i.nextElementSibling.children[0].style.color = "white"; } }
+        for (let i of service_input) {
+          if (i.checked) {
+            i.nextElementSibling.style.background = GeneralJs.colorChip.green;
+            i.nextElementSibling.children[0].style.color = GeneralJs.colorChip.white;
+          }
+        }
         domBox.get("디자이너 선택").style.height = "calc(calc(100% / 3) - 21px)";
         domBox.get("디자이너 선택").children[1].style.height = "calc(90% - 10px)";
         domBox.get("디자이너 선택").children[1].style.marginTop = "10px";
@@ -1312,7 +1317,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     bottom = 56;
     paddingTop = 14;
     paddingLeft = 18;
-    paddingBottom = 13;
+    paddingBottom = isMac() ? 13 : 11;
     titleVisual = 1;
 
     createNode({
@@ -2148,8 +2153,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           div_clone.textContent = d.designer + " 디자이너의 사진 선택";
         }
       }
-      div_clone.style.color = "white";
-      dom.style.background = "#2fa678";
+      div_clone.style.color = GeneralJs.colorChip.white;
+      dom.style.background = GeneralJs.colorChip.green;
     }
     //------------------------------------------------------------------------
     div_clone.setAttribute("cus_id", 's' + String(n));
@@ -2162,9 +2167,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     let target0, target1, target2, target3;
 
     fourth.box.style.display = "none";
-    fourth.title.style.color = "#2fa678";
-    fourth.contents.style.background = "white";
-    fourth.contents.style.border = "1px solid #ececec";
+    fourth.title.style.color = GeneralJs.colorChip.green;
+    fourth.contents.style.background = GeneralJs.colorChip.white;
+    fourth.contents.style.border = "1px solid " + GeneralJs.colorChip.gray2;
     fourth.contents.style.borderRadius = "6px";
     fourth.contents.style.padding = "0px";
     instance.below_launching("fourth", "on");
@@ -2176,7 +2181,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         div_clone.classList.add("pp_designer_selected");
         div_clone.setAttribute("cus_id", 's' + String(i));
         div_clone.style.width = "calc(100% / " + String(num) + ")";
-        if (i !== 0) { div_clone.style.borderLeft = "1px solid #ececec"; }
+        if (i !== 0) {
+          div_clone.style.borderLeft = "1px solid " + GeneralJs.colorChip.gray2;
+        }
 
         for (let j = 0; j < fourth.titles.length; j++) {
           div_clone2 = GeneralJs.nodes.div.cloneNode(true);
@@ -2316,7 +2323,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       if (num <= instance.pastMaps[0].size) {
         for (let i = 0; i < num; i++) {
           instance.pastMaps[0].get("box" + String(i)).style.width = "calc(100% / " + String(num) + ")";
-          if (i !== 0) { instance.pastMaps[0].get("box" + String(i)).style.borderLeft = "1px solid #ececec"; }
+          if (i !== 0) {
+            instance.pastMaps[0].get("box" + String(i)).style.borderLeft = "1px solid " + GeneralJs.colorChip.gray2;
+          }
           fourth.contents.appendChild(instance.pastMaps[0].get("box" + String(i)));
           fourthChildren.set("box" + String(i), instance.pastMaps[0].get("box" + String(i)));
           instance.totalTong.fifthScrollmove["designer" + String(i)] = new Map();
@@ -2345,7 +2354,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       } else {
         for (let i = 0; i < instance.pastMaps[0].size; i++) {
           instance.pastMaps[0].get("box" + String(i)).style.width = "calc(100% / " + String(num) + ")";
-          if (i !== 0) { instance.pastMaps[0].get("box" + String(i)).style.borderLeft = "1px solid #ececec"; }
+          if (i !== 0) {
+            instance.pastMaps[0].get("box" + String(i)).style.borderLeft = "1px solid " + GeneralJs.colorChip.gray2;
+          }
           fourth.contents.appendChild(instance.pastMaps[0].get("box" + String(i)));
           fourthChildren.set("box" + String(i), instance.pastMaps[0].get("box" + String(i)));
           instance.totalTong.fifthScrollmove["designer" + String(i)] = new Map();
@@ -2373,7 +2384,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           div_clone.classList.add("pp_designer_selected");
           div_clone.setAttribute("cus_id", 's' + String(i));
           div_clone.style.width = "calc(100% / " + String(num) + ")";
-          if (i !== 0) { div_clone.style.borderLeft = "1px solid #ececec"; }
+          if (i !== 0) {
+            div_clone.style.borderLeft = "1px solid " + GeneralJs.colorChip.gray2;
+          }
           for (let j = 0; j < fourth.titles.length; j++) {
             div_clone2 = GeneralJs.nodes.div.cloneNode(true);
             div_clone2.classList.add("pp_designer_selected_box");
@@ -2714,11 +2727,11 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
 
       //buttonup
       else if (i === 2) {
-        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("left", "#2fa678"));
+        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("left", GeneralJs.colorChip.green));
         img_clone2.classList.add("ppw_right_buttonup_img_left");
         div_clone3.appendChild(img_clone2);
 
-        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("right", "#2fa678"));
+        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("right", GeneralJs.colorChip.green));
         img_clone2.classList.add("ppw_right_buttonup_img_right");
         div_clone3.appendChild(img_clone2);
 
@@ -3953,7 +3966,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
             xValue = 'P';
           }
 
-          title = '<b style="color=#2fa678;font-weight:200">Q.</b> 고객이 선택한 디자이너를 선택해주세요!';
+          title = '<b style="color=' + GeneralJs.colorChip.green + ';font-weight:200">Q.</b> 고객이 선택한 디자이너를 선택해주세요!';
 
           div_clone = GeneralJs.nodes.div.cloneNode(true);
           div_clone.insertAdjacentHTML("beforeend", title);
@@ -3979,7 +3992,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
             fontSize: String(19) + ea,
             fontWeight: String(600),
             borderRadius: String(5) + ea,
-            border: "1px solid #ececec",
+            border: "1px solid " + GeneralJs.colorChip.gray2,
           };
           for (let i in style) {
             div_clone.style[i] = style[i];
@@ -4201,8 +4214,8 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
 
   //third reset
   let service = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
-  this.domBox.get("서비스 선택").children[0].style.color = "#404040";
-  this.domBox.get("서비스 선택").children[1].style.background = "#f7f7f7";
+  this.domBox.get("서비스 선택").children[0].style.color = GeneralJs.colorChip.black;
+  this.domBox.get("서비스 선택").children[1].style.background = GeneralJs.colorChip.gray0;
   this.domBox.get("서비스 선택").style.height = "calc(calc(100% / 3) - 21px)";
   this.domBox.get("서비스 선택").style.borderBottom = "";
   // this.domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
@@ -4210,15 +4223,20 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
   this.domBox.get("서비스 선택").children[1].style.marginTop = "-0.9vh";
   for (let i of service) {
     i.style.opacity = "";
-    i.style.background = "white";
-    i.children[0].style.color = "#2fa678";
+    i.style.background = GeneralJs.colorChip.white;
+    i.children[0].style.color = GeneralJs.colorChip.green;
     i.children[0].style.fontSize = "1.7vh";
   }
   for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
   for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
   for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
   let service_input = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
-  for (let i of service_input) { if (i.checked) { i.nextElementSibling.style.background = "#2fa678";i.nextElementSibling.children[0].style.color = "white"; } }
+  for (let i of service_input) {
+    if (i.checked) {
+      i.nextElementSibling.style.background = GeneralJs.colorChip.green;
+      i.nextElementSibling.children[0].style.color = GeneralJs.colorChip.white;
+    }
+  }
   this.domBox.get("디자이너 선택").style.height = "calc(calc(100% / 3) - 21px)";
   this.domBox.get("디자이너 선택").children[1].style.height = "calc(90% - 10px)";
   this.domBox.get("디자이너 선택").children[1].style.marginTop = "10px";
@@ -4251,8 +4269,8 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
     i.children[0].style.fontSize = "";
     i.children[0].style.marginTop = "";
   }
-  this.domBox.get("고객 선택").children[0].style.color = "#404040";
-  this.domBox.get("고객 선택").children[1].style.background = "#f7f7f7";
+  this.domBox.get("고객 선택").children[0].style.color = GeneralJs.colorChip.black;
+  this.domBox.get("고객 선택").children[1].style.background = GeneralJs.colorChip.gray0;
 
   this.toggleSetting.first = 0;
   this.toggleSetting.second = 0;
@@ -4282,7 +4300,7 @@ ProposalJs.prototype.load_processLoad_first = function (obj) {
 
   clearTimeout(ProposalJs.toggleTimeout.load_zero);
   this.domBox.get("고객 선택").style.height = "3.2vh";
-  this.domBox.get("고객 선택").style.borderBottom = "1px solid #ececec";
+  this.domBox.get("고객 선택").style.borderBottom = "1px solid " + GeneralJs.colorChip.gray2;
 
   this.domBox.get("서비스 선택").style.height = "calc(69.5% - 3.2vh - 63px)";
   this.domBox.get("서비스 선택").children[1].style.height = "calc(90% + 0.9vh)";
@@ -4370,7 +4388,7 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
     instance.serid = e.target.parentElement.getAttribute("serid");
     instance.xValue = e.target.parentElement.getAttribute("xValue");
     instance.domBox.get("서비스 선택").style.height = "3.2vh";
-    instance.domBox.get("서비스 선택").style.borderBottom = "1px solid #ececec";
+    instance.domBox.get("서비스 선택").style.borderBottom = "1px solid " + GeneralJs.colorChip.gray2;
     for (let i of service) {
       i.style.opacity = "0";
     }
@@ -4387,7 +4405,7 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
       instance.thirdChildren.get("box1_designerInput").style.fontSize = "24px";
       instance.thirdChildren.get("box1_title").style.fontSize = "24px";
       instance.thirdChildren.get("box1").style.background = GeneralJs.colorChip.white;
-      instance.thirdChildren.get("box1").style.border = "1px solid #dddddd";
+      instance.thirdChildren.get("box1").style.border = "1px solid " + GeneralJs.colorChip.gray3;
     }
     ProposalJs.toggleTimeout.load_third = setTimeout(function () {
       third(obj, false);
@@ -4674,12 +4692,12 @@ ProposalJs.prototype.cssInjection = function () {
   .piclabel{font-size:12px;}
 
   /* columns */
-  .columns{position:sticky;top:0px;display:block;border-radius:5px;padding:58px 8px 2px calc(var(--left-padding) + 8px);z-index:1;background:#fff;transition:background 0s;}
-  .columnobj{display:inline-block;position:relative;font-weight:600;vertical-align:top;text-align:center;margin:32px 0px 0px 8px;margin-left:2px;padding:8px 16px 6px 16px;min-height:24px;color:#2fa678;cursor:pointer;}
+  .columns{position:sticky;top:0px;display:block;border-radius:5px;padding:58px 8px 2px calc(var(--left-padding) + 8px);z-index:1;background:${GeneralJs.colorChip.white};transition:background 0s;}
+  .columnobj{display:inline-block;position:relative;font-weight:600;vertical-align:top;text-align:center;margin:32px 0px 0px 8px;margin-left:2px;padding:8px 16px 6px 16px;min-height:24px;color:${GeneralJs.colorChip.green};cursor:pointer;}
 
   /* total data */
-  .data{position:relative;background:#fff;overflow-x:visible;overflow-y:scroll;padding-left:var(--left-padding);transition:background 0s;}
-  .rowdiv{position:relative;display:block;margin:0px;margin-top:0px;padding:1px 2px 1px 8px;border-top:1px solid #e2e2e2;}
+  .data{position:relative;background:${GeneralJs.colorChip.white};overflow-x:visible;overflow-y:scroll;padding-left:var(--left-padding);transition:background 0s;}
+  .rowdiv{position:relative;display:block;margin:0px;margin-top:0px;padding:1px 2px 1px 8px;border-top:1px solid ${GeneralJs.colorChip.gray2};}
   .rows{display:inline-block;position:relative;margin:0px;margin-left:2px;font-weight:600;border-radius:4px;padding:7px 16px 6px 16px;vertical-align:top;text-align:center;min-height:22px;max-height:22px;overflow:hidden;letter-spacing:-0.2px;cursor:pointer;}
   .textrows{line-height:1.7;padding-top:5px;min-height:25px;max-height:25px;transition:all 0s;}
   .rowdiv_back,.rowdiv_init_back{display: block;position:absolute;z-index:0;background:transparent;transition:background 0s;}
@@ -4694,7 +4712,7 @@ ProposalJs.prototype.cssInjection = function () {
   #belowid{position:fixed;height:123px;text-align: center;bottom:0;width:calc(100% - 190px);left:190px;z-index:100;transform:translateY(0px)}
   .below2{position:relative;padding:20px;height:100%;transform: translateX(0px);width: calc(100vw - 230px);}
   .bletotal{display:inline-block;position:relative;overflow:hidden;border-radius:3px;}
-  .bleobj{position:relative;color:#2fa678;margin:4px;margin-top:5px;font-family:'sandoll';font-weight:600;padding:5px 14px 6px 14px;background: linear-gradient(222deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 100%);border-radius:3px;}
+  .bleobj{position:relative;color:${GeneralJs.colorChip.green};margin:4px;margin-top:5px;font-family:'sandoll';font-weight:600;padding:5px 14px 6px 14px;background: linear-gradient(222deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 100%);border-radius:3px;}
   .blegarim{position:absolute;top:4px;left:4px;width:calc(100% - 8px);height:calc(100% - 8px);background:linear-gradient(222deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 100%);opacity:0;cursor:pointer;border-radius:5px;}
   .blegarim:hover{opacity:0.5;}
   #belowgreen_back{width:200%;background:linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%);}
@@ -4703,22 +4721,21 @@ ProposalJs.prototype.cssInjection = function () {
   .belowcircle{top:-20px;}.navicircle{right:11px;}
 
   /* initcolumn */
-  #initcolumn{display:block;position:absolute;top:0;width:2480px;left:-2100px;height:7850px;background:#f7f7f7;z-index:3;opacity:0.87;box-shadow:1px 4px 7px -5px #aaaaaa;}
+  #initcolumn{display:block;position:absolute;top:0;width:2480px;left:-2100px;height:7850px;background:${GeneralJs.colorChip.gray0};z-index:3;opacity:0.87;box-shadow:1px 4px 7px -5px ${GeneralJs.colorChip.gray5};}
   #initcolumn_data{position:absolute;top:0;right:0;width:190px;padding-top:132px;}
   #initcolumn_column{position:absolute;bottom:-8px;right:0px;width:171px;height:100%;}
-  #initcolumn_column_stikcy{position:sticky;top:0;width:100%;height:130px;background:#f7f7f7;z-index:3;}
-  .rowdiv_init{position:relative;display:block;opacity:1;width:163px;left:17px;height:30px;margin:0px;margin-bottom:7px;font-family:'sandoll';color:#303030;font-weight:600;padding:1px 2px 1px 8px;cursor: pointer;}
+  #initcolumn_column_stikcy{position:sticky;top:0;width:100%;height:130px;background:${GeneralJs.colorChip.gray0};z-index:3;}
+  .rowdiv_init{position:relative;display:block;opacity:1;width:163px;left:17px;height:30px;margin:0px;margin-bottom:7px;font-family:'sandoll';color:${GeneralJs.colorChip.darkBlack};font-weight:600;padding:1px 2px 1px 8px;cursor: pointer;}
   .rowdiv_init div{color:inherit;}
-  .columnobjinit{right:0;display:inline-block;position:absolute;font-weight:600;transition:all 0s;min-height:24px;color:#2fa678;bottom:10px;cursor:pointer;}
+  .columnobjinit{right:0;display:inline-block;position:absolute;font-weight:600;transition:all 0s;min-height:24px;color:${GeneralJs.colorChip.green};bottom:10px;cursor:pointer;}
 
   /* search bar */
-  .searchbar{width:588px;position:fixed;height:80px;top:0;right:0px;z-index:1;background:#fff;transition:background 0s;overflow: visible;}
+  .searchbar{width:588px;position:fixed;height:80px;top:0;right:0px;z-index:1;background:${GeneralJs.colorChip.white};transition:background 0s;overflow: visible;}
   .searchicon{width:560px;height:35px;right:28px;top:30px;position:absolute;mix-blend-mode:multiply;}
-  .searchinput{position:absolute;top:29.5px;right:28px;width:548px;height:36px;outline:none;font-family:'sandoll';border:0;font-weight:500;background:transparent;color:#505050;letter-spacing:-0.2px;padding-bottom:4px;}
+  .searchinput{position:absolute;top:29.5px;right:28px;width:548px;height:36px;outline:none;font-family:'sandoll';border:0;font-weight:500;background:transparent;color:${GeneralJs.colorChip.darkDarkShadow};letter-spacing:-0.2px;padding-bottom:4px;}
 
   /* ajax funcs general */
   #cancel_back{width:100%;height:100%;background:transparent;position:fixed;top:0px;left:0px;z-index:1;}
-
 
   @media (min-width:1632px) {
     #longtextbox{height:480px;}
@@ -4749,7 +4766,6 @@ ProposalJs.prototype.cssInjection = function () {
 
   #belowscroll{display:none;}
   #naviscroll{display:none;}
-
   #pp_secondprocess_box{cursor: pointer;}
 
   .pp_contents_inbox{
@@ -4766,7 +4782,7 @@ ProposalJs.prototype.cssInjection = function () {
     display: inline-flex;
     height: calc(calc(100% / 3) - 6px);
     width: calc(calc(100% / 4) - 5px);
-    background: #dddddd;
+    background: ${GeneralJs.colorChip.gray3};
     margin-right: 5px;
     margin-bottom: 5px;
     border-radius: 5px;
@@ -4779,7 +4795,7 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_service_wording{
     font-size: 1.2vh;
     font-weight: 200;
-    color: #aaaaaa;
+    color: ${GeneralJs.colorChip.gray5};
     position: absolute;
     margin-top: -1px;
   }
@@ -4788,7 +4804,7 @@ ProposalJs.prototype.cssInjection = function () {
     display: none;
   }
   .pp_clients_input:checked + div {
-    background:#2fa678;
+    background:${GeneralJs.colorChip.green};
   }
   .pp_clients_input:checked + div > div {
     color:white;
@@ -4828,7 +4844,7 @@ ProposalJs.prototype.cssInjection = function () {
     width: calc(calc(100% / 3) - calc(calc(5px * 2) / 3));
     height: calc(100% - 20px);
     margin-top: 10px;
-    background: #dddddd;
+    background: ${GeneralJs.colorChip.gray3};
     display: inline-flex;
     border-radius: 5px;
     margin-right: 5px;
@@ -4869,7 +4885,7 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_designer_question > div:nth-child(1){
     font-size: inherit;
     font-weight: 200;
-    color:#aaaaaa;
+    color:${GeneralJs.colorChip.gray5};
     display: inline-block;
     margin-left: 7px;
   }
@@ -4880,7 +4896,7 @@ ProposalJs.prototype.cssInjection = function () {
     margin-left: 5px;
     font-size: inherit;
     font-weight: 600;
-    color:#aaaaaa;
+    color:${GeneralJs.colorChip.gray5};
     outline: 0;
     border: 0;
     background: transparent;
@@ -4891,7 +4907,7 @@ ProposalJs.prototype.cssInjection = function () {
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: #cccccc;
+    color: ${GeneralJs.colorChip.gray4};
     margin-top: 3px;
     opacity: 0;
   }
@@ -4917,12 +4933,12 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_designer_selected_box_title{
     font-size: 14px;
     font-weight: 600;
-    color:#606060;
+    color:${GeneralJs.colorChip.darkShadow};
   }
 
   .pp_designer_selected_box_contents{
     margin-top:5px;
-    background: #f2f2f2;
+    background: ${GeneralJs.colorChip.gray1};
     border-radius: 5px;
     height:calc(100% - 24px);
     box-sizing: border-box;
@@ -4950,7 +4966,7 @@ ProposalJs.prototype.cssInjection = function () {
     flex-wrap: wrap;
     position: relative;
     top: 12%;
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid ${GeneralJs.colorChip.gray3};
     text-align: center;
     box-sizing: border-box;
   }
@@ -4972,7 +4988,7 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .pp_designer_selected_box_contents_designers_input:checked + .pp_designer_selected_box_contents_designers{
-    background: #2fa678;
+    background: ${GeneralJs.colorChip.green};
     color:white;
   }
 
@@ -4998,18 +5014,18 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .pp_designer_selected_box_contents_service_input:checked + .pp_designer_selected_box_contents_service{
-    color:#2fa678;
+    color:${GeneralJs.colorChip.green};
   }
 
   .pp_designer_selected_box_contents_service_input:checked + .pp_designer_selected_box_contents_service > .pp_designer_selected_box_contents_service_won{
-    background: #2fa678;
+    background: ${GeneralJs.colorChip.green};
   }
 
   .pp_designer_selected_box_contents_service_won{
     position: absolute;
     width: 6px;
     height: 6px;
-    background: #bbbbbb;
+    background: ${GeneralJs.colorChip.deactive};
     border-radius: 10px;
     top: calc(50% - 4px);
     left: -2px;
@@ -5027,7 +5043,7 @@ ProposalJs.prototype.cssInjection = function () {
     font-size: inherit;
     display: inline-block;
     font-weight: 600;
-    color: #606060;
+    color: ${GeneralJs.colorChip.darkShadow};
     padding-bottom: 3px;
   }
 
@@ -5037,7 +5053,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     margin-right: 2px;
     border: 0;
-    color: #2fa678;
+    color: ${GeneralJs.colorChip.green};
     font-weight: 600;
     outline: 0;
     background: transparent;
@@ -5057,7 +5073,7 @@ ProposalJs.prototype.cssInjection = function () {
     font-size: 1.1vw;
     display: flex;
     font-weight: 300;
-    color: #aaaaaa;
+    color: ${GeneralJs.colorChip.gray5};
     width: 100%;
     height: ${GeneralJs.isMac() ? String(87) : String(97)}%;
     justify-content: center;
@@ -5099,7 +5115,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     margin: 32px;
     margin-top: 33px;
-    border: 1px solid #ececec;
+    border: 1px solid ${GeneralJs.colorChip.gray2};
     border-radius: 7px;
     overflow: scroll;
   }
@@ -5194,7 +5210,7 @@ ProposalJs.prototype.cssInjection = function () {
     bottom: 3.2vh;
     width: 54px;
     height: 28px;
-    background: #2fa678;
+    background: ${GeneralJs.colorChip.green};
     border-radius: 4px;
     color: #fff;
     font-size: 14px;
@@ -5207,7 +5223,7 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .ppw_left_description_inbutton:hover{
-    color: #bddfd0;
+    color: ${GeneralJs.colorChip.whiteGreen};
   }
 
   .ppw_rightbox{
@@ -5215,7 +5231,7 @@ ProposalJs.prototype.cssInjection = function () {
     width: calc(100% - var(--left-width) - 82px);
     height: calc(100% - 66px);
     position: absolute;
-    border: 1px solid #ececec;
+    border: 1px solid ${GeneralJs.colorChip.gray2};
     border-left: 0;
     border-radius: 7px;
     border-top-left-radius: 0px;
@@ -5252,7 +5268,7 @@ ProposalJs.prototype.cssInjection = function () {
 
   .ppw_right_picturebox{
     height: 184px;
-    background: #f2f2f2;
+    background: ${GeneralJs.colorChip.gray1};
     margin-top: 1.3%;
     margin-bottom: 2.9%;
     border-bottom-left-radius: 5px;
@@ -5408,7 +5424,7 @@ ProposalJs.prototype.cssInjection = function () {
   }
   .blewpp_bar{
     position: absolute;
-    border-bottom: 1px solid #83cea7;
+    border-bottom: 1px solid ${GeneralJs.colorChip.middleGreen};
     height: 0;
     top: 53px;
     animation: blewpp_numberbar_total_fadein 1.6s ease forwards;
@@ -5446,14 +5462,14 @@ ProposalJs.prototype.cssInjection = function () {
     border-radius: 4px;
     font-size: 14px;
     font-weight: 300;
-    color: #2fa678;
+    color: ${GeneralJs.colorChip.green};
     text-align: center;
     z-index: 3;
   }
 
   .blewpp_fifthevent_box:hover{
-    color: #2fa678;
-    background: #fbfbfb;
+    color: ${GeneralJs.colorChip.green};
+    background: ${GeneralJs.colorChip.whiteGray};
   }
 
   #blewpp_fifthevent_cancelbox{
@@ -5472,10 +5488,10 @@ ProposalJs.prototype.cssInjection = function () {
     width: 210px;
     left: 0px;
     height: 100%;
-    background: #f7f7f7;
+    background: ${GeneralJs.colorChip.gray0};
     z-index: 3;
     opacity: 0.87;
-    box-shadow: 1px 4px 7px -5px #aaaaaa;
+    box-shadow: 1px 4px 7px -5px ${GeneralJs.colorChip.gray5};
   }
 
   .listpp_leftBar_totalbox{
@@ -5521,7 +5537,7 @@ ProposalJs.prototype.cssInjection = function () {
     top: 8px;
     left: 70%;
     width: 12%;
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid ${GeneralJs.colorChip.gray3};
   }
 
   .listpp_mainArea{
@@ -5553,7 +5569,7 @@ ProposalJs.prototype.cssInjection = function () {
     width: 86px;
     position: absolute;
     top: ${GeneralJs.isMac() ? String(6) : String(7)}px;
-    color: #2fa678;
+    color: ${GeneralJs.colorChip.green};
   }
 
   .listpp_mainArea_tong_name{
@@ -5576,7 +5592,7 @@ ProposalJs.prototype.cssInjection = function () {
     font-size: 13px;
     position: absolute;
     top: 0px;
-    background: #f7f7f7;
+    background: ${GeneralJs.colorChip.gray0};
     height: calc(100% - ${GeneralJs.isMac() ? String(5) : String(6)}px);
     width: calc(100% - 245px);
     padding-left: 11px;
@@ -5605,7 +5621,7 @@ ProposalJs.prototype.cssInjection = function () {
     height: 100%;
     position: absolute;
     right: 13px;
-    border: 1px solid #ececec;
+    border: 1px solid ${GeneralJs.colorChip.gray2};
     text-align: center;
     box-sizing: border-box;
     top: 0px;
@@ -5647,11 +5663,11 @@ ProposalJs.prototype.cssInjection = function () {
     letter-spacing: -0.2px;
     word-spacing: -0.5px;
     margin-top: 5px;
-    color:#505050;
+    color:${GeneralJs.colorChip.darkDarkShadow};
 
   }
   .listpp_menuEvent:hover{
-    color:#2fa678;
+    color:${GeneralJs.colorChip.green};
   }
   .listpp_menuEvent_pending{
     margin-top: 13px;
@@ -5685,14 +5701,14 @@ ProposalJs.prototype.cssInjection = function () {
 
   .selected_button {
     position: relative;
-    border-bottom: 1px solid #ececec;
+    border-bottom: 1px solid ${GeneralJs.colorChip.gray2};
     height: 20%;
     font-size: 16px;
     font-weight: 200;
     text-align: center;
     cursor: pointer;
     background: transparent;
-    color: #404040;
+    color: ${GeneralJs.colorChip.black};
   }
 
   .selected_button_contents {
@@ -5703,11 +5719,11 @@ ProposalJs.prototype.cssInjection = function () {
     font-weight: 200;
     text-align: center;
     cursor: pointer;
-    color: #404040;
+    color: ${GeneralJs.colorChip.black};
   }
 
   .selected_button_contents:hover {
-    color: #2fa789;
+    color: ${GeneralJs.colorChip.green};
   }
 
   `;

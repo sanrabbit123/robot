@@ -1054,7 +1054,7 @@ ClientJs.prototype.infoArea = function (info) {
           zIndex: String(3),
           borderRadius: String(3) + ea,
           animation: "fadeuplite 0.3s ease forwards",
-          boxShadow: "0px 2px 11px -6px #2fa678",
+          boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
         };
         for (let j in style) {
           button_clone.style[j] = style[j];
@@ -4108,7 +4108,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       summaryBox.style[z] = style[z];
     }
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:#2fa678">${String(summaryTong.client)}</b>명&nbsp;&nbsp;제안 <b style="color:#2fa678">${String(summaryTong.proposal)}</b>명&nbsp;&nbsp;추천 <b style="color:#2fa678">${String(summaryTong.recommend)}</b>명&nbsp;&nbsp;계약 <b style="color:#2fa678">${String(summaryTong.contract)}</b>명&nbsp;&nbsp;진행 <b style="color:#2fa678">${String(summaryTong.process)}</b>명<br>제안율 <b style="color:#2fa678">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:#2fa678">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
+    summaryBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.client)}</b>명&nbsp;&nbsp;제안 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.proposal)}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.recommend)}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.contract)}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.process)}</b>명<br>제안율 <b style="color:${GeneralJs.colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:${GeneralJs.colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
     div_clone.appendChild(summaryBox);
 
     totalSummary.client += summaryTong.client;
@@ -4263,7 +4263,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
         while (totalBox.firstChild) {
           totalBox.removeChild(totalBox.lastChild);
         }
-        totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:#2fa678">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;제안 <b style="color:#2fa678">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;추천 <b style="color:#2fa678">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:#2fa678">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:#2fa678">${scrollBox.getAttribute("process_number")}</b>명`);
+        totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;제안 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
       });
     }
   });
@@ -4284,7 +4284,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
     totalBox.style[i] = style[i];
   }
 
-  totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:#2fa678">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;제안 <b style="color:#2fa678">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;추천 <b style="color:#2fa678">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:#2fa678">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:#2fa678">${scrollBox.getAttribute("process_number")}</b>명`);
+  totalBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("client_number")}</b>명&nbsp;&nbsp;제안 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("proposal_number")}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("recommend_number")}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("contract_number")}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${scrollBox.getAttribute("process_number")}</b>명`);
   div_clone.appendChild(totalBox);
 
   //end

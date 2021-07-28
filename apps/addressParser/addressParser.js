@@ -591,9 +591,9 @@ AddressParser.prototype.addressInspection = async function (addressArr, liteMode
             return { boo: false, message: "ERROR: 검색 결과가 없음" };
           }
 
-          first = addressArr[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
-          road = searchResult.address.road.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
-          parcel = searchResult.address.parcel.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '');
+          first = addressArr[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '').replace(/시$/i, '');
+          road = searchResult.address.road.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '').replace(/시$/i, '');
+          parcel = searchResult.address.parcel.split(' ')[0].replace(/특별.+$/i, '').replace(/광역.+$/i, '').replace(/[남북].+$/i, '').replace(/도$/i, '').replace(/시$/i, '');
           if (first !== road && first !== parcel) {
             return { boo: false, message: "ERROR: 광역 단계 일치하지 않음" };
           }
