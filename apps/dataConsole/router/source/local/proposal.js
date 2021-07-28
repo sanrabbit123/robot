@@ -22,6 +22,7 @@ const ProposalJs = function () {
 
   //auto-make proposal function property
   this.firstDo_secondToggle = true;
+  this.clickTargets = [];
 }
 
 ProposalJs.feeKeyMaker = function (desid, cliid, serid, xValue) {
@@ -299,7 +300,12 @@ ProposalJs.below_events = {
 
               result[0].setting.proposal[this_order].description = obj;
 
-              console.log(await GeneralJs.ajaxPromise("where=" + JSON.stringify({ desid: desid }) + "&target=setting.proposal" + "&updateValue=" + JSON.stringify(result[0].setting.proposal), "/rawUpdateDesigner"));
+              await GeneralJs.ajaxJson({
+                whereQuery: { desid },
+                updateQuery: {
+                  "setting.proposal": result[0].setting.proposal
+                }
+              }, "/rawUpdateDesigner");
             }
 
             //remove
@@ -1029,7 +1035,6 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
             GeneralJs.ajax("id=" + instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id"), "/parsingProposal", function (obj) {
               let { result } = JSON.parse(obj);
               instance.firstDo_secondToggle = false;
-              instance.clickTargets = [];
               if (result !== null) {
                 result.client = instance.domBox.get("고객 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
                 result.cliid = instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id");
@@ -1269,20 +1274,32 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
   fourth.events = {};
 
   fourth.events.money = function (e) {
-    if (this.value === '') { this.value = "0"; }
-    if (e.type === "keyup") {
-      if (e.key === "Enter" || e.key === "Tab") {
+    if (e.type === "click") {
+      const index = Number(this.parentNode.parentNode.getAttribute("index"));
+
+
+
+
+
+
+    } else {
+      if (this.value === '') {
+        this.value = "0";
+      }
+      if (e.type === "keyup") {
+        if (e.key === "Enter" || e.key === "Tab") {
+          this.value = GeneralJs.autoComma(this.value);
+        }
+      } else if (e.type === "blur") {
         this.value = GeneralJs.autoComma(this.value);
       }
-    } else if (e.type === "blur") {
-      this.value = GeneralJs.autoComma(this.value);
-    }
-    this.style.width = String(0.85 * this.value.length) + "vh";
-    if (this.value.replace(/,/g, '').length < 7) {
-      this.style.width = String(0.9 * this.value.length) + "vh";
-    }
-    if (this.value.replace(/,/g, '').length < 4) {
-      this.style.width = String(1.1 * this.value.length) + "vh";
+      this.style.width = String(0.85 * this.value.length) + "vh";
+      if (this.value.replace(/,/g, '').length < 7) {
+        this.style.width = String(0.9 * this.value.length) + "vh";
+      }
+      if (this.value.replace(/,/g, '').length < 4) {
+        this.style.width = String(1.1 * this.value.length) + "vh";
+      }
     }
   }
 
@@ -1328,6 +1345,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     input_clone.style.width = String(0.85 * input_clone.value.length) + "vh";
     input_clone.addEventListener("keyup", fourth.events.money);
     input_clone.addEventListener("blur", fourth.events.money);
+    input_clone.addEventListener("click", fourth.events.money);
     div_clone3.appendChild(input_clone);
 
     //3
@@ -1336,7 +1354,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     div_clone2.insertAdjacentHTML("beforeend", '원');
     div_clone3.appendChild(div_clone2);
     return div_clone3;
-
   }
 
   fourth.events.designer = function (e) {
@@ -1414,7 +1431,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
 
   fourth.events.service = async function (e) {
     try {
-
       const card = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
       let n = this.getAttribute("cus_id").replace(/[^0-9]/g, '');
       let desid, cliid, serid, xValue;
@@ -1468,9 +1484,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     }
   }
 
-  //디자이너 이름
   designers = instance.designers;
-
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
     let input, div_clone, div_clone2, div_clone3, input_clone, label_clone;
     let i;
@@ -1494,6 +1508,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       div_clone.appendChild(input_clone);
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       div_clone2.classList.add("pp_designer_selected_box_contents_designers");
+      div_clone2.classList.add("pp_designer_selected_box_contents_designers_s" + String(n));
       div_clone2.textContent = designer.designer;
 
       label_clone = GeneralJs.nodes.label.cloneNode(true);
@@ -1528,9 +1543,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       }
       GeneralJs.timeouts["firstClick"] = setTimeout(async () => {
         try {
-          console.log(instance.clickTargets);
           for (let dom of instance.clickTargets) {
-            console.log(dom);
             dom.querySelector("label").querySelector("div").click();
             await GeneralJs.sleep(600);
           }
@@ -1554,7 +1567,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     dom.appendChild(div_clone);
   });
 
-  //서비스 방식
   fourth.callbacks.set("서비스 방식", function (dom, n) {
     let input = GeneralJs.nodes.input.cloneNode(true);
     input.classList.add("pp_designer_selected_box_contents_service_input");
@@ -1616,12 +1628,12 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     dom.appendChild(div_clone);
   });
 
-  //서비스 금액
   fourth.callbacks.set("서비스 금액", function (dom, n) {
-    let div_clone, div_clone2, div_clone3, input_clone;
+    let div_clone;
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_designer_selected_box_contents_money");
     div_clone.id = "pp_designer_selected_box_contents_money" + String(n);
+    div_clone.setAttribute("index", String(n));
     //------------------------------------------------------------------------
     if (obj.proposal === undefined) {
       div_clone.appendChild(money_set("오프라인", 0));
@@ -1634,7 +1646,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     dom.appendChild(div_clone);
   });
 
-  //사진 선택
   fourth.callbacks.set("사진 선택", function (dom, n) {
     let div_clone, div_clone2, div_clone3, input_clone;
     div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1813,7 +1824,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       }
 
     } else {
-      console.log("in past");
       if (num <= instance.pastMaps[0].size) {
         for (let i = 0; i < num; i++) {
           instance.pastMaps[0].get("box" + String(i)).style.width = "calc(100% / " + String(num) + ")";
@@ -1841,6 +1851,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         for (let node of target3) {
           node.addEventListener("keyup", fourth.events.money);
           node.addEventListener("blur", fourth.events.money);
+          node.addEventListener("click", fourth.events.money);
         }
       } else {
         for (let i = 0; i < instance.pastMaps[0].size; i++) {
@@ -1866,6 +1877,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         for (let node of target3) {
           node.addEventListener("keyup", fourth.events.money);
           node.addEventListener("blur", fourth.events.money);
+          node.addEventListener("click", fourth.events.money);
         }
         for (let i = instance.pastMaps[0].size; i < num; i++) {
           div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -1915,7 +1927,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     }
     instance.fourthChildren = fourthChildren;
     instance.toggleSetting.fourth = 1;
-    console.log(instance.fourthChildren);
 
     let removeAll = function (e) {
       //------------------------------------------------------------------------
@@ -1937,7 +1948,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         fourth.contents.style.padding = "";
         for (let i = 0; i < 3; i++) { instance.thirdChildren.get("box" + String(i)).style.opacity = ""; }
         document.querySelector("#pp_designer_question_input").focus();
-        console.log(instance.pastMaps[0]);
       }
     }
     fourth.title.addEventListener("click", removeAll, { once: true });
@@ -3260,7 +3270,6 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               {
                 type: "click",
                 event: async function (e) {
-                  console.log("this!");
                   try {
                     let timeObj;
                     timeObj = {
@@ -3761,7 +3770,6 @@ ProposalJs.prototype.load_reset = function (obj = {}) {
   this.toggleSetting.third = 0;
   this.toggleSetting.fourth = 0;
 
-  console.log("all reset");
   this.pastMaps = [];
 
   if (obj.cliid !== undefined) {
