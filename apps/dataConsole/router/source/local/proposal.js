@@ -1275,13 +1275,431 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
 
   fourth.events.money = function (e) {
     if (e.type === "click") {
-      const index = Number(this.parentNode.parentNode.getAttribute("index"));
+      const thisSet = this.parentNode;
+      const index = Number(thisSet.parentNode.getAttribute("index"));
+      const designerCardClassName = "pp_designer_selected_box_contents_designers_s";
+      const targetDesigners = Array.from(document.querySelectorAll('.' + designerCardClassName + String(index)));
+      const targetInputs = targetDesigners.map((dom) => { return dom.previousElementSibling; });
+      let thisDesigner, desid, cliid, serid, xValue;
+      thisDesigner = null;
+      for (let i = 0; i < targetInputs.length; i++) {
+        if (targetInputs[i].checked) {
+          thisDesigner = targetDesigners[i];
+        }
+      }
+      if (thisDesigner !== null) {
+        desid = thisDesigner.querySelector("label").querySelector("div").getAttribute("cus_desid");
+        cliid = instance.cliid;
+        serid = instance.serid;
+        xValue = instance.xValue;
+
+        const greenPopup = function (feeObject) {
+          if (typeof feeObject !== "object") {
+            throw new Error("invaild input");
+          }
+          const ea = "px";
+          const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
+          const { client, designer, detail, fee } = feeObject;
+          const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium } = detail;
+          const distanceBoo = (fee !== offline);
+          const mother = thisSet;
+          const motherWidth = mother.getBoundingClientRect().width;
+          const thisOnOff = /offline/gi.test(thisSet.className) ? "offline" : "online";
+          let size, margin;
+          let width;
+          let bottom;
+          let visual;
+          let blockHeight;
+          let paddingTop, paddingLeft, paddingBottom;
+          let titleVisual;
+
+          size = 13;
+          margin = 6;
+          width = 180;
+          visual = 1;
+          blockHeight = 22;
+          bottom = 56;
+          paddingTop = 14;
+          paddingLeft = 18;
+          paddingBottom = 13;
+          titleVisual = 1;
+
+          createNode({
+            mother,
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  for (let i = 0; i < 2; i++) {
+                    mother.removeChild(mother.lastChild);
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: "transparent",
+            }
+          });
+          createNode({
+            mother,
+            events: [
+              {
+                type: "click",
+                event: (e) => { e.preventDefault(); e.stopPropagation(); }
+              }
+            ],
+            style: {
+              position: "absolute",
+              width: String(width) + ea,
+              height: "auto",
+              borderRadius: String(3) + "px",
+              background: colorChip.gradientGreen4,
+              bottom: String(bottom) + ea,
+              left: String((motherWidth - (width + (paddingLeft * 2))) / 2) + ea,
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              animation: "fadeuplite 0.3s ease forwards",
+              paddingTop: String(paddingTop) + ea,
+              paddingBottom: String(paddingBottom) + ea,
+              paddingLeft: String(paddingLeft) + ea,
+              paddingRight: String(paddingLeft) + ea,
+            },
+            children: [
+              {
+                style: {
+                  position: "relative",
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                },
+                children: [
+                  //name
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: designer + " / " + client,
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          left: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                  //alpha
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: "가산점",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          top: String(titleVisual) + ea,
+                          left: String(0) + ea,
+                        }
+                      },
+                      {
+                        text: String(alpha).slice(0, 6) + '%',
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          right: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                  //level
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: "레벨",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          top: String(titleVisual) + ea,
+                          left: String(0) + ea,
+                        }
+                      },
+                      {
+                        text: "시공 " + String(construct) + " / 스타일링 " + String(styling),
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          right: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                  //pyeong
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: "평수",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          top: String(titleVisual) + ea,
+                          left: String(0) + ea,
+                        }
+                      },
+                      {
+                        text: String(pyeong) + "평",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          right: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                  //travel
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: "출장",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          top: String(titleVisual) + ea,
+                          left: String(0) + ea,
+                        }
+                      },
+                      {
+                        text: travel.distance + " / " + travel.time,
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          right: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                  //distance
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    events: [
+                      {
+                        type: [ "click", "contextmenu" ],
+                        event: function (e) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (e.type === "click") {
+
+                            
+
+
+                          } else {
 
 
 
 
+                          }
+                        }
+                      }
+                    ],
+                    children: [
+                      {
+                        text: "출장비",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          top: String(titleVisual) + ea,
+                          left: String(0) + ea,
+                        }
+                      },
+                      {
+                        text: GeneralJs.autoComma(distance) + "원 / " + String(travel.number) + "회",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          right: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                  //online
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: "온라인시",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          top: String(titleVisual) + ea,
+                          left: String(0) + ea,
+                        }
+                      },
+                      {
+                        text: GeneralJs.autoComma(online) + "원",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          right: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                  //offline
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: "오프라인시",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          top: String(titleVisual) + ea,
+                          left: String(0) + ea,
+                        }
+                      },
+                      {
+                        text: GeneralJs.autoComma(offline) + "원",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          right: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                  //final fee
+                  {
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      height: String(blockHeight) + ea,
+                    },
+                    children: [
+                      {
+                        text: "출장 적용",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          top: String(titleVisual) + ea,
+                          left: String(0) + ea,
+                        }
+                      },
+                      {
+                        text: GeneralJs.autoComma(fee) + "원",
+                        style: {
+                          position: "absolute",
+                          fontSize: String(size) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.white,
+                          top: String(0) + ea,
+                          right: String(0) + ea,
+                        }
+                      }
+                    ]
+                  },
+                ]
+              }
+            ]
+          });
 
+        }
 
+        if (!instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
+          GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee").then((raw_fee) => {
+            if (!Array.isArray(raw_fee)) {
+              window.alert("오류 발생, 관리자에게 문의하세요!");
+              window.location.reload();
+            }
+            if (raw_fee.length === 0) {
+              window.alert("오류 발생, 관리자에게 문의하세요!");
+              window.location.reload();
+            }
+            const result = raw_fee[0];
+            instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
+            greenPopup(result);
+          });
+        } else {
+          greenPopup(instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)));
+        }
+      }
     } else {
       if (this.value === '') {
         this.value = "0";
@@ -1420,7 +1838,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         if (/online/g.test(dom.className)) {
           dom.querySelector("input").value = GeneralJs.autoComma(result.detail.online);
         } else {
-          dom.querySelector("input").value = GeneralJs.autoComma(result.detail.offline);
+          dom.querySelector("input").value = GeneralJs.autoComma(result.fee);
         }
       }
 
@@ -3789,6 +4207,8 @@ ProposalJs.prototype.load_processLoad = function (obj) {
 }
 
 ProposalJs.prototype.load_processLoad_first = function (obj) {
+  const instance = this;
+
   clearTimeout(ProposalJs.toggleTimeout.load_zero);
   this.domBox.get("고객 선택").style.height = "3.2vh";
   this.domBox.get("고객 선택").style.borderBottom = "1px solid #ececec";
@@ -3799,27 +4219,39 @@ ProposalJs.prototype.load_processLoad_first = function (obj) {
 
   let service = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
   for (let i of service) {
-    i.style.background = "white";
-    i.children[0].style.color = "#2fa678";
+    i.style.background = GeneralJs.colorChip.white;
+    i.children[0].style.color = GeneralJs.colorChip.green;
     i.children[0].style.fontSize = "1.7vh";
   }
-  for (let i = 0; i < 4; i++) { service[i].children[0].style.marginTop = "-2px"; }
-  for (let i = 4; i < 8; i++) { service[i].children[0].style.marginTop = "-4px"; }
-  for (let i = 8; i < 12; i++) { service[i].children[0].style.marginTop = "-6px"; }
+  for (let i = 0; i < 4; i++) {
+    service[i].children[0].style.marginTop = "-2px";
+  }
+  for (let i = 4; i < 8; i++) {
+    service[i].children[0].style.marginTop = "-4px";
+  }
+  for (let i = 8; i < 12; i++) {
+    service[i].children[0].style.marginTop = "-6px";
+  }
 
   let service_input = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll("input");
   for (let i of service_input) {
     if (i.checked) {
-      i.nextElementSibling.style.background = "#2fa678";
-      i.nextElementSibling.children[0].style.color = "white";
+      i.nextElementSibling.style.background = GeneralJs.colorChip.green;
+      i.nextElementSibling.children[0].style.color = GeneralJs.colorChip.white;
     }
   }
-  this.domBox.get("고객 선택").children[0].style.color = "#2fa678";
-  this.domBox.get("고객 선택").children[1].style.background = "white";
+  this.domBox.get("고객 선택").children[0].style.color = GeneralJs.colorChip.green;
+  this.domBox.get("고객 선택").children[1].style.background = GeneralJs.colorChip.white;
   if (document.querySelector("#pp_title_sub_b")) {
     document.querySelector("#pp_title_sub_b").remove();
   }
-  this.domBox.get("고객 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + obj.cliid + '" style="color:#2fa678;font-weight:300"> : ' + obj.client + '</b>');
+  this.domBox.get("고객 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title_sub_b" cus_id="' + obj.cliid + '" style="color:' + GeneralJs.colorChip.green + ';font-weight:300"> : ' + obj.client + '</b>');
+  this.cliid = obj.cliid;
+  GeneralJs.ajaxJson({ noFlat: true, whereQuery: { cliid: obj.cliid } }, "/getClients", { equal: true }).then((clients) => {
+    instance.client = clients[0];
+  }).catch((err) => {
+    console.log(err);
+  });
   this.toggleSetting.first = 1;
 }
 
@@ -3838,8 +4270,8 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
   }
   let service = this.domBox.get("서비스 선택").children[1].children[0].querySelectorAll(".pp_service");
   for (let i of service) {
-    i.style.background = "white";
-    i.children[0].style.color = "#2fa678";
+    i.style.background = GeneralJs.colorChip.white;
+    i.children[0].style.color = GeneralJs.colorChip.green;
     i.children[0].style.fontSize = "1.7vh";
   }
   for (let i = 0; i < 4; i++) {
@@ -3854,16 +4286,23 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
   let target0 = e.target.parentNode.parentNode;
   let target1 = e.target.parentNode.parentNode.children[0];
 
-  target0.style.background = "#2fa678";
-  target1.style.color = "white";
+  target0.style.background = GeneralJs.colorChip.green;
+  target1.style.color = GeneralJs.colorChip.white;
+
   ProposalJs.toggleTimeout.load_second = setTimeout(function () {
-    instance.domBox.get("서비스 선택").children[0].style.color = "#2fa678";
-    instance.domBox.get("서비스 선택").children[1].style.background = "white";
-    if (document.querySelector("#pp_title2_sub_b")) { document.querySelector("#pp_title2_sub_b").remove(); }
-    instance.domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title2_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_value") + '" style="color:#2fa678;font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+    instance.domBox.get("서비스 선택").children[0].style.color = GeneralJs.colorChip.green;
+    instance.domBox.get("서비스 선택").children[1].style.background = GeneralJs.colorChip.white;
+    if (document.querySelector("#pp_title2_sub_b")) {
+      document.querySelector("#pp_title2_sub_b").remove();
+    }
+    instance.domBox.get("서비스 선택").children[0].insertAdjacentHTML('beforeend', '<b id="pp_title2_sub_b" cus_id="' + e.target.parentElement.getAttribute("cus_value") + '" style="color:' + GeneralJs.colorChip.green + ';font-weight:300"> : ' + e.target.parentElement.getAttribute("cus_value") + '</b>');
+    instance.serid = e.target.parentElement.getAttribute("serid");
+    instance.xValue = e.target.parentElement.getAttribute("xValue");
     instance.domBox.get("서비스 선택").style.height = "3.2vh";
     instance.domBox.get("서비스 선택").style.borderBottom = "1px solid #ececec";
-    for (let i of service) { i.style.opacity = "0"; }
+    for (let i of service) {
+      i.style.opacity = "0";
+    }
     instance.domBox.get("서비스 선택").children[1].style.height = "calc(90% - 10px)";
     instance.domBox.get("서비스 선택").children[1].style.marginTop = "10px";
     instance.domBox.get("디자이너 선택").style.height = "calc(100% - 6.4vh - 63px)";
@@ -3871,12 +4310,12 @@ ProposalJs.prototype.load_processLoad_second = function (obj, third) {
     instance.domBox.get("디자이너 선택").children[1].style.marginTop = "-2.7vh";
     if (instance.thirdChildren instanceof Map) {
       instance.thirdChildren.get("box1_designerInput").focus();
-      instance.thirdChildren.get("box1_designerInput").style.color = "#2fa678";
+      instance.thirdChildren.get("box1_designerInput").style.color = GeneralJs.colorChip.green;
       instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(obj.proposal.length) + "명");
-      instance.thirdChildren.get("box1_title").style.color = "#2fa678";
+      instance.thirdChildren.get("box1_title").style.color = GeneralJs.colorChip.green;
       instance.thirdChildren.get("box1_designerInput").style.fontSize = "24px";
       instance.thirdChildren.get("box1_title").style.fontSize = "24px";
-      instance.thirdChildren.get("box1").style.background = "white";
+      instance.thirdChildren.get("box1").style.background = GeneralJs.colorChip.white;
       instance.thirdChildren.get("box1").style.border = "1px solid #dddddd";
     }
     ProposalJs.toggleTimeout.load_third = setTimeout(function () {

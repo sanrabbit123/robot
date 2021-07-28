@@ -908,10 +908,12 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let offlineFeeCase;
     let onlineFeeCase;
     let toMoney;
+    let travelNumber;
 
     priceStandardCollection = "designerPrice";
     priceStandardConst = 33;
     onlineRatio = 0.8;
+    travelNumber = 2;
 
     if (typeof cliid === "object") {
       mode = 0;
@@ -1095,7 +1097,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       fee = alphaPercentage * fee;
 
       if (onlineBoo) {
-        distanceBoo = false;
         offlineFeeCase = fee;
         onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
         if (priceStandard.online.minus.min > onlineFee) {
@@ -1108,7 +1109,9 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         if (priceStandard.online.absolute.min > fee) {
           fee = priceStandard.online.absolute.min;
         }
+        onlineFeeCase = fee;
       } else {
+        offlineFeeCase = fee;
         onlineFeeCase = fee;
         onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
         if (priceStandard.online.minus.min > onlineFee) {
@@ -1124,7 +1127,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       }
 
       if (distanceBoo) {
-        fee = fee + travelInfo.amount;
+        fee = fee + (travelInfo.amount * travelNumber);
       }
 
       toMoney = (num) => { return (Math.round(num / 10000) * 10000); }
@@ -1142,9 +1145,14 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
           xValue: mode === 0 ? project.service.xValue : xValue,
           newcomer: newcomerBoo,
           premium: premiumBoo,
-          online: onlineBoo ? toMoney(fee) : toMoney(onlineFeeCase),
-          offline: onlineBoo ? toMoney(offlineFeeCase) : toMoney(fee),
+          online: toMoney(onlineFeeCase),
+          offline: toMoney(offlineFeeCase),
           distance: travelInfo.amount,
+          travel: {
+            distance: travelInfo.distance.string,
+            time: travelInfo.time.string,
+            number: travelNumber,
+          },
           xy: { x, y },
           pyeong: request.space.pyeong.value,
           level: {

@@ -390,7 +390,7 @@ AddressParser.prototype.getTravelExpenses = async function (from, to) {
     }
     const mConst = priceStandard[0].travel.unit.meters;
     const sConst = priceStandard[0].travel.unit.seconds;
-    const consultingConst = priceStandard[0].travel.consulting.hours * priceStandard[0].travel.consulting.labor;
+    const consultingConst = priceStandard[0].travel.consulting.labor;
     const distance = await this.getDistance(from, to);
     let m, s, result;
 
