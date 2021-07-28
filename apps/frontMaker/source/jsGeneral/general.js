@@ -441,14 +441,22 @@ GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0) {
   if (from === undefined || valueOrTo === undefined || typeof visualSpecific !== "number") {
     throw new Error("invaild input");
   }
-  if (typeof valueOrTo !== "number") {
-    if (typeof valueOrTo === "object") {
-      valueOrTo = from.scrollTop + valueOrTo.getBoundingClientRect().top;
+  if (from !== window) {
+    if (typeof valueOrTo !== "number") {
+      if (typeof valueOrTo === "object") {
+        valueOrTo = from.scrollTop + valueOrTo.getBoundingClientRect().top;
+      } else {
+        throw new Error("invaild input");
+      }
+    }
+    from.scrollTop = valueOrTo - visualSpecific;
+  } else {
+    if (typeof valueOrTo === "number") {
+      window.scroll({ top: valueOrTo - visualSpecific, left: 0, behavior: "smooth" });
     } else {
-      throw new Error("invaild input");
+      window.scroll({ top: Math.abs(document.body.getBoundingClientRect().top - valueOrTo.getBoundingClientRect().top) - visualSpecific, left: 0, behavior: "smooth" });
     }
   }
-  from.scrollTop = valueOrTo - visualSpecific;
 }
 
 GeneralJs.createNode = function (mode, source, style, mother = null) {

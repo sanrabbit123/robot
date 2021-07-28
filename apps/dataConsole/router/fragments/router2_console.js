@@ -1857,23 +1857,105 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
       if (req.body.id === undefined) {
         throw new Error("must be cliid");
       }
-      const { id } = req.body;
-      const { cases, proid } = await back.getCaseProidById(id, { selfMongo: instance.mongo });
+      const { id: cliid } = req.body;
+      const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+      const { cases } = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+      const realTimes = await back.mongoRead("realtimeDesigner", {}, { selfMongo: instance.mongolocal });
+      const ytoken = 'y';
+      const mtoken = 'm';
+      let contract, proposal, final;
       let project;
+      let temp;
+      let realtimeMap;
+      let standard;
+      let now;
+      let range, secondRange;
+      let selected;
+      let boo;
+
+      if (client.toNormal().requests[0].request.space.resident.living) {
+        standard = new Date();
+      } else {
+        standard = client.toNormal().requests[0].request.space.resident.expected;
+      }
+
+      now = new Date();
+      standard.setDate(standard.getDate() - 60);
+
+      range = [];
+      for (let i = 0; i < 60; i++) {
+        if (now.valueOf() < standard.valueOf()) {
+          range.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
+        }
+        standard.setDate(standard.getDate() + 1);
+      }
+
+      secondRange = [];
+      for (let i = 0; i < 60; i++) {
+        if (now.valueOf() < standard.valueOf()) {
+          secondRange.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
+        }
+        standard.setDate(standard.getDate() + 1);
+      }
+
+      range = Array.from(new Set(range));
+      secondRange = Array.from(new Set(secondRange));
+
+      if (range.length <= 1) {
+        range = range.concat(secondRange);
+      }
+
+      realtimeMap = {};
+      for (let { desid, count } of realTimes) {
+        realtimeMap[desid] = count;
+      }
+
+      contract = [];
+      proposal = [];
+      for (let { proidArr, contractArr } of cases) {
+        contract = contract.concat(contractArr);
+        proposal = proposal.concat(proidArr);
+      }
+      contract = Array.from(new Set(contract));
+      proposal = Array.from(new Set(proposal));
+      proposal = proposal.filter((p) => { return !contract.includes(p); });
+      contract.sort();
+      proposal.sort();
+      final = proposal.concat(contract).reverse();
+
+      selected = [];
+      for (let proid of final) {
+        project = await back.getProjectById(proid, { selfMongo: instance.MONGOLOCALC });
+        if (project !== null) {
+          temp = project.toNormal().proposal.detail.map((obj) => { return obj.desid });
+          for (let desid of temp) {
+            boo = false;
+            for (let token of range) {
+              boo = (realtimeMap[desid][token] >= 1);
+              if (boo) {
+                break;
+              }
+            }
+            if (boo) {
+              if (!selected.map((obj) => { return obj.desid }).includes(desid)) {
+                selected.push(project.selectProposal(desid));
+              }
+            }
+            if (selected.length === 4) {
+              break;
+            }
+          }
+        }
+        if (selected.length === 4) {
+          break;
+        }
+      }
 
       res.set("Content-Type", "application/json");
-      if (proid === null) {
+      if (selected.length === 0) {
         res.send(JSON.stringify({ result: null }));
       } else {
-        project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-        if (project === null) {
-          res.send(JSON.stringify({ result: null }));
-        } else {
-          res.send(JSON.stringify({ result: {
-            proid: project.proid,
-            proposal: project.proposal.detail
-          }}));
-        }
+        res.send(JSON.stringify({ result: { proposal: selected } }));
       }
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });

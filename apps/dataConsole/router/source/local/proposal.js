@@ -1032,14 +1032,14 @@ ProposalJs.prototype.secondToggle = function (button, domBox) {
           document.querySelector(".pp_designer_question_press").classList.add("pp_designer_question_press_add");
 
           if (instance.firstDo_secondToggle) {
-            GeneralJs.ajax("id=" + instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id"), "/parsingProposal", function (obj) {
-              let { result } = JSON.parse(obj);
-              instance.firstDo_secondToggle = false;
+            GeneralJs.ajaxJson({ id: instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id") }, "/parsingProposal", { equal: true }).then((obj) => {
+              const { result } = obj;
               if (result !== null) {
                 result.client = instance.domBox.get("고객 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
                 result.cliid = instance.domBox.get("고객 선택").querySelector('b').getAttribute("cus_id");
                 result.service = instance.domBox.get("서비스 선택").querySelector('b').textContent.replace(/[\: ]/g, '').trim();
                 instance.thirdChildren.get("box1_designerInput").setAttribute("value", String(result.proposal.length) + "명");
+                instance.firstDo_secondToggle = false;
                 (instance.load_processLoad_third())(result, true);
               }
             });
@@ -1258,8 +1258,10 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
   let thirdChildren;
   let fourth;
   let money_set;
+  let input_widthSet;
   let designers;
   let clickTargets;
+  let greenPopup;
 
   fourthChildren = new Map();
   thirdChildren = this.thirdChildren;
@@ -1273,485 +1275,449 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
   fourth.callbacks = new Map();
   fourth.events = {};
 
-  fourth.events.money = function (e) {
-    if (e.type === "click") {
-      const thisSet = this.parentNode;
-      const index = Number(thisSet.parentNode.getAttribute("index"));
-      const designerCardClassName = "pp_designer_selected_box_contents_designers_s";
-      const targetDesigners = Array.from(document.querySelectorAll('.' + designerCardClassName + String(index)));
-      const targetInputs = targetDesigners.map((dom) => { return dom.previousElementSibling; });
-      let thisDesigner, desid, cliid, serid, xValue, greenPopup;
-      thisDesigner = null;
-      for (let i = 0; i < targetInputs.length; i++) {
-        if (targetInputs[i].checked) {
-          thisDesigner = targetDesigners[i];
-        }
-      }
-      if (thisDesigner !== null) {
-        desid = thisDesigner.querySelector("label").querySelector("div").getAttribute("cus_desid");
-        cliid = instance.cliid;
-        serid = instance.serid;
-        xValue = instance.xValue;
+  input_widthSet = function (dom) {
+    dom.style.width = String(0.85 * dom.value.length) + "vh";
+    if (dom.value.replace(/,/g, '').length < 7) {
+      dom.style.width = String(0.9 * dom.value.length) + "vh";
+    }
+    if (dom.value.replace(/,/g, '').length < 4) {
+      dom.style.width = String(1.1 * dom.value.length) + "vh";
+    }
+  }
 
-        greenPopup = function (feeObject) {
-          if (typeof feeObject !== "object") {
-            throw new Error("invaild input");
+  greenPopup = function (thisSet, feeObject, timeoutMode = false) {
+    const serid = instance.serid;
+    const xValue = instance.xValue;
+    const ea = "px";
+    const { createNode, colorChip, withOut, isMac } = GeneralJs;
+    const { desid, cliid, client, designer, detail, fee } = feeObject;
+    const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium } = detail;
+    const distanceBoo = (fee !== offline ? "true" : "false");
+    const mother = thisSet;
+    const motherWidth = mother.getBoundingClientRect().width;
+    const thisOnOff = /offline/gi.test(thisSet.className) ? "offline" : "online";
+    let size, margin;
+    let width;
+    let bottom;
+    let visual;
+    let blockHeight;
+    let paddingTop, paddingLeft, paddingBottom;
+    let titleVisual;
+
+    size = 13;
+    margin = 6;
+    width = 180;
+    visual = 1;
+    blockHeight = 22;
+    bottom = 56;
+    paddingTop = 14;
+    paddingLeft = 18;
+    paddingBottom = 13;
+    titleVisual = 1;
+
+    createNode({
+      mother,
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            mother.lastChild.style.animation = "fadedownlite 0.3s ease forwards";
+            GeneralJs.setTimeout(() => {
+              for (let i = 0; i < 2; i++) {
+                mother.removeChild(mother.lastChild);
+              }
+            }, 301);
           }
-          const ea = "px";
-          const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
-          const { client, designer, detail, fee } = feeObject;
-          const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium } = detail;
-          const distanceBoo = (fee !== offline ? "true" : "false");
-          const mother = thisSet;
-          const motherWidth = mother.getBoundingClientRect().width;
-          const thisOnOff = /offline/gi.test(thisSet.className) ? "offline" : "online";
-          let size, margin;
-          let width;
-          let bottom;
-          let visual;
-          let blockHeight;
-          let paddingTop, paddingLeft, paddingBottom;
-          let titleVisual;
-
-          size = 13;
-          margin = 6;
-          width = 180;
-          visual = 1;
-          blockHeight = 22;
-          bottom = 56;
-          paddingTop = 14;
-          paddingLeft = 18;
-          paddingBottom = 13;
-          titleVisual = 1;
-
-          createNode({
-            mother,
-            events: [
-              {
-                type: "click",
-                event: function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  for (let i = 0; i < 2; i++) {
-                    mother.removeChild(mother.lastChild);
+        }
+      ],
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: "transparent",
+      }
+    });
+    createNode({
+      mother,
+      events: [
+        {
+          type: "click",
+          event: (e) => { e.preventDefault(); e.stopPropagation(); }
+        }
+      ],
+      style: {
+        position: "absolute",
+        width: String(width) + ea,
+        height: "auto",
+        borderRadius: String(3) + "px",
+        background: colorChip.gradientGreen4,
+        bottom: String(bottom) + ea,
+        left: String((motherWidth - (width + (paddingLeft * 2))) / 2) + ea,
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        animation: "fadeuplite 0.3s ease forwards",
+        paddingTop: String(paddingTop) + ea,
+        paddingBottom: String(paddingBottom) + ea,
+        paddingLeft: String(paddingLeft) + ea,
+        paddingRight: String(paddingLeft) + ea,
+      },
+      children: [
+        {
+          style: {
+            position: "relative",
+            width: String(100) + '%',
+            height: String(100) + '%',
+          },
+          children: [
+            //name
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: designer + " / " + client,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    left: String(0) + ea,
                   }
                 }
-              }
-            ],
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              height: String(100) + '%',
-              background: "transparent",
-            }
-          });
-          createNode({
-            mother,
-            events: [
-              {
-                type: "click",
-                event: (e) => { e.preventDefault(); e.stopPropagation(); }
-              }
-            ],
-            style: {
-              position: "absolute",
-              width: String(width) + ea,
-              height: "auto",
-              borderRadius: String(3) + "px",
-              background: colorChip.gradientGreen4,
-              bottom: String(bottom) + ea,
-              left: String((motherWidth - (width + (paddingLeft * 2))) / 2) + ea,
-              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-              animation: "fadeuplite 0.3s ease forwards",
-              paddingTop: String(paddingTop) + ea,
-              paddingBottom: String(paddingBottom) + ea,
-              paddingLeft: String(paddingLeft) + ea,
-              paddingRight: String(paddingLeft) + ea,
+              ]
             },
-            children: [
-              {
-                style: {
-                  position: "relative",
-                  width: String(100) + '%',
-                  height: String(100) + '%',
+            //alpha
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "가산점",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
                 },
-                children: [
-                  //name
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    children: [
-                      {
-                        text: designer + " / " + client,
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          left: String(0) + ea,
-                        }
+                {
+                  text: String(alpha).slice(0, 6) + '%',
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //level
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "레벨",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: "시공 " + String(construct) + " / 스타일링 " + String(styling),
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //pyeong
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "평수",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: String(pyeong) + "평",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //travel
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "출장",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: travel.distance + " / " + travel.time,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //distance
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              attribute: [
+                { desid },
+                { cliid },
+                { serid },
+                { xValue },
+                { distance },
+                { number: travel.number },
+                { distanceBoo },
+                { thisOnOff }
+              ],
+              events: [
+                {
+                  type: [ "click", "contextmenu" ],
+                  event: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const desid = this.getAttribute("desid");
+                    const cliid = this.getAttribute("cliid");
+                    const serid = this.getAttribute("serid");
+                    const xValue = this.getAttribute("xValue");
+                    const distance = Number(this.getAttribute("distance"));
+                    const number = Number(this.getAttribute("number"));
+                    const distanceBoo = this.getAttribute("distanceBoo") === "true";
+                    const thisOnOff = this.getAttribute("thisOnOff");
+                    let doing;
+                    let newNumber, newDistance;
+                    let offline, final;
+                    if (e.type === "click") {
+                      newNumber = number + 1;
+                      doing = true;
+                    } else {
+                      if (number > 1) {
+                        newNumber = number - 1;
+                        doing = true;
+                      } else {
+                        doing = false;
                       }
-                    ]
-                  },
-                  //alpha
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    children: [
-                      {
-                        text: "가산점",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          color: colorChip.white,
-                          top: String(titleVisual) + ea,
-                          left: String(0) + ea,
-                        }
-                      },
-                      {
-                        text: String(alpha).slice(0, 6) + '%',
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          right: String(0) + ea,
-                        }
+                    }
+                    if (doing) {
+                      this.lastChild.textContent = GeneralJs.autoComma(distance) + "원 / " + String(newNumber) + "회";
+                      this.setAttribute("number", String(newNumber));
+                      offline = Number(this.parentElement.children[this.parentElement.children.length - 2].lastChild.textContent.replace(/[^0-9]/gi, ''));
+                      final = offline + (distance * newNumber);
+                      this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
+                      if (distanceBoo && thisOnOff === "offline") {
+                        instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).fee = final;
+                        instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
+                        thisSet.querySelector("input").value = GeneralJs.autoComma(final);
+                        input_widthSet(thisSet.querySelector("input"));
                       }
-                    ]
-                  },
-                  //level
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    children: [
-                      {
-                        text: "레벨",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          color: colorChip.white,
-                          top: String(titleVisual) + ea,
-                          left: String(0) + ea,
-                        }
-                      },
-                      {
-                        text: "시공 " + String(construct) + " / 스타일링 " + String(styling),
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          right: String(0) + ea,
-                        }
-                      }
-                    ]
-                  },
-                  //pyeong
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    children: [
-                      {
-                        text: "평수",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          color: colorChip.white,
-                          top: String(titleVisual) + ea,
-                          left: String(0) + ea,
-                        }
-                      },
-                      {
-                        text: String(pyeong) + "평",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          right: String(0) + ea,
-                        }
-                      }
-                    ]
-                  },
-                  //travel
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    children: [
-                      {
-                        text: "출장",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          color: colorChip.white,
-                          top: String(titleVisual) + ea,
-                          left: String(0) + ea,
-                        }
-                      },
-                      {
-                        text: travel.distance + " / " + travel.time,
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          right: String(0) + ea,
-                        }
-                      }
-                    ]
-                  },
-                  //distance
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    attribute: [
-                      { desid },
-                      { cliid },
-                      { serid },
-                      { xValue },
-                      { distance },
-                      { number: travel.number },
-                      { distanceBoo },
-                      { thisOnOff }
-                    ],
-                    events: [
-                      {
-                        type: [ "click", "contextmenu" ],
-                        event: function (e) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          const desid = this.getAttribute("desid");
-                          const cliid = this.getAttribute("cliid");
-                          const serid = this.getAttribute("serid");
-                          const xValue = this.getAttribute("xValue");
-                          const distance = Number(this.getAttribute("distance"));
-                          const number = Number(this.getAttribute("number"));
-                          const distanceBoo = this.getAttribute("distanceBoo") === "true";
-                          const thisOnOff = this.getAttribute("thisOnOff");
-                          let doing;
-                          let newNumber, newDistance;
-                          let offline, final;
-                          if (e.type === "click") {
-                            newNumber = number + 1;
-                            doing = true;
-                          } else {
-                            if (number > 1) {
-                              newNumber = number - 1;
-                              doing = true;
-                            } else {
-                              doing = false;
-                            }
-                          }
-                          if (doing) {
-                            this.lastChild.textContent = GeneralJs.autoComma(distance) + "원 / " + String(newNumber) + "회";
-                            this.setAttribute("number", String(newNumber));
-                            offline = Number(this.parentElement.children[this.parentElement.children.length - 2].lastChild.textContent.replace(/[^0-9]/gi, ''));
-                            final = offline + (distance * newNumber);
-                            this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
-                            if (distanceBoo && thisOnOff === "offline") {
-                              instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).fee = final;
-                              instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
-                              thisSet.querySelector("input").value = GeneralJs.autoComma(final);
-                            }
-                          }
+                    }
 
-                        }
-                      }
-                    ],
-                    children: [
-                      {
-                        text: "출장비",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          color: colorChip.white,
-                          top: String(titleVisual) + ea,
-                          left: String(0) + ea,
-                        }
-                      },
-                      {
-                        text: GeneralJs.autoComma(distance) + "원 / " + String(travel.number) + "회",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          right: String(0) + ea,
-                        }
-                      }
-                    ]
-                  },
-                  //online
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    children: [
-                      {
-                        text: "온라인시",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          color: colorChip.white,
-                          top: String(titleVisual) + ea,
-                          left: String(0) + ea,
-                        }
-                      },
-                      {
-                        text: GeneralJs.autoComma(online) + "원",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          right: String(0) + ea,
-                        }
-                      }
-                    ]
-                  },
-                  //offline
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    children: [
-                      {
-                        text: "오프라인시",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          color: colorChip.white,
-                          top: String(titleVisual) + ea,
-                          left: String(0) + ea,
-                        }
-                      },
-                      {
-                        text: GeneralJs.autoComma(offline) + "원",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          right: String(0) + ea,
-                        }
-                      }
-                    ]
-                  },
-                  //final fee
-                  {
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      height: String(blockHeight) + ea,
-                    },
-                    children: [
-                      {
-                        text: "출장 적용",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          color: colorChip.white,
-                          top: String(titleVisual) + ea,
-                          left: String(0) + ea,
-                        }
-                      },
-                      {
-                        text: GeneralJs.autoComma(fee) + "원",
-                        style: {
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.white,
-                          top: String(0) + ea,
-                          right: String(0) + ea,
-                        }
-                      }
-                    ]
-                  },
-                ]
-              }
-            ]
-          });
+                  }
+                }
+              ],
+              children: [
+                {
+                  text: "출장비",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: GeneralJs.autoComma(distance) + "원 / " + String(travel.number) + "회",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //online
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "온라인시",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: GeneralJs.autoComma(online) + "원",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //offline
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "오프라인시",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: GeneralJs.autoComma(offline) + "원",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //final fee
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "출장 적용",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: GeneralJs.autoComma(fee) + "원",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+          ]
+        }
+      ]
+    });
 
-        }
-
-        if (!instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
-          GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee").then((raw_fee) => {
-            if (!Array.isArray(raw_fee)) {
-              window.alert("오류 발생, 관리자에게 문의하세요!");
-              window.location.reload();
-            }
-            if (raw_fee.length === 0) {
-              window.alert("오류 발생, 관리자에게 문의하세요!");
-              window.location.reload();
-            }
-            const result = raw_fee[0];
-            instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
-            greenPopup(result);
-          });
-        } else {
-          greenPopup(instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)));
-        }
-      }
-    } else {
-      if (this.value === '') {
-        this.value = "0";
-      }
-      if (e.type === "keyup") {
-        if (e.key === "Enter" || e.key === "Tab") {
-          this.value = GeneralJs.autoComma(this.value);
-        }
-      } else if (e.type === "blur") {
-        this.value = GeneralJs.autoComma(this.value);
-      }
-      this.style.width = String(0.85 * this.value.length) + "vh";
-      if (this.value.replace(/,/g, '').length < 7) {
-        this.style.width = String(0.9 * this.value.length) + "vh";
-      }
-      if (this.value.replace(/,/g, '').length < 4) {
-        this.style.width = String(1.1 * this.value.length) + "vh";
-      }
+    if (timeoutMode) {
+      GeneralJs.setTimeout(() => {
+        mother.lastChild.style.animation = "fadedownlite 0.3s ease forwards";
+        GeneralJs.setTimeout(() => {
+          for (let i = 0; i < 2; i++) {
+            mother.removeChild(mother.lastChild);
+          }
+        }, 301);
+      }, 2000);
     }
   }
 
@@ -1794,7 +1760,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     } else {
       input_clone.value = GeneralJs.autoComma(String(onoff.fee[s].amount));
     }
-    input_clone.style.width = String(0.85 * input_clone.value.length) + "vh";
+    input_widthSet(input_clone);
     input_clone.addEventListener("keyup", fourth.events.money);
     input_clone.addEventListener("blur", fourth.events.money);
     input_clone.addEventListener("click", fourth.events.money);
@@ -1808,6 +1774,58 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     return div_clone3;
   }
 
+  fourth.events.money = function (e) {
+    if (e.type === "click") {
+      const thisSet = this.parentNode;
+      const index = Number(thisSet.parentNode.getAttribute("index"));
+      const designerCardClassName = "pp_designer_selected_box_contents_designers_s";
+      const targetDesigners = Array.from(document.querySelectorAll('.' + designerCardClassName + String(index)));
+      const targetInputs = targetDesigners.map((dom) => { return dom.previousElementSibling; });
+      let thisDesigner, desid, cliid, serid, xValue;
+      thisDesigner = null;
+      for (let i = 0; i < targetInputs.length; i++) {
+        if (targetInputs[i].checked) {
+          thisDesigner = targetDesigners[i];
+        }
+      }
+      if (thisDesigner !== null) {
+        desid = thisDesigner.querySelector("label").querySelector("div").getAttribute("cus_desid");
+        cliid = instance.cliid;
+        serid = instance.serid;
+        xValue = instance.xValue;
+        if (!instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
+          GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee").then((raw_fee) => {
+            if (!Array.isArray(raw_fee)) {
+              window.alert("오류 발생, 관리자에게 문의하세요!");
+              window.location.reload();
+            }
+            if (raw_fee.length === 0) {
+              window.alert("오류 발생, 관리자에게 문의하세요!");
+              window.location.reload();
+            }
+            const result = raw_fee[0];
+            instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
+            greenPopup(thisSet, result, false);
+          });
+        } else {
+          greenPopup(thisSet, instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)), false);
+        }
+      }
+    } else {
+      if (this.value === '') {
+        this.value = "0";
+      }
+      if (e.type === "keyup") {
+        if (e.key === "Enter" || e.key === "Tab") {
+          this.value = GeneralJs.autoComma(this.value);
+        }
+      } else if (e.type === "blur") {
+        this.value = GeneralJs.autoComma(this.value);
+      }
+      input_widthSet(this);
+    }
+  }
+
   fourth.events.designer = function (e) {
     const card = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
     const desid = this.getAttribute("cus_desid");
@@ -1815,14 +1833,16 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     const serid = instance.serid;
     const xValue = instance.xValue;
     const address = this.getAttribute("cus_address");
+    const cusNum = this.getAttribute("cus_num");
     const getnode = (num, boo = true) => {
       if (boo) {
-        return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[num].style;
+        return instance.fourthChildren.get("box" + cusNum).children[3].children[num].style;
       } else {
-        return instance.fourthChildren.get("box" + e.target.getAttribute("cus_num")).children[3].children[1].children[0].style;
+        return instance.fourthChildren.get("box" + cusNum).children[3].children[1].children[0].style;
       }
     }
     const inputTargets = card.querySelectorAll(".pp_designer_selected_box_contents_money_set");
+    const timeoutMode = (e.customHomeLiaison_timeoutMode === true);
 
     (new Promise(function(resolve, reject) {
       resolve(null);
@@ -1863,6 +1883,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         window.location.reload();
       }
       const result = raw_fee[0];
+      let thisSet;
 
       if (!instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
         instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
@@ -1874,6 +1895,20 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         } else {
           dom.querySelector("input").value = GeneralJs.autoComma(result.fee);
         }
+        input_widthSet(dom.querySelector("input"));
+        thisSet = dom.querySelector("input").parentNode;
+      }
+
+      if (timeoutMode) {
+        greenPopup(thisSet, result, timeoutMode);
+        if (GeneralJs.timeouts["greenTimeoutMode"] !== undefined && GeneralJs.timeouts["greenTimeoutMode"] !== null) {
+          clearTimeout(GeneralJs.timeouts["greenTimeoutMode"]);
+        }
+        GeneralJs.timeouts["greenTimeoutMode"] = setTimeout(() => {
+          instance.mother.greenAlert("금액을 누르시면 상세 정보가 나옵니다!");
+          clearTimeout(GeneralJs.timeouts["greenTimeoutMode"]);
+          GeneralJs.timeouts["greenTimeoutMode"] = null;
+        }, 3000);
       }
 
     }).catch((err) => {
@@ -1996,7 +2031,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       GeneralJs.timeouts["firstClick"] = setTimeout(async () => {
         try {
           for (let dom of instance.clickTargets) {
-            dom.querySelector("label").querySelector("div").click();
+            fourth.events.designer.call(dom.querySelector("label").querySelector("div"), {
+              customHomeLiaison_timeoutMode: true
+            });
             await GeneralJs.sleep(600);
           }
           instance.clickTargets = [];

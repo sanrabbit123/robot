@@ -97,18 +97,13 @@ class StyleCurationWordings {
             {
               type: "style",
               half: false,
+              required: true,
+              rewind: "스타일 체크를 진행해주세요!",
               question: [
                 "선호하는 스타일을 <b%3장%b> 골라주세요!",
                 "스타일 분석이 완료되었습니다!"
               ],
-            },
-            {
-              type: "style",
-              half: false,
-              question: [
-                "스타일 분석이 완료되었습니다!",
-              ],
-            },
+            }
           ]
         },
         {
@@ -119,6 +114,7 @@ class StyleCurationWordings {
             {
               type: "address",
               half: false,
+              required: false,
               question: [
                 "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
                 "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
@@ -127,6 +123,7 @@ class StyleCurationWordings {
             {
               type: "calendar",
               half: true,
+              required: false,
               question: [
                 "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
               ],
@@ -135,6 +132,7 @@ class StyleCurationWordings {
             {
               type: "calendar",
               half: true,
+              required: false,
               question: [
                 "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
               ],
@@ -143,6 +141,8 @@ class StyleCurationWordings {
             {
               type: "checkbox",
               half: true,
+              required: true,
+              rewind: "건물 유형을 체크해주세요! (상가 건물일시 오피스텔로 체크해주세요!)",
               question: [
                 "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
               ],
@@ -186,6 +186,8 @@ class StyleCurationWordings {
             {
               type: "checkbox",
               half: true,
+              required: true,
+              rewind: "평형 기준을 체크해주세요!",
               question: [
                 "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
               ],
@@ -209,6 +211,7 @@ class StyleCurationWordings {
             {
               type: "opposite",
               half: false,
+              required: false,
               question: [
                 "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
                 "<b%비율%b>을 알려주세요!"
@@ -223,6 +226,7 @@ class StyleCurationWordings {
             {
               type: "checkbox",
               half: true,
+              required: false,
               question: [
                 "<b%맞춤형 제작 가구 니즈%b>가 있으신가요?"
               ],
@@ -237,6 +241,7 @@ class StyleCurationWordings {
             {
               type: "checkbox",
               half: true,
+              required: false,
               question: [
                 "<b%커튼, 베딩 패브릭 제작 니즈%b>가 있으신가요?"
               ],
@@ -257,6 +262,8 @@ class StyleCurationWordings {
             {
               type: "checkbox",
               half: false,
+              required: true,
+              rewind: "시공 정도를 체크해주세요!",
               question: [
                 "<b%생각하는 시공 정도%b>를 알려주세요!",
               ],
@@ -289,6 +296,7 @@ class StyleCurationWordings {
             {
               type: "list",
               half: false,
+              required: false,
               question: [
                 "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
               ],
@@ -315,6 +323,7 @@ class StyleCurationWordings {
             {
               type: "checkbox",
               half: false,
+              required: false,
               question: [
                 "시공 당일에 예상되는 <b%주거 환경을 알려주세요!%b>"
               ],
@@ -880,7 +889,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
 
   questionWording = wordings[0].question[0];
-  completeWording = wordings[1].question[0];
+  completeWording = wordings[0].question[1];
 
   randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
   this.randomPick = randomPick;
@@ -926,11 +935,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       designers.sort((a, b) => { return a.tendencyLength - b.tendencyLength });
       designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status); });
       designers = designers.map((obj) => { return obj.desid; });
-      instance.values.style = [
-        {
-          value: designers
-        }
-      ];
+      instance.values.style[0].value = designers;
     }
   }
 
@@ -1056,6 +1061,8 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       width: desktop ? withOut(innerMargin * 2, ea) : "",
     }
   });
+
+  instance.values[name][0].dom = pictureBox;
 
   for (let i = 0; i < pictureNumber; i++) {
     tempDom = createNode({
@@ -1542,6 +1549,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         verticalAlign: "top",
       }
     });
+
+    instance.values[name][y].dom = answerArea;
 
     if (obj.type === "address") {
       if (mobile) {
@@ -2174,6 +2183,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 children[children.length - 1].textContent = text;
                 self.setAttribute("toggle", "on");
                 self.setAttribute("value", dateToString(dateValue));
+                instance.values[x][y].value = dateValue;
                 for (let c of children) {
                   c.style.color = colorChip.green;
                 }
@@ -2287,6 +2297,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   if (desktop) {
     blockMother.style.marginBottom = String(0) + ea;
   }
+
+}
+
+StyleCurationJs.prototype.parseValues = function () {
+  const instance = this;
+
+  console.log(instance.values);
+
+
 
 }
 
@@ -2883,8 +2902,30 @@ StyleCurationJs.prototype.insertPannelBox = function () {
           {
             type: "click",
             event: function (e) {
-              window.scroll({ top: 0, left: 0, behavior: "smooth" });
-              GeneralJs.setTimeout(() => { instance.serviceConverting(); }, 1000);
+              let pass;
+              pass = true;
+              for (let i in instance.values) {
+                for (let j of instance.values[i]) {
+                  if (j.required) {
+                    if (j.value === null) {
+                      window.alert(j.rewind);
+                      GeneralJs.scrollTo(window, j.dom, (instance.naviHeight + 20));
+                      pass = false;
+                      break;
+                    }
+                  }
+                }
+                if (!pass) {
+                  break;
+                }
+              }
+              if (pass) {
+                GeneralJs.scrollTo(window, 0);
+                GeneralJs.setTimeout(() => {
+                  instance.parseValues();
+                  instance.serviceConverting();
+                }, 1000);
+              }
             }
           }
         ],
@@ -4100,17 +4141,21 @@ StyleCurationJs.prototype.launching = async function (loading) {
     tempArr = this.wordings.wordings.center.map((obj) => {
       return {
         name: obj.name,
-        children: obj.children.map((obj2) => { return { type: obj2.type, value: null }; })
+        children: obj.children.map((obj2) => {
+          return {
+            type: obj2.type,
+            value: null,
+            dom: null,
+            required: obj2.required,
+            rewind: obj2.required ? obj2.rewind : "",
+          };
+        })
       };
     });
 
     valueObj = {};
     for (let obj of tempArr) {
-      if (obj.name === "style") {
-        valueObj[obj.name] = [];
-      } else {
-        valueObj[obj.name] = obj.children;
-      }
+      valueObj[obj.name] = obj.children;
     }
     this.values = valueObj;
 

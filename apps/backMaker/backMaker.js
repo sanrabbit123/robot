@@ -1015,12 +1015,13 @@ BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo:
     if (typeof option !== "object" || Array.isArray(option)) {
       throw new Error("invaild option input");
     }
-    const clients = await this.getClientsByQuery({}, { withTools: true, ...option });
-    const projects = await this.getProjectsByQuery({}, { withTools: true, ...option });
+    const ago = new Date();
+    ago.setMonth(ago.getMonth() - 24);
+    const clients = await this.getClientsByQuery({ "requests.0.request.timeline": { $gte: ago } }, { withTools: true, ...option });
+    const projects = await this.getProjectsByQuery({ "proposal.date": { $gte: ago } }, { withTools: true, ...option });
     const cases = clients.getType().getTypeCases(projects);
     const targetClient = await this.getClientById(id, option);
     let resultObj = {};
-
     if (targetClient === null) {
       resultObj.cases = null;
       resultObj.proid = null;
@@ -1028,7 +1029,6 @@ BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo:
       resultObj.cases = cases.parsingCases(targetClient);
       resultObj.proid = cases.parsingProid(targetClient);
     }
-
     return resultObj;
   } catch (e) {
     console.log(e);
