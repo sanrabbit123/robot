@@ -1130,7 +1130,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         fee = fee + (travelInfo.amount * travelNumber);
       }
 
-      toMoney = (num) => { return (Math.round(num / 10000) * 10000); }
+      toMoney = (num) => { return (Math.round(num / 1000) * 1000); }
 
       tong.push({
         desid: designer.desid,

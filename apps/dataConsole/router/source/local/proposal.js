@@ -1280,7 +1280,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       const designerCardClassName = "pp_designer_selected_box_contents_designers_s";
       const targetDesigners = Array.from(document.querySelectorAll('.' + designerCardClassName + String(index)));
       const targetInputs = targetDesigners.map((dom) => { return dom.previousElementSibling; });
-      let thisDesigner, desid, cliid, serid, xValue;
+      let thisDesigner, desid, cliid, serid, xValue, greenPopup;
       thisDesigner = null;
       for (let i = 0; i < targetInputs.length; i++) {
         if (targetInputs[i].checked) {
@@ -1293,7 +1293,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         serid = instance.serid;
         xValue = instance.xValue;
 
-        const greenPopup = function (feeObject) {
+        greenPopup = function (feeObject) {
           if (typeof feeObject !== "object") {
             throw new Error("invaild input");
           }
@@ -1301,7 +1301,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
           const { client, designer, detail, fee } = feeObject;
           const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium } = detail;
-          const distanceBoo = (fee !== offline);
+          const distanceBoo = (fee !== offline ? "true" : "false");
           const mother = thisSet;
           const motherWidth = mother.getBoundingClientRect().width;
           const thisOnOff = /offline/gi.test(thisSet.className) ? "offline" : "online";
@@ -1534,23 +1534,57 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       position: "relative",
                       height: String(blockHeight) + ea,
                     },
+                    attribute: [
+                      { desid },
+                      { cliid },
+                      { serid },
+                      { xValue },
+                      { distance },
+                      { number: travel.number },
+                      { distanceBoo },
+                      { thisOnOff }
+                    ],
                     events: [
                       {
                         type: [ "click", "contextmenu" ],
                         event: function (e) {
                           e.preventDefault();
                           e.stopPropagation();
+                          const desid = this.getAttribute("desid");
+                          const cliid = this.getAttribute("cliid");
+                          const serid = this.getAttribute("serid");
+                          const xValue = this.getAttribute("xValue");
+                          const distance = Number(this.getAttribute("distance"));
+                          const number = Number(this.getAttribute("number"));
+                          const distanceBoo = this.getAttribute("distanceBoo") === "true";
+                          const thisOnOff = this.getAttribute("thisOnOff");
+                          let doing;
+                          let newNumber, newDistance;
+                          let offline, final;
                           if (e.type === "click") {
-
-                            
-
-
+                            newNumber = number + 1;
+                            doing = true;
                           } else {
-
-
-
-
+                            if (number > 1) {
+                              newNumber = number - 1;
+                              doing = true;
+                            } else {
+                              doing = false;
+                            }
                           }
+                          if (doing) {
+                            this.lastChild.textContent = GeneralJs.autoComma(distance) + "원 / " + String(newNumber) + "회";
+                            this.setAttribute("number", String(newNumber));
+                            offline = Number(this.parentElement.children[this.parentElement.children.length - 2].lastChild.textContent.replace(/[^0-9]/gi, ''));
+                            final = offline + (distance * newNumber);
+                            this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
+                            if (distanceBoo && thisOnOff === "offline") {
+                              instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).fee = final;
+                              instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
+                              thisSet.querySelector("input").value = GeneralJs.autoComma(final);
+                            }
+                          }
+
                         }
                       }
                     ],
