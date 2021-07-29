@@ -95,6 +95,7 @@ class StyleCurationWordings {
           callback: "styleCheck",
           children: [
             {
+              name: "curation",
               type: "style",
               half: false,
               required: true,
@@ -103,7 +104,7 @@ class StyleCurationWordings {
                 "선호하는 스타일을 <b%3장%b> 골라주세요!",
                 "스타일 분석이 완료되었습니다!"
               ],
-              update: function (value, siblings, family) {
+              update: function (value, siblings, client) {
                 let updateQuery;
                 updateQuery = {};
                 updateQuery["curation.style"] = value;
@@ -121,6 +122,7 @@ class StyleCurationWordings {
           callback: "blockCheck",
           children: [
             {
+              name: "address",
               type: "address",
               half: false,
               required: false,
@@ -128,7 +130,7 @@ class StyleCurationWordings {
                 "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
                 "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
               ],
-              update: function (value, siblings, family) {
+              update: function (value, siblings, client) {
                 if (value === null) {
                   return { history: null, core: null };
                 } else {
@@ -143,6 +145,7 @@ class StyleCurationWordings {
               }
             },
             {
+              name: "precheck",
               type: "calendar",
               half: true,
               required: false,
@@ -150,7 +153,7 @@ class StyleCurationWordings {
                 "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
               ],
               item: "사전 점검일",
-              update: function (value, siblings, family) {
+              update: function (value, siblings, client) {
                 if (value === null) {
                   return { history: null, core: null };
                 } else {
@@ -165,6 +168,7 @@ class StyleCurationWordings {
               }
             },
             {
+              name: "empty",
               type: "calendar",
               half: true,
               required: false,
@@ -172,7 +176,7 @@ class StyleCurationWordings {
                 "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
               ],
               item: "집 비는 날",
-              update: function (value, siblings, family) {
+              update: function (value, siblings, client) {
                 if (value === null) {
                   return { history: null, core: null };
                 } else {
@@ -187,6 +191,7 @@ class StyleCurationWordings {
               }
             },
             {
+              name: "buildingType",
               type: "checkbox",
               half: true,
               required: true,
@@ -229,9 +234,31 @@ class StyleCurationWordings {
                     items[4].children[0].textContent = "주택";
                   }
                 }
+              },
+              update: function (value, siblings, client) {
+                const { items, realItems, selected } = value;
+                let historyQuery, coreQuery;
+                let pyeong;
+
+                historyQuery = {};
+                historyQuery["curation.building.type"] = items[selected];
+
+                pyeong = client.requests[0].request.space.pyeong;
+                if (siblings.space.children.find((obj) => { return obj.name === "pyeongStandard"; }).value) {
+                  pyeong = realItems[selected] * pyeong;
+                }
+
+                coreQuery = {};
+                coreQuery["requests.0.request.space.pyeong"] = pyeong;
+
+                return {
+                  history: historyQuery,
+                  core: coreQuery
+                };
               }
             },
             {
+              name: "pyeongStandard",
               type: "checkbox",
               half: true,
               required: true,
@@ -248,6 +275,24 @@ class StyleCurationWordings {
                 true,
               ],
               multiple: false,
+              update: function (value, siblings, client) {
+                const { items, realItems, selected } = value;
+                let coreQuery;
+                let pyeong;
+
+                pyeong = client.requests[0].request.space.pyeong;
+                if (realItems[selected]) {
+                  pyeong = siblings.space.children.find((obj) => { return obj.name === "buildingType"; }).value * pyeong;
+                }
+
+                coreQuery = {};
+                coreQuery["requests.0.request.space.pyeong"] = pyeong;
+
+                return {
+                  history: null,
+                  core: coreQuery
+                };
+              }
             },
           ]
         },
@@ -257,6 +302,7 @@ class StyleCurationWordings {
           callback: "blockCheck",
           children: [
             {
+              name: "purchaseRatio",
               type: "opposite",
               half: false,
               required: false,
@@ -270,8 +316,19 @@ class StyleCurationWordings {
               ],
               total: 100,
               ea: '%',
+              update: function (value, siblings, client) {
+                const [ ratio ] = value;
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.furniture.ratio"] = ratio;
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              }
             },
             {
+              name: "makeFurnitrue",
               type: "checkbox",
               half: true,
               required: false,
@@ -285,8 +342,19 @@ class StyleCurationWordings {
               ],
               multiple: false,
               notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
+              update: function (value, siblings, client) {
+                const { items, realItems, selected } = value;
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.furniture.makeNeeds.furniture"] = (selected === 0);
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              }
             },
             {
+              name: "makeFabric",
               type: "checkbox",
               half: true,
               required: false,
@@ -299,6 +367,16 @@ class StyleCurationWordings {
                 "모르겠다",
               ],
               multiple: false,
+              update: function (value, siblings, client) {
+                const { items, realItems, selected } = value;
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.furniture.makeNeeds.fabric"] = (selected === 0);
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              }
             },
           ]
         },
@@ -308,6 +386,7 @@ class StyleCurationWordings {
           callback: "blockCheck",
           children: [
             {
+              name: "service",
               type: "checkbox",
               half: false,
               required: true,
@@ -339,9 +418,31 @@ class StyleCurationWordings {
                   mother.style.left = String(-0.4) + "vw";
                   mother.style.paddingTop = String(0.5) + "vw";
                 }
+              },
+              update: function (value, siblings, client) {
+                const seridArr = [
+                  "s2011_aa01s",
+                  "s2011_aa02s",
+                  "s2011_aa03s",
+                  "s2011_aa04s",
+                ];
+                const { items, realItems, selected } = value;
+                let historyQuery;
+                let selectedSerid;
+
+                selectedSerid = selected.map((i) => { return seridArr[i]; });
+
+                historyQuery = {};
+                historyQuery["curation.service.serid"] = selectedSerid;
+
+                return {
+                  history: historyQuery,
+                  core: null
+                };
               }
             },
             {
+              name: "constructList",
               type: "list",
               half: false,
               required: false,
@@ -367,8 +468,19 @@ class StyleCurationWordings {
                 { name: "도배 공사", contents: "이전 상태에 따라 밑작업 난이도 상이" },
               ],
               multiple: true,
+              update: function (value, siblings, client) {
+                const { items, realItems, selected } = value;
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.construct.items"] = selected.map((i) => { return items[i].name; });
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              }
             },
             {
+              name: "spotStatus",
               type: "checkbox",
               half: false,
               required: false,
@@ -388,6 +500,16 @@ class StyleCurationWordings {
                 if (desktop) {
                   items[0].style.marginRight = String(20) + ea;
                 }
+              },
+              update: function (value, siblings, client) {
+                const { items, realItems, selected } = value;
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.construct.living"] = (selected === 0);
+                return {
+                  history: updateQuery,
+                  core: null
+                };
               }
             },
           ]

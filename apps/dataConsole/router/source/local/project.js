@@ -5590,7 +5590,9 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
         let projectObj;
         let valueStandard;
         let meeting, start, end;
+        let startCopy, endCopy;
         let breakNum;
+        let countArr;
 
         res = await ajaxJson({
           mode: "read",
@@ -5629,6 +5631,8 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
         meeting = stringToDate(thisCase["meetingDate"]);
         start = stringToDate(thisCase["formDateFrom"]);
         end = stringToDate(thisCase["formDateTo"]);
+        startCopy = stringToDate(thisCase["formDateFrom"]);
+        endCopy = stringToDate(thisCase["formDateTo"]);
 
         if (meeting.valueOf() > valueStandard) {
           projectObj.meeting = [ meeting ];
@@ -5670,6 +5674,20 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
           target.projects.push(projectObj);
         } else {
           target.projects.splice(index, 1, projectObj);
+        }
+
+        countArr = [];
+        while (startCopy.valueOf() <= endCopy.valueOf()) {
+          countArr.push('y' + String(startCopy.getFullYear()) + 'm' + String(startCopy.getMonth() + 1));
+          startCopy.setDate(startCopy.getDate() + 1);
+        }
+        countArr = Array.from(new Set(countArr));
+        for (let token of countArr) {
+          if (target.count[token] !== undefined) {
+            target.count[token] = target.count[token] - 1;
+          } else {
+            target.count[token] = 0;
+          }
         }
 
         delete target._id;

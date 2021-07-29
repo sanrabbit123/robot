@@ -780,7 +780,6 @@ GoogleAnalytics.prototype.analyticsToMongo = async function (startDate = "defaul
 
     MONGOCHOME.close();
 
-
     for (let i of fileNameArr) {
       shell.exec(`rm -rf ${shellLink(tempDir)}/${i}`);
     }

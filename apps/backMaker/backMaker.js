@@ -2846,7 +2846,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         curation: {
           style: [],
           service: {
-            serid: "",
+            serid: [],
           },
           building: {
             type: "",
