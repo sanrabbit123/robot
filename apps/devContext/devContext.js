@@ -58,11 +58,14 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
+
+
+
+
+
     const cliid = "c2107_aa69s";
     const clientCase = await back.getCaseProidById(cliid, { selfMongo: this.MONGOLOCALC });
-
-
-    console.log(clientCase.caseService())
+    console.log(clientCase.caseService().serid)
 
 
 

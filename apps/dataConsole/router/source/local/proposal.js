@@ -1676,39 +1676,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                   }
                 }
               ]
-            },
-            //final fee
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                height: String(blockHeight) + ea,
-              },
-              children: [
-                {
-                  text: "출장 적용",
-                  style: {
-                    position: "absolute",
-                    fontSize: String(size) + ea,
-                    fontWeight: String(400),
-                    color: colorChip.white,
-                    top: String(titleVisual) + ea,
-                    left: String(0) + ea,
-                  }
-                },
-                {
-                  text: GeneralJs.autoComma(fee) + "원",
-                  style: {
-                    position: "absolute",
-                    fontSize: String(size) + ea,
-                    fontWeight: String(600),
-                    color: colorChip.white,
-                    top: String(0) + ea,
-                    right: String(0) + ea,
-                  }
-                }
-              ]
-            },
+            }
           ]
         }
       ]

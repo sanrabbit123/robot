@@ -53,3 +53,46 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/styleCuration_updateCalculation";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.cliid === undefined || req.body.historyQuery === undefined || req.body.coreQuery === undefined) {
+        throw new Error("invaild post");
+      }
+      const cliid = req.body.cliid;
+      const historyQuery = equalJson(req.body.historyQuery);
+      const coreQuery = equalJson(req.body.coreQuery);
+      const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+      if (clientCase === null) {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({}));
+      } else {
+        await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        if (historyObj === null) {
+          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+        } else {
+          await back.updateHistory("client", [ { cliid }, historyQuery ], { selfMongo: instance.mongolocal });
+        }
+        const serviceCase = clientCase.caseService();
+        if (serviceCase !== null) {
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify(serviceCase));
+        } else {
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({}));
+        }
+      }
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}

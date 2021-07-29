@@ -1770,35 +1770,37 @@ DataRouter.prototype.rou_post_getHistory = function () {
       if (req.url === "/getClientHistory") {
 
         historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
-
         if (historyObj === null) {
           await back.createHistory("client", { cliid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-          for (let i = 0; i < 6; i++) {
-            responseArr.push('');
-          }
-        } else {
-          responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.space === undefined ? '' : historyObj.space.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress.replace(/\=/g, '').replace(/\&/g, ",")));
+          historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
+        }
+
+        responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.space === undefined ? '' : historyObj.space.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress.replace(/\=/g, '').replace(/\&/g, ",")));
+
+        if (req.body.rawMode !== undefined) {
+          responseArr = historyObj;
         }
 
       } else if (req.url === "/getProjectHistory") {
 
         historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
-
         if (historyObj === null) {
           await back.createHistory("project", { proid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-          for (let i = 0; i < 4; i++) {
-            responseArr.push('');
-          }
-        } else {
-          responseArr.push((historyObj.history === undefined ? '' : stringFilter(historyObj.history)));
-          responseArr.push((historyObj.designer === undefined ? '' : stringFilter(historyObj.designer)));
-          responseArr.push((historyObj.client === undefined ? '' : stringFilter(historyObj.client)));
-          responseArr.push((historyObj.photo === undefined ? '' : stringFilter(historyObj.photo)));
+          historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
+        }
+
+        responseArr.push((historyObj.history === undefined ? '' : stringFilter(historyObj.history)));
+        responseArr.push((historyObj.designer === undefined ? '' : stringFilter(historyObj.designer)));
+        responseArr.push((historyObj.client === undefined ? '' : stringFilter(historyObj.client)));
+        responseArr.push((historyObj.photo === undefined ? '' : stringFilter(historyObj.photo)));
+
+        if (req.body.rawMode !== undefined) {
+          responseArr = historyObj;
         }
 
       } else if (req.url === "/getHistoryProperty") {
@@ -3834,6 +3836,49 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/styleCuration_updateCalculation";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.cliid === undefined || req.body.historyQuery === undefined || req.body.coreQuery === undefined) {
+        throw new Error("invaild post");
+      }
+      const cliid = req.body.cliid;
+      const historyQuery = equalJson(req.body.historyQuery);
+      const coreQuery = equalJson(req.body.coreQuery);
+      const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+      if (clientCase === null) {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({}));
+      } else {
+        await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        if (historyObj === null) {
+          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+        } else {
+          await back.updateHistory("client", [ { cliid }, historyQuery ], { selfMongo: instance.mongolocal });
+        }
+        const serviceCase = clientCase.caseService();
+        if (serviceCase !== null) {
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify(serviceCase));
+        } else {
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({}));
+        }
+      }
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

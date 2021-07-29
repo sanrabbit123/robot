@@ -104,6 +104,9 @@ class StyleCurationWordings {
                 "선호하는 스타일을 <b%3장%b> 골라주세요!",
                 "스타일 분석이 완료되었습니다!"
               ],
+              value: function (request, history) {
+                return null;
+              },
               update: function (value, siblings, client) {
                 let updateQuery;
                 updateQuery = {};
@@ -130,6 +133,9 @@ class StyleCurationWordings {
                 "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
                 "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
               ],
+              value: function (request, history) {
+                return request.request.space.address;
+              },
               update: function (value, siblings, client) {
                 if (value === null) {
                   return { history: null, core: null };
@@ -153,6 +159,13 @@ class StyleCurationWordings {
                 "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
               ],
               item: "사전 점검일",
+              value: function (request, history) {
+                if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+                  return null;
+                } else {
+                  return request.analytics.date.space.precheck;
+                }
+              },
               update: function (value, siblings, client) {
                 if (value === null) {
                   return { history: null, core: null };
@@ -176,6 +189,13 @@ class StyleCurationWordings {
                 "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
               ],
               item: "집 비는 날",
+              value: function (request, history) {
+                if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+                  return null;
+                } else {
+                  return request.analytics.date.space.empty;
+                }
+              },
               update: function (value, siblings, client) {
                 if (value === null) {
                   return { history: null, core: null };
@@ -235,6 +255,13 @@ class StyleCurationWordings {
                   }
                 }
               },
+              value: function (request, history) {
+                if (history.curation.building.type === "") {
+                  return null;
+                } else {
+                  return history.curation.building.type;
+                }
+              },
               update: function (value, siblings, client) {
                 const { items, realItems, selected } = value;
                 let historyQuery, coreQuery;
@@ -270,6 +297,9 @@ class StyleCurationWordings {
                 "분양 면적 (공급 면적)",
                 "전용 면적",
               ],
+              value: function (request, history) {
+                return "분양 면적 (공급 면적)";
+              },
               realItems: [
                 false,
                 true,
@@ -316,6 +346,9 @@ class StyleCurationWordings {
               ],
               total: 100,
               ea: '%',
+              value: function (request, history) {
+                return history.curation.furniture.ratio;
+              },
               update: function (value, siblings, client) {
                 let updateQuery;
                 updateQuery = {};
@@ -341,6 +374,9 @@ class StyleCurationWordings {
               ],
               multiple: false,
               notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
+              value: function (request, history) {
+                return history.curation.furniture.makeNeeds.furniture ? "있다" : "모르겠다";
+              },
               update: function (value, siblings, client) {
                 const { items, realItems, selected } = value;
                 let updateQuery;
@@ -366,6 +402,9 @@ class StyleCurationWordings {
                 "모르겠다",
               ],
               multiple: false,
+              value: function (request, history) {
+                return history.curation.furniture.makeNeeds.fabric ? "있다" : "모르겠다";
+              },
               update: function (value, siblings, client) {
                 const { items, realItems, selected } = value;
                 let updateQuery;
@@ -418,6 +457,13 @@ class StyleCurationWordings {
                   mother.style.paddingTop = String(0.5) + "vw";
                 }
               },
+              value: function (request, history) {
+                if (history.curation.service.serid.length === 0) {
+                  return null;
+                } else {
+                  return history.curation.service.serid;
+                }
+              },
               update: function (value, siblings, client) {
                 const seridArr = [
                   "s2011_aa01s",
@@ -467,6 +513,13 @@ class StyleCurationWordings {
                 { name: "도배 공사", contents: "이전 상태에 따라 밑작업 난이도 상이" },
               ],
               multiple: true,
+              value: function (request, history) {
+                if (history.curation.construct.items.length === 0) {
+                  return null;
+                } else {
+                  return history.curation.construct.items;
+                }
+              },
               update: function (value, siblings, client) {
                 const { items, realItems, selected } = value;
                 let updateQuery;
@@ -499,6 +552,9 @@ class StyleCurationWordings {
                 if (desktop) {
                   items[0].style.marginRight = String(20) + ea;
                 }
+              },
+              value: function (request, history) {
+                return history.curation.construct.living ? "거주중, 가구가 있는 상태" : "공실 상태";
               },
               update: function (value, siblings, client) {
                 const { items, realItems, selected } = value;
@@ -1530,6 +1586,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   let addressBoxLeft;
   let addressBoxWidth;
   let addressBoxHeight;
+  let updateValue;
+  let listDoms;
 
   lineHeight = 1.6;
   barEntireValue = 100;
@@ -1720,6 +1778,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
     });
 
     instance.values[name][y].dom = answerArea;
+    updateValue = obj.value(instance.client.requests[0], instance.clientHistory);
 
     if (obj.type === "address") {
       if (mobile) {
@@ -1744,7 +1803,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           mode: "input",
           attribute: [
             { type: "text" },
-            { value: this.client.requests[0].request.space.address },
+            { value: updateValue },
             { x: name },
             { y: String(y) },
           ],
@@ -1999,6 +2058,25 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       if (typeof obj.exception === "function") {
         obj.exception(itemDoms, media);
       }
+
+      console.log("this!2");
+      if (updateValue !== null) {
+        if (obj.multiple) {
+          for (let i of itemDoms) {
+            if (updateValue.includes(i.getAttribute("value"))) {
+              i.click();
+            }
+          }
+        } else {
+          for (let i of itemDoms) {
+            if (updateValue === i.getAttribute("value")) {
+              i.click();
+            }
+          }
+        }
+      }
+      console.log("this!2");
+
     } else if (obj.type === "opposite") {
 
       if (mobile) {
@@ -2098,11 +2176,32 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         }
       });
 
-      if (desktop) {
-        thisName = name + token + String(y);
+      thisName = name + token + String(y);
+      GeneralJs.stacks[thisName + "_isDown"] = false;
+      GeneralJs.stacks[thisName + "_startX"] = false;
+      GeneralJs.stacks[thisName + "_scrollLeft"] = false;
+      barEndEvent = function (e) {
         GeneralJs.stacks[thisName + "_isDown"] = false;
-        GeneralJs.stacks[thisName + "_startX"] = false;
-        GeneralJs.stacks[thisName + "_scrollLeft"] = false;
+        answerArea.style.cursor = "pointer";
+        barBox.style.cursor = "pointer";
+        barButton.style.cursor = "pointer";
+
+        const x = barBox.getAttribute('x');
+        const y = Number(barBox.getAttribute('y'));
+        let thisValue, oppositeValue;
+
+        thisValue = Number(barBox.getAttribute("value"));
+        oppositeValue = barEntireValue - thisValue;
+
+        instance.values[x][y].value = {
+          entire: barEntireValue,
+          value: thisValue,
+          opposite: oppositeValue,
+          values: [ thisValue, oppositeValue ]
+        };
+      }
+
+      if (desktop) {
         barButton.addEventListener("mousedown", function (e) {
           GeneralJs.stacks[thisName + "_isDown"] = true;
           GeneralJs.stacks[thisName + "_startX"] = e.pageX - this.offsetLeft;
@@ -2111,27 +2210,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           barBox.style.cursor = "grabbing";
           barButton.style.cursor = "grabbing";
         });
-        barEndEvent = function (e) {
-          GeneralJs.stacks[thisName + "_isDown"] = false;
-          answerArea.style.cursor = "pointer";
-          barBox.style.cursor = "pointer";
-          barButton.style.cursor = "pointer";
-
-          const x = barBox.getAttribute('x');
-          const y = Number(barBox.getAttribute('y'));
-          let thisValue, oppositeValue;
-
-          thisValue = Number(barBox.getAttribute("value"));
-          oppositeValue = barEntireValue - thisValue;
-
-          instance.values[x][y].value = {
-            entire: barEntireValue,
-            value: thisValue,
-            opposite: oppositeValue,
-            values: [ thisValue, oppositeValue ]
-          };
-
-        }
         answerArea.addEventListener("mouseleave", barEndEvent);
         answerArea.addEventListener("mouseup", barEndEvent);
         answerArea.addEventListener("mousemove", function (e) {
@@ -2167,6 +2245,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 barBox.style.transition = "all 0.3s ease";
                 barBox.style.width = String(percentage) + '%';
                 barBox.setAttribute("value", String(percentage));
+                barEndEvent.call(this, e);
               }
             }
           ],
@@ -2182,6 +2261,16 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         });
       }
 
+      if (updateValue !== null) {
+        if (desktop) {
+          barBox.style.width = "calc(calc(100% - " + String(barText0.getBoundingClientRect().width + barText1.getBoundingClientRect().width + (barTextMargin * 2)) + "px" + ") * " + String(updateValue / 100) + ")";
+        } else {
+          barBox.style.width = String(updateValue) + '%';
+        }
+        barBox.setAttribute("value", String(updateValue));
+        barEndEvent({});
+      }
+
     } else if (obj.type === "list") {
 
       answerArea.style.display = "block";
@@ -2190,8 +2279,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
       listNum = 0;
       for (let obj2 of obj.items) {
-
-        createNode({
+        listDoms = [];
+        listDoms.push(createNode({
           mother: answerArea,
           class: [ "hoverDefault_lite", name + listToken + String(y) + listToken + String(z), name + listToken + String(y) ],
           attribute: [
@@ -2311,18 +2400,31 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               ]
             }
           ]
-        });
+        }));
         listNum++;
+      }
+
+      if (updateValue !== null) {
+        for (let i of listDoms) {
+          if (updateValue.includes(i.getAttribute("value"))) {
+            i.click();
+          }
+        }
       }
 
     } else if (obj.type === "calendar") {
 
-      today = new Date();
+      if (updateValue !== null) {
+        today = updateValue;
+        instance.values[x][y].value = updateValue;
+      } else {
+        today = new Date();
+      }
 
       createNode({
         mother: answerArea,
         attribute: [
-          { toggle: "off" },
+          { toggle: updateValue !== null ? "on" : "off" },
           { name: name },
           { x: name },
           { y: String(y) },
@@ -2433,7 +2535,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               position: "relative",
               fontSize: String(wordingSize) + ea,
               fontWeight: String(200),
-              color: colorChip.deactive,
+              color: colorChip[updateValue === null ? "deactive" : "green"],
               verticalAlign: "top",
               lineHeight: String(lineHeight),
               marginRight: String(calendarMarginLeft) + ea,
@@ -2448,7 +2550,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
               position: "relative",
               fontSize: String(wordingSize) + ea,
               fontWeight: String((media[0] || media[4]) ? 400 : 200),
-              color: colorChip.deactive,
+              color: colorChip[updateValue === null ? "deactive" : "green"],
               verticalAlign: "top",
               lineHeight: String(lineHeight),
               textAlign: "right",
@@ -2518,9 +2620,14 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }
 
-  console.log(this.values);
-  console.log(coreQuery)
-  console.log(historyQuery)
+  console.log(this.values, historyQuery, coreQuery);
+
+  GeneralJs.ajaxJson({ cliid: this.client.cliid, historyQuery, coreQuery }, "/styleCuration_updateCalculation").then((serviceCase) => {
+    console.log(serviceCase);
+    instance.serviceConverting();
+  }).catch((err) => {
+    console.log(err);
+  });
 
 }
 
@@ -3138,7 +3245,6 @@ StyleCurationJs.prototype.insertPannelBox = function () {
                 GeneralJs.scrollTo(window, 0);
                 GeneralJs.setTimeout(() => {
                   instance.parsingValues();
-                  instance.serviceConverting();
                 }, 1000);
               }
             }
@@ -4337,7 +4443,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
 
-    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/getClients");
+    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
@@ -4351,6 +4457,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     this.contentsArr = contentsPhotoObj.contentsArr;
     this.designers = contentsPhotoObj.designers;
     this.client = client;
+    this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
     this.wordings = new StyleCurationWordings();
 
     tempArr = this.wordings.wordings.center.map((obj) => {

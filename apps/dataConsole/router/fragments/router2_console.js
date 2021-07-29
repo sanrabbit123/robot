@@ -1228,35 +1228,37 @@ DataRouter.prototype.rou_post_getHistory = function () {
       if (req.url === "/getClientHistory") {
 
         historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
-
         if (historyObj === null) {
           await back.createHistory("client", { cliid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-          for (let i = 0; i < 6; i++) {
-            responseArr.push('');
-          }
-        } else {
-          responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.space === undefined ? '' : historyObj.space.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget.replace(/\=/g, '').replace(/\&/g, ",")));
-          responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress.replace(/\=/g, '').replace(/\&/g, ",")));
+          historyObj = await back.getHistoryById("client", req.body.id, { selfMongo: instance.mongolocal });
+        }
+
+        responseArr.push((historyObj.history === undefined ? '' : historyObj.history.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.space === undefined ? '' : historyObj.space.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.styling === undefined ? '' : historyObj.styling.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.construct === undefined ? '' : historyObj.construct.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.budget === undefined ? '' : historyObj.budget.replace(/\=/g, '').replace(/\&/g, ",")));
+        responseArr.push((historyObj.progress === undefined ? '' : historyObj.progress.replace(/\=/g, '').replace(/\&/g, ",")));
+
+        if (req.body.rawMode !== undefined) {
+          responseArr = historyObj;
         }
 
       } else if (req.url === "/getProjectHistory") {
 
         historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
-
         if (historyObj === null) {
           await back.createHistory("project", { proid: req.body.id }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-          for (let i = 0; i < 4; i++) {
-            responseArr.push('');
-          }
-        } else {
-          responseArr.push((historyObj.history === undefined ? '' : stringFilter(historyObj.history)));
-          responseArr.push((historyObj.designer === undefined ? '' : stringFilter(historyObj.designer)));
-          responseArr.push((historyObj.client === undefined ? '' : stringFilter(historyObj.client)));
-          responseArr.push((historyObj.photo === undefined ? '' : stringFilter(historyObj.photo)));
+          historyObj = await back.getHistoryById("project", req.body.id, { selfMongo: instance.mongolocal });
+        }
+
+        responseArr.push((historyObj.history === undefined ? '' : stringFilter(historyObj.history)));
+        responseArr.push((historyObj.designer === undefined ? '' : stringFilter(historyObj.designer)));
+        responseArr.push((historyObj.client === undefined ? '' : stringFilter(historyObj.client)));
+        responseArr.push((historyObj.photo === undefined ? '' : stringFilter(historyObj.photo)));
+
+        if (req.body.rawMode !== undefined) {
+          responseArr = historyObj;
         }
 
       } else if (req.url === "/getHistoryProperty") {

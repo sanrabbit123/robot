@@ -426,13 +426,17 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             console.log(err);
           });
           instance.back.getCaseProidById(cliid, { selfMongo: MONGOC }).then((clientCase) => {
-            const serviceCase = clientCase.caseService();
-            if (serviceCase !== null) {
-              const { serid, xValue } = serviceCase;
-              let whereQuery, updateQuery;
-              whereQuery = { cliid };
-              updateQuery = { "requests.0.analytics.response.service.serid": serid[0].serid, "requests.0.analytics.response.service.xValue": xValue[0].xValue };
-              return instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+            if (clientCase !== null) {
+              const serviceCase = clientCase.caseService();
+              if (serviceCase !== null) {
+                const { serid, xValue } = serviceCase;
+                let whereQuery, updateQuery;
+                whereQuery = { cliid };
+                updateQuery = { "requests.0.analytics.response.service.serid": serid[0].serid, "requests.0.analytics.response.service.xValue": xValue[0].xValue };
+                return instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+              } else {
+                return (new Promise((resolve, reject) => { resolve("fail"); }));
+              }
             } else {
               return (new Promise((resolve, reject) => { resolve("fail"); }));
             }

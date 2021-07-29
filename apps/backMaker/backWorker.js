@@ -1096,38 +1096,42 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
       fee = alphaPercentage * fee;
 
-      if (onlineBoo) {
-        offlineFeeCase = fee;
-        onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
-        if (priceStandard.online.minus.min > onlineFee) {
-          onlineFee = priceStandard.online.minus.min;
-        }
-        if (priceStandard.online.minus.max < onlineFee) {
-          onlineFee = priceStandard.online.minus.max;
-        }
-        fee = fee - onlineFee;
-        if (priceStandard.online.absolute.min > fee) {
-          fee = priceStandard.online.absolute.min;
-        }
-        onlineFeeCase = fee;
-      } else {
-        offlineFeeCase = fee;
-        onlineFeeCase = fee;
-        onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
-        if (priceStandard.online.minus.min > onlineFee) {
-          onlineFee = priceStandard.online.minus.min;
-        }
-        if (priceStandard.online.minus.max < onlineFee) {
-          onlineFee = priceStandard.online.minus.max;
-        }
-        onlineFeeCase = onlineFeeCase - onlineFee;
-        if (priceStandard.online.absolute.min > onlineFeeCase) {
-          onlineFeeCase = priceStandard.online.absolute.min;
-        }
-      }
+      offlineFeeCase = fee;
+      onlineFeeCase = fee;
+
+      // if (onlineBoo) {
+      //   offlineFeeCase = fee;
+      //   onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
+      //   if (priceStandard.online.minus.min > onlineFee) {
+      //     onlineFee = priceStandard.online.minus.min;
+      //   }
+      //   if (priceStandard.online.minus.max < onlineFee) {
+      //     onlineFee = priceStandard.online.minus.max;
+      //   }
+      //   fee = fee - onlineFee;
+      //   if (priceStandard.online.absolute.min > fee) {
+      //     fee = priceStandard.online.absolute.min;
+      //   }
+      //   onlineFeeCase = fee;
+      // } else {
+      //   offlineFeeCase = fee;
+      //   onlineFeeCase = fee;
+      //   onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
+      //   if (priceStandard.online.minus.min > onlineFee) {
+      //     onlineFee = priceStandard.online.minus.min;
+      //   }
+      //   if (priceStandard.online.minus.max < onlineFee) {
+      //     onlineFee = priceStandard.online.minus.max;
+      //   }
+      //   onlineFeeCase = onlineFeeCase - onlineFee;
+      //   if (priceStandard.online.absolute.min > onlineFeeCase) {
+      //     onlineFeeCase = priceStandard.online.absolute.min;
+      //   }
+      // }
 
       if (distanceBoo) {
         fee = fee + (travelInfo.amount * travelNumber);
+        offlineFeeCase = fee;
       }
 
       toMoney = (num) => { return (Math.round(num / 1000) * 1000); }

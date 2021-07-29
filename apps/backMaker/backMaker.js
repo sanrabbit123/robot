@@ -1027,84 +1027,119 @@ BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo:
     const projects = await this.getProjectsByQuery({ "proposal.date": { $gte: ago } }, { withTools: true, ...option });
     const cases = clients.getType().getTypeCases(projects);
     const targetClient = await this.getClientById(id, option);
-    const ClientCase = function (client, cases) {
-      this.client = client;
-      this.cases = cases;
-    }
-    let resultObj;
-
-    ClientCase.prototype.caseProposal = function () {
-      const { cases } = this;
-      let contract, proposal, final;
-      contract = [];
-      proposal = [];
-      for (let { proidArr, contractArr } of cases) {
-        contract = contract.concat(contractArr);
-        proposal = proposal.concat(proidArr);
+    if (targetClient === null) {
+      return null;
+    } else {
+      const ClientCase = function (client, cases) {
+        this.client = client;
+        this.cases = cases;
       }
-      contract = Array.from(new Set(contract));
-      proposal = Array.from(new Set(proposal));
-      proposal = proposal.filter((p) => { return !contract.includes(p); });
-      contract.sort();
-      proposal.sort();
-      final = proposal.concat(contract).reverse();
-      return final.map((proid) => { return projects.search(proid); });
-    }
-
-    ClientCase.prototype.caseService = function () {
-      const projectArr = this.caseProposal();
-      const serviceArr = projectArr.map((obj) => { return obj.service; });
-      if (serviceArr.length === 0) {
-        return null;
-      } else {
-        let seridArr, xValueArr;
-        let seridObj, xValueObj;
-
-        seridArr = serviceArr.map((obj) => { return obj.serid; });
-        xValueArr = serviceArr.map((obj) => { return obj.xValue; });
-
-        seridObj = {};
-        for (let s of seridArr) {
-          if (seridObj[s] === undefined) {
-            seridObj[s] = 1;
-          } else {
-            seridObj[s] = seridObj[s] + 1;
+      ClientCase.prototype.caseProposal = function () {
+        const { cases } = this;
+        let contract, proposal, final;
+        contract = [];
+        proposal = [];
+        for (let { proidArr, contractArr } of cases) {
+          contract = contract.concat(contractArr);
+          proposal = proposal.concat(proidArr);
+        }
+        contract = Array.from(new Set(contract));
+        proposal = Array.from(new Set(proposal));
+        proposal = proposal.filter((p) => { return !contract.includes(p); });
+        contract.sort();
+        proposal.sort();
+        final = proposal.concat(contract).reverse();
+        return final.map((proid) => { return projects.search(proid); });
+      }
+      ClientCase.prototype.caseService = function () {
+        const projectArr = this.caseProposal();
+        const serviceArr = projectArr.map((project) => {
+          let serviceObj = JSON.parse(JSON.stringify(project.service));
+          let length, total;
+          let average;
+          length = 0;
+          total = 0;
+          for (let { fee } of project.proposal.detail) {
+            for (let { amount } of fee) {
+              length = length + 1;
+              total = total + amount;
+            }
           }
-        }
-
-        xValueObj = {};
-        for (let s of xValueArr) {
-          if (xValueObj[s] === undefined) {
-            xValueObj[s] = 1;
+          if (length === 0) {
+            average = 0;
           } else {
-            xValueObj[s] = xValueObj[s] + 1;
+            average = Math.round((total / length) / 1000) * 1000;
           }
-        }
-
-        seridArr = [];
-        for (let i in seridObj) {
-          seridArr.push({ serid: i, number: seridObj[i] });
-        }
-
-        xValueArr = [];
-        for (let i in xValueObj) {
-          xValueArr.push({ xValue: i, number: xValueObj[i] });
-        }
-
-        seridArr.sort((a, b) => { return b.number - a.number; });
-        xValueArr.sort((a, b) => { return b.number - a.number; });
-
-        if (seridArr.length === 0 || xValueArr.length === 0) {
+          serviceObj.average = average;
+          return serviceObj;
+        });
+        if (serviceArr.length === 0) {
           return null;
         } else {
-          return { serid: seridArr, xValue: xValueArr };
+          let seridArr, xValueArr;
+          let seridObj, xValueObj;
+          let tempArr, tempNum;
+          let average;
+
+          seridArr = serviceArr.map((obj) => { return obj.serid; });
+          xValueArr = serviceArr.map((obj) => { return obj.xValue; });
+
+          seridObj = {};
+          for (let s of seridArr) {
+            if (seridObj[s] === undefined) {
+              seridObj[s] = 1;
+            } else {
+              seridObj[s] = seridObj[s] + 1;
+            }
+          }
+
+          xValueObj = {};
+          for (let s of xValueArr) {
+            if (xValueObj[s] === undefined) {
+              xValueObj[s] = 1;
+            } else {
+              xValueObj[s] = xValueObj[s] + 1;
+            }
+          }
+
+          seridArr = [];
+          for (let i in seridObj) {
+            seridArr.push({ serid: i, number: seridObj[i] });
+          }
+
+          xValueArr = [];
+          for (let i in xValueObj) {
+            xValueArr.push({ xValue: i, number: xValueObj[i] });
+          }
+
+          seridArr.sort((a, b) => { return b.number - a.number; });
+          xValueArr.sort((a, b) => { return b.number - a.number; });
+
+          for (let obj of seridArr) {
+            tempArr = serviceArr.filter((s) => { return s.serid === obj.serid; });
+            tempNum = 0;
+            obj.fee = [];
+            for (let t of tempArr) {
+              tempNum += t.average;
+              obj.fee.push(t.average);
+            }
+            average = 0;
+            if (tempArr.length !== 0) {
+              average = Math.round((tempNum / tempArr.length) / 1000) * 1000;
+            }
+            obj.average = average;
+          }
+
+          if (seridArr.length === 0 || xValueArr.length === 0) {
+            return null;
+          } else {
+            return { serid: seridArr, xValue: xValueArr };
+          }
         }
       }
+      const resultObj = new ClientCase(targetClient, (targetClient === null) ? null : cases.parsingCases(targetClient));
+      return resultObj;
     }
-
-    resultObj = new ClientCase(targetClient, (targetClient === null) ? null : cases.parsingCases(targetClient));
-
-    return resultObj;
   } catch (e) {
     console.log(e);
   }
