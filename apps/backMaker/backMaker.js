@@ -1012,8 +1012,14 @@ BackMaker.prototype.getClientReport = async function () {
 BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo: null, devAlive: false }) {
   const instance = this;
   try {
+    if (typeof id !== "string") {
+      throw new Error("must be cliid");
+    }
     if (typeof option !== "object" || Array.isArray(option)) {
       throw new Error("invaild option input");
+    }
+    if (option.withTools !== true) {
+      option.withTools = true;
     }
     const ago = new Date();
     ago.setMonth(ago.getMonth() - 24);
@@ -1021,14 +1027,83 @@ BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo:
     const projects = await this.getProjectsByQuery({ "proposal.date": { $gte: ago } }, { withTools: true, ...option });
     const cases = clients.getType().getTypeCases(projects);
     const targetClient = await this.getClientById(id, option);
-    let resultObj = {};
-    if (targetClient === null) {
-      resultObj.cases = null;
-      resultObj.proid = null;
-    } else {
-      resultObj.cases = cases.parsingCases(targetClient);
-      resultObj.proid = cases.parsingProid(targetClient);
+    const ClientCase = function (client, cases) {
+      this.client = client;
+      this.cases = cases;
     }
+    let resultObj;
+
+    ClientCase.prototype.caseProposal = function () {
+      const { cases } = this;
+      let contract, proposal, final;
+      contract = [];
+      proposal = [];
+      for (let { proidArr, contractArr } of cases) {
+        contract = contract.concat(contractArr);
+        proposal = proposal.concat(proidArr);
+      }
+      contract = Array.from(new Set(contract));
+      proposal = Array.from(new Set(proposal));
+      proposal = proposal.filter((p) => { return !contract.includes(p); });
+      contract.sort();
+      proposal.sort();
+      final = proposal.concat(contract).reverse();
+      return final.map((proid) => { return projects.search(proid); });
+    }
+
+    ClientCase.prototype.caseService = function () {
+      const projectArr = this.caseProposal();
+      const serviceArr = projectArr.map((obj) => { return obj.service; });
+      if (serviceArr.length === 0) {
+        return null;
+      } else {
+        let seridArr, xValueArr;
+        let seridObj, xValueObj;
+
+        seridArr = serviceArr.map((obj) => { return obj.serid; });
+        xValueArr = serviceArr.map((obj) => { return obj.xValue; });
+
+        seridObj = {};
+        for (let s of seridArr) {
+          if (seridObj[s] === undefined) {
+            seridObj[s] = 1;
+          } else {
+            seridObj[s] = seridObj[s] + 1;
+          }
+        }
+
+        xValueObj = {};
+        for (let s of xValueArr) {
+          if (xValueObj[s] === undefined) {
+            xValueObj[s] = 1;
+          } else {
+            xValueObj[s] = xValueObj[s] + 1;
+          }
+        }
+
+        seridArr = [];
+        for (let i in seridObj) {
+          seridArr.push({ serid: i, number: seridObj[i] });
+        }
+
+        xValueArr = [];
+        for (let i in xValueObj) {
+          xValueArr.push({ xValue: i, number: xValueObj[i] });
+        }
+
+        seridArr.sort((a, b) => { return b.number - a.number; });
+        xValueArr.sort((a, b) => { return b.number - a.number; });
+
+        if (seridArr.length === 0 || xValueArr.length === 0) {
+          return null;
+        } else {
+          return { serid: seridArr, xValue: xValueArr };
+        }
+      }
+    }
+
+    resultObj = new ClientCase(targetClient, (targetClient === null) ? null : cases.parsingCases(targetClient));
+
     return resultObj;
   } catch (e) {
     console.log(e);

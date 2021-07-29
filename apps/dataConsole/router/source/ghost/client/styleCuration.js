@@ -244,7 +244,7 @@ class StyleCurationWordings {
                 historyQuery["curation.building.type"] = items[selected];
 
                 pyeong = client.requests[0].request.space.pyeong;
-                if (siblings.space.children.find((obj) => { return obj.name === "pyeongStandard"; }).value) {
+                if (siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value.realItems[siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value.selected]) {
                   pyeong = realItems[selected] * pyeong;
                 }
 
@@ -282,7 +282,7 @@ class StyleCurationWordings {
 
                 pyeong = client.requests[0].request.space.pyeong;
                 if (realItems[selected]) {
-                  pyeong = siblings.space.children.find((obj) => { return obj.name === "buildingType"; }).value * pyeong;
+                  pyeong = (siblings.space.find((obj) => { return obj.name === "buildingType"; }).value.realItems[siblings.space.find((obj) => { return obj.name === "buildingType"; }).value.selected]) * pyeong;
                 }
 
                 coreQuery = {};
@@ -317,10 +317,9 @@ class StyleCurationWordings {
               total: 100,
               ea: '%',
               update: function (value, siblings, client) {
-                const [ ratio ] = value;
                 let updateQuery;
                 updateQuery = {};
-                updateQuery["curation.furniture.ratio"] = ratio;
+                updateQuery["curation.furniture.ratio"] = value.value;
                 return {
                   history: updateQuery,
                   core: null
@@ -2472,10 +2471,56 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
 StyleCurationJs.prototype.parsingValues = function () {
   const instance = this;
+  let center, temp;
+  let items, realItems, selected;
+  let coreQuery, historyQuery;
 
-  console.log(instance.values);
+  center = this.wordings.centerWordings;
 
+  for (let obj of center) {
+    for (let i = 0; i < obj.children.length; i++) {
+      if (obj.children[i].type === "checkbox" || obj.children[i].type === "list") {
+        items = JSON.parse(JSON.stringify(obj.children[i].items));
+        if (obj.children[i].realItems !== undefined) {
+          realItems = JSON.parse(JSON.stringify(obj.children[i].realItems));
+        } else {
+          realItems = JSON.parse(JSON.stringify(items)).fill(null, 0);
+        }
+        selected = JSON.parse(JSON.stringify(this.values[obj.name][i].value));
+        selected = selected.map((obj) => { return obj.index; });
+        if (!obj.children[i].multiple) {
+          if (selected.length === 1) {
+            selected = selected[0];
+          } else {
+            selected = [ 0 ];
+          }
+        }
+        this.values[obj.name][i].value = { items, realItems, selected };
+      }
+    }
+  }
 
+  coreQuery = {};
+  historyQuery = {};
+  for (let obj of center) {
+    for (let i = 0; i < obj.children.length; i++) {
+      temp = obj.children[i].update(this.values[obj.name][i].value, this.values, this.client);
+      if (temp.history !== null) {
+        for (let j in temp.history) {
+          historyQuery[j] = temp.history[j];
+        }
+      }
+      if (temp.core !== null) {
+        for (let j in temp.core) {
+          coreQuery[j] = temp.core[j];
+        }
+      }
+    }
+  }
+
+  console.log(this.values);
+  console.log(coreQuery)
+  console.log(historyQuery)
 
 }
 
@@ -4313,6 +4358,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
         name: obj.name,
         children: obj.children.map((obj2) => {
           return {
+            name: obj2.name,
             type: obj2.type,
             value: null,
             dom: null,

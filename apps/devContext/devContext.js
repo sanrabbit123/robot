@@ -58,10 +58,11 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
 
+    const cliid = "c2107_aa69s";
+    const clientCase = await back.getCaseProidById(cliid, { selfMongo: this.MONGOLOCALC });
 
 
-
-
+    console.log(clientCase.caseService())
 
 
 
@@ -77,11 +78,7 @@ DevContext.prototype.launching = async function () {
     // console.log(await work.getDesignerFee("d1907_aa01s", "c2107_aa69s", "s2011_aa02s", "B", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC }));
 
 
-
-
     // console.log(await requestSystem("http://localhost:3000/designerFee", { matrix: test }, { headers: { "Content-Type": "application/json", "origin": "https://localhost:3000" } }));
-
-
 
 
 

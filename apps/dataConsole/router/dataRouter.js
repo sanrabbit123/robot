@@ -2400,8 +2400,8 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
         throw new Error("must be cliid");
       }
       const { id: cliid } = req.body;
-      const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-      const { cases } = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+      const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+      const { client, cases } = clientCase;
       const realTimes = await back.mongoRead("realtimeDesigner", {}, { selfMongo: instance.mongolocal });
       const ytoken = 'y';
       const mtoken = 'm';
@@ -2452,22 +2452,10 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
         realtimeMap[desid] = count;
       }
 
-      contract = [];
-      proposal = [];
-      for (let { proidArr, contractArr } of cases) {
-        contract = contract.concat(contractArr);
-        proposal = proposal.concat(proidArr);
-      }
-      contract = Array.from(new Set(contract));
-      proposal = Array.from(new Set(proposal));
-      proposal = proposal.filter((p) => { return !contract.includes(p); });
-      contract.sort();
-      proposal.sort();
-      final = proposal.concat(contract).reverse();
+      final = clientCase.caseProposal();
 
       selected = [];
-      for (let proid of final) {
-        project = await back.getProjectById(proid, { selfMongo: instance.MONGOLOCALC });
+      for (let project of final) {
         if (project !== null) {
           temp = project.toNormal().proposal.detail.map((obj) => { return obj.desid });
           for (let desid of temp) {

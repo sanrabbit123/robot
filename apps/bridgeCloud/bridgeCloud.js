@@ -425,6 +425,22 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             slack_bot.chat.postMessage({ text: "주소 연산 중 오류 생김", channel: "#error_log" });
             console.log(err);
           });
+          instance.back.getCaseProidById(cliid, { selfMongo: MONGOC }).then((clientCase) => {
+            const serviceCase = clientCase.caseService();
+            if (serviceCase !== null) {
+              const { serid, xValue } = serviceCase;
+              let whereQuery, updateQuery;
+              whereQuery = { cliid };
+              updateQuery = { "requests.0.analytics.response.service.serid": serid[0].serid, "requests.0.analytics.response.service.xValue": xValue[0].xValue };
+              return instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+            } else {
+              return (new Promise((resolve, reject) => { resolve("fail"); }));
+            }
+          }).then((message) => {
+            console.log(cliid, "case update " + message);
+          }).catch((err) => {
+            console.log(err);
+          });
         }
 
         //send slack message
