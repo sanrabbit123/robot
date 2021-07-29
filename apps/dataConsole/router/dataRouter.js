@@ -3852,33 +3852,50 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res) {
     try {
-      if (req.body.cliid === undefined || req.body.historyQuery === undefined || req.body.coreQuery === undefined) {
+      if (req.body.cliid === undefined || req.body.historyQuery === undefined || req.body.coreQuery === undefined || req.body.mode === undefined) {
         throw new Error("invaild post");
       }
       const cliid = req.body.cliid;
       const historyQuery = equalJson(req.body.historyQuery);
       const coreQuery = equalJson(req.body.coreQuery);
-      const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
-      if (clientCase === null) {
-        res.set({ "Content-Type": "application/json" });
-        res.send(JSON.stringify({}));
-      } else {
+      const mode = req.body.mode;
+      let history;
+
+      if (Object.keys(coreQuery).length > 0) {
         await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
-        historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        if (historyObj === null) {
+      }
+
+      if (Object.keys(historyQuery).length > 0) {
+        history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        if (history === null) {
           await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
         } else {
           await back.updateHistory("client", [ { cliid }, historyQuery ], { selfMongo: instance.mongolocal });
         }
-        const serviceCase = clientCase.caseService();
-        if (serviceCase !== null) {
-          res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify(serviceCase));
-        } else {
+        history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+      }
+
+      if (mode !== "update") {
+        const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+        const client = clientCase.client;
+        if (clientCase === null) {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({}));
+        } else {
+          const service = clientCase.caseService();
+          if (service !== null) {
+            res.set({ "Content-Type": "application/json" });
+            res.send(JSON.stringify({ service, client, history }));
+          } else {
+            res.set({ "Content-Type": "application/json" });
+            res.send(JSON.stringify({}));
+          }
         }
+      } else {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({}));
       }
+
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

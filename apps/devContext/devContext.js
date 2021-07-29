@@ -63,11 +63,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const cliid = "c2107_aa69s";
-    const clientCase = await back.getCaseProidById(cliid, { selfMongo: this.MONGOLOCALC });
-    console.log(clientCase.caseService().serid)
-
-
 
 
 

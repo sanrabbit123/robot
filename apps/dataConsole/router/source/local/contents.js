@@ -171,7 +171,7 @@ ContentsJs.prototype.standardBar = function (standard) {
   for (let { conid, pid } of target) {
     if (num === 1) {
       style2.position = "relative";
-      style3.color = "#404040";
+      style3.color = GeneralJs.colorChip.black;
       delete style2.paddingTop;
       delete style2.zIndex;
       delete style2.background;
@@ -305,7 +305,7 @@ ContentsJs.prototype.infoArea = function (info) {
     top: String(0),
     left: String(grayBarWidth) + ea,
     width: String(5000) + ea,
-    color: "#404040",
+    color: GeneralJs.colorChip.black,
   };
 
   style2 = {
@@ -395,7 +395,7 @@ ContentsJs.prototype.infoArea = function (info) {
     const thisId = /t[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/i.exec(mother.className)[0];
     const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
     const conidChildren = instance.totalMother.children[0].children;
-    const finalColor = (mother.getAttribute("drop") === "true") ? "#cccccc" : "#404040";
+    const finalColor = (mother.getAttribute("drop") === "true") ? GeneralJs.colorChip.gray4 : GeneralJs.colorChip.black;
     for (let z = 0; z < mother.children.length; z++) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
         mother.children[z].style.color = finalColor;
@@ -442,9 +442,9 @@ ContentsJs.prototype.infoArea = function (info) {
           for (let z = 0; z < standardArea.children.length; z++) {
             if (standardArea.children[z].getAttribute("index") === thisIndex) {
               if (standardArea.children[z].getAttribute("drop") === "true") {
-                finalColor = "#cccccc";
+                finalColor = GeneralJs.colorChip.gray4;
               } else {
-                finalColor = "#404040";
+                finalColor = GeneralJs.colorChip.black;
               }
               for (let y = 0; y < standardArea.children[z].children.length; y++) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
@@ -2437,7 +2437,7 @@ ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: "#404040",
+        background: GeneralJs.colorChip.black,
         top: String(0) + ea,
         left: String(0) + ea,
         width: "calc(100% - " + String(0) + ea + ")",
@@ -2651,7 +2651,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
           if (allDates[i].dom.firstChild.textContent !== '') {
             if (allDates[i].dom !== this) {
               allDates[i].dom.firstChild.style.fontWeight = String(200);
-              allDates[i].dom.firstChild.style.color = (allDates[i].day > 4) ? GeneralJs.colorChip.green : "#404040";
+              allDates[i].dom.firstChild.style.color = (allDates[i].day > 4) ? GeneralJs.colorChip.green : GeneralJs.colorChip.black;
             } else {
               allDates[i].dom.firstChild.style.fontWeight = String(400);
               allDates[i].dom.firstChild.style.color = GeneralJs.colorChip.green;
@@ -3125,7 +3125,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         position: "relative",
         height: String(10) + "%",
         cursor: "pointer",
-        color: "#404040",
+        color: GeneralJs.colorChip.black,
       };
 
       iconStyle = {
@@ -3201,7 +3201,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           if (num === 0) {
             for (let { style } of gray.firstChild.children) {
               style.background = "#ffffff";
-              style.color = "#404040";
+              style.color = GeneralJs.colorChip.black;
             }
           } else if (num === 1) {
             for (let dom of gray.firstChild.children) {
@@ -3358,7 +3358,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         borderRadius: String(5) + ea,
         boxSizing: "border-box",
         cursor: "pointer",
-        color: "#404040",
+        color: GeneralJs.colorChip.black,
         transition: "all 0.3s ease",
       };
 
@@ -3385,7 +3385,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             designer = this.getAttribute("designer");
           } else {
             i.style.background = "#ffffff";
-            i.style.color = "#404040";
+            i.style.color = GeneralJs.colorChip.black;
           }
         }
 
@@ -3447,7 +3447,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           title3.removeChild(title3.firstChild);
         }
         title3.insertAdjacentHTML("afterbegin", inputHtml);
-        title3.style.color = "#cccccc";
+        title3.style.color = GeneralJs.colorChip.gray4;
 
         GeneralJs.timeouts.firstContentsCreateViewDomsTimeout = setTimeout(async function () {
           const { dom: dom0, title: title0, gray: gray0 } = createViewDoms[0];
@@ -3598,7 +3598,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             createViewDoms[2].dom.style.borderBottom = "";
 
             dom.style.height = "calc(100% - 21px)";
-            title.style.color = title.querySelector("b").style.color = "#404040";
+            title.style.color = title.querySelector("b").style.color = GeneralJs.colorChip.black;
             tempArr = title.querySelector("b").textContent.split(" ");
             temp = '';
             temp += tempArr[0] + ' ' + tempArr[1] + ' ' + tempArr[2] + ' ' + tempArr[3] + ' ';
@@ -4312,7 +4312,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           title3.removeChild(title3.firstChild);
         }
         title3.insertAdjacentHTML("afterbegin", inputHtml);
-        title3.style.color = "#cccccc";
+        title3.style.color = GeneralJs.colorChip.gray4;
 
         GeneralJs.timeouts.thirdContentsCreateViewDomsTimeout = setTimeout(function () {
           const { dom: dom0, title: title0, gray: gray0 } = createViewDoms[0];
@@ -4798,7 +4798,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
-    color: "#404040",
+    color: GeneralJs.colorChip.black,
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
     bottom: String(leftMargin * (GeneralJs.isMac() ? (9 / 60) : (2 / 60))) + ea,
@@ -5616,7 +5616,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           target = dom.querySelector("textarea");
         }
       }
-      this.style.color = "#cccccc";
+      this.style.color = GeneralJs.colorChip.gray4;
     }
 
     //margin box
@@ -5657,7 +5657,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       left: String(fontSize * (2 / 15.3027) * -1) + ea,
       fontSize: String(fontSize) + ea,
       fontWeight: String(600),
-      color: "#404040",
+      color: GeneralJs.colorChip.black,
       background: "white",
       paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
       paddingRight: String(fontSize * (12 / 15.3027)) + ea,
@@ -6039,7 +6039,7 @@ ContentsJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
 
         marginMiddle = (leftArr[2] - (widthArr[3] + dateWidth)) / 2;
         heightMargin = topArr[1] - topArr[0] - height;
-        lineColor = "#cccccc";
+        lineColor = GeneralJs.colorChip.gray4;
 
         //line third
         lineDom = GeneralJs.nodes.div.cloneNode(true);
@@ -6287,7 +6287,7 @@ ContentsJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
     for (let z = 0; z < instance.standardDoms.length; z++) {
       if (z !== 0) {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#404040";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.black;
       } else {
         domTargets = instance.standardDoms[z].children;
         domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
@@ -6337,7 +6337,7 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     for (let z = 0; z < instance.standardDoms.length; z++) {
       if (z !== index && z !== 0) {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#cccccc";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.gray4;
       } else {
         domTargets = instance.standardDoms[z].children;
         domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
@@ -6355,7 +6355,7 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: "#404040",
+        background: GeneralJs.colorChip.black,
         top: String(0) + ea,
         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
         width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -6820,7 +6820,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
       this,
     ];
     for (let i of targets) {
-      i.style.color = "#404040";
+      i.style.color = GeneralJs.colorChip.black;
     }
     if (this.textContent === "미발행") {
       this.style.color = "#dd3424";
@@ -6905,7 +6905,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
         fontSize: String(14) + ea,
         fontWeight: String(300),
         cursor: "pointer",
-        color: "#404040",
+        color: GeneralJs.colorChip.black,
         transition: "all 0s ease",
         boxSizing: "border-box",
       };
@@ -7055,7 +7055,7 @@ ContentsJs.prototype.reportViewMakerDetail = function (recycle = false) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: "#404040",
+          background: GeneralJs.colorChip.black,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -7266,7 +7266,7 @@ ContentsJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: "#404040",
+          background: GeneralJs.colorChip.black,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -7416,7 +7416,7 @@ ContentsJs.prototype.addExtractEvent = function () {
       style = {
         position: "fixed",
         zIndex: String(2),
-        background: "#404040",
+        background: GeneralJs.colorChip.black,
         opacity: String(0.2),
         width: "100%",
         height: "100%",

@@ -439,6 +439,12 @@ class StyleCurationWordings {
                 "전체 리모델링과 전체 스타일링",
                 "구조 변경을 포함한 고급 시공"
               ],
+              realItems: [
+                "s2011_aa01s",
+                "s2011_aa02s",
+                "s2011_aa03s",
+                "s2011_aa04s",
+              ],
               exception: function (items, media) {
                 const mother = items[0].parentNode;
                 const grandMother = mother.parentNode;
@@ -465,17 +471,11 @@ class StyleCurationWordings {
                 }
               },
               update: function (value, siblings, client) {
-                const seridArr = [
-                  "s2011_aa01s",
-                  "s2011_aa02s",
-                  "s2011_aa03s",
-                  "s2011_aa04s",
-                ];
                 const { items, realItems, selected } = value;
                 let historyQuery;
                 let selectedSerid;
 
-                selectedSerid = selected.map((i) => { return seridArr[i]; });
+                selectedSerid = selected.map((i) => { return realItems[i]; });
 
                 historyQuery = {};
                 historyQuery["curation.service.serid"] = selectedSerid;
@@ -1977,6 +1977,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             { z: String(z) },
             { multiple: obj.multiple ? "true" : "false" },
             { value: i },
+            { real: (obj.realItems !== undefined ? String(obj.realItems[z]) : "__undefined__") }
           ],
           events: [
             {
@@ -2059,23 +2060,21 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         obj.exception(itemDoms, media);
       }
 
-      console.log("this!2");
       if (updateValue !== null) {
         if (obj.multiple) {
           for (let i of itemDoms) {
-            if (updateValue.includes(i.getAttribute("value"))) {
+            if (updateValue.includes(i.getAttribute("value")) || updateValue.includes(i.getAttribute("real"))) {
               i.click();
             }
           }
         } else {
           for (let i of itemDoms) {
-            if (updateValue === i.getAttribute("value")) {
+            if (updateValue === i.getAttribute("value") || updateValue === i.getAttribute("real")) {
               i.click();
             }
           }
         }
       }
-      console.log("this!2");
 
     } else if (obj.type === "opposite") {
 
@@ -2278,8 +2277,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
       answerArea.style.paddingTop = String(listAreaPaddingTop) + ea;
 
       listNum = 0;
+      listDoms = [];
       for (let obj2 of obj.items) {
-        listDoms = [];
         listDoms.push(createNode({
           mother: answerArea,
           class: [ "hoverDefault_lite", name + listToken + String(y) + listToken + String(z), name + listToken + String(y) ],
@@ -2416,7 +2415,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
       if (updateValue !== null) {
         today = updateValue;
-        instance.values[x][y].value = updateValue;
+        instance.values[name][y].value = updateValue;
       } else {
         today = new Date();
       }
@@ -2576,6 +2575,7 @@ StyleCurationJs.prototype.parsingValues = function () {
   let center, temp;
   let items, realItems, selected;
   let coreQuery, historyQuery;
+  let finalSerid;
 
   center = this.wordings.centerWordings;
 
@@ -2620,11 +2620,63 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }
 
-  console.log(this.values, historyQuery, coreQuery);
+  GeneralJs.ajaxJson({ cliid: this.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation").then((obj) => {
+    if (Object.keys(obj).length === 0) {
+      window.alert("오류가 발생하였습니다!");
+      window.reload();
+    } else {
+      const { service, client, history } = obj;
+      let totalMust, tempArr;
+      let userSerid, calculSerid;
+      let userSeridSet, calculSeridSet;
 
-  GeneralJs.ajaxJson({ cliid: this.client.cliid, historyQuery, coreQuery }, "/styleCuration_updateCalculation").then((serviceCase) => {
-    console.log(serviceCase);
-    instance.serviceConverting();
+      instance.client = client;
+      instance.clientHistory = history;
+      userSerid = history.curation.service.serid;
+      calculSerid = service.serid.map((obj) => { return obj.serid; });
+
+      userSeridSet = new Set(userSerid);
+      calculSeridSet = new Set(calculSerid);
+
+      finalSerid = Array.from(userSeridSet.intersection(calculSeridSet));
+
+      if (finalSerid.length === 0) {
+        finalSerid = calculSerid;
+      }
+
+      finalSerid = finalSerid.map((serid) => {
+        let obj;
+        let min, max;
+        for (let s of service.serid) {
+          if (s.serid === serid) {
+            obj = s;
+            break;
+          }
+        }
+        obj.fee.sort((a, b) => { return a - b; });
+        min = Math.floor(obj.fee[0] / 1000000);
+        max = Math.ceil(obj.fee[obj.fee.length - 1] / 1000000);
+        return { serid, min, max };
+      });
+
+      if (finalSerid.length === 0) {
+        window.alert("오류가 발생하였습니다!");
+        window.reload();
+      } else {
+        return GeneralJs.ajaxJson({
+          cliid: instance.client.cliid,
+          historyQuery: { "curation.service.serid": finalSerid.map((obj) => { return obj.serid }) },
+          coreQuery: {},
+          mode: "update",
+        }, "/styleCuration_updateCalculation");
+      }
+    }
+  }).then(() => {
+    return instance.serviceConverting(finalSerid);
+  }).then((message) => {
+    if (message !== "done") {
+      throw new Error("promise error");
+    }
   }).catch((err) => {
     console.log(err);
   });
@@ -3282,7 +3334,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
 
 }
 
-StyleCurationJs.prototype.insertServiceBox = function () {
+StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
   const instance = this;
   const { ea, media } = this;
   const baseTong = this.baseTong;
@@ -3334,11 +3386,8 @@ StyleCurationJs.prototype.insertServiceBox = function () {
   let servicePhotoMarginBottom;
 
   data = {
-    selected: [ 0, 1 ],
-    range: [
-      [ 2000000, 3000000 ],
-      [ 3000000, 4000000 ],
-    ]
+    selected: seridObj.map((obj) => { return Number(obj.serid.split('_')[1].replace(/[^0-9]/gi, '').replace(/^0/gi, '').replace(/^0/gi, '').replace(/^0/gi, '')) - 1; }),
+    range: seridObj.map((obj) => { return [ obj.min * 1000000, obj.max * 1000000 ] })
   };
 
   leftMargin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -4400,29 +4449,30 @@ StyleCurationJs.prototype.insertAdditionBox = function () {
 
 }
 
-StyleCurationJs.prototype.serviceConverting = function () {
+StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   const instance = this;
   const { ea, baseTong } = this;
   const { backgroundImageBox, backgroundImageBox2 } = this.mother;
   const { cleanChildren } = GeneralJs;
   const children = baseTong.children;
-  backgroundImageBox2.style.opacity = String(1);
-  backgroundImageBox.style.animation = "justfadeoutoriginal 1s ease forwards";
-  baseTong.style.height = String(baseTong.getBoundingClientRect().height) + ea;
-  baseTong.style.animation = "fadedownmiddle 0.4s ease forwards";
-  GeneralJs.setTimeout(async () => {
-    try {
+  try {
+    backgroundImageBox2.style.opacity = String(1);
+    backgroundImageBox.style.animation = "justfadeoutoriginal 1s ease forwards";
+    baseTong.style.height = String(baseTong.getBoundingClientRect().height) + ea;
+    baseTong.style.animation = "fadedownmiddle 0.4s ease forwards";
+    GeneralJs.setTimeout(() => {
       baseTong.style.opacity = String(0);
       cleanChildren(baseTong);
       instance.insertInitBox(false);
-      instance.insertServiceBox();
+      instance.insertServiceBox(seridObj);
       instance.insertAdditionBox();
       baseTong.style.height = "";
       baseTong.style.animation = "fadeupdelay 0.5s ease forwards";
-    } catch (e) {
-      console.log(e);
-    }
-  }, 500);
+    }, 500);
+    return "done";
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 StyleCurationJs.prototype.launching = async function (loading) {

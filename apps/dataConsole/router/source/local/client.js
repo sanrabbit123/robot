@@ -43,7 +43,7 @@ ClientJs.prototype.standardBar = function (standard) {
   style = {
     display: "block",
     position: "relative",
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     top: String(0),
     left: String(0),
     width: String(this.grayBarWidth) + ea,
@@ -57,7 +57,7 @@ ClientJs.prototype.standardBar = function (standard) {
     paddingTop: String(this.module.paddingTop) + ea,
     top: String(0) + ea,
     zIndex: String(1),
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     width: style.width,
   };
 
@@ -161,7 +161,7 @@ ClientJs.prototype.standardBar = function (standard) {
   for (let { cliid, name } of target) {
     if (num === 1) {
       style2.position = "relative";
-      style3.color = "#404040";
+      style3.color = GeneralJs.colorChip.black;
       delete style2.paddingTop;
       delete style2.zIndex;
       delete style2.background;
@@ -209,7 +209,7 @@ ClientJs.prototype.standardBar = function (standard) {
     if (num !== 0) {
       this.cases.push({ cliid, name });
     } else {
-      div_clone2.style.borderBottom = "1px dashed #dddddd";
+      div_clone2.style.borderBottom = "1px dashed " + GeneralJs.colorChip.gray3;
       div_clone2.style.height = String(this.module.height + this.module.initialLine) + ea;
       this.cases.push(null);
     }
@@ -323,7 +323,7 @@ ClientJs.prototype.infoArea = function (info) {
     top: String(0),
     left: String(grayBarWidth) + ea,
     width: String(5000) + ea,
-    color: "#404040",
+    color: GeneralJs.colorChip.black,
   };
 
   style2 = {
@@ -414,12 +414,12 @@ ClientJs.prototype.infoArea = function (info) {
     const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
     const cliidChildren = instance.totalMother.children[0].children;
     let finalColor;
-    finalColor = "#404040";
+    finalColor = GeneralJs.colorChip.black;
     if (mother.getAttribute("red") === "true") {
       finalColor = "#d13939";
     }
     if (mother.getAttribute("drop") === "true") {
-      finalColor = "#cccccc";
+      finalColor = GeneralJs.colorChip.gray4;
     }
     for (let z = 0; z < mother.children.length; z++) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
@@ -466,9 +466,9 @@ ClientJs.prototype.infoArea = function (info) {
 
           for (let z = 0; z < standardArea.children.length; z++) {
             if (standardArea.children[z].getAttribute("index") === thisIndex) {
-              finalColor = "#404040";
+              finalColor = GeneralJs.colorChip.black;
               if (standardArea.children[z].getAttribute("drop") === "true") {
-                finalColor = "#cccccc";
+                finalColor = GeneralJs.colorChip.gray4;
               }
               if (standardArea.children[z].getAttribute("red") === "true") {
                 finalColor = "#d13939";
@@ -1361,9 +1361,9 @@ ClientJs.prototype.infoArea = function (info) {
       div_clone2.setAttribute("drop", "false");
       div_clone2.setAttribute("red", "false");
       if (dropPoint.values.includes(obj[dropPoint.column])) {
-        style2.color = "#cccccc";
+        style2.color = GeneralJs.colorChip.gray4;
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
-          this.standardDoms[num].children[z].style.color = "#cccccc";
+          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.gray4;
         }
         div_clone2.setAttribute("drop", "true");
       } else if (redPoint.values.includes(obj[redPoint.column])) {
@@ -1590,7 +1590,7 @@ ClientJs.prototype.cardViewMaker = function () {
         fontWeight: String(500),
         top: String(GeneralJs.isMac() ? titleTop : titleTop + 4) + ea,
         left: String(intend) + ea,
-        color: "#404040",
+        color: GeneralJs.colorChip.black,
         cursor: "pointer",
       };
 
@@ -1622,7 +1622,7 @@ ClientJs.prototype.cardViewMaker = function () {
           top: String(startTop + (lineHeight * (i + 1)) + (DataPatch.clientCardViewStandard().exceptionHeight[i] ? exceptionMargin : 0) + (GeneralJs.isMac() ? 0 : 3)) + ea,
           left: String(intend) + ea,
           width: String(totalWidth) + ea,
-          color: "#404040",
+          color: GeneralJs.colorChip.black,
           lineHeight: String(1.5),
         };
         styles.push(temp);
@@ -1648,7 +1648,7 @@ ClientJs.prototype.cardViewMaker = function () {
         left: String(margin * 1.7) + ea,
         fontSize: String(fontSize + 6) + ea,
         fontWeight: String(600),
-        color: "#404040",
+        color: GeneralJs.colorChip.black,
       };
 
       areaNumberStyle = {
@@ -2156,7 +2156,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
-    color: "#404040",
+    color: GeneralJs.colorChip.black,
     fontSize: String(titleFontSize) + ea,
     fontWeight: String(600),
     bottom: String(leftMargin * (GeneralJs.isMac() ? (12 / 60) : (5 / 60))) + ea,
@@ -2958,7 +2958,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           dom.style.height = "calc(" + String(100 - (5 * (historyTongTarget.length - 1))) + "% - " + String(historyTargetHeightConst) + ea + ")";
         }
       }
-      this.style.color = "#202020";
+      this.style.color = GeneralJs.colorChip.black;
     }
 
     //blur event
@@ -2971,7 +2971,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           target = dom.querySelector("textarea");
         }
       }
-      this.style.color = "#cccccc";
+      this.style.color = GeneralJs.colorChip.gray4;
 
       const originalValue = target.value;
       const originalValueArr = originalValue.split("\n");
@@ -3019,7 +3019,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       left: String(fontSize * (2 / 15.3027) * -1) + ea,
       fontSize: String(fontSize) + ea,
       fontWeight: String(600),
-      color: "#404040",
+      color: GeneralJs.colorChip.black,
       background: "white",
       paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
       paddingRight: String(fontSize * (12 / 15.3027)) + ea,
@@ -3054,7 +3054,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       height: String(5000) + ea,
       fontSize: String(fontSize * 0.9) + ea,
       fontWeight: String(400),
-      color: "#aaaaaa",
+      color: GeneralJs.colorChip.gray5,
       border: String(0),
       outline: String(0),
       lineHeight: String(1.6),
@@ -3565,7 +3565,7 @@ ClientJs.prototype.whiteCancelMaker = function (callback = null, recycle = false
     for (let z = 0; z < instance.standardDoms.length; z++) {
       if (z !== 0) {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#404040";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.black;
       } else {
         domTargets = instance.standardDoms[z].children;
         domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
@@ -3633,7 +3633,7 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: "#404040",
+        background: GeneralJs.colorChip.black,
         top: String(0) + ea,
         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
         width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -3890,7 +3890,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       marginRight: String(margin) + ea,
       marginBottom: String(margin) + ea,
       fontSize: String(15) + ea,
-      background: "#f7f7f7",
+      background: GeneralJs.colorChip.gray0,
       borderRadius: String(5) + ea,
     };
     for (let z in style) {
@@ -3921,7 +3921,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       left: String(matrixBoxMargin + 1) + ea,
       top: String(titleTop + (GeneralJs.isMac() ? 0 : 3)) + ea,
       fontWeight: String(200),
-      background: "#f7f7f7",
+      background: GeneralJs.colorChip.gray0,
     };
     for (let z in style) {
       titleBox.style[z] = style[z];
@@ -4134,7 +4134,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
   const vaildValue = function (target) {
     const today = new Date();
     let valueArr0, valueArr1, valueArr2;
-    input_clone.style.color = "#404040";
+    input_clone.style.color = GeneralJs.colorChip.black;
     if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
       if (/[0-9][0-9][0-9][0-9]\-[0-9] \~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]/.test(target.value)) {
         target.value = target.value.slice(0, 5) + '0' + target.value.slice(5);
@@ -4235,7 +4235,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
     fontWeight: String(200),
     border: String(0) + ea,
     outline: String(0) + ea,
-    color: "#404040",
+    color: GeneralJs.colorChip.black,
   };
   for (let i in inputStyle) {
     input_clone.style[i] = inputStyle[i];
@@ -4278,7 +4278,7 @@ ClientJs.prototype.reportContents = function (data, mother, loadingIcon) {
     fontWeight: String(500) + ea,
     right: String(1) + ea,
     top: String(56) + ea,
-    color: "#404040",
+    color: GeneralJs.colorChip.black,
   };
   for (let i in style) {
     totalBox.style[i] = style[i];
@@ -4319,7 +4319,7 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: "#404040",
+          background: GeneralJs.colorChip.black,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -4491,7 +4491,7 @@ ClientJs.prototype.backGrayBar = function () {
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     width: String(this.grayBarWidth) + ea,
     height: String(100) + "vh",
     top: String(0) + ea,
@@ -4532,7 +4532,7 @@ ClientJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: "#404040",
+          background: GeneralJs.colorChip.black,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -4685,7 +4685,7 @@ ClientJs.prototype.addExtractEvent = function () {
       style = {
         position: "fixed",
         zIndex: String(2),
-        background: "#404040",
+        background: GeneralJs.colorChip.black,
         opacity: String(0.2),
         width: "100%",
         height: "100%",
@@ -5104,6 +5104,55 @@ ClientJs.prototype.dashboardBox = function (option) {
 
 }
 
+ClientJs.prototype.communicationRender = function () {
+  const instance = this;
+  const { communication } = this.mother;
+  const { stringToDate, sleep } = GeneralJs;
+
+  communication.setItem([
+    () => { return "선호 사진 요청"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        console.log(cliid);
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
+    () => { return "큐레이팅 전송"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        console.log(cliid);
+        console.log("this!");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+}
+
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -5118,6 +5167,7 @@ ClientJs.prototype.launching = async function () {
     this.addSearchEvent();
     this.addExtractEvent();
     this.whiteResize();
+    this.communicationRender();
 
     const getObj = returnGet();
     let getTarget;

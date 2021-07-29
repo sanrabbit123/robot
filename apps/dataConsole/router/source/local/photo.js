@@ -42,7 +42,7 @@ PhotoJs.prototype.standardBar = function (standard) {
   style = {
     display: "block",
     position: "relative",
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     top: String(0),
     left: String(0),
     width: String(this.grayBarWidth) + ea,
@@ -56,7 +56,7 @@ PhotoJs.prototype.standardBar = function (standard) {
     paddingTop: String(this.module.paddingTop) + ea,
     top: String(0) + ea,
     zIndex: String(1),
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     width: style.width,
   };
 
@@ -414,7 +414,7 @@ PhotoJs.prototype.infoArea = function (info) {
       finalColor = "#d13939";
     }
     if (mother.getAttribute("drop") === "true") {
-      finalColor = "#cccccc";
+      finalColor = GeneralJs.colorChip.gray4;
     }
     for (let z = 0; z < mother.children.length; z++) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
@@ -462,7 +462,7 @@ PhotoJs.prototype.infoArea = function (info) {
             if (standardArea.children[z].getAttribute("index") === thisIndex) {
               finalColor = "#404040";
               if (standardArea.children[z].getAttribute("drop") === "true") {
-                finalColor = "#cccccc";
+                finalColor = GeneralJs.colorChip.gray4;
               }
               if (standardArea.children[z].getAttribute("red") === "true") {
                 finalColor = "#d13939";
@@ -1475,9 +1475,9 @@ PhotoJs.prototype.infoArea = function (info) {
       div_clone2.setAttribute("drop", "false");
       div_clone2.setAttribute("red", "false");
       if (dropPoint.values.includes(obj[dropPoint.column])) {
-        style2.color = "#cccccc";
+        style2.color = GeneralJs.colorChip.gray4;
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
-          this.standardDoms[num].children[z].style.color = "#cccccc";
+          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.gray4;
         }
         div_clone2.setAttribute("drop", "true");
       } else if (redPoint.values.includes(obj[redPoint.column])) {
@@ -3614,7 +3614,7 @@ PhotoJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     for (let z = 0; z < instance.standardDoms.length; z++) {
       if (z !== index && z !== 0) {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#cccccc";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.gray4;
       } else {
         domTargets = instance.standardDoms[z].children;
         domTargets[0].style.color = domTargets[1].style.color = "#2fa678";
@@ -3887,7 +3887,7 @@ PhotoJs.prototype.reportScrollBox = function (data, motherWidth) {
       marginRight: String(margin) + ea,
       marginBottom: String(margin) + ea,
       fontSize: String(15) + ea,
-      background: "#f7f7f7",
+      background: GeneralJs.colorChip.gray0,
       borderRadius: String(5) + ea,
     };
     for (let z in style) {
@@ -3918,7 +3918,7 @@ PhotoJs.prototype.reportScrollBox = function (data, motherWidth) {
       left: String(matrixBoxMargin + 1) + ea,
       top: String(titleTop + (GeneralJs.isMac() ? 0 : 3)) + ea,
       fontWeight: String(600),
-      background: "#f7f7f7",
+      background: GeneralJs.colorChip.gray0,
     };
     for (let z in style) {
       titleBox.style[z] = style[z];
@@ -4067,7 +4067,7 @@ PhotoJs.prototype.reportScrollBox = function (data, motherWidth) {
       right: String(matrixBoxMargin) + ea,
       bottom: String(titleTop + (margin / 2) - 2 +  + (GeneralJs.isMac() ? 0 : -4)) + ea,
       fontWeight: String(200),
-      background: "#f7f7f7",
+      background: GeneralJs.colorChip.gray0,
     };
     for (let z in style) {
       summaryBox.style[z] = style[z];
@@ -4482,7 +4482,7 @@ PhotoJs.prototype.backGrayBar = function () {
   div_clone = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    background: "#f7f7f7",
+    background: GeneralJs.colorChip.gray0,
     width: String(this.grayBarWidth) + ea,
     height: String(100) + "vh",
     top: String(0) + ea,

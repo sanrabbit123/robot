@@ -179,7 +179,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
   for (let { desid, designer } of target) {
     if (num === 1) {
       style2.position = "relative";
-      style3.color = "#404040";
+      style3.color = GeneralJs.colorChip.black;
       delete style2.paddingTop;
       delete style2.zIndex;
       delete style2.background;
@@ -367,7 +367,7 @@ DesignerJs.prototype.infoArea = function (info) {
     top: String(0),
     left: String(grayBarWidth) + ea,
     width: String(5000) + ea,
-    color: "#404040",
+    color: GeneralJs.colorChip.black,
   };
 
   style2 = {
@@ -458,12 +458,12 @@ DesignerJs.prototype.infoArea = function (info) {
     const onOffObj = JSON.parse(window.localStorage.getItem(thisId));
     const desidChildren = instance.totalMother.children[0].children;
     let finalColor;
-    finalColor = "#404040";
+    finalColor = GeneralJs.colorChip.black;
     if (mother.getAttribute("red") === "true") {
       finalColor = "#d13939";
     }
     if (mother.getAttribute("drop") === "true") {
-      finalColor = "#cccccc";
+      finalColor = GeneralJs.colorChip.gray4;
     }
     for (let z = 0; z < mother.children.length; z++) {
       if (!onOffObj[mother.children[z].getAttribute("column")]) {
@@ -510,9 +510,9 @@ DesignerJs.prototype.infoArea = function (info) {
 
           for (let z = 0; z < standardArea.children.length; z++) {
             if (standardArea.children[z].getAttribute("index") === thisIndex) {
-              finalColor = "#404040";
+              finalColor = GeneralJs.colorChip.black;
               if (standardArea.children[z].getAttribute("drop") === "true") {
-                finalColor = "#cccccc";
+                finalColor = GeneralJs.colorChip.gray4;
               }
               if (standardArea.children[z].getAttribute("red") === "true") {
                 finalColor = "#d13939";
@@ -1402,9 +1402,9 @@ DesignerJs.prototype.infoArea = function (info) {
       div_clone2.setAttribute("drop", "false");
       div_clone2.setAttribute("red", "false");
       if (dropPoint.values.includes(obj[dropPoint.column])) {
-        style2.color = "#cccccc";
+        style2.color = GeneralJs.colorChip.gray4;
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
-          this.standardDoms[num].children[z].style.color = "#cccccc";
+          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.gray4;
         }
         div_clone2.setAttribute("drop", "true");
       } else if (redPoint.values.includes(obj[redPoint.column])) {
@@ -2939,7 +2939,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           left: String(0) + ea,
           fontSize: String(fontSize) + ea,
           fontWeight: String(600),
-          color: "#404040",
+          color: GeneralJs.colorChip.black,
           width: "100%",
           height: String(titleHeight) + ea,
           cursor: "pointer",
@@ -3115,7 +3115,7 @@ DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
     for (let z = 0; z < instance.standardDoms.length; z++) {
       if (z !== 0) {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = "#404040";
+        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.black;
       } else {
         domTargets = instance.standardDoms[z].children;
         domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
@@ -3196,7 +3196,7 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: "#404040",
+        background: GeneralJs.colorChip.black,
         top: String(0) + ea,
         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
         width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -3519,7 +3519,7 @@ DesignerJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: "#404040",
+          background: GeneralJs.colorChip.black,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -3675,7 +3675,7 @@ DesignerJs.prototype.addExtractEvent = function () {
       style = {
         position: "fixed",
         zIndex: String(2),
-        background: "#404040",
+        background: GeneralJs.colorChip.black,
         opacity: String(0.2),
         width: "100%",
         height: "100%",
