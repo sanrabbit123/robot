@@ -60,7 +60,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    console.log(await this.mother.ipCheck());
 
 
     // const tong = await work.getDesignerFee("p2107_aa46s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
