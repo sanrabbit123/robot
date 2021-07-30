@@ -686,7 +686,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
 
     //set mongo connetion
     let MONGOC, MONGOLOCALC;
-    if (/localhost/gi.test(address.host)) {
+    if (/localhost/gi.test(address.host) || address.host === this.address.officeinfo.ghost.host) {
       isLocal = true;
       MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       console.log(`\x1b[33m%s\x1b[0m`, `set DB server => 127.0.0.1`);
