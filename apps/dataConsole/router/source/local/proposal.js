@@ -1863,13 +1863,17 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       }
 
       for (let dom of inputTargets) {
-        if (/online/g.test(dom.className)) {
-          dom.querySelector("input").value = GeneralJs.autoComma(result.detail.online);
+        if (dom.querySelector("input") === null) {
+          window.alert("오류 발생, 금액을 다 껐다가 다시 켜보세요!");
         } else {
-          dom.querySelector("input").value = GeneralJs.autoComma(result.fee);
+          if (/online/g.test(dom.className)) {
+            dom.querySelector("input").value = GeneralJs.autoComma(result.detail.online);
+          } else {
+            dom.querySelector("input").value = GeneralJs.autoComma(result.fee);
+          }
+          input_widthSet(dom.querySelector("input"));
+          thisSet = dom.querySelector("input").parentNode;
         }
-        input_widthSet(dom.querySelector("input"));
-        thisSet = dom.querySelector("input").parentNode;
       }
 
       if (timeoutMode) {
