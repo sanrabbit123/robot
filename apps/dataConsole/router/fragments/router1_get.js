@@ -184,6 +184,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "analytics";
           } else if (/^con/i.test(req.params.id)) {
             target = "contents";
+          } else if (/^log/i.test(req.params.id)) {
+            target = "logic";
           } else {
             target = "client";
           }

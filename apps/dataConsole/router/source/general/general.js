@@ -92,8 +92,6 @@ GeneralJs.vaildValue = function (column, value, pastValue) {
     map = DataPatch.projectMap();
   } else if (window.location.pathname === "/contents") {
     map = DataPatch.contentsMap();
-  } else if (window.location.pathname === "/photo") {
-    map = DataPatch.photoMap();
   }
 
   switch (map[column].type) {
@@ -209,8 +207,6 @@ GeneralJs.updateValue = async function (dataObj) {
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
     } else if (window.location.pathname === "/contents") {
       response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateContents"));
-    } else if (window.location.pathname === "/photo") {
-      response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updatePhoto"));
     }
 
     if (response.message !== "success") {
@@ -230,9 +226,6 @@ GeneralJs.updateValue = async function (dataObj) {
     if (GeneralJs.stacks["dashboardBoxBoo"]) {
       let pathArr = window.location.pathname.split("?");
       let thisPathName = pathArr[0].replace(/\//g, '');
-      if (thisPathName === "photo") {
-        thisPathName = "project";
-      }
       const { standardColumn } = DataPatch.toolsDashboard(thisPathName);
       if (standardColumn.includes(dataObj.column)) {
         GeneralJs.timeouts["dashboardBoxUpdate"] = setTimeout(function () {
@@ -274,8 +267,6 @@ GeneralJs.returnValue = async function () {
         response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateProject"));
       } else if (window.location.pathname === "/contents") {
         response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updateContents"));
-      } else if (window.location.pathname === "/photo") {
-        response = JSON.parse(await GeneralJs.ajaxPromise(dataString, "/updatePhoto"));
       }
 
       if (response.message !== "success") {
@@ -425,8 +416,6 @@ GeneralJs.moneyBoo = function (column) {
     map = DataPatch.projectMap();
   } else if (window.location.pathname === "/contents") {
     map = DataPatch.contentsMap();
-  } else if (window.location.pathname === "/photo") {
-    map = DataPatch.photoMap();
   }
   if (map[column] === undefined || map[column].moneyBoo === undefined) {
     return false;
@@ -1044,9 +1033,6 @@ GeneralJs.prototype.searchInput = function (greenBox) {
 GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null, grayDataAlready = null) {
   let pathArr = window.location.pathname.split("?");
   let thisPathName = pathArr[0].replace(/\//g, '');
-  if (thisPathName === "photo") {
-    thisPathName = "project";
-  }
   const { targetColumn, barWidth, barLeft, secondWidth, secondLeft, secondUpdateWidth, updateWidth, columnIndent } = DataPatch.toolsGrayLeftStandard(thisPathName);
   const UPDATE_WORD = "담당자";
   const cookies = GeneralJs.getCookiesAll();
@@ -1757,9 +1743,6 @@ GeneralJs.dashboardBoxLaunching = function (dashboardBox, reload = false) {
   const [ standardDoms_raw, caseDomsTitle_raw, caseDoms_raw ] = document.querySelector(".totalMother").children;
   let pathArr = window.location.pathname.split("?");
   let thisPathName = pathArr[0].replace(/\//g, '');
-  if (thisPathName === "photo") {
-    thisPathName = "project";
-  }
   const { standardColumn, titleStandard, buttons } = DataPatch.toolsDashboard(thisPathName);
   let mainWording;
   let div_clone, div_clone2;
@@ -2185,7 +2168,7 @@ GeneralJs.prototype.greenBar = function () {
   naviIconsMap = [
     [ "client", "analytics" ],
     [ "proposal" ],
-    [ "project", "photo" ],
+    [ "project" ],
     [ "designer", "aspirant" ],
     [ "contents" ],
     [ "service" ]
@@ -2444,9 +2427,6 @@ GeneralJs.prototype.dashboardBox = function () {
   const instance = this;
   let pathArr = window.location.pathname.split("?");
   let thisPathName = pathArr[0].replace(/\//g, '');
-  if (thisPathName === "photo") {
-    thisPathName = "project";
-  }
   const { vaildTargets, standardColumn, titleStandard, buttons } = DataPatch.toolsDashboard(thisPathName);
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
   let ea = "px";

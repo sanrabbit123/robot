@@ -276,6 +276,60 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    preferPhoto: {
+      name: "선호 사진 요청",
+      id: "TF_0586",
+      needs: [
+        "client"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+        ];
+      },
+    },
+    outOfClient: {
+      name: "부재중 알림",
+      id: "TF_3539",
+      needs: [
+        "client"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+        ];
+      },
+    },
+    outClientCuration: {
+      name: "부재중 큐레이션 전송",
+      id: "TF_3540",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "cliid"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+        ];
+      },
+    },
+    curationComplete: {
+      name: "큐레이팅 완료",
+      id: "TF_3556",
+      needs: [
+        "client"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+        ];
+      },
+    },
   };
   return tong[target];
 }
@@ -343,6 +397,7 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
     options = await this.setTalk(method, name, phone, convertObj);
     const { data } = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
     console.log(data);
+    return data;
   } catch (e) {
     console.log(e);
   }

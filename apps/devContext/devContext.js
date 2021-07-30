@@ -63,11 +63,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
     // const tong = await work.getDesignerFee("p2107_aa46s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
     // for (let obj of tong) {
     //   console.log(obj);
@@ -654,6 +649,17 @@ DevContext.prototype.launching = async function () {
     // await app.generateToken();
 
 
+    // kakao test
+    // const kakao = new KakaoTalk();
+    // await kakao.ready();
+    // await kakao.sendTalk("outClientCuration", "배창규", "010-2747-3403", {
+    //   client: "배창규",
+    //   host: "home-liaison.servehttp.com",
+    //   path: "curation",
+    //   cliid: "c2107_aa69s",
+    // });
+
+
     // addtional photo repair
     // const filter = new PortfolioFilter();
     // await filter.additionalRepair("p90", 13);
@@ -680,7 +686,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p123");
+    // await this.spellCheck("p101");
 
 
     // get rawPortfolio by pid
@@ -688,7 +694,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p123");
+    // await this.getCorePortfolio("p101");
 
 
     // aspirant to designer

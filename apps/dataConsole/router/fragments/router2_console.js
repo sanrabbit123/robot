@@ -1852,6 +1852,7 @@ DataRouter.prototype.rou_post_parsingLatestLog = function () {
 DataRouter.prototype.rou_post_parsingProposal = function () {
   const instance = this;
   const back = this.back;
+  const work = this.work;
   let obj = {};
   obj.link = "/parsingProposal";
   obj.func = async function (req, res) {
@@ -1859,88 +1860,7 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
       if (req.body.id === undefined) {
         throw new Error("must be cliid");
       }
-      const { id: cliid } = req.body;
-      const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
-      const { client, cases } = clientCase;
-      const realTimes = await back.mongoRead("realtimeDesigner", {}, { selfMongo: instance.mongolocal });
-      const ytoken = 'y';
-      const mtoken = 'm';
-      let contract, proposal, final;
-      let project;
-      let temp;
-      let realtimeMap;
-      let standard;
-      let now;
-      let range, secondRange;
-      let selected;
-      let boo;
-
-      if (client.toNormal().requests[0].request.space.resident.living) {
-        standard = new Date();
-      } else {
-        standard = client.toNormal().requests[0].request.space.resident.expected;
-      }
-
-      now = new Date();
-      standard.setDate(standard.getDate() - 60);
-
-      range = [];
-      for (let i = 0; i < 60; i++) {
-        if (now.valueOf() < standard.valueOf()) {
-          range.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
-        }
-        standard.setDate(standard.getDate() + 1);
-      }
-
-      secondRange = [];
-      for (let i = 0; i < 60; i++) {
-        if (now.valueOf() < standard.valueOf()) {
-          secondRange.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
-        }
-        standard.setDate(standard.getDate() + 1);
-      }
-
-      range = Array.from(new Set(range));
-      secondRange = Array.from(new Set(secondRange));
-
-      if (range.length <= 1) {
-        range = range.concat(secondRange);
-      }
-
-      realtimeMap = {};
-      for (let { desid, count } of realTimes) {
-        realtimeMap[desid] = count;
-      }
-
-      final = clientCase.caseProposal();
-
-      selected = [];
-      for (let project of final) {
-        if (project !== null) {
-          temp = project.toNormal().proposal.detail.map((obj) => { return obj.desid });
-          for (let desid of temp) {
-            boo = false;
-            for (let token of range) {
-              boo = (realtimeMap[desid][token] >= 1);
-              if (boo) {
-                break;
-              }
-            }
-            if (boo) {
-              if (!selected.map((obj) => { return obj.desid }).includes(desid)) {
-                selected.push(project.selectProposal(desid));
-              }
-            }
-            if (selected.length === 4) {
-              break;
-            }
-          }
-        }
-        if (selected.length === 4) {
-          break;
-        }
-      }
-
+      const selected = await work.designerCuration(req.body.id, 4, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
       res.set("Content-Type", "application/json");
       if (selected.length === 0) {
         res.send(JSON.stringify({ result: null }));
@@ -2015,6 +1935,7 @@ DataRouter.prototype.rou_post_manageDeadline = function () {
 DataRouter.prototype.rou_post_alimTalk = function () {
   const instance = this;
   const back = this.back;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/alimTalk";
   obj.func = async function (req, res) {
@@ -2027,7 +1948,7 @@ DataRouter.prototype.rou_post_alimTalk = function () {
       if (req.body.option === undefined) {
         option = {};
       } else {
-        option = JSON.parse(req.body.option);
+        option = equalJson(req.body.option);
         if (/ADDRESS\[/g.test(option.host)) {
           if (/\(ghost\)/gi.test(option.host)) {
             option.host = instance.address[option.host.replace(/ADDRESS\[/gi, '').replace(/\]/g, '').replace(/\([^\(\)]+\)/g, '')].ghost.host;
@@ -2855,8 +2776,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
 
 DataRouter.prototype.rou_post_designerFee = function () {
   const instance = this;
-  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
-  const work = new BackWorker();
+  const work = this.work;
   const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};

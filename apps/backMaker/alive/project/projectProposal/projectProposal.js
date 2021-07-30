@@ -10,6 +10,11 @@ class Fees extends Array {
     }
     return arr;
   }
+  reset() {
+    if (this.length > 0) {
+      this.splice(0, this.length);
+    }
+  }
 }
 
 const Fee = function (json) {
@@ -100,6 +105,23 @@ Proposal.prototype.toNormal = function () {
   obj.pictureSettings = this.pictureSettings.toNormal();
   obj.description = this.description.toNormal();
   return obj;
+}
+
+Proposal.prototype.resetFee = function () {
+  this.fee.reset();
+}
+
+Proposal.prototype.appendFee = function (method, amount) {
+  if (typeof method !== "string" || typeof amount !== "number") {
+    throw new Error("invaild input");
+  }
+  let tempInstance;
+  tempInstance = new Fee({
+    method: (/off/gi.test(method) ? "offline" : "online"),
+    partial: false,
+    amount: amount,
+  });
+  this.fee.push(tempInstance);
 }
 
 const ProjectProposal = function (json) {

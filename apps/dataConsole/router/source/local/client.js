@@ -5107,7 +5107,50 @@ ClientJs.prototype.dashboardBox = function (option) {
 ClientJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
-  const { stringToDate, sleep } = GeneralJs;
+  const { ajaxJson, sleep } = GeneralJs;
+
+  communication.setItem([
+    () => { return "부재중 알림"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 부재중 알림 알림톡을 전송합니다. 확실합니까?")) {
+            await ajaxJson({
+              method: "outOfClient",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name
+              }
+            }, "/alimTalk");
+            await sleep(1000);
+            window.alert("알림톡 전송이 완료되었습니다!");
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
 
   communication.setItem([
     () => { return "선호 사진 요청"; },
@@ -5116,14 +5159,36 @@ ClientJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        let cliid;
+        let cliid, thisCase;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
-          cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          do {
+            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
         } else {
           cliid = instance.whiteBox.id;
         }
-        console.log(cliid);
-        console.log("this!");
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 선호 사진 요청 알림톡을 전송합니다. 확실합니까?")) {
+            await ajaxJson({
+              method: "preferPhoto",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name
+              }
+            }, "/alimTalk");
+            await sleep(1000);
+            window.alert("알림톡 전송이 완료되었습니다!");
+          }
+        }
       } catch (e) {
         console.log(e);
       }
@@ -5137,14 +5202,39 @@ ClientJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        let cliid;
+        let cliid, thisCase;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
-          cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          do {
+            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
         } else {
           cliid = instance.whiteBox.id;
         }
-        console.log(cliid);
-        console.log("this!");
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 큐레이팅 전송 알림톡을 전송합니다. 확실합니까?")) {
+            await ajaxJson({
+              method: "outClientCuration",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name,
+                host: GHOSTHOST,
+                path: "curation",
+                cliid: cliid,
+              }
+            }, "/alimTalk");
+            await sleep(1000);
+            window.alert("알림톡 전송이 완료되었습니다!");
+          }
+        }
       } catch (e) {
         console.log(e);
       }

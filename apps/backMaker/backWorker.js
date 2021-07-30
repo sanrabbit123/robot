@@ -1187,4 +1187,180 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
   }
 }
 
+BackWorker.prototype.designerCuration = async function (cliid, selectNumber, option = { selfMongo: null, selfLocalMongo: null }) {
+  const instance = this;
+  const back = this.back;
+  if (typeof cliid !== "string" || typeof selectNumber !== "number") {
+    throw new Error("invaild input");
+  }
+  try {
+    const designers = await back.getDesignersByQuery({}, { selfMongo: option.selfMongo, withTools: true });
+    const clientCase = await back.getCaseProidById(cliid, { selfMongo: option.selfMongo });
+    const realTimes = await back.mongoRead("realtimeDesigner", {}, { selfMongo: option.selfLocalMongo });
+    const clientHistory = await back.getHistoryById("client", cliid, { selfMongo: option.selfLocalMongo });
+    const { client, cases } = clientCase;
+    const ytoken = 'y';
+    const mtoken = 'm';
+    let contract, proposal, final;
+    let project;
+    let temp;
+    let realtimeMap;
+    let standard;
+    let now;
+    let range, secondRange;
+    let selected, selectedDesigner;
+    let boo;
+    let designer;
+    let preferBoo, preferDesigners;
+    let tempObj;
+    let feeCalculation;
+    let serviceCase;
+    let serid, xValue;
+
+    if (option.noCalculation !== true) {
+      serviceCase = clientCase.caseService();
+      if (serviceCase === null) {
+        serid = null;
+        xValue = null;
+      } else {
+        serid = serviceCase.serid[0].serid;
+        xValue = serviceCase.xValue[0].xValue;
+      }
+      feeCalculation = async function (arr) {
+        if (!Array.isArray(arr)) {
+          throw new Error("invaild input");
+        }
+        let feeObject;
+        try {
+          for (let obj of arr) {
+            feeObject = await instance.getDesignerFee(obj.desid, cliid, serid, xValue, { selfMongo: option.selfMongo, selfLocalMongo: option.selfLocalMongo });
+            obj.resetFee();
+            if (feeObject.detail.offline !== feeObject.detail.online) {
+              obj.appendFee("offline", feeObject.detail.offline);
+              obj.appendFee("online", feeObject.detail.online);
+            } else {
+              obj.appendFee("offline", feeObject.detail.offline);
+            }
+          }
+          return arr;
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    preferBoo = false;
+    if (clientHistory.curation !== undefined) {
+      if (Array.isArray(clientHistory.curation.style)) {
+        if (clientHistory.curation.style.length > 0) {
+          preferBoo = true;
+          preferDesigners = clientHistory.curation.style;
+        }
+      }
+    }
+
+    if (client.toNormal().requests[0].request.space.resident.living) {
+      standard = new Date();
+    } else {
+      standard = client.toNormal().requests[0].request.space.resident.expected;
+    }
+
+    now = new Date();
+    standard.setDate(standard.getDate() - 60);
+
+    range = [];
+    for (let i = 0; i < 60; i++) {
+      if (now.valueOf() < standard.valueOf()) {
+        range.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
+      }
+      standard.setDate(standard.getDate() + 1);
+    }
+
+    secondRange = [];
+    for (let i = 0; i < 60; i++) {
+      if (now.valueOf() < standard.valueOf()) {
+        secondRange.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
+      }
+      standard.setDate(standard.getDate() + 1);
+    }
+
+    range = Array.from(new Set(range));
+    secondRange = Array.from(new Set(secondRange));
+
+    if (range.length <= 1) {
+      range = range.concat(secondRange);
+    }
+
+    realtimeMap = {};
+    for (let { desid, count } of realTimes) {
+      realtimeMap[desid] = count;
+    }
+
+    final = clientCase.caseProposal();
+
+    selected = [];
+    for (let project of final) {
+      if (project !== null) {
+        temp = project.toNormal().proposal.detail.map((obj) => { return obj.desid });
+        for (let desid of temp) {
+          boo = false;
+          designer = designers.search(desid);
+          if (designer !== null && /완료/gi.test(designer.information.contract.status.value)) {
+            for (let token of range) {
+              boo = (realtimeMap[desid][token] >= 1);
+              if (boo) {
+                break;
+              }
+            }
+            if (boo) {
+              if (!selected.map((obj) => { return obj.desid }).includes(desid)) {
+                selected.push(project.selectProposal(desid));
+              }
+            }
+          }
+          if (!preferBoo && selected.length === selectNumber) {
+            break;
+          }
+        }
+      }
+      if (!preferBoo && selected.length === selectNumber) {
+        break;
+      }
+    }
+
+    //option.noCalculation
+    if (!preferBoo && option.noCalculation !== true) {
+      selected = await feeCalculation(selected);
+    }
+
+    if (preferBoo) {
+      selectedDesigner = [];
+      for (let desid of preferDesigners) {
+        if (typeof selected.find((obj) => { return obj.desid === desid; }) === "object") {
+          tempObj = selected.find((obj) => { return obj.desid === desid; });
+          selectedDesigner.push(tempObj);
+        }
+        if (selectedDesigner.length === selectNumber) {
+          break;
+        }
+      }
+      if (selectedDesigner.length === 0) {
+        if (option.noCalculation !== true) {
+          selected = await feeCalculation(selected);
+        }
+        return selected;
+      } else {
+        if (option.noCalculation !== true) {
+          selectedDesigner = await feeCalculation(selectedDesigner);
+        }
+        return selectedDesigner;
+      }
+    } else {
+      return selected;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = BackWorker;

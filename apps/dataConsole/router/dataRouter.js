@@ -6,11 +6,13 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoIn
   this.module = this.dir + "/module";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.work = new BackWorker();
   this.patchClass = DataPatch;
   this.patch = new DataPatch();
   this.middle = DataMiddle;
@@ -330,6 +332,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "analytics";
           } else if (/^con/i.test(req.params.id)) {
             target = "contents";
+          } else if (/^log/i.test(req.params.id)) {
+            target = "logic";
           } else {
             target = "client";
           }
@@ -2394,6 +2398,7 @@ DataRouter.prototype.rou_post_parsingLatestLog = function () {
 DataRouter.prototype.rou_post_parsingProposal = function () {
   const instance = this;
   const back = this.back;
+  const work = this.work;
   let obj = {};
   obj.link = "/parsingProposal";
   obj.func = async function (req, res) {
@@ -2401,88 +2406,7 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
       if (req.body.id === undefined) {
         throw new Error("must be cliid");
       }
-      const { id: cliid } = req.body;
-      const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
-      const { client, cases } = clientCase;
-      const realTimes = await back.mongoRead("realtimeDesigner", {}, { selfMongo: instance.mongolocal });
-      const ytoken = 'y';
-      const mtoken = 'm';
-      let contract, proposal, final;
-      let project;
-      let temp;
-      let realtimeMap;
-      let standard;
-      let now;
-      let range, secondRange;
-      let selected;
-      let boo;
-
-      if (client.toNormal().requests[0].request.space.resident.living) {
-        standard = new Date();
-      } else {
-        standard = client.toNormal().requests[0].request.space.resident.expected;
-      }
-
-      now = new Date();
-      standard.setDate(standard.getDate() - 60);
-
-      range = [];
-      for (let i = 0; i < 60; i++) {
-        if (now.valueOf() < standard.valueOf()) {
-          range.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
-        }
-        standard.setDate(standard.getDate() + 1);
-      }
-
-      secondRange = [];
-      for (let i = 0; i < 60; i++) {
-        if (now.valueOf() < standard.valueOf()) {
-          secondRange.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
-        }
-        standard.setDate(standard.getDate() + 1);
-      }
-
-      range = Array.from(new Set(range));
-      secondRange = Array.from(new Set(secondRange));
-
-      if (range.length <= 1) {
-        range = range.concat(secondRange);
-      }
-
-      realtimeMap = {};
-      for (let { desid, count } of realTimes) {
-        realtimeMap[desid] = count;
-      }
-
-      final = clientCase.caseProposal();
-
-      selected = [];
-      for (let project of final) {
-        if (project !== null) {
-          temp = project.toNormal().proposal.detail.map((obj) => { return obj.desid });
-          for (let desid of temp) {
-            boo = false;
-            for (let token of range) {
-              boo = (realtimeMap[desid][token] >= 1);
-              if (boo) {
-                break;
-              }
-            }
-            if (boo) {
-              if (!selected.map((obj) => { return obj.desid }).includes(desid)) {
-                selected.push(project.selectProposal(desid));
-              }
-            }
-            if (selected.length === 4) {
-              break;
-            }
-          }
-        }
-        if (selected.length === 4) {
-          break;
-        }
-      }
-
+      const selected = await work.designerCuration(req.body.id, 4, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
       res.set("Content-Type", "application/json");
       if (selected.length === 0) {
         res.send(JSON.stringify({ result: null }));
@@ -2557,6 +2481,7 @@ DataRouter.prototype.rou_post_manageDeadline = function () {
 DataRouter.prototype.rou_post_alimTalk = function () {
   const instance = this;
   const back = this.back;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/alimTalk";
   obj.func = async function (req, res) {
@@ -2569,7 +2494,7 @@ DataRouter.prototype.rou_post_alimTalk = function () {
       if (req.body.option === undefined) {
         option = {};
       } else {
-        option = JSON.parse(req.body.option);
+        option = equalJson(req.body.option);
         if (/ADDRESS\[/g.test(option.host)) {
           if (/\(ghost\)/gi.test(option.host)) {
             option.host = instance.address[option.host.replace(/ADDRESS\[/gi, '').replace(/\]/g, '').replace(/\([^\(\)]+\)/g, '')].ghost.host;
@@ -3397,8 +3322,7 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
 
 DataRouter.prototype.rou_post_designerFee = function () {
   const instance = this;
-  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
-  const work = new BackWorker();
+  const work = this.work;
   const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};
@@ -3847,6 +3771,7 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
 DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const instance = this;
   const back = this.back;
+  const work = this.work;
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
@@ -3860,6 +3785,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
       const coreQuery = equalJson(req.body.coreQuery);
       const mode = req.body.mode;
       let history;
+      let newProid;
 
       if (Object.keys(coreQuery).length > 0) {
         await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
@@ -3875,27 +3801,51 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
       }
 
-      if (mode !== "update") {
-        const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
-        const client = clientCase.client;
-        if (clientCase === null) {
+      const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+      const client = clientCase.client;
+      if (clientCase === null) {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({}));
+      } else {
+        const service = clientCase.caseService();
+        if (service === null) {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({}));
         } else {
-          const service = clientCase.caseService();
-          if (service !== null) {
+          if (mode !== "update") {
             res.set({ "Content-Type": "application/json" });
             res.send(JSON.stringify({ service, client, history }));
           } else {
+            work.designerCuration(cliid, 4, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
+              let detailUpdate, updateQuery;
+              detailUpdate = [];
+              for (let obj of detail) {
+                detailUpdate.push(obj.toNormal());
+              }
+              updateQuery = {};
+              updateQuery["desid"] = "";
+              updateQuery["proposal.status"] = "작성중";
+              updateQuery["cliid"] = cliid;
+              updateQuery["service.serid"] = history.curation.service.serid[0];
+              updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
+              updateQuery["service.online"] = false;
+              updateQuery["proposal.detail"] = detailUpdate;
+              return back.createProject(updateQuery, { selfMongo: instance.mongo });
+            }).then((proid) => {
+              newProid = proid;
+              //DEV => name, phone
+              return instance.kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", { client: client.name });
+            }).then((msg) => {
+              //DEV => error_log to 403_proposal
+              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#error_log" });
+            }).catch((err) => {
+              console.log(err);
+            });
             res.set({ "Content-Type": "application/json" });
-            res.send(JSON.stringify({}));
+            res.send(JSON.stringify({ message: "will do" }));
           }
         }
-      } else {
-        res.set({ "Content-Type": "application/json" });
-        res.send(JSON.stringify({}));
       }
-
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);

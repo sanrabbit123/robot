@@ -469,7 +469,6 @@ ServiceJs.prototype.roomCardRender = function (arr) {
 
 }
 
-
 ServiceJs.prototype.launching = async function () {
   const instance = this;
   try {

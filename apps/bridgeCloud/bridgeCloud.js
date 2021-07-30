@@ -1100,7 +1100,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           instance.bridgeToGoogle({ name: designer, phone: phone, tong: fileTong, folder: designerFolderName, mode: "designer" });
 
           //kakao and slack
-          // KAKAO.sendTalk("photo", designer, phone);
+          KAKAO.sendTalk("photo", designer, phone);
           slack_bot.chat.postMessage({ text: designer + "님이 파일 전송을 시도중입니다!", channel: "#300_designer" });
 
           //end

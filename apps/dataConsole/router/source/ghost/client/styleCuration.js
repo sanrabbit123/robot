@@ -2663,6 +2663,7 @@ StyleCurationJs.prototype.parsingValues = function () {
         window.alert("오류가 발생하였습니다!");
         window.reload();
       } else {
+        GeneralJs.scrollTo(window, 0);
         return GeneralJs.ajaxJson({
           cliid: instance.client.cliid,
           historyQuery: { "curation.service.serid": finalSerid.map((obj) => { return obj.serid }) },
@@ -3294,7 +3295,6 @@ StyleCurationJs.prototype.insertPannelBox = function () {
                 }
               }
               if (pass) {
-                GeneralJs.scrollTo(window, 0);
                 GeneralJs.setTimeout(() => {
                   instance.parsingValues();
                 }, 1000);

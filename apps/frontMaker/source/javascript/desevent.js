@@ -863,6 +863,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
                 window.location.href = "/index.php";
               }, 3000);
             }
+            
           });
         } catch (e) {
           window.location.href = "/index.php";

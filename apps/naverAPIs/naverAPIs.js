@@ -247,6 +247,9 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "타공 판", "타공판" ],
     [ "집 순이", "집순이" ],
     [ "폴로 하", "팔로우하" ],
+    [ "새시", "샤시" ],
+    [ "딥 그린", "딥그린" ],
+    [ "커튼 봉", "커튼봉" ],
   ];
   try {
     let resultArr = [];

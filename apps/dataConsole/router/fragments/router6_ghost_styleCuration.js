@@ -57,6 +57,7 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
 DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const instance = this;
   const back = this.back;
+  const work = this.work;
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
@@ -70,6 +71,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
       const coreQuery = equalJson(req.body.coreQuery);
       const mode = req.body.mode;
       let history;
+      let newProid;
 
       if (Object.keys(coreQuery).length > 0) {
         await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
@@ -85,27 +87,51 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
       }
 
-      if (mode !== "update") {
-        const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
-        const client = clientCase.client;
-        if (clientCase === null) {
+      const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
+      const client = clientCase.client;
+      if (clientCase === null) {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({}));
+      } else {
+        const service = clientCase.caseService();
+        if (service === null) {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({}));
         } else {
-          const service = clientCase.caseService();
-          if (service !== null) {
+          if (mode !== "update") {
             res.set({ "Content-Type": "application/json" });
             res.send(JSON.stringify({ service, client, history }));
           } else {
+            work.designerCuration(cliid, 4, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
+              let detailUpdate, updateQuery;
+              detailUpdate = [];
+              for (let obj of detail) {
+                detailUpdate.push(obj.toNormal());
+              }
+              updateQuery = {};
+              updateQuery["desid"] = "";
+              updateQuery["proposal.status"] = "작성중";
+              updateQuery["cliid"] = cliid;
+              updateQuery["service.serid"] = history.curation.service.serid[0];
+              updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
+              updateQuery["service.online"] = false;
+              updateQuery["proposal.detail"] = detailUpdate;
+              return back.createProject(updateQuery, { selfMongo: instance.mongo });
+            }).then((proid) => {
+              newProid = proid;
+              //DEV => name, phone
+              return instance.kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", { client: client.name });
+            }).then((msg) => {
+              //DEV => error_log to 403_proposal
+              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#error_log" });
+            }).catch((err) => {
+              console.log(err);
+            });
             res.set({ "Content-Type": "application/json" });
-            res.send(JSON.stringify({}));
+            res.send(JSON.stringify({ message: "will do" }));
           }
         }
-      } else {
-        res.set({ "Content-Type": "application/json" });
-        res.send(JSON.stringify({}));
       }
-
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
