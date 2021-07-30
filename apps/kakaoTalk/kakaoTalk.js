@@ -198,6 +198,24 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    outOfDesignerProposal: {
+      name: "제안서 발송 부재중",
+      id: "TF_3653",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "proid"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+        ];
+      },
+    },
     designerSelect: {
       name: "고객 디자이너 선택",
       id: "TE_4039",
@@ -277,8 +295,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     preferPhoto: {
-      name: "선호 사진 요청",
-      id: "TF_0586",
+      name: "선호 사진 요청 수정",
+      id: "TF_3616",
       needs: [
         "client"
       ],
