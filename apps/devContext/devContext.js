@@ -60,9 +60,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await this.mother.ipCheck());
-
-
     // const tong = await work.getDesignerFee("p2107_aa46s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
     // for (let obj of tong) {
     //   console.log(obj);
@@ -690,11 +687,11 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p127");
+    // await this.getRawPortfolio("p114");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p101");
+    // await this.getCorePortfolio("p114");
 
 
     // aspirant to designer
