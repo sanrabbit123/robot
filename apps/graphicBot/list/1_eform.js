@@ -140,7 +140,12 @@ module.exports = function (proid, info) {
             }
           }
 
-          await sleep(10 * 60 * 1000);
+
+          for (var i = 0; i < 60; i++) {
+            console.log("done");
+            await sleep(1000);
+          }
+
 
           // document.querySelectorAll("#header .btn-router")[1].click();
           //
