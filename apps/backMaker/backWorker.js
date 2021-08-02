@@ -1078,7 +1078,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       thisDesignerCareerStart = new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1);
 
       alpha = 0;
-      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf()) ? 2 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 1 : 0);
+      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 2 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 1 : 0);
       alpha += designer.analytics.project.paperWork.values.includes("3D") ? 2 : ((designer.analytics.project.paperWork.values.length >= 4) ? 1 : 0);
       alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0;
       alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0;
