@@ -35,6 +35,10 @@ module.exports = function (proid, info) {
           }
         }, AJAXCONST));
 
+
+        rows = [];
+
+
         if (rows.length === 0) {
 
           titleName = client.name;
@@ -143,7 +147,7 @@ module.exports = function (proid, info) {
 
           for (var i = 0; i < 60; i++) {
             console.log("done");
-            await sleep(1000);
+            await sleep(10000);
           }
 
 
