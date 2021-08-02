@@ -60,7 +60,6 @@ DataConsole.prototype.mediaQuery = function (code) {
 DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch, isGhost) {
   const instance = this;
   const { fileSystem, shell, shellLink, sleep } = this.mother;
-  // const S3HOST = this.address.s3info.host;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
@@ -68,7 +67,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
-  const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
+  const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
   const classException = {
     proposal: [ "designer.js" ],
   };
@@ -277,7 +276,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
-  const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":3000";
+  const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
   try {
 
     //module transform function
