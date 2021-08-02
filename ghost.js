@@ -1739,8 +1739,10 @@ Ghost.prototype.serverLaunching = async function () {
       }
     });
 
+    console.log(address.port);
+
     //server on
-    server.listen(3000, address.ip.inner, () => {
+    server.listen(address.port, address.ip.inner, () => {
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
     });
 
