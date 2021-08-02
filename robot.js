@@ -124,6 +124,7 @@ Robot.prototype.aliveTest = function () {
   const address = this.address;
   const { requestSystem } = this.mother;
   const generalPort = 3000;
+  const ghostPort = 8080;
   const controlPath = "/ssl";
   const protocol = "https:";
   let res, targets, targetNumber, successNum, failNum, message;
@@ -133,7 +134,7 @@ Robot.prototype.aliveTest = function () {
     { name: "console", host: address.backinfo.host, port: generalPort, },
     { name: "bridge", host: address.bridgeinfo.host, port: generalPort, },
     { name: "home", host: address.homeinfo.ghost.host, port: generalPort, },
-    { name: "office", host: address.officeinfo.ghost.host, port: generalPort, },
+    { name: "office", host: address.officeinfo.ghost.host, port: ghostPort, },
     { name: "homeGraphic", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
   ];
 
