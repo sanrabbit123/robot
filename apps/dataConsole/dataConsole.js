@@ -270,7 +270,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const generalMap = require(`${process.cwd()}/apps/mapMaker/map/general.js`);
   const { fileSystem, shell, shellLink, babelSystem, treeParsing, cryptoString } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
-  const SSEHOST = (isGhost ? this.address.backinfo.host : address.host);
+  const SSEHOST = (isGhost ? (address.host === this.address.officeinfo.ghost.host ? address.host : this.address.backinfo.host) : address.host);
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
