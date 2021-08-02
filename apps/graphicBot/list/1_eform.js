@@ -1,6 +1,6 @@
 module.exports = function (proid, info) {
   return [
-    "https://eform.io/signin",
+    "https://widsign.com/signin",
     async function () {
       try {
         const { requestNumber, client, project, designer, contractName, contractAddress } = equalJson(JSON.stringify(POSTCONST));
