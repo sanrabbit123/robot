@@ -3278,6 +3278,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
             type: "click",
             event: function (e) {
               let pass;
+
               pass = true;
               for (let i in instance.values) {
                 for (let j of instance.values[i]) {
@@ -3297,8 +3298,9 @@ StyleCurationJs.prototype.insertPannelBox = function () {
               if (pass) {
                 GeneralJs.setTimeout(() => {
                   instance.parsingValues();
-                }, 1000);
+                }, 0);
               }
+
             }
           }
         ],

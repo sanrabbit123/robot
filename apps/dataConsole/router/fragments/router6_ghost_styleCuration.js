@@ -126,6 +126,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#error_log" });
             }).catch((err) => {
               console.log(err);
+              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#error_log" });
             });
             res.set({ "Content-Type": "application/json" });
             res.send(JSON.stringify({ message: "will do" }));
@@ -133,7 +134,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         }
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }

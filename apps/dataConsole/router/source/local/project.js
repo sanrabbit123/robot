@@ -5639,29 +5639,29 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
         }
 
         if (start.valueOf() > valueStandard && end.valueOf() > valueStandard) {
-          if (projectObj.project.length > 0) {
-            projectObj.project.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
-            for (let i = 0; i < projectObj.project.length; i++) {
-              if (start.valueOf() <= projectObj.project[i].end.valueOf()) {
-                projectObj.project[i].start = start;
-                breakNum = i;
-                break;
-              }
-            }
-            projectObj.project = projectObj.project.slice(breakNum);
-            projectObj.project.sort((a, b) => { return b.end.valueOf() - a.end.valueOf() });
-            for (let i = 0; i < projectObj.project.length; i++) {
-              if (end.valueOf() > projectObj.project[i].start.valueOf()) {
-                projectObj.project[i].end = end;
-                breakNum = i;
-                break;
-              }
-            }
-            projectObj.project = projectObj.project.slice(breakNum);
-            projectObj.project.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
-          } else {
+          // if (projectObj.project.length > 0) {
+          //   projectObj.project.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
+          //   for (let i = 0; i < projectObj.project.length; i++) {
+          //     if (start.valueOf() <= projectObj.project[i].end.valueOf()) {
+          //       projectObj.project[i].start = start;
+          //       breakNum = i;
+          //       break;
+          //     }
+          //   }
+          //   projectObj.project = projectObj.project.slice(breakNum);
+          //   projectObj.project.sort((a, b) => { return b.end.valueOf() - a.end.valueOf() });
+          //   for (let i = 0; i < projectObj.project.length; i++) {
+          //     if (end.valueOf() > projectObj.project[i].start.valueOf()) {
+          //       projectObj.project[i].end = end;
+          //       breakNum = i;
+          //       break;
+          //     }
+          //   }
+          //   projectObj.project = projectObj.project.slice(breakNum);
+          //   projectObj.project.sort((a, b) => { return a.start.valueOf() - b.start.valueOf() });
+          // } else {
             projectObj.project = [ { start, end } ];
-          }
+          // }
         }
 
         index = null;
