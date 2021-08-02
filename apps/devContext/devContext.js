@@ -45,6 +45,106 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
+DevContext.prototype.certRefreshing = async function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, shell, shellLink } = this.mother;
+  try {
+    const certbotFolder = process.env.HOME + "/certbot";
+    const certbotFolderList = (await fileSystem(`readDir`, [ certbotFolder ])).filter((i) => { return i !== ".DS_Store"; });
+    const certSetting = async function (certFolder) {
+      if (typeof certFolder !== "string") {
+        throw new Error("invaild input");
+      }
+      if (!/\//gi.test(certFolder)) {
+        throw new Error("invaild input");
+      }
+      try {
+        const robotFolder = process.cwd();
+        const robotPems = robotFolder + "/" + "pems";
+        const targetFolderList = (await fileSystem(`readDir`, [ certFolder ])).filter((i) => { return i !== ".DS_Store"; });
+        const siteName = certFolder.split('/')[certFolder.split('/').length - 1];
+        const siteNginx = siteName + "_nginx";
+        const children = [
+          { name: "ca", regexp: "chain" },
+          { name: "cert", regexp: "cert" },
+          { name: "key", regexp: "key" },
+          { name: "etc", regexp: null }
+        ];
+        let tempArr;
+        let cert, chain, fullChain;
+
+        shell.exec(`mkdir ${shellLink(certFolder + "/" + siteName)}`);
+        shell.exec(`mkdir ${shellLink(certFolder + "/" + siteNginx)}`);
+
+        for (let { name, regexp } of children) {
+          shell.exec(`mkdir ${shellLink(certFolder + "/" + siteName + "/" + name)}`);
+          shell.exec(`mkdir ${shellLink(certFolder + "/" + siteNginx + "/" + name)}`);
+          if (regexp !== null) {
+            tempArr = targetFolderList.filter((i) => { return (new RegExp(regexp, "gi")).test(i); });
+            for (let i of tempArr) {
+              shell.exec(`cp ${shellLink(certFolder)}/${i} ${shellLink(certFolder + "/" + siteName + "/" + name)}`);
+              shell.exec(`cp ${shellLink(certFolder)}/${i} ${shellLink(certFolder + "/" + siteNginx + "/" + name)}`);
+            }
+          }
+        }
+
+        cert = (await fileSystem(`readString`, [ certFolder + "/" + targetFolderList.find((i) => { return /^cert/.test(i); }) ])).trim().replace(/\n$/gi, '').replace(/\n$/gi, '').replace(/\n$/gi, '').trim();
+        chain = (await fileSystem(`readString`, [ certFolder + "/" + targetFolderList.find((i) => { return /^chain/.test(i); }) ])).trim().replace(/\n$/gi, '').replace(/\n$/gi, '').replace(/\n$/gi, '').trim();
+        fullChain = (await fileSystem(`readString`, [ certFolder + "/" + targetFolderList.find((i) => { return /^full/.test(i); }) ])).trim().replace(/\n$/gi, '').replace(/\n$/gi, '').replace(/\n$/gi, '').trim();
+        await fileSystem(`write`, [ certFolder + "/" + targetFolderList.find((i) => { return /^cert/.test(i); }), (cert + "\n" + chain + "\n" + fullChain) ]);
+        shell.exec(`cp ${shellLink(certFolder)}/${targetFolderList.find((i) => { return /^cert/.test(i); })} ${shellLink(certFolder + "/" + siteNginx + "/cert")}`);
+
+        shell.exec(`cp -r ${shellLink(certFolder + "/" + siteName)} ${shellLink(robotPems)}`);
+        shell.exec(`cp -r ${shellLink(certFolder + "/" + siteNginx)} ${shellLink(robotPems)}`);
+
+        console.log(siteName, "done");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    const scpCommands = certbotFolderList.map((host) => {
+      const address = Object.values(instance.address);
+      let target, scpTarget;
+      target = null;
+      for (let obj of address) {
+        if (obj.host === host) {
+          target = obj;
+        }
+      }
+      if (target === null) {
+        for (let obj of address) {
+          if (obj.ghost !== undefined) {
+            if (obj.ghost.host === host) {
+              target = obj.ghost;
+            }
+          }
+        }
+      }
+      if (target === null) {
+        throw new Error("invaild host");
+      }
+      if (target.port !== 27017) {
+        scpTarget = `${target.user}@${target.host}:/home/${target.user}/robot`;
+      } else {
+        scpTarget = `ubuntu@${target.host}:/home/ubuntu/robot`;
+      }
+      return `scp -r ${shellLink(process.cwd())}/pems ${scpTarget}`;
+    });
+
+    console.log(certbotFolderList);
+    for (let c of certbotFolderList) {
+      await certSetting(certbotFolder + "/" + c);
+    }
+    for (let s of scpCommands) {
+      shell.exec(s);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
@@ -57,6 +157,13 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
     const sheets = new GoogleSheet();
+
+
+
+
+
+
+
 
 
 
@@ -606,6 +713,11 @@ DevContext.prototype.launching = async function () {
 
 
     // TOOLS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+    // certbot
+    // await this.certRefreshing();
+
 
     // get sheets
     // console.log(await ghostRequest(`getSheets`, {
