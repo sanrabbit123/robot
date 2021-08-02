@@ -24,22 +24,18 @@ module.exports = function (proid, info) {
         let idLimitNumber;
         let idInformationButton;
 
-        rows = equalJson(await ajaxPromise({
-          to: "python",
-          path: "/generalMongo",
-          data: {
-            mode: "read",
-            db: "python",
-            collection: "stylingForm",
-            whereQuery: { proid: project.proid },
-          }
-        }, AJAXCONST));
-
-
-        rows = [];
-
-
-        if (rows.length === 0) {
+        // rows = equalJson(await ajaxPromise({
+        //   to: "python",
+        //   path: "/generalMongo",
+        //   data: {
+        //     mode: "read",
+        //     db: "python",
+        //     collection: "stylingForm",
+        //     whereQuery: { proid: project.proid },
+        //   }
+        // }, AJAXCONST));
+        //
+        // if (rows.length === 0) {
 
           titleName = client.name;
           if (contractName.trim() !== "") {
@@ -242,7 +238,7 @@ module.exports = function (proid, info) {
           //
           // await ajaxPromise({ to: "python", path: "/receiveStylingContract", data }, RECEIVECONST);
 
-        }
+        // }
 
       } catch (e) {
         console.log(e);
