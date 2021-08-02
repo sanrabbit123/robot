@@ -820,7 +820,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     // });
 
     //server on
-    https.createServer(pems, app).listen((address.host === this.address.officeinfo.ghost.host ? 5000 : 3000), address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    https.createServer(pems, app).listen((address.host === this.address.officeinfo.ghost.host ? 8080 : 3000), address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
 
   } catch (e) {
     console.log(e);
