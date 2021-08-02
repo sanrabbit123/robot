@@ -883,7 +883,8 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
   const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
   const addressApp = new AddressParser();
   const today = new Date();
-  const yearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+  const tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+  const fiveYearsAgo = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate());
   try {
     let MONGOC, MONGOLOCALC;
     let requestNumber;
@@ -909,6 +910,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let onlineFeeCase;
     let toMoney;
     let travelNumber;
+    let thisDesignerCareerStart;
 
     priceStandardCollection = "designerPrice";
     priceStandardConst = 33;
@@ -1073,9 +1075,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         fee = fee * priceStandard.premium;
       }
 
+      thisDesignerCareerStart = new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1);
+
       alpha = 0;
-      alpha += ((new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1)).valueOf() <= yearsAgo.valueOf()) ? 2 : 0;
-      alpha += (designer.analytics.project.paperWork.values.length >= 4) ? 2 : 0;
+      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf()) ? 2 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 1 : 0);
+      alpha += designer.analytics.project.paperWork.values.includes("3D") ? 2 : ((designer.analytics.project.paperWork.values.length >= 4) ? 1 : 0);
       alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0;
       alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0;
       alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0;
@@ -1090,8 +1094,10 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation.value);
 
       alpha += (homeliaison * (2 / 7));
+
       //인기도
-      alpha += 1;
+      alpha += 0.5;
+
       alphaPercentage = (alpha / 100) + 1;
 
       fee = alphaPercentage * fee;
