@@ -206,6 +206,5 @@ module.exports = function (arg, info) {
       await ajaxPromise({ to: "python", path: "/cashReceipt", data: { cashIn: total } }, RECEIVECONST);
 
     },
-    "close",
   ];
 };
