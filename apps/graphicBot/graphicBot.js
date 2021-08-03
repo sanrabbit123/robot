@@ -342,7 +342,7 @@ GraphicBot.prototype.chromeHistoryClean = async function () {
       buttonY = 32;
     } else {
       buttonX = 50;
-      buttonY = 32;
+      buttonY = 35;
     }
     consoleX = chromeSize.right + ((screenSize.width - chromeSize.right) / 2);
     consoleY = chromeSize.bottom - ((chromeSize.bottom - chromeSize.top) / 2);
@@ -350,6 +350,7 @@ GraphicBot.prototype.chromeHistoryClean = async function () {
     bot.mouseClick("right");
     await sleep(500);
     await this.moveAndClick(consoleX + buttonX, consoleY + buttonY, 500);
+    await sleep(500);
   } catch (e) {
     console.log(e);
   }
@@ -713,7 +714,7 @@ GraphicBot.prototype.startWork = function () {
       }
 
       await instance.chromeHistoryClean();
-      // await instance.chromeClose();
+      await instance.chromeClose();
 
       totalSuccess = totalSuccess.filter((t) => { return !t; });
       if (totalSuccess.length !== 0) {
