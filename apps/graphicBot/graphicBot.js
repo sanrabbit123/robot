@@ -330,6 +330,31 @@ GraphicBot.prototype.chromeClose = async function () {
   }
 }
 
+GraphicBot.prototype.chromeHistoryClean = async function () {
+  const instance = this;
+  const { bot, screenSize, chromeSize, os } = this;
+  const { sleep } = this.mother;
+  try {
+    let consoleX, consoleY;
+    let buttonX, buttonY;
+    if (os === "mac") {
+      buttonX = -50;
+      buttonY = 32;
+    } else {
+      buttonX = 50;
+      buttonY = 32;
+    }
+    consoleX = chromeSize.right + ((screenSize.width - chromeSize.right) / 2);
+    consoleY = chromeSize.bottom - ((chromeSize.bottom - chromeSize.top) / 2);
+    await this.moveAndClick(consoleX, consoleY, 500);
+    bot.mouseClick("right");
+    await sleep(500);
+    await this.moveAndClick(consoleX + buttonX, consoleY + buttonY, 500);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GraphicBot.prototype.moveAndClick = async function (x, y, ms, dblclick = false) {
   const instance = this;
   const { bot } = this;
@@ -687,7 +712,8 @@ GraphicBot.prototype.startWork = function () {
         instance.frontProcess = null;
       }
 
-      await instance.chromeClose();
+      await instance.chromeHistoryClean();
+      // await instance.chromeClose();
 
       totalSuccess = totalSuccess.filter((t) => { return !t; });
       if (totalSuccess.length !== 0) {
