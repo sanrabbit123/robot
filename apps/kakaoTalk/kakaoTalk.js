@@ -307,14 +307,40 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     outOfClient: {
-      name: "부재중 알림",
-      id: "TF_3539",
+      name: "부재중 알림 수정",
+      id: "TF_3881",
       needs: [
-        "client"
+        "client",
+        "host",
+        "path",
+        "cliid"
       ],
       convert: function (obj) {
         return [
           { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+        ];
+      },
+    },
+    clientCuration: {
+      name: "큐레이션 전송",
+      id: "TF_3950",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "cliid",
+        "mode"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "mode", to: obj.mode },
         ];
       },
     },

@@ -997,6 +997,7 @@ DesignerJs.prototype.calculationView = async function () {
     let proposalDate;
     let taxBill;
     let cashReceipt;
+    let limitAgo;
 
     loading = await this.mother.loadingRun();
 
@@ -1058,12 +1059,15 @@ DesignerJs.prototype.calculationView = async function () {
       }
     }
 
+    limitAgo = new Date();
+    limitAgo.setFullYear(limitAgo.getFullYear() - 2);
+
     projects = await ajaxJson({
       noFlat: true,
       whereQuery: {
         $and: [
           { desid: { $regex: "^d" } },
-          { "process.status": { $regex: "^[대진홀]" } },
+          { "proposal.date": { $gt: limitAgo } },
           { "process.contract.remain.date": { $gt: new Date(2000, 0, 1) } }
         ]
       }

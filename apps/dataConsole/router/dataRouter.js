@@ -3836,8 +3836,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               //DEV => name, phone
               return instance.kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", { client: client.name });
             }).then((msg) => {
-              //DEV => error_log to 403_proposal
-              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#error_log" });
+              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#400_customer" });
             }).catch((err) => {
               console.log(err);
               instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#error_log" });

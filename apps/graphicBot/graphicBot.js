@@ -361,15 +361,25 @@ GraphicBot.prototype.conditionMove = function (x, y, color) {
   return (bot.getPixelColor(x, y) !== color.replace(/\#/gi, ''));
 }
 
+GraphicBot.prototype.selectAll = async function () {
+  const instance = this;
+  const { bot, os } = this;
+  const { sleep } = this.mother;
+  try {
+    bot.keyTap("a", os === "mac" ? "command" : "control");
+    await sleep(100);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GraphicBot.prototype.copyText = async function () {
   const instance = this;
   const { bot } = this;
   const { sleep } = this.mother;
   try {
-    bot.keyToggle("control", "down");
-    bot.keyTap("c");
-    await sleep(500);
-    bot.keyToggle("control", "up");
+    bot.keyTap("c", os === "mac" ? "command" : "control");
+    await sleep(100);
   } catch (e) {
     console.log(e);
   }
@@ -868,10 +878,8 @@ GraphicBot.prototype.botRouter = function () {
         }
 
         robot.mouseClick("left");
-        if (!speedUp) {
-          robot.mouseClick("left", true);
-          await instance.pressKey("delete");
-        }
+        await instance.selectAll();
+        await instance.pressKey("delete");
         await instance.clipBoard(text);
         await instance.pasteText();
 

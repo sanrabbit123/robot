@@ -10,8 +10,8 @@ module.exports = function (proid, info) {
         const passwordId = "sign-in-pw";
         const loginReturn = ".sc-hOGjNT";
         const menuId = "btnMenuMyForms";
-        const buttonQuery = ".bePCOT";
-        const popupQuery = "section.sc-fvxABq";
+        const buttonQuery = ".sc-hZpJuv";
+        const popupQuery = ".sc-jWUzTF";
         let map;
         let tempArr;
         let data, raw;
@@ -85,6 +85,7 @@ module.exports = function (proid, info) {
 
           if (document.getElementById(idId) !== null) {
             await injectionInput(document.getElementById(idId), "info.eform.id");
+            await clickElement(document.querySelector("footer"));
             await injectionInput(document.getElementById(passwordId), "info.eform.pwd");
             document.querySelector(loginReturn).click();
           }
@@ -103,7 +104,7 @@ module.exports = function (proid, info) {
             await sleep(500);
             buttons = document.querySelectorAll(buttonQuery);
           }
-          buttons[2].querySelectorAll("button")[2].click();
+          buttons[2].click();
 
           while (document.querySelector(popupQuery) === null) {
             await sleep(500);
@@ -140,45 +141,31 @@ module.exports = function (proid, info) {
             }
           }
 
+          tempArr = dateToString(today).split('-');
+          await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + titleName + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
 
-          for (var i = 0; i < 60; i++) {
-            console.log("done");
-            await sleep(10000);
+          tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
+          while (tempArr.length < 3) {
+            await sleep(500);
+            tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
           }
 
+          await injectionInput(tempArr[0], titleName, true);
+          await injectionInput(tempArr[1], client.email, true);
+          await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
 
-          // document.querySelectorAll("#header .btn-router")[1].click();
-          //
-          // while (document.querySelector("#sendFormName") === null || document.querySelector("#sendFormName") === undefined) {
-          //   await sleep(500);
-          // }
-          // await sleep(1000);
-          //
-          // tempArr = dateToString(today).split('-');
-          // await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + titleName + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
-          //
-          // tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
-          // while (tempArr.length < 3) {
-          //   await sleep(500);
-          //   tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
-          // }
-          //
-          // await injectionInput(tempArr[0], titleName, true);
-          // await injectionInput(tempArr[1], client.email, true);
-          // await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
-          //
-          // await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
-          // await sleep(1000);
-          //
-          // while (document.querySelector(".Select-menu-outer") === null) {
-          //   await sleep(500);
-          // }
-          // await clickElement(document.getElementById("react-select-9--option-3"));
-          //
-          // await sleep(500);
-          // document.querySelectorAll('.btn-router')[1].click();
-          // await sleep(500);
-          //
+          await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
+          await sleep(1000);
+
+          while (document.querySelector(".Select-menu-outer") === null) {
+            await sleep(500);
+          }
+          await clickElement(document.getElementById("react-select-11--option-4"));
+
+          await sleep(500);
+          document.querySelector('.send').click();
+          await sleep(500);
+
           // while (document.querySelector(".confirm") === null) {
           //   await sleep(500);
           // }

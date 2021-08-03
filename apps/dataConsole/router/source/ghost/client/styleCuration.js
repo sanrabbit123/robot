@@ -37,559 +37,6 @@
   ]
 } %/%/g
 
-class StyleCurationWordings {
-  constructor() {
-    this.wordings = {
-      init: {
-        curation: {
-          title: [
-            "홈리에종",
-            "큐레이션",
-          ],
-          contents: [
-            [
-              "홈리에종은 체계화된 정보과 취향 분석 기능을",
-              "활용해서 <b%고객님의 스타일과 조건에 딱 맞는%b>",
-              "<b%서비스를 제안하고, 디자이너를 추천%b>해드립니다.",
-            ],
-            [
-              "아래 간단한 상세 큐레이팅 설문에 응답해주시면",
-              "<b%예상 서비스 및 서비스 금액%b>을 알려드릴 수 있으니,",
-              "작성 부탁드립니다. 감사합니다!",
-            ]
-          ],
-          image: [
-            "/secondConsulting.jpg",
-            "/secondConsultingb.jpg",
-            "/secondConsultingc.jpg",
-          ]
-        },
-        service: {
-          title: [
-            "홈리에종",
-            "서비스 소개",
-          ],
-          contents: [
-            [
-              "일단 시공부터 하는 방식이 아닌, 생활을 고려해",
-              "<b%디자인 및 기획을 먼저 하고 시공 범위를%b>",
-              "<b%함께 고민해 정한 후 인테리어를 진행%b>합니다.",
-            ],
-            [
-              "늘 앉아 있는 소파, 식사마다 머무는 식탁,",
-              "햇빛을 가려주는 커튼, 살이 맞닿는 베딩까지.",
-              "새로운 방식으로 나에게 맞는 집을 만들어 보세요!",
-            ]
-          ],
-          image: [
-            "/secondConsulting2.jpg",
-            "/secondConsulting2b.jpg",
-            "/secondConsulting2c.jpg",
-          ]
-        }
-      },
-      center: [
-        {
-          name: "style",
-          title: "스타일",
-          callback: "styleCheck",
-          children: [
-            {
-              name: "curation",
-              type: "style",
-              half: false,
-              required: true,
-              rewind: "스타일 체크를 진행해주세요!",
-              question: [
-                "선호하는 스타일을 <b%3장%b> 골라주세요!",
-                "스타일 분석이 완료되었습니다!"
-              ],
-              value: function (request, history) {
-                return null;
-              },
-              update: function (value, siblings, client) {
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.style"] = value;
-                return {
-                  history: updateQuery,
-                  core: null
-                };
-              }
-            }
-          ]
-        },
-        {
-          name: "space",
-          title: "공간",
-          callback: "blockCheck",
-          children: [
-            {
-              name: "address",
-              type: "address",
-              half: false,
-              required: false,
-              question: [
-                "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
-                "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
-              ],
-              value: function (request, history) {
-                return request.request.space.address;
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
-                  return { history: null, core: null };
-                } else {
-                  let updateQuery;
-                  updateQuery = {};
-                  updateQuery["requests.0.request.space.address"] = value;
-                  return {
-                    history: null,
-                    core: updateQuery
-                  };
-                }
-              }
-            },
-            {
-              name: "precheck",
-              type: "calendar",
-              half: true,
-              required: false,
-              question: [
-                "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
-              ],
-              item: "사전 점검일",
-              value: function (request, history) {
-                if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-                  return null;
-                } else {
-                  return request.analytics.date.space.precheck;
-                }
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
-                  return { history: null, core: null };
-                } else {
-                  let updateQuery;
-                  updateQuery = {};
-                  updateQuery["requests.0.analytics.date.space.precheck"] = value;
-                  return {
-                    history: null,
-                    core: updateQuery
-                  };
-                }
-              }
-            },
-            {
-              name: "empty",
-              type: "calendar",
-              half: true,
-              required: false,
-              question: [
-                "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
-              ],
-              item: "집 비는 날",
-              value: function (request, history) {
-                if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-                  return null;
-                } else {
-                  return request.analytics.date.space.empty;
-                }
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
-                  return { history: null, core: null };
-                } else {
-                  let updateQuery;
-                  updateQuery = {};
-                  updateQuery["requests.0.analytics.date.space.empty"] = value;
-                  return {
-                    history: null,
-                    core: updateQuery
-                  };
-                }
-              }
-            },
-            {
-              name: "buildingType",
-              type: "checkbox",
-              half: true,
-              required: true,
-              rewind: "건물 유형을 체크해주세요! (상가일 시, 오피스텔로 체크해주세요!)",
-              question: [
-                "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
-              ],
-              items: [
-                "아파트",
-                "오피스텔",
-                "타운하우스",
-                "빌라",
-                "단독 주택"
-              ],
-              realItems: [
-                100 / 75,
-                100 / 50,
-                100 / 70,
-                100 / 65,
-                100 / 70
-              ],
-              multiple: false,
-              exception: function (items, media) {
-                const ea = "px";
-                const mobile = media[4];
-                const desktop = !mobile;
-                let padding, subtract;
-                let paddingLeft, left;
-                if (desktop) {
-                  padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
-                  subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
-                  items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
-                  items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
-                } else {
-                  paddingLeft = 5.6;
-                  left = paddingLeft - 1.2 - 1;
-                  for (let dom of items) {
-                    dom.style.paddingLeft = String(paddingLeft) + "vw";
-                    dom.lastChild.style.left = String(left) + "vw";
-                    items[4].children[0].textContent = "주택";
-                  }
-                }
-              },
-              value: function (request, history) {
-                if (history.curation.building.type === "") {
-                  return null;
-                } else {
-                  return history.curation.building.type;
-                }
-              },
-              update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                let historyQuery, coreQuery;
-                let pyeong;
-
-                historyQuery = {};
-                historyQuery["curation.building.type"] = items[selected];
-
-                pyeong = client.requests[0].request.space.pyeong;
-                if (siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value.realItems[siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value.selected]) {
-                  pyeong = realItems[selected] * pyeong;
-                }
-
-                coreQuery = {};
-                coreQuery["requests.0.request.space.pyeong"] = pyeong;
-
-                return {
-                  history: historyQuery,
-                  core: coreQuery
-                };
-              }
-            },
-            {
-              name: "pyeongStandard",
-              type: "checkbox",
-              half: true,
-              required: true,
-              rewind: "평형 기준을 체크해주세요!",
-              question: [
-                "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
-              ],
-              items: [
-                "분양 면적 (공급 면적)",
-                "전용 면적",
-              ],
-              value: function (request, history) {
-                return "분양 면적 (공급 면적)";
-              },
-              realItems: [
-                false,
-                true,
-              ],
-              multiple: false,
-              update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                let coreQuery;
-                let pyeong;
-
-                pyeong = client.requests[0].request.space.pyeong;
-                if (realItems[selected]) {
-                  pyeong = (siblings.space.find((obj) => { return obj.name === "buildingType"; }).value.realItems[siblings.space.find((obj) => { return obj.name === "buildingType"; }).value.selected]) * pyeong;
-                }
-
-                coreQuery = {};
-                coreQuery["requests.0.request.space.pyeong"] = pyeong;
-
-                return {
-                  history: null,
-                  core: coreQuery
-                };
-              }
-            },
-          ]
-        },
-        {
-          name: "furniture",
-          title: "가구",
-          callback: "blockCheck",
-          children: [
-            {
-              name: "purchaseRatio",
-              type: "opposite",
-              half: false,
-              required: false,
-              question: [
-                "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
-                "<b%비율%b>을 알려주세요!"
-              ],
-              items: [
-                "재사용",
-                "새로 구입",
-              ],
-              total: 100,
-              ea: '%',
-              value: function (request, history) {
-                return history.curation.furniture.ratio;
-              },
-              update: function (value, siblings, client) {
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.furniture.ratio"] = value.value;
-                return {
-                  history: updateQuery,
-                  core: null
-                };
-              }
-            },
-            {
-              name: "makeFurnitrue",
-              type: "checkbox",
-              half: true,
-              required: false,
-              question: [
-                "<b%맞춤형 제작 가구 니즈%b>가 있으신가요?"
-              ],
-              items: [
-                "있다",
-                "없다",
-                "모르겠다",
-              ],
-              multiple: false,
-              notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
-              value: function (request, history) {
-                return history.curation.furniture.makeNeeds.furniture ? "있다" : "모르겠다";
-              },
-              update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.furniture.makeNeeds.furniture"] = (selected === 0);
-                return {
-                  history: updateQuery,
-                  core: null
-                };
-              }
-            },
-            {
-              name: "makeFabric",
-              type: "checkbox",
-              half: true,
-              required: false,
-              question: [
-                "<b%커튼, 베딩 패브릭 제작 니즈%b>가 있으신가요?"
-              ],
-              items: [
-                "있다",
-                "없다",
-                "모르겠다",
-              ],
-              multiple: false,
-              value: function (request, history) {
-                return history.curation.furniture.makeNeeds.fabric ? "있다" : "모르겠다";
-              },
-              update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.furniture.makeNeeds.fabric"] = (selected === 0);
-                return {
-                  history: updateQuery,
-                  core: null
-                };
-              }
-            },
-          ]
-        },
-        {
-          name: "construct",
-          title: "시공",
-          callback: "blockCheck",
-          children: [
-            {
-              name: "service",
-              type: "checkbox",
-              half: false,
-              required: true,
-              rewind: "시공 정도를 체크해주세요!",
-              question: [
-                "<b%생각하는 시공 정도%b>를 알려주세요!",
-              ],
-              multiple: true,
-              items: [
-                "시공 없이 홈퍼니싱만",
-                "5개 이내의 부분 시공과 홈퍼니싱",
-                "전체 리모델링과 전체 스타일링",
-                "구조 변경을 포함한 고급 시공"
-              ],
-              realItems: [
-                "s2011_aa01s",
-                "s2011_aa02s",
-                "s2011_aa03s",
-                "s2011_aa04s",
-              ],
-              exception: function (items, media) {
-                const mother = items[0].parentNode;
-                const grandMother = mother.parentNode;
-                const mobile = media[4];
-                const desktop = !mobile;
-                let ratio = 30;
-                if (media[3]) {
-                  ratio = 40;
-                }
-                if (desktop) {
-                  grandMother.firstChild.style.width = String(ratio) + '%';
-                  grandMother.lastChild.style.width = String(100 - ratio) + '%';
-                } else {
-                  mother.style.textAlign = "left";
-                  mother.style.left = String(-0.4) + "vw";
-                  mother.style.paddingTop = String(0.5) + "vw";
-                }
-              },
-              value: function (request, history) {
-                if (history.curation.service.serid.length === 0) {
-                  return null;
-                } else {
-                  return history.curation.service.serid;
-                }
-              },
-              update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                let historyQuery;
-                let selectedSerid;
-
-                selectedSerid = selected.map((i) => { return realItems[i]; });
-
-                historyQuery = {};
-                historyQuery["curation.service.serid"] = selectedSerid;
-
-                return {
-                  history: historyQuery,
-                  core: null
-                };
-              }
-            },
-            {
-              name: "constructList",
-              type: "list",
-              half: false,
-              required: false,
-              question: [
-                "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
-              ],
-              items: [
-                { name: "철거", contents: "마감재, 벽지 등 일부" },
-                { name: "전기/조명 공사", contents: "배선, 이동추가, 조명 교체" },
-                { name: "설비", contents: "수도/배관, 난방, 에어컨 배관" },
-                { name: "주방 공사", contents: "싱크 등 주방 가구 전체 교체" },
-                { name: "창호 공사", contents: "방문, 중문" },
-                { name: "도장 공사", contents: "부분 페인팅, 탄성코트 등" },
-                { name: "바닥 공사", contents: "마루, 타일, 장판 등" },
-                { name: "금속 공사", contents: "" },
-                { name: "목공사", contents: "간접등 박스, 웨인스 코팅 등" },
-                { name: "욕실 공사", contents: "도기 교체 등" },
-                { name: "샤시", contents: "" },
-                { name: "필름 공사", contents: "면적 및 난이도에 따라 금액 상이" },
-                { name: "철거", contents: "마감재, 벽지 등 일부" },
-                { name: "발코니 확장", contents: "거실, 주방, 방 등 확장 예정 발코니" },
-                { name: "타일 공사", contents: "현관, 주방, 다용도실, 발코니 등" },
-                { name: "도배 공사", contents: "이전 상태에 따라 밑작업 난이도 상이" },
-              ],
-              multiple: true,
-              value: function (request, history) {
-                if (history.curation.construct.items.length === 0) {
-                  return null;
-                } else {
-                  return history.curation.construct.items;
-                }
-              },
-              update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.construct.items"] = selected.map((i) => { return items[i].name; });
-                return {
-                  history: updateQuery,
-                  core: null
-                };
-              }
-            },
-            {
-              name: "spotStatus",
-              type: "checkbox",
-              half: false,
-              required: false,
-              question: [
-                "시공 당일에 예상되는 <b%주거 환경을 알려주세요!%b>"
-              ],
-              items: [
-                "거주중, 가구가 있는 상태",
-                "공실 상태",
-              ],
-              multiple: false,
-              notice: "거주중일 경우 시공에 한계가 있습니다.",
-              exception: function (items, media) {
-                const ea = "px";
-                const mobile = media[4];
-                const desktop = !mobile;
-                if (desktop) {
-                  items[0].style.marginRight = String(20) + ea;
-                }
-              },
-              value: function (request, history) {
-                return history.curation.construct.living ? "거주중, 가구가 있는 상태" : "공실 상태";
-              },
-              update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.construct.living"] = (selected === 0);
-                return {
-                  history: updateQuery,
-                  core: null
-                };
-              }
-            },
-          ]
-        },
-      ],
-      pannel: {
-        button: "서비스 금액 알아보기"
-      }
-    };
-
-  }
-
-  get initWordings() {
-    return this.wordings.init;
-  }
-
-  get centerWordings() {
-    return this.wordings.center;
-  }
-
-  get pannelWordings() {
-    return this.wordings.pannel;
-  }
-}
-
 class WordsDictionary {
   getServiceWording() {
     let obj;
@@ -1066,6 +513,598 @@ StyleCurationJs.photoFilter = function (photos, picks) {
   });
 
   return photos.slice(0, Math.floor(photos.length * ratio));
+}
+
+StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
+  const instance = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  class StyleCurationWordings {
+    constructor() {
+      this.wordings = {};
+      this.wordings.init = {
+        curation: {
+          title: [
+            "홈리에종",
+            "큐레이션",
+          ],
+          contents: [
+            [
+              "홈리에종은 체계화된 정보과 취향 분석 기능을",
+              "활용해서 <b%고객님의 스타일과 조건에 딱 맞는%b>",
+              "<b%서비스를 제안하고, 디자이너를 추천%b>해드립니다.",
+            ],
+            [
+              "아래 간단한 상세 큐레이팅 설문에 응답해주시면",
+              "<b%예상 서비스 및 서비스 금액%b>을 알려드릴 수 있으니,",
+              "작성 부탁드립니다. 감사합니다!",
+            ]
+          ],
+          image: [
+            "/secondConsulting.jpg",
+            "/secondConsultingb.jpg",
+            "/secondConsultingc.jpg",
+          ]
+        },
+        service: {
+          title: [
+            "홈리에종",
+            "서비스 소개",
+          ],
+          contents: [
+            [
+              "일단 시공부터 하는 방식이 아닌, 생활을 고려해",
+              "<b%디자인 및 기획을 먼저 하고 시공 범위를%b>",
+              "<b%함께 고민해 정한 후 인테리어를 진행%b>합니다.",
+            ],
+            [
+              "늘 앉아 있는 소파, 식사마다 머무는 식탁,",
+              "햇빛을 가려주는 커튼, 살이 맞닿는 베딩까지.",
+              "새로운 방식으로 나에게 맞는 집을 만들어 보세요!",
+            ]
+          ],
+          image: [
+            "/secondConsulting2.jpg",
+            "/secondConsulting2b.jpg",
+            "/secondConsulting2c.jpg",
+          ]
+        }
+      };
+      this.wordings.center = [];
+      this.wordings.center.push({
+        name: "style",
+        title: "스타일",
+        callback: "styleCheck",
+        children: [
+          {
+            name: "curation",
+            type: "style",
+            half: false,
+            required: true,
+            rewind: "스타일 체크를 진행해주세요!",
+            question: [
+              "선호하는 스타일을 <b%3장%b> 골라주세요!",
+              "스타일 분석이 완료되었습니다!"
+            ],
+            value: function (request, history) {
+              return null;
+            },
+            update: function (value, siblings, client) {
+              let updateQuery;
+              if (value !== null) {
+                updateQuery = {};
+                updateQuery["curation.style"] = value;
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              } else {
+                return { history: null, core: null };
+              }
+            }
+          }
+        ]
+      });
+      if (!liteMode) {
+        this.wordings.center.push({
+          name: "space",
+          title: "공간",
+          callback: "blockCheck",
+          children: [
+            {
+              name: "address",
+              type: "address",
+              half: false,
+              required: false,
+              question: [
+                "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
+                "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
+              ],
+              value: function (request, history) {
+                return request.request.space.address;
+              },
+              update: function (value, siblings, client) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["requests.0.request.space.address"] = value;
+                  return {
+                    history: null,
+                    core: updateQuery
+                  };
+                }
+              }
+            },
+            {
+              name: "precheck",
+              type: "calendar",
+              half: true,
+              required: false,
+              question: [
+                "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
+              ],
+              item: "사전 점검일",
+              value: function (request, history) {
+                if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+                  return null;
+                } else {
+                  return request.analytics.date.space.precheck;
+                }
+              },
+              update: function (value, siblings, client) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["requests.0.analytics.date.space.precheck"] = value;
+                  return {
+                    history: null,
+                    core: updateQuery
+                  };
+                }
+              }
+            },
+            {
+              name: "empty",
+              type: "calendar",
+              half: true,
+              required: false,
+              question: [
+                "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
+              ],
+              item: "집 비는 날",
+              value: function (request, history) {
+                if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+                  return null;
+                } else {
+                  return request.analytics.date.space.empty;
+                }
+              },
+              update: function (value, siblings, client) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["requests.0.analytics.date.space.empty"] = value;
+                  return {
+                    history: null,
+                    core: updateQuery
+                  };
+                }
+              }
+            },
+            {
+              name: "buildingType",
+              type: "checkbox",
+              half: true,
+              required: true,
+              rewind: "건물 유형을 체크해주세요! (상가일 시, 오피스텔로 체크해주세요!)",
+              question: [
+                "해당 거주지의 <b%건물 유형%b>을 알려주세요!"
+              ],
+              items: [
+                "아파트",
+                "오피스텔",
+                "타운하우스",
+                "빌라",
+                "단독 주택"
+              ],
+              realItems: [
+                100 / 75,
+                100 / 50,
+                100 / 70,
+                100 / 65,
+                100 / 70
+              ],
+              multiple: false,
+              exception: function (items, media) {
+                const ea = "px";
+                const mobile = media[4];
+                const desktop = !mobile;
+                let padding, subtract;
+                let paddingLeft, left;
+                if (desktop) {
+                  padding = Number(items[4].style.paddingLeft.replace(/[^0-9\.\-]/g, ''));
+                  subtract = items[2].getBoundingClientRect().width - items[4].getBoundingClientRect().width;
+                  items[4].style.width = String(items[2].getBoundingClientRect().width - padding) + ea;
+                  items[4].children[1].style.left = String(Number(items[4].children[1].style.left.replace(/[^0-9\.\-]/g, '')) + subtract) + ea;
+                } else {
+                  paddingLeft = 5.6;
+                  left = paddingLeft - 1.2 - 1;
+                  for (let dom of items) {
+                    dom.style.paddingLeft = String(paddingLeft) + "vw";
+                    dom.lastChild.style.left = String(left) + "vw";
+                    items[4].children[0].textContent = "주택";
+                  }
+                }
+              },
+              value: function (request, history) {
+                if (history.curation.building.type === "") {
+                  return null;
+                } else {
+                  return history.curation.building.type;
+                }
+              },
+              update: function (value, siblings, client) {
+                const { items, realItems, selected } = value;
+                const apartStandard = 75;
+                let historyQuery, coreQuery;
+                let pyeong;
+
+                historyQuery = {};
+                historyQuery["curation.building.type"] = items[selected];
+
+                pyeong = client.requests[0].request.space.pyeong;
+                if (siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value.realItems[siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value.selected]) {
+                  pyeong = realItems[selected] * pyeong;
+                } else {
+                  pyeong = (((1 / realItems[selected]) * 100) / apartStandard) * pyeong;
+                }
+
+                coreQuery = {};
+                coreQuery["requests.0.request.space.pyeong"] = pyeong;
+
+                return {
+                  history: historyQuery,
+                  core: coreQuery
+                };
+              }
+            },
+            {
+              name: "pyeongStandard",
+              type: "checkbox",
+              half: true,
+              required: true,
+              rewind: "평형 기준을 체크해주세요!",
+              question: [
+                "적어주신 <b%평수가 분양 면적 기준%b>이 맞나요?"
+              ],
+              items: [
+                "분양 면적 (공급 면적)",
+                "전용 면적",
+              ],
+              value: function (request, history) {
+                return "분양 면적 (공급 면적)";
+              },
+              realItems: [
+                false,
+                true,
+              ],
+              multiple: false,
+              update: function (value, siblings, client) {
+                const { items, realItems, selected } = value;
+                const apartStandard = 75;
+                let coreQuery;
+                let pyeong;
+                let calcValue;
+
+                pyeong = client.requests[0].request.space.pyeong;
+                calcValue = (siblings.space.find((obj) => { return obj.name === "buildingType"; }).value.realItems[siblings.space.find((obj) => { return obj.name === "buildingType"; }).value.selected]);
+                if (realItems[selected]) {
+                  pyeong = calcValue * pyeong;
+                } else {
+                  pyeong = (((1 / calcValue) * 100) / apartStandard) * pyeong;
+                }
+
+                coreQuery = {};
+                coreQuery["requests.0.request.space.pyeong"] = pyeong;
+
+                return {
+                  history: null,
+                  core: coreQuery
+                };
+              }
+            },
+          ]
+        });
+      }
+      this.wordings.center.push({
+        name: "furniture",
+        title: "가구",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "purchaseRatio",
+            type: "opposite",
+            half: false,
+            required: false,
+            question: [
+              "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
+              "<b%비율%b>을 알려주세요!"
+            ],
+            items: [
+              "재사용",
+              "새로 구입",
+            ],
+            total: 100,
+            ea: '%',
+            value: function (request, history) {
+              return history.curation.furniture.ratio;
+            },
+            update: function (value, siblings, client) {
+              if (value !== null) {
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.furniture.ratio"] = value.value;
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              } else {
+                return { history: null, core: null };
+              }
+            }
+          },
+          {
+            name: "makeFurnitrue",
+            type: "checkbox",
+            half: true,
+            required: false,
+            question: [
+              "<b%맞춤형 제작 가구 니즈%b>가 있으신가요?"
+            ],
+            items: [
+              "있다",
+              "없다",
+              "모르겠다",
+            ],
+            multiple: false,
+            notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
+            value: function (request, history) {
+              return history.curation.furniture.makeNeeds.furniture ? "있다" : "모르겠다";
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                const { items, realItems, selected } = value;
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.furniture.makeNeeds.furniture"] = (selected === 0);
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              }
+            }
+          },
+          {
+            name: "makeFabric",
+            type: "checkbox",
+            half: true,
+            required: false,
+            question: [
+              "<b%커튼, 베딩 패브릭 제작 니즈%b>가 있으신가요?"
+            ],
+            items: [
+              "있다",
+              "없다",
+              "모르겠다",
+            ],
+            multiple: false,
+            value: function (request, history) {
+              return history.curation.furniture.makeNeeds.fabric ? "있다" : "모르겠다";
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                const { items, realItems, selected } = value;
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.furniture.makeNeeds.fabric"] = (selected === 0);
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              }
+            }
+          },
+        ]
+      });
+      this.wordings.center.push({
+        name: "construct",
+        title: "시공",
+        callback: "blockCheck",
+        children: [
+          {
+            name: "service",
+            type: "checkbox",
+            half: false,
+            required: true,
+            rewind: "시공 정도를 체크해주세요!",
+            question: [
+              "<b%생각하는 시공 정도%b>를 알려주세요!",
+            ],
+            multiple: true,
+            items: [
+              "시공 없이 홈퍼니싱만",
+              "5개 이내의 부분 시공과 홈퍼니싱",
+              "전체 리모델링과 전체 스타일링",
+              "구조 변경을 포함한 고급 시공"
+            ],
+            realItems: [
+              "s2011_aa01s",
+              "s2011_aa02s",
+              "s2011_aa03s",
+              "s2011_aa04s",
+            ],
+            exception: function (items, media) {
+              const mother = items[0].parentNode;
+              const grandMother = mother.parentNode;
+              const mobile = media[4];
+              const desktop = !mobile;
+              let ratio = 30;
+              if (media[3]) {
+                ratio = 40;
+              }
+              if (desktop) {
+                grandMother.firstChild.style.width = String(ratio) + '%';
+                grandMother.lastChild.style.width = String(100 - ratio) + '%';
+              } else {
+                mother.style.textAlign = "left";
+                mother.style.left = String(-0.4) + "vw";
+                mother.style.paddingTop = String(0.5) + "vw";
+              }
+            },
+            value: function (request, history) {
+              if (history.curation.service.serid.length === 0) {
+                return null;
+              } else {
+                return history.curation.service.serid;
+              }
+            },
+            update: function (value, siblings, client) {
+              const { items, realItems, selected } = value;
+              let historyQuery;
+              let selectedSerid;
+
+              selectedSerid = selected.map((i) => { return realItems[i]; });
+
+              historyQuery = {};
+              historyQuery["curation.service.serid"] = selectedSerid;
+
+              return {
+                history: historyQuery,
+                core: null
+              };
+            }
+          },
+          {
+            name: "constructList",
+            type: "list",
+            half: false,
+            required: false,
+            question: [
+              "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
+            ],
+            items: [
+              { name: "철거", contents: "마감재, 벽지 등 일부" },
+              { name: "전기/조명 공사", contents: "배선, 이동추가, 조명 교체" },
+              { name: "설비", contents: "수도/배관, 난방, 에어컨 배관" },
+              { name: "주방 공사", contents: "싱크 등 주방 가구 전체 교체" },
+              { name: "창호 공사", contents: "방문, 중문" },
+              { name: "도장 공사", contents: "부분 페인팅, 탄성코트 등" },
+              { name: "바닥 공사", contents: "마루, 타일, 장판 등" },
+              { name: "금속 공사", contents: "" },
+              { name: "목공사", contents: "간접등 박스, 웨인스 코팅 등" },
+              { name: "욕실 공사", contents: "도기 교체 등" },
+              { name: "샤시", contents: "" },
+              { name: "필름 공사", contents: "면적 및 난이도에 따라 금액 상이" },
+              { name: "철거", contents: "마감재, 벽지 등 일부" },
+              { name: "발코니 확장", contents: "거실, 주방, 방 등 확장 예정 발코니" },
+              { name: "타일 공사", contents: "현관, 주방, 다용도실, 발코니 등" },
+              { name: "도배 공사", contents: "이전 상태에 따라 밑작업 난이도 상이" },
+            ],
+            multiple: true,
+            value: function (request, history) {
+              if (history.curation.construct.items.length === 0) {
+                return null;
+              } else {
+                return history.curation.construct.items;
+              }
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                const { items, realItems, selected } = value;
+                if (selected.length === 0) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["curation.construct.items"] = selected.map((i) => { return items[i].name; });
+                  return {
+                    history: updateQuery,
+                    core: null
+                  };
+                }
+              }
+            }
+          },
+          {
+            name: "spotStatus",
+            type: "checkbox",
+            half: false,
+            required: false,
+            question: [
+              "시공 당일에 예상되는 <b%주거 환경을 알려주세요!%b>"
+            ],
+            items: [
+              "거주중, 가구가 있는 상태",
+              "공실 상태",
+            ],
+            multiple: false,
+            notice: "거주중일 경우 시공에 한계가 있습니다.",
+            exception: function (items, media) {
+              const ea = "px";
+              const mobile = media[4];
+              const desktop = !mobile;
+              if (desktop) {
+                items[0].style.marginRight = String(20) + ea;
+              }
+            },
+            value: function (request, history) {
+              return history.curation.construct.living ? "거주중, 가구가 있는 상태" : "공실 상태";
+            },
+            update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              } else {
+                const { items, realItems, selected } = value;
+                let updateQuery;
+                updateQuery = {};
+                updateQuery["curation.construct.living"] = (selected === 0);
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              }
+            }
+          },
+        ]
+      });
+      this.wordings.pannel = {
+        button: "서비스 금액 알아보기"
+      };
+    }
+    get initWordings() {
+      return this.wordings.init;
+    }
+    get centerWordings() {
+      return this.wordings.center;
+    }
+    get pannelWordings() {
+      return this.wordings.pannel;
+    }
+  }
+  return new StyleCurationWordings();
 }
 
 StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
@@ -2589,12 +2628,16 @@ StyleCurationJs.prototype.parsingValues = function () {
           realItems = JSON.parse(JSON.stringify(items)).fill(null, 0);
         }
         selected = JSON.parse(JSON.stringify(this.values[obj.name][i].value));
-        selected = selected.map((obj) => { return obj.index; });
-        if (!obj.children[i].multiple) {
-          if (selected.length === 1) {
-            selected = selected[0];
-          } else {
-            selected = [ 0 ];
+        if (selected === null) {
+          selected = [];
+        } else {
+          selected = selected.map((obj) => { return obj.index; });
+          if (!obj.children[i].multiple) {
+            if (selected.length === 1) {
+              selected = selected[0];
+            } else {
+              selected = [ 0 ];
+            }
           }
         }
         this.values[obj.name][i].value = { items, realItems, selected };
@@ -3793,7 +3836,7 @@ StyleCurationJs.prototype.insertServiceBox = function (seridObj) {
           }
         },
         {
-          text: "최저 " + String(Math.round(data.range[i][0] / 10000)) + "만원",
+          text: "최저 " + String(Math.round(data.range[i][0] / 10000) === 0 ? 70 : Math.round(data.range[i][0] / 10000)) + "만원",
           style: {
             display: "inline-block",
             fontSize: "inherit",
@@ -4489,6 +4532,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     let whereQuery;
     let contentsPhotoObj;
     let tempArr, valueObj;
+    let liteMode;
 
     if (getObj.cliid === undefined) {
       alert("잘못된 접근입니다!");
@@ -4502,6 +4546,12 @@ StyleCurationJs.prototype.launching = async function (loading) {
     }
     client = clients[0];
 
+    if (getObj.mode === "lite") {
+      liteMode = true;
+    } else {
+      liteMode = false;
+    }
+
     contentsPhotoObj = await ajaxJson({}, "/styleCuration_getPhotos", { equal: true });
     this.selectPhotos = [];
     this.randomPick = [];
@@ -4510,7 +4560,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     this.designers = contentsPhotoObj.designers;
     this.client = client;
     this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
-    this.wordings = new StyleCurationWordings();
+    this.wordings = this.curationWordings(liteMode);
 
     tempArr = this.wordings.wordings.center.map((obj) => {
       return {

@@ -5139,7 +5139,10 @@ ClientJs.prototype.communicationRender = function () {
               name: thisCase.name,
               phone: thisCase.phone,
               option: {
-                client: thisCase.name
+                client: thisCase.name,
+                host: GHOSTHOST,
+                path: "curation",
+                cliid: cliid,
               }
             }, "/alimTalk");
             await sleep(1000);

@@ -176,7 +176,7 @@ DevContext.prototype.launching = async function () {
       }
     }
 
-    url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port[0]) + "/form";
+    url = "http://localhost:3000/form";
 
     await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName: "", contractAddress: "" }, { headers: { "Content-type": "application/json" } });
 

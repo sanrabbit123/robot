@@ -661,15 +661,19 @@ BackWorker.prototype.designerCalculation = async function () {
     let tempDate;
     let ago, agoValue;
     let greateStandard;
+    let limitAgo;
 
     ago = new Date();
     ago.setDate(ago.getDate() - 28);
     agoValue = ago.valueOf();
 
+    limitAgo = new Date();
+    limitAgo.setFullYear(limitAgo.getFullYear() - 2);
+
     whereQuery = {
       $and: [
         { desid: { $regex: "^d" } },
-        { "process.status": { $regex: "^[대진홀]" } },
+        { "proposal.date": { $gt: limitAgo } },
         { "process.contract.remain.date": { $gt: new Date(2000, 0, 1) } }
       ]
     };
