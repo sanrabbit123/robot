@@ -5156,6 +5156,53 @@ ClientJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
+    () => { return "스타일 체크"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 스타일 체크 알림톡을 전송합니다. 확실합니까?")) {
+            await ajaxJson({
+              method: "clientCuration",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name,
+                host: GHOSTHOST,
+                path: "curation",
+                cliid: cliid,
+                mode: "lite"
+              }
+            }, "/alimTalk");
+            await sleep(1000);
+            window.alert("알림톡 전송이 완료되었습니다!");
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
     () => { return "선호 사진 요청"; },
     function () {
       return true;
@@ -5199,6 +5246,52 @@ ClientJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
+    () => { return "부재중 큐레이팅"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 부재중 큐레이팅 전송 알림톡을 전송합니다. 확실합니까?")) {
+            await ajaxJson({
+              method: "outClientCuration",
+              name: thisCase.name,
+              phone: thisCase.phone,
+              option: {
+                client: thisCase.name,
+                host: GHOSTHOST,
+                path: "curation",
+                cliid: cliid,
+              }
+            }, "/alimTalk");
+            await sleep(1000);
+            window.alert("알림톡 전송이 완료되었습니다!");
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
+  communication.setItem([
     () => { return "큐레이팅 전송"; },
     function () {
       return true;
@@ -5224,7 +5317,7 @@ ClientJs.prototype.communicationRender = function () {
         if (thisCase !== null) {
           if (window.confirm(thisCase.name + " 고객님께 큐레이팅 전송 알림톡을 전송합니다. 확실합니까?")) {
             await ajaxJson({
-              method: "outClientCuration",
+              method: "clientCuration",
               name: thisCase.name,
               phone: thisCase.phone,
               option: {
@@ -5232,6 +5325,7 @@ ClientJs.prototype.communicationRender = function () {
                 host: GHOSTHOST,
                 path: "curation",
                 cliid: cliid,
+                mode: "general"
               }
             }, "/alimTalk");
             await sleep(1000);
