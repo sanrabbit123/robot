@@ -760,6 +760,49 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - voice
+  funcObj.post_voice = {
+    link: [ "/voice" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      let target, text;
+      target = "http://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port[0]);
+      text = (req.body.text === undefined ? "안녕하세요!" : req.body.text);
+      headRequest(target + "/confirm").then(async (response) => {
+        const { statusCode } = response;
+        let raw, res, doing;
+        if (statusCode === 200) {
+          raw = await requestSystem(target + "/confirm");
+          if (raw.data.doing !== undefined) {
+            await sleep(1000);
+            doing = raw.data.doing;
+            while (doing === 1) {
+              console.log("waiting...");
+              await sleep(1000);
+              raw = await requestSystem(target + "/confirm");
+              if (raw.data.doing !== undefined) {
+                doing = raw.data.doing;
+              } else {
+                doing = 2;
+              }
+            }
+            if (doing === 0) {
+              await requestSystem(target + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
+            }
+          }
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    }
+  };
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
