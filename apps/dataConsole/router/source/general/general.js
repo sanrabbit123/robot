@@ -4070,8 +4070,8 @@ GeneralJs.prototype.communicationBox = function () {
 
     size = 14;
     width = 300;
-    height = 32;
-    textTop = isMac() ? 5 : 7;
+    height = 33;
+    textTop = isMac() ? 6 : 8;
     innerMargin = 10;
 
     block = createNode({
