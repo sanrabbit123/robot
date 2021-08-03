@@ -342,7 +342,7 @@ GraphicBot.prototype.chromeHistoryClean = async function () {
       buttonY = 32;
     } else {
       buttonX = 50;
-      buttonY = 35;
+      buttonY = 36;
     }
     consoleX = chromeSize.right + ((screenSize.width - chromeSize.right) / 2);
     consoleY = chromeSize.bottom - ((chromeSize.bottom - chromeSize.top) / 2);

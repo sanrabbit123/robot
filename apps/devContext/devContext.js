@@ -160,15 +160,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    let url, requestNumber, proposalDate;
-
-
-
-    url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port[0]) + "/cash";
-
-    await requestSystem(url);
-
-
 
 
 
