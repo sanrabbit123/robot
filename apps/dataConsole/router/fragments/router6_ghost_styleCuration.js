@@ -81,9 +81,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
         if (history === null) {
           await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-        } else {
-          await back.updateHistory("client", [ { cliid }, historyQuery ], { selfMongo: instance.mongolocal });
         }
+        await back.updateHistory("client", [ { cliid }, historyQuery ], { selfMongo: instance.mongolocal });
         history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
       }
 
@@ -132,6 +131,73 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           }
         }
       }
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/styleCuration_updateAnalytics";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.userAgent === undefined || req.body.referrer === undefined || req.body.mode === undefined || req.body.cliid === undefined) {
+        throw new Error("invaild post");
+      }
+      const { userAgent, referrer, mode, cliid } = req.body;
+      let whereQuery, updateQuery;
+      let history;
+      let update;
+      let image;
+
+      whereQuery = { cliid };
+      history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+      if (history === null) {
+        await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+        history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+      }
+
+      if (mode === "page") {
+
+        history.curation.analytics.page.push({ date: new Date(), referrer, userAgent });
+        updateQuery = {};
+        updateQuery["curation.analytics.page"] = history.curation.analytics.page;
+        await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+      } else if (mode === "update") {
+
+        update = equalJson(req.body.update);
+        history.curation.analytics.update.push({ date: new Date(), referrer, userAgent, update });
+        updateQuery = {};
+        updateQuery["curation.analytics.update"] = history.curation.analytics.update;
+        await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+      } else if (mode === "submit") {
+
+        history.curation.analytics.submit.push({ date: new Date(), referrer, userAgent });
+        updateQuery = {};
+        updateQuery["curation.analytics.submit"] = history.curation.analytics.submit;
+        await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+      } else if (mode === "image") {
+
+        image = equalJson(req.body.image);
+        updateQuery = {};
+        updateQuery["curation.image"] = image;
+        await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+      } else {
+        throw new Error("invaild mode");
+      }
+
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);

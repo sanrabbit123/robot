@@ -669,6 +669,9 @@ module.exports = {
       },
       "styleCuration": {
         "behaviors": []
+      },
+      "universalEstimation": {
+        "behaviors": []
       }
     },
     "login": {

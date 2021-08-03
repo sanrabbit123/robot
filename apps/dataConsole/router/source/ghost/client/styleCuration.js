@@ -1112,7 +1112,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac, sleep } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac, sleep, ajaxJson } = GeneralJs;
   const { photos, contentsArr, designers } = this;
   const greenClassName = "greenRemoveTarget";
   const stackName = "styleCheckNum";
@@ -1133,6 +1133,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
   let resetEvent;
   let arrowEvent;
   let pickupDesigners;
+  let image;
 
   GeneralJs.stacks[stackName] = 0;
   GeneralJs.stacks[loadingName] = false;
@@ -1154,6 +1155,8 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
 
   questionWording = wordings[0].question[0];
   completeWording = wordings[0].question[1];
+
+  image = [];
 
   randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
   this.randomPick = randomPick;
@@ -1200,6 +1203,25 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status); });
       designers = designers.map((obj) => { return obj.desid; });
       instance.values.style[0].value = designers;
+
+      ajaxJson({
+        userAgent: window.navigator.userAgent,
+        referrer: document.referrer,
+        mode: "update",
+        cliid: instance.client.cliid,
+        update: { x: "style", y: 0, value: instance.values.style[0].value }
+      }, "/styleCuration_updateAnalytics").then(() => {
+        return ajaxJson({
+          userAgent: window.navigator.userAgent,
+          referrer: document.referrer,
+          mode: "image",
+          cliid: instance.client.cliid,
+          image: image
+        }, "/styleCuration_updateAnalytics");
+      }).catch((err) => {
+        console.log(err);
+      });
+
     }
   }
 
@@ -1444,6 +1466,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                 },
               });
               instance.selectPhotos.push(instance.randomPick[index]);
+              image.push(instance.randomPick[index].file);
               if (instance.selectPhotos.length >= 3) {
                 instance.photos = StyleCurationJs.photoFilter(instance.photos, instance.selectPhotos);
                 instance.selectPhotos = [];
@@ -1453,6 +1476,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                   resetEvent();
                 }, 201);
               }
+
             }
           }
         }
@@ -1573,7 +1597,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, isMac, dateToString, stringToDate } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, isMac, dateToString, stringToDate, ajaxJson } = GeneralJs;
   const token = '_';
   const listToken = '__list__';
   let wordingSize;
@@ -1932,6 +1956,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     try {
                       self.value = e.data.trim();
                       instance.values[x][y].value = self.value.trim();
+                      ajaxJson({
+                        userAgent: window.navigator.userAgent,
+                        referrer: document.referrer,
+                        mode: "update",
+                        cliid: instance.client.cliid,
+                        update: { x, y, value: instance.values[x][y].value }
+                      }, "/styleCuration_updateAnalytics").catch((err) => {
+                        console.log(err);
+                      });
                       removeTargets = targetMother.querySelectorAll("aside");
                       for (let t of removeTargets) {
                         targetMother.removeChild(t);
@@ -1966,6 +1999,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     const x = this.getAttribute("x");
                     const y = Number(this.getAttribute("y"));
                     instance.values[x][y].value = self.value.trim();
+                    ajaxJson({
+                      userAgent: window.navigator.userAgent,
+                      referrer: document.referrer,
+                      mode: "update",
+                      cliid: instance.client.cliid,
+                      update: { x, y, value: instance.values[x][y].value }
+                    }, "/styleCuration_updateAnalytics").catch((err) => {
+                      console.log(err);
+                    });
                   }
                 } catch (e) {
                   console.log(e);
@@ -2060,6 +2102,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
                   }
                 }
+                ajaxJson({
+                  userAgent: window.navigator.userAgent,
+                  referrer: document.referrer,
+                  mode: "update",
+                  cliid: instance.client.cliid,
+                  update: { x, y, value: instance.values[x][y].value }
+                }, "/styleCuration_updateAnalytics").catch((err) => {
+                  console.log(err);
+                });
               }
             }
           ],
@@ -2237,6 +2288,16 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           opposite: oppositeValue,
           values: [ thisValue, oppositeValue ]
         };
+
+        ajaxJson({
+          userAgent: window.navigator.userAgent,
+          referrer: document.referrer,
+          mode: "update",
+          cliid: instance.client.cliid,
+          update: { x, y, value: instance.values[x][y].value }
+        }, "/styleCuration_updateAnalytics").catch((err) => {
+          console.log(err);
+        });
       }
 
       if (desktop) {
@@ -2356,6 +2417,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
                   }
                 }
+                ajaxJson({
+                  userAgent: window.navigator.userAgent,
+                  referrer: document.referrer,
+                  mode: "update",
+                  cliid: instance.client.cliid,
+                  update: { x, y, value: instance.values[x][y].value }
+                }, "/styleCuration_updateAnalytics").catch((err) => {
+                  console.log(err);
+                });
               }
             }
           ],
@@ -2493,6 +2563,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 self.setAttribute("toggle", "on");
                 self.setAttribute("value", dateToString(dateValue));
                 instance.values[x][y].value = dateValue;
+                ajaxJson({
+                  userAgent: window.navigator.userAgent,
+                  referrer: document.referrer,
+                  mode: "update",
+                  cliid: instance.client.cliid,
+                  update: { x, y, value: instance.values[x][y].value }
+                }, "/styleCuration_updateAnalytics").catch((err) => {
+                  console.log(err);
+                });
                 for (let c of children) {
                   c.style.color = colorChip.green;
                 }
@@ -2716,6 +2795,13 @@ StyleCurationJs.prototype.parsingValues = function () {
       }
     }
   }).then(() => {
+    return GeneralJs.ajaxJson({
+      userAgent: window.navigator.userAgent,
+      referrer: document.referrer,
+      mode: "submit",
+      cliid: instance.client.cliid,
+    }, "/styleCuration_updateAnalytics");
+  }).then(() => {
     return instance.serviceConverting(finalSerid);
   }).then((message) => {
     if (message !== "done") {
@@ -2724,7 +2810,6 @@ StyleCurationJs.prototype.parsingValues = function () {
   }).catch((err) => {
     console.log(err);
   });
-
 }
 
 StyleCurationJs.prototype.insertInitBox = function (curation = true) {
@@ -4498,9 +4583,15 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   const instance = this;
   const { ea, baseTong } = this;
   const { backgroundImageBox, backgroundImageBox2 } = this.mother;
-  const { cleanChildren } = GeneralJs;
+  const { cleanChildren, ajaxJson } = GeneralJs;
   const children = baseTong.children;
   try {
+    await ajaxJson({
+      userAgent: window.navigator.userAgent,
+      referrer: document.referrer,
+      mode: "page",
+      cliid: instance.client.cliid,
+    }, "/styleCuration_updateAnalytics");
     backgroundImageBox2.style.opacity = String(1);
     backgroundImageBox.style.animation = "justfadeoutoriginal 1s ease forwards";
     baseTong.style.height = String(baseTong.getBoundingClientRect().height) + ea;
@@ -4535,13 +4626,13 @@ StyleCurationJs.prototype.launching = async function (loading) {
     let liteMode;
 
     if (getObj.cliid === undefined) {
-      alert("잘못된 접근입니다!");
+      window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
 
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
-      alert("잘못된 접근입니다!");
+      window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
     client = clients[0];
@@ -4551,6 +4642,13 @@ StyleCurationJs.prototype.launching = async function (loading) {
     } else {
       liteMode = false;
     }
+
+    await ajaxJson({
+      userAgent: window.navigator.userAgent,
+      referrer: document.referrer,
+      mode: "page",
+      cliid: client.cliid,
+    }, "/styleCuration_updateAnalytics");
 
     contentsPhotoObj = await ajaxJson({}, "/styleCuration_getPhotos", { equal: true });
     this.selectPhotos = [];
