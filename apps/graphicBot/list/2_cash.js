@@ -26,6 +26,7 @@ module.exports = function (arg, info) {
       }
       document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId).click();
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.id), "info.hometax.id");
+      await clickElement(document.getElementById("textbox10881946"));
       await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), "info.hometax.pwd");
       await endFront();
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();

@@ -160,6 +160,17 @@ DevContext.prototype.launching = async function () {
 
 
 
+    let url, requestNumber, proposalDate;
+
+
+
+    url = "https://" + address.homeinfo.ghost.host + ":" + String(address.homeinfo.ghost.graphic.port[0]) + "/cash";
+
+    await requestSystem(url);
+
+
+
+
 
 
     // const tong = await work.getDesignerFee("p2107_aa46s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
