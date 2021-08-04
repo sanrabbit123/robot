@@ -397,15 +397,7 @@ AddressParser.prototype.getTravelExpenses = async function (from, to) {
     result = null;
 
     if (distance === null) {
-      return {
-        from: null,
-        to: null,
-        amount: null,
-        string: null,
-        distance: null,
-        time: null,
-        standard: null
-      };
+      return null;
     }
 
     m = distance.m;

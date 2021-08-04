@@ -568,6 +568,8 @@ ClientJs.prototype.infoArea = function (info) {
             thisCase: instance.cases[Number(idDom.getAttribute("index"))]
           });
 
+          await instance.globalChaining(instance.cases[Number(idDom.getAttribute("index"))], column, finalValue);
+
           originalDiv.textContent = finalValue;
           idDom.setAttribute("active", "false");
           removeAllEvent();
@@ -2386,6 +2388,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             index: thisCase["index"],
             thisCase: instance.cases[thisCase["index"]],
           });
+
+          await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue);
 
           if (instance.totalFather !== null) {
             for (let father of instance.totalFatherChildren) {
@@ -5104,6 +5108,50 @@ ClientJs.prototype.dashboardBox = function (option) {
 
 }
 
+ClientJs.prototype.globalChaining = async function (thisCase, column, value) {
+  const instance = this;
+  try {
+    const map = DataPatch.clientMap();
+    const dictionary = {
+      service: async function (thisCase, column, value) {
+        const cookies = GeneralJs.getCookiesAll();
+        const { ajaxJson } = GeneralJs;
+        const { cliid, service } = thisCase;
+        try {
+          let serid;
+          if (/홈퍼/gi.test(service)) {
+            serid = "s2011_aa01s";
+          } else if (/홈스/gi.test(service)) {
+            serid = "s2011_aa02s";
+          } else if (/토탈/gi.test(service)) {
+            serid = "s2011_aa03s";
+          } else {
+            serid = "s2011_aa04s";
+          }
+
+          await ajaxJson({
+            id: cliid,
+            column: "curation.service.serid",
+            value: [ serid ],
+            email: cookies.homeliaisonConsoleLoginedEmail,
+          }, "/updateClientHistory");
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+
+    let tempFunction;
+    if (dictionary[column] !== undefined) {
+      tempFunction = dictionary[column];
+      await tempFunction(thisCase, column, value);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 ClientJs.prototype.communicationRender = function () {
   const instance = this;
   const { communication } = this.mother;
@@ -5822,6 +5870,8 @@ ClientJs.prototype.lateLaunching = async function () {
       });
     }
 
+    /*
+
     instance.dashboardBox({
       name: "realtime",
       style: { height: window.innerHeight - 388 - 83, right: 20, bottom: 388 },
@@ -5898,6 +5948,8 @@ ClientJs.prototype.lateLaunching = async function () {
         }
       },
     });
+
+    */
 
   } catch (e) {
     console.log(e);

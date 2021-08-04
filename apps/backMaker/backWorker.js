@@ -981,11 +981,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       throw new Error("mode Error");
     }
 
-    clientAddress = await addressApp.getAddress(request.space.address.value);
-    if (clientAddress === null) {
-      throw new Error("invaild client address");
-    }
-
     priceStandard = await back.mongoRead(priceStandardCollection, { key: priceStandardConst }, { selfMongo: MONGOLOCALC });
     if (priceStandard.length !== 1) {
       throw new Error("invaild price standard");
@@ -1031,7 +1026,15 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     }
 
     tong = [];
+    clientAddress = null;
     for (let designer of designers) {
+
+      price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
+      if (price.length !== 1) {
+        throw new Error("invaild price");
+      }
+      price = price[0];
+      fee = price.matrix[x][y] * 10000;
 
       if (mode === 0) {
         proposal = project.selectProposal(designer.desid);
@@ -1053,23 +1056,28 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
       newcomerBoo = newcomers.includes(designer.designer);
 
-      designerAddress = await addressApp.getAddress(designer.information.address[0].value);
-      if (designerAddress === null) {
-        throw new Error("invaild designer address");
+      if (fee !== 0) {
+        designerAddress = await addressApp.getAddress(designer.information.address[0].value);
+        if (designerAddress === null) {
+          throw new Error("invaild designer address");
+        }
+        if (clientAddress === null) {
+          clientAddress = await addressApp.getAddress(request.space.address.value);
+          if (clientAddress === null) {
+            throw new Error("invaild client address");
+          }
+        }
+        travelInfo = await addressApp.getTravelExpenses(designerAddress, clientAddress);
+      } else {
+        travelInfo = null;
       }
-      travelInfo = await addressApp.getTravelExpenses(designerAddress, clientAddress);
+
       if (travelInfo === null) {
-        throw new Error("invaild travelInfo");
+        distanceBoo = false;
+        travelInfo = { amount: 0, distance: { string: "" }, time: { string: "" } };
+      } else {
+        distanceBoo = (travelInfo.distance.meters > (designer.analytics.region.range * 1000));
       }
-      distanceBoo = (travelInfo.distance.meters > (designer.analytics.region.range * 1000));
-
-      price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
-      if (price.length !== 1) {
-        throw new Error("invaild price");
-      }
-      price = price[0];
-
-      fee = price.matrix[x][y] * 10000;
 
       if (newcomerBoo) {
         fee = fee * priceStandard.newcomer;
@@ -1108,36 +1116,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
       offlineFeeCase = fee;
       onlineFeeCase = fee;
-
-      // if (onlineBoo) {
-      //   offlineFeeCase = fee;
-      //   onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
-      //   if (priceStandard.online.minus.min > onlineFee) {
-      //     onlineFee = priceStandard.online.minus.min;
-      //   }
-      //   if (priceStandard.online.minus.max < onlineFee) {
-      //     onlineFee = priceStandard.online.minus.max;
-      //   }
-      //   fee = fee - onlineFee;
-      //   if (priceStandard.online.absolute.min > fee) {
-      //     fee = priceStandard.online.absolute.min;
-      //   }
-      //   onlineFeeCase = fee;
-      // } else {
-      //   offlineFeeCase = fee;
-      //   onlineFeeCase = fee;
-      //   onlineFee = travelInfo.amount * priceStandard.online.matrix[y] * onlineRatio;
-      //   if (priceStandard.online.minus.min > onlineFee) {
-      //     onlineFee = priceStandard.online.minus.min;
-      //   }
-      //   if (priceStandard.online.minus.max < onlineFee) {
-      //     onlineFee = priceStandard.online.minus.max;
-      //   }
-      //   onlineFeeCase = onlineFeeCase - onlineFee;
-      //   if (priceStandard.online.absolute.min > onlineFeeCase) {
-      //     onlineFeeCase = priceStandard.online.absolute.min;
-      //   }
-      // }
 
       if (distanceBoo) {
         fee = fee + (travelInfo.amount * travelNumber);
@@ -1197,10 +1175,10 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
   }
 }
 
-BackWorker.prototype.designerCuration = async function (cliid, selectNumber, option = { selfMongo: null, selfLocalMongo: null }) {
+BackWorker.prototype.designerCuration = async function (cliid, selectNumber, seridArr, option = { selfMongo: null, selfLocalMongo: null }) {
   const instance = this;
   const back = this.back;
-  if (typeof cliid !== "string" || typeof selectNumber !== "number") {
+  if (typeof cliid !== "string" || typeof selectNumber !== "number" || !Array.isArray(seridArr)) {
     throw new Error("invaild input");
   }
   try {
@@ -1236,12 +1214,17 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, opt
         serid = serviceCase.serid[0].serid;
         xValue = serviceCase.xValue[0].xValue;
       }
+      if (seridArr.length === 1) {
+        serid = seridArr[0];
+      }
       feeCalculation = async function (arr) {
         if (!Array.isArray(arr)) {
           throw new Error("invaild input");
         }
         let feeObject;
+        let newArr;
         try {
+          newArr = [];
           for (let obj of arr) {
             feeObject = await instance.getDesignerFee(obj.desid, cliid, serid, xValue, { selfMongo: option.selfMongo, selfLocalMongo: option.selfLocalMongo });
             obj.resetFee();
@@ -1251,8 +1234,14 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, opt
             } else {
               obj.appendFee("offline", feeObject.detail.offline);
             }
+            if (feeObject.detail.online !== 0) {
+              newArr.push(obj);
+            }
+            if (newArr.length === selectNumber) {
+              break;
+            }
           }
-          return arr;
+          return newArr;
         } catch (e) {
           console.log(e);
         }
@@ -1308,6 +1297,13 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, opt
 
     final = clientCase.caseProposal();
 
+    if (option.noCalculation !== true) {
+      final = final.filter((project) => { return project.service.serid === serid });
+      if (final.length <= (selectNumber * 3)) {
+        final = await back.getProjectsByQuery({ "service.serid": serid }, { selfMongo: option.selfMongo, limit: 200 });
+      }
+    }
+
     selected = [];
     for (let project of final) {
       if (project !== null) {
@@ -1339,10 +1335,6 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, opt
     }
 
     //option.noCalculation
-    if (!preferBoo && option.noCalculation !== true) {
-      selected = await feeCalculation(selected);
-    }
-
     if (preferBoo) {
       selectedDesigner = [];
       for (let desid of preferDesigners) {
@@ -1350,24 +1342,28 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, opt
           tempObj = selected.find((obj) => { return obj.desid === desid; });
           selectedDesigner.push(tempObj);
         }
-        if (selectedDesigner.length === selectNumber) {
-          break;
-        }
       }
       if (selectedDesigner.length === 0) {
         if (option.noCalculation !== true) {
           selected = await feeCalculation(selected);
         }
+        selected = selected.slice(0, selectNumber);
         return selected;
       } else {
         if (option.noCalculation !== true) {
           selectedDesigner = await feeCalculation(selectedDesigner);
         }
+        selectedDesigner = selectedDesigner.slice(0, selectNumber);
         return selectedDesigner;
       }
     } else {
+      if (option.noCalculation !== true) {
+        selected = await feeCalculation(selected);
+      }
+      selected = selected.slice(0, selectNumber);
       return selected;
     }
+    
   } catch (e) {
     console.log(e);
   }

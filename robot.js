@@ -44,10 +44,8 @@ Robot.prototype.mongoToJson = async function () {
       tempObj[dbName] = true;
       collections = await back.mongoListCollections(tempObj);
       tempInfo = this.address[infoName];
-      for (let collection of collections) {
-        order = `mongoexport --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --collection=${collection} --out="${shellLink(backDir)}/${timeString}/${collection}${timeString}.json" --authenticationDatabase admin`;
-        tempMsg = shell.exec(order);
-      }
+      order = `mongodump --uri="mongodb://${tempInfo["host"]}/${tempInfo["database"]}" --username=${tempInfo["user"]} --password=${tempInfo["password"]} --port=${String(tempInfo["port"])} --out="${shellLink(backDir)}/${timeString}/${dbName}${timeString}.json" --authenticationDatabase admin`;
+      tempMsg = shell.exec(order);
     }
 
     return `mongo exports done`;

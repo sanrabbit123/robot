@@ -1833,7 +1833,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
 DataRouter.prototype.rou_post_updateHistory = function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, equalJson } = this.mother;
   const back = this.back;
   const members = this.members;
   let obj = {};
@@ -1841,7 +1841,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   obj.func = async function (req, res) {
     try {
       const today = new Date();
-      const { id, column, value, email } = req.body;
+      const { id, column, value, email } = equalJson(req.body);
       const logDir = `${instance.dir}/log`;
       let historyObj;
       let whereQuery, updateQuery;
@@ -2406,7 +2406,7 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
       if (req.body.id === undefined) {
         throw new Error("must be cliid");
       }
-      const selected = await work.designerCuration(req.body.id, 4, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
+      const selected = await work.designerCuration(req.body.id, 4, [], { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
       res.set("Content-Type", "application/json");
       if (selected.length === 0) {
         res.send(JSON.stringify({ result: null }));
@@ -3772,7 +3772,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const instance = this;
   const back = this.back;
   const work = this.work;
-  const { equalJson } = this.mother;
+  const { equalJson, ghostRequest } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res) {
@@ -3785,7 +3785,6 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
       const coreQuery = equalJson(req.body.coreQuery);
       const mode = req.body.mode;
       let history;
-      let newProid;
 
       if (Object.keys(coreQuery).length > 0) {
         await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
@@ -3811,38 +3810,50 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({}));
         } else {
-          if (mode !== "update") {
-            res.set({ "Content-Type": "application/json" });
-            res.send(JSON.stringify({ service, client, history }));
-          } else {
-            work.designerCuration(cliid, 4, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal }).then((detail) => {
-              let detailUpdate, updateQuery;
-              detailUpdate = [];
-              for (let obj of detail) {
-                detailUpdate.push(obj.toNormal());
-              }
-              updateQuery = {};
-              updateQuery["desid"] = "";
-              updateQuery["proposal.status"] = "작성중";
-              updateQuery["cliid"] = cliid;
-              updateQuery["service.serid"] = history.curation.service.serid[0];
-              updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
-              updateQuery["service.online"] = false;
-              updateQuery["proposal.detail"] = detailUpdate;
-              return back.createProject(updateQuery, { selfMongo: instance.mongo });
-            }).then((proid) => {
+
+          const detail = await work.designerCuration(cliid, 4, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
+          let detailUpdate, updateQuery;
+          let newProid;
+
+          if (detail.length !== 0) {
+
+            detailUpdate = [];
+            for (let obj of detail) {
+              detailUpdate.push(obj.toNormal());
+            }
+
+            updateQuery = {};
+            updateQuery["desid"] = "";
+            updateQuery["proposal.status"] = "작성중";
+            updateQuery["cliid"] = cliid;
+            updateQuery["service.serid"] = history.curation.service.serid[0];
+            updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
+            updateQuery["service.online"] = false;
+            updateQuery["proposal.detail"] = detailUpdate;
+
+            back.createProject(updateQuery, { selfMongo: instance.mongo }).then((proid) => {
               newProid = proid;
               //DEV => name, phone
               return instance.kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", { client: client.name });
-            }).then((msg) => {
+            }).then(() => {
+              return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
+            }).then(() => {
               instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#400_customer" });
             }).catch((err) => {
               console.log(err);
               instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#error_log" });
             });
+
             res.set({ "Content-Type": "application/json" });
-            res.send(JSON.stringify({ message: "will do" }));
+            res.send(JSON.stringify({ service: detailUpdate, client, history }));
+
+          } else {
+
+            res.set({ "Content-Type": "application/json" });
+            res.send(JSON.stringify({ service: [], client, history }));
+
           }
+
         }
       }
     } catch (e) {
@@ -3856,19 +3867,20 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, ipParsing } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateAnalytics";
   obj.func = async function (req, res) {
     try {
-      if (req.body.userAgent === undefined || req.body.referrer === undefined || req.body.mode === undefined || req.body.cliid === undefined) {
+      if (req.body.userAgent === undefined || req.body.referrer === undefined || req.body.mode === undefined || req.body.cliid === undefined || req.body.ip === undefined) {
         throw new Error("invaild post");
       }
-      const { userAgent, referrer, mode, cliid } = req.body;
+      const { userAgent, referrer, mode, cliid, ip } = req.body;
       let whereQuery, updateQuery;
       let history;
       let update;
       let image;
+      let ipObj;
 
       whereQuery = { cliid };
       history = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
@@ -3879,22 +3891,31 @@ DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
 
       if (mode === "page") {
 
-        history.curation.analytics.page.push({ date: new Date(), referrer, userAgent });
+        ipObj = await ipParsing(ip);
+        if (ipObj === null) {
+          ipObj = { ip };
+        }
+
+        history.curation.analytics.page.push({ date: new Date(), referrer, userAgent, ...ipObj });
         updateQuery = {};
         updateQuery["curation.analytics.page"] = history.curation.analytics.page;
+        if (req.body.liteMode === "false") {
+          updateQuery["curation.analytics.full"] = true;
+        }
+
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       } else if (mode === "update") {
 
         update = equalJson(req.body.update);
-        history.curation.analytics.update.push({ date: new Date(), referrer, userAgent, update });
+        history.curation.analytics.update.push({ date: new Date(), update });
         updateQuery = {};
         updateQuery["curation.analytics.update"] = history.curation.analytics.update;
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       } else if (mode === "submit") {
 
-        history.curation.analytics.submit.push({ date: new Date(), referrer, userAgent });
+        history.curation.analytics.submit.push({ date: new Date() });
         updateQuery = {};
         updateQuery["curation.analytics.submit"] = history.curation.analytics.submit;
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });

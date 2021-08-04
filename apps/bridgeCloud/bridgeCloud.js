@@ -495,7 +495,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           "entry.1127622227": filterAll(resultObj["spotspec"]),
           "entry.462371043": requestObj["requests.0.request.etc.comment"],
           "entry.795957898": requestObj["requests.0.request.etc.channel"],
-          "entry.1749939672": requestObj["requests.0.request.timeline"].toUTCString(),
+          "entry.1749939672": String(requestObj["requests.0.request.timeline"].getFullYear()) + ". " + String(requestObj["requests.0.request.timeline"].getMonth() + 1) + ". " + String(requestObj["requests.0.request.timeline"].getDate()) + " " + String(requestObj["requests.0.request.timeline"].getHours()) + ":" + String(requestObj["requests.0.request.timeline"].getMinutes()),
         };
         const { status: googleStatus } = await requestSystem("https://docs.google.com/forms/u/0/d/e/1FAIpQLSfqd1Q-En9K7YbQpknPE3OkqobzCMJaSO9G33W6KRodoE0I8g/formResponse", toGoogle);
         if (googleStatus !== 200) {

@@ -2015,13 +2015,39 @@ Mother.prototype.pasteToClipboard = function (data) {
 }
 
 Mother.prototype.equalJson = function (jsonString) {
-  if (typeof jsonString === "object") {
-    jsonString = JSON.stringify(jsonString);
+  const equal = function (jsonString) {
+    if (typeof jsonString === "object") {
+      jsonString = JSON.stringify(jsonString);
+    }
+    if (typeof jsonString !== "string") {
+      jsonString = String(jsonString);
+    }
+    const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+    const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+    const json = tempFunc();
+    let temp, boo;
+    if (typeof json === "object") {
+      for (let i in json) {
+        if (typeof json[i] === "string") {
+          if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+            try {
+              temp = JSON.parse(json[i]);
+              boo = true;
+            } catch (e) {
+              boo = false;
+            }
+            if (boo) {
+              json[i] = equal(json[i]);
+            }
+          }
+        }
+      }
+      return json;
+    } else {
+      return jsonString;
+    }
   }
-  const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
-  const tempFunc = new Function("const obj = " + filtered + "; return obj;");
-  const json = tempFunc();
-  return json;
+  return equal(jsonString);
 }
 
 Mother.prototype.copyJson = function (obj) {
@@ -2180,6 +2206,36 @@ Mother.prototype.colorParsing = function (str) {
   } else {
     throw new Error("invaild input");
   }
+}
+
+Mother.prototype.ipParsing = function (ip) {
+  if (typeof ip !== "string") {
+    throw new Error("input must be ip");
+  }
+  ip = ip.trim().replace(/[^0-9\.]/gi, '');
+  if (ip.replace(/[0-9\.]/g, '') !== '') {
+    return new Promise(function (resolve, reject) {
+      resolve(null);
+    });
+  }
+  const axios = require('axios');
+  let url;
+
+  url = "https://ipinfo.io";
+  url += "/" + ip;
+
+  return new Promise(function (resolve, reject) {
+    axios.get(url).then(function (response) {
+      if (response.status === 200 && typeof response.data === "object") {
+        if (response.data.readme !== undefined) {
+          delete response.data.readme;
+        }
+        resolve(response.data);
+      }
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
 }
 
 module.exports = Mother;

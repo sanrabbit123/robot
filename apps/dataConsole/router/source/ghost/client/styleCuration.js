@@ -328,6 +328,7 @@ Set.prototype.union = function(setB) {
 const StyleCurationJs = function () {
   this.mother = new GeneralJs();
   this.client = null;
+  this.firstClick = false;
 }
 
 StyleCurationJs.binaryPath = "/middle/curation";
@@ -587,7 +588,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               "선호하는 스타일을 <b%3장%b> 골라주세요!",
               "스타일 분석이 완료되었습니다!"
             ],
-            value: function (request, history) {
+            value: function (request, history, self) {
               return null;
             },
             update: function (value, siblings, client) {
@@ -621,7 +622,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
                 "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
               ],
-              value: function (request, history) {
+              value: function (request, history, self) {
                 return request.request.space.address;
               },
               update: function (value, siblings, client) {
@@ -647,7 +648,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 "<b%사전 점검일%b>이 있다면, 날짜를 알려주세요!"
               ],
               item: "사전 점검일",
-              value: function (request, history) {
+              value: function (request, history, self) {
                 if (request.analytics.date.space.precheck.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
                   return null;
                 } else {
@@ -677,7 +678,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 "공실이 아니라면, <b%집 비는 날짜%b>를 알려주세요!"
               ],
               item: "집 비는 날",
-              value: function (request, history) {
+              value: function (request, history, self) {
                 if (request.analytics.date.space.empty.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
                   return null;
                 } else {
@@ -743,7 +744,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                   }
                 }
               },
-              value: function (request, history) {
+              value: function (request, history, self) {
                 if (history.curation.building.type === "") {
                   return null;
                 } else {
@@ -788,8 +789,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 "분양 면적 (공급 면적)",
                 "전용 면적",
               ],
-              value: function (request, history) {
-                return "분양 면적 (공급 면적)";
+              value: function (request, history, self) {
+                return self.items[0];
               },
               realItems: [
                 false,
@@ -843,7 +844,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             ],
             total: 100,
             ea: '%',
-            value: function (request, history) {
+            value: function (request, history, self) {
               return history.curation.furniture.ratio;
             },
             update: function (value, siblings, client) {
@@ -875,8 +876,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             ],
             multiple: false,
             notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
-            value: function (request, history) {
-              return history.curation.furniture.makeNeeds.furniture ? "있다" : "모르겠다";
+            value: function (request, history, self) {
+              return history.curation.furniture.makeNeeds.furniture ? self.items[0] : self.items[2];
             },
             update: function (value, siblings, client) {
               if (value === null) {
@@ -907,8 +908,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               "모르겠다",
             ],
             multiple: false,
-            value: function (request, history) {
-              return history.curation.furniture.makeNeeds.fabric ? "있다" : "모르겠다";
+            value: function (request, history, self) {
+              return history.curation.furniture.makeNeeds.fabric ? self.items[0] : self.items[2];
             },
             update: function (value, siblings, client) {
               if (value === null) {
@@ -941,7 +942,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             question: [
               "<b%생각하는 시공 정도%b>를 알려주세요!",
             ],
-            multiple: true,
+            multiple: false,
             items: [
               "시공 없이 홈퍼니싱만",
               "5개 이내의 부분 시공과 홈퍼니싱",
@@ -954,6 +955,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               "s2011_aa03s",
               "s2011_aa04s",
             ],
+            liteFreeze: true,
             exception: function (items, media) {
               const mother = items[0].parentNode;
               const grandMother = mother.parentNode;
@@ -972,27 +974,45 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 mother.style.paddingTop = String(0.5) + "vw";
               }
             },
-            value: function (request, history) {
+            value: function (request, history, self) {
               if (history.curation.service.serid.length === 0) {
                 return null;
               } else {
-                return history.curation.service.serid;
+                if (self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; }) === -1) {
+                  return null;
+                } else {
+                  return self.items[self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; })];
+                }
               }
             },
             update: function (value, siblings, client) {
               const { items, realItems, selected } = value;
               let historyQuery;
               let selectedSerid;
-
-              selectedSerid = selected.map((i) => { return realItems[i]; });
-
+              selectedSerid = [ realItems[selected] ];
               historyQuery = {};
               historyQuery["curation.service.serid"] = selectedSerid;
-
               return {
                 history: historyQuery,
                 core: null
               };
+            },
+            chain: function (siblings) {
+              const thisValue = siblings.construct.find((obj) => { return obj.name === "service"; }).value.map((obj) => { return obj.index; });
+              const target = siblings.construct.find((obj) => { return obj.name === "constructList"; });
+              if (target.dom !== null) {
+                const items = target.dom.children;
+                let children;
+                if (thisValue.length === 0 || thisValue.includes(0) || thisValue.includes(1)) {
+                  for (let s of items) {
+                    children = s.firstChild.children;
+                    for (let dom of children) {
+                      dom.style.color = dom.getAttribute("deactive");
+                    }
+                    s.setAttribute("toggle", "off");
+                  }
+                }
+              }
             }
           },
           {
@@ -1022,7 +1042,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               { name: "도배 공사", contents: "이전 상태에 따라 밑작업 난이도 상이" },
             ],
             multiple: true,
-            value: function (request, history) {
+            value: function (request, history, self) {
               if (history.curation.construct.items.length === 0) {
                 return null;
               } else {
@@ -1045,6 +1065,23 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                     core: null
                   };
                 }
+              }
+            },
+            limit: function (siblings) {
+              const standard = siblings.construct.find((obj) => { return obj.name === "service"; });
+              if (standard.value !== null) {
+                const button = standard.value.map((obj) => { return obj.index; })[0];
+                if (button === 0) {
+                  return null;
+                } else if (button === 1) {
+                  return { limit: 5, exception: [ 3, 9 ], alert: "주방, 욕실은 토탈 스타일링 이상부터 가능합니다." };
+                } else if (button === 2) {
+                  return { limit: 90000, exception: [], alert: "" };
+                } else if (button === 3) {
+                  return { limit: 90000, exception: [], alert: "" };
+                }
+              } else {
+                return null;
               }
             }
           },
@@ -1070,8 +1107,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 items[0].style.marginRight = String(20) + ea;
               }
             },
-            value: function (request, history) {
-              return history.curation.construct.living ? "거주중, 가구가 있는 상태" : "공실 상태";
+            value: function (request, history, self) {
+              return history.curation.construct.living ? self.items[0] : self.items[1];
             },
             update: function (value, siblings, client) {
               if (value === null) {
@@ -1085,6 +1122,29 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                   history: updateQuery,
                   core: null
                 };
+              }
+            },
+            chain: function (siblings) {
+              const self = siblings.construct.find((obj) => { return obj.name === "spotStatus"; });
+              const thisValue = self.value.map((obj) => { return obj.index; });
+              const target = siblings.construct.find((obj) => { return obj.name === "service"; });
+              if (target.dom !== null) {
+                if (thisValue.includes(0)) {
+                  if (GeneralJs.returnGet().mode === "lite") {
+                    if (target.value.length === 0) {
+                      window.alert("거주중일 경우, 시공에 한계가 있습니다!");
+                      self.dom.children[1].click();
+                    } else {
+                      if (target.value[0].index !== 0) {
+                        window.alert("거주중일 경우, 시공에 한계가 있습니다!");
+                        self.dom.children[1].click();
+                      }
+                    }
+                  } else {
+                    window.alert("거주중일 경우, 시공에 한계가 있습니다!");
+                    target.dom.children[0].click();
+                  }
+                }
               }
             }
           },
@@ -1843,7 +1903,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
     });
 
     instance.values[name][y].dom = answerArea;
-    updateValue = obj.value(instance.client.requests[0], instance.clientHistory);
+    updateValue = obj.value(instance.client.requests[0], instance.clientHistory, obj);
 
     if (obj.type === "address") {
       if (mobile) {
@@ -2068,54 +2128,59 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             {
               type: "click",
               event: function (e) {
-                const toggle = this.getAttribute("toggle");
-                const name = this.getAttribute("name");
-                const x = name;
-                const y = Number(this.getAttribute("y"));
-                const z = Number(this.getAttribute("z"));
-                const multiple = (this.getAttribute("multiple") === "true");
-                const siblings = document.querySelectorAll('.' + name + token + String(y));
-                const value = this.getAttribute("value");
-                let items;
-                if (toggle === "on") {
-                  this.children[0].style.color = colorChip.deactive;
-                  this.children[1].style.background = colorChip.gray3;
-                  this.setAttribute("toggle", "off");
-                } else {
-                  if (!multiple) {
-                    for (let s of siblings) {
-                      if (s !== this) {
-                        s.children[0].style.color = colorChip.deactive;
-                        s.children[1].style.background = colorChip.gray3;
-                        s.setAttribute("toggle", "off");
-                      } else {
-                        this.children[0].style.color = colorChip.green;
-                        this.children[1].style.background = colorChip.green;
-                        this.setAttribute("toggle", "on");
-                      }
-                    }
+                if (!(GeneralJs.returnGet().mode === "lite" && obj.liteFreeze === true && !instance.firstClick)) {
+                  const toggle = this.getAttribute("toggle");
+                  const name = this.getAttribute("name");
+                  const x = name;
+                  const y = Number(this.getAttribute("y"));
+                  const z = Number(this.getAttribute("z"));
+                  const multiple = (this.getAttribute("multiple") === "true");
+                  const siblings = document.querySelectorAll('.' + name + token + String(y));
+                  const value = this.getAttribute("value");
+                  let items;
+                  if (toggle === "on") {
+                    this.children[0].style.color = colorChip.deactive;
+                    this.children[1].style.background = colorChip.gray3;
+                    this.setAttribute("toggle", "off");
                   } else {
-                    this.children[0].style.color = colorChip.green;
-                    this.children[1].style.background = colorChip.green;
-                    this.setAttribute("toggle", "on");
+                    if (!multiple) {
+                      for (let s of siblings) {
+                        if (s !== this) {
+                          s.children[0].style.color = colorChip.deactive;
+                          s.children[1].style.background = colorChip.gray3;
+                          s.setAttribute("toggle", "off");
+                        } else {
+                          this.children[0].style.color = colorChip.green;
+                          this.children[1].style.background = colorChip.green;
+                          this.setAttribute("toggle", "on");
+                        }
+                      }
+                    } else {
+                      this.children[0].style.color = colorChip.green;
+                      this.children[1].style.background = colorChip.green;
+                      this.setAttribute("toggle", "on");
+                    }
                   }
-                }
-                instance.values[x][y].value = [];
-                for (let s of siblings) {
-                  if (s.getAttribute("toggle") === "on") {
-                    instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
+                  instance.values[x][y].value = [];
+                  for (let s of siblings) {
+                    if (s.getAttribute("toggle") === "on") {
+                      instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
+                    }
                   }
+                  if (obj.chain !== undefined) {
+                    obj.chain(instance.values);
+                  }
+                  ajaxJson({
+                    userAgent: window.navigator.userAgent,
+                    referrer: document.referrer,
+                    ip: instance.ip,
+                    mode: "update",
+                    cliid: instance.client.cliid,
+                    update: { x, y, value: instance.values[x][y].value }
+                  }, "/styleCuration_updateAnalytics").catch((err) => {
+                    console.log(err);
+                  });
                 }
-                ajaxJson({
-                  userAgent: window.navigator.userAgent,
-                  referrer: document.referrer,
-                  ip: instance.ip,
-                  mode: "update",
-                  cliid: instance.client.cliid,
-                  update: { x, y, value: instance.values[x][y].value }
-                }, "/styleCuration_updateAnalytics").catch((err) => {
-                  console.log(err);
-                });
               }
             }
           ],
@@ -2155,6 +2220,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         obj.exception(itemDoms, media);
       }
 
+      instance.firstClick = true;
       if (updateValue !== null) {
         if (obj.multiple) {
           for (let i of itemDoms) {
@@ -2170,6 +2236,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           }
         }
       }
+      instance.firstClick = false;
 
     } else if (obj.type === "opposite") {
 
@@ -2406,6 +2473,9 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 const z = Number(this.getAttribute('z'));
                 const siblings = document.querySelectorAll('.' + name + listToken + String(y));
                 const children = this.firstChild.children;
+                let limitStandard;
+                let siblingsChildren, limitNum;
+
                 if (toggle === "off") {
                   for (let dom of children) {
                     dom.style.color = dom.getAttribute("active");
@@ -2417,7 +2487,48 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   }
                   this.setAttribute("toggle", "off");
                 }
+
                 instance.values[x][y].value = [];
+
+                limitStandard = obj.limit(instance.values);
+                if (limitStandard === null) {
+                  for (let s of siblings) {
+                    siblingsChildren = s.firstChild.children;
+                    for (let dom of siblingsChildren) {
+                      dom.style.color = dom.getAttribute("deactive");
+                    }
+                    s.setAttribute("toggle", "off");
+                  }
+                } else {
+
+                  if (toggle === "off" && limitStandard.exception.includes(z)) {
+                    window.alert(limitStandard.alert);
+                    for (let dom of children) {
+                      dom.style.color = dom.getAttribute("deactive");
+                    }
+                    this.setAttribute("toggle", "off");
+                  }
+
+                  limitNum = 0;
+                  for (let s of siblings) {
+                    if (s.getAttribute("toggle") === "on") {
+                      limitNum = limitNum + 1;
+                    }
+                  }
+                  if (toggle === "off" && limitNum > limitStandard.limit) {
+                    for (let dom of children) {
+                      dom.style.color = dom.getAttribute("deactive");
+                    }
+                    this.setAttribute("toggle", "off");
+                  }
+                  limitNum = 0;
+                  for (let s of siblings) {
+                    if (s.getAttribute("toggle") === "on") {
+                      limitNum = limitNum + 1;
+                    }
+                  }
+                }
+
                 for (let s of siblings) {
                   if (s.getAttribute("toggle") === "on") {
                     instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
@@ -2698,6 +2809,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
 StyleCurationJs.prototype.parsingValues = function () {
   const instance = this;
+  const { ajaxJson, returnGet } = GeneralJs;
+  const { cancel, loading } = this.mother.grayLoading();
   let center, temp;
   let items, realItems, selected;
   let coreQuery, historyQuery;
@@ -2750,42 +2863,39 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }
 
-  GeneralJs.ajaxJson({ cliid: this.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation").then((obj) => {
+  ajaxJson({ cliid: this.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation").then((obj) => {
     if (Object.keys(obj).length === 0) {
       window.alert("오류가 발생하였습니다!");
       window.reload();
     } else {
       const { service, client, history } = obj;
-      let totalMust, tempArr;
-      let userSerid, calculSerid;
-      let userSeridSet, calculSeridSet;
+
+      if (service.length === 0) {
+        if (returnGet().mode === "lite") {
+          window.alert("매칭되는 경우가 없어 진행할 수 없습니다. 홈리에종에 카카오 채널 또는 전화를 통해 문의해주세요!");
+          window.location.reload();
+        } else {
+          window.alert("매칭되는 경우가 없습니다, 생각하는 시공 정도를 조정해주세요!");
+          window.location.reload();
+        }
+      }
 
       instance.client = client;
       instance.clientHistory = history;
-      userSerid = history.curation.service.serid;
-      calculSerid = service.serid.map((obj) => { return obj.serid; });
-
-      userSeridSet = new Set(userSerid);
-      calculSeridSet = new Set(calculSerid);
-
-      finalSerid = Array.from(userSeridSet.intersection(calculSeridSet));
-
-      if (finalSerid.length === 0) {
-        finalSerid = calculSerid;
-      }
+      finalSerid = history.curation.service.serid;
 
       finalSerid = finalSerid.map((serid) => {
-        let obj;
+        let feeArr;
         let min, max;
-        for (let s of service.serid) {
-          if (s.serid === serid) {
-            obj = s;
-            break;
+        feeArr = [];
+        for (let { fee } of service) {
+          for (let { amount } of fee) {
+            feeArr.push(amount);
           }
         }
-        obj.fee.sort((a, b) => { return a - b; });
-        min = Math.floor(obj.fee[0] / 1000000);
-        max = Math.ceil(obj.fee[obj.fee.length - 1] / 1000000);
+        feeArr.sort((a, b) => { return a - b; });
+        min = Math.floor(feeArr[0] / 100000) / 10;
+        max = Math.ceil(feeArr[feeArr.length - 1] / 1000000);
         return { serid, min, max };
       });
 
@@ -2793,23 +2903,18 @@ StyleCurationJs.prototype.parsingValues = function () {
         window.alert("오류가 발생하였습니다!");
         window.reload();
       } else {
+        loading.parentElement.removeChild(loading);
+        cancel.parentElement.removeChild(cancel);
         GeneralJs.scrollTo(window, 0);
-        return GeneralJs.ajaxJson({
+        return ajaxJson({
+          userAgent: window.navigator.userAgent,
+          referrer: document.referrer,
+          ip: instance.ip,
+          mode: "submit",
           cliid: instance.client.cliid,
-          historyQuery: { "curation.service.serid": finalSerid.map((obj) => { return obj.serid }) },
-          coreQuery: {},
-          mode: "update",
-        }, "/styleCuration_updateCalculation");
+        }, "/styleCuration_updateAnalytics");
       }
     }
-  }).then(() => {
-    return GeneralJs.ajaxJson({
-      userAgent: window.navigator.userAgent,
-      referrer: document.referrer,
-      ip: instance.ip,
-      mode: "submit",
-      cliid: instance.client.cliid,
-    }, "/styleCuration_updateAnalytics");
   }).then(() => {
     return instance.serviceConverting(finalSerid);
   }).then((message) => {
@@ -2819,6 +2924,7 @@ StyleCurationJs.prototype.parsingValues = function () {
   }).catch((err) => {
     console.log(err);
   });
+
 }
 
 StyleCurationJs.prototype.insertInitBox = function (curation = true) {
@@ -4592,7 +4698,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   const instance = this;
   const { ea, baseTong } = this;
   const { backgroundImageBox, backgroundImageBox2 } = this.mother;
-  const { cleanChildren, ajaxJson } = GeneralJs;
+  const { cleanChildren, ajaxJson, returnGet } = GeneralJs;
   const children = baseTong.children;
   try {
     await ajaxJson({
@@ -4600,6 +4706,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
       referrer: document.referrer,
       ip: instance.ip,
       mode: "page",
+      liteMode: (returnGet().mode === "lite"),
       cliid: instance.client.cliid,
     }, "/styleCuration_updateAnalytics");
     backgroundImageBox2.style.opacity = String(1);
@@ -4640,7 +4747,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
 
-    this.ip = (await requestPromise("https://icanhazip.com")).trim().replace(/[0-9\.]/gi, '');
+    this.ip = (await requestPromise(BRIDGEHOST + "/ip")).trim().replace(/[^0-9\.]/gi, '');
 
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
@@ -4660,6 +4767,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
       referrer: document.referrer,
       ip: this.ip,
       mode: "page",
+      liteMode: liteMode,
       cliid: client.cliid,
     }, "/styleCuration_updateAnalytics");
 

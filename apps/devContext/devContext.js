@@ -34,6 +34,7 @@ const NaverBlogParsing = require(APP_PATH + "/naverAPIs/naverBlogParsing.js");
 const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
 const ReceiptObserver = require(APP_PATH + "/receiptObserver/receiptObserver.js");
 const GraphicBot = require(APP_PATH + "/graphicBot/graphicBot.js");
+const GaroseroParser = require(APP_PATH + "/garoseroParser/garoseroParser.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -48,7 +49,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -61,15 +62,24 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOLOCALC;
 
+    // const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    // await selfMongo.connect();
 
+    const collection = "clientHistory";
+    const rows = await back.mongoRead(collection, {}, { selfMongo });
+    let whereQuery, updateQuery;
 
-    
+    for (let r of rows) {
+      whereQuery = { cliid: r.cliid };
+      updateQuery = {};
+      updateQuery["curation.analytics.full"] = false;
+      await selfMongo.db(`miro81`).collection(collection).updateMany(whereQuery, { $set: updateQuery });
+      console.log(whereQuery);
+    }
 
-
-
-
-
+    // await selfMongo.close();
 
 
 

@@ -1287,7 +1287,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
 DataRouter.prototype.rou_post_updateHistory = function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, equalJson } = this.mother;
   const back = this.back;
   const members = this.members;
   let obj = {};
@@ -1295,7 +1295,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
   obj.func = async function (req, res) {
     try {
       const today = new Date();
-      const { id, column, value, email } = req.body;
+      const { id, column, value, email } = equalJson(req.body);
       const logDir = `${instance.dir}/log`;
       let historyObj;
       let whereQuery, updateQuery;
@@ -1860,7 +1860,7 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
       if (req.body.id === undefined) {
         throw new Error("must be cliid");
       }
-      const selected = await work.designerCuration(req.body.id, 4, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
+      const selected = await work.designerCuration(req.body.id, 4, [], { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal, noCalculation: true });
       res.set("Content-Type", "application/json");
       if (selected.length === 0) {
         res.send(JSON.stringify({ result: null }));

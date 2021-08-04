@@ -4405,3 +4405,43 @@ GeneralJs.prototype.communicationBox = function () {
   });
 
 }
+
+GeneralJs.prototype.grayLoading = function () {
+  const instance = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
+  let width, ea;
+  let cancel, loading;
+
+  ea = <%% "px", "px", "px", "px", "vw" %%>;
+  width = <%% 50, 50, 50, 40, 10 %%>;
+
+  cancel = createNode({
+    mother: document.body,
+    style: {
+      position: "fixed",
+      top: String(0),
+      left: String(0),
+      width: String(100) + '%',
+      height: String(100) + '%',
+      background: colorChip.black,
+      opacity: String(0.4),
+      zIndex: String(2),
+    }
+  });
+  loading = createNode({
+    mother: document.body,
+    mode: "svg",
+    source: this.returnLoading(),
+    class: [ "loading" ],
+    style: {
+      position: "fixed",
+      top: withOut(50, width / 2, ea),
+      left: withOut(50, width / 2, ea),
+      width: String(width) + ea,
+      height: String(width) + ea,
+      zIndex: String(2),
+    }
+  });
+
+  return { cancel, loading };
+}
