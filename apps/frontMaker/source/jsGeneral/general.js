@@ -1637,15 +1637,41 @@ GeneralJs.protoPatch = async function (instance, modulePath, protoName = null) {
 }
 
 GeneralJs.equalJson = function (jsonString) {
-  if (typeof jsonString === "object") {
-    jsonString = JSON.stringify(jsonString);
+  const equal = function (jsonString) {
+    if (typeof jsonString === "object") {
+      jsonString = JSON.stringify(jsonString);
+    }
+    if (typeof jsonString !== "string") {
+      jsonString = String(jsonString);
+    }
+    let filtered;
+    filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
+    filtered = filtered.replace(/nbsp\;/g, "&nbsp;");
+    const tempFunc = new Function("const obj = " + filtered + "; return obj;");
+    const json = tempFunc();
+    let temp, boo;
+    if (typeof json === "object") {
+      for (let i in json) {
+        if (typeof json[i] === "string") {
+          if (/^[\{\[]/.test(json[i].trim()) && /[\}\]]$/.test(json[i].trim())) {
+            try {
+              temp = JSON.parse(json[i]);
+              boo = true;
+            } catch (e) {
+              boo = false;
+            }
+            if (boo) {
+              json[i] = equal(json[i]);
+            }
+          }
+        }
+      }
+      return json;
+    } else {
+      return jsonString;
+    }
   }
-  let filtered;
-  filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
-  filtered = filtered.replace(/nbsp\;/g, "&nbsp;");
-  const tempFunc = new Function("const obj = " + filtered + "; return obj;");
-  const json = tempFunc();
-  return json;
+  return equal(jsonString);
 }
 
 GeneralJs.autoComma = function (str) {

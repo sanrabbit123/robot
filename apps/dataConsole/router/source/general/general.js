@@ -4406,7 +4406,10 @@ GeneralJs.prototype.communicationBox = function () {
 
 }
 
-GeneralJs.prototype.grayLoading = function () {
+GeneralJs.prototype.grayLoading = function (mother = null) {
+  if (typeof mother !== "object" || mother !== null) {
+    throw new Error("input must be dom");
+  }
   const instance = this;
   const { createNode, colorChip, withOut } = GeneralJs;
   let width, ea;
@@ -4415,8 +4418,22 @@ GeneralJs.prototype.grayLoading = function () {
   ea = <%% "px", "px", "px", "px", "vw" %%>;
   width = <%% 50, 50, 50, 40, 10 %%>;
 
+  const GrayLoading = function (cancel, loading) {
+    this.cancel = cancel;
+    this.loading = loading;
+  }
+
+  GrayLoading.prototype.remove = function () {
+    this.loading.parentElement.removeChild(this.loading);
+    this.cancel.parentElement.removeChild(this.cancel);
+  }
+
+  if (mother === null || mother === undefined) {
+    mother = document.body;
+  }
+
   cancel = createNode({
-    mother: document.body,
+    mother,
     style: {
       position: "fixed",
       top: String(0),
@@ -4424,12 +4441,13 @@ GeneralJs.prototype.grayLoading = function () {
       width: String(100) + '%',
       height: String(100) + '%',
       background: colorChip.black,
-      opacity: String(0.4),
       zIndex: String(2),
+      animation: "justfadein 0.3s ease forwards",
     }
   });
+
   loading = createNode({
-    mother: document.body,
+    mother,
     mode: "svg",
     source: this.returnLoading(),
     class: [ "loading" ],
@@ -4443,5 +4461,5 @@ GeneralJs.prototype.grayLoading = function () {
     }
   });
 
-  return { cancel, loading };
+  return (new GrayLoading(cancel, loading));
 }

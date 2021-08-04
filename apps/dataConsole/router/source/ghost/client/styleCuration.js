@@ -955,7 +955,6 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               "s2011_aa03s",
               "s2011_aa04s",
             ],
-            liteFreeze: true,
             exception: function (items, media) {
               const mother = items[0].parentNode;
               const grandMother = mother.parentNode;
@@ -1130,20 +1129,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               const target = siblings.construct.find((obj) => { return obj.name === "service"; });
               if (target.dom !== null) {
                 if (thisValue.includes(0)) {
-                  if (GeneralJs.returnGet().mode === "lite") {
-                    if (target.value.length === 0) {
-                      window.alert("거주중일 경우, 시공에 한계가 있습니다!");
-                      self.dom.children[1].click();
-                    } else {
-                      if (target.value[0].index !== 0) {
-                        window.alert("거주중일 경우, 시공에 한계가 있습니다!");
-                        self.dom.children[1].click();
-                      }
-                    }
-                  } else {
-                    window.alert("거주중일 경우, 시공에 한계가 있습니다!");
-                    target.dom.children[0].click();
-                  }
+                  window.alert("거주중일 경우, 시공에 한계가 있습니다!");
+                  target.dom.children[0].click();
                 }
               }
             }
@@ -2128,59 +2115,57 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             {
               type: "click",
               event: function (e) {
-                if (!(GeneralJs.returnGet().mode === "lite" && obj.liteFreeze === true && !instance.firstClick)) {
-                  const toggle = this.getAttribute("toggle");
-                  const name = this.getAttribute("name");
-                  const x = name;
-                  const y = Number(this.getAttribute("y"));
-                  const z = Number(this.getAttribute("z"));
-                  const multiple = (this.getAttribute("multiple") === "true");
-                  const siblings = document.querySelectorAll('.' + name + token + String(y));
-                  const value = this.getAttribute("value");
-                  let items;
-                  if (toggle === "on") {
-                    this.children[0].style.color = colorChip.deactive;
-                    this.children[1].style.background = colorChip.gray3;
-                    this.setAttribute("toggle", "off");
-                  } else {
-                    if (!multiple) {
-                      for (let s of siblings) {
-                        if (s !== this) {
-                          s.children[0].style.color = colorChip.deactive;
-                          s.children[1].style.background = colorChip.gray3;
-                          s.setAttribute("toggle", "off");
-                        } else {
-                          this.children[0].style.color = colorChip.green;
-                          this.children[1].style.background = colorChip.green;
-                          this.setAttribute("toggle", "on");
-                        }
+                const toggle = this.getAttribute("toggle");
+                const name = this.getAttribute("name");
+                const x = name;
+                const y = Number(this.getAttribute("y"));
+                const z = Number(this.getAttribute("z"));
+                const multiple = (this.getAttribute("multiple") === "true");
+                const siblings = document.querySelectorAll('.' + name + token + String(y));
+                const value = this.getAttribute("value");
+                let items;
+                if (toggle === "on") {
+                  this.children[0].style.color = colorChip.deactive;
+                  this.children[1].style.background = colorChip.gray3;
+                  this.setAttribute("toggle", "off");
+                } else {
+                  if (!multiple) {
+                    for (let s of siblings) {
+                      if (s !== this) {
+                        s.children[0].style.color = colorChip.deactive;
+                        s.children[1].style.background = colorChip.gray3;
+                        s.setAttribute("toggle", "off");
+                      } else {
+                        this.children[0].style.color = colorChip.green;
+                        this.children[1].style.background = colorChip.green;
+                        this.setAttribute("toggle", "on");
                       }
-                    } else {
-                      this.children[0].style.color = colorChip.green;
-                      this.children[1].style.background = colorChip.green;
-                      this.setAttribute("toggle", "on");
                     }
+                  } else {
+                    this.children[0].style.color = colorChip.green;
+                    this.children[1].style.background = colorChip.green;
+                    this.setAttribute("toggle", "on");
                   }
-                  instance.values[x][y].value = [];
-                  for (let s of siblings) {
-                    if (s.getAttribute("toggle") === "on") {
-                      instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
-                    }
-                  }
-                  if (obj.chain !== undefined) {
-                    obj.chain(instance.values);
-                  }
-                  ajaxJson({
-                    userAgent: window.navigator.userAgent,
-                    referrer: document.referrer,
-                    ip: instance.ip,
-                    mode: "update",
-                    cliid: instance.client.cliid,
-                    update: { x, y, value: instance.values[x][y].value }
-                  }, "/styleCuration_updateAnalytics").catch((err) => {
-                    console.log(err);
-                  });
                 }
+                instance.values[x][y].value = [];
+                for (let s of siblings) {
+                  if (s.getAttribute("toggle") === "on") {
+                    instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
+                  }
+                }
+                if (obj.chain !== undefined) {
+                  obj.chain(instance.values);
+                }
+                ajaxJson({
+                  userAgent: window.navigator.userAgent,
+                  referrer: document.referrer,
+                  ip: instance.ip,
+                  mode: "update",
+                  cliid: instance.client.cliid,
+                  update: { x, y, value: instance.values[x][y].value }
+                }, "/styleCuration_updateAnalytics").catch((err) => {
+                  console.log(err);
+                });
               }
             }
           ],
@@ -2810,7 +2795,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 StyleCurationJs.prototype.parsingValues = function () {
   const instance = this;
   const { ajaxJson, returnGet } = GeneralJs;
-  const { cancel, loading } = this.mother.grayLoading();
+  const grayLoading = this.mother.grayLoading();
   let center, temp;
   let items, realItems, selected;
   let coreQuery, historyQuery;
@@ -2903,8 +2888,7 @@ StyleCurationJs.prototype.parsingValues = function () {
         window.alert("오류가 발생하였습니다!");
         window.reload();
       } else {
-        loading.parentElement.removeChild(loading);
-        cancel.parentElement.removeChild(cancel);
+        grayLoading.remove();
         GeneralJs.scrollTo(window, 0);
         return ajaxJson({
           userAgent: window.navigator.userAgent,
