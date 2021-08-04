@@ -775,40 +775,32 @@ Ghost.prototype.ghostRouter = function (needs) {
       let target, text;
       target = "http://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port[0]);
       text = (req.body.text === undefined ? "안녕하세요!" : req.body.text);
-
-      audio.textToMp3(text).then((file) => {
-
-        
-
-      })
-
-
-      // headRequest(target + "/confirm").then(async (response) => {
-      //   const { statusCode } = response;
-      //   let raw, res, doing;
-      //   if (statusCode === 200) {
-      //     raw = await requestSystem(target + "/confirm");
-      //     if (raw.data.doing !== undefined) {
-      //       await sleep(1000);
-      //       doing = raw.data.doing;
-      //       while (doing === 1) {
-      //         console.log("waiting...");
-      //         await sleep(1000);
-      //         raw = await requestSystem(target + "/confirm");
-      //         if (raw.data.doing !== undefined) {
-      //           doing = raw.data.doing;
-      //         } else {
-      //           doing = 2;
-      //         }
-      //       }
-      //       if (doing === 0) {
-      //         await requestSystem(target + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
-      //       }
-      //     }
-      //   }
-      // }).catch((err) => {
-      //   console.log(err);
-      // });
+      headRequest(target + "/confirm").then(async (response) => {
+        const { statusCode } = response;
+        let raw, res, doing;
+        if (statusCode === 200) {
+          raw = await requestSystem(target + "/confirm");
+          if (raw.data.doing !== undefined) {
+            await sleep(1000);
+            doing = raw.data.doing;
+            while (doing === 1) {
+              console.log("waiting...");
+              await sleep(1000);
+              raw = await requestSystem(target + "/confirm");
+              if (raw.data.doing !== undefined) {
+                doing = raw.data.doing;
+              } else {
+                doing = 2;
+              }
+            }
+            if (doing === 0) {
+              await requestSystem(target + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
+            }
+          }
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
       res.send(JSON.stringify({ message: "will do" }));
     }
   };
@@ -1893,6 +1885,9 @@ Ghost.prototype.robotPassLaunching = async function () {
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
   const robotPassPort = 8080;
+  const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
+  const audio = new PlayAudio();
+  let doing;
 
   app.use(useragent.express());
   app.use(bodyParser.json());
@@ -1920,6 +1915,8 @@ Ghost.prototype.robotPassLaunching = async function () {
       runProcess[b] = 0;
       runList[b] = [];
     }
+
+    doing = 0;
 
     const runAi = async function (button) {
       try {
@@ -1972,6 +1969,25 @@ Ghost.prototype.robotPassLaunching = async function () {
       } catch (e) {
         console.log(e);
       }
+    });
+
+    app.post("/voice", async (req, res) => {
+      try {
+        res.set("Content-Type", "application/json");
+        audio.textToVoice(req.body.text).then((r) => {
+          console.log(r);
+        }).catch((err) => {
+          console.log(err);
+        });
+        res.send({ message: "will do" });
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.get("/confirm", (req, res) => {
+        res.set("Content-Type", "application/json");
+        res.send({ doing });
     });
 
     //server on

@@ -267,6 +267,7 @@ const textToVoice = async function (text = "안녕하세요?") {
     // shell.exec(command, { silent: true });
     // await play(`${tempDir}/${fileName}`);
     // shell.exec(`rm -rf ${tempDir}/${fileName}`, { silent: true });
+    
     doing = 0;
     return "voice done";
   } catch (e) {
