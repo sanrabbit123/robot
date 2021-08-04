@@ -136,6 +136,8 @@ PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
     command += `-d '<speak>${text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '')}</speak>'`;
     command += ` > ${shellLink(tempDir)}/${fileName}`;
 
+    shell.exec(command, { silent: true });
+
     return (tempDir + "/" + fileName);
 
   } catch (e) {

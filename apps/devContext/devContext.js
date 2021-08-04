@@ -62,11 +62,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
+    console.log(await ghostRequest("voice", { text: "안녕안녕?" }));
 
 
 
