@@ -147,10 +147,10 @@ DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
   obj.link = "/styleCuration_updateAnalytics";
   obj.func = async function (req, res) {
     try {
-      if (req.body.userAgent === undefined || req.body.referrer === undefined || req.body.mode === undefined || req.body.cliid === undefined) {
+      if (req.body.userAgent === undefined || req.body.referrer === undefined || req.body.mode === undefined || req.body.cliid === undefined || req.body.ip === undefined) {
         throw new Error("invaild post");
       }
-      const { userAgent, referrer, mode, cliid } = req.body;
+      const { userAgent, referrer, mode, cliid, ip } = req.body;
       let whereQuery, updateQuery;
       let history;
       let update;
@@ -165,7 +165,7 @@ DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
 
       if (mode === "page") {
 
-        history.curation.analytics.page.push({ date: new Date(), referrer, userAgent });
+        history.curation.analytics.page.push({ date: new Date(), referrer, userAgent, ip });
         updateQuery = {};
         updateQuery["curation.analytics.page"] = history.curation.analytics.page;
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
@@ -173,14 +173,14 @@ DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
       } else if (mode === "update") {
 
         update = equalJson(req.body.update);
-        history.curation.analytics.update.push({ date: new Date(), referrer, userAgent, update });
+        history.curation.analytics.update.push({ date: new Date(), referrer, userAgent, ip, update });
         updateQuery = {};
         updateQuery["curation.analytics.update"] = history.curation.analytics.update;
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       } else if (mode === "submit") {
 
-        history.curation.analytics.submit.push({ date: new Date(), referrer, userAgent });
+        history.curation.analytics.submit.push({ date: new Date(), referrer, userAgent, ip });
         updateQuery = {};
         updateQuery["curation.analytics.submit"] = history.curation.analytics.submit;
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });

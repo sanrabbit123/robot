@@ -1207,6 +1207,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       ajaxJson({
         userAgent: window.navigator.userAgent,
         referrer: document.referrer,
+        ip: instance.ip,
         mode: "update",
         cliid: instance.client.cliid,
         update: { x: "style", y: 0, value: instance.values.style[0].value }
@@ -1214,6 +1215,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
         return ajaxJson({
           userAgent: window.navigator.userAgent,
           referrer: document.referrer,
+          ip: instance.ip,
           mode: "image",
           cliid: instance.client.cliid,
           image: image
@@ -1959,6 +1961,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       ajaxJson({
                         userAgent: window.navigator.userAgent,
                         referrer: document.referrer,
+                        ip: instance.ip,
                         mode: "update",
                         cliid: instance.client.cliid,
                         update: { x, y, value: instance.values[x][y].value }
@@ -2002,6 +2005,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     ajaxJson({
                       userAgent: window.navigator.userAgent,
                       referrer: document.referrer,
+                      ip: instance.ip,
                       mode: "update",
                       cliid: instance.client.cliid,
                       update: { x, y, value: instance.values[x][y].value }
@@ -2105,6 +2109,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 ajaxJson({
                   userAgent: window.navigator.userAgent,
                   referrer: document.referrer,
+                  ip: instance.ip,
                   mode: "update",
                   cliid: instance.client.cliid,
                   update: { x, y, value: instance.values[x][y].value }
@@ -2292,6 +2297,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         ajaxJson({
           userAgent: window.navigator.userAgent,
           referrer: document.referrer,
+          ip: instance.ip,
           mode: "update",
           cliid: instance.client.cliid,
           update: { x, y, value: instance.values[x][y].value }
@@ -2420,6 +2426,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 ajaxJson({
                   userAgent: window.navigator.userAgent,
                   referrer: document.referrer,
+                  ip: instance.ip,
                   mode: "update",
                   cliid: instance.client.cliid,
                   update: { x, y, value: instance.values[x][y].value }
@@ -2566,6 +2573,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 ajaxJson({
                   userAgent: window.navigator.userAgent,
                   referrer: document.referrer,
+                  ip: instance.ip,
                   mode: "update",
                   cliid: instance.client.cliid,
                   update: { x, y, value: instance.values[x][y].value }
@@ -2798,6 +2806,7 @@ StyleCurationJs.prototype.parsingValues = function () {
     return GeneralJs.ajaxJson({
       userAgent: window.navigator.userAgent,
       referrer: document.referrer,
+      ip: instance.ip,
       mode: "submit",
       cliid: instance.client.cliid,
     }, "/styleCuration_updateAnalytics");
@@ -4589,6 +4598,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
     await ajaxJson({
       userAgent: window.navigator.userAgent,
       referrer: document.referrer,
+      ip: instance.ip,
       mode: "page",
       cliid: instance.client.cliid,
     }, "/styleCuration_updateAnalytics");
@@ -4616,7 +4626,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise } = GeneralJs;
     const getObj = returnGet();
     let cliid;
     let clients, client;
@@ -4629,6 +4639,8 @@ StyleCurationJs.prototype.launching = async function (loading) {
       window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
+
+    this.ip = (await requestPromise("https://icanhazip.com")).trim().replace(/[0-9\.]/gi, '');
 
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
@@ -4646,6 +4658,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     await ajaxJson({
       userAgent: window.navigator.userAgent,
       referrer: document.referrer,
+      ip: this.ip,
       mode: "page",
       cliid: client.cliid,
     }, "/styleCuration_updateAnalytics");

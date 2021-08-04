@@ -298,7 +298,24 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       res.set({ "Content-Type": "text/plain" });
       res.send('this is new bridge cloud');
     } catch (e) {
-      slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
+      slack_bot.chat.postMessage({ text: "bridge 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+
+  //GET - ip
+  funcObj.get_ip = async function (req, res) {
+    try {
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(String(ip).replace(/[^0-9\.]/gi, ''));
+    } catch (e) {
+      slack_bot.chat.postMessage({ text: "bridge 서버 문제 생김 : " + e, channel: "#error_log" });
       console.log(e);
     }
   }
