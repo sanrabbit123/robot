@@ -486,7 +486,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
 
         console.log(message);
-        ghostRequest("/print", {}).catch((err) => {
+        ghostRequest("/print", {}).then(() => {
+          return ghostRequest("/voice", { text: "새로운 상담 문의가 왔어요! 성함은 " + requestObj["name"] + " 고객님 입니다." });
+        }).catch((err) => {
           console.log(err);
         });
 

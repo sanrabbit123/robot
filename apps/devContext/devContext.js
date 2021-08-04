@@ -65,10 +65,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await requestSystem("http://172.30.1.5:8080/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
-
-
-
 
 
 
