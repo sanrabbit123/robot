@@ -62,7 +62,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await ghostRequest("voice", { text: "안녕안녕?" }));
+
+
+
+    await requestSystem("http://172.30.1.5:8080/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
+
+
 
 
 
