@@ -65,7 +65,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await requestSystem("http://172.30.1.49:8080/voice", { text: "안녕?" }, { headers: { "Content-Type": "application/json" } });
 
 
 
@@ -715,7 +714,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p101");
+    // await this.spellCheck("p105");
 
 
     // get rawPortfolio by pid
@@ -1352,12 +1351,12 @@ DevContext.prototype.spellCheck = async function (porlid) {
     for (let i of targetArr) {
       temp = await app.paragraphChecker(i);
       fixString = hangul.fixString(temp);
-      console.log(fixString)
+      console.log(fixString);
       updateArr.push(fixString);
     }
     console.log(updateArr);
     updateArr.shift();
-    await note.updateNote(updateArr.join('<br><br>'));
+    await note.updateNote(updateArr.join('<br><br>').replace(/\"/gi, "'"));
   } catch (e) {
     console.log(e);
   }

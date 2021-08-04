@@ -279,6 +279,8 @@ Ghost.prototype.ghostRouter = function (needs) {
   const back = this.back;
   const [ MONGOC, MONGOLOCALC ] = needs;
   const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep } = this.mother;
+  const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
+  const audio = new PlayAudio();
   let funcObj = {};
 
   //GET - ssl test
@@ -773,32 +775,40 @@ Ghost.prototype.ghostRouter = function (needs) {
       let target, text;
       target = "http://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port[0]);
       text = (req.body.text === undefined ? "안녕하세요!" : req.body.text);
-      headRequest(target + "/confirm").then(async (response) => {
-        const { statusCode } = response;
-        let raw, res, doing;
-        if (statusCode === 200) {
-          raw = await requestSystem(target + "/confirm");
-          if (raw.data.doing !== undefined) {
-            await sleep(1000);
-            doing = raw.data.doing;
-            while (doing === 1) {
-              console.log("waiting...");
-              await sleep(1000);
-              raw = await requestSystem(target + "/confirm");
-              if (raw.data.doing !== undefined) {
-                doing = raw.data.doing;
-              } else {
-                doing = 2;
-              }
-            }
-            if (doing === 0) {
-              await requestSystem(target + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
-            }
-          }
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
+
+      audio.textToMp3(text).then((file) => {
+
+
+
+      })
+
+
+      // headRequest(target + "/confirm").then(async (response) => {
+      //   const { statusCode } = response;
+      //   let raw, res, doing;
+      //   if (statusCode === 200) {
+      //     raw = await requestSystem(target + "/confirm");
+      //     if (raw.data.doing !== undefined) {
+      //       await sleep(1000);
+      //       doing = raw.data.doing;
+      //       while (doing === 1) {
+      //         console.log("waiting...");
+      //         await sleep(1000);
+      //         raw = await requestSystem(target + "/confirm");
+      //         if (raw.data.doing !== undefined) {
+      //           doing = raw.data.doing;
+      //         } else {
+      //           doing = 2;
+      //         }
+      //       }
+      //       if (doing === 0) {
+      //         await requestSystem(target + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
+      //       }
+      //     }
+      //   }
+      // }).catch((err) => {
+      //   console.log(err);
+      // });
       res.send(JSON.stringify({ message: "will do" }));
     }
   };

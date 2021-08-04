@@ -250,6 +250,7 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "새시", "샤시" ],
     [ "딥 그린", "딥그린" ],
     [ "커튼 봉", "커튼봉" ],
+    [ "빅포 스터", "빅포스터" ],
   ];
   try {
     let resultArr = [];

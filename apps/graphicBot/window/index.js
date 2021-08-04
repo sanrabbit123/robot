@@ -6,6 +6,8 @@ const { exec, execFile } = require("child_process");
 const keypress = require("keypress");
 const screenSize = robot.getScreenSize();
 const shell = require("shelljs");
+const fs = require("fs");
+const axios = require("axios");
 const sleep = function (ms) {
   if (typeof ms !== "number") {
     throw new Error("must be number");
@@ -243,22 +245,28 @@ const textToVoice = async function (text = "안녕하세요?") {
       });
     }
 
-    let restapiKey, command, tempDir, fileName, randoms;
+    let restapiKey, command, tempDir, fileName, randoms, response;
 
     doing = 1;
     restapiKey = "e0d7657d8f0da70f3df436046728c0a0";
     text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)]/g, '');
     tempDir = process.cwd() + "/temp";
     fileName = `tempVoiceRecord_${String((new Date()).valueOf())}.mp3`;
-    command = ``;
-    command += `curl -v -X POST "https://kakaoi-newtone-openapi.kakao.com/v1/synthesize" `;
-    command += `-H "Content-Type: application/xml" `;
-    command += `-H "Authorization: ${restapiKey}" `;
-    command += `-d '<speak>${text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '')}</speak>'`;
-    command += ` > ${tempDir}/${fileName}`;
-    shell.exec(command, { silent: true });
-    await play(`${tempDir}/${fileName}`);
-    shell.exec(`rm -rf ${tempDir}/${fileName}`, { silent: true });
+
+    response = await axios.post("https://kakaoi-newtone-openapi.kakao.com/v1/synthesize", `<speak>${text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '')}</speak>`, { headers: { "Content-Type": "application/xml", "Authorization": restapiKey } });
+
+    fs.writeFile(`${tempDir}/${fileName}`, response.data, "binary", (err) => {});
+
+
+    // command = ``;
+    // command += `curl -v -X POST "https://kakaoi-newtone-openapi.kakao.com/v1/synthesize" `;
+    // command += `-H "Content-Type: application/xml" `;
+    // command += `-H "Authorization: ${restapiKey}" `;
+    // command += `-d '<speak>${text.replace(/\'/g, '"').replace(/\n/g, ' ').replace(/\t/g, '')}</speak>'`;
+    // command += ` > ${tempDir}/${fileName}`;
+    // shell.exec(command, { silent: true });
+    // await play(`${tempDir}/${fileName}`);
+    // shell.exec(`rm -rf ${tempDir}/${fileName}`, { silent: true });
     doing = 0;
     return "voice done";
   } catch (e) {
