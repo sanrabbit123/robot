@@ -2838,6 +2838,14 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
   pannelWordsPadding = <%% 16, 16, 16, 12, 16 %%>;
   pannelLineTop = <%% 31, 31, 31, 26, 47 %%>;
 
+  if (desktop) {
+    if (isMac()) {
+      pannelPaddingTop = pannelPaddingTop;
+    } else {
+      pannelPaddingTop = pannelPaddingTop + 1;
+    }
+  }
+
   arrowTop = <%% 43, 43, 43, 33, 2 %%>;
   arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
 
@@ -3531,6 +3539,10 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
   grayTextTop = <%% 40, 40, 39, 39, 14 %%>;
   grayMargin = <%% 16, 16, 16, 16, 3 %%>;
 
+  if (desktop) {
+    grayTextTop = grayTextTop + (isMac() ? 0 : 2);
+  }
+
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
 
@@ -3542,6 +3554,9 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
   cardWordingSize = <%% 13, 13, 13, 13, 3 %%>;
   cardInnerMargin = <%% 16, 16, 16, 16, 3 %%>;
   cardInnerMarginTop = <%% 11, 11, 11, 11, 2.1 %%>;
+  if (desktop) {
+    cardInnerMarginTop = cardInnerMarginTop + (isMac() ? 0 : 1);
+  }
   xIconWidth = <%% 10, 10, 10, 10, 2 %%>;
   xIconTop = <%% 14, 14, 14, 14, 3 %%>;
   xVisual = <%% 4, 4, 4, 4, 1 %%>;
