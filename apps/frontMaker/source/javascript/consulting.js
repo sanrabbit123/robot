@@ -1388,7 +1388,8 @@ ConsultingJs.prototype.thankyouLoad = function (boo, valuesTong) {
               window.location.href = "https://home-liaison.com";
             }, 3000);
           } else {
-            throw new Error("file transfer error");
+            alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
+            window.location.reload();
           }
         }).catch(function (err) {
           alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");

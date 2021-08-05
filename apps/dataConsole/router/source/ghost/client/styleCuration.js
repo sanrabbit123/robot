@@ -2989,12 +2989,19 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
 
 StyleCurationJs.prototype.parsingValues = function () {
   const instance = this;
-  const { ajaxJson, returnGet } = GeneralJs;
+  const { ajaxJson, ajaxForm, returnGet } = GeneralJs;
   const grayLoading = this.mother.grayLoading();
+  const emptyPromise = function () {
+    return new Promise(function (resolve, reject) {
+      resolve(0);
+    });
+  }
   let center, temp;
   let items, realItems, selected;
   let coreQuery, historyQuery;
   let finalSerid;
+  let formData;
+  let cancelPhoto;
 
   center = this.wordings.centerWordings;
 
@@ -3043,7 +3050,31 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }
 
-  ajaxJson({ cliid: this.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation").then((obj) => {
+  emptyPromise().then(() => {
+    if (instance.fileInput.files.length > 0) {
+      formData = new FormData();
+      formData.enctype = "multipart/form-data";
+      formData.append("name", "배창규");
+      formData.append("phone", "010-2747-3403");
+      cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
+      for (let i = 0; i < instance.fileInput.files.length; i++) {
+        if (!cancelPhoto.includes(i)) {
+          formData.append("upload0", instance.fileInput.files[i]);
+        }
+      }
+      return ajaxForm(formData, BRIDGEHOST + "/binary");
+    } else {
+      return new Promise((resolve, reject) => { resolve("success"); });
+    }
+  }).then((data) => {
+    if (data === "success") {
+      return ajaxJson({ cliid: this.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation");
+    } else {
+      alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
+      window.location.reload();
+      return new Promise((resolve, reject) => { resolve({}); });
+    }
+  }).then((obj) => {
     if (Object.keys(obj).length === 0) {
       window.alert("오류가 발생하였습니다!");
       window.reload();
@@ -3099,6 +3130,7 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }).catch((err) => {
     console.log(err);
+    window.location.reload();
   });
 
 }
@@ -3652,16 +3684,24 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
                   fontSize: String(cardWordingSize) + ea,
                   fontWeight: String(400),
                   color: colorChip.black,
-                  width: String(1000) + ea,
+                  width: String(900) + ea,
                 }
               }
             ]
           },
           {
+            attribute: [
+              { index }
+            ],
             events: [
               {
                 type: "click",
                 event: function (e) {
+                  const index = Number(this.getAttribute("index"));
+                  let cancel;
+                  cancel = JSON.parse(instance.fileInput.getAttribute("cancel"));
+                  cancel.push(index);
+                  instance.fileInput.setAttribute("cancel", JSON.stringify(cancel));
                   this.parentElement.parentElement.removeChild(this.parentElement);
                 }
               }
@@ -3710,7 +3750,6 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
     } else {
       this.previousElementSibling.style.display = "none";
     }
-    console.log(this.files);
   }
 
   block = createNode({
@@ -3784,7 +3823,8 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
           { type: "file" },
           { name: "upload" },
           { accept: "image/*" },
-          { multiple: "true" }
+          { multiple: "true" },
+          { cancel: JSON.stringify([]) }
         ],
         style: {
           position: "absolute",
@@ -3814,6 +3854,8 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
       },
     ]
   });
+
+  this.fileInput = block.querySelector("input");
 
 }
 

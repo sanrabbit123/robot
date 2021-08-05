@@ -971,6 +971,14 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         if (!err && filesKeys.length > 0) {
+
+          res.set({
+            "Content-Type": "text/plain",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          });
+
           const { name, phone } = fields;
           const cilentFolderName = ("date" + todayMaker("total")) + '_' + name + '_' + phone.replace(/\-/g, '');
           const uploadMap = {
@@ -1024,7 +1032,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             clientRows = [ { cliid: "테스트" } ];
           }
           if (clientRows.length === 0) {
-            cliid = "아이디 알 수 없음";
+            cliid = null;
           } else if (phone !== "010-2747-3403") {
             cliid = clientRows[0].cliid;
             if (clientRows[0].requests[0].analytics.response.status === "드랍") {
@@ -1034,22 +1042,17 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             cliid = "테스트";
           }
 
-          //upload google drive
-          instance.bridgeToGoogle({ tong: fileTong, name: name, phone: phone, mode: "client", cliid: cliid, folder: cilentFolderName });
+          if (cliid !== null) {
+            //upload google drive
+            instance.bridgeToGoogle({ tong: fileTong, name: name, phone: phone, mode: "client", cliid: cliid, folder: cilentFolderName });
+            //kakao and slack
+            KAKAO.sendTalk("photo", name, phone);
+            slack_bot.chat.postMessage({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
 
-          //kakao and slack
-          KAKAO.sendTalk("photo", name, phone);
-          slack_bot.chat.postMessage({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
-
-          //end
-          res.set({
-            "Content-Type": "text/plain",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-          });
-          res.send('success');
-
+            res.send('success');
+          } else {
+            res.send('error');
+          }
         } else {
           slack_bot.chat.postMessage({ text: "고객 파일 서버 문제 생김 : " + JSON.stringify(fields) + err, channel: "#error_log" });
           res.set({

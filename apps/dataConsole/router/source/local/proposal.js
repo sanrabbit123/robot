@@ -1948,6 +1948,97 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     }
   }
 
+  fourth.events.prevent = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  fourth.events.drag = function (e) {
+    e.dataTransfer.setData("dragData", this.getAttribute("cus_id"));
+  }
+
+  fourth.events.drop = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const selectedMother = this.parentNode;
+    const domParsing = function (dom) {
+      const { children } = dom;
+      const [ designer, service, fee, popup, value ] = children;
+
+      let resultObj;
+      let designerInputs, serviceInputs, feeInputs;
+
+      resultObj = {};
+      resultObj.desid = null;
+      designerInputs = designer.querySelectorAll("input");
+      for (let i of designerInputs) {
+        if (i.checked) {
+          resultObj.desid = i.value;
+        }
+      }
+
+      serviceInputs = service.querySelectorAll("input");
+      resultObj.service = [];
+      for (let i of serviceInputs) {
+        resultObj.service.push(i.checked);
+      }
+
+      feeInputs = fee.children[1].querySelectorAll("input");
+      if (feeInputs.length === 2) {
+        resultObj.fee = '';
+        for (let i of feeInputs) {
+          resultObj.fee += fee.children[1].textContent + "__split__" + i.value;
+          resultObj.fee += "__split__";
+        }
+        resultObj.fee = resultObj.fee.slice(0, -9);
+      } else if (feeInputs.length === 1) {
+        resultObj.fee = fee.children[1].textContent + "__split__" + feeInputs[0].value;
+      } else {
+        resultObj.fee = null;
+      }
+
+      resultObj.popup = popup.children[1].textContent;
+
+      resultObj.value = value.textContent;
+
+      return resultObj;
+    }
+    const objToDom = function (obj, dom, id0, id1) {
+      const { children } = dom;
+      const [ designerDom, serviceDom, feeDom, popupDom, valueDom ] = children;
+      const { desid, service, fee, popup, value } = obj;
+      let designerInputs, serviceInputs, feeInputs, feeTarget;
+
+      designerInputs = designerDom.querySelectorAll("input");
+      for (let i of designerInputs) {
+        i.checked = (i.value === desid);
+      }
+
+      serviceInputs = serviceDom.querySelectorAll("input");
+      for (let i = 0; i < service.length; i++) {
+        serviceInputs[i].checked = service[i];
+      }
+
+      if (fee.split("__split__").length === 2) {
+        document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
+      } else if (fee.split("__split__").length === 4) {
+        document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
+        document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
+      }
+
+      popupDom.children[1].children[0].textContent = popup;
+      valueDom.textContent = value;
+    }
+    const orderId_from = Number(e.dataTransfer.getData("dragData").replace(/[^0-9]/g, ''));
+    const orderId_to = Number(this.getAttribute("cus_id").replace(/[^0-9]/g, ''));
+    const dom_from = selectedMother.children[orderId_from + 1];
+    const dom_to = selectedMother.children[orderId_to + 1];
+    const info_from = JSON.parse(JSON.stringify(domParsing(dom_from)));
+    const info_to = JSON.parse(JSON.stringify(domParsing(dom_to)));
+    objToDom(info_from, dom_to, orderId_from, orderId_to);
+    objToDom(info_to, dom_from, orderId_to, orderId_from);
+  }
+
   designers = instance.designers;
   fourth.callbacks.set("디자이너 이름", function (dom, n) {
     let input, div_clone, div_clone2, div_clone3, input_clone, label_clone;
@@ -2145,7 +2236,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     fourth.contents.style.borderRadius = "6px";
     fourth.contents.style.padding = "0px";
     instance.below_launching("fourth", "on");
-    instance.totalTong.fifthScrollmove = {}
+    instance.totalTong.fifthScrollmove = {};
 
     if (instance.pastMaps[0] === undefined) {
       for (let i = 0; i < num; i++) {
@@ -2174,99 +2265,12 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
 
         div_clone.setAttribute("draggable", "true");
         div_clone.style.cursor = "pointer";
-        div_clone.addEventListener("dragstart", function (e) {
-          e.dataTransfer.setData("dragData", this.getAttribute("cus_id"));
-        });
-        div_clone.addEventListener("dragenter", function (e) {
-          e.preventDefault();
-        });
-        div_clone.addEventListener("dragleave", function (e) {
-          e.preventDefault();
-        });
-        div_clone.addEventListener("dragover", function (e) {
-          e.preventDefault();
-        });
-        div_clone.addEventListener("drop", function (e) {
-          e.stopPropagation();
-          e.preventDefault();
-          const selectedMother = this.parentNode;
-          const domParsing = function (dom) {
-            const { children } = dom;
-            const [ designer, service, fee, popup, value ] = children;
 
-            let resultObj;
-            let designerInputs, serviceInputs, feeInputs;
-
-            resultObj = {};
-            resultObj.desid = null;
-            designerInputs = designer.querySelectorAll("input");
-            for (let i of designerInputs) {
-              if (i.checked) {
-                resultObj.desid = i.value;
-              }
-            }
-
-            serviceInputs = service.querySelectorAll("input");
-            resultObj.service = [];
-            for (let i of serviceInputs) {
-              resultObj.service.push(i.checked);
-            }
-
-            feeInputs = fee.children[1].querySelectorAll("input");
-            if (feeInputs.length === 2) {
-              resultObj.fee = '';
-              for (let i of feeInputs) {
-                resultObj.fee += fee.children[1].textContent + "__split__" + i.value;
-                resultObj.fee += "__split__";
-              }
-              resultObj.fee = resultObj.fee.slice(0, -9);
-            } else if (feeInputs.length === 1) {
-              resultObj.fee = fee.children[1].textContent + "__split__" + feeInputs[0].value;
-            } else {
-              resultObj.fee = null;
-            }
-
-            resultObj.popup = popup.children[1].textContent;
-
-            resultObj.value = value.textContent;
-
-            return resultObj;
-          }
-          const objToDom = function (obj, dom, id0, id1) {
-            const { children } = dom;
-            const [ designerDom, serviceDom, feeDom, popupDom, valueDom ] = children;
-            const { desid, service, fee, popup, value } = obj;
-            let designerInputs, serviceInputs, feeInputs, feeTarget;
-
-            designerInputs = designerDom.querySelectorAll("input");
-            for (let i of designerInputs) {
-              i.checked = (i.value === desid);
-            }
-
-            serviceInputs = serviceDom.querySelectorAll("input");
-            for (let i = 0; i < service.length; i++) {
-              serviceInputs[i].checked = service[i];
-            }
-
-            if (fee.split("__split__").length === 2) {
-              document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
-            } else if (fee.split("__split__").length === 4) {
-              document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
-              document.getElementById("pp_designer_selected_box_contents_money" + String(id1)).appendChild(document.getElementById("pp_designer_selected_box_contents_money" + String(id0)).children[0]);
-            }
-
-            popupDom.children[1].children[0].textContent = popup;
-            valueDom.textContent = value;
-          }
-          const orderId_from = Number(e.dataTransfer.getData("dragData").replace(/[^0-9]/g, ''));
-          const orderId_to = Number(this.getAttribute("cus_id").replace(/[^0-9]/g, ''));
-          const dom_from = selectedMother.children[orderId_from + 1];
-          const dom_to = selectedMother.children[orderId_to + 1];
-          const info_from = JSON.parse(JSON.stringify(domParsing(dom_from)));
-          const info_to = JSON.parse(JSON.stringify(domParsing(dom_to)));
-          objToDom(info_from, dom_to, orderId_from, orderId_to);
-          objToDom(info_to, dom_from, orderId_to, orderId_from);
-        });
+        div_clone.addEventListener("dragstart", fourth.events.drag);
+        div_clone.addEventListener("dragenter", fourth.events.prevent);
+        div_clone.addEventListener("dragleave", fourth.events.prevent);
+        div_clone.addEventListener("dragover", fourth.events.prevent);
+        div_clone.addEventListener("drop", fourth.events.drop);
 
         //remember value
         div_clone4 = GeneralJs.nodes.div.cloneNode(true);
@@ -2292,12 +2296,20 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       }
 
     } else {
+
       if (num <= instance.pastMaps[0].size) {
         for (let i = 0; i < num; i++) {
           instance.pastMaps[0].get("box" + String(i)).style.width = "calc(100% / " + String(num) + ")";
           if (i !== 0) {
             instance.pastMaps[0].get("box" + String(i)).style.borderLeft = "1px solid " + GeneralJs.colorChip.gray2;
           }
+
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("dragstart", fourth.events.drag);
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("dragenter", fourth.events.prevent);
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("dragleave", fourth.events.prevent);
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("dragover", fourth.events.prevent);
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("drop", fourth.events.drop);
+
           fourth.contents.appendChild(instance.pastMaps[0].get("box" + String(i)));
           fourthChildren.set("box" + String(i), instance.pastMaps[0].get("box" + String(i)));
           instance.totalTong.fifthScrollmove["designer" + String(i)] = new Map();
@@ -2329,6 +2341,13 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           if (i !== 0) {
             instance.pastMaps[0].get("box" + String(i)).style.borderLeft = "1px solid " + GeneralJs.colorChip.gray2;
           }
+
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("dragstart", fourth.events.drag);
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("dragenter", fourth.events.prevent);
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("dragleave", fourth.events.prevent);
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("dragover", fourth.events.prevent);
+          instance.pastMaps[0].get("box" + String(i)).addEventListener("drop", fourth.events.drop);
+
           fourth.contents.appendChild(instance.pastMaps[0].get("box" + String(i)));
           fourthChildren.set("box" + String(i), instance.pastMaps[0].get("box" + String(i)));
           instance.totalTong.fifthScrollmove["designer" + String(i)] = new Map();
@@ -2359,6 +2378,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           if (i !== 0) {
             div_clone.style.borderLeft = "1px solid " + GeneralJs.colorChip.gray2;
           }
+
           for (let j = 0; j < fourth.titles.length; j++) {
             div_clone2 = GeneralJs.nodes.div.cloneNode(true);
             div_clone2.classList.add("pp_designer_selected_box");
@@ -2372,6 +2392,16 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
             div_clone2.appendChild(div_clone3);
             div_clone.appendChild(div_clone2);
           }
+
+          div_clone.setAttribute("draggable", "true");
+          div_clone.style.cursor = "pointer";
+
+          div_clone.addEventListener("dragstart", fourth.events.drag);
+          div_clone.addEventListener("dragenter", fourth.events.prevent);
+          div_clone.addEventListener("dragleave", fourth.events.prevent);
+          div_clone.addEventListener("dragover", fourth.events.prevent);
+          div_clone.addEventListener("drop", fourth.events.drop);
+
           //remember value
           div_clone4 = GeneralJs.nodes.div.cloneNode(true);
           div_clone4.classList.add("pp_designer_selected_box_value");
@@ -3255,15 +3285,22 @@ ProposalJs.prototype.list_mainArea = async function (searchQuery = null, limit =
 }
 
 ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw, designer_names_obj) {
+  const instance = this;
+  const ea = "px";
+  let details = [ "_id", "_name", "_details", "_progress" ];
+  let details_list = [];
+  let info_object_arr = [];
+  let div_clone, div_clone2, proposal_obj, general_string, proposal_obj_new;
+  let cliidArr;
+  let rowDoms;
+  let motherDom, proidDom, nameDom;
+
   while (parent.firstChild) {
     parent.removeChild(parent.lastChild);
   }
 
-  let details = [ "_id", "_name", "_details", "_progress" ];
-  let details_list = [];
-  let info_object_arr = [];
+  cliidArr = proposal_list_raw.map((obj) => { return obj.cliid; });
 
-  let div_clone, div_clone2, proposal_obj, general_string, proposal_obj_new;
   for (let i = 0; i < proposal_list_raw.length; i++) {
     proposal_obj_new = [];
     proposal_obj = proposal_list_raw[i];
@@ -3303,6 +3340,8 @@ ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw
     });
     details_list.unshift(proposal_obj_new);
   }
+
+  rowDoms = [];
   for (let i = 0; i < details_list.length; i++) {
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("listpp_mainArea_tong");
@@ -3321,9 +3360,60 @@ ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw
       div_clone2.insertAdjacentHTML("beforeend", details_list[i][j]);
       div_clone.appendChild(div_clone2);
     }
-    div_clone.insertAdjacentHTML("beforeend", '<section style="display:none;">' + JSON.stringify(info_object_arr[i]) + '</section>')
+    div_clone.insertAdjacentHTML("beforeend", '<section style="display:none;">' + JSON.stringify(info_object_arr[i]) + '</section>');
+    rowDoms.push(div_clone);
     parent.appendChild(div_clone);
   }
+
+  GeneralJs.ajaxJson({
+    idArr: cliidArr,
+    method: "client",
+    property: "curation"
+  }, "/getHistoryProperty").then((cliidObj) => {
+    let targetDoms, right, top;
+
+    right = -7.5;
+    top = GeneralJs.isMac() ? 6 : 4;
+
+    targetDoms = [];
+    for (let obj of proposal_list_raw) {
+      obj.full = (cliidObj[obj.cliid] === undefined ? false : cliidObj[obj.cliid].analytics.full);
+      for (let dom of rowDoms) {
+        if (dom.getAttribute("cus_id") === obj.proid) {
+          if (obj.full) {
+            targetDoms.push(dom);
+          }
+        }
+      }
+    }
+
+    for (let dom of targetDoms) {
+      dom.children[0].style.width = "auto";
+      dom.children[1].style.width = "auto";
+
+      motherDom = dom.getBoundingClientRect();
+      proidDom = dom.children[0].getBoundingClientRect();
+      nameDom = dom.children[1].getBoundingClientRect();
+
+      GeneralJs.createNodes([
+        {
+          mother: dom,
+          mode: "svg",
+          source: instance.mother.returnCircle("", GeneralJs.colorChip.green),
+          style: {
+            position: "absolute",
+            transform: "scale(0.4)",
+            transformOrigin: "100% 0%",
+            left: String((nameDom.x - motherDom.x) + nameDom.width + right) + ea,
+            top: String(top) + ea,
+          }
+        }
+      ]);
+    }
+
+  }).catch((err) => {
+    console.log(err);
+  })
 
   this.list_leftBar({ projects: proposal_list_raw, designers: designer_names_obj });
 }

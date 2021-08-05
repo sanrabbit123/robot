@@ -29,6 +29,7 @@ ClientJs.prototype.standardBar = function (standard) {
   let num, leftPosition;
   let sortEventFunction;
   let cliidDom, cliidArr;
+  let histories;
 
   temp = {
     cliid: standard.standard.cliid.name,
@@ -235,29 +236,49 @@ ClientJs.prototype.standardBar = function (standard) {
     }, 401);
   }
 
-  GeneralJs.ajax("idArr=" + JSON.stringify(cliidArr) + "&method=client&property=important", "/getHistoryProperty", function (obj) {
-    const cliidObj = JSON.parse(obj);
+  GeneralJs.ajaxJson({
+    idArr: cliidArr,
+    method: "client",
+    property: "curation"
+  }, "/getHistoryProperty").then((cliidObj) => {
+    histories = cliidObj;
+    return GeneralJs.ajaxJson({
+      idArr: cliidArr,
+      method: "client",
+      property: "important"
+    }, "/getHistoryProperty");
+  }).then((cliidObj) => {
     let boo, tempFunction;
-
+    for (let cliid in histories) {
+      histories[cliid].important = cliidObj[cliid];
+    }
     if (cliidObj !== null) {
       for (let { cliid, dom } of cliidDom) {
-        if (cliidObj[cliid] === undefined) {
+        if (histories[cliid] === undefined) {
           boo = false;
         } else {
-          if (cliidObj[cliid]) {
+          if (histories[cliid].important) {
             boo = true;
           } else {
             boo = false;
           }
         }
-        dom.setAttribute("important", "false");
-        dom.addEventListener("contextmenu", instance.makeImportantEvent(cliid));
-        if (boo) {
-          tempFunction = instance.makeImportantEvent(cliid, !boo);
+        if (histories[cliid].analytics.full) {
+          dom.setAttribute("important", "false");
+          tempFunction = instance.makeImportantEvent(cliid, !boo, "green");
           tempFunction.call(dom, { type: "click" });
+        } else {
+          dom.setAttribute("important", "false");
+          dom.addEventListener("contextmenu", instance.makeImportantEvent(cliid, true));
+          if (boo) {
+            tempFunction = instance.makeImportantEvent(cliid, !boo);
+            tempFunction.call(dom, { type: "click" });
+          }
         }
       }
     }
+  }).catch((err) => {
+    console.log(err);
   });
 
 }
@@ -4757,7 +4778,7 @@ ClientJs.prototype.makeClipBoardEvent = function (text) {
   }
 }
 
-ClientJs.prototype.makeImportantEvent = function (id, update = true) {
+ClientJs.prototype.makeImportantEvent = function (id, update, color = "red") {
   const instance = this;
   const cookies = GeneralJs.getCookiesAll();
   return async function (e) {
@@ -4789,7 +4810,7 @@ ClientJs.prototype.makeImportantEvent = function (id, update = true) {
         };
 
         for (let i = 0; i < length; i++) {
-          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", "#FF5F57"));
+          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", GeneralJs.colorChip[color]));
           for (let j in alarmStyle) {
             alarmCircle.style[j] = alarmStyle[j];
           }
@@ -4811,7 +4832,7 @@ ClientJs.prototype.makeImportantEvent = function (id, update = true) {
       }
 
     } catch (e) {
-      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+      GeneralJs.ajax("message=" + e.message + "&channel=#error_log", "/sendSlack", function () {});
       console.log(e);
     }
   }
