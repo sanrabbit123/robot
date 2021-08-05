@@ -1140,6 +1140,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
       this.wordings.pannel = {
         button: "서비스 금액 알아보기"
       };
+      this.wordings.photo = {
+        question: "현장 사진, 또는 특별히 선호하는 사진이 있다면 보내주세요!"
+      }
     }
     get initWordings() {
       return this.wordings.init;
@@ -1149,6 +1152,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
     }
     get pannelWordings() {
       return this.wordings.pannel;
+    }
+    get photoWordings() {
+      return this.wordings.photo;
     }
   }
   return new StyleCurationWordings();
@@ -2768,6 +2774,364 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
 }
 
+StyleCurationJs.prototype.photoUpload = function (mother) {
+  const instance = this;
+  const { client, ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, cleanChildren, isMac, sleep, ajaxJson } = GeneralJs;
+  const { photos, contentsArr, designers } = this;
+  const greenClassName = "greenRemoveTarget";
+  const stackName = "styleCheckNum";
+  const loadingName = "loading";
+  let pictureNumber, columnNumber;
+  let randomPick, targetPhotos;
+  let pictureBox;
+  let innerMargin;
+  let pictureMargin;
+  let questionWording, completeWording;
+  let pannelHeight;
+  let pannelWordsSize;
+  let pannelWordsPadding;
+  let pannelLineTop;
+  let arrowTop, arrowWidth;
+  let tempDom;
+  let photoHeight, photoWidth, photoWidthCss, photoHeightCss;
+  let resetEvent;
+  let arrowEvent;
+  let pickupDesigners;
+  let image;
+  let photoPosition;
+
+  GeneralJs.stacks[stackName] = 0;
+  GeneralJs.stacks[loadingName] = false;
+
+  pictureNumber = <%% 5, 4, 4, 4, 2 %%>;
+  columnNumber = <%% 5, 4, 4, 4, 2 %%>;
+
+  innerMargin = <%% 42, 36, 36, 28, 4.5 %%>;
+  pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
+
+  pannelHeight = <%% 114, 114, 114, 90, 15.4 %%>;
+  pannelPaddingTop = <%% 32, 32, 32, 22, 4 %%>;
+  pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
+  pannelWordsPadding = <%% 16, 16, 16, 12, 16 %%>;
+  pannelLineTop = <%% 47, 47, 47, 36, 47 %%>;
+
+  arrowTop = <%% 43, 43, 43, 33, 2 %%>;
+  arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
+
+  questionWording = this.wordings.photoWordings.question;
+  completeWording = this.wordings.photoWordings.question;
+
+  image = [];
+
+  randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
+  targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
+  photoPosition = [];
+
+  mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(0) + ea;
+  if (mobile) {
+    mother.style.background = "";
+    mother.style.boxShadow = "";
+  }
+
+  if (desktop) {
+    photoWidth = (this.mother.standardWidth - (this.whiteMargin * 2) - (innerMargin * 2) - (pictureMargin * (columnNumber - 1))) / columnNumber;
+  } else {
+    photoWidth = (this.mother.standardWidth - (this.whiteMargin * 2) - (0 * 2) - (pictureMargin * (columnNumber - 1))) / columnNumber;
+  }
+  photoWidthCss = "calc(calc(100% - " + String(pictureMargin * (columnNumber - 1)) + ea + ") / " + String(columnNumber) + ")";
+  photoHeight = (205 / 297) * (photoWidth);
+  photoHeightCss = String(photoHeight) + ea;
+
+  pickupDesigners = function () {
+    const photos = instance.photos;
+    if (photos.length !== 0) {
+      let tendencyAverage, designers, average;
+      designers = JSON.parse(JSON.stringify(instance.designers));
+      tendencyAverage = (new Array(photos[0].tendency.length)).fill(0, 0);
+      for (let { tendency } of photos) {
+        for (let i = 0; i < tendency.length; i++) {
+          tendencyAverage[i] += tendency[i];
+        }
+      }
+      tendencyAverage = tendencyAverage.map((n) => { return Math.round((n / photos.length) * 100) / 100; });
+
+      for (let designer of designers) {
+        average = 0;
+        for (let i = 0; i < tendencyAverage.length; i++) {
+          average += Math.abs(tendencyAverage[i] - designer.tendency[i]);
+        }
+        designer.tendencyLength = average;
+      }
+
+      designers.sort((a, b) => { return a.tendencyLength - b.tendencyLength });
+      designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status); });
+      designers = designers.map((obj) => { return obj.desid; });
+      instance.values.style[0].value = designers;
+
+      ajaxJson({
+        mode: "update",
+        cliid: instance.client.cliid,
+        update: { x: "style", y: 0, value: instance.values.style[0].value }
+      }, "/styleCuration_updateAnalytics").then(() => {
+        return ajaxJson({
+          mode: "image",
+          cliid: instance.client.cliid,
+          image: image
+        }, "/styleCuration_updateAnalytics");
+      }).catch((err) => {
+        console.log(err);
+      });
+
+    }
+  }
+
+  resetEvent = function () {
+    let rowLength, thisTime;
+    let greenTargets;
+    let style;
+    let loading;
+    let loadingWidth, completePaddingTop;
+    let animationTime, delayTime, animationTimes, animationTimesTemp;
+    let targetPhotos;
+    let randomPick;
+
+    loadingWidth = <%% 40, 40, 36, 30, 10 %%>;
+    completePaddingTop = <%% 10, 10, 9, 8, 0 %%>;
+    animationTime = 0.3;
+    delayTime = 0.2;
+    animationTimes = [];
+
+    greenTargets = mother.querySelectorAll('.' + greenClassName);
+    for (let dom of greenTargets) {
+      dom.style.animation = "justfadeoutnine 0.6s ease forwards";
+    }
+
+    rowLength = Math.round(pictureNumber / columnNumber);
+    animationTimesTemp = [];
+    for (let i = 0; i < instance.photoPosition.length; i++) {
+      animationTimesTemp.push(animationTime + ((i % rowLength) * delayTime));
+      if (animationTimesTemp.length === columnNumber) {
+        animationTimes.push(animationTimesTemp);
+        animationTimesTemp = [];
+      }
+    }
+    if (Math.random() > 0.5) {
+      animationTimes = animationTimes.map((arr) => { return arr.reverse(); });
+    }
+    animationTimes = animationTimes.flat();
+
+    for (let i = 0; i < instance.photoPosition.length; i++) {
+      thisTime = String(animationTimes[i]) + 's';
+      instance.photoPosition[i].style.animation = "fadedownlite " + String(animationTime) + "s ease " + thisTime + " forwards";
+    }
+
+    animationTimes.sort((a, b) => { return b - a; });
+
+    loading = instance.mother.returnLoadingIcon();
+    style = {
+      position: "absolute",
+      width: String(loadingWidth) + ea,
+      height: String(loadingWidth) + ea,
+      top: withOut(50, loadingWidth * (desktop ? (3 / 4) : 0.55), ea),
+      left: withOut(50, loadingWidth * (1 / 2), ea),
+    };
+    for (let i in style) {
+      loading.style[i] = style[i];
+    }
+    mother.firstChild.appendChild(loading);
+
+    randomPick = StyleCurationJs.randomPick(instance.photos, contentsArr, pictureNumber);
+    console.log(randomPick);
+    if (!Array.isArray(randomPick)) {
+      // sleep((animationTimes[0] * 1000) + 100).then(async () => {
+      //   try {
+      //     for (let i = 0; i < instance.photoPosition.length; i++) {
+      //       instance.photoPosition[i].style.backgroundImage = "";
+      //       instance.photoPosition[i].style.height = String(0);
+      //       instance.photoPosition[i].setAttribute("complete", "true");
+      //     }
+      //     mother.style.paddingTop = String(completePaddingTop) + ea;
+      //     mother.firstChild.removeChild(loading);
+      //     mother.lastChild.lastChild.textContent = completeWording;
+      //     for (let dom of greenTargets) {
+      //       dom.remove();
+      //     }
+      //     await sleep(100);
+      //     for (let i = 0; i < instance.photoPosition.length; i++) {
+      //       instance.photoPosition[i].style.display = "none";
+      //     }
+      //     GeneralJs.stacks[loadingName] = false;
+      //
+      //     pickupDesigners();
+      //
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      // });
+    } else {
+      targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
+      sleep((animationTimes[0] * 1000) + (animationTime * 1000)).then(async () => {
+        try {
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.backgroundImage = "url('" + targetPhotos[i] + "')";
+          }
+          await sleep(animationTime * 1000);
+          mother.firstChild.removeChild(loading);
+          for (let dom of greenTargets) {
+            dom.remove();
+          }
+          await sleep(100);
+          for (let i = 0; i < instance.photoPosition.length; i++) {
+            instance.photoPosition[i].style.animation = "fadeupmiddle " + String(animationTime) + "s ease forwards";
+          }
+          GeneralJs.stacks[loadingName] = false;
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+  }
+
+  arrowEvent = function () {
+    instance.selectPhotos = [];
+    GeneralJs.stacks[loadingName] = true;
+    GeneralJs.setTimeout(() => {
+      resetEvent();
+    }, 201);
+  }
+
+  pictureBox = createNode({
+    mother,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: desktop ? String(innerMargin) + ea : "",
+      width: desktop ? withOut(innerMargin * 2, ea) : "",
+    }
+  });
+
+  for (let i = 0; i < pictureNumber; i++) {
+    tempDom = createNode({
+      mother: pictureBox,
+      class: [ "hoverDefault_lite" ],
+      attribute: [
+        { index: String(i) },
+        { complete: "false" },
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: photoWidthCss,
+        height: photoHeightCss,
+        borderRadius: String(3) + "px",
+        marginRight: String(i % columnNumber === (columnNumber - 1) ? 0 : pictureMargin) + ea,
+        marginBottom: String(pictureMargin) + ea,
+        overflow: "hidden",
+        background: colorChip.gray2
+      }
+    });
+    photoPosition.push(tempDom);
+  }
+
+  for (let i = 0; i < pictureNumber; i++) {
+    photoPosition[i].style.backgroundImage = "url('" + targetPhotos[i] + "')";
+    photoPosition[i].style.backgroundPosition = "50% 50%";
+    photoPosition[i].style.backgroundSize = "100% auto";
+  }
+
+  createNode({
+    mother,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(pannelHeight - pannelPaddingTop) + ea,
+      paddingTop: String(pannelPaddingTop) + ea,
+      textAlign: "center",
+      background: mobile ? colorChip.white : "",
+      boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+      borderRadius: mobile ? String(5) + "px" : "",
+    },
+    children: [
+      {
+        style: {
+          display: desktop ? "block" : "none",
+          position: "absolute",
+          width: withOut(innerMargin * 2, ea),
+          left: String(innerMargin) + ea,
+          top: String(0) + ea,
+          height: String(pannelLineTop) + ea,
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      },
+      {
+        mode: "svg",
+        source: this.mother.returnArrow("left", colorChip.green),
+        events: [
+          {
+            type: "click",
+            event: arrowEvent
+          }
+        ],
+        style: {
+          display: desktop ? "block" : "none",
+          position: "absolute",
+          left: String(innerMargin) + ea,
+          top: String(arrowTop) + ea,
+          width: String(arrowWidth) + ea,
+          paddingRight: String(pannelWordsPadding) + ea,
+          background: colorChip.white,
+          cursor: "pointer"
+        }
+      },
+      {
+        mode: "svg",
+        source: this.mother.returnArrow("right", colorChip.green),
+        events: [
+          {
+            type: "click",
+            event: arrowEvent
+          }
+        ],
+        style: {
+          display: desktop ? "block" : "none",
+          position: "absolute",
+          right: String(innerMargin) + ea,
+          top: String(arrowTop) + ea,
+          width: String(arrowWidth) + ea,
+          paddingLeft: String(pannelWordsPadding) + ea,
+          background: colorChip.white,
+          cursor: "pointer"
+        }
+      },
+      {
+        text: questionWording,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          textAlign: "center",
+          fontSize: String(pannelWordsSize) + ea,
+          fontWeight: String(200),
+          color: colorChip.green,
+          paddingRight: desktop ? String(pannelWordsPadding) + ea : "",
+          paddingLeft: desktop ? String(pannelWordsPadding) + ea : "",
+          paddingTop: desktop ? (isMac() ? "" : String(2) + ea) : "",
+          background: colorChip.white,
+          width: desktop ? "" : String(100) + '%',
+        },
+        bold: {
+          fontWeight: String(600),
+          color: colorChip.green,
+        }
+      }
+    ]
+  });
+
+}
+
 StyleCurationJs.prototype.parsingValues = function () {
   const instance = this;
   const { ajaxJson, returnGet } = GeneralJs;
@@ -3269,6 +3633,98 @@ StyleCurationJs.prototype.insertCenterBox = function () {
     contents(block.lastChild);
     num++;
   }
+
+}
+
+StyleCurationJs.prototype.insertPhotoBox = function () {
+  const instance = this;
+  const { client, ea, baseTong, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  let paddingTop;
+  let block;
+  let whiteBlock, whiteTong;
+  let bottomMargin;
+  let titleFontSize;
+  let num;
+  let numberRight;
+  let titleTop, titleTopNumber;
+  let barTop;
+  let titleBottom, blockBottom;
+  let index;
+  let mobileTitleLeft, mobileTitleTop;
+
+  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  margin = <%% 52, 52, 44, 36, 4.7 %%>;
+  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
+
+  titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
+  numberRight = <%% 12, 12, 12, 12, 3 %%>;
+
+  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
+  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
+
+  barTop = <%% 15, 15, 15, 15, 2.6 %%>;
+
+  titleBottom = <%% 15, 15, 15, 15, 0 %%>;
+  blockBottom = <%% 40, 40, 40, 40, 3 %%>;
+
+  mobileTitleLeft = 1.5;
+  mobileTitleTop = -8.7;
+
+  this.whiteMargin = (desktop ? margin : 0);
+
+  whiteBlock = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      background: desktop ? colorChip.white : "",
+      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
+      paddingBottom: desktop ? String(margin + (desktop ? 0 : 1.3)) + ea : "",
+      marginBottom: String(bottomMargin) + ea,
+      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
+        height: String(100) + '%',
+        marginLeft: String(desktop ? margin : 0) + ea,
+      }
+    ]
+  });
+  whiteTong = whiteBlock.firstChild;
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          border: desktop ? "1px solid " + colorChip.gray2 : "",
+          background: desktop ? "" : colorChip.white,
+          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: String(5) + "px",
+          overflow: "hidden",
+          marginBottom: String(blockBottom) + ea,
+          marginTop: desktop ? "" : String(14) + ea,
+        }
+      },
+    ]
+  });
+
+  this.photoUpload(block.lastChild);
 
 }
 
@@ -4763,6 +5219,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox(true);
           instance.insertCenterBox();
+          instance.insertPhotoBox();
           instance.insertPannelBox();
         } catch (e) {
           console.log(e);

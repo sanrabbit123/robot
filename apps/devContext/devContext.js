@@ -62,22 +62,22 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const selfMongo = this.MONGOLOCALC;
+    // const selfMongo = this.MONGOLOCALC;
 
     // const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
     // await selfMongo.connect();
 
-    const collection = "clientHistory";
-    const rows = await back.mongoRead(collection, {}, { selfMongo });
-    let whereQuery, updateQuery;
-
-    for (let r of rows) {
-      whereQuery = { cliid: r.cliid };
-      updateQuery = {};
-      updateQuery["curation.analytics.full"] = false;
-      await selfMongo.db(`miro81`).collection(collection).updateMany(whereQuery, { $set: updateQuery });
-      console.log(whereQuery);
-    }
+    // const collection = "clientHistory";
+    // const rows = await back.mongoRead(collection, {}, { selfMongo });
+    // let whereQuery, updateQuery;
+    //
+    // for (let r of rows) {
+    //   whereQuery = { cliid: r.cliid };
+    //   updateQuery = {};
+    //   updateQuery["curation.analytics.full"] = false;
+    //   await selfMongo.db(`miro81`).collection(collection).updateMany(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery);
+    // }
 
     // await selfMongo.close();
 
@@ -697,9 +697,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "여훈",
-    //     designer: "김남희",
-    //     link: "https://drive.google.com/drive/folders/1K_WydnX5QIIzJLUgTuWtnoUd2-goPKtq",
+    //     client: "이수진",
+    //     designer: "고윤미",
+    //     link: "https://drive.google.com/drive/folders/1LD3YlLFULB7fUHs0pgwGfqKbdcmsFtVp",
     //   },
     // ]);
 

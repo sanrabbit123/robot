@@ -166,8 +166,6 @@ module.exports = function (proid, info) {
           document.querySelector('.send').click();
           await sleep(500);
 
-          await sleep(50 * 50 * 50 * 50 * 1000)
-
           while (document.querySelector(".sc-jWUzTF") === null) {
             await sleep(500);
           }
