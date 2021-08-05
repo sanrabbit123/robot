@@ -403,7 +403,9 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       if (client !== null) {
         await kakao.sendTalk("stylingForm", client.name, client.phone, { client: client.name });
         instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 및 알림톡 전송 완료 : " + obj.name, channel: "#400_customer" });
-        ghostRequest("voice", { text: obj.name + " 계약서를 작성하고 알림톡을 전송했어요!" });
+        ghostRequest("voice", { text: obj.name + " 계약서를 작성하고 알림톡을 전송했어요!" }).catch((err) => {
+          console.log(err);
+        });
       }
 
       res.set({
