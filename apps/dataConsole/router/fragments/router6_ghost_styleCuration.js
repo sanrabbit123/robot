@@ -158,10 +158,14 @@ DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
   obj.link = "/styleCuration_updateAnalytics";
   obj.func = async function (req, res) {
     try {
-      if (req.body.userAgent === undefined || req.body.referrer === undefined || req.body.mode === undefined || req.body.cliid === undefined || req.body.ip === undefined) {
+      if (req.body.mode === undefined || req.body.cliid === undefined) {
         throw new Error("invaild post");
       }
-      const { userAgent, referrer, mode, cliid, ip } = req.body;
+      const { mode, cliid } = req.body;
+      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const rawUserAgent = req.useragent;
+      const { source: userAgent, browser, os, platform } = rawUserAgent;
+      const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
       let whereQuery, updateQuery;
       let history;
       let update;
@@ -182,7 +186,7 @@ DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
           ipObj = { ip };
         }
 
-        history.curation.analytics.page.push({ date: new Date(), referrer, userAgent, ...ipObj });
+        history.curation.analytics.page.push({ date: new Date(), referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj });
         updateQuery = {};
         updateQuery["curation.analytics.page"] = history.curation.analytics.page;
         if (req.body.liteMode === "false") {
