@@ -3732,6 +3732,8 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
         "t8p9.jpg",
         "t13a27.jpg",
         "t19a41.jpg",
+        "t1p12.jpg",
+        "t9a37.jpg"
       ];
 
       let photos, sendingDesigners, temp;

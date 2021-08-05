@@ -585,7 +585,7 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             required: true,
             rewind: "스타일 체크를 진행해주세요!",
             question: [
-              "선호하는 스타일을 <b%3장%b> 골라주세요!",
+              "상대적으로 마음에 드는 <b%3장%b> 골라주세요!",
               "스타일 분석이 완료되었습니다!"
             ],
             value: function (request, history, self) {
@@ -1141,7 +1141,24 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
         button: "서비스 금액 알아보기"
       };
       this.wordings.photo = {
-        question: "현장 사진, 또는 특별히 선호하는 사진이 있다면 보내주세요!"
+        desktop: {
+          question: "<b%현장 사진%b> 또는 도면이 있다면 보내주세요!",
+          notice: "<b%*%b> 없다면 보내지 않으셔도 괜찮습니다!",
+          file: "클릭 또는 드래그하여 파일 업로드 ..."
+        },
+        mobile: {
+          question: "<b%현장 사진%b> 또는 도면이 있다면 보내주세요!",
+          notice: "<b%*%b> 없다면 보내지 않으셔도 괜찮습니다!",
+          file: "클릭하여 파일 업로드 ..."
+        },
+        before: [
+          "beforeal1.jpg",
+          "beforeal2.jpg",
+          "beforeal3.jpg",
+          "beforeal4.jpg",
+          "beforeal5.jpg",
+          "beforeal6.jpg",
+        ]
       }
     }
     get initWordings() {
@@ -2774,7 +2791,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
 }
 
-StyleCurationJs.prototype.photoUpload = function (mother) {
+StyleCurationJs.prototype.photoBefore = function (mother) {
   const instance = this;
   const { client, ea, media } = this;
   const mobile = media[4];
@@ -2789,7 +2806,7 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
   let pictureBox;
   let innerMargin;
   let pictureMargin;
-  let questionWording, completeWording;
+  let questionWording;
   let pannelHeight;
   let pannelWordsSize;
   let pannelWordsPadding;
@@ -2797,11 +2814,13 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
   let arrowTop, arrowWidth;
   let tempDom;
   let photoHeight, photoWidth, photoWidthCss, photoHeightCss;
-  let resetEvent;
-  let arrowEvent;
-  let pickupDesigners;
   let image;
-  let photoPosition;
+  let beforePhotos;
+  let beforePhotosSelected;
+  let randomNum;
+  let greenTop, greenLeft;
+  let noticeWording, noticeWordsSize;
+  let noticeTop;
 
   GeneralJs.stacks[stackName] = 0;
   GeneralJs.stacks[loadingName] = false;
@@ -2812,23 +2831,34 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
   innerMargin = <%% 42, 36, 36, 28, 4.5 %%>;
   pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
 
-  pannelHeight = <%% 114, 114, 114, 90, 15.4 %%>;
-  pannelPaddingTop = <%% 32, 32, 32, 22, 4 %%>;
+  pannelHeight = <%% 106, 106, 106, 92, 21 %%>;
+  pannelPaddingTop = <%% 16, 16, 16, 12, 4 %%>;
   pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
+  noticeWordsSize = <%% 12, 12, 12, 12, 3 %%>;
   pannelWordsPadding = <%% 16, 16, 16, 12, 16 %%>;
-  pannelLineTop = <%% 47, 47, 47, 36, 47 %%>;
+  pannelLineTop = <%% 31, 31, 31, 26, 47 %%>;
 
   arrowTop = <%% 43, 43, 43, 33, 2 %%>;
   arrowWidth = <%% 10, 10, 10, 8, 2 %%>;
 
-  questionWording = this.wordings.photoWordings.question;
-  completeWording = this.wordings.photoWordings.question;
+  noticeTop = <%% 53, 53, 53, 45, 10.2 %%>;
+
+  questionWording = this.wordings.photoWordings[desktop ? "desktop" : "mobile"].question;
+  noticeWording = this.wordings.photoWordings[desktop ? "desktop" : "mobile"].notice;
+
+  beforePhotosSelected = [];
+  beforePhotos = this.wordings.photoWordings.before;
+  for (let i = 0; i < pictureNumber; i++) {
+    randomNum = Math.floor(beforePhotos.length * Math.random());
+    beforePhotosSelected.push(beforePhotos[randomNum]);
+    beforePhotos.splice(randomNum, 1);
+  }
+  beforePhotosSelected = beforePhotosSelected.map((jpg) => { return S3HOST + StyleCurationJs.binaryPath + "/" + jpg; });
 
   image = [];
 
   randomPick = StyleCurationJs.randomPick(photos, contentsArr, pictureNumber);
   targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
-  photoPosition = [];
 
   mother.style.paddingTop = desktop ? String(innerMargin) + ea : String(0) + ea;
   if (mobile) {
@@ -2845,163 +2875,8 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
   photoHeight = (205 / 297) * (photoWidth);
   photoHeightCss = String(photoHeight) + ea;
 
-  pickupDesigners = function () {
-    const photos = instance.photos;
-    if (photos.length !== 0) {
-      let tendencyAverage, designers, average;
-      designers = JSON.parse(JSON.stringify(instance.designers));
-      tendencyAverage = (new Array(photos[0].tendency.length)).fill(0, 0);
-      for (let { tendency } of photos) {
-        for (let i = 0; i < tendency.length; i++) {
-          tendencyAverage[i] += tendency[i];
-        }
-      }
-      tendencyAverage = tendencyAverage.map((n) => { return Math.round((n / photos.length) * 100) / 100; });
-
-      for (let designer of designers) {
-        average = 0;
-        for (let i = 0; i < tendencyAverage.length; i++) {
-          average += Math.abs(tendencyAverage[i] - designer.tendency[i]);
-        }
-        designer.tendencyLength = average;
-      }
-
-      designers.sort((a, b) => { return a.tendencyLength - b.tendencyLength });
-      designers = designers.filter((d) => { return /완료/gi.test(d.information.contract.status); });
-      designers = designers.map((obj) => { return obj.desid; });
-      instance.values.style[0].value = designers;
-
-      ajaxJson({
-        mode: "update",
-        cliid: instance.client.cliid,
-        update: { x: "style", y: 0, value: instance.values.style[0].value }
-      }, "/styleCuration_updateAnalytics").then(() => {
-        return ajaxJson({
-          mode: "image",
-          cliid: instance.client.cliid,
-          image: image
-        }, "/styleCuration_updateAnalytics");
-      }).catch((err) => {
-        console.log(err);
-      });
-
-    }
-  }
-
-  resetEvent = function () {
-    let rowLength, thisTime;
-    let greenTargets;
-    let style;
-    let loading;
-    let loadingWidth, completePaddingTop;
-    let animationTime, delayTime, animationTimes, animationTimesTemp;
-    let targetPhotos;
-    let randomPick;
-
-    loadingWidth = <%% 40, 40, 36, 30, 10 %%>;
-    completePaddingTop = <%% 10, 10, 9, 8, 0 %%>;
-    animationTime = 0.3;
-    delayTime = 0.2;
-    animationTimes = [];
-
-    greenTargets = mother.querySelectorAll('.' + greenClassName);
-    for (let dom of greenTargets) {
-      dom.style.animation = "justfadeoutnine 0.6s ease forwards";
-    }
-
-    rowLength = Math.round(pictureNumber / columnNumber);
-    animationTimesTemp = [];
-    for (let i = 0; i < instance.photoPosition.length; i++) {
-      animationTimesTemp.push(animationTime + ((i % rowLength) * delayTime));
-      if (animationTimesTemp.length === columnNumber) {
-        animationTimes.push(animationTimesTemp);
-        animationTimesTemp = [];
-      }
-    }
-    if (Math.random() > 0.5) {
-      animationTimes = animationTimes.map((arr) => { return arr.reverse(); });
-    }
-    animationTimes = animationTimes.flat();
-
-    for (let i = 0; i < instance.photoPosition.length; i++) {
-      thisTime = String(animationTimes[i]) + 's';
-      instance.photoPosition[i].style.animation = "fadedownlite " + String(animationTime) + "s ease " + thisTime + " forwards";
-    }
-
-    animationTimes.sort((a, b) => { return b - a; });
-
-    loading = instance.mother.returnLoadingIcon();
-    style = {
-      position: "absolute",
-      width: String(loadingWidth) + ea,
-      height: String(loadingWidth) + ea,
-      top: withOut(50, loadingWidth * (desktop ? (3 / 4) : 0.55), ea),
-      left: withOut(50, loadingWidth * (1 / 2), ea),
-    };
-    for (let i in style) {
-      loading.style[i] = style[i];
-    }
-    mother.firstChild.appendChild(loading);
-
-    randomPick = StyleCurationJs.randomPick(instance.photos, contentsArr, pictureNumber);
-    console.log(randomPick);
-    if (!Array.isArray(randomPick)) {
-      // sleep((animationTimes[0] * 1000) + 100).then(async () => {
-      //   try {
-      //     for (let i = 0; i < instance.photoPosition.length; i++) {
-      //       instance.photoPosition[i].style.backgroundImage = "";
-      //       instance.photoPosition[i].style.height = String(0);
-      //       instance.photoPosition[i].setAttribute("complete", "true");
-      //     }
-      //     mother.style.paddingTop = String(completePaddingTop) + ea;
-      //     mother.firstChild.removeChild(loading);
-      //     mother.lastChild.lastChild.textContent = completeWording;
-      //     for (let dom of greenTargets) {
-      //       dom.remove();
-      //     }
-      //     await sleep(100);
-      //     for (let i = 0; i < instance.photoPosition.length; i++) {
-      //       instance.photoPosition[i].style.display = "none";
-      //     }
-      //     GeneralJs.stacks[loadingName] = false;
-      //
-      //     pickupDesigners();
-      //
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
-      // });
-    } else {
-      targetPhotos = randomPick.map((obj) => { return S3HOST + obj.path; });
-      sleep((animationTimes[0] * 1000) + (animationTime * 1000)).then(async () => {
-        try {
-          for (let i = 0; i < instance.photoPosition.length; i++) {
-            instance.photoPosition[i].style.backgroundImage = "url('" + targetPhotos[i] + "')";
-          }
-          await sleep(animationTime * 1000);
-          mother.firstChild.removeChild(loading);
-          for (let dom of greenTargets) {
-            dom.remove();
-          }
-          await sleep(100);
-          for (let i = 0; i < instance.photoPosition.length; i++) {
-            instance.photoPosition[i].style.animation = "fadeupmiddle " + String(animationTime) + "s ease forwards";
-          }
-          GeneralJs.stacks[loadingName] = false;
-        } catch (e) {
-          console.log(e);
-        }
-      });
-    }
-  }
-
-  arrowEvent = function () {
-    instance.selectPhotos = [];
-    GeneralJs.stacks[loadingName] = true;
-    GeneralJs.setTimeout(() => {
-      resetEvent();
-    }, 201);
-  }
+  greenTop = Math.floor(2 / columnNumber) * (photoHeight + pictureMargin);
+  greenLeft = (2 % columnNumber) * (photoWidth + pictureMargin);
 
   pictureBox = createNode({
     mother,
@@ -3014,7 +2889,7 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
   });
 
   for (let i = 0; i < pictureNumber; i++) {
-    tempDom = createNode({
+    createNode({
       mother: pictureBox,
       class: [ "hoverDefault_lite" ],
       attribute: [
@@ -3030,16 +2905,12 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
         marginRight: String(i % columnNumber === (columnNumber - 1) ? 0 : pictureMargin) + ea,
         marginBottom: String(pictureMargin) + ea,
         overflow: "hidden",
-        background: colorChip.gray2
+        background: colorChip.gray2,
+        backgroundImage: "url('" + beforePhotosSelected[i] + "')",
+        backgroundSize: "100% 100%",
+        backgroundPosition: "50% 50%",
       }
     });
-    photoPosition.push(tempDom);
-  }
-
-  for (let i = 0; i < pictureNumber; i++) {
-    photoPosition[i].style.backgroundImage = "url('" + targetPhotos[i] + "')";
-    photoPosition[i].style.backgroundPosition = "50% 50%";
-    photoPosition[i].style.backgroundSize = "100% auto";
   }
 
   createNode({
@@ -3052,8 +2923,8 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
       paddingTop: String(pannelPaddingTop) + ea,
       textAlign: "center",
       background: mobile ? colorChip.white : "",
-      boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-      borderRadius: mobile ? String(5) + "px" : "",
+      boxShadow: mobile ? "0px 6px 12px -10px " + colorChip.gray5 : "",
+      borderRadius: mobile ? String(3) + "px" : "",
     },
     children: [
       {
@@ -3065,46 +2936,6 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
           top: String(0) + ea,
           height: String(pannelLineTop) + ea,
           borderBottom: "1px dashed " + colorChip.gray3,
-        }
-      },
-      {
-        mode: "svg",
-        source: this.mother.returnArrow("left", colorChip.green),
-        events: [
-          {
-            type: "click",
-            event: arrowEvent
-          }
-        ],
-        style: {
-          display: desktop ? "block" : "none",
-          position: "absolute",
-          left: String(innerMargin) + ea,
-          top: String(arrowTop) + ea,
-          width: String(arrowWidth) + ea,
-          paddingRight: String(pannelWordsPadding) + ea,
-          background: colorChip.white,
-          cursor: "pointer"
-        }
-      },
-      {
-        mode: "svg",
-        source: this.mother.returnArrow("right", colorChip.green),
-        events: [
-          {
-            type: "click",
-            event: arrowEvent
-          }
-        ],
-        style: {
-          display: desktop ? "block" : "none",
-          position: "absolute",
-          right: String(innerMargin) + ea,
-          top: String(arrowTop) + ea,
-          width: String(arrowWidth) + ea,
-          paddingLeft: String(pannelWordsPadding) + ea,
-          background: colorChip.white,
-          cursor: "pointer"
         }
       },
       {
@@ -3126,7 +2957,23 @@ StyleCurationJs.prototype.photoUpload = function (mother) {
           fontWeight: String(600),
           color: colorChip.green,
         }
-      }
+      },
+      {
+        text: noticeWording,
+        style: {
+          position: "absolute",
+          textAlign: "center",
+          fontSize: String(noticeWordsSize) + ea,
+          fontWeight: String(500),
+          color: colorChip.deactive,
+          width: String(99.7) + '%',
+          top: String(noticeTop) + ea,
+        },
+        bold: {
+          fontWeight: String(500),
+          color: colorChip.green,
+        }
+      },
     ]
   });
 
@@ -3651,9 +3498,18 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
   let numberRight;
   let titleTop, titleTopNumber;
   let barTop;
-  let titleBottom, blockBottom;
+  let titleBottom;
   let index;
   let mobileTitleLeft, mobileTitleTop;
+  let grayHeight, grayWording, grayTextTop;
+  let pannelWordsSize;
+  let grayMargin;
+  let fileTongClassName;
+  let cardWidthNumber, cardHeightNumber, cardMargin, cardHeight;
+  let cardInnerMargin, cardInnerMarginTop;
+  let xIconWidth, xIconTop, xVisual;
+  let cardWordingSize;
+  let fileChangeEvent;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -3667,11 +3523,32 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
 
   barTop = <%% 15, 15, 15, 15, 2.6 %%>;
 
-  titleBottom = <%% 15, 15, 15, 15, 0 %%>;
-  blockBottom = <%% 40, 40, 40, 40, 3 %%>;
+  titleBottom = <%% 15, 15, 15, 12, 0 %%>;
+  grayHeight = <%% 120, 120, 120, 120, 36 %%>;
+
+  pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
+
+  grayTextTop = <%% 40, 40, 39, 39, 14 %%>;
+  grayMargin = <%% 16, 16, 16, 16, 3 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
+
+  cardWidthNumber = <%% 8, 6, 5, 4, 2 %%>;
+  cardHeightNumber = <%% 2, 2, 2, 2, 3 %%>;
+  cardMargin = <%% 6, 6, 6, 6, 1 %%>;
+  cardHeight = (grayHeight - (desktop ? grayMargin * 2 : (grayMargin * 2) + 2) - (cardMargin * (cardHeightNumber - 1))) / cardHeightNumber;
+
+  cardWordingSize = <%% 13, 13, 13, 13, 3 %%>;
+  cardInnerMargin = <%% 16, 16, 16, 16, 3 %%>;
+  cardInnerMarginTop = <%% 11, 11, 11, 11, 2.1 %%>;
+  xIconWidth = <%% 10, 10, 10, 10, 2 %%>;
+  xIconTop = <%% 14, 14, 14, 14, 3 %%>;
+  xVisual = <%% 4, 4, 4, 4, 1 %%>;
+
+  fileTongClassName = "fileTong";
+
+  grayWording = this.wordings.photoWordings[desktop ? "desktop" : "mobile"].file;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -3716,15 +3593,212 @@ StyleCurationJs.prototype.insertPhotoBox = function () {
           background: desktop ? "" : colorChip.white,
           boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
           borderRadius: String(5) + "px",
-          overflow: "hidden",
-          marginBottom: String(blockBottom) + ea,
-          marginTop: desktop ? "" : String(14) + ea,
+          overflow: desktop ? "hidden" : "",
+          marginBottom: String(titleBottom) + ea,
+          marginTop: desktop ? "" : String(4) + ea,
         }
       },
     ]
   });
+  this.photoBefore(block.lastChild);
 
-  this.photoUpload(block.lastChild);
+  fileChangeEvent = function (e) {
+    const self = this;
+    const mother = document.querySelector('.' + fileTongClassName);
+    const cardMaker = (fileObj, index) => {
+      createNode({
+        mother,
+        events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(cardMargin * (cardWidthNumber - 1)) + ea + ") / " + String(cardWidthNumber) + ")",
+          height: String(cardHeight) + ea,
+          marginRight: String(index % cardWidthNumber === cardWidthNumber - 1 ? 0 : cardMargin) + ea,
+          marginBottom: String(cardMargin) + ea,
+          background: colorChip.white,
+          borderRadius: String(3) + "px",
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              top: String(cardInnerMarginTop) + ea,
+              left: String(cardInnerMargin) + ea,
+              width: withOut(xIconWidth + (cardInnerMargin * 2.8), ea),
+              height: withOut(cardInnerMarginTop, ea),
+              overflow: "hidden",
+            },
+            children: [
+              {
+                text: fileObj.name,
+                style: {
+                  position: "absolute",
+                  fontSize: String(cardWordingSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  width: String(1000) + ea,
+                }
+              }
+            ]
+          },
+          {
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  this.parentElement.parentElement.removeChild(this.parentElement);
+                }
+              }
+            ],
+            style: {
+              position: "absolute",
+              background: colorChip.white,
+              width: String(xIconWidth) + ea,
+              height: String(xIconWidth) + ea,
+              right: String(cardInnerMargin) + ea,
+              top: String(xIconTop) + ea,
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  background: colorChip.white,
+                  width: String(xIconWidth + (xVisual * 2)) + ea,
+                  height: String(xIconWidth + (xVisual * 2)) + ea,
+                  right: String(-1 * xVisual) + ea,
+                  top: String(-1 * xVisual) + ea,
+                }
+              },
+              {
+                mode: "svg",
+                source: instance.mother.returnCancel(colorChip.green),
+                style: {
+                  position: "absolute",
+                  background: colorChip.white,
+                  width: String(xIconWidth) + ea,
+                  right: String(0) + ea,
+                  top: String(0) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      });
+    }
+    cleanChildren(mother);
+    for (let i = 0; i < this.files.length; i++) {
+      cardMaker(this.files[i], i);
+    }
+    if (this.files.length === 0) {
+      this.previousElementSibling.style.display = "block";
+    } else {
+      this.previousElementSibling.style.display = "none";
+    }
+    console.log(this.files);
+  }
+
+  block = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      cursor: "pointer",
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          height: String(grayHeight) + ea,
+          border: desktop ? "1px solid " + colorChip.gray1 : "",
+          background: desktop ? colorChip.gray1 : colorChip.gray6,
+          borderRadius: String(desktop ? 5 : 3) + "px",
+          overflow: "hidden",
+          marginTop: desktop ? "" : String(-2) + ea,
+          zIndex: desktop ? "" : String(-1),
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              top: String(grayMargin + (desktop ? 0 : 2)) + ea,
+              left: String(grayMargin) + ea,
+              width: withOut(grayMargin * 2, ea),
+              height: withOut(grayMargin + grayMargin + (desktop ? 0 : 2), ea),
+              overflow: "scroll",
+              zIndex: String(1),
+            },
+            children: [
+              {
+                class: [ fileTongClassName ],
+                style: {
+                  position: "relative",
+                  width: String(100) + '%',
+                  top: String(0),
+                  left: String(0),
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        text: grayWording,
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          textAlign: "center",
+          fontSize: String(pannelWordsSize) + ea,
+          fontWeight: String(200),
+          color: desktop ? colorChip.gray4 : colorChip.deactive,
+          top: String(grayTextTop) + ea,
+        }
+      },
+      {
+        mode: "input",
+        events: [
+          {
+            type: "change",
+            event: fileChangeEvent
+          }
+        ],
+        attribute: [
+          { type: "file" },
+          { name: "upload" },
+          { accept: "image/*" },
+          { multiple: "true" }
+        ],
+        style: {
+          position: "absolute",
+          display: "none",
+        }
+      }
+    ],
+    events: [
+      {
+        type: "click",
+        event: function (e) {
+          this.querySelector("input").click();
+        }
+      },
+      {
+        type: "drop",
+        event: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.querySelector("input").files = e.dataTransfer.files;
+          fileChangeEvent.call(this.querySelector("input"), e);
+        }
+      },
+      {
+        type: [ "dragenter", "dragover", "dragleave" ],
+        event: (e) => { e.preventDefault(); e.stopPropagation(); }
+      },
+    ]
+  });
 
 }
 

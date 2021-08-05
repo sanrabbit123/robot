@@ -30,6 +30,7 @@ GeneralJs.colorChip = {
   gray3: "#dddddd",
   gray4: "#cccccc",
   gray5: "#aaaaaa",
+  gray6: "#e2e2e2",
   gradientGray: "linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%)",
   gradientSilver: "linear-gradient(256deg, rgba(30, 30, 30, 0.65) 0%, rgba(38, 38, 38, 0.7) 100%)",
   grayDeactive: "#c2c2c2",
