@@ -2831,7 +2831,7 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
   innerMargin = <%% 42, 36, 36, 28, 4.5 %%>;
   pictureMargin = <%% 10, 6, 6, 4, 1 %%>;
 
-  pannelHeight = <%% 106, 106, 106, 92, 21 %%>;
+  pannelHeight = <%% 106, 106, 106, 92, 20 %%>;
   pannelPaddingTop = <%% 16, 16, 16, 12, 4 %%>;
   pannelWordsSize = <%% 23, 23, 23, 21, 4 %%>;
   noticeWordsSize = <%% 12, 12, 12, 12, 3 %%>;
