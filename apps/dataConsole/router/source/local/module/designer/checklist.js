@@ -219,23 +219,28 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             updateQuery = {};
                                             updateQuery["information.business.career.relatedY"] = relatedY;
                                             updateQuery["information.business.career.relatedM"] = relatedM;
-                                            text = `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월`
-                                            await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                                            await ajaxJson({
-                                              mode: "sse",
-                                              db: "console",
-                                              collection: "sse_checklistDesigner",
-                                              log: true,
-                                              who: cookies.homeliaisonConsoleLoginedEmail,
-                                              updateQuery: {
-                                                desid,
-                                                type: "async__function__{ mother.querySelectorAll('div')[0].textContent __equal__ value; }",
-                                                value: text,
-                                                position: { x: 1, y: 0, class: "dom_" + String(1) + "_" + String(0) },
-                                                update: { whereQuery, updateQuery }
-                                              }
-                                            }, "/generalMongo");
-                                            instance.designers.update([ whereQuery, updateQuery ]);
+                                            text = `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월`;
+                                            if (window.confirm("수정이 확실합니까?")) {
+                                              await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                                              await ajaxJson({
+                                                mode: "sse",
+                                                db: "console",
+                                                collection: "sse_checklistDesigner",
+                                                log: true,
+                                                who: cookies.homeliaisonConsoleLoginedEmail,
+                                                updateQuery: {
+                                                  desid,
+                                                  type: "async__function__{ mother.querySelectorAll('div')[0].textContent __equal__ value; }",
+                                                  value: text,
+                                                  position: { x: 1, y: 0, class: "dom_" + String(1) + "_" + String(0) },
+                                                  update: { whereQuery, updateQuery }
+                                                }
+                                              }, "/generalMongo");
+                                              instance.designers.update([ whereQuery, updateQuery ]);
+                                            } else {
+                                              text = this.getAttribute("past");
+                                              this.value = text;
+                                            }
                                           }
                                         }
                                       } else {
@@ -364,23 +369,28 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             updateQuery = {};
                                             updateQuery["information.business.career.startY"] = startY;
                                             updateQuery["information.business.career.startM"] = startM;
-                                            text = `스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`,
-                                            await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                                            await ajaxJson({
-                                              mode: "sse",
-                                              db: "console",
-                                              collection: "sse_checklistDesigner",
-                                              log: true,
-                                              who: cookies.homeliaisonConsoleLoginedEmail,
-                                              updateQuery: {
-                                                desid,
-                                                type: "async__function__{ mother.querySelectorAll('div')[2].textContent __equal__ value; }",
-                                                value: text,
-                                                position: { x: 1, y: 0, class: "dom_" + String(1) + "_" + String(0) },
-                                                update: { whereQuery, updateQuery }
-                                              }
-                                            }, "/generalMongo");
-                                            instance.designers.update([ whereQuery, updateQuery ]);
+                                            text = `스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
+                                            if (window.confirm("수정이 확실합니까?")) {
+                                              await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                                              await ajaxJson({
+                                                mode: "sse",
+                                                db: "console",
+                                                collection: "sse_checklistDesigner",
+                                                log: true,
+                                                who: cookies.homeliaisonConsoleLoginedEmail,
+                                                updateQuery: {
+                                                  desid,
+                                                  type: "async__function__{ mother.querySelectorAll('div')[2].textContent __equal__ value; }",
+                                                  value: text,
+                                                  position: { x: 1, y: 0, class: "dom_" + String(1) + "_" + String(0) },
+                                                  update: { whereQuery, updateQuery }
+                                                }
+                                              }, "/generalMongo");
+                                              instance.designers.update([ whereQuery, updateQuery ]);
+                                            } else {
+                                              text = this.getAttribute("past");
+                                              this.value = text;
+                                            }
                                           }
                                         }
                                       } else {
@@ -3266,7 +3276,8 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                   const designer = instance.designers.pick(desid);
                                   const whereQuery = { desid };
                                   const { updateQuery, text } = checkListData[x].children[y].update(this.value, designer);
-                                  if (updateQuery === "error") {
+                                  const confirm = window.confirm("수정이 확실합니까?");
+                                  if (updateQuery === "error" || !confirm) {
                                     this.value = this.getAttribute("past");
                                   } else {
                                     this.parentElement.removeChild(this.parentElement.firstChild);
@@ -3365,36 +3376,39 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                     let anothers, resultArr;
                     let whereQuery, updateQuery;
 
-                    anothers = [];
-                    for (let dom of thisButtons) {
-                      if (this !== dom) {
-                        anothers.push(dom);
-                      }
-                    }
-                    if (toggle === 0) {
-                      if (!multiple) {
-                        for (let dom of anothers) {
-                          dom.style.color = colorChip.gray4;
-                          dom.setAttribute("toggle", String(0));
+                    if (window.confirm("수정이 확실합니까?")) {
+                      anothers = [];
+                      for (let dom of thisButtons) {
+                        if (this !== dom) {
+                          anothers.push(dom);
                         }
                       }
-                      this.style.color = colorChip.green;
-                      this.setAttribute("toggle", String(1));
-                    } else {
-                      this.style.color = colorChip.gray4;
-                      this.setAttribute("toggle", String(0));
+                      if (toggle === 0) {
+                        if (!multiple) {
+                          for (let dom of anothers) {
+                            dom.style.color = colorChip.gray4;
+                            dom.setAttribute("toggle", String(0));
+                          }
+                        }
+                        this.style.color = colorChip.green;
+                        this.setAttribute("toggle", String(1));
+                      } else {
+                        this.style.color = colorChip.gray4;
+                        this.setAttribute("toggle", String(0));
+                      }
+
+                      resultArr = [];
+                      for (let dom of thisButtons) {
+                        resultArr.push(Number(dom.getAttribute("toggle")));
+                      }
+                      updateQuery = checkListData[x].children[y].update(resultArr, designer);
+                      whereQuery = { desid };
+
+                      await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                      await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: resultArr, position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
+                      instance.designers.update([ whereQuery, updateQuery ]);
                     }
 
-                    resultArr = [];
-                    for (let dom of thisButtons) {
-                      resultArr.push(Number(dom.getAttribute("toggle")));
-                    }
-                    updateQuery = checkListData[x].children[y].update(resultArr, designer);
-                    whereQuery = { desid };
-
-                    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                    await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: resultArr, position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
-                    instance.designers.update([ whereQuery, updateQuery ]);
                   } catch (err) {
                     console.log(err);
                   }
@@ -3481,35 +3495,38 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       const designer = instance.designers.pick(desid);
                       let whereQuery, updateQuery;
 
-                      for (let i = 0; i < thisButtons.length; i++) {
-                        if (i <= t) {
-                          thisButtons[i].setAttribute("toggle", String(1));
-                          thisButtons[i].style.background = colorChip.green;
-                        } else {
-                          thisButtons[i].setAttribute("toggle", String(0));
-                          thisButtons[i].style.background = colorChip.gray2;
-                        }
-                      }
-
-                      if (checkListData[x].children[y].opposite === true) {
-                        const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y) + String(1 - z));
-                        for (let i = 0; i < oppositeButtons.length; i++) {
-                          if (i < oppositeButtons.length - t - 1) {
-                            oppositeButtons[i].setAttribute("toggle", String(1));
-                            oppositeButtons[i].style.background = colorChip.green;
+                      if (window.confirm("수정이 확실합니까?")) {
+                        for (let i = 0; i < thisButtons.length; i++) {
+                          if (i <= t) {
+                            thisButtons[i].setAttribute("toggle", String(1));
+                            thisButtons[i].style.background = colorChip.green;
                           } else {
-                            oppositeButtons[i].setAttribute("toggle", String(0));
-                            oppositeButtons[i].style.background = colorChip.gray2;
+                            thisButtons[i].setAttribute("toggle", String(0));
+                            thisButtons[i].style.background = colorChip.gray2;
                           }
                         }
+
+                        if (checkListData[x].children[y].opposite === true) {
+                          const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y) + String(1 - z));
+                          for (let i = 0; i < oppositeButtons.length; i++) {
+                            if (i < oppositeButtons.length - t - 1) {
+                              oppositeButtons[i].setAttribute("toggle", String(1));
+                              oppositeButtons[i].style.background = colorChip.green;
+                            } else {
+                              oppositeButtons[i].setAttribute("toggle", String(0));
+                              oppositeButtons[i].style.background = colorChip.gray2;
+                            }
+                          }
+                        }
+
+                        whereQuery = { desid };
+                        updateQuery = checkListData[x].children[y].update(z, t, designer);
+
+                        await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
+                        await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: [ z, t, (checkListData[x].children[y].opposite === true), matrixButtonConst ], position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
+                        instance.designers.update([ whereQuery, updateQuery ]);
                       }
 
-                      whereQuery = { desid };
-                      updateQuery = checkListData[x].children[y].update(z, t, designer);
-
-                      await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                      await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: [ z, t, (checkListData[x].children[y].opposite === true), matrixButtonConst ], position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
-                      instance.designers.update([ whereQuery, updateQuery ]);
                     } catch (err) {
                       console.log(err);
                     }
@@ -3595,7 +3612,8 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       const designer = instance.designers.pick(desid);
                       const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
                       const whereQuery = { desid };
-                      if (updateQuery === "error") {
+                      const confirm = window.confirm("수정이 확실합니까?");
+                      if (updateQuery === "error" || !confirm) {
                         this.value = this.getAttribute("past");
                       } else {
                         await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");

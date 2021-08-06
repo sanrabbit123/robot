@@ -1143,12 +1143,12 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
       this.wordings.photo = {
         desktop: {
           question: "<b%현장 사진%b> 또는 도면이 있다면 보내주세요!",
-          notice: "<b%*%b> 없다면 보내지 않으셔도 괜찮습니다!",
+          notice: "<b%*%b> 이미 보냈거나 없다면, 보내지 않으셔도 괜찮습니다!",
           file: "클릭 또는 드래그하여 파일 업로드 ..."
         },
         mobile: {
           question: "<b%현장 사진%b> 또는 도면이 있다면 보내주세요!",
-          notice: "<b%*%b> 없다면 보내지 않으셔도 괜찮습니다!",
+          notice: "<b%*%b> 이미 보냈거나 없다면, 보내지 않으셔도 괜찮습니다!",
           file: "클릭하여 파일 업로드 ..."
         },
         before: [

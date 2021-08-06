@@ -1910,6 +1910,25 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           cliid = instance.cliid;
           serid = instance.serid;
           xValue = instance.xValue;
+
+          if (desid === null) {
+            const designerCardClassName = "pp_designer_selected_box_contents_designers_s";
+            const targetDesigners = Array.from(document.querySelectorAll('.' + designerCardClassName + String(n)));
+            const targetInputs = targetDesigners.map((dom) => { return dom.previousElementSibling; });
+            let thisDesigner;
+            thisDesigner = null;
+            for (let i = 0; i < targetInputs.length; i++) {
+              if (targetInputs[i].checked) {
+                thisDesigner = targetDesigners[i];
+              }
+            }
+            if (thisDesigner === null) {
+              window.alert("디자이너를 체크해주세요!");
+            } else {
+              desid = thisDesigner.querySelector("label").querySelector("div").getAttribute("cus_desid");
+            }
+          }
+
           if (instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
             result = instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
           } else {
