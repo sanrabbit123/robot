@@ -3447,11 +3447,11 @@ ProposalJs.prototype.list_menu = function () {
     let mother = this;
     let list = [
       { key: "pending", name: "작성중", },
-      { key: "confirm", name: "컨펌 요청", },
       { key: "make", name: "제작 요청", },
       { key: "send", name: "발송 예약", },
       { key: "complete", name: "완료", },
       { key: "selected", name: "고객 선택", },
+      { key: "confirm", name: "미리보기", },
       { key: "delete", name: "삭제", }
     ];
     // style
@@ -3503,13 +3503,12 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       }
       break;
     case "confirm":
-      return_func = async function (e) {
-        let message = "제안서 확인 후, 컨펌 부탁드리겠습니다! link: ";
-        await GeneralJs.ajaxPromise("linkmake=true&link=/proposal&query=" + GeneralJs.queryFilter(JSON.stringify([ { standard: "proid", value: proid } ])) + "&message=" + GeneralJs.queryFilter(message) + "&channel=#403_proposal", "/sendSlack");
-        await mother_name(obj);
-        reset_event(this);
-      }
-      break;
+    return_func = async function (e) {
+      GeneralJs.blankHref("https://" + GHOSTHOST + "/middle/proposal?proid=" + proid);
+      mother.parentElement.remove();
+      reset_event(this);
+    }
+    break;
     case "make":
       return_func = async function (e) {
         const { link } = await GeneralJs.ajaxJson("proid=" + proid, "/createProposalDocument");
@@ -5755,7 +5754,11 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .listpp_menuEvent_delete{
-    color:indianred;
+    color: ${GeneralJs.colorChip.red};
+  }
+
+  .listpp_menuEvent_confirm{
+    color: ${GeneralJs.colorChip.purple};
   }
   @keyframes listpp_fadein_ani {
     from {opacity: 0;transform: translateX(-20px);}
