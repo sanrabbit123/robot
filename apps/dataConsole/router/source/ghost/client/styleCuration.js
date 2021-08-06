@@ -1089,11 +1089,11 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               { name: "필름 공사", count: true, half: false, extra: false, contents: "면적, 난이도에 따라 상이" },
               { name: "도배 공사", count: true, half: false, extra: false, contents: "밑작업 난이도 상이" },
               { name: "목공사", count: true, half: false, extra: false, contents: "간접등 박스, 웨인스 코팅, 가벽 등" },
-              { name: "발코니 확장", count: true, half: false, extra: true, contents: "거실, 주방 등 확장 예정 발코니", alert: "발코니 확장은 토탈 스타일링 이상부터 가능합니다." },
+              { name: "발코니 확장", count: true, half: false, extra: true, contents: "거실, 주방 등 확장 발코니", alert: "발코니 확장은 토탈 스타일링 이상부터 가능합니다." },
               { name: "기타 공사", count: true, half: false, extra: true, contents: "샤시 교체, 금속 공사 등", alert: "기타 공사는 토탈 스타일링 이상부터 가능합니다." },
               { name: "전기 공사", count: true, half: true, extra: false, contents: "배선, 이동 추가 등", alert: "배선 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
               { name: "욕실 공사", count: true, half: true, extra: false, contents: "도기 교체 등", alert: "욕실 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-              { name: "주방 공사", count: true, half: true, extra: false, contents: "싱크 등 주방 가구 전체 교체", alert: "주방 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+              { name: "주방 공사", count: true, half: true, extra: false, contents: "싱크 등 주방 가구 교체", alert: "주방 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
               { name: "바닥 공사", count: true, half: true, extra: false, contents: "마루, 타일, 장판 등", alert: "바닥 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
             ],
             multiple: true,
@@ -1129,11 +1129,11 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 if (button === 0) {
                   return null;
                 } else if (button === 1) {
-                  return 5;
+                  return { limit: 5, extra: true };
                 } else if (button === 2) {
-                  return 90000;
+                  return { limit: 90000, extra: false };
                 } else if (button === 3) {
-                  return 90000;
+                  return { limit: 90000, extra: false };
                 }
               } else {
                 return null;
@@ -2562,33 +2562,18 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 const z = Number(this.getAttribute('z'));
                 const siblings = document.querySelectorAll('.' + name + listToken + String(y));
                 const children = this.firstChild.children;
-                const count = this.getAttribute("count");
-                const half = this.getAttribute("half");
-                const extra = this.getAttribute("extra");
+                const count = this.getAttribute("count") === "true";
+                const half = this.getAttribute("half") === "true";
+                const extra = this.getAttribute("extra") === "true";
                 const alert = this.getAttribute("alert");
                 const from = this.getAttribute("from");
                 const to = this.getAttribute("to");
-
-
-
                 let limitStandard;
                 let siblingsChildren, limitNum;
 
-                if (toggle === "off") {
-                  for (let dom of children) {
-                    dom.style.color = dom.getAttribute("active");
-                  }
-                  this.setAttribute("toggle", "on");
-                } else {
-                  for (let dom of children) {
-                    dom.style.color = dom.getAttribute("deactive");
-                  }
-                  this.setAttribute("toggle", "off");
-                }
-
                 instance.values[x][y].value = [];
-
                 limitStandard = obj.limit(instance.values);
+
                 if (limitStandard === null) {
                   for (let s of siblings) {
                     siblingsChildren = s.firstChild.children;
@@ -2598,32 +2583,52 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     s.setAttribute("toggle", "off");
                   }
                 } else {
-
-                  if (toggle === "off" && obj2.extra) {
-                    window.alert(limitStandard.alert);
+                  if (toggle === "off") {
+                    limitNum = 1;
+                    for (let s of siblings) {
+                      if (s.getAttribute("toggle") === "on") {
+                        if (s.getAttribute("count") === "true") {
+                          limitNum = limitNum + 1;
+                        }
+                      }
+                    }
+                    if (limitStandard.extra && extra) {
+                      if (!instance.firstClick) {
+                        window.alert(alert);
+                      }
+                      for (let dom of children) {
+                        dom.style.color = dom.getAttribute("deactive");
+                      }
+                      this.setAttribute("toggle", "off");
+                    } else if (limitNum > limitStandard.limit) {
+                      for (let dom of children) {
+                        dom.style.color = dom.getAttribute("deactive");
+                      }
+                      this.setAttribute("toggle", "off");
+                    } else {
+                      if (!half || (half && !limitStandard.extra)) {
+                        for (let dom of children) {
+                          dom.style.color = dom.getAttribute("active");
+                        }
+                      } else {
+                        for (let dom of children) {
+                          dom.style.color = dom.getAttribute("half");
+                        }
+                        if (!instance.firstClick) {
+                          window.alert(alert);
+                        }
+                        children[1].textContent = children[1].textContent.replace(new RegExp(from), to);
+                      }
+                      this.setAttribute("toggle", "on");
+                    }
+                  } else {
                     for (let dom of children) {
                       dom.style.color = dom.getAttribute("deactive");
                     }
-                    this.setAttribute("toggle", "off");
-                  }
-
-                  limitNum = 0;
-                  for (let s of siblings) {
-                    if (s.getAttribute("toggle") === "on") {
-                      limitNum = limitNum + 1;
-                    }
-                  }
-                  if (toggle === "off" && limitNum > limitStandard) {
-                    for (let dom of children) {
-                      dom.style.color = dom.getAttribute("deactive");
+                    if (from !== "" && to !== "") {
+                      children[1].textContent = children[1].textContent.replace(new RegExp(to), from);
                     }
                     this.setAttribute("toggle", "off");
-                  }
-                  limitNum = 0;
-                  for (let s of siblings) {
-                    if (s.getAttribute("toggle") === "on") {
-                      limitNum = limitNum + 1;
-                    }
                   }
                 }
 
@@ -2667,7 +2672,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: '- ',
                   attribute: [
                     { deactive: colorChip.gray5 },
-                    { active: colorChip.green }
+                    { active: colorChip.green },
+                    { half: colorChip.purple }
                   ],
                   style: {
                     display: "inline-block",
@@ -2682,7 +2688,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: obj2.name,
                   attribute: [
                     { deactive: colorChip.deactive },
-                    { active: colorChip.green }
+                    { active: colorChip.green },
+                    { half: colorChip.purple }
                   ],
                   style: {
                     display: "inline-block",
@@ -2696,7 +2703,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: obj2.contents === '' ? '' : ':',
                   attribute: [
                     { deactive: colorChip.gray5 },
-                    { active: colorChip.gray5 }
+                    { active: colorChip.gray5 },
+                    { active: colorChip.gray5 },
                   ],
                   style: {
                     display: "inline-block",
@@ -2712,7 +2720,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   text: obj2.contents,
                   attribute: [
                     { deactive: colorChip.deactive },
-                    { active: colorChip.green }
+                    { active: colorChip.green },
+                    { half: colorChip.purple }
                   ],
                   style: {
                     display: "inline-block",
@@ -2729,6 +2738,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         listNum++;
       }
 
+      instance.firstClick = true;
       if (updateValue !== null) {
         for (let i of listDoms) {
           if (updateValue.includes(i.getAttribute("value"))) {
@@ -2736,6 +2746,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           }
         }
       }
+      instance.firstClick = false;
 
     } else if (obj.type === "calendar") {
 
@@ -3185,8 +3196,8 @@ StyleCurationJs.prototype.parsingValues = function () {
     if (instance.fileInput.files.length > 0) {
       formData = new FormData();
       formData.enctype = "multipart/form-data";
-      formData.append("name", "배창규");
-      formData.append("phone", "010-2747-3403");
+      formData.append("name", instance.client.name);
+      formData.append("phone", instance.client.phone);
       cancelPhoto = JSON.parse(instance.fileInput.getAttribute("cancel"));
       for (let i = 0; i < instance.fileInput.files.length; i++) {
         if (!cancelPhoto.includes(i)) {
@@ -3199,9 +3210,9 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }).then((data) => {
     if (data === "success") {
-      return ajaxJson({ cliid: this.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation");
+      return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation");
     } else {
-      alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
+      window.alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
       window.location.reload();
       return new Promise((resolve, reject) => { resolve({}); });
     }
@@ -3266,7 +3277,7 @@ StyleCurationJs.prototype.parsingValues = function () {
   }).catch((err) => {
     ajaxJson({
       message: instance.client.name + " 고객님이 큐레이션 페이지를 제출하는 도중 오류를 만나 비정상 종료되었습니다!",
-      channel: "#403_proposal",
+      channel: "#404_curation",
       voice: true,
     }, "/sendSlack").then(() => { window.location.reload(); }).catch((err) => { console.log(err); });
   });

@@ -94,55 +94,52 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         res.send(JSON.stringify({}));
       } else {
         const service = clientCase.caseService();
-        if (service === null) {
-          res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({}));
-        } else {
+        const detail = await work.designerCuration(cliid, 4, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
+        let detailUpdate, updateQuery;
+        let newProid;
 
-          const detail = await work.designerCuration(cliid, 4, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
-          let detailUpdate, updateQuery;
-          let newProid;
+        if (detail.length !== 0) {
 
-          if (detail.length !== 0) {
-
-            detailUpdate = [];
-            for (let obj of detail) {
-              detailUpdate.push(obj.toNormal());
-            }
-
-            updateQuery = {};
-            updateQuery["desid"] = "";
-            updateQuery["proposal.status"] = "작성중";
-            updateQuery["cliid"] = cliid;
-            updateQuery["service.serid"] = history.curation.service.serid[0];
-            updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
-            updateQuery["service.online"] = false;
-            updateQuery["proposal.detail"] = detailUpdate;
-
-            back.createProject(updateQuery, { selfMongo: instance.mongo }).then((proid) => {
-              newProid = proid;
-              //DEV => name, phone
-              return instance.kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", { client: client.name });
-            }).then(() => {
-              return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
-            }).then(() => {
-              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#400_customer" });
-            }).catch((err) => {
-              console.log(err);
-              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#error_log" });
-            });
-
-            res.set({ "Content-Type": "application/json" });
-            res.send(JSON.stringify({ service: detailUpdate, client, history }));
-
-          } else {
-
-            res.set({ "Content-Type": "application/json" });
-            res.send(JSON.stringify({ service: [], client, history }));
-
+          detailUpdate = [];
+          for (let obj of detail) {
+            detailUpdate.push(obj.toNormal());
           }
 
+          updateQuery = {};
+          updateQuery["desid"] = "";
+          updateQuery["proposal.status"] = "작성중";
+          updateQuery["cliid"] = cliid;
+          updateQuery["service.serid"] = history.curation.service.serid[0];
+          if (service === null) {
+            updateQuery["service.xValue"] = "M";
+          } else {
+            updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
+          }
+          updateQuery["service.online"] = false;
+          updateQuery["proposal.detail"] = detailUpdate;
+
+          back.createProject(updateQuery, { selfMongo: instance.mongo }).then((proid) => {
+            newProid = proid;
+            return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+          }).then(() => {
+            return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
+          }).then(() => {
+            instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
+          }).catch((err) => {
+            console.log(err);
+            instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });
+          });
+
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({ service: detailUpdate, client, history }));
+
+        } else {
+
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({ service: [], client, history }));
+
         }
+
       }
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });

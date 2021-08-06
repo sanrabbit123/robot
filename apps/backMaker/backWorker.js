@@ -1223,6 +1223,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
         }
         let feeObject;
         let newArr;
+        let designer;
         try {
           newArr = [];
           for (let obj of arr) {
@@ -1230,7 +1231,12 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
             obj.resetFee();
             if (feeObject.detail.offline !== feeObject.detail.online) {
               obj.appendFee("offline", feeObject.detail.offline);
-              obj.appendFee("online", feeObject.detail.online);
+              designer = designers.search(obj.desid);
+              if (designer !== null) {
+                if (designer.analytics.project.online) {
+                  obj.appendFee("online", feeObject.detail.online);
+                }
+              }
             } else {
               obj.appendFee("offline", feeObject.detail.offline);
             }
@@ -1363,7 +1369,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
       selected = selected.slice(0, selectNumber);
       return selected;
     }
-    
+
   } catch (e) {
     console.log(e);
   }
