@@ -1474,13 +1474,16 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
 
                   button_clone.addEventListener("click", function (e) {
                     const value = this.textContent;
-                    GeneralJs.ajax("id=" + id + "&column=manager&value=" + value + "&email=" + cookies.homeliaisonConsoleLoginedEmail + "&method=" + thisPathName, "/updateHistory", function () {
+                    const column = "manager";
+                    const email = cookies.homeliaisonConsoleLoginedEmail;
+                    const method = thisPathName;
+                    GeneralJs.ajaxJson({ id, column, value, email, method }, "/updateHistory").then(() => {
                       button.textContent = value;
                       const removeTargets = document.querySelectorAll(".removeTarget");
                       for (let i = 0; i < removeTargets.length; i++) {
                         removeTargets[i].parentNode.removeChild(removeTargets[i]);
                       }
-                    });
+                    }).catch((err) => { console.log(err); });
                   });
                   button.parentNode.appendChild(button_clone);
                 }

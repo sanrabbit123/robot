@@ -1843,11 +1843,23 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       const today = new Date();
       const { id, column, value, email } = equalJson(req.body);
       const logDir = `${instance.dir}/log`;
+      const managerInteraction = {
+        designer: {
+          to: "project",
+          toId: "proid",
+          method: "getProjectsByQuery",
+          whereQuery: { desid: id }
+        },
+      };
       let historyObj;
       let whereQuery, updateQuery;
       let thisPerson;
       let fileTarget;
       let method, standard;
+      let managerArr;
+      let managerIdArr;
+      let managerToObj;
+      let managerTargetArr;
 
       for (let member of members) {
         if (member.email.includes(email)) {
@@ -1921,10 +1933,33 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       }
       await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
 
+      if (column === "manager") {
+        if (managerInteraction[method] !== undefined) {
+          managerArr = await back[managerInteraction[method].method](managerInteraction[method].whereQuery, { selfMongo: instance.mongo });
+          managerIdArr = [];
+          for (let obj of managerArr) {
+            managerIdArr.push(obj[managerInteraction[method].toId]);
+          }
+          if (managerIdArr.length !== 0) {
+            managerToObj = await back.getHistoryProperty(managerInteraction[method].to, "manager", managerIdArr, { selfMongo: instance.mongolocal });
+            managerTargetArr = [];
+            for (let i in managerToObj) {
+              managerTargetArr.push([ i, managerToObj[i] ]);
+            }
+            managerTargetArr = managerTargetArr.filter((a) => { return a[1] === '' || a[1] === '-' || a[1] === "홀딩"; });
+            for (let [ id ] of managerTargetArr) {
+              whereQuery = {};
+              whereQuery[managerInteraction[method].toId] = id;
+              await back.updateHistory(managerInteraction[method].to, [ whereQuery, { manager: value } ], { selfMongo: instance.mongolocal });
+            }
+          }
+        }
+      }
+
       res.set("Content-Type", "application/json");
-      res.send(JSON.stringify({ "message": "success" }));
+      res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -3838,8 +3873,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
           back.createProject(updateQuery, { selfMongo: instance.mongo }).then((proid) => {
             newProid = proid;
-            //DEV => name, phone
-            return instance.kakao.sendTalk("curationComplete", "배창규", "010-2747-3403", { client: client.name });
+            return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
           }).then(() => {
             return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
           }).then(() => {

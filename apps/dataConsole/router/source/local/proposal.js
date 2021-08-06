@@ -4104,6 +4104,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               let updateQuery;
               let thisProject_raw;
               let selectedDesigner;
+              let designerHistory;
               try {
                 selectedDesigner = instance.designers.pick(desid);
                 thisProject_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: proid }), "/getProjects"));
@@ -4159,6 +4160,9 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
 
                 await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify(updateQuery), "/rawUpdateProject");
                 await GeneralJs.ajaxPromise("where=" + JSON.stringify({ cliid: thisProject_raw[0].cliid }) + "&updateQuery=" + JSON.stringify({ "requests.0.analytics.response.status": "진행" }), "/rawUpdateClient");
+
+                designerHistory = await GeneralJs.ajaxJson({ idArr: [ desid ], method: "designer", property: "manager" }, "/getHistoryProperty");
+                await GeneralJs.ajaxJson({ method: "project", id: proid, column: "manager", value: designerHistory[desid], email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail }, "/updateHistory");
 
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
 

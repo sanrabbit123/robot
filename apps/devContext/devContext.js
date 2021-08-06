@@ -62,24 +62,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOLOCALC;
 
-    // const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    // await selfMongo.connect();
+    
 
-    // const collection = "clientHistory";
-    // const rows = await back.mongoRead(collection, {}, { selfMongo });
-    // let whereQuery, updateQuery;
-    //
-    // for (let r of rows) {
-    //   whereQuery = { cliid: r.cliid };
-    //   updateQuery = {};
-    //   updateQuery["curation.analytics.full"] = false;
-    //   await selfMongo.db(`miro81`).collection(collection).updateMany(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery);
-    // }
 
-    // await selfMongo.close();
+
+
 
 
 
