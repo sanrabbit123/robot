@@ -205,6 +205,16 @@ DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
         updateQuery["curation.analytics.update"] = history.curation.analytics.update;
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
+        if (req.body.updateQuery !== undefined) {
+          const { history: historyQuery, core: coreQuery } = equalJson(req.body.updateQuery);
+          if (historyQuery !== null && typeof historyQuery === "object" && Object.keys(historyQuery).length > 0) {
+            await back.updateHistory("client", [ whereQuery, historyQuery ], { selfMongo: instance.mongolocal });
+          }
+          if (coreQuery !== null && typeof coreQuery === "object" && Object.keys(coreQuery).length > 0) {
+            await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
+          }
+        }
+
       } else if (mode === "submit") {
 
         history.curation.analytics.submit.push({ date: new Date() });

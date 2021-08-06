@@ -341,7 +341,7 @@ StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, rooms
   const conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
   const standard = 50;
   const stackName = "styleCheckNum";
-  const limit = 6;
+  const limit = 5;
   let randoms;
   let randomPick, randomPick_raw, contentsPick;
   let randomPickFiles, randomPickFiles_new;
@@ -583,9 +583,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             type: "style",
             half: false,
             required: true,
-            rewind: "스타일 체크를 진행해주세요!",
+            rewind: "사진을 더 선택해주셔야 고객님께 맞는 디자이너를 추천드릴 수 있습니다! 스타일 체크를 완료해주세요 :)",
             question: [
-              "상대적으로 마음에 드는 <b%3장%b> 골라주세요!",
+              "마음에 드는 사진을 <b%3장%b> 골라주세요!",
               "스타일 분석이 완료되었습니다!"
             ],
             value: function (request, history, self) {
@@ -751,29 +751,46 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                   return history.curation.building.type;
                 }
               },
+              siblings: [ "pyeongStandard" ],
               update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                const apartStandard = 75;
-                let historyQuery, coreQuery;
-                let pyeong;
-
-                historyQuery = {};
-                historyQuery["curation.building.type"] = items[selected];
-
-                pyeong = client.requests[0].request.space.pyeong;
-                if (siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value.realItems[siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value.selected]) {
-                  pyeong = realItems[selected] * pyeong;
+                if (value === null) {
+                  return { history: null, core: null };
                 } else {
-                  pyeong = (((1 / realItems[selected]) * 100) / apartStandard) * pyeong;
+                  const { items, realItems, selected } = value;
+                  if (selected === null) {
+                    return { history: null, core: null };
+                  } else {
+                    const apartStandard = 75;
+                    let historyQuery, coreQuery;
+                    let pyeong, pyeongTarget;
+
+                    historyQuery = {};
+                    historyQuery["curation.building.type"] = items[selected];
+
+                    pyeong = client.requests[0].request.space.pyeong;
+
+                    pyeongTarget = siblings.space.find((obj) => { return obj.name === "pyeongStandard"; }).value;
+                    if (pyeongTarget === null || pyeongTarget === undefined) {
+                      pyeong = realItems[selected] * pyeong;
+                    } else if (typeof pyeongTarget === "object" && pyeongTarget.realItems !== undefined && pyeongTarget.realItems) {
+                      if (pyeongTarget.realItems[pyeongTarget.selected]) {
+                        pyeong = realItems[selected] * pyeong;
+                      } else {
+                        pyeong = (((1 / realItems[selected]) * 100) / apartStandard) * pyeong;
+                      }
+                    } else {
+                      pyeong = realItems[selected] * pyeong;
+                    }
+
+                    coreQuery = {};
+                    coreQuery["requests.0.request.space.pyeong"] = pyeong;
+
+                    return {
+                      history: historyQuery,
+                      core: coreQuery
+                    };
+                  }
                 }
-
-                coreQuery = {};
-                coreQuery["requests.0.request.space.pyeong"] = pyeong;
-
-                return {
-                  history: historyQuery,
-                  core: coreQuery
-                };
               }
             },
             {
@@ -797,28 +814,44 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 true,
               ],
               multiple: false,
+              siblings: [ "buildingType" ],
               update: function (value, siblings, client) {
-                const { items, realItems, selected } = value;
-                const apartStandard = 75;
-                let coreQuery;
-                let pyeong;
-                let calcValue;
-
-                pyeong = client.requests[0].request.space.pyeong;
-                calcValue = (siblings.space.find((obj) => { return obj.name === "buildingType"; }).value.realItems[siblings.space.find((obj) => { return obj.name === "buildingType"; }).value.selected]);
-                if (realItems[selected]) {
-                  pyeong = calcValue * pyeong;
-                } else {
-                  pyeong = (((1 / calcValue) * 100) / apartStandard) * pyeong;
+                if (value === null) {
+                  return { history: null, core: null };
                 }
+                const { items, realItems, selected } = value;
+                if (selected === null) {
+                  return { history: null, core: null };
+                } else {
+                  const apartStandard = 75;
+                  let coreQuery;
+                  let pyeong;
+                  let calcValue;
+                  let calcTarget;
 
-                coreQuery = {};
-                coreQuery["requests.0.request.space.pyeong"] = pyeong;
+                  pyeong = client.requests[0].request.space.pyeong;
+                  calcTarget = siblings.space.find((obj) => { return obj.name === "buildingType"; }).value;
+                  if (calcTarget === null || calcTarget === undefined) {
+                    pyeong = pyeong;
+                  } else if (typeof calcTarget === "object" && calcTarget.realItems !== undefined && calcTarget.realItems) {
+                    calcValue = calcTarget.realItems[calcTarget.selected];
+                    if (realItems[selected]) {
+                      pyeong = calcValue * pyeong;
+                    } else {
+                      pyeong = (((1 / calcValue) * 100) / apartStandard) * pyeong;
+                    }
+                  } else {
+                    pyeong = pyeong;
+                  }
 
-                return {
-                  history: null,
-                  core: coreQuery
-                };
+                  coreQuery = {};
+                  coreQuery["requests.0.request.space.pyeong"] = pyeong;
+
+                  return {
+                    history: null,
+                    core: coreQuery
+                  };
+                }
               }
             },
           ]
@@ -884,13 +917,17 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 return { history: null, core: null };
               } else {
                 const { items, realItems, selected } = value;
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.furniture.makeNeeds.furniture"] = (selected === 0);
-                return {
-                  history: updateQuery,
-                  core: null
-                };
+                if (selected === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["curation.furniture.makeNeeds.furniture"] = (selected === 0);
+                  return {
+                    history: updateQuery,
+                    core: null
+                  };
+                }
               }
             }
           },
@@ -916,13 +953,17 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 return { history: null, core: null };
               } else {
                 const { items, realItems, selected } = value;
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.furniture.makeNeeds.fabric"] = (selected === 0);
-                return {
-                  history: updateQuery,
-                  core: null
-                };
+                if (selected === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["curation.furniture.makeNeeds.fabric"] = (selected === 0);
+                  return {
+                    history: updateQuery,
+                    core: null
+                  };
+                }
               }
             }
           },
@@ -945,8 +986,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             multiple: false,
             items: [
               "시공 없이 홈퍼니싱만",
-              "5개 이내의 부분 시공과 홈퍼니싱",
-              "전체 리모델링과 전체 스타일링",
+              "5개 이내의 부분 시공과 홈스타일링",
+              "전체 리모델링의 토탈 스타일링",
               "구조 변경을 포함한 고급 시공"
             ],
             realItems: [
@@ -971,6 +1012,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 mother.style.textAlign = "left";
                 mother.style.left = String(-0.4) + "vw";
                 mother.style.paddingTop = String(0.5) + "vw";
+                for (let i of items) {
+                  i.style.display = "block";
+                }
               }
             },
             value: function (request, history, self) {
@@ -985,16 +1029,25 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               }
             },
             update: function (value, siblings, client) {
+              if (value === null) {
+                return { history: null, core: null };
+              }
               const { items, realItems, selected } = value;
-              let historyQuery;
-              let selectedSerid;
-              selectedSerid = [ realItems[selected] ];
-              historyQuery = {};
-              historyQuery["curation.service.serid"] = selectedSerid;
-              return {
-                history: historyQuery,
-                core: null
-              };
+              if (selected === null) {
+                return { history: null, core: null };
+              } else {
+                let historyQuery, coreQuery;
+                let selectedSerid;
+                selectedSerid = [ realItems[selected] ];
+                historyQuery = {};
+                historyQuery["curation.service.serid"] = selectedSerid;
+                coreQuery = {};
+                coreQuery["requests.0.analytics.response.service.serid"] = realItems[selected];
+                return {
+                  history: historyQuery,
+                  core: coreQuery
+                };
+              }
             },
             chain: function (siblings) {
               const thisValue = siblings.construct.find((obj) => { return obj.name === "service"; }).value.map((obj) => { return obj.index; });
@@ -1012,6 +1065,9 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                   }
                 }
               }
+            },
+            freeze: function () {
+              window.alert("시공 정도 변경을 희망하신다면, 홈리에종 카카오 채널로 직접 문의부탁드립니다!");
             }
           },
           {
@@ -1023,22 +1079,22 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
             ],
             items: [
-              { name: "철거", contents: "마감재, 벽지 등 일부" },
-              { name: "전기/조명 공사", contents: "배선, 이동추가, 조명 교체" },
-              { name: "설비", contents: "수도/배관, 난방, 에어컨 배관" },
-              { name: "주방 공사", contents: "싱크 등 주방 가구 전체 교체" },
-              { name: "창호 공사", contents: "방문, 중문" },
-              { name: "도장 공사", contents: "부분 페인팅, 탄성코트 등" },
-              { name: "바닥 공사", contents: "마루, 타일, 장판 등" },
-              { name: "금속 공사", contents: "" },
-              { name: "목공사", contents: "간접등 박스, 웨인스 코팅 등" },
-              { name: "욕실 공사", contents: "도기 교체 등" },
-              { name: "샤시", contents: "" },
-              { name: "필름 공사", contents: "면적 및 난이도에 따라 금액 상이" },
-              { name: "철거", contents: "마감재, 벽지 등 일부" },
-              { name: "발코니 확장", contents: "거실, 주방, 방 등 확장 예정 발코니" },
-              { name: "타일 공사", contents: "현관, 주방, 다용도실, 발코니 등" },
-              { name: "도배 공사", contents: "이전 상태에 따라 밑작업 난이도 상이" },
+              { name: "철거", count: false, half: false, extra: false, contents: "마감재, 가구 철거" },
+              { name: "설비", count: false, half: false, extra: false, contents: "배관, 난방, 에어컨 설비 등" },
+              { name: "창호 공사", count: true, half: false, extra: false, contents: "방문, 중문 교체" },
+              { name: "조명 공사", count: true, half: false, extra: false, contents: "조명기기 교체" },
+              { name: "도장 공사", count: true, half: false, extra: false, contents: "페인팅, 탄성코트 등" },
+              { name: "타일 공사", count: true, half: false, extra: false, contents: "현관, 주방, 발코니 등" },
+              { name: "가구 공사", count: true, half: false, extra: false, contents: "붙박이장 등 제작 가구" },
+              { name: "필름 공사", count: true, half: false, extra: false, contents: "면적, 난이도에 따라 상이" },
+              { name: "도배 공사", count: true, half: false, extra: false, contents: "밑작업 난이도 상이" },
+              { name: "목공사", count: true, half: false, extra: false, contents: "간접등 박스, 웨인스 코팅, 가벽 등" },
+              { name: "발코니 확장", count: true, half: false, extra: true, contents: "거실, 주방 등 확장 예정 발코니", alert: "발코니 확장은 토탈 스타일링 이상부터 가능합니다." },
+              { name: "기타 공사", count: true, half: false, extra: true, contents: "샤시 교체, 금속 공사 등", alert: "기타 공사는 토탈 스타일링 이상부터 가능합니다." },
+              { name: "전기 공사", count: true, half: true, extra: false, contents: "배선, 이동 추가 등", alert: "배선 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+              { name: "욕실 공사", count: true, half: true, extra: false, contents: "도기 교체 등", alert: "욕실 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+              { name: "주방 공사", count: true, half: true, extra: false, contents: "싱크 등 주방 가구 전체 교체", alert: "주방 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+              { name: "바닥 공사", count: true, half: true, extra: false, contents: "마루, 타일, 장판 등", alert: "바닥 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
             ],
             multiple: true,
             value: function (request, history, self) {
@@ -1073,11 +1129,11 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
                 if (button === 0) {
                   return null;
                 } else if (button === 1) {
-                  return { limit: 5, exception: [ 3, 9 ], alert: "주방, 욕실은 토탈 스타일링 이상부터 가능합니다." };
+                  return 5;
                 } else if (button === 2) {
-                  return { limit: 90000, exception: [], alert: "" };
+                  return 90000;
                 } else if (button === 3) {
-                  return { limit: 90000, exception: [], alert: "" };
+                  return 90000;
                 }
               } else {
                 return null;
@@ -1094,43 +1150,64 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             ],
             items: [
               "거주중, 가구가 있는 상태",
-              "공실 상태",
+              "거주중이지만 보관 이사 예정",
+              "거주중 아님, 공실 상태",
             ],
             multiple: false,
             notice: "거주중일 경우 시공에 한계가 있습니다.",
             exception: function (items, media) {
-              const ea = "px";
+              const mother = items[0].parentNode;
+              const grandMother = mother.parentNode;
               const mobile = media[4];
               const desktop = !mobile;
-              if (desktop) {
-                items[0].style.marginRight = String(20) + ea;
+              if (mobile) {
+                mother.style.textAlign = "left";
+                mother.style.left = String(-0.4) + "vw";
+                mother.style.paddingTop = String(0.5) + "vw";
+                for (let i of items) {
+                  i.style.display = "block";
+                }
               }
             },
             value: function (request, history, self) {
-              return history.curation.construct.living ? self.items[0] : self.items[1];
+              return history.curation.construct.living ? self.items[0] : self.items[2];
             },
             update: function (value, siblings, client) {
               if (value === null) {
                 return { history: null, core: null };
               } else {
                 const { items, realItems, selected } = value;
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.construct.living"] = (selected === 0);
-                return {
-                  history: updateQuery,
-                  core: null
-                };
+                if (selected === null) {
+                  return { history: null, core: null };
+                } else {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["curation.construct.living"] = (selected === 0);
+                  return {
+                    history: updateQuery,
+                    core: null
+                  };
+                }
               }
             },
             chain: function (siblings) {
               const self = siblings.construct.find((obj) => { return obj.name === "spotStatus"; });
               const thisValue = self.value.map((obj) => { return obj.index; });
               const target = siblings.construct.find((obj) => { return obj.name === "service"; });
+              let valueCopied;
               if (target.dom !== null) {
                 if (thisValue.includes(0)) {
-                  window.alert("거주중일 경우, 시공에 한계가 있습니다!");
-                  target.dom.children[0].click();
+                  if (Array.isArray(target.value)) {
+                    valueCopied = JSON.parse(JSON.stringify(target.value)).map((obj) => { return obj.index; });
+                    if (valueCopied.includes(1) || valueCopied.includes(2) || valueCopied.includes(3)) {
+                      window.alert("거주중일 경우, 시공에 한계가 있습니다!");
+                      if (valueCopied.includes(2)) {
+                        target.dom.children[1].click();
+                      } else if (valueCopied.includes(3)) {
+                        target.dom.children[1].click();
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1302,13 +1379,13 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
 
     loadingWidth = <%% 40, 40, 36, 30, 10 %%>;
     completePaddingTop = <%% 10, 10, 9, 8, 0 %%>;
-    animationTime = 0.3;
-    delayTime = 0.2;
+    animationTime = 0.2;
+    delayTime = 0.1;
     animationTimes = [];
 
     greenTargets = mother.querySelectorAll('.' + greenClassName);
     for (let dom of greenTargets) {
-      dom.style.animation = "justfadeoutnine 0.6s ease forwards";
+      dom.style.animation = "justfadeoutnine " + String(animationTime * 2) + "s ease forwards";
     }
 
     rowLength = Math.round(pictureNumber / columnNumber);
@@ -1663,9 +1740,10 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
   const { client, ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, isMac, dateToString, stringToDate, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, isMac, dateToString, stringToDate, ajaxJson, returnGet } = GeneralJs;
   const token = '_';
   const listToken = '__list__';
+  const getObj = returnGet();
   let wordingSize;
   let paddingTop, paddingBottom, marginLeft;
   let blockMother, block;
@@ -2025,7 +2103,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       ajaxJson({
                         mode: "update",
                         cliid: instance.client.cliid,
-                        update: { x, y, value: instance.values[x][y].value }
+                        update: { x, y, value: instance.values[x][y].value },
+                        updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
                       }, "/styleCuration_updateAnalytics").catch((err) => {
                         console.log(err);
                       });
@@ -2066,7 +2145,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     ajaxJson({
                       mode: "update",
                       cliid: instance.client.cliid,
-                      update: { x, y, value: instance.values[x][y].value }
+                      update: { x, y, value: instance.values[x][y].value },
+                      updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
                     }, "/styleCuration_updateAnalytics").catch((err) => {
                       console.log(err);
                     });
@@ -2126,54 +2206,66 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             {
               type: "click",
               event: function (e) {
-                const toggle = this.getAttribute("toggle");
-                const name = this.getAttribute("name");
-                const x = name;
-                const y = Number(this.getAttribute("y"));
-                const z = Number(this.getAttribute("z"));
-                const multiple = (this.getAttribute("multiple") === "true");
-                const siblings = document.querySelectorAll('.' + name + token + String(y));
-                const value = this.getAttribute("value");
-                let items;
-                if (toggle === "on") {
-                  this.children[0].style.color = colorChip.deactive;
-                  this.children[1].style.background = colorChip.gray3;
-                  this.setAttribute("toggle", "off");
+                if (getObj.mode === "lite" && !instance.firstClick && typeof obj.freeze === "function") {
+                  obj.freeze();
                 } else {
-                  if (!multiple) {
-                    for (let s of siblings) {
-                      if (s !== this) {
-                        s.children[0].style.color = colorChip.deactive;
-                        s.children[1].style.background = colorChip.gray3;
-                        s.setAttribute("toggle", "off");
-                      } else {
-                        this.children[0].style.color = colorChip.green;
-                        this.children[1].style.background = colorChip.green;
-                        this.setAttribute("toggle", "on");
-                      }
-                    }
+                  const toggle = this.getAttribute("toggle");
+                  const name = this.getAttribute("name");
+                  const x = name;
+                  const y = Number(this.getAttribute("y"));
+                  const z = Number(this.getAttribute("z"));
+                  const multiple = (this.getAttribute("multiple") === "true");
+                  const siblings = document.querySelectorAll('.' + name + token + String(y));
+                  const value = this.getAttribute("value");
+                  let items, realItems;
+                  let selected;
+                  let valuesCopied;
+
+                  if (toggle === "on") {
+                    this.children[0].style.color = colorChip.deactive;
+                    this.children[1].style.background = colorChip.gray3;
+                    this.setAttribute("toggle", "off");
                   } else {
-                    this.children[0].style.color = colorChip.green;
-                    this.children[1].style.background = colorChip.green;
-                    this.setAttribute("toggle", "on");
+                    if (!multiple) {
+                      for (let s of siblings) {
+                        if (s !== this) {
+                          s.children[0].style.color = colorChip.deactive;
+                          s.children[1].style.background = colorChip.gray3;
+                          s.setAttribute("toggle", "off");
+                        } else {
+                          this.children[0].style.color = colorChip.green;
+                          this.children[1].style.background = colorChip.green;
+                          this.setAttribute("toggle", "on");
+                        }
+                      }
+                    } else {
+                      this.children[0].style.color = colorChip.green;
+                      this.children[1].style.background = colorChip.green;
+                      this.setAttribute("toggle", "on");
+                    }
                   }
-                }
-                instance.values[x][y].value = [];
-                for (let s of siblings) {
-                  if (s.getAttribute("toggle") === "on") {
-                    instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
+                  instance.values[x][y].value = [];
+                  for (let s of siblings) {
+                    if (s.getAttribute("toggle") === "on") {
+                      instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
+                    }
                   }
+                  if (obj.chain !== undefined) {
+                    obj.chain(instance.values);
+                  }
+
+                  instance.valuesConvert(true).then((valuesCopied) => {
+                    return ajaxJson({
+                      mode: "update",
+                      cliid: instance.client.cliid,
+                      update: { x, y, value: instance.values[x][y].value },
+                      updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
+                    }, "/styleCuration_updateAnalytics");
+                  }).catch((err) => {
+                    console.log(err);
+                  });
+
                 }
-                if (obj.chain !== undefined) {
-                  obj.chain(instance.values);
-                }
-                ajaxJson({
-                  mode: "update",
-                  cliid: instance.client.cliid,
-                  update: { x, y, value: instance.values[x][y].value }
-                }, "/styleCuration_updateAnalytics").catch((err) => {
-                  console.log(err);
-                });
               }
             }
           ],
@@ -2357,7 +2449,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         ajaxJson({
           mode: "update",
           cliid: instance.client.cliid,
-          update: { x, y, value: instance.values[x][y].value }
+          update: { x, y, value: instance.values[x][y].value },
+          updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
         }, "/styleCuration_updateAnalytics").catch((err) => {
           console.log(err);
         });
@@ -2451,7 +2544,13 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
             { x: name },
             { y: String(y) },
             { z: String(listNum) },
-            { value: obj2.name }
+            { value: obj2.name },
+            { count: obj2.count ? "true" : "false" },
+            { half: obj2.half ? "true" : "false" },
+            { extra: obj2.extra ? "true" : "false" },
+            { alert: obj2.alert !== undefined ? obj2.alert : "" },
+            { from: obj2.from !== undefined ? obj2.from : "" },
+            { to: obj2.to !== undefined ? obj2.to : "" },
           ],
           events: [
             {
@@ -2463,6 +2562,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 const z = Number(this.getAttribute('z'));
                 const siblings = document.querySelectorAll('.' + name + listToken + String(y));
                 const children = this.firstChild.children;
+                const count = this.getAttribute("count");
+                const half = this.getAttribute("half");
+                const extra = this.getAttribute("extra");
+                const alert = this.getAttribute("alert");
+                const from = this.getAttribute("from");
+                const to = this.getAttribute("to");
+
+
+
                 let limitStandard;
                 let siblingsChildren, limitNum;
 
@@ -2491,7 +2599,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   }
                 } else {
 
-                  if (toggle === "off" && limitStandard.exception.includes(z)) {
+                  if (toggle === "off" && obj2.extra) {
                     window.alert(limitStandard.alert);
                     for (let dom of children) {
                       dom.style.color = dom.getAttribute("deactive");
@@ -2505,7 +2613,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       limitNum = limitNum + 1;
                     }
                   }
-                  if (toggle === "off" && limitNum > limitStandard.limit) {
+                  if (toggle === "off" && limitNum > limitStandard) {
                     for (let dom of children) {
                       dom.style.color = dom.getAttribute("deactive");
                     }
@@ -2524,11 +2632,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     instance.values[x][y].value.push({ index: Number(s.getAttribute("z")), value: s.getAttribute("value") });
                   }
                 }
-                ajaxJson({
-                  mode: "update",
-                  cliid: instance.client.cliid,
-                  update: { x, y, value: instance.values[x][y].value }
-                }, "/styleCuration_updateAnalytics").catch((err) => {
+
+                instance.valuesConvert(true).then((valuesCopied) => {
+                  return ajaxJson({
+                    mode: "update",
+                    cliid: instance.client.cliid,
+                    update: { x, y, value: instance.values[x][y].value },
+                    updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
+                  }, "/styleCuration_updateAnalytics");
+                }).catch((err) => {
                   console.log(err);
                 });
               }
@@ -2671,7 +2783,8 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 ajaxJson({
                   mode: "update",
                   cliid: instance.client.cliid,
-                  update: { x, y, value: instance.values[x][y].value }
+                  update: { x, y, value: instance.values[x][y].value },
+                  updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
                 }, "/styleCuration_updateAnalytics").catch((err) => {
                   console.log(err);
                 });
@@ -2987,17 +3100,63 @@ StyleCurationJs.prototype.photoBefore = function (mother) {
 
 }
 
+StyleCurationJs.prototype.valuesConvert = async function (deepCopy = false) {
+  const instance = this;
+  const center = this.wordings.centerWordings;
+  let items, realItems, selected;
+  let valuesCopied;
+  try {
+    if (deepCopy) {
+      valuesCopied = JSON.parse(JSON.stringify(this.values));
+    }
+
+    for (let obj of center) {
+      for (let i = 0; i < obj.children.length; i++) {
+        if (obj.children[i].type === "checkbox" || obj.children[i].type === "list") {
+          items = JSON.parse(JSON.stringify(obj.children[i].items));
+          if (obj.children[i].realItems !== undefined) {
+            realItems = JSON.parse(JSON.stringify(obj.children[i].realItems));
+          } else {
+            realItems = JSON.parse(JSON.stringify(items)).fill(null, 0);
+          }
+          if (deepCopy) {
+            selected = JSON.parse(JSON.stringify(valuesCopied[obj.name][i].value));
+          } else {
+            selected = JSON.parse(JSON.stringify(this.values[obj.name][i].value));
+          }
+          if (selected === null) {
+            selected = [];
+          } else {
+            selected = selected.map((obj) => { return obj.index; });
+            if (!obj.children[i].multiple) {
+              if (selected.length === 1) {
+                selected = selected[0];
+              } else {
+                selected = null;
+              }
+            }
+          }
+          if (deepCopy) {
+            valuesCopied[obj.name][i].value = { items, realItems, selected };
+          } else {
+            this.values[obj.name][i].value = { items, realItems, selected };
+          }
+        }
+      }
+    }
+
+    return deepCopy ? valuesCopied : this.values;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 StyleCurationJs.prototype.parsingValues = function () {
   const instance = this;
   const { ajaxJson, ajaxForm, returnGet } = GeneralJs;
   const grayLoading = this.mother.grayLoading();
-  const emptyPromise = function () {
-    return new Promise(function (resolve, reject) {
-      resolve(0);
-    });
-  }
   let center, temp;
-  let items, realItems, selected;
   let coreQuery, historyQuery;
   let finalSerid;
   let formData;
@@ -3005,52 +3164,24 @@ StyleCurationJs.prototype.parsingValues = function () {
 
   center = this.wordings.centerWordings;
 
-  for (let obj of center) {
-    for (let i = 0; i < obj.children.length; i++) {
-      if (obj.children[i].type === "checkbox" || obj.children[i].type === "list") {
-        items = JSON.parse(JSON.stringify(obj.children[i].items));
-        if (obj.children[i].realItems !== undefined) {
-          realItems = JSON.parse(JSON.stringify(obj.children[i].realItems));
-        } else {
-          realItems = JSON.parse(JSON.stringify(items)).fill(null, 0);
-        }
-        selected = JSON.parse(JSON.stringify(this.values[obj.name][i].value));
-        if (selected === null) {
-          selected = [];
-        } else {
-          selected = selected.map((obj) => { return obj.index; });
-          if (!obj.children[i].multiple) {
-            if (selected.length === 1) {
-              selected = selected[0];
-            } else {
-              selected = [ 0 ];
-            }
+  this.valuesConvert(false).then(() => {
+    coreQuery = {};
+    historyQuery = {};
+    for (let obj of center) {
+      for (let i = 0; i < obj.children.length; i++) {
+        temp = obj.children[i].update(this.values[obj.name][i].value, this.values, this.client);
+        if (temp.history !== null) {
+          for (let j in temp.history) {
+            historyQuery[j] = temp.history[j];
           }
         }
-        this.values[obj.name][i].value = { items, realItems, selected };
-      }
-    }
-  }
-
-  coreQuery = {};
-  historyQuery = {};
-  for (let obj of center) {
-    for (let i = 0; i < obj.children.length; i++) {
-      temp = obj.children[i].update(this.values[obj.name][i].value, this.values, this.client);
-      if (temp.history !== null) {
-        for (let j in temp.history) {
-          historyQuery[j] = temp.history[j];
-        }
-      }
-      if (temp.core !== null) {
-        for (let j in temp.core) {
-          coreQuery[j] = temp.core[j];
+        if (temp.core !== null) {
+          for (let j in temp.core) {
+            coreQuery[j] = temp.core[j];
+          }
         }
       }
     }
-  }
-
-  emptyPromise().then(() => {
     if (instance.fileInput.files.length > 0) {
       formData = new FormData();
       formData.enctype = "multipart/form-data";
@@ -3084,10 +3215,10 @@ StyleCurationJs.prototype.parsingValues = function () {
       if (service.length === 0) {
         if (returnGet().mode === "lite") {
           window.alert("매칭되는 경우가 없어 진행할 수 없습니다. 홈리에종에 카카오 채널 또는 전화를 통해 문의해주세요!");
-          window.location.reload();
+          throw new Error("promise error");
         } else {
           window.alert("매칭되는 경우가 없습니다, 생각하는 시공 정도를 조정해주세요!");
-          window.location.reload();
+          throw new Error("promise error");
         }
       }
 
@@ -3122,15 +3253,22 @@ StyleCurationJs.prototype.parsingValues = function () {
         }, "/styleCuration_updateAnalytics");
       }
     }
-  }).then(() => {
-    return instance.serviceConverting(finalSerid);
+  }).then((obj) => {
+    if (obj.message !== "done") {
+      throw new Error("promise error");
+    } else {
+      return instance.serviceConverting(finalSerid);
+    }
   }).then((message) => {
     if (message !== "done") {
       throw new Error("promise error");
     }
   }).catch((err) => {
-    console.log(err);
-    window.location.reload();
+    ajaxJson({
+      message: instance.client.name + " 고객님이 큐레이션 페이지를 제출하는 도중 오류를 만나 비정상 종료되었습니다!",
+      channel: "#403_proposal",
+      voice: true,
+    }, "/sendSlack").then(() => { window.location.reload(); }).catch((err) => { console.log(err); });
   });
 
 }

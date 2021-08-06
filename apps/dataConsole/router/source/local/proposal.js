@@ -2112,24 +2112,24 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     }
 
     if (clickMode) {
-      // if (GeneralJs.timeouts["firstClick"] !== undefined && GeneralJs.timeouts["firstClick"] !== null) {
-      //   clearTimeout(GeneralJs.timeouts["firstClick"]);
-      // }
-      // GeneralJs.timeouts["firstClick"] = setTimeout(async () => {
-      //   try {
-      //     for (let dom of instance.clickTargets) {
-      //       fourth.events.designer.call(dom.querySelector("label").querySelector("div"), {
-      //         customHomeLiaison_timeoutMode: true
-      //       });
-      //       await GeneralJs.sleep(600);
-      //     }
-      //     instance.clickTargets = [];
-      //     clearTimeout(GeneralJs.timeouts["firstClick"]);
-      //     GeneralJs.timeouts["firstClick"] = null;
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
-      // }, 1000);
+      if (GeneralJs.timeouts["firstClick"] !== undefined && GeneralJs.timeouts["firstClick"] !== null) {
+        clearTimeout(GeneralJs.timeouts["firstClick"]);
+      }
+      GeneralJs.timeouts["firstClick"] = setTimeout(async () => {
+        try {
+          for (let dom of instance.clickTargets) {
+            fourth.events.designer.call(dom.querySelector("label").querySelector("div"), {
+              customHomeLiaison_timeoutMode: true
+            });
+            await GeneralJs.sleep(600);
+          }
+          instance.clickTargets = [];
+          clearTimeout(GeneralJs.timeouts["firstClick"]);
+          GeneralJs.timeouts["firstClick"] = null;
+        } catch (e) {
+          console.log(e);
+        }
+      }, 1000);
     }
 
     for (let j = 0; j < 10; j++) {

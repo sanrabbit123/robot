@@ -1960,8 +1960,8 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
 DataRouter.prototype.rou_post_sendSlack = function () {
   const instance = this;
   const back = this.back;
-  const slack = this.mother.slack_bot;
-  const url = require('url');
+  const { ghostRequest, slack_bot: slack } = this.mother;
+  const url = require("url");
   let obj = {};
   obj.link = "/sendSlack";
   obj.func = async function (req, res) {
@@ -1998,6 +1998,10 @@ DataRouter.prototype.rou_post_sendSlack = function () {
         await slack.chat.postMessage({ text: new_message, channel: req.body.channel });
       } else {
         await slack.chat.postMessage({ text: req.body.message, channel: req.body.channel });
+      }
+
+      if (req.body.voice !== undefined) {
+        await ghostRequest("voice", { text: req.body.message });
       }
 
       res.set("Content-Type", "application/json");
@@ -3918,6 +3922,16 @@ DataRouter.prototype.rou_post_styleCuration_updateAnalytics = function () {
         updateQuery = {};
         updateQuery["curation.analytics.update"] = history.curation.analytics.update;
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+        if (req.body.updateQuery !== undefined) {
+          const { history: historyQuery, core: coreQuery } = equalJson(req.body.updateQuery);
+          if (historyQuery !== null && typeof historyQuery === "object" && Object.keys(historyQuery).length > 0) {
+            await back.updateHistory("client", [ whereQuery, historyQuery ], { selfMongo: instance.mongolocal });
+          }
+          if (coreQuery !== null && typeof coreQuery === "object" && Object.keys(coreQuery).length > 0) {
+            await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
+          }
+        }
 
       } else if (mode === "submit") {
 

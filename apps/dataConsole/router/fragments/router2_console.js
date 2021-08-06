@@ -1414,8 +1414,8 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
 DataRouter.prototype.rou_post_sendSlack = function () {
   const instance = this;
   const back = this.back;
-  const slack = this.mother.slack_bot;
-  const url = require('url');
+  const { ghostRequest, slack_bot: slack } = this.mother;
+  const url = require("url");
   let obj = {};
   obj.link = "/sendSlack";
   obj.func = async function (req, res) {
@@ -1452,6 +1452,10 @@ DataRouter.prototype.rou_post_sendSlack = function () {
         await slack.chat.postMessage({ text: new_message, channel: req.body.channel });
       } else {
         await slack.chat.postMessage({ text: req.body.message, channel: req.body.channel });
+      }
+
+      if (req.body.voice !== undefined) {
+        await ghostRequest("voice", { text: req.body.message });
       }
 
       res.set("Content-Type", "application/json");
