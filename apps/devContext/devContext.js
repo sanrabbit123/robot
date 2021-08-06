@@ -62,8 +62,26 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    
+    // const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    // await selfMongo.connect();
+    // const coreMongo = this.MONGOC;
+    // const rows = (await back.mongoRead("projectHistory", {}, { selfMongo })).filter((obj) => { return obj.manager === '' || obj.manager === '-' || obj.manager === "홀딩"; });
+    // const proidArr = rows.map((obj) => { return { proid: obj.proid } });
+    // const targetProjects = (await back.getProjectsByQuery({ $or: proidArr }, { selfMongo: coreMongo })).filter((obj) => { return obj.desid !== "" });
+    // let manager;
+    //
+    // for (let { desid, proid } of targetProjects) {
+    //   manager = await back.mongoRead("designerHistory", { desid }, { selfMongo });
+    //   if (manager.length === 1) {
+    //     manager = manager[0].manager;
+    //     if (manager !== '' && manager !== '-') {
+    //       await back.mongoUpdate("projectHistory", [ { proid }, { manager } ], { selfMongo });
+    //       console.log(proid, "done");
+    //     }
+    //   }
+    // }
+    //
+    // await selfMongo.close();
 
 
 
