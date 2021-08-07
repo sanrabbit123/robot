@@ -4398,40 +4398,13 @@ ClientJs.prototype.addExtractEvent = function () {
       let style;
       let ea = "px";
       let width;
-
-      valuesArr = [];
-
-      temp2 = Object.keys(caseCopied[0]);
-      temp = [];
-      for (let i of temp2) {
-        if (map[i] === undefined || typeof map[i] !== "object") {
-          temp.push("알 수 없음");
-        } else {
-          temp.push(map[i].name);
-        }
-      }
-      valuesArr.push(temp);
-
-      for (let i = 0; i < caseCopied.length; i++) {
-        temp2 = Object.values(caseCopied[i]);
-        valuesArr.push(temp2);
-      }
-
-      data = '';
-      data += "values=";
-      data += JSON.stringify(valuesArr).replace(/&/g, '').replace(/=/g, '');
-      data += "&newMake=";
-      data += "true";
-      data += "&parentId=";
-      data += parentId;
-      data += "&sheetName=";
-      data += "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker();
+      let cliidArr;
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        zIndex: String(2),
+        zIndex: String(3),
         background: GeneralJs.colorChip.black,
         opacity: String(0.2),
         width: "100%",
@@ -4448,7 +4421,7 @@ ClientJs.prototype.addExtractEvent = function () {
       svg_clone = instance.mother.returnLoadingIcon();
       style = {
         position: "fixed",
-        zIndex: String(2),
+        zIndex: String(3),
         width: String(width) + ea,
         height: String(width) + ea,
         top: "calc(50% - " + String((width / 2) + 60) + ea + ")",
@@ -4459,8 +4432,39 @@ ClientJs.prototype.addExtractEvent = function () {
       }
       instance.totalMother.appendChild(svg_clone);
 
-      GeneralJs.ajax(data, "/sendSheets", function (res) {
-        const link = JSON.parse(res).link;
+      valuesArr = [];
+
+      temp2 = Object.keys(caseCopied[0]);
+      temp = [];
+      for (let i of temp2) {
+        if (map[i] === undefined || typeof map[i] !== "object") {
+          temp.push("알 수 없음");
+        } else {
+          temp.push(map[i].name);
+        }
+      }
+      valuesArr.push(temp);
+
+      cliidArr = [];
+      for (let i = 0; i < caseCopied.length; i++) {
+        temp2 = Object.values(caseCopied[i]);
+        valuesArr.push(temp2);
+        cliidArr.push(temp2.find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); }));
+      }
+
+      GeneralJs.ajaxJson({ idArr: cliidArr, method: "client", property: "manager" }, "/getHistoryProperty").then((obj) => {
+        valuesArr[0].push("담당자");
+        for (let i = 1; i < valuesArr.length; i++) {
+          valuesArr[i].push(obj[valuesArr[i].find((c) => { return /^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); })]);
+        }
+        return GeneralJs.ajaxJson({
+          values: valuesArr,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, "/sendSheets")
+      }).then((res) => {
+        const { link } = res;
         div_clone.classList.remove("justfadein");
         div_clone.classList.add("justfadeout");
         svg_clone.style.opacity = "0";
@@ -4473,7 +4477,9 @@ ClientJs.prototype.addExtractEvent = function () {
           clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
           GeneralJs.timeouts["extractPendingBack"] = null;
         }, 401);
-      })
+      }).catch((err) => {
+        console.log(err);
+      });
 
     } catch (e) {
       GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

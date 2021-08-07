@@ -2112,41 +2112,14 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
 
       if (req.url === "/createRequestDocument") {
 
-        let clientOriginal;
-        let projects, project;
-        let resultObj = { "alert": "요청에 문제가 있습니다!" };
-
-        clientOriginal = await back.getClientById(req.body.id);
-        if (clientOriginal === null) {
-          resultObj = { "alert": "확인되는 고객이 없습니다!" };
-        } else {
-          projects = await back.getProjectsByQuery({ cliid: req.body.id });
-          project = null;
-          for (let p of projects) {
-            if (p.desid !== '') {
-              project = p;
-              break;
-            }
-          }
-          if (project === null) {
-            resultObj = { "alert": "확인되는 프로젝트가 없습니다!" };
-          } else {
-            if (project.process.contract.meeting.date.getFullYear() < 1900) {
-              resultObj = { "alert": "현장 미팅에 대한 정보가 없습니다!" };
-            } else {
-              await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port[0]) + "/toAiServer", { type: "request", id: req.body.id }, { headers: { "Content-Type": "application/json" } });
-              resultObj = { "alert": "의뢰서 제작 요청이 완료되었습니다!" };
-            }
-          }
-        }
-
         res.set("Content-Type", "application/json");
-        res.send(JSON.stringify(resultObj));
+        res.send(JSON.stringify({}));
 
       } else if (req.url === "/createProposalDocument") {
 
         const { proid } = req.body;
         const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid + "&mode=test";
+        await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
         if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
           const { year, month, date, hour, minute, second } = req.body;
           let message, command, time;
@@ -2169,15 +2142,12 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
           res.set("Content-Type", "application/json");
           res.send(JSON.stringify({ link: proposalLink }));
         } else {
-          await requestSystem("https://" + ADDRESS.homeinfo.ghost.host + ":" + String(ADDRESS.homeinfo.ghost.graphic.port[0]) + "/toAiServer", { type: "proposal", id: proid }, { headers: { "Content-Type": "application/json" } });
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({ link: proposalLink }));
+          throw new Error("invaild post")
         }
-
       }
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + req.url + " " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }

@@ -5356,36 +5356,7 @@ ProjectJs.prototype.addExtractEvent = function () {
       let style;
       let ea = "px";
       let width;
-
-      valuesArr = [];
-
-      temp2 = Object.keys(caseCopied[0]);
-      temp = [];
-      for (let i of temp2) {
-        if (i === "name") {
-          temp.push("성함");
-        } else if (map[i] === undefined || typeof map[i] !== "object") {
-          temp.push("알 수 없음");
-        } else {
-          temp.push(map[i].name);
-        }
-      }
-      valuesArr.push(temp);
-
-      for (let i = 0; i < caseCopied.length; i++) {
-        temp2 = Object.values(caseCopied[i]);
-        valuesArr.push(temp2);
-      }
-
-      data = '';
-      data += "values=";
-      data += JSON.stringify(valuesArr).replace(/&/g, '').replace(/=/g, '');
-      data += "&newMake=";
-      data += "true";
-      data += "&parentId=";
-      data += parentId;
-      data += "&sheetName=";
-      data += "fromDB_client_" + String(today.getFullYear()) + instance.mother.todayMaker();
+      let proidArr;
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       div_clone.classList.add("justfadein");
@@ -5419,8 +5390,41 @@ ProjectJs.prototype.addExtractEvent = function () {
       }
       instance.totalMother.appendChild(svg_clone);
 
-      GeneralJs.ajax(data, "/sendSheets", function (res) {
-        const link = JSON.parse(res).link;
+      valuesArr = [];
+
+      temp2 = Object.keys(caseCopied[0]);
+      temp = [];
+      for (let i of temp2) {
+        if (i === "name") {
+          temp.push("성함");
+        } else if (map[i] === undefined || typeof map[i] !== "object") {
+          temp.push("알 수 없음");
+        } else {
+          temp.push(map[i].name);
+        }
+      }
+      valuesArr.push(temp);
+
+      proidArr = [];
+      for (let i = 0; i < caseCopied.length; i++) {
+        temp2 = Object.values(caseCopied[i]);
+        valuesArr.push(temp2);
+        proidArr.push(temp2.find((c) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); }));
+      }
+
+      GeneralJs.ajaxJson({ idArr: proidArr, method: "project", property: "manager" }, "/getHistoryProperty").then((obj) => {
+        valuesArr[0].push("담당자");
+        for (let i = 1; i < valuesArr.length; i++) {
+          valuesArr[i].push(obj[valuesArr[i].find((c) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); })]);
+        }
+        return GeneralJs.ajaxJson({
+          values: valuesArr,
+          newMake: true,
+          parentId: parentId,
+          sheetName: "fromDB_project_" + String(today.getFullYear()) + instance.mother.todayMaker()
+        }, "/sendSheets")
+      }).then((res) => {
+        const { link } = res;
         div_clone.classList.remove("justfadein");
         div_clone.classList.add("justfadeout");
         svg_clone.style.opacity = "0";
@@ -5433,6 +5437,8 @@ ProjectJs.prototype.addExtractEvent = function () {
           clearTimeout(GeneralJs.timeouts["extractPendingBack"]);
           GeneralJs.timeouts["extractPendingBack"] = null;
         }, 401);
+      }).catch((err) => {
+        console.log(err);
       });
 
     } catch (e) {

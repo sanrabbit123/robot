@@ -724,7 +724,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    await this.getRawPortfolio("p110");
+    // await this.getRawPortfolio("p108");
 
 
     // get corePortfolio by pid

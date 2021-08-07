@@ -915,11 +915,14 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let toMoney;
     let travelNumber;
     let thisDesignerCareerStart;
+    let distanceLimitBoo;
+    let distanceLimitPlus;
 
     priceStandardCollection = "designerPrice";
     priceStandardConst = 33;
     onlineRatio = 0.8;
     travelNumber = 2;
+    distanceLimitPlus = 40;
 
     if (typeof cliid === "object") {
       mode = 0;
@@ -1074,9 +1077,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
       if (travelInfo === null) {
         distanceBoo = false;
+        distanceLimitBoo = false;
         travelInfo = { amount: 0, distance: { string: "" }, time: { string: "" } };
       } else {
         distanceBoo = (travelInfo.distance.meters > (designer.analytics.region.range * 1000));
+        distanceLimitBoo = (travelInfo.distance.meters > ((distanceLimitPlus + designer.analytics.region.expenses) * 1000));
       }
 
       if (newcomerBoo) {
@@ -1120,6 +1125,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       if (distanceBoo) {
         fee = fee + (travelInfo.amount * travelNumber);
         offlineFeeCase = fee;
+      }
+
+      if (distanceLimitBoo) {
+        offlineFeeCase = 0;
+        onlineFeeCase = 0;
       }
 
       toMoney = (num) => { return (Math.round(num / 1000) * 1000); }
