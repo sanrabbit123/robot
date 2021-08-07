@@ -650,19 +650,7 @@ module.exports = {
         ]
       },
       "designerProposal": {
-        "behaviors": [
-          {
-            "wording": {
-              "desktop": "pdf로도 다운받으실 수 있어요!",
-              "mobile": "pdf로도 다운받으실 수 있어요!"
-            },
-            "action": "GeneralJs.downloadFile('https://home-liaison.servehttp.com/proposalPdf/' + GeneralJs.returnGet().proid + '.pdf', '홈리에종 디자이너 추천 제안서').catch(function (e) { console.log(e); });",
-            "src": {
-              "desktop": "g_interaction_proposal_behaviors_desktop_0_12rspot219_033009.svg",
-              "mobile": "g_interaction_proposal_behaviors_mobile_0_12rspot219_033009.svg"
-            }
-          }
-        ]
+        "behaviors": []
       },
       "responseReservation": {
         "behaviors": []

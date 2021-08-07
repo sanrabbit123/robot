@@ -3443,11 +3443,10 @@ ProposalJs.prototype.list_menu = function () {
     if (e.cancelable) {
       e.preventDefault();
     }
+    const self = this;
     let div_clone, div_clone2, div_clone3;
-    let mother = this;
     let list = [
       { key: "pending", name: "작성중", },
-      { key: "make", name: "제작 요청", },
       { key: "send", name: "발송 예약", },
       { key: "complete", name: "완료", },
       { key: "selected", name: "고객 선택", },
@@ -3463,7 +3462,7 @@ ProposalJs.prototype.list_menu = function () {
     div_clone.addEventListener("click", function (e) {
       this.nextElementSibling.remove();
       this.remove();
-      mother.style.color = "";
+      self.style.color = "";
     });
     this.parentElement.appendChild(div_clone);
 
@@ -3476,7 +3475,7 @@ ProposalJs.prototype.list_menu = function () {
       div_clone2.classList.add("listpp_menuEvent");
       div_clone2.classList.add("listpp_menuEvent_" + i.key);
       div_clone2.textContent = i.name;
-      div_clone2.addEventListener("click", await instance.list_menuEvents(i, mother, this.parentElement.getAttribute("cus_id")));
+      div_clone2.addEventListener("click", await instance.list_menuEvents(i, self, this.parentElement.getAttribute("cus_id")));
       div_clone.appendChild(div_clone2);
     }
     this.parentElement.appendChild(div_clone);
@@ -3503,17 +3502,9 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       }
       break;
     case "confirm":
-    return_func = async function (e) {
-      GeneralJs.blankHref("https://" + GHOSTHOST + "/middle/proposal?proid=" + proid + "&mode=test");
-      mother.parentElement.remove();
-      reset_event(this);
-    }
-    break;
-    case "make":
       return_func = async function (e) {
-        const { link } = await GeneralJs.ajaxJson("proid=" + proid, "/createProposalDocument");
-        GeneralJs.blankHref(link);
-        await mother_name(obj);
+        GeneralJs.blankHref("https://" + GHOSTHOST + "/middle/proposal?proid=" + proid + "&mode=test");
+        mother.parentElement.remove();
         reset_event(this);
       }
       break;
