@@ -3447,8 +3447,8 @@ ProposalJs.prototype.list_menu = function () {
     let div_clone, div_clone2, div_clone3;
     let list = [
       { key: "pending", name: "작성중", },
-      { key: "send", name: "발송 예약", },
       { key: "complete", name: "완료", },
+      { key: "send", name: "발송 예약", },
       { key: "selected", name: "고객 선택", },
       { key: "confirm", name: "미리보기", },
       { key: "delete", name: "삭제", }
@@ -5713,7 +5713,7 @@ ProposalJs.prototype.cssInjection = function () {
     right: 7px;
     top: 38px;
     width: 81px;
-    height: ${GeneralJs.isMac() ? String(184) : String(187)}px;
+    height: ${GeneralJs.isMac() ? String(160) : String(163)}px;
     background: white;
     z-index: 2;
     border-radius: 5px;

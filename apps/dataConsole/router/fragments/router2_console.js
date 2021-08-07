@@ -1573,6 +1573,7 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
 
         const { proid } = req.body;
         const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid + "&mode=test";
+        await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
         if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
           const { year, month, date, hour, minute, second } = req.body;
           let message, command, time;
@@ -1595,14 +1596,12 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
           res.set("Content-Type", "application/json");
           res.send(JSON.stringify({ link: proposalLink }));
         } else {
-          res.set("Content-Type", "application/json");
-          res.send(JSON.stringify({}));
+          throw new Error("invaild post")
         }
-
       }
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + req.url + " " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
