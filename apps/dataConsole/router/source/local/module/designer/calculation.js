@@ -371,7 +371,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         condition = true;
       } else {
         if (designer.projects[i].contents.photo.boo) {
-          if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf()) {
+          if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
             condition = false;
           } else {
             condition = true;

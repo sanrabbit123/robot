@@ -739,7 +739,7 @@ BackWorker.prototype.designerCalculation = async function () {
             condition1 = true;
           } else {
             if (designer.projects[i].contents.photo.boo) {
-              if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf()) {
+              if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
                 condition1 = false;
               } else {
                 condition1 = true;
