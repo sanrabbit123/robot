@@ -214,8 +214,10 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         }
       }
 
-      await bill.createBill(collection, rows, { option: instance.mongolocal });
-      
+      bill.createBill(collection, rows, { selfMongo: instance.mongolocal }).catch((err) => {
+        console.log(err);
+      });
+
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
