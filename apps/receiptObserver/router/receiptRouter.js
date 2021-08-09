@@ -5,11 +5,13 @@ const ReceiptRouter = function (MONGOC, MONGOLOCALC, kakaoInstance, humanInstanc
   this.dir = process.cwd() + "/apps/receiptObserver";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
   const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.bill = new BillMaker();
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
   this.calendar = new GoogleCalendar();
@@ -178,73 +180,8 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
 ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   const instance = this;
   const back = this.back;
+  const bill = this.bill;
   const { equalJson, fileSystem, slack_bot, dateToString, autoComma } = this.mother;
-  class CashOut {
-    constructor(o) {
-      this.id = o.id;
-      this.date = o.time;
-      this.deal = o.deal;
-      this.method = 0;
-      this.amount = {
-        supply: o.supply,
-        vat: o.vat,
-        service: o.service,
-        total: o.total,
-      };
-      this.etc = {
-        business: o.method,
-        remark: o.etc,
-        issuance: o.issuance
-      };
-    }
-    toMessage() {
-      let arr;
-      arr = [
-        `현금 영수증(${this.id}) ${dateToString(this.date, true)}`,
-        ``,
-        `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
-        `- 금액 : ${autoComma(this.amount.total)}원`,
-      ];
-      return arr.join("\n");
-    }
-  }
-  class CashIn {
-    constructor(o) {
-      this.id = o.id;
-      this.date = o.time;
-      this.deal = o.deal;
-      this.method = 1;
-      this.who = {
-        business: o.business,
-        company: o.from
-      };
-      this.amount = {
-        supply: o.supply,
-        vat: o.vat,
-        service: o.service,
-        total: o.total,
-      };
-      this.etc = {
-        item: o.item,
-        remark: o.etc,
-        issuance: o.issuance
-      };
-    }
-    toMessage() {
-      let arr;
-      arr = [
-        `현금 영수증(${this.id}) ${dateToString(this.date, true)}`,
-        ``,
-        `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
-        `- 발신자 : ${this.who.company} (${this.who.business})`,
-        `- 품목 : ${this.etc.item}`,
-        `- 금액 : ${autoComma(this.amount.total)}원`,
-      ];
-      return arr.join("\n");
-    }
-  }
-  // method 0 : input / 1 : output
-
   let obj = {};
   obj.link = "/cashReceipt";
   obj.func = async function (req, res) {
@@ -258,45 +195,24 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       let rows;
 
       if (json.cashOut !== undefined) {
-
         const { cashOut: cashOut_raw } = json;
-        let cashOut;
-
-        cashOut = [];
+        rows = [];
         for (let arr of cashOut_raw) {
           for (let obj of arr) {
-            cashOut.push(new CashOut(obj));
+            rows.push(obj);
           }
         }
-
-        for (let obj of cashOut) {
-          rows = await back.mongoRead(collection, { $and: [ { method: 0 }, { id: obj.id } ] }, { selfMongo });
-          if (rows.length === 0) {
-            await back.mongoCreate(collection, obj, { selfMongo });
-          }
-        }
-
       } else if (json.cashIn !== undefined) {
-
         const { cashIn: cashIn_raw } = json;
-        let cashIn;
-
-        cashIn = [];
+        rows = [];
         for (let arr of cashIn_raw) {
           for (let obj of arr) {
-            cashIn.push(new CashIn(obj));
+            rows.push(obj);
           }
         }
-
-        for (let obj of cashIn) {
-          rows = await back.mongoRead(collection, { $and: [ { method: 1 }, { id: obj.id } ] }, { selfMongo });
-          if (rows.length === 0) {
-            await slack_bot.chat.postMessage({ text: obj.toMessage(), channel: "#701_taxbill" });
-            await back.mongoCreate(collection, obj, { selfMongo: instance.mongolocal });
-          }
-        }
-
       }
+
+      await bill.createBill(collection, rows, { option: instance.mongolocal });
 
       res.set({
         "Content-Type": "application/json",
