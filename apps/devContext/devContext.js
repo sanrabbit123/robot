@@ -96,6 +96,30 @@ DevContext.prototype.launching = async function () {
 
     console.log(id);
 
+    {
+      name: "견적서 이름",
+      date: new Date(),
+      id: id,
+      who: {
+        from: {
+          name: "",
+          phone: "",
+          email: "",
+        },
+        to: {
+          name: "",
+          phone: "",
+          email: "",
+        },
+      },
+      requests: [
+        {
+          date: new Date(),
+          
+        }
+      ]
+    }
+
 
 
 
