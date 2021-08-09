@@ -18,6 +18,7 @@ const BackMaker = function () {
 BackMaker.allDatabaseNames = [
   "mongoinfo",
   "backinfo",
+  "pythoninfo",
 ];
 
 BackMaker.flatDeathCollections = [

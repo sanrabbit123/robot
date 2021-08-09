@@ -697,5 +697,4 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
   }
 }
 
-
 module.exports = ReceiptObserver;
