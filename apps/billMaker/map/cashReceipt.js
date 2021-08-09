@@ -86,7 +86,7 @@ module.exports = {
         findQuery = map.find.in(fresh);
         insertEvent = async function (fresh) {
           try {
-            await mother.slack_bot.chat.postMessage({ text: fresh.toMessage(), channel: "#701_taxbill" });
+            await mother.slack_bot.chat.postMessage(fresh.toMessage());
           } catch (e) {
             console.log(e);
           }
@@ -124,7 +124,7 @@ module.exports = {
           `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
           `- 금액 : ${autoComma(this.amount.total)}원`,
         ];
-        return { message: arr.join("\n"), channel: "#701_taxbill" };
+        return { text: arr.join("\n"), channel: "#701_taxbill" };
       }
     }
     class CashIn {
@@ -159,7 +159,7 @@ module.exports = {
           `- 품목 : ${this.etc.item}`,
           `- 금액 : ${autoComma(this.amount.total)}원`,
         ];
-        return { message: arr.join("\n"), channel: "#701_taxbill" };
+        return { text: arr.join("\n"), channel: "#701_taxbill" };
       }
     }
     return { CashOut, CashIn };

@@ -181,7 +181,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, fileSystem, slack_bot, dateToString, autoComma } = this.mother;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/cashReceipt";
   obj.func = async function (req, res) {
@@ -193,8 +193,6 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       const collection = "cashReceipt";
       const selfMongo = instance.mongolocal;
       let rows;
-
-      console.log(json);
 
       if (json.cashOut !== undefined) {
         const { cashOut: cashOut_raw } = json;
