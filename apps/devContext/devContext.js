@@ -60,6 +60,9 @@ DevContext.prototype.launching = async function () {
     const sheets = new GoogleSheet();
 
 
+    const detail = await work.designerCuration("c2108_aa25s", 4, [ "s2011_aa01s" ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
+
+    console.log(detail);
 
 
     // const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });

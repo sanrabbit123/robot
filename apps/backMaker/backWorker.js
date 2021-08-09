@@ -1199,8 +1199,6 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     const { client, cases } = clientCase;
     const ytoken = 'y';
     const mtoken = 'm';
-    const dateNumber = 60;
-    const secondDateNumber = 60;
     let contract, proposal, final;
     let project;
     let temp;
@@ -1216,7 +1214,14 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     let feeCalculation;
     let serviceCase;
     let serid, xValue;
+    let dateNumber, secondDateNumber;
+    let seridNumber;
+    let standardStart, standardEnd, standardRealEnd;
+    let possibleRange, possibleRealRange;
+    let possibleTempArr;
 
+    serid = null;
+    xValue = null;
     if (option.noCalculation !== true) {
       serviceCase = clientCase.caseService();
       if (serviceCase === null) {
@@ -1276,49 +1281,73 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
       }
     }
 
-    if (client.toNormal().requests[0].request.space.resident.living) {
-      standard = new Date();
-    } else {
-      standard = client.toNormal().requests[0].request.space.resident.expected;
-    }
-
-    now = new Date();
-    standard.setDate(standard.getDate() - dateNumber);
-
-    range = [];
-    for (let i = 0; i < dateNumber; i++) {
-      if (now.valueOf() < standard.valueOf()) {
-        range.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
+    dateNumber = 60;
+    secondDateNumber = 60;
+    if (serid !== null && serid !== undefined && typeof serid === "string") {
+      if (/^s[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(serid)) {
+        seridNumber = Number(serid.split('_')[1].replace(/[^0-9]/gi, '').replace(/^0/, '').replace(/^0/, ''));
+        if (seridNumber === 1) {
+          dateNumber = 35;
+          secondDateNumber = 35;
+        } else if (seridNumber === 2) {
+          dateNumber = 45;
+          secondDateNumber = 45;
+        } else if (seridNumber === 3) {
+          dateNumber = 60;
+          secondDateNumber = 60;
+        } else if (seridNumber === 4) {
+          dateNumber = 60;
+          secondDateNumber = 60;
+        }
       }
-      standard.setDate(standard.getDate() + 1);
     }
 
-    secondRange = [];
-    for (let i = 0; i < secondDateNumber; i++) {
-      if (now.valueOf() < standard.valueOf()) {
-        secondRange.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
-      }
-      standard.setDate(standard.getDate() + 1);
-    }
+    standardEnd = client.toNormal().requests[0].analytics.date.space.movein;
+    standardStart = new Date(standardEnd.getFullYear(), standardEnd.getMonth(), standardEnd.getDate());
+    standardStart.setDate(standardStart.getDate() - dateNumber);
+    standardRealEnd = new Date(standardEnd.getFullYear(), standardEnd.getMonth(), standardEnd.getDate());
+    standardRealEnd.setDate(standardRealEnd.getDate() + secondDateNumber);
 
-    range = Array.from(new Set(range));
-    secondRange = Array.from(new Set(secondRange));
-
-    if (range.length <= 1) {
-      range = range.concat(secondRange);
+    possibleRange = [];
+    while (standardStart.valueOf() < standardEnd.valueOf()) {
+      possibleRange.push(ytoken + String(standardStart.getFullYear()) + mtoken + String(standardStart.getMonth() + 1));
+      standardStart.setDate(standardStart.getDate() + 1);
     }
+    possibleRange = Array.from(new Set(possibleRange));
+
+    possibleRealRange = [];
+    while (standardStart.valueOf() < standardRealEnd.valueOf()) {
+      possibleRealRange.push(ytoken + String(standardStart.getFullYear()) + mtoken + String(standardStart.getMonth() + 1));
+      standardStart.setDate(standardStart.getDate() + 1);
+    }
+    possibleRealRange = Array.from(new Set(possibleRealRange));
 
     realtimeMap = {};
     for (let { desid, count } of realTimes) {
-      realtimeMap[desid] = count;
+      possibleTempArr = [];
+      for (let t of possibleRange) {
+        possibleTempArr.push(count[t] > 0);
+      }
+      realtimeMap[desid] = possibleTempArr.every((b) => { return b === true; });
+    }
+
+    if (Object.values(realtimeMap).filter((b) => { return b === true; }).length === 0) {
+      realtimeMap = {};
+      for (let { desid, count } of realTimes) {
+        possibleTempArr = [];
+        for (let t of possibleRealRange) {
+          possibleTempArr.push(count[t] > 0);
+        }
+        realtimeMap[desid] = possibleTempArr.every((b) => { return b === true; });
+      }
     }
 
     final = clientCase.caseProposal();
 
     if (option.noCalculation !== true) {
       final = final.filter((project) => { return project.service.serid === serid });
-      if (final.length <= (selectNumber * 3)) {
-        final = await back.getProjectsByQuery({ "service.serid": serid }, { selfMongo: option.selfMongo, limit: 200 });
+      if (final.length <= (selectNumber * 4)) {
+        final = await back.getProjectsByQuery({ "service.serid": serid }, { selfMongo: option.selfMongo, limit: 800 });
       }
     }
 
@@ -1330,12 +1359,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
           boo = false;
           designer = designers.search(desid);
           if (designer !== null && /완료/gi.test(designer.information.contract.status.value)) {
-            for (let token of range) {
-              boo = (realtimeMap[desid][token] >= 1);
-              if (boo) {
-                break;
-              }
-            }
+            boo = realtimeMap[desid];
             if (boo) {
               if (!selected.map((obj) => { return obj.desid }).includes(desid)) {
                 selected.push(project.selectProposal(desid));

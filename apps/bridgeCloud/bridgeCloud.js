@@ -385,7 +385,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           tempArr = filterAll(filterDate(resultObj["movingdate"])).split("-");
           requestObj["requests.0.request.space.resident.living"] = false;
           requestObj["requests.0.request.space.resident.expected"] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-          requestObj["requests.0.analytics.date.space.movein"] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+          future = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+          future.setDate(future.getDate() + 10);
+          requestObj["requests.0.analytics.date.space.movein"] = future;
         }
 
         if (filterAll(filterDate(resultObj["movingdate"])) !== "거주중" && requestObj["requests.0.request.space.resident.expected"].valueOf() <= (new Date()).valueOf()) {

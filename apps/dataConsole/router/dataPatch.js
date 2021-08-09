@@ -513,7 +513,7 @@ DataPatch.prototype.clientStandard = function () {
       width: 100,
     },
     spacePicture: {
-      name: "현장 사진",
+      name: "사진",
       width: 100,
     },
     preferPicture: {
@@ -638,7 +638,7 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "연락처", target: "phone" },
       { name: "이메일", target: "email" },
       { name: "채널 등록", target: "kakao" },
-      { name: "현장 사진", target: "spacePicture" },
+      { name: "사진", target: "spacePicture" },
       { name: "사전 점검일", target: "precheck" },
       { name: "집 비는 날", target: "empty" },
       { name: "예상 종료일", target: "movein" },
@@ -1595,7 +1595,7 @@ DataPatch.prototype.clientMap = function () {
     empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     movein: { name: "예상 종료일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
-    spacePicture: { name: "현장 사진", position: "requests.0.analytics.picture.space.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
+    spacePicture: { name: "사진", position: "requests.0.analytics.picture.space.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
     preferPicture: { name: "선호 사진", position: "requests.0.analytics.picture.prefer.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
   };
   return map;
