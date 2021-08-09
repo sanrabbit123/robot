@@ -65,7 +65,6 @@ DevContext.prototype.launching = async function () {
 
 
     // const matrix = [
-    //   [ "c2108_aa25s", "s2011_aa01s", "p2108_aa14s" ],
     //   [ "c2108_aa37s", "s2011_aa02s", "p2108_aa15s" ],
     //   [ "c2108_aa23s", "s2011_aa03s", "p2108_aa16s" ],
     //   [ "c2108_aa38s", "s2011_aa01s", "p2108_aa17s" ],
@@ -74,7 +73,7 @@ DevContext.prototype.launching = async function () {
     // let update;
     //
     // for (let [ cliid, serid, proid ] of matrix) {
-    //   detail = await work.designerCuration(cliid, 4, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
+    //   detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
     //   update = [];
     //   for (let d of detail) {
     //     update.push(d.toNormal());

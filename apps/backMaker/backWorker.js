@@ -922,7 +922,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     priceStandardConst = 33;
     onlineRatio = 0.8;
     travelNumber = 2;
-    distanceLimitPlus = 40;
+    distanceLimitPlus = 5;
 
     if (typeof cliid === "object") {
       mode = 0;
