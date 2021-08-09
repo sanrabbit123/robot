@@ -42,8 +42,8 @@ module.exports = {
         }
       },
       find: {
-        out: { $and: [ { method: 0 }, { id: obj.id } ] },
-        in: { $and: [ { method: 1 }, { id: obj.id } ] }
+        out: (fresh) => { return { $and: [ { method: 0 }, { id: fresh.id } ] }; },
+        in: (fresh) => { return { $and: [ { method: 1 }, { id: fresh.id } ] }; }
       },
       graphic: {
         out: {
@@ -79,11 +79,11 @@ module.exports = {
     for (let updateQuery of updateQueryArr) {
       if (updateQuery.method !== undefined) {
         fresh = new CashOut(updateQuery);
-        findQuery = map.find.out;
+        findQuery = map.find.out(fresh);
         insertEvent = async function (fresh) {}
       } else {
         fresh = new CashIn(updateQuery);
-        findQuery = map.find.in;
+        findQuery = map.find.in(fresh);
         insertEvent = async function (fresh) {
           try {
             await this.mother.slack_bot.chat.postMessage({ text: fresh.toMessage(), channel: "#701_taxbill" });
