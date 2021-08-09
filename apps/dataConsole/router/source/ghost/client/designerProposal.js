@@ -724,7 +724,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       { title: "대상 면적", value: String(request.space.pyeong) + "평" },
       { title: "대상 공간", value: spaceToString(request.space.spec) },
       { title: "출장비 여부", value: "없음" },
-      { title: "입주 예정일", value: expectedToString(analytics.date.space.movein, request.space.resident.expected) },
+      { title: "입주 예정일", value: expectedToString(request.space.resident.expected, analytics.date.space.movein) },
       { title: "계약 형태", value: request.space.contract },
       { title: "예산", value: request.budget },
     ];
@@ -735,7 +735,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       { title: "대상 면적", value: String(request.space.pyeong) + "평" },
       { title: "대상 공간", value: spaceToString(request.space.spec) },
       { title: "출장비 여부", value: "없음" },
-      { title: "입주 예정일", value: expectedToString(analytics.date.space.movein, request.space.resident.expected) },
+      { title: "입주 예정일", value: expectedToString(request.space.resident.expected, analytics.date.space.movein) },
     ];
   }
 

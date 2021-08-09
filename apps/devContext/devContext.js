@@ -62,8 +62,6 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-    const s = await bill.readBill("taxBill", {})
-    console.log(s);
 
 
     // const matrix = [
