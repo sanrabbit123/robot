@@ -214,8 +214,6 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         }
       }
 
-      console.log(rows);
-
       await bill.createBill(collection, rows, { option: instance.mongolocal });
 
       res.set({

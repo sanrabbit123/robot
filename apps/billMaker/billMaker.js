@@ -15,6 +15,7 @@ BillMaker.billCollections = [
 ];
 
 BillMaker.prototype.createBill = async function (collection, updateQueryArr, option = { selfMongo: null }) {
+  console.log(1);
   if (typeof collection !== "string" || !Array.isArray(updateQueryArr) || typeof option !== "object") {
     throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
   }
@@ -28,6 +29,7 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
   const { mongo, mongopythoninfo } = this.mother;
   const map = require(`${this.mapDir}/${collection}.js`);
   try {
+    console.log(2);
     const { main, alive } = map;
     if (typeof main !== "function" || typeof alive !== "function") {
       throw new Error("invaild collection model");
@@ -37,11 +39,15 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
     let tong;
     let rows;
 
+    console.log(3);
+
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
     } else {
       selfBoo = true;
     }
+
+    console.log(4);
 
     if (!selfBoo) {
       MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
