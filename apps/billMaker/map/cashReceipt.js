@@ -1,6 +1,6 @@
 module.exports = {
   collection: "cashReceipt",
-  main: function (alive, updateQueryArr) {
+  main: function (alive, updateQueryArr, mother) {
     let map, fresh, findQuery, tong, insertEvent;
     map = {
       out: {
@@ -74,7 +74,7 @@ module.exports = {
         }
       }
     };
-    const { CashOut, CashIn } = alive();
+    const { CashOut, CashIn } = alive(mother);
     tong = [];
     for (let updateQuery of updateQueryArr) {
       if (updateQuery.method !== undefined) {
@@ -86,7 +86,7 @@ module.exports = {
         findQuery = map.find.in(fresh);
         insertEvent = async function (fresh) {
           try {
-            await this.mother.slack_bot.chat.postMessage({ text: fresh.toMessage(), channel: "#701_taxbill" });
+            await mother.slack_bot.chat.postMessage({ text: fresh.toMessage(), channel: "#701_taxbill" });
           } catch (e) {
             console.log(e);
           }
@@ -96,7 +96,8 @@ module.exports = {
     }
     return tong;
   },
-  alive: function () {
+  alive: function (mother) {
+    const { dateToString, autoComma } = mother;
     class CashOut {
       constructor(o) {
         this.id = o.id;
