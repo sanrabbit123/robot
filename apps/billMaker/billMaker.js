@@ -59,8 +59,10 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
         await insertEvent(fresh);
         await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
       } else {
-        if (option.noUpdate !== true) {
-          await MONGOC.db(`miro81`).collection(collection).updateOne(findQuery, { $set: fresh });
+        if (option.updateMode === true) {
+          await MONGOC.db(`miro81`).collection(collection).deleteOne(findQuery);
+          await insertEvent(fresh);
+          await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
         }
       }
     }

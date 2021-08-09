@@ -211,7 +211,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         }
       }
 
-      bill.createBill(collection, rows, { selfMongo: instance.mongolocal, noUpdate: true }).catch((err) => {
+      bill.createBill(collection, rows, { selfMongo: instance.mongolocal }).catch((err) => {
         console.log(err);
       });
 
@@ -289,6 +289,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
 ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
   const instance = this;
   const back = this.back;
+  const bill = this.bill;
   const kakao = this.kakao;
   const { equalJson, fileSystem, slack_bot, dateToString, autoComma, ghostRequest } = this.mother;
   let obj = {};
@@ -306,7 +307,7 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       await bill.createBill(collection, [ json ], { selfMongo: instance.mongolocal });
       client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
       if (client !== null) {
-        await kakao.sendTalk("stylingForm", client.name, client.phone, { client: client.name });
+        await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
         instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 및 알림톡 전송 완료 : " + obj.name, channel: "#400_customer" });
         ghostRequest("voice", { text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!" }).catch((err) => {
           console.log(err);
