@@ -1,86 +1,102 @@
 module.exports = {
-  main: function () {
-    let dummy;
-    dummy = {
-      structure: {
-        aspid: "",
-        designer: "",
-        phone: "",
-        address: "",
-        email: "",
-        meeting: {
-          date: new Date(1800, 0, 1),
-          status: "",
-        },
-        calendar: {
-          mother: "designerMeeting",
-          id: "",
-        },
-        portfolio: [],
-        submit: {
-          presentation: {
-            date: new Date(1800, 0, 1),
-            boo: false
-          },
-          partnership: {
-            date: new Date(1800, 0, 1),
-            boo: false
-          },
-          firstRequest: {
-            date: new Date(1800, 0, 1),
-            method: "",
-          },
-          comeFrom: "",
-        },
-        information: {
-          company: {
+  collection: "taxBill",
+  main: function (alive, updateQueryArr, mother) {
+    let map, fresh, findQuery, tong, insertEvent;
+    map = {
+      main: {
+        id: "",
+        date: new Date(1800, 0, 1),
+        who: {
+          from: {
+            business: "",
+            company: "",
             name: "",
-            classification: "",
-            businessNumber: "",
-            representative: "",
-            start: new Date(1800, 0, 1),
-          },
-          account: {
-            bank: "",
-            number: "",
-            to: "",
-            etc: "",
-          },
-          career: {
-            interior: {
-              year: 0,
-              month: 0
-            },
-            styling: {
-              year: 0,
-              month: 0
-            },
+            address: "",
+            status: "",
             detail: "",
+            email: ""
           },
-          channel: {
-            web: [],
-            sns: [],
-            cloud: []
+          to: {
+            business: "",
+            company: "",
+            name: "",
+            address: "",
+            status: "",
+            detail: "",
+            email: ""
           }
+        },
+        items: [],
+        sum: {
+          total: 0,
+          supply: 0,
+          vat: 0
         }
+      },
+      items: {
+        month: 0,
+        date: 0,
+        name: "",
+        ea: "",
+        amount: 0,
+        unit: 0,
+        supply: 0,
+        vat: 0,
+        etc: ""
       }
     };
-    return dummy;
+
+    return [];
   },
-  sub: function (subject) {
-    let dummy = null;
-    if (subject === "portfolio") {
-      dummy = {
-        date: new Date(),
-        confirm: [
-          {
-            date: new Date(),
-            who: "",
-          }
-        ],
-        folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
-      };
+  alive: function (mother) {
+    const { dateToString, autoComma } = mother;
+    class TaxBill {
+      constructor(id, date) {
+        if (id === undefined || date === undefined) {
+          throw new Error("invaild input");
+        }
+        this.id = id;
+        this.date = date;
+        this.who = {};
+        this.who.from = {};
+        this.who.to = {};
+        this.items = [];
+        this.sum = {
+          total: 0,
+          supply: 0,
+          vat: 0
+        };
+      }
+      toMessage() {
+        const zeroAddition = (num) => { return ((num < 10) ? '0' + String(num) : String(num)); }
+        const { id, date, who, items, sum } = this;
+        let message = '';
+        message += "전자 세금 계산서(" + this.id + ") " + dateToString(date, true) + "\n";
+        message += "\n";
+        message += "발신자\n";
+        message += "- 상호 : " + who.from.company + " (" + who.from.business + ")" + "\n";
+        message += "- 이름 : " + who.from.name + "\n";
+        message += "- 이메일 : " + who.from.email + "\n";
+        message += "\n";
+        message += "수신자\n";
+        message += "- 상호 : " + who.to.company + " (" + who.to.business + ")" + "\n";
+        message += "- 이름 : " + who.to.name + "\n";
+        message += "- 이메일 : " + who.to.email + "\n";
+        message += "\n";
+        message += "내용\n";
+        for (let item of items) {
+          message += "- 날짜 : " + String((new Date()).getFullYear()) + "-" + zeroAddition(item.month) + "-" + zeroAddition(item.date) + "\n";
+          message += "- 품목 : " + item.name + "\n";
+          message += "- 공급가 : " + autoComma(item.supply) + "원" + "\n";
+          message += "- 세액 : " + autoComma(item.vat) + "원" + "\n";
+          message += "\n";
+        }
+        message += "합계\n";
+        message += "- 소비자가 : " + autoComma(sum.total) + "원" + "\n";
+        message += "- 공급가 : " + autoComma(sum.supply) + "원" + "\n";
+        return message;
+      }
     }
-    return dummy;
+    return { TaxBill };
   }
 }

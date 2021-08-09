@@ -368,8 +368,8 @@ Robot.prototype.pythonWatcher = async function () {
 
 Robot.prototype.taxBill = async function () {
   try {
-    const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
-    const app = new ReceiptObserver();
+    const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+    const app = new BillMaker();
     await app.taxBill();
     this.aliveTest();
   } catch (e) {

@@ -1,86 +1,167 @@
 module.exports = {
-  main: function () {
-    let dummy;
-    dummy = {
-      structure: {
-        aspid: "",
-        designer: "",
-        phone: "",
-        address: "",
-        email: "",
-        meeting: {
-          date: new Date(1800, 0, 1),
-          status: "",
+  collection: "stylingForm",
+  main: function (alive, updateQueryArr, mother) {
+    let map, fresh, findQuery, tong, insertEvent;
+    map = {
+      out: {
+        id: "",
+        date: new Date(1800, 0, 1),
+        deal: false,
+        method: 0,
+        amount: {
+          supply: 0,
+          vat: 0,
+          service: 0,
+          total: 0
         },
-        calendar: {
-          mother: "designerMeeting",
+        etc: {
+          business: "",
+          remark: "",
+          issuance: ""
+        }
+      },
+      in: {
+        id: "",
+        date: new Date(1800, 0, 1),
+        deal: false,
+        method: 1,
+        who: {
+          business: "",
+          company: ""
+        },
+        amount: {
+          supply: 0,
+          vat: 0,
+          service: 0,
+          total: 0
+        },
+        etc: {
+          item: "",
+          remark: "",
+          issuance: ""
+        }
+      },
+      find: {
+        out: (fresh) => { return { $and: [ { method: 0 }, { id: fresh.id } ] }; },
+        in: (fresh) => { return { $and: [ { method: 1 }, { id: fresh.id } ] }; }
+      },
+      graphic: {
+        out: {
+          method: "",
+          time: new Date(1800, 0, 1),
+          supply: 0,
+          vat: 0,
+          service: 0,
+          total: 0,
           id: "",
+          issuance: "",
+          deal: false,
+          etc: "",
         },
-        portfolio: [],
-        submit: {
-          presentation: {
-            date: new Date(1800, 0, 1),
-            boo: false
-          },
-          partnership: {
-            date: new Date(1800, 0, 1),
-            boo: false
-          },
-          firstRequest: {
-            date: new Date(1800, 0, 1),
-            method: "",
-          },
-          comeFrom: "",
-        },
-        information: {
-          company: {
-            name: "",
-            classification: "",
-            businessNumber: "",
-            representative: "",
-            start: new Date(1800, 0, 1),
-          },
-          account: {
-            bank: "",
-            number: "",
-            to: "",
-            etc: "",
-          },
-          career: {
-            interior: {
-              year: 0,
-              month: 0
-            },
-            styling: {
-              year: 0,
-              month: 0
-            },
-            detail: "",
-          },
-          channel: {
-            web: [],
-            sns: [],
-            cloud: []
-          }
+        in: {
+          time: new Date(1800, 0, 1),
+          business: "",
+          from: "",
+          item: "",
+          supply: 0,
+          vat: 0,
+          service: 0,
+          total: 0,
+          id: "",
+          issuance: "",
+          deal: false,
+          etc: "",
         }
       }
     };
-    return dummy;
-  },
-  sub: function (subject) {
-    let dummy = null;
-    if (subject === "portfolio") {
-      dummy = {
-        date: new Date(),
-        confirm: [
-          {
-            date: new Date(),
-            who: "",
+    const { CashOut, CashIn } = alive(mother);
+    tong = [];
+    for (let updateQuery of updateQueryArr) {
+      if (updateQuery.method !== undefined) {
+        fresh = new CashOut(updateQuery);
+        findQuery = map.find.out(fresh);
+        insertEvent = async function (fresh) {}
+      } else {
+        fresh = new CashIn(updateQuery);
+        findQuery = map.find.in(fresh);
+        insertEvent = async function (fresh) {
+          try {
+            await mother.slack_bot.chat.postMessage(fresh.toMessage());
+          } catch (e) {
+            console.log(e);
           }
-        ],
-        folderId: "1j-mLXZszbWNqq_xhXVPtm4MW5QOm5sZ2"
-      };
+        }
+      }
+      tong.push({ fresh, findQuery, insertEvent });
     }
-    return dummy;
+    return tong;
+  },
+  alive: function (mother) {
+    const { dateToString, autoComma } = mother;
+    class CashOut {
+      constructor(o) {
+        this.id = o.id;
+        this.date = o.time;
+        this.deal = o.deal;
+        this.method = 0;
+        this.amount = {
+          supply: o.supply,
+          vat: o.vat,
+          service: o.service,
+          total: o.total,
+        };
+        this.etc = {
+          business: o.method,
+          remark: o.etc,
+          issuance: o.issuance
+        };
+      }
+      toMessage() {
+        let arr;
+        arr = [
+          `현금 영수증(${this.id}) ${dateToString(this.date, true)}`,
+          ``,
+          `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
+          `- 금액 : ${autoComma(this.amount.total)}원`,
+        ];
+        return { text: arr.join("\n"), channel: "#701_taxbill" };
+      }
+    }
+    class CashIn {
+      constructor(o) {
+        this.id = o.id;
+        this.date = o.time;
+        this.deal = o.deal;
+        this.method = 1;
+        this.who = {
+          business: o.business,
+          company: o.from
+        };
+        this.amount = {
+          supply: o.supply,
+          vat: o.vat,
+          service: o.service,
+          total: o.total,
+        };
+        this.etc = {
+          item: o.item,
+          remark: o.etc,
+          issuance: o.issuance
+        };
+      }
+      toMessage() {
+        let arr;
+        arr = [
+          `현금 영수증(${this.id}) ${dateToString(this.date, true)}`,
+          ``,
+          `- 종류 : ${this.method === 0 ? "매출" : "매입"}`,
+          `- 발신자 : ${this.who.company} (${this.who.business})`,
+          `- 품목 : ${this.etc.item}`,
+          `- 금액 : ${autoComma(this.amount.total)}원`,
+        ];
+        return { text: arr.join("\n"), channel: "#701_taxbill" };
+      }
+    }
+    return { CashOut, CashIn };
   }
 }
