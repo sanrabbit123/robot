@@ -215,7 +215,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       }
 
       await bill.createBill(collection, rows, { option: instance.mongolocal });
-
+      
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",

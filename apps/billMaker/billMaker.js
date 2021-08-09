@@ -77,7 +77,7 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
   }
 }
 
-BillMaker.prototype.createBill = async function (collection, updateQueryArr, option = { selfMongo: null, devAlive: false }) {
+BillMaker.prototype.updateBill = async function (collection, updateQueryArr, option = { selfMongo: null, devAlive: false }) {
   if (typeof collection !== "string" || !Array.isArray(updateQueryArr)) {
     throw new Error("input must be String: bill collection, Array: updateQueryArr")
   }
