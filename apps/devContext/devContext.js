@@ -64,6 +64,41 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+    const month = function (num) {
+      const aCode = 'a'.charCodeAt(0);
+      let arr = [];
+      for (let i = 0; i < 12; i++) {
+        if (i < 9) {
+          arr.push(String(i + 1));
+        } else {
+          arr.push(String.fromCharCode(i - 9 + aCode));
+        }
+      }
+      return arr[num];
+    }
+    const date = function (num) {
+      const aCode = 'a'.charCodeAt(0);
+      let arr = [];
+      for (let i = 0; i < 32; i++) {
+        if (i < 9) {
+          arr.push(String(i + 1));
+        } else {
+          arr.push(String.fromCharCode(i - 9 + aCode));
+        }
+      }
+      return arr[num];
+    }
+    const today = new Date();
+    let id;
+    id = 'b' + String(today.getFullYear()).slice(2) + month(today.getMonth()) + date(today.getDate() - 1) + '_';
+
+    console.log(id);
+
+
+
+
     // const matrix = [
     //   [ "c2108_aa37s", "s2011_aa02s", "p2108_aa15s" ],
     //   [ "c2108_aa23s", "s2011_aa03s", "p2108_aa16s" ],
