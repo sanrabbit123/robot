@@ -194,9 +194,9 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       const selfMongo = instance.mongolocal;
       let rows;
 
+      rows = [];
       if (json.cashOut !== undefined) {
         const { cashOut: cashOut_raw } = json;
-        rows = [];
         for (let arr of cashOut_raw) {
           for (let obj of arr) {
             rows.push(obj);
@@ -204,7 +204,6 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         }
       } else if (json.cashIn !== undefined) {
         const { cashIn: cashIn_raw } = json;
-        rows = [];
         for (let arr of cashIn_raw) {
           for (let obj of arr) {
             rows.push(obj);
@@ -212,7 +211,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
         }
       }
 
-      bill.createBill(collection, rows, { selfMongo: instance.mongolocal }).catch((err) => {
+      bill.createBill(collection, rows, { selfMongo: instance.mongolocal, noUpdate: true }).catch((err) => {
         console.log(err);
       });
 
@@ -302,26 +301,14 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       const json = equalJson(req.body.json);
       const collection = "stylingForm";
       const selfMongo = instance.mongolocal;
-      let obj;
       let client;
 
-      obj = {
-        id: json.id,
-        date: new Date(),
-        name: json.name,
-        proid: json.proid,
-        client: {
-          cliid: json.cliid,
-          requestNumber: json.requestNumber
-        }
-      };
-
-      await back.mongoCreate(collection, obj, { selfMongo });
+      await bill.createBill(collection, [ json ], { selfMongo: instance.mongolocal });
       client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
       if (client !== null) {
         await kakao.sendTalk("stylingForm", client.name, client.phone, { client: client.name });
         instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 및 알림톡 전송 완료 : " + obj.name, channel: "#400_customer" });
-        ghostRequest("voice", { text: obj.name + " 계약서를 작성하고 알림톡을 전송했어요!" }).catch((err) => {
+        ghostRequest("voice", { text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!" }).catch((err) => {
           console.log(err);
         });
       }
@@ -334,7 +321,7 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
