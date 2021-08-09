@@ -180,6 +180,9 @@ module.exports = function (proid, info) {
           while (document.querySelector("ul.sc-eGRTUG").children.length === 0) {
             await sleep(500);
           }
+          while (document.querySelector("ul.sc-eGRTUG").firstChild.querySelector('a') === null) {
+            await sleep(500);
+          }
 
           document.querySelector("ul.sc-eGRTUG").firstChild.querySelector('a').click();
 
