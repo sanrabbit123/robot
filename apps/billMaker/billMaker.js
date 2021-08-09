@@ -70,20 +70,14 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
   }
 }
 
-BillMaker.prototype.taxBill = async function () {
+BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo, fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, slack_bot, autoComma, dateToString } = this.mother;
-  const MONGOLOCALC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
-  const jsdom = require("jsdom");
-  const { JSDOM } = jsdom;
-  const collection = "taxBill";
-  const map = require(`${this.mapDir}/${collection}.js`);
-  const { TaxBill } = map.alive(this.mother);
+  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, slack_bot, autoComma } = this.mother;
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
     await MONGOLOCALC.connect();
     const selfMongo = MONGOLOCALC;
-    const pastDateNumber = 2;
     const today = new Date();
     const yesterday = new Date();
     const month = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
@@ -93,10 +87,13 @@ BillMaker.prototype.taxBill = async function () {
     const hash = "d3e48a26c2203b3f57af7489f4357a49c1336757d65d49d31455414c3c84e54e";
     const password = "homeliaison";
     const homeTaxEmail = "hometaxadmin@hometax.go.kr";
+    const jsdom = require("jsdom");
+    const { JSDOM } = jsdom;
     const keywords = "전자세금계산서를 발급하고 발송한 메일";
     const attachmentsKeywords = "Content-Disposition: attachment";
     const dateKeywords = "Date: ";
     const pythonFile = `${process.cwd()}/temp/getMail.py`;
+    const zeroAddition = (num) => { return ((num < 10) ? '0' + String(num) : String(num)); }
     class FindIndex extends Array {
       constructor(arr) {
         super();
@@ -125,6 +122,52 @@ BillMaker.prototype.taxBill = async function () {
           result.splice(1, between);
         }
         return result;
+      }
+    }
+    class TaxBill {
+      constructor(id, date) {
+        if (id === undefined || date === undefined) {
+          throw new Error("invaild input");
+        }
+        this.id = id;
+        this.date = date;
+        this.who = {};
+        this.who.from = {};
+        this.who.to = {};
+        this.items = [];
+        this.sum = {
+          total: 0,
+          supply: 0,
+          vat: 0
+        };
+      }
+      toMessage() {
+        const { id, date, who, items, sum } = this;
+        let message = '';
+        message += "전자 세금 계산서(" + this.id + ") " + String(date.getFullYear()) + "-" + zeroAddition(date.getMonth() + 1) + "-" + zeroAddition(date.getDate()) + " " + zeroAddition(date.getHours()) + ":" + zeroAddition(date.getMinutes()) + ":" + zeroAddition(date.getSeconds()) + "\n";
+        message += "\n";
+        message += "발신자\n";
+        message += "- 상호 : " + who.from.company + " (" + who.from.business + ")" + "\n";
+        message += "- 이름 : " + who.from.name + "\n";
+        message += "- 이메일 : " + who.from.email + "\n";
+        message += "\n";
+        message += "수신자\n";
+        message += "- 상호 : " + who.to.company + " (" + who.to.business + ")" + "\n";
+        message += "- 이름 : " + who.to.name + "\n";
+        message += "- 이메일 : " + who.to.email + "\n";
+        message += "\n";
+        message += "내용\n";
+        for (let item of items) {
+          message += "- 날짜 : " + String((new Date()).getFullYear()) + "-" + zeroAddition(item.month) + "-" + zeroAddition(item.date) + "\n";
+          message += "- 품목 : " + item.name + "\n";
+          message += "- 공급가 : " + autoComma(item.supply) + "원" + "\n";
+          message += "- 세액 : " + autoComma(item.vat) + "원" + "\n";
+          message += "\n";
+        }
+        message += "합계\n";
+        message += "- 소비자가 : " + autoComma(sum.total) + "원" + "\n";
+        message += "- 공급가 : " + autoComma(sum.supply) + "원" + "\n";
+        return message;
       }
     }
     let pythonDate, pythonScript;
@@ -156,7 +199,7 @@ BillMaker.prototype.taxBill = async function () {
 
     yesterday.setDate(yesterday.getDate() - pastDateNumber);
     realPwd = await decryptoHash(password, hash);
-    pythonDate = dateToString(yesterday, false);
+    pythonDate = `${zeroAddition(yesterday.getDate())}-${month[yesterday.getMonth()]}-${String(yesterday.getFullYear())}`;
     pythonScript = ``;
     pythonScript += `from imaplib import IMAP4_SSL\n`;
     pythonScript += `import json\n`;
