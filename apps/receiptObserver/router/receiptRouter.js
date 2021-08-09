@@ -194,6 +194,8 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       const selfMongo = instance.mongolocal;
       let rows;
 
+      console.log(json);
+
       if (json.cashOut !== undefined) {
         const { cashOut: cashOut_raw } = json;
         rows = [];
@@ -211,6 +213,8 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
           }
         }
       }
+
+      console.log(rows);
 
       await bill.createBill(collection, rows, { option: instance.mongolocal });
 
