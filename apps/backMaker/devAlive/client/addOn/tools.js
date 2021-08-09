@@ -344,7 +344,7 @@ const withTools = function (Client) {
     let tong = [];
     let temp;
 
-    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service }, date: { call: { next, history: callHistory }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
+    for (let { request: { timeline, budget, family, space: { address, contract, pyeong, spec: { room, bathroom, valcony }, resident: { living, expected } }, etc: { comment, channel } }, analytics: { response: { status, action, outreason, kakao, service }, date: { call: { next, history: callHistory }, space: { precheck, empty, movein } }, picture: { space: spacePicture, prefer: preferPicture } } } of client.requests) {
 
       temp = {};
       temp.standard = {
@@ -372,6 +372,7 @@ const withTools = function (Client) {
         precheck: dateToString(precheck),
         empty: dateToString(empty),
         movein: dateToString(movein),
+        expected: dateToString(expected),
         room,
         bathroom,
         valcony,
@@ -418,6 +419,7 @@ const withToolsArr = function (Clients) {
   }
 
   class RequestsTongs extends Array {
+
     reportAll() {
       let arr = [];
       for (let i of this) {
@@ -425,6 +427,25 @@ const withToolsArr = function (Clients) {
       }
       return arr;
     }
+
+    select(dateObj) {
+      if (!(dateObj instanceof Date)) {
+        throw new Error("must be date object");
+      }
+      let key, target;
+
+      target = null;
+      key = (String(dateObj.getFullYear()).slice(2) + "년 " + String(dateObj.getMonth() + 1) + "월");
+      for (let obj of this) {
+        if (obj.name === key) {
+          target = obj;
+          break;
+        }
+      }
+
+      return target;
+    }
+
   }
 
   class RequestsTongFactor {

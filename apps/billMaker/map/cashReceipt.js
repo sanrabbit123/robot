@@ -103,21 +103,14 @@ module.exports = {
     class CashOut {
       constructor(o) {
         if (o !== null) {
-          this.id = o.id;
-          this.date = o.time;
-          this.deal = o.deal;
-          this.method = 0;
-          this.amount = {
-            supply: o.supply,
-            vat: o.vat,
-            service: o.service,
-            total: o.total,
-          };
-          this.etc = {
-            business: o.method,
-            remark: o.etc,
-            issuance: o.issuance
-          };
+          if (typeof o === "object") {
+            this.id = o.id;
+            this.date = o.time;
+            this.deal = o.deal;
+            this.method = 0;
+            this.amount = o.amount;
+            this.etc = o.etc;
+          }
         }
       }
       make(o) {
@@ -151,25 +144,15 @@ module.exports = {
     class CashIn {
       constructor(o) {
         if (o !== null) {
-          this.id = o.id;
-          this.date = o.time;
-          this.deal = o.deal;
-          this.method = 1;
-          this.who = {
-            business: o.business,
-            company: o.from
-          };
-          this.amount = {
-            supply: o.supply,
-            vat: o.vat,
-            service: o.service,
-            total: o.total,
-          };
-          this.etc = {
-            item: o.item,
-            remark: o.etc,
-            issuance: o.issuance
-          };
+          if (typeof o === "object") {
+            this.id = o.id;
+            this.date = o.time;
+            this.deal = o.deal;
+            this.method = 1;
+            this.who = o.who;
+            this.amount = o.amount;
+            this.etc = o.etc;
+          }
         }
       }
       make(o) {
@@ -207,5 +190,32 @@ module.exports = {
       }
     }
     return { CashOut, CashIn };
+  },
+  wrap: function (alive, jsonArr, mother) {
+    const { CashOut, CashIn } = alive(mother);
+    class Cash extends Array {
+      search(id) {
+        let target;
+        target = null;
+        for (let o of this) {
+          if (o.id === id) {
+            target = o;
+            break;
+          }
+        }
+        return target;
+      }
+    }
+    let arr, tempObj;
+    arr = new Cash();
+    for (let json of jsonArr) {
+      if (json.method === 1) {
+        tempObj = new CashIn(json);
+      } else {
+        tempObj = new CashOut(json);
+      }
+      arr.push(tempObj);
+    }
+    return arr;
   }
 }

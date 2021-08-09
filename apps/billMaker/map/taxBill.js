@@ -53,17 +53,13 @@ module.exports = {
     class TaxBill {
       constructor(obj) {
         if (obj !== null) {
-          this.id = id;
-          this.date = date;
-          this.who = {};
-          this.who.from = {};
-          this.who.to = {};
-          this.items = [];
-          this.sum = {
-            total: 0,
-            supply: 0,
-            vat: 0
-          };
+          if (typeof obj === "object") {
+            this.id = obj.id;
+            this.date = obj.date;
+            this.who = obj.who;
+            this.items = obj.items;
+            this.sum = obj.sum;
+          }
         }
       }
       make(id, date) {
@@ -113,5 +109,27 @@ module.exports = {
       }
     }
     return { TaxBill };
+  },
+  wrap: function (alive, jsonArr, mother) {
+    const { TaxBill } = alive(mother);
+    class TaxBill extends Array {
+      search(id) {
+        let target;
+        target = null;
+        for (let o of this) {
+          if (o.id === id) {
+            target = o;
+            break;
+          }
+        }
+        return target;
+      }
+    }
+    let arr;
+    arr = new TaxBill();
+    for (let json of jsonArr) {
+      arr.push(new TaxBill(json));
+    }
+    return arr;
   }
 }

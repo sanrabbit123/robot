@@ -557,6 +557,10 @@ DataPatch.prototype.clientStandard = function () {
       width: 100,
     },
     movein: {
+      name: "예상 종료일",
+      width: 100,
+    },
+    expected: {
       name: "입주 예정일",
       width: 100,
     },
@@ -635,10 +639,10 @@ DataPatch.prototype.clientWhiteViewStandard = function () {
       { name: "이메일", target: "email" },
       { name: "채널 등록", target: "kakao" },
       { name: "현장 사진", target: "spacePicture" },
-      { name: "선호 사진", target: "preferPicture" },
       { name: "사전 점검일", target: "precheck" },
       { name: "집 비는 날", target: "empty" },
-      { name: "입주 예정일", target: "movein" },
+      { name: "예상 종료일", target: "movein" },
+      { name: "입주 예정일", target: "expected" },
       { name: "거주중", target: "living" },
       { name: "예상 서비스", target: "service" },
       { name: "예산", target: "budget" },
@@ -1589,7 +1593,8 @@ DataPatch.prototype.clientMap = function () {
     callHistory: { name: "연락 기록", position: "requests.0.analytics.date.call.history", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },
     precheck: { name: "사전 점검일", position: "requests.0.analytics.date.space.precheck", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     empty: { name: "집 비는 날", position: "requests.0.analytics.date.space.empty", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
-    movein: { name: "입주 예정일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    movein: { name: "예상 종료일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
+    expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     spacePicture: { name: "현장 사진", position: "requests.0.analytics.picture.space.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
     preferPicture: { name: "선호 사진", position: "requests.0.analytics.picture.prefer.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
   };

@@ -327,6 +327,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
 DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
+  const back = this.back;
   const { fileSystem, pythonExecute, shell, shellLink, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
@@ -502,7 +503,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           date: today
         };
 
-        instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { local: null, local: true, selfMongo: null }).catch(function (e) {
+        back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
           throw new Error(e);
         });
 
@@ -554,6 +555,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
 
 DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const instance = this;
+  const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents" ];
@@ -561,6 +563,8 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
     try {
       let raw_data;
       let whereQuery, updateQuery, dateQuery;
+      let cookies;
+      let updateTong;
 
       if (req.body.where !== undefined) {
         whereQuery = equalJson(req.body.where);
@@ -582,13 +586,31 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       }
 
       if (req.url === "/rawUpdateClient") {
-        raw_data = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        raw_data = await back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/rawUpdateDesigner") {
-        raw_data = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        raw_data = await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/rawUpdateProject") {
-        raw_data = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        raw_data = await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/rawUpdateContents") {
-        raw_data = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        raw_data = await back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      }
+
+      cookies = DataRouter.cookieParsing(req);
+      if (cookies !== null) {
+        if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
+          updateTong = {
+            user: {
+              name: cookies.homeliaisonConsoleLoginedName,
+              email: cookies.homeliaisonConsoleLoginedEmail
+            },
+            where: Object.values(whereQuery)[0],
+            update: { updateQuery: JSON.stringify(updateQuery) },
+            date: new Date()
+          };
+          back.mongoCreate((req.url.replace(/^\/rawU/, 'u') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
+            throw new Error(e);
+          });
+        }
       }
 
       res.set("Content-Type", "application/json");

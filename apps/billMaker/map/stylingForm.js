@@ -18,7 +18,8 @@ module.exports = {
     const { StylingForm } = alive(mother);
     tong = [];
     for (let json of updateQueryArr) {
-      fresh = new StylingForm(json);
+      fresh = new StylingForm(null);
+      fresh.make(json);
       findQuery = map.find(fresh);
       insertEvent = async function (fresh) {}
       tong.push({ fresh, findQuery, insertEvent });
@@ -28,6 +29,17 @@ module.exports = {
   alive: function (mother) {
     class StylingForm {
       constructor(json) {
+        if (json !== null) {
+          if (typeof json === "object") {
+            this.id = json.id;
+            this.date = json.date;
+            this.name = json.name;
+            this.proid = json.proid;
+            this.client = json.client;
+          }
+        }
+      }
+      make(json) {
         this.id = json.id;
         this.date = new Date();
         this.name = json.name;
@@ -38,5 +50,27 @@ module.exports = {
       }
     }
     return { StylingForm };
+  },
+  wrap: function (alive, jsonArr, mother) {
+    const { StylingForm } = alive(mother);
+    class StylingForms extends Array {
+      search(id) {
+        let target;
+        target = null;
+        for (let o of this) {
+          if (o.id === id) {
+            target = o;
+            break;
+          }
+        }
+        return target;
+      }
+    }
+    let arr;
+    arr = new StylingForms();
+    for (let json of jsonArr) {
+      arr.push(new StylingForm(json));
+    }
+    return arr;
   }
 }

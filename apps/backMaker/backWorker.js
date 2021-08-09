@@ -1199,6 +1199,8 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     const { client, cases } = clientCase;
     const ytoken = 'y';
     const mtoken = 'm';
+    const dateNumber = 60;
+    const secondDateNumber = 60;
     let contract, proposal, final;
     let project;
     let temp;
@@ -1281,10 +1283,10 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     }
 
     now = new Date();
-    standard.setDate(standard.getDate() - 60);
+    standard.setDate(standard.getDate() - dateNumber);
 
     range = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < dateNumber; i++) {
       if (now.valueOf() < standard.valueOf()) {
         range.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
       }
@@ -1292,7 +1294,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     }
 
     secondRange = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < secondDateNumber; i++) {
       if (now.valueOf() < standard.valueOf()) {
         secondRange.push(ytoken + String(standard.getFullYear()) + mtoken + String(standard.getMonth() + 1));
       }

@@ -34,6 +34,44 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoIn
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
 
+DataRouter.cookieParsing = function (req) {
+  if (req.headers.cookie === undefined) {
+    return null;
+  } else {
+    if (typeof req.headers.cookie === "string" && /=/gi.test(req.headers.cookie)) {
+      const str = req.headers.cookie;
+      const tryDecode = (str) => {
+        try {
+          return decodeURIComponent(str);
+        } catch (e) {
+          return str;
+        }
+      }
+      const pairs = str.split(/; */);
+      let obj;
+      let key, val;
+      obj = {};
+      for (let pair of pairs) {
+        eq_idx = pair.indexOf('=');
+        if (eq_idx < 0) {
+          continue;
+        }
+        key = pair.slice(0, eq_idx).trim();
+        val = pair.slice(eq_idx + 1, pair.length).trim();
+        if (val[0] === '"') {
+          val = val.slice(1, -1);
+        }
+        if (obj[key] === undefined) {
+          obj[key] = tryDecode(val);
+        }
+      }
+      return obj;
+    } else {
+      return null;
+    }
+  }
+}
+
 DataRouter.queryFilter = function (str) {
   str = str.replace(/[|\\\/\[\]\{\}\(\)\<\>!@#\$\%\^\&\*\=\+\?]/g, '');
   str = str.replace(/\n/g, '');

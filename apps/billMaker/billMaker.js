@@ -76,6 +76,65 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
   }
 }
 
+BillMaker.prototype.readBill = async function (collection, whereQuery, option = { selfMongo: null }) {
+  if (typeof collection !== "string" || typeof whereQuery !== "object" || typeof option !== "object") {
+    throw new Error("input must be String: bill collection, Object: whereQuery, Object: option");
+  }
+  if (!BillMaker.billCollections.includes(collection)) {
+    throw new Error("input must be String: bill collection, Object: whereQuery, Object: option");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo } = this.mother;
+  const map = require(`${this.mapDir}/${collection}.js`);
+  try {
+    const { alive, wrap } = map;
+    let MONGOC;
+    let selfBoo;
+    let tong;
+    let rows;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    
+
+    wrap(alive)
+
+
+    tong = main(alive, updateQueryArr, instance.mother);
+    for (let { fresh, findQuery, insertEvent } of tong) {
+      rows = await MONGOC.db(`miro81`).collection(collection).find(findQuery).toArray();
+      if (rows.length === 0) {
+        await insertEvent(fresh);
+        await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
+      } else {
+        if (option.updateMode === true) {
+          await MONGOC.db(`miro81`).collection(collection).deleteOne(findQuery);
+          await insertEvent(fresh);
+          await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
+        }
+      }
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
   const instance = this;
   const back = this.back;

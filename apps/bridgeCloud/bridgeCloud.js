@@ -345,6 +345,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         let thisClientArr, thisClient;
         let defaultPyeong;
         let cliid;
+        let future;
 
         defaultPyeong = 34;
 
@@ -377,12 +378,22 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         if (filterAll(filterDate(resultObj["movingdate"])) === "거주중") {
           requestObj["requests.0.request.space.resident.living"] = true;
           requestObj["requests.0.request.space.resident.expected"] = new Date();
-          requestObj["requests.0.analytics.date.space.movein"] = new Date();
+          future = new Date();
+          future.setDate(future.getDate() + 60);
+          requestObj["requests.0.analytics.date.space.movein"] = future;
         } else {
           tempArr = filterAll(filterDate(resultObj["movingdate"])).split("-");
           requestObj["requests.0.request.space.resident.living"] = false;
           requestObj["requests.0.request.space.resident.expected"] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
           requestObj["requests.0.analytics.date.space.movein"] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+        }
+
+        if (filterAll(filterDate(resultObj["movingdate"])) !== "거주중" && requestObj["requests.0.request.space.resident.expected"].valueOf() <= (new Date()).valueOf()) {
+          requestObj["requests.0.request.space.resident.living"] = true;
+          requestObj["requests.0.request.space.resident.expected"] = new Date();
+          future = new Date();
+          future.setDate(future.getDate() + 60);
+          requestObj["requests.0.analytics.date.space.movein"] = future;
         }
 
         requestObj["requests.0.request.space.contract"] = filterAll(filterCont(resultObj["myhomeboo"]));

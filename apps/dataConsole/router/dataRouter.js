@@ -34,6 +34,44 @@ const DataRouter = function (DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoIn
 
 //STATIC FUNCTIONS --------------------------------------------------------------------------
 
+DataRouter.cookieParsing = function (req) {
+  if (req.headers.cookie === undefined) {
+    return null;
+  } else {
+    if (typeof req.headers.cookie === "string" && /=/gi.test(req.headers.cookie)) {
+      const str = req.headers.cookie;
+      const tryDecode = (str) => {
+        try {
+          return decodeURIComponent(str);
+        } catch (e) {
+          return str;
+        }
+      }
+      const pairs = str.split(/; */);
+      let obj;
+      let key, val;
+      obj = {};
+      for (let pair of pairs) {
+        eq_idx = pair.indexOf('=');
+        if (eq_idx < 0) {
+          continue;
+        }
+        key = pair.slice(0, eq_idx).trim();
+        val = pair.slice(eq_idx + 1, pair.length).trim();
+        if (val[0] === '"') {
+          val = val.slice(1, -1);
+        }
+        if (obj[key] === undefined) {
+          obj[key] = tryDecode(val);
+        }
+      }
+      return obj;
+    } else {
+      return null;
+    }
+  }
+}
+
 DataRouter.queryFilter = function (str) {
   str = str.replace(/[|\\\/\[\]\{\}\(\)\<\>!@#\$\%\^\&\*\=\+\?]/g, '');
   str = str.replace(/\n/g, '');
@@ -873,6 +911,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 
 DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
+  const back = this.back;
   const { fileSystem, pythonExecute, shell, shellLink, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
@@ -1048,7 +1087,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
           date: today
         };
 
-        instance.back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { local: null, local: true, selfMongo: null }).catch(function (e) {
+        back.mongoCreate((req.url.replace(/^\//, '') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
           throw new Error(e);
         });
 
@@ -1100,6 +1139,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
 
 DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const instance = this;
+  const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents" ];
@@ -1107,6 +1147,8 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
     try {
       let raw_data;
       let whereQuery, updateQuery, dateQuery;
+      let cookies;
+      let updateTong;
 
       if (req.body.where !== undefined) {
         whereQuery = equalJson(req.body.where);
@@ -1128,13 +1170,31 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
       }
 
       if (req.url === "/rawUpdateClient") {
-        raw_data = await instance.back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        raw_data = await back.updateClient([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/rawUpdateDesigner") {
-        raw_data = await instance.back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        raw_data = await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/rawUpdateProject") {
-        raw_data = await instance.back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        raw_data = await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/rawUpdateContents") {
-        raw_data = await instance.back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        raw_data = await back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      }
+
+      cookies = DataRouter.cookieParsing(req);
+      if (cookies !== null) {
+        if (cookies.homeliaisonConsoleLoginedName !== undefined && cookies.homeliaisonConsoleLoginedEmail !== undefined) {
+          updateTong = {
+            user: {
+              name: cookies.homeliaisonConsoleLoginedName,
+              email: cookies.homeliaisonConsoleLoginedEmail
+            },
+            where: Object.values(whereQuery)[0],
+            update: { updateQuery: JSON.stringify(updateQuery) },
+            date: new Date()
+          };
+          back.mongoCreate((req.url.replace(/^\/rawU/, 'u') + "Log"), updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
+            throw new Error(e);
+          });
+        }
       }
 
       res.set("Content-Type", "application/json");
