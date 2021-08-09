@@ -78,11 +78,13 @@ module.exports = {
     tong = [];
     for (let updateQuery of updateQueryArr) {
       if (updateQuery.method !== undefined) {
-        fresh = new CashOut(updateQuery);
+        fresh = new CashOut(null);
+        fresh.make(updateQuery);
         findQuery = map.find.out(fresh);
         insertEvent = async function (fresh) {}
       } else {
-        fresh = new CashIn(updateQuery);
+        fresh = new CashIn(null);
+        fresh.make(updateQuery);
         findQuery = map.find.in(fresh);
         insertEvent = async function (fresh) {
           try {
@@ -100,6 +102,25 @@ module.exports = {
     const { dateToString, autoComma } = mother;
     class CashOut {
       constructor(o) {
+        if (o !== null) {
+          this.id = o.id;
+          this.date = o.time;
+          this.deal = o.deal;
+          this.method = 0;
+          this.amount = {
+            supply: o.supply,
+            vat: o.vat,
+            service: o.service,
+            total: o.total,
+          };
+          this.etc = {
+            business: o.method,
+            remark: o.etc,
+            issuance: o.issuance
+          };
+        }
+      }
+      make(o) {
         this.id = o.id;
         this.date = o.time;
         this.deal = o.deal;
@@ -129,6 +150,29 @@ module.exports = {
     }
     class CashIn {
       constructor(o) {
+        if (o !== null) {
+          this.id = o.id;
+          this.date = o.time;
+          this.deal = o.deal;
+          this.method = 1;
+          this.who = {
+            business: o.business,
+            company: o.from
+          };
+          this.amount = {
+            supply: o.supply,
+            vat: o.vat,
+            service: o.service,
+            total: o.total,
+          };
+          this.etc = {
+            item: o.item,
+            remark: o.etc,
+            issuance: o.issuance
+          };
+        }
+      }
+      make(o) {
         this.id = o.id;
         this.date = o.time;
         this.deal = o.deal;

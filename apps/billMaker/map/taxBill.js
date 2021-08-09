@@ -51,7 +51,22 @@ module.exports = {
   alive: function (mother) {
     const { dateToString, autoComma } = mother;
     class TaxBill {
-      constructor(id, date) {
+      constructor(obj) {
+        if (obj !== null) {
+          this.id = id;
+          this.date = date;
+          this.who = {};
+          this.who.from = {};
+          this.who.to = {};
+          this.items = [];
+          this.sum = {
+            total: 0,
+            supply: 0,
+            vat: 0
+          };
+        }
+      }
+      make(id, date) {
         if (id === undefined || date === undefined) {
           throw new Error("invaild input");
         }

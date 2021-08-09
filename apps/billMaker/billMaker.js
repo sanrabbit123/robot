@@ -82,6 +82,8 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
   const { mongo, mongoinfo, mongolocalinfo, fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, slack_bot, autoComma } = this.mother;
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
+    const collection = "taxBill";
+    const map = require(`${this.mapDir}/${collection}.js`);
     await MONGOLOCALC.connect();
     const selfMongo = MONGOLOCALC;
     const today = new Date();
@@ -100,6 +102,7 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
     const dateKeywords = "Date: ";
     const pythonFile = `${process.cwd()}/temp/getMail.py`;
     const zeroAddition = (num) => { return ((num < 10) ? '0' + String(num) : String(num)); }
+    const { TaxBill } = map.alive(this.mother);
     class FindIndex extends Array {
       constructor(arr) {
         super();
@@ -128,52 +131,6 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
           result.splice(1, between);
         }
         return result;
-      }
-    }
-    class TaxBill {
-      constructor(id, date) {
-        if (id === undefined || date === undefined) {
-          throw new Error("invaild input");
-        }
-        this.id = id;
-        this.date = date;
-        this.who = {};
-        this.who.from = {};
-        this.who.to = {};
-        this.items = [];
-        this.sum = {
-          total: 0,
-          supply: 0,
-          vat: 0
-        };
-      }
-      toMessage() {
-        const { id, date, who, items, sum } = this;
-        let message = '';
-        message += "전자 세금 계산서(" + this.id + ") " + String(date.getFullYear()) + "-" + zeroAddition(date.getMonth() + 1) + "-" + zeroAddition(date.getDate()) + " " + zeroAddition(date.getHours()) + ":" + zeroAddition(date.getMinutes()) + ":" + zeroAddition(date.getSeconds()) + "\n";
-        message += "\n";
-        message += "발신자\n";
-        message += "- 상호 : " + who.from.company + " (" + who.from.business + ")" + "\n";
-        message += "- 이름 : " + who.from.name + "\n";
-        message += "- 이메일 : " + who.from.email + "\n";
-        message += "\n";
-        message += "수신자\n";
-        message += "- 상호 : " + who.to.company + " (" + who.to.business + ")" + "\n";
-        message += "- 이름 : " + who.to.name + "\n";
-        message += "- 이메일 : " + who.to.email + "\n";
-        message += "\n";
-        message += "내용\n";
-        for (let item of items) {
-          message += "- 날짜 : " + String((new Date()).getFullYear()) + "-" + zeroAddition(item.month) + "-" + zeroAddition(item.date) + "\n";
-          message += "- 품목 : " + item.name + "\n";
-          message += "- 공급가 : " + autoComma(item.supply) + "원" + "\n";
-          message += "- 세액 : " + autoComma(item.vat) + "원" + "\n";
-          message += "\n";
-        }
-        message += "합계\n";
-        message += "- 소비자가 : " + autoComma(sum.total) + "원" + "\n";
-        message += "- 공급가 : " + autoComma(sum.supply) + "원" + "\n";
-        return message;
       }
     }
     let pythonDate, pythonScript;
@@ -339,7 +296,8 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
         { word: "종목", not: "이메일", regxp: false, between: 0, start: 0, column: "detail" },
         { word: "이메일", not: "이메일", regxp: false, between: 0, start: 0, column: "email" },
       ];
-      resultObj = new TaxBill(textArr[2], date);
+      resultObj = new TaxBill(null);
+      resultObj.make(textArr[2], date);
 
       for (let { word, not, regxp, between, start, column } of spotTargets) {
         tempArr = textArr.findIndexAll(word, regxp, between, start);
