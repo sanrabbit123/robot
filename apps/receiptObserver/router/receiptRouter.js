@@ -308,7 +308,7 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
       if (client !== null) {
         await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
-        instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 및 알림톡 전송 완료 : " + obj.name, channel: "#400_customer" });
+        instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 및 알림톡 전송 완료 : " + client.name, channel: "#400_customer" });
         ghostRequest("voice", { text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!" }).catch((err) => {
           console.log(err);
         });

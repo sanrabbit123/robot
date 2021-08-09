@@ -181,7 +181,7 @@ module.exports = function (proid, info) {
             await sleep(500);
           }
 
-          document.querySelector("ul.sc-eGRTUG").firstChild.firstChild.firstChild.children[1].firstChild.click();
+          document.querySelector("ul.sc-eGRTUG").firstChild.querySelector('a').click();
 
           while (document.querySelector(".view-header-title") === null) {
             await sleep(500);
