@@ -90,8 +90,14 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
     const { alive, wrap } = map;
     let MONGOC;
     let selfBoo;
-    let tong;
     let rows;
+    let sortQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = { "date": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -106,29 +112,17 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
       MONGOC = option.selfMongo;
     }
 
-    
-
-    wrap(alive)
-
-
-    tong = main(alive, updateQueryArr, instance.mother);
-    for (let { fresh, findQuery, insertEvent } of tong) {
-      rows = await MONGOC.db(`miro81`).collection(collection).find(findQuery).toArray();
-      if (rows.length === 0) {
-        await insertEvent(fresh);
-        await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
-      } else {
-        if (option.updateMode === true) {
-          await MONGOC.db(`miro81`).collection(collection).deleteOne(findQuery);
-          await insertEvent(fresh);
-          await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
-        }
-      }
+    if (option.limit !== undefined) {
+      rows = await MONGOC.db(`miro81`).collection(collection).find(whereQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
+    } else {
+      rows = await MONGOC.db(`miro81`).collection(collection).find(whereQuery).sort(sortQuery).toArray();
     }
 
     if (!selfBoo) {
       await MONGOC.close();
     }
+
+    return map.wrap(alive, rows, this.mother);
 
   } catch (e) {
     console.log(e);

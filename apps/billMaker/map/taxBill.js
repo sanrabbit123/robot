@@ -112,7 +112,7 @@ module.exports = {
   },
   wrap: function (alive, jsonArr, mother) {
     const { TaxBill } = alive(mother);
-    class TaxBill extends Array {
+    class TaxBills extends Array {
       search(id) {
         let target;
         target = null;
@@ -126,7 +126,7 @@ module.exports = {
       }
     }
     let arr;
-    arr = new TaxBill();
+    arr = new TaxBills();
     for (let json of jsonArr) {
       arr.push(new TaxBill(json));
     }

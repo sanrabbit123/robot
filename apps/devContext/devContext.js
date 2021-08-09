@@ -35,6 +35,7 @@ const DataMiddle = require(APP_PATH + "/dataConsole/router/dataMiddle.js");
 const ReceiptObserver = require(APP_PATH + "/receiptObserver/receiptObserver.js");
 const GraphicBot = require(APP_PATH + "/graphicBot/graphicBot.js");
 const GaroseroParser = require(APP_PATH + "/garoseroParser/garoseroParser.js");
+const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -58,11 +59,33 @@ DevContext.prototype.launching = async function () {
     const report = new BackReport();
     const work = new BackWorker();
     const sheets = new GoogleSheet();
+    const bill = new BillMaker();
 
 
-    const detail = await work.designerCuration("c2108_aa25s", 4, [ "s2011_aa01s" ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
+    const s = await bill.readBill("taxBill", {})
+    console.log(s);
 
-    console.log(detail);
+
+    // const matrix = [
+    //   [ "c2108_aa25s", "s2011_aa01s", "p2108_aa14s" ],
+    //   [ "c2108_aa37s", "s2011_aa02s", "p2108_aa15s" ],
+    //   [ "c2108_aa23s", "s2011_aa03s", "p2108_aa16s" ],
+    //   [ "c2108_aa38s", "s2011_aa01s", "p2108_aa17s" ],
+    // ]
+    // let detail;
+    // let update;
+    //
+    // for (let [ cliid, serid, proid ] of matrix) {
+    //   detail = await work.designerCuration(cliid, 4, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
+    //   update = [];
+    //   for (let d of detail) {
+    //     update.push(d.toNormal());
+    //   }
+    //   await back.updateProject([ { proid }, { "proposal.detail": update } ]);
+    //   console.log(update.length);
+    // }
+
+
 
 
     // const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });

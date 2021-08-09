@@ -105,7 +105,7 @@ module.exports = {
         if (o !== null) {
           if (typeof o === "object") {
             this.id = o.id;
-            this.date = o.time;
+            this.date = o.date;
             this.deal = o.deal;
             this.method = 0;
             this.amount = o.amount;
@@ -146,7 +146,7 @@ module.exports = {
         if (o !== null) {
           if (typeof o === "object") {
             this.id = o.id;
-            this.date = o.time;
+            this.date = o.date;
             this.deal = o.deal;
             this.method = 1;
             this.who = o.who;
