@@ -50,7 +50,9 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
       MONGOC = option.selfMongo;
     }
 
+    console.log(updateQueryArr);
     tong = main(alive, updateQueryArr);
+    console.log(tong);
     for (let { fresh, findQuery, insertEvent } of tong) {
       console.log(fresh, findQuery, insertEvent);
       rows = await MONGOC.db(`miro81`).collection(collection).find(findQuery).toArray();
