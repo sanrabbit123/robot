@@ -193,7 +193,9 @@ DevContext.prototype.launching = async function () {
     console.log(model);
 
 
+    await bill.createBill({ name: "테스트" }, { selfMongo: this.MONGOLOCALC });
 
+    console.log(await bill.getBillsByQuery({}, { selfMongo: this.MONGOLOCALC }))
 
 
 

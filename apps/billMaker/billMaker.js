@@ -25,15 +25,12 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
     collection = "generalBill";
     const map = require(`${this.mapDir}/${collection}.js`);
     try {
-      const { main, alive } = map;
-      if (typeof main !== "function" || typeof alive !== "function") {
-        throw new Error("invaild collection model");
-      }
       let MONGOC;
       let selfBoo;
-      let tong;
       let rows;
       let dummy;
+      let pastId;
+      let newId;
 
       if (option.selfMongo === undefined || option.selfMongo === null) {
         selfBoo = false;
@@ -48,20 +45,18 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
         MONGOC = option.selfMongo;
       }
 
-      dummy = main();
-      rows = await MONGOC.db(`miro81`).collection(collection).find({}).sort("").limit(1).toArray();
-
-      rows = await MONGOC.db(`miro81`).collection(collection).find(findQuery).toArray();
+      dummy = map.main();
+      rows = await MONGOC.db(`miro81`).collection(collection).find({}).sort({ "date": -1 }).limit(1).toArray();
       if (rows.length === 0) {
-        await insertEvent(fresh);
-        await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
+        pastId = "b2111_aa01s";
       } else {
-        if (option.updateMode === true) {
-          await MONGOC.db(`miro81`).collection(collection).deleteOne(findQuery);
-          await insertEvent(fresh);
-          await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
-        }
+        pastId = rows[0].bilid;
       }
+      dummy.bilid = this.back.idMaker(pastId, false);
+      newId = dummy.bilid;
+
+      await MONGOC.db(`miro81`).collection(collection).insertOne(dummy);
+      await MONGOC.db(`miro81`).collection(collection).updateOne({ bilid: newId }, { $set: updateQuery });
 
       if (!selfBoo) {
         await MONGOC.close();
@@ -72,7 +67,7 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
     }
   } else if (typeof collection === "string" && Array.isArray(updateQueryArr) && typeof option === "object") {
     if (!BillMaker.billCollections.includes(collection)) {
-      throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
+      throw new Error("generalBill must use getBillById or getBillsByQuery");
     }
     if (!updateQueryArr.every((o) => { return typeof o === "object"; })) {
       throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
@@ -133,7 +128,7 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
     throw new Error("input must be String: bill collection, Object: whereQuery, Object: option");
   }
   if (!BillMaker.billCollections.includes(collection)) {
-    throw new Error("input must be String: bill collection, Object: whereQuery, Object: option");
+    throw new Error("generalBill must use getBillById or getBillsByQuery");
   }
   const instance = this;
   const { mongo, mongopythoninfo } = this.mother;
@@ -175,6 +170,316 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
     }
 
     return map.wrap(alive, rows, this.mother);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.returnBillDummies = function (subject) {
+  const instance = this;
+  const map = require(`${this.mapDir}/generalBill.js`);
+  let dummy;
+  dummy = map.sub(subject);
+  return dummy;
+}
+
+BillMaker.prototype.getBillById = async function (bilid, option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongopythoninfo } = this.mother;
+  try {
+    const map = require(`${this.mapDir}/generalBill.js`);
+    let MONGOC;
+    let selfBoo;
+    let arr;
+    let result, target;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    arr = await MONGOC.db(`miro81`).collection(`generalBill`).find({ bilid }).toArray();
+    result = map.wrap(map.alive, arr, this.mother);
+    if (result.length > 0) {
+      target = result[0];
+    } else {
+      target = null;
+    }
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    return target;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.getBillsByQuery = async function (whereQuery, option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongopythoninfo } = this.mother;
+  try {
+    const map = require(`${this.mapDir}/generalBill.js`);
+    let MONGOC;
+    let selfBoo;
+    let sortQuery;
+    let tong;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.sort === undefined) {
+      sortQuery = { "date": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    if (option.limit !== undefined) {
+      tong = await MONGOC.db(`miro81`).collection(`generalBill`).find(whereQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
+    } else {
+      tong = await MONGOC.db(`miro81`).collection(`generalBill`).find(whereQuery).sort(sortQuery).toArray();
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+    return map.wrap(map.alive, tong, this.mother);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.updateBill = async function (queryArr, option = { selfMongo: null }) {
+  if (queryArr.length !== 2) {
+    throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo } = this.mother;
+  try {
+    const [ whereQuery, updateQuery ] = queryArr;
+    let MONGOC;
+    let selfBoo;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    await MONGOC.db(`miro81`).collection(`generalBill`).updateOne(whereQuery, { $set: updateQuery });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.deleteBill = async function (bilid, option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongopythoninfo } = this.mother;
+  try {
+    const [ whereQuery, updateQuery ] = queryArr;
+    let MONGOC;
+    let selfBoo;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    await MONGOC.db(`miro81`).collection(`generalBill`).deleteOne({ bilid });
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.createStylingBill = async function (proid, desid, option = { selfMongo: null, selfCoreMongo: null }) {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    const project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    const client = await back.getProjectById(project.cliid, { selfMongo: MONGOCOREC });
+    
+
+
+
+
+
+
+
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.createConstructBill = async function (proid, option = { selfMongo: null, selfCoreMongo: null }) {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.createPhotoBill = async function (proid, option = { selfMongo: null, selfCoreMongo: null }) {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
 
   } catch (e) {
     console.log(e);

@@ -1,36 +1,43 @@
 module.exports = {
   collection: "taxBill",
   main: function () {
-    let map, dummy;
-    map = {
-      main: {
-        bilid: "",
-        class: "",
-        name: "",
-        date: new Date(),
-        participant: {
-          managers: [],
-          customer: {
-            name: "",
-            phone: "",
-            email: "",
-          },
+    return {
+      bilid: "",
+      class: "",
+      name: "",
+      date: new Date(),
+      participant: {
+        managers: [],
+        customer: {
+          name: "",
+          phone: "",
+          email: "",
         },
-        requests: [],
-        comments: [],
-        links: [],
       },
-      managers: {
+      requests: [],
+      comments: [],
+      links: [],
+    };
+  },
+  sub: function (subject) {
+    let dummy = null;
+    if (subject === "managers") {
+      dummy = {
         name: "",
         phone: "",
         email: "",
-      },
-      requests: {
+      };
+    } else if (subject === "requests") {
+      dummy = {
         date: new Date(),
+        status: "결제 요청",
         info: [],
-        items: []
-      },
-      items: {
+        items: [],
+        pay: new Date(1800, 0, 1),
+        cancel: new Date(1800, 0, 1),
+      };
+    } else if (subject === "items") {
+      dummy = {
         id: "",
         class: "",
         name: "",
@@ -46,9 +53,9 @@ module.exports = {
           vat: 0,
           consumer: 0,
         }
-      }
-    };
-    return [];
+      };
+    }
+    return dummy;
   },
   alive: function (mother) {
     class SeachArray extends Array {
@@ -165,14 +172,19 @@ module.exports = {
     class Request {
       constructor(json) {
         this.date = json.date;
+        this.status = json.status;
         this.info = new SeachArray(json.info);
         this.items = new Items(json.items);
+        this.pay = json.pay;
+        this.cancel = json.cancel;
       }
       toNormal() {
         let obj = {};
         obj.date = this.date;
         obj.info = this.info.toNormal();
         obj.items = this.items.toNormal();
+        obj.pay = this.pay;
+        obj.cancel = this.cancel;
         return obj;
       }
     }
