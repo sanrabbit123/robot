@@ -1,20 +1,13 @@
 module.exports = {
   collection: "taxBill",
-  main: function (alive, updateQueryArr, mother) {
-    let map, fresh, findQuery, tong, insertEvent;
+  main: function () {
+    let map, dummy;
     map = {
       main: {
         bilid: "",
         class: "",
         name: "",
-        generate: {
-          date: new Date(),
-          who: {
-            name: "",
-            phone: "",
-            email: "",
-          },
-        },
+        date: new Date(),
         participant: {
           managers: [],
           customer: {
@@ -58,8 +51,6 @@ module.exports = {
     return [];
   },
   alive: function (mother) {
-    const { dateToString, autoComma } = mother;
-
     class SeachArray extends Array {
       constructor(arr) {
         super();
@@ -102,7 +93,37 @@ module.exports = {
       }
     }
 
-    class Request {
+    class Amount {
+      constructor(json) {
+        this.supply = json.supply;
+        this.vat = json.vat;
+        this.consumer = json.consumer;
+      }
+      toNormal() {
+        let obj = {};
+        obj.supply = this.supply;
+        obj.vat = this.vat;
+        obj.consumer = this.consumer;
+        return obj;
+      }
+    }
+
+    class Unit {
+      constructor(json) {
+        this.ea = json.ea;
+        this.price = json.price;
+        this.number = json.number;
+      }
+      toNormal() {
+        let obj = {};
+        obj.ea = this.ea;
+        obj.price = this.price;
+        obj.number = this.number;
+        return obj;
+      }
+    }
+
+    class Item {
       constructor(json) {
         this.id = json.id;
         this.class = json.class;
@@ -121,6 +142,37 @@ module.exports = {
         obj.info = this.info.toNormal();
         obj.unit = this.unit.toNormal();
         obj.amount = this.amount.toNormal();
+        return obj;
+      }
+    }
+
+    class Items extends Array {
+      constructor(jsonArr) {
+        super();
+        for (let obj of jsonArr) {
+          this.push(new Item(obj));
+        }
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.toNormal());
+        }
+        return arr;
+      }
+    }
+
+    class Request {
+      constructor(json) {
+        this.date = json.date;
+        this.info = new SeachArray(json.info);
+        this.items = new Items(json.items);
+      }
+      toNormal() {
+        let obj = {};
+        obj.date = this.date;
+        obj.info = this.info.toNormal();
+        obj.items = this.items.toNormal();
         return obj;
       }
     }
@@ -171,30 +223,16 @@ module.exports = {
       }
     }
 
-    class Generate {
-      constructor(json) {
-        this.date = json.date;
-        this.who = new Who(json.who);
-      }
-      toNormal() {
-        let obj;
-        obj = {};
-        obj.date = this.date;
-        obj.who = this.who.toNormal();
-        return obj;
-      }
-    }
-
     class Bill {
       constructor(json) {
         this.bilid = json.bilid;
         this.class = json.class;
         this.name = json.name;
-        this.generate = new Generate(json.generate);
+        this.date = json.date;
         this.participant = new Participant(json.participant);
         this.requests = new Requests(json.requests);
-        this.comments = new Comments(json.comments);
-        this.links = new Links(json.links);
+        this.comments = new SeachArray(json.comments);
+        this.links = new SeachArray(json.links);
       }
       toNormal() {
         let obj;
@@ -202,7 +240,7 @@ module.exports = {
         obj.bilid = this.bilid;
         obj.class = this.class;
         obj.name = this.name;
-        obj.generate = this.generate.toNormal();
+        obj.date = this.date;
         obj.participant = this.participant.toNormal();
         obj.requests = this.requests.toNormal();
         obj.comments = this.comments.toNormal();
@@ -214,13 +252,13 @@ module.exports = {
     return { Bill };
   },
   wrap: function (alive, jsonArr, mother) {
-    const { TaxBill } = alive(mother);
-    class TaxBills extends Array {
+    const { Bill } = alive(mother);
+    class Bills extends Array {
       search(id) {
         let target;
         target = null;
         for (let o of this) {
-          if (o.id === id) {
+          if (o.bilid === id) {
             target = o;
             break;
           }
@@ -229,9 +267,9 @@ module.exports = {
       }
     }
     let arr;
-    arr = new TaxBills();
+    arr = new Bills();
     for (let json of jsonArr) {
-      arr.push(new TaxBill(json));
+      arr.push(new Bill(json));
     }
     return arr;
   }

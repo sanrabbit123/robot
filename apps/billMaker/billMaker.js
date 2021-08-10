@@ -17,43 +17,40 @@ BillMaker.billCollections = [
 ];
 
 BillMaker.prototype.createBill = async function (collection, updateQueryArr, option = { selfMongo: null }) {
-  if (typeof collection !== "string" || !Array.isArray(updateQueryArr) || typeof option !== "object") {
-    throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
-  }
-  if (!BillMaker.billCollections.includes(collection)) {
-    throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
-  }
-  if (!updateQueryArr.every((o) => { return typeof o === "object"; })) {
-    throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
-  }
   const instance = this;
   const { mongo, mongopythoninfo } = this.mother;
-  const map = require(`${this.mapDir}/${collection}.js`);
-  try {
-    const { main, alive } = map;
-    if (typeof main !== "function" || typeof alive !== "function") {
-      throw new Error("invaild collection model");
-    }
-    let MONGOC;
-    let selfBoo;
-    let tong;
-    let rows;
+  if (typeof collection === "object" && typeof updateQueryArr === "object" && !Array.isArray(updateQueryArr)) {
+    const updateQuery = collection;
+    option = updateQueryArr;
+    collection = "generalBill";
+    const map = require(`${this.mapDir}/${collection}.js`);
+    try {
+      const { main, alive } = map;
+      if (typeof main !== "function" || typeof alive !== "function") {
+        throw new Error("invaild collection model");
+      }
+      let MONGOC;
+      let selfBoo;
+      let tong;
+      let rows;
+      let dummy;
 
-    if (option.selfMongo === undefined || option.selfMongo === null) {
-      selfBoo = false;
-    } else {
-      selfBoo = true;
-    }
+      if (option.selfMongo === undefined || option.selfMongo === null) {
+        selfBoo = false;
+      } else {
+        selfBoo = true;
+      }
 
-    if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
-      await MONGOC.connect();
-    } else {
-      MONGOC = option.selfMongo;
-    }
+      if (!selfBoo) {
+        MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+        await MONGOC.connect();
+      } else {
+        MONGOC = option.selfMongo;
+      }
 
-    tong = main(alive, updateQueryArr, instance.mother);
-    for (let { fresh, findQuery, insertEvent } of tong) {
+      dummy = main();
+      rows = await MONGOC.db(`miro81`).collection(collection).find({}).sort("").limit(1).toArray();
+
       rows = await MONGOC.db(`miro81`).collection(collection).find(findQuery).toArray();
       if (rows.length === 0) {
         await insertEvent(fresh);
@@ -65,14 +62,69 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
           await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
         }
       }
-    }
 
-    if (!selfBoo) {
-      await MONGOC.close();
-    }
+      if (!selfBoo) {
+        await MONGOC.close();
+      }
 
-  } catch (e) {
-    console.log(e);
+    } catch (e) {
+      console.log(e);
+    }
+  } else if (typeof collection === "string" && Array.isArray(updateQueryArr) && typeof option === "object") {
+    if (!BillMaker.billCollections.includes(collection)) {
+      throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
+    }
+    if (!updateQueryArr.every((o) => { return typeof o === "object"; })) {
+      throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
+    }
+    const map = require(`${this.mapDir}/${collection}.js`);
+    try {
+      const { main, alive } = map;
+      if (typeof main !== "function" || typeof alive !== "function") {
+        throw new Error("invaild collection model");
+      }
+      let MONGOC;
+      let selfBoo;
+      let tong;
+      let rows;
+
+      if (option.selfMongo === undefined || option.selfMongo === null) {
+        selfBoo = false;
+      } else {
+        selfBoo = true;
+      }
+
+      if (!selfBoo) {
+        MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+        await MONGOC.connect();
+      } else {
+        MONGOC = option.selfMongo;
+      }
+
+      tong = main(alive, updateQueryArr, instance.mother);
+      for (let { fresh, findQuery, insertEvent } of tong) {
+        rows = await MONGOC.db(`miro81`).collection(collection).find(findQuery).toArray();
+        if (rows.length === 0) {
+          await insertEvent(fresh);
+          await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
+        } else {
+          if (option.updateMode === true) {
+            await MONGOC.db(`miro81`).collection(collection).deleteOne(findQuery);
+            await insertEvent(fresh);
+            await MONGOC.db(`miro81`).collection(collection).insertOne(fresh);
+          }
+        }
+      }
+
+      if (!selfBoo) {
+        await MONGOC.close();
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
   }
 }
 
