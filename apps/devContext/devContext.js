@@ -186,6 +186,7 @@ DevContext.prototype.launching = async function () {
         }
       ],
       comments: [],
+      links: []
     }
 
 

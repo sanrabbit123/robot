@@ -4,111 +4,214 @@ module.exports = {
     let map, fresh, findQuery, tong, insertEvent;
     map = {
       main: {
-        id: "",
-        date: new Date(1800, 0, 1),
-        who: {
-          from: {
-            business: "",
-            company: "",
+        bilid: "",
+        class: "",
+        name: "",
+        generate: {
+          date: new Date(),
+          who: {
             name: "",
-            address: "",
-            status: "",
-            detail: "",
-            email: ""
+            phone: "",
+            email: "",
           },
-          to: {
-            business: "",
-            company: "",
-            name: "",
-            address: "",
-            status: "",
-            detail: "",
-            email: ""
-          }
         },
-        items: [],
-        sum: {
-          total: 0,
-          supply: 0,
-          vat: 0
-        }
+        participant: {
+          managers: [],
+          customer: {
+            name: "",
+            phone: "",
+            email: "",
+          },
+        },
+        requests: [],
+        comments: [],
+        links: [],
+      },
+      managers: {
+        name: "",
+        phone: "",
+        email: "",
+      },
+      requests: {
+        date: new Date(),
+        info: [],
+        items: []
       },
       items: {
-        month: 0,
-        date: 0,
+        id: "",
+        class: "",
         name: "",
-        ea: "",
-        amount: 0,
-        unit: 0,
-        supply: 0,
-        vat: 0,
-        etc: ""
+        description: "",
+        info: [],
+        unit: {
+          ea: "",
+          price: 0,
+          number: 0,
+        },
+        amount: {
+          supply: 0,
+          vat: 0,
+          consumer: 0,
+        }
       }
     };
-
     return [];
   },
   alive: function (mother) {
     const { dateToString, autoComma } = mother;
-    class TaxBill {
-      constructor(obj) {
-        if (obj !== null) {
-          if (typeof obj === "object") {
-            this.id = obj.id;
-            this.date = obj.date;
-            this.who = obj.who;
-            this.items = obj.items;
-            this.sum = obj.sum;
+
+    class SeachArray extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          if (typeof i === "object") {
+            for (let key in i) {
+              Object.defineProperty(this, key, {
+                value: i[key],
+                configurable: true,
+                enumerable: false,
+                writable: true
+              });
+            }
           }
+          this.push(i);
         }
       }
-      make(id, date) {
-        if (id === undefined || date === undefined) {
-          throw new Error("invaild input");
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i);
         }
-        this.id = id;
-        this.date = date;
-        this.who = {};
-        this.who.from = {};
-        this.who.to = {};
-        this.items = [];
-        this.sum = {
-          total: 0,
-          supply: 0,
-          vat: 0
-        };
-      }
-      toMessage() {
-        const zeroAddition = (num) => { return ((num < 10) ? '0' + String(num) : String(num)); }
-        const { id, date, who, items, sum } = this;
-        let message = '';
-        message += "전자 세금 계산서(" + this.id + ") " + dateToString(date, true) + "\n";
-        message += "\n";
-        message += "발신자\n";
-        message += "- 상호 : " + who.from.company + " (" + who.from.business + ")" + "\n";
-        message += "- 이름 : " + who.from.name + "\n";
-        message += "- 이메일 : " + who.from.email + "\n";
-        message += "\n";
-        message += "수신자\n";
-        message += "- 상호 : " + who.to.company + " (" + who.to.business + ")" + "\n";
-        message += "- 이름 : " + who.to.name + "\n";
-        message += "- 이메일 : " + who.to.email + "\n";
-        message += "\n";
-        message += "내용\n";
-        for (let item of items) {
-          message += "- 날짜 : " + String((new Date()).getFullYear()) + "-" + zeroAddition(item.month) + "-" + zeroAddition(item.date) + "\n";
-          message += "- 품목 : " + item.name + "\n";
-          message += "- 공급가 : " + autoComma(item.supply) + "원" + "\n";
-          message += "- 세액 : " + autoComma(item.vat) + "원" + "\n";
-          message += "\n";
-        }
-        message += "합계\n";
-        message += "- 소비자가 : " + autoComma(sum.total) + "원" + "\n";
-        message += "- 공급가 : " + autoComma(sum.supply) + "원" + "\n";
-        return message;
+        return arr;
       }
     }
-    return { TaxBill };
+
+    class Who {
+      constructor(json) {
+        this.name = json.name;
+        this.phone = json.phone;
+        this.email = json.email;
+      }
+      toNormal() {
+        let obj;
+        obj = {};
+        obj.name = this.name;
+        obj.phone = this.phone;
+        obj.email = this.email;
+        return obj;
+      }
+    }
+
+    class Request {
+      constructor(json) {
+        this.id = json.id;
+        this.class = json.class;
+        this.name = json.name;
+        this.description = json.description;
+        this.info = new SeachArray(json.info);
+        this.unit = new Unit(json.unit);
+        this.amount = new Amount(json.amount);
+      }
+      toNormal() {
+        let obj = {};
+        obj.id = this.id;
+        obj.class = this.class;
+        obj.name = this.name;
+        obj.description = this.description;
+        obj.info = this.info.toNormal();
+        obj.unit = this.unit.toNormal();
+        obj.amount = this.amount.toNormal();
+        return obj;
+      }
+    }
+
+    class Requests extends Array {
+      constructor(jsonArr) {
+        super();
+        for (let obj of jsonArr) {
+          this.push(new Request(obj));
+        }
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.toNormal());
+        }
+        return arr;
+      }
+    }
+
+    class Managers extends Array {
+      constructor(jsonArr) {
+        super();
+        for (let obj of jsonArr) {
+          this.push(new Who(obj));
+        }
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.toNormal());
+        }
+        return arr;
+      }
+    }
+
+    class Participant {
+      constructor(json) {
+        this.managers = new Managers(json.managers);
+        this.customer = new Who(json.customer);
+      }
+      toNormal() {
+        let obj;
+        obj = {};
+        obj.managers = this.managers;
+        obj.customer = this.customer;
+        return obj;
+      }
+    }
+
+    class Generate {
+      constructor(json) {
+        this.date = json.date;
+        this.who = new Who(json.who);
+      }
+      toNormal() {
+        let obj;
+        obj = {};
+        obj.date = this.date;
+        obj.who = this.who.toNormal();
+        return obj;
+      }
+    }
+
+    class Bill {
+      constructor(json) {
+        this.bilid = json.bilid;
+        this.class = json.class;
+        this.name = json.name;
+        this.generate = new Generate(json.generate);
+        this.participant = new Participant(json.participant);
+        this.requests = new Requests(json.requests);
+        this.comments = new Comments(json.comments);
+        this.links = new Links(json.links);
+      }
+      toNormal() {
+        let obj;
+        obj = {};
+        obj.bilid = this.bilid;
+        obj.class = this.class;
+        obj.name = this.name;
+        obj.generate = this.generate.toNormal();
+        obj.participant = this.participant.toNormal();
+        obj.requests = this.requests.toNormal();
+        obj.comments = this.comments.toNormal();
+        obj.links = this.links;
+        return obj;
+      }
+    }
+
+    return { Bill };
   },
   wrap: function (alive, jsonArr, mother) {
     const { TaxBill } = alive(mother);

@@ -3009,7 +3009,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
           style: [],
           image: [],
           service: {
-            serid: [],
+            serid: [ "s2011_aa02s" ],
           },
           building: {
             type: "",

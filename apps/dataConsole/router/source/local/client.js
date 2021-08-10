@@ -5068,7 +5068,7 @@ ClientJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        let cliid, thisCase;
+        let cliid, thisCase, serid;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
             cliid = window.prompt("고객 아이디를 입력하세요!").trim();
@@ -5086,6 +5086,23 @@ ClientJs.prototype.communicationRender = function () {
         }
         if (thisCase !== null) {
           if (window.confirm(thisCase.name + " 고객님께 부재중 알림 알림톡을 전송합니다. 확실합니까?")) {
+
+            if (/홈퍼/gi.test(thisCase.service)) {
+              serid = "s2011_aa01s";
+            } else if (/홈스/gi.test(thisCase.service)) {
+              serid = "s2011_aa02s";
+            } else if (/토탈/gi.test(thisCase.service)) {
+              serid = "s2011_aa03s";
+            } else {
+              serid = "s2011_aa04s";
+            }
+            await ajaxJson({
+              id: cliid,
+              column: "curation.service.serid",
+              value: [ serid ],
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            }, "/updateClientHistory");
+
             await ajaxJson({
               method: "outOfClient",
               name: thisCase.name,
@@ -5113,7 +5130,7 @@ ClientJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        let cliid, thisCase;
+        let cliid, thisCase, serid;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
             cliid = window.prompt("고객 아이디를 입력하세요!").trim();
@@ -5131,6 +5148,23 @@ ClientJs.prototype.communicationRender = function () {
         }
         if (thisCase !== null) {
           if (window.confirm(thisCase.name + " 고객님께 스타일 체크 알림톡을 전송합니다. 확실합니까?")) {
+
+            if (/홈퍼/gi.test(thisCase.service)) {
+              serid = "s2011_aa01s";
+            } else if (/홈스/gi.test(thisCase.service)) {
+              serid = "s2011_aa02s";
+            } else if (/토탈/gi.test(thisCase.service)) {
+              serid = "s2011_aa03s";
+            } else {
+              serid = "s2011_aa04s";
+            }
+            await ajaxJson({
+              id: cliid,
+              column: "curation.service.serid",
+              value: [ serid ],
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            }, "/updateClientHistory");
+
             await ajaxJson({
               method: "clientCuration",
               name: thisCase.name,
