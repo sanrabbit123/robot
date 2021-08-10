@@ -37,10 +37,13 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
         history.curation.analytics.page.push({ page, date: new Date(), referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj });
         updateQuery = {};
         updateQuery["curation.analytics.page"] = history.curation.analytics.page;
-        if (req.body.liteMode === "false") {
-          updateQuery["curation.analytics.full"] = true;
+        if (page === "styleCuration") {
+          if (req.body.liteMode === "false") {
+            updateQuery["curation.analytics.full"] = true;
+          } else {
+            updateQuery["curation.analytics.full"] = false;
+          }
         }
-
         await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       } else if (mode === "update") {
@@ -83,7 +86,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient general 서버 문제 생김 (rou_post_ghostClient_updateAnalytics) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }

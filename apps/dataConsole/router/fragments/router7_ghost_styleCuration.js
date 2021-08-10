@@ -49,7 +49,7 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -113,7 +113,15 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           if (service === null) {
             updateQuery["service.xValue"] = "M";
           } else {
-            updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
+            if (typeof service === "object") {
+              if (Array.isArray(service.xValue)) {
+                updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
+              } else {
+                updateQuery["service.xValue"] = "M";
+              }
+            } else {
+              updateQuery["service.xValue"] = "M";
+            }
           }
           updateQuery["service.online"] = false;
           updateQuery["proposal.detail"] = detailUpdate;
@@ -142,7 +150,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
