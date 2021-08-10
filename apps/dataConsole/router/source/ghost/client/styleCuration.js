@@ -1352,15 +1352,17 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       instance.values.style[0].value = designers;
 
       ajaxJson({
+        page: "styleCuration",
         mode: "update",
         cliid: instance.client.cliid,
         update: { x: "style", y: 0, value: instance.values.style[0].value }
-      }, "/styleCuration_updateAnalytics").then(() => {
+      }, "/ghostClient_updateAnalytics").then(() => {
         return ajaxJson({
+          page: "styleCuration",
           mode: "image",
           cliid: instance.client.cliid,
           image: image
-        }, "/styleCuration_updateAnalytics");
+        }, "/ghostClient_updateAnalytics");
       }).catch((err) => {
         console.log(err);
       });
@@ -2101,11 +2103,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       self.value = e.data.trim();
                       instance.values[x][y].value = self.value.trim();
                       ajaxJson({
+                        page: "styleCuration",
                         mode: "update",
                         cliid: instance.client.cliid,
                         update: { x, y, value: instance.values[x][y].value },
                         updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                      }, "/styleCuration_updateAnalytics").catch((err) => {
+                      }, "/ghostClient_updateAnalytics").catch((err) => {
                         console.log(err);
                       });
                       removeTargets = targetMother.querySelectorAll("aside");
@@ -2143,11 +2146,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     const y = Number(this.getAttribute("y"));
                     instance.values[x][y].value = self.value.trim();
                     ajaxJson({
+                      page: "styleCuration",
                       mode: "update",
                       cliid: instance.client.cliid,
                       update: { x, y, value: instance.values[x][y].value },
                       updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                    }, "/styleCuration_updateAnalytics").catch((err) => {
+                    }, "/ghostClient_updateAnalytics").catch((err) => {
                       console.log(err);
                     });
                   }
@@ -2256,11 +2260,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
                   instance.valuesConvert(true).then((valuesCopied) => {
                     return ajaxJson({
+                      page: "styleCuration",
                       mode: "update",
                       cliid: instance.client.cliid,
                       update: { x, y, value: instance.values[x][y].value },
                       updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
-                    }, "/styleCuration_updateAnalytics");
+                    }, "/ghostClient_updateAnalytics");
                   }).catch((err) => {
                     console.log(err);
                   });
@@ -2447,11 +2452,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
         };
 
         ajaxJson({
+          page: "styleCuration",
           mode: "update",
           cliid: instance.client.cliid,
           update: { x, y, value: instance.values[x][y].value },
           updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-        }, "/styleCuration_updateAnalytics").catch((err) => {
+        }, "/ghostClient_updateAnalytics").catch((err) => {
           console.log(err);
         });
       }
@@ -2640,11 +2646,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
                 instance.valuesConvert(true).then((valuesCopied) => {
                   return ajaxJson({
+                    page: "styleCuration",
                     mode: "update",
                     cliid: instance.client.cliid,
                     update: { x, y, value: instance.values[x][y].value },
                     updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
-                  }, "/styleCuration_updateAnalytics");
+                  }, "/ghostClient_updateAnalytics");
                 }).catch((err) => {
                   console.log(err);
                 });
@@ -2792,11 +2799,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 self.setAttribute("value", dateToString(dateValue));
                 instance.values[x][y].value = dateValue;
                 ajaxJson({
+                  page: "styleCuration",
                   mode: "update",
                   cliid: instance.client.cliid,
                   update: { x, y, value: instance.values[x][y].value },
                   updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                }, "/styleCuration_updateAnalytics").catch((err) => {
+                }, "/ghostClient_updateAnalytics").catch((err) => {
                   console.log(err);
                 });
                 for (let c of children) {
@@ -3259,9 +3267,10 @@ StyleCurationJs.prototype.parsingValues = function () {
         grayLoading.remove();
         GeneralJs.scrollTo(window, 0);
         return ajaxJson({
+          page: "styleCuration",
           mode: "submit",
           cliid: instance.client.cliid,
-        }, "/styleCuration_updateAnalytics");
+        }, "/ghostClient_updateAnalytics");
       }
     }
   }).then((obj) => {
@@ -5395,10 +5404,11 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   const children = baseTong.children;
   try {
     await ajaxJson({
+      page: "styleCuration",
       mode: "page",
       liteMode: (returnGet().mode === "lite"),
       cliid: instance.client.cliid,
-    }, "/styleCuration_updateAnalytics");
+    }, "/ghostClient_updateAnalytics");
     backgroundImageBox2.style.opacity = String(1);
     backgroundImageBox.style.animation = "justfadeoutoriginal 1s ease forwards";
     baseTong.style.height = String(baseTong.getBoundingClientRect().height) + ea;
@@ -5450,12 +5460,6 @@ StyleCurationJs.prototype.launching = async function (loading) {
       liteMode = false;
     }
 
-    await ajaxJson({
-      mode: "page",
-      liteMode: liteMode,
-      cliid: client.cliid,
-    }, "/styleCuration_updateAnalytics");
-
     contentsPhotoObj = await ajaxJson({}, "/styleCuration_getPhotos", { equal: true });
     this.selectPhotos = [];
     this.randomPick = [];
@@ -5489,6 +5493,8 @@ StyleCurationJs.prototype.launching = async function (loading) {
     this.values = valueObj;
 
     await this.mother.ghostClientLaunching({
+      name: "styleCuration",
+      client: this.client,
       base: {
         instance: this,
         binaryPath: StyleCurationJs.binaryPath,

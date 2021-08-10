@@ -196,6 +196,8 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     this.client = client;
 
     await this.mother.ghostClientLaunching({
+      name: "universalEstimation",
+      client: client,
       base: {
         instance: this,
         binaryPath: UniversalEstimationJs.binaryPath,

@@ -63,62 +63,160 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const selfMongo = this.MONGOLOCALC;
+    const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    await selfMongo.connect();
 
 
+    const history = await back.getHistoriesByQuery("client", {}, { selfMongo });
+    let whereQuery, updateQuery;
 
-    const month = function (num) {
-      const aCode = 'a'.charCodeAt(0);
-      let arr = [];
-      for (let i = 0; i < 12; i++) {
-        if (i < 9) {
-          arr.push(String(i + 1));
-        } else {
-          arr.push(String.fromCharCode(i - 9 + aCode));
+    for (let { cliid, curation: { analytics } } of history) {
+      if (analytics.page.length > 0 || analytics.update.length > 0 || analytics.submit.length > 0) {
+        whereQuery = { cliid };
+        for (let obj of analytics.page) {
+          obj.page = "styleCuration";
         }
-      }
-      return arr[num];
-    }
-    const date = function (num) {
-      const aCode = 'a'.charCodeAt(0);
-      let arr = [];
-      for (let i = 0; i < 32; i++) {
-        if (i < 9) {
-          arr.push(String(i + 1));
-        } else {
-          arr.push(String.fromCharCode(i - 9 + aCode));
+        for (let obj of analytics.update) {
+          obj.page = "styleCuration";
         }
+        for (let obj of analytics.submit) {
+          obj.page = "styleCuration";
+        }
+        updateQuery = {};
+        updateQuery["curation.analytics.page"] = analytics.page;
+        updateQuery["curation.analytics.update"] = analytics.update;
+        updateQuery["curation.analytics.submit"] = analytics.submit;
+
+        await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo });
+        console.log(whereQuery);
       }
-      return arr[num];
     }
+
+    await selfMongo.close();
+
+
+
+    /*
+
     const today = new Date();
-    let id;
-    id = 'b' + String(today.getFullYear()).slice(2) + month(today.getMonth()) + date(today.getDate() - 1) + '_';
+    const tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+    const fiveYearsAgo = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate());
+    const designers = await back.getDesignersByQuery({});
 
-    console.log(id);
+    let alpha, alphaPercentage;
+    let thisDesignerCareerStart;
+    let homeliaison;
+    let relationItems;
+    let matrix;
+    let tempArr;
+    let sheetsId;
 
-    {
-      name: "견적서 이름",
-      date: new Date(),
-      id: id,
-      who: {
-        from: {
-          name: "",
-          phone: "",
-          email: "",
-        },
-        to: {
-          name: "",
-          phone: "",
-          email: "",
-        },
-      },
-      requests: [
-        {
-          date: new Date(),
-          
+    matrix = [ [ "디자이너 이름", "경력", "페이퍼 워크", "구매 대행", "설치 제공", "정리 수납", "홈리에종 관계", "인기도", "가산점", "증가율" ] ];
+    for (let designer of designers) {
+
+      tempArr = [];
+      tempArr.push(designer.designer);
+
+      thisDesignerCareerStart = new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1);
+
+      alpha = 0;
+      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 2 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 1 : 0);
+      tempArr.push(thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 2 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 1 : 0));
+      alpha += designer.analytics.project.paperWork.values.includes("3D") ? 2 : ((designer.analytics.project.paperWork.values.length >= 4) ? 1 : 0);
+      tempArr.push(designer.analytics.project.paperWork.values.includes("3D") ? 2 : ((designer.analytics.project.paperWork.values.length >= 4) ? 1 : 0));
+      alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0;
+      tempArr.push(designer.analytics.purchase.agencies ? (1 / 3) : 0);
+      alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0;
+      tempArr.push(designer.analytics.purchase.setting.install ? (1 / 3) : 0);
+      alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0;
+      tempArr.push(designer.analytics.purchase.setting.storage ? (1 / 3) : 0);
+
+      homeliaison = 0;
+      for (let { value } of designer.analytics.etc.personality) {
+        if (value) {
+          homeliaison = homeliaison + 1;
         }
-      ]
+      }
+      relationItems = designer.analytics.etc.relation.items;
+      homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation.value);
+      alpha += (homeliaison * (2 / 7));
+      tempArr.push((homeliaison * (2 / 7)));
+
+      //인기도
+      alpha += 0.5;
+      tempArr.push(0.5);
+
+      alphaPercentage = Math.round(((alpha / 100) + 1) * 10000) / 100;
+
+      tempArr.push(alpha);
+      tempArr.push(alphaPercentage);
+      matrix.push(tempArr);
     }
+
+    // sheetsId = await sheets.create_newSheets_inPython("디자이너별 가산점", "0B7youNEnMPEfOEJHM3NYRk0zQk0");
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython("1N3aKMPbRlTzu_NbSCmr9C_jT4wcmhnyL-BusBybDTwM", "", matrix);
+
+    */
+
+
+
+
+
+    // const month = function (num) {
+    //   const aCode = 'a'.charCodeAt(0);
+    //   let arr = [];
+    //   for (let i = 0; i < 12; i++) {
+    //     if (i < 9) {
+    //       arr.push(String(i + 1));
+    //     } else {
+    //       arr.push(String.fromCharCode(i - 9 + aCode));
+    //     }
+    //   }
+    //   return arr[num];
+    // }
+    // const date = function (num) {
+    //   const aCode = 'a'.charCodeAt(0);
+    //   let arr = [];
+    //   for (let i = 0; i < 32; i++) {
+    //     if (i < 9) {
+    //       arr.push(String(i + 1));
+    //     } else {
+    //       arr.push(String.fromCharCode(i - 9 + aCode));
+    //     }
+    //   }
+    //   return arr[num];
+    // }
+    // const today = new Date();
+    // let id;
+    // id = 'b' + String(today.getFullYear()).slice(2) + month(today.getMonth()) + date(today.getDate() - 1) + '_';
+    //
+    // console.log(id);
+    //
+    // {
+    //   name: "견적서 이름",
+    //   date: new Date(),
+    //   id: id,
+    //   who: {
+    //     from: {
+    //       name: "",
+    //       phone: "",
+    //       email: "",
+    //     },
+    //     to: {
+    //       name: "",
+    //       phone: "",
+    //       email: "",
+    //     },
+    //   },
+    //   requests: [
+    //     {
+    //       date: new Date(),
+    //
+    //     }
+    //   ]
+    // }
 
 
 

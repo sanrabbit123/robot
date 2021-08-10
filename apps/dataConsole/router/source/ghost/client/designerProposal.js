@@ -4108,6 +4108,8 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     }
 
     await this.mother.ghostClientLaunching({
+      name: "designerProposal",
+      client: client,
       base: {
         instance: this,
         binaryPath: DesignerProposalJs.binaryPath,

@@ -265,35 +265,80 @@ BackMaker.prototype.getNothingById = async function (nulid) {
   }
 }
 
-BackMaker.prototype.idMaker = function (pastId) {
+BackMaker.prototype.idMaker = function (pastId, generalMode = true) {
   const instance = this;
   const { orderSystem } = this.mother;
   const today = new Date();
 
   let thisId;
-  let year, month, dateString;
+  let year, month, date, dateString;
   let initial, endInitial;
 
   initial = pastId.slice(0, 1);
   endInitial = pastId.slice(-1);
 
   year = today.getFullYear();
-  month = today.getMonth();
+  month = today.getMonth() + 1;
+  date = today.getDate();
 
-  dateString = String(year).slice(2);
-  if (month + 1 < 10) {
-    dateString += '0' + String(month + 1);
+  if (generalMode) {
+
+    dateString = String(year).slice(2);
+    if (month < 10) {
+      dateString += '0' + String(month);
+    } else {
+      dateString += String(month);
+    }
+
+    if (pastId.slice(1, 5) === dateString) {
+      thisId = initial + dateString + '_' + orderSystem("encode", orderSystem("decode", pastId) + 1) + endInitial;
+    } else {
+      thisId = initial + dateString + '_' + orderSystem("encode", 1) + endInitial;
+    }
+
+    return thisId;
+
   } else {
-    dateString += String(month + 1);
+
+    const monthEncode = (num) => {
+      const aCode = 'a'.charCodeAt(0);
+      let arr = [];
+      for (let i = 0; i < 12; i++) {
+        if (i < 9) {
+          arr.push(String(i + 1));
+        } else {
+          arr.push(String.fromCharCode(i - 9 + aCode));
+        }
+      }
+      return arr[num];
+    }
+    const dateEncode = (num) => {
+      const aCode = 'a'.charCodeAt(0);
+      let arr = [];
+      for (let i = 0; i < 32; i++) {
+        if (i < 9) {
+          arr.push(String(i + 1));
+        } else {
+          arr.push(String.fromCharCode(i - 9 + aCode));
+        }
+      }
+      return arr[num];
+    }
+
+    dateString = String(year).slice(2);
+    dateString += monthEncode(month - 1);
+    dateString += dateEncode(date - 1);
+
+    if (pastId.slice(1, 5) === dateString) {
+      thisId = initial + dateString + '_' + orderSystem("encode", orderSystem("decode", pastId) + 1) + endInitial;
+    } else {
+      thisId = initial + dateString + '_' + orderSystem("encode", 1) + endInitial;
+    }
+
+    return thisId;
+
   }
 
-  if (pastId.slice(1, 5) === dateString) {
-    thisId = initial + dateString + '_' + orderSystem("encode", orderSystem("decode", pastId) + 1) + endInitial;
-  } else {
-    thisId = initial + dateString + '_' + orderSystem("encode", 1) + endInitial;
-  }
-
-  return thisId;
 }
 
 BackMaker.prototype.idFilter = function (button) {

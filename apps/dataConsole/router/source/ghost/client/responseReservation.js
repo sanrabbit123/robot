@@ -688,6 +688,8 @@ ResponseReservationJs.prototype.launching = async function (loading) {
     this.client = client;
 
     await this.mother.ghostClientLaunching({
+      name: "responseReservation",
+      client: client,
       base: {
         instance: this,
         binaryPath: ResponseReservationJs.binaryPath,

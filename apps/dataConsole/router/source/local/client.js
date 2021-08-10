@@ -3147,7 +3147,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     imageMargin = fontSize * (6 / 15);
     columnsLength = 3;
     paddingBottom = fontSize * (240 / 15);;
-    titleHeight = fontSize * (48 / 15);
+    titleHeight = fontSize * (50 / 15);
     titleBottom = fontSize * (9 / 15);
 
     if (/fadeout/gi.test(historyBox.style.animation)) {
@@ -3192,11 +3192,24 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       }, "/getHistoryProperty").then((obj) => {
         if (typeof obj === "object" && !Array.isArray(obj)) {
           tong.removeChild(tong.firstChild);
-          const { image: images } = obj[thisCase[standard[1]]];
+          const { image: images, analytics } = obj[thisCase[standard[1]]];
           const imageLink = "/corePortfolio/listImage";
           let titleTong;
           let scrollTong, pid, num;
           let scroll;
+          let historyArr;
+
+          console.log(analytics);
+          historyArr = [];
+          for (let key in analytics) {
+            if (Array.isArray(analytics[key])) {
+              historyArr = historyArr.concat(analytics[key].map((obj) => { obj.key = key; return obj; }));
+            }
+          }
+          historyArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+
+          console.log(historyArr);
+
 
           titleTong = createNode({
             mother: tong,
@@ -3219,7 +3232,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               }
             ]
           });
-
           scroll = createNode({
             mother: tong,
             style: {
@@ -3229,7 +3241,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               overflow: "scroll"
             }
           })
-
           scrollTong = createNode({
             mother: scroll,
             style: {

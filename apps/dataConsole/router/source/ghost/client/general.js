@@ -259,12 +259,13 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
   const instance = this;
   try {
     if (typeof obj !== "object") {
-      throw new Error("must be object => { base, local }");
+      throw new Error("must be object => { name, client, base, local }");
     }
-    if (typeof obj.base !== "object" || typeof obj.local !== "function") {
-      throw new Error("must be object => { base, local }");
+    if (typeof obj.name !== "string" || typeof obj.client !== "object" || typeof obj.base !== "object" || typeof obj.local !== "function") {
+      throw new Error("must be object => { name, client, base, local }");
     }
-    const { base, local } = obj;
+    const { ajaxJson, returnGet } = GeneralJs;
+    const { name, client, base, local } = obj;
     let belowTarget, removeTargets;
 
     this.setGeneralBase(base);
@@ -283,6 +284,13 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       this.homeliaisonTalk();
     }
     this.totalContents.style.height = "auto";
+
+    await ajaxJson({
+      page: name,
+      mode: "page",
+      liteMode: returnGet().mode === "lite",
+      cliid: client.cliid,
+    }, "/ghostClient_updateAnalytics");
 
   } catch (e) {
     console.log(e);
