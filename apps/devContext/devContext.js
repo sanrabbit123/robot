@@ -134,73 +134,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    const model = {
-      bilid: "b218a_aa01s",
-      name: "견적서 이름",
-      generate: {
-        date: new Date(),
-        who: {
-          name: "",
-          phone: "",
-          email: "",
-        },
-      },
-      participant: {
-        managers: [
-          {
-            name: "",
-            phone: "",
-            email: "",
-          }
-        ],
-        customer: {
-          name: "",
-          phone: "",
-          email: "",
-        },
-      },
-      requests: [
-        {
-          date: new Date(),
-          info: [],
-          items: [
-            {
-              id: "",
-              class: "",
-              name: "",
-              description: "",
-              info: [],
-              unit: {
-                ea: "",
-                price: 0,
-                number: 0,
-              },
-              amount: {
-                supply: 0,
-                vat: 0,
-                consumer: 0,
-              }
-            }
-          ]
-        }
-      ],
-      comments: [],
-      links: []
-    }
-
-
-    console.log(model);
-
-
-    await bill.createBill({ name: "테스트" }, { selfMongo: this.MONGOLOCALC });
-
-    console.log(await bill.getBillsByQuery({}, { selfMongo: this.MONGOLOCALC }))
-
-
-
-
-
     // const matrix = [
       // [ "c2108_aa38s", "s2011_aa01s", "p2108_aa17s" ],
     // ]
@@ -878,15 +811,15 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p114");
+    // await this.spellCheck("p110");
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p108");
+    // await this.getRawPortfolio("p110");
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p114");
+    // await this.getCorePortfolio("p110");
 
 
     // aspirant to designer

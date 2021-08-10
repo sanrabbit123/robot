@@ -251,6 +251,9 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "딥 그린", "딥그린" ],
     [ "커튼 봉", "커튼봉" ],
     [ "빅포 스터", "빅포스터" ],
+    [ "홈 퍼러니 싱", "홈퍼니싱" ],
+    [ "피아 니즈 트", "피아니스트" ],
+    [ "피아니즈트", "피아니스트" ],
   ];
   try {
     let resultArr = [];
