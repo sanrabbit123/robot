@@ -285,12 +285,14 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     }
     this.totalContents.style.height = "auto";
 
-    await ajaxJson({
-      page: name,
-      mode: "page",
-      liteMode: returnGet().mode === "lite",
-      cliid: client.cliid,
-    }, "/ghostClient_updateAnalytics");
+    if (returnGet().mode !== "test") {
+      await ajaxJson({
+        page: name,
+        mode: "page",
+        liteMode: returnGet().mode === "lite",
+        cliid: client.cliid,
+      }, "/ghostClient_updateAnalytics");
+    }
 
   } catch (e) {
     console.log(e);

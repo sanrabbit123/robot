@@ -63,37 +63,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOLOCALC;
-    const selfMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    await selfMongo.connect();
-
-
-    const history = await back.getHistoriesByQuery("client", {}, { selfMongo });
-    let whereQuery, updateQuery;
-
-    for (let { cliid, curation: { analytics } } of history) {
-      if (analytics.page.length > 0 || analytics.update.length > 0 || analytics.submit.length > 0) {
-        whereQuery = { cliid };
-        for (let obj of analytics.page) {
-          obj.page = "styleCuration";
-        }
-        for (let obj of analytics.update) {
-          obj.page = "styleCuration";
-        }
-        for (let obj of analytics.submit) {
-          obj.page = "styleCuration";
-        }
-        updateQuery = {};
-        updateQuery["curation.analytics.page"] = analytics.page;
-        updateQuery["curation.analytics.update"] = analytics.update;
-        updateQuery["curation.analytics.submit"] = analytics.submit;
-
-        await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo });
-        console.log(whereQuery);
-      }
-    }
-
-    await selfMongo.close();
+    
 
 
 

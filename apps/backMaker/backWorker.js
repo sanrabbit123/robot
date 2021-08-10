@@ -917,6 +917,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let thisDesignerCareerStart;
     let distanceLimitBoo;
     let distanceLimitPlus;
+    let serviceMatchBoo;
 
     priceStandardCollection = "designerPrice";
     priceStandardConst = 33;
@@ -1032,6 +1033,8 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     clientAddress = null;
     for (let designer of designers) {
 
+      serviceMatchBoo = designer.analytics.project.matrix[y].some((s) => { return s === 1; });
+
       price = await back.mongoRead(priceStandardCollection, { key: (designer.analytics.construct.level * 10) + designer.analytics.styling.level }, { selfMongo: MONGOLOCALC });
       if (price.length !== 1) {
         throw new Error("invaild price");
@@ -1128,6 +1131,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       }
 
       if (distanceLimitBoo) {
+        offlineFeeCase = 0;
+        onlineFeeCase = 0;
+      }
+
+      if (!serviceMatchBoo) {
         offlineFeeCase = 0;
         onlineFeeCase = 0;
       }
