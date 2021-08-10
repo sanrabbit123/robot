@@ -3132,7 +3132,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //dev ===================================================================================
 
   rInitialBox.addEventListener("click", function (e) {
-    const { colorChip, createNode, createNodes, withOut, ajaxJson } = GeneralJs;
+    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString } = GeneralJs;
     let matrixBox;
     let loadingWidth;
     let tong;
@@ -3199,17 +3199,26 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let scroll;
           let historyArr;
 
-          console.log(analytics);
           historyArr = [];
           for (let key in analytics) {
             if (Array.isArray(analytics[key])) {
-              historyArr = historyArr.concat(analytics[key].map((obj) => { obj.key = key; return obj; }));
+              historyArr = historyArr.concat(analytics[key].map((obj) => { obj.key = key; obj.date = stringToDate(obj.date); return obj; }));
             }
           }
           historyArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
-
-          console.log(historyArr);
-
+          historyArr = historyArr.map((obj) => {
+            let text, date;
+            date = dateToString(obj.date, true).slice(2, -3);
+            if (obj.key === "page") {
+              text = `${date} | ${obj.city}(${obj.postal})에서 ${obj.platform}(${obj.os})로 ${obj.page} 페이지 방문함`;
+            } else if (obj.key === "update") {
+              text = `${date} | ${obj.page} 페이지에서 값을 업데이트함`;
+            } else if (obj.key === "submit") {
+              text = `${date} | ${obj.page} 페이지에서 결과를 제출함`;
+            }
+            obj.text = text;
+            return obj;
+          });
 
           titleTong = createNode({
             mother: tong,
@@ -3252,6 +3261,26 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               paddingBottom: String(paddingBottom) + ea,
             }
           });
+
+
+          // num = 0;
+          // for (let { text } of historyArr) {
+          //   createNode({
+          //     mother: scrollTong,
+          //     text,
+          //     style: {
+          //       position: "relative",
+          //       display: "block",
+          //       width: String(100) + '%',
+          //       height: "auto",
+          //       marginBottom: String(imageMargin) + ea,
+          //       borderRadius: String(3) + "px",
+          //       fontSize: String(fontSize) + ea
+          //     }
+          //   });
+          //   num++;
+          // }
+
 
           num = 0;
           for (let image of images) {

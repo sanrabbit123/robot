@@ -1742,6 +1742,9 @@ GeneralJs.dateToString = function (date, detail = false) {
 }
 
 GeneralJs.stringToDate = function (str) {
+  if (str instanceof Date) {
+    return str;
+  }
   if (typeof str !== "string") {
     throw new Error("invaild input");
   }
@@ -1752,6 +1755,11 @@ GeneralJs.stringToDate = function (str) {
     return (new Date(3800, 0, 1));
   }
   str = str.trim();
+  if (/T/g.test(str) && /Z$/.test(str) && /^[0-9]/.test(str) && /\-/g.test(str) && /\:/g.test(str)) {
+    if (!Number.isNaN((new Date(str)).getTime())) {
+      return new Date(str);
+    }
+  }
   if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str) && !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$/.test(str)) {
     throw new Error("not date string : " + str);
   }
