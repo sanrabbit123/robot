@@ -1131,11 +1131,13 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       }
 
       if (distanceLimitBoo) {
+        fee = 0;
         offlineFeeCase = 0;
         onlineFeeCase = 0;
       }
 
       if (!serviceMatchBoo) {
+        fee = 0;
         offlineFeeCase = 0;
         onlineFeeCase = 0;
       }

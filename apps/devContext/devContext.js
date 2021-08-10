@@ -168,7 +168,10 @@ DevContext.prototype.launching = async function () {
             {
               id: "",
               name: "",
-              ea: "",
+              unit: {
+                ea: "",
+                amount: 0,
+              },
               number: 0,
               supply: 0,
               vat: 0,
@@ -184,23 +187,28 @@ DevContext.prototype.launching = async function () {
 
     console.log(model);
 
-    const matrix = [
-      [ "c2108_aa42s", "s2011_aa02s", "p2108_aa15s" ],
-      // [ "c2108_aa38s", "s2011_aa01s", "p2108_aa17s" ],
-    ]
-    let detail;
-    let update;
 
-    for (let [ cliid, serid, proid ] of matrix) {
-      detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
-      console.log(detail);
+
+
+
+
+
+
+    // const matrix = [
+      // [ "c2108_aa38s", "s2011_aa01s", "p2108_aa17s" ],
+    // ]
+    // let detail;
+    // let update;
+
+    // for (let [ cliid, serid, proid ] of matrix) {
+    //   detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
       // update = [];
       // for (let d of detail) {
       //   update.push(d.toNormal());
       // }
       // await back.updateProject([ { proid }, { "proposal.detail": update } ]);
       // console.log(update.length);
-    }
+    // }
 
 
 

@@ -1297,7 +1297,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     const { createNode, colorChip, withOut, isMac } = GeneralJs;
     const { desid, cliid, client, designer, detail, fee } = feeObject;
     const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium } = detail;
-    const distanceBoo = (fee !== offline ? "true" : "false");
+    const distanceBoo = (online !== offline ? "true" : "false");
     const mother = thisSet;
     const motherWidth = mother.getBoundingClientRect().width;
     const thisOnOff = /offline/gi.test(thisSet.className) ? "offline" : "online";
@@ -1572,12 +1572,12 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       }
                     }
                     if (doing) {
-                      this.lastChild.textContent = GeneralJs.autoComma(distance) + "원 / " + String(newNumber) + "회";
+                      this.lastChild.textContent = "회당 " + GeneralJs.autoComma(distanceBoo ? distance : 0) + "원, 총 " + String(distanceBoo ? newNumber : 0) + "회";
                       this.setAttribute("number", String(newNumber));
                       offline = Number(this.parentElement.children[this.parentElement.children.length - 2].lastChild.textContent.replace(/[^0-9]/gi, ''));
                       final = offline + (distance * newNumber);
-                      this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
                       if (distanceBoo && thisOnOff === "offline") {
+                        this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
                         instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).fee = final;
                         instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
                         thisSet.querySelector("input").value = GeneralJs.autoComma(final);
@@ -1601,7 +1601,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                   }
                 },
                 {
-                  text: GeneralJs.autoComma(distance) + "원 / " + String(travel.number) + "회",
+                  text: "회당 " + GeneralJs.autoComma(distanceBoo === "true" ? distance : 0) + "원, 총 " + String(distanceBoo === "true" ? travel.number : 0) + "회",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
@@ -1869,7 +1869,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           if (/online/g.test(dom.className)) {
             dom.querySelector("input").value = GeneralJs.autoComma(result.detail.online);
           } else {
-            dom.querySelector("input").value = GeneralJs.autoComma(result.fee);
+            dom.querySelector("input").value = GeneralJs.autoComma(result.detail.offline);
           }
           input_widthSet(dom.querySelector("input"));
           thisSet = dom.querySelector("input").parentNode;

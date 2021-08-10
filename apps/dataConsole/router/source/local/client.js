@@ -3155,7 +3155,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     innerPaddingBottom = fontSize * (10 / 15);
     innerPaddingLeft = fontSize * (16 / 15);
     circleRadius = fontSize * (8 / 15);
-    circleBottom = fontSize * ((isMac() ? 16 : 17) / 15);
+    circleBottom = fontSize * ((isMac() ? 15 : 16) / 15);
     circleRight = fontSize * (2 / 15);
 
     if (/fadeout/gi.test(historyBox.style.animation)) {
@@ -3219,21 +3219,31 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           }
           historyArr.sort((a, b) => {
-            if (a.date.valueOf() !== b.date.valueOf()) {
-              return a.date.valueOf() - b.date.valueOf();
+            const aDate = new Date(a.date.getFullYear(), a.date.getMonth(), a.date.getDate(), a.date.getHours(), a.date.getMinutes());
+            const bDate = new Date(b.date.getFullYear(), b.date.getMonth(), b.date.getDate(), b.date.getHours(), b.date.getMinutes());
+            if (aDate.valueOf() !== bDate.valueOf()) {
+              return aDate.valueOf() - bDate.valueOf();
             } else {
-              return (a.key === "page" ? 1 : (a.key === "update" ? 3 : 5)) - (b.key === "page" ? 1 : (b.key === "update" ? 3 : 5));
+              return (a.key === "page" ? 3 : (a.key === "update" ? 5 : 1)) - (b.key === "page" ? 3 : (b.key === "update" ? 5 : 1));
             }
           });
           historyArr = historyArr.map((obj) => {
-            let text, date;
+            let text, date, pageName;
             date = dateToString(obj.date, true).slice(2, -3);
+            if (/curation/gi.test(obj.page)) {
+              pageName = "스타일 체크";
+            } else if (/proposal/gi.test(obj.page)) {
+              pageName = "제안서";
+            } else {
+              pageName = obj.page;
+            }
+
             if (obj.key === "page") {
-              text = `${date} | ${obj.city}(${obj.postal})에서 ${obj.platform}(${obj.os})로 ${obj.page} 페이지 방문함`;
+              text = `${date} | ${obj.city}(${obj.postal})에서 ${obj.platform}(${obj.os})로 <b%${pageName}%b> 페이지 <b%방문%b>함`;
             } else if (obj.key === "update") {
-              text = `${date} | ${obj.page} 페이지에서 값을 업데이트함`;
+              text = `${date} | <b%${pageName}%b> 페이지에서 값을 <b%업데이트%b>함`;
             } else if (obj.key === "submit") {
-              text = `${date} | ${obj.page} 페이지에서 결과를 제출함`;
+              text = `${date} | <b%${pageName}%b> 페이지에서 결과를 <b%제출%b>함`;
             }
             obj.text = text;
             return obj;
@@ -3364,7 +3374,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       position: "relative",
                       display: "inline-block",
                       fontSize: String(fontSize) + ea,
-                      fontWeight: String(600),
+                      fontWeight: String(400),
                       color: colorChip.shadow,
                       background: colorChip.gray2,
                       paddingTop: String(innerPaddingTop) + ea,
@@ -3373,6 +3383,11 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       paddingRight: String(innerPaddingLeft) + ea,
                       borderRadius: String(3) + "px",
                       marginRight: String(imageMargin) + ea,
+                    },
+                    bold: {
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.green,
                     }
                   },
                   {
@@ -3389,6 +3404,11 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       paddingLeft: String(innerPaddingLeft) + ea,
                       paddingRight: String(innerPaddingLeft) + ea,
                       borderRadius: String(3) + "px"
+                    },
+                    bold: {
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.black,
                     }
                   }
                 ]
