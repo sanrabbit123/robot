@@ -63,7 +63,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 
@@ -193,7 +193,6 @@ DevContext.prototype.launching = async function () {
 
     // const matrix = [
     //   [ "c2108_aa37s", "s2011_aa02s", "p2108_aa15s" ],
-    //   [ "c2108_aa23s", "s2011_aa03s", "p2108_aa16s" ],
     //   [ "c2108_aa38s", "s2011_aa01s", "p2108_aa17s" ],
     // ]
     // let detail;

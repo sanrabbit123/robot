@@ -3132,7 +3132,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //dev ===================================================================================
 
   rInitialBox.addEventListener("click", function (e) {
-    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString } = GeneralJs;
+    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
     let matrixBox;
     let loadingWidth;
     let tong;
@@ -3141,6 +3141,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     let columnsLength;
     let paddingBottom;
     let titleHeight, titleBottom;
+    let innerPaddingTop, innerPaddingBottom, innerPaddingLeft;
+    let circleRadius, circleBottom, circleRight;
 
     loadingWidth = fontSize * (40 / 15);
     innerMargin = fontSize * (20 / 15);
@@ -3149,6 +3151,12 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     paddingBottom = fontSize * (240 / 15);;
     titleHeight = fontSize * (50 / 15);
     titleBottom = fontSize * (9 / 15);
+    innerPaddingTop = fontSize * (8 / 15);
+    innerPaddingBottom = fontSize * (10 / 15);
+    innerPaddingLeft = fontSize * (16 / 15);
+    circleRadius = fontSize * (8 / 15);
+    circleBottom = fontSize * ((isMac() ? 16 : 17) / 15);
+    circleRight = fontSize * (2 / 15);
 
     if (/fadeout/gi.test(historyBox.style.animation)) {
 
@@ -3198,6 +3206,11 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let scrollTong, pid, num;
           let scroll;
           let historyArr;
+          let imageLoad, historyLoad;
+
+          imageLoad = () => {};
+          historyLoad = () => {};
+          scrollTong = {};
 
           historyArr = [];
           for (let key in analytics) {
@@ -3238,6 +3251,41 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   position: "absolute",
                   bottom: String(titleBottom) + ea,
                 }
+              },
+              {
+                class: [ "hoverDefault_lite" ],
+                attribute: [
+                  { toggle: "off" }
+                ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      const toggle = this.getAttribute("toggle");
+                      const textDom = this.previousElementSibling;
+                      if (toggle === "off") {
+                        cleanChildren(scrollTong);
+                        historyLoad();
+                        textDom.textContent = "고객님의 페이지 행적";
+                        this.setAttribute("toggle", "on");
+                      } else {
+                        cleanChildren(scrollTong);
+                        imageLoad();
+                        textDom.textContent = "고객님이 선택한 사진";
+                        this.setAttribute("toggle", "off");
+                      }
+                    }
+                  }
+                ],
+                style: {
+                  position: "absolute",
+                  bottom: String(circleBottom) + ea,
+                  right: String(circleRight) + ea,
+                  width: String(circleRadius) + ea,
+                  height: String(circleRadius) + ea,
+                  background: colorChip.red,
+                  borderRadius: String(circleRadius) + ea,
+                }
               }
             ]
           });
@@ -3262,47 +3310,89 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           });
 
-
-          // num = 0;
-          // for (let { text } of historyArr) {
-          //   createNode({
-          //     mother: scrollTong,
-          //     text,
-          //     style: {
-          //       position: "relative",
-          //       display: "block",
-          //       width: String(100) + '%',
-          //       height: "auto",
-          //       marginBottom: String(imageMargin) + ea,
-          //       borderRadius: String(3) + "px",
-          //       fontSize: String(fontSize) + ea
-          //     }
-          //   });
-          //   num++;
-          // }
-
-
-          num = 0;
-          for (let image of images) {
-            pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
-            createNode({
-              mother: scrollTong,
-              mode: "img",
-              attribute: [
-                { src: "https://" + GHOSTHOST + "/" + imageLink + "/" + pid + "/" + image }
-              ],
-              style: {
-                position: "relative",
-                display: "inline-block",
-                width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
-                height: "auto",
-                marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
-                marginBottom: String(imageMargin) + ea,
-                borderRadius: String(3) + "px",
-              }
-            });
-            num++;
+          imageLoad = () => {
+            scrollTong.style.height = String(8000) + ea;
+            let num, pid;
+            num = 0;
+            for (let image of images) {
+              pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
+              createNode({
+                mother: scrollTong,
+                mode: "img",
+                attribute: [
+                  { src: "https://" + GHOSTHOST + "/" + imageLink + "/" + pid + "/" + image }
+                ],
+                style: {
+                  position: "relative",
+                  display: "inline-block",
+                  width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
+                  height: "auto",
+                  marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
+                  marginBottom: String(imageMargin) + ea,
+                  borderRadius: String(3) + "px",
+                }
+              });
+              scrollTong.style.height = "auto";
+              num++;
+            }
           }
+
+          historyLoad = () => {
+            scrollTong.style.height = String(8000) + ea;
+            let num;
+            num = 0;
+            for (let { text } of historyArr) {
+              createNode({
+                mother: scrollTong,
+                style: {
+                  position: "relative",
+                  display: "block",
+                  width: String(100) + '%',
+                  height: "auto",
+                  marginBottom: String(imageMargin) + ea,
+                },
+                children: [
+                  {
+                    text: text.split('|')[0].trim(),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.shadow,
+                      background: colorChip.gray2,
+                      paddingTop: String(innerPaddingTop) + ea,
+                      paddingBottom: String(innerPaddingBottom) + ea,
+                      paddingLeft: String(innerPaddingLeft) + ea,
+                      paddingRight: String(innerPaddingLeft) + ea,
+                      borderRadius: String(3) + "px",
+                      marginRight: String(imageMargin) + ea,
+                    }
+                  },
+                  {
+                    text: text.split('|')[1].trim(),
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(300),
+                      color: colorChip.black,
+                      background: colorChip.gray0,
+                      paddingTop: String(innerPaddingTop) + ea,
+                      paddingBottom: String(innerPaddingBottom) + ea,
+                      paddingLeft: String(innerPaddingLeft) + ea,
+                      paddingRight: String(innerPaddingLeft) + ea,
+                      borderRadius: String(3) + "px"
+                    }
+                  }
+                ]
+              });
+              scrollTong.style.height = "auto";
+              num++;
+            }
+          }
+
+          historyLoad();
 
           scrollTong.style.height = "auto";
 
