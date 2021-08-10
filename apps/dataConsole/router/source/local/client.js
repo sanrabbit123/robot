@@ -3218,7 +3218,13 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               historyArr = historyArr.concat(analytics[key].map((obj) => { obj.key = key; obj.date = stringToDate(obj.date); return obj; }));
             }
           }
-          historyArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+          historyArr.sort((a, b) => {
+            if (a.date.valueOf() !== b.date.valueOf()) {
+              return a.date.valueOf() - b.date.valueOf();
+            } else {
+              return (a.key === "page" ? 1 : (a.key === "update" ? 3 : 5)) - (b.key === "page" ? 1 : (b.key === "update" ? 3 : 5));
+            }
+          });
           historyArr = historyArr.map((obj) => {
             let text, date;
             date = dateToString(obj.date, true).slice(2, -3);
@@ -3392,7 +3398,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           }
 
-          historyLoad();
+          imageLoad();
 
           scrollTong.style.height = "auto";
 
