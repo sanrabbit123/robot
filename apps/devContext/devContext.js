@@ -136,7 +136,7 @@ DevContext.prototype.launching = async function () {
 
 
     const model = {
-      bilid: "b218a_aa01a",
+      bilid: "b218a_aa01s",
       name: "견적서 이름",
       generate: {
         date: new Date(),
@@ -163,20 +163,24 @@ DevContext.prototype.launching = async function () {
       requests: [
         {
           date: new Date(),
-          where: "",
+          info: [],
           items: [
             {
               id: "",
+              class: "",
               name: "",
+              description: "",
+              info: [],
               unit: {
                 ea: "",
-                amount: 0,
+                price: 0,
+                number: 0,
               },
-              number: 0,
-              supply: 0,
-              vat: 0,
-              consumer: 0,
-              etc: "",
+              amount: {
+                supply: 0,
+                vat: 0,
+                consumer: 0,
+              }
             }
           ]
         }

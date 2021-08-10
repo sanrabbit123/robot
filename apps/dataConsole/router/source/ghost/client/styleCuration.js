@@ -3288,7 +3288,7 @@ StyleCurationJs.prototype.parsingValues = function () {
       message: instance.client.name + " 고객님이 큐레이션 페이지를 제출하는 도중 오류를 만나 비정상 종료되었습니다!",
       channel: "#404_curation",
       voice: true,
-    }, "/sendSlack").then(() => { window.location.reload(); }).catch((err) => { console.log(err); });
+    }, "/sendSlack").then(() => { window.alert("오류가 발생하였습니다! 관리자에게 문의 부탁드립니다!"); window.location.reload(); }).catch((err) => { console.log(err); });
   });
 
 }
