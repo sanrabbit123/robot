@@ -134,79 +134,73 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const month = function (num) {
-    //   const aCode = 'a'.charCodeAt(0);
-    //   let arr = [];
-    //   for (let i = 0; i < 12; i++) {
-    //     if (i < 9) {
-    //       arr.push(String(i + 1));
-    //     } else {
-    //       arr.push(String.fromCharCode(i - 9 + aCode));
-    //     }
-    //   }
-    //   return arr[num];
-    // }
-    // const date = function (num) {
-    //   const aCode = 'a'.charCodeAt(0);
-    //   let arr = [];
-    //   for (let i = 0; i < 32; i++) {
-    //     if (i < 9) {
-    //       arr.push(String(i + 1));
-    //     } else {
-    //       arr.push(String.fromCharCode(i - 9 + aCode));
-    //     }
-    //   }
-    //   return arr[num];
-    // }
-    // const today = new Date();
-    // let id;
-    // id = 'b' + String(today.getFullYear()).slice(2) + month(today.getMonth()) + date(today.getDate() - 1) + '_';
-    //
-    // console.log(id);
-    //
-    // {
-    //   name: "견적서 이름",
-    //   date: new Date(),
-    //   id: id,
-    //   who: {
-    //     from: {
-    //       name: "",
-    //       phone: "",
-    //       email: "",
-    //     },
-    //     to: {
-    //       name: "",
-    //       phone: "",
-    //       email: "",
-    //     },
-    //   },
-    //   requests: [
-    //     {
-    //       date: new Date(),
-    //
-    //     }
-    //   ]
-    // }
+
+    const model = {
+      bilid: "b218a_aa01a",
+      name: "견적서 이름",
+      generate: {
+        date: new Date(),
+        who: {
+          name: "",
+          phone: "",
+          email: "",
+        },
+      },
+      participant: {
+        managers: [
+          {
+            name: "",
+            phone: "",
+            email: "",
+          }
+        ],
+        customer: {
+          name: "",
+          phone: "",
+          email: "",
+        },
+      },
+      requests: [
+        {
+          date: new Date(),
+          where: "",
+          items: [
+            {
+              id: "",
+              name: "",
+              ea: "",
+              number: 0,
+              supply: 0,
+              vat: 0,
+              consumer: 0,
+              etc: "",
+            }
+          ]
+        }
+      ],
+      comments: [],
+    }
 
 
+    console.log(model);
 
+    const matrix = [
+      [ "c2108_aa42s", "s2011_aa02s", "p2108_aa15s" ],
+      // [ "c2108_aa38s", "s2011_aa01s", "p2108_aa17s" ],
+    ]
+    let detail;
+    let update;
 
-    // const matrix = [
-    //   [ "c2108_aa37s", "s2011_aa02s", "p2108_aa15s" ],
-    //   [ "c2108_aa38s", "s2011_aa01s", "p2108_aa17s" ],
-    // ]
-    // let detail;
-    // let update;
-    //
-    // for (let [ cliid, serid, proid ] of matrix) {
-    //   detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
-    //   update = [];
-    //   for (let d of detail) {
-    //     update.push(d.toNormal());
-    //   }
-    //   await back.updateProject([ { proid }, { "proposal.detail": update } ]);
-    //   console.log(update.length);
-    // }
+    for (let [ cliid, serid, proid ] of matrix) {
+      detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
+      console.log(detail);
+      // update = [];
+      // for (let d of detail) {
+      //   update.push(d.toNormal());
+      // }
+      // await back.updateProject([ { proid }, { "proposal.detail": update } ]);
+      // console.log(update.length);
+    }
 
 
 

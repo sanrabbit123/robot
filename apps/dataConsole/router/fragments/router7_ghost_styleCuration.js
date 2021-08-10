@@ -150,7 +150,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 : " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }

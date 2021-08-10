@@ -1242,6 +1242,9 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
       if (seridArr.length === 1) {
         serid = seridArr[0];
       }
+      if (xValue === null || xValue === undefined) {
+        xValue = "B";
+      }
       feeCalculation = async function (arr) {
         if (!Array.isArray(arr)) {
           throw new Error("invaild input");
