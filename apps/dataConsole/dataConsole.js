@@ -804,10 +804,19 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     console.log(`set router`);
 
     //set static
-    await this.renderStatic(staticFolder, address, DataPatch, isGhost);
-    if (DataMiddle !== null) {
-      await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
-    }
+    this.renderStatic(staticFolder, address, DataPatch, isGhost).then(() => {
+      if (DataMiddle !== null) {
+        return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
+      } else {
+        return new Promise(function (resolve, reject) {
+          resolve(null);
+        });
+      }
+    }).then(() => {
+      console.log(`static done`);
+    }).catch((err) => {
+      console.log(err);
+    });
 
     //set binary
     // await this.setBinary();
