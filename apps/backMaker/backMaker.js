@@ -425,11 +425,10 @@ BackMaker.prototype.setInfoObj = async function (option = { selfMongo: null, get
     arr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
     target = arr[0];
 
-    console.log("\x1b[32m%s\x1b[0m", "info set complete");
-
     if (option.getMode === true) {
       return target.info;
     } else {
+      console.log("\x1b[32m%s\x1b[0m", "info set complete");
       await fileSystem(`write`, [ infoPath, `module.exports = ${JSON.stringify(target.info, null, 2)}` ]);
       return true;
     }
@@ -498,11 +497,10 @@ BackMaker.prototype.setMemberObj = async function (option = { selfMongo: null, g
     arr.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
     target = arr[0];
 
-    console.log("\x1b[32m%s\x1b[0m", "member set complete");
-
     if (option.getMode === true) {
       return target.info;
     } else {
+      console.log("\x1b[32m%s\x1b[0m", "member set complete");
       await fileSystem(`write`, [ infoPath, `module.exports = ${JSON.stringify(target.info, null, 2)}` ]);
       return true;
     }

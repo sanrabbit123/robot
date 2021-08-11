@@ -3990,23 +3990,33 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           updateQuery["cliid"] = cliid;
           updateQuery["service.serid"] = history.curation.service.serid[0];
           if (service === null) {
-            updateQuery["service.xValue"] = "M";
+            updateQuery["service.xValue"] = "B";
           } else {
             if (typeof service === "object") {
               if (Array.isArray(service.xValue)) {
-                updateQuery["service.xValue"] = (service.xValue.length === 0 ? "M" : service.xValue[0].xValue);
+                updateQuery["service.xValue"] = (service.xValue.length === 0 ? "B" : service.xValue[0].xValue);
               } else {
-                updateQuery["service.xValue"] = "M";
+                updateQuery["service.xValue"] = "B";
               }
             } else {
-              updateQuery["service.xValue"] = "M";
+              updateQuery["service.xValue"] = "B";
             }
           }
           updateQuery["service.online"] = false;
           updateQuery["proposal.detail"] = detailUpdate;
 
-          back.createProject(updateQuery, { selfMongo: instance.mongo }).then((proid) => {
-            newProid = proid;
+          newProid = null;
+          back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo }).then((rows) => {
+            if (rows.length > 0) {
+              newProid = rows[0].proid;
+              return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
+            } else {
+              return back.createProject(updateQuery, { selfMongo: instance.mongo });
+            }
+          }).then((proid) => {
+            if (newProid === null) {
+              newProid = proid;
+            }
             return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
           }).then(() => {
             return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });

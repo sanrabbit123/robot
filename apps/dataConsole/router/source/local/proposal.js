@@ -13,7 +13,6 @@ const ProposalJs = function () {
   this.below_tong = new Map();
   this.list_domBox = new Map();
   this.listSearchInput = null;
-  this.designerFee = new Map();
   this.designers = [];
   this.client = null;
   this.cliid = null;
@@ -24,6 +23,8 @@ const ProposalJs = function () {
   this.firstDo_secondToggle = true;
   this.clickTargets = [];
 }
+
+ProposalJs.designerFee = new Map();
 
 ProposalJs.feeKeyMaker = function (desid, cliid, serid, xValue) {
   if (typeof desid !== "string" || typeof cliid !== "string" || typeof serid !== "string" || typeof xValue !== "string") {
@@ -108,10 +109,16 @@ ProposalJs.prototype.toggleSetting = {
 
 ProposalJs.below_events = {
   save: async function (e) {
-    await ProposalJs.save_init(false);
+    const result = await ProposalJs.save_init(false);
+    if (/fail/gi.test(result)) {
+      window.location.reload();
+    }
   },
   update: async function (e) {
-    await ProposalJs.save_init(true);
+    const result = await ProposalJs.save_init(true);
+    if (/fail/gi.test(result)) {
+      window.location.reload();
+    }
   },
   search: {
     client: function (e) {
@@ -1301,6 +1308,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     const mother = thisSet;
     const motherWidth = mother.getBoundingClientRect().width;
     const thisOnOff = /offline/gi.test(thisSet.className) ? "offline" : "online";
+    const removeClassName = "greenPopupRemoveTarget";
+    const greenClassName = "greenPopupBox";
     let size, margin;
     let width;
     let bottom;
@@ -1322,16 +1331,21 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
 
     createNode({
       mother,
+      class: [ removeClassName ],
       events: [
         {
           type: "click",
           event: function (e) {
             e.preventDefault();
             e.stopPropagation();
-            mother.lastChild.style.animation = "fadedownlite 0.3s ease forwards";
+            const box = mother.querySelector('.' + greenClassName);
+            if (box !== null) {
+              box.style.animation = "fadedownlite 0.3s ease forwards";
+            }
             GeneralJs.setTimeout(() => {
-              for (let i = 0; i < 2; i++) {
-                mother.removeChild(mother.lastChild);
+              const removeTargets = mother.querySelectorAll('.' + removeClassName);
+              for (let i = 0; i < removeTargets.length; i++) {
+                mother.removeChild(removeTargets[i]);
               }
             }, 301);
           }
@@ -1348,6 +1362,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     });
     createNode({
       mother,
+      class: [ removeClassName, greenClassName ],
       events: [
         {
           type: "click",
@@ -1578,8 +1593,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       final = offline + (distance * newNumber);
                       if (distanceBoo && thisOnOff === "offline") {
                         this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
-                        instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).fee = final;
-                        instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
+                        ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).fee = final;
+                        ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
                         thisSet.querySelector("input").value = GeneralJs.autoComma(final);
                         input_widthSet(thisSet.querySelector("input"));
                       }
@@ -1684,10 +1699,14 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
 
     if (timeoutMode) {
       GeneralJs.setTimeout(() => {
-        mother.lastChild.style.animation = "fadedownlite 0.3s ease forwards";
+        const box = mother.querySelector('.' + greenClassName);
+        if (box !== null) {
+          box.style.animation = "fadedownlite 0.3s ease forwards";
+        }
         GeneralJs.setTimeout(() => {
-          for (let i = 0; i < 2; i++) {
-            mother.removeChild(mother.lastChild);
+          const removeTargets = mother.querySelectorAll('.' + removeClassName);
+          for (let i = 0; i < removeTargets.length; i++) {
+            mother.removeChild(removeTargets[i]);
           }
         }, 301);
       }, 2000);
@@ -1766,7 +1785,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         cliid = instance.cliid;
         serid = instance.serid;
         xValue = instance.xValue;
-        if (!instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
+        if (!ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) || (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline === 0)) {
           GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee").then((raw_fee) => {
             if (!Array.isArray(raw_fee)) {
               window.alert("오류 발생, 관리자에게 문의하세요!");
@@ -1777,11 +1796,11 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
               window.location.reload();
             }
             const result = raw_fee[0];
-            instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
+            ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
             greenPopup(thisSet, result, false);
           });
         } else {
-          greenPopup(thisSet, instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)), false);
+          greenPopup(thisSet, ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)), false);
         }
       }
     } else {
@@ -1799,27 +1818,29 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     }
   }
 
-  fourth.events.designer = function (e) {
-    const card = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-    const desid = this.getAttribute("cus_desid");
-    const cliid = instance.cliid;
-    const serid = instance.serid;
-    const xValue = instance.xValue;
-    const address = this.getAttribute("cus_address");
-    const cusNum = this.getAttribute("cus_num");
-    const getnode = (num, boo = true) => {
-      if (boo) {
-        return instance.fourthChildren.get("box" + cusNum).children[3].children[num].style;
-      } else {
-        return instance.fourthChildren.get("box" + cusNum).children[3].children[1].children[0].style;
+  fourth.events.designer = async function (e) {
+    try {
+      const card = this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+      const desid = this.getAttribute("cus_desid");
+      const cliid = instance.cliid;
+      const serid = instance.serid;
+      const xValue = instance.xValue;
+      const address = this.getAttribute("cus_address");
+      const cusNum = this.getAttribute("cus_num");
+      const getnode = (num, boo = true) => {
+        if (boo) {
+          return instance.fourthChildren.get("box" + cusNum).children[3].children[num].style;
+        } else {
+          return instance.fourthChildren.get("box" + cusNum).children[3].children[1].children[0].style;
+        }
       }
-    }
-    const inputTargets = card.querySelectorAll(".pp_designer_selected_box_contents_money_set");
-    const timeoutMode = (e.customHomeLiaison_timeoutMode === true);
+      const inputTargets = card.querySelectorAll(".pp_designer_selected_box_contents_money_set");
+      const timeoutMode = (e.customHomeLiaison_timeoutMode === true);
+      let target;
+      let raw_fee;
+      let result;
+      let thisSet;
 
-    (new Promise(function(resolve, reject) {
-      resolve(null);
-    })).then(() => {
       for (let dom of inputTargets) {
         dom.querySelector("input").value = "연산중";
       }
@@ -1829,8 +1850,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       getnode(0).color = GeneralJs.colorChip.green;
       getnode(1).background = GeneralJs.colorChip.green;
       getnode(1, false).color = GeneralJs.colorChip.white;
-      let target;
-      if ((target = document.getElementById("pp_designer_selected_box_contents_selection" + this.getAttribute("cus_num"))) !== null) {
+      target = document.getElementById("pp_designer_selected_box_contents_selection" + this.getAttribute("cus_num"));
+      if (target !== null) {
         while (target.firstChild) {
           target.removeChild(target.lastChild);
         }
@@ -1841,12 +1862,12 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         target.textContent = '';
       }
 
-      if (instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
-        return new Promise((resolve, reject) => { resolve([ instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) ]); });
+      if (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline !== 0) {
+        raw_fee = [ ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) ];
       } else {
-        return GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee");
+        raw_fee = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee");
       }
-    }).then((raw_fee) => {
+
       if (!Array.isArray(raw_fee)) {
         window.alert("오류 발생, 관리자에게 문의하세요!");
         window.location.reload();
@@ -1855,11 +1876,10 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         window.alert("오류 발생, 관리자에게 문의하세요!");
         window.location.reload();
       }
-      const result = raw_fee[0];
-      let thisSet;
 
-      if (!instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
-        instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
+      result = raw_fee[0];
+      if (!ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) || (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline === 0)) {
+        ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
       }
 
       for (let dom of inputTargets) {
@@ -1878,19 +1898,13 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
 
       if (timeoutMode) {
         greenPopup(thisSet, result, timeoutMode);
-        if (GeneralJs.timeouts["greenTimeoutMode"] !== undefined && GeneralJs.timeouts["greenTimeoutMode"] !== null) {
-          clearTimeout(GeneralJs.timeouts["greenTimeoutMode"]);
-        }
-        GeneralJs.timeouts["greenTimeoutMode"] = setTimeout(() => {
-          instance.mother.greenAlert("금액을 누르시면 상세 정보가 나옵니다!");
-          clearTimeout(GeneralJs.timeouts["greenTimeoutMode"]);
-          GeneralJs.timeouts["greenTimeoutMode"] = null;
-        }, 3000);
       }
 
-    }).catch((err) => {
-      console.log(err);
-    });
+      return "yes!";
+
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   fourth.events.service = async function (e) {
@@ -1929,11 +1943,11 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
             }
           }
 
-          if (instance.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue))) {
-            result = instance.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
+          if (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline !== 0) {
+            result = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
           } else {
             result = (await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee"))[0];
-            instance.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
+            ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
           }
           document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)).appendChild(money_set(this.getAttribute("cus_value"), 0, result));
         }
@@ -2111,26 +2125,52 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       i = i + 1;
     }
 
-    if (clickMode) {
-      if (GeneralJs.timeouts["firstClick"] !== undefined && GeneralJs.timeouts["firstClick"] !== null) {
-        clearTimeout(GeneralJs.timeouts["firstClick"]);
+    // if (clickMode) {
+
+    GeneralJs.createNode({
+      mode: "aside",
+      mother: document.body,
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(99) + "vw",
+        height: String(99) + "vh",
+        background: "transparent",
+        zIndex: String(999)
       }
-      GeneralJs.timeouts["firstClick"] = setTimeout(async () => {
-        try {
-          for (let dom of instance.clickTargets) {
-            fourth.events.designer.call(dom.querySelector("label").querySelector("div"), {
-              customHomeLiaison_timeoutMode: true
-            });
-            await GeneralJs.sleep(600);
-          }
-          instance.clickTargets = [];
-          clearTimeout(GeneralJs.timeouts["firstClick"]);
-          GeneralJs.timeouts["firstClick"] = null;
-        } catch (e) {
-          console.log(e);
-        }
-      }, 1000);
+    });
+
+    if (GeneralJs.timeouts["firstClick"] !== undefined && GeneralJs.timeouts["firstClick"] !== null) {
+      clearTimeout(GeneralJs.timeouts["firstClick"]);
     }
+
+    GeneralJs.timeouts["firstClick"] = setTimeout(async () => {
+      try {
+        for (let dom of instance.clickTargets) {
+          fourth.events.designer.call(dom.querySelector("label").querySelector("div"), {
+            customHomeLiaison_timeoutMode: true
+          }).then((str) => {
+            if (/aside/gi.test(document.body.lastChild.nodeName)) {
+              document.body.removeChild(document.body.lastChild);
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+          await GeneralJs.sleep(600);
+        }
+        while (/aside/gi.test(document.body.lastChild.nodeName)) {
+          document.body.removeChild(document.body.lastChild);
+        }
+        instance.clickTargets = [];
+        clearTimeout(GeneralJs.timeouts["firstClick"]);
+        GeneralJs.timeouts["firstClick"] = null;
+      } catch (e) {
+        console.log(e);
+      }
+    }, 1000);
+
+    // }
 
     for (let j = 0; j < 10; j++) {
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
@@ -2194,9 +2234,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           }
         } else if (obj.proposal[n].fee.length === 2) {
           if (i === 0 || i === 1) { input_clone.checked = true; }
-        }
-        if (obj.proposal[n].fee[0].partial) {
-          if (i === 2) { input_clone.checked = true; }
         }
       }
       //------------------------------------------------------------------------
@@ -4507,7 +4544,6 @@ ProposalJs.prototype.load_processLoad_third = function () {
 }
 
 ProposalJs.save_init = async function (update = false) {
-  const instance = this;
   const { createNodes, colorChip, withOut } = GeneralJs;
   try {
     let target, temp, temp2, standard_id;
@@ -4524,6 +4560,8 @@ ProposalJs.save_init = async function (update = false) {
     let belowHeight;
     let loadingCancelBox, loadingLoadingIcon;
     let methodOnlineBoo;
+    let designerFeeCalculBoo;
+    let designerFeeCalculObj;
 
     loadingWidth = 50;
     belowHeight = 123;
@@ -4651,10 +4689,13 @@ ProposalJs.save_init = async function (update = false) {
           return "fail";
         }
 
+        designerFeeCalculBoo = ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]));
+        if (designerFeeCalculBoo) {
+          designerFeeCalculObj = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]));
+        }
+
         temp_num = (temp_arr.indexOf("부분 공간") !== -1) ? temp_arr.length - 1 : temp_arr.length;
-
         result_obj["proposal.detail"][i].fee = new Array(temp_num);
-
         methodOnlineBoo = false;
         for (let f = 0; f < temp_num; f++) {
           result_obj["proposal.detail"][i].fee[f] = {};
@@ -4674,8 +4715,19 @@ ProposalJs.save_init = async function (update = false) {
               result_obj["proposal.detail"][i].fee[f].amount = Number(temp[i].querySelectorAll(".pp_designer_selected_box_contents_money_set")[0].querySelector(".pp_designer_selected_box_contents_money_input").value.replace(/[^0-9]/g, ''));
             }
           }
+          result_obj["proposal.detail"][i].fee[f].distance = {
+            number: 0,
+            amount: 0
+          };
+          if (designerFeeCalculBoo) {
+            if (designerFeeCalculObj.detail.offline !== designerFeeCalculObj.detail.online && designerFeeCalculObj.detail.travel.number > 0) {
+              if (result_obj["proposal.detail"][i].fee[f].method !== "online") {
+                result_obj["proposal.detail"][i].fee[f].distance.number = designerFeeCalculObj.detail.travel.number;
+              }
+              result_obj["proposal.detail"][i].fee[f].distance.amount = (designerFeeCalculObj.detail.offline - designerFeeCalculObj.detail.online) / designerFeeCalculObj.detail.travel.number;
+            }
+          }
         }
-
         result_obj["service.online"] = methodOnlineBoo;
 
         temp_num = 0;

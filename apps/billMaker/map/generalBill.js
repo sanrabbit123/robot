@@ -15,8 +15,9 @@ module.exports = {
         },
       },
       requests: [],
+      proofs: [],
       comments: [],
-      links: [],
+      links: {},
     };
   },
   sub: function (subject) {
@@ -55,6 +56,17 @@ module.exports = {
           consumer: 0,
         }
       };
+    } else if (subject === "proofs") {
+      dummy = {
+        id: "",
+        date: new Date(),
+        amount: 0,
+        info: {
+          method: "",
+          proof: "",
+          to: "",
+        },
+      };
     }
     return dummy;
   },
@@ -80,6 +92,70 @@ module.exports = {
         let arr = [];
         for (let i of this) {
           arr.push(i);
+        }
+        return arr;
+      }
+    }
+
+    class Links {
+      constructor(obj) {
+        for (let key in obj) {
+          this[key] = obj[key];
+        }
+      }
+      toNormal() {
+        let obj = {};
+        for (let key in this) {
+          obj[key] = this[key];
+        }
+        return obj;
+      }
+    }
+
+    class ProofInfo {
+      constructor(json) {
+        this.method = json.method;
+        this.proof = json.proof;
+        this.to = json.to;
+      }
+      toNormal() {
+        let obj = {};
+        obj.method = this.method;
+        obj.proof = this.proof;
+        obj.to = this.to;
+        return obj;
+      }
+    }
+
+    class Proof {
+      constructor(json) {
+        this.id = json.id;
+        this.date = json.date;
+        this.amount = json.amount;
+        this.info = new ProofInfo(json.info);
+      }
+      toNormal() {
+        let obj;
+        obj = {};
+        obj.id = this.id;
+        obj.date = this.date;
+        obj.amount = this.amount;
+        obj.info = this.info.toNormal();
+        return obj;
+      }
+    }
+
+    class Proofs extends Array {
+      constructor(jsonArr) {
+        super();
+        for (let obj of jsonArr) {
+          this.push(new Proof(obj));
+        }
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.toNormal());
         }
         return arr;
       }
@@ -246,8 +322,9 @@ module.exports = {
         this.date = json.date;
         this.participant = new Participant(json.participant);
         this.requests = new Requests(json.requests);
+        this.proofs = new Proofs(json.proofs);
         this.comments = new SeachArray(json.comments);
-        this.links = new SeachArray(json.links);
+        this.links = new Links(json.links);
       }
       toNormal() {
         let obj;
@@ -258,6 +335,7 @@ module.exports = {
         obj.date = this.date;
         obj.participant = this.participant.toNormal();
         obj.requests = this.requests.toNormal();
+        obj.proofs = this.proofs.toNormal();
         obj.comments = this.comments.toNormal();
         obj.links = this.links;
         return obj;

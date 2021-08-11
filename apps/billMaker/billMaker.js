@@ -16,6 +16,42 @@ BillMaker.billCollections = [
   "stylingForm",
 ];
 
+BillMaker.billDictionary = {
+  styling: {
+    class: "style",
+    name: "스타일링",
+    items: [
+      {
+        id: "_idte",
+        class: "designerTime",
+        name: "디자인 용역비",
+        description: "",
+        ea: "식",
+        number: 1,
+        ratio: 0.8
+      },
+      {
+        id: "_idsg",
+        class: "designSupervising",
+        name: "디자인 감리비",
+        description: "",
+        ea: "식",
+        number: 1,
+        ratio: 0.2
+      },
+      {
+        id: "_ites",
+        class: "travelExpenses",
+        name: "출장비",
+        description: "",
+        ea: "회",
+        number: 2,
+        ratio: 0
+      },
+    ]
+  },
+};
+
 BillMaker.prototype.createBill = async function (collection, updateQueryArr, option = { selfMongo: null }) {
   const instance = this;
   const { mongo, mongopythoninfo } = this.mother;
@@ -56,11 +92,15 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
       newId = dummy.bilid;
 
       await MONGOC.db(`miro81`).collection(collection).insertOne(dummy);
-      await MONGOC.db(`miro81`).collection(collection).updateOne({ bilid: newId }, { $set: updateQuery });
+      if (updateQuery !== null && Object.keys(updateQuery).length > 0) {
+        await MONGOC.db(`miro81`).collection(collection).updateOne({ bilid: newId }, { $set: updateQuery });
+      }
 
       if (!selfBoo) {
         await MONGOC.close();
       }
+
+      return newId;
 
     } catch (e) {
       console.log(e);
@@ -271,6 +311,9 @@ BillMaker.prototype.updateBill = async function (queryArr, option = { selfMongo:
   const { mongo, mongopythoninfo } = this.mother;
   try {
     const [ whereQuery, updateQuery ] = queryArr;
+    if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
+      throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
+    }
     let MONGOC;
     let selfBoo;
     if (option.selfMongo === undefined || option.selfMongo === null) {
@@ -285,7 +328,9 @@ BillMaker.prototype.updateBill = async function (queryArr, option = { selfMongo:
       MONGOC = option.selfMongo;
     }
 
-    await MONGOC.db(`miro81`).collection(`generalBill`).updateOne(whereQuery, { $set: updateQuery });
+    if (updateQuery !== null && Object.keys(updateQuery).length > 0) {
+      await MONGOC.db(`miro81`).collection(`generalBill`).updateOne(whereQuery, { $set: updateQuery });
+    }
 
     if (!selfBoo) {
       await MONGOC.close();
@@ -325,13 +370,18 @@ BillMaker.prototype.deleteBill = async function (bilid, option = { selfMongo: nu
   }
 }
 
-BillMaker.prototype.createStylingBill = async function (proid, desid, option = { selfMongo: null, selfCoreMongo: null }) {
+BillMaker.prototype.createStylingBill = async function (proid, desid, option = { selfMongo: null, selfCoreMongo: null, selfLocalMongo: null }) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  const { mongo, mongoinfo, mongopythoninfo, mongolocalinfo } = this.mother;
+  const constNames = {
+    class: BillMaker.billDictionary.styling.class,
+    name: BillMaker.billDictionary.styling.name,
+  };
+  const stylingItems = BillMaker.billDictionary.styling.items;
   try {
-    let MONGOC, MONGOCOREC;
-    let selfBoo, selfCoreBoo;
+    let MONGOC, MONGOCOREC, MONGOLOCALC;
+    let selfBoo, selfCoreBoo, selfLocalBoo;
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
     } else {
@@ -341,6 +391,11 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
       selfCoreBoo = false;
     } else {
       selfCoreBoo = true;
+    }
+    if (option.selfLocalMongo === undefined || option.selfLocalMongo === null) {
+      selfLocalBoo = false;
+    } else {
+      selfLocalBoo = true;
     }
 
     if (!selfBoo) {
@@ -355,23 +410,116 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
     } else {
       MONGOCOREC = option.selfCoreMongo;
     }
+    if (!selfLocalBoo) {
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      await MONGOLOCALC.connect();
+    } else {
+      MONGOLOCALC = option.selfLocalMongo;
+    }
 
     const project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
-    const client = await back.getProjectById(project.cliid, { selfMongo: MONGOCOREC });
-    
+    if (project === null) {
+      throw new Error("no project error");
+    }
+    const client = await back.getClientById(project.cliid, { selfMongo: MONGOCOREC });
+    if (client === null) {
+      throw new Error("no client error");
+    }
+    const targetProposal = project.selectProposal(desid);
+    if (targetProposal === null) {
+      throw new Error("invaild desid");
+    }
+    const { fee } = targetProposal;
+    if (fee.length === 0) {
+      throw new Error("invaild proposal");
+    }
+    const designerHistory = await back.getHistoryById("designer", desid, { selfMongo: MONGOLOCALC });
+    if (designerHistory === null) {
+      throw new Error("designer history error");
+    }
+    const members = await back.setMemberObj({ selfMongo: MONGOCOREC, getMode: true });
+    if (!Array.isArray(members) || members.length === 0) {
+      throw new Error("no member error");
+    }
+    let thisMember;
+    let bilid;
+    let whereQuery, updateQuery;
+    let tempObj, tempObj2;
 
+    thisMember = null;
+    for (let obj of members) {
+      if (obj.name === designerHistory.manager) {
+        thisMember = obj;
+      }
+    }
+    if (thisMember === null) {
+      thisMember = members[0];
+    }
 
+    var amount = 2000000;
+    bilid = "b2111_aa01s";
 
+    updateQuery = {};
+    updateQuery["class"] = constNames.class;
+    updateQuery["name"] = client.name + "_" + client.phone + "_" + constNames.name;
+    updateQuery["date"] = new Date();
 
+    tempObj = this.returnBillDummies("managers");
+    tempObj.name = thisMember.name;
+    tempObj.phone = thisMember.phone;
+    tempObj.email = thisMember.email[0];
+    updateQuery["participant.managers"] = [ JSON.parse(JSON.stringify(tempObj)) ];
 
+    updateQuery["participant.customer.name"] = client.name;
+    updateQuery["participant.customer.phone"] = client.phone;
+    updateQuery["participant.customer.email"] = client.email;
+    updateQuery["links.proid"] = project.proid;
+    updateQuery["links.cliid"] = client.cliid;
+    updateQuery["links.desid"] = desid;
 
+    tempObj = this.returnBillDummies("requests");
+    tempObj.id = bilid + "_r" + String(0);
+    tempObj.info.push({ address: client.requests[0].request.space.address });
+    tempObj.info.push({ pyeong: client.requests[0].request.space.pyeong });
 
+    for (let item of stylingItems) {
+      tempObj2 = JSON.parse(JSON.stringify(this.returnBillDummies("items")));
+      tempObj2.id = bilid + item.id;
+      tempObj2.class = item.class;
+      tempObj2.name = item.name;
+      tempObj2.description = item.description;
+      tempObj2.unit.ea = item.ea;
+      tempObj2.unit.price = amount * item.ratio;
+      tempObj2.unit.number = item.number;
+      tempObj2.amount.supply = amount * item.ratio * item.number;
+      tempObj2.amount.vat = amount * item.ratio * item.number * 0.1;
+      tempObj2.amount.consumer = amount * item.ratio * item.number * 1.1;
+      tempObj.items.push(tempObj2);
+    }
+
+    updateQuery["requests"] = [ tempObj ];
+
+    console.log(updateQuery);
+    console.log(updateQuery.requests[0]);
+
+    // for (let { method, partial, amount } of fee) {
+    //   bilid = await this.createBill({}, { selfMongo: MONGOC });
+    //   whereQuery = { bilid };
+    //   updateQuery = {};
+    //
+    //
+    //
+    //   await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+    // }
 
     if (!selfBoo) {
       await MONGOC.close();
     }
     if (!selfCoreBoo) {
       await MONGOCOREC.close();
+    }
+    if (!selfLocalBoo) {
+      await MONGOLOCALC.close();
     }
 
   } catch (e) {

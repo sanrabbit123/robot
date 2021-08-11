@@ -1229,6 +1229,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     let standardStart, standardEnd, standardRealEnd;
     let possibleRange, possibleRealRange;
     let possibleTempArr;
+    let possibleBoo;
 
     serid = null;
     xValue = null;
@@ -1321,37 +1322,43 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     standardRealEnd = new Date(standardEnd.getFullYear(), standardEnd.getMonth(), standardEnd.getDate());
     standardRealEnd.setDate(standardRealEnd.getDate() + secondDateNumber);
 
-    possibleRange = [];
-    while (standardStart.valueOf() < standardEnd.valueOf()) {
-      possibleRange.push(ytoken + String(standardStart.getFullYear()) + mtoken + String(standardStart.getMonth() + 1));
-      standardStart.setDate(standardStart.getDate() + 1);
-    }
-    possibleRange = Array.from(new Set(possibleRange));
-
-    possibleRealRange = [];
-    while (standardStart.valueOf() < standardRealEnd.valueOf()) {
-      possibleRealRange.push(ytoken + String(standardStart.getFullYear()) + mtoken + String(standardStart.getMonth() + 1));
-      standardStart.setDate(standardStart.getDate() + 1);
-    }
-    possibleRealRange = Array.from(new Set(possibleRealRange));
+    // possibleRange = [];
+    // while (standardStart.valueOf() < standardEnd.valueOf()) {
+    //   possibleRange.push(ytoken + String(standardStart.getFullYear()) + mtoken + String(standardStart.getMonth() + 1));
+    //   standardStart.setDate(standardStart.getDate() + 1);
+    // }
+    // possibleRange = Array.from(new Set(possibleRange));
+    //
+    // possibleRealRange = [];
+    // while (standardStart.valueOf() < standardRealEnd.valueOf()) {
+    //   possibleRealRange.push(ytoken + String(standardStart.getFullYear()) + mtoken + String(standardStart.getMonth() + 1));
+    //   standardStart.setDate(standardStart.getDate() + 1);
+    // }
+    // possibleRealRange = Array.from(new Set(possibleRealRange));
 
     realtimeMap = {};
-    for (let { desid, count } of realTimes) {
-      possibleTempArr = [];
-      for (let t of possibleRange) {
-        possibleTempArr.push(count[t] > 0);
+    for (let { desid, possible } of realTimes) {
+      realtimeMap[desid] = false;
+      for (let { start, end } of possible) {
+        possibleBoo = (start.valueOf() <= standardStart.valueOf() && standardEnd.valueOf() <= end.valueOf());
+        realtimeMap[desid] = possibleBoo;
+        if (possibleBoo) {
+          break;
+        }
       }
-      realtimeMap[desid] = possibleTempArr.every((b) => { return b === true; });
     }
 
     if (Object.values(realtimeMap).filter((b) => { return b === true; }).length === 0) {
       realtimeMap = {};
-      for (let { desid, count } of realTimes) {
-        possibleTempArr = [];
-        for (let t of possibleRealRange) {
-          possibleTempArr.push(count[t] > 0);
+      for (let { desid, possible } of realTimes) {
+        realtimeMap[desid] = false;
+        for (let { start, end } of possible) {
+          possibleBoo = (start.valueOf() <= standardEnd.valueOf() && standardRealEnd.valueOf() <= end.valueOf());
+          realtimeMap[desid] = possibleBoo;
+          if (possibleBoo) {
+            break;
+          }
         }
-        realtimeMap[desid] = possibleTempArr.every((b) => { return b === true; });
       }
     }
 
