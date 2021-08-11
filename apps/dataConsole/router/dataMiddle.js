@@ -81,7 +81,7 @@ MiddleCommunication.prototype.middleBinary = async function () {
   }
 }
 
-MiddleCommunication.prototype.baseHtml = async function (target, req) {
+MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo, selfLocalMongo) {
   const instance = this;
   const back = this.back;
   const { fileSystem } = this.mother;
@@ -115,7 +115,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
       return invaildCode;
     }
 
-    thisPerson = await (back[idMethod])(id);
+    thisPerson = await (back[idMethod])(id, { selfMongo });
     if (thisPerson === null) {
       throw new Error("There is no data, insert vaild id");
       return invaildCode;
@@ -157,6 +157,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req) {
 
   } catch (e) {
     console.log(target);
+    console.log(e.message);
     return `<!DOCTYPE html><html><head><title>Permission denied</title></head><body>error<script>alert("잘못된 접근입니다!");window.location.href = "https://home-liaison.com";</script></body></html>`;
   }
 }

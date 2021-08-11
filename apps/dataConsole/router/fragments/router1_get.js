@@ -32,7 +32,7 @@ DataRouter.prototype.baseMaker = function (target, mode = "first", req = null) {
 
     return new Promise(function(resolve, reject) {
       if (DataMiddle !== null) {
-        DataMiddle.baseHtml(target, req).then(function (html) {
+        DataMiddle.baseHtml(target, req, instance.mongo, instance.mongolocal).then(function (html) {
           resolve(html);
         }).catch(function (e) {
           reject(e);

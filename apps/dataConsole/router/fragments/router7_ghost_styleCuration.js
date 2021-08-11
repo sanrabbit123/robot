@@ -127,27 +127,29 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           updateQuery["service.online"] = false;
           updateQuery["proposal.detail"] = detailUpdate;
 
-          newProid = null;
-          back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo }).then((rows) => {
-            if (rows.length > 0) {
-              newProid = rows[0].proid;
-              return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
-            } else {
-              return back.createProject(updateQuery, { selfMongo: instance.mongo });
-            }
-          }).then((proid) => {
-            if (newProid === null) {
-              newProid = proid;
-            }
-            return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
-          }).then(() => {
-            return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
-          }).then(() => {
-            instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
-          }).catch((err) => {
-            console.log(err);
-            instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });
-          });
+          if (client.phone.trim() !== "010-2747-3403") {
+            newProid = null;
+            back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo }).then((rows) => {
+              if (rows.length > 0) {
+                newProid = rows[0].proid;
+                return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
+              } else {
+                return back.createProject(updateQuery, { selfMongo: instance.mongo });
+              }
+            }).then((proid) => {
+              if (newProid === null) {
+                newProid = proid;
+              }
+              return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+            }).then(() => {
+              return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
+            }).then(() => {
+              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
+            }).catch((err) => {
+              console.log(err);
+              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });
+            });
+          }
 
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ service: detailUpdate, client, history }));

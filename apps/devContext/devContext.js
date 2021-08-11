@@ -68,12 +68,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await work.proposalReset("p2108_aa29s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
+    // await work.proposalReset("p2108_aa29s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
 
 
 
-
-
+    
 
 
     // const matrix = [
