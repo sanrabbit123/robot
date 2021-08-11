@@ -29,6 +29,7 @@ module.exports = {
       };
     } else if (subject === "requests") {
       dummy = {
+        id: "",
         date: new Date(),
         status: "결제 요청",
         info: [],
@@ -171,6 +172,7 @@ module.exports = {
 
     class Request {
       constructor(json) {
+        this.id = json.id;
         this.date = json.date;
         this.status = json.status;
         this.info = new SeachArray(json.info);
@@ -180,6 +182,7 @@ module.exports = {
       }
       toNormal() {
         let obj = {};
+        obj.id = this.id;
         obj.date = this.date;
         obj.info = this.info.toNormal();
         obj.items = this.items.toNormal();
