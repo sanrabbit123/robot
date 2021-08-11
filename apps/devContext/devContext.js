@@ -64,11 +64,40 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await bill.createStylingBill("p2108_aa28s", "d2105_aa01s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
+    // await bill.createStylingBill("p2108_aa30s", "d2104_aa03s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
 
 
-    // const projects = await back.getProjectsByQuery({})
-    // console.log(projects[40].proposal.detail[0].fee)
+
+    await work.proposalReset("p2108_aa29s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
+
+
+
+
+
+
+
+    // const matrix = [
+    //   [ "c2108_aa43s", "s2011_aa02s", "p2108_aa23s" ],
+    // ]
+    // let detail;
+    // let update;
+    //
+    // for (let [ cliid, serid, proid ] of matrix) {
+    //   detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
+    //   update = [];
+    //   for (let d of detail) {
+    //     update.push(d.toNormal());
+    //   }
+    //   await back.updateProject([ { proid }, { "proposal.detail": update } ]);
+    //   console.log(update.length);
+    // }
+
+
+
+
+
+
+
 
 
     /*
@@ -136,21 +165,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const matrix = [
-    //   [ "c2108_aa43s", "s2011_aa02s", "p2108_aa23s" ],
-    // ]
-    // let detail;
-    // let update;
-    //
-    // for (let [ cliid, serid, proid ] of matrix) {
-    //   detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
-    //   update = [];
-    //   for (let d of detail) {
-    //     update.push(d.toNormal());
-    //   }
-    //   await back.updateProject([ { proid }, { "proposal.detail": update } ]);
-    //   console.log(update.length);
-    // }
+
 
 
 
@@ -779,8 +794,8 @@ DevContext.prototype.launching = async function () {
     // kakao test
     // const kakao = new KakaoTalk();
     // await kakao.ready();
-    // await kakao.sendTalk("outClientCuration", "배창규", "010-2747-3403", {
-    //   client: "배창규",
+    // await kakao.sendTalk("outOfClient", "임지민", "010-3412-1435", {
+    //   client: "임지민",
     //   host: "home-liaison.servehttp.com",
     //   path: "curation",
     //   cliid: "c2107_aa69s",

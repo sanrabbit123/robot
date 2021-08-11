@@ -2316,21 +2316,23 @@ GeneralJs.prototype.greenBar = function () {
           const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) - move;
           return ("translateX(" + String(newValue) + ea + ")");
         }
-        if (Number(targets[0].style.width.replace(/[^0-9]/g, '')) >= window.innerWidth - 20) {
-          for (let target of targets) {
-            if (target.style.transform === '') {
-              target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
-            } else {
-              target.style.transform = translateFunc(target.style.transform);
-            }
-            if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
-              target.style.transform = "translateX(0px)";
-              window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
-              GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
-            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
-              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
-              window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
-              GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
+        if (targets.length > 0) {
+          if (Number(targets[0].style.width.replace(/[^0-9]/g, '')) >= window.innerWidth - 20) {
+            for (let target of targets) {
+              if (target.style.transform === '') {
+                target.style.transform = "translateX(" + String(-1 * move) + ea + ")";
+              } else {
+                target.style.transform = translateFunc(target.style.transform);
+              }
+              if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+                target.style.transform = "translateX(0px)";
+                window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
+                GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
+              } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
+                target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
+                window.clearInterval(GeneralJs.timeouts["scrollXAreaLeftInterval"]);
+                GeneralJs.timeouts["scrollXAreaLeftInterval"] = null;
+              }
             }
           }
         }
@@ -2371,21 +2373,23 @@ GeneralJs.prototype.greenBar = function () {
           const newValue = Number(past.replace(/[^0-9\-\.]/g, '')) + move;
           return ("translateX(" + String(newValue) + ea + ")");
         }
-        if (Number(targets[0].style.width.replace(/[^0-9]/g, '')) >= window.innerWidth - 20) {
-          for (let target of targets) {
-            if (target.style.transform === '') {
-              target.style.transform = "translateX(" + String(move) + ea + ")";
-            } else {
-              target.style.transform = translateFunc(target.style.transform);
-            }
-            if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
-              target.style.transform = "translateX(0px)";
-              window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
-              GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
-            } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
-              target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
-              window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
-              GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
+        if (targets.length > 0) {
+          if (Number(targets[0].style.width.replace(/[^0-9]/g, '')) >= window.innerWidth - 20) {
+            for (let target of targets) {
+              if (target.style.transform === '') {
+                target.style.transform = "translateX(" + String(move) + ea + ")";
+              } else {
+                target.style.transform = translateFunc(target.style.transform);
+              }
+              if (Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) > 0) {
+                target.style.transform = "translateX(0px)";
+                window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
+                GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
+              } else if ((-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20))) > Number(target.style.transform.replace(/[^0-9\-\.]/g, '')) + instance.grayBarWidth) {
+                target.style.transform = "translateX(" + String(-1 * (Number(target.style.width.replace(/[^0-9]/g, '')) - (window.innerWidth - 20) + instance.grayBarWidth)) + ea + ")";
+                window.clearInterval(GeneralJs.timeouts["scrollXAreaRightInterval"]);
+                GeneralJs.timeouts["scrollXAreaRightInterval"] = null;
+              }
             }
           }
         }

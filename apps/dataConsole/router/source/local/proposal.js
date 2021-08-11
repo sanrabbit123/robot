@@ -110,14 +110,16 @@ ProposalJs.prototype.toggleSetting = {
 ProposalJs.below_events = {
   save: async function (e) {
     const result = await ProposalJs.save_init(false);
-    if (/fail/gi.test(result)) {
-      window.location.reload();
+    const removetargets = document.querySelectorAll(".saveLoading");
+    for (let dom of removetargets) {
+      document.body.removeChild(dom);
     }
   },
   update: async function (e) {
     const result = await ProposalJs.save_init(true);
-    if (/fail/gi.test(result)) {
-      window.location.reload();
+    const removetargets = document.querySelectorAll(".saveLoading");
+    for (let dom of removetargets) {
+      document.body.removeChild(dom);
     }
   },
   search: {
@@ -4569,6 +4571,7 @@ ProposalJs.save_init = async function (update = false) {
     [ loadingCancelBox, loadingLoadingIcon ] = createNodes([
       {
         mother: document.body,
+        class: [ "saveLoading" ],
         style: {
           position: "fixed",
           width: String(100) + '%',
@@ -4584,7 +4587,7 @@ ProposalJs.save_init = async function (update = false) {
         mother: document.body,
         mode: "svg",
         source: GeneralJs.prototype.returnLoading(),
-        class: [ "loading" ],
+        class: [ "loading", "saveLoading" ],
         style: {
           position: "fixed",
           width: String(loadingWidth) + "px",
@@ -4619,6 +4622,16 @@ ProposalJs.save_init = async function (update = false) {
         }
 
       }
+    } else {
+
+      target = document.getElementById("pp_firstprocess_box").children[0];
+      if (target.querySelector("#pp_title_sub_b") === null) {
+        alert("고객을 선택해주세요!");
+        return "fail";
+      } else {
+        result_obj["cliid"] = target.querySelector("#pp_title_sub_b").getAttribute("cus_id");
+      }
+
     }
 
     // 2 service

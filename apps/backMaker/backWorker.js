@@ -1431,4 +1431,86 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
   }
 }
 
+BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo: null, selfLocalBoo: null }) {
+  if (typeof cliid !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!/^[cp]/.test(cliid)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  try {
+    let selfMongo, selfLocalMongo;
+    let selfBoo, selfLocalBoo;
+    let detail, update;
+    let projects;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (option.selfLocalMongo === undefined || option.selfLocalMongo === null) {
+      selfLocalBoo = false;
+    } else {
+      selfLocalBoo = true;
+    }
+
+    if (!selfBoo) {
+      selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await selfMongo.connect();
+    } else {
+      selfMongo = option.selfMongo;
+    }
+
+    if (!selfLocalBoo) {
+      selfLocalMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      await selfLocalMongo.connect();
+    } else {
+      selfLocalMongo = option.selfLocalMongo;
+    }
+
+    projects = await back.getProjectsByQuery({ cliid }, { selfMongo });
+    update = [];
+    if (/^c/.test(cliid)) {
+      projects = await back.getProjectsByQuery({ cliid }, { selfMongo });
+    } else if (/^p/.test(cliid)) {
+      projects = await back.getProjectById(cliid, { selfMongo });
+      if (projects === null) {
+        projects = [];
+      } else {
+        projects = [ projects ];
+      }
+    } else {
+      throw new Error("invaild id");
+    }
+
+    if (projects.length > 0) {
+      const project = projects[0];
+      const { proid, cliid: id, service: { serid } } = project;
+
+      detail = await this.designerCuration(id, 6, [ serid ], { selfMongo, selfLocalMongo });
+      for (let d of detail) {
+        update.push(d.toNormal());
+      }
+      if (update.length > 0) {
+        await back.updateProject([ { proid }, { "proposal.detail": update } ], { selfMongo });
+      }
+    }
+
+    if (!selfBoo) {
+      await selfMongo.close();
+    }
+    if (!selfLocalBoo) {
+      await selfLocalMongo.close();
+    }
+
+    return update.length;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = BackWorker;

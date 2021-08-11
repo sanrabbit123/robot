@@ -27,8 +27,8 @@ BillMaker.billDictionary = {
         name: "디자인 용역비",
         description: "",
         ea: "식",
-        number: 1,
-        ratio: 0.8
+        number: (method, distance) => { return 1; },
+        amount: (method, amount, distance) => { return ((/^off/gi.test(method) ? amount - (distance.number * distance.amount) : amount) * 0.8) },
       },
       {
         id: "_idsg",
@@ -36,8 +36,8 @@ BillMaker.billDictionary = {
         name: "디자인 감리비",
         description: "",
         ea: "식",
-        number: 1,
-        ratio: 0.2
+        number: (method, distance) => { return 1; },
+        amount: (method, amount, distance) => { return ((/^off/gi.test(method) ? amount - (distance.number * distance.amount) : amount) * 0.2) },
       },
       {
         id: "_ites",
@@ -45,9 +45,13 @@ BillMaker.billDictionary = {
         name: "출장비",
         description: "",
         ea: "회",
-        number: 2,
-        ratio: 0
+        number: (method, distance) => { return (/^off/gi.test(method) ? distance.number : 0); },
+        amount: (method, amount, distance) => { return (/^off/gi.test(method) ? distance.amount : 0) },
       },
+    ],
+    comments: [
+      "스타일링 견적서에 대한 안내 문구입니다.",
+      "출장 횟수를 초과할 경우, 출장비가 추가 청구될 수 있습니다."
     ]
   },
 };
@@ -379,6 +383,8 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
     name: BillMaker.billDictionary.styling.name,
   };
   const stylingItems = BillMaker.billDictionary.styling.items;
+  const stylingComments = BillMaker.billDictionary.styling.comments;
+  const vatRatio = 0.1;
   try {
     let MONGOC, MONGOCOREC, MONGOLOCALC;
     let selfBoo, selfCoreBoo, selfLocalBoo;
@@ -456,61 +462,56 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
       thisMember = members[0];
     }
 
-    var amount = 2000000;
-    bilid = "b2111_aa01s";
+    for (let { method, partial, amount, distance } of fee) {
+      bilid = await this.createBill({}, { selfMongo: MONGOC });
+      whereQuery = { bilid };
 
-    updateQuery = {};
-    updateQuery["class"] = constNames.class;
-    updateQuery["name"] = client.name + "_" + client.phone + "_" + constNames.name;
-    updateQuery["date"] = new Date();
+      updateQuery = {};
+      updateQuery["class"] = constNames.class;
+      updateQuery["name"] = client.name + "_" + client.phone + "_" + constNames.name;
+      updateQuery["date"] = new Date();
 
-    tempObj = this.returnBillDummies("managers");
-    tempObj.name = thisMember.name;
-    tempObj.phone = thisMember.phone;
-    tempObj.email = thisMember.email[0];
-    updateQuery["participant.managers"] = [ JSON.parse(JSON.stringify(tempObj)) ];
+      tempObj = this.returnBillDummies("managers");
+      tempObj.name = thisMember.name;
+      tempObj.phone = thisMember.phone;
+      tempObj.email = thisMember.email[0];
+      updateQuery["participant.managers"] = [ JSON.parse(JSON.stringify(tempObj)) ];
 
-    updateQuery["participant.customer.name"] = client.name;
-    updateQuery["participant.customer.phone"] = client.phone;
-    updateQuery["participant.customer.email"] = client.email;
-    updateQuery["links.proid"] = project.proid;
-    updateQuery["links.cliid"] = client.cliid;
-    updateQuery["links.desid"] = desid;
+      updateQuery["participant.customer.name"] = client.name;
+      updateQuery["participant.customer.phone"] = client.phone;
+      updateQuery["participant.customer.email"] = client.email;
+      updateQuery["links.proid"] = project.proid;
+      updateQuery["links.cliid"] = client.cliid;
+      updateQuery["links.desid"] = desid;
 
-    tempObj = this.returnBillDummies("requests");
-    tempObj.id = bilid + "_r" + String(0);
-    tempObj.info.push({ address: client.requests[0].request.space.address });
-    tempObj.info.push({ pyeong: client.requests[0].request.space.pyeong });
+      tempObj = this.returnBillDummies("requests");
+      tempObj.id = bilid + "_r" + String(0);
+      tempObj.info.push({ address: client.requests[0].request.space.address.value });
+      tempObj.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+      tempObj.info.push({ method });
+      for (let item of stylingItems) {
+        tempObj2 = JSON.parse(JSON.stringify(this.returnBillDummies("items")));
+        tempObj2.id = bilid + item.id;
+        tempObj2.class = item.class;
+        tempObj2.name = item.name;
+        tempObj2.description = item.description;
+        tempObj2.unit.ea = item.ea;
+        tempObj2.unit.price = Math.round(item.amount(method, amount, distance));
+        tempObj2.unit.number = item.number(method, distance);
+        tempObj2.amount.supply = Math.round(tempObj2.unit.price * tempObj2.unit.number);
+        tempObj2.amount.vat = Math.round(tempObj2.amount.supply * vatRatio);
+        tempObj2.amount.consumer = Math.round(tempObj2.amount.supply * (1 + vatRatio));
+        tempObj.items.push(tempObj2);
+      }
+      updateQuery["requests"] = [ tempObj ];
 
-    for (let item of stylingItems) {
-      tempObj2 = JSON.parse(JSON.stringify(this.returnBillDummies("items")));
-      tempObj2.id = bilid + item.id;
-      tempObj2.class = item.class;
-      tempObj2.name = item.name;
-      tempObj2.description = item.description;
-      tempObj2.unit.ea = item.ea;
-      tempObj2.unit.price = amount * item.ratio;
-      tempObj2.unit.number = item.number;
-      tempObj2.amount.supply = amount * item.ratio * item.number;
-      tempObj2.amount.vat = amount * item.ratio * item.number * 0.1;
-      tempObj2.amount.consumer = amount * item.ratio * item.number * 1.1;
-      tempObj.items.push(tempObj2);
+      updateQuery["comments"] = [];
+      for (let c of stylingComments) {
+        updateQuery["comments"].push(c);
+      }
+
+      await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
     }
-
-    updateQuery["requests"] = [ tempObj ];
-
-    console.log(updateQuery);
-    console.log(updateQuery.requests[0]);
-
-    // for (let { method, partial, amount } of fee) {
-    //   bilid = await this.createBill({}, { selfMongo: MONGOC });
-    //   whereQuery = { bilid };
-    //   updateQuery = {};
-    //
-    //
-    //
-    //   await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-    // }
 
     if (!selfBoo) {
       await MONGOC.close();
