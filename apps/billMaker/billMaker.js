@@ -24,33 +24,36 @@ BillMaker.billDictionary = {
       {
         id: "_idte",
         class: "designerTime",
-        name: "디자인 용역비",
-        description: "",
-        ea: "식",
+        name: "디자인 인건비",
+        description: "디자이너가 인테리어 디자인 작업을 진행하는 비용입니다.",
+        ea: null,
         number: (method, distance) => { return 1; },
-        amount: (method, amount, distance) => { return ((/^off/gi.test(method) ? amount - (distance.number * distance.amount) : amount) * 0.8) },
+        amount: (method, amount, distance) => { return ((/^off/gi.test(method) ? amount - (distance.number * distance.amount) : amount) * 0.9) },
       },
       {
         id: "_idsg",
         class: "designSupervising",
         name: "디자인 감리비",
-        description: "",
-        ea: "식",
+        description: "디자이너가 자신의 디자인이 잘 구현되도록 세팅을 감리하는 비용입니다. (시공 감리 제외, 구매 대행 제외)",
+        ea: null,
         number: (method, distance) => { return 1; },
-        amount: (method, amount, distance) => { return ((/^off/gi.test(method) ? amount - (distance.number * distance.amount) : amount) * 0.2) },
+        amount: (method, amount, distance) => { return ((/^off/gi.test(method) ? amount - (distance.number * distance.amount) : amount) * 0.1) },
       },
       {
         id: "_ites",
         class: "travelExpenses",
         name: "출장비",
-        description: "",
+        description: "디자이너가 출장시 발생되는 왕복 비용입니다.",
         ea: "회",
         number: (method, distance) => { return (/^off/gi.test(method) ? distance.number : 0); },
         amount: (method, amount, distance) => { return (/^off/gi.test(method) ? distance.amount : 0) },
       },
     ],
     comments: [
-      "스타일링 견적서에 대한 안내 문구입니다.",
+      "디자인 인건비는 디자이너가 인테리어 디자인 작업을 진행하는 비용입니다.",
+      "디자인 감리비는 디자이너가 자신의 디자인이 잘 구현되도록 세팅을 감리하는 비용입니다.",
+      "디자인 감리는 시공 감리가 아니며, 시공 감리는 시공 진행시에 책임자가 달라질 수 있습니다.",
+      "디자인 감리에 구매 대행은 포함되지 않습니다. 디자이너는 구매 대행을 진행하지 않습니다.",
       "출장 횟수를 초과할 경우, 출장비가 추가 청구될 수 있습니다."
     ]
   },
@@ -374,10 +377,16 @@ BillMaker.prototype.deleteBill = async function (bilid, option = { selfMongo: nu
   }
 }
 
-BillMaker.prototype.createStylingBill = async function (proid, desid, option = { selfMongo: null, selfCoreMongo: null, selfLocalMongo: null }) {
+BillMaker.prototype.createStylingBill = async function (proid, option = { selfMongo: null, selfCoreMongo: null, selfConsoleMongo: null }) {
+  if (typeof proid !== "string") {
+    throw new Error("must be proid");
+  }
+  if (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid)) {
+    throw new Error("must be proid");
+  }
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo, mongolocalinfo } = this.mother;
+  const { mongo, mongoinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
   const constNames = {
     class: BillMaker.billDictionary.styling.class,
     name: BillMaker.billDictionary.styling.name,
@@ -386,8 +395,8 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
   const stylingComments = BillMaker.billDictionary.styling.comments;
   const vatRatio = 0.1;
   try {
-    let MONGOC, MONGOCOREC, MONGOLOCALC;
-    let selfBoo, selfCoreBoo, selfLocalBoo;
+    let MONGOC, MONGOCOREC, MONGOCONSOLEC;
+    let selfBoo, selfCoreBoo, selfConsoleBoo;
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
     } else {
@@ -398,10 +407,10 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
     } else {
       selfCoreBoo = true;
     }
-    if (option.selfLocalMongo === undefined || option.selfLocalMongo === null) {
-      selfLocalBoo = false;
+    if (option.selfConsoleMongo === undefined || option.selfConsoleMongo === null) {
+      selfConsoleBoo = false;
     } else {
-      selfLocalBoo = true;
+      selfConsoleBoo = true;
     }
 
     if (!selfBoo) {
@@ -416,13 +425,17 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
     } else {
       MONGOCOREC = option.selfCoreMongo;
     }
-    if (!selfLocalBoo) {
-      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-      await MONGOLOCALC.connect();
+    if (!selfConsoleBoo) {
+      MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      await MONGOCONSOLEC.connect();
     } else {
-      MONGOLOCALC = option.selfLocalMongo;
+      MONGOCONSOLEC = option.selfConsoleMongo;
     }
 
+    const members = await back.setMemberObj({ selfMongo: MONGOCOREC, getMode: true });
+    if (!Array.isArray(members) || members.length === 0) {
+      throw new Error("no member error");
+    }
     const project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
     if (project === null) {
       throw new Error("no project error");
@@ -431,49 +444,33 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
     if (client === null) {
       throw new Error("no client error");
     }
-    const targetProposal = project.selectProposal(desid);
-    if (targetProposal === null) {
-      throw new Error("invaild desid");
-    }
-    const { fee } = targetProposal;
-    if (fee.length === 0) {
-      throw new Error("invaild proposal");
-    }
-    const designerHistory = await back.getHistoryById("designer", desid, { selfMongo: MONGOLOCALC });
-    if (designerHistory === null) {
-      throw new Error("designer history error");
-    }
-    const members = await back.setMemberObj({ selfMongo: MONGOCOREC, getMode: true });
-    if (!Array.isArray(members) || members.length === 0) {
-      throw new Error("no member error");
-    }
+
+    let designerHistory;
     let thisMember;
     let bilid, bilidArr;
     let whereQuery, updateQuery;
     let tempObj, tempObj2;
-    let clientSelectMethod;
     let res;
 
-    thisMember = null;
-    for (let obj of members) {
-      if (obj.name === designerHistory.manager) {
-        thisMember = obj;
-      }
-    }
-    if (thisMember === null) {
-      thisMember = members[0];
-    }
-
-    clientSelectMethod = [];
-    if (option.method !== undefined && typeof option.method === "string" && [ "offline", "online" ].includes(option.method)) {
-      clientSelectMethod.push(option.method);
-    } else {
-      clientSelectMethod = [ "offline", "online" ];
-    }
-
     bilidArr = [];
-    for (let { method, partial, amount, distance } of fee) {
-      if (clientSelectMethod.includes(method.trim())) {
+    for (let { desid, fee } of project.proposal.detail) {
+
+      designerHistory = await back.getHistoryById("designer", desid, { selfMongo: MONGOCONSOLEC });
+      if (designerHistory === null) {
+        throw new Error("designer history error");
+      }
+
+      thisMember = null;
+      for (let obj of members) {
+        if (obj.name === designerHistory.manager) {
+          thisMember = obj;
+        }
+      }
+      if (thisMember === null) {
+        thisMember = members[0];
+      }
+
+      for (let { method, partial, amount, distance } of fee) {
         bilid = await this.createBill({}, { selfMongo: MONGOC });
         whereQuery = { bilid };
 
@@ -494,6 +491,7 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
         updateQuery["links.proid"] = project.proid;
         updateQuery["links.cliid"] = client.cliid;
         updateQuery["links.desid"] = desid;
+        updateQuery["links.method"] = method;
 
         tempObj = this.returnBillDummies("requests");
         tempObj.id = bilid + "_r" + String(0);
@@ -526,6 +524,7 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
           bilidArr.push(bilid);
         }
       }
+
     }
 
     if (!selfBoo) {
@@ -534,118 +533,11 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
     if (!selfCoreBoo) {
       await MONGOCOREC.close();
     }
-    if (!selfLocalBoo) {
-      await MONGOLOCALC.close();
+    if (!selfConsoleBoo) {
+      await MONGOCONSOLEC.close();
     }
 
     return bilidArr;
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-BillMaker.prototype.createConstructBill = async function (proid, option = { selfMongo: null, selfCoreMongo: null }) {
-  const instance = this;
-  const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
-  try {
-    let MONGOC, MONGOCOREC;
-    let selfBoo, selfCoreBoo;
-    if (option.selfMongo === undefined || option.selfMongo === null) {
-      selfBoo = false;
-    } else {
-      selfBoo = true;
-    }
-    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
-      selfCoreBoo = false;
-    } else {
-      selfCoreBoo = true;
-    }
-
-    if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
-      await MONGOC.connect();
-    } else {
-      MONGOC = option.selfMongo;
-    }
-    if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
-      await MONGOCOREC.connect();
-    } else {
-      MONGOCOREC = option.selfCoreMongo;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    if (!selfBoo) {
-      await MONGOC.close();
-    }
-    if (!selfCoreBoo) {
-      await MONGOCOREC.close();
-    }
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-BillMaker.prototype.createPhotoBill = async function (proid, option = { selfMongo: null, selfCoreMongo: null }) {
-  const instance = this;
-  const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
-  try {
-    let MONGOC, MONGOCOREC;
-    let selfBoo, selfCoreBoo;
-    if (option.selfMongo === undefined || option.selfMongo === null) {
-      selfBoo = false;
-    } else {
-      selfBoo = true;
-    }
-    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
-      selfCoreBoo = false;
-    } else {
-      selfCoreBoo = true;
-    }
-
-    if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
-      await MONGOC.connect();
-    } else {
-      MONGOC = option.selfMongo;
-    }
-    if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
-      await MONGOCOREC.connect();
-    } else {
-      MONGOCOREC = option.selfCoreMongo;
-    }
-
-
-
-
-
-
-
-
-
-
-
-    if (!selfBoo) {
-      await MONGOC.close();
-    }
-    if (!selfCoreBoo) {
-      await MONGOCOREC.close();
-    }
 
   } catch (e) {
     console.log(e);

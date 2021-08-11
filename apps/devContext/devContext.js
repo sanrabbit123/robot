@@ -62,11 +62,9 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-    // const option = { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC };
-
-    // await bill.createStylingBill("p2108_aa30s", "d1910_aa02s", option);
-
-    // console.log(await bill.getBillsByQuery({ "links.proid": "p2108_aa30s" }, option))
+    const option = { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC };
+    await bill.createStylingBill("p2108_aa30s", option);
+    console.log(await bill.getBillsByQuery({ "links.proid": "p2108_aa30s" }, option))
 
 
 

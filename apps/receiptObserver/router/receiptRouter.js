@@ -329,6 +329,29 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_createStylingBill = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  let obj = {};
+  obj.link = "/createStylingBill";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined) {
+        throw new Error("invaild post, must be { proid }");
+      }
+      const { proid } = req.body;
+      const bilidArr = await bill.createStylingBill(proid, { selfCoreMongo: instance.mongo, selfMongo: instance.mongolocal });
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify(bilidArr));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_createStylingBill) : " + e.message, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 
