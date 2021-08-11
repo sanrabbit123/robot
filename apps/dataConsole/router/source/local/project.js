@@ -604,7 +604,7 @@ ProjectJs.prototype.infoArea = function (info) {
             thisCase: thisCase
           });
 
-          await instance.globalChaining(thisCase, column, finalValue);
+          await instance.globalChaining(thisCase, column, finalValue, pastRawData);
 
           thisCase[column] = finalValue;
           if (GeneralJs.moneyBoo(column)) {
@@ -2703,7 +2703,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             thisCase: thisCaseOriginal,
           });
 
-          await instance.globalChaining(thisCase, column, finalValue);
+          await instance.globalChaining(thisCase, column, finalValue, pastRawData);
 
           if (instance.totalFather !== null) {
             for (let father of instance.totalFatherChildren) {
@@ -5564,11 +5564,11 @@ ProjectJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
-ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
+ProjectJs.prototype.globalChaining = async function (thisCase, column, value, pastValue) {
   const instance = this;
   try {
     const map = DataPatch.projectMap();
-    const realtimeDesigner = async function (thisCase, column, value) {
+    const realtimeDesigner = async function (thisCase, column, value, pastValue) {
       try {
         const { ajaxJson } = GeneralJs;
         const stringToDate = function (str) {
@@ -5709,7 +5709,7 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
         console.log(e);
       }
     }
-    const designerChange = async function (thisCase, column, value) {
+    const designerChange = async function (thisCase, column, value, pastValue) {
       try {
         const { ajaxJson, autoComma } = GeneralJs;
         const { proid } = thisCase;
@@ -5826,7 +5826,7 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value) {
     let tempFunction;
     if (dictionary[column] !== undefined) {
       tempFunction = dictionary[column];
-      await tempFunction(thisCase, column, value);
+      await tempFunction(thisCase, column, value, pastValue);
     }
   } catch (e) {
     console.log(e);

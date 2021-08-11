@@ -448,9 +448,11 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
       throw new Error("no member error");
     }
     let thisMember;
-    let bilid;
+    let bilid, bilidArr;
     let whereQuery, updateQuery;
     let tempObj, tempObj2;
+    let clientSelectMethod;
+    let res;
 
     thisMember = null;
     for (let obj of members) {
@@ -462,55 +464,68 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
       thisMember = members[0];
     }
 
+    clientSelectMethod = [];
+    if (option.method !== undefined && typeof option.method === "string" && [ "offline", "online" ].includes(option.method)) {
+      clientSelectMethod.push(option.method);
+    } else {
+      clientSelectMethod = [ "offline", "online" ];
+    }
+
+    bilidArr = [];
     for (let { method, partial, amount, distance } of fee) {
-      bilid = await this.createBill({}, { selfMongo: MONGOC });
-      whereQuery = { bilid };
+      if (clientSelectMethod.includes(method.trim())) {
+        bilid = await this.createBill({}, { selfMongo: MONGOC });
+        whereQuery = { bilid };
 
-      updateQuery = {};
-      updateQuery["class"] = constNames.class;
-      updateQuery["name"] = client.name + "_" + client.phone + "_" + constNames.name;
-      updateQuery["date"] = new Date();
+        updateQuery = {};
+        updateQuery["class"] = constNames.class;
+        updateQuery["name"] = client.name + "_" + client.phone + "_" + constNames.name;
+        updateQuery["date"] = new Date();
 
-      tempObj = this.returnBillDummies("managers");
-      tempObj.name = thisMember.name;
-      tempObj.phone = thisMember.phone;
-      tempObj.email = thisMember.email[0];
-      updateQuery["participant.managers"] = [ JSON.parse(JSON.stringify(tempObj)) ];
+        tempObj = this.returnBillDummies("managers");
+        tempObj.name = thisMember.name;
+        tempObj.phone = thisMember.phone;
+        tempObj.email = thisMember.email[0];
+        updateQuery["participant.managers"] = [ JSON.parse(JSON.stringify(tempObj)) ];
 
-      updateQuery["participant.customer.name"] = client.name;
-      updateQuery["participant.customer.phone"] = client.phone;
-      updateQuery["participant.customer.email"] = client.email;
-      updateQuery["links.proid"] = project.proid;
-      updateQuery["links.cliid"] = client.cliid;
-      updateQuery["links.desid"] = desid;
+        updateQuery["participant.customer.name"] = client.name;
+        updateQuery["participant.customer.phone"] = client.phone;
+        updateQuery["participant.customer.email"] = client.email;
+        updateQuery["links.proid"] = project.proid;
+        updateQuery["links.cliid"] = client.cliid;
+        updateQuery["links.desid"] = desid;
 
-      tempObj = this.returnBillDummies("requests");
-      tempObj.id = bilid + "_r" + String(0);
-      tempObj.info.push({ address: client.requests[0].request.space.address.value });
-      tempObj.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-      tempObj.info.push({ method });
-      for (let item of stylingItems) {
-        tempObj2 = JSON.parse(JSON.stringify(this.returnBillDummies("items")));
-        tempObj2.id = bilid + item.id;
-        tempObj2.class = item.class;
-        tempObj2.name = item.name;
-        tempObj2.description = item.description;
-        tempObj2.unit.ea = item.ea;
-        tempObj2.unit.price = Math.round(item.amount(method, amount, distance));
-        tempObj2.unit.number = item.number(method, distance);
-        tempObj2.amount.supply = Math.round(tempObj2.unit.price * tempObj2.unit.number);
-        tempObj2.amount.vat = Math.round(tempObj2.amount.supply * vatRatio);
-        tempObj2.amount.consumer = Math.round(tempObj2.amount.supply * (1 + vatRatio));
-        tempObj.items.push(tempObj2);
+        tempObj = this.returnBillDummies("requests");
+        tempObj.id = bilid + "_r" + String(0);
+        tempObj.info.push({ address: client.requests[0].request.space.address.value });
+        tempObj.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+        tempObj.info.push({ method });
+        for (let item of stylingItems) {
+          tempObj2 = JSON.parse(JSON.stringify(this.returnBillDummies("items")));
+          tempObj2.id = bilid + item.id;
+          tempObj2.class = item.class;
+          tempObj2.name = item.name;
+          tempObj2.description = item.description;
+          tempObj2.unit.ea = item.ea;
+          tempObj2.unit.price = Math.round(item.amount(method, amount, distance));
+          tempObj2.unit.number = item.number(method, distance);
+          tempObj2.amount.supply = Math.round(tempObj2.unit.price * tempObj2.unit.number);
+          tempObj2.amount.vat = Math.round(tempObj2.amount.supply * vatRatio);
+          tempObj2.amount.consumer = Math.round(tempObj2.amount.supply * (1 + vatRatio));
+          tempObj.items.push(tempObj2);
+        }
+        updateQuery["requests"] = [ tempObj ];
+
+        updateQuery["comments"] = [];
+        for (let c of stylingComments) {
+          updateQuery["comments"].push(c);
+        }
+
+        res = await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+        if (res === "success") {
+          bilidArr.push(bilid);
+        }
       }
-      updateQuery["requests"] = [ tempObj ];
-
-      updateQuery["comments"] = [];
-      for (let c of stylingComments) {
-        updateQuery["comments"].push(c);
-      }
-
-      await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
     }
 
     if (!selfBoo) {
@@ -522,6 +537,8 @@ BillMaker.prototype.createStylingBill = async function (proid, desid, option = {
     if (!selfLocalBoo) {
       await MONGOLOCALC.close();
     }
+
+    return bilidArr;
 
   } catch (e) {
     console.log(e);

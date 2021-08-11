@@ -62,37 +62,12 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
+    const option = { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC };
+
+    // await bill.createStylingBill("p2108_aa30s", "d1910_aa02s", option);
 
 
-    // await bill.createStylingBill("p2108_aa30s", "d2104_aa03s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
-
-
-
-    // await work.proposalReset("p2108_aa29s", { selfMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
-
-
-
-    
-
-
-    // const matrix = [
-    //   [ "c2108_aa43s", "s2011_aa02s", "p2108_aa23s" ],
-    // ]
-    // let detail;
-    // let update;
-    //
-    // for (let [ cliid, serid, proid ] of matrix) {
-    //   detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
-    //   update = [];
-    //   for (let d of detail) {
-    //     update.push(d.toNormal());
-    //   }
-    //   await back.updateProject([ { proid }, { "proposal.detail": update } ]);
-    //   console.log(update.length);
-    // }
-
-
-
+    console.log(await bill.getBillsByQuery({ "links.proid": "p2108_aa30s" }, option))
 
 
 

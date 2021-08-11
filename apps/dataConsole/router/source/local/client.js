@@ -589,7 +589,7 @@ ClientJs.prototype.infoArea = function (info) {
             thisCase: instance.cases[Number(idDom.getAttribute("index"))]
           });
 
-          await instance.globalChaining(instance.cases[Number(idDom.getAttribute("index"))], column, finalValue);
+          await instance.globalChaining(instance.cases[Number(idDom.getAttribute("index"))], column, finalValue, pastRawData);
 
           originalDiv.textContent = finalValue;
           idDom.setAttribute("active", "false");
@@ -2410,7 +2410,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             thisCase: instance.cases[thisCase["index"]],
           });
 
-          await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue);
+          await instance.globalChaining(instance.cases[thisCase["index"]], column, finalValue, pastRawData);
 
           if (instance.totalFather !== null) {
             for (let father of instance.totalFatherChildren) {
@@ -5013,12 +5013,12 @@ ClientJs.prototype.dashboardBox = function (option) {
 
 }
 
-ClientJs.prototype.globalChaining = async function (thisCase, column, value) {
+ClientJs.prototype.globalChaining = async function (thisCase, column, value, pastValue) {
   const instance = this;
   try {
     const map = DataPatch.clientMap();
     const dictionary = {
-      service: async function (thisCase, column, value) {
+      service: async function (thisCase, column, value, pastValue) {
         const cookies = GeneralJs.getCookiesAll();
         const { ajaxJson } = GeneralJs;
         const { cliid, service } = thisCase;
@@ -5044,13 +5044,24 @@ ClientJs.prototype.globalChaining = async function (thisCase, column, value) {
         } catch (e) {
           console.log(e);
         }
+      },
+      movein: async function (thisCase, column, value, pastValue) {
+        const { ajaxJson } = GeneralJs;
+        const { cliid } = thisCase;
+        try {
+          if (value !== pastValue) {
+            await ajaxJson({ cliid }, "/proposalReset");
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
     };
 
     let tempFunction;
     if (dictionary[column] !== undefined) {
       tempFunction = dictionary[column];
-      await tempFunction(thisCase, column, value);
+      await tempFunction(thisCase, column, value, pastValue);
     }
   } catch (e) {
     console.log(e);

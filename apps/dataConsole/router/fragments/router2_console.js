@@ -1630,6 +1630,44 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_proposalReset = function () {
+  const instance = this;
+  const back = this.back;
+  const work = this.work;
+  let obj = {};
+  obj.link = [ "/proposalReset" ];
+  obj.func = async function (req, res) {
+    try {
+      let id;
+      if (req.body.proid === undefined) {
+        id = req.body.cliid;
+      }
+      if (req.body.cliid === undefined) {
+        id = req.body.proid;
+      }
+      if (typeof id !== "string") {
+        throw new Error("invaild post");
+      }
+      if (!/^[cp]/.test(id)) {
+        throw new Error("invaild post");
+      }
+      
+      work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).then(() => {
+        //pass
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + req.url + " " + e.message, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_getMembers = function () {
   const instance = this;
   const { shell, shellLink } = this.mother;

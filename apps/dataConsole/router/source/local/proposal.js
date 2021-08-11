@@ -4737,7 +4737,9 @@ ProposalJs.save_init = async function (update = false) {
               if (result_obj["proposal.detail"][i].fee[f].method !== "online") {
                 result_obj["proposal.detail"][i].fee[f].distance.number = designerFeeCalculObj.detail.travel.number;
               }
-              result_obj["proposal.detail"][i].fee[f].distance.amount = (designerFeeCalculObj.detail.offline - designerFeeCalculObj.detail.online) / designerFeeCalculObj.detail.travel.number;
+              if (designerFeeCalculObj.detail.offline !== 0) {
+                result_obj["proposal.detail"][i].fee[f].distance.amount = (designerFeeCalculObj.detail.offline - designerFeeCalculObj.detail.online) / designerFeeCalculObj.detail.travel.number;
+              }
             }
           }
         }

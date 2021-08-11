@@ -18,7 +18,32 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       });
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + e.message, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_designerProposal_createBill = function () {
+  const instance = this;
+  const back = this.back;
+  const work = this.work;
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const bill = new BillMaker();
+  let obj = {};
+  obj.link = "/designerProposal_createBill";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined || req.body.desid === undefined || req.body.method === undefined) {
+        throw new Error("invaild post, must be { proid, desid, method }");
+      }
+      const { proid, desid, method } = req.body;
+      const bilidArr = await bill.createStylingBill(proid, desid, { selfCoreMongo: instance.mongo, selfLocalMongo: instance.mongolocal, method });
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify(bilidArr));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_createBill) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }

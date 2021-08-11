@@ -2214,6 +2214,44 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_proposalReset = function () {
+  const instance = this;
+  const back = this.back;
+  const work = this.work;
+  let obj = {};
+  obj.link = [ "/proposalReset" ];
+  obj.func = async function (req, res) {
+    try {
+      let id;
+      if (req.body.proid === undefined) {
+        id = req.body.cliid;
+      }
+      if (req.body.cliid === undefined) {
+        id = req.body.proid;
+      }
+      if (typeof id !== "string") {
+        throw new Error("invaild post");
+      }
+      if (!/^[cp]/.test(id)) {
+        throw new Error("invaild post");
+      }
+      
+      work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).then(() => {
+        //pass
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + req.url + " " + e.message, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_getMembers = function () {
   const instance = this;
   const { shell, shellLink } = this.mother;
@@ -3845,7 +3883,32 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       });
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + e.message, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_designerProposal_createBill = function () {
+  const instance = this;
+  const back = this.back;
+  const work = this.work;
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const bill = new BillMaker();
+  let obj = {};
+  obj.link = "/designerProposal_createBill";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined || req.body.desid === undefined || req.body.method === undefined) {
+        throw new Error("invaild post, must be { proid, desid, method }");
+      }
+      const { proid, desid, method } = req.body;
+      const bilidArr = await bill.createStylingBill(proid, desid, { selfCoreMongo: instance.mongo, selfLocalMongo: instance.mongolocal, method });
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify(bilidArr));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_createBill) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -4006,27 +4069,29 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           updateQuery["service.online"] = false;
           updateQuery["proposal.detail"] = detailUpdate;
 
-          newProid = null;
-          back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo }).then((rows) => {
-            if (rows.length > 0) {
-              newProid = rows[0].proid;
-              return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
-            } else {
-              return back.createProject(updateQuery, { selfMongo: instance.mongo });
-            }
-          }).then((proid) => {
-            if (newProid === null) {
-              newProid = proid;
-            }
-            return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
-          }).then(() => {
-            return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
-          }).then(() => {
-            instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
-          }).catch((err) => {
-            console.log(err);
-            instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });
-          });
+          if (client.phone.trim() !== "010-2747-3403") {
+            newProid = null;
+            back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo }).then((rows) => {
+              if (rows.length > 0) {
+                newProid = rows[0].proid;
+                return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
+              } else {
+                return back.createProject(updateQuery, { selfMongo: instance.mongo });
+              }
+            }).then((proid) => {
+              if (newProid === null) {
+                newProid = proid;
+              }
+              return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+            }).then(() => {
+              return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
+            }).then(() => {
+              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
+            }).catch((err) => {
+              console.log(err);
+              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });
+            });
+          }
 
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ service: detailUpdate, client, history }));
