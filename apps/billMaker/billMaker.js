@@ -449,8 +449,11 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     let thisMember;
     let bilid, bilidArr;
     let whereQuery, updateQuery;
-    let tempObj, tempObj2;
+    let tempObj, tempObj2, tempArr;
     let res;
+    let temp;
+    let updateMode;
+    let thisBill;
 
     bilidArr = [];
     for (let { desid, fee } of project.proposal.detail) {
@@ -471,7 +474,24 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
       }
 
       for (let { method, partial, amount, distance } of fee) {
-        bilid = await this.createBill({}, { selfMongo: MONGOC });
+
+        temp = await this.getBillsByQuery({
+          $and: [
+            { "links.proid": project.proid },
+            { "links.cliid": client.cliid },
+            { "links.desid": desid },
+            { "links.method": method },
+          ]
+        }, { selfMongo: MONGOC });
+        if (temp.length === 0) {
+          bilid = await this.createBill({}, { selfMongo: MONGOC });
+          updateMode = false;
+        } else {
+          thisBill = temp[0].bilid;
+          bilid = thisBill.bilid;
+          updateMode = true;
+        }
+
         whereQuery = { bilid };
 
         updateQuery = {};
@@ -494,7 +514,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         updateQuery["links.method"] = method;
 
         tempObj = this.returnBillDummies("requests");
-        tempObj.id = bilid + "_r" + String(0);
+        tempObj.id = bilid + "_r" + String(updateMode ? thisBill.requests.length : 0);
         tempObj.info.push({ address: client.requests[0].request.space.address.value });
         tempObj.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
         tempObj.info.push({ method });
@@ -512,7 +532,13 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
           tempObj2.amount.consumer = Math.round(tempObj2.amount.supply * (1 + vatRatio));
           tempObj.items.push(tempObj2);
         }
-        updateQuery["requests"] = [ tempObj ];
+        if (!updateMode) {
+          updateQuery["requests"] = [ tempObj ];
+        } else {
+          tempArr = thisBill.requests.toNormal();
+          tempArr.unshift(tempObj);
+          updateQuery["requests"] = tempArr;
+        }
 
         updateQuery["comments"] = [];
         for (let c of stylingComments) {

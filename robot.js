@@ -207,6 +207,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
     const path = "designerProposal";
     const { host } = this.address.homeinfo.ghost;
+    const { requestSystem } = this.mother;
     const proid = arg;
     let kakaoInstance, cliid, name, phone;
     return new Promise(function (resolve, reject) {
@@ -227,6 +228,8 @@ Robot.prototype.proposalMaker = function (button, arg) {
         return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": (new Date()) } ]);
       }).then(function () {
         return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 피드백 예정" } ]);
+      }).then(function () {
+        return requestSystem("https://" + instance.address.pythoninfo.host + ":3000/createStylingBill", { proid }, { headers: { "Content-Type": "application/json" } });
       }).then(function () {
         instance.mother.slack_bot.chat.postMessage({ text: name + " 고객님께 제안서 알림톡을 전송하였습니다!\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
         console.log("web proposal done", name, phone, proid);
