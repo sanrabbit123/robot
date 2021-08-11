@@ -617,7 +617,8 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
               name: "address",
               type: "address",
               half: false,
-              required: false,
+              required: true,
+              rewind: "스타일링 받으실 곳의 주소를 정확히 입력해주세요 :)",
               question: [
                 "<b%스타일링 받으실 곳의 주소가 맞나요?%b>",
                 "아니라면, 스타일링 받을 곳으로 고쳐주세요!"
