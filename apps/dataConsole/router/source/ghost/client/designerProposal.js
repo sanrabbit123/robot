@@ -4020,7 +4020,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
           }
         });
       } else {
-        window.alert("자동 큐레이션을 진행하신 고객님은 유선 확인 후 결제를 진행하실 수 있습니다! 금일 홈리에종 CX팀이 전화드릴 예정입니다!");
+        window.alert("자동 큐레이션을 진행하신 고객님은 유선 확인 후 결제를 진행하실 수 있습니다! 영업일 기준 12시간 내로 홈리에종 CX팀이 전화드릴 예정입니다!");
       }
     });
 
