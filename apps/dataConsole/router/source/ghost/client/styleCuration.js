@@ -2100,17 +2100,31 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   });
                   GeneralJs.stacks["addressEvent"] = async function (e) {
                     try {
-                      self.value = e.data.trim();
-                      instance.values[x][y].value = self.value.trim();
-                      ajaxJson({
-                        page: "styleCuration",
-                        mode: "update",
-                        cliid: instance.client.cliid,
-                        update: { x, y, value: instance.values[x][y].value },
-                        updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                      }, "/ghostClient_updateAnalytics").catch((err) => {
-                        console.log(err);
-                      });
+
+                      const inspectionArr = await ajaxJson({
+                        mode: "inspection",
+                        addressArr: [ { id: instance.client.cliid, address: e.data.trim() } ],
+                        liteMode: false,
+                      }, "/parsingAddress");
+
+                      if (inspectionArr.length !== 0) {
+                        window.alert("주소가 잘못되었습니다! 주소를 표준 주소 체계 형식으로 고쳐주세요!\n(팝업의 검색 기능을 활용해주세요!)");
+                        self.value = "";
+                        instance.values[x][y].value = "";
+                      } else {
+
+                        self.value = e.data.trim();
+                        instance.values[x][y].value = self.value.trim();
+                        await ajaxJson({
+                          page: "styleCuration",
+                          mode: "update",
+                          cliid: instance.client.cliid,
+                          update: { x, y, value: instance.values[x][y].value },
+                          updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
+                        }, "/ghostClient_updateAnalytics");
+
+                      }
+
                       removeTargets = targetMother.querySelectorAll("aside");
                       for (let t of removeTargets) {
                         targetMother.removeChild(t);
@@ -2144,16 +2158,26 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     e.stopPropagation();
                     const x = this.getAttribute("x");
                     const y = Number(this.getAttribute("y"));
-                    instance.values[x][y].value = self.value.trim();
-                    ajaxJson({
-                      page: "styleCuration",
-                      mode: "update",
-                      cliid: instance.client.cliid,
-                      update: { x, y, value: instance.values[x][y].value },
-                      updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                    }, "/ghostClient_updateAnalytics").catch((err) => {
-                      console.log(err);
-                    });
+                    const inspectionArr = await ajaxJson({
+                      mode: "inspection",
+                      addressArr: [ { id: instance.client.cliid, address: self.value.trim() } ],
+                      liteMode: false,
+                    }, "/parsingAddress");
+
+                    if (inspectionArr.length !== 0) {
+                      window.alert("주소가 잘못되었습니다! 주소를 표준 주소 체계 형식으로 고쳐주세요!\n(팝업의 검색 기능을 활용해주세요!)");
+                      self.value = "";
+                    } else {
+                      instance.values[x][y].value = self.value.trim();
+                      await ajaxJson({
+                        page: "styleCuration",
+                        mode: "update",
+                        cliid: instance.client.cliid,
+                        update: { x, y, value: instance.values[x][y].value },
+                        updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
+                      }, "/ghostClient_updateAnalytics");
+                    }
+
                   }
                 } catch (e) {
                   console.log(e);

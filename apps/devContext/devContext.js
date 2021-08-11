@@ -62,12 +62,11 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-    const option = { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC };
+    // const option = { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC };
 
     // await bill.createStylingBill("p2108_aa30s", "d1910_aa02s", option);
 
-
-    console.log(await bill.getBillsByQuery({ "links.proid": "p2108_aa30s" }, option))
+    // console.log(await bill.getBillsByQuery({ "links.proid": "p2108_aa30s" }, option))
 
 
 
@@ -89,25 +88,19 @@ DevContext.prototype.launching = async function () {
     let tempArr;
     let sheetsId;
 
-    matrix = [ [ "디자이너 이름", "경력", "페이퍼 워크", "구매 대행", "설치 제공", "정리 수납", "홈리에종 관계", "인기도", "가산점", "증가율" ] ];
+    matrix = [ [ "디자이너 이름", "경력", "페이퍼 워크", "홈리에종 관계", "인기도", "가산점", "증가율" ] ];
     for (let designer of designers) {
 
       tempArr = [];
       tempArr.push(designer.designer);
 
-      thisDesignerCareerStart = new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1);
+      thisDesignerCareerStart = new Date(designer.information.business.career.startY - Math.floor(designer.information.business.career.relatedY / 3), designer.information.business.career.startM - 1, 1);
 
       alpha = 0;
-      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 2 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 1 : 0);
-      tempArr.push(thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 2 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 1 : 0));
-      alpha += designer.analytics.project.paperWork.values.includes("3D") ? 2 : ((designer.analytics.project.paperWork.values.length >= 4) ? 1 : 0);
-      tempArr.push(designer.analytics.project.paperWork.values.includes("3D") ? 2 : ((designer.analytics.project.paperWork.values.length >= 4) ? 1 : 0));
-      alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0;
-      tempArr.push(designer.analytics.purchase.agencies ? (1 / 3) : 0);
-      alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0;
-      tempArr.push(designer.analytics.purchase.setting.install ? (1 / 3) : 0);
-      alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0;
-      tempArr.push(designer.analytics.purchase.setting.storage ? (1 / 3) : 0);
+      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1.5 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 0.75 : 0);
+      tempArr.push(thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1.5 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 0.75 : 0));
+      alpha += designer.analytics.project.paperWork.values.includes("3D") ? 1.5 : ((designer.analytics.project.paperWork.values.length >= 4) ? 0.75 : 0);
+      tempArr.push(designer.analytics.project.paperWork.values.includes("3D") ? 1.5 : ((designer.analytics.project.paperWork.values.length >= 4) ? 0.75 : 0));
 
       homeliaison = 0;
       for (let { value } of designer.analytics.etc.personality) {
@@ -117,8 +110,8 @@ DevContext.prototype.launching = async function () {
       }
       relationItems = designer.analytics.etc.relation.items;
       homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation.value);
-      alpha += (homeliaison * (2 / 7));
-      tempArr.push((homeliaison * (2 / 7)));
+      alpha += (homeliaison * (4.5 / 7));
+      tempArr.push((homeliaison * (4.5 / 7)));
 
       //인기도
       alpha += 0.5;
@@ -131,9 +124,9 @@ DevContext.prototype.launching = async function () {
       matrix.push(tempArr);
     }
 
-    // sheetsId = await sheets.create_newSheets_inPython("디자이너별 가산점", "0B7youNEnMPEfOEJHM3NYRk0zQk0");
-    // await sheets.setting_cleanView_inPython(sheetsId);
-    await sheets.update_value_inPython("1N3aKMPbRlTzu_NbSCmr9C_jT4wcmhnyL-BusBybDTwM", "", matrix);
+    sheetsId = await sheets.create_newSheets_inPython("디자이너별 가산점 새로운 버전", "0B7youNEnMPEfOEJHM3NYRk0zQk0");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
 
     */
 

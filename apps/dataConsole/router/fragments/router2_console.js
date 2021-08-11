@@ -1651,7 +1651,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
       if (!/^[cp]/.test(id)) {
         throw new Error("invaild post");
       }
-      
+
       work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).then(() => {
         //pass
       }).catch((err) => {
@@ -2422,7 +2422,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
           throw new Error("must be addressArr");
         }
         const addressArr = JSON.parse(req.body.addressArr);
-        const liteMode = req.body.liteMode === undefined ? true : (typeof req.body.liteMode === "string" ? req.body.liteMode === "true" : req.body.liteMode);
+        const liteMode = req.body.liteMode === undefined ? false : (typeof req.body.liteMode === "string" ? req.body.liteMode === "true" : req.body.liteMode);
         for (let obj of addressArr) {
           if (obj.id === undefined || obj.address === undefined) {
             throw new Error("invaild address array => [ { id, address }... ]");
