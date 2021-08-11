@@ -67,13 +67,8 @@ DevContext.prototype.launching = async function () {
     // await bill.createStylingBill("p2108_aa28s", "d2105_aa01s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfLocalMongo: this.MONGOLOCALC });
 
 
-
-
-
-
-
-
-
+    // const projects = await back.getProjectsByQuery({})
+    // console.log(projects[40].proposal.detail[0].fee)
 
 
     /*
@@ -141,21 +136,21 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const matrix = [
-      [ "c2108_aa43s", "s2011_aa02s", "p2108_aa23s" ],
-    ]
-    let detail;
-    let update;
-
-    for (let [ cliid, serid, proid ] of matrix) {
-      detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
-      update = [];
-      for (let d of detail) {
-        update.push(d.toNormal());
-      }
-      await back.updateProject([ { proid }, { "proposal.detail": update } ]);
-      console.log(update.length);
-    }
+    // const matrix = [
+    //   [ "c2108_aa43s", "s2011_aa02s", "p2108_aa23s" ],
+    // ]
+    // let detail;
+    // let update;
+    //
+    // for (let [ cliid, serid, proid ] of matrix) {
+    //   detail = await work.designerCuration(cliid, 6, [ serid ], { selfMongo: instance.MONGOC, selfLocalMongo: instance.MONGOLOCALC });
+    //   update = [];
+    //   for (let d of detail) {
+    //     update.push(d.toNormal());
+    //   }
+    //   await back.updateProject([ { proid }, { "proposal.detail": update } ]);
+    //   console.log(update.length);
+    // }
 
 
 

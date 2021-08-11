@@ -10,12 +10,30 @@ class Fees extends Array {
     }
     return arr;
   }
+  reset() {
+    if (this.length > 0) {
+      this.splice(0, this.length);
+    }
+  }
+}
+
+const FeeDistance = function (json) {
+  this.number = json.number;
+  this.amount = json.amount;
+}
+
+FeeDistance.prototype.toNormal = function () {
+  let obj = {};
+  obj.number = this.number;
+  obj.amount = this.amount;
+  return obj;
 }
 
 const Fee = function (json) {
   this.method = json.method;
   this.partial = json.partial;
   this.amount = json.amount;
+  this.distance = new FeeDistance(json.distance);
 }
 
 Fee.prototype.toNormal = function () {
@@ -23,6 +41,7 @@ Fee.prototype.toNormal = function () {
   obj.method = this.method;
   obj.partial = this.partial;
   obj.amount = this.amount;
+  obj.distance = this.distance.toNormal();
   return obj;
 }
 
@@ -100,6 +119,27 @@ Proposal.prototype.toNormal = function () {
   obj.pictureSettings = this.pictureSettings.toNormal();
   obj.description = this.description.toNormal();
   return obj;
+}
+
+Proposal.prototype.resetFee = function () {
+  this.fee.reset();
+}
+
+Proposal.prototype.appendFee = function (method, amount, number = 0, distanceAmount = 0) {
+  if (typeof method !== "string" || typeof amount !== "number") {
+    throw new Error("invaild input");
+  }
+  let tempInstance;
+  tempInstance = new Fee({
+    method: (/off/gi.test(method) ? "offline" : "online"),
+    partial: false,
+    amount: amount,
+    distance: {
+      number: number,
+      amount: distanceAmount
+    }
+  });
+  this.fee.push(tempInstance);
 }
 
 const ProjectProposal = function (json) {

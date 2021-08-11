@@ -108,6 +108,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
           updateQuery = {};
           updateQuery["desid"] = "";
           updateQuery["proposal.status"] = "작성중";
+          updateQuery["proposal.date"] = new Date();
           updateQuery["cliid"] = cliid;
           updateQuery["service.serid"] = history.curation.service.serid[0];
           if (service === null) {

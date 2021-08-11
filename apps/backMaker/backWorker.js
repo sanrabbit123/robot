@@ -1261,15 +1261,15 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
             feeObject = await instance.getDesignerFee(obj.desid, cliid, serid, xValue, { selfMongo: option.selfMongo, selfLocalMongo: option.selfLocalMongo });
             obj.resetFee();
             if (feeObject.detail.offline !== feeObject.detail.online) {
-              obj.appendFee("offline", feeObject.detail.offline);
+              obj.appendFee("offline", feeObject.detail.offline, feeObject.detail.offline, feeObject.detail.travel.number, feeObject.detail.distance);
               designer = designers.search(obj.desid);
               if (designer !== null) {
                 if (designer.analytics.project.online) {
-                  obj.appendFee("online", feeObject.detail.online);
+                  obj.appendFee("online", feeObject.detail.online, 0, feeObject.detail.distance);
                 }
               }
             } else {
-              obj.appendFee("offline", feeObject.detail.offline);
+              obj.appendFee("offline", feeObject.detail.offline, 0, feeObject.detail.distance);
             }
             if (feeObject.detail.online !== 0) {
               newArr.push(obj);
