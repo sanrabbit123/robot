@@ -272,10 +272,9 @@ BackMaker.prototype.idMaker = function (pastId, generalMode = true) {
 
   let thisId;
   let year, month, date, dateString;
-  let initial, endInitial;
+  let initial;
 
   initial = pastId.slice(0, 1);
-  endInitial = pastId.slice(-1);
 
   year = today.getFullYear();
   month = today.getMonth() + 1;
@@ -291,9 +290,9 @@ BackMaker.prototype.idMaker = function (pastId, generalMode = true) {
     }
 
     if (pastId.slice(1, 5) === dateString) {
-      thisId = initial + dateString + '_' + orderSystem("encode", orderSystem("decode", pastId) + 1) + endInitial;
+      thisId = initial + dateString + '_' + orderSystem("encode", orderSystem("decode", pastId) + 1);
     } else {
-      thisId = initial + dateString + '_' + orderSystem("encode", 1) + endInitial;
+      thisId = initial + dateString + '_' + orderSystem("encode", 1);
     }
 
     return thisId;
@@ -330,9 +329,9 @@ BackMaker.prototype.idMaker = function (pastId, generalMode = true) {
     dateString += dateEncode(date - 1);
 
     if (pastId.slice(1, 5) === dateString) {
-      thisId = initial + dateString + '_' + orderSystem("encode", orderSystem("decode", pastId) + 1) + endInitial;
+      thisId = initial + dateString + '_' + orderSystem("encode", orderSystem("decode", pastId) + 1);
     } else {
-      thisId = initial + dateString + '_' + orderSystem("encode", 1) + endInitial;
+      thisId = initial + dateString + '_' + orderSystem("encode", 1);
     }
 
     return thisId;

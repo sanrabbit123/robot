@@ -662,9 +662,9 @@ ResourceMaker.prototype.portfolio_modeling = async function (conidArr, proid, cl
     }
 
     if (conidTargetArr.length === 0) {
-      tempObj.conid = ("t" + todayString.slice(2, 4) + todayString.slice(5, 7) + "_aa01s");
+      tempObj.conid = ("t" + todayString.slice(2, 4) + todayString.slice(5, 7) + "_" + orderSystem("encode", 1));
     } else {
-      tempObj.conid = ("t" + todayString.slice(2, 4) + todayString.slice(5, 7) + "_" + orderSystem("encode", (orderSystem("decode", conidTargetArr[0]) + 1)) + "s");
+      tempObj.conid = ("t" + todayString.slice(2, 4) + todayString.slice(5, 7) + "_" + orderSystem("encode", (orderSystem("decode", conidTargetArr[0]) + 1)));
     }
 
     this.final = tempObj;
