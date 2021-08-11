@@ -1268,7 +1268,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
 
             if (feeObject.detail.offline !== feeObject.detail.online) {
               if (feeObject.detail.offline !== 0) {
-                obj.appendFee("offline", feeObject.detail.offline, feeObject.detail.offline, feeObject.detail.travel.number, feeObject.detail.distance);
+                obj.appendFee("offline", feeObject.detail.offline, feeObject.detail.travel.number, feeObject.detail.distance);
                 designer = designers.search(obj.desid);
                 if (designer !== null) {
                   if (designer.analytics.project.online) {
