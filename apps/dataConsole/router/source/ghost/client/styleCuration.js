@@ -2025,7 +2025,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                 const grandMother = targetMother.parentNode.parentNode.parentNode;
                 const x = this.getAttribute("x");
                 const y = Number(this.getAttribute("y"));
-                let addressFrame, removeTargets, inspectionArr;
+                let addressFrame, removeTargets;
                 grandMother.style.overflow = "";
                 if (targetMother.querySelector("aside") === null) {
                   this.style.zIndex = String(2);
@@ -2103,16 +2103,15 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
                       const inspectionArr = await ajaxJson({
                         mode: "inspection",
-                        addressArr: [ { id: instance.client.cliid, address: e.data.trim() } ],
+                        addressArr: [ { id: instance.client.cliid, address: e.data.trim().replace(/[\<\>\[\]\&\=\{\}\:\$]/gi, '') } ],
                         liteMode: false,
                       }, "/parsingAddress");
 
                       if (inspectionArr.length !== 0) {
                         window.alert("주소가 잘못되었습니다! 주소를 표준 주소 체계 형식으로 고쳐주세요!\n(팝업의 검색 기능을 활용해주세요!)");
                         self.value = "";
-                        instance.values[x][y].value = "";
+                        instance.values[x][y].value = null;
                       } else {
-
                         self.value = e.data.trim();
                         instance.values[x][y].value = self.value.trim();
                         await ajaxJson({
@@ -2122,7 +2121,6 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                           update: { x, y, value: instance.values[x][y].value },
                           updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
                         }, "/ghostClient_updateAnalytics");
-
                       }
 
                       removeTargets = targetMother.querySelectorAll("aside");
@@ -2158,24 +2156,30 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     e.stopPropagation();
                     const x = this.getAttribute("x");
                     const y = Number(this.getAttribute("y"));
-                    const inspectionArr = await ajaxJson({
-                      mode: "inspection",
-                      addressArr: [ { id: instance.client.cliid, address: self.value.trim() } ],
-                      liteMode: false,
-                    }, "/parsingAddress");
 
-                    if (inspectionArr.length !== 0) {
-                      window.alert("주소가 잘못되었습니다! 주소를 표준 주소 체계 형식으로 고쳐주세요!\n(팝업의 검색 기능을 활용해주세요!)");
+                    if (self.value.trim() === '') {
                       self.value = "";
+                      instance.values[x][y].value = null;
                     } else {
-                      instance.values[x][y].value = self.value.trim();
-                      await ajaxJson({
-                        page: "styleCuration",
-                        mode: "update",
-                        cliid: instance.client.cliid,
-                        update: { x, y, value: instance.values[x][y].value },
-                        updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
-                      }, "/ghostClient_updateAnalytics");
+                      const inspectionArr = await ajaxJson({
+                        mode: "inspection",
+                        addressArr: [ { id: instance.client.cliid, address: self.value.trim().replace(/[\<\>\[\]\&\=\{\}\:\$]/gi, '') } ],
+                        liteMode: false,
+                      }, "/parsingAddress");
+                      if (inspectionArr.length !== 0) {
+                        window.alert("주소가 잘못되었습니다! 주소를 표준 주소 체계 형식으로 고쳐주세요!\n(팝업의 검색 기능을 활용해주세요!)");
+                        self.value = "";
+                        instance.values[x][y].value = null;
+                      } else {
+                        instance.values[x][y].value = self.value.trim();
+                        await ajaxJson({
+                          page: "styleCuration",
+                          mode: "update",
+                          cliid: instance.client.cliid,
+                          update: { x, y, value: instance.values[x][y].value },
+                          updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
+                        }, "/ghostClient_updateAnalytics");
+                      }
                     }
 
                   }
