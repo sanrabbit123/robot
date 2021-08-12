@@ -2636,10 +2636,12 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       }
                       this.setAttribute("toggle", "off");
                     } else if (limitNum > limitStandard.limit) {
-                      for (let dom of children) {
-                        dom.style.color = dom.getAttribute("deactive");
+                      if (count) {
+                        for (let dom of children) {
+                          dom.style.color = dom.getAttribute("deactive");
+                        }
+                        this.setAttribute("toggle", "off");
                       }
-                      this.setAttribute("toggle", "off");
                     } else {
                       if (!half || (half && !limitStandard.extra)) {
                         for (let dom of children) {

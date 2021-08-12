@@ -55,20 +55,100 @@ const UniversalEstimationJs = function () {
 
 UniversalEstimationJs.binaryPath = "/middle/estimation";
 
+UniversalEstimationJs.prototype.billWordings = function () {
+  const instance = this;
+  const { client, designer, media, bill } = this;
+  const { dateToString, autoComma } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const { analytics, request } = client.requests[0];
+  const spendDates = (Number(String(analytics.response.service.serid).split('_')[1].replace(/[^0-9]/gi, '')) + 1) * 15;
+  let start, end;
+  let wordings;
+  let tempArr;
+  let sum0, sum1;
+  end = analytics.date.space.movein;
+  start = new Date(end.getFullYear(), end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds());
+  start.setDate(start.getDate() - spendDates);
+  wordings = {
+    mainTitle: [
+      designer.designer + " 디자이너",
+      "<b%홈스타일링 비용 내역%b>",
+    ],
+    subTitle: [
+      "<b%현장명%b> : " + request.space.address,
+      "<b%예상 기간%b> : " + dateToString(start) + " ~ " + dateToString(end),
+    ],
+    column: [
+      "품명",
+      "설명",
+      "단위",
+      "수량",
+      "단가",
+      "공급가",
+      "소비자가"
+    ],
+    items: [],
+    sum: {},
+    comments: [],
+    button: "결제 안내"
+  };
+  sum0 = 0;
+  sum1 = 0;
+  for (let obj of bill.requests[0].items) {
+    tempArr = [];
+    tempArr.push(obj.name);
+    tempArr.push(obj.description);
+    tempArr.push(obj.unit.ea === null ? '-' : obj.unit.ea);
+    tempArr.push(autoComma(obj.unit.number));
+    tempArr.push(autoComma(obj.unit.price));
+    tempArr.push(autoComma(obj.amount.supply));
+    tempArr.push(autoComma(obj.amount.consumer));
+    wordings.items.push(tempArr);
+    sum0 += obj.amount.supply;
+    sum1 += obj.amount.consumer;
+  }
+  wordings.sum.supply = autoComma(sum0);
+  wordings.sum.consumer = autoComma(sum1);
+  wordings.comments = bill.comments
+  return wordings;
+}
+
 UniversalEstimationJs.prototype.insertInitBox = function () {
   const instance = this;
   const { client, designer, ea, baseTong, media, bill } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  const wordings = this.billWordings();
   let whiteBlock, whiteTong;
   let blockHeight;
   let margin;
   let blockMarginBottom;
+  let titleBox;
+  let titleFontSize, titleFontWeight, titleFontBottom;
+  let titlePadding, titlePaddingMargin;
+  let initWordingSize, initWordingWidth;
+  let titleBarTopVisual, titleBarBottomVisual;
+  let subTitleBoxTop;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
+
+  titleFontSize = <%% 32, 31, 29, 26, 5.7 %%>;
+  titleFontWeight = <%% 400, 400, 400, 400, 400 %%>;
+  titleFontBottom = <%% 2, 2, 2, 2, 2 %%>;
+  titlePadding = <%% 6, 6, 6, 6, 6 %%>;
+  titlePaddingMargin = <%% 18, 18, 18, 18, 18 %%>;
+
+  titleBarTopVisual = <%% 10, 10, 10, 10, 10 %%>;
+  titleBarBottomVisual = <%% 6, 6, 6, 6, 6 %%>;
+
+  initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  initWordingWidth = <%% 300, 300, 300, 300, 300 %%>;
+
+  subTitleBoxTop = <%% 42, 42, 42, 42, 42 %%>;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -95,10 +175,76 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
+  titleBox = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+    },
+    children: [
+      {
+        text: wordings.mainTitle[0],
+        style: {
+          position: "relative",
+          fontSize: String(titleFontSize) + ea,
+          fontWeight: String(titleFontWeight),
+          color: colorChip.black,
+          marginBottom: String(titleFontBottom) + ea,
+          paddingLeft: String(titlePadding + titlePaddingMargin) + ea,
+        },
+        bold: {
+          fontWeight: String(600),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: wordings.mainTitle[1],
+        style: {
+          position: "relative",
+          fontSize: String(titleFontSize) + ea,
+          fontWeight: String(titleFontWeight),
+          color: colorChip.black,
+          paddingLeft: String(titlePadding + titlePaddingMargin) + ea,
+        },
+        bold: {
+          fontWeight: String(600),
+          color: colorChip.black,
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          left: String(0),
+          width: String(titlePadding) + ea,
+          borderRadius: String(3) + "px",
+          height: withOut(titleBarTopVisual + titleBarBottomVisual, ea),
+          background: colorChip.gray2,
+          top: String(titleBarTopVisual) + ea,
+        }
+      },
+      {
+        text: wordings.subTitle.join("\n"),
+        style: {
+          position: "absolute",
+          right: String(0),
+          top: String(subTitleBoxTop) + ea,
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(initWordingWidth) + ea,
+          color: colorChip.black,
+          lineHeight: String(1.6),
+          textAlign: "right",
+        },
+        bold: {
+          color: colorChip.black,
+          fontWeight: String(600),
+        }
+      }
+    ]
+  });
+
+  console.log(wordings);
 
 
-  console.log(bill)
-  
 
 
 }
