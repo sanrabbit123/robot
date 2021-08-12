@@ -3212,12 +3212,12 @@ StyleCurationJs.prototype.parsingValues = function () {
 
   center = this.wordings.centerWordings;
 
-  this.valuesConvert(false).then(() => {
+  this.valuesConvert(true).then((valuesCopied) => {
     coreQuery = {};
     historyQuery = {};
     for (let obj of center) {
       for (let i = 0; i < obj.children.length; i++) {
-        temp = obj.children[i].update(this.values[obj.name][i].value, this.values, this.client);
+        temp = obj.children[i].update(valuesCopied[obj.name][i].value, valuesCopied, this.client);
         if (temp.history !== null) {
           for (let j in temp.history) {
             historyQuery[j] = temp.history[j];
@@ -3250,24 +3250,23 @@ StyleCurationJs.prototype.parsingValues = function () {
       return ajaxJson({ cliid: instance.client.cliid, historyQuery, coreQuery, mode: "calculation" }, "/styleCuration_updateCalculation");
     } else {
       window.alert("사진 전송에 문제가 생겼습니다! 200MB 이하의 파일로 다시 시도해주세요!");
-      window.location.reload();
-      return new Promise((resolve, reject) => { resolve({}); });
+      return new Promise((resolve, reject) => { resolve({ promisePass: true }); });
     }
   }).then((obj) => {
-    if (Object.keys(obj).length === 0) {
-      window.alert("오류가 발생하였습니다!");
-      window.reload();
+    if (typeof obj !== "object" || Object.keys(obj).length === 0) {
+      throw new Error("promise error");
+    } else if (obj.promisePass === true) {
+      return new Promise((resolve, reject) => { resolve({ promisePass: true }); });
     } else {
       const { service, client, history } = obj;
 
       if (service.length === 0) {
         if (returnGet().mode === "lite") {
           window.alert("매칭되는 경우가 없어 진행할 수 없습니다. 홈리에종에 카카오 채널 또는 전화를 통해 문의해주세요!");
-          throw new Error("promise error");
         } else {
           window.alert("매칭되는 경우가 없습니다, 생각하는 시공 정도를 조정해주세요!");
-          throw new Error("promise error");
         }
+        return new Promise((resolve, reject) => { resolve({ promisePass: true }); });
       }
 
       instance.client = client;
@@ -3290,8 +3289,7 @@ StyleCurationJs.prototype.parsingValues = function () {
       });
 
       if (finalSerid.length === 0) {
-        window.alert("오류가 발생하였습니다!");
-        window.reload();
+        throw new Error("promise error");
       } else {
         grayLoading.remove();
         GeneralJs.scrollTo(window, 0);
@@ -3304,7 +3302,11 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }).then((obj) => {
     if (obj.message !== "done") {
-      throw new Error("promise error");
+      grayLoading.remove();
+      GeneralJs.scrollTo(window, 0);
+      return new Promise((resolve, reject) => {
+        resolve("done");
+      });
     } else {
       return instance.serviceConverting(finalSerid);
     }
@@ -4270,9 +4272,16 @@ StyleCurationJs.prototype.insertPannelBox = function () {
                 }
               }
               if (pass) {
-                GeneralJs.setTimeout(() => {
-                  instance.parsingValues();
-                }, 0);
+                instance.mother.certificationBox(instance.client.name, instance.client.phone, async function (back, box) {
+                  try {
+                    await GeneralJs.sleep(500);
+                    document.body.removeChild(box);
+                    document.body.removeChild(back);
+                    instance.parsingValues();
+                  } catch (e) {
+                    console.log(e);
+                  }
+                });
               }
 
             }

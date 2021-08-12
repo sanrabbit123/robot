@@ -1635,12 +1635,12 @@ DataRouter.prototype.rou_post_proposalReset = function () {
   const back = this.back;
   const work = this.work;
   const address = this.address;
-  const { requestSystem } = this.mother;
+  const { requestSystem, ghostRequest } = this.mother;
   let obj = {};
   obj.link = [ "/proposalReset", "/proposalCreate" ];
   obj.func = async function (req, res) {
     try {
-      let id;
+      let id, historyObj;
       if (req.body.proid === undefined) {
         id = req.body.cliid;
       }
@@ -1664,16 +1664,25 @@ DataRouter.prototype.rou_post_proposalReset = function () {
         if (/^c/.test(id)) {
           if (typeof req.body.serid === "string") {
             if (/^s[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(req.body.serid)) {
-              requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", {
-                cliid: id,
-                historyQuery: { "curation.service.serid": [ req.body.serid ] },
-                coreQuery: {},
-                mode: "create"
-              }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
-                //pass
-              }).catch((err) => {
-                console.log(err);
-              });
+
+              historyObj = await back.getHistoryById("client", id, { selfMongo: instance.mongolocal });
+              if (historyObj !== null && historyObj.curation.image.length > 0) {
+                requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", {
+                  cliid: id,
+                  historyQuery: { "curation.service.serid": [ req.body.serid ] },
+                  coreQuery: {},
+                  mode: "create"
+                }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
+                  //pass
+                }).catch((err) => {
+                  console.log(err);
+                });
+              } else {
+                ghostRequest("/voice", { text: id + " 고객님은 스타일 체크를 진행하지 않아 자동으로 제안서를 만들 수 없습니다!" }).catch((err) => {
+                  console.log(err);
+                });
+              }
+
             }
           }
         }

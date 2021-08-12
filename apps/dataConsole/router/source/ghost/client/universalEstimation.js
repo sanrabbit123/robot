@@ -57,101 +57,16 @@ UniversalEstimationJs.binaryPath = "/middle/estimation";
 
 UniversalEstimationJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { client, ea, baseTong, media } = this;
+  const { client, designer, ea, baseTong, media, bill } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip } = GeneralJs;
   let whiteBlock, whiteTong;
-  let blockHeight, bottomMargin;
-  let margin;
-
-  blockHeight = <%% 444, 424, 390, 335, 424 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      height: desktop ? String(blockHeight - (margin * 2)) + ea : "auto",
-      background: colorChip.white,
-      paddingTop: String(desktop ? margin : 9) + ea,
-      paddingBottom: String(desktop ? margin : 10.5) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    children: [
-      {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
-      }
-    ]
-  });
-  whiteTong = whiteBlock.firstChild;
-
-
-}
-
-UniversalEstimationJs.prototype.insertWordsBox = function () {
-  const instance = this;
-  const { client, ea, baseTong, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
-  let whiteBlock, whiteTong;
-  let blockHeight, bottomMargin;
-  let margin;
-
-  blockHeight = <%% 444, 424, 390, 335, 424 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      height: desktop ? String(blockHeight - (margin * 2)) + ea : "auto",
-      background: colorChip.white,
-      paddingTop: String(desktop ? margin : 9) + ea,
-      paddingBottom: String(desktop ? margin : 10.5) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
-    },
-    children: [
-      {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
-      }
-    ]
-  });
-  whiteTong = whiteBlock.firstChild;
-
-
-}
-
-UniversalEstimationJs.prototype.insertPannelBox = function () {
-  const instance = this;
-  const { client, ea, baseTong, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
-  let whiteBlock, whiteTong;
-  let blockHeight, bottomMargin;
+  let blockHeight;
   let margin;
   let blockMarginBottom;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
@@ -165,9 +80,8 @@ UniversalEstimationJs.prototype.insertPannelBox = function () {
       background: colorChip.white,
       paddingTop: String(desktop ? margin : 9) + ea,
       paddingBottom: String(desktop ? margin : 10.5) + ea,
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
       marginBottom: String(blockMarginBottom) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
     children: [
       {
@@ -182,6 +96,11 @@ UniversalEstimationJs.prototype.insertPannelBox = function () {
   whiteTong = whiteBlock.firstChild;
 
 
+
+  console.log(bill)
+  
+
+
 }
 
 UniversalEstimationJs.prototype.launching = async function (loading) {
@@ -191,34 +110,45 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
-    let clients, client;
-
     if (getObj.needs === undefined || getObj.cliid === undefined) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
-
     const { needs, cliid } = getObj;
     const [ kind, desid, proid, method ] = needs.split(',');
+    let clients, client;
+    let designers, designer;
+    let bills, bill;
+
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
+    designers = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
+    if (designers.length === 0) {
+      alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+
     client = clients[0];
     this.client = client;
+    designer = designers[0];
+    this.designer = designer;
 
-    console.log(kind, cliid, desid, proid, method);
-
-    const bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, PYTHONHOST + "/generalBill", { equal: true });
+    bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, PYTHONHOST + "/generalBill", { equal: true });
     if (bills.length === 0) {
       alert("견적서가 없습니다! 홈리에종에 문의해주세요!");
       window.location.href = this.frontPage;
     }
-    const bill = new StylingBill(bills[0]);
-    this.bill = bill;
-    this.class = kind;
-    console.log(bill)
+    if (kind === "style") {
+      bill = new StylingBill(bills[0]);
+      this.bill = bill;
+      this.class = kind;
+    } else {
+      alert("아직 구축되지 않은 영역입니다!");
+      window.location.href = this.frontPage;
+    }
 
     await this.mother.ghostClientLaunching({
       name: "universalEstimation",
@@ -231,8 +161,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       local: async () => {
         try {
           instance.insertInitBox();
-          instance.insertWordsBox();
-          instance.insertPannelBox();
         } catch (e) {
           console.log(e);
         }
