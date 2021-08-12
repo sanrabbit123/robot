@@ -103,7 +103,7 @@ BridgeCloud.returnTimeline = function () {
 
 BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
   const instance = this;
-  const { shell, slack_bot, shellLink, googleSystem } = this.mother;
+  const { shell, slack_bot, shellLink, googleSystem, ghostRequest } = this.mother;
   try {
     const { tong, folder } = obj;
     let tongKeys = Object.keys(tong);
@@ -134,6 +134,9 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
       message += "console : " + "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid + "\n";
       message += "drive : " + "https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
+      ghostRequest("/voice", { text: obj.cliid + " 고객님의 새로운 파일이 전송되었어요. 서버와 슬렉을 확인해주세요!" }).catch((err) => {
+        console.log(err);
+      });
 
     } else if (obj.mode === "designer") {
       already = await instance.back.getAspirantsByQuery({ phone: obj.phone });
