@@ -1336,6 +1336,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       let managerIdArr;
       let managerToObj;
       let managerTargetArr;
+      let page, query, dummy, cookies;
 
       for (let member of members) {
         if (member.email.includes(email)) {
@@ -1385,6 +1386,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           updateQuery[column] = value;
         }
         await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+        historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
       } else {
         whereQuery = {};
         whereQuery[standard] = id;
@@ -1430,6 +1432,27 @@ DataRouter.prototype.rou_post_updateHistory = function () {
             }
           }
         }
+      }
+
+      if (typeof req.body.send === "string" && /Client/gi.test(req.url)) {
+        page = req.body.send.split('_')[0];
+        query = req.body.send.split('_').length > 1 ? req.body.send.split('_')[1] : null;
+        cookies = DataRouter.cookieParsing(req);
+        dummy = {
+          page,
+          date: new Date(),
+          mode: query,
+          who: {
+            name: cookies.homeliaisonConsoleLoginedName,
+            email: cookies.homeliaisonConsoleLoginedEmail
+          }
+        };
+        if (Array.isArray(historyObj.curation.analytics.send)) {
+          historyObj.curation.analytics.send.push(dummy);
+        } else {
+          historyObj.curation.analytics.send = [ dummy ];
+        }
+        await back.updateHistory("client", [ { cliid: id }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
       }
 
       res.set("Content-Type", "application/json");
@@ -1595,6 +1618,10 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
 
         const { proid } = req.body;
         const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid + "&mode=test";
+        const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+        const cliid = thisProject.cliid;
+        let page, cookies, dummy, historyObj;
+
         await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
         if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
           const { year, month, date, hour, minute, second } = req.body;
@@ -1620,6 +1647,31 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         } else {
           throw new Error("invaild post")
         }
+
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        if (historyObj === null) {
+          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+          historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        }
+
+        page = "designerProposal";
+        cookies = DataRouter.cookieParsing(req);
+        dummy = {
+          page,
+          date: new Date(),
+          mode: null,
+          who: {
+            name: cookies.homeliaisonConsoleLoginedName,
+            email: cookies.homeliaisonConsoleLoginedEmail
+          }
+        };
+        if (Array.isArray(historyObj.curation.analytics.send)) {
+          historyObj.curation.analytics.send.push(dummy);
+        } else {
+          historyObj.curation.analytics.send = [ dummy ];
+        }
+        await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
+
       }
 
     } catch (e) {

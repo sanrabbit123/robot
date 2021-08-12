@@ -5112,6 +5112,7 @@ ClientJs.prototype.communicationRender = function () {
               column: "curation.service.serid",
               value: [ serid ],
               email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              send: "styleCuration_general",
             }, "/updateClientHistory");
 
             await ajaxJson({
@@ -5174,6 +5175,7 @@ ClientJs.prototype.communicationRender = function () {
               column: "curation.service.serid",
               value: [ serid ],
               email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              send: "styleCuration_lite",
             }, "/updateClientHistory");
 
             await ajaxJson({

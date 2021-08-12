@@ -442,9 +442,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         //to mongo
         console.log(requestObj);
-        if (requestObj["phone"] !== "010-2747-3403") {
+        if (!instance.ignorePhone.includes(requestObj["phone"])) {
           if (!pastInfo_boo) {
             cliid = await instance.back.createClient(requestObj, { selfMongo: MONGOC });
+            await instance.back.createHistory("client", { cliid: cliid, space: "최초 고객이 적은 주소 : " + requestObj["requests.0.request.space.address"] }, { fromConsole: true });
           } else {
             await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, requestObj ], { selfMongo: MONGOC });
             cliid = ifOverlap[0].cliid;
@@ -481,7 +482,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         }
 
         //send slack message
-        if (requestObj["phone"] !== "010-2747-3403") {
+        if (!instance.ignorePhone.includes(requestObj["phone"])) {
           thisClientArr = await instance.back.getClientsByQuery({ phone: requestObj["phone"] }, { withTools: true, selfMongo: MONGOC });
           thisClient = thisClientArr[0];
 
@@ -526,7 +527,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         });
 
         // to slack
-        if (requestObj["phone"] !== "010-2747-3403") {
+        if (!instance.ignorePhone.includes(requestObj["phone"])) {
           slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
         } else {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });

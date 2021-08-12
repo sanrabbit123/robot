@@ -1920,6 +1920,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       let managerIdArr;
       let managerToObj;
       let managerTargetArr;
+      let page, query, dummy, cookies;
 
       for (let member of members) {
         if (member.email.includes(email)) {
@@ -1969,6 +1970,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           updateQuery[column] = value;
         }
         await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+        historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
       } else {
         whereQuery = {};
         whereQuery[standard] = id;
@@ -2014,6 +2016,27 @@ DataRouter.prototype.rou_post_updateHistory = function () {
             }
           }
         }
+      }
+
+      if (typeof req.body.send === "string" && /Client/gi.test(req.url)) {
+        page = req.body.send.split('_')[0];
+        query = req.body.send.split('_').length > 1 ? req.body.send.split('_')[1] : null;
+        cookies = DataRouter.cookieParsing(req);
+        dummy = {
+          page,
+          date: new Date(),
+          mode: query,
+          who: {
+            name: cookies.homeliaisonConsoleLoginedName,
+            email: cookies.homeliaisonConsoleLoginedEmail
+          }
+        };
+        if (Array.isArray(historyObj.curation.analytics.send)) {
+          historyObj.curation.analytics.send.push(dummy);
+        } else {
+          historyObj.curation.analytics.send = [ dummy ];
+        }
+        await back.updateHistory("client", [ { cliid: id }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
       }
 
       res.set("Content-Type", "application/json");
@@ -2179,6 +2202,10 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
 
         const { proid } = req.body;
         const proposalLink = "https://" + ADDRESS.homeinfo.ghost.host + "/middle/designerProposal?proid=" + proid + "&mode=test";
+        const thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+        const cliid = thisProject.cliid;
+        let page, cookies, dummy, historyObj;
+
         await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
         if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
           const { year, month, date, hour, minute, second } = req.body;
@@ -2204,6 +2231,31 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         } else {
           throw new Error("invaild post")
         }
+
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        if (historyObj === null) {
+          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+          historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        }
+
+        page = "designerProposal";
+        cookies = DataRouter.cookieParsing(req);
+        dummy = {
+          page,
+          date: new Date(),
+          mode: null,
+          who: {
+            name: cookies.homeliaisonConsoleLoginedName,
+            email: cookies.homeliaisonConsoleLoginedEmail
+          }
+        };
+        if (Array.isArray(historyObj.curation.analytics.send)) {
+          historyObj.curation.analytics.send.push(dummy);
+        } else {
+          historyObj.curation.analytics.send = [ dummy ];
+        }
+        await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
+
       }
 
     } catch (e) {
@@ -4015,6 +4067,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
       if (req.body.cliid === undefined || req.body.historyQuery === undefined || req.body.coreQuery === undefined || req.body.mode === undefined) {
         throw new Error("invaild post");
       }
+      const passPromise = () => { return new Promise((resolve, reject) => { resolve(null); }); }
       const cliid = req.body.cliid;
       const historyQuery = equalJson(req.body.historyQuery);
       const coreQuery = equalJson(req.body.coreQuery);
@@ -4078,8 +4131,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             newProid = null;
             back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo }).then((rows) => {
               if (rows.length > 0) {
-                newProid = rows[0].proid;
-                return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
+                newProid = null;
+                return passPromise();
               } else {
                 return back.createProject(updateQuery, { selfMongo: instance.mongo });
               }
@@ -4089,9 +4142,23 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               }
               return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
             }).then(() => {
-              return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
+              if (newProid !== null) {
+                return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ]);
+              } else {
+                return passPromise();
+              }
             }).then(() => {
-              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
+              if (newProid !== null) {
+                return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
+              } else {
+                return passPromise();
+              }
+            }).then(() => {
+              if (newProid !== null) {
+                return instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
+              } else {
+                return passPromise();
+              }
             }).catch((err) => {
               console.log(err);
               instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });

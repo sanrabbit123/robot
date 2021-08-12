@@ -81,15 +81,17 @@ UniversalEstimationJs.prototype.billWordings = function () {
     ],
     column: [
       "품명",
-      "설명",
-      "단위",
       "수량",
       "단가",
+      "수량",
+      "단위",
       "공급가",
+      "VAT",
       "소비자가"
     ],
     items: [],
     sum: {},
+    commentsTitle: "<b%*%b> 유의 사항",
     comments: [],
     button: "결제 안내"
   };
@@ -98,11 +100,11 @@ UniversalEstimationJs.prototype.billWordings = function () {
   for (let obj of bill.requests[0].items) {
     tempArr = [];
     tempArr.push(obj.name);
-    tempArr.push(obj.description);
-    tempArr.push(obj.unit.ea === null ? '-' : obj.unit.ea);
-    tempArr.push(autoComma(obj.unit.number));
     tempArr.push(autoComma(obj.unit.price));
+    tempArr.push(autoComma(obj.unit.number));
+    tempArr.push(obj.unit.ea === null ? '-' : obj.unit.ea);
     tempArr.push(autoComma(obj.amount.supply));
+    tempArr.push(autoComma(obj.amount.vat));
     tempArr.push(autoComma(obj.amount.consumer));
     wordings.items.push(tempArr);
     sum0 += obj.amount.supply;
@@ -128,16 +130,32 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let titleBox;
   let titleFontSize, titleFontWeight, titleFontBottom;
   let titlePadding, titlePaddingMargin;
-  let initWordingSize, initWordingWidth;
+  let initWordingSize, initWordingWeight;
   let titleBarTopVisual, titleBarBottomVisual;
   let subTitleBoxTop;
+  let table;
+  let tableMarginTop;
+  let items, itemsRatio, itemsLength, itemsLengthConverted, itemsLengthSum;
+  let item;
+  let tempArr;
+  let itemBar;
+  let itemBarLeft;
+  let itemBarTop, itemBarBottom;
+  let tablePaddingTop;
+  let tablePaddingBottom;
+  let barPaddingBottom;
+  let barMarginBottom;
+  let sumBox;
+  let grayMarginTop0, grayMarginTop1;
+  let cautionBox;
+  let cautionTitleBox, cautionContentsBox;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
   titleFontSize = <%% 32, 31, 29, 26, 5.7 %%>;
-  titleFontWeight = <%% 400, 400, 400, 400, 400 %%>;
+  titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
   titleFontBottom = <%% 2, 2, 2, 2, 2 %%>;
   titlePadding = <%% 6, 6, 6, 6, 6 %%>;
   titlePaddingMargin = <%% 18, 18, 18, 18, 18 %%>;
@@ -146,9 +164,50 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   titleBarBottomVisual = <%% 6, 6, 6, 6, 6 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
-  initWordingWidth = <%% 300, 300, 300, 300, 300 %%>;
+  initWordingWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   subTitleBoxTop = <%% 42, 42, 42, 42, 42 %%>;
+
+  tableMarginTop = <%% 34, 34, 34, 34, 34 %%>;
+
+  itemBarLeft = <%% 28, 28, 28, 28, 28 %%>;
+  itemBarTop = <%% 10, 10, 10, 10, 10 %%>;
+  itemBarBottom = <%% 16, 16, 16, 16, 16 %%>;
+
+  tablePaddingTop = <%% 8, 8, 8, 8, 8 %%>;
+  tablePaddingBottom = <%% 13, 13, 13, 13, 13 %%>;
+  barPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
+  barMarginBottom = <%% 14, 14, 14, 14, 14 %%>;
+
+  grayMarginTop0 = <%% 40, 40, 40, 40, 40 %%>;
+  grayMarginTop1 = <%% 20, 20, 20, 20, 20 %%>;
+
+  items = JSON.parse(JSON.stringify(wordings.items));
+  items = [ JSON.parse(JSON.stringify(wordings.column)) ].concat(items);
+  itemsLength = items.map((arr) => { return arr.map((a) => {
+    return a.replace(/[ \n\.\_]/gi, '').replace(/[0-9]/gi, '').length + (a.replace(/[^0-9]/gi, '').length * 0.5);
+  }) });
+  itemsLengthConverted = [];
+  for (let i = 0; i < wordings.column.length; i++) {
+    tempArr = [];
+    for (let arr of itemsLength) {
+      tempArr.push(arr[i]);
+    }
+    itemsLengthConverted.push(tempArr);
+  }
+  itemsLengthConverted.forEach((arr) => {
+    arr.sort((a, b) => { return b - a; });
+  });
+  itemsLengthConverted = itemsLengthConverted.map((arr) => {
+    return arr[0] === undefined ? 0 : arr[0];
+  });
+  itemsLengthSum = 0;
+  for (let num of itemsLengthConverted) {
+    itemsLengthSum += num;
+  }
+  itemsRatio = itemsLengthConverted.map((num) => { return itemsLengthSum === 0 ? 0 : (num / itemsLengthSum) });
+  itemsRatio = itemsRatio.map((num) => { return String(Math.floor(num * 10000) / 100) + '%'; });
+
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -229,7 +288,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           right: String(0),
           top: String(subTitleBoxTop) + ea,
           fontSize: String(initWordingSize) + ea,
-          fontWeight: String(initWordingWidth) + ea,
+          fontWeight: String(initWordingWeight) + ea,
           color: colorChip.black,
           lineHeight: String(1.6),
           textAlign: "right",
@@ -242,10 +301,170 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     ]
   });
 
+  table = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(3) + "px",
+      border: "1px solid " + colorChip.gray3,
+      boxSizing: "border-box",
+      paddingTop: String(tablePaddingTop) + ea,
+      paddingBottom: String(tablePaddingBottom) + ea,
+      marginTop: String(tableMarginTop) + ea,
+    }
+  });
+
+  itemBar = createNode({
+    mother: table,
+    style: {
+      display: "block",
+      position: "relative",
+      marginLeft: String(itemBarLeft) + ea,
+      width: withOut(itemBarLeft * 2, ea),
+      paddingBottom: String(barPaddingBottom) + ea,
+      marginBottom: String(barMarginBottom) + ea,
+      borderBottom: "1px solid " + colorChip.gray3
+    }
+  });
+  for (let i = 0; i < itemsRatio.length; i++) {
+    item = createNode({
+      mother: itemBar,
+      text: wordings.column[i],
+      style: {
+        display: "inline-block",
+        width: itemsRatio[i],
+        position: "relative",
+        paddingTop: String(itemBarTop) + ea,
+        paddingBottom: String(itemBarBottom) + ea,
+        borderRadius: String(3) + "px",
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(600),
+        textAlign: "center",
+      }
+    });
+  }
+  for (let z = 0; z < wordings.items.length; z++) {
+    itemBar = createNode({
+      mother: table,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(itemBarLeft) + ea,
+        width: withOut(itemBarLeft * 2, ea),
+      }
+    });
+    for (let i = 0; i < itemsRatio.length; i++) {
+      item = createNode({
+        mother: itemBar,
+        text: wordings.items[z][i],
+        style: {
+          display: "inline-block",
+          width: itemsRatio[i],
+          position: "relative",
+          paddingTop: String(itemBarTop) + ea,
+          paddingBottom: String(itemBarBottom) + ea,
+          borderRadius: String(3) + "px",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(initWordingWeight),
+          textAlign: "center",
+        }
+      });
+    }
+  }
+
+  sumBox = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(15) + ea,
+    },
+    children: [
+      {
+        style: {
+          display: "block",
+          position: "relative",
+          textAlign: "right",
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              borderBottom: "1px solid " + colorChip.gray3,
+              height: String(20) + ea,
+              width: String(100) + '%',
+              top: String(0),
+              left: String(0),
+            }
+          },
+          {
+            text: wordings.sum.consumer + "원",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(29) + ea,
+              fontWeight: String(500),
+              textAlign: "right",
+              background: colorChip.white,
+              paddingLeft: String(19) + ea,
+              color: colorChip.black,
+            }
+          },
+          {
+            text: "vat 포함",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              paddingLeft: String(10) + ea,
+              fontSize: String(18) + ea,
+              fontWeight: String(300),
+              textAlign: "right",
+              background: colorChip.white,
+              color: colorChip.shadow,
+            }
+          }
+        ]
+      }
+    ]
+  });
+
+  cautionBox = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(5) + "px",
+      paddingTop: String(tablePaddingTop) + ea,
+      paddingBottom: String(tablePaddingBottom) + ea,
+      marginTop: String(grayMarginTop0) + ea,
+      background: colorChip.gray0,
+      height: String(600) + ea,
+    }
+  });
+
+
+
+
+
+
+  createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      borderRadius: String(5) + "px",
+      paddingTop: String(tablePaddingTop) + ea,
+      paddingBottom: String(tablePaddingBottom) + ea,
+      marginTop: String(grayMarginTop1) + ea,
+      background: colorChip.gray0,
+      height: String(300) + ea,
+    }
+  });
+
   console.log(wordings);
 
-
-
+  whiteBlock.style.height = "auto";
 
 }
 

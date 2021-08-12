@@ -144,6 +144,12 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
             }).then(() => {
               if (newProid !== null) {
+                return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ]);
+              } else {
+                return passPromise();
+              }
+            }).then(() => {
+              if (newProid !== null) {
                 return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
               } else {
                 return passPromise();

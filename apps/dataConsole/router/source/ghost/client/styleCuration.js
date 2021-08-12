@@ -5468,6 +5468,52 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
   }
 }
 
+StyleCurationJs.prototype.forceConverting = async function () {
+  const instance = this;
+  const { ajaxJson } = GeneralJs;
+  const { client, clientHistory } = this;
+  try {
+    if (Array.isArray(clientHistory.curation.analytics.send)) {
+      if (clientHistory.curation.analytics.send.length > 0) {
+        if (clientHistory.curation.analytics.send.every((o) => { return typeof o === "object"; })) {
+          let boo, feeArr, thisProjects, thisProject, finalSerid;
+          boo = false;
+          for (let obj of clientHistory.curation.analytics.send) {
+            if (obj.page === "designerProposal") {
+              boo = true;
+              break;
+            }
+          }
+          if (boo) {
+            thisProjects = await ajaxJson({ noFlat: true, whereQuery: { cliid: client.cliid } }, "/getProjects", { equal: true });
+            if (thisProjects.length > 0) {
+              thisProject = thisProjects[0];
+              finalSerid = clientHistory.curation.service.serid;
+              finalSerid = finalSerid.map((serid) => {
+                let feeArr;
+                let min, max;
+                feeArr = [];
+                for (let { fee } of thisProject.proposal.detail) {
+                  for (let { amount } of fee) {
+                    feeArr.push(amount);
+                  }
+                }
+                feeArr.sort((a, b) => { return a - b; });
+                min = Math.floor(feeArr[0] / 100000) / 10;
+                max = Math.ceil(feeArr[feeArr.length - 1] / 1000000);
+                return { serid, min, max };
+              });
+              await this.serviceConverting(finalSerid);
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 StyleCurationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -5547,6 +5593,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
           instance.insertCenterBox();
           instance.insertPhotoBox();
           instance.insertPannelBox();
+          await instance.forceConverting();
         } catch (e) {
           console.log(e);
         }
