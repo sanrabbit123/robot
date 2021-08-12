@@ -181,12 +181,13 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     const getObj = returnGet();
     let clients, client;
 
-    if (getObj.class === undefined || getObj.cliid === undefined || getObj.desid === undefined || getObj.proid === undefined || getObj.method === undefined) {
+    if (getObj.needs === undefined || getObj.cliid === undefined) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
 
-    const { class, cliid, desid, proid, method } = getObj;
+    const { needs, cliid } = getObj;
+    const [ kind, desid, proid, method ] = needs.split(',');
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
       alert("잘못된 접근입니다!");
@@ -195,8 +196,10 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     client = clients[0];
     this.client = client;
 
+    console.log(kind, cliid, desid, proid, method);
 
-
+    const bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, PYTHONHOST + "/generalBill");
+    console.log(bills);
 
     await this.mother.ghostClientLaunching({
       name: "universalEstimation",

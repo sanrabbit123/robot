@@ -33,7 +33,6 @@
   "name": "styleEstimation",
   "route": [
     "styleEstimate",
-    "estimation",
     "SE"
   ]
 } %/%/g

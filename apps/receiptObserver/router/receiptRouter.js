@@ -357,6 +357,50 @@ ReceiptRouter.prototype.rou_post_createStylingBill = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_generalBill = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, fileSystem } = this.mother;
+  let obj = {};
+  obj.link = "/generalBill";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.mode === undefined) {
+        throw new Error("must be mode => [ create, read, update, delete, sse ]");
+      }
+      const collection = "generalBill";
+      const { mode } = req.body;
+      let selfMongo, result;
+      let whereQuery, updateQuery;
+
+      selfMongo = instance.mongolocal;
+
+      if (mode === "read") {
+        if (req.body.whereQuery === undefined) {
+          throw new Error("must be whereQuery");
+        }
+        whereQuery = equalJson(req.body.whereQuery);
+        result = await bill.getBillsByQuery(whereQuery, { selfMongo });
+      } else {
+        throw new Error("must be mode => [ read ]");
+      }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_generalBill): " + e.message, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 
