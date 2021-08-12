@@ -5197,6 +5197,54 @@ ClientJs.prototype.communicationRender = function () {
       }
     }
   ]);
+  communication.setItem([
+    () => { return "제안서 자동 생성"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님의 제안서를 새롭게 자동 생성합니다. 확실합니까?")) {
+
+            if (/홈퍼/gi.test(thisCase.service)) {
+              serid = "s2011_aa01s";
+            } else if (/홈스/gi.test(thisCase.service)) {
+              serid = "s2011_aa02s";
+            } else if (/토탈/gi.test(thisCase.service)) {
+              serid = "s2011_aa03s";
+            } else {
+              serid = "s2011_aa04s";
+            }
+
+            await ajaxJson({ cliid, serid }, "/proposalCreate");
+
+            await sleep(1000);
+            window.alert("제안서 제작 요청이 완료되었습니다!");
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
 }
 
 ClientJs.prototype.launching = async function () {

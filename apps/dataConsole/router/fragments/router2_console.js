@@ -1634,8 +1634,10 @@ DataRouter.prototype.rou_post_proposalReset = function () {
   const instance = this;
   const back = this.back;
   const work = this.work;
+  const address = this.address;
+  const { requestSystem } = this.mother;
   let obj = {};
-  obj.link = [ "/proposalReset" ];
+  obj.link = [ "/proposalReset", "/proposalCreate" ];
   obj.func = async function (req, res) {
     try {
       let id;
@@ -1652,11 +1654,30 @@ DataRouter.prototype.rou_post_proposalReset = function () {
         throw new Error("invaild post");
       }
 
-      work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).then(() => {
-        //pass
-      }).catch((err) => {
-        console.log(err);
-      });
+      if (req.url === "/proposalReset") {
+        work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).then(() => {
+          //pass
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else if (req.url === "/proposalCreate") {
+        if (/^c/.test(id)) {
+          if (typeof req.body.serid === "string") {
+            if (/^s[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(req.body.serid)) {
+              requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", {
+                cliid: id,
+                historyQuery: { "curation.service.serid": [ req.body.serid ] },
+                coreQuery: {},
+                mode: "create"
+              }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
+                //pass
+              }).catch((err) => {
+                console.log(err);
+              });
+            }
+          }
+        }
+      }
 
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "will do" }));

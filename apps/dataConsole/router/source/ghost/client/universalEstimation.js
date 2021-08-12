@@ -210,7 +210,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
     console.log(kind, cliid, desid, proid, method);
 
-    const bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, PYTHONHOST + "/generalBill");
+    const bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, PYTHONHOST + "/generalBill", { equal: true });
     if (bills.length === 0) {
       alert("견적서가 없습니다! 홈리에종에 문의해주세요!");
       window.location.href = this.frontPage;
