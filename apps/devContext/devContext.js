@@ -62,13 +62,10 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-    await requestSystem("https://home-liaison.xyz:3000/createStylingBill", { proid: "p2108_aa30s" }, { headers: { "Content-Type": "application/json" } });
-
-
-    console.log(await bill.getBillsByQuery({ "links.proid": "p2108_aa30s" }))
 
 
 
+    
 
 
 

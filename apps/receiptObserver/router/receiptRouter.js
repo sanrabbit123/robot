@@ -342,7 +342,12 @@ ReceiptRouter.prototype.rou_post_createStylingBill = function () {
       }
       const { proid } = req.body;
       const bilidArr = await bill.createStylingBill(proid, { selfCoreMongo: instance.mongo, selfMongo: instance.mongolocal });
-      res.set({ "Content-Type": "application/json" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
       res.send(JSON.stringify(bilidArr));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_createStylingBill) : " + e.message, channel: "#error_log" });

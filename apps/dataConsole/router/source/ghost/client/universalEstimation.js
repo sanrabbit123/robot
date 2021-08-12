@@ -179,21 +179,24 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
     const { returnGet, ajaxJson } = GeneralJs;
     const getObj = returnGet();
-    let cliid;
     let clients, client;
 
-    if (getObj.cliid === undefined) {
+    if (getObj.class === undefined || getObj.cliid === undefined || getObj.desid === undefined || getObj.proid === undefined || getObj.method === undefined) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
 
-    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: getObj.cliid } }, "/getClients", { equal: true });
+    const { class, cliid, desid, proid, method } = getObj;
+    clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
     client = clients[0];
     this.client = client;
+
+
+
 
     await this.mother.ghostClientLaunching({
       name: "universalEstimation",
