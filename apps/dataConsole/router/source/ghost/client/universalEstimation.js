@@ -37,6 +37,18 @@
   ]
 } %/%/g
 
+class StylingBill {
+  constructor(json) {
+    if (typeof json !== "object") {
+      throw new Error("invaild input");
+    }
+    for (let i in json) {
+      this[i] = json[i];
+    }
+  }
+
+}
+
 const UniversalEstimationJs = function () {
   this.mother = new GeneralJs();
 }
@@ -199,7 +211,14 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     console.log(kind, cliid, desid, proid, method);
 
     const bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, PYTHONHOST + "/generalBill");
-    console.log(bills);
+    if (bills.length === 0) {
+      alert("견적서가 없습니다! 홈리에종에 문의해주세요!");
+      window.location.href = this.frontPage;
+    }
+    const bill = new StylingBill(bills[0]);
+    this.bill = bill;
+    this.class = kind;
+    console.log(bill)
 
     await this.mother.ghostClientLaunching({
       name: "universalEstimation",

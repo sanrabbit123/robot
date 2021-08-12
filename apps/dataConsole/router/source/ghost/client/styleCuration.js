@@ -341,7 +341,7 @@ StyleCurationJs.randomPick = function (photos, contentsArr, pictureNumber, rooms
   const conidArr = Array.from(new Set(photos.map((obj) => { return obj.conid })));
   const standard = 50;
   const stackName = "styleCheckNum";
-  const limit = 5;
+  const limit = 3;
   let randoms;
   let randomPick, randomPick_raw, contentsPick;
   let randomPickFiles, randomPickFiles_new;
@@ -857,119 +857,119 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             },
           ]
         });
+        this.wordings.center.push({
+          name: "furniture",
+          title: "가구",
+          callback: "blockCheck",
+          children: [
+            {
+              name: "purchaseRatio",
+              type: "opposite",
+              half: false,
+              required: false,
+              question: [
+                "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
+                "<b%비율%b>을 알려주세요!"
+              ],
+              items: [
+                "재사용",
+                "새로 구입",
+              ],
+              total: 100,
+              ea: '%',
+              value: function (request, history, self) {
+                return history.curation.furniture.ratio;
+              },
+              update: function (value, siblings, client) {
+                if (value !== null) {
+                  let updateQuery;
+                  updateQuery = {};
+                  updateQuery["curation.furniture.ratio"] = value.value;
+                  return {
+                    history: updateQuery,
+                    core: null
+                  };
+                } else {
+                  return { history: null, core: null };
+                }
+              }
+            },
+            {
+              name: "makeFurnitrue",
+              type: "checkbox",
+              half: true,
+              required: false,
+              question: [
+                "<b%맞춤형 제작 가구 니즈%b>가 있으신가요?"
+              ],
+              items: [
+                "있다",
+                "없다",
+                "모르겠다",
+              ],
+              multiple: false,
+              notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
+              value: function (request, history, self) {
+                return history.curation.furniture.makeNeeds.furniture ? self.items[0] : self.items[2];
+              },
+              update: function (value, siblings, client) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  const { items, realItems, selected } = value;
+                  if (selected === null) {
+                    return { history: null, core: null };
+                  } else {
+                    let updateQuery;
+                    updateQuery = {};
+                    updateQuery["curation.furniture.makeNeeds.furniture"] = (selected === 0);
+                    return {
+                      history: updateQuery,
+                      core: null
+                    };
+                  }
+                }
+              }
+            },
+            {
+              name: "makeFabric",
+              type: "checkbox",
+              half: true,
+              required: false,
+              question: [
+                "<b%커튼, 베딩 패브릭 제작 니즈%b>가 있으신가요?"
+              ],
+              items: [
+                "있다",
+                "없다",
+                "모르겠다",
+              ],
+              multiple: false,
+              value: function (request, history, self) {
+                return history.curation.furniture.makeNeeds.fabric ? self.items[0] : self.items[2];
+              },
+              update: function (value, siblings, client) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  const { items, realItems, selected } = value;
+                  if (selected === null) {
+                    return { history: null, core: null };
+                  } else {
+                    let updateQuery;
+                    updateQuery = {};
+                    updateQuery["curation.furniture.makeNeeds.fabric"] = (selected === 0);
+                    return {
+                      history: updateQuery,
+                      core: null
+                    };
+                  }
+                }
+              }
+            },
+          ]
+        });
       }
-      this.wordings.center.push({
-        name: "furniture",
-        title: "가구",
-        callback: "blockCheck",
-        children: [
-          {
-            name: "purchaseRatio",
-            type: "opposite",
-            half: false,
-            required: false,
-            question: [
-              "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
-              "<b%비율%b>을 알려주세요!"
-            ],
-            items: [
-              "재사용",
-              "새로 구입",
-            ],
-            total: 100,
-            ea: '%',
-            value: function (request, history, self) {
-              return history.curation.furniture.ratio;
-            },
-            update: function (value, siblings, client) {
-              if (value !== null) {
-                let updateQuery;
-                updateQuery = {};
-                updateQuery["curation.furniture.ratio"] = value.value;
-                return {
-                  history: updateQuery,
-                  core: null
-                };
-              } else {
-                return { history: null, core: null };
-              }
-            }
-          },
-          {
-            name: "makeFurnitrue",
-            type: "checkbox",
-            half: true,
-            required: false,
-            question: [
-              "<b%맞춤형 제작 가구 니즈%b>가 있으신가요?"
-            ],
-            items: [
-              "있다",
-              "없다",
-              "모르겠다",
-            ],
-            multiple: false,
-            notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
-            value: function (request, history, self) {
-              return history.curation.furniture.makeNeeds.furniture ? self.items[0] : self.items[2];
-            },
-            update: function (value, siblings, client) {
-              if (value === null) {
-                return { history: null, core: null };
-              } else {
-                const { items, realItems, selected } = value;
-                if (selected === null) {
-                  return { history: null, core: null };
-                } else {
-                  let updateQuery;
-                  updateQuery = {};
-                  updateQuery["curation.furniture.makeNeeds.furniture"] = (selected === 0);
-                  return {
-                    history: updateQuery,
-                    core: null
-                  };
-                }
-              }
-            }
-          },
-          {
-            name: "makeFabric",
-            type: "checkbox",
-            half: true,
-            required: false,
-            question: [
-              "<b%커튼, 베딩 패브릭 제작 니즈%b>가 있으신가요?"
-            ],
-            items: [
-              "있다",
-              "없다",
-              "모르겠다",
-            ],
-            multiple: false,
-            value: function (request, history, self) {
-              return history.curation.furniture.makeNeeds.fabric ? self.items[0] : self.items[2];
-            },
-            update: function (value, siblings, client) {
-              if (value === null) {
-                return { history: null, core: null };
-              } else {
-                const { items, realItems, selected } = value;
-                if (selected === null) {
-                  return { history: null, core: null };
-                } else {
-                  let updateQuery;
-                  updateQuery = {};
-                  updateQuery["curation.furniture.makeNeeds.fabric"] = (selected === 0);
-                  return {
-                    history: updateQuery,
-                    core: null
-                  };
-                }
-              }
-            }
-          },
-        ]
-      });
       this.wordings.center.push({
         name: "construct",
         title: "시공",
