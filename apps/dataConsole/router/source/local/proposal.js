@@ -1290,12 +1290,12 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
   fourth.events = {};
 
   input_widthSet = function (dom) {
-    dom.style.width = String(0.75 * dom.value.length) + "vh";
+    dom.style.width = String(0.8 * dom.value.length) + "vh";
     if (dom.value.replace(/,/g, '').length < 7) {
-      dom.style.width = String(0.85 * dom.value.length) + "vh";
+      dom.style.width = String(0.9 * dom.value.length) + "vh";
     }
     if (dom.value.replace(/,/g, '').length < 4) {
-      dom.style.width = String(1.05 * dom.value.length) + "vh";
+      dom.style.width = String(1.1 * dom.value.length) + "vh";
     }
   }
 
