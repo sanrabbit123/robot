@@ -2554,15 +2554,15 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
 
   if (online) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인 인건비", amount: autoComma(amount) + "원" },
-      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: autoComma(amount) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인 인건비", amount: autoComma(amount * 0.9) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: autoComma(amount * 0.1) + "원" },
     ];
   }
 
   if (offline) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인 인건비", amount: autoComma(amount) + "원" },
-      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: autoComma(amount) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인 인건비", amount: autoComma(amount * 0.9) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: autoComma(amount * 0.1) + "원" },
       { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 총 " + String(number) + "회)", amount: autoComma(distance * number) + "원" }
     ];
     if (mobile) {
@@ -2575,10 +2575,10 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
 
   if (both) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 인건비 (온라인)", amount: autoComma(amount2) + "원" },
-      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 감리비 (온라인)", amount: autoComma(amount2) + "원" },
-      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 인건비 (오프라인)", amount: autoComma(amount) + "원" },
-      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 감리비 (오프라인)", amount: autoComma(amount) + "원" },
+      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 인건비 (온라인)", amount: autoComma(amount2 * 0.9) + "원" },
+      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 감리비 (온라인)", amount: autoComma(amount2 * 0.1) + "원" },
+      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 인건비 (오프라인)", amount: autoComma(amount * 0.9) + "원" },
+      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 감리비 (오프라인)", amount: autoComma(amount * 0.1) + "원" },
       { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 총 " + String(number) + "회)", amount: autoComma(distance * number) + "원" }
     ];
     if (mobile) {
