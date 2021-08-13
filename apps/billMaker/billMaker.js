@@ -28,7 +28,7 @@ BillMaker.billDictionary = {
         description: "디자이너가 인테리어 디자인 작업을 진행하는 비용입니다.",
         ea: null,
         number: (method, distance) => { return 1; },
-        amount: (method, amount, distance) => { return ((/^off/gi.test(method) ? amount - (distance.number * distance.amount) : amount) * 0.9) },
+        amount: (method, amount, distance) => { return amount * 0.9 },
       },
       {
         id: "_idsg",
@@ -37,7 +37,7 @@ BillMaker.billDictionary = {
         description: "디자이너가 자신의 디자인이 잘 구현되도록 세팅을 감리하는 비용입니다. (시공 감리 제외, 구매 대행 제외)",
         ea: null,
         number: (method, distance) => { return 1; },
-        amount: (method, amount, distance) => { return ((/^off/gi.test(method) ? amount - (distance.number * distance.amount) : amount) * 0.1) },
+        amount: (method, amount, distance) => { return amount * 0.1 },
       },
       {
         id: "_ites",

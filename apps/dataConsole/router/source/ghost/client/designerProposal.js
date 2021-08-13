@@ -608,13 +608,10 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   const desktop = !mobile;
   const { requests } = this.client;
   const { request, analytics } = requests[0];
-  const expectedToString = function (str0, str1) {
+  const expectedToString = function (str0, startDateNumber = 0) {
     let expected;
-    if (/^1/.test(str0) || /^3/.test(str0)) {
-      expected = new Date(str1);
-    } else {
-      expected = new Date(str0);
-    }
+    expected = new Date(str0);
+    expected.setDate(expected.getDate() - startDateNumber);
     if (testMode) {
       return `00년 0월 0일`;
     } else {
@@ -723,10 +720,10 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
       { title: "대상 면적", value: String(request.space.pyeong) + "평" },
       { title: "대상 공간", value: spaceToString(request.space.spec) },
-      { title: "출장비 여부", value: "없음" },
-      { title: "입주 예정일", value: expectedToString(request.space.resident.expected, analytics.date.space.movein) },
       { title: "계약 형태", value: request.space.contract },
       { title: "예산", value: request.budget },
+      { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
+      { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
     ];
   } else {
     factors = [
@@ -734,8 +731,8 @@ DesignerProposalJs.prototype.insertInitBox = function () {
       { title: "서비스 형태", value: GeneralJs.serviceParsing(this.project.service).split(' ')[0] },
       { title: "대상 면적", value: String(request.space.pyeong) + "평" },
       { title: "대상 공간", value: spaceToString(request.space.spec) },
-      { title: "출장비 여부", value: "없음" },
-      { title: "입주 예정일", value: expectedToString(request.space.resident.expected, analytics.date.space.movein) },
+      { title: "예상 시작일", value: expectedToString(analytics.date.space.movein, GeneralJs.serviceParsing(this.project.service, true)) },
+      { title: "예상 종료일", value: expectedToString(analytics.date.space.movein) },
     ];
   }
 
@@ -1740,39 +1737,39 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   this.designerPortfolio(portfolioBox, desid);
   mother.appendChild(portfolioBox);
 
-  // //designer fee detail
-  // feeDetailBox = GeneralJs.nodes.div.cloneNode(true);
-  // style = {
-  //   position: "relative",
-  //   marginLeft: String(desktop ? leftMargin : 0) + ea,
-  //   marginRight: String(desktop ? leftMargin : 0) + ea,
-  //   width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
-  //   height: String(portfolioBoxHeight) + ea,
-  //   marginTop: String(analyticsBoxTopMargin) + ea,
-  //   boxSizing: "border-box",
-  //   borderRadius: String(3) + "px",
-  //   border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
-  //   background: mobile ? GeneralJs.colorChip.white : "transparent",
-  //   boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
-  // };
-  // for (let i in style) {
-  //   feeDetailBox.style[i] = style[i];
-  // }
-  // feeDetailBoxTitle = GeneralJs.nodes.div.cloneNode(true);
-  // feeDetailBoxTitle.textContent = "디자이너비 상세 사항";
-  // style = {
-  //   position: "absolute",
-  //   left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
-  //   top: String(descriptionTitleTop) + ea,
-  //   fontSize: String(descriptionTitleSize) + ea,
-  //   fontWeight: String(600),
-  // };
-  // for (let i in style) {
-  //   feeDetailBoxTitle.style[i] = style[i];
-  // }
-  // feeDetailBox.appendChild(feeDetailBoxTitle);
-  // this.designerFeeDetail(feeDetailBox, desid, info.fee);
-  // mother.appendChild(feeDetailBox);
+  //designer fee detail
+  feeDetailBox = GeneralJs.nodes.div.cloneNode(true);
+  style = {
+    position: "relative",
+    marginLeft: String(desktop ? leftMargin : 0) + ea,
+    marginRight: String(desktop ? leftMargin : 0) + ea,
+    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
+    height: String(portfolioBoxHeight) + ea,
+    marginTop: String(analyticsBoxTopMargin) + ea,
+    boxSizing: "border-box",
+    borderRadius: String(3) + "px",
+    border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
+    background: mobile ? GeneralJs.colorChip.white : "transparent",
+    boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
+  };
+  for (let i in style) {
+    feeDetailBox.style[i] = style[i];
+  }
+  feeDetailBoxTitle = GeneralJs.nodes.div.cloneNode(true);
+  feeDetailBoxTitle.textContent = "디자이너비 상세 사항";
+  style = {
+    position: "absolute",
+    left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
+    top: String(descriptionTitleTop) + ea,
+    fontSize: String(descriptionTitleSize) + ea,
+    fontWeight: String(600),
+  };
+  for (let i in style) {
+    feeDetailBoxTitle.style[i] = style[i];
+  }
+  feeDetailBox.appendChild(feeDetailBoxTitle);
+  this.designerFeeDetail(feeDetailBox, desid, info.fee);
+  mother.appendChild(feeDetailBox);
 
   //designer fee
   feeBox = GeneralJs.nodes.div.cloneNode(true);
@@ -2358,19 +2355,31 @@ DesignerProposalJs.prototype.designerPortfolio = function (mother, desid) {
 
 }
 
-DesignerProposalJs.prototype.feeToString = function (fee, percentage = 1, noMethod = false) {
+DesignerProposalJs.prototype.feeToString = function (fee) {
   const instance = this;
+  const { ea, media } = this;
   const { autoComma } = GeneralJs;
+  const mobile = media[4];
+  const desktop = !mobile;
   let moneyText;
   let money;
   moneyText = '';
-  for (let { amount, method, partial } of fee) {
-    money = amount * percentage;
+  for (let { amount, method, partial, distance } of fee) {
+    if (/offline/gi.test(method)) {
+      money = amount + (distance.amount * distance.number);
+    } else {
+      money = amount;
+    }
     money = Math.round(money / 1000) * 1000;
-    moneyText += (noMethod ? "" : (/offline/gi.test(method) ? "오프라인" : "온라인") + (partial ? "(부분) " : ' ')) + autoComma(money) + "원";
+    moneyText += (/offline/gi.test(method) ? "오프라인" : "온라인") + (partial ? "(부분) " : ' ') + autoComma(money) + "원";
     moneyText += ", ";
   }
   moneyText = moneyText.slice(0, -2);
+  if (mobile) {
+    if (/, /gi.test(moneyText)) {
+      moneyText = moneyText.replace(/오프라인/g, "오프").replace(/온라인/g, "온");
+    }
+  }
   return moneyText;
 }
 
@@ -2425,21 +2434,6 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
     }
     mother.appendChild(arrowBox);
 
-    // arrowHead = GeneralJs.nodes.div.cloneNode(true);
-    // style = {
-    //   position: "absolute",
-    //   borderRight: "1px solid " + GeneralJs.colorChip.gray3,
-    //   borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-    //   width: String(headWidth) + ea,
-    //   height: String(headWidth) + ea,
-    //   transform: "rotate(315deg)",
-    //   top: String(headTop) + ea,
-    //   left: "calc(100% - 351px)",
-    // };
-    // for (let i in style) {
-    //   arrowHead.style[i] = style[i];
-    // }
-    // mother.appendChild(arrowHead);
   }
 
   moneyBox = GeneralJs.nodes.div.cloneNode(true);
@@ -2487,23 +2481,6 @@ DesignerProposalJs.prototype.designerFee = function (mother, fee) {
   }
   mother.appendChild(vatBox);
 
-  // if (desktop) {
-  //   setTimeout(function () {
-  //     let standardWidth, spaceException, oneException, visualException;
-  //     visualException = 3;
-  //     standardWidth = moneyBox.getBoundingClientRect().width + vatBox.getBoundingClientRect().width + headMargin + visualException;
-  //     if (desktop && !GeneralJs.isMac()) {
-  //       spaceException = ([ ...moneyBox.textContent.matchAll(/ /g) ]).length;
-  //       oneException = ([ ...moneyBox.textContent.matchAll(/1/g) ]).length;
-  //       spaceException = (2 * spaceException);
-  //       oneException = (0 * oneException);
-  //       standardWidth = standardWidth - visualException - spaceException - oneException;
-  //     }
-  //     arrowBox.style.width = "calc(100% - " + String(standardWidth) + ea + ")";
-  //     arrowHead.style.left = "calc(100% - " + String(standardWidth + headVisual) + ea + ")";
-  //   }, 0);
-  // }
-
 }
 
 DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
@@ -2514,115 +2491,173 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.pick(desid);
-  const percentage = 0.8;
-  // GeneralJs.ajax({
-  //   mode: "inspection",
-  //
-  // }, "/parsingAddress", function (res) {
-    // const contentsArr = JSON.parse(res);
+  const percentage = 0.9;
+  let sourceArr;
+  let style;
+  let num;
+  let entireDom;
+  let entireHeight, entireMarginBottom;
+  let titleDom, amountDom;
+  let wordSpacing, fontSize;
+  let marginTop, marginBottom;
+  let mobilePaddingTop;
+  let thisProposal;
+  let amount, km, time, distance, number;
+  let amount2;
+  let online, offline, both;
 
-    const addressCompress = function (address) {
-      let tempArr, targetIndex;
-      tempArr = address.split(' ');
-      for (let i = 0; i < tempArr.length; i++) {
-        if (/[동로가리길]$/i.test(tempArr[i])) {
-          targetIndex = i;
-        }
-      }
-      return tempArr.slice(0, targetIndex + 1).join(' ');
+  for (let obj of this.proposal.detail) {
+    if (obj.desid === desid) {
+      thisProposal = obj;
     }
-    let sourceArr;
-    let style;
-    let num;
-    let entireDom;
-    let entireHeight, entireMarginBottom;
-    let titleDom, amountDom;
-    let wordSpacing, fontSize;
-    let marginTop, marginBottom;
-    let mobilePaddingTop;
+  }
 
-    marginTop = <%% left - 6, left - 6, top, top, 2 %%>;
-    marginBottom = <%% left - 3, left - 3, bottom, bottom, 5.1 %%>;
+  online = /online/gi.test(thisProposal.fee[0].method);
+  offline = /offline/gi.test(thisProposal.fee[0].method);
+  both = (thisProposal.fee.length === 2);
+  if (both) {
+    online = false;
+    offline = false;
+  }
 
-    entireHeight = <%% 20, 21, 20, 18, 4 %%>;
-    entireMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+  amount = 0;
+  km = "0km";
+  time = "0시간 0분";
+  distance = 0;
+  number = 0;
 
-    fontSize = <%% 15, 15, 15, 13.5, 2.9 %%>;
-    wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+  if (online) {
+    amount = thisProposal.fee[0].amount;
+  }
 
+  if (offline) {
+    amount = thisProposal.fee[0].amount;
+    km = thisProposal.fee[0].distance.distance;
+    time = thisProposal.fee[0].distance.time;
+    distance = thisProposal.fee[0].distance.amount;
+    number = thisProposal.fee[0].distance.number;
+  }
+
+  if (both) {
+    for (let obj of thisProposal.fee) {
+      if (/off/gi.test(obj.method)) {
+        amount = obj.amount;
+        km = obj.distance.distance;
+        time = obj.distance.time;
+        distance = obj.distance.amount;
+        number = obj.distance.number;
+      } else {
+        amount2 = obj.amount;
+      }
+    }
+  }
+
+  if (online) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인 용역비", amount: instance.feeToString(fee, percentage, true) },
-      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: instance.feeToString(fee, 1 - percentage, true) },
-      { title: "출장비 (거리 : " + String(297) + "km)", amount: autoComma(1000000) + "원" }
+      { title: thisDesigner.designer + " 디자이너 디자인 인건비", amount: autoComma(amount) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: autoComma(amount) + "원" },
     ];
+  }
 
-    num = 0;
-    for (let { title, amount } of sourceArr) {
-      entireDom = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "relative",
-        height: String(entireHeight) + ea,
-        marginLeft: String(left) + ea,
-        width: "calc(100% - " + String(left * 2) + ea + ")",
-        marginBottom: String(entireMarginBottom) + ea,
-      };
-      if (num === 0) {
-        style.marginTop = String(marginTop) + ea;
-      }
-      for (let j in style) {
-        entireDom.style[j] = style[j];
-      }
+  if (offline) {
+    sourceArr = [
+      { title: thisDesigner.designer + " 디자이너 디자인 인건비", amount: autoComma(amount) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: autoComma(amount) + "원" },
+      { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 총 " + String(number) + "회)", amount: autoComma(distance * number) + "원" }
+    ];
+    if (mobile) {
+      sourceArr[2].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
+    }
+  }
 
-      titleDom = GeneralJs.nodes.div.cloneNode(true);
-      titleDom.textContent = title;
-      style = {
-        display: "inline-block",
-        position: "relative",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(400),
-        left: String(0) + ea,
-        top: String(0) + ea,
-        color: GeneralJs.colorChip.black,
-        wordSpacing: String(wordSpacing) + "px",
-      };
-      for (let j in style) {
-        titleDom.style[j] = style[j];
-      }
-      entireDom.appendChild(titleDom);
+  if (both) {
+    sourceArr = [
+      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 인건비 (온라인)", amount: autoComma(amount2) + "원" },
+      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 감리비 (온라인)", amount: autoComma(amount2) + "원" },
+      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 인건비 (오프라인)", amount: autoComma(amount) + "원" },
+      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 감리비 (오프라인)", amount: autoComma(amount) + "원" },
+      { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 총 " + String(number) + "회)", amount: autoComma(distance * number) + "원" }
+    ];
+    if (mobile) {
+      sourceArr[4].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
+    }
+  }
 
-      amountDom = GeneralJs.nodes.div.cloneNode(true);
-      amountDom.textContent = amount + " (vat 별도)";
-      amountDom.classList.add("hoverDefault");
-      style = {
-        position: "absolute",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(400),
-        right: String(0) + ea,
-        top: String(0) + ea,
-        color: GeneralJs.colorChip.green,
-        wordSpacing: String(wordSpacing) + "px",
-      };
-      if (mobile) {
-        style.fontSize = String(fontSize + 0.3) + ea;
-        style.top = String(-0.15) + ea;
-      }
-      for (let j in style) {
-        amountDom.style[j] = style[j];
-      }
-      entireDom.appendChild(amountDom);
+  marginTop = <%% left - 6, left - 6, top, top, 2 %%>;
+  marginBottom = <%% left - 3, left - 3, bottom, bottom, 5.1 %%>;
 
-      mother.appendChild(entireDom);
-      num = num + 1;
+  entireHeight = <%% 20, 21, 20, 18, 4 %%>;
+  entireMarginBottom = <%% 10, 10, 10, 10, 1 %%>;
+
+  fontSize = <%% 15, 15, 15, 13.5, 2.9 %%>;
+  wordSpacing = <%% -1, -1, -1, -1, -1 %%>;
+
+  num = 0;
+  for (let { title, amount } of sourceArr) {
+    entireDom = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "relative",
+      height: String(entireHeight) + ea,
+      marginLeft: String(left) + ea,
+      width: "calc(100% - " + String(left * 2) + ea + ")",
+      marginBottom: String(entireMarginBottom) + ea,
+    };
+    if (num === 0) {
+      style.marginTop = String(marginTop) + ea;
+    }
+    for (let j in style) {
+      entireDom.style[j] = style[j];
     }
 
-    if (desktop) {
-      mother.style.height = String(marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
-    } else {
-      mobilePaddingTop = 8.6;
-      mother.style.height = String(mobilePaddingTop + marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
-      mother.style.paddingTop = String(mobilePaddingTop) + ea;
+    titleDom = GeneralJs.nodes.div.cloneNode(true);
+    titleDom.textContent = title;
+    style = {
+      display: "inline-block",
+      position: "relative",
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(400),
+      left: String(0) + ea,
+      top: String(0) + ea,
+      color: GeneralJs.colorChip.black,
+      wordSpacing: String(wordSpacing) + "px",
+    };
+    for (let j in style) {
+      titleDom.style[j] = style[j];
     }
-  // });
+    entireDom.appendChild(titleDom);
+
+    amountDom = GeneralJs.nodes.div.cloneNode(true);
+    amountDom.textContent = amount + " (vat 별도)";
+    amountDom.classList.add("hoverDefault");
+    style = {
+      position: "absolute",
+      fontSize: String(fontSize) + ea,
+      fontWeight: String(400),
+      right: String(0) + ea,
+      top: String(0) + ea,
+      color: GeneralJs.colorChip.green,
+      wordSpacing: String(wordSpacing) + "px",
+    };
+    if (mobile) {
+      style.fontSize = String(fontSize + 0.3) + ea;
+      style.top = String(-0.15) + ea;
+    }
+    for (let j in style) {
+      amountDom.style[j] = style[j];
+    }
+    entireDom.appendChild(amountDom);
+
+    mother.appendChild(entireDom);
+    num = num + 1;
+  }
+
+  if (desktop) {
+    mother.style.height = String(marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
+  } else {
+    mobilePaddingTop = 8.6;
+    mother.style.height = String(mobilePaddingTop + marginTop + marginBottom + (sourceArr.length * entireHeight) + ((sourceArr.length - 1) * entireMarginBottom)) + ea;
+    mother.style.paddingTop = String(mobilePaddingTop) + ea;
+  }
 
 }
 

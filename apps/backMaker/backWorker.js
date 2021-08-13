@@ -1081,7 +1081,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       if (travelInfo === null) {
         distanceBoo = false;
         distanceLimitBoo = false;
-        travelInfo = { amount: 0, distance: { string: "" }, time: { string: "" } };
+        travelInfo = { amount: 0, distance: { string: "0km" }, time: { string: "0시간 0분" } };
       } else {
         distanceBoo = (travelInfo.distance.meters > (designer.analytics.region.range * 1000));
         distanceLimitBoo = (travelInfo.distance.meters > ((distanceLimitPlus + designer.analytics.region.expenses) * 1000));
@@ -1125,9 +1125,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       offlineFeeCase = fee;
       onlineFeeCase = fee;
 
-      if (!distanceBoo) {
+      if (!distanceBoo || distanceLimitBoo) {
         travelInfo.amount = 0;
         travelNumber = 0;
+        travelInfo.distance.string = "0km";
+        travelInfo.time.string = "0시간 0분";
       }
 
       // distance fee plus
@@ -1272,25 +1274,21 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
             feeObject = await instance.getDesignerFee(obj.desid, cliid, serid, xValue, { selfMongo: option.selfMongo, selfLocalMongo: option.selfLocalMongo });
             obj.resetFee();
 
-            if (feeObject.detail.offline !== feeObject.detail.online) {
-              if (feeObject.detail.offline !== 0) {
-                obj.appendFee("offline", feeObject.detail.offline, feeObject.detail.travel.number, feeObject.detail.distance);
-                designer = designers.search(obj.desid);
-                if (designer !== null) {
-                  if (designer.analytics.project.online) {
-                    obj.appendFee("online", feeObject.detail.online, 0, feeObject.detail.distance);
-                  }
-                }
-              } else {
-                designer = designers.search(obj.desid);
-                if (designer !== null) {
-                  if (designer.analytics.project.online) {
-                    obj.appendFee("online", feeObject.detail.online, 0, feeObject.detail.distance);
-                  }
+            if (feeObject.detail.offline !== 0) {
+              obj.appendFee("offline", feeObject.detail.offline, feeObject.detail.travel.number, feeObject.detail.distance, feeObject.detail.travel.distance, feeObject.detail.travel.time);
+              designer = designers.search(obj.desid);
+              if (designer !== null) {
+                if (designer.analytics.project.online) {
+                  obj.appendFee("online", feeObject.detail.online, 0, 0, "0km", "0시간 0분");
                 }
               }
             } else {
-              obj.appendFee("offline", feeObject.detail.offline, 0, feeObject.detail.distance);
+              designer = designers.search(obj.desid);
+              if (designer !== null) {
+                if (designer.analytics.project.online) {
+                  obj.appendFee("online", feeObject.detail.online, 0, 0, "0km", "0시간 0분");
+                }
+              }
             }
 
             if (feeObject.detail.online !== 0) {

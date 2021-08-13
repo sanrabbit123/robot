@@ -72,6 +72,30 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const selfMongo = this.MONGOLOCALC;
+    const projects = await selfMongo.db(`miro81`).collection(`project`).find({}).toArray();
+    let whereQuery, updateQuery, temp;
+
+    for (let project of projects) {
+      whereQuery = { proid: project.proid };
+      updateQuery = {};
+
+      temp = JSON.parse(JSON.stringify(project.proposal.detail));
+      for (let t of temp) {
+        for (let obj of t.fee) {
+          obj.distance = {
+            number: 0,
+            amount: 0,
+            distance: "0km",
+            time: "0시간 0분"
+          }
+        }
+      }
+      updateQuery["proposal.detail"] = temp;
+
+      await selfMongo.db(`miro81`).collection(`project`).updateOne(whereQuery, { $set: updateQuery });
+      console.log(whereQuery);
+    }
 
 
 

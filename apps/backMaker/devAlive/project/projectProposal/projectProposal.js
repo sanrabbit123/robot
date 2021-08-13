@@ -20,12 +20,16 @@ class Fees extends Array {
 const FeeDistance = function (json) {
   this.number = json.number;
   this.amount = json.amount;
+  this.distance = json.distance;
+  this.time = json.time;
 }
 
 FeeDistance.prototype.toNormal = function () {
   let obj = {};
   obj.number = this.number;
   obj.amount = this.amount;
+  obj.distance = this.distance;
+  obj.time = this.time
   return obj;
 }
 
@@ -125,7 +129,7 @@ Proposal.prototype.resetFee = function () {
   this.fee.reset();
 }
 
-Proposal.prototype.appendFee = function (method, amount, number = 0, distanceAmount = 0) {
+Proposal.prototype.appendFee = function (method, amount, number = 0, distanceAmount = 0, km = "0km", time = "0시간 0분") {
   if (typeof method !== "string" || typeof amount !== "number") {
     throw new Error("invaild input");
   }
@@ -136,7 +140,9 @@ Proposal.prototype.appendFee = function (method, amount, number = 0, distanceAmo
     amount: amount,
     distance: {
       number: number,
-      amount: distanceAmount
+      amount: distanceAmount,
+      distance: km,
+      time: time,
     }
   });
   this.fee.push(tempInstance);

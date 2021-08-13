@@ -4593,7 +4593,7 @@ ProposalJs.prototype.load_processLoad_third = function () {
 }
 
 ProposalJs.save_init = async function (update = false) {
-  const { createNodes, colorChip, withOut } = GeneralJs;
+  const { createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
   try {
     let target, temp, temp2, standard_id;
     let addressArr;
@@ -4611,6 +4611,7 @@ ProposalJs.save_init = async function (update = false) {
     let methodOnlineBoo;
     let designerFeeCalculBoo;
     let designerFeeCalculObj;
+    let startDate, endDate;
 
     loadingWidth = 50;
     belowHeight = 123;
@@ -4681,6 +4682,17 @@ ProposalJs.save_init = async function (update = false) {
 
     }
 
+    thisClient = await ajaxJson({ noFlat: true, whereQuery: { cliid: result_obj["cliid"] } }, "/getClients", { equal: true });
+    if (thisClient.length === 0) {
+      alert("고객 DB 에러입니다!");
+      return "fail";
+    }
+    thisClient = thisClient[0];
+    if (thisClient.requests[0].analytics.date.space.movein.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+      alert("고객의 예상 종료일을 반드시 적어야 합니다!");
+      return "fail";
+    }
+
     // 2 service
     target = document.getElementById("pp_secondprocess_box").children[0];
     if (target.querySelector("#pp_title2_sub_b") === null) {
@@ -4711,6 +4723,16 @@ ProposalJs.save_init = async function (update = false) {
         result_obj["service.xValue"] = "P";
       }
     }
+
+    endDate = thisClient.requests[0].analytics.date.space.movein;
+    startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), endDate.getHours(), endDate.getMinutes());
+    startDate.setDate(startDate.getDate() - GeneralJs.serviceParsing({ serid: result_obj["service.serid"], xValue: result_obj["service.xValue"], online: false }, true));
+    if (startDate.valueOf() <= (new Date()).valueOf()) {
+      alert("고객의 예상 종료일을 올바르게 고쳐주세요!");
+      return "fail";
+    }
+    result_obj["process.contract.form.date.from"] = startDate;
+    result_obj["process.contract.form.date.to"] = endDate;
 
     // 3 details
     if (document.querySelectorAll('.pp_designer_selected').length === 0) {
@@ -4781,7 +4803,9 @@ ProposalJs.save_init = async function (update = false) {
           }
           result_obj["proposal.detail"][i].fee[f].distance = {
             number: designerFeeCalculObj.detail.travel.number,
-            amount: designerFeeCalculObj.detail.distance
+            amount: designerFeeCalculObj.detail.distance,
+            distance: designerFeeCalculObj.detail.travel.distance,
+            time: designerFeeCalculObj.detail.travel.time,
           };
         }
         result_obj["service.online"] = methodOnlineBoo;
@@ -4809,11 +4833,14 @@ ProposalJs.save_init = async function (update = false) {
     }
 
     if (!update) {
-      const { id: newId } = JSON.parse(await GeneralJs.ajaxPromise("updateQuery=" + JSON.stringify(result_obj), "/createProject"));
+      const { id: newId } = await GeneralJs.ajaxJson({ updateQuery: result_obj }, "/createProject");
       standard_id = newId;
     } else {
       standard_id = document.getElementById("blewpp_button3").getAttribute("cus_id");
-      await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: standard_id }) + "&updateQuery=" + JSON.stringify(result_obj), "/rawUpdateProject");
+      await GeneralJs.ajaxJson({
+        where: { proid: standard_id },
+        updateQuery: result_obj
+      }, "/rawUpdateProject");
     }
 
     if (document.querySelector(".pp_fifth_cancelback") !== null) {

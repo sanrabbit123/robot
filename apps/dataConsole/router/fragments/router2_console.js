@@ -653,11 +653,12 @@ DataRouter.prototype.rou_post_deleteDocument = function () {
 
 DataRouter.prototype.rou_post_createDocument = function () {
   const instance = this;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/createClient", "/createDesigner", "/createProject", "/createContents" ];
   obj.func = async function (req, res) {
     try {
-      const updateQuery = JSON.parse(req.body.updateQuery);
+      const updateQuery = equalJson(req.body.updateQuery);
       let id;
 
       if (req.url === "/createClient") {
