@@ -234,12 +234,13 @@ AddressParser.prototype.getAddress = async function (address, pointMode = false)
   }
 }
 
-AddressParser.prototype.getDistance = async function (from, to) {
+AddressParser.prototype.getDistance = async function (from, to, option = { selfMongo: null }) {
   if (from === undefined || to === undefined) {
     throw new Error("invaild input => String: from address, String: to address");
   }
   const instance = this;
-  const { requestSystem, stringToDate } = this.mother;
+  const back = this.back;
+  const { requestSystem, stringToDate, mongo, mongoconsoleinfo } = this.mother;
   const { url, key } = this.token.tMap;
   try {
     class Distance {
@@ -251,6 +252,14 @@ AddressParser.prototype.getDistance = async function (from, to) {
         this.seconds = s;
         this.from = from;
         this.to = to;
+      }
+      toNormal() {
+        let obj = {};
+        obj.meters = this.meters;
+        obj.seconds = this.seconds;
+        obj.from = this.from;
+        obj.to = this.to;
+        return obj;
       }
       get m() {
         return this.meters;
@@ -272,9 +281,30 @@ AddressParser.prototype.getDistance = async function (from, to) {
     let origin, destination, res, result;
     let meters, seconds;
     let data;
+    let distanceLogCollection;
+    let distanceRows;
+    let addressLogCollection;
+    let addressRows;
+    let MONGOC;
+
+    if (option.selfMongo === null || option.selfMongo === undefined) {
+      MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    distanceLogCollection = "distanceLog";
+    addressLogCollection = "addressLog";
 
     if (typeof from === "string") {
-      origin = await this.getAddress(from);
+      addressRows = await back.mongoRead(addressLogCollection, { input: from }, { selfMongo: MONGOC });
+      if (addressRows.length !== 0) {
+        origin = addressRows[0].address;
+      } else {
+        origin = await this.getAddress(from);
+        await back.mongoCreate(addressLogCollection, { input: from, address: origin }, { selfMongo: MONGOC });
+      }
       if (origin === null) {
         return null;
       }
@@ -301,7 +331,13 @@ AddressParser.prototype.getDistance = async function (from, to) {
     }
 
     if (typeof to === "string") {
-      destination = await this.getAddress(to);
+      addressRows = await back.mongoRead(addressLogCollection, { input: to }, { selfMongo: MONGOC });
+      if (addressRows.length !== 0) {
+        destination = addressRows[0].address;
+      } else {
+        destination = await this.getAddress(to);
+        await back.mongoCreate(addressLogCollection, { input: to, address: destination }, { selfMongo: MONGOC });
+      }
       if (destination === null) {
         return null;
       }
@@ -333,41 +369,52 @@ AddressParser.prototype.getDistance = async function (from, to) {
       return result;
     }
 
-    data = {
-      startX: origin.point.x,
-      startY: origin.point.y,
-      endX: destination.point.x,
-      endY: destination.point.y,
-      totalValue: 2,
-      reqCoordType: "WGS84GEO",
-      speed: 60,
-    };
+    distanceRows = await back.mongoRead(distanceLogCollection, { $and: [ { "input.origin": origin.address.road }, { "input.destination": destination.address.road } ] }, { selfMongo: MONGOC });
+    if (distanceRows.length !== 0) {
+      result = new Distance(distanceRows[0].distance.meters, distanceRows[0].distance.seconds, origin, destination);
+    } else {
 
-    res = await requestSystem(url, data, { headers: { "appKey": key, "Content-type": "application/json" } });
+      data = {
+        startX: origin.point.x,
+        startY: origin.point.y,
+        endX: destination.point.x,
+        endY: destination.point.y,
+        totalValue: 2,
+        reqCoordType: "WGS84GEO",
+        speed: 60,
+      };
 
-    if (res.data === undefined) {
-      return result;
-    }
-    if (!Array.isArray(res.data.features)) {
-      return result;
-    }
-    if (res.data.features.length === 0) {
-      return result;
-    }
-    if (res.data.features[0].properties === undefined) {
-      return result;
-    }
-    if (res.data.features[0].properties.totalDistance === undefined) {
-      return result;
-    }
-    if (res.data.features[0].properties.totalTime === undefined) {
-      return result;
+      res = await requestSystem(url, data, { headers: { "appKey": key, "Content-type": "application/json" } });
+
+      if (res.data === undefined) {
+        return result;
+      }
+      if (!Array.isArray(res.data.features)) {
+        return result;
+      }
+      if (res.data.features.length === 0) {
+        return result;
+      }
+      if (res.data.features[0].properties === undefined) {
+        return result;
+      }
+      if (res.data.features[0].properties.totalDistance === undefined) {
+        return result;
+      }
+      if (res.data.features[0].properties.totalTime === undefined) {
+        return result;
+      }
+
+      meters = res.data.features[0].properties.totalDistance;
+      seconds = res.data.features[0].properties.totalTime;
+
+      result = new Distance(meters, seconds, origin, destination);
+      await back.mongoCreate(distanceLogCollection, { input: { origin: origin.address.road, destination: destination.address.road }, distance: result.toNormal() }, { selfMongo: MONGOC });
     }
 
-    meters = res.data.features[0].properties.totalDistance;
-    seconds = res.data.features[0].properties.totalTime;
-
-    result = new Distance(meters, seconds, origin, destination);
+    if (option.selfMongo === null || option.selfMongo === undefined) {
+      await MONGOC.close();
+    }
 
     return result;
   } catch (e) {
@@ -375,7 +422,7 @@ AddressParser.prototype.getDistance = async function (from, to) {
   }
 }
 
-AddressParser.prototype.getTravelExpenses = async function (from, to) {
+AddressParser.prototype.getTravelExpenses = async function (from, to, option = { selfMongo: null }) {
   if (from === undefined || to === undefined) {
     throw new Error("invaild input => String: from address, String: to address");
   }
@@ -391,7 +438,7 @@ AddressParser.prototype.getTravelExpenses = async function (from, to) {
     const mConst = priceStandard[0].travel.unit.meters;
     const sConst = priceStandard[0].travel.unit.seconds;
     const consultingConst = priceStandard[0].travel.consulting.labor;
-    const distance = await this.getDistance(from, to);
+    const distance = await this.getDistance(from, to, option);
     let m, s, result;
 
     result = null;

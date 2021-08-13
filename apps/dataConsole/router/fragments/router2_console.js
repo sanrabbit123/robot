@@ -2517,7 +2517,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
           throw new Error("must be from, to");
         }
         const { from, to } = req.body;
-        result = await addressApp.getTravelExpenses(from, to);
+        result = await addressApp.getTravelExpenses(from, to, { selfMongo: instance.mongolocal });
       } else if (mode === "sample" || mode === "samples") {
         const priceStandard = await back.mongoRead(`designerPrice`, { key: 33 }, { selfMongo: instance.mongolocal });
         const { travel: { unit, consulting } } = priceStandard[0];

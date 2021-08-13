@@ -918,8 +918,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let distanceLimitBoo;
     let distanceLimitPlus;
     let serviceMatchBoo;
+    let addressLogCollection;
+    let addressRows;
 
     priceStandardCollection = "designerPrice";
+    addressLogCollection = "addressLog";
     priceStandardConst = 33;
     onlineRatio = 0.8;
     travelNumber = 2;
@@ -1063,17 +1066,32 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       newcomerBoo = newcomers.includes(designer.designer);
 
       if (fee !== 0) {
-        designerAddress = await addressApp.getAddress(designer.information.address[0].value);
-        if (designerAddress === null) {
-          throw new Error("invaild designer address");
+
+        addressRows = await back.mongoRead(addressLogCollection, { input: designer.information.address[0].value }, { selfMongo: MONGOLOCALC });
+        if (addressRows.length !== 0) {
+          designerAddress = addressRows[0].address;
+        } else {
+          designerAddress = await addressApp.getAddress(designer.information.address[0].value);
+          if (designerAddress === null) {
+            throw new Error("invaild designer address");
+          }
+          await back.mongoCreate(addressLogCollection, { input: designer.information.address[0].value, address: designerAddress }, { selfMongo: MONGOLOCALC });
         }
+
         if (clientAddress === null) {
-          clientAddress = await addressApp.getAddress(request.space.address.value);
-          if (clientAddress === null) {
-            throw new Error("invaild client address");
+          addressRows = await back.mongoRead(addressLogCollection, { input: request.space.address.value }, { selfMongo: MONGOLOCALC });
+          if (addressRows.length !== 0) {
+            clientAddress = addressRows[0].address;
+          } else {
+            clientAddress = await addressApp.getAddress(request.space.address.value);
+            if (clientAddress === null) {
+              throw new Error("invaild client address");
+            }
+            await back.mongoCreate(addressLogCollection, { input: request.space.address.value, address: clientAddress }, { selfMongo: MONGOLOCALC });
           }
         }
-        travelInfo = await addressApp.getTravelExpenses(designerAddress, clientAddress);
+
+        travelInfo = await addressApp.getTravelExpenses(designerAddress, clientAddress, { selfMongo: MONGOLOCALC });
       } else {
         travelInfo = null;
       }
@@ -1139,9 +1157,15 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       // }
 
       if (distanceLimitBoo) {
-        if (designer.analytics.project.online) {
-          offlineFeeCase = 0;
-          fee = onlineFeeCase;
+        if (y < 2) {
+          if (designer.analytics.project.online) {
+            offlineFeeCase = 0;
+            fee = onlineFeeCase;
+          } else {
+            fee = 0;
+            offlineFeeCase = 0;
+            onlineFeeCase = 0;
+          }
         } else {
           fee = 0;
           offlineFeeCase = 0;

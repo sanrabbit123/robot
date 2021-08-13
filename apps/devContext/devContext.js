@@ -101,7 +101,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await requestSystem("https://home-liaison.xyz:3000/createStylingBill", { proid: "p2108_aa30s" }, { headers: { "Contents-Type": "application/json" } }));
 
 
 
@@ -813,9 +812,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이수진",
-    //     designer: "고윤미",
-    //     link: "https://drive.google.com/drive/folders/1LD3YlLFULB7fUHs0pgwGfqKbdcmsFtVp",
+    //     client: "최선옥",
+    //     designer: "김다래",
+    //     link: "https://drive.google.com/drive/folders/1ClMD2zax8uTmziijESlLfKukeyRx5g9C",
     //   },
     // ]);
 
@@ -830,7 +829,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p110");
+    // await this.spellCheck("p108");
 
 
     // get rawPortfolio by pid
@@ -838,7 +837,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p110");
+    // await this.getCorePortfolio("p108");
 
 
     // aspirant to designer
