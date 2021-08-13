@@ -428,21 +428,22 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
         requestObj["requests.0.request.timeline"] = new Date();
 
-        if (ifOverlap.length > 0) {
-          requestArr = [];
-          pastRequests = (ifOverlap[0].toNormal()).requests;
-          for (let z = 0; z < pastRequests.length; z++) {
-            requestArr.push(pastRequests[z]);
-          }
-          requestArr.unshift(instance.back.returnClientRequest());
-          pastInfo_boo = true;
-
-          await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, { "requests": requestArr } ], { selfMongo: MONGOC });
-        }
-
         //to mongo
         console.log(requestObj);
         if (!instance.ignorePhone.includes(requestObj["phone"])) {
+
+          if (ifOverlap.length > 0) {
+            requestArr = [];
+            pastRequests = (ifOverlap[0].toNormal()).requests;
+            for (let z = 0; z < pastRequests.length; z++) {
+              requestArr.push(pastRequests[z]);
+            }
+            requestArr.unshift(instance.back.returnClientRequest());
+            pastInfo_boo = true;
+
+            await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, { "requests": requestArr } ], { selfMongo: MONGOC });
+          }
+
           if (!pastInfo_boo) {
             cliid = await instance.back.createClient(requestObj, { selfMongo: MONGOC });
             await instance.back.createHistory("client", { cliid: cliid, space: "최초 고객이 적은 주소 : " + requestObj["requests.0.request.space.address"] }, { fromConsole: true });
@@ -450,6 +451,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             await instance.back.updateClient([ { cliid: ifOverlap[0].cliid }, requestObj ], { selfMongo: MONGOC });
             cliid = ifOverlap[0].cliid;
           }
+
           instance.parsingAddress(cliid, requestObj["requests.0.request.space.address"], MONGOC).then((r) => {
             const { result, id } = r;
             if (!result) {
@@ -459,6 +461,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             slack_bot.chat.postMessage({ text: "주소 연산 중 오류 생김", channel: "#error_log" });
             console.log(err);
           });
+
           instance.back.getCaseProidById(cliid, { selfMongo: MONGOC }).then((clientCase) => {
             if (clientCase !== null) {
               const serviceCase = clientCase.caseService();

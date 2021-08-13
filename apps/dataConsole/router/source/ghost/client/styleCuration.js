@@ -1371,7 +1371,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
     }
   }
 
-  resetEvent = function () {
+  resetEvent = function (forceQuit = false) {
     let rowLength, thisTime;
     let greenTargets;
     let style;
@@ -1426,7 +1426,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
     mother.firstChild.appendChild(loading);
 
     instance.randomPick = StyleCurationJs.randomPick(instance.photos, contentsArr, pictureNumber);
-    if (!Array.isArray(instance.randomPick)) {
+    if (!Array.isArray(instance.randomPick) || forceQuit === true) {
       sleep((animationTimes[0] * 1000) + 100).then(async () => {
         try {
           for (let i = 0; i < instance.photoPosition.length; i++) {
@@ -1446,7 +1446,9 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           }
           GeneralJs.stacks[loadingName] = false;
 
-          pickupDesigners();
+          if (forceQuit !== true) {
+            pickupDesigners();
+          }
 
         } catch (e) {
           console.log(e);
@@ -1480,7 +1482,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
     instance.selectPhotos = [];
     GeneralJs.stacks[loadingName] = true;
     GeneralJs.setTimeout(() => {
-      resetEvent();
+      resetEvent(false);
     }, 201);
   }
 
@@ -1619,7 +1621,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
                 GeneralJs.stacks[loadingName] = true;
                 GeneralJs.setTimeout(() => {
                   GeneralJs.stacks[stackName] = GeneralJs.stacks[stackName] + 1;
-                  resetEvent();
+                  resetEvent(false);
                 }, 201);
               }
 
@@ -1735,6 +1737,12 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
       }
     ]
   });
+
+  if (Array.isArray(instance.values.style[0].value) && instance.values.style[0].value.length > 0 && instance.alreadyStyleCheck === true) {
+    GeneralJs.setTimeout(() => {
+      resetEvent(true);
+    }, 0);
+  }
 
 }
 
@@ -5555,6 +5563,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     this.client = client;
     this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
     this.wordings = this.curationWordings(liteMode);
+    this.alreadyStyleCheck = false;
 
     tempArr = this.wordings.wordings.center.map((obj) => {
       return {
@@ -5577,6 +5586,14 @@ StyleCurationJs.prototype.launching = async function (loading) {
       valueObj[obj.name] = obj.children;
     }
     this.values = valueObj;
+
+    if (this.clientHistory.curation.style.length > 0 && this.clientHistory.curation.image.length > 0) {
+      this.values.style[0].value = this.clientHistory.curation.style;
+      this.alreadyStyleCheck = true;
+    } else {
+      this.values.style[0].value = null;
+      this.alreadyStyleCheck = false;
+    }
 
     await this.mother.ghostClientLaunching({
       name: "styleCuration",

@@ -149,6 +149,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let grayMarginTop0, grayMarginTop1;
   let cautionBox;
   let cautionTitleBox, cautionContentsBox;
+  let cautionPaddingTop;
+  let cautionPaddingBottom;
+  let cautionPaddingLeft;
+  let cautionPaddingRight;
+  let cautionFirstBoxWidth;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -181,6 +186,12 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
 
   grayMarginTop0 = <%% 40, 40, 40, 40, 40 %%>;
   grayMarginTop1 = <%% 20, 20, 20, 20, 20 %%>;
+
+  cautionPaddingTop = <%% 30, 30, 30, 30, 30 %%>;
+  cautionPaddingBottom = <%% 30, 30, 30, 30, 30 %%>;
+  cautionPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
+  cautionPaddingRight = <%% 30, 30, 30, 30, 30 %%>;
+  cautionFirstBoxWidth = <%% 200, 200, 200, 200, 200 %%>;
 
   items = JSON.parse(JSON.stringify(wordings.items));
   items = [ JSON.parse(JSON.stringify(wordings.column)) ].concat(items);
@@ -435,14 +446,40 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       display: "block",
       position: "relative",
       borderRadius: String(5) + "px",
-      paddingTop: String(tablePaddingTop) + ea,
-      paddingBottom: String(tablePaddingBottom) + ea,
+      paddingTop: String(cautionPaddingTop) + ea,
+      paddingBottom: String(cautionPaddingBottom) + ea,
+      paddingLeft: String(cautionPaddingLeft) + ea,
+      paddingRight: String(cautionPaddingRight) + ea,
+      width: withOut(cautionPaddingLeft + cautionPaddingRight, ea),
       marginTop: String(grayMarginTop0) + ea,
       background: colorChip.gray0,
       height: String(600) + ea,
-    }
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          background: "aliceblue",
+          width: String(cautionFirstBoxWidth) + ea,
+          height: String(100) + '%'
+        }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          background: "red",
+          width: withOut(cautionFirstBoxWidth, ea),
+          height: String(100) + '%'
+        }
+      },
+    ]
   });
 
+  
+  cautionBox.firstChild
+  cautionBox.lastChild
 
 
 
