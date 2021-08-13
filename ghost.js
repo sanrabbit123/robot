@@ -314,6 +314,10 @@ Ghost.prototype.ghostRouter = function (needs) {
         } else {
           const { sender, kind } = req.body;
           const message = (req.body.message !== undefined ? req.body.message : "");
+          const method = (kind === '1' ? "phone" : "sms");
+
+
+          
           await instance.mother.slack_bot.chat.postMessage({ text: sender, channel: "#error_log" });
           await instance.mother.slack_bot.chat.postMessage({ text: (typeof kind), channel: "#error_log" });
           await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
