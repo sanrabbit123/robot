@@ -1738,38 +1738,38 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   mother.appendChild(portfolioBox);
 
   //designer fee detail
-  feeDetailBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    marginLeft: String(desktop ? leftMargin : 0) + ea,
-    marginRight: String(desktop ? leftMargin : 0) + ea,
-    width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
-    height: String(portfolioBoxHeight) + ea,
-    marginTop: String(analyticsBoxTopMargin) + ea,
-    boxSizing: "border-box",
-    borderRadius: String(3) + "px",
-    border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
-    background: mobile ? GeneralJs.colorChip.white : "transparent",
-    boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
-  };
-  for (let i in style) {
-    feeDetailBox.style[i] = style[i];
-  }
-  feeDetailBoxTitle = GeneralJs.nodes.div.cloneNode(true);
-  feeDetailBoxTitle.textContent = "디자이너비 상세 사항";
-  style = {
-    position: "absolute",
-    left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
-    top: String(descriptionTitleTop) + ea,
-    fontSize: String(descriptionTitleSize) + ea,
-    fontWeight: String(600),
-  };
-  for (let i in style) {
-    feeDetailBoxTitle.style[i] = style[i];
-  }
-  feeDetailBox.appendChild(feeDetailBoxTitle);
-  this.designerFeeDetail(feeDetailBox, desid, info.fee);
-  mother.appendChild(feeDetailBox);
+  // feeDetailBox = GeneralJs.nodes.div.cloneNode(true);
+  // style = {
+  //   position: "relative",
+  //   marginLeft: String(desktop ? leftMargin : 0) + ea,
+  //   marginRight: String(desktop ? leftMargin : 0) + ea,
+  //   width: desktop ? "calc(100% - " + String(leftMargin * 2) + ea + ")" : String(100) + '%',
+  //   height: String(portfolioBoxHeight) + ea,
+  //   marginTop: String(analyticsBoxTopMargin) + ea,
+  //   boxSizing: "border-box",
+  //   borderRadius: String(3) + "px",
+  //   border: desktop ? "1px solid " + GeneralJs.colorChip.gray3 : String(0),
+  //   background: mobile ? GeneralJs.colorChip.white : "transparent",
+  //   boxShadow: mobile ? "0px 5px 12px -10px " + GeneralJs.colorChip.gray5 : "",
+  // };
+  // for (let i in style) {
+  //   feeDetailBox.style[i] = style[i];
+  // }
+  // feeDetailBoxTitle = GeneralJs.nodes.div.cloneNode(true);
+  // feeDetailBoxTitle.textContent = "디자이너비 상세 사항";
+  // style = {
+  //   position: "absolute",
+  //   left: String(desktop ? 0 : this.subBoxMargin.left) + ea,
+  //   top: String(descriptionTitleTop) + ea,
+  //   fontSize: String(descriptionTitleSize) + ea,
+  //   fontWeight: String(600),
+  // };
+  // for (let i in style) {
+  //   feeDetailBoxTitle.style[i] = style[i];
+  // }
+  // feeDetailBox.appendChild(feeDetailBoxTitle);
+  // this.designerFeeDetail(feeDetailBox, desid, info.fee);
+  // mother.appendChild(feeDetailBox);
 
   //designer fee
   feeBox = GeneralJs.nodes.div.cloneNode(true);
@@ -2569,9 +2569,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     if (mobile) {
       sourceArr[2].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
     }
-    // if (distance * number === 0) {
+    if (distance * number === 0) {
       sourceArr.pop();
-    // }
+    }
   }
 
   if (both) {
@@ -2585,9 +2585,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     if (mobile) {
       sourceArr[4].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
     }
-    // if (distance * number === 0) {
+    if (distance * number === 0) {
       sourceArr.pop();
-    // }
+    }
   }
 
   marginTop = <%% left - 6, left - 6, top, top, 2 %%>;
