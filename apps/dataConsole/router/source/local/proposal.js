@@ -2234,10 +2234,10 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     input.setAttribute("name", "pp_designer_selected_box_contents_service_input" + String(n));
     input.style.display = "none";
 
-    let div_clone, div_clone2, div_clone3, input_clone, label_clone;
+    let div_clone, div_clone2, div_clone3, input_clone, label_clone, service;
     div_clone = GeneralJs.nodes.div.cloneNode(true);
     div_clone.classList.add("pp_designer_selected_box_contents_service_total");
-    let service = [ "오프라인", "온라인" ];
+    service = [ "오프라인", "온라인" ];
 
     for (let i = 0; i < service.length; i++) {
       input_clone = input.cloneNode(true);
@@ -2252,7 +2252,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       div_clone2.classList.add("pp_designer_selected_box_contents_service");
       div_clone2.textContent = service[i];
-      div_clone2.insertAdjacentHTML('afterbegin', '<div class="pp_designer_selected_box_contents_service_won"></div>');
       label_clone = GeneralJs.nodes.label.cloneNode(true);
       label_clone.setAttribute("for", "pp_designer_selected_box_contents_service_input" + String(n) + String(i));
       div_clone3 = GeneralJs.nodes.div.cloneNode(true);
@@ -5126,12 +5125,12 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .pp_designer_selected_box{
-    margin: 18px;
-    margin-top: 16px;
+    margin: 17px;
+    margin-top: 12px;
     margin-bottom: 0;
   }
   .pp_designer_selected > .pp_designer_selected_box:nth-child(1){
-    margin-top: 31px;
+    margin-top: 19px;
   }
   .pp_designer_selected_box_value{
     display:none;
@@ -5152,16 +5151,16 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .pp_designer_selected > .pp_designer_selected_box:nth-child(1){
-    height:calc(calc(100% - 116px) * 0.42);
+    height:calc(calc(100% - 116px) * 0.47);
   }
   .pp_designer_selected > .pp_designer_selected_box:nth-child(2){
-    height:calc(calc(100% - 116px) * 0.16);
+    height:calc(calc(100% - 116px) * 0.17);
   }
   .pp_designer_selected > .pp_designer_selected_box:nth-child(3){
-    height:calc(calc(100% - 116px) * 0.16);
+    height:calc(calc(100% - 116px) * 0.17);
   }
   .pp_designer_selected > .pp_designer_selected_box:nth-child(4){
-    height:calc(calc(100% - 116px) * 0.26);
+    height:calc(calc(100% - 116px) * 0.27);
   }
 
   .pp_designer_selected_box_contents_designers_total,.pp_designer_selected_box_contents_service_total{
