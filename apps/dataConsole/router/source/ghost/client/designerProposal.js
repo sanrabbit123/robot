@@ -2492,7 +2492,6 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
   const desktop = !mobile;
   const { top, bottom, left } = this.subBoxMargin;
   const thisDesigner = this.designers.pick(desid);
-  const percentage = 0.9;
   let sourceArr;
   let style;
   let num;
@@ -2555,19 +2554,17 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
 
   if (online) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인 인건비", amount: autoComma(amount * 0.9) + "원" },
-      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: autoComma(amount * 0.1) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(amount) + "원" },
     ];
   }
 
   if (offline) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너 디자인 인건비", amount: autoComma(amount * 0.9) + "원" },
-      { title: thisDesigner.designer + " 디자이너 디자인 감리비", amount: autoComma(amount * 0.1) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비", amount: autoComma(amount) + "원" },
       { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 총 " + String(number) + "회)", amount: autoComma(distance * number) + "원" }
     ];
     if (mobile) {
-      sourceArr[2].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
+      sourceArr[sourceArr.length - 1].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
     }
     if (distance * number === 0) {
       sourceArr.pop();
@@ -2576,14 +2573,12 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
 
   if (both) {
     sourceArr = [
-      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 인건비 (온라인)", amount: autoComma(amount2 * 0.9) + "원" },
-      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 감리비 (온라인)", amount: autoComma(amount2 * 0.1) + "원" },
-      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 인건비 (오프라인)", amount: autoComma(amount * 0.9) + "원" },
-      { title: thisDesigner.designer + " 디자이너" + (desktop ? " 디자인" : "") + " 감리비 (오프라인)", amount: autoComma(amount * 0.1) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비 (온라인)", amount: autoComma(amount2) + "원" },
+      { title: thisDesigner.designer + " 디자이너 디자인비 (오프라인)", amount: autoComma(amount) + "원" },
       { title: "출장비 (거리 : " + km + " / 시간 : " + time + " / 총 " + String(number) + "회)", amount: autoComma(distance * number) + "원" }
     ];
     if (mobile) {
-      sourceArr[4].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
+      sourceArr[sourceArr.length - 1].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
     }
     if (distance * number === 0) {
       sourceArr.pop();
