@@ -5279,7 +5279,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     margin-left: 6px;
     margin-right: 6px;
-    top: ${GeneralJs.isMac() ? String(1) : String(0)}px;
+    top: 0px;
   }
 
   .pp_designer_selected_box_contents_selection{
