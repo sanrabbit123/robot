@@ -300,24 +300,28 @@ Ghost.prototype.ghostRouter = function (needs) {
   //POST - receive
   funcObj.post_receiveCall = {
     link: [ "/receiveCall" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      if (req.body.sender === undefined || req.body.kind === undefined) {
-        console.log(req.body);
-        res.send(JSON.stringify({ error: "error" }));
-      } else {
-        const { sender, kind } = req.body;
-        const message = (req.body.message !== undefined ? req.body.message : "");
-        await instance.mother.slack_bot.chat.postMessage({ text: sender, channel: "#error_log" });
-        await instance.mother.slack_bot.chat.postMessage({ text: kind, channel: "#error_log" });
-        await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+    func: async function (req, res) {
+      try {
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.sender === undefined || req.body.kind === undefined) {
+          console.log(req.body);
+          res.send(JSON.stringify({ error: "error" }));
+        } else {
+          const { sender, kind } = req.body;
+          const message = (req.body.message !== undefined ? req.body.message : "");
+          await instance.mother.slack_bot.chat.postMessage({ text: sender, channel: "#error_log" });
+          await instance.mother.slack_bot.chat.postMessage({ text: kind, channel: "#error_log" });
+          await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
 
-        res.send(JSON.stringify({ message: "success" }));
+          res.send(JSON.stringify({ message: "success" }));
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
   };
