@@ -3131,8 +3131,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //r initial event
   GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
-  //dev ===================================================================================
-
   rInitialBox.addEventListener("click", function (e) {
     const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
     let matrixBox;
@@ -3246,7 +3244,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               text = `${date} | <b%${pageName}%b> 페이지에서 값을 <b%업데이트%b>함`;
             } else if (obj.key === "submit") {
               text = `${date} | <b%${pageName}%b> 페이지에서 결과를 <b%제출%b>함`;
+            } else if (obj.key === "send") {
+              text = `${date} | ${obj.who.name}이 <b%${pageName}%b> 페이지를 고객에게 <b%전송%b>함`;
             }
+
             obj.text = text;
             return obj;
           });
@@ -3262,7 +3263,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             },
             children: [
               {
-                text: "고객님이 선택한 사진",
+                text: "고객님의 페이지 행적",
                 style: {
                   fontSize: String(fontSize) + ea,
                   fontWeight: String(600),
@@ -3284,12 +3285,12 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       if (toggle === "off") {
                         cleanChildren(scrollTong);
                         historyLoad();
-                        textDom.textContent = "고객님의 페이지 행적";
+                        textDom.textContent = "고객님이 선택한 사진";
                         this.setAttribute("toggle", "on");
                       } else {
                         cleanChildren(scrollTong);
                         imageLoad();
-                        textDom.textContent = "고객님이 선택한 사진";
+                        textDom.textContent = "고객님의 페이지 행적";
                         this.setAttribute("toggle", "off");
                       }
                     }
@@ -3420,7 +3421,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           }
 
-          imageLoad();
+          historyLoad();
 
           scrollTong.style.height = "auto";
 
@@ -3435,8 +3436,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       matrixBox.style.animation = "fadein 0.3s ease forwards";
     }
   });
-
-  //dev ===================================================================================
 
   //get textAreaTong
   GeneralJs.ajax("id=" + thisCase[standard[1]], "/getClientHistory", function (res) {
