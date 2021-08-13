@@ -1791,7 +1791,7 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
 
   if (/aa01s/gi.test(serid)) {
     finalWords += "홈퍼니싱 ";
-    startDateNumber = 35;
+    startDateNumber = 30;
   } else if (/aa02s/gi.test(serid)) {
     finalWords += "홈스타일링 ";
     startDateNumber = 45;
