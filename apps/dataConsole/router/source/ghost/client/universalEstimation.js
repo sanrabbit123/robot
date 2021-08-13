@@ -191,8 +191,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   itemBarTop = <%% 10, 10, 10, 10, 10 %%>;
   itemBarBottom = <%% 16, 16, 16, 16, 16 %%>;
 
-  tablePaddingTop = <%% 8, 8, 8, 8, 8 %%>;
-  tablePaddingBottom = <%% 13, 13, 13, 13, 13 %%>;
+  tablePaddingTop = <%% 13, 13, 13, 13, 13 %%>;
+  tablePaddingBottom = <%% 18, 18, 18, 18, 18 %%>;
   barPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
   barMarginBottom = <%% 14, 14, 14, 14, 14 %%>;
 
