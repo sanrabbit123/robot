@@ -2568,6 +2568,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     if (mobile) {
       sourceArr[2].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
     }
+    if (distance * number === 0) {
+      sourceArr.pop();
+    }
   }
 
   if (both) {
@@ -2580,6 +2583,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     ];
     if (mobile) {
       sourceArr[4].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
+    }
+    if (distance * number === 0) {
+      sourceArr.pop();
     }
   }
 
