@@ -5129,12 +5129,12 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .pp_designer_selected_box{
-    margin: 25px;
+    margin: 18px;
     margin-top: 16px;
     margin-bottom: 0;
   }
   .pp_designer_selected > .pp_designer_selected_box:nth-child(1){
-    margin-top: 34px;
+    margin-top: 31px;
   }
   .pp_designer_selected_box_value{
     display:none;
