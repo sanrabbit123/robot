@@ -572,7 +572,7 @@ AddressParser.prototype.addressInspection = async function (addressArr, liteMode
           return { boo: false, message: "ERROR: 건물 번호 없음" };
         }
         if (/[로길]$/i.test(addressArr[targetIndex])) {
-          if (addressArr[targetIndex + 1].replace(/[0-9\-\.]/gi, '') !== '') {
+          if (addressArr[targetIndex + 1].replace(/\([^\)]*\)?/gi, '').replace(/[0-9\-\.]/gi, '') !== '') {
             return { boo: false, message: "ERROR: 건물 번호가 이상함" };
           }
         }

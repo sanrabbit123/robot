@@ -1306,7 +1306,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     const { createNode, colorChip, withOut, isMac } = GeneralJs;
     const { desid, cliid, client, designer, detail, fee } = feeObject;
     const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium } = detail;
-    const distanceBoo = (online !== offline ? "true" : "false");
+    const distanceBoo = (distance !== 0 ? "true" : "false");
     const mother = thisSet;
     const motherWidth = mother.getBoundingClientRect().width;
     const thisOnOff = /offline/gi.test(thisSet.className) ? "offline" : "online";
@@ -1325,7 +1325,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     width = 180;
     visual = 1;
     blockHeight = 22;
-    bottom = 56;
+    bottom = 28;
     paddingTop = 14;
     paddingLeft = 18;
     paddingBottom = isMac() ? 13 : 10;
@@ -1589,16 +1589,13 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       }
                     }
                     if (doing) {
-                      this.lastChild.textContent = "회당 " + GeneralJs.autoComma(distanceBoo ? distance : 0) + "원, 총 " + String(distanceBoo ? newNumber : 0) + "회";
+                      this.lastChild.textContent = "회당 " + GeneralJs.autoComma(distance) + "원, 총 " + String(distanceBoo ? newNumber : 0) + "회";
                       this.setAttribute("number", String(newNumber));
-                      offline = Number(this.parentElement.children[this.parentElement.children.length - 2].lastChild.textContent.replace(/[^0-9]/gi, ''));
-                      final = offline + (distance * newNumber);
-                      if (distanceBoo && thisOnOff === "offline") {
-                        this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
-                        ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).fee = final;
+                      if (distanceBoo) {
                         ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
-                        thisSet.querySelector("input").value = GeneralJs.autoComma(final);
-                        input_widthSet(thisSet.querySelector("input"));
+                        offline = Number(this.parentElement.children[this.parentElement.children.length - 2].lastChild.textContent.replace(/[^0-9]/gi, ''));
+                        final = offline + (distance * newNumber);
+                        this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
                       }
                     }
 
@@ -1618,7 +1615,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                   }
                 },
                 {
-                  text: "회당 " + GeneralJs.autoComma(distanceBoo === "true" ? distance : 0) + "원, 총 " + String(distanceBoo === "true" ? travel.number : 0) + "회",
+                  text: "회당 " + GeneralJs.autoComma(distance) + "원, 총 " + String(travel.number) + "회",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
@@ -1693,7 +1690,39 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                   }
                 }
               ]
-            }
+            },
+            //total
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "출장비 적용",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: GeneralJs.autoComma(offline + (distance * travel.number)) + "원",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
           ]
         }
       ]
@@ -2149,17 +2178,33 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
 
     GeneralJs.timeouts["firstClick"] = setTimeout(async () => {
       try {
+        let desid, cliid, serid, xValue;
+        let raw_obj, result;
+
+        cliid = instance.cliid;
+        serid = instance.serid;
+        xValue = instance.xValue;
+
         for (let dom of instance.clickTargets) {
-          fourth.events.designer.call(dom.querySelector("label").querySelector("div"), {
-            customHomeLiaison_timeoutMode: true
-          }).then((str) => {
-            if (/aside/gi.test(document.body.lastChild.nodeName)) {
-              document.body.removeChild(document.body.lastChild);
+          if (instance.toggleSetting.load === 0) {
+            fourth.events.designer.call(dom.querySelector("label").querySelector("div"), {
+              customHomeLiaison_timeoutMode: true
+            }).then((str) => {
+              if (/aside/gi.test(document.body.lastChild.nodeName)) {
+                document.body.removeChild(document.body.lastChild);
+              }
+            }).catch((err) => {
+              console.log(err);
+            });
+            await GeneralJs.sleep(600);
+          } else {
+            desid = dom.querySelector("div").getAttribute("cus_desid");
+            raw_obj = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee");
+            if (raw_obj.length !== 0) {
+              result = raw_obj[0];
+              ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
             }
-          }).catch((err) => {
-            console.log(err);
-          });
-          await GeneralJs.sleep(600);
+          }
         }
         while (/aside/gi.test(document.body.lastChild.nodeName)) {
           document.body.removeChild(document.body.lastChild);
@@ -2171,6 +2216,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         console.log(e);
       }
     }, 1000);
+
+
 
     // }
 
@@ -4705,6 +4752,10 @@ ProposalJs.save_init = async function (update = false) {
         designerFeeCalculBoo = ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]));
         if (designerFeeCalculBoo) {
           designerFeeCalculObj = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]));
+        } else {
+          designerFeeCalculObj = await GeneralJs.ajaxJson({ matrix: [ [ result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"] ] ] }, "/designerFee");
+          designerFeeCalculObj = designerFeeCalculObj[0];
+          ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]), designerFeeCalculObj);
         }
 
         temp_num = (temp_arr.indexOf("부분 공간") !== -1) ? temp_arr.length - 1 : temp_arr.length;
@@ -4729,19 +4780,9 @@ ProposalJs.save_init = async function (update = false) {
             }
           }
           result_obj["proposal.detail"][i].fee[f].distance = {
-            number: 0,
-            amount: 0
+            number: designerFeeCalculObj.detail.travel.number,
+            amount: designerFeeCalculObj.detail.distance
           };
-          if (designerFeeCalculBoo) {
-            if (designerFeeCalculObj.detail.offline !== designerFeeCalculObj.detail.online && designerFeeCalculObj.detail.travel.number > 0) {
-              if (result_obj["proposal.detail"][i].fee[f].method !== "online") {
-                result_obj["proposal.detail"][i].fee[f].distance.number = designerFeeCalculObj.detail.travel.number;
-              }
-              if (designerFeeCalculObj.detail.offline !== 0) {
-                result_obj["proposal.detail"][i].fee[f].distance.amount = (designerFeeCalculObj.detail.offline - designerFeeCalculObj.detail.online) / designerFeeCalculObj.detail.travel.number;
-              }
-            }
-          }
         }
         result_obj["service.online"] = methodOnlineBoo;
 
@@ -5120,7 +5161,7 @@ ProposalJs.prototype.cssInjection = function () {
     display: inline-flex;
     padding: 13px;
     padding-top: ${GeneralJs.isMac() ? String(4) : String(4.5)}px;
-    padding-bottom: ${GeneralJs.isMac() ? String(5) : String(4.5)}px;
+    padding-bottom: ${GeneralJs.isMac() ? String(4) : String(4.5)}px;
     height: 16px;
     background: white;
     margin: 2px;
@@ -5146,13 +5187,15 @@ ProposalJs.prototype.cssInjection = function () {
   .pp_designer_selected_box_contents_service{
     font-size: 1.4vh;
     background: transparent;
-    padding-top: ${GeneralJs.isMac() ? String(0) : String(0.2)}vw;
+    padding-top: 0;
+    padding-bottom: 0;
     position: relative;
     display: inline-block;
     text-align: initial;
     overflow: visible;
     padding-left:0.5vw;
     padding-right:0.5vw;
+    top:-0.3vh;
   }
 
   .pp_designer_selected_box_contents_service_input:checked + .pp_designer_selected_box_contents_service{
@@ -5169,7 +5212,7 @@ ProposalJs.prototype.cssInjection = function () {
     height: 6px;
     background: ${GeneralJs.colorChip.deactive};
     border-radius: 10px;
-    top: calc(50% - 4px);
+    top: 0.7vh;
     left: -2px;
   }
 
@@ -5179,6 +5222,7 @@ ProposalJs.prototype.cssInjection = function () {
     width: 100%;
     height: 100%;
     justify-content: center;
+    align-items: center;
   }
 
   .pp_designer_selected_box_contents_money_text,.pp_designer_selected_box_contents_money_text2{
@@ -5208,7 +5252,7 @@ ProposalJs.prototype.cssInjection = function () {
     position: relative;
     margin-left: 6px;
     margin-right: 6px;
-    top: ${GeneralJs.isMac() ? String(14) : String(13)}px;
+    top: ${GeneralJs.isMac() ? String(1) : String(0)}px;
   }
 
   .pp_designer_selected_box_contents_selection{
@@ -5896,17 +5940,17 @@ ProposalJs.prototype.launching = async function () {
     this.thirdChildren = await this.thirdProcess();
     await this.secondProcess();
 
-    GeneralJs.ajaxJson({
-      mode: "inspection",
-      addressArr: Array.from(this.designers).map((designer) => { return { id: designer.desid, address: designer.information.address.length === 0 ? "" : designer.information.address[0] } })
-    }, "/parsingAddress").then((inspectionArr) => {
-      if (inspectionArr.length !== 0) {
-        window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!");
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionArr[0].id;
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
+    // GeneralJs.ajaxJson({
+    //   mode: "inspection",
+    //   addressArr: Array.from(this.designers).map((designer) => { return { id: designer.desid, address: designer.information.address.length === 0 ? "" : designer.information.address[0] } })
+    // }, "/parsingAddress").then((inspectionArr) => {
+    //   if (inspectionArr.length !== 0) {
+    //     window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!");
+    //     window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionArr[0].id;
+    //   }
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
 
     let query = GeneralJs.returnGet();
     let proposal_list_raw, proposal_obj;

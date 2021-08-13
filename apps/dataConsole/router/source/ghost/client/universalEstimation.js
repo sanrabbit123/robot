@@ -121,7 +121,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   const { client, designer, ea, baseTong, media, bill } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
   const wordings = this.billWordings();
   let whiteBlock, whiteTong;
   let blockHeight;
@@ -146,6 +146,10 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let barPaddingBottom;
   let barMarginBottom;
   let sumBox;
+  let sumBoxPaddingTop, sumBoxPaddingBottom;
+  let sumBoxBarTop;
+  let sumBoxMainFontSize, sumBoxMainFontWeight, sumBoxMainPaddingLeft;
+  let sumBoxVatFontSize, sumBoxVatFontWeight, sumBoxVatPaddingLeft;
   let grayMarginTop0, grayMarginTop1;
   let cautionBox;
   let cautionTitleBox, cautionContentsBox;
@@ -154,6 +158,14 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let cautionPaddingLeft;
   let cautionPaddingRight;
   let cautionFirstBoxWidth;
+  let cautionWordsMarginBottom;
+  let cautionLogoBottom, cautionLogoHeight;
+  let grayTong;
+  let grayHeight, grayTop, grayTextTop, grayTextLeft, grayTextSize, grayButtonHeight;
+  let grayTextTong;
+  let grayTongMarginBottom;
+  let buttonOff, buttonOn, buttonTong;
+  let buttonTongHeight;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
@@ -187,11 +199,36 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   grayMarginTop0 = <%% 40, 40, 40, 40, 40 %%>;
   grayMarginTop1 = <%% 20, 20, 20, 20, 20 %%>;
 
-  cautionPaddingTop = <%% 30, 30, 30, 30, 30 %%>;
-  cautionPaddingBottom = <%% 30, 30, 30, 30, 30 %%>;
-  cautionPaddingLeft = <%% 30, 30, 30, 30, 30 %%>;
-  cautionPaddingRight = <%% 30, 30, 30, 30, 30 %%>;
-  cautionFirstBoxWidth = <%% 200, 200, 200, 200, 200 %%>;
+  sumBoxBarTop = <%% 20, 20, 20, 20, 20 %%>;
+  sumBoxMainFontSize = <%% 29, 29, 29, 29, 29 %%>;
+  sumBoxMainFontWeight = <%% 500, 500, 500, 500, 500 %%>;
+  sumBoxMainPaddingLeft = <%% 19, 19, 19, 19, 19 %%>;
+  sumBoxVatFontSize = <%% 18, 18, 18, 18, 18 %%>;
+  sumBoxVatFontWeight = <%% 300, 300, 300, 300, 300 %%>;
+  sumBoxVatPaddingLeft = <%% 10, 10, 10, 10, 10 %%>;
+
+  sumBoxPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
+  sumBoxPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+
+  cautionPaddingTop = <%% 34, 34, 34, 34, 34 %%>;
+  cautionPaddingBottom = <%% 29, 29, 29, 29, 29 %%>;
+  cautionPaddingLeft = <%% 40, 40, 40, 40, 40 %%>;
+  cautionPaddingRight = <%% 40, 40, 40, 40, 40 %%>;
+  cautionFirstBoxWidth = <%% 180, 180, 180, 180, 180 %%>;
+  cautionWordsMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
+
+  cautionLogoBottom = <%% 12, 12, 12, 12, 12 %%>;
+  cautionLogoHeight = <%% 16, 16, 16, 16, 16 %%>;
+
+  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
+  grayTop = <%% 5, 5, 5, 5, 0 %%>;
+  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
+  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
+  grayButtonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
+  grayTongMarginBottom = <%% 15, 15, 15, 15, 2.5 %%>;
+
+  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
 
   items = JSON.parse(JSON.stringify(wordings.items));
   items = [ JSON.parse(JSON.stringify(wordings.column)) ].concat(items);
@@ -389,7 +426,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     style: {
       display: "block",
       position: "relative",
-      paddingTop: String(15) + ea,
+      paddingTop: String(sumBoxPaddingTop) + ea,
+      paddingBottom: String(sumBoxPaddingBottom) + ea,
     },
     children: [
       {
@@ -403,7 +441,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             style: {
               position: "absolute",
               borderBottom: "1px solid " + colorChip.gray3,
-              height: String(20) + ea,
+              height: String(sumBoxBarTop) + ea,
               width: String(100) + '%',
               top: String(0),
               left: String(0),
@@ -414,11 +452,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              fontSize: String(29) + ea,
-              fontWeight: String(500),
+              fontSize: String(sumBoxMainFontSize) + ea,
+              fontWeight: String(sumBoxMainFontWeight),
               textAlign: "right",
               background: colorChip.white,
-              paddingLeft: String(19) + ea,
+              paddingLeft: String(sumBoxMainPaddingLeft) + ea,
               color: colorChip.black,
             }
           },
@@ -427,9 +465,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             style: {
               display: "inline-block",
               position: "relative",
-              paddingLeft: String(10) + ea,
-              fontSize: String(18) + ea,
-              fontWeight: String(300),
+              paddingLeft: String(sumBoxVatPaddingLeft) + ea,
+              fontSize: String(sumBoxVatFontSize) + ea,
+              fontWeight: String(sumBoxVatFontWeight),
               textAlign: "right",
               background: colorChip.white,
               color: colorChip.shadow,
@@ -453,39 +491,77 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       width: withOut(cautionPaddingLeft + cautionPaddingRight, ea),
       marginTop: String(grayMarginTop0) + ea,
       background: colorChip.gray0,
-      height: String(600) + ea,
     },
     children: [
       {
         style: {
           display: "inline-block",
           position: "relative",
-          background: "aliceblue",
           width: String(cautionFirstBoxWidth) + ea,
-          height: String(100) + '%'
+          verticalAlign: "top",
         }
       },
       {
         style: {
           display: "inline-block",
           position: "relative",
-          background: "red",
           width: withOut(cautionFirstBoxWidth, ea),
-          height: String(100) + '%'
+          verticalAlign: "top",
         }
       },
     ]
   });
 
-  
-  cautionBox.firstChild
-  cautionBox.lastChild
-
-
-
-
-
   createNode({
+    mother: cautionBox.firstChild,
+    text: wordings.commentsTitle,
+    style: {
+      position: "relative",
+      fontSize: String(initWordingSize) + ea,
+      fontWeight: String(600),
+      color: colorChip.black,
+    },
+    bold: {
+      fontSize: String(initWordingSize) + ea,
+      fontWeight: String(600),
+      color: colorChip.green,
+    }
+  });
+
+  for (let c of wordings.comments) {
+    createNode({
+      mother: cautionBox.lastChild,
+      text: "<b%-%b>&nbsp;&nbsp;" + c,
+      style: {
+        position: "relative",
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(initWordingWeight),
+        color: colorChip.black,
+        marginBottom: String(cautionWordsMarginBottom) + ea,
+      },
+      bold: {
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(initWordingWeight),
+        color: colorChip.gray5,
+      }
+    });
+  }
+
+  if (desktop) {
+    createNode({
+      mother: cautionBox.lastChild,
+      mode: "svg",
+      source: instance.mother.returnLogo(colorChip.shadow, 4),
+      style: {
+        position: "absolute",
+        bottom: String(cautionLogoBottom) + ea,
+        right: String(0) + ea,
+        height: String(cautionLogoHeight) + ea,
+      }
+    });
+  }
+
+  grayTong = createNode({
     mother: whiteTong,
     style: {
       display: "block",
@@ -495,9 +571,110 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       paddingBottom: String(tablePaddingBottom) + ea,
       marginTop: String(grayMarginTop1) + ea,
       background: colorChip.gray0,
-      height: String(300) + ea,
+      marginBottom: String(grayTongMarginBottom) + ea,
+      height: String(grayHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          top: String(grayTextTop) + ea,
+          left: String(grayTextLeft) + ea,
+          width: withOut(grayTextLeft * 2, ea),
+          height: withOut(grayTextTop * 2, ea),
+          overflow: "scroll",
+        },
+        children: [
+          {
+            style: {
+              position: "absolute",
+              top: String(0) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: "auto",
+              fontSize: String(grayTextSize) + ea,
+              fontWeight: String(300),
+              lineHeight: String(1.6),
+            }
+          }
+        ]
+      }
+    ]
+  });
+  grayTextTong = grayTong.firstChild.firstChild;
+
+  buttonOn = {};
+  buttonTong = createNode({
+    mother: whiteTong,
+    attribute: [
+      { toggle: "on" }
+    ],
+    events: [
+      {
+        type: "click",
+        event: function (e) {
+          if (buttonOn.style !== undefined) {
+            if (this.getAttribute("toggle") === "on") {
+              buttonOn.style.opacity = String(0);
+              this.setAttribute("toggle", "off");
+            } else {
+              buttonOn.style.opacity = String(1);
+              this.setAttribute("toggle", "on");
+            }
+          }
+        }
+      }
+    ],
+    style: {
+      position: "relative",
+      left: String(0) + ea,
+      width: withOut(0 * 2, ea),
+      height: String(buttonTongHeight) + ea,
+      cursor: "pointer",
     }
   });
+
+  ajaxJson("/designerProposal_policy").then(function (res) {
+    const { policy, button } = res;
+    let bTags;
+
+    grayTextTong.insertAdjacentHTML("beforeend", policy);
+    bTags = grayTextTong.querySelectorAll("b");
+    for (let b of bTags) {
+      b.style.color = colorChip.black;
+      b.style.fontWeight = String(600);
+    }
+
+    [ buttonOff, buttonOn ] = createNodes([
+      {
+        mother: buttonTong,
+        mode: "svg",
+        source: button.off,
+        style: {
+          position: "absolute",
+          height: String(grayButtonHeight) + ea,
+          right: String(0) + ea,
+          top: String(0) + ea,
+        }
+      },
+      {
+        mother: buttonTong,
+        mode: "svg",
+        source: button.on,
+        style: {
+          position: "absolute",
+          height: String(grayButtonHeight) + ea,
+          right: String(0) + ea,
+          top: String(0) + ea,
+          background: colorChip.white,
+        }
+      },
+    ]);
+
+  }).catch(function (err) {
+    throw new Error(err);
+  });
+
 
   console.log(wordings);
 

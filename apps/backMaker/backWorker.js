@@ -1125,10 +1125,16 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       offlineFeeCase = fee;
       onlineFeeCase = fee;
 
-      if (distanceBoo) {
-        fee = fee + (travelInfo.amount * travelNumber);
-        offlineFeeCase = fee;
+      if (!distanceBoo) {
+        travelInfo.amount = 0;
+        travelNumber = 0;
       }
+
+      // distance fee plus
+      // if (distanceBoo) {
+      //   fee = fee + (travelInfo.amount * travelNumber);
+      //   offlineFeeCase = fee;
+      // }
 
       if (distanceLimitBoo) {
         if (designer.analytics.project.online) {
