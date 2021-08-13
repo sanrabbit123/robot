@@ -2366,7 +2366,8 @@ DesignerProposalJs.prototype.feeToString = function (fee) {
   moneyText = '';
   for (let { amount, method, partial, distance } of fee) {
     if (/offline/gi.test(method)) {
-      money = amount + (distance.amount * distance.number);
+      // money = amount + (distance.amount * distance.number);
+      money = amount;
     } else {
       money = amount;
     }
@@ -2568,9 +2569,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     if (mobile) {
       sourceArr[2].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
     }
-    if (distance * number === 0) {
+    // if (distance * number === 0) {
       sourceArr.pop();
-    }
+    // }
   }
 
   if (both) {
@@ -2584,9 +2585,9 @@ DesignerProposalJs.prototype.designerFeeDetail = function (mother, desid, fee) {
     if (mobile) {
       sourceArr[4].title = "출장비 (" + km + " / " + time + " / " + String(number) + "회)";
     }
-    if (distance * number === 0) {
+    // if (distance * number === 0) {
       sourceArr.pop();
-    }
+    // }
   }
 
   marginTop = <%% left - 6, left - 6, top, top, 2 %%>;
