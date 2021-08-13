@@ -62,12 +62,15 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-    const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
-    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    let id;
-    id = phoneNumbers[3];
-    const { data } = (await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } }));
-    console.log(data);
+    // const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
+    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    // let id;
+    // id = phoneNumbers[3];
+    // const { data } = (await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } }));
+    // console.log(data);
+
+
+
 
 
 

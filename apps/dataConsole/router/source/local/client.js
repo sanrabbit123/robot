@@ -1480,9 +1480,11 @@ ClientJs.prototype.spreadData = async function (search = null) {
     let standardDomsTargets, caseDomsTargets;
 
     if (search === null || search === '' || search === '-') {
-      clients = JSON.parse(await GeneralJs.ajaxPromise("limit=100", "/getClients"));
+      const ago = new Date();
+      ago.setDate(ago.getDate() - 30);
+      clients = await GeneralJs.ajaxJson({ whereQuery: { $or: [ { requests: { $elemMatch: { "request.timeline": { $gte: ago } } } }, { requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } } ] } }, "/getClients");
     } else {
-      clients = JSON.parse(await GeneralJs.ajaxPromise("query=" + search, "/searchClients"));
+      clients = await GeneralJs.ajaxJson({ query: search }, "/searchClients");
     }
 
     const { standard, data } = clients;
