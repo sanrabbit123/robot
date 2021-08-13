@@ -1290,12 +1290,12 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
   fourth.events = {};
 
   input_widthSet = function (dom) {
-    dom.style.width = String(0.85 * dom.value.length) + "vh";
+    dom.style.width = String(0.75 * dom.value.length) + "vh";
     if (dom.value.replace(/,/g, '').length < 7) {
-      dom.style.width = String(0.9 * dom.value.length) + "vh";
+      dom.style.width = String(0.85 * dom.value.length) + "vh";
     }
     if (dom.value.replace(/,/g, '').length < 4) {
-      dom.style.width = String(1.1 * dom.value.length) + "vh";
+      dom.style.width = String(1.05 * dom.value.length) + "vh";
     }
   }
 
@@ -3414,7 +3414,7 @@ ProposalJs.prototype.list_mainAreaContents = function (parent, proposal_list_raw
       general_string += designer_names_obj[obj.desid] + ' <b style="display:none">' + obj.desid + '</b>';
       general_string += ' : ';
       for (let obj2 of obj.fee) {
-        general_string += (obj2.method === "offline") ? "오프라인" : "온라인";
+        general_string += (obj2.method === "offline") ? "오프" : "온";
         general_string += ' ';
         general_string += String(obj2.amount / 10000) + "만원";
         if (obj2.partial) {

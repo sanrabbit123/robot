@@ -1245,8 +1245,6 @@ DataRouter.prototype.rou_post_createDocument = function () {
       const updateQuery = equalJson(req.body.updateQuery);
       let id;
 
-      console.log(updateQuery);
-
       if (req.url === "/createClient") {
         id = await instance.back.createClient(updateQuery, { selfMongo: instance.mongo });
       } else if (req.url === "/createDesigner") {
