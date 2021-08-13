@@ -62,23 +62,23 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-    const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
-    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    let id;
-    let callbackurl;
-    let callbackhost;
-    let callbackport;
+    // const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
+    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    // let id;
+    // let callbackurl;
+    // let callbackhost;
+    // let callbackport;
+    //
+    // callbackurl = "/cloud.php";
+    // callbackhost = "3.35.212.109";
+    // callbackport = 80;
+    //
+    // for (let id of phoneNumbers) {
+    //   console.log(await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + callbackport, { id, pass, callbackurl, callbackhost, callbackport }, { headers: { "Content-Type": "application/json" } }));
+    // }
 
-    callbackurl = "/cloud.php";
-    callbackhost = "3.35.212.109";
-    callbackport = 80;
-
-    for (let id of phoneNumbers) {
-      console.log(await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + callbackport, { id, pass, callbackurl, callbackhost, callbackport }, { headers: { "Content-Type": "application/json" } }));
-    }
 
 
-    
 
 
     // const selfMongo = this.MONGOLOCALC;

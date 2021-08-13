@@ -315,7 +315,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           const { sender, kind } = req.body;
           const message = (req.body.message !== undefined ? req.body.message : "");
           await instance.mother.slack_bot.chat.postMessage({ text: sender, channel: "#error_log" });
-          await instance.mother.slack_bot.chat.postMessage({ text: kind, channel: "#error_log" });
+          await instance.mother.slack_bot.chat.postMessage({ text: (typeof kind), channel: "#error_log" });
           await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
 
           res.send(JSON.stringify({ message: "success" }));
