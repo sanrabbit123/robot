@@ -2156,8 +2156,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       i = i + 1;
     }
 
-    // if (clickMode) {
-
     GeneralJs.createNode({
       mode: "aside",
       mother: document.body,
@@ -2168,6 +2166,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         width: String(99) + "vw",
         height: String(99) + "vh",
         background: "transparent",
+        cursor: "wait",
         zIndex: String(999)
       }
     });
@@ -2216,10 +2215,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         console.log(e);
       }
     }, 1000);
-
-
-
-    // }
 
     for (let j = 0; j < 10; j++) {
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
@@ -4727,10 +4722,12 @@ ProposalJs.save_init = async function (update = false) {
     endDate = thisClient.requests[0].analytics.date.space.movein;
     startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), endDate.getHours(), endDate.getMinutes());
     startDate.setDate(startDate.getDate() - GeneralJs.serviceParsing({ serid: result_obj["service.serid"], xValue: result_obj["service.xValue"], online: false }, true));
-    // if (startDate.valueOf() <= (new Date()).valueOf()) {
-    //   alert("고객의 예상 종료일을 올바르게 고쳐주세요!");
-    //   return "fail";
-    // }
+    if (!update) {
+      if (startDate.valueOf() <= (new Date()).valueOf()) {
+        alert("고객의 예상 종료일을 올바르게 고쳐주세요!");
+        return "fail";
+      }
+    }
     result_obj["process.contract.form.date.from"] = startDate;
     result_obj["process.contract.form.date.to"] = endDate;
 

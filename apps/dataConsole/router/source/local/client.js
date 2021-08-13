@@ -5035,14 +5035,12 @@ ClientJs.prototype.globalChaining = async function (thisCase, column, value, pas
           } else {
             serid = "s2011_aa04s";
           }
-
           await ajaxJson({
             id: cliid,
             column: "curation.service.serid",
             value: [ serid ],
             email: cookies.homeliaisonConsoleLoginedEmail,
           }, "/updateClientHistory");
-
         } catch (e) {
           console.log(e);
         }
@@ -5052,7 +5050,9 @@ ClientJs.prototype.globalChaining = async function (thisCase, column, value, pas
         const { cliid } = thisCase;
         try {
           if (value !== pastValue) {
-            await ajaxJson({ cliid }, "/proposalReset");
+            if (window.confirm("제안서 리셋을 원하시나요?")) {
+              await ajaxJson({ cliid }, "/proposalReset");
+            }
           }
         } catch (e) {
           console.log(e);
