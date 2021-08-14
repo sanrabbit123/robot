@@ -16,6 +16,8 @@ const Ghost = function () {
   this.formidable = require('formidable');
 }
 
+Ghost.timeouts = {};
+
 Ghost.prototype.setTimer = function (callback, timeObj) {
   if (typeof timeObj !== "object" || typeof callback !== "function") {
     throw new Error("arguments must be Object: timeObj, Function: callback");
@@ -315,6 +317,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           const { sender, kind } = req.body;
           const message = (req.body.message !== undefined ? req.body.message : "");
           const method = (kind === '1' ? "phone" : "sms");
+          const timeoutConst = "receiveCall";
           let phoneNumber, senderArr;
           let part0, part1, part2;
 
@@ -352,9 +355,22 @@ Ghost.prototype.ghostRouter = function (needs) {
             phoneNumber = part0 + '-' + part1 + '-' + part2;
           }
 
-          await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
-          await instance.mother.slack_bot.chat.postMessage({ text: kind, channel: "#error_log" });
-          await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+          if (Ghost.timeouts[timeoutConst] !== null || Ghost.timeouts[timeoutConst] !== undefined) {
+            clearTimeout(Ghost.timeouts[timeoutConst]);
+          }
+
+          Ghost.timeouts[timeoutConst] = setTimeout(async () => {
+            try {
+              await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
+              await instance.mother.slack_bot.chat.postMessage({ text: kind, channel: "#error_log" });
+              await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+            } catch (e) {
+              console.log(e);
+            } finally {
+              clearTimeout(Ghost.timeouts[timeoutConst]);
+              Ghost.timeouts[timeoutConst] = null;
+            }
+          }, 2000);
 
           res.send(JSON.stringify({ message: "success" }));
         }
