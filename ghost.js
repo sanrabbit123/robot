@@ -315,7 +315,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify({ error: "error" }));
         } else {
           const { sender, kind } = req.body;
-          const message = (req.body.message !== undefined ? req.body.message : "");
           const method = (kind === '1' ? "phone" : "sms");
           const timeoutConst = "receiveCall";
           let phoneNumber, senderArr;
@@ -362,8 +361,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           Ghost.timeouts[timeoutConst] = setTimeout(async () => {
             try {
               await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
-              await instance.mother.slack_bot.chat.postMessage({ text: kind, channel: "#error_log" });
-              await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
               await instance.mother.slack_bot.chat.postMessage({ text: "aaaa", channel: "#error_log" });
             } catch (e) {
               console.log(e);
