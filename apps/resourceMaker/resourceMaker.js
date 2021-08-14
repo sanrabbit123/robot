@@ -688,6 +688,7 @@ ResourceMaker.prototype.launching = async function () {
     let input;
     let tempResponse, index;
     let tempObject;
+    let tempRows;
     let namesArr;
     let clients;
     let thisProject;
@@ -710,6 +711,10 @@ ResourceMaker.prototype.launching = async function () {
     this.arr = await note.readNote();
 
     this.portfolio_verification();
+    tempRows = await back.getContentsArrByQuery({ "contents.portfolio.pid": this.p_id });
+    if (tempRows.length !== 0) {
+      throw new Error("invaild pid");
+    }
 
     //parsing portfolio number
     tempResponse = 200;
@@ -731,6 +736,12 @@ ResourceMaker.prototype.launching = async function () {
     //make info and write raw file
     this.infoMaker();
     this.portfolio_maker();
+    if (!/999/.test(this.final.r_id)) {
+      tempRows = await back.getContentsArrByQuery({ "contents.review.rid": this.final.r_id });
+      if (tempRows.length !== 0) {
+        throw new Error("invaild rid");
+      }
+    }
     await fileSystem("write", [ `${process.cwd()}/temp/${this.p_id}_raw.js`, JSON.stringify(this.final, null, 2) ]);
 
     //parsing cliid, proid

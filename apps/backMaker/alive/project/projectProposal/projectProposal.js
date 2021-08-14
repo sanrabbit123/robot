@@ -37,6 +37,7 @@ const Fee = function (json) {
   this.method = json.method;
   this.partial = json.partial;
   this.amount = json.amount;
+  this.discount = json.discount;
   this.distance = new FeeDistance(json.distance);
 }
 
@@ -45,6 +46,7 @@ Fee.prototype.toNormal = function () {
   obj.method = this.method;
   obj.partial = this.partial;
   obj.amount = this.amount;
+  obj.discount = this.discount;
   obj.distance = this.distance.toNormal();
   return obj;
 }
@@ -138,6 +140,7 @@ Proposal.prototype.appendFee = function (method, amount, number = 0, distanceAmo
     method: (/off/gi.test(method) ? "offline" : "online"),
     partial: false,
     amount: amount,
+    discount: 0,
     distance: {
       number: number,
       amount: distanceAmount,

@@ -48,6 +48,7 @@ Project.prototype.selectProposal = function (desid) {
   for (let obj of this.proposal.detail) {
     if (obj.desid === desid) {
       target = obj;
+      target.proid = this.proid;
     }
   }
   return target;

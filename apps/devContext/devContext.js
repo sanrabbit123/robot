@@ -81,7 +81,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOLOCALC;
+    // const selfMongo = this.MONGOC;
     // const projects = await selfMongo.db(`miro81`).collection(`project`).find({}).toArray();
     // let whereQuery, updateQuery, temp;
     //
@@ -92,12 +92,7 @@ DevContext.prototype.launching = async function () {
     //   temp = JSON.parse(JSON.stringify(project.proposal.detail));
     //   for (let t of temp) {
     //     for (let obj of t.fee) {
-    //       obj.distance = {
-    //         number: 0,
-    //         amount: 0,
-    //         distance: "0km",
-    //         time: "0시간 0분"
-    //       }
+    //       obj.discount = 0;
     //     }
     //   }
     //   updateQuery["proposal.detail"] = temp;
@@ -107,7 +102,7 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-
+    
 
 
 
@@ -842,7 +837,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p110");
+    // await this.getRawPortfolio("p109");
 
 
     // get corePortfolio by pid
