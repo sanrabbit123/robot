@@ -319,7 +319,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           const timeoutConst = "receiveCall";
           const tempDir = process.cwd() + "/temp";
           const now = new Date();
-          const receiveTime = String(now.getFullYear()) + String(now.getMonth()) + String(now.getDate()) + String(now.getHours()) + String(now.Minutes());
+          const receiveTime = String(now.getFullYear()) + String(now.getMonth()) + String(now.getDate()) + String(now.getHours()) + String(now.getMinutes());
           const fileName = timeoutConst + "_" + receiveTime + ".json";
           let phoneNumber, senderArr;
           let part0, part1, part2;
