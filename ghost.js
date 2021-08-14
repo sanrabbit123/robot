@@ -315,11 +315,45 @@ Ghost.prototype.ghostRouter = function (needs) {
           const { sender, kind } = req.body;
           const message = (req.body.message !== undefined ? req.body.message : "");
           const method = (kind === '1' ? "phone" : "sms");
+          let phoneNumber, senderArr;
+          let part0, part1, part2;
 
+          senderArr = sender.split('');
+          phoneNumber = '';
+          part0 = '';
+          part1 = '';
+          part2 = '';
+          if (/^01/gi.test(sender)) {
+            for (let i = 0; i < 3; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 += senderArr.pop();
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          } else if (/^02/gi.test(sender)) {
+            for (let i = 0; i < 2; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 += senderArr.pop();
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          } else {
+            for (let i = 0; i < 3; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 += senderArr.pop();
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          }
 
-          
-          await instance.mother.slack_bot.chat.postMessage({ text: sender, channel: "#error_log" });
-          await instance.mother.slack_bot.chat.postMessage({ text: (typeof kind), channel: "#error_log" });
+          await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
+          await instance.mother.slack_bot.chat.postMessage({ text: kind, channel: "#error_log" });
           await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
 
           res.send(JSON.stringify({ message: "success" }));
