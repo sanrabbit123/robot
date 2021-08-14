@@ -317,6 +317,10 @@ Ghost.prototype.ghostRouter = function (needs) {
           const { sender, kind } = req.body;
           const method = (kind === '1' ? "phone" : "sms");
           const timeoutConst = "receiveCall";
+          const tempDir = process.cwd() + "/temp";
+          const now = new Date();
+          const receiveTime = String(now.getFullYear()) + String(now.getMonth()) + String(now.getDate()) + String(now.getHours()) + String(now.Minutes());
+          const fileName = timeoutConst + "_" + receiveTime + ".json";
           let phoneNumber, senderArr;
           let part0, part1, part2;
 
@@ -354,21 +358,29 @@ Ghost.prototype.ghostRouter = function (needs) {
             phoneNumber = part0 + '-' + part1 + '-' + part2;
           }
 
-          if (Ghost.timeouts[timeoutConst] !== null || Ghost.timeouts[timeoutConst] !== undefined) {
-            clearTimeout(Ghost.timeouts[timeoutConst]);
-          }
-
+          await fileSystem("writeJson", [ tempDir + "/" + fileName, { phoneNumber } ]);
           Ghost.timeouts[timeoutConst] = setTimeout(async () => {
             try {
-              await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
-              await instance.mother.slack_bot.chat.postMessage({ text: "aaaa", channel: "#error_log" });
+              let tempDirList, target;
+              tempDirList = await fileSystem("readDir", [ tempDir ]);
+              tempDirList = tempDirList.filter((f) => { return (new RegExp("^" + fileName, "gi")).test(f); });
+              target = null;
+              for (let file of tempDirList) {
+                if (await fileSystem("exist"), [ tempDir + "/" + file ]) {
+                  target = await fileSystem("readJson", [ tempDir + "/" + file ]);
+                }
+              }
+              if (target !== null) {
+                await instance.mother.slack_bot.chat.postMessage({ text: target.phoneNumber, channel: "#error_log" });
+                await instance.mother.slack_bot.chat.postMessage({ text: "aaaa", channel: "#error_log" });
+              }
             } catch (e) {
               console.log(e);
             } finally {
               clearTimeout(Ghost.timeouts[timeoutConst]);
               Ghost.timeouts[timeoutConst] = null;
             }
-          }, 1000);
+          }, 1000 + (1000 * Math.random()));
 
           res.send(JSON.stringify({ message: "success" }));
         }
