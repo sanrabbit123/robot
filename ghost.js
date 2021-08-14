@@ -364,13 +364,14 @@ Ghost.prototype.ghostRouter = function (needs) {
               await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
               await instance.mother.slack_bot.chat.postMessage({ text: kind, channel: "#error_log" });
               await instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+              await instance.mother.slack_bot.chat.postMessage({ text: "aaaa", channel: "#error_log" });
             } catch (e) {
               console.log(e);
             } finally {
               clearTimeout(Ghost.timeouts[timeoutConst]);
               Ghost.timeouts[timeoutConst] = null;
             }
-          }, 2000);
+          }, 1000);
 
           res.send(JSON.stringify({ message: "success" }));
         }
