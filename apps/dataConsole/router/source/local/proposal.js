@@ -1360,6 +1360,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         width: String(100) + '%',
         height: String(100) + '%',
         background: "transparent",
+        zIndex: String(1),
       }
     });
     createNode({
@@ -1385,6 +1386,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         paddingBottom: String(paddingBottom) + ea,
         paddingLeft: String(paddingLeft) + ea,
         paddingRight: String(paddingLeft) + ea,
+        zIndex: String(1),
       },
       children: [
         {
