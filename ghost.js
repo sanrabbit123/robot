@@ -358,7 +358,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             phoneNumber = part0 + '-' + part1 + '-' + part2;
           }
 
-          await instance.mother.slack_bot.chat.postMessage({ text: sender, channel: "#error_log" });
+          await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
 
           // await fileSystem("writeJson", [ tempDir + "/" + fileName, { phoneNumber } ]);
           // Ghost.timeouts[timeoutConst] = setTimeout(async () => {
