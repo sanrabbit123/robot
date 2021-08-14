@@ -2941,6 +2941,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
       }
       const matrix = equalJson(req.body.matrix);
       let resultObj, temp;
+      let project, thisProposal;
 
       if (!Array.isArray(matrix)) {
         throw new Error("invaild post");
@@ -2951,10 +2952,27 @@ DataRouter.prototype.rou_post_designerFee = function () {
         for (let proid of matrix) {
           resultObj[proid] = await work.getDesignerFee(proid, option);
         }
-      } else if (matrix.every((a) => { return Array.isArray(a) && a.length === 4; })) {
+      } else if (matrix.every((a) => { return Array.isArray(a) && a.length === 5; })) {
         resultObj = [];
-        for (let [ desid, cliid, serid, xValue ] of matrix) {
+        for (let [ desid, cliid, serid, xValue, proid ] of matrix) {
           temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
+          temp.detail.discount = {
+            online: 0,
+            offline: 0,
+          };
+          if (proid !== null && proid !== undefined) {
+            project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+            thisProposal = project.selectProposal(desid);
+            if (thisProposal !== null) {
+              for (let { method, discount } of thisProposal.fee) {
+                if (/^off/gi.test(method)) {
+                  temp.detail.discount.offline = discount;
+                } else {
+                  temp.detail.discount.online = discount;
+                }
+              }
+            }
+          }
           resultObj.push(temp);
         }
       } else {

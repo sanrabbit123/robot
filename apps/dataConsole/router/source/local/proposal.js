@@ -1305,7 +1305,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     const ea = "px";
     const { createNode, colorChip, withOut, isMac } = GeneralJs;
     const { desid, cliid, client, designer, detail, fee } = feeObject;
-    const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium } = detail;
+    const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium, discount: { online: discountOnline, offline: discountOffline } } = detail;
     const distanceBoo = (distance !== 0 ? "true" : "false");
     const mother = thisSet;
     const motherWidth = mother.getBoundingClientRect().width;
@@ -1574,6 +1574,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     const number = Number(this.getAttribute("number"));
                     const distanceBoo = this.getAttribute("distanceBoo") === "true";
                     const thisOnOff = this.getAttribute("thisOnOff");
+                    const offlinePosition = 7;
+                    const totalPosition = 8;
                     let doing;
                     let newNumber, newDistance;
                     let offline, final;
@@ -1593,9 +1595,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       this.setAttribute("number", String(newNumber));
                       if (distanceBoo) {
                         ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.number = newNumber;
-                        offline = Number(this.parentElement.children[this.parentElement.children.length - 2].lastChild.textContent.replace(/[^0-9]/gi, ''));
+                        offline = Number(this.parentElement.children[offlinePosition].lastChild.textContent.replace(/[^0-9]/gi, ''));
                         final = offline + (distance * newNumber);
-                        this.parentElement.children[this.parentElement.children.length - 1].lastChild.textContent = GeneralJs.autoComma(final) + "원";
+                        this.parentElement.children[totalPosition].lastChild.textContent = GeneralJs.autoComma(final) + "원";
                       }
                     }
 
@@ -1723,6 +1725,119 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                 }
               ]
             },
+            //discount
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              attribute: [
+                { desid },
+                { cliid },
+                { serid },
+                { xValue },
+                { thisOnOff },
+                { number: Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) },
+              ],
+              events: [
+                {
+                  type: [ "click", "contextmenu" ],
+                  event: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const desid = this.getAttribute("desid");
+                    const cliid = this.getAttribute("cliid");
+                    const serid = this.getAttribute("serid");
+                    const xValue = this.getAttribute("xValue");
+                    const number = Number(this.getAttribute("number"));
+                    const thisOnOff = this.getAttribute("thisOnOff");
+                    const onlinePosition = 6;
+                    const offlinePosition = 7;
+                    const finalPosition = 10;
+                    let doing;
+                    let newNumber;
+                    let final;
+                    let original;
+                    if (e.type === "click") {
+                      newNumber = number + 1;
+                      doing = true;
+                    } else {
+                      if (number > 0) {
+                        newNumber = number - 1;
+                        doing = true;
+                      } else {
+                        doing = false;
+                      }
+                    }
+                    if (doing) {
+                      this.lastChild.textContent = String(newNumber) + "%";
+                      this.setAttribute("number", String(newNumber));
+                      ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.discount[thisOnOff] = (newNumber / 100);
+                      original = Number(this.parentElement.children[/^off/.test(thisOnOff) ? offlinePosition : onlinePosition].lastChild.textContent.replace(/[^0-9]/gi, ''));
+                      final = original * (1 - (newNumber / 100));
+                      this.parentElement.children[finalPosition].lastChild.textContent = GeneralJs.autoComma(final) + "원";
+                    }
+                  }
+                }
+              ],
+              children: [
+                {
+                  text: "할인율",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) + "%",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //discount apply
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              children: [
+                {
+                  text: "할인 적용",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: GeneralJs.autoComma((1 - (/^off/gi.test(thisOnOff) ? discountOffline : discountOnline)) * (/^off/gi.test(thisOnOff) ? offline : online)) + "원",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
           ]
         }
       ]
@@ -1817,7 +1932,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         serid = instance.serid;
         xValue = instance.xValue;
         if (!ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) || (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline === 0)) {
-          GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee").then((raw_fee) => {
+          GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee").then((raw_fee) => {
             if (!Array.isArray(raw_fee)) {
               window.alert("오류 발생, 관리자에게 문의하세요!");
               window.location.reload();
@@ -1896,7 +2011,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       if (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline !== 0) {
         raw_fee = [ ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) ];
       } else {
-        raw_fee = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee");
+        raw_fee = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee");
       }
 
       if (!Array.isArray(raw_fee)) {
@@ -1977,7 +2092,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           if (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline !== 0) {
             result = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
           } else {
-            result = (await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee"))[0];
+            result = (await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee"))[0];
             ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
           }
           document.querySelector("#" + "pp_designer_selected_box_contents_money" + String(n)).appendChild(money_set(this.getAttribute("cus_value"), 0, result));
@@ -2198,7 +2313,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
             await GeneralJs.sleep(600);
           } else {
             desid = dom.querySelector("div").getAttribute("cus_desid");
-            raw_obj = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue ] ] }, "/designerFee");
+            raw_obj = await GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee");
             if (raw_obj.length !== 0) {
               result = raw_obj[0];
               ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
@@ -4606,7 +4721,9 @@ ProposalJs.save_init = async function (update = false) {
     let designerFeeCalculBoo;
     let designerFeeCalculObj;
     let startDate, endDate;
+    let thisProid;
 
+    thisProid = document.getElementById("blewpp_button3").getAttribute("cus_id");
     loadingWidth = 50;
     belowHeight = 123;
 
@@ -4771,7 +4888,7 @@ ProposalJs.save_init = async function (update = false) {
         if (designerFeeCalculBoo) {
           designerFeeCalculObj = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]));
         } else {
-          designerFeeCalculObj = await GeneralJs.ajaxJson({ matrix: [ [ result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"] ] ] }, "/designerFee");
+          designerFeeCalculObj = await GeneralJs.ajaxJson({ matrix: [ [ result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"], thisProid ] ] }, "/designerFee");
           designerFeeCalculObj = designerFeeCalculObj[0];
           ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(result_obj["proposal.detail"][i].desid, result_obj["cliid"], result_obj["service.serid"], result_obj["service.xValue"]), designerFeeCalculObj);
         }
@@ -4803,7 +4920,11 @@ ProposalJs.save_init = async function (update = false) {
             distance: designerFeeCalculObj.detail.travel.distance,
             time: designerFeeCalculObj.detail.travel.time,
           };
-          result_obj["proposal.detail"][i].fee[f].discount = 0;
+          if (/^off/gi.test(result_obj["proposal.detail"][i].fee[f].method)) {
+            result_obj["proposal.detail"][i].fee[f].discount = designerFeeCalculObj.detail.discount.offline;
+          } else {
+            result_obj["proposal.detail"][i].fee[f].discount = designerFeeCalculObj.detail.discount.online;
+          }
         }
         result_obj["service.online"] = methodOnlineBoo;
 
