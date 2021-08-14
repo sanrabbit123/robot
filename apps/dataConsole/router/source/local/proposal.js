@@ -4803,6 +4803,7 @@ ProposalJs.save_init = async function (update = false) {
             distance: designerFeeCalculObj.detail.travel.distance,
             time: designerFeeCalculObj.detail.travel.time,
           };
+          result_obj["proposal.detail"][i].fee[f].discount = 0;
         }
         result_obj["service.online"] = methodOnlineBoo;
 
