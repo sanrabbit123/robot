@@ -318,9 +318,9 @@ Ghost.prototype.ghostRouter = function (needs) {
           const method = (kind === '1' ? "phone" : "sms");
           const timeoutConst = "receiveCall";
           const tempDir = process.cwd() + "/temp";
-          // const now = new Date();
-          // const receiveTime = String(now.getFullYear()) + String(now.getMonth()) + String(now.getDate()) + String(now.getHours()) + String(now.getMinutes());
-          // const fileName = timeoutConst + "_" + receiveTime + ".json";
+          const now = new Date();
+          const receiveTime = String(now.getFullYear()) + String(now.getMonth()) + String(now.getDate()) + String(now.getHours()) + String(now.getMinutes());
+          const fileName = timeoutConst + "_" + receiveTime + ".json";
           let phoneNumber, senderArr;
           let part0, part1, part2;
 
@@ -358,7 +358,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             phoneNumber = part0 + '-' + part1 + '-' + part2;
           }
 
-          await instance.mother.slack_bot.chat.postMessage({ text: target.phoneNumber, channel: "#error_log" });
+          await instance.mother.slack_bot.chat.postMessage({ text: sender, channel: "#error_log" });
 
           // await fileSystem("writeJson", [ tempDir + "/" + fileName, { phoneNumber } ]);
           // Ghost.timeouts[timeoutConst] = setTimeout(async () => {
