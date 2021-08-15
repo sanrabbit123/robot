@@ -456,6 +456,7 @@ Robot.prototype.tellVoice = async function () {
 }
 
 Robot.prototype.receiveCall = async function () {
+  const { fileSystem } = this.mother;
   try {
     const https = require("https");
     const express = require("express");
