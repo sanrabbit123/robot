@@ -316,7 +316,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         } else {
           const { phoneNumber, kind } = req.body;
           const method = (kind === '1' ? "전화" : "문자");
-          let rows, temp, name, sub;
+          let rows, temp, name, sub, text;
           rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: MONGOC });
           if (rows.length === 0) {
             rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
@@ -343,7 +343,9 @@ Ghost.prototype.ghostRouter = function (needs) {
             name = rows[0].name;
             sub = "고객님";
           }
-          await instance.mother.slack_bot.chat.postMessage({ text: `${name} ${sub}에게서 ${method}가 왔습니다!`, channel: "#error_log" });
+          text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
+          await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
+          await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
           res.send(JSON.stringify({ message: "success" }));
         }
       } catch (e) {
