@@ -321,7 +321,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           if (rows.length === 0) {
             rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
             if (rows.length === 0) {
-              temp = await back.setMemberObj({ selfMongo: this.MONGOC, getMode: true });
+              temp = await back.setMemberObj({ selfMongo: MONGOC, getMode: true });
               rows = [];
               for (let obj of temp) {
                 if (obj.phone === phoneNumber) {
