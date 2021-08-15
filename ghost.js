@@ -315,11 +315,35 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify({ error: "error" }));
         } else {
           const { phoneNumber, kind } = req.body;
-          const method = (kind === '1' ? "phone" : "sms");
-
-          await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
-          await instance.mother.slack_bot.chat.postMessage({ text: method, channel: "#error_log" });
-
+          const method = (kind === '1' ? "전화" : "문자");
+          let rows, temp, name, sub;
+          rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: MONGOC });
+          if (rows.length === 0) {
+            rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
+            if (rows.length === 0) {
+              temp = await back.setMemberObj({ selfMongo: this.MONGOC, getMode: true });
+              rows = [];
+              for (let obj of temp) {
+                if (obj.phone === phoneNumber) {
+                  rows.push(obj);
+                }
+              }
+              if (rows.length === 0) {
+                name = "알 수 없는";
+                sub = "사람";
+              } else {
+                name = rows[0].name;
+                sub = "팀원";
+              }
+            } else {
+              name = rows[0].designer;
+              sub = "실장님";
+            }
+          } else {
+            name = rows[0].name;
+            sub = "고객님";
+          }
+          await instance.mother.slack_bot.chat.postMessage({ text: `${name} ${sub}에게서 ${method}가 왔습니다!`, channel: "#error_log" });
           res.send(JSON.stringify({ message: "success" }));
         }
       } catch (e) {
