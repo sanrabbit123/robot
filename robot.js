@@ -457,7 +457,8 @@ Robot.prototype.tellVoice = async function () {
 
 Robot.prototype.receiveCall = async function () {
   const instance = this;
-  const { fileSystem } = this.mother;
+  const address = this.address;
+  const { fileSystem, requestSystem } = this.mother;
   try {
     const https = require("https");
     const express = require("express");
@@ -507,7 +508,6 @@ Robot.prototype.receiveCall = async function () {
           res.send(JSON.stringify({ error: "error" }));
         } else {
           const { sender, kind } = req.body;
-          const method = (kind === '1' ? "phone" : "sms");
           const timeoutConst = "receiveCall";
           let phoneNumber, senderArr;
           let part0, part1, part2;
@@ -551,7 +551,7 @@ Robot.prototype.receiveCall = async function () {
           }
           Robot.timeouts[timeoutConst] = setTimeout(async () => {
             try {
-              await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
+              await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.port) + "/receiveCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
               clearTimeout(Robot.timeouts[timeoutConst]);
               Robot.timeouts[timeoutConst] = null;
             } catch (e) {

@@ -310,78 +310,15 @@ Ghost.prototype.ghostRouter = function (needs) {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": '*',
         });
-        if (req.body.sender === undefined || req.body.kind === undefined) {
+        if (req.body.phoneNumber === undefined) {
           console.log(req.body);
           res.send(JSON.stringify({ error: "error" }));
         } else {
-          const { sender, kind } = req.body;
+          const { phoneNumber, kind } = req.body;
           const method = (kind === '1' ? "phone" : "sms");
-          const timeoutConst = "receiveCall";
-          const tempDir = process.cwd() + "/temp";
-          const now = new Date();
-          const receiveTime = String(now.getFullYear()) + String(now.getMonth()) + String(now.getDate()) + String(now.getHours()) + String(now.getMinutes());
-          const fileName = timeoutConst + "_" + receiveTime + ".json";
-          let phoneNumber, senderArr;
-          let part0, part1, part2;
 
-          senderArr = sender.split('');
-          phoneNumber = '';
-          part0 = '';
-          part1 = '';
-          part2 = '';
-          if (/^01/gi.test(sender)) {
-            for (let i = 0; i < 3; i++) {
-              part0 += senderArr.shift();
-            }
-            for (let i = 0; i < 4; i++) {
-              part2 += senderArr.pop();
-            }
-            part1 = senderArr.join('');
-            phoneNumber = part0 + '-' + part1 + '-' + part2;
-          } else if (/^02/gi.test(sender)) {
-            for (let i = 0; i < 2; i++) {
-              part0 += senderArr.shift();
-            }
-            for (let i = 0; i < 4; i++) {
-              part2 += senderArr.pop();
-            }
-            part1 = senderArr.join('');
-            phoneNumber = part0 + '-' + part1 + '-' + part2;
-          } else {
-            for (let i = 0; i < 3; i++) {
-              part0 += senderArr.shift();
-            }
-            for (let i = 0; i < 4; i++) {
-              part2 += senderArr.pop();
-            }
-            part1 = senderArr.join('');
-            phoneNumber = part0 + '-' + part1 + '-' + part2;
-          }
-
-          await fileSystem("writeJson", [ tempDir + "/" + fileName, { phoneNumber } ]);
-
-          Ghost.timeouts[timeoutConst] = setTimeout(async () => {
-            try {
-              let tempDirList, target;
-              tempDirList = await fileSystem("readDir", [ tempDir ]);
-              tempDirList = tempDirList.filter((f) => { return (new RegExp("^" + fileName, "gi")).test(f); });
-              target = null;
-              for (let file of tempDirList) {
-                if (await fileSystem("exist", [ tempDir + "/" + file ])) {
-                  target = await fileSystem("readJson", [ tempDir + "/" + file ]);
-                  shell.exec("rm -rf " + shellLink(tempDir) + "/" + shellLink(file));
-                }
-              }
-              if (target !== null) {
-                await instance.mother.slack_bot.chat.postMessage({ text: target.phoneNumber, channel: "#error_log" });
-              }
-            } catch (e) {
-              console.log(e);
-            } finally {
-              clearTimeout(Ghost.timeouts[timeoutConst]);
-              Ghost.timeouts[timeoutConst] = null;
-            }
-          }, 1000);
+          await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
+          await instance.mother.slack_bot.chat.postMessage({ text: method, channel: "#error_log" });
 
           res.send(JSON.stringify({ message: "success" }));
         }
