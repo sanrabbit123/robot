@@ -322,9 +322,10 @@ Ghost.prototype.ghostRouter = function (needs) {
             rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
             if (rows.length === 0) {
               temp = await back.setMemberObj({ selfMongo: MONGOC, getMode: true });
-              await instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(temp, null, 2), channel: "#error_log" });
               rows = [];
               for (let obj of temp) {
+                await instance.mother.slack_bot.chat.postMessage({ text: obj.phone, channel: "#error_log" });
+                await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
                 if (obj.phone === phoneNumber) {
                   rows.push(obj);
                 }
