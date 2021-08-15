@@ -547,10 +547,14 @@ Robot.prototype.receiveCall = async function () {
           if (Robot.timeouts[timeoutConst] !== undefined || Robot.timeouts[timeoutConst] !== null) {
             clearTimeout(Robot.timeouts[timeoutConst]);
           }
-          Robot.timeouts[timeoutConst] = setTimeout(() => {
-            await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
-            clearTimeout(Robot.timeouts[timeoutConst]);
-            Robot.timeouts[timeoutConst] = null;
+          Robot.timeouts[timeoutConst] = setTimeout(async () => {
+            try {
+              await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
+              clearTimeout(Robot.timeouts[timeoutConst]);
+              Robot.timeouts[timeoutConst] = null;
+            } catch (e) {
+              console.log(e);
+            }
           }, 1000);
 
           res.send(JSON.stringify({ message: "success" }));

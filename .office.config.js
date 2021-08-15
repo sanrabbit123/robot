@@ -4,7 +4,7 @@ module.exports = {
       name: "robot",
       script: "./robot.js",
       instances: 1,
-      exec_mode: "folk",
+      exec_mode: "fork",
       args: [ "receiveCall" ]
     },
     {
