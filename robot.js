@@ -457,7 +457,6 @@ Robot.prototype.tellVoice = async function () {
 
 Robot.prototype.receiveCall = async function () {
   const instance = this;
-  const address = this.address;
   const { fileSystem, requestSystem } = this.mother;
   try {
     const https = require("https");
@@ -551,7 +550,7 @@ Robot.prototype.receiveCall = async function () {
           }
           Robot.timeouts[timeoutConst] = setTimeout(async () => {
             try {
-              await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.port) + "/receiveCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
+              await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/receiveCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
               clearTimeout(Robot.timeouts[timeoutConst]);
               Robot.timeouts[timeoutConst] = null;
             } catch (e) {
