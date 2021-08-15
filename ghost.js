@@ -358,22 +358,18 @@ Ghost.prototype.ghostRouter = function (needs) {
             phoneNumber = part0 + '-' + part1 + '-' + part2;
           }
 
-          await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
           await fileSystem("writeJson", [ tempDir + "/" + fileName, { phoneNumber } ]);
 
           Ghost.timeouts[timeoutConst] = setTimeout(async () => {
             try {
               let tempDirList, target;
               tempDirList = await fileSystem("readDir", [ tempDir ]);
-              await instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(tempDirList), channel: "#error_log" });
-
               tempDirList = tempDirList.filter((f) => { return (new RegExp("^" + fileName, "gi")).test(f); });
-              await instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(tempDirList), channel: "#error_log" });
-
               target = null;
               for (let file of tempDirList) {
-                if (await fileSystem("exist"), [ tempDir + "/" + file ]) {
+                if (await fileSystem("exist", [ tempDir + "/" + file ])) {
                   target = await fileSystem("readJson", [ tempDir + "/" + file ]);
+                  shell.exec("rm -rf " + shellLink(tempDir) + "/" + shellLink(file));
                 }
               }
               if (target !== null) {
@@ -386,7 +382,7 @@ Ghost.prototype.ghostRouter = function (needs) {
               clearTimeout(Ghost.timeouts[timeoutConst]);
               Ghost.timeouts[timeoutConst] = null;
             }
-          }, (1000 + (1000 * Math.random())));
+          }, (1000 + (2000 * Math.random())));
 
           res.send(JSON.stringify({ message: "success" }));
         }
