@@ -360,7 +360,9 @@ Ghost.prototype.ghostRouter = function (needs) {
 
           await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
 
-          // await fileSystem("writeJson", [ tempDir + "/" + fileName, { phoneNumber } ]);
+          await fileSystem("write", [ tempDir + "/" + fileName, JSON.stringify({ phoneNumber }) ]);
+
+
           // Ghost.timeouts[timeoutConst] = setTimeout(async () => {
           //   try {
           //     let tempDirList, target;
