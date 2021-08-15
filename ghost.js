@@ -358,31 +358,30 @@ Ghost.prototype.ghostRouter = function (needs) {
             phoneNumber = part0 + '-' + part1 + '-' + part2;
           }
 
-          if (!(await fileSystem("exist", [ tempDir + "/" + fileName ]))) {
-            await fileSystem("writeJson", [ tempDir + "/" + fileName, { phoneNumber } ]);
-            Ghost.timeouts[timeoutConst] = setTimeout(async () => {
-              try {
-                let tempDirList, target;
-                tempDirList = await fileSystem("readDir", [ tempDir ]);
-                tempDirList = tempDirList.filter((f) => { return (new RegExp("^" + fileName, "gi")).test(f); });
-                target = null;
-                for (let file of tempDirList) {
-                  if (await fileSystem("exist", [ tempDir + "/" + file ])) {
-                    target = await fileSystem("readJson", [ tempDir + "/" + file ]);
-                    shell.exec("rm -rf " + shellLink(tempDir) + "/" + shellLink(file));
-                  }
+          await fileSystem("writeJson", [ tempDir + "/" + fileName, { phoneNumber } ]);
+
+          Ghost.timeouts[timeoutConst] = setTimeout(async () => {
+            try {
+              let tempDirList, target;
+              tempDirList = await fileSystem("readDir", [ tempDir ]);
+              tempDirList = tempDirList.filter((f) => { return (new RegExp("^" + fileName, "gi")).test(f); });
+              target = null;
+              for (let file of tempDirList) {
+                if (await fileSystem("exist", [ tempDir + "/" + file ])) {
+                  target = await fileSystem("readJson", [ tempDir + "/" + file ]);
+                  shell.exec("rm -rf " + shellLink(tempDir) + "/" + shellLink(file));
                 }
-                if (target !== null) {
-                  await instance.mother.slack_bot.chat.postMessage({ text: target.phoneNumber, channel: "#error_log" });
-                }
-              } catch (e) {
-                console.log(e);
-              } finally {
-                clearTimeout(Ghost.timeouts[timeoutConst]);
-                Ghost.timeouts[timeoutConst] = null;
               }
-            }, 1000);
-          }
+              if (target !== null) {
+                await instance.mother.slack_bot.chat.postMessage({ text: target.phoneNumber, channel: "#error_log" });
+              }
+            } catch (e) {
+              console.log(e);
+            } finally {
+              clearTimeout(Ghost.timeouts[timeoutConst]);
+              Ghost.timeouts[timeoutConst] = null;
+            }
+          }, 1000);
 
           res.send(JSON.stringify({ message: "success" }));
         }

@@ -7,6 +7,8 @@ const Robot = function () {
   this.address = ADDRESS;
 }
 
+Robot.timeouts = {};
+
 Robot.prototype.mongoToJson = async function () {
   const instance = this;
   const back = this.back;
@@ -443,6 +445,122 @@ Robot.prototype.tellVoice = async function () {
     });
 
     http.createServer(app).listen(3000, () => {
+      console.log(``);
+      console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
+      console.log(``);
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.receiveCall = async function () {
+  try {
+    const https = require("https");
+    const express = require("express");
+    const app = express();
+    const bodyParser = require("body-parser");
+
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+
+    const { name, rawObj: address } = await this.mother.ipCheck();
+    let pemsLink = process.cwd() + "/pems/" + address.host;
+    let pems = {};
+    let certDir, keyDir, caDir;
+
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
+    app.post("/receiveCall", async (req, res) => {
+      try {
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        if (req.body.sender === undefined || req.body.kind === undefined) {
+          console.log(req.body);
+          res.send(JSON.stringify({ error: "error" }));
+        } else {
+          const { sender, kind } = req.body;
+          const method = (kind === '1' ? "phone" : "sms");
+          const timeoutConst = "receiveCall";
+          let phoneNumber, senderArr;
+          let part0, part1, part2;
+
+          senderArr = sender.split('');
+          phoneNumber = '';
+          part0 = '';
+          part1 = '';
+          part2 = '';
+          if (/^01/gi.test(sender)) {
+            for (let i = 0; i < 3; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 += senderArr.pop();
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          } else if (/^02/gi.test(sender)) {
+            for (let i = 0; i < 2; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 += senderArr.pop();
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          } else {
+            for (let i = 0; i < 3; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 += senderArr.pop();
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          }
+
+          if (Robot.timeouts[timeoutConst] !== undefined || Robot.timeouts[timeoutConst] !== null) {
+            clearTimeout(Robot.timeouts[timeoutConst]);
+          }
+          Robot.timeouts[timeoutConst] = setTimeout(() => {
+            await instance.mother.slack_bot.chat.postMessage({ text: phoneNumber, channel: "#error_log" });
+            clearTimeout(Robot.timeouts[timeoutConst]);
+            Robot.timeouts[timeoutConst] = null;
+          }, 1000);
+
+          res.send(JSON.stringify({ message: "success" }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    https.createServer(pems, app).listen(3000, () => {
       console.log(``);
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
       console.log(``);
@@ -1110,7 +1228,14 @@ const MENU = {
   },
   aliveTest: function () {
     robot.aliveTest();
-  }
+  },
+  receiveCall: async function () {
+    try {
+      await robot.receiveCall();
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };
 let launchingFunc;
 
