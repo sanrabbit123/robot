@@ -521,7 +521,7 @@ Robot.prototype.receiveCall = async function () {
               part0 += senderArr.shift();
             }
             for (let i = 0; i < 4; i++) {
-              part2 += senderArr.pop();
+              part2 = senderArr.pop() + part2;
             }
             part1 = senderArr.join('');
             phoneNumber = part0 + '-' + part1 + '-' + part2;
@@ -530,7 +530,7 @@ Robot.prototype.receiveCall = async function () {
               part0 += senderArr.shift();
             }
             for (let i = 0; i < 4; i++) {
-              part2 += senderArr.pop();
+              part2 = senderArr.pop() + part2;
             }
             part1 = senderArr.join('');
             phoneNumber = part0 + '-' + part1 + '-' + part2;
@@ -539,7 +539,7 @@ Robot.prototype.receiveCall = async function () {
               part0 += senderArr.shift();
             }
             for (let i = 0; i < 4; i++) {
-              part2 += senderArr.pop();
+              part2 = senderArr.pop() + part2;
             }
             part1 = senderArr.join('');
             phoneNumber = part0 + '-' + part1 + '-' + part2;
