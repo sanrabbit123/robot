@@ -279,7 +279,7 @@ Ghost.prototype.dirParsing = function (dir) {
 Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
-  const [ MONGOC, MONGOLOCALC ] = needs;
+  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
   const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const audio = new PlayAudio();
@@ -317,6 +317,12 @@ Ghost.prototype.ghostRouter = function (needs) {
           const { phoneNumber, kind } = req.body;
           const method = (kind === '1' ? "전화" : "문자");
           let rows, temp, name, sub, text;
+          let manager;
+          let cliid, desid, proid;
+          let projects;
+          let boo;
+
+          manager = null;
           rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: MONGOC });
           if (rows.length === 0) {
             rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
@@ -338,12 +344,64 @@ Ghost.prototype.ghostRouter = function (needs) {
             } else {
               name = rows[0].designer;
               sub = "실장님";
+              manager = await back.getHistoryById("desid", rows[0].desid, { selfMongo: MONGOCONSOLEC });
+              if (manager !== null) {
+                if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                  manager = null;
+                } else {
+                  manager = manager.manager;
+                }
+              }
             }
           } else {
             name = rows[0].name;
             sub = "고객님";
+            cliid = rows[0].cliid;
+            boo = false;
+            for (let { analytics } of rows[0].requests) {
+              boo = /진행/gi.test(analytics.response.status);
+            }
+            if (boo) {
+              projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } }, { "process.status": { $regex: "^[진홀]" } } ] }, { selfMongo: MONGOC });
+              if (projects.length > 0) {
+                manager = await back.getHistoryById("project", projects[0].proid, { selfMongo: MONGOCONSOLEC });
+                if (manager !== null) {
+                  if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                    manager = null;
+                  } else {
+                    manager = manager.manager;
+                  }
+                }
+              } else {
+                manager = await back.getHistoryById("client", cliid, { selfMongo: MONGOCONSOLEC });
+                if (manager !== null) {
+                  if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                    manager = null;
+                  } else {
+                    manager = manager.manager;
+                  }
+                }
+              }
+            } else {
+              manager = await back.getHistoryById("client", cliid, { selfMongo: MONGOCONSOLEC });
+              if (manager !== null) {
+                if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                  manager = null;
+                } else {
+                  manager = manager.manager;
+                }
+              }
+            }
           }
           text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
+          if (manager !== null) {
+            text += ` ${manager} 담당자님 `;
+            if (method === "전화") {
+              test += method + " 받아주세요!";
+            } else {
+              test += method + " 확인해주세요!";
+            }
+          }
           await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
           await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
           res.send(JSON.stringify({ message: "success" }));
@@ -884,7 +942,7 @@ Ghost.prototype.ghostRouter = function (needs) {
 Ghost.prototype.clientRouter = function (needs) {
   const instance = this;
   const back = this.back;
-  const [ MONGOC, MONGOLOCALC ] = needs;
+  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
   const folderName = "고객";
   const pathNameConst = "/client_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -927,7 +985,7 @@ Ghost.prototype.clientRouter = function (needs) {
 Ghost.prototype.designerRouter = function (needs) {
   const instance = this;
   const back = this.back;
-  const [ MONGOC, MONGOLOCALC ] = needs;
+  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
   const folderName = "디자이너";
   const pathNameConst = "/designer_";
   const standardId = "desid";
@@ -1094,7 +1152,7 @@ Ghost.prototype.photoRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const drive = this.drive;
-  const [ MONGOC, MONGOLOCALC ] = needs;
+  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -1330,76 +1388,6 @@ Ghost.prototype.photoRouter = function (needs) {
       res.send(JSON.stringify({ message: "will do" }));
     }
   };
-
-  //end : set router
-  let resultObj = { get: [], post: [] };
-  for (let i in funcObj) {
-    for (let j = 0; j < funcObj[i].link.length; j++) {
-      funcObj[i].link[j] = pathNameConst + funcObj[i].link[j].slice(1);
-    }
-    resultObj[i.split('_')[0]].push(funcObj[i]);
-  }
-  return resultObj;
-}
-
-Ghost.prototype.investRouter = function (needs) {
-  const instance = this;
-  const back = this.back;
-  const [ MONGOC, MONGOLOCALC ] = needs;
-  const folderName = "IR";
-  const pathNameConst = "/invest_";
-  const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
-  let funcObj = {};
-
-  //POST - read directory
-  funcObj.post_ls = {
-    link: [ "/ls", "/readDir" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
-        let list_refined = [];
-        for (let i of list) {
-          if (!/^\._/.test(i) && !/DS_Store/gi.test(i)) {
-            list_refined.push(i);
-          }
-        }
-        res.send(JSON.stringify(list_refined));
-      }).catch((e) => { throw new Error(e); });
-    }
-  };
-
-  //POST - index
-  funcObj.post_index = {
-    link: [ "/index/:id" ],
-    func: function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      fileSystem(`readDir`, [ sambaDir ]).then((list) => {
-        let list_refined;
-        list_refined = list.filter((name) => { return (!/^\._/.test(name) && !/DS_Store/gi.test(name)); });
-        list_refined.sort((a, b) => { return Number(a) - Number(b); });
-        if (Number.isNaN(Number(req.params.id.replace(/[^0-9]/g, '')))) {
-          throw new Error("invaild parameter");
-        }
-        return fileSystem(`readDir`, [ `${sambaDir}/${list_refined[Number(req.params.id.replace(/[^0-9]/g, ''))]}` ]);
-      }).then((list) => {
-        let list_refined;
-        list_refined = list.filter((name) => { return (!/^\._/.test(name) && !/DS_Store/gi.test(name)); });
-        list_refined.sort((a, b) => { return Number(a) - Number(b); });
-        res.send(JSON.stringify(list_refined));
-      }).catch((e) => { throw new Error(e); });
-    }
-  }
 
   //end : set router
   let resultObj = { get: [], post: [] };
@@ -1713,7 +1701,7 @@ Ghost.prototype.fileRouter = function (static) {
 
 Ghost.prototype.serverLaunching = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -1749,10 +1737,12 @@ Ghost.prototype.serverLaunching = async function () {
     //set mongo connetion
     const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
     const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
     console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
 
     await MONGOC.connect();
     await MONGOLOCALC.connect();
+    await MONGOCONSOLEC.connect();
 
     //set pem key
     let pems = {};
@@ -1793,7 +1783,7 @@ Ghost.prototype.serverLaunching = async function () {
     pems.allowHTTP1 = true;
 
     //set router
-    const { get, post } = this.ghostRouter([ MONGOC, MONGOLOCALC ]);
+    const { get, post } = this.ghostRouter([ MONGOC, MONGOLOCALC, MONGOCONSOLEC ]);
     for (let obj of get) {
       app.get(obj.link, obj.func);
     }
@@ -1803,7 +1793,7 @@ Ghost.prototype.serverLaunching = async function () {
 
     //set sub routers
     for (let r of routerTargets) {
-      routerObj = (this[r + "Router"])([ MONGOC, MONGOLOCALC ]);
+      routerObj = (this[r + "Router"])([ MONGOC, MONGOLOCALC, MONGOCONSOLEC ]);
       for (let obj of routerObj.get) {
         app.get(obj.link, obj.func);
       }
