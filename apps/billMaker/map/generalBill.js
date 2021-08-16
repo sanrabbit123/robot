@@ -14,6 +14,7 @@ module.exports = {
           email: "",
         },
       },
+      goal: [],
       requests: [],
       proofs: [],
       comments: [],
@@ -38,7 +39,7 @@ module.exports = {
         pay: new Date(1800, 0, 1),
         cancel: new Date(1800, 0, 1),
       };
-    } else if (subject === "items") {
+    } else if (subject === "items" || subject === "goal") {
       dummy = {
         id: "",
         class: "",
@@ -314,6 +315,22 @@ module.exports = {
       }
     }
 
+    class Goal extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(new Item(i));
+        }
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.toNormal());
+        }
+        return arr;
+      }
+    }
+
     class Bill {
       constructor(json) {
         this.bilid = json.bilid;
@@ -321,6 +338,7 @@ module.exports = {
         this.name = json.name;
         this.date = json.date;
         this.participant = new Participant(json.participant);
+        this.goal = new Goal(json.goal);
         this.requests = new Requests(json.requests);
         this.proofs = new Proofs(json.proofs);
         this.comments = new SeachArray(json.comments);
@@ -334,6 +352,7 @@ module.exports = {
         obj.name = this.name;
         obj.date = this.date;
         obj.participant = this.participant.toNormal();
+        obj.goal = this.goal.toNormal();
         obj.requests = this.requests.toNormal();
         obj.proofs = this.proofs.toNormal();
         obj.comments = this.comments.toNormal();

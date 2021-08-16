@@ -46,7 +46,10 @@ BillMaker.billDictionary = {
       "디자인 감리는 시공 감리가 아니며, 시공 감리는 시공 진행시에 책임자가 달라질 수 있습니다.",
       "디자인 감리에 구매 대행은 포함되지 않습니다. 디자이너는 구매 대행을 진행하지 않습니다.",
       "출장 횟수를 초과할 경우, 출장비가 추가 청구될 수 있습니다."
-    ]
+    ],
+    etc: {
+      contractAmount: 300000,
+    }
   },
 };
 
@@ -377,13 +380,14 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
   }
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
+  const { mongo, mongoinfo, mongopythoninfo, mongoconsoleinfo, sleep } = this.mother;
   const constNames = {
     class: BillMaker.billDictionary.styling.class,
     name: BillMaker.billDictionary.styling.name,
   };
   const stylingItems = BillMaker.billDictionary.styling.items;
   const stylingComments = BillMaker.billDictionary.styling.comments;
+  const contractAmount = BillMaker.billDictionary.styling.etc.contractAmount;
   const vatRatio = 0.1;
   try {
     let MONGOC, MONGOCOREC, MONGOCONSOLEC;
@@ -445,6 +449,10 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     let temp;
     let updateMode;
     let thisBill;
+    let contractRequest;
+    let designFeeRequest;
+    let itemFactor;
+    let goalArr;
 
     bilidArr = [];
     for (let { desid, fee } of project.proposal.detail) {
@@ -504,32 +512,63 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         updateQuery["links.desid"] = desid;
         updateQuery["links.method"] = method;
 
-        tempObj = this.returnBillDummies("requests");
-        tempObj.id = bilid + "_r" + String(updateMode ? thisBill.requests.length : 0);
-        tempObj.info.push({ address: client.requests[0].request.space.address.value });
-        tempObj.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-        tempObj.info.push({ method });
+        contractRequest = this.returnBillDummies("requests");
+        contractRequest.id = bilid + "_r" + String(updateMode ? thisBill.requests.length : 0);
+        contractRequest.info.push({ address: client.requests[0].request.space.address.value });
+        contractRequest.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+        contractRequest.info.push({ method });
         for (let item of stylingItems) {
-          tempObj2 = JSON.parse(JSON.stringify(this.returnBillDummies("items")));
-          tempObj2.id = bilid + item.id;
-          tempObj2.class = item.class;
-          tempObj2.name = item.name;
-          tempObj2.description = item.description;
-          tempObj2.unit.ea = item.ea;
-          tempObj2.unit.price = Math.round(item.amount(method, amount, distance));
-          tempObj2.unit.number = item.number(method, distance);
-          tempObj2.amount.supply = Math.round(tempObj2.unit.price * tempObj2.unit.number);
-          tempObj2.amount.vat = Math.round(tempObj2.amount.supply * vatRatio);
-          tempObj2.amount.consumer = Math.round(tempObj2.amount.supply * (1 + vatRatio));
-          tempObj.items.push(tempObj2);
+          if (/designer/gi.test(item.class)) {
+            itemFactor = this.returnBillDummies("items");
+            itemFactor.id = bilid + item.id;
+            itemFactor.class = item.class;
+            itemFactor.name = item.name;
+            itemFactor.description = item.description;
+            itemFactor.unit.ea = item.ea;
+            itemFactor.unit.price = Math.round(item.amount(method, contractAmount, distance));
+            itemFactor.unit.number = item.number(method, distance);
+            itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+            itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
+            itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+            contractRequest.items.push(itemFactor);
+          }
         }
+
+        await sleep(100);
+
+        goalArr = [];
+
+        designFeeRequest = this.returnBillDummies("requests");
+        designFeeRequest.id = bilid + "_r" + String((updateMode ? thisBill.requests.length : 0) + 1);
+        designFeeRequest.info.push({ address: client.requests[0].request.space.address.value });
+        designFeeRequest.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+        designFeeRequest.info.push({ method });
+        for (let item of stylingItems) {
+          itemFactor = this.returnBillDummies("items");
+          itemFactor.id = bilid + item.id;
+          itemFactor.class = item.class;
+          itemFactor.name = item.name;
+          itemFactor.description = item.description;
+          itemFactor.unit.ea = item.ea;
+          itemFactor.unit.price = Math.round(item.amount(method, amount, distance));
+          itemFactor.unit.number = item.number(method, distance);
+          itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+          itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
+          itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+          designFeeRequest.items.push(itemFactor);
+          goalArr.push(itemFactor);
+        }
+
         if (!updateMode) {
-          updateQuery["requests"] = [ tempObj ];
+          tempArr = [];
         } else {
           tempArr = thisBill.requests.toNormal();
-          tempArr.unshift(tempObj);
-          updateQuery["requests"] = tempArr;
         }
+        tempArr.unshift(contractRequest);
+        tempArr.unshift(designFeeRequest);
+        updateQuery["requests"] = tempArr;
+
+        updateQuery["goal"] = goalArr;
 
         updateQuery["comments"] = [];
         for (let c of stylingComments) {
