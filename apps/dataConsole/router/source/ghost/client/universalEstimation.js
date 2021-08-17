@@ -757,11 +757,15 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
     let innerMargin;
     let fontSize;
     let firstBox, secondBox;
+    let textBetween, textPaddingLeft;
 
-    whitePopupWidth = <%% 800, 800, 800, 800, 800 %%>;
-    whitePopupHeight = <%% 500, 500, 500, 500, 500 %%>;
+    whitePopupWidth = <%% 370, 370, 370, 370, 370 %%>;
+    whitePopupHeight = <%% 296, 296, 296, 296, 296 %%>;
     innerMargin = <%% 30, 30, 30, 30, 30 %%>;
     fontSize = <%% 16, 16, 16, 16, 16 %%>;
+    buttonWidth = <%% 128, 128, 128, 128, 128 %%>;
+    textBetween = <%% 2, 2, 2, 2, 2 %%>;
+    textPaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
 
     cancelBack = createNode({
       mother,
@@ -826,6 +830,15 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
         {
           style: {
             position: "absolute",
+            bottom: String(innerMargin + (size * 2) + textBetween) + ea,
+            right: String(innerMargin) + ea,
+            width: withOut(innerMargin * 2, ea),
+            borderBottom: "1px solid " + colorChip.green,
+          }
+        },
+        {
+          style: {
+            position: "absolute",
             bottom: String(innerMargin) + ea,
             right: String(innerMargin) + ea,
             textAlign: "right",
@@ -841,7 +854,9 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
         display: "block",
         fontSize: String(size) + ea,
         fontWeight: String(400),
-        marginBottom: String(4) + ea,
+        marginBottom: String(textBetween) + ea,
+        paddingLeft: String(textPaddingLeft) + ea,
+        background: colorChip.white,
       }
     });
     createNode({
@@ -871,6 +886,33 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
             left: String(innerMargin) + ea,
             top: String(innerMargin) + ea,
           }
+        },
+        {
+          class: [ "hoverDefault_lite" ],
+          style: {
+            position: "absolute",
+            bottom: String(innerMargin) + ea,
+            right: String(innerMargin) + ea,
+            width: String(buttonWidth) + ea,
+            height: String(height) + ea,
+            background: colorChip.green,
+            borderRadius: String(3) + "px",
+            textAlign: "center",
+          },
+          children: [
+            {
+              text: "카드 결제창",
+              style: {
+                position: "absolute",
+                color: colorChip.white,
+                fontSize: String(size) + ea,
+                fontWeight: String(400),
+                top: String(textTop) + ea,
+                left: String(0),
+                width: String(100) + '%',
+              }
+            }
+          ]
         }
       ]
     });
