@@ -62,6 +62,21 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
+    // console.log(await bill.createStylingBill("p2108_aa30s"));
+    // console.log(await bill.createStylingBill("p2108_aa30s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC }));
+    // console.log((await bill.getBillById("b218h_aa02s")).requests);
+
+
+    // const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
+    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    // let res;
+    // for (let id of phoneNumbers) {
+    //   res = await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } });
+    //   console.log(res.data);
+    // }
+
+
+
 
     // const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
     // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
@@ -69,14 +84,20 @@ DevContext.prototype.launching = async function () {
     // let callbackurl;
     // let callbackhost;
     // let callbackport;
+    // let num;
     //
-    // callbackurl = "/cloud.php";
-    // callbackhost = "3.35.212.109";
-    // callbackport = 80;
-    //
+    // num = 0;
     // for (let id of phoneNumbers) {
+    //   callbackurl = "/cloud" + String(num) + ".php";
+    //   callbackhost = "3.35.212.109";
+    //   callbackport = 80;
     //   console.log(await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + callbackport, { id, pass, callbackurl, callbackhost, callbackport }, { headers: { "Content-Type": "application/json" } }));
+    //   num++;
     // }
+
+
+
+
 
 
 

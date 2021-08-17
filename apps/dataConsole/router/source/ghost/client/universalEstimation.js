@@ -97,7 +97,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
   };
   sum0 = 0;
   sum1 = 0;
-  for (let obj of bill.requests[0].items) {
+  for (let obj of bill.requests[1].items) {
     tempArr = [];
     tempArr.push(obj.name);
     tempArr.push(autoComma(obj.unit.price));
@@ -166,12 +166,18 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let grayTongMarginBottom;
   let buttonOff, buttonOn, buttonTong;
   let buttonTongHeight;
+  let greenButton;
+  let greenButtonBase;
+  let greenButtonWidth, greenButtonHeight;
+  let greenButtonFontSize;
+  let greenButtonTextTop;
+  let greenBasePaddingTop, greenBasePaddingBottom;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
+  margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  titleFontSize = <%% 32, 31, 29, 26, 5.7 %%>;
+  titleFontSize = <%% 31, 30, 28, 26, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
   titleFontBottom = <%% 2, 2, 2, 2, 2 %%>;
   titlePadding = <%% 6, 6, 6, 6, 6 %%>;
@@ -183,7 +189,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
   initWordingWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  subTitleBoxTop = <%% 42, 42, 42, 42, 42 %%>;
+  subTitleBoxTop = <%% 37, 37, 37, 37, 37 %%>;
 
   tableMarginTop = <%% 34, 34, 34, 34, 34 %%>;
 
@@ -196,10 +202,10 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   barPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
   barMarginBottom = <%% 14, 14, 14, 14, 14 %%>;
 
-  grayMarginTop0 = <%% 40, 40, 40, 40, 40 %%>;
+  grayMarginTop0 = <%% 50, 50, 50, 50, 50 %%>;
   grayMarginTop1 = <%% 20, 20, 20, 20, 20 %%>;
 
-  sumBoxBarTop = <%% 20, 20, 20, 20, 20 %%>;
+  sumBoxBarTop = <%% 19, 19, 19, 19, 19 %%>;
   sumBoxMainFontSize = <%% 29, 29, 29, 29, 29 %%>;
   sumBoxMainFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   sumBoxMainPaddingLeft = <%% 19, 19, 19, 19, 19 %%>;
@@ -230,6 +236,14 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
 
   buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
 
+  greenButtonWidth = <%% 122, 122, 122, 110, 17 %%>;
+  greenButtonHeight = <%% 47, 47, 45, 40, 8.4 %%>;
+  greenButtonFontSize = <%% 20, 20, 20, 16, 3.8 %%>;
+  greenButtonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
+
+  greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
+  greenBasePaddingBottom = <%% 32, 32, 32, 32, 3.8 %%>;
+
   items = JSON.parse(JSON.stringify(wordings.items));
   items = [ JSON.parse(JSON.stringify(wordings.column)) ].concat(items);
   itemsLength = items.map((arr) => { return arr.map((a) => {
@@ -255,7 +269,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   }
   itemsRatio = itemsLengthConverted.map((num) => { return itemsLengthSum === 0 ? 0 : (num / itemsLengthSum) });
   itemsRatio = itemsRatio.map((num) => { return String(Math.floor(num * 10000) / 100) + '%'; });
-
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -675,11 +688,118 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     throw new Error(err);
   });
 
+  greenButtonBase = createNode({
+    mother: whiteTong,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(greenBasePaddingTop) + ea,
+      paddingBottom: String(greenBasePaddingBottom) + ea,
+      textAlign: "center",
+    }
+  });
 
-  console.log(wordings);
+  greenButton = createNode({
+    mother: greenButtonBase,
+    class: [ "hoverDefault_lite" ],
+    events: [
+      {
+        type: "click",
+        event: instance.greenPopup({ height: greenButtonHeight, size: greenButtonFontSize, textTop: greenButtonTextTop }),
+      }
+    ],
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(greenButtonWidth) + ea,
+      height: String(greenButtonHeight) + ea,
+      background: colorChip.green,
+      textAlign: "center",
+      borderRadius: String(3) + "px",
+    },
+    children: [
+      {
+        text: wordings.button,
+        style: {
+          position: "absolute",
+          top: String(greenButtonTextTop) + ea,
+          width: String(100) + '%',
+          left: String(0),
+          fontSize: String(greenButtonFontSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.white,
+          textAlign: "center",
+        }
+      }
+    ]
+  });
 
   whiteBlock.style.height = "auto";
+}
 
+UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
+  if (typeof buttonSpec !== "object") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
+  const { client, designer, ea, baseTong, media, bill } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const wordings = this.billWordings();
+  const removeClassName = "estimateWhitePopup";
+  return function (e) {
+    const { height, size, textTop } = buttonSpec;
+    const mother = document.getElementById("totalcontents");
+    let cancelBack;
+    let whitePopup;
+    let whitePopupWidth, whitePopupHeight;
+
+    whitePopupWidth = <%% 800, 800, 800, 800, 800 %%>;
+    whitePopupHeight = <%% 500, 500, 500, 500, 500 %%>;
+
+    cancelBack = createNode({
+      mother,
+      class: [ removeClassName ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            while (document.querySelector('.' + removeClassName) !== null) {
+              mother.removeChild(document.querySelector('.' + removeClassName));
+            }
+          }
+        }
+      ],
+      style: {
+        position: "fixed",
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: colorChip.black,
+        animation: "justfadein 0.3s ease forwards",
+        zIndex: String(1),
+      }
+    });
+
+    whitePopup = createNode({
+      mother,
+      class: [ removeClassName ],
+      style: {
+        position: "fixed",
+        left: withOut(50, whitePopupWidth / 2, ea),
+        top: withOut(50, whitePopupHeight / 2, ea),
+        width: String(whitePopupWidth) + ea,
+        height: String(whitePopupHeight) + ea,
+        borderRadius: String(3) + "px",
+        background: colorChip.white,
+        animation: "fadeup 0.3s ease forwards",
+        zIndex: String(1),
+      }
+    });
+
+  }
 }
 
 UniversalEstimationJs.prototype.launching = async function (loading) {

@@ -16,8 +16,6 @@ module.exports = {
       },
       goal: [],
       requests: [],
-      proofs: [],
-      comments: [],
       links: {},
     };
   },
@@ -38,6 +36,8 @@ module.exports = {
         items: [],
         pay: new Date(1800, 0, 1),
         cancel: new Date(1800, 0, 1),
+        proofs: [],
+        comments: [],
       };
     } else if (subject === "items" || subject === "goal") {
       dummy = {
@@ -256,6 +256,8 @@ module.exports = {
         this.items = new Items(json.items);
         this.pay = json.pay;
         this.cancel = json.cancel;
+        this.proofs = new Proofs(json.proofs);
+        this.comments = new SeachArray(json.comments);
       }
       toNormal() {
         let obj = {};
@@ -265,6 +267,8 @@ module.exports = {
         obj.items = this.items.toNormal();
         obj.pay = this.pay;
         obj.cancel = this.cancel;
+        obj.proofs = this.proofs.toNormal();
+        obj.comments = this.comments.toNormal();
         return obj;
       }
     }
@@ -340,8 +344,6 @@ module.exports = {
         this.participant = new Participant(json.participant);
         this.goal = new Goal(json.goal);
         this.requests = new Requests(json.requests);
-        this.proofs = new Proofs(json.proofs);
-        this.comments = new SeachArray(json.comments);
         this.links = new Links(json.links);
       }
       toNormal() {
@@ -354,8 +356,6 @@ module.exports = {
         obj.participant = this.participant.toNormal();
         obj.goal = this.goal.toNormal();
         obj.requests = this.requests.toNormal();
-        obj.proofs = this.proofs.toNormal();
-        obj.comments = this.comments.toNormal();
         obj.links = this.links;
         return obj;
       }
