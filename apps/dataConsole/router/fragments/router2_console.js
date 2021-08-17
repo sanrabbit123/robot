@@ -2988,3 +2988,27 @@ DataRouter.prototype.rou_post_designerFee = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_iamportScript = function () {
+  const instance = this;
+  const work = this.work;
+  const back = this.back;
+  const { requestSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/iamportScript" ];
+  obj.func = async function (req, res) {
+    try {
+      let pluginScript;
+      pluginScript = '';
+      pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
+      pluginScript += "\n\n";
+      pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify({ script: pluginScript }));
+    } catch (e) {
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify([ null ]));
+    }
+  }
+  return obj;
+}

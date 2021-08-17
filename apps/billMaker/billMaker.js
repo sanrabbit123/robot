@@ -40,21 +40,27 @@ BillMaker.billDictionary = {
         amount: (method, amount, distance) => { return (/^off/gi.test(method) ? distance.amount : 0) },
       },
     ],
-    comments: [
-      [
-        "계약금은 전체 서비스 금액에 포함됩니다.",
-        "계약금을 입금하시면 담당 디자이너에게 고객님 정보가 전달되며, 현장 미팅이 진행됩니다.",
-        "현장 미팅 후 계약금을 제외한 잔금을 입금하시면 스타일링 서비스가 계속 진행됩니다.",
-        "현장 미팅 후 스타일링을 진행하지 않더라도, 계약금은 환불되지 않습니다.",
-        "계좌 이체시, '기업 049-085567-04-022 / (주)홈리에종'으로 보내주시면 됩니다."
-      ],
-      [
-        "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
-        "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
-        "결제해주신 디자인비는 서비스 정책상, 홈스타일링이 끝날 때까지 홈리에종에서 보관합니다.",
-        "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
-        "계좌 이체시, '기업 049-085567-04-022 / (주)홈리에종'으로 보내주시면 됩니다."
-      ],
+    requests: [
+      {
+        name: "홈리에종 계약금",
+        comments: [
+          "계약금은 전체 서비스 금액에 포함됩니다.",
+          "계약금을 입금하시면 담당 디자이너에게 고객님 정보가 전달되며, 현장 미팅이 진행됩니다.",
+          "현장 미팅 후 계약금을 제외한 잔금을 입금하시면 스타일링 서비스가 계속 진행됩니다.",
+          "현장 미팅 후 스타일링을 진행하지 않더라도, 계약금은 환불되지 않습니다.",
+          "계좌 이체시, '기업 049-085567-04-022 / (주)홈리에종'으로 보내주시면 됩니다."
+        ]
+      },
+      {
+        name: "홈리에종 잔금",
+        comments: [
+          "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
+          "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
+          "결제해주신 디자인비는 서비스 정책상, 홈스타일링이 끝날 때까지 홈리에종에서 보관합니다.",
+          "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
+          "계좌 이체시, '기업 049-085567-04-022 / (주)홈리에종'으로 보내주시면 됩니다."
+        ]
+      },
     ],
     etc: {
       contractAmount: 300000,
@@ -395,7 +401,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     name: BillMaker.billDictionary.styling.name,
   };
   const stylingItems = BillMaker.billDictionary.styling.items;
-  const stylingComments = BillMaker.billDictionary.styling.comments;
+  const stylingRequests = BillMaker.billDictionary.styling.requests;
   const contractAmount = BillMaker.billDictionary.styling.etc.contractAmount;
   const vatRatio = 0.1;
   try {
@@ -542,7 +548,8 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
             contractRequest.items.push(itemFactor);
           }
         }
-        for (let c of stylingComments[0]) {
+        contractRequest.name = stylingRequests[0].name;
+        for (let c of stylingRequests[0].comments) {
           contractRequest.comments.push(c);
         }
 
@@ -570,7 +577,8 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
           designFeeRequest.items.push(itemFactor);
           goalArr.push(itemFactor);
         }
-        for (let c of stylingComments[1]) {
+        designFeeRequest.name = stylingRequests[1].name;
+        for (let c of stylingRequests[1].comments) {
           designFeeRequest.comments.push(c);
         }
 

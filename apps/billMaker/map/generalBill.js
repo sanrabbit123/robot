@@ -31,6 +31,7 @@ module.exports = {
       dummy = {
         id: "",
         date: new Date(),
+        name: "",
         status: "결제 요청",
         info: [],
         items: [],
@@ -251,6 +252,7 @@ module.exports = {
       constructor(json) {
         this.id = json.id;
         this.date = json.date;
+        this.name = json.name;
         this.status = json.status;
         this.info = new SeachArray(json.info);
         this.items = new Items(json.items);
@@ -263,6 +265,7 @@ module.exports = {
         let obj = {};
         obj.id = this.id;
         obj.date = this.date;
+        obj.name = this.name;
         obj.info = this.info.toNormal();
         obj.items = this.items.toNormal();
         obj.pay = this.pay;

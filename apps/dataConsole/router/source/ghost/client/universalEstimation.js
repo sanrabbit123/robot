@@ -93,7 +93,22 @@ UniversalEstimationJs.prototype.billWordings = function () {
     sum: {},
     commentsTitle: "<b%*%b> 유의 사항",
     comments: [],
-    button: "결제 안내"
+    button: "결제 안내",
+    pannel: [
+      {
+        name: "계좌 이체시",
+        children: [
+          "기업 049-085567-04-022",
+          "(주)홈리에종"
+        ]
+      },
+      {
+        name: "카드 결제시",
+        children: [
+          "카드 결제창",
+        ]
+      },
+    ]
   };
   sum0 = 0;
   sum1 = 0;
@@ -202,7 +217,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   barPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
   barMarginBottom = <%% 14, 14, 14, 14, 14 %%>;
 
-  grayMarginTop0 = <%% 50, 50, 50, 50, 50 %%>;
+  grayMarginTop0 = <%% 56, 56, 56, 56, 56 %%>;
   grayMarginTop1 = <%% 20, 20, 20, 20, 20 %%>;
 
   sumBoxBarTop = <%% 19, 19, 19, 19, 19 %%>;
@@ -470,7 +485,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
               textAlign: "right",
               background: colorChip.white,
               paddingLeft: String(sumBoxMainPaddingLeft) + ea,
-              color: colorChip.black,
+              color: colorChip.green,
             }
           },
           {
@@ -818,7 +833,7 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
       },
       children: [
         {
-          text: "계좌 이체시",
+          text: wordings.pannel[0].name,
           style: {
             position: "absolute",
             fontSize: String(fontSize) + ea,
@@ -849,7 +864,7 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
 
     createNode({
       mother: firstBox.lastChild,
-      text: "기업 049-085567-04-022",
+      text: wordings.pannel[0].children[0],
       style: {
         display: "block",
         fontSize: String(size) + ea,
@@ -861,7 +876,7 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
     });
     createNode({
       mother: firstBox.lastChild,
-      text: "(주)홈리에종",
+      text: wordings.pannel[0].children[1],
       style: {
         display: "block",
         fontSize: String(size) + ea,
@@ -878,7 +893,7 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
       },
       children: [
         {
-          text: "카드 결제시",
+          text: wordings.pannel[1].name,
           style: {
             position: "absolute",
             fontSize: String(fontSize) + ea,
@@ -889,6 +904,36 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
         },
         {
           class: [ "hoverDefault_lite" ],
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                const IMP = window.IMP;
+                IMP.init("imp71921105");
+                console.log(client.name);
+                console.log(client.phone);
+                console.log(client.email);
+                IMP.request_pay({
+                  merchant_uid: "merchant_" + new Date().getTime(),
+                  name: "홈리에종 계약금",
+                  amount: 330000,
+                  buyer_email: "admin@home-liaison.com",
+                  buyer_name: "배창규",
+                  buyer_tel: "010-2747-3403",
+                }, (result) => {
+                  if (result.success) {
+                    window.alert("결제가 완료되었습니다!");
+                    window.location.href = "https://home-liaison.com";
+                  } else {
+                    window.alert("결제에 실패하였습니다, 다시 시도해주세요!");
+                    while (document.querySelector('.' + removeClassName) !== null) {
+                      mother.removeChild(document.querySelector('.' + removeClassName));
+                    }
+                  }
+                });
+              }
+            }
+          ],
           style: {
             position: "absolute",
             bottom: String(innerMargin) + ea,
@@ -901,7 +946,7 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
           },
           children: [
             {
-              text: "카드 결제창",
+              text: wordings.pannel[1].children[0],
               style: {
                 position: "absolute",
                 color: colorChip.white,
@@ -917,7 +962,6 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
       ]
     });
 
-
   }
 }
 
@@ -926,7 +970,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
   try {
     this.mother.setGeneralProperties(this);
 
-    const { returnGet, ajaxJson } = GeneralJs;
+    const { returnGet, ajaxJson, requestPromise } = GeneralJs;
     const getObj = returnGet();
     if (getObj.needs === undefined || getObj.cliid === undefined) {
       alert("잘못된 접근입니다!");
@@ -986,6 +1030,14 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
+
+    ajaxJson({}, "/iamportScript").then((obj) => {
+      const { script } = obj;
+      const plugin = new Function(script);
+      plugin();
+    }).catch((err) => {
+      console.log(err);
+    })
 
   } catch (e) {
     console.log(e);
