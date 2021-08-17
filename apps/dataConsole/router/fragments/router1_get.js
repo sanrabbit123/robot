@@ -260,6 +260,25 @@ DataRouter.prototype.rou_get_Address = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_get_Address = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/tools/trigger";
+  obj.func = function (req, res) {
+    try {
+      const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
+        <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
+        window.parent.postMessage("안녕?", '*');</script></body></html>`;
+      res.set("Content-Type", "text/html");
+      res.send(html);
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_get_ServerSent = function () {
   const instance = this;
   const back = this.back;

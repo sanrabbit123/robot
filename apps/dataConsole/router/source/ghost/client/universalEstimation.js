@@ -57,7 +57,7 @@ UniversalEstimationJs.binaryPath = "/middle/estimation";
 
 UniversalEstimationJs.prototype.billWordings = function () {
   const instance = this;
-  const { client, designer, media, bill } = this;
+  const { client, designer, media, bill, requestNumber } = this;
   const { dateToString, autoComma } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
@@ -110,9 +110,11 @@ UniversalEstimationJs.prototype.billWordings = function () {
       },
     ]
   };
+
   sum0 = 0;
   sum1 = 0;
-  for (let obj of bill.requests[1].items) {
+
+  for (let obj of bill.requests[requestNumber].items) {
     tempArr = [];
     tempArr.push(obj.name);
     tempArr.push(autoComma(obj.unit.price));
@@ -127,13 +129,17 @@ UniversalEstimationJs.prototype.billWordings = function () {
   }
   wordings.sum.supply = autoComma(sum0);
   wordings.sum.consumer = autoComma(sum1);
-  wordings.comments = bill.requests[1].comments
+  wordings.comments = bill.requests[requestNumber].comments;
+
+  this.request.name = bill.requests[requestNumber].name;
+  this.request.amount = sum1;
+
   return wordings;
 }
 
 UniversalEstimationJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { client, designer, ea, baseTong, media, bill } = this;
+  const { client, designer, ea, baseTong, media, bill, request } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
@@ -714,13 +720,59 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     }
   });
 
+  window.addEventListener("message", function (e) {
+    for (let i = 0; i < 3; i++) {
+      document.body.removeChild(document.body.lastChild);
+    }
+    document.head.removeChild(document.head.lastChild);
+    //close callback
+    window.alert("결제가 취소되었습니다! 다시 시도해주세요!");
+  });
+
   greenButton = createNode({
     mother: greenButtonBase,
     class: [ "hoverDefault_lite" ],
     events: [
       {
         type: "click",
-        event: instance.greenPopup({ height: greenButtonHeight, size: greenButtonFontSize, textTop: greenButtonTextTop }),
+        event: async function (e) {
+          try {
+            const { pluginScript, formValue } = await ajaxJson({
+              cliid: instance.cliid,
+              kind: instance.class,
+              desid: instance.desid,
+              proid: instance.proid,
+              method: instance.method,
+              mode: "script",
+              name: request.name,
+              // price: request.amount,
+              price: 1001,
+              buyerName: "배창규",
+              buyerPhone: "010-2747-3403",
+              buyerEmail: "uragenbooks@gmail.com",
+              currentPage: window.location.protocol + "//" + window.location.host,
+            }, "/inicisPayment");
+            const form = document.createElement("FORM");
+            let value, formId, plugin;
+            formId = "form" + String((new Date()).valueOf());
+            form.id = formId;
+            form.style.display = "none";
+            document.body.appendChild(form);
+            for (let name in formValue) {
+              value = String(formValue[name]);
+              createNode({
+                mother: form,
+                mode: "input",
+                attribute: [ { name }, { value } ],
+                style: { display: "none" }
+              });
+            }
+            plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
+            plugin();
+          } catch (e) {
+            console.log(e);
+          }
+        },
       }
     ],
     style: {
@@ -757,8 +809,8 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut } = GeneralJs;
-  const { client, designer, ea, baseTong, media, bill } = this;
+  const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { client, designer, ea, baseTong, media, bill, request } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const wordings = this.billWordings();
@@ -907,30 +959,38 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
           events: [
             {
               type: "click",
-              event: function (e) {
-                const IMP = window.IMP;
-                IMP.init("imp71921105");
-                console.log(client.name);
-                console.log(client.phone);
-                console.log(client.email);
-                IMP.request_pay({
-                  merchant_uid: "merchant_" + new Date().getTime(),
-                  name: "홈리에종 계약금",
-                  amount: 330000,
-                  buyer_email: "admin@home-liaison.com",
-                  buyer_name: "배창규",
-                  buyer_tel: "010-2747-3403",
-                }, (result) => {
-                  if (result.success) {
-                    window.alert("결제가 완료되었습니다!");
-                    window.location.href = "https://home-liaison.com";
-                  } else {
-                    window.alert("결제에 실패하였습니다, 다시 시도해주세요!");
-                    while (document.querySelector('.' + removeClassName) !== null) {
-                      mother.removeChild(document.querySelector('.' + removeClassName));
-                    }
+              event: async function (e) {
+                try {
+                  const { pluginScript, formValue } = await ajaxJson({
+                    name: request.name,
+                    price: request.amount,
+                    buyerName: "배창규",
+                    buyerPhone: "010-2747-3403",
+                    buyerEmail: "uragenbooks@gmail.com",
+                    currentPage: window.location.href,
+                  }, "/inicisPayment");
+                  const form = document.createElement("FORM");
+                  let value, formId, plugin;
+                  formId = "form" + String((new Date()).valueOf());
+                  form.id = formId;
+                  form.style.display = "none";
+                  document.body.appendChild(form);
+                  for (let name in formValue) {
+                    value = String(formValue[name]);
+                    createNode({
+                      mother: form,
+                      mode: "input",
+                      attribute: [ { name }, { value } ],
+                      style: {
+                        display: "none"
+                      }
+                    });
                   }
-                });
+                  plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
+                  plugin();
+                } catch (e) {
+                  console.log(e);
+                }
               }
             }
           ],
@@ -965,6 +1025,103 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
   }
 }
 
+UniversalEstimationJs.prototype.payComplete = async function (data) {
+  const instance = this;
+  const { ajaxJson } = GeneralJs;
+  try {
+    window.alert("결제가 완료되었습니다!");
+    console.log(data);
+    console.log(JSON.stringify(data, null, 2));
+    /*
+    {
+      "CARD_Quota": "00",
+      "CARD_ClEvent": "",
+      "CARD_CorpFlag": "0",
+      "buyerTel": "010-2747-3403",
+      "parentEmail": "",
+      "applDate": "20210817",
+      "buyerEmail": "uragenbooks@gmail.com",
+      "p_Sub": "",
+      "resultCode": "0000",
+      "mid": "MOIhomeli1",
+      "CARD_UsePoint": "",
+      "CARD_Num": "91002001****",
+      "authSignature": "a98c4d9991e30b43ada7ff0064d403cb941b721380e4cfada8ec68152a29d3b0",
+      "ISP_CardCode": "000100202266221",
+      "tid": "StdpayISP_MOIhomeli120210817205753658566",
+      "EventCode": "",
+      "goodName": "홈리에종 계약금",
+      "TotPrice": "1001",
+      "payMethod": "VCard",
+      "CARD_MemberNum": "",
+      "MOID": "merchant_1629201365161",
+      "CARD_Point": "",
+      "currency": "WON",
+      "CARD_PurchaseCode": "",
+      "CARD_PrtcCode": "1",
+      "applTime": "205753",
+      "goodsName": "홈리에종 계약금",
+      "CARD_CheckFlag": "0",
+      "FlgNotiSendChk": "",
+      "CARD_Code": "11",
+      "CARD_BankCode": "00",
+      "CARD_TerminalNum": "0208937000",
+      "ISP_RetrievalNum": "",
+      "P_FN_NM": "BC카드",
+      "buyerName": "배창규",
+      "p_SubCnt": "",
+      "applNum": "36775268",
+      "resultMsg": "정상완료",
+      "CARD_Interest": "0",
+      "CARD_SrcCode": "",
+      "CARD_ApplPrice": "1001",
+      "CARD_GWCode": "G",
+      "custEmail": "uragenbooks@gmail.com",
+      "CARD_PurchaseName": "",
+      "CARD_PRTC_CODE": "1",
+      "payDevice": "PC"
+    }
+
+    {
+      "buyerTel": "010-2747-3403",
+      "parentEmail": "",
+      "applDate": "20210817",
+      "buyerEmail": "uragenbooks@gmail.com",
+      "p_Sub": "",
+      "resultCode": "0000",
+      "mid": "MOIhomeli1",
+      "VACT_Date": "20210916",
+      "authSignature": "8755e7a17d2859e719fc2ae821ff2e9d85515e441e2608bf322c6e3a31fc1ddb",
+      "tid": "StdpayVBNKMOIhomeli120210817210301095424",
+      "EventCode": "",
+      "VACT_Name": "（주）  홈리에종",
+      "VACT_InputName": "배창규",
+      "goodName": "홈리에종 계약금",
+      "VACT_Time": "235959",
+      "TotPrice": "1001",
+      "payMethod": "VBank",
+      "VACT_BankCode": "20",
+      "MOID": "merchant_1629201641177",
+      "vactBankName": "우리은행",
+      "currency": "WON",
+      "applTime": "210301",
+      "goodsName": "홈리에종 계약금",
+      "FlgNotiSendChk": "",
+      "buyerName": "배창규",
+      "p_SubCnt": "",
+      "resultMsg": "정상처리되었습니다.",
+      "custEmail": "uragenbooks@gmail.com",
+      "VACT_Num": "27489473818806",
+      "payDevice": "PC"
+    }
+
+    */
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 UniversalEstimationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -977,10 +1134,19 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
     const { needs, cliid } = getObj;
+    if (needs.split(',').length !== 4) {
+      alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
     const [ kind, desid, proid, method ] = needs.split(',');
+    if (!/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(desid) || !/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(proid)) {
+      alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
     let clients, client;
     let designers, designer;
     let bills, bill;
+    let data;
 
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
@@ -1007,9 +1173,36 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       bill = new StylingBill(bills[0]);
       this.bill = bill;
       this.class = kind;
+      this.method = method;
+      this.proid = proid;
+      this.desid = desid;
+      this.cliid = cliid;
     } else {
       alert("아직 구축되지 않은 영역입니다!");
       window.location.href = this.frontPage;
+    }
+
+    this.requestNumber = 0;
+    for (let i = 0; i < bill.requests.length; i++) {
+      if (bill.requests[i].pay.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+        this.requestNumber = i;
+      }
+    }
+    this.request = {
+      name: "",
+      amount: 0,
+    };
+
+    if (getObj.hash !== undefined) {
+      data = await ajaxJson({
+        hash: getObj.hash,
+        mode: "decrypto",
+      }, "/inicisPayment", { equal: true });
+      if (getObj.mode === "complete") {
+        await this.payComplete(data);
+      } else if (getObj.mode === "fail") {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      }
     }
 
     await this.mother.ghostClientLaunching({
@@ -1030,14 +1223,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     });
 
     loading.parentNode.removeChild(loading);
-
-    ajaxJson({}, "/iamportScript").then((obj) => {
-      const { script } = obj;
-      const plugin = new Function(script);
-      plugin();
-    }).catch((err) => {
-      console.log(err);
-    })
 
   } catch (e) {
     console.log(e);

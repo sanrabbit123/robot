@@ -766,7 +766,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     for (let obj of rouObj.post) {
       if (obj.public !== true) {
         app.post(obj.link, function (req, res) {
-          let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers;
+          let __wallLogicBoo, __vailHosts, __authorization, __originTarget, __headers, __slackMessage;
 
           __vailHosts = [
             instance.address.backinfo.host,
@@ -774,13 +774,16 @@ DataConsole.prototype.connect = async function (noStatic = false) {
             "localhost:3000",
             "localhost:8080",
             instance.address.officeinfo.ghost.host,
+            "stdpay.inicis.com",
+            "fcstdpay.inicis.com",
+            "ksstdpay.inicis.com"
           ];
 
           __wallLogicBoo = false;
 
           __originTarget = req.headers["origin"] || "invaild";
           for (let host of __vailHosts) {
-            __wallLogicBoo = (__originTarget.trim() === ("https://" + host));
+            __wallLogicBoo = (__originTarget.trim().replace(/\/$/, '') === ("https://" + host));
             if (__wallLogicBoo) {
               break;
             }
@@ -791,6 +794,11 @@ DataConsole.prototype.connect = async function (noStatic = false) {
             res.send(JSON.stringify({ message: "OK" }));
             __headers = req.headers;
             __headers = JSON.parse(JSON.stringify(__headers));
+            __slackMessage = JSON.stringify(__headers, null, 2);
+            if (req.body !== null && req.body !== undefined) {
+              __slackMessage += "\n\n";
+              __slackMessage += JSON.stringify(req.body, null, 2);
+            }
             instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + JSON.stringify(__headers, null, 2), channel: "#error_log" });
           } else {
             obj.func(req, res);

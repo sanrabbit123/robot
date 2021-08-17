@@ -446,6 +446,25 @@ DataRouter.prototype.rou_get_Address = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_get_Address = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = "/tools/trigger";
+  obj.func = function (req, res) {
+    try {
+      const html = `<!DOCTYPE html><html lang="ko" dir="ltr"><head><meta charset="utf-8">
+        <style>*{margin:0}body{width:100vh;height:100vh;overflow:hidden}body::-webkit-scrollbar{display:none;}img{cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1}div{border:0;width:100vw;height:100vh;position:relative}</style><script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script></head><body><script>
+        window.parent.postMessage("안녕?", '*');</script></body></html>`;
+      res.set("Content-Type", "text/html");
+      res.send(html);
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_get_ServerSent = function () {
   const instance = this;
   const back = this.back;
@@ -3573,25 +3592,77 @@ DataRouter.prototype.rou_post_designerFee = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_iamportScript = function () {
+DataRouter.prototype.rou_post_inicisPayment = function () {
   const instance = this;
   const work = this.work;
   const back = this.back;
-  const { requestSystem } = this.mother;
+  const { requestSystem, cryptoString, decryptoHash } = this.mother;
+  const crypto = require('crypto');
+  const password = "homeliaison";
   let obj = {};
-  obj.link = [ "/iamportScript" ];
+  obj.link = [ "/inicisPayment" ];
   obj.func = async function (req, res) {
     try {
-      let pluginScript;
-      pluginScript = '';
-      pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
-      pluginScript += "\n\n";
-      pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
-      res.set({ "Content-Type": "application/json" });
-      res.send(JSON.stringify({ script: pluginScript }));
+      const now = new Date();
+
+      if (req.body.mode === "script") {
+        const { cliid, kind, desid, proid, method } = req.body;
+        const oidConst = "merchant_";
+        const version = "1.0";
+        const gopaymethod = "";
+        const mid = "MOIhomeli1";
+        const signkey = "dWtKaWY0RzR5QkZZNGpCeDQ5Z0dzUT09";
+        const timestamp = String(now.valueOf());
+        const oid = oidConst + timestamp;
+        const price = Number(req.body.price);
+        const signature = crypto.createHash("sha256").update(`oid=${oid}&price=${String(price)}&timestamp=${timestamp}`).digest("hex");
+        const mKey = crypto.createHash("sha256").update(signkey).digest("hex");
+        const currency = "WON";
+        const goodname = req.body.name;
+        const buyername = req.body.buyerName;
+        const buyertel = req.body.buyerPhone;
+        const buyeremail = req.body.buyerEmail;
+        const returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
+        const closeUrl = req.body.currentPage + "/tools/trigger";
+
+        let pluginScript, formValue;
+        pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
+        formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
+
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ pluginScript, formValue }));
+
+      } else if (req.body.mode === "decrypto") {
+
+        let result = await decryptoHash(password, req.body.hash.trim());
+        try {
+          result = JSON.parse(result);
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify(result));
+        } catch (e) {
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({ result }));
+        }
+
+      } else {
+
+        const { resultCode, authUrl, netCancelUrl, returnUrl, orderNumber, authToken, mid } = req.body;
+        const charset = "UTF-8";
+        const format = "JSON";
+        const timestamp = String(now.valueOf());
+        const signature = crypto.createHash("sha256").update(`authToken=${authToken}&timestamp=${timestamp}`).digest("hex");
+        const response = await requestSystem(authUrl, { mid, authToken, timestamp, signature, charset, format });
+        const responseData = await cryptoString(password, JSON.stringify(response.data));
+        if (response.data.resultCode === "0000") {
+          res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
+        } else {
+          res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
+        }
+
+      }
+
     } catch (e) {
-      res.set({ "Content-Type": "application/json" });
-      res.send(JSON.stringify([ null ]));
+      console.log(e);
     }
   }
   return obj;
