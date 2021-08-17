@@ -818,7 +818,7 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
           style: {
             position: "absolute",
             fontSize: String(fontSize) + ea,
-            fontWeight: String(500),
+            fontWeight: String(600),
             left: String(innerMargin) + ea,
             top: String(innerMargin) + ea,
           }
@@ -839,9 +839,9 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
       text: "기업 049-085567-04-022",
       style: {
         display: "block",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(500),
-        marignBottom: String(10) + ea,
+        fontSize: String(size) + ea,
+        fontWeight: String(400),
+        marginBottom: String(4) + ea,
       }
     });
     createNode({
@@ -849,8 +849,8 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
       text: "(주)홈리에종",
       style: {
         display: "block",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(500),
+        fontSize: String(size) + ea,
+        fontWeight: String(400),
       }
     });
 
@@ -867,7 +867,7 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
           style: {
             position: "absolute",
             fontSize: String(fontSize) + ea,
-            fontWeight: String(500),
+            fontWeight: String(600),
             left: String(innerMargin) + ea,
             top: String(innerMargin) + ea,
           }

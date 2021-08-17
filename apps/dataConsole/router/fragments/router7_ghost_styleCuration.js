@@ -132,8 +132,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             newProid = null;
             back.getProjectsByQuery({ cliid }, { selfMongo: instance.mongo }).then((rows) => {
               if (rows.length > 0) {
-                newProid = null;
-                return passPromise();
+                newProid = rows[0].proid;
+                return back.updateProject([ { proid: newProid }, updateQuery ], { selfMongo: instance.mongo });
               } else {
                 return back.createProject(updateQuery, { selfMongo: instance.mongo });
               }

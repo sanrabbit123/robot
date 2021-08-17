@@ -6073,7 +6073,7 @@ ProposalJs.prototype.launching = async function () {
   const { ajaxJson } = GeneralJs;
   try {
 
-    this.designers = new Designers(await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $regex: "완료" } } }, "/getDesigners", { equal: true }));
+    this.designers = new Designers(await ajaxJson({ noFlat: true, whereQuery: {} }, "/getDesigners", { equal: true }));
 
     left.style.display = "none";
     right.style.display = "none";
