@@ -754,9 +754,14 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
     let cancelBack;
     let whitePopup;
     let whitePopupWidth, whitePopupHeight;
+    let innerMargin;
+    let fontSize;
+    let firstBox, secondBox;
 
     whitePopupWidth = <%% 800, 800, 800, 800, 800 %%>;
     whitePopupHeight = <%% 500, 500, 500, 500, 500 %%>;
+    innerMargin = <%% 30, 30, 30, 30, 30 %%>;
+    fontSize = <%% 16, 16, 16, 16, 16 %%>;
 
     cancelBack = createNode({
       mother,
@@ -798,6 +803,78 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
         zIndex: String(1),
       }
     });
+
+    firstBox = createNode({
+      mother: whitePopup,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(50) + '%',
+        borderBottom: "1px dashed " + colorChip.gray5,
+      },
+      children: [
+        {
+          text: "계좌 이체시",
+          style: {
+            position: "absolute",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(500),
+            left: String(innerMargin) + ea,
+            top: String(innerMargin) + ea,
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            bottom: String(innerMargin) + ea,
+            right: String(innerMargin) + ea,
+            textAlign: "right",
+          }
+        }
+      ]
+    });
+
+    createNode({
+      mother: firstBox.lastChild,
+      text: "기업 049-085567-04-022",
+      style: {
+        display: "block",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(500),
+        marignBottom: String(10) + ea,
+      }
+    });
+    createNode({
+      mother: firstBox.lastChild,
+      text: "(주)홈리에종",
+      style: {
+        display: "block",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(500),
+      }
+    });
+
+    secondBox = createNode({
+      mother: whitePopup,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(50) + '%',
+      },
+      children: [
+        {
+          text: "카드 결제시",
+          style: {
+            position: "absolute",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(500),
+            left: String(innerMargin) + ea,
+            top: String(innerMargin) + ea,
+          }
+        }
+      ]
+    });
+
 
   }
 }

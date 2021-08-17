@@ -397,13 +397,13 @@ Ghost.prototype.ghostRouter = function (needs) {
           if (manager !== null) {
             text += ` ${manager} 담당자님 `;
             if (method === "전화") {
-              test += method + " 받아주세요!";
+              text += method + " 받아주세요!";
             } else {
-              test += method + " 확인해주세요!";
+              text += method + " 확인해주세요!";
             }
           }
-          await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
           await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
+          requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
           res.send(JSON.stringify({ message: "success" }));
         }
       } catch (e) {
