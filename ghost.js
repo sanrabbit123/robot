@@ -322,54 +322,65 @@ Ghost.prototype.ghostRouter = function (needs) {
           let projects;
           let boo;
 
-          manager = null;
-          rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: MONGOC });
-          if (rows.length === 0) {
-            rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
+          if (!/^2/.test(phoneNumber)) {
+            manager = null;
+            rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: MONGOC });
             if (rows.length === 0) {
-              temp = await back.setMemberObj({ selfMongo: MONGOC, getMode: true });
-              rows = [];
-              for (let obj of temp) {
-                if (obj.phone === phoneNumber) {
-                  rows.push(obj);
-                }
-              }
+              rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
               if (rows.length === 0) {
-                name = "알 수 없는";
-                sub = "사람";
-              } else {
-                name = rows[0].name;
-                sub = "팀원";
-              }
-            } else {
-              name = rows[0].designer;
-              sub = "실장님";
-              manager = await back.getHistoryById("designer", rows[0].desid, { selfMongo: MONGOCONSOLEC });
-              if (manager !== null) {
-                if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
-                  manager = null;
-                } else {
-                  manager = manager.manager;
+                temp = await back.setMemberObj({ selfMongo: MONGOC, getMode: true });
+                rows = [];
+                for (let obj of temp) {
+                  if (obj.phone === phoneNumber) {
+                    rows.push(obj);
+                  }
                 }
-              }
-            }
-          } else {
-            name = rows[0].name;
-            sub = "고객님";
-            cliid = rows[0].cliid;
-            boo = false;
-            for (let { analytics } of rows[0].requests) {
-              boo = /진행/gi.test(analytics.response.status);
-            }
-            if (boo) {
-              projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } }, { "process.status": { $regex: "^[진홀]" } } ] }, { selfMongo: MONGOC });
-              if (projects.length > 0) {
-                manager = await back.getHistoryById("project", projects[0].proid, { selfMongo: MONGOCONSOLEC });
+                if (rows.length === 0) {
+                  name = "알 수 없는";
+                  sub = "사람";
+                } else {
+                  name = rows[0].name;
+                  sub = "팀원";
+                }
+              } else {
+                name = rows[0].designer;
+                sub = "실장님";
+                manager = await back.getHistoryById("designer", rows[0].desid, { selfMongo: MONGOCONSOLEC });
                 if (manager !== null) {
                   if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
                     manager = null;
                   } else {
                     manager = manager.manager;
+                  }
+                }
+              }
+            } else {
+              name = rows[0].name;
+              sub = "고객님";
+              cliid = rows[0].cliid;
+              boo = false;
+              for (let { analytics } of rows[0].requests) {
+                boo = /진행/gi.test(analytics.response.status);
+              }
+              if (boo) {
+                projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } }, { "process.status": { $regex: "^[진홀]" } } ] }, { selfMongo: MONGOC });
+                if (projects.length > 0) {
+                  manager = await back.getHistoryById("project", projects[0].proid, { selfMongo: MONGOCONSOLEC });
+                  if (manager !== null) {
+                    if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                      manager = null;
+                    } else {
+                      manager = manager.manager;
+                    }
+                  }
+                } else {
+                  manager = await back.getHistoryById("client", cliid, { selfMongo: MONGOCONSOLEC });
+                  if (manager !== null) {
+                    if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                      manager = null;
+                    } else {
+                      manager = manager.manager;
+                    }
                   }
                 }
               } else {
@@ -382,28 +393,20 @@ Ghost.prototype.ghostRouter = function (needs) {
                   }
                 }
               }
-            } else {
-              manager = await back.getHistoryById("client", cliid, { selfMongo: MONGOCONSOLEC });
-              if (manager !== null) {
-                if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
-                  manager = null;
-                } else {
-                  manager = manager.manager;
-                }
+            }
+            text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
+            if (manager !== null) {
+              text += ` ${manager} 담당자님 `;
+              if (method === "전화") {
+                text += method + " 받아주세요!";
+              } else {
+                text += method + " 확인해주세요!";
               }
             }
+            await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
+            requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
           }
-          text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
-          if (manager !== null) {
-            text += ` ${manager} 담당자님 `;
-            if (method === "전화") {
-              text += method + " 받아주세요!";
-            } else {
-              text += method + " 확인해주세요!";
-            }
-          }
-          await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
-          requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+
           res.send(JSON.stringify({ message: "success" }));
         }
       } catch (e) {
