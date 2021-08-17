@@ -344,7 +344,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             } else {
               name = rows[0].designer;
               sub = "실장님";
-              manager = await back.getHistoryById("desid", rows[0].desid, { selfMongo: MONGOCONSOLEC });
+              manager = await back.getHistoryById("designer", rows[0].desid, { selfMongo: MONGOCONSOLEC });
               if (manager !== null) {
                 if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
                   manager = null;
