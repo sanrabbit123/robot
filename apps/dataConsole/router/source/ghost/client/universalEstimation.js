@@ -112,7 +112,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
   }
   wordings.sum.supply = autoComma(sum0);
   wordings.sum.consumer = autoComma(sum1);
-  wordings.comments = bill.comments
+  wordings.comments = bill.requests[1].comments
   return wordings;
 }
 
@@ -177,7 +177,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  titleFontSize = <%% 31, 30, 28, 26, 5.7 %%>;
+  titleFontSize = <%% 30, 30, 29, 25, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
   titleFontBottom = <%% 2, 2, 2, 2, 2 %%>;
   titlePadding = <%% 6, 6, 6, 6, 6 %%>;

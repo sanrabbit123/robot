@@ -3284,12 +3284,12 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       const textDom = this.previousElementSibling;
                       if (toggle === "off") {
                         cleanChildren(scrollTong);
-                        historyLoad();
+                        imageLoad();
                         textDom.textContent = "고객님이 선택한 사진";
                         this.setAttribute("toggle", "on");
                       } else {
                         cleanChildren(scrollTong);
-                        imageLoad();
+                        historyLoad();
                         textDom.textContent = "고객님의 페이지 행적";
                         this.setAttribute("toggle", "off");
                       }
