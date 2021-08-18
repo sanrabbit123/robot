@@ -512,11 +512,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         thisBill.requests[Number(requestNumber)].proofs.push(proofs);
         updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
-        // instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
-        //   client: client.name,
-        //   designer: designer.designer,
-        // });
-
         if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
 
           projectQuery = {};
@@ -591,6 +586,11 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
             designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
             await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
 
+            // instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+            //   client: client.name,
+            //   designer: designer.designer,
+            // });
+
           } else if (data.goodName.trim() === "홈리에종 잔금") {
             projectQuery["process.contract.remain.date"] = new Date();
             projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
@@ -613,6 +613,8 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         // });
 
       }
+
+      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
 
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo })
 
@@ -816,6 +818,11 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
           designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
           await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
 
+          // instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+          //   client: client.name,
+          //   designer: designer.designer,
+          // });
+
         } else if (data.goodName.trim() === "홈리에종 잔금") {
           projectQuery["process.contract.remain.date"] = new Date();
           projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
@@ -827,6 +834,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
 
       }
 
+      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       res.set({ "Content-Type": "text/plain" });
