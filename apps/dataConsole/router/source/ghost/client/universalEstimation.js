@@ -751,7 +751,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
               buyerPhone: "010-2747-3403",
               buyerEmail: "uragenbooks@gmail.com",
               currentPage: window.location.protocol + "//" + window.location.host,
-            }, PYTHONHOST + "/inicisPayment");
+            }, "/inicisPayment");
             const form = document.createElement("FORM");
             let value, formId, plugin;
             formId = "form" + String((new Date()).valueOf());
@@ -968,7 +968,7 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
                     buyerPhone: "010-2747-3403",
                     buyerEmail: "uragenbooks@gmail.com",
                     currentPage: window.location.href,
-                  }, PYTHONHOST + "/inicisPayment");
+                  }, "/inicisPayment");
                   const form = document.createElement("FORM");
                   let value, formId, plugin;
                   formId = "form" + String((new Date()).valueOf());
@@ -1034,8 +1034,20 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
       throw new Error("invaild data");
     }
     const bilid = bill.bilid;
-    // await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
+    await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
     window.alert("결제가 완료되었습니다!");
+
+
+
+
+
+
+
+
+
+
+
+
   } catch (e) {
     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
     window.location.reload();
@@ -1117,7 +1129,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       data = await ajaxJson({
         hash: getObj.hash,
         mode: "decrypto",
-      }, PYTHONHOST + "/inicisPayment", { equal: true });
+      }, "/inicisPayment", { equal: true });
       if (getObj.mode === "complete") {
         await this.payComplete(data);
       } else if (getObj.mode === "fail") {
