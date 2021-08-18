@@ -857,7 +857,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p108");
+    // await this.spellCheck("p112");
 
 
     // get rawPortfolio by pid
@@ -865,7 +865,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p109");
+    // await this.getCorePortfolio("p112");
 
 
     // aspirant to designer
