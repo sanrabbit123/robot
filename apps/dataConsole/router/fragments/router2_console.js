@@ -2327,6 +2327,27 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_webHookTest = function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem } = this.mother;
+  let obj = {};
+  obj.link = "/webHookTest";
+  obj.public = true;
+  obj.func = async function (req, res) {
+    try {
+      res.set({ "Content-Type": "text/plain" });
+      console.log(req);
+      instance.mother.slack_bot.chat.postMessage({ text: `webhook 로그 발생`, channel: "#error_log" });
+      res.send("OK");
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_generalMongo = function () {
   const instance = this;
   const back = this.back;
