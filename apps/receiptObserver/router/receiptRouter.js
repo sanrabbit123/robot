@@ -680,6 +680,13 @@ ReceiptRouter.prototype.rou_post_inicisPayment = function () {
     try {
       const now = new Date();
 
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+
       if (req.body.mode === "script") {
         const { cliid, kind, desid, proid, method } = req.body;
         const oidConst = "homeliaisonBill_";
@@ -703,8 +710,6 @@ ReceiptRouter.prototype.rou_post_inicisPayment = function () {
         let pluginScript, formValue;
         pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
         formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
-
-        res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ pluginScript, formValue }));
 
       } else if (req.body.mode === "decrypto") {
@@ -712,10 +717,8 @@ ReceiptRouter.prototype.rou_post_inicisPayment = function () {
         let result = await decryptoHash(password, req.body.hash.trim());
         try {
           result = JSON.parse(result);
-          res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify(result));
         } catch (e) {
-          res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ result }));
         }
 
@@ -729,9 +732,9 @@ ReceiptRouter.prototype.rou_post_inicisPayment = function () {
         const response = await requestSystem(authUrl, { mid, authToken, timestamp, signature, charset, format });
         const responseData = await cryptoString(password, JSON.stringify(response.data));
         if (response.data.resultCode === "0000") {
-          res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
+          res.redirect(returnUrl.replace(/\/inicisPayment/, "/middle/estimation") + "&mode=complete" + "&hash=" + responseData);
         } else {
-          res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
+          res.redirect(returnUrl.replace(/\/inicisPayment/, "/middle/estimation") + "&mode=fail" + "&hash=" + responseData);
         }
 
       }
