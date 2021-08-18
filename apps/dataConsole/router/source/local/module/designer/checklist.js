@@ -2105,7 +2105,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
       ]
     },
     {
-      name: "성격",
+      name: "태도",
       children: [
         {
           name: "미팅 준비성",
