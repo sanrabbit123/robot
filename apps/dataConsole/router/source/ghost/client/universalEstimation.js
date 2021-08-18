@@ -57,12 +57,13 @@ UniversalEstimationJs.binaryPath = "/middle/estimation";
 
 UniversalEstimationJs.prototype.billWordings = function () {
   const instance = this;
-  const { client, designer, media, bill, requestNumber } = this;
+  const { client, designer, project, media, bill, requestNumber } = this;
   const { dateToString, autoComma } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
   const { analytics, request } = client.requests[0];
   const spendDates = (Number(String(analytics.response.service.serid).split('_')[1].replace(/[^0-9]/gi, '')) + 1) * 15;
+  const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "설계 변경" ];
   let start, end;
   let wordings;
   let tempArr;
@@ -73,8 +74,8 @@ UniversalEstimationJs.prototype.billWordings = function () {
   start.setDate(start.getDate() - spendDates);
   wordings = {
     mainTitle: [
-      designer.designer + " 디자이너",
-      "<b%홈스타일링 비용 내역%b>",
+      client.name + " 고객님",
+      "<b%" + (project.service.online ? "온라인" : "오프라인") + " " + serviceName[Number(project.service.serid.split('_')[1].replace(/[^0-9]/g, '').replace(/^0/, '')) - 1] + " 내역%b>",
     ],
     subTitle: [
       "<b%현장명%b> : " + request.space.address,
@@ -1195,6 +1196,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     }
     let clients, client;
     let designers, designer;
+    let projects, project;
     let bills, bill;
     let data;
 
@@ -1208,11 +1210,18 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
+    projects = await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true });
+    if (projects.length === 0) {
+      alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
 
     client = clients[0];
     this.client = client;
     designer = designers[0];
     this.designer = designer;
+    project = projects[0];
+    this.project = project;
 
     bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, PYTHONHOST + "/generalBill", { equal: true });
     if (bills.length === 0) {

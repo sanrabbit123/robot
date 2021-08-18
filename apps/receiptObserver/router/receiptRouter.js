@@ -455,7 +455,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       project = await back.getProjectById(proid, { selfMongo: instance.mongo });
       proposal = project.selectProposal(desid);
 
-      if (proposal === null) {
+      if (client === null || designer === null || project === null || proposal === null) {
         throw new Error("invaild proposal");
       }
 
@@ -512,14 +512,12 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         thisBill.requests[Number(requestNumber)].proofs.push(proofs);
         updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
-        /*
+        // instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+        //   client: client.name,
+        //   designer: designer.designer,
+        // });
 
-        instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
-          client: client.name,
-          designer: designer.designer,
-        });
-
-        if (data.goodsName.trim() === "홈리에종 계약금" || data.goodsName.trim() === "홈리에종 잔금") {
+        if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
 
           projectQuery = {};
           amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
@@ -533,7 +531,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
             }
           }
 
-          if (data.goodsName.trim() === "홈리에종 계약금") {
+          if (data.goodName.trim() === "홈리에종 계약금") {
             projectQuery["process.contract.first.date"] = new Date();
             projectQuery["process.contract.first.calculation.amount"] = amount;
             projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
@@ -598,7 +596,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
             designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
             await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
 
-          } else if (data.goodsName.trim() === "홈리에종 잔금") {
+          } else if (data.goodName.trim() === "홈리에종 잔금") {
             projectQuery["process.contract.remain.date"] = new Date();
             projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
             projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
@@ -608,20 +606,16 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
         }
 
-        */
-
       } else {
 
-        /*
-        instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
-          client: client.name,
-          goodName: data.goodName,
-          bankName: data.vactBankName,
-          account: data.VACT_Num,
-          to: data.VACT_Name,
-          date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
-        });
-        */
+        // instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
+        //   client: client.name,
+        //   goodName: data.goodName,
+        //   bankName: data.vactBankName,
+        //   account: data.VACT_Num,
+        //   to: data.VACT_Name,
+        //   date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+        // });
 
       }
 
@@ -667,6 +661,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         throw new Error("invaild post");
       }
       const oid = req.body.no_oid;
+      const inisis = "이니시스";
       const bankFrom = ParsingHangul.decodeURI(req.body.nm_inputbank);
       const nameFrom = ParsingHangul.decodeURI(req.body.nm_input);
       const bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
@@ -677,7 +672,27 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         throw new Error("invaild bill");
       }
       const { proid, cliid, desid, method } = bills[0].links;
+      let infoArr, index;
+      let bilid;
       let client, designer, project, proposal;
+      let requestNumber;
+      let data;
+      let thisBill;
+      let projectQuery;
+      let amount;
+      let pureDesignFee;
+      let vat, consumer;
+      let classification, percentage;
+      let businessMethod;
+      let bankName, bankTo;
+      let calculate;
+      let designerHistory;
+      let whereQuery, updateQuery;
+      let proofs;
+
+      thisBill = bills[0];
+      thisBill = thisBill.toNormal();
+      bilid = thisBill.bilid;
 
       client = await back.getClientById(cliid, { selfMongo: instance.mongo });
       designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
@@ -688,43 +703,141 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         throw new Error("invaild id");
       }
 
-      
+      requestNumber = null;
+      for (let i = 0; i < thisBill.requests.length; i++) {
+        for (let obj of thisBill.requests[i].info) {
+          if (obj.oid === oid) {
+            requestNumber = i;
+            break;
+          }
+        }
+      }
 
+      if (requestNumber === null) {
+        throw new Error("invaild request");
+      }
 
+      for (let obj of thisBill.requests[requestNumber].info) {
+        if (typeof obj.data === "object" && obj.data !== null) {
+          data = JSON.parse(JSON.stringify(obj.data));
+        }
+      }
 
+      infoArr = JSON.parse(JSON.stringify(thisBill.requests[requestNumber].info));
+      index = -1;
+      for (let i = 0; i < infoArr.length; i++) {
+        if (infoArr[i].virtualAccount !== undefined && typeof infoArr[i].virtualAccount === "string") {
+          index = i;
+        }
+      }
+      if (index !== -1) {
+        infoArr.splice(index, 1);
+      }
+      infoArr.push({ virtualAccount: JSON.parse(JSON.stringify(req.body)) });
 
-      // no_tid: 'ININPGVBNKMOIhomeli120210818104550283225',
-      // no_oid: 'merchant_1629250869293',
-      // id_merchant: 'MOIhomeli1',
-      // cd_bank: '00000020',
-      // cd_deal: '00000020',
-      // dt_trans: '20210818',
-      // tm_trans: '104349',
-      // no_msgseq: '0002133837',
-      // cd_joinorg: '01306001',
-      // dt_transbase: '20210818',
-      // no_transseq: '2133837',
-      // type_msg: '0200',
-      // cl_trans: '1100',
-      // cl_close: '0',
-      // cl_kor: '2',
-      // no_msgmanage: '10004349',
-      // no_vacct: '27489495718161',
-      // amt_input: '1001',
-      // amt_check: '0',
-      // nm_inputbank: '%BF%EC%B8%AE%C0%BA%C7%E0',
-      // nm_input: '%B9%E8%C3%A2%B1%D4',
-      // dt_inputstd: '20210818',
-      // dt_calculstd: '20210818',
-      // flg_close: '0',
-      // dt_cshr: '20210818',
-      // tm_cshr: '104550',
-      // no_cshr_appl: '265687974',
-      // no_cshr_tid: 'StdpayVBNKMOIhomeli120210818104128882138'
+      whereQuery = { bilid };
+      updateQuery = {};
+      updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
+      updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+      updateQuery["requests." + String(requestNumber) + ".pay"] = new Date();
+      proofs = bill.returnBillDummies("proofs");
+      proofs.method = "무통장 입금(" + bankFrom + ")";
+      proofs.proof = inisis;
+      proofs.to = nameFrom;
+      thisBill.requests[requestNumber].proofs.push(proofs);
+      updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
 
+      if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
 
+        projectQuery = {};
+        amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
+        if (proposal.fee.length === 1) {
+          pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
+        } else {
+          for (let obj of fee) {
+            if (obj.method === thisBill.links.method) {
+              pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
+            }
+          }
+        }
 
+        if (data.goodName.trim() === "홈리에종 계약금") {
+          projectQuery["process.contract.first.date"] = new Date();
+          projectQuery["process.contract.first.calculation.amount"] = amount;
+          projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
+          projectQuery["process.contract.first.calculation.info.proof"] = inisis;
+          projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
 
+          projectQuery["desid"] = desid;
+          projectQuery["service.online"] = /off/gi.test(thisBill.links.method);
+          projectQuery["process.status"] = "대기";
+
+          if (proposal.fee.length === 1) {
+            proposal.fee[0]
+          } else {
+
+          }
+
+          vat = Math.round(pureDesignFee * 0.1);
+          consumer = Math.round(pureDesignFee * 1.1);
+
+          projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
+          projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
+          projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+
+          classification = designer.information.business.businessInfo.classification;
+          percentage = Number(designer.information.business.service.cost.percentage);
+          businessMethod = "사업자(일반)";
+          if (/사업자/g.test(classification)) {
+            if (/일반/g.test(classification)) {
+              businessMethod = "사업자(일반)";
+            } else {
+              businessMethod = "사업자(간이)";
+            }
+          } else {
+            businessMethod = "프리랜서";
+          }
+          projectQuery["process.calculation.method"] = businessMethod;
+          projectQuery["process.calculation.percentage"] = percentage;
+
+          if (designer.information.business.account.length > 0) {
+            bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
+            bankTo = designer.information.business.account[0].to;
+            projectQuery["process.calculation.info.account"] = bankName;
+            projectQuery["process.calculation.info.proof"] = bankTo;
+            projectQuery["process.calculation.info.to"] = bankTo;
+          }
+
+          if (/일반/gi.test(businessMethod)) {
+            calculate = Math.round((pureDesignFee * 1.1) * (1 - (percentage / 100)));
+          } else if (/간이/gi.test(businessMethod)) {
+            calculate = Math.round(pureDesignFee * (1 - (percentage / 100)));
+          } else if (/프리/gi.test(businessMethod)) {
+            ratio = 0.967;
+            calculate = Math.round((pureDesignFee - (pureDesignFee * (percentage / 100))) * ratio);
+          } else {
+            calculate = Math.round((pureDesignFee * 1.1) * (1 - (percentage / 100)));
+          }
+          projectQuery["process.calculation.payments.totalAmount"] = calculate;
+          projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
+          projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
+
+          await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+          designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
+          await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+
+        } else if (data.goodName.trim() === "홈리에종 잔금") {
+          projectQuery["process.contract.remain.date"] = new Date();
+          projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
+          projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
+          projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
+        }
+
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      }
+
+      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
