@@ -410,7 +410,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
   obj.link = "/ghostClientBill";
   obj.func = async function (req, res) {
     try {
-      if (req.body.bill === undefined || req.body.requestNumber === undefined || req.body.data === undefined) {
+      if (req.body.bilid === undefined || req.body.requestNumber === undefined || req.body.data === undefined) {
         throw new Error("invaild post");
       }
       const selfMongo = instance.mongolocal;
@@ -575,7 +575,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_generalBill): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message, channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
