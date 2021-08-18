@@ -420,8 +420,8 @@ const ProjectAnalytics = function (json) {
     "컨셉 제안",
     "마감재 제안",
     "제품 리스트",
-    "참고 이미지",
-    "드로잉",
+    "제품 이미지",
+    "콜라주",
   ], true);
   this.online = json.online;
   this.living = json.living;

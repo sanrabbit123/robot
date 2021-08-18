@@ -1206,8 +1206,8 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
               "컨셉 제안",
               "마감재 제안",
               "제품 리스트",
-              "참고 이미지",
-              "드로잉",
+              "제품 이미지",
+              "콜라주",
             ];
             value = [];
             for (let i of contents) {
@@ -1223,8 +1223,8 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
               "컨셉 제안",
               "마감재 제안",
               "제품 리스트",
-              "참고 이미지",
-              "드로잉",
+              "제품 이미지",
+              "콜라주",
             ];
             target = [];
             for (let i = 0; i < contents.length; i++) {
@@ -2162,12 +2162,12 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "matrix",
         },
         {
-          name: "작업 속도",
+          name: "마감 기한",
           value: function (designer) {
             let contents, value;
             contents = [
-              "빠름",
-              "보통"
+              "정확",
+              "지연"
             ];
             value = [
               designer.analytics.etc.personality[2].value ? 1 : 0,
@@ -2216,7 +2216,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           type: "matrix",
         },
         {
-          name: "고객 공감 대응",
+          name: "문제 해결력",
           value: function (designer) {
             let contents, value;
             contents = [
