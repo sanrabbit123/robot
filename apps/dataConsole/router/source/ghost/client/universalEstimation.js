@@ -67,6 +67,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
   let wordings;
   let tempArr;
   let sum0, sum1;
+  let between;
   end = analytics.date.space.movein;
   start = new Date(end.getFullYear(), end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds());
   start.setDate(start.getDate() - spendDates);
@@ -81,7 +82,6 @@ UniversalEstimationJs.prototype.billWordings = function () {
     ],
     column: [
       "품명",
-      "수량",
       "단가",
       "수량",
       "단위",
@@ -91,7 +91,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
     ],
     items: [],
     sum: {},
-    commentsTitle: "<b%*%b> 유의 사항",
+    commentsTitle: "<b%*%b> 안내 사항",
     comments: [],
     button: "결제 안내",
     pannel: [
@@ -110,7 +110,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
       },
     ]
   };
-
+  between = "&nbsp;&nbsp;/&nbsp;&nbsp;";
   sum0 = 0;
   sum1 = 0;
 
@@ -131,6 +131,18 @@ UniversalEstimationJs.prototype.billWordings = function () {
   wordings.sum.consumer = autoComma(sum1);
   wordings.comments = bill.requests[requestNumber].comments;
 
+  if (this.completeInfo.method === "card") {
+    wordings.completeComments = [];
+    wordings.completeComments.push("결제가 완료되었으며, 다음 과정 안내를 위해 홈리에종에서 연락이 갈 수 있습니다.");
+    wordings.completeComments.push("기타 문의 사항은 02-2039-2252 으로 전화 주시거나, <u%카카오톡 홈리에종 채널을 통해 문의 부탁%u>드립니다!");
+  } else if (this.completeInfo.method === "bank") {
+    wordings.completeComments = [];
+    wordings.completeComments.push(dateToString(this.completeInfo.when) + " 까지 다음 가상계좌를 통해 입금해주시면 결제가 완료됩니다!");
+    wordings.completeComments.push("가상계좌 정보 :&nbsp;&nbsp;<u%" + this.completeInfo.where.bank + between + this.completeInfo.where.account + between + this.completeInfo.where.to.replace(/ /g, '').replace(/\)/, ") ") + "%u>");
+  } else {
+    wordings.completeComments = [];
+  }
+
   this.request.name = bill.requests[requestNumber].name;
   this.request.amount = sum1;
 
@@ -139,7 +151,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
 
 UniversalEstimationJs.prototype.insertInitBox = function () {
   const instance = this;
-  const { client, designer, ea, baseTong, media, bill, request } = this;
+  const { client, designer, ea, baseTong, media, bill, request, completeMode, completeInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
@@ -193,6 +205,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let greenButtonFontSize;
   let greenButtonTextTop;
   let greenBasePaddingTop, greenBasePaddingBottom;
+  let completeMarginTop0;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -223,6 +236,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   barPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
   barMarginBottom = <%% 14, 14, 14, 14, 14 %%>;
 
+  completeMarginTop0 = <%% 32, 32, 32, 32, 32 %%>;
   grayMarginTop0 = <%% 56, 56, 56, 56, 56 %%>;
   grayMarginTop1 = <%% 20, 20, 20, 20, 20 %%>;
 
@@ -316,6 +330,14 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   });
   whiteTong = whiteBlock.firstChild;
 
+  if (completeMode) {
+    if (completeInfo.method === "card") {
+      wordings.mainTitle[0] = "카드 결제가";
+    } else {
+      wordings.mainTitle[0] = "가상계좌 발급이";
+    }
+    wordings.mainTitle[1] = "<b%완료되었습니다!%b>";
+  }
   titleBox = createNode({
     mother: whiteTong,
     style: {
@@ -450,67 +472,114 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           fontSize: String(initWordingSize) + ea,
           fontWeight: String(initWordingWeight),
           textAlign: "center",
+          color: completeMode ? colorChip.green : colorChip.black
         }
       });
     }
   }
 
-  sumBox = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      paddingTop: String(sumBoxPaddingTop) + ea,
-      paddingBottom: String(sumBoxPaddingBottom) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          textAlign: "right",
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              borderBottom: "1px solid " + colorChip.gray3,
-              height: String(sumBoxBarTop) + ea,
-              width: String(100) + '%',
-              top: String(0),
-              left: String(0),
-            }
+  if (completeMode) {
+    sumBox = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingTop: String(sumBoxPaddingTop) + ea,
+        paddingBottom: String(sumBoxPaddingBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            textAlign: "right",
           },
-          {
-            text: wordings.sum.consumer + "원",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(sumBoxMainFontSize) + ea,
-              fontWeight: String(sumBoxMainFontWeight),
-              textAlign: "right",
-              background: colorChip.white,
-              paddingLeft: String(sumBoxMainPaddingLeft) + ea,
-              color: colorChip.green,
+          children: [
+            {
+              style: {
+                position: "absolute",
+                borderBottom: "1px solid " + colorChip.gray3,
+                height: String(sumBoxBarTop) + ea,
+                width: String(100) + '%',
+                top: String(0),
+                left: String(0),
+              }
+            },
+            {
+              text: "결제 완료",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(sumBoxMainFontSize) + ea,
+                fontWeight: String(sumBoxMainFontWeight),
+                textAlign: "right",
+                background: colorChip.white,
+                paddingLeft: String(sumBoxMainPaddingLeft) + ea,
+                color: colorChip.green,
+              }
             }
+          ]
+        }
+      ]
+    });
+  } else {
+    sumBox = createNode({
+      mother: whiteTong,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingTop: String(sumBoxPaddingTop) + ea,
+        paddingBottom: String(sumBoxPaddingBottom) + ea,
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            textAlign: "right",
           },
-          {
-            text: "vat 포함",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              paddingLeft: String(sumBoxVatPaddingLeft) + ea,
-              fontSize: String(sumBoxVatFontSize) + ea,
-              fontWeight: String(sumBoxVatFontWeight),
-              textAlign: "right",
-              background: colorChip.white,
-              color: colorChip.shadow,
+          children: [
+            {
+              style: {
+                position: "absolute",
+                borderBottom: "1px solid " + colorChip.gray3,
+                height: String(sumBoxBarTop) + ea,
+                width: String(100) + '%',
+                top: String(0),
+                left: String(0),
+              }
+            },
+            {
+              text: wordings.sum.consumer + "원",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(sumBoxMainFontSize) + ea,
+                fontWeight: String(sumBoxMainFontWeight),
+                textAlign: "right",
+                background: colorChip.white,
+                paddingLeft: String(sumBoxMainPaddingLeft) + ea,
+                color: colorChip.green,
+              }
+            },
+            {
+              text: "vat 포함",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                paddingLeft: String(sumBoxVatPaddingLeft) + ea,
+                fontSize: String(sumBoxVatFontSize) + ea,
+                fontWeight: String(sumBoxVatFontWeight),
+                textAlign: "right",
+                background: colorChip.white,
+                color: colorChip.shadow,
+              }
             }
-          }
-        ]
-      }
-    ]
-  });
+          ]
+        }
+      ]
+    });
+  }
 
   cautionBox = createNode({
     mother: whiteTong,
@@ -523,7 +592,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       paddingLeft: String(cautionPaddingLeft) + ea,
       paddingRight: String(cautionPaddingRight) + ea,
       width: withOut(cautionPaddingLeft + cautionPaddingRight, ea),
-      marginTop: String(grayMarginTop0) + ea,
+      marginTop: String(completeMode ? completeMarginTop0 : grayMarginTop0) + ea,
       background: colorChip.gray0,
     },
     children: [
@@ -562,23 +631,54 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     }
   });
 
-  for (let c of wordings.comments) {
-    createNode({
-      mother: cautionBox.lastChild,
-      text: "<b%-%b>&nbsp;&nbsp;" + c,
-      style: {
-        position: "relative",
-        fontSize: String(initWordingSize) + ea,
-        fontWeight: String(initWordingWeight),
-        color: colorChip.black,
-        marginBottom: String(cautionWordsMarginBottom) + ea,
-      },
-      bold: {
-        fontSize: String(initWordingSize) + ea,
-        fontWeight: String(initWordingWeight),
-        color: colorChip.gray5,
-      }
-    });
+  if (completeMode) {
+    for (let c of wordings.completeComments) {
+      createNode({
+        mother: cautionBox.lastChild,
+        text: "<b%-%b>&nbsp;&nbsp;" + c,
+        style: {
+          position: "relative",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(initWordingWeight),
+          color: colorChip.black,
+          marginBottom: String(cautionWordsMarginBottom) + ea,
+        },
+        bold: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(initWordingWeight),
+          color: colorChip.gray5,
+        },
+        under: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.green,
+        }
+      });
+    }
+  } else {
+    for (let c of wordings.comments) {
+      createNode({
+        mother: cautionBox.lastChild,
+        text: "<b%-%b>&nbsp;&nbsp;" + c,
+        style: {
+          position: "relative",
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(initWordingWeight),
+          color: colorChip.black,
+          marginBottom: String(cautionWordsMarginBottom) + ea,
+        },
+        bold: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(initWordingWeight),
+          color: colorChip.gray5,
+        },
+        under: {
+          fontSize: String(initWordingSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.green,
+        }
+      });
+    }
   }
 
   if (desktop) {
@@ -593,6 +693,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
         height: String(cautionLogoHeight) + ea,
       }
     });
+  }
+
+  if (completeMode) {
+    whiteBlock.style.height = "auto";
+    return 0;
   }
 
   grayTong = createNode({
@@ -1028,25 +1133,38 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
 UniversalEstimationJs.prototype.payComplete = async function (data) {
   const instance = this;
   const { ajaxJson } = GeneralJs;
-  const { bill, requestNumber } = this;
+  const { bill, requestNumber, completeInfo } = this;
   try {
     if (typeof data.MOID !== "string") {
       throw new Error("invaild data");
     }
     const bilid = bill.bilid;
+    let year, month, date;
+    let to;
     await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
-    window.alert("결제가 완료되었습니다!");
 
+    completeInfo.raw = data;
 
+    if (data.CARD_BankCode !== undefined) {
+      completeInfo.method = "card";
+    } else {
+      year = Number(data.VACT_Date.slice(0, 4));
+      month = Number(data.VACT_Date.slice(4, -2).replace(/^0/, '')) - 1;
+      date = Number(data.VACT_Date.slice(-2).replace(/^0/, ''));
+      to = new Date(year, month, date, 15);
+      to.setDate(to.getDate() - 1);
+      completeInfo.method = "bank";
+      completeInfo.when = to;
+      completeInfo.where = {
+        bank: data.vactBankName,
+        account: data.VACT_Num,
+        to: data.VACT_Name,
+        input: data.VACT_InputName
+      };
+      completeInfo.price = Number(data.TotPrice);
+    }
 
-
-
-
-
-
-
-
-
+    this.completeMode = true;
 
   } catch (e) {
     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
@@ -1124,6 +1242,8 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       name: "",
       amount: 0,
     };
+    this.completeMode = false;
+    this.completeInfo = {};
 
     if (getObj.hash !== undefined) {
       data = await ajaxJson({
@@ -1153,6 +1273,13 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         }
       }
     });
+
+    if (this.completeMode) {
+      const totalContents = document.getElementById("totalcontents");
+      GeneralJs.setTimeout(() => {
+        totalContents.children[1].style.height = String(totalContents.getBoundingClientRect().height - totalContents.children[totalContents.children.length - 2].getBoundingClientRect().height) + "px";
+      }, 0);
+    }
 
     loading.parentNode.removeChild(loading);
 

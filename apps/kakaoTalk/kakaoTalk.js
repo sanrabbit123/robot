@@ -374,6 +374,42 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    paymentAndChannel: {
+      name: "계약금 입금 및 등록",
+      id: "TF_5340",
+      needs: [
+        "client",
+        "designer"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "designer", to: obj.designer },
+        ];
+      },
+    },
+    virtualAccount: {
+      name: "가상계좌 안내",
+      id: "TF_5382",
+      needs: [
+        "client",
+        "goodName",
+        "bankName",
+        "account",
+        "to",
+        "date",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "goodName", to: obj.goodName },
+          { from: "bankName", to: obj.bankName },
+          { from: "account", to: obj.account },
+          { from: "to", to: obj.to },
+          { from: "date", to: obj.date },
+        ];
+      },
+    },
   };
   return tong[target];
 }

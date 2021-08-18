@@ -419,17 +419,45 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         throw new Error("invaild post");
       }
       const oid = data.MOID;
+      const inisis = "이니시스";
       let whereQuery, updateQuery, method;
       let thisBill;
+      let cliid, desid, proid;
+      let client, designer, project;
+      let proposal;
       let oidArr, infoArr;
       let index;
       let boo;
+      let proofs;
+      let projectQuery;
+      let amount;
+      let pureDesignFee;
+      let vat, consumer;
+      let classification, percentage;
+      let businessMethod;
+      let bankName, bankTo;
+      let calculate;
+      let designerHistory;
 
       thisBill = await bill.getBillById(bilid, { selfMongo });
       if (thisBill === null) {
         throw new Error("there is no bill");
       }
+      if (thisBill.links.cliid === undefined || thisBill.links.desid === undefined || thisBill.links.proid === undefined) {
+        throw new Error("invaild bill");
+      }
       thisBill = thisBill.toNormal();
+      cliid = thisBill.links.cliid;
+      desid = thisBill.links.desid;
+      proid = thisBill.links.proid;
+      client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+      designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+      project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+      proposal = project.selectProposal(desid);
+
+      if (proposal === null) {
+        throw new Error("invaild proposal");
+      }
 
       if (Array.isArray(thisBill.links.oid)) {
         oidArr = JSON.parse(JSON.stringify(thisBill.links.oid));
@@ -475,104 +503,127 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
 
       if (data.CARD_BankCode !== undefined) {
-        //card
+        updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+        updateQuery["requests." + String(requestNumber) + ".pay"] = new Date();
+        proofs = bill.returnBillDummies("proofs");
+        proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
+        proofs.proof = inisis;
+        proofs.to = data.buyerName;
+        thisBill.requests[Number(requestNumber)].proofs.push(proofs);
+        updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
         /*
-        {
-          "CARD_Quota": "00",
-          "CARD_ClEvent": "",
-          "CARD_CorpFlag": "0",
-          "buyerTel": "010-2747-3403",
-          "parentEmail": "",
-          "applDate": "20210817",
-          "buyerEmail": "uragenbooks@gmail.com",
-          "p_Sub": "",
-          "resultCode": "0000",
-          "mid": "MOIhomeli1",
-          "CARD_UsePoint": "",
-          "CARD_Num": "91002001****",
-          "authSignature": "a98c4d9991e30b43ada7ff0064d403cb941b721380e4cfada8ec68152a29d3b0",
-          "ISP_CardCode": "000100202266221",
-          "tid": "StdpayISP_MOIhomeli120210817205753658566",
-          "EventCode": "",
-          "goodName": "홈리에종 계약금",
-          "TotPrice": "1001",
-          "payMethod": "VCard",
-          "CARD_MemberNum": "",
-          "MOID": "merchant_1629201365161",
-          "CARD_Point": "",
-          "currency": "WON",
-          "CARD_PurchaseCode": "",
-          "CARD_PrtcCode": "1",
-          "applTime": "205753",
-          "goodsName": "홈리에종 계약금",
-          "CARD_CheckFlag": "0",
-          "FlgNotiSendChk": "",
-          "CARD_Code": "11",
-          "CARD_BankCode": "00",
-          "CARD_TerminalNum": "0208937000",
-          "ISP_RetrievalNum": "",
-          "P_FN_NM": "BC카드",
-          "buyerName": "배창규",
-          "p_SubCnt": "",
-          "applNum": "36775268",
-          "resultMsg": "정상완료",
-          "CARD_Interest": "0",
-          "CARD_SrcCode": "",
-          "CARD_ApplPrice": "1001",
-          "CARD_GWCode": "G",
-          "custEmail": "uragenbooks@gmail.com",
-          "CARD_PurchaseName": "",
-          "CARD_PRTC_CODE": "1",
-          "payDevice": "PC"
+
+        instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+          client: client.name,
+          designer: designer.designer,
+        });
+
+        if (data.goodsName.trim() === "홈리에종 계약금" || data.goodsName.trim() === "홈리에종 잔금") {
+
+          projectQuery = {};
+          amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
+          if (proposal.fee.length === 1) {
+            pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
+          } else {
+            for (let obj of fee) {
+              if (obj.method === thisBill.links.method) {
+                pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
+              }
+            }
+          }
+
+          if (data.goodsName.trim() === "홈리에종 계약금") {
+            projectQuery["process.contract.first.date"] = new Date();
+            projectQuery["process.contract.first.calculation.amount"] = amount;
+            projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
+            projectQuery["process.contract.first.calculation.info.proof"] = inisis;
+            projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
+
+            projectQuery["desid"] = desid;
+            projectQuery["service.online"] = /off/gi.test(thisBill.links.method);
+            projectQuery["process.status"] = "대기";
+
+            if (proposal.fee.length === 1) {
+              proposal.fee[0]
+            } else {
+
+            }
+
+            vat = Math.round(pureDesignFee * 0.1);
+            consumer = Math.round(pureDesignFee * 1.1);
+
+            projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
+            projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
+            projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+
+            classification = designer.information.business.businessInfo.classification;
+            percentage = Number(designer.information.business.service.cost.percentage);
+            businessMethod = "사업자(일반)";
+            if (/사업자/g.test(classification)) {
+              if (/일반/g.test(classification)) {
+                businessMethod = "사업자(일반)";
+              } else {
+                businessMethod = "사업자(간이)";
+              }
+            } else {
+              businessMethod = "프리랜서";
+            }
+            projectQuery["process.calculation.method"] = businessMethod;
+            projectQuery["process.calculation.percentage"] = percentage;
+
+            if (designer.information.business.account.length > 0) {
+              bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
+              bankTo = designer.information.business.account[0].to;
+              projectQuery["process.calculation.info.account"] = bankName;
+              projectQuery["process.calculation.info.proof"] = bankTo;
+              projectQuery["process.calculation.info.to"] = bankTo;
+            }
+
+            if (/일반/gi.test(businessMethod)) {
+              calculate = Math.round((pureDesignFee * 1.1) * (1 - (percentage / 100)));
+            } else if (/간이/gi.test(businessMethod)) {
+              calculate = Math.round(pureDesignFee * (1 - (percentage / 100)));
+            } else if (/프리/gi.test(businessMethod)) {
+              ratio = 0.967;
+              calculate = Math.round((pureDesignFee - (pureDesignFee * (percentage / 100))) * ratio);
+            } else {
+              calculate = Math.round((pureDesignFee * 1.1) * (1 - (percentage / 100)));
+            }
+            projectQuery["process.calculation.payments.totalAmount"] = calculate;
+            projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
+            projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
+
+            await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+            designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
+            await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+
+          } else if (data.goodsName.trim() === "홈리에종 잔금") {
+            projectQuery["process.contract.remain.date"] = new Date();
+            projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
+            projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
+            projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
+          }
+
+          await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
         }
+
         */
-
-
 
       } else {
-        //bank
 
         /*
-
-        {
-          "buyerTel": "010-2747-3403",
-          "parentEmail": "",
-          "applDate": "20210817",
-          "buyerEmail": "uragenbooks@gmail.com",
-          "p_Sub": "",
-          "resultCode": "0000",
-          "mid": "MOIhomeli1",
-          "VACT_Date": "20210916",
-          "authSignature": "8755e7a17d2859e719fc2ae821ff2e9d85515e441e2608bf322c6e3a31fc1ddb",
-          "tid": "StdpayVBNKMOIhomeli120210817210301095424",
-          "EventCode": "",
-          "VACT_Name": "（주）  홈리에종",
-          "VACT_InputName": "배창규",
-          "goodName": "홈리에종 계약금",
-          "VACT_Time": "235959",
-          "TotPrice": "1001",
-          "payMethod": "VBank",
-          "VACT_BankCode": "20",
-          "MOID": "merchant_1629201641177",
-          "vactBankName": "우리은행",
-          "currency": "WON",
-          "applTime": "210301",
-          "goodsName": "홈리에종 계약금",
-          "FlgNotiSendChk": "",
-          "buyerName": "배창규",
-          "p_SubCnt": "",
-          "resultMsg": "정상처리되었습니다.",
-          "custEmail": "uragenbooks@gmail.com",
-          "VACT_Num": "27489473818806",
-          "payDevice": "PC"
-        }
-
+        instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
+          client: client.name,
+          goodName: data.goodName,
+          bankName: data.vactBankName,
+          account: data.VACT_Num,
+          to: data.VACT_Name,
+          date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+        });
         */
 
-
       }
-
 
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo })
 
@@ -618,7 +669,26 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       const oid = req.body.no_oid;
       const bankFrom = ParsingHangul.decodeURI(req.body.nm_inputbank);
       const nameFrom = ParsingHangul.decodeURI(req.body.nm_input);
+      const bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
+      if (bills.length === 0) {
+        throw new Error("invaild oid");
+      }
+      if (bills[0].links.proid === undefined || bills[0].links.desid === undefined || bills[0].links.cliid === undefined) {
+        throw new Error("invaild bill");
+      }
+      const { proid, cliid, desid, method } = bills[0].links;
+      let client, designer, project, proposal;
 
+      client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+      designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+      project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+      proposal = project.selectProposal(desid);
+
+      if (client === null || designer === null || project === null || proposal === null) {
+        throw new Error("invaild id");
+      }
+
+      
 
 
 

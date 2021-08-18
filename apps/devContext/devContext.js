@@ -68,6 +68,8 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
     // const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
     // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
     // let res;
@@ -824,12 +826,15 @@ DevContext.prototype.launching = async function () {
     // kakao test
     // const kakao = new KakaoTalk();
     // await kakao.ready();
-    // await kakao.sendTalk("outOfClient", "임지민", "010-3412-1435", {
-    //   client: "임지민",
+    // await kakao.sendTalk("clientCuration", "배창규", "010-2747-3403", {
+    //   client: "배창규",
     //   host: "home-liaison.servehttp.com",
     //   path: "curation",
-    //   cliid: "c2107_aa69s",
+    //   cliid: "c1801_aa01s",
+    //   mode: "lite",
     // });
+
+
 
 
     // addtional photo repair

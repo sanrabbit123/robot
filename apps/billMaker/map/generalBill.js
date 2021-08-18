@@ -60,14 +60,10 @@ module.exports = {
       };
     } else if (subject === "proofs") {
       dummy = {
-        id: "",
         date: new Date(),
-        amount: 0,
-        info: {
-          method: "",
-          proof: "",
-          to: "",
-        },
+        method: "",
+        proof: "",
+        to: "",
       };
     }
     return dummy;
@@ -114,35 +110,19 @@ module.exports = {
       }
     }
 
-    class ProofInfo {
+    class Proof {
       constructor(json) {
+        this.date = json.date;
         this.method = json.method;
         this.proof = json.proof;
         this.to = json.to;
       }
       toNormal() {
         let obj = {};
+        obj.date = this.date;
         obj.method = this.method;
         obj.proof = this.proof;
         obj.to = this.to;
-        return obj;
-      }
-    }
-
-    class Proof {
-      constructor(json) {
-        this.id = json.id;
-        this.date = json.date;
-        this.amount = json.amount;
-        this.info = new ProofInfo(json.info);
-      }
-      toNormal() {
-        let obj;
-        obj = {};
-        obj.id = this.id;
-        obj.date = this.date;
-        obj.amount = this.amount;
-        obj.info = this.info.toNormal();
         return obj;
       }
     }

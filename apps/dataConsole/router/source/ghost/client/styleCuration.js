@@ -969,252 +969,252 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
             },
           ]
         });
-      }
-      this.wordings.center.push({
-        name: "construct",
-        title: "시공",
-        callback: "blockCheck",
-        children: [
-          {
-            name: "service",
-            type: "checkbox",
-            half: false,
-            required: true,
-            rewind: "시공 정도를 체크해주세요!",
-            question: [
-              "<b%생각하는 시공 정도%b>를 알려주세요!",
-            ],
-            multiple: false,
-            items: [
-              "시공 없이 홈퍼니싱만",
-              "5개 이내의 부분 시공과 홈스타일링",
-              "전체 리모델링의 토탈 스타일링",
-              "구조 변경을 포함한 고급 시공"
-            ],
-            realItems: [
-              "s2011_aa01s",
-              "s2011_aa02s",
-              "s2011_aa03s",
-              "s2011_aa04s",
-            ],
-            exception: function (items, media) {
-              const mother = items[0].parentNode;
-              const grandMother = mother.parentNode;
-              const mobile = media[4];
-              const desktop = !mobile;
-              let ratio = 30;
-              if (media[3]) {
-                ratio = 40;
-              }
-              if (desktop) {
-                grandMother.firstChild.style.width = String(ratio) + '%';
-                grandMother.lastChild.style.width = String(100 - ratio) + '%';
-              } else {
-                mother.style.textAlign = "left";
-                mother.style.left = String(-0.4) + "vw";
-                mother.style.paddingTop = String(0.5) + "vw";
-                for (let i of items) {
-                  i.style.display = "block";
+        this.wordings.center.push({
+          name: "construct",
+          title: "시공",
+          callback: "blockCheck",
+          children: [
+            {
+              name: "service",
+              type: "checkbox",
+              half: false,
+              required: true,
+              rewind: "시공 정도를 체크해주세요!",
+              question: [
+                "<b%생각하는 시공 정도%b>를 알려주세요!",
+              ],
+              multiple: false,
+              items: [
+                "시공 없이 홈퍼니싱만",
+                "5개 이내의 부분 시공과 홈스타일링",
+                "전체 리모델링의 토탈 스타일링",
+                "구조 변경을 포함한 고급 시공"
+              ],
+              realItems: [
+                "s2011_aa01s",
+                "s2011_aa02s",
+                "s2011_aa03s",
+                "s2011_aa04s",
+              ],
+              exception: function (items, media) {
+                const mother = items[0].parentNode;
+                const grandMother = mother.parentNode;
+                const mobile = media[4];
+                const desktop = !mobile;
+                let ratio = 30;
+                if (media[3]) {
+                  ratio = 40;
                 }
-              }
-            },
-            value: function (request, history, self) {
-              if (history.curation.service.serid.length === 0) {
-                return null;
-              } else {
-                if (self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; }) === -1) {
-                  return null;
+                if (desktop) {
+                  grandMother.firstChild.style.width = String(ratio) + '%';
+                  grandMother.lastChild.style.width = String(100 - ratio) + '%';
                 } else {
-                  return self.items[self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; })];
-                }
-              }
-            },
-            update: function (value, siblings, client) {
-              if (value === null) {
-                return { history: null, core: null };
-              }
-              const { items, realItems, selected } = value;
-              if (selected === null) {
-                return { history: null, core: null };
-              } else {
-                let historyQuery, coreQuery;
-                let selectedSerid;
-                selectedSerid = [ realItems[selected] ];
-                historyQuery = {};
-                historyQuery["curation.service.serid"] = selectedSerid;
-                coreQuery = {};
-                coreQuery["requests.0.analytics.response.service.serid"] = realItems[selected];
-                return {
-                  history: historyQuery,
-                  core: coreQuery
-                };
-              }
-            },
-            chain: function (siblings) {
-              const thisValue = siblings.construct.find((obj) => { return obj.name === "service"; }).value.map((obj) => { return obj.index; });
-              const target = siblings.construct.find((obj) => { return obj.name === "constructList"; });
-              if (target.dom !== null) {
-                const items = target.dom.children;
-                let children;
-                if (thisValue.length === 0 || thisValue.includes(0) || thisValue.includes(1)) {
-                  for (let s of items) {
-                    children = s.firstChild.children;
-                    for (let dom of children) {
-                      dom.style.color = dom.getAttribute("deactive");
-                    }
-                    s.setAttribute("toggle", "off");
+                  mother.style.textAlign = "left";
+                  mother.style.left = String(-0.4) + "vw";
+                  mother.style.paddingTop = String(0.5) + "vw";
+                  for (let i of items) {
+                    i.style.display = "block";
                   }
                 }
-              }
-            },
-            freeze: function () {
-              window.alert("시공 정도 변경을 희망하신다면, 홈리에종 카카오 채널로 직접 문의부탁드립니다!");
-            }
-          },
-          {
-            name: "constructList",
-            type: "list",
-            half: false,
-            required: false,
-            question: [
-              "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
-            ],
-            items: [
-              { name: "철거", count: false, half: false, extra: false, contents: "마감재, 가구 철거" },
-              { name: "설비", count: false, half: false, extra: false, contents: "배관, 난방, 에어컨 설비 등" },
-              { name: "창호 공사", count: true, half: false, extra: false, contents: "방문, 중문 교체" },
-              { name: "조명 공사", count: true, half: false, extra: false, contents: "조명기기 교체" },
-              { name: "도장 공사", count: true, half: false, extra: false, contents: "페인팅, 탄성코트 등" },
-              { name: "타일 공사", count: true, half: false, extra: false, contents: "현관, 주방, 발코니 등" },
-              { name: "가구 공사", count: true, half: false, extra: false, contents: "붙박이장 등 제작 가구" },
-              { name: "필름 공사", count: true, half: false, extra: false, contents: "면적, 난이도에 따라 상이" },
-              { name: "도배 공사", count: true, half: false, extra: false, contents: "밑작업 난이도 상이" },
-              { name: "목공사", count: true, half: false, extra: false, contents: "간접등 박스, 웨인스 코팅, 가벽 등" },
-              { name: "발코니 확장", count: true, half: false, extra: true, contents: "거실, 주방 등 확장 발코니", alert: "발코니 확장은 토탈 스타일링 이상부터 가능합니다." },
-              { name: "기타 공사", count: true, half: false, extra: true, contents: "샤시 교체, 금속 공사 등", alert: "기타 공사는 토탈 스타일링 이상부터 가능합니다." },
-              { name: "전기 공사", count: true, half: true, extra: false, contents: "배선, 이동 추가 등", alert: "배선 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-              { name: "욕실 공사", count: true, half: true, extra: false, contents: "도기 교체 등", alert: "욕실 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-              { name: "주방 공사", count: true, half: true, extra: false, contents: "싱크 등 주방 가구 교체", alert: "주방 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-              { name: "바닥 공사", count: true, half: true, extra: false, contents: "마루, 타일, 장판 등", alert: "바닥 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
-            ],
-            multiple: true,
-            value: function (request, history, self) {
-              if (history.curation.construct.items.length === 0) {
-                return null;
-              } else {
-                return history.curation.construct.items;
-              }
-            },
-            update: function (value, siblings, client) {
-              if (value === null) {
-                return { history: null, core: null };
-              } else {
-                const { items, realItems, selected } = value;
-                if (selected.length === 0) {
-                  return { history: null, core: null };
-                } else {
-                  let updateQuery;
-                  updateQuery = {};
-                  updateQuery["curation.construct.items"] = selected.map((i) => { return items[i].name; });
-                  return {
-                    history: updateQuery,
-                    core: null
-                  };
-                }
-              }
-            },
-            limit: function (siblings) {
-              const standard = siblings.construct.find((obj) => { return obj.name === "service"; });
-              if (standard.value !== null) {
-                const button = standard.value.map((obj) => { return obj.index; })[0];
-                if (button === 0) {
+              },
+              value: function (request, history, self) {
+                if (history.curation.service.serid.length === 0) {
                   return null;
-                } else if (button === 1) {
-                  return { limit: 5, extra: true };
-                } else if (button === 2) {
-                  return { limit: 90000, extra: false };
-                } else if (button === 3) {
-                  return { limit: 90000, extra: false };
+                } else {
+                  if (self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; }) === -1) {
+                    return null;
+                  } else {
+                    return self.items[self.realItems.findIndex((i) => { return i === history.curation.service.serid[0]; })];
+                  }
                 }
-              } else {
-                return null;
-              }
-            }
-          },
-          {
-            name: "spotStatus",
-            type: "checkbox",
-            half: false,
-            required: false,
-            question: [
-              "시공 당일에 예상되는 <b%주거 환경을 알려주세요!%b>"
-            ],
-            items: [
-              "거주중, 가구가 있는 상태",
-              "거주중이지만 보관 이사 예정",
-              "거주중 아님, 공실 상태",
-            ],
-            multiple: false,
-            notice: "거주중일 경우 시공에 한계가 있습니다.",
-            exception: function (items, media) {
-              const mother = items[0].parentNode;
-              const grandMother = mother.parentNode;
-              const mobile = media[4];
-              const desktop = !mobile;
-              if (mobile) {
-                mother.style.textAlign = "left";
-                mother.style.left = String(-0.4) + "vw";
-                mother.style.paddingTop = String(0.5) + "vw";
-                for (let i of items) {
-                  i.style.display = "block";
+              },
+              update: function (value, siblings, client) {
+                if (value === null) {
+                  return { history: null, core: null };
                 }
-              }
-            },
-            value: function (request, history, self) {
-              return history.curation.construct.living ? self.items[0] : self.items[2];
-            },
-            update: function (value, siblings, client) {
-              if (value === null) {
-                return { history: null, core: null };
-              } else {
                 const { items, realItems, selected } = value;
                 if (selected === null) {
                   return { history: null, core: null };
                 } else {
-                  let updateQuery;
-                  updateQuery = {};
-                  updateQuery["curation.construct.living"] = (selected === 0);
+                  let historyQuery, coreQuery;
+                  let selectedSerid;
+                  selectedSerid = [ realItems[selected] ];
+                  historyQuery = {};
+                  historyQuery["curation.service.serid"] = selectedSerid;
+                  coreQuery = {};
+                  coreQuery["requests.0.analytics.response.service.serid"] = realItems[selected];
                   return {
-                    history: updateQuery,
-                    core: null
+                    history: historyQuery,
+                    core: coreQuery
                   };
+                }
+              },
+              chain: function (siblings) {
+                const thisValue = siblings.construct.find((obj) => { return obj.name === "service"; }).value.map((obj) => { return obj.index; });
+                const target = siblings.construct.find((obj) => { return obj.name === "constructList"; });
+                if (target.dom !== null) {
+                  const items = target.dom.children;
+                  let children;
+                  if (thisValue.length === 0 || thisValue.includes(0) || thisValue.includes(1)) {
+                    for (let s of items) {
+                      children = s.firstChild.children;
+                      for (let dom of children) {
+                        dom.style.color = dom.getAttribute("deactive");
+                      }
+                      s.setAttribute("toggle", "off");
+                    }
+                  }
+                }
+              },
+              freeze: function () {
+                window.alert("시공 정도 변경을 희망하신다면, 홈리에종 카카오 채널로 직접 문의부탁드립니다!");
+              }
+            },
+            {
+              name: "constructList",
+              type: "list",
+              half: false,
+              required: false,
+              question: [
+                "생각하고 있는 <b%시공이 있으시다면 체크%b>해주세요!"
+              ],
+              items: [
+                { name: "철거", count: false, half: false, extra: false, contents: "마감재, 가구 철거" },
+                { name: "설비", count: false, half: false, extra: false, contents: "배관, 난방, 에어컨 설비 등" },
+                { name: "창호 공사", count: true, half: false, extra: false, contents: "방문, 중문 교체" },
+                { name: "조명 공사", count: true, half: false, extra: false, contents: "조명기기 교체" },
+                { name: "도장 공사", count: true, half: false, extra: false, contents: "페인팅, 탄성코트 등" },
+                { name: "타일 공사", count: true, half: false, extra: false, contents: "현관, 주방, 발코니 등" },
+                { name: "가구 공사", count: true, half: false, extra: false, contents: "붙박이장 등 제작 가구" },
+                { name: "필름 공사", count: true, half: false, extra: false, contents: "면적, 난이도에 따라 상이" },
+                { name: "도배 공사", count: true, half: false, extra: false, contents: "밑작업 난이도 상이" },
+                { name: "목공사", count: true, half: false, extra: false, contents: "간접등 박스, 웨인스 코팅, 가벽 등" },
+                { name: "발코니 확장", count: true, half: false, extra: true, contents: "거실, 주방 등 확장 발코니", alert: "발코니 확장은 토탈 스타일링 이상부터 가능합니다." },
+                { name: "기타 공사", count: true, half: false, extra: true, contents: "샤시 교체, 금속 공사 등", alert: "기타 공사는 토탈 스타일링 이상부터 가능합니다." },
+                { name: "전기 공사", count: true, half: true, extra: false, contents: "배선, 이동 추가 등", alert: "배선 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+                { name: "욕실 공사", count: true, half: true, extra: false, contents: "도기 교체 등", alert: "욕실 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+                { name: "주방 공사", count: true, half: true, extra: false, contents: "싱크 등 주방 가구 교체", alert: "주방 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+                { name: "바닥 공사", count: true, half: true, extra: false, contents: "마루, 타일, 장판 등", alert: "바닥 전체의 공사인 경우, 토탈 스타일링으로 선택해주세요!", from: "공사", to: "일부" },
+              ],
+              multiple: true,
+              value: function (request, history, self) {
+                if (history.curation.construct.items.length === 0) {
+                  return null;
+                } else {
+                  return history.curation.construct.items;
+                }
+              },
+              update: function (value, siblings, client) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  const { items, realItems, selected } = value;
+                  if (selected.length === 0) {
+                    return { history: null, core: null };
+                  } else {
+                    let updateQuery;
+                    updateQuery = {};
+                    updateQuery["curation.construct.items"] = selected.map((i) => { return items[i].name; });
+                    return {
+                      history: updateQuery,
+                      core: null
+                    };
+                  }
+                }
+              },
+              limit: function (siblings) {
+                const standard = siblings.construct.find((obj) => { return obj.name === "service"; });
+                if (standard.value !== null) {
+                  const button = standard.value.map((obj) => { return obj.index; })[0];
+                  if (button === 0) {
+                    return null;
+                  } else if (button === 1) {
+                    return { limit: 5, extra: true };
+                  } else if (button === 2) {
+                    return { limit: 90000, extra: false };
+                  } else if (button === 3) {
+                    return { limit: 90000, extra: false };
+                  }
+                } else {
+                  return null;
                 }
               }
             },
-            chain: function (siblings) {
-              const self = siblings.construct.find((obj) => { return obj.name === "spotStatus"; });
-              const thisValue = self.value.map((obj) => { return obj.index; });
-              const target = siblings.construct.find((obj) => { return obj.name === "service"; });
-              let valueCopied;
-              if (target.dom !== null) {
-                if (thisValue.includes(0)) {
-                  if (Array.isArray(target.value)) {
-                    valueCopied = JSON.parse(JSON.stringify(target.value)).map((obj) => { return obj.index; });
-                    if (valueCopied.includes(1) || valueCopied.includes(2) || valueCopied.includes(3)) {
-                      window.alert("거주중일 경우, 시공에 한계가 있습니다!");
-                      if (valueCopied.includes(2)) {
-                        target.dom.children[1].click();
-                      } else if (valueCopied.includes(3)) {
-                        target.dom.children[1].click();
+            {
+              name: "spotStatus",
+              type: "checkbox",
+              half: false,
+              required: false,
+              question: [
+                "시공 당일에 예상되는 <b%주거 환경을 알려주세요!%b>"
+              ],
+              items: [
+                "거주중, 가구가 있는 상태",
+                "거주중이지만 보관 이사 예정",
+                "거주중 아님, 공실 상태",
+              ],
+              multiple: false,
+              notice: "거주중일 경우 시공에 한계가 있습니다.",
+              exception: function (items, media) {
+                const mother = items[0].parentNode;
+                const grandMother = mother.parentNode;
+                const mobile = media[4];
+                const desktop = !mobile;
+                if (mobile) {
+                  mother.style.textAlign = "left";
+                  mother.style.left = String(-0.4) + "vw";
+                  mother.style.paddingTop = String(0.5) + "vw";
+                  for (let i of items) {
+                    i.style.display = "block";
+                  }
+                }
+              },
+              value: function (request, history, self) {
+                return history.curation.construct.living ? self.items[0] : self.items[2];
+              },
+              update: function (value, siblings, client) {
+                if (value === null) {
+                  return { history: null, core: null };
+                } else {
+                  const { items, realItems, selected } = value;
+                  if (selected === null) {
+                    return { history: null, core: null };
+                  } else {
+                    let updateQuery;
+                    updateQuery = {};
+                    updateQuery["curation.construct.living"] = (selected === 0);
+                    return {
+                      history: updateQuery,
+                      core: null
+                    };
+                  }
+                }
+              },
+              chain: function (siblings) {
+                const self = siblings.construct.find((obj) => { return obj.name === "spotStatus"; });
+                const thisValue = self.value.map((obj) => { return obj.index; });
+                const target = siblings.construct.find((obj) => { return obj.name === "service"; });
+                let valueCopied;
+                if (target.dom !== null) {
+                  if (thisValue.includes(0)) {
+                    if (Array.isArray(target.value)) {
+                      valueCopied = JSON.parse(JSON.stringify(target.value)).map((obj) => { return obj.index; });
+                      if (valueCopied.includes(1) || valueCopied.includes(2) || valueCopied.includes(3)) {
+                        window.alert("거주중일 경우, 시공에 한계가 있습니다!");
+                        if (valueCopied.includes(2)) {
+                          target.dom.children[1].click();
+                        } else if (valueCopied.includes(3)) {
+                          target.dom.children[1].click();
+                        }
                       }
                     }
                   }
                 }
               }
-            }
-          },
-        ]
-      });
+            },
+          ]
+        });
+      }
       this.wordings.pannel = {
         button: "서비스 금액 알아보기"
       };
