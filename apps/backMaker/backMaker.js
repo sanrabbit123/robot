@@ -3002,6 +3002,10 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
             update: [],
             submit: [],
             send: [],
+            call: {
+              out: [],
+              in: []
+            },
             full: false
           },
           style: [],

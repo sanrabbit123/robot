@@ -64,52 +64,17 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOLOCALC;
-    // const designers = await back.getDesignersByQuery({}, { selfMongo });
-    // let whereQuery, updateQuery;
-    // let arr, index;
-    //
-    // for (let designer of designers) {
-    //
-    //   whereQuery = { desid: designer.desid };
-    //   updateQuery = {};
-    //
-    //   arr = designer.analytics.project.paperWork.toNormal();
-    //   index = arr.findIndex(a => a === "드로잉");
-    //   if (index !== -1) {
-    //     arr.splice(index, 1, "콜라주");
-    //   }
-    //   index = arr.findIndex(a => a === "참고 이미지");
-    //   if (index !== -1) {
-    //     arr.splice(index, 1, "제품 이미지");
-    //   }
-    //   updateQuery["analytics.project.paperWork"] = JSON.parse(JSON.stringify(arr));
-    //   await back.updateDesigner([ whereQuery, updateQuery ], { selfMongo });
-    //   console.log(whereQuery);
-    //
-    // }
+
+
+
+
+
 
 
 
     // console.log(await bill.createStylingBill("p2108_aa30s"));
     // console.log(await bill.createStylingBill("p2108_aa30s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC }));
     // console.log((await bill.getBillById("b218h_aa02s")).requests);
-
-
-
-
-
-    // const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
-    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    // let res;
-    // for (let id of phoneNumbers) {
-    //   res = await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } });
-    //   console.log(res.data);
-    // }
-
-
-
-
 
 
     // const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";

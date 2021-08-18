@@ -535,7 +535,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
 
             projectQuery["desid"] = desid;
             projectQuery["service.online"] = /off/gi.test(thisBill.links.method);
-            projectQuery["process.status"] = "대기";
+            projectQuery["process.status"] = "진행";
             projectQuery["proposal.status"] = "고객 선택";
 
             vat = Math.round(pureDesignFee * 0.1);
@@ -767,7 +767,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
 
           projectQuery["desid"] = desid;
           projectQuery["service.online"] = /off/gi.test(thisBill.links.method);
-          projectQuery["process.status"] = "대기";
+          projectQuery["process.status"] = "진행";
           projectQuery["proposal.status"] = "고객 선택";
 
           vat = Math.round(pureDesignFee * 0.1);
