@@ -1150,11 +1150,10 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         travelInfo.time.string = "0시간 0분";
       }
 
-      // distance fee plus
-      // if (distanceBoo) {
-      //   fee = fee + (travelInfo.amount * travelNumber);
-      //   offlineFeeCase = fee;
-      // }
+      if (distanceBoo) {
+        offlineFeeCase = 0;
+        fee = onlineFeeCase;
+      }
 
       if (distanceLimitBoo) {
         if (y < 2) {
@@ -1303,14 +1302,14 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
               designer = designers.search(obj.desid);
               if (designer !== null) {
                 if (designer.analytics.project.online) {
-                  obj.appendFee("online", feeObject.detail.online, 0, 0, "0km", "0시간 0분");
+                  obj.appendFee("online", feeObject.detail.online, feeObject.detail.travel.number, feeObject.detail.distance, feeObject.detail.travel.distance, feeObject.detail.travel.time);
                 }
               }
             } else {
               designer = designers.search(obj.desid);
               if (designer !== null) {
                 if (designer.analytics.project.online) {
-                  obj.appendFee("online", feeObject.detail.online, 0, 0, "0km", "0시간 0분");
+                  obj.appendFee("online", feeObject.detail.online, feeObject.detail.travel.number, feeObject.detail.distance, feeObject.detail.travel.distance, feeObject.detail.travel.time);
                 }
               }
             }
