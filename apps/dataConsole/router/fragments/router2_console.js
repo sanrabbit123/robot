@@ -2327,27 +2327,6 @@ DataRouter.prototype.rou_post_webHookGoogle = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_webHookTest = function () {
-  const instance = this;
-  const back = this.back;
-  const { requestSystem } = this.mother;
-  let obj = {};
-  obj.link = "/webHookTest";
-  obj.public = true;
-  obj.func = async function (req, res) {
-    try {
-      res.set({ "Content-Type": "text/plain" });
-      console.log(req);
-      instance.mother.slack_bot.chat.postMessage({ text: `webhook 로그 발생`, channel: "#error_log" });
-      res.send("OK");
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 DataRouter.prototype.rou_post_generalMongo = function () {
   const instance = this;
   const back = this.back;
@@ -3014,7 +2993,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   const instance = this;
   const work = this.work;
   const back = this.back;
-  const { requestSystem, cryptoString, decryptoHash } = this.mother;
+  const { requestSystem, cryptoString, decryptoHash, equalJson } = this.mother;
   const crypto = require('crypto');
   const password = "homeliaison";
   let obj = {};
@@ -3025,11 +3004,11 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
       if (req.body.mode === "script") {
         const { cliid, kind, desid, proid, method } = req.body;
-        const oidConst = "merchant_";
+        const oidConst = "homeliaisonBill_";
         const version = "1.0";
         const gopaymethod = "";
-        const mid = instance.officeinfo.inicis.mid;
-        const signkey = instance.officeinfo.inicis.signkey;
+        const mid = instance.address.officeinfo.inicis.mid;
+        const signkey = instance.address.officeinfo.inicis.signkey;
         const timestamp = String(now.valueOf());
         const oid = oidConst + timestamp;
         const price = Number(req.body.price);

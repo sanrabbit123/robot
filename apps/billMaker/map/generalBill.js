@@ -316,8 +316,8 @@ module.exports = {
       toNormal() {
         let obj;
         obj = {};
-        obj.managers = this.managers;
-        obj.customer = this.customer;
+        obj.managers = this.managers.toNormal();
+        obj.customer = this.customer.toNormal();
         return obj;
       }
     }
@@ -359,7 +359,7 @@ module.exports = {
         obj.participant = this.participant.toNormal();
         obj.goal = this.goal.toNormal();
         obj.requests = this.requests.toNormal();
-        obj.links = this.links;
+        obj.links = this.links.toNormal();
         return obj;
       }
     }

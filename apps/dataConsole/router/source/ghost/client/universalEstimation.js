@@ -1028,97 +1028,17 @@ UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
 UniversalEstimationJs.prototype.payComplete = async function (data) {
   const instance = this;
   const { ajaxJson } = GeneralJs;
+  const { bill, requestNumber } = this;
   try {
+    if (typeof data.MOID !== "string") {
+      throw new Error("invaild data");
+    }
+    const bilid = bill.bilid;
+    await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
     window.alert("결제가 완료되었습니다!");
-    console.log(data);
-    console.log(JSON.stringify(data, null, 2));
-    /*
-    {
-      "CARD_Quota": "00",
-      "CARD_ClEvent": "",
-      "CARD_CorpFlag": "0",
-      "buyerTel": "010-2747-3403",
-      "parentEmail": "",
-      "applDate": "20210817",
-      "buyerEmail": "uragenbooks@gmail.com",
-      "p_Sub": "",
-      "resultCode": "0000",
-      "mid": "MOIhomeli1",
-      "CARD_UsePoint": "",
-      "CARD_Num": "91002001****",
-      "authSignature": "a98c4d9991e30b43ada7ff0064d403cb941b721380e4cfada8ec68152a29d3b0",
-      "ISP_CardCode": "000100202266221",
-      "tid": "StdpayISP_MOIhomeli120210817205753658566",
-      "EventCode": "",
-      "goodName": "홈리에종 계약금",
-      "TotPrice": "1001",
-      "payMethod": "VCard",
-      "CARD_MemberNum": "",
-      "MOID": "merchant_1629201365161",
-      "CARD_Point": "",
-      "currency": "WON",
-      "CARD_PurchaseCode": "",
-      "CARD_PrtcCode": "1",
-      "applTime": "205753",
-      "goodsName": "홈리에종 계약금",
-      "CARD_CheckFlag": "0",
-      "FlgNotiSendChk": "",
-      "CARD_Code": "11",
-      "CARD_BankCode": "00",
-      "CARD_TerminalNum": "0208937000",
-      "ISP_RetrievalNum": "",
-      "P_FN_NM": "BC카드",
-      "buyerName": "배창규",
-      "p_SubCnt": "",
-      "applNum": "36775268",
-      "resultMsg": "정상완료",
-      "CARD_Interest": "0",
-      "CARD_SrcCode": "",
-      "CARD_ApplPrice": "1001",
-      "CARD_GWCode": "G",
-      "custEmail": "uragenbooks@gmail.com",
-      "CARD_PurchaseName": "",
-      "CARD_PRTC_CODE": "1",
-      "payDevice": "PC"
-    }
-
-    {
-      "buyerTel": "010-2747-3403",
-      "parentEmail": "",
-      "applDate": "20210817",
-      "buyerEmail": "uragenbooks@gmail.com",
-      "p_Sub": "",
-      "resultCode": "0000",
-      "mid": "MOIhomeli1",
-      "VACT_Date": "20210916",
-      "authSignature": "8755e7a17d2859e719fc2ae821ff2e9d85515e441e2608bf322c6e3a31fc1ddb",
-      "tid": "StdpayVBNKMOIhomeli120210817210301095424",
-      "EventCode": "",
-      "VACT_Name": "（주）  홈리에종",
-      "VACT_InputName": "배창규",
-      "goodName": "홈리에종 계약금",
-      "VACT_Time": "235959",
-      "TotPrice": "1001",
-      "payMethod": "VBank",
-      "VACT_BankCode": "20",
-      "MOID": "merchant_1629201641177",
-      "vactBankName": "우리은행",
-      "currency": "WON",
-      "applTime": "210301",
-      "goodsName": "홈리에종 계약금",
-      "FlgNotiSendChk": "",
-      "buyerName": "배창규",
-      "p_SubCnt": "",
-      "resultMsg": "정상처리되었습니다.",
-      "custEmail": "uragenbooks@gmail.com",
-      "VACT_Num": "27489473818806",
-      "payDevice": "PC"
-    }
-
-    */
-
   } catch (e) {
-    console.log(e);
+    window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+    window.location.reload();
   }
 }
 

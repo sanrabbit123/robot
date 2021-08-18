@@ -401,6 +401,263 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/ghostClientBill";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.bill === undefined || req.body.requestNumber === undefined || req.body.data === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { bilid, requestNumber, data } = equalJson(req.body);
+      const oid = data.MOID;
+      let whereQuery, updateQuery, method;
+      let thisBill;
+      let oidArr, infoArr;
+      let index;
+
+      thisBill = await bill.getBillById(bilid, { selfMongo });
+      if (thisBill === null) {
+        throw new Error("there is no bill");
+      }
+      thisBill = thisBill.toNormal();
+
+      if (Array.isArray(thisBill.links.oid)) {
+        oidArr = JSON.parse(JSON.stringify(thisBill.links.oid));
+        oidArr.push(oid);
+      } else {
+        oidArr = [ oid ];
+      }
+
+      infoArr = JSON.parse(JSON.stringify(thisBill.requests[Number(requestNumber)].info));
+      index = -1;
+      for (let i = 0; i < infoArr.length; i++) {
+        if (infoArr[i].oid !== undefined && typeof infoArr[i].oid === "string") {
+          index = i;
+        }
+      }
+      if (index !== -1) {
+        infoArr.splice(index, 1);
+      }
+      infoArr.push({ oid });
+
+      index = -1;
+      for (let i = 0; i < infoArr.length; i++) {
+        if (infoArr[i].data !== undefined && typeof infoArr[i].data === "string") {
+          index = i;
+        }
+      }
+      if (index !== -1) {
+        infoArr.splice(index, 1);
+      }
+      infoArr.push({ data });
+
+      whereQuery = { bilid };
+      updateQuery = {};
+      updateQuery["links.oid"] = oidArr;
+      updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
+
+      if (data.CARD_BankCode !== undefined) {
+        //card
+
+        /*
+        {
+          "CARD_Quota": "00",
+          "CARD_ClEvent": "",
+          "CARD_CorpFlag": "0",
+          "buyerTel": "010-2747-3403",
+          "parentEmail": "",
+          "applDate": "20210817",
+          "buyerEmail": "uragenbooks@gmail.com",
+          "p_Sub": "",
+          "resultCode": "0000",
+          "mid": "MOIhomeli1",
+          "CARD_UsePoint": "",
+          "CARD_Num": "91002001****",
+          "authSignature": "a98c4d9991e30b43ada7ff0064d403cb941b721380e4cfada8ec68152a29d3b0",
+          "ISP_CardCode": "000100202266221",
+          "tid": "StdpayISP_MOIhomeli120210817205753658566",
+          "EventCode": "",
+          "goodName": "홈리에종 계약금",
+          "TotPrice": "1001",
+          "payMethod": "VCard",
+          "CARD_MemberNum": "",
+          "MOID": "merchant_1629201365161",
+          "CARD_Point": "",
+          "currency": "WON",
+          "CARD_PurchaseCode": "",
+          "CARD_PrtcCode": "1",
+          "applTime": "205753",
+          "goodsName": "홈리에종 계약금",
+          "CARD_CheckFlag": "0",
+          "FlgNotiSendChk": "",
+          "CARD_Code": "11",
+          "CARD_BankCode": "00",
+          "CARD_TerminalNum": "0208937000",
+          "ISP_RetrievalNum": "",
+          "P_FN_NM": "BC카드",
+          "buyerName": "배창규",
+          "p_SubCnt": "",
+          "applNum": "36775268",
+          "resultMsg": "정상완료",
+          "CARD_Interest": "0",
+          "CARD_SrcCode": "",
+          "CARD_ApplPrice": "1001",
+          "CARD_GWCode": "G",
+          "custEmail": "uragenbooks@gmail.com",
+          "CARD_PurchaseName": "",
+          "CARD_PRTC_CODE": "1",
+          "payDevice": "PC"
+        }
+        */
+
+
+
+      } else {
+        //bank
+
+        /*
+
+        {
+          "buyerTel": "010-2747-3403",
+          "parentEmail": "",
+          "applDate": "20210817",
+          "buyerEmail": "uragenbooks@gmail.com",
+          "p_Sub": "",
+          "resultCode": "0000",
+          "mid": "MOIhomeli1",
+          "VACT_Date": "20210916",
+          "authSignature": "8755e7a17d2859e719fc2ae821ff2e9d85515e441e2608bf322c6e3a31fc1ddb",
+          "tid": "StdpayVBNKMOIhomeli120210817210301095424",
+          "EventCode": "",
+          "VACT_Name": "（주）  홈리에종",
+          "VACT_InputName": "배창규",
+          "goodName": "홈리에종 계약금",
+          "VACT_Time": "235959",
+          "TotPrice": "1001",
+          "payMethod": "VBank",
+          "VACT_BankCode": "20",
+          "MOID": "merchant_1629201641177",
+          "vactBankName": "우리은행",
+          "currency": "WON",
+          "applTime": "210301",
+          "goodsName": "홈리에종 계약금",
+          "FlgNotiSendChk": "",
+          "buyerName": "배창규",
+          "p_SubCnt": "",
+          "resultMsg": "정상처리되었습니다.",
+          "custEmail": "uragenbooks@gmail.com",
+          "VACT_Num": "27489473818806",
+          "payDevice": "PC"
+        }
+
+        */
+
+
+      }
+
+
+      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo })
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_generalBill): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { requestSystem } = this.mother;
+  const ParsingHangul = require(`${process.cwd()}/parsingHangul/parsingHangul.js`);
+  let obj = {};
+  obj.link = "/webHookVAccount";
+  obj.public = true;
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.no_oid === undefined || req.body.id_merchant === undefined || req.body.no_tid === undefined) {
+        throw new Error("invaild post");
+      }
+      if (req.body.id_merchant !== instance.address.officeinfo.inicis.mid) {
+        throw new Error("invaild post");
+      }
+      const oid = req.body.no_oid;
+      const bankFrom = ParsingHangul.decodeURI(req.body.nm_inputbank);
+      const nameFrom = ParsingHangul.decodeURI(req.body.nm_input);
+
+      instance.mother.slack_bot.chat.postMessage({ text: oid, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: bankFrom, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: nameFrom, channel: "#error_log" });
+
+
+
+      // no_tid: 'ININPGVBNKMOIhomeli120210818104550283225',
+      // no_oid: 'merchant_1629250869293',
+      // id_merchant: 'MOIhomeli1',
+      // cd_bank: '00000020',
+      // cd_deal: '00000020',
+      // dt_trans: '20210818',
+      // tm_trans: '104349',
+      // no_msgseq: '0002133837',
+      // cd_joinorg: '01306001',
+      // dt_transbase: '20210818',
+      // no_transseq: '2133837',
+      // type_msg: '0200',
+      // cl_trans: '1100',
+      // cl_close: '0',
+      // cl_kor: '2',
+      // no_msgmanage: '10004349',
+      // no_vacct: '27489495718161',
+      // amt_input: '1001',
+      // amt_check: '0',
+      // nm_inputbank: '%BF%EC%B8%AE%C0%BA%C7%E0',
+      // nm_input: '%B9%E8%C3%A2%B1%D4',
+      // dt_inputstd: '20210818',
+      // dt_calculstd: '20210818',
+      // flg_close: '0',
+      // dt_cshr: '20210818',
+      // tm_cshr: '104550',
+      // no_cshr_appl: '265687974',
+      // no_cshr_tid: 'StdpayVBNKMOIhomeli120210818104128882138'
+
+
+
+
+
+      res.set({ "Content-Type": "text/plain" });
+      res.send("OK");
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      res.set({ "Content-Type": "text/plain" });
+      res.send("FAIL");
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 
