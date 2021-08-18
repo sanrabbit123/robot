@@ -415,6 +415,9 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       }
       const selfMongo = instance.mongolocal;
       const { bilid, requestNumber, data } = equalJson(req.body);
+      if (typeof data.MOID !== "string") {
+        throw new Error("invaild post");
+      }
       const oid = data.MOID;
       let whereQuery, updateQuery, method;
       let thisBill;
@@ -649,7 +652,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
       res.set({ "Content-Type": "text/plain" });
       res.send("FAIL");
       console.log(e);
