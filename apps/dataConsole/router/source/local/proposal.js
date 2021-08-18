@@ -1727,83 +1727,6 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                 }
               ]
             },
-            //discount
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                height: String(blockHeight) + ea,
-              },
-              attribute: [
-                { desid },
-                { cliid },
-                { serid },
-                { xValue },
-                { thisOnOff },
-                { number: Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) },
-              ],
-              events: [
-                {
-                  type: [ "click", "contextmenu" ],
-                  event: function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const desid = this.getAttribute("desid");
-                    const cliid = this.getAttribute("cliid");
-                    const serid = this.getAttribute("serid");
-                    const xValue = this.getAttribute("xValue");
-                    const number = Number(this.getAttribute("number"));
-                    const thisOnOff = this.getAttribute("thisOnOff");
-                    const onlinePosition = 6;
-                    const offlinePosition = 7;
-                    const discountPosition = 9;
-                    const premiumPosition = 10;
-                    const finalPosition = 11;
-                    const opposite = this.parentElement.children[premiumPosition];
-                    let newNumber;
-                    let final;
-                    let original;
-                    if (e.type === "click") {
-                      newNumber = number + 1;
-                    } else {
-                      newNumber = number - 1;
-                    }
-                    this.lastChild.textContent = String(newNumber) + "%";
-                    this.setAttribute("number", String(newNumber));
-                    ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.discount[thisOnOff] = (newNumber / 100);
-                    original = Number(this.parentElement.children[/^off/.test(thisOnOff) ? offlinePosition : onlinePosition].lastChild.textContent.replace(/[^0-9\-]/gi, ''));
-                    final = original * (1 - (newNumber / 100));
-                    this.parentElement.children[finalPosition].lastChild.textContent = GeneralJs.autoComma(final) + "원";
-                    opposite.lastChild.textContent = String(-1 * newNumber) + "%";
-                    opposite.setAttribute("number", String(-1 * newNumber));
-                  }
-                }
-              ],
-              children: [
-                {
-                  text: "할인율",
-                  style: {
-                    position: "absolute",
-                    fontSize: String(size) + ea,
-                    fontWeight: String(400),
-                    color: colorChip.white,
-                    top: String(titleVisual) + ea,
-                    left: String(0) + ea,
-                  }
-                },
-                {
-                  text: Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) + "%",
-                  style: {
-                    position: "absolute",
-                    fontSize: String(size) + ea,
-                    fontWeight: String(600),
-                    color: colorChip.white,
-                    top: String(0) + ea,
-                    right: String(0) + ea,
-                  }
-                }
-              ]
-            },
             //premium
             {
               style: {
@@ -1833,10 +1756,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     const thisOnOff = this.getAttribute("thisOnOff");
                     const onlinePosition = 6;
                     const offlinePosition = 7;
-                    const discountPosition = 9;
-                    const premiumPosition = 10;
-                    const finalPosition = 11;
-                    const opposite = this.parentElement.children[discountPosition];
+                    const premiumPosition = 9;
+                    const finalPosition = 10;
                     let newNumber;
                     let final;
                     let original;
@@ -1851,14 +1772,14 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     original = Number(this.parentElement.children[/^off/.test(thisOnOff) ? offlinePosition : onlinePosition].lastChild.textContent.replace(/[^0-9\-]/gi, ''));
                     final = original * (1 - ((-1 * newNumber) / 100));
                     this.parentElement.children[finalPosition].lastChild.textContent = GeneralJs.autoComma(final) + "원";
-                    opposite.lastChild.textContent = String(-1 * newNumber) + "%";
-                    opposite.setAttribute("number", String(-1 * newNumber));
+                    this.parentElement.parentElement.parentElement.querySelector("input").value = GeneralJs.autoComma(final);
+                    input_widthSet(this.parentElement.parentElement.parentElement.querySelector("input"));
                   }
                 }
               ],
               children: [
                 {
-                  text: "프리미엄",
+                  text: "증감율",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
@@ -6146,7 +6067,7 @@ ProposalJs.prototype.launching = async function () {
   const { ajaxJson } = GeneralJs;
   try {
 
-    this.designers = new Designers(await ajaxJson({ noFlat: true, whereQuery: {} }, "/getDesigners", { equal: true }));
+    this.designers = new Designers(await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $regex: "완료" } } }, "/getDesigners", { equal: true }));
 
     left.style.display = "none";
     right.style.display = "none";
