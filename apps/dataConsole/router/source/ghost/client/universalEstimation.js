@@ -1139,7 +1139,7 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
     const bilid = bill.bilid;
     let year, month, date;
     let to;
-    // await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
+    await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
 
     completeInfo.raw = data;
 
