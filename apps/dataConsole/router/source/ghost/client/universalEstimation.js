@@ -86,7 +86,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
     sum: {},
     commentsTitle: "<b%*%b> 안내 사항",
     comments: [],
-    button: "결제 안내",
+    button: "결제 진행",
     pannel: [
       {
         name: "계좌 이체시",
@@ -229,13 +229,13 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  titleFontSize = <%% 30, 30, 28, 23, 5.7 %%>;
+  titleFontSize = <%% 30, 30, 28, 23, 5.4 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
   titleFontBottom = <%% 2, 2, 2, 2, 0.2 %%>;
   titlePadding = <%% 6, 6, 6, 5, 12 %%>;
   titlePaddingMargin = <%% 18, 18, 18, 16, 18 %%>;
 
-  titleBarTopVisual = <%% 10, 10, 10, 7, 18.5 %%>;
+  titleBarTopVisual = <%% 10, 10, 10, 7, 17.5 %%>;
   titleBarBottomVisual = <%% 6, 6, 6, 6, 6 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3 %%>;
@@ -247,51 +247,51 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   itemBarTop = <%% 10, 10, 10, 10, 1 %%>;
   itemBarBottom = <%% 16, 16, 16, 16, 2 %%>;
 
-  tableMarginTop = <%% 32, 32, 26, 22, 9 %%>;
-  tablePaddingTop = <%% 13, 13, 13, 13, 3 %%>;
-  tablePaddingBottom = <%% 18, 18, 18, 18, 3.5 %%>;
+  tableMarginTop = <%% 32, 32, 26, 22, 8 %%>;
+  tablePaddingTop = <%% 13, 13, 13, 13, 2.5 %%>;
+  tablePaddingBottom = <%% 18, 18, 18, 18, 3 %%>;
   barPaddingBottom = <%% 5, 5, 5, 5, 2 %%>;
-  barMarginBottom = <%% 14, 14, 14, 14, 3 %%>;
+  barMarginBottom = <%% 14, 14, 14, 14, 2.5 %%>;
 
-  completeMarginTop0 = <%% 32, 32, 24, 20, 3 %%>;
-  grayMarginTop0 = <%% 56, 56, 45, 36, 5 %%>;
-  grayMarginTop1 = <%% 20, 20, 14, 12, 2 %%>;
-
-  sumBoxBarTop = <%% 19, 19, 18, 18, 19 %%>;
+  sumBoxBarTop = <%% 19, 19, 18, 18, 4 %%>;
   sumBoxMainFontSize = <%% 29, 29, 28, 27, 5.5 %%>;
   sumBoxMainFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  sumBoxMainPaddingLeft = <%% 19, 19, 19, 19, 19 %%>;
+  sumBoxMainPaddingLeft = <%% 19, 19, 19, 19, 3 %%>;
   sumBoxVatFontSize = <%% 18, 18, 17, 16, 3 %%>;
   sumBoxVatFontWeight = <%% 300, 300, 300, 300, 300 %%>;
-  sumBoxVatPaddingLeft = <%% 10, 10, 10, 10, 10 %%>;
+  sumBoxVatPaddingLeft = <%% 10, 10, 10, 10, 2 %%>;
 
-  sumBoxPaddingTop = <%% 15, 15, 14, 13, 15 %%>;
-  sumBoxPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
+  sumBoxPaddingTop = <%% 15, 15, 14, 13, 2.5 %%>;
+  sumBoxPaddingBottom = <%% 10, 10, 10, 10, 5 %%>;
 
-  cautionPaddingTop = <%% 34, 34, 34, 27, 34 %%>;
-  cautionPaddingBottom = <%% 29, 29, 29, 24, 29 %%>;
-  cautionPaddingLeft = <%% 40, 40, 40, 32, 40 %%>;
-  cautionPaddingRight = <%% 40, 40, 40, 32, 40 %%>;
-  cautionFirstBoxWidth = <%% 180, 180, 150, 110, 180 %%>;
-  cautionWordsMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
+  completeMarginTop0 = <%% 32, 32, 24, 20, 3 %%>;
+  grayMarginTop0 = <%% 56, 56, 45, 36, 4 %%>;
+  grayMarginTop1 = <%% 20, 20, 14, 12, 2 %%>;
+
+  cautionPaddingTop = <%% 34, 34, 34, 27, 4 %%>;
+  cautionPaddingBottom = <%% 29, 29, 29, 24, 4 %%>;
+  cautionPaddingLeft = <%% 40, 40, 40, 32, 4.5 %%>;
+  cautionPaddingRight = <%% 40, 40, 40, 32, 4.5 %%>;
+  cautionFirstBoxWidth = <%% 180, 180, 150, 110, 20 %%>;
+  cautionWordsMarginBottom = <%% 8, 8, 8, 8, 1.5 %%>;
 
   cautionLogoBottom = <%% 12, 12, 12, 12, 12 %%>;
   cautionLogoHeight = <%% 16, 16, 16, 16, 16 %%>;
 
   grayHeight = <%% 180, 180, 180, 180, 42 %%>;
   grayTop = <%% 5, 5, 5, 5, 0 %%>;
-  grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
-  grayTextLeft = <%% 22, 22, 20, 20, 3 %%>;
+  grayTextTop = <%% 22, 22, 20, 20, 3.5 %%>;
+  grayTextLeft = <%% 22, 22, 20, 20, 4 %%>;
   grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
   grayButtonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
   grayTongMarginBottom = <%% 15, 15, 15, 15, 2.5 %%>;
 
   buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
 
-  greenButtonWidth = <%% 122, 122, 122, 110, 17 %%>;
+  greenButtonWidth = <%% 122, 122, 122, 110, 20 %%>;
   greenButtonHeight = <%% 47, 47, 45, 40, 8.4 %%>;
   greenButtonFontSize = <%% 20, 20, 20, 16, 3.8 %%>;
-  greenButtonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
+  greenButtonTextTop = <%% 9, 9, 9, 9, 1.4 %%>;
 
   greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
   greenBasePaddingBottom = <%% 32, 32, 32, 32, 3.8 %%>;
@@ -330,8 +330,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       width: String(100) + '%',
       height: desktop ? String(blockHeight - (margin * 2)) + ea : "auto",
       background: colorChip.white,
-      paddingTop: String(desktop ? margin : 9) + ea,
-      paddingBottom: String(desktop ? margin : 10.5) + ea,
+      paddingTop: String(desktop ? margin : 8.5) + ea,
+      paddingBottom: String(desktop ? margin : 8) + ea,
       marginBottom: String(blockMarginBottom) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
@@ -620,17 +620,18 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     children: [
       {
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "relative",
-          width: String(cautionFirstBoxWidth) + ea,
+          width: desktop ? String(cautionFirstBoxWidth) + ea : String(100) + '%',
           verticalAlign: "top",
+          marginBottom: desktop ? "" : String(2) + ea,
         }
       },
       {
         style: {
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           position: "relative",
-          width: withOut(cautionFirstBoxWidth, ea),
+          width: desktop ? withOut(cautionFirstBoxWidth, ea) : String(100) + '%',
           verticalAlign: "top",
         }
       },
@@ -642,65 +643,40 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     text: wordings.commentsTitle,
     style: {
       position: "relative",
-      fontSize: String(initWordingSize) + ea,
+      fontSize: String(initWordingSize + (desktop ? 0 : 0.3)) + ea,
       fontWeight: String(600),
       color: colorChip.black,
     },
     bold: {
-      fontSize: String(initWordingSize) + ea,
+      fontSize: String(initWordingSize + (desktop ? 0 : 0.3)) + ea,
       fontWeight: String(600),
       color: colorChip.green,
     }
   });
 
-  if (completeMode) {
-    for (let c of wordings.completeComments) {
-      createNode({
-        mother: cautionBox.lastChild,
-        text: "<b%-%b>&nbsp;&nbsp;" + c,
-        style: {
-          position: "relative",
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(initWordingWeight),
-          color: colorChip.black,
-          marginBottom: String(cautionWordsMarginBottom) + ea,
-        },
-        bold: {
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(initWordingWeight),
-          color: colorChip.gray5,
-        },
-        under: {
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.green,
-        }
-      });
-    }
-  } else {
-    for (let c of wordings.comments) {
-      createNode({
-        mother: cautionBox.lastChild,
-        text: "<b%-%b>&nbsp;&nbsp;" + c,
-        style: {
-          position: "relative",
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(initWordingWeight),
-          color: colorChip.black,
-          marginBottom: String(cautionWordsMarginBottom) + ea,
-        },
-        bold: {
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(initWordingWeight),
-          color: colorChip.gray5,
-        },
-        under: {
-          fontSize: String(initWordingSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.green,
-        }
-      });
-    }
+  for (let c of wordings[completeMode ? "completeComments" : "comments"]) {
+    createNode({
+      mother: cautionBox.lastChild,
+      text: "<b%-%b>&nbsp;&nbsp;" + c,
+      style: {
+        position: "relative",
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(initWordingWeight),
+        color: colorChip.black,
+        marginBottom: String(cautionWordsMarginBottom) + ea,
+        lineHeight: desktop ? "" : String(1.5),
+      },
+      bold: {
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(initWordingWeight),
+        color: colorChip.gray5,
+      },
+      under: {
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(600),
+        color: colorChip.green,
+      }
+    });
   }
 
   if (media[0] || media[1] || media[2]) {
