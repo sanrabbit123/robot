@@ -260,7 +260,7 @@ DataRouter.prototype.rou_get_Address = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_get_Address = function () {
+DataRouter.prototype.rou_get_Trigger = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/trigger";
