@@ -389,14 +389,15 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     virtualAccount: {
-      name: "가상계좌 안내",
-      id: "TF_5382",
+      name: "가상계좌 안내 수정",
+      id: "TF_5485",
       needs: [
         "client",
         "goodName",
         "bankName",
         "account",
         "to",
+        "amount",
         "date",
       ],
       convert: function (obj) {
@@ -406,6 +407,7 @@ KakaoTalk.prototype.templateTong = function (target) {
           { from: "bankName", to: obj.bankName },
           { from: "account", to: obj.account },
           { from: "to", to: obj.to },
+          { from: "amount", to: obj.amount },
           { from: "date", to: obj.date },
         ];
       },

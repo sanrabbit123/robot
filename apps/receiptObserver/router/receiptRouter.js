@@ -597,6 +597,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         //   bankName: data.vactBankName,
         //   account: data.VACT_Num,
         //   to: data.VACT_Name,
+        //   amount: amount,
         //   date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
         // });
 
@@ -606,6 +607,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           bankName: data.vactBankName,
           account: data.VACT_Num,
           to: data.VACT_Name,
+          amount: String(amount),
           date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
         });
 
@@ -648,12 +650,16 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   obj.public = true;
   obj.func = async function (req, res) {
     try {
-      if (req.body.no_oid === undefined || req.body.id_merchant === undefined || req.body.no_tid === undefined) {
-        throw new Error("invaild post");
+
+      if (req.body.P_TID !== undefined) {
+        req.body.no_oid = req.body.P_OID;
+        req.body.id_merchant = req.body.P_MID;
+        req.body.no_tid = req.body.P_TID;
+        req.body.nm_inputbank = req.body.P_FN_NM;
+        req.body.nm_input = req.body.P_AMT;
       }
-      if (req.body.id_merchant !== instance.address.officeinfo.inicis.mid) {
-        throw new Error("invaild post");
-      }
+      console.log(req.body)
+
       const oid = req.body.no_oid;
       const inisis = "이니시스";
       const bankFrom = ParsingHangul.decodeURI(req.body.nm_inputbank);
