@@ -3667,6 +3667,37 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_inicisPayment = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill" ];
+  obj.func = async function (req, res) {
+    try {
+      const url = req.url.replace(/^\//gi, '');
+      if (url.split('_').length < 2) {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ message: "OK" }));
+      } else {
+        const path = url.split('_')[1].trim();
+        const protocol = "https:";
+        const targetUrl = protocol + "//" + address["pythoninfo"].host + ":3000/" + path;
+        const post = equalJson(req.body);
+        console.log(JSON.stringify(post, null, 2));
+        const pythonResponse = await requestSystem(targetUrl, post, { headers: { "Content-Type": "application/json" } });
+        console.log(JSON.stringify(pythonResponse.data, null, 2));
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify(pythonResponse.data));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 
 DataRouter.policy = function () {
   let text = '';

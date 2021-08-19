@@ -1139,7 +1139,7 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
     const bilid = bill.bilid;
     let year, month, date;
     let to;
-    await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
+    await ajaxJson({ bilid, requestNumber, data }, "/pythonPass_ghostClientBill");
 
     completeInfo.raw = data;
 
@@ -1220,7 +1220,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     project = projects[0];
     this.project = project;
 
-    bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, PYTHONHOST + "/generalBill", { equal: true });
+    bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, "/pythonPass_generalBill", { equal: true });
     if (bills.length === 0) {
       alert("견적서가 없습니다! 홈리에종에 문의해주세요!");
       window.location.href = this.frontPage;
