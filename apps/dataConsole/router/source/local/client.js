@@ -3207,6 +3207,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let scroll;
           let historyArr;
           let imageLoad, historyLoad;
+          let tempArr;
 
           imageLoad = () => {};
           historyLoad = () => {};
@@ -3218,6 +3219,19 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               historyArr = historyArr.concat(analytics[key].map((obj) => { obj.key = key; obj.date = stringToDate(obj.date); return obj; }));
             }
           }
+
+          tempArr = [];
+          for (let { date, success } of analytics.call.out) {
+            tempArr.push({ date: stringToDate(date), key: "callOut", success, page: "전화" });
+          }
+          historyArr = historyArr.concat(tempArr);
+
+          tempArr = [];
+          for (let { date, success } of analytics.call.in) {
+            tempArr.push({ date: stringToDate(date), key: "callIn", success, page: "전화" });
+          }
+          historyArr = historyArr.concat(tempArr);
+
           historyArr.sort((a, b) => {
             const aDate = new Date(a.date.getFullYear(), a.date.getMonth(), a.date.getDate(), a.date.getHours(), a.date.getMinutes());
             const bDate = new Date(b.date.getFullYear(), b.date.getMonth(), b.date.getDate(), b.date.getHours(), b.date.getMinutes());
@@ -3227,6 +3241,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               return (a.key === "page" ? 3 : (a.key === "update" ? 5 : 1)) - (b.key === "page" ? 3 : (b.key === "update" ? 5 : 1));
             }
           });
+
           historyArr = historyArr.map((obj) => {
             let text, date, pageName;
             date = dateToString(obj.date, true).slice(2, -3);
@@ -3246,6 +3261,18 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               text = `${date} | <b%${pageName}%b> 페이지에서 결과를 <b%제출%b>함`;
             } else if (obj.key === "send") {
               text = `${date} | ${obj.who.name}이 <b%${pageName}%b> 페이지를 고객에게 <b%전송%b>함`;
+            } else if (obj.key === "callOut") {
+              if (obj.success) {
+                text = `${date} | <b%홈리에종에서%b> 고객에게 전화를 걸고 <b%통화에 성공%b>함`;
+              } else {
+                text = `${date} | <b%홈리에종에서%b> 고객에게 전화를 걸었지만 <b%통화에 실패%b>함`;
+              }
+            } else if (obj.key === "callIn") {
+              if (obj.success) {
+                text = `${date} | <b%고객이%b> 홈리에종에 전화를 걸었고 <b%통화에 성공%b>함`;
+              } else {
+                text = `${date} | <b%고객이%b> 홈리에종에 전화를 걸었지만 <b%통화에 실패%b>함`;
+              }
             }
 
             obj.text = text;
