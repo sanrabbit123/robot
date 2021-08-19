@@ -212,51 +212,50 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  titleFontSize = <%% 30, 30, 29, 25, 5.7 %%>;
+  titleFontSize = <%% 30, 30, 28, 23, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
-  titleFontBottom = <%% 2, 2, 2, 2, 2 %%>;
-  titlePadding = <%% 6, 6, 6, 6, 6 %%>;
-  titlePaddingMargin = <%% 18, 18, 18, 18, 18 %%>;
+  titleFontBottom = <%% 2, 2, 2, 2, 0.2 %%>;
+  titlePadding = <%% 6, 6, 6, 5, 12 %%>;
+  titlePaddingMargin = <%% 18, 18, 18, 16, 18 %%>;
 
-  titleBarTopVisual = <%% 10, 10, 10, 10, 10 %%>;
+  titleBarTopVisual = <%% 10, 10, 10, 7, 18.5 %%>;
   titleBarBottomVisual = <%% 6, 6, 6, 6, 6 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
   initWordingWeight = <%% 300, 300, 300, 300, 300 %%>;
 
-  subTitleBoxTop = <%% 37, 37, 37, 37, 37 %%>;
-
-  tableMarginTop = <%% 34, 34, 34, 34, 34 %%>;
+  subTitleBoxTop = <%% 35, 35, 31, 20, 35 %%>;
 
   itemBarLeft = <%% 28, 28, 28, 28, 28 %%>;
   itemBarTop = <%% 10, 10, 10, 10, 10 %%>;
   itemBarBottom = <%% 16, 16, 16, 16, 16 %%>;
 
-  tablePaddingTop = <%% 13, 13, 13, 13, 13 %%>;
-  tablePaddingBottom = <%% 18, 18, 18, 18, 18 %%>;
+  tableMarginTop = <%% 32, 32, 26, 22, 9 %%>;
+  tablePaddingTop = <%% 13, 13, 13, 13, 4 %%>;
+  tablePaddingBottom = <%% 18, 18, 18, 18, 5 %%>;
   barPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
   barMarginBottom = <%% 14, 14, 14, 14, 14 %%>;
 
-  completeMarginTop0 = <%% 32, 32, 32, 32, 32 %%>;
-  grayMarginTop0 = <%% 56, 56, 56, 56, 56 %%>;
-  grayMarginTop1 = <%% 20, 20, 20, 20, 20 %%>;
+  completeMarginTop0 = <%% 32, 32, 24, 20, 3 %%>;
+  grayMarginTop0 = <%% 56, 56, 45, 36, 5 %%>;
+  grayMarginTop1 = <%% 20, 20, 14, 12, 2 %%>;
 
-  sumBoxBarTop = <%% 19, 19, 19, 19, 19 %%>;
-  sumBoxMainFontSize = <%% 29, 29, 29, 29, 29 %%>;
+  sumBoxBarTop = <%% 19, 19, 18, 18, 19 %%>;
+  sumBoxMainFontSize = <%% 29, 29, 28, 27, 5.5 %%>;
   sumBoxMainFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   sumBoxMainPaddingLeft = <%% 19, 19, 19, 19, 19 %%>;
-  sumBoxVatFontSize = <%% 18, 18, 18, 18, 18 %%>;
+  sumBoxVatFontSize = <%% 18, 18, 17, 16, 3 %%>;
   sumBoxVatFontWeight = <%% 300, 300, 300, 300, 300 %%>;
   sumBoxVatPaddingLeft = <%% 10, 10, 10, 10, 10 %%>;
 
-  sumBoxPaddingTop = <%% 15, 15, 15, 15, 15 %%>;
+  sumBoxPaddingTop = <%% 15, 15, 14, 13, 15 %%>;
   sumBoxPaddingBottom = <%% 10, 10, 10, 10, 10 %%>;
 
-  cautionPaddingTop = <%% 34, 34, 34, 34, 34 %%>;
-  cautionPaddingBottom = <%% 29, 29, 29, 29, 29 %%>;
-  cautionPaddingLeft = <%% 40, 40, 40, 40, 40 %%>;
-  cautionPaddingRight = <%% 40, 40, 40, 40, 40 %%>;
-  cautionFirstBoxWidth = <%% 180, 180, 180, 180, 180 %%>;
+  cautionPaddingTop = <%% 34, 34, 34, 27, 34 %%>;
+  cautionPaddingBottom = <%% 29, 29, 29, 24, 29 %%>;
+  cautionPaddingLeft = <%% 40, 40, 40, 32, 40 %%>;
+  cautionPaddingRight = <%% 40, 40, 40, 32, 40 %%>;
+  cautionFirstBoxWidth = <%% 180, 180, 150, 110, 180 %%>;
   cautionWordsMarginBottom = <%% 8, 8, 8, 8, 8 %%>;
 
   cautionLogoBottom = <%% 12, 12, 12, 12, 12 %%>;
@@ -265,7 +264,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   grayHeight = <%% 180, 180, 180, 180, 42 %%>;
   grayTop = <%% 5, 5, 5, 5, 0 %%>;
   grayTextTop = <%% 22, 22, 20, 20, 3 %%>;
-  grayTextLeft = <%% 22, 20, 18, 15, 3 %%>;
+  grayTextLeft = <%% 22, 22, 20, 20, 3 %%>;
   grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
   grayButtonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
   grayTongMarginBottom = <%% 15, 15, 15, 15, 2.5 %%>;
@@ -354,7 +353,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           fontWeight: String(titleFontWeight),
           color: colorChip.black,
           marginBottom: String(titleFontBottom) + ea,
-          paddingLeft: String(titlePadding + titlePaddingMargin) + ea,
+          paddingLeft: String(desktop ? titlePadding + titlePaddingMargin : 0) + ea,
+          textAlign: mobile ? "center" : "",
+          width: mobile ? String(100) + '%' : "",
         },
         bold: {
           fontWeight: String(600),
@@ -368,7 +369,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           fontSize: String(titleFontSize) + ea,
           fontWeight: String(titleFontWeight),
           color: colorChip.black,
-          paddingLeft: String(titlePadding + titlePaddingMargin) + ea,
+          paddingLeft: String(desktop ? titlePadding + titlePaddingMargin : 0) + ea,
+          textAlign: mobile ? "center" : "",
+          width: mobile ? String(100) + '%' : "",
         },
         bold: {
           fontWeight: String(600),
@@ -378,10 +381,10 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       {
         style: {
           position: "absolute",
-          left: String(0),
+          left: desktop ? String(0) : withOut(50, titlePadding / 2, ea),
           width: String(titlePadding) + ea,
           borderRadius: String(3) + "px",
-          height: withOut(titleBarTopVisual + titleBarBottomVisual, ea),
+          height: desktop ? withOut(titleBarTopVisual + titleBarBottomVisual, ea) : String(0.8) + ea,
           background: colorChip.gray2,
           top: String(titleBarTopVisual) + ea,
         }
@@ -389,6 +392,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       {
         text: wordings.subTitle.join("\n"),
         style: {
+          display: desktop ? "block" : "none",
           position: "absolute",
           right: String(0),
           top: String(subTitleBoxTop) + ea,
@@ -682,7 +686,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     }
   }
 
-  if (desktop) {
+  if (media[0] || media[1] || media[2]) {
     createNode({
       mother: cautionBox.lastChild,
       mode: "svg",

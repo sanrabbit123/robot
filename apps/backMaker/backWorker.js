@@ -1150,10 +1150,10 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
         travelInfo.time.string = "0시간 0분";
       }
 
-      if (distanceBoo) {
-        offlineFeeCase = 0;
-        fee = onlineFeeCase;
-      }
+      // if (distanceBoo) {
+      //   offlineFeeCase = 0;
+      //   fee = onlineFeeCase;
+      // }
 
       if (distanceLimitBoo) {
         if (y < 2) {
