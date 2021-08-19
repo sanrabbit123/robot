@@ -221,20 +221,20 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   titleBarTopVisual = <%% 10, 10, 10, 7, 18.5 %%>;
   titleBarBottomVisual = <%% 6, 6, 6, 6, 6 %%>;
 
-  initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  initWordingSize = <%% 14.5, 14, 14, 13, 3 %%>;
   initWordingWeight = <%% 300, 300, 300, 300, 300 %%>;
 
   subTitleBoxTop = <%% 35, 35, 31, 20, 35 %%>;
 
-  itemBarLeft = <%% 28, 28, 28, 28, 28 %%>;
-  itemBarTop = <%% 10, 10, 10, 10, 10 %%>;
-  itemBarBottom = <%% 16, 16, 16, 16, 16 %%>;
+  itemBarLeft = <%% 28, 28, 28, 28, 2 %%>;
+  itemBarTop = <%% 10, 10, 10, 10, 1 %%>;
+  itemBarBottom = <%% 16, 16, 16, 16, 2 %%>;
 
   tableMarginTop = <%% 32, 32, 26, 22, 9 %%>;
   tablePaddingTop = <%% 13, 13, 13, 13, 4 %%>;
   tablePaddingBottom = <%% 18, 18, 18, 18, 5 %%>;
   barPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
-  barMarginBottom = <%% 14, 14, 14, 14, 14 %%>;
+  barMarginBottom = <%% 14, 14, 14, 14, 2 %%>;
 
   completeMarginTop0 = <%% 32, 32, 24, 20, 3 %%>;
   grayMarginTop0 = <%% 56, 56, 45, 36, 5 %%>;

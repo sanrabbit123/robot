@@ -3246,7 +3246,11 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             let text, date, pageName;
             date = dateToString(obj.date, true).slice(2, -3);
             if (/curation/gi.test(obj.page)) {
-              pageName = "스타일 체크";
+              if (/mode\=lite/gi.test(obj.referrer)) {
+                pageName = "스타일 체크";
+              } else {
+                pageName = "부재중 알림";
+              }
             } else if (/proposal/gi.test(obj.page)) {
               pageName = "제안서";
             } else {
