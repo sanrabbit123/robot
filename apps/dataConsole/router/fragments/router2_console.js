@@ -3041,6 +3041,26 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
       } else {
 
+        const mobileConverting = {
+          P_STATUS: "resultCode",
+          P_RMESG1: "resultMsg",
+          P_TID: "tid",
+          P_TYPE: "payMethod",
+          P_AUTH_DT: "applDate",
+          P_MID: "mid",
+          P_OID: "MOID",
+          P_AMT: "TotPrice",
+          P_UNAME: "buyerName",
+          P_CARD_ISSUER_CODE: "CARD_BankCode",
+          P_CARD_NUM: "CARD_Num",
+          P_FN_NM: "P_FN_NM",
+          P_CARD_APPLPRICE: "CARD_ApplPrice",
+          P_FN_CD1: "CARD_Code",
+          P_FN_NM: "vactBankName",
+          P_VACT_NUM: "VACT_Num",
+          P_VACT_NAME: "VACT_Name",
+          P_VACT_DATE: "VACT_Date",
+        };
         const charset = "UTF-8";
         const format = "JSON";
         const timestamp = String(now.valueOf());
@@ -3048,6 +3068,9 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         let resultCode, authUrl, netCancelUrl, returnUrl, orderNumber, authToken, mid;
         let signature;
         let response, responseData;
+        let target;
+        let targetArr, tong, convertTong;
+        let tempStr, tempArr;
 
         if (req.body.P_STATUS === undefined) {
           device = "desktop";
@@ -3063,10 +3086,10 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           resultCode = (req.body.P_STATUS === "00" ? "0000" : req.body.P_STATUS);
           authUrl = req.body.P_REQ_URL;
           netCancelUrl = "";
-          returnUrl = req.body.P_NOTI.split("__split__")[1];
+          returnUrl = req.body.P_NOTI.split("__split__")[2];
           orderNumber = "";
           authToken = req.body.P_TID;
-          mid = req.body.P_NOTI.split("__split__")[0];
+          mid = req.body.P_NOTI.split("__split__")[1];
         }
 
         if (device === "desktop") {
@@ -3081,11 +3104,46 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         } else {
           if (resultCode === "0000") {
             response = await requestSystem(authUrl, { P_MID: mid, P_TID: authToken });
-            responseData = await cryptoString(password, JSON.stringify(response.data));
-            instance.mother.slack_bot.chat.postMessage({ text: response.data, channel: "#error_log" });
-            instance.mother.slack_bot.chat.postMessage({ text: typeof response.data, channel: "#error_log" });
-            instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(response.data, null, 2), channel: "#error_log" });
-            res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
+            target = response.data;
+            targetArr = target.split('&').map((q) => { return q.split('='); });
+            for (let i = 1; i < targetArr.length; i++) {
+              if (targetArr[i][0] === "needs" || targetArr[i][0] === "mode" || targetArr[i][0] === "cliid" || targetArr[i][0] === "desid" || targetArr[i][0] === "proid") {
+                tempStr = targetArr[i - 1][targetArr[i - 1].length - 1] + "&" + targetArr[i].join('=');
+                targetArr[i - 1][targetArr[i - 1].length - 1] = tempStr;
+              }
+            }
+            targetArr = targetArr.filter((arr) => { return arr[0] !== "needs" && arr[0] !== "mode" && arr[0] !== "cliid" && arr[0] !== "desid" && arr[0] !== "proid" });
+            for (let i = 0; i < targetArr.length; i++) {
+              if (targetArr[i].length > 2) {
+                tempArr = JSON.parse(JSON.stringify(targetArr[i]));
+                tempArr.shift();
+                targetArr[i] = [ targetArr[i][0], tempArr.join('=') ];
+              }
+            }
+            tong = {};
+            for (let arr of targetArr) {
+              tong[arr[0]] = arr[1];
+            }
+
+            convertTong = {};
+            convertTong.goodName = tong.P_NOTI.split("__split__")[0];
+            convertTong.goodsName = tong.P_NOTI.split("__split__")[0];
+            for (let from in mobileConverting) {
+              if (tong[from] !== undefined) {
+                convertTong[mobileConverting[from]] = tong[from];
+              }
+            }
+            if (convertTong.resultCode === "00") {
+              convertTong.resultCode = "0000";
+            }
+            convertTong.payDevice = "MOBILE";
+            responseData = await cryptoString(password, JSON.stringify(convertTong));
+
+            if (convertTong.resultCode === "0000") {
+              res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
+            } else {
+              res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
+            }
           } else {
             res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
           }

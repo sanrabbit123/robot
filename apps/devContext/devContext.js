@@ -70,6 +70,25 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // tong = {};
+    // for (let arr of targetArr) {
+    //   if (arr[0] === "needs" || arr[0] === "mode" || arr[0] === "cliid" || arr[0] === "desid" || arr[0] === "proid")
+    //   if (arr.length === 2) {
+    //     tong[arr[0]] = arr[1];
+    //   } else if (arr.length > 2) {
+    //
+    //   }
+    // }
+
+
+
+
+
+
+
+
+
+
 
 
     // console.log(await bill.createStylingBill("p2108_aa30s"));

@@ -888,7 +888,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                 P_NOTI_URL: formValue.returnUrl,
                 P_HPP_METHOD: String(1),
                 P_CHARSET: "utf8",
-                P_NOTI: formValue.mid + "__split__" + formValue.returnUrl,
+                P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
               };
               for (let name in mobileInisisInfo) {
                 value = String(mobileInisisInfo[name]);
