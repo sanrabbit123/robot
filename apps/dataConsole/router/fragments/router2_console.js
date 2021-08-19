@@ -3064,7 +3064,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_inicisPayment = function () {
+DataRouter.prototype.rou_post_pythonPass = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
