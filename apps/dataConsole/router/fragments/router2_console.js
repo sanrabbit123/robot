@@ -3082,6 +3082,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           if (resultCode === "0000") {
             response = await requestSystem(authUrl, { P_MID: mid, P_TID: authToken });
             responseData = await cryptoString(password, JSON.stringify(response.data));
+            instance.mother.slack_bot.chat.postMessage({ text: response.data, channel: "#error_log" });
+            instance.mother.slack_bot.chat.postMessage({ text: typeof response.data, channel: "#error_log" });
             instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(response.data, null, 2), channel: "#error_log" });
             res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
           } else {
