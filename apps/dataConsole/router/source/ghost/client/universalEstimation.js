@@ -86,7 +86,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
     sum: {},
     commentsTitle: "<b%*%b> 안내 사항",
     comments: [],
-    button: "결제 진행",
+    button: (desktop ? "결제 진행" : [ "카드 결제", "무통장 입금" ]),
     pannel: [
       {
         name: "계좌 이체시",
@@ -224,6 +224,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let greenButtonTextTop;
   let greenBasePaddingTop, greenBasePaddingBottom;
   let completeMarginTop0;
+  let paymentEvent;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -832,81 +833,85 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     window.alert("결제가 취소되었습니다! 다시 시도해주세요!");
   });
 
+  paymentEvent = function (motherMethod) {
+    return async function (e) {
+      try {
+        const { pluginScript, formValue } = await ajaxJson({
+          cliid: instance.cliid,
+          kind: instance.class,
+          desid: instance.desid,
+          proid: instance.proid,
+          method: instance.method,
+          mode: "script",
+          name: request.name,
+          // price: request.amount,
+          price: 1001,
+          buyerName: "배창규",
+          buyerPhone: "010-2747-3403",
+          buyerEmail: "uragenbooks@gmail.com",
+          currentPage: window.location.protocol + "//" + window.location.host,
+        }, "/inicisPayment");
+        const form = document.createElement("FORM");
+        let value, formId, plugin;
+        let mobileInisisInfo;
+        formId = "form" + String((new Date()).valueOf());
+        form.id = formId;
+        form.style.display = "none";
+        document.body.appendChild(form);
+        if (desktop) {
+          for (let name in formValue) {
+            value = String(formValue[name]);
+            createNode({
+              mother: form,
+              mode: "input",
+              attribute: [ { name }, { value } ],
+              style: { display: "none" }
+            });
+          }
+          plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
+          plugin();
+        } else {
+          form.setAttribute("method", "post");
+          form.setAttribute("accept-charset", "euc-kr");
+          mobileInisisInfo = {
+            P_INI_PAYMENT: (/card/gi.test(motherMethod) ? "CARD" : "VBANK"),
+            P_MID: formValue.mid,
+            P_OID: formValue.oid,
+            P_AMT: 1001,
+            P_GOODS: formValue.goodname,
+            P_UNAME: "배창규",
+            P_NEXT_URL: formValue.returnUrl,
+            P_NOTI_URL: formValue.returnUrl,
+            P_HPP_METHOD: String(1),
+            P_CHARSET: "utf8",
+            P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
+          };
+          for (let name in mobileInisisInfo) {
+            value = String(mobileInisisInfo[name]);
+            createNode({
+              mother: form,
+              mode: "input",
+              attribute: [ { name }, { value } ],
+              style: { display: "none" }
+            });
+          }
+          form.action = "https://mobile.inicis.com/smart/payment/";
+          form.target = "_blank";
+          form.submit();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  }
+
   greenButton = createNode({
     mother: greenButtonBase,
     class: [ "hoverDefault_lite" ],
     events: [
       {
         type: "click",
-        event: async function (e) {
-          try {
-            const { pluginScript, formValue } = await ajaxJson({
-              cliid: instance.cliid,
-              kind: instance.class,
-              desid: instance.desid,
-              proid: instance.proid,
-              method: instance.method,
-              mode: "script",
-              name: request.name,
-              // price: request.amount,
-              price: 1001,
-              buyerName: "배창규",
-              buyerPhone: "010-2747-3403",
-              buyerEmail: "uragenbooks@gmail.com",
-              currentPage: window.location.protocol + "//" + window.location.host,
-            }, "/inicisPayment");
-            const form = document.createElement("FORM");
-            let value, formId, plugin;
-            let mobileInisisInfo;
-            formId = "form" + String((new Date()).valueOf());
-            form.id = formId;
-            form.style.display = "none";
-            document.body.appendChild(form);
-            if (desktop) {
-              for (let name in formValue) {
-                value = String(formValue[name]);
-                createNode({
-                  mother: form,
-                  mode: "input",
-                  attribute: [ { name }, { value } ],
-                  style: { display: "none" }
-                });
-              }
-              plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
-              plugin();
-            } else {
-              form.setAttribute("method", "post");
-              form.setAttribute("accept-charset", "euc-kr");
-              mobileInisisInfo = {
-                P_INI_PAYMENT: "CARD",
-                P_MID: formValue.mid,
-                P_OID: formValue.oid,
-                P_AMT: 1001,
-                P_GOODS: formValue.goodname,
-                P_UNAME: "배창규",
-                P_NEXT_URL: formValue.returnUrl,
-                P_NOTI_URL: formValue.returnUrl,
-                P_HPP_METHOD: String(1),
-                P_CHARSET: "utf8",
-                P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
-              };
-              for (let name in mobileInisisInfo) {
-                value = String(mobileInisisInfo[name]);
-                createNode({
-                  mother: form,
-                  mode: "input",
-                  attribute: [ { name }, { value } ],
-                  style: { display: "none" }
-                });
-              }
-              form.action = "https://mobile.inicis.com/smart/payment/";
-              form.target = "_self";
-              form.submit();
-            }
-          } catch (e) {
-            console.log(e);
-          }
-        },
+        event: paymentEvent("card"),
       }
     ],
     style: {
@@ -917,10 +922,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       background: colorChip.green,
       textAlign: "center",
       borderRadius: String(3) + "px",
+      marginRight: String(0.6) + ea,
     },
     children: [
       {
-        text: wordings.button,
+        text: desktop ? wordings.button : wordings.button[0],
         style: {
           position: "absolute",
           top: String(greenButtonTextTop) + ea,
@@ -934,6 +940,44 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       }
     ]
   });
+
+  if (mobile) {
+    greenButton = createNode({
+      mother: greenButtonBase,
+      class: [ "hoverDefault_lite" ],
+      events: [
+        {
+          type: "click",
+          event: paymentEvent("vbank"),
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(greenButtonWidth + 3) + ea,
+        height: String(greenButtonHeight) + ea,
+        background: colorChip.green,
+        textAlign: "center",
+        borderRadius: String(3) + "px",
+        marginLeft: String(0.6) + ea,
+      },
+      children: [
+        {
+          text: wordings.button[1],
+          style: {
+            position: "absolute",
+            top: String(greenButtonTextTop) + ea,
+            width: String(100) + '%',
+            left: String(0),
+            fontSize: String(greenButtonFontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.white,
+            textAlign: "center",
+          }
+        }
+      ]
+    });
+  }
 
   whiteBlock.style.height = "auto";
 }
