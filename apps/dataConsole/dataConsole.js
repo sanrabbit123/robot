@@ -776,7 +776,10 @@ DataConsole.prototype.connect = async function (noStatic = false) {
             instance.address.officeinfo.ghost.host,
             "stdpay.inicis.com",
             "fcstdpay.inicis.com",
-            "ksstdpay.inicis.com"
+            "ksstdpay.inicis.com",
+            "stgmobile.inicis.com",
+            "ksmobile.inicis.com",
+            "fcmobile.inicis.com"
           ];
 
           __wallLogicBoo = false;

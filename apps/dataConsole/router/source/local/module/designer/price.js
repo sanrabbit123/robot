@@ -2702,7 +2702,7 @@ DesignerJs.prototype.priceView = async function () {
     this.designers = new Designers(await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true }));
     this.domClassName = "priceDom";
     this.seroStandards = [ 'F', 'S', 'T', 'XT' ];
-    this.garoStandards = [ '0 - 8', '9 - 14', '15 - 22', '23 - 29', '30 - 33', '34 - 38', '39 - 44', '44 - 999' ];
+    this.garoStandards = [ '0 - 8', '9 - 14', '15 - 22', '23 - 28', '29 - 33', '34 - 38', '39 - 44', '44 - 999' ];
     this.price = new PriceMatrix(await ajaxJson({
       mode: "read",
       db: "console",

@@ -857,21 +857,52 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             }, "/inicisPayment");
             const form = document.createElement("FORM");
             let value, formId, plugin;
+            let mobileInisisInfo;
             formId = "form" + String((new Date()).valueOf());
             form.id = formId;
             form.style.display = "none";
             document.body.appendChild(form);
-            for (let name in formValue) {
-              value = String(formValue[name]);
-              createNode({
-                mother: form,
-                mode: "input",
-                attribute: [ { name }, { value } ],
-                style: { display: "none" }
-              });
+            if (desktop) {
+              for (let name in formValue) {
+                value = String(formValue[name]);
+                createNode({
+                  mother: form,
+                  mode: "input",
+                  attribute: [ { name }, { value } ],
+                  style: { display: "none" }
+                });
+              }
+              plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
+              plugin();
+            } else {
+              form.setAttribute("method", "post");
+              form.setAttribute("accept-charset", "euc-kr");
+              mobileInisisInfo = {
+                P_INI_PAYMENT: "CARD",
+                P_MID: formValue.mid,
+                P_OID: formValue.oid,
+                P_AMT: 1001,
+                P_GOODS: formValue.goodname,
+                P_UNAME: "배창규",
+                P_NEXT_URL: formValue.returnUrl,
+                P_NOTI_URL: formValue.returnUrl,
+                P_HPP_METHOD: String(1),
+                P_CHARSET: "utf8",
+                P_NOTI: formValue.mid + "__split__" + formValue.returnUrl,
+              };
+              for (let name in mobileInisisInfo) {
+                value = String(mobileInisisInfo[name]);
+                createNode({
+                  mother: form,
+                  mode: "input",
+                  attribute: [ { name }, { value } ],
+                  style: { display: "none" }
+                });
+              }
+              form.action = "https://mobile.inicis.com/smart/payment/";
+              form.target = "_self";
+              form.submit();
             }
-            plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
-            plugin();
           } catch (e) {
             console.log(e);
           }
@@ -1260,9 +1291,10 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       }, "/inicisPayment", { equal: true });
       if (getObj.mode === "complete") {
         await this.payComplete(data);
-      } else if (getObj.mode === "fail") {
-        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
       }
+    }
+    if (getObj.mode === "fail") {
+      window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
     }
 
     await this.mother.ghostClientLaunching({

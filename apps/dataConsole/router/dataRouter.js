@@ -446,7 +446,7 @@ DataRouter.prototype.rou_get_Address = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_get_Address = function () {
+DataRouter.prototype.rou_get_Trigger = function () {
   const instance = this;
   let obj = {};
   obj.link = "/tools/trigger";
@@ -3627,7 +3627,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         let pluginScript, formValue;
         pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
         formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
-
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ pluginScript, formValue }));
 
@@ -3645,17 +3644,54 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
       } else {
 
-        const { resultCode, authUrl, netCancelUrl, returnUrl, orderNumber, authToken, mid } = req.body;
+        console.log(req.body);
+
         const charset = "UTF-8";
         const format = "JSON";
         const timestamp = String(now.valueOf());
-        const signature = crypto.createHash("sha256").update(`authToken=${authToken}&timestamp=${timestamp}`).digest("hex");
-        const response = await requestSystem(authUrl, { mid, authToken, timestamp, signature, charset, format });
-        const responseData = await cryptoString(password, JSON.stringify(response.data));
-        if (response.data.resultCode === "0000") {
-          res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
+        let device;
+        let resultCode, authUrl, netCancelUrl, returnUrl, orderNumber, authToken, mid;
+        let signature;
+        let response, responseData;
+
+        if (req.body.P_STATUS === undefined) {
+          device = "desktop";
+          resultCode = req.body.resultCode;
+          authUrl = req.body.authUrl;
+          netCancelUrl = req.body.netCancelUrl;
+          returnUrl = req.body.returnUrl;
+          orderNumber = req.body.orderNumber;
+          authToken = req.body.authToken;
+          mid = req.body.mid;
         } else {
-          res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
+          device = "mobile";
+          resultCode = (req.body.P_STATUS === "00" ? "0000" : req.body.P_STATUS);
+          authUrl = req.body.P_REQ_URL;
+          netCancelUrl = "";
+          returnUrl = req.body.P_NOTI.split("__split__")[1];
+          orderNumber = "";
+          authToken = req.body.P_TID;
+          mid = req.body.P_NOTI.split("__split__")[0];
+        }
+
+        if (device === "desktop") {
+          signature = crypto.createHash("sha256").update(`authToken=${authToken}&timestamp=${timestamp}`).digest("hex");
+          response = await requestSystem(authUrl, { mid, authToken, timestamp, signature, charset, format });
+          responseData = await cryptoString(password, JSON.stringify(response.data));
+          if (response.data.resultCode === "0000") {
+            res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
+          } else {
+            res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
+          }
+        } else {
+          if (resultCode === "0000") {
+            response = await requestSystem(authUrl, { P_MID: mid, P_TID: authToken });
+            responseData = await cryptoString(password, JSON.stringify(response.data));
+            console.log(response.data)
+            res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
+          } else {
+            res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
+          }
         }
 
       }
@@ -3667,34 +3703,34 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   return obj;
 }
 
-// DataRouter.prototype.rou_post_pythonPass = function () {
-//   const instance = this;
-//   const back = this.back;
-//   const address = this.address;
-//   const { requestSystem, equalJson } = this.mother;
-//   let obj = {};
-//   obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill" ];
-//   obj.func = async function (req, res) {
-//     try {
-//       const url = req.url.replace(/^\//gi, '');
-//       if (url.split('_').length < 2) {
-//         res.set({ "Content-Type": "application/json" });
-//         res.send(JSON.stringify({ message: "OK" }));
-//       } else {
-//         const path = url.split('_')[1].trim();
-//         const protocol = "https:";
-//         const targetUrl = protocol + "//" + address["pythoninfo"].host + ":3000/" + path;
-//         const post = equalJson(req.body);
-//         const pythonResponse = await requestSystem(targetUrl, post, { headers: { "Content-Type": "application/json" } });
-//         res.set({ "Content-Type": "application/json" });
-//         res.send(JSON.stringify(pythonResponse.data));
-//       }
-//     } catch (e) {
-//       console.log(e);
-//     }
-//   }
-//   return obj;
-// }
+DataRouter.prototype.rou_post_pythonPass = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill" ];
+  obj.func = async function (req, res) {
+    try {
+      const url = req.url.replace(/^\//gi, '');
+      if (url.split('_').length < 2) {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ message: "OK" }));
+      } else {
+        const path = url.split('_')[1].trim();
+        const protocol = "https:";
+        const targetUrl = protocol + "//" + address["pythoninfo"].host + ":3000/" + path;
+        const post = equalJson(req.body);
+        const pythonResponse = await requestSystem(targetUrl, post, { headers: { "Content-Type": "application/json" } });
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify(pythonResponse.data));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
 
 
 DataRouter.policy = function () {
