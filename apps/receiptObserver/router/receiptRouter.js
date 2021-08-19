@@ -475,32 +475,15 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       }
 
       infoArr = JSON.parse(JSON.stringify(thisBill.requests[Number(requestNumber)].info));
-      index = -1;
-      for (let i = 0; i < infoArr.length; i++) {
-        if (infoArr[i].oid !== undefined && typeof infoArr[i].oid === "string") {
-          index = i;
-        }
-      }
-      if (index !== -1) {
-        infoArr.splice(index, 1);
-      }
-      infoArr.push({ oid });
-
-      index = -1;
-      for (let i = 0; i < infoArr.length; i++) {
-        if (infoArr[i].data !== undefined && typeof infoArr[i].data === "string") {
-          index = i;
-        }
-      }
-      if (index !== -1) {
-        infoArr.splice(index, 1);
-      }
-      infoArr.push({ data });
+      infoArr.unshift({ data });
+      infoArr.unshift({ oid });
 
       whereQuery = { bilid };
       updateQuery = {};
       updateQuery["links.oid"] = oidArr;
       updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
+
+      amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
 
       if (data.CARD_BankCode !== undefined) {
         updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
@@ -515,7 +498,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
 
           projectQuery = {};
-          amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
           if (proposal.fee.length === 1) {
             pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
           } else {
@@ -591,6 +573,11 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
             //   designer: designer.designer,
             // });
 
+            instance.kakao.sendTalk("paymentAndChannel", "배창규", "010-2747-3403", {
+              client: "배창규",
+              designer: designer.designer,
+            });
+
           } else if (data.goodName.trim() === "홈리에종 잔금") {
             projectQuery["process.contract.remain.date"] = new Date();
             projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
@@ -612,6 +599,15 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         //   to: data.VACT_Name,
         //   date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
         // });
+
+        instance.kakao.sendTalk("virtualAccount", "배창규", "010-2747-3403", {
+          client: "배창규",
+          goodName: data.goodName,
+          bankName: data.vactBankName,
+          account: data.VACT_Num,
+          to: data.VACT_Name,
+          date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+        });
 
       }
 
@@ -716,22 +712,14 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       }
 
       for (let obj of thisBill.requests[requestNumber].info) {
-        if (typeof obj.data === "object" && obj.data !== null) {
+        if (obj.data !== undefined && typeof obj.data === "object" && obj.data !== null) {
           data = JSON.parse(JSON.stringify(obj.data));
+          break;
         }
       }
 
       infoArr = JSON.parse(JSON.stringify(thisBill.requests[requestNumber].info));
-      index = -1;
-      for (let i = 0; i < infoArr.length; i++) {
-        if (infoArr[i].virtualAccount !== undefined && typeof infoArr[i].virtualAccount === "string") {
-          index = i;
-        }
-      }
-      if (index !== -1) {
-        infoArr.splice(index, 1);
-      }
-      infoArr.push({ virtualAccount: JSON.parse(JSON.stringify(req.body)) });
+      infoArr.unshift({ virtualAccount: JSON.parse(JSON.stringify(req.body)) });
 
       whereQuery = { bilid };
       updateQuery = {};
@@ -745,10 +733,11 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       thisBill.requests[requestNumber].proofs.push(proofs);
       updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
 
+      amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
+
       if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
 
         projectQuery = {};
-        amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
         if (proposal.fee.length === 1) {
           pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
         } else {

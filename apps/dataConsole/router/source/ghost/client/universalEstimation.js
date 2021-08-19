@@ -122,7 +122,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
     ];
   }
 
-  between = "&nbsp;&nbsp;/&nbsp;&nbsp;";
+  between = desktop ? "&nbsp;&nbsp;/&nbsp;&nbsp;" : " / ";
   sum0 = 0;
   sum1 = 0;
 
@@ -1139,7 +1139,7 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
     const bilid = bill.bilid;
     let year, month, date;
     let to;
-    await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
+    // await ajaxJson({ bilid, requestNumber, data }, PYTHONHOST + "/ghostClientBill");
 
     completeInfo.raw = data;
 
@@ -1244,7 +1244,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         this.requestNumber = i;
       }
     }
-    this.requestNumber = 0;
+    // this.requestNumber = 0;
 
     this.request = {
       name: "",
