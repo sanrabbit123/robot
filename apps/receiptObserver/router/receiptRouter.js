@@ -405,7 +405,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson } = this.mother;
+  const { equalJson, autoComma } = this.mother;
   let obj = {};
   obj.link = "/ghostClientBill";
   obj.func = async function (req, res) {
@@ -597,7 +597,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         //   bankName: data.vactBankName,
         //   account: data.VACT_Num,
         //   to: data.VACT_Name,
-        //   amount: amount,
+        //   amount: autoComma(amount),
         //   date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
         // });
 
@@ -607,7 +607,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           bankName: data.vactBankName,
           account: data.VACT_Num,
           to: data.VACT_Name,
-          amount: String(amount),
+          amount: autoComma(amount),
           date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
         });
 
