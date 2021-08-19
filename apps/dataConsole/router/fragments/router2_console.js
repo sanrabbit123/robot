@@ -3053,7 +3053,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           P_UNAME: "buyerName",
           P_CARD_ISSUER_CODE: "CARD_BankCode",
           P_CARD_NUM: "CARD_Num",
-          P_FN_NM: "P_FN_NM",
           P_CARD_APPLPRICE: "CARD_ApplPrice",
           P_FN_CD1: "CARD_Code",
           P_FN_NM: "vactBankName",
@@ -3137,9 +3136,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
               convertTong.resultCode = "0000";
             }
             convertTong.payDevice = "MOBILE";
+            convertTong.P_FN_NM = convertTong.vactBankName;
             responseData = await cryptoString(password, JSON.stringify(convertTong));
-
-            instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(convertTong, null, 2), channel: "#error_log" });
 
             if (convertTong.resultCode === "0000") {
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);

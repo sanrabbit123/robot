@@ -439,8 +439,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       let calculate;
       let designerHistory;
 
-      console.log(bilid, requestNumber, data);
-
       thisBill = await bill.getBillById(bilid, { selfMongo });
       if (thisBill === null) {
         throw new Error("there is no bill");
