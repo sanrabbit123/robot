@@ -582,9 +582,9 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
             projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
             projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
-            await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-            designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-            await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+            // await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+            // designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
+            // await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
 
             // instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
             //   client: client.name,
@@ -598,7 +598,8 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
             projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
           }
 
-          await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+          console.log(projectQuery);
+          // await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
         }
 
       } else {
@@ -614,7 +615,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
 
       }
 
-      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+      // instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
 
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo })
 
@@ -814,9 +815,9 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
           projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
           projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
-          await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-          designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-          await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+          // await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+          // designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
+          // await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
 
           // instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
           //   client: client.name,
@@ -830,11 +831,12 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
           projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
         }
 
-        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+        console.log(projectQuery);
+        // await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
 
       }
 
-      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+      // instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       res.set({ "Content-Type": "text/plain" });
