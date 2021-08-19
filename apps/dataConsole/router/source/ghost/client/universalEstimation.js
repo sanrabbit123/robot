@@ -81,15 +81,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
       "<b%현장명%b> : " + request.space.address,
       "<b%예상 기간%b> : " + dateToString(start) + " ~ " + dateToString(end),
     ],
-    column: [
-      "품명",
-      "단가",
-      "수량",
-      "단위",
-      "공급가",
-      "VAT",
-      "소비자가"
-    ],
+    column: [],
     items: [],
     sum: {},
     commentsTitle: "<b%*%b> 안내 사항",
@@ -111,6 +103,25 @@ UniversalEstimationJs.prototype.billWordings = function () {
       },
     ]
   };
+  if (desktop) {
+    wordings.column = [
+      "품명",
+      "단가",
+      "수량",
+      "단위",
+      "공급가",
+      "VAT",
+      "소비자가"
+    ];
+  } else {
+    wordings.column = [
+      "품명",
+      "수량",
+      "공급가",
+      "소비자가"
+    ];
+  }
+
   between = "&nbsp;&nbsp;/&nbsp;&nbsp;";
   sum0 = 0;
   sum1 = 0;
@@ -118,11 +129,17 @@ UniversalEstimationJs.prototype.billWordings = function () {
   for (let obj of bill.requests[requestNumber].items) {
     tempArr = [];
     tempArr.push(obj.name);
-    tempArr.push(autoComma(obj.unit.price));
+    if (desktop) {
+      tempArr.push(autoComma(obj.unit.price));
+    }
     tempArr.push(autoComma(obj.unit.number));
-    tempArr.push(obj.unit.ea === null ? '-' : obj.unit.ea);
+    if (desktop) {
+      tempArr.push(obj.unit.ea === null ? '-' : obj.unit.ea);
+    }
     tempArr.push(autoComma(obj.amount.supply));
-    tempArr.push(autoComma(obj.amount.vat));
+    if (desktop) {
+      tempArr.push(autoComma(obj.amount.vat));
+    }
     tempArr.push(autoComma(obj.amount.consumer));
     wordings.items.push(tempArr);
     sum0 += obj.amount.supply;
@@ -231,10 +248,10 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   itemBarBottom = <%% 16, 16, 16, 16, 2 %%>;
 
   tableMarginTop = <%% 32, 32, 26, 22, 9 %%>;
-  tablePaddingTop = <%% 13, 13, 13, 13, 4 %%>;
-  tablePaddingBottom = <%% 18, 18, 18, 18, 5 %%>;
-  barPaddingBottom = <%% 5, 5, 5, 5, 5 %%>;
-  barMarginBottom = <%% 14, 14, 14, 14, 2 %%>;
+  tablePaddingTop = <%% 13, 13, 13, 13, 3 %%>;
+  tablePaddingBottom = <%% 18, 18, 18, 18, 3.5 %%>;
+  barPaddingBottom = <%% 5, 5, 5, 5, 2 %%>;
+  barMarginBottom = <%% 14, 14, 14, 14, 3 %%>;
 
   completeMarginTop0 = <%% 32, 32, 24, 20, 3 %%>;
   grayMarginTop0 = <%% 56, 56, 45, 36, 5 %%>;
@@ -1251,6 +1268,8 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         this.requestNumber = i;
       }
     }
+    this.requestNumber = 0;
+
     this.request = {
       name: "",
       amount: 0,

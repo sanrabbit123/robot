@@ -3208,6 +3208,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let historyArr;
           let imageLoad, historyLoad;
           let tempArr;
+          let lastPageMode;
 
           imageLoad = () => {};
           historyLoad = () => {};
@@ -3242,14 +3243,43 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           });
 
+
+          lastPageMode = '';
+          for (let i = 0; i < historyArr.length; i++) {
+            if (/curation/gi.test(historyArr[i].page)) {
+              if (typeof historyArr[i].referrer === "string") {
+                if (/mode\=lite/gi.test(historyArr[i].referrer)) {
+                  lastPageMode = "lite";
+                } else {
+                  lastPageMode = "general";
+                }
+              }
+              if (typeof historyArr[i].update !== undefined) {
+                if (historyArr[i].mode === undefined) {
+                  historyArr[i].mode = lastPageMode;
+                }
+              }
+            }
+          }
+
           historyArr = historyArr.map((obj) => {
             let text, date, pageName;
             date = dateToString(obj.date, true).slice(2, -3);
             if (/curation/gi.test(obj.page)) {
-              if (/mode\=lite/gi.test(obj.referrer)) {
-                pageName = "스타일 체크";
-              } else {
-                pageName = "부재중 알림";
+              pageName = "스타일 체크";
+              if (typeof obj.referrer === "string") {
+                if (/mode\=lite/gi.test(obj.referrer)) {
+                  pageName = "스타일 체크";
+                } else {
+                  pageName = "부재중 알림";
+                }
+              }
+              if (typeof obj.mode === "string") {
+                if (/lite/gi.test(obj.mode)) {
+                  pageName = "스타일 체크";
+                } else {
+                  pageName = "부재중 알림";
+                }
               }
             } else if (/proposal/gi.test(obj.page)) {
               pageName = "제안서";
