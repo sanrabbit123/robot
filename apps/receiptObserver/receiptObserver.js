@@ -150,13 +150,12 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
   const https = require("https");
   const express = require("express");
   const app = express();
-  const bodyParser = require("body-parser");
   const multer = require("multer");
   const multiForms = multer();
 
-  app.use(bodyParser.json());
+  app.use(express.json());
   app.use(multiForms.array());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true }));
 
   try {
     await this.back.setInfoObj({ getMode: false });
