@@ -5535,6 +5535,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     let contentsPhotoObj;
     let tempArr, valueObj;
     let liteMode;
+    let liteForce;
 
     if (getObj.cliid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -5562,6 +5563,28 @@ StyleCurationJs.prototype.launching = async function (loading) {
     this.designers = contentsPhotoObj.designers;
     this.client = client;
     this.clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
+
+    if (!liteMode) {
+      liteForce = false;
+      if (Array.isArray(this.clientHistory.curation.analytics.send)) {
+        if (this.clientHistory.curation.analytics.send.length > 0) {
+          for (let obj of this.clientHistory.curation.analytics.send) {
+            if (/Curation/gi.test(obj.page) && /lite/gi.test(obj.mode)) {
+              liteForce = true;
+              break;
+            }
+          }
+        }
+      }
+      if (liteForce) {
+        if (getObj.mode === undefined) {
+          window.location.href = (window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=lite");
+        } else {
+          window.location.href = (window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search.replace(/mode\=[^\&]+/gi, "mode=lite"));
+        }
+      }
+    }
+
     this.wordings = this.curationWordings(liteMode);
     this.alreadyStyleCheck = false;
 

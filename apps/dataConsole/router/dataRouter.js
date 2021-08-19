@@ -3685,9 +3685,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const protocol = "https:";
         const targetUrl = protocol + "//" + address["pythoninfo"].host + ":3000/" + path;
         const post = equalJson(req.body);
-        console.log(JSON.stringify(post, null, 2));
         const pythonResponse = await requestSystem(targetUrl, post, { headers: { "Content-Type": "application/json" } });
-        console.log(JSON.stringify(pythonResponse.data, null, 2));
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify(pythonResponse.data));
       }

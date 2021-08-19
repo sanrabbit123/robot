@@ -229,7 +229,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
 
-  titleFontSize = <%% 30, 30, 28, 23, 5.4 %%>;
+  titleFontSize = <%% 30, 30, 28, 23, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
   titleFontBottom = <%% 2, 2, 2, 2, 0.2 %%>;
   titlePadding = <%% 6, 6, 6, 5, 12 %%>;
@@ -247,13 +247,13 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   itemBarTop = <%% 10, 10, 10, 10, 1 %%>;
   itemBarBottom = <%% 16, 16, 16, 16, 2 %%>;
 
-  tableMarginTop = <%% 32, 32, 26, 22, 8 %%>;
+  tableMarginTop = <%% 32, 32, 26, 22, 8.5 %%>;
   tablePaddingTop = <%% 13, 13, 13, 13, 2.5 %%>;
   tablePaddingBottom = <%% 18, 18, 18, 18, 3 %%>;
   barPaddingBottom = <%% 5, 5, 5, 5, 2 %%>;
   barMarginBottom = <%% 14, 14, 14, 14, 2.5 %%>;
 
-  sumBoxBarTop = <%% 19, 19, 18, 18, 4 %%>;
+  sumBoxBarTop = <%% 19, 19, 18, 18, 3.5 %%>;
   sumBoxMainFontSize = <%% 29, 29, 28, 27, 5.5 %%>;
   sumBoxMainFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   sumBoxMainPaddingLeft = <%% 19, 19, 19, 19, 3 %%>;
@@ -291,7 +291,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   greenButtonWidth = <%% 122, 122, 122, 110, 20 %%>;
   greenButtonHeight = <%% 47, 47, 45, 40, 8.4 %%>;
   greenButtonFontSize = <%% 20, 20, 20, 16, 3.8 %%>;
-  greenButtonTextTop = <%% 9, 9, 9, 9, 1.4 %%>;
+  greenButtonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
 
   greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
   greenBasePaddingBottom = <%% 32, 32, 32, 32, 3.8 %%>;
