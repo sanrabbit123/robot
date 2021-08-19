@@ -144,6 +144,9 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
     let whereQuery, updateQuery;
     let historyObj;
     let boo;
+    let requestNumber;
+    let targetColumn;
+    let pastHistory;
 
     calltype = "outbound";
     tong = {};
@@ -222,11 +225,35 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         }
         if (boo) {
           historyObj.curation.analytics.call.out.push({ date, success });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
+          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
         }
-        whereQuery = { cliid };
-        updateQuery = {};
-        updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
-        await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+
+        requestNumber = 0;
+        for (let i = 0; i < rows[0].requests.length; i++) {
+          if (rows[0].requests[i].request.timeline.valueOf() <= date.valueOf()) {
+            requestNumber = i;
+            break;
+          }
+        }
+        pastHistory = rows[0].requests[requestNumber].analytics.date.call.history.toNormal();
+        targetColumn = "requests." + String(requestNumber) + ".analytics.date.call.history";
+        boo = true;
+        for (let obj of pastHistory) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
+            boo = false;
+          }
+        }
+        if (boo) {
+          pastHistory.push({ date, who: '' });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery[targetColumn] = pastHistory;
+          await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+        }
+
       }
     }
 
@@ -243,15 +270,16 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         }
         if (boo) {
           historyObj.curation.analytics.call.in.push({ date, success });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
+          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
         }
-        whereQuery = { cliid };
-        updateQuery = {};
-        updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
-        await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+
       }
     }
 
-    await instance.mother.slack_bot.chat.postMessage({ text: "통화 기록 업데이트 됨", channel: "#error_log" });
+    await instance.mother.slack_bot.chat.postMessage({ text: "callHistory update success : " + JSON.stringify(new Date()), channel: "#error_log" });
 
   } catch (e) {
     console.log(e);
