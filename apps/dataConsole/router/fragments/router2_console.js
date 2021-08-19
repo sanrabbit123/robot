@@ -3139,6 +3139,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             convertTong.payDevice = "MOBILE";
             responseData = await cryptoString(password, JSON.stringify(convertTong));
 
+            instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(convertTong, null, 2), channel: "#error_log" });
+
             if (convertTong.resultCode === "0000") {
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
             } else {
