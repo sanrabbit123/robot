@@ -651,19 +651,12 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   obj.func = async function (req, res) {
     try {
 
-      if (req.body.P_TID !== undefined) {
-        req.body.no_oid = req.body.P_OID;
-        req.body.id_merchant = req.body.P_MID;
-        req.body.no_tid = req.body.P_TID;
-        req.body.nm_inputbank = req.body.P_FN_NM;
-        req.body.nm_input = req.body.P_AMT;
-      }
       console.log(req.body)
 
       const oid = req.body.no_oid;
       const inisis = "이니시스";
-      const bankFrom = ParsingHangul.decodeURI(req.body.nm_inputbank);
-      const nameFrom = ParsingHangul.decodeURI(req.body.nm_input);
+      const bankFrom = req.body.nm_inputbank;
+      const nameFrom = req.body.nm_input;
       const bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
       if (bills.length === 0) {
         throw new Error("invaild oid");
@@ -689,6 +682,11 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       let designerHistory;
       let whereQuery, updateQuery;
       let proofs;
+
+      console.log(oid, bankFrom, nameFrom);
+
+
+      /*
 
       thisBill = bills[0];
       thisBill = thisBill.toNormal();
@@ -833,6 +831,8 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
 
       // instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+      */
 
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
