@@ -227,6 +227,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let paymentEvent;
   let titleBoxPaddingTop;
 
+  console.log(isMac())
+
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
