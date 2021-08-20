@@ -946,33 +946,33 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       });
       if (req.body.pretext === undefined || req.body.cellphone === undefined) {
         res.send("error");
-        console.log("this!1");
       } else {
         const phone = req.body.cellphone.trim().replace(/[\&\=\'\(\)\<\>\; \n\?\!\[\]\{\}\*\+]/g, '');
         if (!/^[0-9]+-[0-9]+-[0-9]+$/.test(phone)) {
           res.send("error");
-          console.log("this!2");
         } else {
-          const clients = await instance.back.getClientsByQuery({ phone }, { withTools: false, selfMongo: MONGOC });
-          if (clients.length === 0) {
-            res.send("error");
-            console.log("this!3");
+          if (instance.ignorePhone.includes(phone)) {
+            res.send(String(1001));
           } else {
-            let cliid;
-            let projects, project;
-            let first, remain;
-
-            cliid = clients[0].cliid;
-            projects = await instance.back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } } ] }, { withTools: false, selfMongo: MONGOC });
-            if (projects.length === 0) {
+            const clients = await instance.back.getClientsByQuery({ phone }, { withTools: false, selfMongo: MONGOC });
+            if (clients.length === 0) {
               res.send("error");
-              console.log("this!4");
             } else {
-              project = projects[0];
-              first = project.process.contract.first.calculation.amount;
-              remain = project.process.contract.remain.calculation.amount.consumer - first;
+              let cliid;
+              let projects, project;
+              let first, remain;
 
-              res.send(String(remain));
+              cliid = clients[0].cliid;
+              projects = await instance.back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } } ] }, { withTools: false, selfMongo: MONGOC });
+              if (projects.length === 0) {
+                res.send("error");
+              } else {
+                project = projects[0];
+                first = project.process.contract.first.calculation.amount;
+                remain = project.process.contract.remain.calculation.amount.consumer - first;
+
+                res.send(String(remain));
+              }
             }
           }
         }
