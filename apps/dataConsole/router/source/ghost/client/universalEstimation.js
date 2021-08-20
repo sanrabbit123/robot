@@ -172,7 +172,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   const { client, designer, ea, baseTong, media, bill, request, completeMode, completeInfo } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, isMac } = GeneralJs;
   const wordings = this.billWordings();
   let whiteBlock, whiteTong;
   let blockHeight;
@@ -225,6 +225,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let greenBasePaddingTop, greenBasePaddingBottom;
   let completeMarginTop0;
   let paymentEvent;
+  let titleBoxPaddingTop;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -235,9 +236,10 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   titleFontBottom = <%% 2, 2, 2, 2, 0.2 %%>;
   titlePadding = <%% 6, 6, 6, 5, 12 %%>;
   titlePaddingMargin = <%% 18, 18, 18, 16, 18 %%>;
+  titleBoxPaddingTop <%% 2, 2, 2, 2, 2 %%>;
 
-  titleBarTopVisual = <%% 10, 10, 10, 7, 17.5 %%>;
-  titleBarBottomVisual = <%% 6, 6, 6, 6, 6 %%>;
+  titleBarTopVisual = <%% (isMac() ? 10 : 6), (isMac() ? 10 : 6), (isMac() ? 10 : 6), (isMac() ? 7 : 5), 17.5 %%>;
+  titleBarBottomVisual = <%% (isMac() ? 6 : 10), (isMac() ? 6 : 10), (isMac() ? 6 : 10), (isMac() ? 6 : 8), 6 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3 %%>;
   initWordingWeight = <%% 300, 300, 300, 300, 300 %%>;
@@ -250,11 +252,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
 
   tableMarginTop = <%% 32, 32, 26, 22, 8.5 %%>;
   tablePaddingTop = <%% 13, 13, 13, 13, 2.5 %%>;
-  tablePaddingBottom = <%% 18, 18, 18, 18, 3 %%>;
+  tablePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3 %%>;
   barPaddingBottom = <%% 5, 5, 5, 5, 2 %%>;
   barMarginBottom = <%% 14, 14, 14, 14, 2.5 %%>;
 
-  sumBoxBarTop = <%% 19, 19, 18, 18, 3.5 %%>;
+  sumBoxBarTop = <%% (isMac() ? 19 : 16), (isMac() ? 19 : 16), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.5 %%>;
   sumBoxMainFontSize = <%% 29, 29, 28, 27, 5.5 %%>;
   sumBoxMainFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   sumBoxMainPaddingLeft = <%% 19, 19, 19, 19, 3 %%>;
@@ -270,7 +272,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   grayMarginTop1 = <%% 20, 20, 14, 12, 2 %%>;
 
   cautionPaddingTop = <%% 34, 34, 34, 27, 4 %%>;
-  cautionPaddingBottom = <%% 29, 29, 29, 24, 4 %%>;
+  cautionPaddingBottom = <%% (isMac() ? 29 : 25), (isMac() ? 29 : 25), (isMac() ? 29 : 25), (isMac() ? 24 : 22), 4 %%>;
   cautionPaddingLeft = <%% 40, 40, 40, 32, 4.5 %%>;
   cautionPaddingRight = <%% 40, 40, 40, 32, 4.5 %%>;
   cautionFirstBoxWidth = <%% 180, 180, 150, 110, 20 %%>;
@@ -292,7 +294,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   greenButtonWidth = <%% 122, 122, 122, 110, 20 %%>;
   greenButtonHeight = <%% 47, 47, 45, 40, 8.4 %%>;
   greenButtonFontSize = <%% 20, 20, 20, 16, 3.8 %%>;
-  greenButtonTextTop = <%% 9, 9, 9, 9, 1.2 %%>;
+  greenButtonTextTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), 1.2 %%>;
 
   greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
   greenBasePaddingBottom = <%% 32, 32, 32, 32, 3.8 %%>;
@@ -361,6 +363,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     style: {
       display: "block",
       position: "relative",
+      paddingTop: (isMac() ? "" : String(titleBoxPaddingTop) + ea),
     },
     children: [
       {
@@ -844,11 +847,10 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           method: instance.method,
           mode: "script",
           name: request.name,
-          // price: request.amount,
-          price: 1001,
-          buyerName: "배창규",
-          buyerPhone: "010-2747-3403",
-          buyerEmail: "uragenbooks@gmail.com",
+          price: request.amount,
+          buyerName: instance.client.name,
+          buyerPhone: instance.client.phone,
+          buyerEmail: instance.client.email,
           currentPage: window.location.protocol + "//" + window.location.host,
           device: (desktop ? "desktop" : "mobile"),
         }, "/inicisPayment");
@@ -878,9 +880,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             P_INI_PAYMENT: (/card/gi.test(motherMethod) ? "CARD" : "VBANK"),
             P_MID: formValue.mid,
             P_OID: formValue.oid,
-            P_AMT: 1001,
+            P_AMT: request.amount,
             P_GOODS: formValue.goodname,
-            P_UNAME: "배창규",
+            P_UNAME: instance.client.name,
             P_NEXT_URL: formValue.returnUrl,
             P_NOTI_URL: PYTHONHOST.replace(/\:3000/gi, '') + "/webHookVAccount.php",
             P_HPP_METHOD: String(1),
@@ -981,227 +983,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   }
 
   whiteBlock.style.height = "auto";
-}
-
-UniversalEstimationJs.prototype.greenPopup = function (buttonSpec) {
-  if (typeof buttonSpec !== "object") {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
-  const { client, designer, ea, baseTong, media, bill, request } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const wordings = this.billWordings();
-  const removeClassName = "estimateWhitePopup";
-  return function (e) {
-    const { height, size, textTop } = buttonSpec;
-    const mother = document.getElementById("totalcontents");
-    let cancelBack;
-    let whitePopup;
-    let whitePopupWidth, whitePopupHeight;
-    let innerMargin;
-    let fontSize;
-    let firstBox, secondBox;
-    let textBetween, textPaddingLeft;
-
-    whitePopupWidth = <%% 370, 370, 370, 370, 370 %%>;
-    whitePopupHeight = <%% 296, 296, 296, 296, 296 %%>;
-    innerMargin = <%% 30, 30, 30, 30, 30 %%>;
-    fontSize = <%% 16, 16, 16, 16, 16 %%>;
-    buttonWidth = <%% 128, 128, 128, 128, 128 %%>;
-    textBetween = <%% 2, 2, 2, 2, 2 %%>;
-    textPaddingLeft = <%% 12, 12, 12, 12, 12 %%>;
-
-    cancelBack = createNode({
-      mother,
-      class: [ removeClassName ],
-      events: [
-        {
-          type: "click",
-          event: function (e) {
-            while (document.querySelector('.' + removeClassName) !== null) {
-              mother.removeChild(document.querySelector('.' + removeClassName));
-            }
-          }
-        }
-      ],
-      style: {
-        position: "fixed",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(100) + '%',
-        background: colorChip.black,
-        animation: "justfadein 0.3s ease forwards",
-        zIndex: String(1),
-      }
-    });
-
-    whitePopup = createNode({
-      mother,
-      class: [ removeClassName ],
-      style: {
-        position: "fixed",
-        left: withOut(50, whitePopupWidth / 2, ea),
-        top: withOut(50, whitePopupHeight / 2, ea),
-        width: String(whitePopupWidth) + ea,
-        height: String(whitePopupHeight) + ea,
-        borderRadius: String(3) + "px",
-        background: colorChip.white,
-        animation: "fadeup 0.3s ease forwards",
-        zIndex: String(1),
-      }
-    });
-
-    firstBox = createNode({
-      mother: whitePopup,
-      style: {
-        display: "block",
-        position: "relative",
-        height: String(50) + '%',
-        borderBottom: "1px dashed " + colorChip.gray5,
-      },
-      children: [
-        {
-          text: wordings.pannel[0].name,
-          style: {
-            position: "absolute",
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(600),
-            left: String(innerMargin) + ea,
-            top: String(innerMargin) + ea,
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            bottom: String(innerMargin + (size * 2) + textBetween) + ea,
-            right: String(innerMargin) + ea,
-            width: withOut(innerMargin * 2, ea),
-            borderBottom: "1px solid " + colorChip.green,
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            bottom: String(innerMargin) + ea,
-            right: String(innerMargin) + ea,
-            textAlign: "right",
-          }
-        }
-      ]
-    });
-
-    createNode({
-      mother: firstBox.lastChild,
-      text: wordings.pannel[0].children[0],
-      style: {
-        display: "block",
-        fontSize: String(size) + ea,
-        fontWeight: String(400),
-        marginBottom: String(textBetween) + ea,
-        paddingLeft: String(textPaddingLeft) + ea,
-        background: colorChip.white,
-      }
-    });
-    createNode({
-      mother: firstBox.lastChild,
-      text: wordings.pannel[0].children[1],
-      style: {
-        display: "block",
-        fontSize: String(size) + ea,
-        fontWeight: String(400),
-      }
-    });
-
-    secondBox = createNode({
-      mother: whitePopup,
-      style: {
-        display: "block",
-        position: "relative",
-        height: String(50) + '%',
-      },
-      children: [
-        {
-          text: wordings.pannel[1].name,
-          style: {
-            position: "absolute",
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(600),
-            left: String(innerMargin) + ea,
-            top: String(innerMargin) + ea,
-          }
-        },
-        {
-          class: [ "hoverDefault_lite" ],
-          events: [
-            {
-              type: "click",
-              event: async function (e) {
-                try {
-                  const { pluginScript, formValue } = await ajaxJson({
-                    name: request.name,
-                    price: request.amount,
-                    buyerName: "배창규",
-                    buyerPhone: "010-2747-3403",
-                    buyerEmail: "uragenbooks@gmail.com",
-                    currentPage: window.location.href,
-                  }, "/inicisPayment");
-                  const form = document.createElement("FORM");
-                  let value, formId, plugin;
-                  formId = "form" + String((new Date()).valueOf());
-                  form.id = formId;
-                  form.style.display = "none";
-                  document.body.appendChild(form);
-                  for (let name in formValue) {
-                    value = String(formValue[name]);
-                    createNode({
-                      mother: form,
-                      mode: "input",
-                      attribute: [ { name }, { value } ],
-                      style: {
-                        display: "none"
-                      }
-                    });
-                  }
-                  plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
-                  plugin();
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            }
-          ],
-          style: {
-            position: "absolute",
-            bottom: String(innerMargin) + ea,
-            right: String(innerMargin) + ea,
-            width: String(buttonWidth) + ea,
-            height: String(height) + ea,
-            background: colorChip.green,
-            borderRadius: String(3) + "px",
-            textAlign: "center",
-          },
-          children: [
-            {
-              text: wordings.pannel[1].children[0],
-              style: {
-                position: "absolute",
-                color: colorChip.white,
-                fontSize: String(size) + ea,
-                fontWeight: String(400),
-                top: String(textTop) + ea,
-                left: String(0),
-                width: String(100) + '%',
-              }
-            }
-          ]
-        }
-      ]
-    });
-
-  }
 }
 
 UniversalEstimationJs.prototype.payComplete = async function (data) {
