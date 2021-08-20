@@ -882,7 +882,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             P_GOODS: formValue.goodname,
             P_UNAME: "배창규",
             P_NEXT_URL: formValue.returnUrl,
-            P_NOTI_URL: formValue.returnUrl,
             P_HPP_METHOD: String(1),
             P_CHARSET: "utf8",
             P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
