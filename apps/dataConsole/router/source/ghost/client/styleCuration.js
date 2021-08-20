@@ -573,40 +573,6 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
         }
       };
       this.wordings.center = [];
-      this.wordings.center.push({
-        name: "style",
-        title: "스타일",
-        callback: "styleCheck",
-        children: [
-          {
-            name: "curation",
-            type: "style",
-            half: false,
-            required: true,
-            rewind: "사진을 더 선택해주셔야 고객님께 맞는 디자이너를 추천드릴 수 있습니다! 스타일 체크를 완료해주세요 :)",
-            question: [
-              "마음에 드는 사진을 <b%3장%b> 골라주세요!",
-              "스타일 분석이 완료되었습니다!"
-            ],
-            value: function (request, history, self) {
-              return null;
-            },
-            update: function (value, siblings, client) {
-              let updateQuery;
-              if (value !== null) {
-                updateQuery = {};
-                updateQuery["curation.style"] = value;
-                return {
-                  history: updateQuery,
-                  core: null
-                };
-              } else {
-                return { history: null, core: null };
-              }
-            }
-          }
-        ]
-      });
       if (!liteMode) {
         this.wordings.center.push({
           name: "space",
@@ -858,118 +824,6 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
           ]
         });
         this.wordings.center.push({
-          name: "furniture",
-          title: "가구",
-          callback: "blockCheck",
-          children: [
-            {
-              name: "purchaseRatio",
-              type: "opposite",
-              half: false,
-              required: false,
-              question: [
-                "가구와 소품의 <b%기존 제품 구매와 재사용의%b>",
-                "<b%비율%b>을 알려주세요!"
-              ],
-              items: [
-                "재사용",
-                "새로 구입",
-              ],
-              total: 100,
-              ea: '%',
-              value: function (request, history, self) {
-                return history.curation.furniture.ratio;
-              },
-              update: function (value, siblings, client) {
-                if (value !== null) {
-                  let updateQuery;
-                  updateQuery = {};
-                  updateQuery["curation.furniture.ratio"] = value.value;
-                  return {
-                    history: updateQuery,
-                    core: null
-                  };
-                } else {
-                  return { history: null, core: null };
-                }
-              }
-            },
-            {
-              name: "makeFurnitrue",
-              type: "checkbox",
-              half: true,
-              required: false,
-              question: [
-                "<b%맞춤형 제작 가구 니즈%b>가 있으신가요?"
-              ],
-              items: [
-                "있다",
-                "없다",
-                "모르겠다",
-              ],
-              multiple: false,
-              notice: "맞춤형 제작 가구 : 신발장, 붙박이장 등, 디자인 제작 가구 : 거실장, 서재 책장, 윈도우 시트 등",
-              value: function (request, history, self) {
-                return history.curation.furniture.makeNeeds.furniture ? self.items[0] : self.items[2];
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
-                  return { history: null, core: null };
-                } else {
-                  const { items, realItems, selected } = value;
-                  if (selected === null) {
-                    return { history: null, core: null };
-                  } else {
-                    let updateQuery;
-                    updateQuery = {};
-                    updateQuery["curation.furniture.makeNeeds.furniture"] = (selected === 0);
-                    return {
-                      history: updateQuery,
-                      core: null
-                    };
-                  }
-                }
-              }
-            },
-            {
-              name: "makeFabric",
-              type: "checkbox",
-              half: true,
-              required: false,
-              question: [
-                "<b%커튼, 베딩 패브릭 제작 니즈%b>가 있으신가요?"
-              ],
-              items: [
-                "있다",
-                "없다",
-                "모르겠다",
-              ],
-              multiple: false,
-              value: function (request, history, self) {
-                return history.curation.furniture.makeNeeds.fabric ? self.items[0] : self.items[2];
-              },
-              update: function (value, siblings, client) {
-                if (value === null) {
-                  return { history: null, core: null };
-                } else {
-                  const { items, realItems, selected } = value;
-                  if (selected === null) {
-                    return { history: null, core: null };
-                  } else {
-                    let updateQuery;
-                    updateQuery = {};
-                    updateQuery["curation.furniture.makeNeeds.fabric"] = (selected === 0);
-                    return {
-                      history: updateQuery,
-                      core: null
-                    };
-                  }
-                }
-              }
-            },
-          ]
-        });
-        this.wordings.center.push({
           name: "construct",
           title: "시공",
           callback: "blockCheck",
@@ -1215,6 +1069,40 @@ StyleCurationJs.prototype.curationWordings = function (liteMode = false) {
           ]
         });
       }
+      this.wordings.center.push({
+        name: "style",
+        title: "스타일",
+        callback: "styleCheck",
+        children: [
+          {
+            name: "curation",
+            type: "style",
+            half: false,
+            required: true,
+            rewind: "사진을 더 선택해주셔야 고객님께 맞는 디자이너를 추천드릴 수 있습니다! 스타일 체크를 완료해주세요 :)",
+            question: [
+              "마음에 드는 사진을 <b%3장%b> 골라주세요!",
+              "스타일 분석이 완료되었습니다!"
+            ],
+            value: function (request, history, self) {
+              return null;
+            },
+            update: function (value, siblings, client) {
+              let updateQuery;
+              if (value !== null) {
+                updateQuery = {};
+                updateQuery["curation.style"] = value;
+                return {
+                  history: updateQuery,
+                  core: null
+                };
+              } else {
+                return { history: null, core: null };
+              }
+            }
+          }
+        ]
+      });
       this.wordings.pannel = {
         button: "서비스 금액 알아보기"
       };

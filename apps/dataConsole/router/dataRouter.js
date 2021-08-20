@@ -4249,7 +4249,7 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
       const { whereQuery, startDate, endDate } = equalJson(req.body);
       const designers = await back.getDesignersByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
       const designersRealTime = await back.mongoRead("realtimeDesigner", whereQuery, { selfMongo: instance.mongolocal });
-      const margin = 0;
+      const margin = 10;
       let designersNormal;
       let boo;
 
