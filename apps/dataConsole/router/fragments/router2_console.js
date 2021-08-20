@@ -3002,7 +3002,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
       const now = new Date();
 
       if (req.body.mode === "script") {
-        const { cliid, kind, desid, proid, method } = req.body;
+        const { cliid, kind, desid, proid, method, device } = req.body;
         const oidConst = "homeliaisonBill_";
         const version = "1.0";
         const gopaymethod = "Card:VBank";
@@ -3020,10 +3020,22 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const buyeremail = req.body.buyerEmail;
         const returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
         const closeUrl = req.body.currentPage + "/tools/trigger";
+        const imp = "imp71921105";
 
         let pluginScript, formValue;
-        pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
+
         formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
+
+        if (device === "desktop") {
+          pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
+        } else {
+          pluginScript = '';
+          pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
+          pluginScript += "\n\n";
+          pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
+          formValue.imp = imp;
+        }
+
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ pluginScript, formValue }));
 

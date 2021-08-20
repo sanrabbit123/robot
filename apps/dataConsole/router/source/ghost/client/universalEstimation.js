@@ -850,15 +850,21 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           buyerPhone: "010-2747-3403",
           buyerEmail: "uragenbooks@gmail.com",
           currentPage: window.location.protocol + "//" + window.location.host,
+          device: (desktop ? "desktop" : "mobile"),
         }, "/inicisPayment");
-        const form = document.createElement("FORM");
+
+        let form;
         let value, formId, plugin;
         let mobileInisisInfo;
-        formId = "form" + String((new Date()).valueOf());
-        form.id = formId;
-        form.style.display = "none";
-        document.body.appendChild(form);
+
         if (desktop) {
+
+          form = document.createElement("FORM");
+          formId = "form" + String((new Date()).valueOf());
+          form.id = formId;
+          form.style.display = "none";
+          document.body.appendChild(form);
+
           for (let name in formValue) {
             value = String(formValue[name]);
             createNode({
@@ -870,35 +876,75 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           }
           plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
           plugin();
+
         } else {
-          form.setAttribute("method", "post");
-          form.setAttribute("accept-charset", "euc-kr");
-          mobileInisisInfo = {
-            P_INI_PAYMENT: (/card/gi.test(motherMethod) ? "CARD" : "VBANK"),
-            P_MID: formValue.mid,
-            P_OID: formValue.oid,
-            P_AMT: 1001,
-            P_GOODS: formValue.goodname,
-            P_UNAME: "배창규",
-            P_NEXT_URL: formValue.returnUrl,
-            P_NOTI_URL: formValue.returnUrl,
-            P_HPP_METHOD: String(1),
-            P_CHARSET: "utf8",
-            P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
-            P_NOTI_URL: PYTHONHOST + "/webHookVAccount",
-          };
-          for (let name in mobileInisisInfo) {
-            value = String(mobileInisisInfo[name]);
-            createNode({
-              mother: form,
-              mode: "input",
-              attribute: [ { name }, { value } ],
-              style: { display: "none" }
+
+          if (!/card/gi.test(motherMethod)) {
+
+            form = document.createElement("FORM");
+            formId = "form" + String((new Date()).valueOf());
+            form.id = formId;
+            form.style.display = "none";
+            document.body.appendChild(form);
+
+            form.setAttribute("method", "post");
+            form.setAttribute("accept-charset", "euc-kr");
+            mobileInisisInfo = {
+              P_INI_PAYMENT: (/card/gi.test(motherMethod) ? "CARD" : "VBANK"),
+              P_MID: formValue.mid,
+              P_OID: formValue.oid,
+              P_AMT: 1001,
+              P_GOODS: formValue.goodname,
+              P_UNAME: "배창규",
+              P_NEXT_URL: formValue.returnUrl,
+              P_NOTI_URL: formValue.returnUrl,
+              P_HPP_METHOD: String(1),
+              P_CHARSET: "utf8",
+              P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
+            };
+            if (!/card/gi.test(motherMethod)) {
+              mobileInisisInfo.P_NOTI_URL = PYTHONHOST + "/webHookVAccount";
+            }
+            for (let name in mobileInisisInfo) {
+              value = String(mobileInisisInfo[name]);
+              createNode({
+                mother: form,
+                mode: "input",
+                attribute: [ { name }, { value } ],
+                style: { display: "none" }
+              });
+            }
+            form.action = "https://mobile.inicis.com/smart/payment/";
+            form.target = "_self";
+            form.submit();
+
+          } else {
+
+            if (window.IMP === undefined) {
+              plugin = new Function(pluginScript);
+              plugin();
+            }
+
+            const IMP = window.IMP;
+            IMP.init(formValue.imp);
+            IMP.request_pay({
+              merchant_uid: formValue.oid,
+              name: formValue.goodname,
+              amount: 1001,
+              buyer_email: "admin@home-liaison.com",
+              buyer_name: "배창규",
+              buyer_tel: "010-2747-3403",
+            }, (result) => {
+              if (result.success) {
+                window.alert("결제가 완료되었습니다!");
+                window.location.href = "https://home-liaison.com";
+              } else {
+                window.alert("결제에 실패하였습니다, 다시 시도해주세요!");
+              }
             });
+
           }
-          form.action = "https://mobile.inicis.com/smart/payment/";
-          form.target = "_self";
-          form.submit();
+
         }
       } catch (e) {
         console.log(e);
