@@ -5682,19 +5682,19 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value, pa
           target.projects.splice(index, 1, projectObj);
         }
 
-        countArr = [];
-        while (startCopy.valueOf() <= endCopy.valueOf()) {
-          countArr.push('y' + String(startCopy.getFullYear()) + 'm' + String(startCopy.getMonth() + 1));
-          startCopy.setDate(startCopy.getDate() + 1);
-        }
-        countArr = Array.from(new Set(countArr));
-        for (let token of countArr) {
-          if (target.count[token] !== undefined) {
-            target.count[token] = target.count[token] - 1;
-          } else {
-            target.count[token] = 0;
-          }
-        }
+        // countArr = [];
+        // while (startCopy.valueOf() <= endCopy.valueOf()) {
+        //   countArr.push('y' + String(startCopy.getFullYear()) + 'm' + String(startCopy.getMonth() + 1));
+        //   startCopy.setDate(startCopy.getDate() + 1);
+        // }
+        // countArr = Array.from(new Set(countArr));
+        // for (let token of countArr) {
+        //   if (target.count[token] !== undefined) {
+        //     target.count[token] = target.count[token] - 1;
+        //   } else {
+        //     target.count[token] = 0;
+        //   }
+        // }
 
         delete target._id;
         await ajaxJson({
