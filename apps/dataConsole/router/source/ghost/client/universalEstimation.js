@@ -227,8 +227,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let paymentEvent;
   let titleBoxPaddingTop;
 
-  console.log(isMac())
-
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
@@ -238,7 +236,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   titleFontBottom = <%% 2, 2, 2, 2, 0.2 %%>;
   titlePadding = <%% 6, 6, 6, 5, 12 %%>;
   titlePaddingMargin = <%% 18, 18, 18, 16, 18 %%>;
-  titleBoxPaddingTop <%% 2, 2, 2, 2, 2 %%>;
+  titleBoxPaddingTop = <%% 2, 2, 2, 2, 2 %%>;
 
   titleBarTopVisual = <%% (isMac() ? 10 : 6), (isMac() ? 10 : 6), (isMac() ? 10 : 6), (isMac() ? 7 : 5), 17.5 %%>;
   titleBarBottomVisual = <%% (isMac() ? 6 : 10), (isMac() ? 6 : 10), (isMac() ? 6 : 10), (isMac() ? 6 : 8), 6 %%>;
