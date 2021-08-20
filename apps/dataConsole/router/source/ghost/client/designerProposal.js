@@ -1442,7 +1442,7 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   //title
   designerTitle = GeneralJs.nodes.div.cloneNode(true);
   // designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너 " + this.abc[this.abcStatic] + "&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.gray3 + "\">></b>&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + designer + "</b>");
-  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + this.abc[this.abcStatic] + "</b>");
+  designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip[instance.designers.pick(desid).end ? "gray5" : "green"] + "\">" + this.abc[this.abcStatic] + "</b>" + (instance.designers.pick(desid).end ? "&nbsp;&nbsp;: 해당 디자이너는 마감되었습니다." : ""));
   style = {
     position: "relative",
     marginLeft: String(desktop ? leftMargin : 0) + ea,
@@ -1790,6 +1790,26 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
   }
   this.designerFee(feeBox, info.fee);
   mother.appendChild(feeBox);
+
+
+  if (instance.designers.pick(desid).end) {
+    for (let dom of mother.children) {
+      dom.style.opacity = String(desktop ? 0.5 : 0.4);
+    }
+    if (desktop) {
+      mother.style.background = GeneralJs.colorChip.gray0;
+      for (let i = 1; i < feeBox.children.length; i++) {
+        feeBox.children[i].style.background = GeneralJs.colorChip.gray0;
+        feeBox.children[i].style.color = GeneralJs.colorChip.gray5;
+      }
+    } else {
+      for (let i = 0; i < feeBox.children.length; i++) {
+        feeBox.children[i].style.color = GeneralJs.colorChip.gray5;
+      }
+    }
+
+  }
+
 }
 
 DesignerProposalJs.prototype.designerAnalytics = function (mother, desid) {
@@ -3978,9 +3998,14 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
       window.alert("디자이너를 선택해주세요!");
       return;
     } else {
-      if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
-        instance.submitEvent(desid, realName);
+      if (!instance.designers.pick(desid).end) {
+        if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
+          instance.submitEvent(desid, realName);
+        } else {
+          return;
+        }
       } else {
+        window.alert("해당 디자이너는 일정이 마감되었습니다!");
         return;
       }
     }
@@ -4069,11 +4094,12 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
 
 DesignerProposalJs.prototype.launching = async function (loading) {
   const instance = this;
+  const { returnGet, ajaxJson, sleep } = GeneralJs;
   try {
 
     this.mother.setGeneralProperties(this);
 
-    const getObj = GeneralJs.returnGet();
+    const getObj = returnGet();
     if (getObj.cliid === undefined && getObj.proid === undefined) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
@@ -4084,6 +4110,8 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     let designers, designer;
     let whereQuery;
     let belowTarget, removeTargets;
+    let designersRealTime;
+    let startDate, endDate;
 
     if (getObj.cliid !== undefined) {
       cliid = getObj.cliid;
@@ -4095,24 +4123,24 @@ DesignerProposalJs.prototype.launching = async function (loading) {
 
     //set proposal, client info
     if (cliid !== null) {
-      projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getProjects"));
-      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid }), "/getClients"));
+      projects = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getProjects");
+      clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients");
     } else {
-      projects = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid }), "/getProjects"));
+      projects = await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
       projects.sort((a, b) => {
         return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
       });
       project = projects[0];
-      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ cliid: project.cliid }), "/getClients"));
+      clients = await ajaxJson({ noFlat: true, whereQuery: { cliid: project.cliid } }, "/getClients");
     }
 
     if (clients.length === 0) {
-      alert("잘못된 접근입니다!");
+      window.alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
 
     if (projects.length === 0) {
-      alert("아직 제안서가 만들어지지 않았습니다! 잠시만 기다려주세요 :)");
+      window.alert("아직 제안서가 만들어지지 않았습니다! 잠시만 기다려주세요 :)");
       window.location.href = this.frontPage;
       project = null;
     } else {
@@ -4124,7 +4152,11 @@ DesignerProposalJs.prototype.launching = async function (loading) {
           whereQuery["$or"].push({ desid: desid });
         }
       }
-      designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
+
+      startDate = new Date(clients[0].requests[0].analytics.date.space.movein);
+      startDate.setDate(startDate.getDate() - GeneralJs.serviceParsing(projects[0].service, true));
+      endDate = new Date(clients[0].requests[0].analytics.date.space.movein);
+      designers = await ajaxJson({ whereQuery, startDate, endDate }, "/designerProposal_getDesigners");
 
       projects.sort((a, b) => {
         return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
@@ -4146,6 +4178,8 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.client = client;
     this.designers = new Designers(designers);
     this.proposal = project.proposal;
+
+    console.log(this.designers);
 
     if (getObj.proid === undefined) {
       window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
@@ -4180,7 +4214,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     });
 
     //loading end
-    await GeneralJs.sleep(500);
+    await sleep(500);
     loading.parentNode.removeChild(loading);
 
   } catch (e) {

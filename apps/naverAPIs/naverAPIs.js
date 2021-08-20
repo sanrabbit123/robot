@@ -255,7 +255,8 @@ NaverAPIs.prototype.paragraphChecker = async function (paragraph) {
     [ "피아 니즈 트", "피아니스트" ],
     [ "피아니즈트", "피아니스트" ],
     [ "테러 조", "테라조" ],
-    [ "기존의 자", "기존 의자" ]
+    [ "기존의 자", "기존 의자" ],
+    [ "월 플렉스", "월플렉스" ],
   ];
   try {
     let resultArr = [];

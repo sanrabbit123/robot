@@ -62,11 +62,56 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
+    /*
+    const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC });
+    const fees = projects.getFees();
+    const targets = fees.filter((a) => { return a.distance.amount !== 0 });
+    const firstDiscount = 0.85;
+    const firstLimit = 50 * 10000;
+    const secondDiscount = 0.95;
+    const secondLimit = 15 * 10000;
 
+    let num;
+    let matrix;
+    let tempArr;
 
+    matrix = [ [ "순수 디자인비", "출장비 합산", "순수 온라인", "온라인 + 출장비", "거리", "시간", "출장 횟수", "회당 출장비" ] ]
 
+    for (let t of targets) {
+      tempArr = [];
+      tempArr.push(t.amount);
+      tempArr.push(t.amount + (t.distance.number * t.distance.amount));
+      num = t.amount * (1 - firstDiscount);
+      if (t.amount * firstDiscount <= firstLimit) {
+        num = firstLimit;
+      }
+      tempArr.push(t.amount - num);
+      num = t.amount * (1 - secondDiscount);
+      if (t.amount * secondDiscount <= secondLimit) {
+        num = secondLimit;
+      }
+      tempArr.push(t.amount - num + (t.distance.number * t.distance.amount));
+      tempArr.push(t.distance.distance);
+      tempArr.push(t.distance.time);
+      tempArr.push(String(t.distance.number) + '회');
+      tempArr.push(t.distance.amount);
 
+      tempArr = tempArr.map((i) => {
+        if (typeof i === "number") {
+          return autoComma(i) + '원';
+        } else {
+          return i;
+        }
+      })
+      matrix.push(tempArr);
+    }
 
+    const sheetsId = await sheets.create_newSheets_inPython("출장비 계산", "1H8iw8joBVDEu2BwNnVCSfHMiMPBqJWsz");
+    await sheets.setting_cleanView_inPython(sheetsId);
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+
+    console.log(matrix);
+    */
 
 
 
@@ -876,7 +921,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p112");
+    // await this.spellCheck("p109");
 
 
     // get rawPortfolio by pid
@@ -884,7 +929,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p112");
+    // await this.getCorePortfolio("p109");
 
 
     // aspirant to designer

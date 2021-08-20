@@ -4234,6 +4234,57 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
+  const instance = this;
+  const { equalJson } = this.mother;
+  const back = this.back;
+  const address = this.address;
+  let obj = {};
+  obj.link = "/designerProposal_getDesigners";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.whereQuery === undefined || req.body.startDate === undefined || req.body.endDate === undefined) {
+        throw new Error("invaild post");
+      }
+      const { whereQuery, startDate, endDate } = equalJson(req.body);
+      const designers = await back.getDesignersByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
+      const designersRealTime = await back.mongoRead("realtimeDesigner", whereQuery, { selfMongo: instance.mongolocal });
+      const margin = 0;
+      let designersNormal;
+      let boo;
+
+      startDate.setDate(startDate.getDate() + margin);
+      endDate.setDate(endDate.getDate() - margin);
+
+      boo = false;
+      for (let designerRealTime of designersRealTime) {
+        boo = false;
+        for (let { start, end } of designerRealTime.possible) {
+          if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {
+            boo = true;
+          }
+          if (boo) {
+            break;
+          }
+        }
+        designers.search(designerRealTime.desid).end = !boo;
+      }
+
+      designersNormal = designers.toNormal();
+      for (let d of designersNormal) {
+        d.end = designers.search(d.desid).end;
+      }
+
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify(designersNormal));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message, channel: "#error_log" });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 
 DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
   const instance = this;

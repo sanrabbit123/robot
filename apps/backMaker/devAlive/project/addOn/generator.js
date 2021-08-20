@@ -12,6 +12,56 @@ class Projects extends Array {
     return tong;
   }
 
+  getProposals() {
+    let tong;
+    tong = [];
+    for (let i of this) {
+      for (let j of i.proposal.detail) {
+        j.proid = i.proid;
+        j.cliid = i.cliid;
+        tong.push(j);
+      }
+    }
+    return tong;
+  }
+
+  getFees() {
+    let tong;
+    class Fees extends Array {
+      online() {
+        let tong = new Fees();
+        for (let i of this) {
+          if (i.method === "online") {
+            tong.push(i);
+          }
+        }
+        return tong;
+      }
+      offline() {
+        let tong = new Fees();
+        for (let i of this) {
+          if (i.method === "offline") {
+            tong.push(i);
+          }
+        }
+        return tong;
+      }
+    }
+
+    tong = new Fees();
+    for (let i of this) {
+      for (let j of i.proposal.detail) {
+        for (let k of j.fee) {
+          k.proid = i.proid;
+          k.cliid = i.cliid;
+          k.desid = j.desid;
+          tong.push(k);
+        }
+      }
+    }
+    return tong;
+  }
+
 }
 
 const withTools = function (Project) {
