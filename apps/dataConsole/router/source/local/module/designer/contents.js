@@ -3017,6 +3017,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     for (let dom of tempQsa) {
       dom.style.color = colorChip.gray4;
     }
+    whiteBlock.children[2].style.background = colorChip.gray0;
     whiteBack.style.background = colorChip.gray0;
     circle.style.background = colorChip.gray4;
   }

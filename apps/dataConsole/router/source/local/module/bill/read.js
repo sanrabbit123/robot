@@ -544,6 +544,10 @@ BillJs.prototype.contentsBlockInjection = function () {
   let startLeft, betweenText, widthArr, domArr;
   let temp;
   let idPastArr;
+  let mergeIndex;
+  let marginMultiple;
+
+  marginMultiple = 4.5;
 
   cleanChildren(contentsTong);
 
@@ -573,16 +577,25 @@ BillJs.prototype.contentsBlockInjection = function () {
 
   idPastArr = [];
   this.contentsBlocks = [];
+  mergeIndex = [];
   for (let i = 0; i < bills.length; i++) {
     if (!idPastArr.includes(bills[i].links[typeMap[type]])) {
       idPastArr.push(bills[i].links[typeMap[type]]);
       bills[i].title = "<b style=\"font-weight:" + String(700) + ";color:" + colorChip.black + "\">" + bills[i].title.replace(/\<b\%/, "</b><b%");
+      mergeIndex.push(i);
     } else {
       bills[i].title = "<u%" + bills[i].title.replace(/\<b\%/, '').replace(/\%b\>/, "%u>");
     }
     [ startLeft, betweenText, widthArr, domArr ] = this.contentsWhiteBlock(scrollTong, bills[i], (i === bills.length - 1), i);
     width.push(widthArr);
     dom.push(domArr);
+  }
+
+  mergeIndex = mergeIndex.map((i) => { return i - 1; });
+  for (let i = 0; i < this.contentsBlocks.length - 1; i++) {
+    if (mergeIndex.includes(i)) {
+      this.contentsBlocks[i].style.marginBottom = String(Number(this.contentsBlocks[i].style.marginBottom.replace(/[^0-9\-\.]/gi, '')) * marginMultiple) + ea;
+    }
   }
 
   if (width.length > 0) {
@@ -979,7 +992,7 @@ BillJs.prototype.contentsView = async function () {
 
     loading = await this.mother.loadingRun();
 
-    typeArr = [ "client", "designer", "project", "all" ];
+    typeArr = [ "client", "designer", "construct", "all" ];
     type = returnGet().type;
     if (type === undefined || type === null || !typeArr.includes(type)) {
       type = typeArr[0];
