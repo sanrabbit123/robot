@@ -171,35 +171,38 @@ BillJs.prototype.cardViewMaker = function (force = false) {
 BillJs.prototype.launching = async function () {
   const instance = this;
   try {
-    this.belowHeight = this.mother.belowHeight;
-    this.searchInput = this.mother.searchInput;
-    this.grayBarWidth = this.mother.grayBarWidth;
-
+    const { protoPatch, returnGet, getUser } = GeneralJs;
     const removeIds = [
       "moveRightArea",
       "moveLeftArea",
       "grayLeftOpenButton"
     ];
+    const modulePath = "/module/bill";
     const belowGreen = this.totalContents.firstChild;
+    const getObj = returnGet();
     let tempFunction, totalMother;
 
     for (let id of removeIds) {
-      belowGreen.removeChild(document.getElementById(id));
+      document.getElementById(id).style.display = "none";
     }
 
-    totalMother = GeneralJs.nodes.div.cloneNode(true);
-    totalMother.classList.add("totalMother");
-    totalMother.style.height = "calc(100% - " + String(this.belowHeight) + "px" + ")";
-    this.totalContents.appendChild(totalMother);
-    this.totalMother = totalMother;
+    this.user = getUser();
+    this.belowHeight = this.mother.belowHeight;
+    this.searchInput = this.mother.searchInput;
+    this.grayBarWidth = this.mother.grayBarWidth;
 
-    tempFunction = this.cardViewMaker(true);
-    await tempFunction();
-
-
-
-
-
+    if (/read/gi.test(getObj.mode)) {
+      await protoPatch(instance, `${modulePath}/read.js`);
+      await this.contentsView();
+    } else {
+      totalMother = GeneralJs.nodes.div.cloneNode(true);
+      totalMother.classList.add("totalMother");
+      totalMother.style.height = "calc(100% - " + String(this.belowHeight) + "px" + ")";
+      this.totalContents.appendChild(totalMother);
+      this.totalMother = totalMother;
+      tempFunction = this.cardViewMaker(true);
+      await tempFunction();
+    }
 
   } catch (e) {
     console.log(e);

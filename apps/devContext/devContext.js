@@ -63,7 +63,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 
@@ -102,18 +102,19 @@ DevContext.prototype.launching = async function () {
       tempArr.push(String(t.distance.number) + '회');
       tempArr.push(t.distance.amount);
 
-      tempArr = tempArr.map((i) => {
-        if (typeof i === "number") {
-          return autoComma(i) + '원';
-        } else {
-          return i;
-        }
-      })
+      // tempArr = tempArr.map((i) => {
+      //   if (typeof i === "number") {
+      //     return autoComma(i) + '원';
+      //   } else {
+      //     return i;
+      //   }
+      // })
       matrix.push(tempArr);
     }
 
-    const sheetsId = await sheets.create_newSheets_inPython("출장비 계산", "1H8iw8joBVDEu2BwNnVCSfHMiMPBqJWsz");
-    await sheets.setting_cleanView_inPython(sheetsId);
+    // const sheetsId = await sheets.create_newSheets_inPython("출장비 계산", "1H8iw8joBVDEu2BwNnVCSfHMiMPBqJWsz");
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    const sheetsId = "1UrV-J3bXXm5Qh5mKai3B9AuF1wZ8P23wreyaDWQmcmI";
     await sheets.update_value_inPython(sheetsId, "", matrix);
 
     console.log(matrix);

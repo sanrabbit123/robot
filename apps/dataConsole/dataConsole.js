@@ -70,6 +70,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const OFFICEHOST = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.port);
   const classException = {
     proposal: [ "designer.js" ],
+    bill: [ "designer.js" ],
   };
   try {
 

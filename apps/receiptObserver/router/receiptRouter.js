@@ -373,6 +373,7 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
       const { mode } = req.body;
       let selfMongo, result;
       let whereQuery, updateQuery;
+      let option;
 
       selfMongo = instance.mongolocal;
 
@@ -381,7 +382,11 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
           throw new Error("must be whereQuery");
         }
         whereQuery = equalJson(req.body.whereQuery);
-        result = await bill.getBillsByQuery(whereQuery, { selfMongo });
+        option = { selfMongo };
+        if (req.body.limit !== undefined && !Number.isNaN(Number(req.body.limit))) {
+          option.limit = Number(req.body.limit);
+        }
+        result = await bill.getBillsByQuery(whereQuery, option);
       } else {
         throw new Error("must be mode => [ read ]");
       }

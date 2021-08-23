@@ -2277,7 +2277,7 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
   if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
     throw new Error("invaild service object");
   }
-  const { online, serid, xValue } = serviceObj;
+  let { online, serid, xValue } = serviceObj;
   let finalWords;
   let startDateNumber;
 

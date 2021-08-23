@@ -3594,7 +3594,6 @@ DataRouter.prototype.rou_post_designerFee = function () {
           endDate.setDate(endDate.getDate() - margin);
 
           designerRealtime = await back.mongoRead("realtimeDesigner", { desid }, { selfMongo: instance.mongolocal });
-
           boo = false;
           for (let { start, end } of designerRealtime[0].possible) {
             if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {
@@ -3602,15 +3601,12 @@ DataRouter.prototype.rou_post_designerFee = function () {
               break;
             }
           }
-
           if (!boo) {
             temp.detail.online = 0;
             temp.detail.offline = 0;
             temp.detail.travel.number = 0;
             temp.fee = 0;
-            console.log(temp);
           }
-
           resultObj.push(temp);
         }
       } else {

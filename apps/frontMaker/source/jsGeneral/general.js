@@ -1779,7 +1779,7 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
   if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
     throw new Error("invaild service object");
   }
-  const { online, serid, xValue } = serviceObj;
+  let { online, serid, xValue } = serviceObj;
   let finalWords;
   let startDateNumber;
 
@@ -3405,5 +3405,80 @@ GeneralJs.isIE = function () {
     return true;
   } else {
     return false;
+  }
+}
+
+GeneralJs.orderSystem = function (type, number) {
+  if (number === undefined) {
+    number = type;
+    type = "encode";
+  }
+  const ABC = [ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" ];
+  let a1, a2, a0;
+  let n1, n2;
+  let target, index0, index1, result;
+  let lastInitialArr, num;
+  let a, s, z;
+
+  lastInitialArr = [];
+  a = 'a'.charCodeAt(0);
+  s = 's'.charCodeAt(0);
+  z = 'z'.charCodeAt(0);
+  for (let i = a; i < z + 1; i++) {
+    num = i + (s - a);
+    if (num > z) {
+      lastInitialArr.push(String.fromCharCode(num - z - 1 + a));
+    } else {
+      lastInitialArr.push(String.fromCharCode(num));
+    }
+  }
+
+  if (type === "encode") {
+
+    if (typeof number !== "number") {
+      throw new Error("encode input must be number");
+    }
+    if (number >= ((ABC.length - 1) * 100 * (ABC.length)) + ((ABC.length - 1) * 100) + (9 * 10) + (9 * 1) + ((ABC.length - 1) * 100 * (ABC.length) * (ABC.length)) + 1) {
+      throw new Error("too heavy number");
+    }
+
+    n2 = (number % 10);
+    n1 = (((number - n2) % (10 * 10)) / 10);
+    a2 = ABC[((number - n2 - (n1 * 10)) % (ABC.length * 10 * 10)) / (10 * 10)];
+    a1 = ABC[((number - n2 - (n1 * 10) - (ABC.indexOf(a2) * 10 * 10)) % (ABC.length * ABC.length * 10 * 10)) / (ABC.length * 10 * 10)];
+    a0 = lastInitialArr[((number - n2 - (n1 * 10) - (ABC.indexOf(a2) * 10 * 10) - (ABC.indexOf(a1) * ABC.length * 10 * 10)) % (ABC.length * ABC.length * ABC.length * 10 * 10)) / (ABC.length * ABC.length * 10 * 10)];
+
+    return (a1 + a2 + String(n1) + String(n2) + a0);
+
+  } else if (type === "decode") {
+
+    if (typeof number !== "string") {
+      throw new Error("decode input must be string");
+    }
+
+    if (number.length === 11) {
+      target = number.split("_")[1].trim();
+    } else if (number.length === 5) {
+      target = number.trim();
+    } else {
+      throw new Error("invaild id");
+    }
+
+    index0 = 0;
+    index1 = 0;
+    for (let i = 0; i < ABC.length; i++) {
+      if (ABC[i] === target[0]) {
+        index0 = i;
+      }
+      if (ABC[i] === target[1]) {
+        index1 = i;
+      }
+    }
+    result = (index0 * 100 * 26) + (index1 * 100) + (Number(target[2]) * 10) + (Number(target[3]) * 1) + (lastInitialArr.indexOf(target[4]) * 100 * 26 * 26);
+
+    return result;
+
+  } else {
+    throw new Error("orderSystem type must be 'encode' or 'decode'");
   }
 }

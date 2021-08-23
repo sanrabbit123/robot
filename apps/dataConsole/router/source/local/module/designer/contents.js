@@ -833,7 +833,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
       parent.style.overflow = "hidden";
-      resetWidthEvent(mother);
+      resetWidthEvent(mother).catch((err) => { console.log(err); });
     });
 
     if (date.valueOf() > (new Date(3000, 0, 1).valueOf()) || photographer === "미정" || interviewer === "미정") {
@@ -1936,7 +1936,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
       parent.style.overflow = "hidden";
-      resetWidthEvent(mother);
+      resetWidthEvent(mother).catch((err) => { console.log(err); });
     });
 
     if (/미정/gi.test(tempString0) || /미정/gi.test(tempString1) || /미정/gi.test(tempString2) || /미정/gi.test(tempString3)) {
@@ -2739,6 +2739,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             e.preventDefault();
             if (this.querySelectorAll("aside").length === 0) {
               if (!e.altKey) {
+                const self = this;
                 const index = Number(this.getAttribute("arrindex"));
                 const { ea } = instance;
                 const { createNodes, colorChip, withOut } = GeneralJs;
@@ -2754,7 +2755,69 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                 const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
                 let cancelBox, parent, calendarEvent, resetWidthEvent;
 
+                resetWidthEvent = async function (domFactor) {
+                  try {
+                    const ignoreNumbers = [ 3, 2 ];
+                    const thisDom = domFactor.parentElement;
+                    const thisId = thisDom.id;
+                    let children, width, left;
+                    let between, betweenArr, betweenBeforeArr;
+                    let tempArr, tempWidthArr;
+                    let leftArr, widthArr;
+
+                    children = thisDom.children;
+                    if (children.length <= ignoreNumbers[0] + ignoreNumbers[1] + 1) {
+                      throw new Error("invaild block");
+                    }
+                    betweenBeforeArr = [];
+                    for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+                      left = Number(children[i].style.left.replace(/[^0-9\-\.]/gi, ''));
+                      width = Number(children[i].style.width.replace(/[^0-9\-\.]/gi, ''));
+                      tempArr = [ left, width ];
+                      betweenBeforeArr.push(tempArr);
+                    }
+                    betweenArr = [];
+                    for (let i = 1; i < betweenBeforeArr.length; i++) {
+                      betweenArr.push(Math.round(betweenBeforeArr[i][0] - (betweenBeforeArr[i - 1][0] + betweenBeforeArr[i - 1][1])));
+                    }
+                    betweenArr.sort((a, b) => { return b - a; });
+                    between = betweenArr[0];
+
+                    left = Number(children[ignoreNumbers[0]].style.left.replace(/[^0-9\-\.]/gi, '')) - between;
+                    width = 0;
+                    leftArr = [];
+                    widthArr = [];
+
+                    for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+                      left = left + width + between;
+                      tempWidthArr = [];
+                      for (let block of instance.contentsBlocks) {
+                        block.children[i].style.width = "auto";
+                        width = block.children[i].getBoundingClientRect().width;
+                        tempWidthArr.push(width);
+                      }
+                      tempWidthArr.sort((a, b) => { return b - a; });
+                      width = tempWidthArr[0];
+                      leftArr.push(left);
+                      widthArr.push(width);
+                    }
+
+                    for (let block of instance.contentsBlocks) {
+                      children = block.children;
+                      for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+                        children[i].style.left = String(leftArr[i - ignoreNumbers[0]]) + ea;
+                        children[i].style.width = String(widthArr[i - ignoreNumbers[0]]) + ea;
+                        children[i].style.overflow = "hidden";
+                      }
+                    }
+
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+
                 parent = this.parentElement;
+
                 [ cancelBox ] = createNodes([
                   {
                     mother: this,
@@ -2762,14 +2825,19 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                     events: [
                       {
                         type: "click",
-                        event: function (e) {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          parent.style.overflow = "hidden";
-                          const directParent = this.parentElement;
-                          const removeTargets = directParent.querySelectorAll("aside");
-                          for (let dom of removeTargets) {
-                            directParent.removeChild(dom);
+                        event: async function (e) {
+                          try {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            parent.style.overflow = "hidden";
+                            const directParent = this.parentElement;
+                            const removeTargets = directParent.querySelectorAll("aside");
+                            for (let dom of removeTargets) {
+                              directParent.removeChild(dom);
+                            }
+                            resetWidthEvent(self);
+                          } catch (e) {
+                            console.log(e);
                           }
                         }
                       }
@@ -2786,7 +2854,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                   }
                 ]);
                 parent.style.overflow = "visible";
-
+                this.style.overflow = "visible";
                 calendarEvent = null;
                 if (instance.type === "photo") {
                   if (thisCase["boo"].textContent.trim() === "O") {
@@ -2822,59 +2890,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                       });
 
                     }
-                  }
-                }
-
-                resetWidthEvent = async function (domFactor) {
-                  try {
-                    const ignoreNumbers = [ 3, 2 ];
-                    const thisDom = domFactor.parentElement;
-                    const thisId = thisDom.id;
-                    let children, width, left;
-                    let between, betweenArr, betweenBeforeArr;
-                    let tempArr;
-                    let leftArr, widthArr;
-
-                    children = thisDom.children;
-                    if (children.length <= ignoreNumbers[0] + ignoreNumbers[1] + 1) {
-                      throw new Error("invaild block");
-                    }
-                    betweenBeforeArr = [];
-                    for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-                      left = Number(children[i].style.left.replace(/[^0-9\-\.]/gi, ''));
-                      width = Number(children[i].style.width.replace(/[^0-9\-\.]/gi, ''));
-                      tempArr = [ left, width ];
-                      betweenBeforeArr.push(tempArr);
-                    }
-                    betweenArr = [];
-                    for (let i = 1; i < betweenBeforeArr.length; i++) {
-                      betweenArr.push(Math.round(betweenBeforeArr[i][0] - (betweenBeforeArr[i - 1][0] + betweenBeforeArr[i - 1][1])));
-                    }
-                    betweenArr.sort((a, b) => { return b - a; });
-                    between = betweenArr[0];
-
-                    left = Number(children[ignoreNumbers[0]].style.left.replace(/[^0-9\-\.]/gi, '')) - between;
-                    width = 0;
-                    leftArr = [];
-                    widthArr = [];
-                    for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-                      children[i].style.width = "auto";
-                      left = left + width + between;
-                      width = children[i].getBoundingClientRect().width;
-                      leftArr.push(left);
-                      widthArr.push(width);
-                    }
-
-                    for (let block of instance.contentsBlocks) {
-                      children = block.children;
-                      for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-                        children[i].style.left = String(leftArr[i - ignoreNumbers[0]]) + ea;
-                        children[i].style.width = String(widthArr[i - ignoreNumbers[0]]) + ea;
-                      }
-                    }
-
-                  } catch (e) {
-                    console.log(e);
                   }
                 }
 

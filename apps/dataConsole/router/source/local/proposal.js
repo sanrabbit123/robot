@@ -4977,7 +4977,7 @@ ProposalJs.save_init = async function (update = false) {
     }
 
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    GeneralJs.ajax("message=" + "ProposalJs.save_init, " + JSON.stringify(e.message).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }
