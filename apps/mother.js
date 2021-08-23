@@ -2273,4 +2273,70 @@ Mother.prototype.ipParsing = function (ip) {
   });
 }
 
+Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
+  if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
+    throw new Error("invaild service object");
+  }
+  const { online, serid, xValue } = serviceObj;
+  let finalWords;
+  let startDateNumber;
+
+  if (online) {
+    finalWords = "온라인 ";
+  } else {
+    finalWords = "오프라인 ";
+  }
+
+  if (/_/gi.test(serid) && serid.split('_').length === 2) {
+    serid = serid.split('_')[1];
+    if (/aa01s/gi.test(serid)) {
+      finalWords += "홈퍼니싱 ";
+      startDateNumber = 30;
+    } else if (/aa02s/gi.test(serid)) {
+      finalWords += "홈스타일링 ";
+      startDateNumber = 45;
+    } else if (/aa03s/gi.test(serid)) {
+      finalWords += "토탈 스타일링 ";
+      startDateNumber = 60;
+    } else if (/aa04s/gi.test(serid)) {
+      finalWords += "엑스트라 스타일링 ";
+      startDateNumber = 75;
+    } else {
+      throw new Error("invaild service object");
+    }
+  } else {
+    if (/1/gi.test(serid)) {
+      finalWords += "홈퍼니싱 ";
+      startDateNumber = 30;
+    } else if (/2/gi.test(serid)) {
+      finalWords += "홈스타일링 ";
+      startDateNumber = 45;
+    } else if (/3/gi.test(serid)) {
+      finalWords += "토탈 스타일링 ";
+      startDateNumber = 60;
+    } else if (/4/gi.test(serid)) {
+      finalWords += "엑스트라 스타일링 ";
+      startDateNumber = 75;
+    } else {
+      throw new Error("invaild service object");
+    }
+  }
+
+  if (/M/gi.test(xValue)) {
+    finalWords += "mini";
+  } else if (/B/gi.test(xValue)) {
+    finalWords += "basic ";
+  } else if (/P/gi.test(xValue)) {
+    finalWords += "premium";
+  } else {
+    throw new Error("invaild service object");
+  }
+
+  if (!startDateMode) {
+    return finalWords;
+  } else {
+    return startDateNumber;
+  }
+}
+
 module.exports = Mother;

@@ -370,8 +370,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "analytics";
           } else if (/^con/i.test(req.params.id)) {
             target = "contents";
-          } else if (/^log/i.test(req.params.id)) {
-            target = "logic";
+          } else if (/^bil/i.test(req.params.id)) {
+            target = "bill";
           } else {
             target = "client";
           }
@@ -3533,7 +3533,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
   const instance = this;
   const work = this.work;
   const back = this.back;
-  const { equalJson } = this.mother;
+  const { equalJson, serviceParsing } = this.mother;
   let obj = {};
   obj.link = [ "/designerFee" ];
   obj.func = async function (req, res) {
@@ -3543,8 +3543,13 @@ DataRouter.prototype.rou_post_designerFee = function () {
         throw new Error("must be matrix");
       }
       const matrix = equalJson(req.body.matrix);
+      const margin = 10;
       let resultObj, temp;
       let project, thisProposal;
+      let client;
+      let startDate, endDate;
+      let designerRealtime;
+      let boo;
 
       if (!Array.isArray(matrix)) {
         throw new Error("invaild post");
@@ -3559,6 +3564,8 @@ DataRouter.prototype.rou_post_designerFee = function () {
         resultObj = [];
         for (let [ desid, cliid, serid, xValue, proid ] of matrix) {
           temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
+
+          //discount setting
           temp.detail.discount = {
             online: 0,
             offline: 0,
@@ -3576,6 +3583,34 @@ DataRouter.prototype.rou_post_designerFee = function () {
               }
             }
           }
+
+          client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+
+          startDate = client.requests[0].analytics.date.space.movein.toNormal();
+          endDate = client.requests[0].analytics.date.space.movein.toNormal();
+          startDate.setDate(startDate.getDate() - serviceParsing({ online: false, serid, xValue }, true));
+
+          startDate.setDate(startDate.getDate() + margin);
+          endDate.setDate(endDate.getDate() - margin);
+
+          designerRealtime = await back.mongoRead("realtimeDesigner", { desid }, { selfMongo: instance.mongolocal });
+
+          boo = false;
+          for (let { start, end } of designerRealtime[0].possible) {
+            if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {
+              boo = true;
+              break;
+            }
+          }
+
+          if (!boo) {
+            temp.detail.online = 0;
+            temp.detail.offline = 0;
+            temp.detail.travel.number = 0;
+            temp.fee = 0;
+            console.log(temp);
+          }
+
           resultObj.push(temp);
         }
       } else {
@@ -3585,6 +3620,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(resultObj));
     } catch (e) {
+      console.log(e.message);
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify([ null ]));
     }

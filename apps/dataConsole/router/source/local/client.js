@@ -5353,7 +5353,7 @@ ClientJs.prototype.launching = async function () {
     }
 
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    GeneralJs.ajax({ message: e.message, channel: "#error_log" }, "/sendSlack", function () {});
     console.log(e);
   }
 }

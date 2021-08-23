@@ -62,6 +62,12 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
+
+    
+
+
+
+
     /*
     const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC });
     const fees = projects.getFees();
@@ -904,9 +910,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "최선옥",
-    //     designer: "김다래",
-    //     link: "https://drive.google.com/drive/folders/1ClMD2zax8uTmziijESlLfKukeyRx5g9C",
+    //     client: "우아라",
+    //     designer: "박정훈",
+    //     link: "https://drive.google.com/drive/folders/1HDcpbHHtfPwYYeFtBQe1tcpnSofd74R9",
     //   },
     // ]);
 

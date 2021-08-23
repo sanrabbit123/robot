@@ -169,7 +169,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   size = 15;
   textMargin = 6;
   startLeft = 160;
-  betweenText = 28;
+  betweenText = 30;
+
   totalObj.push(startLeft);
   totalObj.push(betweenText);
 
@@ -262,7 +263,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     };
 
     stringArr.push(textMaker(map["boo"].title, boo ? 'O' : 'X', "black", "boo"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "boo";
@@ -300,6 +301,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -338,7 +340,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["date"].title, dateToString(date), dateToColor(date, true), "date"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "date";
@@ -388,6 +390,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -480,7 +483,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시 ${zeroAddition(date.getMinutes())}분`, dateToColor(date, true), "dateHour"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "dateHour";
@@ -530,6 +533,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -596,7 +600,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
     });
     stringArr.push(textMaker(map["status"].title, status, "black", "status"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "status";
@@ -630,6 +634,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -668,7 +673,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["photographer"].title, photographer, (photographer === "미정" ? "red" : "black"), "photographer"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "photographer";
@@ -707,6 +712,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -745,7 +751,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["interviewer"].title, interviewer, (interviewer === "미정" ? "red" : "black"), "interviewer"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewer";
@@ -784,6 +790,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -822,9 +829,11 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["address"].title, address.replace(/시 /gi, " ").replace(/도 /gi, " ").replace(/군 /gi, " ").replace(/구 /gi, " ").slice(0, 40), "black", "address"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+      const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
       parent.style.overflow = "hidden";
+      resetWidthEvent(mother);
     });
 
     if (date.valueOf() > (new Date(3000, 0, 1).valueOf()) || photographer === "미정" || interviewer === "미정") {
@@ -872,7 +881,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     };
 
     stringArr.push(textMaker(map["portfolioStatus"].title, portfolioStatus, /요망/gi.test(portfolioStatus) ? "red" : (/요청 완료/gi.test(portfolioStatus) ? "purple" : (/편집 완료/gi.test(portfolioStatus) ? "green" : "black")), "portfolioStatus"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "portfolioStatus";
@@ -912,6 +921,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -950,7 +960,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["portfolioLink"].title, portfolioLink === '' ? "링크 없음" : "링크 있음", "black", "portfolioLink"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "portfolioLink";
@@ -990,6 +1000,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -1052,7 +1063,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
     });
     stringArr.push(textMaker(map["interviewStatus"].title, interviewStatus, /요망/gi.test(interviewStatus) ? "red" : (/편집 완료/gi.test(interviewStatus) ? "green" : "black"), "interviewStatus"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewStatus";
@@ -1092,6 +1103,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -1130,7 +1142,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["interviewLink"].title, interviewLink === '' ? "링크 없음" : "링크 있음", "black", "interviewLink"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewLink";
@@ -1164,6 +1176,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -1226,7 +1239,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
     });
     stringArr.push(textMaker(map["photoStatus"].title, photoStatus, /요망/gi.test(photoStatus) ? "red" : (/보정 완료/gi.test(photoStatus) ? "green" : "black"), "photoStatus"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "photoStatus";
@@ -1266,6 +1279,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -1349,7 +1363,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     tempString3 = dateToString(shortInterview);
 
     stringArr.push(textMaker(map["interviewLong"].title, tempString1, dateToColor(longInterview, false), "interviewLong"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewLong";
@@ -1399,6 +1413,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -1491,7 +1506,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["portfolioLong"].title, tempString0, dateToColor(longPortfolio, false), "portfolioLong"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "portfolioLong";
@@ -1540,6 +1555,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -1632,7 +1648,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["interviewShort"].title, tempString3, dateToColor(shortInterview, false), "interviewShort"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewShort";
@@ -1681,6 +1697,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -1773,7 +1790,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["portfolioShort"].title, tempString2, dateToColor(shortPortfoilo, false), "portfolioShort"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "portfolioShort";
@@ -1822,6 +1839,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -1914,9 +1932,11 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["webPublish"].title, dateToString(project.web), dateToColor(project.web, false), "webPublish"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+      const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
       parent.style.overflow = "hidden";
+      resetWidthEvent(mother);
     });
 
     if (/미정/gi.test(tempString0) || /미정/gi.test(tempString1) || /미정/gi.test(tempString2) || /미정/gi.test(tempString3)) {
@@ -1953,7 +1973,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     };
 
     stringArr.push(textMaker(map["clientPhoto"].title, dateToString(photoClient).replace(/미정/g, "예정"), dateToColor(photoClient, false).replace(/red/gi, "black"), "clientPhoto"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "clientPhoto";
@@ -2002,6 +2022,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -2094,7 +2115,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["designerPhoto"].title, dateToString(photoDesigner).replace(/미정/g, "예정"), dateToColor(photoDesigner, false).replace(/red/gi, "black"), "designerPhoto"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "designerPhoto";
@@ -2143,6 +2164,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -2235,7 +2257,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["clientContents"].title, dateToString(contentsClient).replace(/미정/g, "예정"), dateToColor(contentsClient, false).replace(/red/gi, "black"), "clientContents"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "clientContents";
@@ -2284,6 +2306,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -2376,7 +2399,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["designerContents"].title, dateToString(contentsDesigner).replace(/미정/g, "예정"), dateToColor(contentsDesigner, false).replace(/red/gi, "black"), "designerContents"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "designerContents";
@@ -2425,6 +2448,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             mother.removeChild(dom);
           }
           parent.style.overflow = "hidden";
+          resetWidthEvent(mother);
         } catch (e) {
           console.log(e);
         }
@@ -2520,7 +2544,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   }
 
   stringArr.push(textMaker("촬영 메모", history.replace(/\n/g, ' ').slice(0, 40), "black", "history"));
-  updateArr.push(function (e, option, cancelBox, parent, calendarEvent = null) {
+  updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
     const mother = this;
     const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
     const column = "status";
@@ -2600,6 +2624,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                   for (let dom of removeTargets) {
                     mother.removeChild(dom);
                   }
+
+                  resetWidthEvent(mother);
                 }
               } catch (e) {
                 console.log(e);
@@ -2665,6 +2691,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         top: String(top + (isMac() ? 1 : 0)) + ea,
         left: String(left) + ea,
         fontSize: String(size) + ea,
+        zIndex: String(2),
       }
     },
     {
@@ -2676,7 +2703,20 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         top: String(top + (isMac() ? 1 : 0)) + ea,
         left: String(left + width0 + textMargin) + ea,
         fontSize: String(size) + ea,
-        color: colorChip.gray4
+        color: colorChip.gray4,
+        zIndex: String(2),
+      }
+    },
+    {
+      mother: -3,
+      style: {
+        position: "absolute",
+        width: String(left + width0 + textMargin + width1 + (textMargin * 1.5)) + ea,
+        top: String(0) + ea,
+        left: String(0) + ea,
+        height: String(100) + '%',
+        background: colorChip.white,
+        zIndex: String(1),
       }
     },
   ]);
@@ -2712,7 +2752,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                   thisCase[column] = document.getElementById(project.proid + "_" + column);
                 }
                 const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
-                let cancelBox, parent, calendarEvent;
+                let cancelBox, parent, calendarEvent, resetWidthEvent;
 
                 parent = this.parentElement;
                 [ cancelBox ] = createNodes([
@@ -2785,7 +2825,61 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                   }
                 }
 
-                updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent);
+                resetWidthEvent = async function (domFactor) {
+                  try {
+                    const ignoreNumbers = [ 3, 2 ];
+                    const thisDom = domFactor.parentElement;
+                    const thisId = thisDom.id;
+                    let children, width, left;
+                    let between, betweenArr, betweenBeforeArr;
+                    let tempArr;
+                    let leftArr, widthArr;
+
+                    children = thisDom.children;
+                    if (children.length <= ignoreNumbers[0] + ignoreNumbers[1] + 1) {
+                      throw new Error("invaild block");
+                    }
+                    betweenBeforeArr = [];
+                    for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+                      left = Number(children[i].style.left.replace(/[^0-9\-\.]/gi, ''));
+                      width = Number(children[i].style.width.replace(/[^0-9\-\.]/gi, ''));
+                      tempArr = [ left, width ];
+                      betweenBeforeArr.push(tempArr);
+                    }
+                    betweenArr = [];
+                    for (let i = 1; i < betweenBeforeArr.length; i++) {
+                      betweenArr.push(Math.round(betweenBeforeArr[i][0] - (betweenBeforeArr[i - 1][0] + betweenBeforeArr[i - 1][1])));
+                    }
+                    betweenArr.sort((a, b) => { return b - a; });
+                    between = betweenArr[0];
+
+                    left = Number(children[ignoreNumbers[0]].style.left.replace(/[^0-9\-\.]/gi, '')) - between;
+                    width = 0;
+                    leftArr = [];
+                    widthArr = [];
+                    for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+                      children[i].style.width = "auto";
+                      left = left + width + between;
+                      width = children[i].getBoundingClientRect().width;
+                      leftArr.push(left);
+                      widthArr.push(width);
+                    }
+
+                    for (let block of instance.contentsBlocks) {
+                      children = block.children;
+                      for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+                        children[i].style.left = String(leftArr[i - ignoreNumbers[0]]) + ea;
+                        children[i].style.width = String(widthArr[i - ignoreNumbers[0]]) + ea;
+                      }
+                    }
+
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+
+                updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent, resetWidthEvent);
+
               } else {
 
                 if (instance.contentsBlocks.length > 0) {
@@ -3298,6 +3392,31 @@ DesignerJs.prototype.contentsDeactivate = function (proid, offMode = true) {
 
 }
 
+DesignerJs.prototype.contentsBlockMove = function () {
+  const instance = this;
+  const { ea } = this;
+  const { belowButtons: { arrow: { left, right } } } = this.mother;
+  const moveEvent = function (type = "left") {
+    return function (e) {
+      const blocks = instance.contentsBlocks;
+      const movementAmount = 50;
+      const ignoreNumbers = [ 3, 2 ];
+      let children;
+      let left;
+      for (let block of blocks) {
+        children = block.children;
+        for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+          left = Number(children[i].style.left.replace(/[^0-9\-\.]/gi, ''));
+          left = left + (movementAmount * (type === "left" ? -1 : 1));
+          children[i].style.left = String(left) + ea;
+        }
+      }
+    }
+  }
+  left.addEventListener("click", moveEvent("left"));
+  right.addEventListener("click", moveEvent("right"));
+}
+
 DesignerJs.prototype.contentsView = async function () {
   const instance = this;
   try {
@@ -3459,6 +3578,7 @@ DesignerJs.prototype.contentsView = async function () {
 
     this.contentsBase();
     this.contentsSearchEvent();
+    this.contentsBlockMove();
 
   } catch (e) {
     console.log(e);

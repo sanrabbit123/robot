@@ -2154,15 +2154,15 @@ GeneralJs.prototype.greenBar = function () {
     "/project",
     "/designer",
     "/designer?mode=contents",
-    "/service",
+    "/bill",
   ];
   naviIconsContextLinks = [
     "/analytics",
     "/proposal",
-    "/designer?mode=contents",
+    "/project",
     "/designer?mode=aspirant",
     "/contents",
-    "/service",
+    "/bill",
   ];
   naviIconsLeftException = [
     0,
