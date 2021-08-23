@@ -1576,8 +1576,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     const number = Number(this.getAttribute("number"));
                     const distanceBoo = this.getAttribute("distanceBoo") === "true";
                     const thisOnOff = this.getAttribute("thisOnOff");
-                    const offlinePosition = 7;
-                    const totalPosition = 8;
+                    const offlinePosition = 8;
+                    const totalPosition = 9;
                     let doing;
                     let newNumber, newDistance;
                     let offline, final;
@@ -1620,6 +1620,70 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                 },
                 {
                   text: "회당 " + GeneralJs.autoComma(distance) + "원, 총 " + String(travel.number) + "회",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.white,
+                    top: String(0) + ea,
+                    right: String(0) + ea,
+                  }
+                }
+              ]
+            },
+            //limit
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(blockHeight) + ea,
+              },
+              attribute: [
+                { number: travel.limit },
+              ],
+              events: [
+                {
+                  type: [ "click", "contextmenu" ],
+                  event: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const number = Number(this.getAttribute("number"));
+                    let doing;
+                    let newNumber;
+                    if (e.type === "click") {
+                      newNumber = number + 1;
+                      doing = true;
+                    } else {
+                      if (number > 1) {
+                        newNumber = number - 1;
+                        doing = true;
+                      } else {
+                        doing = false;
+                      }
+                    }
+                    if (doing) {
+                      this.lastChild.textContent = String(newNumber) + "회";
+                      this.setAttribute("number", String(newNumber));
+                      ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.limit = newNumber;
+                    }
+
+                  }
+                }
+              ],
+              children: [
+                {
+                  text: "출장 한계",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(size) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.white,
+                    top: String(titleVisual) + ea,
+                    left: String(0) + ea,
+                  }
+                },
+                {
+                  text: String(travel.limit) + "회",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
@@ -1754,10 +1818,10 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     const xValue = this.getAttribute("xValue");
                     const number = Number(this.getAttribute("number"));
                     const thisOnOff = this.getAttribute("thisOnOff");
-                    const onlinePosition = 6;
-                    const offlinePosition = 7;
-                    const premiumPosition = 9;
-                    const finalPosition = 10;
+                    const onlinePosition = 7;
+                    const offlinePosition = 8;
+                    const premiumPosition = 10;
+                    const finalPosition = 11;
                     let newNumber;
                     let final;
                     let original;
