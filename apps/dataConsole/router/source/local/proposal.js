@@ -4915,6 +4915,7 @@ ProposalJs.save_init = async function (update = false) {
             amount: designerFeeCalculObj.detail.distance,
             distance: designerFeeCalculObj.detail.travel.distance,
             time: designerFeeCalculObj.detail.travel.time,
+            limit: designerFeeCalculObj.detail.travel.limit,
           };
           if (/^off/gi.test(result_obj["proposal.detail"][i].fee[f].method)) {
             result_obj["proposal.detail"][i].fee[f].discount = designerFeeCalculObj.detail.discount.offline;

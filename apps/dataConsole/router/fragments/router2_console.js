@@ -2981,6 +2981,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
             }
           }
 
+          //realtime setting
           client = await back.getClientById(cliid, { selfMongo: instance.mongo });
 
           startDate = client.requests[0].analytics.date.space.movein.toNormal();
@@ -3004,6 +3005,10 @@ DataRouter.prototype.rou_post_designerFee = function () {
             temp.detail.travel.number = 0;
             temp.fee = 0;
           }
+
+          //limit setting
+          temp.detail.travel.limit = 5;
+
           resultObj.push(temp);
         }
       } else {

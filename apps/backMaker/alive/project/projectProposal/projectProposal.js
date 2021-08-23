@@ -22,6 +22,7 @@ const FeeDistance = function (json) {
   this.amount = json.amount;
   this.distance = json.distance;
   this.time = json.time;
+  this.limit = json.limit;
 }
 
 FeeDistance.prototype.toNormal = function () {
@@ -30,6 +31,7 @@ FeeDistance.prototype.toNormal = function () {
   obj.amount = this.amount;
   obj.distance = this.distance;
   obj.time = this.time;
+  obj.limit = this.limit;
   return obj;
 }
 
@@ -146,6 +148,7 @@ Proposal.prototype.appendFee = function (method, amount, number = 0, distanceAmo
       amount: distanceAmount,
       distance: km,
       time: time,
+      limit: 5,
     }
   });
   this.fee.push(tempInstance);

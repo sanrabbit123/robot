@@ -184,7 +184,7 @@ DevContext.prototype.launching = async function () {
     //   temp = JSON.parse(JSON.stringify(project.proposal.detail));
     //   for (let t of temp) {
     //     for (let obj of t.fee) {
-    //       obj.discount = 0;
+    //       obj.distance.limit = 5;
     //     }
     //   }
     //   updateQuery["proposal.detail"] = temp;
@@ -192,13 +192,6 @@ DevContext.prototype.launching = async function () {
     //   await selfMongo.db(`miro81`).collection(`project`).updateOne(whereQuery, { $set: updateQuery });
     //   console.log(whereQuery);
     // }
-
-
-
-
-
-
-
 
 
 
