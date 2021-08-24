@@ -551,7 +551,26 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
-  //GET - callHistory test
+  //GET - polling test
+  funcObj.get_polling = {
+    link: [ "/polling" ],
+    func: async function (req, res) {
+      try {
+        console.log(req);
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        res.send(JSON.stringify({ message: "hello?" }));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  //GET - callHistory
   funcObj.get_callHistory = {
     link: [ "/callHistory" ],
     func: async function (req, res) {
