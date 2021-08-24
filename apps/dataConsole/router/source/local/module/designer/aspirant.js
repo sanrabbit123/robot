@@ -1798,7 +1798,7 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: GeneralJs.colorChip.black,
+          background: GeneralJs.colorChip.cancelBlack,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",

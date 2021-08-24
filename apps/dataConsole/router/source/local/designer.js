@@ -1707,7 +1707,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
               borderRadius: String(5) + "px",
               marginRight: ((i % (cards.length / 2)) === (cards.length / 2) - 1) ? String(0) + ea : String(margin) + ea,
               cursor: "pointer",
-              boxShadow: "0px 3px 12px -9px " + colorChip.deactive,
+              boxShadow: "0px 3px 12px -9px " + colorChip.liteShadow,
               marginBottom: (i < (cards.length / 2)) ? String(margin) + ea : String(0) + ea,
             }
           },
@@ -3196,7 +3196,7 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: GeneralJs.colorChip.black,
+        background: GeneralJs.colorChip.cancelBlack,
         top: String(0) + ea,
         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
         width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -3519,7 +3519,7 @@ DesignerJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: GeneralJs.colorChip.black,
+          background: GeneralJs.colorChip.cancelBlack,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",

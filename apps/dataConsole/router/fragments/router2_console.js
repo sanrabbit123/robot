@@ -1717,7 +1717,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
 
       if (req.url === "/proposalReset") {
         work.proposalReset(id, { selfMongo: instance.mongo, selfLocalBoo: instance.mongolocal }).then(() => {
-          //pass
+          return back.updateHistory("client", [ { cliid: id }, { "curation.analytics.full": false } ], { selfMongo: instance.mongolocal });
         }).catch((err) => {
           console.log(err);
         });

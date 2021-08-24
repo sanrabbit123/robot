@@ -267,7 +267,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         width: String(firstWidth) + ea,
         fontSize: String(size) + ea,
         fontWeight: String(200),
-        color: colorChip.shadow,
+        color: colorChip.shadowWhite,
       }
     });
     textBox = createNode({
@@ -351,7 +351,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         width: String(firstWidth) + ea,
         fontSize: String(size) + ea,
         fontWeight: String(200),
-        color: colorChip.shadow,
+        color: colorChip.shadowWhite,
       }
     });
     textBox = createNode({
@@ -471,7 +471,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       width: String(firstWidth) + ea,
       fontSize: String(sumSize) + ea,
       fontWeight: String(200),
-      color: colorChip.shadow,
+      color: colorChip.shadowWhite,
     }
   });
   textBox = createNode({
@@ -522,7 +522,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       width: String(firstWidth) + ea,
       fontSize: String(sumSize) + ea,
       fontWeight: String(200),
-      color: colorChip.shadow,
+      color: colorChip.shadowWhite,
     }
   });
   textBox = createNode({
@@ -836,7 +836,7 @@ DesignerJs.prototype.calculationControlPannel = function () {
         left: String(textLeft) + ea,
         fontSize: String(size) + ea,
         fontWeight: String(500),
-        color: colorChip.white,
+        color: colorChip.whiteBlack,
       }
     },
     {
@@ -903,7 +903,7 @@ DesignerJs.prototype.calculationControlPannel = function () {
         width: String(buttonHeight - (circleMargin * 2)) + ea,
         height: String(buttonHeight - (circleMargin * 2)) + ea,
         borderRadius: String(buttonHeight - (circleMargin * 2)) + ea,
-        background: colorChip.gradientGreen,
+        background: colorChip.gradientGreenWhite,
         transform: "translateX(0px)"
       }
     },
@@ -916,7 +916,7 @@ DesignerJs.prototype.calculationControlPannel = function () {
         left: String(textLeft) + ea,
         fontSize: String(size) + ea,
         fontWeight: String(500),
-        color: colorChip.white,
+        color: colorChip.whiteBlack,
       }
     },
     {
@@ -973,7 +973,7 @@ DesignerJs.prototype.calculationControlPannel = function () {
         width: String(buttonHeight - (circleMargin * 2)) + ea,
         height: String(buttonHeight - (circleMargin * 2)) + ea,
         borderRadius: String(buttonHeight - (circleMargin * 2)) + ea,
-        background: colorChip.gradientGreen,
+        background: colorChip.gradientGreenWhite,
         transform: "translateX(0px)"
       }
     },

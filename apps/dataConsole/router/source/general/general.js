@@ -619,7 +619,7 @@ GeneralJs.prototype.generalCss = function () {
   html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale;-ms-touch-action: manipulation;touch-action: manipulation;}
   *{margin:0;padding:0;transition:all 0.3s ease;font-family:'sandoll';-webkit-tap-highlight-color: transparent;}
   *::-webkit-scrollbar{display:none;}
-  input::placeholder {color:${GeneralJs.colorChip.white};opacity:0.5;}
+  input::placeholder {color:${GeneralJs.colorChip.whiteIcon};opacity:0.5;}
   body,div{font-size:0;color:${GeneralJs.colorChip.black};margin:0;}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
   textarea{resize:none}
@@ -627,7 +627,7 @@ GeneralJs.prototype.generalCss = function () {
   img{border:0}
   button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}
   button,html input[type=button],input[type=submit]{-webkit-appearance:button;cursor:pointer;box-sizing:border-box;white-space: normal}
-  input[type=text],input[type=password],textarea{-webkit-appearance:none;appearance: none;box-sizing:border-box}
+  input[type=text],input[type=password],textarea{-webkit-appearance:none;appearance: none;box-sizing:border-box;background-color:${GeneralJs.colorChip.white}}
   input{line-height:normal}
   input[type=checkbox],input[type=radio]{box-sizing:border-box;padding:0}
   input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}input[type=search]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
@@ -639,7 +639,7 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fa{from{opacity:0;}to{opacity:1;}}
   @keyframes flash{from,80%,to{opacity:0}30%,50%{opacity:0.85}}
-  #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;width:100%}
+  #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;width:100%;background-color:${GeneralJs.colorChip.white}}
   #footergreenback0817{display:block;position:relative;width:100%;height:300px;background-color:${GeneralJs.colorChip.green};overflow:hidden}
   .footerbutton{position:absolute;opacity:0;transition:all .5s ease;left:50%;cursor:pointer}
   .footerbutton:hover{opacity:0.5;}
@@ -1023,7 +1023,7 @@ GeneralJs.prototype.searchInput = function (greenBox) {
     border: String(0),
     textAlign: "center",
     fontWeight: String(100),
-    color: GeneralJs.colorChip.white,
+    color: GeneralJs.colorChip.whiteIcon,
     outline: "none",
   };
   for (let i in style) {
@@ -1983,7 +1983,7 @@ GeneralJs.prototype.greenBar = function () {
   right = 38;
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow(GeneralJs.colorChip.white)));
+  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow(GeneralJs.colorChip.whiteIcon)));
   div_clone2.classList.add("hoverDefault");
   style = {
     display: "block",
@@ -2025,7 +2025,7 @@ GeneralJs.prototype.greenBar = function () {
 
   //arrow - right
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow(GeneralJs.colorChip.white)));
+  div_clone2.appendChild(SvgTong.stringParsing(this.returnBigArrow(GeneralJs.colorChip.whiteIcon)));
   div_clone2.classList.add("hoverDefault");
   for (let i in style) {
     div_clone2.style[i] = style[i];
@@ -2064,7 +2064,7 @@ GeneralJs.prototype.greenBar = function () {
   belowTop = top + 34;
 
   //report
-  svg_icon = SvgTong.stringParsing(this.returnReport(GeneralJs.colorChip.white));
+  svg_icon = SvgTong.stringParsing(this.returnReport(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   style = {
     display: "block",
@@ -2082,7 +2082,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //return
-  svg_icon = SvgTong.stringParsing(this.returnReturn(GeneralJs.colorChip.white));
+  svg_icon = SvgTong.stringParsing(this.returnReturn(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -2106,7 +2106,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //button C
-  svg_icon = SvgTong.stringParsing(this.returnCinitial(GeneralJs.colorChip.white));
+  svg_icon = SvgTong.stringParsing(this.returnCinitial(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -2124,7 +2124,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //button R
-  svg_icon = SvgTong.stringParsing(this.returnRinitialItalic(GeneralJs.colorChip.white));
+  svg_icon = SvgTong.stringParsing(this.returnRinitialItalic(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -2142,7 +2142,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //navigator icons
-  const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr(GeneralJs.colorChip.white, 23);
+  const { heightRatio: naviIconsRatio, svg: naviIcons } = this.returnTitleArr(GeneralJs.colorChip.whiteIcon, 23);
   let naviIconsHost, naviIconsLeftException;
   let naviIconsLinks, naviIconsContextLinks;
   let naviIconsMap;
@@ -2210,7 +2210,7 @@ GeneralJs.prototype.greenBar = function () {
   }
 
   //extract icon
-  svg_icon = SvgTong.stringParsing(this.returnExtract(GeneralJs.colorChip.white));
+  svg_icon = SvgTong.stringParsing(this.returnExtract(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -2229,7 +2229,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //talk icon
-  svg_icon = SvgTong.stringParsing(this.returnTalk(GeneralJs.colorChip.white));
+  svg_icon = SvgTong.stringParsing(this.returnTalk(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -2248,7 +2248,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //file manager icon
-  svg_icon = SvgTong.stringParsing(this.returnFolder(GeneralJs.colorChip.white));
+  svg_icon = SvgTong.stringParsing(this.returnFolder(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -2267,7 +2267,7 @@ GeneralJs.prototype.greenBar = function () {
   div_clone.appendChild(svg_icon);
 
   //profile icon
-  svg_icon = SvgTong.stringParsing(this.returnProfile(GeneralJs.colorChip.white));
+  svg_icon = SvgTong.stringParsing(this.returnProfile(GeneralJs.colorChip.whiteIcon));
   svg_icon.classList.add("hoverDefault");
   for (let i in style) {
     svg_icon.style[i] = style[i];
@@ -2474,7 +2474,7 @@ GeneralJs.prototype.dashboardBox = function () {
         bottom: String(bottom) + ea,
         overflow: "hidden",
         opacity: String(0.9),
-        boxShadow: "-1px 4px 15px -9px " + colorChip.gray5,
+        boxShadow: "-1px 4px 15px -9px " + colorChip.shadow,
         transition: "all 0s ease",
         zIndex: String(102),
         animation: "fadeuplite 0.3s ease forwards",

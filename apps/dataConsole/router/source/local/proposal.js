@@ -451,13 +451,13 @@ ProposalJs.prototype.below_initial = function () {
     height: String(GeneralJs.isMac() ? 42 : 41) + ea,
     top: String(31.5) + ea,
     right: String(49) + ea,
-    background: "white",
+    background: GeneralJs.colorChip.whiteIcon,
     borderRadius: String(3) + ea,
     fontSize: String(17) + ea,
     fontWeight: String(500) + ea,
     textAlign: "center",
     paddingTop: String(GeneralJs.isMac() ? 15 : 16) + ea,
-    color: GeneralJs.colorChip.green,
+    color: GeneralJs.colorChip.greenGray,
     cursor: "pointer",
     animation: "justfadeinoriginal 0.4s ease forwards",
   };
@@ -1410,7 +1410,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     left: String(0) + ea,
                   }
@@ -1431,7 +1431,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1442,7 +1442,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1463,7 +1463,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1474,7 +1474,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1495,7 +1495,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1506,7 +1506,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1527,7 +1527,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1538,7 +1538,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1613,7 +1613,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1624,7 +1624,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1677,7 +1677,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1688,7 +1688,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1709,7 +1709,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1720,7 +1720,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1741,7 +1741,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1752,7 +1752,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1773,7 +1773,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1784,7 +1784,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1848,7 +1848,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1859,7 +1859,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -1880,7 +1880,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(400),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(titleVisual) + ea,
                     left: String(0) + ea,
                   }
@@ -1891,7 +1891,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     position: "absolute",
                     fontSize: String(size) + ea,
                     fontWeight: String(600),
-                    color: colorChip.white,
+                    color: colorChip.whiteBlack,
                     top: String(0) + ea,
                     right: String(0) + ea,
                   }
@@ -3014,11 +3014,11 @@ ProposalJs.prototype.fifthWhiteup = function (whitebox, contents, id, ghost, pic
 
       //buttonup
       else if (i === 2) {
-        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("left", GeneralJs.colorChip.green));
+        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("left", GeneralJs.colorChip.greenWhite));
         img_clone2.classList.add("ppw_right_buttonup_img_left");
         div_clone3.appendChild(img_clone2);
 
-        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("right", GeneralJs.colorChip.green));
+        img_clone2 = SvgTong.stringParsing(instance.mother.returnArrow("right", GeneralJs.colorChip.greenWhite));
         img_clone2.classList.add("ppw_right_buttonup_img_right");
         div_clone3.appendChild(img_clone2);
 
@@ -3880,7 +3880,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               borderRadius: String(5) + "px",
               zIndex: String(4),
               animation: "fadeup 0.3s ease forwards",
-              boxShadow: "0px 3px 15px -9px " + colorChip.gray4,
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
               transition: "all 0s ease",
               paddingTop: String(paddingTop) + ea,
               paddingLeft: String(paddingLeft) + ea,
@@ -3980,6 +3980,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               fontSize: String(size1) + ea,
               fontWeight: String(100),
               color: colorChip.green,
+              background: colorChip.white,
               top: String(valueTop) + ea,
               right: String(valueRight) + ea,
               width: String(110) + ea,
@@ -4036,6 +4037,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               fontSize: String(size1) + ea,
               fontWeight: String(100),
               color: colorChip.green,
+              background: colorChip.white,
               top: String(valueTop + valueLineHeight) + ea,
               right: String(valueRight) + ea,
               width: String(200) + ea,
@@ -4092,6 +4094,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               fontSize: String(size1) + ea,
               fontWeight: String(100),
               color: colorChip.green,
+              background: colorChip.white,
               top: String(valueTop + valueLineHeight + valueLineHeight) + ea,
               right: String(valueRight) + ea,
               width: String(200) + ea,
@@ -4145,7 +4148,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               position: "absolute",
               fontSize: String(size2) + ea,
               fontWeight: String(500),
-              color: colorChip.white,
+              color: colorChip.whiteBlack,
               width: String(100) + '%',
               textAlign: "center",
               top: String(GeneralJs.isMac() ? 3 : 5) + ea,
@@ -4199,7 +4202,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               position: "absolute",
               fontSize: String(size2) + ea,
               fontWeight: String(500),
-              color: colorChip.white,
+              color: colorChip.whiteBlack,
               width: String(100) + '%',
               textAlign: "center",
               top: String(GeneralJs.isMac() ? 3 : 5) + ea,
@@ -4236,7 +4239,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               position: "absolute",
               fontSize: String(size2) + ea,
               fontWeight: String(500),
-              color: colorChip.white,
+              color: colorChip.whiteBlack,
               width: String(100) + '%',
               textAlign: "center",
               top: String(GeneralJs.isMac() ? 3 : 5) + ea,
@@ -5066,6 +5069,7 @@ ProposalJs.prototype.cssInjection = function () {
     --left-width:69.6vh;
   }
 
+  input[type=text],input[type=password],textarea{background-color:transparent}
   label{cursor:pointer}
   article,section{margin:0;}
   @keyframes in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0px);}}
@@ -5121,7 +5125,7 @@ ProposalJs.prototype.cssInjection = function () {
   .belowcircle{top:-20px;}.navicircle{right:11px;}
 
   /* initcolumn */
-  #initcolumn{display:block;position:absolute;top:0;width:2480px;left:-2100px;height:7850px;background:${GeneralJs.colorChip.gray0};z-index:3;opacity:0.87;box-shadow:1px 4px 7px -5px ${GeneralJs.colorChip.gray5};}
+  #initcolumn{display:block;position:absolute;top:0;width:2480px;left:-2100px;height:7850px;background:${GeneralJs.colorChip.gray0};z-index:3;opacity:0.87;box-shadow:1px 4px 7px -5px ${GeneralJs.colorChip.shadow};}
   #initcolumn_data{position:absolute;top:0;right:0;width:190px;padding-top:132px;}
   #initcolumn_column{position:absolute;bottom:-8px;right:0px;width:171px;height:100%;}
   #initcolumn_column_stikcy{position:sticky;top:0;width:100%;height:130px;background:${GeneralJs.colorChip.gray0};z-index:3;}
@@ -5207,7 +5211,7 @@ ProposalJs.prototype.cssInjection = function () {
     background:${GeneralJs.colorChip.green};
   }
   .pp_clients_input:checked + div > div {
-    color:white;
+    color:${GeneralJs.colorChip.white};
   }
 
   .pp_clients_label{
@@ -5228,7 +5232,7 @@ ProposalJs.prototype.cssInjection = function () {
     padding:15px;
     padding-top:${GeneralJs.isMac() ? String(6) : String(7)}px;
     padding-bottom:${GeneralJs.isMac() ? String(8) : String(7)}px;
-    background:white;
+    background:${GeneralJs.colorChip.white};
     margin:3px;
     border-radius:5px;
     box-sizing: border-box;
@@ -5380,7 +5384,7 @@ ProposalJs.prototype.cssInjection = function () {
     padding-top: ${GeneralJs.isMac() ? String(4) : String(4.5)}px;
     padding-bottom: ${GeneralJs.isMac() ? String(4) : String(4.5)}px;
     height: 16px;
-    background: white;
+    background: ${GeneralJs.colorChip.white};
     margin: 2px;
     margin-top: 2px;
     border-radius: 5px;
@@ -5389,7 +5393,7 @@ ProposalJs.prototype.cssInjection = function () {
 
   .pp_designer_selected_box_contents_designers_input:checked + .pp_designer_selected_box_contents_designers{
     background: ${GeneralJs.colorChip.green};
-    color:white;
+    color:${GeneralJs.colorChip.white};
   }
 
   .pp_designer_selected_box_contents_service_total{
@@ -5503,9 +5507,9 @@ ProposalJs.prototype.cssInjection = function () {
     position: absolute;
     width: calc(100% - 96px);
     height: calc(100% - 120px);
-    background: white;
+    background: ${GeneralJs.colorChip.white};
     border-radius: 9px;
-    box-shadow: rgb(128,128,128) 0px 3px 8px -5px;
+    box-shadow: 0px 3px 8px -5px ${GeneralJs.colorChip.shadow};
     opacity:0;
     transform: translateY(20px);
     animation: whitebox_fadein 0.6s ease forwards;
@@ -5554,7 +5558,7 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .ppw_left_picturebox_inbox_detail{
-    background: silver;
+    background: ${GeneralJs.colorChip.deactive};
     border-radius: 5px;
     display: inline-block;
     position: absolute;
@@ -5605,6 +5609,8 @@ ProposalJs.prototype.cssInjection = function () {
     word-spacing: -0.3px;
     letter-spacing: -0.2px;
     font-weight: 500;
+    background-color: ${GeneralJs.colorChip.white};
+    color: ${GeneralJs.colorChip.black};
   }
 
   .ppw_left_description_inbutton{
@@ -5615,7 +5621,7 @@ ProposalJs.prototype.cssInjection = function () {
     height: 28px;
     background: ${GeneralJs.colorChip.green};
     border-radius: 4px;
-    color: ${GeneralJs.colorChip.white};
+    color: ${GeneralJs.colorChip.whiteBlack};
     font-size: 14px;
     padding-bottom: ${GeneralJs.isMac() ? String(3) : String(0)}px;
     font-weight: 600;
@@ -5739,7 +5745,7 @@ ProposalJs.prototype.cssInjection = function () {
     height: 100%;
     width: 50%;
     top: 0;
-    background: white;
+    background: ${GeneralJs.colorChip.white};
     opacity: 0;
     cursor: pointer;
   }
@@ -5757,7 +5763,7 @@ ProposalJs.prototype.cssInjection = function () {
   .blewpp_button{
     cursor: pointer;
     position: absolute;
-    background: white;
+    background: ${GeneralJs.colorChip.white};
     border-radius: 9px;
     top: 37px;
     animation: blewpp_button_fadein 1s ease forwards;
@@ -5783,7 +5789,7 @@ ProposalJs.prototype.cssInjection = function () {
     font-size: 29px;
     font-weight: 100;
     height: 99px;
-    color: white;
+    color: ${GeneralJs.colorChip.white};
     outline: 0;
     border: 0;
     background: transparent;
@@ -5791,7 +5797,7 @@ ProposalJs.prototype.cssInjection = function () {
   }
 
   .blewpp_input::placeholder {
-    color: white;
+    color: ${GeneralJs.colorChip.white};
     opacity: 0.7;
   }
 
@@ -5860,8 +5866,8 @@ ProposalJs.prototype.cssInjection = function () {
     padding-top: 6px;
     padding-right: 17px;
     padding-left: 17px;
-    background: white;
-    box-shadow: rgb(128,128,128) 1px 4px 7px -5px;
+    background: ${GeneralJs.colorChip.white};
+    box-shadow: 1px 4px 7px -5px ${GeneralJs.colorChip.shadow};
     border-radius: 4px;
     font-size: 14px;
     font-weight: 300;
@@ -5894,7 +5900,7 @@ ProposalJs.prototype.cssInjection = function () {
     background: ${GeneralJs.colorChip.gray0};
     z-index: 3;
     opacity: 0.87;
-    box-shadow: 1px 4px 7px -5px ${GeneralJs.colorChip.gray5};
+    box-shadow: 1px 4px 7px -5px ${GeneralJs.colorChip.shadow};
   }
 
   .listpp_leftBar_totalbox{
@@ -5959,7 +5965,7 @@ ProposalJs.prototype.cssInjection = function () {
     height: 34px;
     margin-bottom: 8px;
     border-radius: 5px;
-    background: white;
+    background: ${GeneralJs.colorChip.white};
     cursor: pointer;
     position: relative;
   }
@@ -6042,11 +6048,11 @@ ProposalJs.prototype.cssInjection = function () {
     top: 38px;
     width: 81px;
     height: ${GeneralJs.isMac() ? String(160) : String(163)}px;
-    background: white;
+    background: ${GeneralJs.colorChip.white};
     z-index: 2;
     border-radius: 5px;
     display: block;
-    box-shadow: rgb(128,128,128) 0px 3px 8px -5px;
+    box-shadow: 0px 3px 8px -5px ${GeneralJs.colorChip.shadow};
     animation: listpp_menu_ani 0.3s ease forwards;
   }
   .listpp_menu_cancelback{
@@ -6056,7 +6062,7 @@ ProposalJs.prototype.cssInjection = function () {
     top: 0;
     width: 100%;
     z-index: 1;
-    background: silver;
+    background: ${GeneralJs.colorChip.deactive};
     opacity: 0.3;
   }
   .listpp_menuEvent{

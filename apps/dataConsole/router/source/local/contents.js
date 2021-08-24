@@ -618,7 +618,7 @@ ContentsJs.prototype.infoArea = function (info) {
 
         if (thisMap.type === "date" && e.type === "click") {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -635,7 +635,7 @@ ContentsJs.prototype.infoArea = function (info) {
             left: "calc(50% - " + String((width / 2) + 0.1) + ea + ")",
             width: String(width) + ea,
             height: String(260) + ea,
-            background: "white",
+            background: GeneralJs.colorChip.white,
             textAlign: "center",
             fontSize: "inherit",
             color: GeneralJs.colorChip.green,
@@ -655,7 +655,7 @@ ContentsJs.prototype.infoArea = function (info) {
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -775,7 +775,7 @@ ContentsJs.prototype.infoArea = function (info) {
 
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -794,7 +794,7 @@ ContentsJs.prototype.infoArea = function (info) {
             width: String(width) + ea,
             paddingTop: String(height * 0.3) + ea,
             height: String(width * 0.9) + ea,
-            background: "white",
+            background: GeneralJs.colorChip.white,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -823,7 +823,7 @@ ContentsJs.prototype.infoArea = function (info) {
 
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
           tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
@@ -984,7 +984,7 @@ ContentsJs.prototype.infoArea = function (info) {
         height: String(document.querySelector('.totalMother').children[2].getBoundingClientRect().height) + ea,
         opacity: String(0.7),
         zIndex: String(3),
-        background: "white",
+        background: GeneralJs.colorChip.white,
         animation: "justfadeinmiddle 0.3s ease forwards",
       };
       for (let i in style) {
@@ -1486,7 +1486,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
             if (i !== thisIndex) {
               temp = GeneralJs.stacks["snsAdjustDom0"][i].dom;
               GeneralJs.stacks["snsAdjustDom0"][i].onoff = "off";
-              temp.style.background = "white";
+              temp.style.background = GeneralJs.colorChip.white;
               temp.firstChild.style.color = GeneralJs.colorChip.realBlack;
               temp.lastChild.style.color = GeneralJs.colorChip.green;
             } else {
@@ -1495,7 +1495,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
               GeneralJs.stacks["snsAdjustDom0"].target = GeneralJs.stacks["snsAdjustDom0"][thisIndex].dom;
               temp.style.background = GeneralJs.colorChip.green;
               for (let j of temp.children) {
-                j.style.color = "white";
+                j.style.color = GeneralJs.colorChip.white;
               }
             }
           }
@@ -1526,7 +1526,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
             if (i !== thisIndex) {
               temp = GeneralJs.stacks["snsAdjustDom1"][i].dom;
               GeneralJs.stacks["snsAdjustDom1"][i].onoff = "off";
-              temp.style.background = "white";
+              temp.style.background = GeneralJs.colorChip.white;
               temp.firstChild.style.color = GeneralJs.colorChip.realBlack;
               temp.lastChild.style.color = GeneralJs.colorChip.green;
             } else {
@@ -1535,7 +1535,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
               GeneralJs.stacks["snsAdjustDom1"].target = GeneralJs.stacks["snsAdjustDom1"][thisIndex].dom;
               temp.style.background = GeneralJs.colorChip.green;
               for (let j of temp.children) {
-                j.style.color = "white";
+                j.style.color = GeneralJs.colorChip.white;
               }
             }
           }
@@ -1565,7 +1565,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
             if (i !== thisIndex) {
               temp = GeneralJs.stacks["snsAdjustDom2"][i].dom;
               GeneralJs.stacks["snsAdjustDom2"][i].onoff = "off";
-              temp.style.background = "white";
+              temp.style.background = GeneralJs.colorChip.white;
               temp.firstChild.style.color = GeneralJs.colorChip.realBlack;
               temp.lastChild.style.color = GeneralJs.colorChip.green;
             } else {
@@ -1574,7 +1574,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
               GeneralJs.stacks["snsAdjustDom2"].target = GeneralJs.stacks["snsAdjustDom2"][thisIndex].dom;
               temp.style.background = GeneralJs.colorChip.green;
               for (let j of temp.children) {
-                j.style.color = "white";
+                j.style.color = GeneralJs.colorChip.white;
               }
             }
           }
@@ -1663,7 +1663,7 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
     position: "relative",
     width: String(100) + '%',
     height: String(42) + ea,
-    background: "white",
+    background: GeneralJs.colorChip.white,
     marginBottom: String(Math.floor(areaMargin * 0.4)) + ea,
     borderRadius: String(3) + ea,
     cursor: "pointer",
@@ -1842,14 +1842,14 @@ ContentsJs.prototype.snsContentsMaker = function (proidArr, mother, callback) {
   this.overrideSearchWhite.querySelector("input").addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
       const offStandard = [
-        "white",
+        GeneralJs.colorChip.white,
         "rgb(32, 32, 32)",
         GeneralJs.colorChip.green,
       ];
       const onStandard = [
         GeneralJs.colorChip.green,
-        "white",
-        "white",
+        GeneralJs.colorChip.white,
+        GeneralJs.colorChip.white,
       ];
       const [ one ] = filterDoms;
       const { pool: onePool } = one;
@@ -2224,7 +2224,7 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
     position: "relative",
     width: String(100) + '%',
     height: String(42) + ea,
-    background: "white",
+    background: GeneralJs.colorChip.white,
     marginBottom: String(Math.floor(areaMargin * 0.4)) + ea,
     borderRadius: String(3) + ea,
     cursor: "pointer",
@@ -2350,14 +2350,14 @@ ContentsJs.prototype.filterContentsMaker = function (proidArr, mother, callback)
   this.overrideSearchWhite.querySelector("input").addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
       const offStandard = [
-        "white",
+        GeneralJs.colorChip.white,
         "rgb(32, 32, 32)",
         GeneralJs.colorChip.green,
       ];
       const onStandard = [
         GeneralJs.colorChip.green,
-        "white",
-        "white",
+        GeneralJs.colorChip.white,
+        GeneralJs.colorChip.white,
       ];
       const [ one, two, three, four, five ] = filterDoms;
       const { pool: onePool } = one;
@@ -2437,7 +2437,7 @@ ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: GeneralJs.colorChip.black,
+        background: GeneralJs.colorChip.cancelBlack,
         top: String(0) + ea,
         left: String(0) + ea,
         width: "calc(100% - " + String(0) + ea + ")",
@@ -2467,7 +2467,7 @@ ContentsJs.prototype.filterViewMakerDetail = function (proidArr, recycle = false
 
     style = {
       position: "fixed",
-      background: "white",
+      background: GeneralJs.colorChip.white,
       top: String(margin) + ea,
       left: String(margin) + ea,
       borderRadius: String(5) + ea,
@@ -2812,7 +2812,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       style = {
         fontSize: String(13.5) + ea,
-        color: "white",
+        color: GeneralJs.colorChip.white,
         fontWeight: String(600),
         position: "absolute",
         top: String(GeneralJs.isMac() ? 4.5 : 5.5) + ea,
@@ -2931,7 +2931,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       style = {
         fontSize: String(13.5) + ea,
-        color: "white",
+        color: GeneralJs.colorChip.white,
         fontWeight: String(600),
         position: "absolute",
         top: String(GeneralJs.isMac() ? 4.5 : 5.5) + ea,
@@ -2968,7 +2968,7 @@ ContentsJs.prototype.photoAdjust = async function (objectInfo) {
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
       style = {
         fontSize: String(13.5) + ea,
-        color: "white",
+        color: GeneralJs.colorChip.white,
         fontWeight: String(600),
         position: "absolute",
         top: String(GeneralJs.isMac() ? 4.5 : 5.5) + ea,
@@ -3353,7 +3353,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         padding: String(15) + ea,
         paddingTop: (GeneralJs.isMac() ? String(6) : String(7.5)) + ea,
         paddingBottom: (GeneralJs.isMac() ? String(8) : String(7)) + ea,
-        background: "white",
+        background: GeneralJs.colorChip.white,
         margin: String(3) + ea,
         borderRadius: String(5) + ea,
         boxSizing: "border-box",
@@ -3464,13 +3464,13 @@ ContentsJs.prototype.cardViewMaker = function () {
           gray1.style.height = expandGrayHeight;
           gray1.style.marginTop = String(-0.9) + "vh";
 
-          gray2.style.background = "white";
+          gray2.style.background = GeneralJs.colorChip.white;
           dom2.style.height = compressHeight;
           dom2.style.borderBottom = "1px solid " + GeneralJs.colorChip.gray2;
 
           zNum = 0;
           for (let z of gray1.firstChild.children) {
-            z.style.background = "white";
+            z.style.background = GeneralJs.colorChip.white;
             if (zNum === 0) {
               z.firstChild.style.color = that.getAttribute("portfolioExist") === "true" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray3;
             } else if (zNum === 1) {
@@ -3681,7 +3681,7 @@ ContentsJs.prototype.cardViewMaker = function () {
             for (let i in blockStyle) {
               div_clone.style[i] = blockStyle[i];
             }
-            div_clone.style.background = "white";
+            div_clone.style.background = GeneralJs.colorChip.white;
             div_clone.style.height = "calc(100% - 54px)";
             div_clone.style.top = String(28) + ea;
             div_clone.style.borderRadius = String(5) + ea;
@@ -3734,7 +3734,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               position: "absolute",
               top: String(buttonMargin * 2) + ea,
               right: String(buttonMargin * 2) + ea,
-              background: "white",
+              background: GeneralJs.colorChip.white,
               borderRadius: String(5) + ea,
               boxShadow: "0px 8px 15px -11px " + GeneralJs.colorChip.green,
             };
@@ -4036,7 +4036,7 @@ ContentsJs.prototype.cardViewMaker = function () {
                 width: String(47) + ea,
                 height: String(32) + ea,
                 background: GeneralJs.colorChip.green,
-                color: "white",
+                color: GeneralJs.colorChip.white,
                 borderRadius: String(3) + ea,
                 left: "calc(50% - " + String(113) + ea + ")",
                 fontSize: String(12) + ea,
@@ -4047,7 +4047,7 @@ ContentsJs.prototype.cardViewMaker = function () {
               div_clone2 = GeneralJs.nodes.div.cloneNode(true);
               buttonTextStyle = {
                 position: "absolute",
-                color: "white",
+                color: GeneralJs.colorChip.white,
                 fontSize: String(14) + ea,
                 fontWeight: String(600),
                 top: String(GeneralJs.isMac() ? 5 : 6) + ea,
@@ -4320,7 +4320,7 @@ ContentsJs.prototype.cardViewMaker = function () {
           const { dom: dom2, title: title2, gray: gray2 } = createViewDoms[2];
           let zNum;
 
-          gray0.style.background = "white";
+          gray0.style.background = GeneralJs.colorChip.white;
           dom0.style.height = compressHeight;
           dom0.style.borderBottom = "1px solid " + GeneralJs.colorChip.gray2;
 
@@ -4334,7 +4334,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
           zNum = 0;
           for (let z of gray1.children[0].children) {
-            z.style.background = "white";
+            z.style.background = GeneralJs.colorChip.white;
             if (zNum === 0) {
               z.firstChild.style.color = that.getAttribute("portfolioExist") === "true" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray3;
             } else if (zNum === 1) {
@@ -4898,7 +4898,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   hInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
   hInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
   hInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  hInitialBox.style.background = "white";
+  hInitialBox.style.background = GeneralJs.colorChip.white;
   div_clone2.appendChild(hInitialBox);
 
   //m initial icon
@@ -4921,7 +4921,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   mInitialBox.style.height = String(leftMargin * (20 / 60)) + ea;
   mInitialBox.style.width = String(leftMargin * (18 / 60)) + ea;
   mInitialBox.style.bottom = String((leftMargin * (12 / 60)) + 1) + ea;
-  mInitialBox.style.background = "white";
+  mInitialBox.style.background = GeneralJs.colorChip.white;
   div_clone2.appendChild(mInitialBox);
 
   //bar
@@ -5121,7 +5121,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         if (thisMap.type === "date" && e.type === "click") {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -5138,7 +5138,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             left: String(0) + ea,
             width: String(width) + ea,
             height: String(260) + ea,
-            background: "white",
+            background: GeneralJs.colorChip.white,
             textAlign: "center",
             fontSize: "inherit",
             color: GeneralJs.colorChip.green,
@@ -5158,7 +5158,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         } else if (thisMap.type !== "object" && thisMap.items !== undefined) {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -5279,7 +5279,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         } else if (thisMap.type !== "object" && thisMap.address !== undefined && e.type === "click") {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
 
           this.style.overflow = "";
@@ -5298,7 +5298,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             width: String(width) + ea,
             paddingTop: String(height * 0.3) + ea,
             height: String(width * 0.9) + ea,
-            background: "white",
+            background: GeneralJs.colorChip.white,
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
@@ -5327,7 +5327,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
         } else if (thisMap.type === "object" && thisMap.inputFunction !== undefined) {
 
-          cancel_inputBack.style.background = "white";
+          cancel_inputBack.style.background = GeneralJs.colorChip.white;
           // cancel_inputBack.style.animation = "justfadeinmiddle 0.3s ease forwards";
           tempFunction = new Function("mother", "input", "callback", thisMap.inputFunction);
           tempFunction(this, input_clone, function () {
@@ -5658,7 +5658,7 @@ ContentsJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       fontSize: String(fontSize) + ea,
       fontWeight: String(600),
       color: GeneralJs.colorChip.black,
-      background: "white",
+      background: GeneralJs.colorChip.white,
       paddingBottom: String(fontSize * (7 / 15.3027)) + ea,
       paddingRight: String(fontSize * (12 / 15.3027)) + ea,
       cursor: "pointer",
@@ -5985,7 +5985,7 @@ ContentsJs.prototype.convertWhiteContents = function (motherArea, titleArea, con
             formBoxText.textContent = i;
 
             if (matrixNum === 0 && num === 0) {
-              formBoxText.style.color = "white";
+              formBoxText.style.color = GeneralJs.colorChip.white;
             }
 
             formBox.appendChild(formBoxText);
@@ -6355,7 +6355,7 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: GeneralJs.colorChip.black,
+        background: GeneralJs.colorChip.cancelBlack,
         top: String(0) + ea,
         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
         width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -6394,7 +6394,7 @@ ContentsJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
 
     style = {
       position: "fixed",
-      background: "white",
+      background: GeneralJs.colorChip.white,
       top: String(margin) + ea,
       left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
       borderRadius: String(5) + ea,
@@ -6772,7 +6772,7 @@ ContentsJs.prototype.reportContents = function (data, mother, loadingIcon) {
       fontWeight: String(500),
       top: String(5) + ea,
       left: String(margin) + ea,
-      color: "white",
+      color: GeneralJs.colorChip.white,
     }
     for (let i in style) {
       div_clone2.style[i] = style[i];
@@ -7055,7 +7055,7 @@ ContentsJs.prototype.reportViewMakerDetail = function (recycle = false) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: GeneralJs.colorChip.black,
+          background: GeneralJs.colorChip.cancelBlack,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -7078,7 +7078,7 @@ ContentsJs.prototype.reportViewMakerDetail = function (recycle = false) {
       div_clone.classList.add("totalWhite");
       style = {
         position: "fixed",
-        background: "white",
+        background: GeneralJs.colorChip.white,
         top: String(margin) + ea,
         left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
         borderRadius: String(5) + ea,
@@ -7266,7 +7266,7 @@ ContentsJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: GeneralJs.colorChip.black,
+          background: GeneralJs.colorChip.cancelBlack,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -7289,7 +7289,7 @@ ContentsJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
       div_clone.classList.add("totalWhite");
       style = {
         position: "fixed",
-        background: "white",
+        background: GeneralJs.colorChip.white,
         top: String(margin) + ea,
         left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
         borderRadius: String(5) + ea,

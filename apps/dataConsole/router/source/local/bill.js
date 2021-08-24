@@ -105,7 +105,7 @@ BillJs.prototype.cardViewMaker = function (force = false) {
               borderRadius: String(5) + "px",
               marginRight: ((i % (cards.length / 2)) === (cards.length / 2) - 1) ? String(0) + ea : String(margin) + ea,
               cursor: "pointer",
-              boxShadow: "0px 3px 12px -9px " + colorChip.deactive,
+              boxShadow: "0px 3px 12px -9px " + colorChip.liteShadow,
               marginBottom: (i < (cards.length / 2)) ? String(margin) + ea : String(0) + ea,
             }
           },
