@@ -7,6 +7,16 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     //localStorage clear
     // window.localStorage.clear();
 
+    if (window.localStorage.getItem("colorChip") === null) {
+      GeneralJs.colorChip = JSON.parse(JSON.stringify(GeneralJs.colorSet.light));
+      GeneralJs.colorMode = "light";
+      window.localStorage.setItem("colorChip", JSON.stringify(GeneralJs.colorChip));
+      window.localStorage.setItem("colorMode", GeneralJs.colorMode);
+    } else {
+      GeneralJs.colorChip = JSON.parse(window.localStorage.getItem("colorChip"));
+      GeneralJs.colorMode = window.localStorage.getItem("colorMode");
+    }
+
     local_funcs.mother.generalCss();
     local_funcs.mother.greenBar();
     local_funcs.mother.communicationBox();

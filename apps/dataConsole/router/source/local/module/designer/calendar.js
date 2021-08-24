@@ -900,7 +900,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
             top: String(e.type === "click" ? textTop1 : textTop0) + ea,
             fontFamily: e.type === "click" ? "graphik" : "",
             fontWeight: String(300),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
             zIndex: String(2),
           }
         });

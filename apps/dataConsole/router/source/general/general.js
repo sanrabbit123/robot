@@ -619,6 +619,7 @@ GeneralJs.prototype.generalCss = function () {
   html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing: grayscale;-ms-touch-action: manipulation;touch-action: manipulation;}
   *{margin:0;padding:0;transition:all 0.3s ease;font-family:'sandoll';-webkit-tap-highlight-color: transparent;}
   *::-webkit-scrollbar{display:none;}
+  body{transition:all 0s ease;}
   input::placeholder {color:${GeneralJs.colorChip.whiteIcon};opacity:0.5;}
   body,div{font-size:0;color:${GeneralJs.colorChip.black};margin:0;}
   a{text-decoration:inherit;color:inherit;-webkit-tap-highlight-color:rgba(0,0,0,0);background:0 0;outline:0}
@@ -639,7 +640,7 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fa{from{opacity:0;}to{opacity:1;}}
   @keyframes flash{from,80%,to{opacity:0}30%,50%{opacity:0.85}}
-  #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;width:100%;background-color:${GeneralJs.colorChip.white}}
+  #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;width:100%;background-color:${GeneralJs.colorChip.white};transition:all 0s ease;}
   #footergreenback0817{display:block;position:relative;width:100%;height:300px;background-color:${GeneralJs.colorChip.green};overflow:hidden}
   .footerbutton{position:absolute;opacity:0;transition:all .5s ease;left:50%;cursor:pointer}
   .footerbutton:hover{opacity:0.5;}
@@ -2263,6 +2264,20 @@ GeneralJs.prototype.greenBar = function () {
   for (let i in additionalStyle) {
     svg_icon.style[i] = additionalStyle[i];
   }
+  svg_icon.addEventListener("click", function (e) {
+    if (GeneralJs.colorMode === "light") {
+      GeneralJs.colorChip = JSON.parse(JSON.stringify(GeneralJs.colorSet.dark));
+      GeneralJs.colorMode = "dark";
+      window.localStorage.setItem("colorChip", JSON.stringify(GeneralJs.colorChip));
+      window.localStorage.setItem("colorMode", GeneralJs.colorMode);
+    } else {
+      GeneralJs.colorChip = JSON.parse(JSON.stringify(GeneralJs.colorSet.light));
+      GeneralJs.colorMode = "light";
+      window.localStorage.setItem("colorChip", JSON.stringify(GeneralJs.colorChip));
+      window.localStorage.setItem("colorMode", GeneralJs.colorMode);
+    }
+    window.location.reload();
+  });
   this.belowButtons.sub.folder = svg_icon;
   div_clone.appendChild(svg_icon);
 

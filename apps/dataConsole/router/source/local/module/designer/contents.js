@@ -3142,7 +3142,7 @@ DesignerJs.prototype.contentsDashBoard = function () {
               if (instance.typeArr[i] === instance.type) {
                 instance.typeDoms[i].style.color = colorChip.green;
               } else {
-                instance.typeDoms[i].style.color = colorChip.shadow;
+                instance.typeDoms[i].style.color = colorChip.shadowWhite;
               }
             }
             instance.contentsBlockInjection();
@@ -3156,7 +3156,7 @@ DesignerJs.prototype.contentsDashBoard = function () {
         fontSize: String(size) + ea,
         fontWeight: String(400),
         top: String(top) + ea,
-        color: colorChip[i === typeNum ? "green" : "shadow"],
+        color: colorChip[i === typeNum ? "green" : "shadowWhite"],
       }
     });
     if (i !== textArr.length - 1) {
@@ -3195,7 +3195,7 @@ DesignerJs.prototype.contentsDashBoard = function () {
       top: String(top - 1) + ea,
       right: String(0) + ea,
       fontStyle: "italic",
-      color: colorChip["black"],
+      color: colorChip.black,
     }
   });
   nodeArr.push({
@@ -3218,7 +3218,7 @@ DesignerJs.prototype.contentsDashBoard = function () {
       top: String(top - 1) + ea,
       right: String(18) + ea,
       fontStyle: "italic",
-      color: colorChip["black"],
+      color: colorChip.black,
     }
   });
 

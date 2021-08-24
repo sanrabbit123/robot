@@ -3938,7 +3938,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother: -1,
       mode: "svg",
-      source: this.mother.returnHamburger(colorChip.white),
+      source: this.mother.returnHamburger(colorChip.whiteIcon),
       style: {
         position: "absolute",
         width: String(radius * 0.9) + ea,
@@ -3963,7 +3963,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother: -1,
       mode: "svg",
-      source: this.mother.returnAinitial(colorChip.white),
+      source: this.mother.returnAinitial(colorChip.whiteIcon),
       style: {
         position: "absolute",
         width: String(15) + ea,
@@ -3988,7 +3988,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother: -1,
       mode: "svg",
-      source: this.mother.returnDecrease(colorChip.white),
+      source: this.mother.returnDecrease(colorChip.whiteIcon),
       style: {
         position: "absolute",
         width: String(radius * 0.9) + ea,
@@ -4013,7 +4013,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother: -1,
       mode: "svg",
-      source: this.mother.returnMinitial(colorChip.white),
+      source: this.mother.returnMinitial(colorChip.whiteIcon),
       style: {
         position: "absolute",
         width: String(16.5) + ea,
@@ -4038,7 +4038,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother: -1,
       mode: "svg",
-      source: this.mother.returnIncrease(colorChip.white),
+      source: this.mother.returnIncrease(colorChip.whiteIcon),
       style: {
         position: "absolute",
         width: String(radius * 0.9) + ea,
@@ -4063,7 +4063,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother: -1,
       mode: "svg",
-      source: this.mother.returnRinitial(colorChip.white),
+      source: this.mother.returnRinitial(colorChip.whiteIcon),
       style: {
         position: "absolute",
         width: String(14) + ea,
