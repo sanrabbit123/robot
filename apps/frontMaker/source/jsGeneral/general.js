@@ -31,8 +31,6 @@ GeneralJs.colorChip = {
   gray4: "#cccccc",
   gray5: "#aaaaaa",
   gray6: "#e2e2e2",
-  gradientGray: "linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%)",
-  gradientSilver: "linear-gradient(256deg, rgba(30, 30, 30, 0.65) 0%, rgba(38, 38, 38, 0.7) 100%)",
   grayDeactive: "#c2c2c2",
   deactive: "#bbbbbb",
   shadow: "#808080",
@@ -41,10 +39,12 @@ GeneralJs.colorChip = {
   black: "#404040",
   darkBlack: "#303030",
   realBlack: "#202020",
+  
   green: "#2fa678",
   darkGreen: "#009b6a",
   whiteGreen: "#bedacb",
   middleGreen: "#83cea7",
+  gradientGray: "linear-gradient(256deg, rgba(20, 20, 20, 0.65) 0%, rgba(28, 28, 28, 0.7) 100%)",
   gradientGreen: "linear-gradient(222deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
   gradientGreen2: "linear-gradient(222deg, rgba(89, 175, 137, 0.8) 5%, rgba(0, 156, 106, 0.9) 100%)",
   gradientGreen3: "linear-gradient(172deg, rgba(89, 175, 137, 0.9) 5%, rgba(0, 156, 106, 0.9) 100%)",
@@ -52,6 +52,7 @@ GeneralJs.colorChip = {
   red: "#ff5f57",
   yellow: "#ffbd3d",
   purple: "#ba7dd7",
+  darkRed: "#d13939",
 };
 
 GeneralJs.colorParsing = function (str) {

@@ -437,7 +437,7 @@ ClientJs.prototype.infoArea = function (info) {
     let finalColor;
     finalColor = GeneralJs.colorChip.black;
     if (mother.getAttribute("red") === "true") {
-      finalColor = "#d13939";
+      finalColor = GeneralJs.colorChip.darkRed;
     }
     if (mother.getAttribute("drop") === "true") {
       finalColor = GeneralJs.colorChip.gray4;
@@ -492,7 +492,7 @@ ClientJs.prototype.infoArea = function (info) {
                 finalColor = GeneralJs.colorChip.gray4;
               }
               if (standardArea.children[z].getAttribute("red") === "true") {
-                finalColor = "#d13939";
+                finalColor = GeneralJs.colorChip.darkRed;
               }
               for (let y = 0; y < standardArea.children[z].children.length; y++) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
@@ -1390,9 +1390,9 @@ ClientJs.prototype.infoArea = function (info) {
         }
         div_clone2.setAttribute("drop", "true");
       } else if (redPoint.values.includes(obj[redPoint.column])) {
-        style2.color = "#d13939";
+        style2.color = GeneralJs.colorChip.darkRed;
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
-          this.standardDoms[num].children[z].style.color = "#d13939";
+          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.darkRed;
         }
         div_clone2.setAttribute("red", "true");
       } else {
@@ -1630,7 +1630,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
       barStyle = {
         position: "absolute",
-        background: "#ececec",
+        background: GeneralJs.colorChip.gray2,
         top: String(startTop + 13 + (GeneralJs.isMac() ? 0 : 2)) + ea,
         left: String(intend) + ea,
         width: String(totalWidth) + ea,
@@ -1663,7 +1663,7 @@ ClientJs.prototype.cardViewMaker = function () {
         paddingBottom: String(margin * 1.2) + ea,
         paddingRight: String(margin * 1.2) + ea,
         paddingLeft: String(margin * 10) + ea,
-        border: "1px dashed #cccccc",
+        border: "1px dashed " + GeneralJs.colorChip.gray4,
         borderRadius: String(5) + ea,
       };
 
@@ -1682,14 +1682,14 @@ ClientJs.prototype.cardViewMaker = function () {
         left: String(margin * 1.7) + ea,
         fontSize: String(fontSize + 4) + ea,
         fontWeight: String(200),
-        color: "#aaaaaa",
+        color: GeneralJs.colorChip.gray5,
       };
 
       areaTongStyle = {
         position: "relative",
         paddingBottom: String(margin) + ea,
         minHeight: String(fixedHeightSize + margin) + ea,
-        background: "#f2f2f2",
+        background: GeneralJs.colorChip.gray1,
         borderRadius: String(5) + ea,
       };
 
@@ -2524,7 +2524,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px #808080",
+            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
             transition: "all 0s ease",
           };
           for (let j in style) {
@@ -2681,7 +2681,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px #aaaaaa",
+            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.gray5,
           };
           for (let i in style) {
             button_clone.style[i] = style[i];
@@ -3029,7 +3029,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       height: "calc(" + String(100 / historyTongTarget.length) + "% - " + String(historyTargetHeightConst) + ea + ")",
       fontSize: String(fontSize) + ea,
       fontWeight: String(300),
-      border: "solid 1px #dddddd",
+      border: "solid 1px " + GeneralJs.colorChip.gray3,
       borderRadius: String(5) + ea,
     };
     for (let j in style) {
@@ -3641,7 +3641,7 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       top: String(margin) + ea,
       left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
       borderRadius: String(5) + ea,
-      boxShadow: "0 2px 10px -6px #808080",
+      boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
       width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
       height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
       zIndex: String(2),
@@ -3830,8 +3830,8 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     columnLineHeight = 28;
     columnPaddingTop = 7;
     matrixFontSize = 14;
-    matrixInnerLine = "1px solid #ececec";
-    matrixOuterLine = "1px solid #cccccc";
+    matrixInnerLine = "1px solid " + GeneralJs.colorChip.gray2;
+    matrixOuterLine = "1px solid " + GeneralJs.colorChip.gray4;
     matrixTop = titleTop + 40;
     matrixBoxMargin = 23;
     matrixWidth = boxWidth - (matrixBoxMargin * 2) - 3;
@@ -3870,7 +3870,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       right: String(matrixBoxMargin + 1) + ea,
       top: String(titleTop + 14) + ea,
       height: String(0),
-      borderTop: "1px solid #dddddd",
+      borderTop: "1px solid " + GeneralJs.colorChip.gray3,
     };
     for (let z in style) {
       grayBar.style[z] = style[z];
@@ -4311,7 +4311,7 @@ ClientJs.prototype.reportViewMakerDetail = function (recycle = false) {
         top: String(margin) + ea,
         left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
         borderRadius: String(5) + ea,
-        boxShadow: "0 2px 10px -6px #808080",
+        boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
         width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
         height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
         zIndex: String(2),
@@ -5343,6 +5343,14 @@ ClientJs.prototype.communicationRender = function () {
             } else {
               serid = "s2011_aa04s";
             }
+
+            await ajaxJson({
+              id: cliid,
+              column: "curation.analytics.full",
+              value: false,
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              send: "styleCuration_lite",
+            }, "/updateClientHistory");
 
             await ajaxJson({ cliid, serid }, "/proposalCreate");
 

@@ -361,7 +361,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
                 mother.setAttribute("alarm", "on");
                 for (let dom of mother.children) {
                   if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
-                    alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(4) : String(2)) + "px;", "#FF5F57"));
+                    alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(4) : String(2)) + "px;", GeneralJs.colorChip.red));
                     dom.firstChild.appendChild(alarmCircle);
                     dom.setAttribute("alarm", "on");
                   }
@@ -415,7 +415,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           width: String(100) + '%',
           height: String(itemHeight) + ea,
           background: GeneralJs.colorChip.white,
-          boxShadow: "0px 2px 14px -8px #808080",
+          boxShadow: "0px 2px 14px -8px " + GeneralJs.colorChip.shadow,
           borderRadius: String(3) + ea,
           marginBottom: String(5) + ea,
           cursor: "pointer",
@@ -427,7 +427,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           width: String(100) + '%',
           top: String(GeneralJs.isMac() ? 6 : 8) + ea,
           textAlign: "center",
-          color: "#2fa678",
+          color: GeneralJs.colorChip.green,
         };
 
         //append items
@@ -522,7 +522,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     fontSize: String(13) + ea,
     bottom: String(0) + ea,
     fontWeight: String(500),
-    color: (data.mode === "total" ? "#2fa678" : "#cccccc"),
+    color: (data.mode === "total" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray4),
   };
   for (let i in style) {
     text_div.style[i] = style[i];
@@ -562,7 +562,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     fontSize: String(13) + ea,
     bottom: String(0) + ea,
     fontWeight: String(500),
-    color: (data.mode === "presentation" ? "#2fa678" : "#cccccc"),
+    color: (data.mode === "presentation" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray4),
   };
   for (let i in style) {
     text_div.style[i] = style[i];
@@ -602,7 +602,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     fontSize: String(13) + ea,
     bottom: String(0) + ea,
     fontWeight: String(500),
-    color: (data.mode === "partnership" ? "#2fa678" : "#cccccc"),
+    color: (data.mode === "partnership" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray4),
   };
   for (let i in style) {
     text_div.style[i] = style[i];
@@ -642,7 +642,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     fontSize: String(13) + ea,
     bottom: String(0) + ea,
     fontWeight: String(500),
-    color: "#cccccc",
+    color: GeneralJs.colorChip.gray4,
   };
   for (let i in style) {
     text_div.style[i] = style[i];
@@ -691,7 +691,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       position: "absolute",
       width: String(100) + '%',
       height: String(100) + '%',
-      background: "#cccccc",
+      background: GeneralJs.colorChip.gray4,
       opacity: String(0.4),
       top: String(0) + ea,
       left: String(0) + ea,
@@ -713,7 +713,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   titleArea.appendChild(titleIcon0_4);
 
 
-  titleIcon1 = SvgTong.stringParsing(this.mother.returnArrow("left", "#2fa678"));
+  titleIcon1 = SvgTong.stringParsing(this.mother.returnArrow("left", GeneralJs.colorChip.green));
   titleIcon1.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
@@ -749,7 +749,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   });
   titleArea.appendChild(titleIcon1);
 
-  titleIcon2 = SvgTong.stringParsing(this.mother.returnArrow("right", "#2fa678"));
+  titleIcon2 = SvgTong.stringParsing(this.mother.returnArrow("right", GeneralJs.colorChip.green));
   titleIcon2.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
@@ -879,7 +879,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           dataArea.parentNode.removeChild(newArea);
           dataArea.style.animation = "fadein 0.3s ease forwards";
         },
-        color: [ "#404040", "#404040" ],
+        color: [ GeneralJs.colorChip.black, GeneralJs.colorChip.black ],
         mode: null,
       },
       {
@@ -908,7 +908,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
             alert("추가 신청이 없습니다!");
           }
         },
-        color: [ "#c1272d", "#2fa678" ],
+        color: [ GeneralJs.colorChip.red, GeneralJs.colorChip.green ],
         mode: "opposite",
       },
       {
@@ -936,7 +936,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
             alert("포트폴리오가 없습니다!");
           }
         },
-        color: [ "#c1272d", "#2fa678" ],
+        color: [ GeneralJs.colorChip.red, GeneralJs.colorChip.green ],
         mode: "binary",
       },
     ];
@@ -992,7 +992,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       position: "absolute",
       fontSize: String(cardDefaultFontSize + 1) + ea,
       fontWeight: String(200),
-      color: "#2fa678",
+      color: GeneralJs.colorChip.green,
       top: String(0) + ea,
     };
     for (let i in style) {
@@ -1009,7 +1009,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     div_clone.style.height = String(cardTitleHeight) + ea;
 
     //icons
-    titleIcon1 = SvgTong.stringParsing(instance.mother.returnArrow("left", "#2fa678"));
+    titleIcon1 = SvgTong.stringParsing(instance.mother.returnArrow("left", GeneralJs.colorChip.green));
     titleIcon1.classList.add("hoverDefault_lite");
     style = {
       position: "absolute",
@@ -1030,7 +1030,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     });
     cardArea.appendChild(titleIcon1);
 
-    titleIcon2 = SvgTong.stringParsing(instance.mother.returnArrow("right", "#2fa678"));
+    titleIcon2 = SvgTong.stringParsing(instance.mother.returnArrow("right", GeneralJs.colorChip.green));
     titleIcon2.classList.add("hoverDefault_lite");
     style = {
       position: "absolute",
@@ -1057,7 +1057,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     style = {
       position: "absolute",
       top: String(contentsStartTop) + ea,
-      borderTop: "1px solid #dddddd",
+      borderTop: "1px solid " + GeneralJs.colorChip.gray3,
       width: "calc(100% - " + String(cardMargin * 2) + ea + ")",
       left: String(cardMargin) + ea,
     };
@@ -1103,7 +1103,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         position: "absolute",
         fontSize: String(cardDefaultFontSize) + ea,
         fontWeight: String(600),
-        color: "#404040",
+        color: GeneralJs.colorChip.black,
         top: String(0) + ea,
       };
       for (let i in style) {
@@ -1148,7 +1148,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         fontSize: String(cardDefaultFontSize) + ea,
         fontWeight: String(300),
         textAlign: "left",
-        color: "#404040",
+        color: GeneralJs.colorChip.black,
         top: String(0) + ea,
       };
       for (let i in style) {
@@ -1178,7 +1178,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         bottom: String(cardMargin - 2) + ea,
         right: String(cardMargin + buttonsWidthAddtion) + ea,
         width: String(1000) + ea,
-        border: "1px solid #dddddd",
+        border: "1px solid " + GeneralJs.colorChip.gray3,
         borderRadius: String(3) + ea,
         transition: "all 0s ease",
       };
@@ -1219,7 +1219,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     position: "relative",
     top: String(subMargin) + ea,
     height: "calc(100% - " + String(subMargin) + ea + ")",
-    border: "1px solid #dddddd",
+    border: "1px solid " + GeneralJs.colorChip.gray3,
     borderRadius: String(4) + ea,
   };
   for (let i in style) {
@@ -1230,7 +1230,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
   style = {
     position: "relative",
     height: String(46) + ea,
-    borderBottom: "1px solid #dddddd",
+    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
     overflow: "hidden",
   };
   for (let i in style) {
@@ -1277,7 +1277,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       fontSize: String(14) + ea,
       fontWeight: String(600),
       width: "auto",
-      color: "#2fa678",
+      color: GeneralJs.colorChip.green,
       transition: "all 0s ease",
       textAlign: "center",
     };
@@ -1396,7 +1396,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         fontSize: String(14) + ea,
         width: "auto",
         lineHeight: String(1.8),
-        color: "#202020",
+        color: GeneralJs.colorChip.realBlack,
         fontWeight: data.data[j][sameStandard.name] ? String(500) : String(200),
         transition: "all 0s ease",
         textAlign: "center",
@@ -1508,7 +1508,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
 
   for (let a of alarmTargets) {
     if (a.getAttribute("alarm") === "on") {
-      alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(4) : String(2)) + "px;", "#FF5F57"));
+      alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(4) : String(2)) + "px;", GeneralJs.colorChip.red));
       a.firstChild.appendChild(alarmCircle);
     }
   }
@@ -1529,7 +1529,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
     position: "relative",
     top: String(subMargin) + ea,
     height: "calc(100% - " + String(subMargin) + ea + ")",
-    background: "#f4f4f4",
+    background: GeneralJs.colorChip.gray1,
     borderRadius: String(4) + ea,
   };
   for (let i in style) {
@@ -1599,7 +1599,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       position: "absolute",
       fontSize: String(reportFontSize) + ea,
       fontWeight: String(200),
-      color: "#cccccc",
+      color: GeneralJs.colorChip.gray4,
     };
     for (let i in style) {
       text_div.style[i] = style[i];
@@ -1721,7 +1721,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
       }
       text_div = GeneralJs.nodes.div.cloneNode(true);
       if (reportTargetColumnTong[i].value !== null) {
-        text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name + ' : <b style="font-size:' + String(reportFontSize - 2) + ea + ';color:#2fa678;font-weight:500">' + String(reportTargetColumnTong[i].value) + '</b>');
+        text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name + ' : <b style="font-size:' + String(reportFontSize - 2) + ea + ';color:' + GeneralJs.colorChip.green + ';font-weight:500">' + String(reportTargetColumnTong[i].value) + '</b>');
       } else {
         text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name);
       }
@@ -1729,7 +1729,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
         position: "absolute",
         fontSize: String(reportFontSize - 2) + ea,
         fontWeight: String(200),
-        color: "#202020",
+        color: GeneralJs.colorChip.realBlack,
       };
       for (let i in style) {
         text_div.style[i] = style[i];
@@ -1798,7 +1798,7 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
         div_clone.classList.add("justfadein");
         style = {
           position: "fixed",
-          background: "#404040",
+          background: GeneralJs.colorChip.black,
           top: String(0) + ea,
           left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
           width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -1825,7 +1825,7 @@ DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
         top: String(margin) + ea,
         left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
         borderRadius: String(5) + ea,
-        boxShadow: "0 2px 10px -6px #808080",
+        boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
         width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
         height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
         zIndex: String(2),

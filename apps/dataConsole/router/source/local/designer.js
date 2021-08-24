@@ -244,7 +244,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
     if (num !== 0) {
       this.cases.push({ desid, designer });
     } else {
-      div_clone2.style.borderBottom = "1px dashed #dddddd";
+      div_clone2.style.borderBottom = "1px dashed " + GeneralJs.colorChip.gray3;
       div_clone2.style.height = String(this.module.height + this.module.initialLine) + ea;
       this.cases.push(null);
     }
@@ -460,7 +460,7 @@ DesignerJs.prototype.infoArea = function (info) {
     let finalColor;
     finalColor = GeneralJs.colorChip.black;
     if (mother.getAttribute("red") === "true") {
-      finalColor = "#d13939";
+      finalColor = GeneralJs.colorChip.darkRed;
     }
     if (mother.getAttribute("drop") === "true") {
       finalColor = GeneralJs.colorChip.gray4;
@@ -515,7 +515,7 @@ DesignerJs.prototype.infoArea = function (info) {
                 finalColor = GeneralJs.colorChip.gray4;
               }
               if (standardArea.children[z].getAttribute("red") === "true") {
-                finalColor = "#d13939";
+                finalColor = GeneralJs.colorChip.darkRed;
               }
               for (let y = 0; y < standardArea.children[z].children.length; y++) {
                 if (!onOffObj[standardArea.children[z].children[y].getAttribute("column")]) {
@@ -711,7 +711,7 @@ DesignerJs.prototype.infoArea = function (info) {
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px #808080",
+            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
             transition: "all 0s ease",
           };
           for (let j in style) {
@@ -867,7 +867,7 @@ DesignerJs.prototype.infoArea = function (info) {
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px #aaaaaa",
+            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.gray5,
           };
           for (let i in style) {
             button_clone.style[i] = style[i];
@@ -1095,7 +1095,7 @@ DesignerJs.prototype.infoArea = function (info) {
           zIndex: String(3),
           borderRadius: String(3) + ea,
           animation: "fadeuplite 0.3s ease forwards",
-          boxShadow: "0px 2px 11px -6px #2fa678",
+          boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
         };
         for (let j in style) {
           button_clone.style[j] = style[j];
@@ -1408,9 +1408,9 @@ DesignerJs.prototype.infoArea = function (info) {
         }
         div_clone2.setAttribute("drop", "true");
       } else if (redPoint.values.includes(obj[redPoint.column])) {
-        style2.color = "#d13939";
+        style2.color = GeneralJs.colorChip.darkRed;
         for (let z = 0; z < this.standardDoms[num].children.length; z++) {
-          this.standardDoms[num].children[z].style.color = "#d13939";
+          this.standardDoms[num].children[z].style.color = GeneralJs.colorChip.darkRed;
         }
         div_clone2.setAttribute("red", "true");
       } else {
@@ -1466,7 +1466,7 @@ DesignerJs.prototype.infoArea = function (info) {
       upsideWhiteBar = div_clone2;
       upsideWhiteBar.classList.add("moveTarget");
 
-      upsideWhiteBar.style.borderBottom = "1px dashed #dddddd";
+      upsideWhiteBar.style.borderBottom = "1px dashed " + GeneralJs.colorChip.gray3;
       upsideWhiteBar.style.height = String(this.module.height + this.module.initialLine) + ea;
 
       upsideWhiteBar.setAttribute("sort", String(0));
@@ -1583,7 +1583,7 @@ DesignerJs.prototype.makeImportantEvent = function (id, update = true) {
         };
 
         for (let i = 0; i < length; i++) {
-          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", "#FF5F57"));
+          alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("", GeneralJs.colorChip.red));
           for (let j in alarmStyle) {
             alarmCircle.style[j] = alarmStyle[j];
           }
@@ -2212,7 +2212,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px #808080",
+            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
             transition: "all 0s ease",
           };
           for (let j in style) {
@@ -2369,7 +2369,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px #aaaaaa",
+            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.gray5,
           };
           for (let i in style) {
             button_clone.style[i] = style[i];
@@ -2615,7 +2615,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     right: String(leftMargin) + ea,
     width: "calc(55% - " + String(leftMargin) + ea + ")",
     overflow: "scroll",
-    borderBottom: "1px solid #dddddd",
+    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
   };
   for (let i in style) {
     portfolioBox.style[i] = style[i];
@@ -2784,7 +2784,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         div_clone6.addEventListener("click", function (e) {
           window.open(window.location.protocol + "//" + window.location.host + "/project?proid=" + pairs[z].proid, "_blank");
         });
-        div_clone6.insertAdjacentHTML('beforeend', pairs[z].name + ' <b style="color:#2fa678;font-size:' + String(fontSize - 5) + ea + '" >' + pairs[z].proid + '</b>');
+        div_clone6.insertAdjacentHTML('beforeend', pairs[z].name + ' <b style="color:' + GeneralJs.colorChip.green + ';font-size:' + String(fontSize - 5) + ea + '" >' + pairs[z].proid + '</b>');
         style = {
           display: "inline-block",
           position: "relative",
@@ -3239,7 +3239,7 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       top: String(margin) + ea,
       left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
       borderRadius: String(5) + ea,
-      boxShadow: "0 2px 10px -6px #808080",
+      boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
       width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
       height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
       zIndex: String(2),
@@ -3546,7 +3546,7 @@ DesignerJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
         top: String(margin) + ea,
         left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
         borderRadius: String(5) + ea,
-        boxShadow: "0 2px 10px -6px #808080",
+        boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
         width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
         height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
         zIndex: String(2),

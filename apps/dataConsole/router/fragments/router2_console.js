@@ -1384,7 +1384,11 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         if (column === "important") {
           updateQuery[column] = (Number(value) === 1);
         } else {
-          updateQuery[column] = value;
+          if (value === "true" || value === "false") {
+            updateQuery[column] = (value === "true");
+          } else {
+            updateQuery[column] = value;
+          }
         }
         await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
         historyObj = await back.getHistoryById(method, id, { selfMongo: instance.mongolocal });
@@ -1394,7 +1398,11 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         if (column === "important") {
           updateQuery[column] = (Number(value) === 1);
         } else {
-          updateQuery[column] = value;
+          if (value === "true" || value === "false") {
+            updateQuery[column] = (value === "true");
+          } else {
+            updateQuery[column] = value;
+          }
         }
         await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
       }
