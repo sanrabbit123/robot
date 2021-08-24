@@ -147,6 +147,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
     let requestNumber;
     let targetColumn;
     let pastHistory;
+    let index, indexTarget;
 
     calltype = "outbound";
     tong = {};
@@ -234,10 +235,14 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         cliid = rows[0].cliid;
         historyObj = await back.getHistoryById("client", cliid, { selfMongo: selfConsoleInfo });
         boo = true;
+        index = 0;
+        indexTarget = -1;
         for (let obj of historyObj.curation.analytics.call.out) {
-          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes() && obj.success === success) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
             boo = false;
+            indexTarget = index;
           }
+          index++;
         }
         if (boo) {
           historyObj.curation.analytics.call.out.push({ date, success });
@@ -245,6 +250,16 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
           updateQuery = {};
           updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
           await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+        } else {
+          if (typeof historyObj.curation.analytics.call.out[indexTarget] === "object") {
+            if (historyObj.curation.analytics.call.out[indexTarget].success !== success) {
+              historyObj.curation.analytics.call.out[indexTarget].success = success;
+              whereQuery = { cliid };
+              updateQuery = {};
+              updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
+              await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+            }
+          }
         }
 
         requestNumber = 0;
@@ -279,10 +294,14 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         cliid = rows[0].cliid;
         historyObj = await back.getHistoryById("client", cliid, { selfMongo: selfConsoleInfo });
         boo = true;
+        index = 0;
+        indexTarget = -1;
         for (let obj of historyObj.curation.analytics.call.in) {
-          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes() && obj.success === success) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
             boo = false;
+            indexTarget = index;
           }
+          index++;
         }
         if (boo) {
           historyObj.curation.analytics.call.in.push({ date, success });
@@ -290,12 +309,19 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
           updateQuery = {};
           updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
           await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+        } else {
+          if (typeof historyObj.curation.analytics.call.in[indexTarget] === "object") {
+            if (historyObj.curation.analytics.call.in[indexTarget].success !== success) {
+              historyObj.curation.analytics.call.in[indexTarget].success = success;
+              whereQuery = { cliid };
+              updateQuery = {};
+              updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
+              await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+            }
+          }
         }
-
       }
     }
-
-    await instance.mother.slack_bot.chat.postMessage({ text: "callHistory update success : " + JSON.stringify(new Date()), channel: "#error_log" });
 
   } catch (e) {
     console.log(e);
@@ -506,7 +532,10 @@ Ghost.prototype.ghostRouter = function (needs) {
     link: [ "/ssl" ],
     func: async function (req, res) {
       try {
-        instance.callHistory(MONGOC, MONGOCONSOLEC).catch((err) => {
+        instance.callHistory(MONGOC, MONGOCONSOLEC).then(() => {
+          return instance.mother.slack_bot.chat.postMessage({ text: "callHistory update success : " + JSON.stringify(new Date()), channel: "#error_log" });
+        }).catch((err) => {
+          instance.mother.slack_bot.chat.postMessage({ text: "callHistory error : " + err.message, channel: "#error_log" });
           console.log(err);
         });
         res.set({
