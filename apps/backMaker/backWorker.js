@@ -920,6 +920,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     let serviceMatchBoo;
     let addressLogCollection;
     let addressRows;
+    let comment;
 
     priceStandardCollection = "designerPrice";
     addressLogCollection = "addressLog";
@@ -927,6 +928,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
     onlineRatio = 0.8;
     travelNumber = 2;
     distanceLimitPlus = 5;
+    comment = "";
 
     if (typeof cliid === "object") {
       mode = 0;
@@ -1155,6 +1157,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       // }
 
       if (distanceLimitBoo) {
+        comment = "Out of bounds";
         if (y < 2) {
           if (designer.analytics.project.online) {
             offlineFeeCase = 0;
@@ -1172,9 +1175,14 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       }
 
       if (!serviceMatchBoo) {
+        comment = "Unable service";
         fee = 0;
         offlineFeeCase = 0;
         onlineFeeCase = 0;
+      }
+
+      if (comment === "" && fee === 0) {
+        comment = "Zero in table";
       }
 
       toMoney = (num) => { return (Math.round(num / 1000) * 1000); }
@@ -1207,7 +1215,8 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
             styling: designer.analytics.styling.level,
           },
         },
-        fee: toMoney(fee)
+        fee: toMoney(fee),
+        comment,
       });
     }
 

@@ -1979,7 +1979,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       const designerCardClassName = "pp_designer_selected_box_contents_designers_s";
       const targetDesigners = Array.from(document.querySelectorAll('.' + designerCardClassName + String(index)));
       const targetInputs = targetDesigners.map((dom) => { return dom.previousElementSibling; });
-      let thisDesigner, desid, cliid, serid, xValue;
+      let thisDesigner, desid, cliid, serid, xValue, feeObject;
       thisDesigner = null;
       for (let i = 0; i < targetInputs.length; i++) {
         if (targetInputs[i].checked) {
@@ -2008,6 +2008,12 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         } else {
           greenPopup(thisSet, ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)), false);
         }
+
+        feeObject = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
+        if (feeObject.fee === 0 && feeObject.comment !== "") {
+          window.alert(feeObject.comment);
+        }
+
       }
     } else {
       if (this.value === '') {
@@ -2100,6 +2106,11 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
           input_widthSet(dom.querySelector("input"));
           thisSet = dom.querySelector("input").parentNode;
         }
+      }
+
+      result = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue));
+      if (result.fee === 0 && result.comment !== "") {
+        window.alert(result.comment);
       }
 
       if (timeoutMode) {

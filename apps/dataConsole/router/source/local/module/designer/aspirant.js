@@ -252,7 +252,7 @@ DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callb
           background: GeneralJs.colorChip.white,
           top: String(whiteTop) + ea,
           left: String(whiteLeft) + ea,
-          boxShadow: "0px 4px 14px -8px #808080",
+          boxShadow: "0px 4px 14px -8px " + GeneralJs.colorChip.shadow,
           paddingTop: String(1) + ea,
           borderRadius: String(5) + ea,
           animation: "fadeuplite 0.3s ease forwards",

@@ -633,14 +633,14 @@ GeneralJs.prototype.generalCss = function () {
   input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}input[type=search]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
   input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
   p{overflow:hidden;}
-  b{color:#c0c0c0;}
+  b{color:${GeneralJs.colorChip.grayDeactive};}
   label{cursor:pointer}
   article,section{margin:0;}
   @keyframes in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fa{from{opacity:0;}to{opacity:1;}}
   @keyframes flash{from,80%,to{opacity:0}30%,50%{opacity:0.85}}
   #totalcontents{display:block;position:relative;left:0;top:0;height:100vh;width:100%}
-  #footergreenback0817{display:block;position:relative;width:100%;height:300px;background-color:#2fa678;overflow:hidden}
+  #footergreenback0817{display:block;position:relative;width:100%;height:300px;background-color:${GeneralJs.colorChip.green};overflow:hidden}
   .footerbutton{position:absolute;opacity:0;transition:all .5s ease;left:50%;cursor:pointer}
   .footerbutton:hover{opacity:0.5;}
   @media (min-width:1061px) and (max-width:1610px) {
@@ -916,7 +916,7 @@ GeneralJs.prototype.returnTitleArr = function (color, height = 23) {
 }
 
 GeneralJs.prototype.returnNavigator = function (color) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.181 7.908"><path d="M7.893 6.239h-7.604C0.129 6.239 0 6.368 0 6.527v1.092c0 0.159 0.129 0.289 0.289 0.289h7.604c0.159 0 0.289-0.129 0.289-0.289V6.527C8.181 6.368 8.052 6.239 7.893 6.239z" fill="#34A77A"/><path d="M0.276 5.519h7.63c0.231 0 0.359-0.28 0.214-0.468l-3.763-4.917c-0.136-0.178-0.396-0.178-0.532 0l-3.764 4.917C-0.083 5.239 0.045 5.519 0.276 5.519z" fill="${color}"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.181 7.908"><path d="M7.893 6.239h-7.604C0.129 6.239 0 6.368 0 6.527v1.092c0 0.159 0.129 0.289 0.289 0.289h7.604c0.159 0 0.289-0.129 0.289-0.289V6.527C8.181 6.368 8.052 6.239 7.893 6.239z" fill="${GeneralJs.colorChip.green}"/><path d="M0.276 5.519h7.63c0.231 0 0.359-0.28 0.214-0.468l-3.763-4.917c-0.136-0.178-0.396-0.178-0.532 0l-3.764 4.917C-0.083 5.239 0.045 5.519 0.276 5.519z" fill="${color}"/></svg>`;
 }
 
 GeneralJs.prototype.returnExtract = function (color) {
@@ -2656,7 +2656,7 @@ GeneralJs.prototype.memberView = function () {
       background: GeneralJs.colorChip.white,
       borderRadius: String(4) + ea,
       opacity: String(0.9),
-      boxShadow: "0px 6px 18px -9px #505050",
+      boxShadow: "0px 6px 18px -9px " + GeneralJs.colorChip.darkDarkShadow,
       animation: "profilefadeup 0.4s ease forwards",
       zIndex: String(3),
     };
@@ -2715,7 +2715,7 @@ GeneralJs.prototype.memberView = function () {
       left: String(227) + ea,
       fontSize: String(12) + ea,
       fontWeight: String(200),
-      color: "#808080",
+      color: GeneralJs.colorChip.shadow,
     };
     for (let i in style) {
       div_clone2.style[i] = style[i];
@@ -2863,7 +2863,7 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
       top: "calc(25% - 61.5px)",
       left: "25%",
       background: GeneralJs.colorChip.white,
-      boxShadow: "0px 4px 13px -8px #808080",
+      boxShadow: "0px 4px 13px -8px " + GeneralJs.colorChip.shadow,
       opacity: String(0.95),
       zIndex: String(4),
       animation: "fadeup 0.4s ease forwards",
@@ -2877,7 +2877,7 @@ GeneralJs.prototype.getWhitePrompt = function (size = "big", callback = function
       top: "calc(35% - 61.5px)",
       left: "35%",
       background: GeneralJs.colorChip.white,
-      boxShadow: "0px 4px 13px -8px #808080",
+      boxShadow: "0px 4px 13px -8px " + GeneralJs.colorChip.shadow,
       opacity: String(0.95),
       zIndex: String(4),
       animation: "fadeup 0.4s ease forwards",

@@ -3548,6 +3548,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
       let startDate, endDate;
       let designerRealtime;
       let boo;
+      let comment;
 
       if (!Array.isArray(matrix)) {
         throw new Error("invaild post");
@@ -3601,6 +3602,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
             }
           }
           if (!boo) {
+            comment = "Unable schedule";
             temp.detail.online = 0;
             temp.detail.offline = 0;
             temp.detail.travel.number = 0;
