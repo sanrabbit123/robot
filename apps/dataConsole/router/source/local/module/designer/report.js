@@ -2549,7 +2549,7 @@ DesignerJs.prototype.reportAddExtractEvent = function () {
                 style: {
                   position: "fixed",
                   zIndex: String(2),
-                  background: "#404040",
+                  background: colorChip.black,
                   opacity: String(0.2),
                   width: "100%",
                   height: "100%",

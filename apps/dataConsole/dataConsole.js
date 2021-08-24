@@ -660,16 +660,15 @@ DataConsole.prototype.connect = async function (noStatic = false) {
   const https = require("https");
   const express = require("express");
   const app = express();
-  const bodyParser = require("body-parser");
   const multer = require("multer");
   const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + "/static";
 
   app.use(useragent.express());
-  app.use(bodyParser.json());
+  app.use(express.json({ limit : "50mb" }));
   app.use(multiForms.array());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(staticFolder));
 
   try {

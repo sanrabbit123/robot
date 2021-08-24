@@ -2157,10 +2157,10 @@ GeneralJs.prototype.greenBar = function () {
     "/bill",
   ];
   naviIconsContextLinks = [
-    "/analytics",
+    "/client",
     "/proposal",
     "/project",
-    "/designer?mode=aspirant",
+    "/designer",
     "/contents",
     "/bill",
   ];
@@ -2173,12 +2173,12 @@ GeneralJs.prototype.greenBar = function () {
     3,
   ];
   naviIconsMap = [
-    [ "client", "analytics" ],
+    [ "client" ],
     [ "proposal" ],
     [ "project" ],
-    [ "designer", "aspirant" ],
+    [ "designer" ],
     [ "contents" ],
-    [ "service" ]
+    [ "bill" ]
   ];
 
   for (let i = 0; i < naviIcons.length; i++) {

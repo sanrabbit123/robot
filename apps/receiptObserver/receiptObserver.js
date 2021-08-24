@@ -153,9 +153,9 @@ ReceiptObserver.prototype.taxServerLaunching = async function () {
   const multer = require("multer");
   const multiForms = multer();
 
-  app.use(express.json());
+  app.use(express.json({ limit : "50mb" }));
   app.use(multiForms.array());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
   try {
     await this.back.setInfoObj({ getMode: false });

@@ -5454,6 +5454,8 @@ StyleCurationJs.prototype.launching = async function (loading) {
 
     if (!liteMode) {
       liteForce = false;
+
+
       if (Array.isArray(this.clientHistory.curation.analytics.send)) {
         if (this.clientHistory.curation.analytics.send.length > 0) {
           for (let obj of this.clientHistory.curation.analytics.send) {
@@ -5464,6 +5466,12 @@ StyleCurationJs.prototype.launching = async function (loading) {
           }
         }
       }
+
+
+      
+
+
+
       if (liteForce) {
         if (getObj.mode === undefined) {
           window.location.href = (window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=lite");

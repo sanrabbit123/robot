@@ -4179,8 +4179,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     this.designers = new Designers(designers);
     this.proposal = project.proposal;
 
-    console.log(this.designers);
-
     if (getObj.proid === undefined) {
       window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
     }

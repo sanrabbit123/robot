@@ -366,8 +366,6 @@ DataRouter.prototype.rou_get_First = function () {
             target = "project";
           } else if (/^prop/i.test(req.params.id)) {
             target = "proposal";
-          } else if (/^ana/i.test(req.params.id)) {
-            target = "analytics";
           } else if (/^con/i.test(req.params.id)) {
             target = "contents";
           } else if (/^bil/i.test(req.params.id)) {

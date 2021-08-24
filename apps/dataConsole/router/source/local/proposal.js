@@ -5604,7 +5604,7 @@ ProposalJs.prototype.cssInjection = function () {
     height: 28px;
     background: ${GeneralJs.colorChip.green};
     border-radius: 4px;
-    color: #fff;
+    color: ${GeneralJs.colorChip.white};
     font-size: 14px;
     padding-bottom: ${GeneralJs.isMac() ? String(3) : String(0)}px;
     font-weight: 600;

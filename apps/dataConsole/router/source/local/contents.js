@@ -315,7 +315,7 @@ ContentsJs.prototype.infoArea = function (info) {
     paddingTop: String(this.module.paddingTop) + ea,
     top: String(0) + ea,
     zIndex: String(1),
-    background: "#ffffff",
+    background: GeneralJs.colorChip.white,
     width: style.width,
     left: style.left,
     color: "inherit",
@@ -1022,7 +1022,7 @@ ContentsJs.prototype.infoArea = function (info) {
           textAlign: "center",
           fontSize: "inherit",
           fontWeight: String(500),
-          color: "#ffffff",
+          color: GeneralJs.colorChip.white,
           zIndex: String(3),
           borderRadius: String(3) + ea,
           animation: "fadeuplite 0.3s ease forwards",
@@ -1038,7 +1038,7 @@ ContentsJs.prototype.infoArea = function (info) {
           position: "absolute",
           fontSize: "inherit",
           fontWeight: String(400),
-          color: "#ffffff",
+          color: GeneralJs.colorChip.white,
           zIndex: String(3),
           textAlign: "center",
           background: "transparent",
@@ -3200,7 +3200,7 @@ ContentsJs.prototype.cardViewMaker = function () {
 
           if (num === 0) {
             for (let { style } of gray.firstChild.children) {
-              style.background = "#ffffff";
+              style.background = GeneralJs.colorChip.white;
               style.color = GeneralJs.colorChip.black;
             }
           } else if (num === 1) {
@@ -3377,14 +3377,14 @@ ContentsJs.prototype.cardViewMaker = function () {
         for (let i of GeneralJs.stacks.firstContentsCreateViewDoms) {
           if (i.getAttribute("index") === this.getAttribute("index")) {
             i.style.background = GeneralJs.colorChip.green;
-            i.style.color = "#ffffff";
+            i.style.color = GeneralJs.colorChip.white;
             cliid = this.getAttribute("cliid");
             proid = this.getAttribute("proid");
             name = this.getAttribute("name");
             desid = this.getAttribute("desid");
             designer = this.getAttribute("designer");
           } else {
-            i.style.background = "#ffffff";
+            i.style.background = GeneralJs.colorChip.white;
             i.style.color = GeneralJs.colorChip.black;
           }
         }
@@ -4243,7 +4243,7 @@ ContentsJs.prototype.cardViewMaker = function () {
         for (let i of GeneralJs.stacks.thirdContentsCreateViewDoms) {
           if (i.getAttribute("index") === this.getAttribute("index")) {
             i.style.background = GeneralJs.colorChip.green;
-            i.style.color = "#ffffff";
+            i.style.color = GeneralJs.colorChip.white;
             cliid = this.getAttribute("cliid");
             proid = this.getAttribute("proid");
             name = this.getAttribute("name");
