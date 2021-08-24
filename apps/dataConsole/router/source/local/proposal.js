@@ -1854,7 +1854,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                   }
                 },
                 {
-                  text: Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) + "%",
+                  text: String(Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) * -1) + "%",
                   style: {
                     position: "absolute",
                     fontSize: String(size) + ea,
