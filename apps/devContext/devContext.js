@@ -47,6 +47,222 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
+DevContext.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, requestSystem, stringToDate } = this.mother;
+  const selfMongo = MONGOC;
+  const selfConsoleInfo = MONGOCONSOLEC;
+  try {
+    const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
+    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    const querystring = require("querystring");
+    const callConst = "c_";
+    const uniqueConst = "u_";
+    const successStandardSec = 200;
+    const autoHypen = (sender) => {
+      let phoneNumber, senderArr;
+      let part0, part1, part2;
+      senderArr = sender.split('');
+      phoneNumber = '';
+      part0 = '';
+      part1 = '';
+      part2 = '';
+      if (/^01/gi.test(sender)) {
+        for (let i = 0; i < 3; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      } else if (/^02/gi.test(sender)) {
+        for (let i = 0; i < 2; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      } else {
+        for (let i = 0; i < 3; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      }
+      return phoneNumber;
+    }
+    let res, tong, data, query, calltype, page;
+    let outArr, inArr;
+    let tempObj;
+    let rows, cliid;
+    let whereQuery, updateQuery;
+    let historyObj;
+    let boo;
+    let requestNumber;
+    let targetColumn;
+    let pastHistory;
+
+    calltype = "outbound";
+    tong = {};
+    for (let id of phoneNumbers) {
+      page = 0;
+      do {
+        page++;
+        query = { id, pass, calltype, page };
+        res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+        data = res.data;
+        if (data.DATAS === null) {
+          break;
+        }
+        for (let obj of data.DATAS) {
+          if (!Array.isArray(tong[callConst + obj.SRC])) {
+            tong[callConst + obj.SRC] = [];
+          }
+          tong[callConst + obj.SRC].push(JSON.parse(JSON.stringify(obj)));
+        }
+      } while (data.LISTINFO.total > 10);
+    }
+    for (let c in tong) {
+      tong[c].sort((a, b) => { return a.NO - b.NO; });
+      tong[c] = { out: JSON.parse(JSON.stringify(tong[c])), in: [] };
+    }
+
+    calltype = "inbound";
+    for (let id of phoneNumbers) {
+      page = 0;
+      do {
+        page++;
+        query = { id, pass, calltype, page };
+        res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+        data = res.data;
+        if (data.DATAS === null) {
+          break;
+        }
+        for (let obj of data.DATAS) {
+          tong[callConst + obj.DST].in.push(JSON.parse(JSON.stringify(obj)));
+        }
+      } while (data.LISTINFO.total > 10);
+    }
+
+    outArr = [];
+    inArr = [];
+    for (let c in tong) {
+      for (let obj of tong[c].out) {
+        tempObj = {};
+        tempObj.date = stringToDate(obj.TIME);
+        tempObj.to = autoHypen(obj.DST);
+        if (obj.STATUS === "OK") {
+          if (Number(obj.DURATION) >= successStandardSec) {
+            tempObj.success = true;
+          } else {
+            tempObj.success = false;
+          }
+        } else {
+          tempObj.success = false;
+        }
+        outArr.push(tempObj);
+      }
+      for (let obj of tong[c].in) {
+        tempObj = {};
+        tempObj.date = stringToDate(obj.TIME);
+        tempObj.from = autoHypen(obj.SRC);
+        if (obj.STATUS === "OK") {
+          if (Number(obj.DURATION) >= successStandardSec) {
+            tempObj.success = true;
+          } else {
+            tempObj.success = false;
+          }
+        } else {
+          tempObj.success = false;
+        }
+        inArr.push(tempObj);
+      }
+    }
+
+    outArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+    inArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+
+    for (let { date, to, success } of outArr) {
+      rows = await back.getClientsByQuery({ phone: to }, { selfMongo });
+      if (rows.length !== 0) {
+        cliid = rows[0].cliid;
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: selfConsoleInfo });
+        boo = true;
+        for (let obj of historyObj.curation.analytics.call.out) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes() && obj.success === success) {
+            boo = false;
+          }
+        }
+        if (boo) {
+          historyObj.curation.analytics.call.out.push({ date, success });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
+          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+        }
+
+        requestNumber = 0;
+        for (let i = 0; i < rows[0].requests.length; i++) {
+          if (rows[0].requests[i].request.timeline.valueOf() <= date.valueOf()) {
+            requestNumber = i;
+            break;
+          }
+        }
+        pastHistory = rows[0].requests[requestNumber].analytics.date.call.history.toNormal();
+        targetColumn = "requests." + String(requestNumber) + ".analytics.date.call.history";
+        boo = true;
+        for (let obj of pastHistory) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
+            boo = false;
+          }
+        }
+        if (boo) {
+          pastHistory.push({ date, who: '' });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery[targetColumn] = pastHistory;
+          await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+        }
+
+      }
+    }
+
+    for (let { date, from, success } of inArr) {
+      rows = await back.getClientsByQuery({ phone: from }, { selfMongo });
+      if (rows.length !== 0) {
+        cliid = rows[0].cliid;
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: selfConsoleInfo });
+        boo = true;
+        for (let obj of historyObj.curation.analytics.call.in) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes() && obj.success === success) {
+            boo = false;
+          }
+        }
+        if (boo) {
+          historyObj.curation.analytics.call.in.push({ date, success });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
+          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+        }
+
+      }
+    }
+
+    await instance.mother.slack_bot.chat.postMessage({ text: "callHistory update success : " + JSON.stringify(new Date()), channel: "#error_log" });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
@@ -60,6 +276,14 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
     const bill = new BillMaker();
+
+
+    instance.callHistory(this.MONGOLOCALC, this.MONGOLOCALC).catch((err) => {
+      console.log(err);
+    });
+
+
+
 
 
 
@@ -904,9 +1128,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "우아라",
-    //     designer: "박정훈",
-    //     link: "https://drive.google.com/drive/folders/1HDcpbHHtfPwYYeFtBQe1tcpnSofd74R9",
+    //     client: "홍은영",
+    //     designer: "김소영",
+    //     link: "https://drive.google.com/drive/folders/17WZTI7wG6pv0PuCrd0EU7akSq0aiCmfT",
     //   },
     // ]);
 

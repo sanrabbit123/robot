@@ -98,6 +98,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
     const querystring = require("querystring");
     const callConst = "c_";
     const uniqueConst = "u_";
+    const successStandardSec = 200;
     const autoHypen = (sender) => {
       let phoneNumber, senderArr;
       let part0, part1, part2;
@@ -136,7 +137,6 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
       }
       return phoneNumber;
     }
-
     let res, tong, data, query, calltype, page;
     let outArr, inArr;
     let tempObj;
@@ -197,14 +197,30 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         tempObj = {};
         tempObj.date = stringToDate(obj.TIME);
         tempObj.to = autoHypen(obj.DST);
-        tempObj.success = (obj.STATUS === "OK");
+        if (obj.STATUS === "OK") {
+          if (Number(obj.DURATION) >= successStandardSec) {
+            tempObj.success = true;
+          } else {
+            tempObj.success = false;
+          }
+        } else {
+          tempObj.success = false;
+        }
         outArr.push(tempObj);
       }
       for (let obj of tong[c].in) {
         tempObj = {};
         tempObj.date = stringToDate(obj.TIME);
         tempObj.from = autoHypen(obj.SRC);
-        tempObj.success = (obj.STATUS === "OK");
+        if (obj.STATUS === "OK") {
+          if (Number(obj.DURATION) >= successStandardSec) {
+            tempObj.success = true;
+          } else {
+            tempObj.success = false;
+          }
+        } else {
+          tempObj.success = false;
+        }
         inArr.push(tempObj);
       }
     }
