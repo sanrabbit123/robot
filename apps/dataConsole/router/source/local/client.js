@@ -849,7 +849,7 @@ ClientJs.prototype.infoArea = function (info) {
             zIndex: String(3),
             borderRadius: String(3) + ea,
             animation: "fadeuplite 0.3s ease forwards",
-            boxShadow: "0px 2px 11px -6px #aaaaaa",
+            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.gray5,
           };
           for (let i in style) {
             button_clone.style[i] = style[i];
@@ -1446,7 +1446,7 @@ ClientJs.prototype.infoArea = function (info) {
     if (num === 0) {
       upsideWhiteBar = div_clone2;
       upsideWhiteBar.classList.add("moveTarget");
-      upsideWhiteBar.style.borderBottom = "1px dashed #dddddd";
+      upsideWhiteBar.style.borderBottom = "1px dashed " + GeneralJs.colorChip.gray3;
       upsideWhiteBar.style.height = String(this.module.height + this.module.initialLine) + ea;
       upsideWhiteBar.setAttribute("sort", String(0));
       this.totalMother.appendChild(upsideWhiteBar);
@@ -2306,7 +2306,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
   style = {
     position: "absolute",
-    background: "#dddddd",
+    background: GeneralJs.colorChip.gray3,
     height: String(1) + ea,
     width: "calc(100% - " + (leftMargin * 2) + ea + ")",
     bottom: String(0) + ea,
@@ -5164,10 +5164,14 @@ ClientJs.prototype.communicationRender = function () {
             liteBoo = false;
             callBoo = false;
             for (let { success } of thisHistory.curation.analytics.call.out) {
-              callBoo = true;
+              if (success) {
+                callBoo = true;
+              }
             }
             for (let { success } of thisHistory.curation.analytics.call.in) {
-              callBoo = true;
+              if (success) {
+                callBoo = true;
+              }
             }
 
             if (callBoo) {

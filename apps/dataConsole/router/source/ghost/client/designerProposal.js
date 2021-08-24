@@ -4062,25 +4062,42 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
       property: "curation",
       idArr: [ instance.client.cliid ]
     }, "/getHistoryProperty").then((obj) => {
-      if (obj !== null && obj !== undefined && typeof obj === "object" && obj[instance.client.cliid] !== undefined && !obj[instance.client.cliid].analytics.full) {
-        instance.mother.certificationBox(name, phone, async function (back, box) {
-          try {
-            await GeneralJs.ajaxJson({
-              cliid: instance.client.cliid,
-              proid: instance.project.proid,
-              desid: desid,
-              name: name,
-              phone: phone,
-              designer: designer,
-            }, "/designerProposal_submit");
-            await GeneralJs.sleep(500);
-            document.body.removeChild(box);
-            document.body.removeChild(back);
-            window.location.href = frontPage + "/payment.php?card=true";
-          } catch (e) {
-            console.log(e);
+      let analytics, callBoo;
+      if (obj !== null && obj !== undefined && typeof obj === "object" && obj[instance.client.cliid] !== undefined) {
+        analytics = obj[instance.client.cliid].analytics;
+        callBoo = false;
+        for (let { success } of analytics.call.out) {
+          if (success) {
+            callBoo = true;
           }
-        });
+        }
+        for (let { success } of analytics.call.in) {
+          if (success) {
+            callBoo = true;
+          }
+        }
+        if (!analytics.full || callBoo) {
+          instance.mother.certificationBox(name, phone, async function (back, box) {
+            try {
+              await GeneralJs.ajaxJson({
+                cliid: instance.client.cliid,
+                proid: instance.project.proid,
+                desid: desid,
+                name: name,
+                phone: phone,
+                designer: designer,
+              }, "/designerProposal_submit");
+              await GeneralJs.sleep(500);
+              document.body.removeChild(box);
+              document.body.removeChild(back);
+              window.location.href = frontPage + "/payment.php?card=true";
+            } catch (e) {
+              console.log(e);
+            }
+          });
+        } else {
+          window.alert("자동 큐레이션을 진행하신 고객님은 유선 확인 후 결제를 진행하실 수 있습니다! 영업일 기준 12시간 내로 홈리에종 CX팀이 전화드릴 예정입니다!");
+        }
       } else {
         window.alert("자동 큐레이션을 진행하신 고객님은 유선 확인 후 결제를 진행하실 수 있습니다! 영업일 기준 12시간 내로 홈리에종 CX팀이 전화드릴 예정입니다!");
       }
