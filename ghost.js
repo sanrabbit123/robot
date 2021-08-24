@@ -198,8 +198,9 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         tempObj = {};
         tempObj.date = stringToDate(obj.TIME);
         tempObj.to = autoHypen(obj.DST);
+        tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, ''));
         if (obj.STATUS === "OK") {
-          if (Number(obj.DURATION) >= successStandardSec) {
+          if (tempObj.duration >= successStandardSec) {
             tempObj.success = true;
           } else {
             tempObj.success = false;
@@ -213,8 +214,9 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         tempObj = {};
         tempObj.date = stringToDate(obj.TIME);
         tempObj.from = autoHypen(obj.SRC);
+        tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, ''));
         if (obj.STATUS === "OK") {
-          if (Number(obj.DURATION) >= successStandardSec) {
+          if (tempObj.duration >= successStandardSec) {
             tempObj.success = true;
           } else {
             tempObj.success = false;
@@ -229,7 +231,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
     outArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
     inArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
 
-    for (let { date, to, success } of outArr) {
+    for (let { date, to, duration, success } of outArr) {
       rows = await back.getClientsByQuery({ phone: to }, { selfMongo });
       if (rows.length !== 0) {
         cliid = rows[0].cliid;
@@ -245,14 +247,15 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
           index++;
         }
         if (boo) {
-          historyObj.curation.analytics.call.out.push({ date, success });
+          historyObj.curation.analytics.call.out.push({ date, success, duration });
           whereQuery = { cliid };
           updateQuery = {};
           updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
           await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
         } else {
           if (typeof historyObj.curation.analytics.call.out[indexTarget] === "object") {
-            if (historyObj.curation.analytics.call.out[indexTarget].success !== success) {
+            if (historyObj.curation.analytics.call.out[indexTarget].duration !== duration) {
+              historyObj.curation.analytics.call.out[indexTarget].duration = duration;
               historyObj.curation.analytics.call.out[indexTarget].success = success;
               whereQuery = { cliid };
               updateQuery = {};
@@ -288,7 +291,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
       }
     }
 
-    for (let { date, from, success } of inArr) {
+    for (let { date, from, duration, success } of inArr) {
       rows = await back.getClientsByQuery({ phone: from }, { selfMongo });
       if (rows.length !== 0) {
         cliid = rows[0].cliid;
@@ -304,14 +307,15 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
           index++;
         }
         if (boo) {
-          historyObj.curation.analytics.call.in.push({ date, success });
+          historyObj.curation.analytics.call.in.push({ date, success, duration });
           whereQuery = { cliid };
           updateQuery = {};
           updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
           await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
         } else {
           if (typeof historyObj.curation.analytics.call.in[indexTarget] === "object") {
-            if (historyObj.curation.analytics.call.in[indexTarget].success !== success) {
+            if (historyObj.curation.analytics.call.in[indexTarget].duration !== duration) {
+              historyObj.curation.analytics.call.in[indexTarget].duration = duration;
               historyObj.curation.analytics.call.in[indexTarget].success = success;
               whereQuery = { cliid };
               updateQuery = {};
