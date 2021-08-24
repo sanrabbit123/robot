@@ -71,7 +71,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // /*
+    /*
     const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC });
     const fees = projects.getFees();
     const targets = fees.filter((a) => { return a.distance.amount !== 0 });
@@ -119,7 +119,7 @@ DevContext.prototype.launching = async function () {
     await sheets.update_value_inPython(sheetsId, "", matrix);
 
     console.log(matrix);
-    // */
+    */
 
 
 
@@ -937,7 +937,7 @@ DevContext.prototype.launching = async function () {
 
 
     // spell check
-    // await this.spellCheck("p109");
+    // await this.spellCheck("p107");
 
 
     // get rawPortfolio by pid
@@ -945,7 +945,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p109");
+    // await this.getCorePortfolio("p107");
 
 
     // aspirant to designer
