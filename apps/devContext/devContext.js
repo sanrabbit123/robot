@@ -71,57 +71,55 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
+    // /*
     const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC });
     const fees = projects.getFees();
     const targets = fees.filter((a) => { return a.distance.amount !== 0 });
-    const firstDiscount = 0.85;
+    const onlineMinimum = 425000;
+    const offlineMinimun = 450000;
+    const firstDiscount = 0.15;
     const firstLimit = 50 * 10000;
-    const secondDiscount = 0.95;
-    const secondLimit = 15 * 10000;
-
+    const secondDiscount = 0.05;
     let num;
     let matrix;
     let tempArr;
+    let temp;
 
-    matrix = [ [ "순수 디자인비", "출장비 합산", "순수 온라인", "온라인 + 출장비", "거리", "시간", "출장 횟수", "회당 출장비" ] ]
+    matrix = [ [ "오프라인비", "순수 온라인", "온라인 + 출장 1회", "출장비 3회 합산", "거리", "시간", "회당 출장비" ] ]
 
     for (let t of targets) {
       tempArr = [];
       tempArr.push(t.amount);
-      tempArr.push(t.amount + (t.distance.number * t.distance.amount));
-      num = t.amount * (1 - firstDiscount);
-      if (t.amount * firstDiscount <= firstLimit) {
-        num = firstLimit;
-      }
-      tempArr.push(t.amount - num);
-      num = t.amount * (1 - secondDiscount);
-      if (t.amount * secondDiscount <= secondLimit) {
-        num = secondLimit;
-      }
-      tempArr.push(t.amount - num + (t.distance.number * t.distance.amount));
-      tempArr.push(t.distance.distance);
-      tempArr.push(t.distance.time);
-      tempArr.push(String(t.distance.number) + '회');
-      tempArr.push(t.distance.amount);
 
-      // tempArr = tempArr.map((i) => {
-      //   if (typeof i === "number") {
-      //     return autoComma(i) + '원';
-      //   } else {
-      //     return i;
-      //   }
-      // })
+      if (t.amount * firstDiscount >= firstLimit) {
+        temp = t.amount - firstLimit;
+      } else {
+        temp = t.amount * (1 - firstDiscount);
+      }
+      if (temp <= onlineMinimum) {
+        temp = onlineMinimum;
+      }
+      tempArr.push(temp);
+      tempArr.push((t.amount * (1 - secondDiscount)) + t.distance.amount);
+      tempArr.push(t.amount + (3 * t.distance.amount));
+      tempArr.push(Number(t.distance.distance.replace(/[^0-9]/gi, '')));
+      tempArr.push(Number(t.distance.time.replace(/시간/, '.').replace(/[^0-9\-\.]/gi, '')));
+      tempArr.push(t.distance.amount);
       matrix.push(tempArr);
     }
 
     // const sheetsId = await sheets.create_newSheets_inPython("출장비 계산", "1H8iw8joBVDEu2BwNnVCSfHMiMPBqJWsz");
     // await sheets.setting_cleanView_inPython(sheetsId);
-    const sheetsId = "1UrV-J3bXXm5Qh5mKai3B9AuF1wZ8P23wreyaDWQmcmI";
+
+    matrix = matrix.map((arr) => { return arr.map((n) => { return String(n); }).join("__split__") });
+    matrix = Array.from(new Set(matrix));
+    matrix = matrix.map((str) => { return str.split("__split__").map((s) => { return Number(s); }) });
+
+    const sheetsId = "1LpWjGBJP5fQtfIHFP4s39yBgMFoqZLHkmMjg-Aiju2c";
     await sheets.update_value_inPython(sheetsId, "", matrix);
 
     console.log(matrix);
-    */
+    // */
 
 
 
@@ -170,6 +168,21 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
+    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    // let id;
+    // let callbackurl;
+    // let callbackhost;
+    // let callbackport;
+    // let num;
+    // let res;
+    //
+    // for (let id of phoneNumbers) {
+    //   console.log(id);
+    //   console.log(+(new Date()))
+    //   res = await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } });
+    //   console.log(res.data);
+    // }
 
 
 

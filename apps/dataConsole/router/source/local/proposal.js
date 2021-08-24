@@ -1304,14 +1304,19 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     const xValue = instance.xValue;
     const ea = "px";
     const { createNode, colorChip, withOut, isMac } = GeneralJs;
-    const { desid, cliid, client, designer, detail, fee } = feeObject;
-    const { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium, discount: { online: discountOnline, offline: discountOffline } } = detail;
+    let { desid, cliid, client, designer, detail, fee } = feeObject;
+    let { alpha, distance, level: { construct, styling }, offline, online, pyeong, travel, newcomer, premium, discount: { online: discountOnline, offline: discountOffline } } = detail;
     const distanceBoo = (distance !== 0 ? "true" : "false");
     const mother = thisSet;
     const motherWidth = mother.getBoundingClientRect().width;
     const thisOnOff = /offline/gi.test(thisSet.className) ? "offline" : "online";
     const removeClassName = "greenPopupRemoveTarget";
     const greenClassName = "greenPopupBox";
+    const onlineMinimum = 425000;
+    const offlineMinimun = 450000;
+    const firstDiscount = 0.15;
+    const firstLimit = 50 * 10000;
+    const secondDiscount = 0.05;
     let size, margin;
     let width;
     let bottom;
@@ -1319,6 +1324,8 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     let blockHeight;
     let paddingTop, paddingLeft, paddingBottom;
     let titleVisual;
+    let temp;
+    let onlineTarget;
 
     size = 13;
     margin = 6;
@@ -1330,6 +1337,33 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
     paddingLeft = 18;
     paddingBottom = isMac() ? 13 : 10;
     titleVisual = 1;
+
+    if (distance === 0) {
+      travel.limit = 0;
+      ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.limit = 0;
+      if (offline * firstDiscount >= firstLimit) {
+        temp = offline - firstLimit;
+      } else {
+        temp = offline * (1 - firstDiscount);
+      }
+      if (temp <= onlineMinimum) {
+        temp = onlineMinimum;
+      }
+      online = temp;
+      ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.online = online;
+      if (thisOnOff === "online") {
+        onlineTarget = null;
+        for (let dom of mother.parentElement.parentElement.querySelectorAll("input")) {
+          if (/온/gi.test(dom.previousElementSibling.textContent)) {
+            onlineTarget = dom;
+          }
+        }
+        if (onlineTarget !== null) {
+          onlineTarget.value = GeneralJs.autoComma(online);
+          input_widthSet(onlineTarget);
+        }
+      }
+    }
 
     createNode({
       mother,
@@ -1640,6 +1674,9 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
               },
               attribute: [
                 { number: travel.limit },
+                { distance },
+                { distanceBoo },
+                { thisOnOff }
               ],
               events: [
                 {
@@ -1648,13 +1685,19 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     e.preventDefault();
                     e.stopPropagation();
                     const number = Number(this.getAttribute("number"));
+                    const distance = Number(this.getAttribute("distance"));
+                    const distanceBoo = this.getAttribute("distanceBoo") === "true";
+                    const thisOnOff = this.getAttribute("thisOnOff");
+                    const onlinePosition = 7;
+                    const offlinePosition = 8;
+                    const totalPosition = 9;
                     let doing;
                     let newNumber;
                     if (e.type === "click") {
                       newNumber = number + 1;
                       doing = true;
                     } else {
-                      if (number > 1) {
+                      if (number > 0) {
                         newNumber = number - 1;
                         doing = true;
                       } else {
@@ -1662,9 +1705,18 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       }
                     }
                     if (doing) {
-                      this.lastChild.textContent = String(newNumber) + "회";
-                      this.setAttribute("number", String(newNumber));
-                      ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.limit = newNumber;
+                      this.lastChild.textContent = String(!distanceBoo ? 0 : newNumber) + "회";
+                      this.setAttribute("number", String(!distanceBoo ? 0 : newNumber));
+                      ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.limit = (!distanceBoo ? 0 : newNumber);
+                      if (distanceBoo) {
+                        if (newNumber === 0) {
+
+                        } else if (newNumber === 1) {
+
+                        } else {
+
+                        }
+                      }
                     }
 
                   }
