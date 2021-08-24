@@ -551,6 +551,28 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //GET - callHistory test
+  funcObj.get_callHistory = {
+    link: [ "/callHistory" ],
+    func: async function (req, res) {
+      try {
+        instance.callHistory(MONGOC, MONGOCONSOLEC).catch((err) => {
+          instance.mother.slack_bot.chat.postMessage({ text: "callHistory error : " + err.message, channel: "#error_log" });
+          console.log(err);
+        });
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        res.send(JSON.stringify({ message: "hello?" }));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
   //POST - receive
   funcObj.post_receiveCall = {
     link: [ "/receiveCall" ],
