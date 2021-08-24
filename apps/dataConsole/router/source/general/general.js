@@ -1099,8 +1099,8 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
               transition: "all 0.3s ease",
               transform: "translateX(" + String(barWidth) + ea + ")",
               cursor: "pointer",
-              background: "rgb(247, 247, 247)",
-              borderBottom: "1px dashed rgb(221, 221, 221)",
+              background: GeneralJs.colorChip.gray1,
+              borderBottom: "1px dashed " + GeneralJs.colorChip.shadow,
             };
             for (let i in style) {
               grayTitle.style[i] = style[i];
@@ -1112,7 +1112,7 @@ GeneralJs.grayLeftLaunching = function (reload = false, grayTitleAlready = null,
             grayData.classList.add("backblurdefault_lite");
             style = {
               position: "absolute",
-              background: "rgb(247, 247, 247)",
+              background: GeneralJs.colorChip.gray1,
               top: String(0) + ea,
               right: String(0) + ea,
               width: String(barWidth) + ea,

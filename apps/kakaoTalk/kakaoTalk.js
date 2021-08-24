@@ -35,6 +35,8 @@ const KakaoTalk = function () {
   this.authObj = {};
   this.templates = {};
   this.message = {};
+  this.dir = process.cwd() + "/kakaoTalk";
+  this.listDir = this.dir + "/list";
 }
 
 KakaoTalk.prototype.generateToken = async function () {
@@ -535,6 +537,37 @@ KakaoTalk.prototype.sendAspirantPresentation = async function () {
         console.log(response.data);
       }
     }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+KakaoTalk.prototype.cronLaunching = async function (number) {
+  if (typeof number !== "number") {
+    throw new Error("must be int input");
+  }
+  const instance = this;
+  const { fileSystem } = this.mother;
+  try {
+    const list = (await fileSystem(`readDir`, [ this.listDir ])).filter((i) => { return i !== `.DS_Store`; });
+    list.sort((a, b) => {
+      return Number(a.split('_')[0].replace(/[^0-9]/gi, '')) - Number(b.split('_')[1].replace(/[^0-9]/gi, ''));
+    });
+    if (list.length === 0) {
+      throw new Error("empty list");
+    }
+    if (list[number] === undefined) {
+      throw new Error("invaild number");
+    }
+
+
+
+
+    this.listDir + "/" + list[0]
+
+
+
 
   } catch (e) {
     console.log(e);
