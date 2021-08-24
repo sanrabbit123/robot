@@ -369,7 +369,7 @@ AddressParser.prototype.getDistance = async function (from, to, option = { selfM
       return result;
     }
 
-    distanceRows = await back.mongoRead(distanceLogCollection, { $and: [ { "input.origin": origin.address.road }, { "input.destination": destination.address.road } ] }, { selfMongo: MONGOC });
+    distanceRows = await back.mongoRead(distanceLogCollection, { $and: [ { "input.origin": origin.point.value }, { "input.destination": destination.point.value } ] }, { selfMongo: MONGOC });
     if (distanceRows.length !== 0) {
       result = new Distance(distanceRows[0].distance.meters, distanceRows[0].distance.seconds, origin, destination);
     } else {
@@ -409,7 +409,7 @@ AddressParser.prototype.getDistance = async function (from, to, option = { selfM
       seconds = res.data.features[0].properties.totalTime;
 
       result = new Distance(meters, seconds, origin, destination);
-      await back.mongoCreate(distanceLogCollection, { input: { origin: origin.address.road, destination: destination.address.road }, distance: result.toNormal() }, { selfMongo: MONGOC });
+      await back.mongoCreate(distanceLogCollection, { input: { origin: origin.point.value, destination: destination.point.value }, distance: result.toNormal() }, { selfMongo: MONGOC });
     }
 
     if (option.selfMongo === null || option.selfMongo === undefined) {

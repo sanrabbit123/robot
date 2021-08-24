@@ -952,7 +952,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       MONGOLOCALC = option.selfLocalMongo;
     }
 
-
     if (mode === 0) {
 
       project = await back.getProjectById(proid, { selfMongo: MONGOC });
