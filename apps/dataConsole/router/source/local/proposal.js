@@ -1791,7 +1791,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                 }
               ]
             },
-            //premium
+            //plus minus
             {
               style: {
                 display: "block",
@@ -1804,7 +1804,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                 { serid },
                 { xValue },
                 { thisOnOff },
-                { number: Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) },
+                { number: String(Math.round((/^off/gi.test(thisOnOff) ? discountOffline : discountOnline) * 100) * -1) },
               ],
               events: [
                 {
