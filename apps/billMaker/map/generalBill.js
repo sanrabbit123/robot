@@ -74,7 +74,6 @@ module.exports = {
         amount: {
           pure: 0,
           commission: 0,
-          tax: 0,
         }
       };
     } else if (subject === "proofs") {
@@ -251,13 +250,11 @@ module.exports = {
       constructor(json) {
         this.pure = json.pure;
         this.commission = json.commission;
-        this.tax = json.tax;
       }
       toNormal() {
         let obj = {};
         obj.pure = this.pure;
         obj.commission = this.commission;
-        obj.tax = this.tax;
         return obj;
       }
     }

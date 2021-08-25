@@ -59,6 +59,15 @@ BillMaker.billDictionary = {
           "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
         ]
       },
+      {
+        name: "홈리에종 정산",
+        comments: [
+          "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
+          "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
+          "결제해주신 디자인비는 서비스 정책상, 홈스타일링이 끝날 때까지 홈리에종에서 보관합니다.",
+          "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
+        ]
+      },
     ],
     calculation: {
       designerFeeFirst: {
@@ -67,7 +76,7 @@ BillMaker.billDictionary = {
         description: "디자인 비용에 대한 선금입니다.",
         ea: null,
         number: (method, distance) => { return 1; },
-        amount: (method, amount, distance) => { return amount; },
+        amount: (method, amount, distance) => { return Math.round((amount / 2) / 1000) * 1000; },
       },
       designerFeeRemain: {
         id: "_edfr",
@@ -75,7 +84,7 @@ BillMaker.billDictionary = {
         description: "디자인 비용에 대한 잔금입니다.",
         ea: null,
         number: (method, distance) => { return 1; },
-        amount: (method, amount, distance) => { return (/^off/gi.test(method) ? distance.amount : 0) },
+        amount: (method, amount, distance) => { return Math.round((amount / 2) / 1000) * 1000; },
       },
       designerTravelExpenses: {
         id: "_edte",
@@ -89,6 +98,7 @@ BillMaker.billDictionary = {
     etc: {
       contractAmount: 300000,
       vatRatio: 0.1,
+      freeRatio: 0.967,
     }
   },
 };
@@ -430,6 +440,8 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
   const contractAmount = BillMaker.billDictionary.styling.etc.contractAmount;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
   const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
+  const initCalculation = [ "designerFeeFirst", "designerFeeRemain" ];
   try {
     let MONGOC, MONGOCOREC, MONGOCONSOLEC;
     let selfBoo, selfCoreBoo, selfConsoleBoo;
@@ -495,6 +507,13 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     let itemFactor;
     let goalArr;
     let homeliaisonResponse;
+    let responseObj;
+    let property;
+    let designer;
+    let classification;
+    let calculate;
+    let percentage;
+    let commission;
 
     bilidArr = [];
     for (let { desid, fee } of project.proposal.detail) {
@@ -503,6 +522,10 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
       if (designerHistory === null) {
         throw new Error("designer history error");
       }
+
+      designer = await back.getDesignerById(desid, { selfMongo: MONGOCOREC });
+      classification = designer.information.business.businessInfo.classification;
+      percentage = designer.information.business.service.cost.percentage;
 
       thisMember = null;
       for (let obj of members) {
@@ -626,7 +649,6 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
 
 
         //responses
-        /*
         homeliaisonResponse = this.returnBillDummies("responses");
         homeliaisonResponse.id = bilid + "_r" + String((updateMode ? thisBill.responses.length : 0) + 1);
         homeliaisonResponse.info.push({ address: client.requests[0].request.space.address.value });
@@ -634,26 +656,39 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         homeliaisonResponse.info.push({ method });
         homeliaisonResponse.info.push({ desid });
 
-        for (let item of stylingItems) {
+        for (let property of initCalculation) {
+          responseObj = designerCalculation[property];
           itemFactor = this.returnBillDummies("responseItems");
-          // itemFactor.id = bilid + item.id;
-          // itemFactor.class = item.class;
-          // itemFactor.name = item.name;
-          // itemFactor.description = item.description;
-          // itemFactor.unit.ea = item.ea;
-          // itemFactor.unit.price = Math.round(item.amount(method, amount, distance));
-          // itemFactor.unit.number = item.number(method, distance);
-          // itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-          // itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
-          // itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+          itemFactor.id = bilid + responseObj.id;
+          itemFactor.class = responseObj.class;
+          itemFactor.name = property;
+          itemFactor.description = responseObj.description;
+
+          if (/일반/gi.test(classification)) {
+            calculate = Math.round((amount * 1.1) * (1 - (percentage / 100)));
+          } else if (/간이/gi.test(classification)) {
+            calculate = Math.round(amount * (1 - (percentage / 100)));
+          } else if (/프리/gi.test(classification)) {
+            calculate = Math.round((amount - (amount * (percentage / 100))) * freeRatio);
+          } else {
+            calculate = Math.round((amount * 1.1) * (1 - (percentage / 100)));
+          }
+          commission = Math.round(amount * (percentage / 100));
+
+          itemFactor.unit.ea = responseObj.ea;
+          itemFactor.unit.price = Math.round(responseObj.amount(method, calculate, distance));
+          itemFactor.unit.number = responseObj.number(method, distance);
+
+          itemFactor.amount.pure = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+          itemFactor.amount.commission = Math.round(commission / 1000) * 1000;
+
           homeliaisonResponse.items.push(itemFactor);
-          goalArr.push(itemFactor);
         }
-        homeliaisonResponse.name = stylingRequests[1].name;
-        for (let c of stylingRequests[1].comments) {
+
+        homeliaisonResponse.name = stylingRequests[2].name;
+        for (let c of stylingRequests[2].comments) {
           homeliaisonResponse.comments.push(c);
         }
-        */
 
         //end
 
