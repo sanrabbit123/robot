@@ -335,6 +335,36 @@ MirrorRouter.prototype.rou_get_callHistory = function () {
   return obj;
 }
 
+MirrorRouter.prototype.rou_get_clickDial = function () {
+  const instance = this;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  const querystring = require("querystring");
+  let obj = {};
+  obj.link = "/clickDial";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.id === undefined || req.body.destnumber === undefined) {
+        throw new Error("invaild post");
+      }
+      const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
+      let query;
+      query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
+      await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send(JSON.stringify({ message: "hello?" }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 MirrorRouter.prototype.getAll = function () {
   let result, result_arr;
 

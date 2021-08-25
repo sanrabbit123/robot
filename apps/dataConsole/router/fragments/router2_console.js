@@ -3250,7 +3250,7 @@ DataRouter.prototype.rou_post_callTo = function () {
       } else {
         const who = req.body.who;
         const members = instance.members;
-        let thisPerson, index, number, query, phone;
+        let thisPerson, index, number, phone;
 
         if (req.body.phone !== undefined) {
           phone = req.body.phone;
@@ -3272,8 +3272,10 @@ DataRouter.prototype.rou_post_callTo = function () {
           res.send(JSON.stringify({ message: "OK" }));
         } else {
           number = address.officeinfo.phone.numbers[index];
-          query = { id: number, pass: address.officeinfo.phone.password, destnumber: phone.replace(/[^0-9]/g, '') };
-          await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial" + "?" + "id=" + query.id + "&pass=" + query.pass + "&destnumber=" + query.destnumber, query, { headers: { "Content-Type": "application/json" } });
+          await requestSystem("http://" + address.mirrorinfo.host + ":3000/clickDial", {
+            id: number,
+            destnumber: phone.replace(/[^0-9]/g, '')
+          }, { headers: { "Content-Type": "application/json" } });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "true" }));
         }
