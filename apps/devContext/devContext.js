@@ -279,52 +279,52 @@ DevContext.prototype.launching = async function () {
     //   num++;
     // }
 
-    const selfMongo = this.MONGOLOCALC;
-    const querystring = require("querystring");
-    const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
-    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    let num, num2;
-    let res, res2;
-    let query;
-    let id;
-    let status;
-
-    id = "07046037707";
-    query = { id, pass };
-
-    num = 0;
-    status = 0;
-    while (num < 40) {
-      res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-      if (res.data.SVC_RT === "0000") {
-        status = 1;
-        num2 = 0;
-        while (true) {
-          res2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-          if (res2.data.SVC_RT !== "0000") {
-            break;
-          }
-          await sleep(2000);
-          num2++;
-        }
-        if (num2 >= ((30 * 5) - 1)) {
-          status = 2;
-        } else {
-          status = 3;
-        }
-        break;
-      }
-      await sleep(2000);
-      num++;
-    }
-
-    if (status === 0) {
-      //fail => "부재중"
-    } else if (status === 2) {
-      //success => "스타일 찾기"
-    } else if (status === 3) {
-      //fail => "부재중"
-    }
+    // const selfMongo = this.MONGOLOCALC;
+    // const querystring = require("querystring");
+    // const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
+    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    // let num, num2;
+    // let res, res2;
+    // let query;
+    // let id;
+    // let status;
+    //
+    // id = "07046037707";
+    // query = { id, pass };
+    //
+    // num = 0;
+    // status = 0;
+    // while (num < 40) {
+    //   res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+    //   if (res.data.SVC_RT === "0000") {
+    //     status = 1;
+    //     num2 = 0;
+    //     while (true) {
+    //       res2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+    //       if (res2.data.SVC_RT !== "0000") {
+    //         break;
+    //       }
+    //       await sleep(2000);
+    //       num2++;
+    //     }
+    //     if (num2 >= ((30 * 5) - 1)) {
+    //       status = 2;
+    //     } else {
+    //       status = 3;
+    //     }
+    //     break;
+    //   }
+    //   await sleep(2000);
+    //   num++;
+    // }
+    //
+    // if (status === 0) {
+    //   //fail => "부재중"
+    // } else if (status === 2) {
+    //   //success => "스타일 찾기"
+    // } else if (status === 3) {
+    //   //fail => "부재중"
+    // }
 
 
 

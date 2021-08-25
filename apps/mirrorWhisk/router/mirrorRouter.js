@@ -357,66 +357,73 @@ MirrorRouter.prototype.rou_get_clickDial = function () {
         throw new Error("invaild post");
       }
       const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
-      let query, phone, client;
+      let query, phone, client, observer;
       query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
       await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
 
       phone = instance.autoHypen(req.body.destnumber.replace(/[^0-9]/g, ''));
-      client = null;
+      client = {};
+      observer = async function () {
+        try {
+          const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
+          let query;
+          let num, num2;
+          let status;
+          let response, response2;
+
+          query = { id: req.body.id, pass: address.officeinfo.phone.password };
+
+          if (client.name !== undefined) {
+
+            num = 0;
+            status = 0;
+            while (num < 40) {
+              response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+              if (response.data.SVC_RT === "0000") {
+                status = 1;
+                num2 = 0;
+                while (true) {
+                  response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+                  if (response2.data.SVC_RT !== "0000") {
+                    break;
+                  }
+                  await sleep(2000);
+                  num2++;
+                }
+                if (num2 >= ((30 * 5) - 1)) {
+                  status = 2;
+                } else {
+                  status = 3;
+                }
+                break;
+              }
+              await sleep(2000);
+              num++;
+            }
+
+            if (status === 0) {
+              sendJandi(client.name + " 부재중");
+              //fail => "부재중"
+            } else if (status === 2) {
+              sendJandi(client.name + " 스타일 찾기");
+              //success => "스타일 찾기"
+            } else if (status === 3) {
+              sendJandi(client.name + " 부재중");
+              //fail => "부재중"
+            }
+
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
       back.getClientsByQuery({ phone }, { selfMongo: instance.mongo }).then((rows) => {
         if (rows.length > 0) {
           client = rows[0];
         }
-        return instance.emptyPromise();
-      }).then(() => {
-        let query;
-        let num, num2;
-        let status;
-        let response, response2;
-
-        query = { id: req.body.id, pass: address.officeinfo.phone.password };
-
-        if (client !== null) {
-
-          num = 0;
-          status = 0;
-          while (num < 40) {
-            response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-            if (response.data.SVC_RT === "0000") {
-              status = 1;
-              num2 = 0;
-              while (true) {
-                response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-                if (response2.data.SVC_RT !== "0000") {
-                  break;
-                }
-                await sleep(2000);
-                num2++;
-              }
-              if (num2 >= ((30 * 5) - 1)) {
-                status = 2;
-              } else {
-                status = 3;
-              }
-              break;
-            }
-            await sleep(2000);
-            num++;
-          }
-
-          if (status === 0) {
-            sendJandi(client.name + " 부재중");
-            //fail => "부재중"
-          } else if (status === 2) {
-            sendJandi(client.name + " 스타일 찾기");
-            //success => "스타일 찾기"
-          } else if (status === 3) {
-            sendJandi(client.name + " 부재중");
-            //fail => "부재중"
-          }
-
-        }
-
+        return observer();
       }).catch((err) => {
         console.log(err);
       });
