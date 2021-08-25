@@ -3244,13 +3244,22 @@ DataRouter.prototype.rou_post_callTo = function () {
   obj.link = [ "/callTo" ];
   obj.func = async function (req, res) {
     try {
-      if (req.body.who === undefined || req.body.phone === undefined) {
+      if (req.body.who === undefined) {
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ message: "OK" }));
       } else {
-        const { who, phone } = equalJson(req.body);
+        const who = req.body.who;
         const members = instance.members;
-        let thisPerson, index, number, query;
+        let thisPerson, index, number, query, phone;
+
+        if (req.body.phone !== undefined) {
+          phone = req.body.phone;
+        } else if (req.body.proid !== undefined) {
+          phone = (await back.getClientById((await back.getProjectById(req.body.proid, { selfMongo: instance.mongo })).cliid, { selfMongo: instance.mongo })).phone;
+        } else {
+          throw new Error("invaild post");
+        }
+
         for (let { id, email } of members) {
           if (email.includes(who)) {
             thisPerson = id;
@@ -3271,6 +3280,8 @@ DataRouter.prototype.rou_post_callTo = function () {
       }
     } catch (e) {
       console.log(e);
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify({ message: "OK" }));
     }
   }
   return obj;

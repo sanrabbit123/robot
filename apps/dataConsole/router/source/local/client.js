@@ -2913,7 +2913,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       height: String(fontSize * (21 / 16)) + ea,
       overflow: "scroll",
       fontSize: String(fontSize) + ea,
-      fontWeight: String(300),
+      fontWeight: String(400),
     };
     for (let j in style) {
       div_clone4.style[j] = style[j];
@@ -3091,7 +3091,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       width: "100%",
       height: String(5000) + ea,
       fontSize: String(fontSize * 0.9) + ea,
-      fontWeight: String(400),
+      fontWeight: String(500),
       color: GeneralJs.colorChip.gray5,
       border: String(0),
       outline: String(0),

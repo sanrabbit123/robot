@@ -10,6 +10,14 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
       children: [
         {
           name: "성함",
+          script: function (mother, designer) {
+            if (window.confirm(designer.designer + " 실장님께 전화를 걸까요?")) {
+              GeneralJs.ajaxJson({
+                who: cookies.homeliaisonConsoleLoginedEmail,
+                phone: designer.information.phone.replace(/[^0-9]/gi, '')
+              }, "/callTo").catch((err) => { console.log(err); });
+            }
+          },
           value: function (designer) {
             return designer.designer;
           },
@@ -18,6 +26,14 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
         },
         {
           name: "연락처",
+          script: function (mother, designer) {
+            if (window.confirm(designer.designer + " 실장님께 전화를 걸까요?")) {
+              GeneralJs.ajaxJson({
+                who: cookies.homeliaisonConsoleLoginedEmail,
+                phone: designer.information.phone.replace(/[^0-9]/gi, '')
+              }, "/callTo").catch((err) => { console.log(err); });
+            }
+          },
           value: function (designer) {
             return designer.information.phone;
           },

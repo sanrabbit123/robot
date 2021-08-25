@@ -2374,7 +2374,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let historyTongTarget, historyTargetHeightConst;
   let visualSpecificMarginTop;
   let textAreas;
-  let notionEvent;
+  let callEvent;
   let historyFocusEvent, historyBlurEvent;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
 
@@ -2392,7 +2392,18 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   motherHeight = Number(mother.style.height.replace(/[^0-9\-\.]/g, ''));
-  notionEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
+  callEvent = async function (e) {
+    try {
+      if (window.confirm(thisCase.name + " 고객님께 전화를 걸까요?")) {
+        await GeneralJs.ajaxJson({
+          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          proid: thisCase.proid
+        }, "/callTo");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   //title ------------------------------------------
 
@@ -2428,7 +2439,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", notionEvent);
+  div_clone3.addEventListener("click", callEvent);
   div_clone2.appendChild(div_clone3);
 
   //proid
@@ -2445,7 +2456,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", notionEvent);
+  div_clone3.addEventListener("click", callEvent);
   div_clone2.appendChild(div_clone3);
 
   //right arrow
@@ -3206,7 +3217,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       height: String(fontSize * (21 / 16)) + ea,
       overflow: "scroll",
       fontSize: String(fontSize) + ea,
-      fontWeight: String(300),
+      fontWeight: String(400),
     };
     for (let j in style) {
       div_clone4.style[j] = style[j];
@@ -3478,7 +3489,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       width: "100%",
       height: String(5000) + ea,
       fontSize: String(fontSize * 0.9) + ea,
-      fontWeight: String(200),
+      fontWeight: String(500),
       color: GeneralJs.colorChip.gray5,
       border: String(0),
       outline: String(0),
