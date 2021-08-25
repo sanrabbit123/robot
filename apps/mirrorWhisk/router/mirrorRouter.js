@@ -21,9 +21,55 @@ const MirrorRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOPYTHONC,
   this.human = humanInstance;
 }
 
+MirrorRouter.prototype.emptyPromise = function () {
+  return new Promise(function (resolve, reject) {
+    resolve(null);
+  });
+}
+
+MirrorRouter.prototype.autoHypen = function (sender) {
+  let phoneNumber, senderArr;
+  let part0, part1, part2;
+  senderArr = sender.split('');
+  phoneNumber = '';
+  part0 = '';
+  part1 = '';
+  part2 = '';
+  if (/^01/gi.test(sender)) {
+    for (let i = 0; i < 3; i++) {
+      part0 += senderArr.shift();
+    }
+    for (let i = 0; i < 4; i++) {
+      part2 = senderArr.pop() + part2;
+    }
+    part1 = senderArr.join('');
+    phoneNumber = part0 + '-' + part1 + '-' + part2;
+  } else if (/^02/gi.test(sender)) {
+    for (let i = 0; i < 2; i++) {
+      part0 += senderArr.shift();
+    }
+    for (let i = 0; i < 4; i++) {
+      part2 = senderArr.pop() + part2;
+    }
+    part1 = senderArr.join('');
+    phoneNumber = part0 + '-' + part1 + '-' + part2;
+  } else {
+    for (let i = 0; i < 3; i++) {
+      part0 += senderArr.shift();
+    }
+    for (let i = 0; i < 4; i++) {
+      part2 = senderArr.pop() + part2;
+    }
+    part1 = senderArr.join('');
+    phoneNumber = part0 + '-' + part1 + '-' + part2;
+  }
+  return phoneNumber;
+}
+
 MirrorRouter.prototype.callHistory = async function () {
   const instance = this;
   const back = this.back;
+  const autoHypen = this.autoHypen;
   const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, requestSystem, stringToDate } = this.mother;
   const selfMongo = this.mongo;
   const selfConsoleInfo = this.mongoConsole;
@@ -34,44 +80,6 @@ MirrorRouter.prototype.callHistory = async function () {
     const callConst = "c_";
     const uniqueConst = "u_";
     const successStandardSec = 200;
-    const autoHypen = (sender) => {
-      let phoneNumber, senderArr;
-      let part0, part1, part2;
-      senderArr = sender.split('');
-      phoneNumber = '';
-      part0 = '';
-      part1 = '';
-      part2 = '';
-      if (/^01/gi.test(sender)) {
-        for (let i = 0; i < 3; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      } else if (/^02/gi.test(sender)) {
-        for (let i = 0; i < 2; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      } else {
-        for (let i = 0; i < 3; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      }
-      return phoneNumber;
-    }
     let res, tong, data, query, calltype, page;
     let outArr, inArr;
     let tempObj;
@@ -337,8 +345,9 @@ MirrorRouter.prototype.rou_get_callHistory = function () {
 
 MirrorRouter.prototype.rou_get_clickDial = function () {
   const instance = this;
+  const back = this.back;
   const address = this.address;
-  const { requestSystem } = this.mother;
+  const { requestSystem, sendJandi } = this.mother;
   const querystring = require("querystring");
   let obj = {};
   obj.link = "/clickDial";
@@ -348,9 +357,70 @@ MirrorRouter.prototype.rou_get_clickDial = function () {
         throw new Error("invaild post");
       }
       const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
-      let query;
+      let query, phone, client;
       query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
       await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+
+      phone = instance.autoHypen(req.body.destnumber.replace(/[^0-9]/g, ''));
+      client = null;
+      back.getClientsByQuery({ phone }, { selfMongo: instance.mongo }).then((rows) => {
+        if (rows.length > 0) {
+          client = rows[0];
+        }
+        return instance.emptyPromise();
+      }).then(() => {
+        let query;
+        let num, num2;
+        let status;
+        let response, response2;
+
+        query = { id: req.body.id, pass: address.officeinfo.phone.password };
+
+        if (client !== null) {
+
+          num = 0;
+          status = 0;
+          while (num < 40) {
+            response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+            if (response.data.SVC_RT === "0000") {
+              status = 1;
+              num2 = 0;
+              while (true) {
+                response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+                if (response2.data.SVC_RT !== "0000") {
+                  break;
+                }
+                await sleep(2000);
+                num2++;
+              }
+              if (num2 >= ((30 * 5) - 1)) {
+                status = 2;
+              } else {
+                status = 3;
+              }
+              break;
+            }
+            await sleep(2000);
+            num++;
+          }
+
+          if (status === 0) {
+            sendJandi(client.name + " 부재중");
+            //fail => "부재중"
+          } else if (status === 2) {
+            sendJandi(client.name + " 스타일 찾기");
+            //success => "스타일 찾기"
+          } else if (status === 3) {
+            sendJandi(client.name + " 부재중");
+            //fail => "부재중"
+          }
+
+        }
+
+      }).catch((err) => {
+        console.log(err);
+      });
+
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',

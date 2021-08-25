@@ -95,6 +95,13 @@ document.addEventListener("DOMContentLoaded", async function (e) {
             }
 
             //end
+          } else if (obj.email !== undefined && obj.prompt !== undefined && obj.url !== undefined) {
+            if (Array.isArray(obj.email)) {
+              if (obj.email.includes(GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail)) {
+                const promptResult = window.prompt(obj.prompt);
+                GeneralJs.ajax({ result: (promptResult ? 1 : 0) }, obj.url, () => {});
+              }
+            }
           }
         }
       });

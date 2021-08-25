@@ -280,84 +280,55 @@ DevContext.prototype.launching = async function () {
     // }
 
     const selfMongo = this.MONGOLOCALC;
-    const autoHypen = (sender) => {
-      let phoneNumber, senderArr;
-      let part0, part1, part2;
-      senderArr = sender.split('');
-      phoneNumber = '';
-      part0 = '';
-      part1 = '';
-      part2 = '';
-      if (/^01/gi.test(sender)) {
-        for (let i = 0; i < 3; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      } else if (/^02/gi.test(sender)) {
-        for (let i = 0; i < 2; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      } else {
-        for (let i = 0; i < 3; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      }
-      return phoneNumber;
-    }
     const querystring = require("querystring");
     const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
-    const historyUrl = "https://centrex.uplus.co.kr/RestApi/callhistory";
     const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    let id;
-    let callbackurl;
-    let callbackhost;
-    let callbackport;
-    let num;
-    let res;
+    let num, num2;
+    let res, res2;
     let query;
-    let calltype;
-    let page;
-    let targetPhone;
-    let rows;
-    let arr;
+    let id;
+    let status;
 
-    calltype = "outbound";
-    page = 1;
+    id = "07046037707";
+    query = { id, pass };
 
-    for (let id of phoneNumbers) {
-      query = { id, pass, destnumber: "01027473403" };
-      res = await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial" + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-
-      break;
-
-      // query = { id, pass };
-      // res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-      // if (res.data.SVC_RT === "0000") {
-      //   arr = [];
-      //
-      //   console.log(res.data);
-      //   console.log(id);
-      //
-      //
-      //   // rows = await back.getClientsByQuery({ phone: targetPhone }, { selfMongo });
-      //   // rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
-      //
-      // }
+    num = 0;
+    status = 0;
+    while (num < 40) {
+      res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+      if (res.data.SVC_RT === "0000") {
+        status = 1;
+        num2 = 0;
+        while (true) {
+          res2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+          if (res2.data.SVC_RT !== "0000") {
+            break;
+          }
+          await sleep(2000);
+          num2++;
+        }
+        if (num2 >= ((30 * 5) - 1)) {
+          status = 2;
+        } else {
+          status = 3;
+        }
+        break;
+      }
+      await sleep(2000);
+      num++;
     }
+
+    if (status === 0) {
+      //fail => "부재중"
+    } else if (status === 2) {
+      //success => "스타일 찾기"
+    } else if (status === 3) {
+      //fail => "부재중"
+    }
+
+
+
+
 
 
 
