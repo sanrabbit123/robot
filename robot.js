@@ -373,6 +373,16 @@ Robot.prototype.pythonWatcher = async function () {
   }
 }
 
+Robot.prototype.mirrorWhisk = async function () {
+  try {
+    const MirrorWhisk = require(`${process.cwd()}/apps/mirrorWhisk/mirrorWhisk.js`);
+    const app = new MirrorWhisk();
+    await app.mirrorServerLaunching();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.taxBill = async function () {
   try {
     const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
@@ -1241,6 +1251,13 @@ const MENU = {
       console.log(e);
     }
   },
+  mirrorWhisk: async function () {
+    try {
+      await robot.mirrorWhisk();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 };
 let launchingFunc;
 

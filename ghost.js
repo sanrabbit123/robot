@@ -536,12 +536,6 @@ Ghost.prototype.ghostRouter = function (needs) {
     link: [ "/ssl" ],
     func: async function (req, res) {
       try {
-        instance.callHistory(MONGOC, MONGOCONSOLEC).then(() => {
-          return instance.mother.slack_bot.chat.postMessage({ text: "callHistory update success : " + JSON.stringify(new Date()), channel: "#error_log" });
-        }).catch((err) => {
-          instance.mother.slack_bot.chat.postMessage({ text: "callHistory error : " + err.message, channel: "#error_log" });
-          console.log(err);
-        });
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": '*',

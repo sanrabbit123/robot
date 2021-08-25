@@ -50,7 +50,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing } = this.mother;
+  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -60,7 +60,6 @@ DevContext.prototype.launching = async function () {
     const work = new BackWorker();
     const sheets = new GoogleSheet();
     const bill = new BillMaker();
-
 
 
 
@@ -160,9 +159,9 @@ DevContext.prototype.launching = async function () {
     // num = 0;
     // for (let id of phoneNumbers) {
     //   callbackurl = "/cloud" + String(num) + ".php";
-    //   callbackhost = "3.35.212.109";
+    //   callbackhost = "3.35.13.93";
     //   callbackport = 80;
-    //   console.log(await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + callbackport, { id, pass, callbackurl, callbackhost, callbackport }, { headers: { "Content-Type": "application/json" } }));
+    //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + callbackport, { id, pass, callbackurl, callbackhost, callbackport }, { headers: { "Content-Type": "application/json" } })).data);
     //   num++;
     // }
 
@@ -216,7 +215,7 @@ DevContext.prototype.launching = async function () {
 
     const today = new Date();
     const tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
-    const fiveYearsAgo = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate());
+    const fourYearsAgo = new Date(today.getFullYear() - 4, today.getMonth(), today.getDate());
     const designers = await back.getDesignersByQuery({});
 
     let alpha, alphaPercentage;
@@ -226,8 +225,9 @@ DevContext.prototype.launching = async function () {
     let matrix;
     let tempArr;
     let sheetsId;
+    let paper;
 
-    matrix = [ [ "디자이너 이름", "경력", "페이퍼 워크", "홈리에종 관계", "인기도", "가산점", "증가율" ] ];
+    matrix = [ [ "디자이너 이름", "경력", "페이퍼 워크", "홈리에종 관계", "가산점", "증가율" ] ];
     for (let designer of designers) {
 
       tempArr = [];
@@ -236,10 +236,17 @@ DevContext.prototype.launching = async function () {
       thisDesignerCareerStart = new Date(designer.information.business.career.startY - Math.floor(designer.information.business.career.relatedY / 3), designer.information.business.career.startM - 1, 1);
 
       alpha = 0;
-      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1.5 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 0.75 : 0);
-      tempArr.push(thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1.5 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 0.75 : 0));
-      alpha += designer.analytics.project.paperWork.values.includes("3D") ? 1.5 : ((designer.analytics.project.paperWork.values.length >= 4) ? 0.75 : 0);
-      tempArr.push(designer.analytics.project.paperWork.values.includes("3D") ? 1.5 : ((designer.analytics.project.paperWork.values.length >= 4) ? 0.75 : 0));
+
+      alpha += (designer.information.business.career.relatedY >= 4 ? 0.5 : 0);
+      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1 : (thisDesignerCareerStart.valueOf() <= fourYearsAgo.valueOf() ? 0.5 : 0);
+      tempArr.push(alpha);
+
+      paper = 0;
+      paper += (designer.analytics.project.paperWork.values.includes("3D") ? 0.5 : 0);
+      paper += (designer.analytics.project.paperWork.values.includes("콜라주") ? 0.5 : 0);
+      paper += (designer.analytics.project.paperWork.values.length >= 4 ? 0.5 : 0);
+      tempArr.push(paper);
+      alpha += paper;
 
       homeliaison = 0;
       for (let { value } of designer.analytics.etc.personality) {
@@ -253,8 +260,8 @@ DevContext.prototype.launching = async function () {
       tempArr.push((homeliaison * (4.5 / 7)));
 
       //인기도
+      alpha += 1;
       alpha += 0.5;
-      tempArr.push(0.5);
 
       alphaPercentage = Math.round(((alpha / 100) + 1) * 10000) / 100;
 

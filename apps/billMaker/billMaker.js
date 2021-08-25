@@ -62,20 +62,33 @@ BillMaker.billDictionary = {
     ],
     calculation: {
       designerFeeFirst: {
-        id: "_idff",
+        id: "_edff",
         name: "디자인비 선금",
         description: "디자인 비용에 대한 선금입니다.",
+        ea: null,
+        number: (method, distance) => { return 1; },
         amount: (method, amount, distance) => { return amount; },
       },
       designerFeeRemain: {
-        id: "_idfr",
+        id: "_edfr",
         name: "디자인비 잔금",
         description: "디자인 비용에 대한 잔금입니다.",
+        ea: null,
+        number: (method, distance) => { return 1; },
+        amount: (method, amount, distance) => { return (/^off/gi.test(method) ? distance.amount : 0) },
+      },
+      designerTravelExpenses: {
+        id: "_edte",
+        name: "디자이너 출장비",
+        description: "디자이너가 출장시 발생되는 왕복 비용입니다.",
+        ea: "회",
+        number: (method, distance) => { return (/^off/gi.test(method) ? distance.number : 0); },
         amount: (method, amount, distance) => { return (/^off/gi.test(method) ? distance.amount : 0) },
       }
     },
     etc: {
       contractAmount: 300000,
+      vatRatio: 0.1,
     }
   },
 };
@@ -415,7 +428,8 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
   const stylingItems = BillMaker.billDictionary.styling.items;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
   const contractAmount = BillMaker.billDictionary.styling.etc.contractAmount;
-  const vatRatio = 0.1;
+  const designerCalculation = BillMaker.billDictionary.styling.calculation;
+  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
   try {
     let MONGOC, MONGOCOREC, MONGOCONSOLEC;
     let selfBoo, selfCoreBoo, selfConsoleBoo;
@@ -612,7 +626,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
 
 
         //responses
-
+        /*
         homeliaisonResponse = this.returnBillDummies("responses");
         homeliaisonResponse.id = bilid + "_r" + String((updateMode ? thisBill.responses.length : 0) + 1);
         homeliaisonResponse.info.push({ address: client.requests[0].request.space.address.value });
@@ -622,22 +636,16 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
 
         for (let item of stylingItems) {
           itemFactor = this.returnBillDummies("responseItems");
-          itemFactor.id = bilid + item.id;
-          itemFactor.class = item.class;
-          itemFactor.name = item.name;
-          itemFactor.description = item.description;
-
-
-
-
-
-
-          itemFactor.unit.ea = item.ea;
-          itemFactor.unit.price = Math.round(item.amount(method, amount, distance));
-          itemFactor.unit.number = item.number(method, distance);
-          itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-          itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
-          itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+          // itemFactor.id = bilid + item.id;
+          // itemFactor.class = item.class;
+          // itemFactor.name = item.name;
+          // itemFactor.description = item.description;
+          // itemFactor.unit.ea = item.ea;
+          // itemFactor.unit.price = Math.round(item.amount(method, amount, distance));
+          // itemFactor.unit.number = item.number(method, distance);
+          // itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+          // itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
+          // itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
           homeliaisonResponse.items.push(itemFactor);
           goalArr.push(itemFactor);
         }
@@ -645,8 +653,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         for (let c of stylingRequests[1].comments) {
           homeliaisonResponse.comments.push(c);
         }
-
-
+        */
 
         //end
 

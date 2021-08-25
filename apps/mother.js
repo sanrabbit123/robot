@@ -2339,4 +2339,28 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
   }
 }
 
+Mother.prototype.sendJandi = function (message) {
+  if (typeof message !== "string") {
+    throw new Error("message must be string");
+  }
+  const axios = require("axios");
+  const webhookUrl = "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844";
+  return new Promise((resolve, reject) => {
+    axios.post(webhookUrl, {
+      body: message,
+      connectColor: "#FAC11B",
+      connectInfo: []
+    }, {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Accept": "application/vnd.tosslab.jandi-v2+json"
+      }
+    }).then(function (response) {
+      resolve(response);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+}
+
 module.exports = Mother;

@@ -888,7 +888,7 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
   const addressApp = new AddressParser();
   const today = new Date();
   const tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
-  const fiveYearsAgo = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate());
+  const fourYearsAgo = new Date(today.getFullYear() - 4, today.getMonth(), today.getDate());
   try {
     let MONGOC, MONGOLOCALC;
     let requestNumber;
@@ -1117,11 +1117,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       thisDesignerCareerStart = new Date(designer.information.business.career.startY, designer.information.business.career.startM - 1, 1);
 
       alpha = 0;
-      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 2 : (thisDesignerCareerStart.valueOf() <= fiveYearsAgo.valueOf() ? 1 : 0);
-      alpha += designer.analytics.project.paperWork.values.includes("3D") ? 2 : ((designer.analytics.project.paperWork.values.length >= 4) ? 1 : 0);
-      alpha += designer.analytics.purchase.agencies ? (1 / 3) : 0;
-      alpha += designer.analytics.purchase.setting.install ? (1 / 3) : 0;
-      alpha += designer.analytics.purchase.setting.storage ? (1 / 3) : 0;
+      alpha += (designer.information.business.career.relatedY >= 4 ? 0.5 : 0);
+      alpha += thisDesignerCareerStart.valueOf() <= tenYearsAgo.valueOf() ? 1 : (thisDesignerCareerStart.valueOf() <= fourYearsAgo.valueOf() ? 0.5 : 0);
+      alpha += (designer.analytics.project.paperWork.values.includes("3D") ? 0.5 : 0);
+      alpha += (designer.analytics.project.paperWork.values.includes("콜라주") ? 0.5 : 0);
+      alpha += (designer.analytics.project.paperWork.values.length >= 4 ? 0.5 : 0);
 
       homeliaison = 0;
       for (let { value } of designer.analytics.etc.personality) {
@@ -1132,9 +1132,11 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       relationItems = designer.analytics.etc.relation.items;
       homeliaison += 2 - relationItems.indexOf(designer.analytics.etc.relation.value);
 
-      alpha += (homeliaison * (2 / 7));
+      alpha += (homeliaison * (4.5 / 7));
 
-      //인기도
+      //고객 평가 (2점 만점)
+      alpha += 1;
+      //인기도 (0.5점 만점)
       alpha += 0.5;
 
       alphaPercentage = (alpha / 100) + 1;

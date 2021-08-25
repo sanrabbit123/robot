@@ -79,20 +79,7 @@ CronGhost.prototype.middlePython = function (listNum) {
 CronGhost.prototype.endPython = function (listNum) {
   const instance = this;
   const targetList = this.list[listNum];
-  let script;
-  let addJopMaker;
-
-  script = `
-  scheduler = AsyncIOScheduler()
-
-  scheduler.start()
-  try:
-      asyncio.get_event_loop().run_forever()
-  except (KeyboardInterrupt, SystemExit):
-      pass`;
-
-
-  addJopMaker = function (name, time) {
+  const addJopMaker = function (name, time) {
     if (time.hour === undefined || time.hour === undefined || time.hour === undefined) {
       throw new Error("invaild time");
     }
@@ -111,6 +98,7 @@ CronGhost.prototype.endPython = function (listNum) {
       return `scheduler.add_job(${name}, 'cron', day_of_week='${String(time.day_of_week)}', hour='${String(hour)}', minute='${String(minute)}', second='${String(second)}')`;
     }
   }
+  let script;
 
   script = `scheduler = AsyncIOScheduler()`;
   for (let { name, time } of targetList) {

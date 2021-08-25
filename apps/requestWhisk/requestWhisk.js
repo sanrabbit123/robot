@@ -102,7 +102,7 @@ RequestWhisk.prototype.requestBeating = async function (requestNumber = 0) {
   const http = require("http");
   const express = require("express");
   const app = express();
-  const { spawn } = require('child_process');
+  const { spawn } = require("child_process");
   try {
     let requestScript, targetList, requestOpt;
 

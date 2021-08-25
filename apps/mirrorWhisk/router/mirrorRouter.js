@@ -1,0 +1,355 @@
+const MirrorRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOPYTHONC, kakaoInstance, humanInstance) {
+  this.dir = process.cwd() + "/apps/mirrorWhisk";
+  const Mother = require(`${process.cwd()}/apps/mother.js`);
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+  const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
+  this.mother = new Mother();
+  this.back = new BackMaker();
+  this.bill = new BillMaker();
+  this.sheets = new GoogleSheet();
+  this.drive = new GoogleDrive();
+  this.calendar = new GoogleCalendar();
+  this.mongo = MONGOC;
+  this.mongolocal = MONGOLOCALC;
+  this.mongoConsole = MONGOCONSOLEC;
+  this.mongoPython = MONGOPYTHONC;
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
+  this.kakao = kakaoInstance;
+  this.human = humanInstance;
+}
+
+MirrorRouter.prototype.callHistory = async function () {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, requestSystem, stringToDate } = this.mother;
+  const selfMongo = this.mongo;
+  const selfConsoleInfo = this.mongoConsole;
+  try {
+    const url = "https://centrex.uplus.co.kr/RestApi/callhistory";
+    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    const querystring = require("querystring");
+    const callConst = "c_";
+    const uniqueConst = "u_";
+    const successStandardSec = 200;
+    const autoHypen = (sender) => {
+      let phoneNumber, senderArr;
+      let part0, part1, part2;
+      senderArr = sender.split('');
+      phoneNumber = '';
+      part0 = '';
+      part1 = '';
+      part2 = '';
+      if (/^01/gi.test(sender)) {
+        for (let i = 0; i < 3; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      } else if (/^02/gi.test(sender)) {
+        for (let i = 0; i < 2; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      } else {
+        for (let i = 0; i < 3; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      }
+      return phoneNumber;
+    }
+    let res, tong, data, query, calltype, page;
+    let outArr, inArr;
+    let tempObj;
+    let rows, cliid;
+    let whereQuery, updateQuery;
+    let historyObj;
+    let boo;
+    let requestNumber;
+    let targetColumn;
+    let pastHistory;
+    let index, indexTarget;
+
+    calltype = "outbound";
+    tong = {};
+    for (let id of phoneNumbers) {
+      page = 0;
+      do {
+        page++;
+        query = { id, pass, calltype, page };
+        res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+        data = res.data;
+        if (data.DATAS === null) {
+          break;
+        }
+        for (let obj of data.DATAS) {
+          if (!Array.isArray(tong[callConst + obj.SRC])) {
+            tong[callConst + obj.SRC] = [];
+          }
+          tong[callConst + obj.SRC].push(JSON.parse(JSON.stringify(obj)));
+        }
+      } while (data.LISTINFO.total > 10);
+    }
+    for (let c in tong) {
+      tong[c].sort((a, b) => { return a.NO - b.NO; });
+      tong[c] = { out: JSON.parse(JSON.stringify(tong[c])), in: [] };
+    }
+
+    calltype = "inbound";
+    for (let id of phoneNumbers) {
+      page = 0;
+      do {
+        page++;
+        query = { id, pass, calltype, page };
+        res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+        data = res.data;
+        if (data.DATAS === null) {
+          break;
+        }
+        for (let obj of data.DATAS) {
+          tong[callConst + obj.DST].in.push(JSON.parse(JSON.stringify(obj)));
+        }
+      } while (data.LISTINFO.total > 10);
+    }
+
+    outArr = [];
+    inArr = [];
+    for (let c in tong) {
+      for (let obj of tong[c].out) {
+        tempObj = {};
+        tempObj.date = stringToDate(obj.TIME);
+        tempObj.to = autoHypen(obj.DST);
+        tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, ''));
+        if (obj.STATUS === "OK") {
+          if (tempObj.duration >= successStandardSec) {
+            tempObj.success = true;
+          } else {
+            tempObj.success = false;
+          }
+        } else {
+          tempObj.success = false;
+        }
+        outArr.push(tempObj);
+      }
+      for (let obj of tong[c].in) {
+        tempObj = {};
+        tempObj.date = stringToDate(obj.TIME);
+        tempObj.from = autoHypen(obj.SRC);
+        tempObj.duration = Number.isNaN(Number(obj.DURATION.replace(/[^0-9]/gi, ''))) ? 0 : Number(obj.DURATION.replace(/[^0-9]/gi, ''));
+        if (obj.STATUS === "OK") {
+          if (tempObj.duration >= successStandardSec) {
+            tempObj.success = true;
+          } else {
+            tempObj.success = false;
+          }
+        } else {
+          tempObj.success = false;
+        }
+        inArr.push(tempObj);
+      }
+    }
+
+    outArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+    inArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+
+    for (let { date, to, duration, success } of outArr) {
+      rows = await back.getClientsByQuery({ phone: to }, { selfMongo });
+      if (rows.length !== 0) {
+        cliid = rows[0].cliid;
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: selfConsoleInfo });
+        boo = true;
+        index = 0;
+        indexTarget = -1;
+        for (let obj of historyObj.curation.analytics.call.out) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
+            boo = false;
+            indexTarget = index;
+          }
+          index++;
+        }
+        if (boo) {
+          historyObj.curation.analytics.call.out.push({ date, success, duration });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
+          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+        } else {
+          if (typeof historyObj.curation.analytics.call.out[indexTarget] === "object") {
+            if (historyObj.curation.analytics.call.out[indexTarget].duration !== duration) {
+              historyObj.curation.analytics.call.out[indexTarget].duration = duration;
+              historyObj.curation.analytics.call.out[indexTarget].success = success;
+              whereQuery = { cliid };
+              updateQuery = {};
+              updateQuery["curation.analytics.call.out"] = historyObj.curation.analytics.call.out;
+              await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+            }
+          }
+        }
+
+        requestNumber = 0;
+        for (let i = 0; i < rows[0].requests.length; i++) {
+          if (rows[0].requests[i].request.timeline.valueOf() <= date.valueOf()) {
+            requestNumber = i;
+            break;
+          }
+        }
+        pastHistory = rows[0].requests[requestNumber].analytics.date.call.history.toNormal();
+        targetColumn = "requests." + String(requestNumber) + ".analytics.date.call.history";
+        boo = true;
+        for (let obj of pastHistory) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
+            boo = false;
+          }
+        }
+        if (boo) {
+          pastHistory.push({ date, who: '' });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery[targetColumn] = pastHistory;
+          await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+        }
+
+      }
+    }
+
+    for (let { date, from, duration, success } of inArr) {
+      rows = await back.getClientsByQuery({ phone: from }, { selfMongo });
+      if (rows.length !== 0) {
+        cliid = rows[0].cliid;
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: selfConsoleInfo });
+        boo = true;
+        index = 0;
+        indexTarget = -1;
+        for (let obj of historyObj.curation.analytics.call.in) {
+          if (obj.date.getFullYear() === date.getFullYear() && obj.date.getMonth() === date.getMonth() && obj.date.getDate() === date.getDate() && obj.date.getHours() === date.getHours() && obj.date.getMinutes() === date.getMinutes()) {
+            boo = false;
+            indexTarget = index;
+          }
+          index++;
+        }
+        if (boo) {
+          historyObj.curation.analytics.call.in.push({ date, success, duration });
+          whereQuery = { cliid };
+          updateQuery = {};
+          updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
+          await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+        } else {
+          if (typeof historyObj.curation.analytics.call.in[indexTarget] === "object") {
+            if (historyObj.curation.analytics.call.in[indexTarget].duration !== duration) {
+              historyObj.curation.analytics.call.in[indexTarget].duration = duration;
+              historyObj.curation.analytics.call.in[indexTarget].success = success;
+              whereQuery = { cliid };
+              updateQuery = {};
+              updateQuery["curation.analytics.call.in"] = historyObj.curation.analytics.call.in;
+              await back.updateHistory("client", [ whereQuery, updateQuery ], { selfMongo: selfConsoleInfo });
+            }
+          }
+        }
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MirrorRouter.prototype.rou_get_Root = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = '/';
+  obj.func = async function (req, res) {
+    try {
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(String(ip).replace(/[^0-9\.]/gi, ''));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+MirrorRouter.prototype.rou_get_Ssl = function () {
+  const instance = this;
+  let obj = {};
+  obj.link = '/ssl';
+  obj.func = async function (req, res) {
+    try {
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send("hi");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+MirrorRouter.prototype.rou_get_callHistory = function () {
+  const instance = this;
+  const { sendJandi } = this.mother;
+  let obj = {};
+  obj.link = "/callHistory";
+  obj.func = async function (req, res) {
+    try {
+      instance.callHistory().then(() => {
+        return sendJandi("callHistory update success : " + JSON.stringify(new Date()));
+      }).catch((err) => {
+        instance.mother.slack_bot.chat.postMessage({ text: "callHistory error : " + err.message, channel: "#error_log" });
+        console.log(err);
+      });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      res.send(JSON.stringify({ message: "hello?" }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+MirrorRouter.prototype.getAll = function () {
+  let result, result_arr;
+
+  result = { get: [], post: [] };
+  result_arr = Object.keys(MirrorRouter.prototype);
+
+  for (let i of result_arr) { if (/^rou_get/g.test(i)) {
+    result.get.push((this[i])());
+  }}
+
+  for (let i of result_arr) { if (/^rou_post/g.test(i)) {
+    result.post.push((this[i])());
+  }}
+
+  return result;
+}
+
+module.exports = MirrorRouter;
