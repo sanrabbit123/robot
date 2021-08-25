@@ -20,7 +20,8 @@ class RobotInstall:
             [ "html5lib" ],
             [ "lxml" ],
             [ "wheel" ],
-            [ "apscheduler" ]
+            [ "apscheduler" ],
+            [ "aiohttp" ]
         ]
         self.upgrade = [
             [ "google-api-core" ],

@@ -15,6 +15,7 @@ const KakaoTalk = function () {
     console: address.backinfo.ip.outer,
     front: address.frontinfo.ip.outer,
     python: address.pythoninfo.ip.outer,
+    mirror: address.mirrorinfo.ip.outer,
   };
   this.ipRegExp = {
     office: new RegExp(this.ip.office + "\n", 'g'),
@@ -23,6 +24,7 @@ const KakaoTalk = function () {
     console: new RegExp(this.ip.console + "\n", 'g'),
     front: new RegExp(this.ip.front + "\n", 'g'),
     python: new RegExp(this.ip.python + "\n", 'g'),
+    mirror: new RegExp(this.ip.mirror + "\n", 'g'),
   };
   this.token = {
     office: 'f05cb48bb2b2397b0a00673f9d042cb11e617e2f474adb80aa21def198e93defb9772db0decfdceb11711fe00220d7353e22750dfa4a033787d2b65baa74c0edRpWklMHb+gajmvp0DWz3EOkwdpHCjhFmkliDkyfGD20Rw/GTrgkATGf016jQH2sPQym/QCo7cxJnGmM4do74ZA==',
@@ -31,6 +33,7 @@ const KakaoTalk = function () {
     front: 'c14a594407ce851449e11aa060556b54faf1e4de714adc353e49f645c9720880a1149ed617ad5ef19de94fed1da6094bdeb4f1a8756bed3b3fe74c8120490fe4hX3mInjDzik6Yz05qMUnpOJkL6ix9DcJRLVAZpofdBoZA89GFnHTtZJ5BUx\/iFFVdRVHW2vD4cA0dmbL8Qkf0A==',
     console: 'aa75be3ea35bd41e6df6f61e78cc60c3ad7c4cc7904977c1d196d2450c32fe0c56149c2e108acf4c5f1ed99fbcab12477abfe8e687e65a1558d6755898030efct1SICS3yu5x3EKNeIHKkY4ua62MZH2aweY7zBm2BvPVvHmQDS1eH9eEX3+peb5hQrO8p8sB7XgSrzsz+3UODcg==',
     python: '786b0d4ac1842028afa3040383a376a7266a56abafd828d6f5d006cf2f1ea7024f58c2b14e61824a4cbceb61f250934008a157b7adb442bc4c971c24cf30b20eC6SuVOSK1WhQraJ6x4anTsijkB/JQmX1zTVQnAG6765nBLZFjWWooknW9NJASAYXEHN4TbTHjTv0I+0eVOrM7g==',
+    mirror: 'f4e8563917e14ad63cd8c5ec2f4fd52b6d2ea62bf49c13b2af6a81ad60e6c2d9f4e92ab02b51be3292d95c8c996d170dfc92ef5aeeeff2ec344f444a9c123fc1A6+Qyo1i6ePSaaMBmwBsWOSth7nmmZmx7ymYfU4PjQuhuWbs0t+87h2H8ejU1x8030XV+S6B4qTnMWpVIOttdw==',
   };
   this.authObj = {};
   this.templates = {};
@@ -70,6 +73,8 @@ KakaoTalk.prototype.setAuth = async function () {
       this.authObj.token = this.token.console;
     } else if (this.ipRegExp.python.test(data)) {
       this.authObj.token = this.token.python;
+    } else if (this.ipRegExp.mirror.test(data)) {
+      this.authObj.token = this.token.mirror;
     }
 
   } catch (e) {
