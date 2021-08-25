@@ -2137,7 +2137,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let historyFocusEvent, historyBlurEvent;
   let visualSpecificMarginTop;
   let textAreas;
-  let notionEvent;
+  let callEvent;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
 
   //entire box -------------------------------------
@@ -2161,7 +2161,18 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   titleFontSize = (42 / 786) * motherHeight;
   topMargin = leftMargin * (62 / 60);
   titleHeight = (54 / 42) * titleFontSize;
-  notionEvent = instance.makeClipBoardEvent(thisCase[standard[1]]);
+  callEvent = async function (e) {
+    try {
+      if (window.confirm(thisCase.name + " 고객님께 전화를 걸까요?")) {
+        await GeneralJs.ajaxJson({
+          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          phone: thisCase.phone.replace(/[^0-9]/gi, '')
+        }, "/callTo");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   div_clone2 = GeneralJs.nodes.div.cloneNode(true);
   style = {
@@ -2191,7 +2202,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", notionEvent);
+  div_clone3.addEventListener("click", callEvent);
   div_clone2.appendChild(div_clone3);
 
   //cliid
@@ -2209,7 +2220,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", notionEvent);
+  div_clone3.addEventListener("click", callEvent);
   div_clone2.appendChild(div_clone3);
 
   //right arrow

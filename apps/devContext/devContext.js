@@ -63,9 +63,123 @@ DevContext.prototype.launching = async function () {
 
 
 
+    /*
+    const selfMongo = this.MONGOLOCALC;
+
+    let clients, cliidArr, projects, secondCliidArr, targetClients, targetClientHistories, totalClientHistories;
+    let arr, result, total, matrix, num, table;
+    let keys;
+    let sheetsId;
+
+    clients = await back.getClientsByQuery({ "requests.0.request.timeline": { $gte: new Date(2021, 3, 1) } }, { selfMongo });
+    cliidArr = clients.map((obj) => { return { cliid: obj.cliid }; });
+    projects = (await back.getProjectsByQuery({ $or: cliidArr }, { selfMongo })).filter((obj) => { return obj.desid !== ''; }).filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
+    secondCliidArr = projects.map((obj) => { return { cliid: obj.cliid } });
+    targetClients = await back.getClientsByQuery({ $or: secondCliidArr }, { selfMongo });
+    targetClientHistories = await back.getHistoriesByQuery("client", { $or: secondCliidArr }, { selfMongo });
+    totalClientHistories = await back.getHistoriesByQuery("client", { $or: cliidArr }, { selfMongo });
+
+    arr = targetClientHistories.map((obj) => { return { cliid: obj.cliid, manager: obj.manager } });
+    result = {};
+    for (let { cliid, manager } of arr) {
+      if (result[manager] === undefined) {
+        result[manager] = [];
+      }
+      result[manager].push(cliid);
+    }
+
+    arr = totalClientHistories.map((obj) => { return { cliid: obj.cliid, manager: obj.manager } });
+    total = {};
+    for (let { cliid, manager } of arr) {
+      if (total[manager] === undefined) {
+        total[manager] = [];
+      }
+      total[manager].push(cliid);
+    }
+
+    matrix = [ [ "담당자명", "전체 응대수", "전체 계약수", "계약율", "계약율(문자)" ] ];
+    keys = Object.keys(total);
+    keys.sort();
+    for (let name of keys) {
+      arr = [];
+      arr.push(name);
+      arr.push(total[name].length);
+      arr.push(result[name].length);
+      if (total[name].length === 0) {
+        arr.push(0);
+        arr.push("0%");
+      } else {
+        num = Math.round((result[name].length / total[name].length) * 10000) / 100;
+        arr.push(num);
+        arr.push(String(num) + '%');
+      }
+      matrix.push(arr);
+    }
+
+    for (let i = 3; i < 8; i++) {
+
+      matrix.push([ '', '', '', '', '' ]);
+      matrix.push([ "2021년 " + String(i + 1) + "월", '', '', '', '' ]);
+
+      clients = await back.getClientsByQuery({ $and: [ { "requests.0.request.timeline": { $gte: new Date(2021, i, 1) } }, { "requests.0.request.timeline": { $lt: new Date(2021, (i + 1), 1) } } ] }, { selfMongo });
+      cliidArr = clients.map((obj) => { return { cliid: obj.cliid }; });
+      projects = (await back.getProjectsByQuery({ $or: cliidArr }, { selfMongo })).filter((obj) => { return obj.desid !== ''; }).filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
+      secondCliidArr = projects.map((obj) => { return { cliid: obj.cliid } });
+      targetClients = await back.getClientsByQuery({ $or: secondCliidArr }, { selfMongo });
+      targetClientHistories = await back.getHistoriesByQuery("client", { $or: secondCliidArr }, { selfMongo });
+      totalClientHistories = await back.getHistoriesByQuery("client", { $or: cliidArr }, { selfMongo });
+
+      arr = targetClientHistories.map((obj) => { return { cliid: obj.cliid, manager: obj.manager } });
+      result = {};
+      for (let { cliid, manager } of arr) {
+        if (result[manager] === undefined) {
+          result[manager] = [];
+        }
+        result[manager].push(cliid);
+      }
+
+      arr = totalClientHistories.map((obj) => { return { cliid: obj.cliid, manager: obj.manager } });
+      total = {};
+      for (let { cliid, manager } of arr) {
+        if (total[manager] === undefined) {
+          total[manager] = [];
+        }
+        total[manager].push(cliid);
+      }
+
+      keys = Object.keys(total);
+      keys.sort();
+      for (let name of keys) {
+        arr = [];
+        arr.push(name);
+        arr.push(total[name].length);
+        if (result[name] === undefined) {
+          arr.push(0);
+        } else {
+          arr.push(result[name].length);
+        }
+        if (total[name].length === 0 || result[name] === undefined) {
+          arr.push(0);
+          arr.push("0%");
+        } else {
+          num = Math.round((result[name].length / total[name].length) * 10000) / 100;
+          arr.push(num);
+          arr.push(String(num) + '%');
+        }
+        matrix.push(arr);
+      }
+
+    }
 
 
 
+    // sheetsId = await sheets.create_newSheets_inPython("응대자별 계약율", "1qriE2iba-MAdcglyuQsBjY5VcXVyy1pi");
+    // await sheets.setting_cleanView_inPython(sheetsId);
+    sheetsId = "1nqjhgB8xYqoM_6R_wbO7qHJL8EcGMfpa6vc9-xYxNro";
+    await sheets.update_value_inPython(sheetsId, "", matrix);
+
+    console.log(matrix);
+    */
 
 
 
@@ -165,23 +279,88 @@ DevContext.prototype.launching = async function () {
     //   num++;
     // }
 
+    const selfMongo = this.MONGOLOCALC;
+    const autoHypen = (sender) => {
+      let phoneNumber, senderArr;
+      let part0, part1, part2;
+      senderArr = sender.split('');
+      phoneNumber = '';
+      part0 = '';
+      part1 = '';
+      part2 = '';
+      if (/^01/gi.test(sender)) {
+        for (let i = 0; i < 3; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      } else if (/^02/gi.test(sender)) {
+        for (let i = 0; i < 2; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      } else {
+        for (let i = 0; i < 3; i++) {
+          part0 += senderArr.shift();
+        }
+        for (let i = 0; i < 4; i++) {
+          part2 = senderArr.pop() + part2;
+        }
+        part1 = senderArr.join('');
+        phoneNumber = part0 + '-' + part1 + '-' + part2;
+      }
+      return phoneNumber;
+    }
+    const querystring = require("querystring");
+    const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
+    const historyUrl = "https://centrex.uplus.co.kr/RestApi/callhistory";
+    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    let id;
+    let callbackurl;
+    let callbackhost;
+    let callbackport;
+    let num;
+    let res;
+    let query;
+    let calltype;
+    let page;
+    let targetPhone;
+    let rows;
+    let arr;
+
+    calltype = "outbound";
+    page = 1;
+
+    for (let id of phoneNumbers) {
+      query = { id, pass, destnumber: "01027473403" };
+      res = await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial" + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+
+      break;
+
+      // query = { id, pass };
+      // res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+      // if (res.data.SVC_RT === "0000") {
+      //   arr = [];
+      //
+      //   console.log(res.data);
+      //   console.log(id);
+      //
+      //
+      //   // rows = await back.getClientsByQuery({ phone: targetPhone }, { selfMongo });
+      //   // rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
+      //
+      // }
+    }
 
 
-    // const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
-    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    // let id;
-    // let callbackurl;
-    // let callbackhost;
-    // let callbackport;
-    // let num;
-    // let res;
-    //
-    // for (let id of phoneNumbers) {
-    //   console.log(id);
-    //   console.log(+(new Date()))
-    //   res = await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } });
-    //   console.log(res.data);
-    // }
+
 
 
 

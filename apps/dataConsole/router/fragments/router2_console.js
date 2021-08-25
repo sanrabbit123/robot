@@ -3234,3 +3234,44 @@ DataRouter.prototype.rou_post_pythonPass = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_callTo = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/callTo" ];
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.who === undefined || req.body.phone === undefined) {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ message: "OK" }));
+      } else {
+        const { who, phone } = equalJson(req.body);
+        const members = instance.members;
+        let thisPerson, index, number, query;
+        for (let { id, email } of members) {
+          if (email.includes(who)) {
+            thisPerson = id;
+            break;
+          }
+        }
+        index = address.officeinfo.phone.members.indexOf(thisPerson);
+        if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({ message: "OK" }));
+        } else {
+          number = address.officeinfo.phone.numbers[index];
+          query = { id: number, pass: address.officeinfo.phone.password, destnumber: phone.replace(/[^0-9]/g, '') };
+          await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial" + "?" + "id=" + query.id + "&pass=" + query.pass + "&destnumber=" + query.destnumber, query, { headers: { "Content-Type": "application/json" } });
+          res.set({ "Content-Type": "application/json" });
+          res.send(JSON.stringify({ message: "true" }));
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}

@@ -2950,7 +2950,7 @@ GeneralJs.prototype.greenAlert = async function (message, blackMode = false) {
     style = {
       position: "absolute",
       textAlign: "center",
-      color: GeneralJs.colorChip.white,
+      color: GeneralJs.colorChip.whiteBlack,
       height: String(28) + ea,
       fontSize: String(19) + ea,
       fontWeight: String(300),
