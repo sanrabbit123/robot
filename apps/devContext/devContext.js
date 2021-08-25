@@ -71,7 +71,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // /*
+    /*
     const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC });
     const fees = projects.getFees();
     const targets = fees.filter((a) => { return a.distance.amount !== 0 });
@@ -119,7 +119,7 @@ DevContext.prototype.launching = async function () {
     await sheets.update_value_inPython(sheetsId, "", matrix);
 
     console.log(matrix);
-    // */
+    */
 
 
 
@@ -910,7 +910,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // addtional photo repair
     // const filter = new PortfolioFilter();
     // await filter.additionalRepair("p90", 13);
@@ -920,11 +919,12 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "홍은영",
-    //     designer: "김소영",
-    //     link: "https://drive.google.com/drive/folders/17WZTI7wG6pv0PuCrd0EU7akSq0aiCmfT",
+    //     client: "이유나",
+    //     designer: "오정수",
+    //     link: "https://drive.google.com/drive/folders/1JyY5_SJYyDLxlFVcs-y8ElQXK-rXM3yd",
     //   },
     // ]);
+
 
 
     // get photo folder

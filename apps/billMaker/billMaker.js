@@ -60,6 +60,20 @@ BillMaker.billDictionary = {
         ]
       },
     ],
+    calculation: {
+      designerFeeFirst: {
+        id: "_idff",
+        name: "디자인비 선금",
+        description: "디자인 비용에 대한 선금입니다.",
+        amount: (method, amount, distance) => { return amount; },
+      },
+      designerFeeRemain: {
+        id: "_idfr",
+        name: "디자인비 잔금",
+        description: "디자인 비용에 대한 잔금입니다.",
+        amount: (method, amount, distance) => { return (/^off/gi.test(method) ? distance.amount : 0) },
+      }
+    },
     etc: {
       contractAmount: 300000,
     }
@@ -466,6 +480,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     let designFeeRequest;
     let itemFactor;
     let goalArr;
+    let homeliaisonResponse;
 
     bilidArr = [];
     for (let { desid, fee } of project.proposal.detail) {
@@ -506,6 +521,9 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
 
         whereQuery = { bilid };
 
+
+        //general
+
         updateQuery = {};
         updateQuery["class"] = constNames.class;
         updateQuery["name"] = client.name + "_" + client.phone + "_" + constNames.name;
@@ -524,6 +542,9 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         updateQuery["links.cliid"] = client.cliid;
         updateQuery["links.desid"] = desid;
         updateQuery["links.method"] = method;
+
+
+        //requests
 
         contractRequest = this.returnBillDummies("requests");
         contractRequest.id = bilid + "_r" + String(updateMode ? thisBill.requests.length : 0);
@@ -554,7 +575,6 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         await sleep(100);
 
         goalArr = [];
-
         designFeeRequest = this.returnBillDummies("requests");
         designFeeRequest.id = bilid + "_r" + String((updateMode ? thisBill.requests.length : 0) + 1);
         designFeeRequest.info.push({ address: client.requests[0].request.space.address.value });
@@ -587,9 +607,48 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         }
         tempArr.unshift(contractRequest);
         tempArr.unshift(designFeeRequest);
-        updateQuery["requests"] = tempArr;
-
+        updateQuery["requests"] = JSON.parse(JSON.stringify(tempArr));
         updateQuery["goal"] = goalArr;
+
+
+        //responses
+
+        homeliaisonResponse = this.returnBillDummies("responses");
+        homeliaisonResponse.id = bilid + "_r" + String((updateMode ? thisBill.responses.length : 0) + 1);
+        homeliaisonResponse.info.push({ address: client.requests[0].request.space.address.value });
+        homeliaisonResponse.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+        homeliaisonResponse.info.push({ method });
+        homeliaisonResponse.info.push({ desid });
+
+        for (let item of stylingItems) {
+          itemFactor = this.returnBillDummies("responseItems");
+          itemFactor.id = bilid + item.id;
+          itemFactor.class = item.class;
+          itemFactor.name = item.name;
+          itemFactor.description = item.description;
+
+
+
+
+
+
+          itemFactor.unit.ea = item.ea;
+          itemFactor.unit.price = Math.round(item.amount(method, amount, distance));
+          itemFactor.unit.number = item.number(method, distance);
+          itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+          itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
+          itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+          homeliaisonResponse.items.push(itemFactor);
+          goalArr.push(itemFactor);
+        }
+        homeliaisonResponse.name = stylingRequests[1].name;
+        for (let c of stylingRequests[1].comments) {
+          homeliaisonResponse.comments.push(c);
+        }
+
+
+
+        //end
 
         res = await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
         if (res === "success") {

@@ -333,7 +333,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             textAlign: "center",
             fontSize: String(size) + ea,
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
           }
         });
       }
@@ -666,7 +666,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             textAlign: "center",
             fontSize: String(size) + ea,
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
           }
         });
       }
@@ -744,7 +744,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             textAlign: "center",
             fontSize: String(size) + ea,
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
           }
         });
       }
@@ -822,7 +822,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             textAlign: "center",
             fontSize: String(size) + ea,
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
           }
         });
       }
@@ -953,7 +953,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             textAlign: "center",
             fontSize: String(size) + ea,
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
           }
         });
       }
@@ -1135,7 +1135,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             textAlign: "center",
             fontSize: String(size) + ea,
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
           }
         });
       }
@@ -1311,7 +1311,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             textAlign: "center",
             fontSize: String(size) + ea,
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
           }
         });
       }

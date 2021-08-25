@@ -16,6 +16,7 @@ module.exports = {
       },
       goal: [],
       requests: [],
+      responses: [],
       links: {},
     };
   },
@@ -27,12 +28,12 @@ module.exports = {
         phone: "",
         email: "",
       };
-    } else if (subject === "requests") {
+    } else if (subject === "requests" || subject === "responses") {
       dummy = {
         id: "",
         date: new Date(),
         name: "",
-        status: "결제 요청",
+        status: (subject === "requests" ? "결제 요청" : "정산 대기"),
         info: [],
         items: [],
         pay: new Date(1800, 0, 1),
@@ -56,6 +57,24 @@ module.exports = {
           supply: 0,
           vat: 0,
           consumer: 0,
+        }
+      };
+    } else if (subject === "responseItems") {
+      dummy = {
+        id: "",
+        class: "",
+        name: "",
+        description: "",
+        info: [],
+        unit: {
+          ea: "",
+          price: 0,
+          number: 0,
+        },
+        amount: {
+          pure: 0,
+          commission: 0,
+          tax: 0,
         }
       };
     } else if (subject === "proofs") {
@@ -228,6 +247,104 @@ module.exports = {
       }
     }
 
+    class ResponseAmount {
+      constructor(json) {
+        this.pure = json.pure;
+        this.commission = json.commission;
+        this.tax = json.tax;
+      }
+      toNormal() {
+        let obj = {};
+        obj.pure = this.pure;
+        obj.commission = this.commission;
+        obj.tax = this.tax;
+        return obj;
+      }
+    }
+
+    class ResponseItem {
+      constructor(json) {
+        this.id = json.id;
+        this.class = json.class;
+        this.name = json.name;
+        this.description = json.description;
+        this.info = new SeachArray(json.info);
+        this.unit = new Unit(json.unit);
+        this.amount = new ResponseAmount(json.amount);
+      }
+      toNormal() {
+        let obj = {};
+        obj.id = this.id;
+        obj.class = this.class;
+        obj.name = this.name;
+        obj.description = this.description;
+        obj.info = this.info.toNormal();
+        obj.unit = this.unit.toNormal();
+        obj.amount = this.amount.toNormal();
+        return obj;
+      }
+    }
+
+    class ResponseItems extends Array {
+      constructor(jsonArr) {
+        super();
+        for (let obj of jsonArr) {
+          this.push(new ResponseItem(obj));
+        }
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.toNormal());
+        }
+        return arr;
+      }
+    }
+
+    class Response {
+      constructor(json) {
+        this.id = json.id;
+        this.date = json.date;
+        this.name = json.name;
+        this.status = json.status;
+        this.info = new SeachArray(json.info);
+        this.items = new ResponseItems(json.items);
+        this.pay = json.pay;
+        this.cancel = json.cancel;
+        this.proofs = new Proofs(json.proofs);
+        this.comments = new SeachArray(json.comments);
+      }
+      toNormal() {
+        let obj = {};
+        obj.id = this.id;
+        obj.date = this.date;
+        obj.name = this.name;
+        obj.info = this.info.toNormal();
+        obj.items = this.items.toNormal();
+        obj.pay = this.pay;
+        obj.cancel = this.cancel;
+        obj.proofs = this.proofs.toNormal();
+        obj.comments = this.comments.toNormal();
+        return obj;
+      }
+    }
+
+    class Responses extends Array {
+      constructor(jsonArr) {
+        super();
+        for (let obj of jsonArr) {
+          this.push(new Response(obj));
+        }
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.toNormal());
+        }
+        return arr;
+      }
+    }
+
     class Request {
       constructor(json) {
         this.id = json.id;
@@ -327,6 +444,7 @@ module.exports = {
         this.participant = new Participant(json.participant);
         this.goal = new Goal(json.goal);
         this.requests = new Requests(json.requests);
+        this.responses = new Responses(json.responses);
         this.links = new Links(json.links);
       }
       toNormal() {
@@ -339,6 +457,7 @@ module.exports = {
         obj.participant = this.participant.toNormal();
         obj.goal = this.goal.toNormal();
         obj.requests = this.requests.toNormal();
+        obj.responses = this.responses.toNormal();
         obj.links = this.links.toNormal();
         return obj;
       }
