@@ -71,7 +71,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    /*
+    // /*
     const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC });
     const fees = projects.getFees();
     const targets = fees.filter((a) => { return a.distance.amount !== 0 });
@@ -119,7 +119,7 @@ DevContext.prototype.launching = async function () {
     await sheets.update_value_inPython(sheetsId, "", matrix);
 
     console.log(matrix);
-    */
+    // */
 
 
 

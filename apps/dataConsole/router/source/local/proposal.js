@@ -1693,6 +1693,11 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                     const totalPosition = 9;
                     let doing;
                     let newNumber;
+                    let temp;
+                    let offline;
+                    let online;
+                    let onlineTarget;
+
                     if (e.type === "click") {
                       newNumber = number + 1;
                       doing = true;
@@ -1709,13 +1714,33 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
                       this.setAttribute("number", String(!distanceBoo ? 0 : newNumber));
                       ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.travel.limit = (!distanceBoo ? 0 : newNumber);
                       if (distanceBoo) {
+                        offline = ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline;
+                        online = offline;
                         if (newNumber === 0) {
-
+                          if (offline * firstDiscount >= firstLimit) {
+                            temp = offline - firstLimit;
+                          } else {
+                            temp = offline * (1 - firstDiscount);
+                          }
+                          if (temp <= onlineMinimum) {
+                            temp = onlineMinimum;
+                          }
+                          online = temp;
                         } else if (newNumber === 1) {
-
-                        } else {
-
+                          online = offline * (1 - secondDiscount);
                         }
+                        this.parentElement.children[onlinePosition].lastChild.textContent = GeneralJs.autoComma(online) + "원";
+                        onlineTarget = null;
+                        for (let dom of this.parentElement.parentElement.parentElement.parentElement.querySelectorAll("input")) {
+                          if (/온/gi.test(dom.previousElementSibling.textContent)) {
+                            onlineTarget = dom;
+                          }
+                        }
+                        if (onlineTarget !== null) {
+                          onlineTarget.value = GeneralJs.autoComma(online);
+                          input_widthSet(onlineTarget);
+                        }
+                        ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.online = online;
                       }
                     }
 
