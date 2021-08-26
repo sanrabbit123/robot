@@ -889,11 +889,11 @@ ExecMain.prototype.start = function (dayString) {
   app.open(new File(tempArr.join('/')));
   this.doms = this.request.readDoms();
   this.request.intoTable();
-  this.request.intoClientHistory();
-  this.request.staticMaker();
-
-  this.request.setPageNumber();
-
-  this.fileSave();
-  app.activeDocument.close();
+  // this.request.intoClientHistory();
+  // this.request.staticMaker();
+  //
+  // this.request.setPageNumber();
+  //
+  // this.fileSave();
+  // app.activeDocument.close();
 }
