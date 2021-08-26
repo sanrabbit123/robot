@@ -7,12 +7,13 @@ const ConsultingJs = function () {
 ConsultingJs.sourceLink = "/list_image/consulting";
 
 ConsultingJs.inputMaker = function (boo, id) {
-  let temp_string = '';
-  let dom = GeneralJs.nodes.div.cloneNode(true);
+  let temp_string, dom, input_clone;
+  temp_string = '';
+  dom = GeneralJs.nodes.div.cloneNode(true);
   dom.id = id;
   temp_string = (boo ? "" : "mo") + "consulting_inputblock";
   dom.classList.add(temp_string);
-  let input_clone = GeneralJs.nodes.input.cloneNode(true);
+  input_clone = GeneralJs.nodes.input.cloneNode(true);
   temp_string = (boo ? "" : "mo") + "consulting_input";
   input_clone.classList.add(temp_string);
   dom.appendChild(input_clone);
@@ -1539,13 +1540,20 @@ ConsultingJs.prototype.returnBlocks = function () {
             right: 534,
           },
           callback: function (needs) {
-            const { buttons } = needs;
+            const { buttons, popup } = needs;
 
             let h = document.createDocumentFragment();
             let dom, input, img;
             let svg_clone;
             let height, width, ea = "px";
             let style = {};
+            let margin;
+            let popupHeight;
+            let popup_dom;
+            let top, right, inputWidth;
+            let svg_dom;
+            let popup_dom2, input2, svg_dom2;
+            let popup_indent;
 
             //button
             height = 31;
@@ -1580,26 +1588,140 @@ ConsultingJs.prototype.returnBlocks = function () {
             h.appendChild(dom);
 
             //address
+            top = 50;
+            right = 0;
+            inputWidth = 407;
+            height = 33;
+            margin = 11;
+            popupHeight = 56;
+            popup_indent = 8;
+
             dom = ConsultingJs.inputMaker(true, "blocks_address0");
-            dom.style.top = "50px";
-            dom.style.right = "0px";
-            dom.style.width = "407px";
+            dom.style.top = String(top) + ea;
+            dom.style.right = String(right) + ea;
+            dom.style.width = String(inputWidth) + ea;
             input = dom.children[0];
             input.style.textAlign = "left";
             input.style.textIndent = "10px";
             input.setAttribute("placeholder", "주소");
             h.appendChild(dom);
 
+            //address notice
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.desktop;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(margin) + ea,
+              left: String(margin + 6) + ea,
+              width: String(width) + ea,
+              height: String(height) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - popup_indent) + ea,
+              width: String(width + ((margin + 6) * 2)) + ea,
+              height: String(popupHeight) + ea,
+              right: String(right + (inputWidth / 2) - ((width + ((margin + 6) * 2)) / 2)) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + ea,
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+              zIndex: String(1),
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.3s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.setTimeout(function () {
+                popup_dom.style.display = "none";
+              }, 401);
+            });
+
             //detail address
+            top = 95;
+            right = 0;
+            inputWidth = 477;
+
             dom = ConsultingJs.inputMaker(true, "blocks_address1");
-            dom.style.top = "95px";
-            dom.style.right = "0px";
-            dom.style.width = "477px";
-            input = dom.children[0];
-            input.style.textAlign = "left";
-            input.style.textIndent = "10px";
-            input.setAttribute("placeholder", "상세 주소");
+            dom.style.top = String(top) + ea;
+            dom.style.right = String(right) + ea;
+            dom.style.width = String(inputWidth) + ea;
+            input2 = dom.children[0];
+            input2.style.textAlign = "left";
+            input2.style.textIndent = "10px";
+            input2.setAttribute("placeholder", "상세 주소");
             h.appendChild(dom);
+
+            //detail address notice
+            popup_dom2 = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.desktop;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: height, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(margin) + ea,
+              left: String(margin + 6) + ea,
+              width: String(width) + ea,
+              height: String(height) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom2 = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top + 31.5 + popup_indent) + ea,
+              width: String(width + ((margin + 6) * 2)) + ea,
+              height: String(popupHeight) + ea,
+              right: String(right + (inputWidth / 2) - ((width + ((margin + 6) * 2)) / 2)) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + ea,
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+              zIndex: String(1),
+            };
+            for (let i in style) {
+              popup_dom2.style[i] = style[i];
+            }
+
+            popup_dom2.appendChild(svg_dom2);
+            h.appendChild(popup_dom2);
+
+            input2.addEventListener("focus", function (e) {
+              popup_dom2.style.display = "block";
+              popup_dom2.style.animation = "fadeup 0.3s ease forwards";
+            });
+
+            input2.addEventListener("blur", function (e) {
+              popup_dom2.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.setTimeout(function () {
+                popup_dom2.style.display = "none";
+              }, 401);
+            });
 
             return h;
           }
@@ -1687,20 +1809,35 @@ ConsultingJs.prototype.returnBlocks = function () {
             left: 0,
           },
           callback: function (needs) {
-            const { buttons } = needs;
+            const { buttons, popup } = needs;
             let h = document.createDocumentFragment();
             let dom, input, img;
             let svg_clone;
             let height, width, ea = "vw";
             let style = {};
-            let addressTop = "29.6vw";
+            let popup_dom;
+            let popupMargin;
+            let popupHeight;
+            let top, left, inputWidth;
+            let svg_dom;
+            let popup_dom2, input2, svg_dom2;
+            let popupIndent;
+            let popupSvgHeight;
+
+            top = 29.6;
+            left = 37.2;
+            inputWidth = 50.4;
+            popupSvgHeight = 8.2;
+            popupHeight = 15.1;
+            popupMargin = 3.5;
+            popupIndent = 2;
 
             //button
             height = 7.1;
             dom = GeneralJs.nodes.div.cloneNode(true);
             dom.className = "moblocks_address_button";
             style = {
-              top: addressTop,
+              top: String(top) + ea,
               left: String(21.2) + ea,
               width: String(14) + ea,
               height: String(height) + ea,
@@ -1729,25 +1866,129 @@ ConsultingJs.prototype.returnBlocks = function () {
 
             //address
             dom = ConsultingJs.inputMaker(false, "moblocks_address0");
-            dom.style.top = addressTop;
-            dom.style.left = "37.2vw";
-            dom.style.width = "50.4vw";
+            dom.style.top = String(top) + ea;
+            dom.style.left = String(left) + ea;
+            dom.style.width = String(inputWidth) + ea;
             input = dom.children[0];
             input.style.textAlign = "left";
             input.style.textIndent = "2.1vw";
             input.setAttribute("placeholder", "주소");
             h.appendChild(dom);
 
+            //address notice
+            popup_dom = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - popupIndent) + ea,
+              width: String(width + ((popupMargin + 0.3) * 2) + 0.1) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left + (inputWidth / 2) - ((width + ((popupMargin + 0.3) * 2)) / 2)) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom.style[i] = style[i];
+            }
+
+            popup_dom.appendChild(svg_dom);
+            h.appendChild(popup_dom);
+
+            input.addEventListener("focus", function (e) {
+              popup_dom.style.display = "block";
+              popup_dom.style.animation = "fadeup 0.3s ease forwards";
+            });
+
+            input.addEventListener("blur", function (e) {
+              popup_dom.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.setTimeout(function () {
+                popup_dom.style.display = "none";
+              }, 401);
+            });
+
             //detail address
+            top = 39.4;
+            left = 21.2;
+            inputWidth = 66.2;
+
             dom = ConsultingJs.inputMaker(false, "moblocks_address1");
-            dom.style.top = "39.4vw";
-            dom.style.left = "21.2vw";
-            dom.style.width = "66.2vw";
-            input = dom.children[0];
-            input.style.textAlign = "left";
-            input.style.textIndent = "2.1vw";
-            input.setAttribute("placeholder", "상세 주소");
+            dom.style.top = String(top) + ea;
+            dom.style.left = String(left) + ea;
+            dom.style.width = String(inputWidth) + ea;
+            input2 = dom.children[0];
+            input2.style.textAlign = "left";
+            input2.style.textIndent = "2.1vw";
+            input2.setAttribute("placeholder", "상세 주소");
             h.appendChild(dom);
+
+            //detail address notice
+            popup_dom2 = GeneralJs.nodes.div.cloneNode(true);
+
+            svg_clone = SvgTong.tongMaker();
+            svg_clone.src = popup.src.mobile;
+            width = GeneralJs.parseRatio({ source: svg_clone.src, target: popupSvgHeight, method: "height", result: "number" });
+            style = {
+              position: "absolute",
+              top: String(popupMargin) + ea,
+              left: String(popupMargin + 0.3) + ea,
+              width: String(width) + ea,
+              height: String(popupSvgHeight) + ea,
+            };
+            for (let i in style) {
+              svg_clone.style[i] = style[i];
+            }
+            svg_dom2 = SvgTong.parsing(svg_clone);
+
+            style = {
+              position: "absolute",
+              top: String(top - popupHeight - popupIndent) + ea,
+              width: String(width + ((popupMargin + 0.3) * 2) + 0.1) + ea,
+              height: String(popupHeight) + ea,
+              left: String(left + (inputWidth / 2) - ((width + ((popupMargin + 0.3) * 2)) / 2)) + ea,
+              background: "linear-gradient(222deg, rgba(89,175,137,0.9) 5%, rgba(0,156,106,0.9) 100%)",
+              borderRadius: String(3) + "px",
+              transition: "opacity 0.3s ease",
+              boxShadow: "0px 3px 13px -9px #404040",
+              opacity: String(0),
+              display: "none",
+            };
+            for (let i in style) {
+              popup_dom2.style[i] = style[i];
+            }
+
+            popup_dom2.appendChild(svg_dom2);
+            h.appendChild(popup_dom2);
+
+            input2.addEventListener("focus", function (e) {
+              popup_dom2.style.display = "block";
+              popup_dom2.style.animation = "fadeup 0.3s ease forwards";
+            });
+
+            input2.addEventListener("blur", function (e) {
+              popup_dom2.style.animation = "fadedown 0.4s ease forwards";
+              GeneralJs.setTimeout(function () {
+                popup_dom2.style.display = "none";
+              }, 401);
+            });
 
             return h;
           }
@@ -3460,6 +3701,9 @@ ConsultingJs.prototype.baseMaker = function () {
           if (this.map.main[i].children[j].notice !== undefined) {
             options.notice = this.map.main[i].children[j].notice;
           }
+          if (this.map.main[i].children[j].popup !== undefined) {
+            options.popup = this.map.main[i].children[j].popup;
+          }
 
           temp.appendChild(blocks[i].desktop[j].callback(options));
         }
@@ -3503,6 +3747,9 @@ ConsultingJs.prototype.baseMaker = function () {
           }
           if (this.map.main[i].children[j].notice !== undefined) {
             options.notice = this.map.main[i].children[j].notice;
+          }
+          if (this.map.main[i].children[j].popup !== undefined) {
+            options.popup = this.map.main[i].children[j].popup;
           }
 
           temp.appendChild(blocks[i].mobile[j].callback(options));

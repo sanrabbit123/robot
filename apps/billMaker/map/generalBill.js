@@ -9,10 +9,17 @@ module.exports = {
       participant: {
         managers: [],
         customer: {
+          id: "",
           name: "",
           phone: "",
           email: "",
         },
+        designer: {
+          id: "",
+          name: "",
+          phone: "",
+          email: ""
+        }
       },
       requests: [],
       responses: [],
@@ -23,6 +30,7 @@ module.exports = {
     let dummy = null;
     if (subject === "managers") {
       dummy = {
+        id: "",
         name: "",
         phone: "",
         email: "",
@@ -40,13 +48,13 @@ module.exports = {
         cancel: [],
         proofs: [],
         comments: [],
-      };
-      if (subject === "response") {
-        dummy.target = {
+        target: {
+          id: "",
           name: "",
-          phone: ""
-        };
-      }
+          phone: "",
+          email: ""
+        }
+      };
     } else if (subject === "items") {
       dummy = {
         id: "",
@@ -203,6 +211,7 @@ module.exports = {
 
     class Who {
       constructor(json) {
+        this.id = json.id;
         this.name = json.name;
         this.phone = json.phone;
         this.email = json.email;
@@ -210,6 +219,7 @@ module.exports = {
       toNormal() {
         let obj;
         obj = {};
+        obj.id = this.id;
         obj.name = this.name;
         obj.phone = this.phone;
         obj.email = this.email;
@@ -338,19 +348,6 @@ module.exports = {
       }
     }
 
-    class ResponseTarget {
-      constructor(json) {
-        this.name = json.name;
-        this.phone = json.phone;
-      }
-      toNormal() {
-        let obj = {};
-        obj.name = this.name;
-        obj.phone = this.phone;
-        return obj;
-      }
-    }
-
     class Response {
       constructor(json) {
         this.id = json.id;
@@ -364,7 +361,7 @@ module.exports = {
         this.cancel = new PayArray(json.cancel);
         this.proofs = new Proofs(json.proofs);
         this.comments = new SeachArray(json.comments);
-        this.target = new ResponseTarget(json.target);
+        this.target = new Who(json.target);
       }
       toNormal() {
         let obj = {};
@@ -412,6 +409,7 @@ module.exports = {
         this.cancel = new PayArray(json.cancel);
         this.proofs = new Proofs(json.proofs);
         this.comments = new SeachArray(json.comments);
+        this.target = new Who(json.target);
       }
       toNormal() {
         let obj = {};
@@ -425,6 +423,7 @@ module.exports = {
         obj.cancel = this.cancel.toNormal();
         obj.proofs = this.proofs.toNormal();
         obj.comments = this.comments.toNormal();
+        obj.target = this.target.toNormal();
         return obj;
       }
     }
@@ -465,12 +464,14 @@ module.exports = {
       constructor(json) {
         this.managers = new Managers(json.managers);
         this.customer = new Who(json.customer);
+        this.designer = new Who(json.designer);
       }
       toNormal() {
         let obj;
         obj = {};
         obj.managers = this.managers.toNormal();
         obj.customer = this.customer.toNormal();
+        obj.designer = this.designer.toNormal();
         return obj;
       }
     }

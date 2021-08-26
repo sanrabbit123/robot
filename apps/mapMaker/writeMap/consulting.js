@@ -358,6 +358,32 @@ module.exports = function(map, source_rawArr) {
     }}
   }
 
+  //popup
+  tong = [];
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
+      if (main[i].children[j].popup !== undefined) {
+        tong.push({ contents: main[i].children[j].popup.description.desktop, xyz: [ i, j, 9 ] });
+        tong.push({ contents: main[i].children[j].popup.description.mobile, xyz: [ i, j, 9 ], mobile: true });
+      }
+    }
+  }
+  for (let obj of tong) {
+    if (obj.mobile !== undefined) {
+      temp_reg = new RegExp("^mopopup" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]));
+    } else {
+      temp_reg = new RegExp("^popup" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]));
+    }
+    for (let z of source_rawArr) { if (temp_reg.test(z)) {
+      if (obj.mobile !== undefined) {
+        main[obj.xyz[0]].children[obj.xyz[1]].popup.src.mobile = z;
+      } else {
+        main[obj.xyz[0]].children[obj.xyz[1]].popup.src.desktop = z;
+      }
+      svgTong.sync.push(z);
+    }}
+  }
+
   //survey
   temp_reg = new RegExp("^surveyTitle");
   for (let z of source_rawArr) { if (temp_reg.test(z)) {

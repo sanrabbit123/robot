@@ -3416,7 +3416,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           target = dom.querySelector("textarea");
         }
       }
-      this.style.color = GeneralJs.colorChip.gray4;
+      this.style.color = GeneralJs.colorChip.liteBlack;
       GeneralJs.ajax("id=" + thisCase[standard[1]] + "&column=" + historyTongTarget[thisIndex].column + "&value=" + target.value.replace(/[\=\&]/g, '') + "&email=" + cookies.homeliaisonConsoleLoginedEmail, "/updateProjectHistory", function (res) {});
     }
 

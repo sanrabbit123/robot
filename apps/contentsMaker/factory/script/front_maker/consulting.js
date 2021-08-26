@@ -389,6 +389,41 @@ ExecMain.prototype.noticeMaker = function () {
 
 }
 
+ExecMain.prototype.popupMaker = function () {
+  const { main } = this.text;
+  let tong = [];
+
+  //set data
+  for (let i = 0; i < main.length; i++) {
+    for (let j = 0; j < main[i].children.length; j++) {
+      if (main[i].children[j].popup !== undefined) {
+        tong.push({ contents: main[i].children[j].popup.description.desktop, xyz: [ i, j, 9 ] });
+        tong.push({ contents: main[i].children[j].popup.description.mobile, xyz: [ i, j, 9 ], mobile: true });
+      }
+    }
+  }
+
+  //make
+  let this_ai, from, to, contents, temp;
+  for (let obj of tong) {
+    this_ai = app.activeDocument;
+    from = "general";
+    to = "popup" + String(obj.xyz[0]) + String(obj.xyz[1]) + String(obj.xyz[2]);
+    if (obj.mobile !== undefined) {
+      to = "mo" + to;
+    }
+    contents = obj.contents.join("\n");
+    this.setCreateSetting({ from: from, to: to, exception: { font: "SDGothicNeoa-eMd", color: "#ffffff", justification: "CENTER", fontSize: 24 } });
+    this.setParagraph({ from: contents, to: to });
+    temp = this.createElements(this_ai, this.createSetting[to]);
+    temp = temp.createOutline();
+    this.mother.fit_box();
+    app.doScript("expandall", "contents_maker");
+    this.saveSvg(this_ai, to, true);
+  }
+
+}
+
 ExecMain.prototype.surveyMaker = function () {
   const { sub: { survey } } = this.text;
   const { title, children: [ obj ] } = survey;
@@ -1129,6 +1164,7 @@ ExecMain.prototype.start = function (dayString) {
   this.subTitleMaker();
   this.buttonMaker();
   this.noticeMaker();
+  this.popupMaker();
   this.surveyMaker();
   this.pendingMaker();
   this.certificationMaker();

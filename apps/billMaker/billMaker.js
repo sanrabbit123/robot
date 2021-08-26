@@ -578,14 +578,19 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         updateQuery["date"] = new Date();
 
         tempObj = this.returnBillDummies("managers");
+        tempObj.id = thisMember.id;
         tempObj.name = thisMember.name;
         tempObj.phone = thisMember.phone;
         tempObj.email = thisMember.email[0];
         updateQuery["participant.managers"] = [ equalJson(JSON.stringify(tempObj)) ];
-
+        updateQuery["participant.customer.id"] = client.cliid;
         updateQuery["participant.customer.name"] = client.name;
         updateQuery["participant.customer.phone"] = client.phone;
         updateQuery["participant.customer.email"] = client.email;
+        updateQuery["participant.designer.id"] = designer.desid;
+        updateQuery["participant.designer.name"] = designer.designer;
+        updateQuery["participant.designer.phone"] = designer.information.phone;
+        updateQuery["participant.designer.email"] = designer.information.email;
         updateQuery["links.proid"] = project.proid;
         updateQuery["links.cliid"] = client.cliid;
         updateQuery["links.desid"] = desid;
@@ -620,6 +625,11 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
           contractRequest.comments.push(c);
         }
 
+        contractRequest.target.id = client.cliid;
+        contractRequest.target.name = client.name;
+        contractRequest.target.phone = client.phone;
+        contractRequest.target.email = client.email;
+
         await sleep(100);
 
         designFeeRequest = this.returnBillDummies("requests");
@@ -647,6 +657,11 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         for (let c of stylingRequests[1].comments) {
           designFeeRequest.comments.push(c);
         }
+
+        designFeeRequest.target.id = client.cliid;
+        designFeeRequest.target.name = client.name;
+        designFeeRequest.target.phone = client.phone;
+        designFeeRequest.target.email = client.email;
 
         distanceRequest = null;
         if (distance.amount !== 0 && distance.number !== 0) {
@@ -683,6 +698,11 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
           for (let c of stylingRequests[3].comments) {
             distanceRequest.comments.push(c);
           }
+
+          distanceRequest.target.id = client.cliid;
+          distanceRequest.target.name = client.name;
+          distanceRequest.target.phone = client.phone;
+          distanceRequest.target.email = client.email;
         }
 
         if (!updateMode) {
@@ -718,8 +738,8 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
           responseObj = designerCalculation[property];
           itemFactor = this.returnBillDummies("responseItems");
           itemFactor.id = bilid + responseObj.id;
-          itemFactor.class = responseObj.class;
-          itemFactor.name = property;
+          itemFactor.class = property;
+          itemFactor.name = responseObj.name;
           itemFactor.description = responseObj.description;
 
           if (/일반/gi.test(classification)) {
@@ -734,11 +754,11 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
           commission = Math.round(amount * (percentage / 100));
 
           itemFactor.unit.ea = responseObj.ea;
-          itemFactor.unit.price = Math.round(responseObj.amount(method, calculate, distance));
+          itemFactor.unit.price = Math.round((amount / 2) / 1000) * 1000;
           itemFactor.unit.number = responseObj.number(method, distance);
 
           itemFactor.amount.pure = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-          itemFactor.amount.commission = Math.round(commission / 1000) * 1000;
+          itemFactor.amount.commission = Math.round((commission / 2) / 1000) * 1000;
 
           homeliaisonResponse.items.push(itemFactor);
 
@@ -747,8 +767,10 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
             homeliaisonResponse.comments.push(c);
           }
 
+          homeliaisonResponse.target.id = designer.desid;
           homeliaisonResponse.target.name = designer.designer;
           homeliaisonResponse.target.phone = designer.information.phone;
+          homeliaisonResponse.target.email = designer.information.email;
 
           tempArr.unshift(equalJson(JSON.stringify(homeliaisonResponse)));
 
@@ -773,11 +795,11 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
           responseObj = designerCalculation[property];
           itemFactor = this.returnBillDummies("responseItems");
           itemFactor.id = bilid + responseObj.id;
-          itemFactor.class = responseObj.class;
-          itemFactor.name = property;
+          itemFactor.class = property;
+          itemFactor.name = responseObj.name;
           itemFactor.description = responseObj.description;
 
-          distancePercentage = 0;
+          distancePercentage = 10;
 
           if (/일반/gi.test(classification)) {
             calculate = Math.round((distanceFinalAmount * 1.1) * (1 - (distancePercentage / 100)));
@@ -804,8 +826,10 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
             homeliaisonResponse.comments.push(c);
           }
 
+          homeliaisonResponse.target.id = designer.desid;
           homeliaisonResponse.target.name = designer.designer;
           homeliaisonResponse.target.phone = designer.information.phone;
+          homeliaisonResponse.target.email = designer.information.email;
 
           tempArr.unshift(equalJson(JSON.stringify(homeliaisonResponse)));
 

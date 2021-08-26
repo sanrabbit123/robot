@@ -3009,7 +3009,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           target = dom.querySelector("textarea");
         }
       }
-      this.style.color = GeneralJs.colorChip.gray4;
+      this.style.color = GeneralJs.colorChip.liteBlack;
 
       const originalValue = target.value;
       const originalValueArr = originalValue.split("\n");
