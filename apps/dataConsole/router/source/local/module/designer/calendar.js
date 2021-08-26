@@ -225,7 +225,7 @@ DesignerJs.prototype.calendarMatrix = function () {
       }
     }
   }
-  const length = 9;
+  const length = 12;
   let past, future;
   let date, week;
   let dateMatrix;

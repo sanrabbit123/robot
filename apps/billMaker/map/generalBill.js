@@ -14,7 +14,6 @@ module.exports = {
           email: "",
         },
       },
-      goal: [],
       requests: [],
       responses: [],
       links: {},
@@ -32,16 +31,23 @@ module.exports = {
       dummy = {
         id: "",
         date: new Date(),
+        removal: new Date(1800, 0, 1),
         name: "",
         status: (subject === "requests" ? "결제 요청" : "정산 대기"),
         info: [],
         items: [],
-        pay: new Date(1800, 0, 1),
-        cancel: new Date(1800, 0, 1),
+        pay: [],
+        cancel: [],
         proofs: [],
         comments: [],
       };
-    } else if (subject === "items" || subject === "goal") {
+      if (subject === "response") {
+        dummy.target = {
+          name: "",
+          phone: ""
+        };
+      }
+    } else if (subject === "items") {
       dummy = {
         id: "",
         class: "",
@@ -83,10 +89,44 @@ module.exports = {
         proof: "",
         to: "",
       };
+    } else if (subject === "pay") {
+      dummy = {
+        date: new Date(),
+        amount: 0
+      };
     }
     return dummy;
   },
   alive: function (mother) {
+    class Pay {
+      constructor(json) {
+        this.date = json.date;
+        this.amount = json.amount;
+      }
+      toNormal() {
+        let obj = {};
+        obj.date = this.date;
+        obj.amount = this.amount;
+        return obj;
+      }
+    }
+
+    class PayArray extends Array {
+      constructor(jsonArr) {
+        super();
+        for (let obj of jsonArr) {
+          this.push(new Pay(obj));
+        }
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i.toNormal());
+        }
+        return arr;
+      }
+    }
+
     class SeachArray extends Array {
       constructor(arr) {
         super();
@@ -298,30 +338,47 @@ module.exports = {
       }
     }
 
+    class ResponseTarget {
+      constructor(json) {
+        this.name = json.name;
+        this.phone = json.phone;
+      }
+      toNormal() {
+        let obj = {};
+        obj.name = this.name;
+        obj.phone = this.phone;
+        return obj;
+      }
+    }
+
     class Response {
       constructor(json) {
         this.id = json.id;
         this.date = json.date;
+        this.removal = json.removal;
         this.name = json.name;
         this.status = json.status;
         this.info = new SeachArray(json.info);
         this.items = new ResponseItems(json.items);
-        this.pay = json.pay;
-        this.cancel = json.cancel;
+        this.pay = new PayArray(json.pay);
+        this.cancel = new PayArray(json.cancel);
         this.proofs = new Proofs(json.proofs);
         this.comments = new SeachArray(json.comments);
+        this.target = new ResponseTarget(json.target);
       }
       toNormal() {
         let obj = {};
         obj.id = this.id;
         obj.date = this.date;
+        obj.removal = this.removal;
         obj.name = this.name;
         obj.info = this.info.toNormal();
         obj.items = this.items.toNormal();
-        obj.pay = this.pay;
-        obj.cancel = this.cancel;
+        obj.pay = this.pay.toNormal();
+        obj.cancel = this.cancel.toNormal();
         obj.proofs = this.proofs.toNormal();
         obj.comments = this.comments.toNormal();
+        obj.target = this.target.toNormal();
         return obj;
       }
     }
@@ -346,12 +403,13 @@ module.exports = {
       constructor(json) {
         this.id = json.id;
         this.date = json.date;
+        this.removal = json.removal;
         this.name = json.name;
         this.status = json.status;
         this.info = new SeachArray(json.info);
         this.items = new Items(json.items);
-        this.pay = json.pay;
-        this.cancel = json.cancel;
+        this.pay = new PayArray(json.pay);
+        this.cancel = new PayArray(json.cancel);
         this.proofs = new Proofs(json.proofs);
         this.comments = new SeachArray(json.comments);
       }
@@ -359,11 +417,12 @@ module.exports = {
         let obj = {};
         obj.id = this.id;
         obj.date = this.date;
+        obj.removal = this.removal;
         obj.name = this.name;
         obj.info = this.info.toNormal();
         obj.items = this.items.toNormal();
-        obj.pay = this.pay;
-        obj.cancel = this.cancel;
+        obj.pay = this.pay.toNormal();
+        obj.cancel = this.cancel.toNormal();
         obj.proofs = this.proofs.toNormal();
         obj.comments = this.comments.toNormal();
         return obj;
@@ -416,22 +475,6 @@ module.exports = {
       }
     }
 
-    class Goal extends Array {
-      constructor(arr) {
-        super();
-        for (let i of arr) {
-          this.push(new Item(i));
-        }
-      }
-      toNormal() {
-        let arr = [];
-        for (let i of this) {
-          arr.push(i.toNormal());
-        }
-        return arr;
-      }
-    }
-
     class Bill {
       constructor(json) {
         this.bilid = json.bilid;
@@ -439,7 +482,6 @@ module.exports = {
         this.name = json.name;
         this.date = json.date;
         this.participant = new Participant(json.participant);
-        this.goal = new Goal(json.goal);
         this.requests = new Requests(json.requests);
         this.responses = new Responses(json.responses);
         this.links = new Links(json.links);
@@ -452,7 +494,6 @@ module.exports = {
         obj.name = this.name;
         obj.date = this.date;
         obj.participant = this.participant.toNormal();
-        obj.goal = this.goal.toNormal();
         obj.requests = this.requests.toNormal();
         obj.responses = this.responses.toNormal();
         obj.links = this.links.toNormal();

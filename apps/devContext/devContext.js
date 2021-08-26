@@ -63,6 +63,17 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
     /*
     const selfMongo = this.MONGOLOCALC;
 
@@ -1076,9 +1087,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이유나",
-    //     designer: "오정수",
-    //     link: "https://drive.google.com/drive/folders/1JyY5_SJYyDLxlFVcs-y8ElQXK-rXM3yd",
+    //     client: "김현애",
+    //     designer: "박주령",
+    //     link: "https://drive.google.com/drive/folders/1doatalOQU12nzCPMkJ1WZ-FjDt1z3Di6",
     //   },
     // ]);
 

@@ -1053,6 +1053,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     let projects, project;
     let bills, bill;
     let data;
+    let totalNum, payNum, cancelNum;
 
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
@@ -1097,11 +1098,22 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
     this.requestNumber = 0;
     for (let i = 0; i < bill.requests.length; i++) {
-      if (bill.requests[i].pay.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+      totalNum = 0;
+      for (let { amount: { consumer } } of bill.requests[i].items) {
+        totalNum += consumer;
+      }
+      payNum = 0;
+      for (let { amount } of bill.requests[i].pay) {
+        payNum += amount;
+      }
+      cancelNum = 0;
+      for (let { amount } of bill.requests[i].cancel) {
+        cancelNum += amount;
+      }
+      if (totalNum !== payNum - cancelNum) {
         this.requestNumber = i;
       }
     }
-    // this.requestNumber = 0;
 
     this.request = {
       name: "",
