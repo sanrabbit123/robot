@@ -2969,7 +2969,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
         resultObj = [];
         for (let [ desid, cliid, serid, xValue, proid ] of matrix) {
           temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
-
+          
           //discount setting
           temp.detail.discount = {
             online: 0,

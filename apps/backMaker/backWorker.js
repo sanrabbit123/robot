@@ -889,8 +889,23 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
   const today = new Date();
   const tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
   const fourYearsAgo = new Date(today.getFullYear() - 4, today.getMonth(), today.getDate());
+  let MONGOC, MONGOLOCALC;
+
+  if (option.selfMongo === null || option.selfMongo === undefined) {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+    await MONGOC.connect();
+  } else {
+    MONGOC = option.selfMongo;
+  }
+
+  if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
+    MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    await MONGOLOCALC.connect();
+  } else {
+    MONGOLOCALC = option.selfLocalMongo;
+  }
+
   try {
-    let MONGOC, MONGOLOCALC;
     let requestNumber;
     let designers, desidArr;
     let desid;
@@ -938,20 +953,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       if (typeof desid !== "string" || typeof cliid !== "string" || typeof serid !== "string" || typeof xValue !== "string") {
         throw new Error("invaild input");
       }
-    }
-
-    if (option.selfMongo === null || option.selfMongo === undefined) {
-      MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
-      await MONGOC.connect();
-    } else {
-      MONGOC = option.selfMongo;
-    }
-
-    if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
-      MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-      await MONGOLOCALC.connect();
-    } else {
-      MONGOLOCALC = option.selfLocalMongo;
     }
 
     if (mode === 0) {
@@ -1222,14 +1223,6 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
       });
     }
 
-    if (option.selfMongo === null || option.selfMongo === undefined) {
-      await MONGOC.close();
-    }
-
-    if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
-      await MONGOLOCALC.close();
-    }
-
     if (mode === 0) {
       return tong;
     } else if (mode === 1) {
@@ -1238,6 +1231,44 @@ BackWorker.prototype.getDesignerFee = async function (proid, cliid, serid = null
 
   } catch (e) {
     console.log(e);
+    return {
+      desid: "",
+      designer: "",
+      cliid: "",
+      client: "",
+      proid: "",
+      detail: {
+        original: 0,
+        alpha: 0,
+        serid: "",
+        xValue: "",
+        newcomer: false,
+        premium: false,
+        online: 0,
+        offline: 0,
+        distance: 0,
+        travel: {
+          distance: "",
+          time: "",
+          number: 0,
+        },
+        xy: { x: 0, y: 0 },
+        pyeong: 0,
+        level: {
+          construct: 0,
+          styling: 0,
+        },
+      },
+      fee: 0,
+      comment: e.message,
+    };
+  } finally {
+    if (option.selfMongo === null || option.selfMongo === undefined) {
+      await MONGOC.close();
+    }
+    if (option.selfLocalMongo === null || option.selfLocalMongo === undefined) {
+      await MONGOLOCALC.close();
+    }
   }
 }
 

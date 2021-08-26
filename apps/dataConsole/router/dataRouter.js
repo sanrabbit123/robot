@@ -3570,7 +3570,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
         resultObj = [];
         for (let [ desid, cliid, serid, xValue, proid ] of matrix) {
           temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
-
+          console.log(temp);
           //discount setting
           temp.detail.discount = {
             online: 0,
@@ -3608,13 +3608,13 @@ DataRouter.prototype.rou_post_designerFee = function () {
               break;
             }
           }
-          if (!boo) {
-            temp.comment = "Unable schedule";
-            temp.detail.online = 0;
-            temp.detail.offline = 0;
-            temp.detail.travel.number = 0;
-            temp.fee = 0;
-          }
+          // if (!boo) {
+          //   temp.comment = "Unable schedule";
+          //   temp.detail.online = 0;
+          //   temp.detail.offline = 0;
+          //   temp.detail.travel.number = 0;
+          //   temp.fee = 0;
+          // }
 
           //limit setting
           temp.detail.travel.limit = 5;
