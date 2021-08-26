@@ -77,13 +77,13 @@ AiConsole.prototype.cardToRequest = async function (cliid) {
     });
 
     resultDir = await this.mother.fileSystem("readDir", [ this.options.home_dir + "/result/" + sw ]);
-    // for (let i of resultDir) { if (i !== `.DS_Store`) {
-    //   resultLink = await gDrive.upload_andView(folderId, this.options.home_dir + "/result/" + sw + "/" + i);
-    // }}
+    for (let i of resultDir) { if (i !== `.DS_Store`) {
+      resultLink = await gDrive.upload_andView(folderId, this.options.home_dir + "/result/" + sw + "/" + i);
+    }}
 
-    // await this.mother.slack_bot.chat.postMessage({ text: `${client.designer.designer} 실장님께 보낼, ${client.name} 고객님 홈스타일링 의뢰서가 완료되었습니다! 확인부탁드립니다! : ${resultLink}`, channel: `#300_designer` });
+    await this.mother.slack_bot.chat.postMessage({ text: `${client.designer.designer} 실장님께 보낼, ${client.name} 고객님 홈스타일링 의뢰서가 완료되었습니다! 확인부탁드립니다! : ${resultLink}`, channel: `#300_designer` });
 
-    // shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
+    shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
 
     return { "alert": "의뢰서가 제작되었습니다!", "link": resultLink };
 
