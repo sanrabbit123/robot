@@ -3871,6 +3871,7 @@ DataRouter.prototype.rou_post_callTo = function () {
         if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "OK" }));
+          throw new Error("invaild post");
         } else {
           number = address.officeinfo.phone.numbers[index];
           await requestSystem("http://" + address.mirrorinfo.host + ":3000/clickDial", {
@@ -3883,6 +3884,7 @@ DataRouter.prototype.rou_post_callTo = function () {
       }
     } catch (e) {
       console.log(e);
+      instance.mother.slack_bot.chat.postMessage({ text: "Click Dial 서버 문제 생김 : " + JSON.stringify(req.body, null, 2) + "\n\n" + JSON.stringify(instance.members, null, 2), channel: "#error_log" });
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "OK" }));
     }

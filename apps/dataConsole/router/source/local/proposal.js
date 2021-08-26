@@ -2083,7 +2083,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
         cliid = instance.cliid;
         serid = instance.serid;
         xValue = instance.xValue;
-        if (!ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) || (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline === 0)) {
+        if (!ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) || (ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) !== null && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline === 0)) {
           GeneralJs.ajaxJson({ matrix: [ [ desid, cliid, serid, xValue, document.getElementById("blewpp_button3").getAttribute("cus_id") ] ] }, "/designerFee").then((raw_fee) => {
             if (!Array.isArray(raw_fee)) {
               window.alert("오류 발생, 관리자에게 문의하세요!");
@@ -2182,7 +2182,7 @@ ProposalJs.prototype.fourthsetTimeout = async function (num, obj, clickMode = fa
       }
 
       result = raw_fee[0];
-      if (!ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) || (ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline === 0)) {
+      if (!ProposalJs.designerFee.has(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) || (ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)) !== null && ProposalJs.designerFee.get(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue)).detail.offline === 0)) {
         ProposalJs.designerFee.set(ProposalJs.feeKeyMaker(desid, cliid, serid, xValue), result);
       }
 
