@@ -5,6 +5,6 @@ module.exports = [
     target: "/callHistory",
     data: {},
     headers: {},
-    minute: 30,
+    minute: 20,
   }
 ];
