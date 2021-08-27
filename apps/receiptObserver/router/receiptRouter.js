@@ -516,7 +516,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           cancelNum += cancelAmount;
         }
 
-        if (totalNum === payNum - cancelNum) {
+        if (itemNum === payNum - cancelNum) {
           updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
           paymentComplete = true;
         } else {
@@ -769,7 +769,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         cancelNum += cancelAmount;
       }
 
-      if (totalNum === payNum - cancelNum) {
+      if (itemNum === payNum - cancelNum) {
         updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
         paymentComplete = true;
       } else {
