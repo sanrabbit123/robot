@@ -86,7 +86,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
     sum: {},
     commentsTitle: "<b%*%b> 안내 사항",
     comments: [],
-    button: (desktop ? "결제 진행" : [ "카드 결제", "무통장 입금" ]),
+    button: [ "카드 결제", "무통장 입금" ],
     pannel: [
       {
         name: "계좌 이체시",
@@ -226,6 +226,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let completeMarginTop0;
   let paymentEvent;
   let titleBoxPaddingTop;
+  let greenButtonBetween;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -295,6 +296,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   greenButtonHeight = <%% 47, 47, 45, 40, 8.4 %%>;
   greenButtonFontSize = <%% 20, 20, 20, 16, 3.8 %%>;
   greenButtonTextTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), 1.2 %%>;
+  greenButtonBetween = <%% 4, 4, 4, 2, 0.6 %%>;
 
   greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
   greenBasePaddingBottom = <%% 32, 32, 32, 32, 3.8 %%>;
@@ -847,11 +849,13 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           method: instance.method,
           mode: "script",
           name: request.name,
-          price: request.amount,
+          // price: request.amount,
+          price: 1001,
           buyerName: instance.client.name,
           buyerPhone: instance.client.phone,
           buyerEmail: instance.client.email,
           currentPage: window.location.protocol + "//" + window.location.host,
+          gopaymethod: (/card/gi.test(motherMethod) ? "Card" : "VBank"),
           device: (desktop ? "desktop" : "mobile"),
         }, "/inicisPayment");
         const form = document.createElement("FORM");
@@ -908,7 +912,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     };
   }
 
-  greenButton = createNode({
+  createNode({
     mother: greenButtonBase,
     class: [ "hoverDefault_lite" ],
     events: [
@@ -925,11 +929,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       background: colorChip.green,
       textAlign: "center",
       borderRadius: String(3) + "px",
-      marginRight: String(0.6) + ea,
+      marginRight: String(greenButtonBetween) + ea,
     },
     children: [
       {
-        text: desktop ? wordings.button : wordings.button[0],
+        text: wordings.button[0],
         style: {
           position: "absolute",
           top: String(greenButtonTextTop) + ea,
@@ -944,43 +948,42 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     ]
   });
 
-  if (mobile) {
-    greenButton = createNode({
-      mother: greenButtonBase,
-      class: [ "hoverDefault_lite" ],
-      events: [
-        {
-          type: "click",
-          event: paymentEvent("vbank"),
+  createNode({
+    mother: greenButtonBase,
+    class: [ "hoverDefault_lite" ],
+    events: [
+      {
+        type: "click",
+        event: paymentEvent("vbank"),
+      }
+    ],
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(greenButtonWidth + 3) + ea,
+      height: String(greenButtonHeight) + ea,
+      background: colorChip.green,
+      textAlign: "center",
+      borderRadius: String(3) + "px",
+      marginLeft: String(greenButtonBetween) + ea,
+    },
+    children: [
+      {
+        text: wordings.button[1],
+        style: {
+          position: "absolute",
+          top: String(greenButtonTextTop) + ea,
+          width: String(100) + '%',
+          left: String(0),
+          fontSize: String(greenButtonFontSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.white,
+          textAlign: "center",
         }
-      ],
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: String(greenButtonWidth + 3) + ea,
-        height: String(greenButtonHeight) + ea,
-        background: colorChip.green,
-        textAlign: "center",
-        borderRadius: String(3) + "px",
-        marginLeft: String(0.6) + ea,
-      },
-      children: [
-        {
-          text: wordings.button[1],
-          style: {
-            position: "absolute",
-            top: String(greenButtonTextTop) + ea,
-            width: String(100) + '%',
-            left: String(0),
-            fontSize: String(greenButtonFontSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.white,
-            textAlign: "center",
-          }
-        }
-      ]
-    });
-  }
+      }
+    ]
+  });
+
 
   whiteBlock.style.height = "auto";
 }
@@ -1097,9 +1100,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     }
 
     this.requestNumber = 0;
-    console.log(bill);
     for (let i = 0; i < bill.requests.length; i++) {
-      console.log(bill.requests[i]);
       totalNum = 0;
       for (let { amount: { consumer } } of bill.requests[i].items) {
         totalNum += consumer;

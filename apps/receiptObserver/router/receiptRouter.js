@@ -601,15 +601,15 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
               projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
-              await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-              designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-              await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
-              await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
-
-              instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
-                client: client.name,
-                designer: designer.designer,
-              });
+              // await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+              // designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
+              // await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+              // await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
+              //
+              // instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+              //   client: client.name,
+              //   designer: designer.designer,
+              // });
 
             } else if (data.goodName.trim() === "홈리에종 잔금") {
               projectQuery["process.contract.remain.date"] = new Date();
@@ -618,25 +618,25 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
             }
 
-            await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+            // await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
           }
         }
 
       } else {
 
-        instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
-          client: client.name,
-          goodName: data.goodName,
-          bankName: data.vactBankName,
-          account: data.VACT_Num,
-          to: data.VACT_Name,
-          amount: autoComma(amount),
-          date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
-        });
+        // instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
+        //   client: client.name,
+        //   goodName: data.goodName,
+        //   bankName: data.vactBankName,
+        //   account: data.VACT_Num,
+        //   to: data.VACT_Name,
+        //   amount: autoComma(amount),
+        //   date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+        // });
 
       }
 
-      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+      // instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
       res.set({
@@ -854,15 +854,15 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
             projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
             projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
-            await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-            designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-            await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
-            await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
+            // await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+            // designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
+            // await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+            // await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
 
-            instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
-              client: client.name,
-              designer: designer.designer,
-            });
+            // instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+            //   client: client.name,
+            //   designer: designer.designer,
+            // });
 
           } else if (data.goodName.trim() === "홈리에종 잔금") {
             projectQuery["process.contract.remain.date"] = new Date();
@@ -871,12 +871,12 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
             projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
           }
 
-          await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+          // await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
 
         }
       }
 
-      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+      // instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
 

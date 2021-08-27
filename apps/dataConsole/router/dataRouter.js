@@ -3652,7 +3652,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const { cliid, kind, desid, proid, method, device } = req.body;
         const oidConst = "homeliaisonBill_";
         const version = "1.0";
-        const gopaymethod = "Card:VBank";
+        const gopaymethod = req.body.gopaymethod;
         const mid = instance.address.officeinfo.inicis.mid;
         const signkey = instance.address.officeinfo.inicis.signkey;
         const timestamp = String(now.valueOf());
@@ -3816,17 +3816,15 @@ DataRouter.prototype.rou_post_pythonPass = function () {
   obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill" ];
   obj.func = async function (req, res) {
     try {
-      console.log(req.headers);
       const url = req.url.replace(/^\//gi, '');
       if (url.split('_').length < 2) {
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         const path = url.split('_')[1].trim();
-        const protocol = "https:";
-        const targetUrl = protocol + "//" + address["pythoninfo"].host + ":3000/" + path;
-        const post = equalJson(req.body);
-        const pythonResponse = await requestSystem(targetUrl, post, { headers: { "Content-Type": "application/json" } });
+        let targetUrl, pythonResponse;
+        targetUrl = "https://" + address["pythoninfo"].host + ":3000/" + path;
+        pythonResponse = await requestSystem(targetUrl, equalJson(req.body), { headers: { "Content-Type": "application/json" } });
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify(pythonResponse.data));
       }
