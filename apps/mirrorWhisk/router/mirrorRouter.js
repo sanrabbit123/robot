@@ -1,4 +1,4 @@
-const MirrorRouter = function (MONGOC, MONGOLOCALC, instance.mongoConsole, MONGOPYTHONC, kakaoInstance, humanInstance) {
+const MirrorRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOPYTHONC, kakaoInstance, humanInstance) {
   this.dir = process.cwd() + "/apps/mirrorWhisk";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
