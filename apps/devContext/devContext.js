@@ -261,11 +261,12 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
+    // const project = await back.getProjectById("p2108_aa63s", { selfMongo: this.MONGOLOCALC });
+    // const client = await back.getClientById(project.cliid, { selfMongo: this.MONGOLOCALC });
+    // const designer = await back.getDesignerById("d2007_aa02s", { selfMongo: this.MONGOLOCALC });
+    // await bill.itemInjection("b218r_aa04s_r1", "travelExpenses", client, designer, project, "offline", { selfMongo: this.MONGOLOCALC });
+    // await bill.itemInjection("b218r_aa04s_r0", "travelExpenses", client, designer, project, "offline", { selfMongo: this.MONGOLOCALC, number: 5 });
+    // await bill.itemInjection("b218r_aa04s_s0", "travelExpenses", client, designer, project, "offline", { selfMongo: this.MONGOLOCALC });
 
     // console.log(await bill.createStylingBill("p2108_aa63s"));
     // console.log(await bill.createStylingBill("p2108_aa63s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC }));
