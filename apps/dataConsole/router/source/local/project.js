@@ -5853,11 +5853,15 @@ ProjectJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "제안서 다시 발송"; },
     function () {
-      return true;
+      return instance.whiteBox !== null;
     },
     async function (e) {
       try {
-        console.log("this!");
+        const proid = instance.whiteBox.id;
+        if (window.confirm("제안서를 다시 보낼까요?")) {
+          await GeneralJs.ajaxJson({ instant: true, proid, retryProposal: true }, "/createProposalDocument");
+          window.alert(`알림톡 발송이 요청되었습니다!`);
+        }
       } catch (e) {
         console.log(e);
       }
@@ -5936,110 +5940,6 @@ ProjectJs.prototype.communicationRender = function () {
 
           await GeneralJs.ajaxJson({ proid, contractName, contractAddress }, PYTHONHOST + "/createStylingContract");
         }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-
-  communication.setItem([
-    () => { return "현장 미팅 알림"; },
-    function () {
-
-      return true;
-    },
-    async function (e) {
-      try {
-        console.log("this!");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-
-  communication.setItem([
-    () => { return "프로젝트 시작 고지"; },
-    function () {
-
-      return true;
-    },
-    async function (e) {
-      try {
-        console.log("this!");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-
-
-  communication.setItem([
-    () => { return "시공 계약서 발송"; },
-    function () {
-
-      return true;
-    },
-    async function (e) {
-      try {
-        console.log("this!");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-  communication.setItem([
-    () => { return "시공 착수금 요청"; },
-    function () {
-
-      return true;
-    },
-    async function (e) {
-      try {
-        console.log("this!");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-  communication.setItem([
-    () => { return "시공 중도금 요청"; },
-    function () {
-
-      return true;
-    },
-    async function (e) {
-      try {
-        console.log("this!");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-
-  communication.setItem([
-    () => { return "시공 잔금 요청"; },
-    function () {
-
-      return true;
-    },
-    async function (e) {
-      try {
-        console.log("this!");
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-
-  communication.setItem([
-    () => { return "촬영 재알림"; },
-    function () {
-
-      return true;
-    },
-    async function (e) {
-      try {
-        console.log("this!");
       } catch (e) {
         console.log(e);
       }

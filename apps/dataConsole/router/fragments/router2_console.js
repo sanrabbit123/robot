@@ -1631,7 +1631,9 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         const cliid = thisProject.cliid;
         let page, cookies, dummy, historyObj;
 
-        await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
+        if (req.body.retryProposal === undefined) {
+          await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
+        }
         if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
           const { year, month, date, hour, minute, second } = req.body;
           let message, command, time;

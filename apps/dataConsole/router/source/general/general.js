@@ -4166,7 +4166,7 @@ GeneralJs.prototype.communicationBox = function () {
             position: "absolute",
             fontSize: String(size) + ea,
             fontWeight: String(500),
-            color: colorChip.white,
+            color: colorChip.whiteBlack,
             top: String(textTop) + ea,
           }
         }

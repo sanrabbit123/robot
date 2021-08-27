@@ -4374,7 +4374,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
       break;
     case "complete":
       return_func = async function (e) {
-        await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&target=proposal.date&updateValue=today", "/rawUpdateProject");
+        // await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&target=proposal.date&updateValue=today", "/rawUpdateProject");
         await mother_name(obj);
         reset_event(this);
       }
@@ -4944,6 +4944,7 @@ ProposalJs.save_init = async function (update = false) {
       // 0 make proid
       result_obj["desid"] = "";
       result_obj["proposal.status"] = "작성중";
+      result_obj["proposal.date"] = new Date();
 
       // 1 client
       target = document.getElementById("pp_firstprocess_box").children[0];
