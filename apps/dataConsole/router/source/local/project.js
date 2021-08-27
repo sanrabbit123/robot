@@ -6003,7 +6003,7 @@ ProjectJs.prototype.communicationRender = function () {
               whereQuery: { cliid }
             }, "/getClients"))[0];
 
-            onoff = window.confirm("해당 서비스가 온라인인가요? 맞으면 확인, 오프라인이면 취소") ? "online" : "offline";
+            onoff = window.confirm("해당 서비스가 오프라인 인가요? 맞으면 확인, 온라인이면 취소") ? "offline" : "online";
             await GeneralJs.ajaxJson({
               method: "firstPayment",
               name: client.name,
@@ -6011,12 +6011,11 @@ ProjectJs.prototype.communicationRender = function () {
               option: {
                 client: client.name,
                 host: GHOSTHOST,
-                path: "middle/estimation/?cliid=" + cliid + "&needs=style," + desid + "," + proid + "," + onoff,
+                path: "estimation",
+                cliid: client.cliid,
+                needs: "style," + desid + "," + proid + "," + onoff,
               }
             }, "/alimTalk");
-
-            // https://localhost:3000/middle/estimation/?cliid=c2108_aa55s&needs=style,d2104_aa07s,p2108_aa30s,offline
-
 
           }
         }
@@ -6026,6 +6025,67 @@ ProjectJs.prototype.communicationRender = function () {
     }
   ]);
 
+  communication.setItem([
+    () => { return "잔금 안내"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let proid, designer, desid, onoff;
+        let thisCase;
+        let cliid, client;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            proid = window.prompt("프로젝트 아이디를 입력하세요!").trim();
+          } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
+        } else {
+          proid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.proid === proid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          designer = thisCase.designer;
+          desid = designer.split(' ')[1];
+          designer = designer.split(' ')[0];
+          if (window.confirm(thisCase.name + " 고객님께 잔금 안내를 보낼까요?")) {
+
+            cliid = (await GeneralJs.ajaxJson({
+              noFlat: true,
+              whereQuery: { proid }
+            }, "/getProjects"))[0].cliid
+            client = (await GeneralJs.ajaxJson({
+              noFlat: true,
+              whereQuery: { cliid }
+            }, "/getClients"))[0];
+
+            onoff = window.confirm("해당 서비스가 오프라인 인가요? 맞으면 확인, 온라인이면 취소") ? "offline" : "online";
+            await GeneralJs.ajaxJson({
+              method: "secondPayment",
+              name: client.name,
+              phone: client.phone,
+              option: {
+                client: client.name,
+                host: GHOSTHOST,
+                path: "estimation",
+                cliid: client.cliid,
+                needs: "style," + desid + "," + proid + "," + onoff,
+              }
+            }, "/alimTalk");
+
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
 
 }
 

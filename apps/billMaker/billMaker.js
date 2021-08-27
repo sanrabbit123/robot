@@ -20,9 +20,31 @@ BillMaker.billDictionary = {
   styling: {
     class: "style",
     name: "스타일링",
-    requests: [
-      {
+    requests: {
+      firstPayment: {
         name: "홈리에종 계약금",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ method });
+          return info;
+        },
+        item: (feeObject, subObj = {}) => {
+          const contractAmount = 300000;
+          return [
+            [ "designerTime", contractAmount ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: client.cliid,
+            name: client.name,
+            phone: client.phone,
+            email: client.email,
+          };
+        },
         comments: [
           "계약금은 전체 서비스 금액에 포함됩니다.",
           "계약금을 입금하시면 담당 디자이너에게 고객님 정보가 전달되며, 현장 미팅이 진행됩니다.",
@@ -30,8 +52,30 @@ BillMaker.billDictionary = {
           "현장 미팅 후 스타일링을 진행하지 않더라도, 계약금은 환불되지 않습니다.",
         ]
       },
-      {
+      secondPayment: {
         name: "홈리에종 잔금",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ method });
+          return info;
+        },
+        item: (feeObject, subObj = {}) => {
+          const contractAmount = 300000;
+          return [
+            [ "designerTime", feeObject.amount - contractAmount ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: client.cliid,
+            name: client.name,
+            phone: client.phone,
+            email: client.email,
+          };
+        },
         comments: [
           "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
           "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
@@ -39,17 +83,92 @@ BillMaker.billDictionary = {
           "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
         ]
       },
-      {
-        name: "홈리에종 정산",
-        comments: [
-          "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
-          "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
-          "결제해주신 디자인비는 서비스 정책상, 홈스타일링이 끝날 때까지 홈리에종에서 보관합니다.",
-          "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
-        ]
-      },
-      {
+      travelPayment: {
         name: "디자이너 출장비",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          let feeObject, distance;
+          for (let proposal of project.proposal.detail) {
+            if (proposal.desid === designer.desid) {
+              for (let obj of proposal.fee) {
+                if (obj.method === method) {
+                  feeObject = obj;
+                }
+              }
+            }
+          }
+          distance = feeObject.distance;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ distance: distance.distance });
+          info.push({ time: distance.time });
+          info.push({ number: distance.number });
+          info.push({ limit: distance.limit });
+          info.push({ method });
+          info.push({ desid: designer.desid });
+          return info;
+        },
+        item: (feeObject, subObj = {}) => {
+          return [
+            [ "travelExpenses", 0 ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: client.cliid,
+            name: client.name,
+            phone: client.phone,
+            email: client.email,
+          };
+        },
+        comments: []
+      }
+    },
+    responses: {
+      firstDesignFee: {
+        name: "홈리에종 선금 정산",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ method });
+          info.push({ desid: designer.desid });
+          return info;
+        },
+        item: (feeObject, subObj) => {
+          const { designer } = subObj;
+          const { amount } = feeObject;
+          const freeRatio = 0.967;
+          let classification, percentage, calculate, commission;
+
+          classification = designer.information.business.businessInfo.classification.value;
+          percentage = designer.information.business.service.cost.percentage;
+
+          if (/일반/gi.test(classification)) {
+            calculate = Math.floor((amount * 1.1) * (1 - (percentage / 100)));
+          } else if (/간이/gi.test(classification)) {
+            calculate = Math.floor(amount * (1 - (percentage / 100)));
+          } else if (/프리/gi.test(classification)) {
+            calculate = Math.floor((amount - (amount * (percentage / 100))) * freeRatio);
+          } else {
+            calculate = Math.floor((amount * 1.1) * (1 - (percentage / 100)));
+          }
+          commission = Math.floor(amount * (percentage / 100));
+
+          return [
+            [ "designerFeeFirst", calculate, commission ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: designer.desid,
+            name: designer.designer,
+            phone: designer.information.phone,
+            email: designer.information.email,
+          };
+        },
         comments: [
           "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
           "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
@@ -57,7 +176,120 @@ BillMaker.billDictionary = {
           "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
         ]
       },
-    ],
+      secondDesignFee: {
+        name: "홈리에종 잔금 정산",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ method });
+          info.push({ desid: designer.desid });
+          return info;
+        },
+        item: (feeObject, subObj) => {
+          const { designer } = subObj;
+          const { amount } = feeObject;
+          const freeRatio = 0.967;
+          let classification, percentage, calculate, commission;
+
+          classification = designer.information.business.businessInfo.classification.value;
+          percentage = designer.information.business.service.cost.percentage;
+
+          if (/일반/gi.test(classification)) {
+            calculate = Math.floor((amount * 1.1) * (1 - (percentage / 100)));
+          } else if (/간이/gi.test(classification)) {
+            calculate = Math.floor(amount * (1 - (percentage / 100)));
+          } else if (/프리/gi.test(classification)) {
+            calculate = Math.floor((amount - (amount * (percentage / 100))) * freeRatio);
+          } else {
+            calculate = Math.floor((amount * 1.1) * (1 - (percentage / 100)));
+          }
+          commission = Math.floor(amount * (percentage / 100));
+
+          return [
+            [ "designerFeeRemain", calculate, commission ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: designer.desid,
+            name: designer.designer,
+            phone: designer.information.phone,
+            email: designer.information.email,
+          };
+        },
+        comments: [
+          "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
+          "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
+          "결제해주신 디자인비는 서비스 정책상, 홈스타일링이 끝날 때까지 홈리에종에서 보관합니다.",
+          "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
+        ]
+      },
+      designerTravelFee: {
+        name: "출장비 정산",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          let feeObject, distance;
+          for (let proposal of project.proposal.detail) {
+            if (proposal.desid === designer.desid) {
+              for (let obj of proposal.fee) {
+                if (obj.method === method) {
+                  feeObject = obj;
+                }
+              }
+            }
+          }
+          distance = feeObject.distance;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ distance: distance.distance });
+          info.push({ time: distance.time });
+          info.push({ number: distance.number });
+          info.push({ limit: distance.limit });
+          info.push({ method });
+          info.push({ desid: designer.desid });
+          return info;
+        },
+        item: (feeObject, subObj) => {
+          const { designer } = subObj;
+          const { distance } = feeObject;
+          const freeRatio = 0.967;
+          const distancePercentage = 10;
+          let classification, calculate, commission, distanceFinalAmount;
+
+          distanceFinalAmount = distance.amount * distance.number;
+          classification = designer.information.business.businessInfo.classification.value;
+
+          if (/일반/gi.test(classification)) {
+            calculate = Math.floor((distanceFinalAmount * 1.1) * (1 - (distancePercentage / 100)));
+          } else if (/간이/gi.test(classification)) {
+            calculate = Math.floor(distanceFinalAmount * (1 - (distancePercentage / 100)));
+          } else if (/프리/gi.test(classification)) {
+            calculate = Math.floor((distanceFinalAmount - (distanceFinalAmount * (distancePercentage / 100))) * freeRatio);
+          } else {
+            calculate = Math.floor((distanceFinalAmount * 1.1) * (1 - (distancePercentage / 100)));
+          }
+          commission = Math.floor(distanceFinalAmount * (distancePercentage / 100));
+
+          calculate = (distance.number === 0 ? 0 : Math.floor(calculate / distance.number));
+
+          return [
+            [ "travelExpenses", calculate, commission ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: designer.desid,
+            name: designer.designer,
+            phone: designer.information.phone,
+            email: designer.information.email,
+          };
+        },
+        comments: []
+      }
+    },
     goods: {
       designerTime: {
         id: "_idte",
@@ -66,14 +298,21 @@ BillMaker.billDictionary = {
         ea: null,
         number: (method, distance) => { return 1; },
         amount: (method, amount, distance) => { return amount; },
+        comments: []
       },
       travelExpenses: {
         id: "_ites",
         name: "출장비",
         description: "디자이너가 출장시 발생되는 왕복 비용입니다.",
         ea: "회",
-        number: (method, distance) => { return (/^off/gi.test(method) ? distance.number : 0); },
+        number: (method, distance) => { return distance.number; },
         amount: (method, amount, distance) => { return distance.amount; },
+        comments: [
+          "출장비는 디자이너가 고객님의 집까지 이동하는 데에 발생하는 비용입니다.",
+          "출장비는 도달 거리와 시간을 측정하여 계산되며, 왕복 비용으로 청구됩니다.",
+          "출장비는 대중 교통이 아닌 차량의 이동 거리 및 시간으로 측정됩니다.",
+          "출장비에는 디자이너의 미팅 시간이 감안된 디자인 인건비가 함께 포함되어 있습니다.",
+        ]
       },
     },
     calculation: {
@@ -83,7 +322,8 @@ BillMaker.billDictionary = {
         description: "디자인 비용에 대한 선금입니다.",
         ea: null,
         number: (method, distance) => { return 1; },
-        amount: (method, amount, distance) => { return Math.round((amount / 2) / 1000) * 1000; },
+        amount: (method, amount, distance) => { return Math.floor((amount / 2) / 10) * 10; },
+        comments: []
       },
       designerFeeRemain: {
         id: "_edfr",
@@ -91,15 +331,22 @@ BillMaker.billDictionary = {
         description: "디자인 비용에 대한 잔금입니다.",
         ea: null,
         number: (method, distance) => { return 1; },
-        amount: (method, amount, distance) => { return Math.round((amount / 2) / 1000) * 1000; },
+        amount: (method, amount, distance) => { return Math.floor((amount / 2) / 10) * 10; },
+        comments: []
       },
       travelExpenses: {
         id: "_edte",
         name: "디자이너 출장비",
         description: "디자이너가 출장시 발생되는 왕복 비용입니다.",
         ea: "회",
-        number: (method, distance) => { return (/^off/gi.test(method) ? distance.number : 0); },
-        amount: (method, amount, distance) => { return distance.amount; },
+        number: (method, distance) => { return distance.number; },
+        amount: (method, amount, distance) => { return amount; },
+        comments: [
+          "출장비는 디자이너님이 고객님의 집까지 이동하는 데에 발생하는 비용입니다.",
+          "출장비는 도달 거리와 시간을 측정하여 계산되며, 왕복 비용으로 고객님께 받습니다.",
+          "출장비는 대중 교통이 아닌 차량의 이동 거리 및 시간으로 측정됩니다.",
+          "출장비에는 디자이너님의 미팅 시간이 감안된 디자인 인건비가 함께 포함되어 있습니다.",
+        ]
       }
     },
     etc: {
@@ -441,13 +688,6 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     class: BillMaker.billDictionary.styling.class,
     name: BillMaker.billDictionary.styling.name,
   };
-  const stylingItems = BillMaker.billDictionary.styling.goods;
-  const stylingRequests = BillMaker.billDictionary.styling.requests;
-  const contractAmount = BillMaker.billDictionary.styling.etc.contractAmount;
-  const designerCalculation = BillMaker.billDictionary.styling.calculation;
-  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
-  const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
-  const initCalculation = [ "designerFeeFirst", "designerFeeRemain" ];
   try {
     let MONGOC, MONGOCOREC, MONGOCONSOLEC;
     let selfBoo, selfCoreBoo, selfConsoleBoo;
@@ -508,22 +748,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     let temp;
     let updateMode;
     let thisBill;
-    let contractRequest;
-    let designFeeRequest;
-    let distanceRequest;
-    let itemFactor;
-    let homeliaisonResponse;
-    let responseObj;
-    let property;
     let designer;
-    let classification;
-    let calculate;
-    let percentage;
-    let commission;
-    let item;
-    let tempNum;
-    let distanceFinalAmount;
-    let distancePercentage;
 
     bilidArr = [];
     for (let { desid, fee } of project.proposal.detail) {
@@ -534,8 +759,6 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
       }
 
       designer = await back.getDesignerById(desid, { selfMongo: MONGOCOREC });
-      classification = designer.information.business.businessInfo.classification;
-      percentage = designer.information.business.service.cost.percentage;
 
       thisMember = null;
       for (let obj of members) {
@@ -567,10 +790,6 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         }
 
         whereQuery = { bilid };
-
-
-        //general
-
         updateQuery = {};
         updateQuery["class"] = constNames.class;
         updateQuery["name"] = client.name + "_" + client.phone + "_" + constNames.name;
@@ -594,251 +813,16 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         updateQuery["links.cliid"] = client.cliid;
         updateQuery["links.desid"] = desid;
         updateQuery["links.method"] = method;
-
-
-        //requests
-
-        contractRequest = this.returnBillDummies("requests");
-        contractRequest.id = bilid + "_r" + String(updateMode ? thisBill.requests.length : 0);
-        contractRequest.info.push({ address: client.requests[0].request.space.address.value });
-        contractRequest.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-        contractRequest.info.push({ method });
-
-        property = "designerTime";
-        item = stylingItems[property];
-        itemFactor = this.returnBillDummies("items");
-        itemFactor.id = bilid + item.id;
-        itemFactor.class = property;
-        itemFactor.name = item.name;
-        itemFactor.description = item.description;
-        itemFactor.unit.ea = item.ea;
-        itemFactor.unit.price = Math.round(item.amount(method, contractAmount, distance));
-        itemFactor.unit.number = item.number(method, distance);
-        itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-        itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
-        itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
-        contractRequest.items.push(equalJson(JSON.stringify(itemFactor)));
-
-        contractRequest.name = stylingRequests[0].name;
-        for (let c of stylingRequests[0].comments) {
-          contractRequest.comments.push(c);
-        }
-
-        contractRequest.target.id = client.cliid;
-        contractRequest.target.name = client.name;
-        contractRequest.target.phone = client.phone;
-        contractRequest.target.email = client.email;
-
-        await sleep(100);
-
-        designFeeRequest = this.returnBillDummies("requests");
-        designFeeRequest.id = bilid + "_r" + String((updateMode ? thisBill.requests.length : 0) + 1);
-        designFeeRequest.info.push({ address: client.requests[0].request.space.address.value });
-        designFeeRequest.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-        designFeeRequest.info.push({ method });
-
-        property = "designerTime";
-        item = stylingItems[property];
-        itemFactor = this.returnBillDummies("items");
-        itemFactor.id = bilid + item.id;
-        itemFactor.class = property;
-        itemFactor.name = item.name;
-        itemFactor.description = item.description;
-        itemFactor.unit.ea = item.ea;
-        itemFactor.unit.price = Math.round(item.amount(method, amount - contractAmount, distance));
-        itemFactor.unit.number = item.number(method, distance);
-        itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-        itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
-        itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
-        designFeeRequest.items.push(equalJson(JSON.stringify(itemFactor)));
-
-        designFeeRequest.name = stylingRequests[1].name;
-        for (let c of stylingRequests[1].comments) {
-          designFeeRequest.comments.push(c);
-        }
-
-        designFeeRequest.target.id = client.cliid;
-        designFeeRequest.target.name = client.name;
-        designFeeRequest.target.phone = client.phone;
-        designFeeRequest.target.email = client.email;
-
-        distanceRequest = null;
-        if (distance.amount !== 0 && distance.number !== 0) {
-
-          await sleep(100);
-
-          distanceRequest = this.returnBillDummies("requests");
-          distanceRequest.id = bilid + "_r" + String((updateMode ? thisBill.requests.length : 0) + 2);
-          distanceRequest.info.push({ address: client.requests[0].request.space.address.value });
-          distanceRequest.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-          distanceRequest.info.push({ distance: distance.distance });
-          distanceRequest.info.push({ time: distance.time });
-          distanceRequest.info.push({ number: distance.number });
-          distanceRequest.info.push({ limit: distance.limit });
-          distanceRequest.info.push({ method });
-
-          property = "travelExpenses";
-          item = stylingItems[property];
-          itemFactor = this.returnBillDummies("items");
-          itemFactor.id = bilid + item.id;
-          itemFactor.class = property;
-          itemFactor.name = item.name;
-          itemFactor.description = item.description;
-          itemFactor.unit.ea = item.ea;
-          itemFactor.unit.price = Math.round(item.amount(method, amount, distance));
-          itemFactor.unit.number = item.number(method, distance);
-          itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-          itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
-          itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
-          distanceFinalAmount = itemFactor.amount.supply;
-          distanceRequest.items.push(equalJson(JSON.stringify(itemFactor)));
-
-          distanceRequest.name = stylingRequests[3].name;
-          for (let c of stylingRequests[3].comments) {
-            distanceRequest.comments.push(c);
-          }
-
-          distanceRequest.target.id = client.cliid;
-          distanceRequest.target.name = client.name;
-          distanceRequest.target.phone = client.phone;
-          distanceRequest.target.email = client.email;
-        }
-
-        if (!updateMode) {
-          tempArr = [];
-        } else {
-          tempArr = thisBill.requests.toNormal();
-        }
-        tempArr.unshift(contractRequest);
-        tempArr.unshift(designFeeRequest);
-        if (distanceRequest !== null) {
-          tempArr.unshift(distanceRequest);
-        }
-        updateQuery["requests"] = equalJson(JSON.stringify(tempArr));
-
-
-        //responses
-        if (!updateMode) {
-          tempArr = [];
-        } else {
-          tempArr = thisBill.responses.toNormal();
-        }
-
-        tempNum = 0;
-        for (let property of initCalculation) {
-
-          homeliaisonResponse = this.returnBillDummies("responses");
-          homeliaisonResponse.id = bilid + "_r" + String((updateMode ? thisBill.responses.length : 0) + tempNum);
-          homeliaisonResponse.info.push({ address: client.requests[0].request.space.address.value });
-          homeliaisonResponse.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-          homeliaisonResponse.info.push({ method });
-          homeliaisonResponse.info.push({ desid });
-
-          responseObj = designerCalculation[property];
-          itemFactor = this.returnBillDummies("responseItems");
-          itemFactor.id = bilid + responseObj.id;
-          itemFactor.class = property;
-          itemFactor.name = responseObj.name;
-          itemFactor.description = responseObj.description;
-
-          if (/일반/gi.test(classification)) {
-            calculate = Math.round((amount * 1.1) * (1 - (percentage / 100)));
-          } else if (/간이/gi.test(classification)) {
-            calculate = Math.round(amount * (1 - (percentage / 100)));
-          } else if (/프리/gi.test(classification)) {
-            calculate = Math.round((amount - (amount * (percentage / 100))) * freeRatio);
-          } else {
-            calculate = Math.round((amount * 1.1) * (1 - (percentage / 100)));
-          }
-          commission = Math.round(amount * (percentage / 100));
-
-          itemFactor.unit.ea = responseObj.ea;
-          itemFactor.unit.price = Math.round((amount / 2) / 1000) * 1000;
-          itemFactor.unit.number = responseObj.number(method, distance);
-
-          itemFactor.amount.pure = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-          itemFactor.amount.commission = Math.round((commission / 2) / 1000) * 1000;
-
-          homeliaisonResponse.items.push(itemFactor);
-
-          homeliaisonResponse.name = stylingRequests[2].name;
-          for (let c of stylingRequests[2].comments) {
-            homeliaisonResponse.comments.push(c);
-          }
-
-          homeliaisonResponse.target.id = designer.desid;
-          homeliaisonResponse.target.name = designer.designer;
-          homeliaisonResponse.target.phone = designer.information.phone;
-          homeliaisonResponse.target.email = designer.information.email;
-
-          tempArr.unshift(equalJson(JSON.stringify(homeliaisonResponse)));
-
-          tempNum++;
-        }
-
-        if (distanceRequest !== null && typeof distanceFinalAmount === "number") {
-
-          property = "travelExpenses";
-
-          homeliaisonResponse = this.returnBillDummies("responses");
-          homeliaisonResponse.id = bilid + "_r" + String((updateMode ? thisBill.responses.length : 0) + tempNum);
-          homeliaisonResponse.info.push({ address: client.requests[0].request.space.address.value });
-          homeliaisonResponse.info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-          homeliaisonResponse.info.push({ distance: distance.distance });
-          homeliaisonResponse.info.push({ time: distance.time });
-          homeliaisonResponse.info.push({ number: distance.number });
-          homeliaisonResponse.info.push({ limit: distance.limit });
-          homeliaisonResponse.info.push({ method });
-          homeliaisonResponse.info.push({ desid });
-
-          responseObj = designerCalculation[property];
-          itemFactor = this.returnBillDummies("responseItems");
-          itemFactor.id = bilid + responseObj.id;
-          itemFactor.class = property;
-          itemFactor.name = responseObj.name;
-          itemFactor.description = responseObj.description;
-
-          distancePercentage = 10;
-
-          if (/일반/gi.test(classification)) {
-            calculate = Math.round((distanceFinalAmount * 1.1) * (1 - (distancePercentage / 100)));
-          } else if (/간이/gi.test(classification)) {
-            calculate = Math.round(distanceFinalAmount * (1 - (distancePercentage / 100)));
-          } else if (/프리/gi.test(classification)) {
-            calculate = Math.round((distanceFinalAmount - (distanceFinalAmount * (distancePercentage / 100))) * freeRatio);
-          } else {
-            calculate = Math.round((distanceFinalAmount * 1.1) * (1 - (distancePercentage / 100)));
-          }
-          commission = Math.round(distanceFinalAmount * (distancePercentage / 100));
-
-          itemFactor.unit.ea = responseObj.ea;
-          itemFactor.unit.number = responseObj.number(method, distance);
-          itemFactor.unit.price = (itemFactor.unit.number === 0 ? 0 : Math.round(calculate / itemFactor.unit.number));
-
-          itemFactor.amount.pure = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-          itemFactor.amount.commission = Math.round(commission / 1000) * 1000;
-
-          homeliaisonResponse.items.push(itemFactor);
-
-          homeliaisonResponse.name = stylingRequests[3].name;
-          for (let c of stylingRequests[3].comments) {
-            homeliaisonResponse.comments.push(c);
-          }
-
-          homeliaisonResponse.target.id = designer.desid;
-          homeliaisonResponse.target.name = designer.designer;
-          homeliaisonResponse.target.phone = designer.information.phone;
-          homeliaisonResponse.target.email = designer.information.email;
-
-          tempArr.unshift(equalJson(JSON.stringify(homeliaisonResponse)));
-
-        }
-
-        updateQuery["responses"] = equalJson(JSON.stringify(tempArr));
-
-        //end
-
         res = await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+        await this.requestInjection(bilid, "firstPayment", client, designer, project, method, { selfMongo: MONGOC });
+        await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC });
+        // await this.requestInjection(bilid, "travelPayment", client, designer, project, method, { selfMongo: MONGOC });
+
+        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+        // await this.responseInjection(bilid, "designerTravelFee", client, designer, project, method, { selfMongo: MONGOC });
+
         if (res === "success") {
           bilidArr.push(bilid);
         }
@@ -857,6 +841,376 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     }
 
     return bilidArr;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.requestInjection = async function (bilid, requestKey, client, designer, project, method, option = { selfMongo: null }) {
+  if (typeof bilid !== "string" || typeof requestKey !== "string" || typeof client !== "object" || typeof designer !== "object" || typeof project !== "object" || typeof method !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const stylingItems = BillMaker.billDictionary.styling.goods;
+  const stylingRequests = BillMaker.billDictionary.styling.requests;
+  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  const requestConst = "_r";
+  try {
+    let requestObject;
+    let MONGOC;
+    let selfBoo;
+    let thisBill;
+    let thisRequest;
+    let feeObject;
+    let itemMatrix;
+    let item, itemFactor;
+    let distance;
+    let tempArr;
+    let whereQuery, updateQuery;
+    let commentsArr;
+
+    if (stylingRequests[requestKey] === undefined) {
+      throw new Error("invaild request key");
+    }
+    thisRequest = stylingRequests[requestKey];
+
+    feeObject = null;
+    for (let proposal of project.proposal.detail) {
+      if (proposal.desid === designer.desid) {
+        for (let obj of proposal.fee) {
+          if (obj.method === method) {
+            feeObject = obj;
+          }
+        }
+      }
+    }
+    if (feeObject === null) {
+      throw new Error("cannot find fee object");
+    }
+    distance = feeObject.distance;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+
+    requestObject = this.returnBillDummies("requests");
+    requestObject.id = bilid + requestConst + String(thisBill.requests.length);
+    requestObject.info = thisRequest.info(client, designer, project, method, null);
+
+    itemMatrix = thisRequest.item(feeObject, null);
+    commentsArr = thisRequest.comments;
+    for (let [ property, thisAmount ] of itemMatrix) {
+      await sleep(100);
+      if (stylingItems[property] === undefined) {
+        throw new Error("item property error");
+      }
+      item = stylingItems[property];
+      itemFactor = this.returnBillDummies("items");
+      itemFactor.id = bilid + item.id;
+      itemFactor.class = property;
+      itemFactor.name = item.name;
+      itemFactor.description = item.description;
+      itemFactor.unit.ea = item.ea;
+      itemFactor.unit.price = Math.round(item.amount(method, thisAmount, distance));
+      itemFactor.unit.number = item.number(method, distance);
+      itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+      itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
+      itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+      requestObject.items.push(equalJson(JSON.stringify(itemFactor)));
+      commentsArr = commentsArr.concat(item.comments);
+    }
+
+    requestObject.name = thisRequest.name;
+    for (let c of commentsArr) {
+      requestObject.comments.push(c);
+    }
+
+    requestObject.target = thisRequest.target(client, designer, project, method, null);
+
+    tempArr = thisBill.requests.toNormal();
+    tempArr.unshift(requestObject);
+    whereQuery = { bilid };
+    updateQuery = {};
+    updateQuery["requests"] = equalJson(JSON.stringify(tempArr));
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.responseInjection = async function (bilid, responseKey, client, designer, project, method, option = { selfMongo: null }) {
+  if (typeof bilid !== "string" || typeof responseKey !== "string" || typeof client !== "object" || typeof designer !== "object" || typeof project !== "object" || typeof method !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const designerCalculation = BillMaker.billDictionary.styling.calculation;
+  const stylingResponses = BillMaker.billDictionary.styling.responses;
+  const responseConst = "_s";
+  try {
+    let responseObject;
+    let MONGOC;
+    let selfBoo;
+    let thisBill;
+    let thisResponse;
+    let feeObject;
+    let itemMatrix;
+    let item, itemFactor;
+    let distance;
+    let tempArr;
+    let whereQuery, updateQuery;
+    let commentsArr;
+
+    if (stylingResponses[responseKey] === undefined) {
+      throw new Error("invaild response key");
+    }
+    thisResponse = stylingResponses[responseKey];
+
+    feeObject = null;
+    for (let proposal of project.proposal.detail) {
+      if (proposal.desid === designer.desid) {
+        for (let obj of proposal.fee) {
+          if (obj.method === method) {
+            feeObject = obj;
+          }
+        }
+      }
+    }
+    if (feeObject === null) {
+      throw new Error("cannot find fee object");
+    }
+    distance = feeObject.distance;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+
+    responseObject = this.returnBillDummies("responses");
+    responseObject.id = bilid + responseConst + String(thisBill.responses.length);
+    responseObject.info = thisResponse.info(client, designer, project, method, null);
+
+    itemMatrix = thisResponse.item(feeObject, { designer });
+    commentsArr = thisResponse.comments;
+    for (let [ property, thisAmount, commission ] of itemMatrix) {
+      await sleep(100);
+      if (designerCalculation[property] === undefined) {
+        throw new Error("item property error");
+      }
+      item = designerCalculation[property];
+      itemFactor = this.returnBillDummies("responseItems");
+      itemFactor.id = bilid + item.id;
+      itemFactor.class = property;
+      itemFactor.name = item.name;
+      itemFactor.description = item.description;
+      itemFactor.unit.ea = item.ea;
+      itemFactor.unit.price = Math.floor(item.amount(method, thisAmount, distance));
+      itemFactor.unit.number = item.number(method, distance);
+      itemFactor.amount.pure = Math.floor(itemFactor.unit.price * itemFactor.unit.number);
+      itemFactor.amount.commission = Math.floor(commission / 10) * 10;
+      responseObject.items.push(equalJson(JSON.stringify(itemFactor)));
+      commentsArr = commentsArr.concat(item.comments);
+    }
+
+    responseObject.name = thisResponse.name;
+    for (let c of commentsArr) {
+      responseObject.comments.push(c);
+    }
+
+    responseObject.target = thisResponse.target(client, designer, project, method, null);
+
+    tempArr = thisBill.responses.toNormal();
+    tempArr.unshift(responseObject);
+    whereQuery = { bilid };
+    updateQuery = {};
+    updateQuery["responses"] = equalJson(JSON.stringify(tempArr));
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.itemInjection = async function (id, itemKey, client, designer, project, method, option = { selfMongo: null }) {
+  if (typeof id !== "string" || typeof itemKey !== "string") {
+    throw new Error("must be request or response id");
+  }
+  if (!/_/gi.test(id)) {
+    throw new Error("must be request or response id");
+  }
+  if (!(id.split('_').length === 2 && /^[rs]/.test(id.split('_')[1]))) {
+    throw new Error("must be request or response id");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const bilid = id.split('_')[0];
+  const toggle = /^r/.test(id.split('_')[1]) ? true : false;
+  const stylingItems = BillMaker.billDictionary.styling.goods;
+  const stylingRequests = BillMaker.billDictionary.styling.requests;
+  const designerCalculation = BillMaker.billDictionary.styling.calculation;
+  const stylingResponses = BillMaker.billDictionary.styling.responses;
+  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  try {
+    let MONGOC;
+    let feeObject;
+    let selfBoo;
+    let thisBill;
+    let distance;
+    let item;
+    let targetR, targetIndex;
+    let itemFactor;
+    let num;
+    let amount;
+    let commission;
+    let whereQuery, updateQuery;
+
+    if (!toggle) {
+      if (typeof option.commission !== "number") {
+        throw new Error("if response, must be commission in option");
+      }
+      commission = option.commission;
+    }
+
+    if (toggle) {
+      if (stylingItems[itemKey] === undefined) {
+        throw new Error("invaild item key");
+      }
+      item = stylingItems[itemKey];
+    } else {
+      if (designerCalculation[itemKey] === undefined) {
+        throw new Error("invaild item key");
+      }
+      item = designerCalculation[itemKey];
+    }
+
+    feeObject = null;
+    for (let proposal of project.proposal.detail) {
+      if (proposal.desid === designer.desid) {
+        for (let obj of proposal.fee) {
+          if (obj.method === method) {
+            feeObject = obj;
+          }
+        }
+      }
+    }
+    if (feeObject === null) {
+      throw new Error("cannot find fee object");
+    }
+    distance = feeObject.distance;
+    amount = feeObject.amount;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+
+    targetR = null;
+    num = 0;
+    if (toggle) {
+      for (let obj of thisBill.requests) {
+        if (id === obj.id) {
+          targetR = obj;
+          targetIndex = num;
+        }
+        num++;
+      }
+    } else {
+      for (let obj of thisBill.responses) {
+        if (id === obj.id) {
+          targetR = obj;
+          targetIndex = num;
+        }
+        num++;
+      }
+    }
+    if (targetR === null) {
+      throw new Error("invaild request or response id");
+    }
+
+    if (toggle) {
+      itemFactor = this.returnBillDummies("items");
+      itemFactor.id = bilid + item.id;
+      itemFactor.class = property;
+      itemFactor.name = item.name;
+      itemFactor.description = item.description;
+      itemFactor.unit.ea = item.ea;
+      itemFactor.unit.price = Math.round(item.amount(method, amount, distance));
+      itemFactor.unit.number = item.number(method, distance);
+      itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+      itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
+      itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+    } else {
+      itemFactor = this.returnBillDummies("responseItems");
+      itemFactor.id = bilid + item.id;
+      itemFactor.class = property;
+      itemFactor.name = item.name;
+      itemFactor.description = item.description;
+      itemFactor.unit.ea = item.ea;
+      itemFactor.unit.price = Math.floor(item.amount(method, amount, distance));
+      itemFactor.unit.number = item.number(method, distance);
+      itemFactor.amount.pure = Math.floor(itemFactor.unit.price * itemFactor.unit.number);
+      itemFactor.amount.commission = Math.floor(commission / 10) * 10;
+    }
+    targetR.items.push(equalJson(JSON.stringify(itemFactor)));
+    targetR.comments = targetR.comments.concat(item.comments);
+
+    whereQuery = { bilid };
+    updateQuery = {};
+    updateQuery[(toggle ? "requests." : "responses.") + String(targetIndex) + ".items"] = equalJson(JSON.stringify(targetR.items));
+    updateQuery[(toggle ? "requests." : "responses.") + String(targetIndex) + ".comments"] = equalJson(JSON.stringify(targetR.comments));
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
 
   } catch (e) {
     console.log(e);

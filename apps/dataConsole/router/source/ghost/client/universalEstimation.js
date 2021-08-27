@@ -1082,8 +1082,11 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
 
     bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, "/pythonPass_generalBill", { equal: true });
     if (bills.length === 0) {
-      alert("견적서가 없습니다! 홈리에종에 문의해주세요!");
-      window.location.href = this.frontPage;
+      bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": (/off/gi.test(method) ? "online" : "offline") } ] } }, "/pythonPass_generalBill", { equal: true });
+      if (bills.length === 0) {
+        alert("견적서가 없습니다! 홈리에종에 문의해주세요!");
+        window.location.href = this.frontPage;
+      }
     }
     if (kind === "style") {
       bill = new StylingBill(bills[0]);

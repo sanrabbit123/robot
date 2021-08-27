@@ -420,34 +420,42 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     firstPayment: {
-      name: "계약금 안내",
-      id: "TF_6470",
+      name: "계약금 안내 수정",
+      id: "TF_6482",
       needs: [
         "client",
         "host",
-        "path"
+        "path",
+        "cliid",
+        "needs"
       ],
       convert: function (obj) {
         return [
           { from: "client", to: obj.client },
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
         ];
       },
     },
     secondPayment: {
-      name: "잔금 안내 수정",
-      id: "TF_6200",
+      name: "잔금 안내 수정 수정",
+      id: "TF_6481",
       needs: [
         "client",
         "host",
-        "path"
+        "path",
+        "cliid",
+        "needs"
       ],
       convert: function (obj) {
         return [
           { from: "client", to: obj.client },
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
         ];
       },
     },
