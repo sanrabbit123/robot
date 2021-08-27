@@ -343,7 +343,7 @@ MirrorRouter.prototype.rou_get_callHistory = function () {
   return obj;
 }
 
-MirrorRouter.prototype.rou_get_clickDial = function () {
+MirrorRouter.prototype.rou_post_clickDial = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;

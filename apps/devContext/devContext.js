@@ -260,7 +260,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    await requestSystem("http://" + address.mirrorinfo.host + ":3000/clickDial", {
+      id: "07046037707",
+      destnumber: "01027473403"
+    }, { headers: { "Content-Type": "application/json" } });
 
 
 
