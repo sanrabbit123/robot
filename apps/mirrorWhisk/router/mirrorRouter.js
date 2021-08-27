@@ -1,4 +1,4 @@
-const MirrorRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOPYTHONC, kakaoInstance, humanInstance) {
+const MirrorRouter = function (MONGOC, MONGOLOCALC, instance.mongoConsole, MONGOPYTHONC, kakaoInstance, humanInstance) {
   this.dir = process.cwd() + "/apps/mirrorWhisk";
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
@@ -275,6 +275,120 @@ MirrorRouter.prototype.callHistory = async function () {
   }
 }
 
+MirrorRouter.prototype.callObserver = async function (client, id, pass) {
+  const instance = this;
+  const { requestSystem, sleep, sendJandi } = this.mother;
+  const querystring = require("querystring");
+  const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
+  const back = this.back;
+  const address = this.address;
+  const { officeinfo: { phone: { numbers: phoneNumbers } } } = address;
+  try {
+    let query;
+    let num, num2;
+    let status;
+    let response, response2;
+    let tempRes;
+    let index;
+    let targets;
+
+    if (client !== null) {
+
+      if (id === null) {
+        targets = [];
+        for (let phone of phoneNumbers) {
+          query = { id: phone, pass };
+          tempRes = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+          if (tempRes.data.SVC_RT !== "0000") {
+            targets.push(phone);
+          }
+        }
+
+        num = 0;
+        status = 0;
+        while (num < 40) {
+          for (let phone of targets) {
+            query = { id: phone, pass };
+            response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+            if (response.data.SVC_RT === "0000") {
+              id = phone;
+              break;
+            }
+          }
+          if (id !== null) {
+            break;
+          }
+          await sleep(500);
+          num++;
+        }
+        if (id !== null) {
+          query = { id, pass };
+          status = 1;
+          num2 = 0;
+          while (true) {
+            response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+            if (response2.data.SVC_RT !== "0000") {
+              break;
+            }
+            await sleep(2000);
+            num2++;
+          }
+          if (num2 >= ((30 * 5) - 1)) {
+            status = 2;
+          } else {
+            status = 3;
+          }
+        }
+
+      } else {
+
+        query = { id, pass };
+        num = 0;
+        status = 0;
+        while (num < 40) {
+          response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+          if (response.data.SVC_RT === "0000") {
+            status = 1;
+            num2 = 0;
+            while (true) {
+              response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+              if (response2.data.SVC_RT !== "0000") {
+                break;
+              }
+              await sleep(2000);
+              num2++;
+            }
+            if (num2 >= ((30 * 5) - 1)) {
+              status = 2;
+            } else {
+              status = 3;
+            }
+            break;
+          }
+          await sleep(2000);
+          num++;
+        }
+
+      }
+
+      if (status === 0) {
+        sendJandi(client.name + " 부재중");
+        //fail => "부재중"
+      } else if (status === 2) {
+        sendJandi(client.name + " 스타일 찾기");
+        //success => "스타일 찾기"
+      } else if (status === 3) {
+        sendJandi(client.name + " 부재중");
+        //fail => "부재중"
+      }
+
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 MirrorRouter.prototype.rou_get_Root = function () {
   const instance = this;
   let obj = {};
@@ -347,7 +461,7 @@ MirrorRouter.prototype.rou_post_clickDial = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, sendJandi, sleep } = this.mother;
+  const { requestSystem } = this.mother;
   const querystring = require("querystring");
   let obj = {};
   obj.link = "/clickDial";
@@ -357,73 +471,19 @@ MirrorRouter.prototype.rou_post_clickDial = function () {
         throw new Error("invaild post");
       }
       const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
-      let query, phone, client, observer;
+      let query, phone;
       query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
       await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
 
       phone = instance.autoHypen(req.body.destnumber.replace(/[^0-9]/g, ''));
-      client = {};
-      observer = async function () {
-        try {
-          const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
-          let query;
-          let num, num2;
-          let status;
-          let response, response2;
-
-          query = { id: req.body.id, pass: address.officeinfo.phone.password };
-
-          if (client.name !== undefined) {
-
-            num = 0;
-            status = 0;
-            while (num < 40) {
-              response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-              if (response.data.SVC_RT === "0000") {
-                status = 1;
-                num2 = 0;
-                while (true) {
-                  response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-                  if (response2.data.SVC_RT !== "0000") {
-                    break;
-                  }
-                  await sleep(2000);
-                  num2++;
-                }
-                if (num2 >= ((30 * 5) - 1)) {
-                  status = 2;
-                } else {
-                  status = 3;
-                }
-                break;
-              }
-              await sleep(2000);
-              num++;
-            }
-
-            if (status === 0) {
-              sendJandi(client.name + " 부재중");
-              //fail => "부재중"
-            } else if (status === 2) {
-              sendJandi(client.name + " 스타일 찾기");
-              //success => "스타일 찾기"
-            } else if (status === 3) {
-              sendJandi(client.name + " 부재중");
-              //fail => "부재중"
-            }
-
-          }
-
-        } catch (e) {
-          console.log(e);
-        }
-      }
-
       back.getClientsByQuery({ phone }, { selfMongo: instance.mongo }).then((rows) => {
+        let client;
         if (rows.length > 0) {
           client = rows[0];
+        } else {
+          client = null;
         }
-        return observer();
+        return instance.callObserver(client, req.body.id, address.officeinfo.phone.password);
       }).catch((err) => {
         console.log(err);
       });
@@ -435,6 +495,130 @@ MirrorRouter.prototype.rou_post_clickDial = function () {
         "Access-Control-Allow-Headers": '*',
       });
       res.send(JSON.stringify({ message: "hello?" }));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+MirrorRouter.prototype.rou_post_receiveCall = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  let obj = {};
+  obj.link = "/receiveCall";
+  obj.func = async function (req, res) {
+    try {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.phoneNumber === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "error" }));
+      } else {
+        const { phoneNumber, kind } = req.body;
+        const method = (kind === '1' ? "전화" : "문자");
+        let client;
+        let rows, temp, name, sub, text;
+        let manager;
+        let cliid, desid, proid;
+        let projects;
+        let boo;
+
+        if (!/^2/.test(phoneNumber)) {
+          manager = null;
+          rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: instance.mongo });
+          if (rows.length === 0) {
+            rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: instance.mongo });
+            if (rows.length === 0) {
+              temp = await back.setMemberObj({ selfMongo: instance.mongo, getMode: true });
+              rows = [];
+              for (let obj of temp) {
+                if (obj.phone === phoneNumber) {
+                  rows.push(obj);
+                }
+              }
+              if (rows.length === 0) {
+                name = "알 수 없는";
+                sub = "사람";
+              } else {
+                name = rows[0].name;
+                sub = "팀원";
+              }
+            } else {
+              name = rows[0].designer;
+              sub = "실장님";
+              manager = await back.getHistoryById("designer", rows[0].desid, { selfMongo: instance.mongoConsole });
+              if (manager !== null) {
+                if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                  manager = null;
+                } else {
+                  manager = manager.manager;
+                }
+              }
+            }
+          } else {
+            client = rows[0];
+            instance.callObserver(client, null, address.officeinfo.phone.password).catch((err) => { console.log(err); });
+            name = client.name;
+            sub = "고객님";
+            cliid = client.cliid;
+            boo = false;
+            for (let { analytics } of client.requests) {
+              boo = /진행/gi.test(analytics.response.status);
+            }
+            if (boo) {
+              projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } }, { "process.status": { $regex: "^[진홀]" } } ] }, { selfMongo: instance.mongo });
+              if (projects.length > 0) {
+                manager = await back.getHistoryById("project", projects[0].proid, { selfMongo: instance.mongoConsole });
+                if (manager !== null) {
+                  if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                    manager = null;
+                  } else {
+                    manager = manager.manager;
+                  }
+                }
+              } else {
+                manager = await back.getHistoryById("client", cliid, { selfMongo: instance.mongoConsole });
+                if (manager !== null) {
+                  if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                    manager = null;
+                  } else {
+                    manager = manager.manager;
+                  }
+                }
+              }
+            } else {
+              manager = await back.getHistoryById("client", cliid, { selfMongo: instance.mongoConsole });
+              if (manager !== null) {
+                if (manager.manager === '-' || manager.manager === '' || /^[홀없]/.test(manager.manager)) {
+                  manager = null;
+                } else {
+                  manager = manager.manager;
+                }
+              }
+            }
+          }
+          text = `${name} ${sub}에게서 ${method}가 왔습니다!`;
+          if (manager !== null) {
+            text += ` ${manager} 담당자님 `;
+            if (method === "전화") {
+              text += method + " 받아주세요!";
+            } else {
+              text += method + " 확인해주세요!";
+            }
+          }
+          await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
+          requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+        }
+
+        res.send(JSON.stringify({ message: "success" }));
+      }
     } catch (e) {
       console.log(e);
     }
