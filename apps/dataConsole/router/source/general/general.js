@@ -4156,7 +4156,7 @@ GeneralJs.prototype.communicationBox = function () {
         borderRadius: String(4) + "px",
         marginRight: String(innerMargin / 2) + ea,
         marginBottom: String(innerMargin / 2) + ea,
-        background: colorChip.green,
+        background: colorChip.greenGray,
         transition: "all 0s ease",
       },
       children: [

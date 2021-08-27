@@ -5853,14 +5853,31 @@ ProjectJs.prototype.communicationRender = function () {
   communication.setItem([
     () => { return "제안서 다시 발송"; },
     function () {
-      return instance.whiteBox !== null;
+      return true;
     },
     async function (e) {
       try {
-        const proid = instance.whiteBox.id;
-        if (window.confirm("제안서를 다시 보낼까요?")) {
-          await GeneralJs.ajaxJson({ instant: true, proid, retryProposal: true }, "/createProposalDocument");
-          window.alert(`알림톡 발송이 요청되었습니다!`);
+        let proid, thisCase;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            proid = window.prompt("프로젝트 아이디를 입력하세요!").trim();
+          } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
+        } else {
+          proid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.proid === proid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 제안서를 다시 보낼까요?")) {
+            await GeneralJs.ajaxJson({ instant: true, proid, retryProposal: true }, "/createProposalDocument");
+            window.alert(`제안서 알림톡 발송이 요청되었습니다!`);
+          }
         }
       } catch (e) {
         console.log(e);
@@ -5945,6 +5962,45 @@ ProjectJs.prototype.communicationRender = function () {
       }
     }
   ]);
+
+  communication.setItem([
+    () => { return "계약금 견적서"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let proid, designer, desid;
+        let thisCase;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            proid = window.prompt("프로젝트 아이디를 입력하세요!").trim();
+          } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
+        } else {
+          proid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.proid === proid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          designer = thisCase.designer;
+          desid = designer.split(' ')[1];
+          designer = designer.split(' ')[0];
+          if (window.confirm(thisCase.name + " 고객님께 계약금 견적서를 보낼까요?")) {
+
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+
 
 }
 
