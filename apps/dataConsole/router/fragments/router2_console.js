@@ -2969,7 +2969,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
         resultObj = [];
         for (let [ desid, cliid, serid, xValue, proid ] of matrix) {
           temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
-          
+
           //discount setting
           temp.detail.discount = {
             online: 0,
@@ -3221,10 +3221,9 @@ DataRouter.prototype.rou_post_pythonPass = function () {
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         const path = url.split('_')[1].trim();
-        const protocol = "https:";
-        const targetUrl = protocol + "//" + address["pythoninfo"].host + ":3000/" + path;
-        const post = equalJson(req.body);
-        const pythonResponse = await requestSystem(targetUrl, post, { headers: { "Content-Type": "application/json" } });
+        let targetUrl, pythonResponse;
+        targetUrl = "https://" + address["pythoninfo"].host + ":3000/" + path;
+        pythonResponse = await requestSystem(targetUrl, equalJson(req.body), { headers: { "Content-Type": "application/json" } });
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify(pythonResponse.data));
       }

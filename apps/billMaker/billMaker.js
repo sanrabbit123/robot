@@ -404,7 +404,6 @@ BillMaker.prototype.deleteBill = async function (bilid, option = { selfMongo: nu
   const instance = this;
   const { mongo, mongopythoninfo } = this.mother;
   try {
-    const [ whereQuery, updateQuery ] = queryArr;
     let MONGOC;
     let selfBoo;
     if (option.selfMongo === undefined || option.selfMongo === null) {
@@ -858,6 +857,56 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     }
 
     return bilidArr;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.designerSelect = async function (proid, desid, option = { selfMongo: null }) {
+  if (typeof proid !== "string" || typeof desid !== "string" || typeof option !== "object") {
+    throw new Error("must be proid, desid");
+  }
+  if (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid) || !/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(desid)) {
+    throw new Error("must be proid, desid");
+  }
+  const instance = this;
+  const { mongo, mongoinfo, equalJson } = this.mother;
+  try {
+    let MONGOC;
+    let selfBoo;
+    let thisBill;
+    let targets;
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    targets = await this.getBillsByQuery({ "links.proid": proid }, { selfMongo: MONGOC });
+    thisBill = null;
+    for (let b of targets) {
+      if (b.links.desid === desid) {
+        thisBill = b;
+      }
+    }
+    if (thisBill !== null) {
+      for (let b of targets) {
+        if (b.links.desid !== desid) {
+          await this.deleteBill(b.bilid, { selfMongo: MONGOC });
+        }
+      }
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
 
   } catch (e) {
     console.log(e);

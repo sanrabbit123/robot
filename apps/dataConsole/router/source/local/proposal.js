@@ -4532,6 +4532,8 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                 designerHistory = await GeneralJs.ajaxJson({ idArr: [ desid ], method: "designer", property: "manager" }, "/getHistoryProperty");
                 await GeneralJs.ajaxJson({ method: "project", id: proid, column: "manager", value: designerHistory[desid], email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail }, "/updateHistory");
 
+                await GeneralJs.ajaxJson({ proid, desid }, PYTHONHOST + "/designerSelect");
+
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
 
               } catch (e) {

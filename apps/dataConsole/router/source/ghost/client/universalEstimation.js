@@ -1097,7 +1097,9 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     }
 
     this.requestNumber = 0;
+    console.log(bill);
     for (let i = 0; i < bill.requests.length; i++) {
+      console.log(bill.requests[i]);
       totalNum = 0;
       for (let { amount: { consumer } } of bill.requests[i].items) {
         totalNum += consumer;

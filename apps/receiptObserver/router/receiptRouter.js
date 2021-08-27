@@ -604,6 +604,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
               designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
               await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+              await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
 
               instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
                 client: client.name,
@@ -856,6 +857,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
             await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
             designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
             await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+            await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
 
             instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
               client: client.name,
@@ -884,6 +886,41 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
       res.set({ "Content-Type": "text/plain" });
       res.send("FAIL");
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_designerSelect = function () {
+  const instance = this;
+  const bill = this.bill;
+  let obj = {};
+  obj.link = "/designerSelect";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined || req.body.desid === undefined) {
+        throw new Error("invaild post, must be proid / desid : " + JSON.stringify(req.body, null, 2));
+      }
+      const selfMongo = instance.mongolocal;
+      const { proid, desid } = equalJson(req.body);
+      await bill.designerSelect(proid, desid, { selfMongo });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
   }
