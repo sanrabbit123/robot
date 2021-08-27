@@ -296,6 +296,8 @@ MirrorRouter.prototype.callObserver = async function (client, id, pass) {
 
       sendJandi(client.name + " Observer");
 
+      /*
+
       if (id === null) {
         targets = [];
         for (let phone of phoneNumbers) {
@@ -385,6 +387,8 @@ MirrorRouter.prototype.callObserver = async function (client, id, pass) {
       }
 
       sendJandi(client.name + String(status));
+
+      */
 
     }
 

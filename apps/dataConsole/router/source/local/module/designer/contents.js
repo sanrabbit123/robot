@@ -245,7 +245,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       photographer: {
         title: "포토",
         position: "contents.photo.info.photographer",
-        values: [ '미정', '정경일', '이현익', '김다현', '디자이너', '박혜연', '배창규' ],
+        values: [ '미정', '정경일', '이현익', '김다현', '디자이너', '고객', '박혜연', '배창규' ],
         chain: null
       },
       interviewer: {

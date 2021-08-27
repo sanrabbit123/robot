@@ -419,6 +419,38 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    firstPayment: {
+      name: "계약금 안내",
+      id: "TF_6470",
+      needs: [
+        "client",
+        "host",
+        "path"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+        ];
+      },
+    },
+    secondPayment: {
+      name: "잔금 안내 수정",
+      id: "TF_6200",
+      needs: [
+        "client",
+        "host",
+        "path"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+        ];
+      },
+    },
   };
   return tong[target];
 }

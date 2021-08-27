@@ -5964,14 +5964,15 @@ ProjectJs.prototype.communicationRender = function () {
   ]);
 
   communication.setItem([
-    () => { return "계약금 견적서"; },
+    () => { return "계약금 안내"; },
     function () {
       return true;
     },
     async function (e) {
       try {
-        let proid, designer, desid;
+        let proid, designer, desid, onoff;
         let thisCase;
+        let cliid, client;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
             proid = window.prompt("프로젝트 아이디를 입력하세요!").trim();
@@ -5991,7 +5992,31 @@ ProjectJs.prototype.communicationRender = function () {
           designer = thisCase.designer;
           desid = designer.split(' ')[1];
           designer = designer.split(' ')[0];
-          if (window.confirm(thisCase.name + " 고객님께 계약금 견적서를 보낼까요?")) {
+          if (window.confirm(thisCase.name + " 고객님께 계약금 안내를 보낼까요?")) {
+
+            cliid = (await GeneralJs.ajaxJson({
+              noFlat: true,
+              whereQuery: { proid }
+            }, "/getProjects"))[0].cliid
+            client = (await GeneralJs.ajaxJson({
+              noFlat: true,
+              whereQuery: { cliid }
+            }, "/getClients"))[0];
+
+            onoff = window.confirm("해당 서비스가 온라인인가요? 맞으면 확인, 오프라인이면 취소") ? "online" : "offline";
+            await GeneralJs.ajaxJson({
+              method: "firstPayment",
+              name: client.name,
+              phone: client.phone,
+              option: {
+                client: client.name,
+                host: GHOSTHOST,
+                path: "middle/estimation/?cliid=" + cliid + "&needs=style," + desid + "," + proid + "," + onoff,
+              }
+            }, "/alimTalk");
+
+            // https://localhost:3000/middle/estimation/?cliid=c2108_aa55s&needs=style,d2104_aa07s,p2108_aa30s,offline
+
 
           }
         }

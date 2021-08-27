@@ -2123,7 +2123,7 @@ DataRouter.prototype.rou_post_alimTalk = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 (rou_post_alimTalk): " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
