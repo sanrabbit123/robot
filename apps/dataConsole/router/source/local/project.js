@@ -2356,6 +2356,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const cookies = GeneralJs.getCookiesAll();
   const map = DataPatch.projectMap();
   const { chainingTargets, chainingMethods } = DataPatch.projectChainingTarget();
+  const thisProjectBill = "thisProjectBill";
   let { standard, info } = DataPatch.projectWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
   let propertyBox, historyBox;
@@ -2377,6 +2378,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let callEvent;
   let historyFocusEvent, historyBlurEvent;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
+  let betweenSpace;
+  let distanceValueDom;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2443,20 +2446,43 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(div_clone3);
 
   //proid
+  betweenSpace = "&nbsp;&nbsp;<b style=\"color: " + GeneralJs.colorChip.gray3 + "\">/</b>&nbsp;&nbsp;";
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.textContent = thisCase[standard[1]];
+  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Cl)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)"));
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: GeneralJs.colorChip.green,
-    fontSize: String(titleFontSize * (19 / 42)) + ea,
+    fontSize: String(titleFontSize * (17 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.6 : (thisCase[standard[0]].length === 2 ? 2.3 : 3))) + ea,
   };
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", callEvent);
+  div_clone3.addEventListener("click", async function (e) {
+    try {
+      const slashes = this.querySelectorAll('b');
+      const slashesPosition0 = slashes[0].getBoundingClientRect().x;
+      const slashesPosition1 = slashes[1].getBoundingClientRect().x;
+      const proid = thisCase[standard[1]];
+      let projects, project, tempFunction;
+      if (e.x < slashesPosition0) {
+        tempFunction = instance.makeClipBoardEvent(proid);
+        tempFunction.call(this, e);
+      } else if (e.x < slashesPosition1) {
+        projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
+        project = projects[0];
+        GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/client?cliid=" + project.cliid);
+      } else {
+        projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
+        project = projects[0];
+        GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?desid=" + project.desid);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
   div_clone2.appendChild(div_clone3);
 
   //right arrow
@@ -3230,13 +3256,29 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   }
 
   //referrer links
-  GeneralJs.ajax("noFlat=true&where=" + JSON.stringify({ proid: thisCase["proid"] }), "/getProjects", function (data) {
-    const { proid, cliid, desid } = JSON.parse(data)[0];
+  GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid: thisCase["proid"] } }, "/getProjects").then((projects) => {
+    const project = projects[0];
+    const { proid, cliid, desid } = project;
+    const thisOnOff = /오프라인/gi.test(thisCase.service) ? "offline" : "online";
     let div_clone3, div_clone4, div_clone5;
     let style = {};
     let ea = "px";
     let referrerLinks;
     let bTagStyle;
+    let proposal;
+    let feeObject;
+
+    for (let p of project.proposal.detail) {
+      if (p.desid === desid) {
+        proposal = p;
+      }
+    }
+
+    for (let f of proposal.fee) {
+      if (f.method === thisOnOff) {
+        feeObject = f;
+      }
+    }
 
     div_clone3 = GeneralJs.nodes.div.cloneNode(true);
     div_clone3.setAttribute("index", "referrerLinks");
@@ -3253,7 +3295,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
     //column name
     div_clone4 = GeneralJs.nodes.div.cloneNode(true);
-    div_clone4.textContent = "참조 링크";
+    div_clone4.textContent = "출장비 정보";
     style = {
       display: "inline-block",
       position: "absolute",
@@ -3271,6 +3313,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
     //value
     div_clone4 = GeneralJs.nodes.div.cloneNode(true);
+    div_clone4.textContent = "회당 " + GeneralJs.autoComma(feeObject.distance.amount) + "원" + " / " + String(0) + "회 / " + feeObject.distance.distance;
     style = {
       display: "inline-block",
       position: "absolute",
@@ -3285,54 +3328,42 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     for (let i in style) {
       div_clone4.style[i] = style[i];
     }
-
-    //value detail
-    bTagStyle = '<b style="font-size:' + String(fontSize - 2) + ea + ';color:' + GeneralJs.colorChip.green + '">';
-    referrerLinks = [
-      {
-        tag: "고객 " + bTagStyle + cliid + "</b>",
-        eventFunction: function (e) {
-          let target = window.location.protocol + "//" + window.location.host + "/client?cliid=" + cliid;
-          window.open(target, "_blank");
-        }
-      },
-      {
-        tag: "디자이너 " + bTagStyle + desid + "</b>",
-        eventFunction: function (e) {
-          let target = window.location.protocol + "//" + window.location.host + "/designer?desid=" + desid;
-          window.open(target, "_blank");
-        }
-      },
-      {
-        tag: "제안서 " + bTagStyle + proid + "</b>",
-        eventFunction: function (e) {
-          let target = window.location.protocol + "//" + window.location.host + "/proposal?proid=" + proid;
-          window.open(target, "_blank");
-        }
-      },
-    ];
-    for (let { tag, eventFunction } of referrerLinks) {
-      div_clone5 = GeneralJs.nodes.div.cloneNode(true);
-      div_clone5.classList.add("hoverDefault");
-      div_clone5.insertAdjacentHTML("beforeend", tag);
-      div_clone5.addEventListener("click", eventFunction);
-      style = {
-        display: "inline-block",
-        position: "relative",
-        marginRight: String(18) + ea,
-        height: String(fontSize * (21 / 16)) + ea,
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(600),
-        cursor: "pointer",
-      };
-      for (let j in style) {
-        div_clone5.style[j] = style[j];
-      }
-      div_clone4.appendChild(div_clone5);
-    }
     div_clone3.appendChild(div_clone4);
+    distanceValueDom = div_clone4;
 
     propertyBox.appendChild(div_clone3);
+
+    return GeneralJs.ajaxJson({
+      mode: "read",
+      whereQuery: {
+        $and: [
+          { class: "style" },
+          { "links.cliid": project.cliid },
+          { "links.desid": project.desid },
+          { "links.proid": project.proid },
+          { "links.method": project.service.online ? "online" : "offline" },
+        ]
+      },
+    }, PYTHONHOST + "/generalBill", { equal: true });
+  }).then((bills) => {
+    if (bills.length > 0) {
+      const [ bill ] = bills;
+      let number;
+      let tempArr;
+      number = 0;
+      for (let request of bill.requests) {
+        for (let item of request.items) {
+          if (/출장/gi.test(item.name)) {
+            number += item.unit.number;
+          }
+        }
+      }
+      tempArr = distanceValueDom.textContent.split(" / ");
+      tempArr[1] = String(number) + '회';
+      distanceValueDom.textContent = tempArr.join(" / ");
+    }
+  }).catch((err) => {
+    console.log(err);
   });
 
   div_clone2.appendChild(propertyBox);
@@ -3539,730 +3570,703 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   });
 
   //r initial event
-  //dev ===================================================================================
-
+  GeneralJs.stacks[thisProjectBill] = null;
   rInitialBox.addEventListener("click", function (e) {
-    const { colorChip, createNode, createNodes, withOut } = GeneralJs;
+    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
     let matrixBox;
-    let baseBox;
-    let margin, marginLeft;
-    let scrollBox;
-    let checkListBlocks;
-    let titleTargets;
-    let processTargets, processTong;
-    let circleMargin;
-    let temp;
-    let processFontSize;
-    let marginBottom, marginBottom2;
-    let clientCheckListTargets, clientCheckList;
-    let whiteCardWidth, whiteCardMargin;
-    let designerCheckList;
+    let loadingWidth;
+    let tong;
+    let innerMargin;
+    let imageMargin;
+    let columnsLength;
+    let paddingBottom;
+    let titleHeight, titleBottom;
+    let innerPaddingTop, innerPaddingBottom, innerPaddingLeft;
+    let circleRadius, circleBottom, circleRight;
 
-    margin = 20;
-    marginLeft = 22;
-    circleMargin = 8;
-    marginBottom = 13;
-    marginBottom2 = 24;
-    whiteCardWidth = 200;
-    whiteCardMargin = 10;
+    loadingWidth = fontSize * (40 / 15);
+    innerMargin = fontSize * (20 / 15);
+    imageMargin = fontSize * (6 / 15);
+    columnsLength = 3;
+    paddingBottom = fontSize * (240 / 15);;
+    titleHeight = fontSize * (50 / 15);
+    titleBottom = fontSize * (9 / 15);
+    innerPaddingTop = fontSize * (8 / 15);
+    innerPaddingBottom = fontSize * (11 / 15);
+    innerPaddingLeft = fontSize * (16 / 15);
+    circleRadius = fontSize * (8 / 15);
+    circleBottom = fontSize * ((isMac() ? 15 : 16) / 15);
+    circleRight = fontSize * (2 / 15);
 
-    matrixBox = historyBox.cloneNode(false);
-    historyBox.parentElement.appendChild(matrixBox);
+    if (/fadeout/gi.test(historyBox.style.animation)) {
 
-    baseBox = createNode({
-      mother: matrixBox,
-      style: {
-        position: "relative",
-        boxSizing: "border-box",
-        border: "1px solid " + colorChip.gray3,
-        borderRadius: String(5) + ea,
-        width: String(100) + '%',
-        height: String(100) + '%'
-      }
-    });
+      historyBox.style.animation = "fadein 0.3s ease forwards";
+      historyBox.parentNode.removeChild(historyBox.parentNode.lastChild);
 
-    scrollBox = createNode({
-      mother: baseBox,
-      style: {
-        position: "relative",
-        top: String(margin) + ea,
-        left: String(marginLeft) + ea,
-        overflow: "scroll",
-        width: withOut(String(marginLeft * 2), ea),
-        height: withOut(String(margin * 2), ea),
-      }
-    });
+    } else {
+      matrixBox = historyBox.cloneNode(false);
+      matrixBox.style.border = String("1px solid " + colorChip.gray3);
+      matrixBox.style.borderRadius = String(5) + ea;
+      matrixBox.style.opacity = String(0);
+      historyBox.parentNode.appendChild(matrixBox);
 
-    checkListBlocks = createNodes([
-      {
-        mother: scrollBox,
+      tong = createNode({
+        mother: matrixBox,
         style: {
           position: "relative",
-          marginBottom: String(marginBottom + 1) + ea,
-        },
-      },
-      {
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          marginBottom: String(marginBottom2) + ea,
-        },
-      },
-      {
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          marginBottom: String(marginBottom) + ea,
-        },
-      },
-      {
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          marginBottom: String(marginBottom2) + ea,
-        },
-      },
-      {
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          marginBottom: String(marginBottom) + ea,
-        },
-      },
-      {
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          marginBottom: String(marginBottom2) + ea,
-        },
-      },
-      {
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          marginBottom: String(marginBottom) + ea,
-        },
-      },
-      {
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          marginBottom: String(marginBottom2) + ea,
-        },
-      },
-    ]);
-
-    titleTargets = [
-      {
-        target: checkListBlocks[0],
-        text: [ "current", "process" ]
-      },
-      {
-        target: checkListBlocks[2],
-        text: [ "client", "checklist" ]
-      },
-      {
-        target: checkListBlocks[4],
-        text: [ "designer", "checklist" ]
-      },
-      {
-        target: checkListBlocks[6],
-        text: [ "project", "calendar" ]
-      },
-    ];
-
-    for (let { target, text } of titleTargets) {
-      createNodes([
-        {
-          mother: target,
-          text: text[0],
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(18) + ea,
-            fontFamily: "graphik",
-            fontWeight: String(100),
-            marginRight: String(6) + ea,
-            marginLeft: String(2) + ea,
-          }
-        },
-        {
-          mother: target,
-          text: text[1],
-          style: {
-            display: "inline-block",
-            position: "relative",
-            fontSize: String(18) + ea,
-            fontFamily: "graphik",
-            fontWeight: String(400),
-            fontStyle: "italic",
-          }
-        }
-      ]);
-    }
-
-    processTong = checkListBlocks[1];
-    processTargets = [
-      {
-        target: processTong,
-        progress: 0,
-        text: "현장 대기",
-        client: [
-          { text: "선호 사진 전송", check: 1 },
-          { text: "현장 사진 전송", check: 1 },
-          { text: "요구 사항 확인", check: 1 },
-          { text: "분양 평수 확인", check: 1 },
-          { text: "시공 가능 여부 확인", check: 1 }
-        ],
-        designer: [
-          { text: "가능 시간대 확인", check: 1 },
-          { text: "가능 일정 확인", check: 1 },
-          { text: "스타일링 의뢰서 전송", check: 1 },
-          { text: "현장 미팅 일자 확인", check: 1 },
-          { text: "미팅 준비 확인", check: 1 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 0,
-        text: "현장 미팅",
-        client: [
-          { text: "현장 실측 및 촬영", check: 1 },
-          { text: "설비 관련 점검", check: 1 },
-          { text: "가용 예산 확인", check: 1 },
-          { text: "일정 및 요구 사항 점검", check: 1 },
-          { text: "디자인 취향 확인", check: 1 }
-        ],
-        designer: [
-          { text: "현장 실측 및 촬영", check: 1 },
-          { text: "설비 관련 점검", check: 1 },
-          { text: "가용 예산 확인", check: 1 },
-          { text: "일정 및 요구 사항 점검", check: 1 },
-          { text: "디자인 취향 확인", check: 1 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 0,
-        text: "공간 기획",
-        client: [
-          { text: "고객 생활 패턴 확인", check: 1 },
-          { text: "전체 공간 용도 기획", check: 1 },
-          { text: "예산 사용 기획", check: 1 },
-          { text: "시공 범위 결정", check: 1 },
-          { text: "재사용 범위 결정", check: 1 }
-        ],
-        designer: [
-          { text: "고객 생활 패턴 확인", check: 1 },
-          { text: "전체 공간 용도 기획", check: 1 },
-          { text: "예산 사용 기획", check: 1 },
-          { text: "시공 범위 결정", check: 1 },
-          { text: "재사용 범위 결정", check: 1 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 0,
-        text: "예산 계획",
-        client: [
-          { text: "전체 예산 한도 설정", check: 1 },
-          { text: "예산 분배 가이드", check: 1 },
-          { text: "영역별 예산 분배", check: 1 },
-          { text: "지불 방법 정리", check: 1 },
-          { text: "예산 총괄표 수령", check: 1 }
-        ],
-        designer: [
-          { text: "전체 예산 한도 설정", check: 1 },
-          { text: "예산 분배 가이드", check: 1 },
-          { text: "영역별 예산 분배", check: 1 },
-          { text: "지불 방법 정리", check: 1 },
-          { text: "예산 총괄표 수령", check: 1 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 0,
-        text: "1차 제안",
-        client: [
-          { text: "전체 컨샙, 톤 앤 매너", check: 1 },
-          { text: "공간 레이아웃 결정", check: 1 },
-          { text: "시공 마감재 제안", check: 1 },
-          { text: "구매 제품 추천", check: 1 },
-          { text: "제작 가구, 패브릭 추천", check: 1 }
-        ],
-        designer: [
-          { text: "전체 컨샙, 톤 앤 매너", check: 1 },
-          { text: "공간 레이아웃 결정", check: 1 },
-          { text: "시공 마감재 제안", check: 1 },
-          { text: "구매 제품 추천", check: 1 },
-          { text: "제작 가구, 패브릭 추천", check: 1 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 0,
-        text: "수정 제안",
-        client: [
-          { text: "수정 횟수 확인", check: 1 },
-          { text: "수정 제안 일정 조정", check: 1 },
-          { text: "시공 마감재 제안", check: 1 },
-          { text: "구매 제품 추천", check: 1 },
-          { text: "제작 가구, 패브릭 추천", check: 1 }
-        ],
-        designer: [
-          { text: "수정 횟수 확인", check: 1 },
-          { text: "수정 제안 일정 조정", check: 1 },
-          { text: "시공 마감재 제안", check: 1 },
-          { text: "구매 제품 추천", check: 1 },
-          { text: "제작 가구, 패브릭 추천", check: 1 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 1,
-        text: "시공 진행",
-        client: [
-          { text: "시공 범위 확인", check: 1 },
-          { text: "시공 견적서 제안", check: 1 },
-          { text: "공사 일정표 전달", check: 0 },
-          { text: "세대내 설비 특징 검토", check: 1 },
-          { text: "시공 방법 확인", check: 0 }
-        ],
-        designer: [
-          { text: "시공 범위 확인", check: 1 },
-          { text: "시공 견적서 제안", check: 1 },
-          { text: "공사 일정표 전달", check: 0 },
-          { text: "세대내 설비 특징 검토", check: 1 },
-          { text: "시공 방법 확인", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "제품 구매",
-        client: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ],
-        designer: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "제작 가구",
-        client: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ],
-        designer: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "배송중",
-        client: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ],
-        designer: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "제품 설치",
-        client: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ],
-        designer: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "제작 패브릭",
-        client: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ],
-        designer: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "부가 서비스",
-        client: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ],
-        designer: [
-          { text: "각 구매처 리뷰 검토", check: 0 },
-          { text: "배송 기간, 배송료 확인", check: 0 },
-          { text: "최종 배송일 확인", check: 0 },
-          { text: "설치 물량 확인", check: 0 },
-          { text: "설치 특이사항 점검", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "현장 촬영",
-        client: [
-          { text: "시공 상태 확인", check: 0 },
-          { text: "구매 제품 상태 확인", check: 0 },
-          { text: "사진 촬영", check: 0 },
-          { text: "고객 인터뷰", check: 0 },
-          { text: "콘텐츠 공유", check: 0 }
-        ],
-        designer: [
-          { text: "시공 상태 확인", check: 0 },
-          { text: "구매 제품 상태 확인", check: 0 },
-          { text: "사진 촬영", check: 0 },
-          { text: "고객 인터뷰", check: 0 },
-          { text: "콘텐츠 공유", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "고객 인터뷰",
-        client: [
-          { text: "시공 상태 확인", check: 0 },
-          { text: "구매 제품 상태 확인", check: 0 },
-          { text: "사진 촬영", check: 0 },
-          { text: "고객 인터뷰", check: 0 },
-          { text: "콘텐츠 공유", check: 0 }
-        ],
-        designer: [
-          { text: "시공 상태 확인", check: 0 },
-          { text: "구매 제품 상태 확인", check: 0 },
-          { text: "사진 촬영", check: 0 },
-          { text: "고객 인터뷰", check: 0 },
-          { text: "콘텐츠 공유", check: 0 }
-        ]
-      },
-      {
-        target: processTong,
-        progress: 2,
-        text: "컨텐츠 공유",
-        client: [
-          { text: "시공 상태 확인", check: 0 },
-          { text: "구매 제품 상태 확인", check: 0 },
-          { text: "사진 촬영", check: 0 },
-          { text: "고객 인터뷰", check: 0 },
-          { text: "콘텐츠 공유", check: 0 }
-        ],
-        designer: [
-          { text: "시공 상태 확인", check: 0 },
-          { text: "구매 제품 상태 확인", check: 0 },
-          { text: "사진 촬영", check: 0 },
-          { text: "고객 인터뷰", check: 0 },
-          { text: "콘텐츠 공유", check: 0 }
-        ]
-      },
-    ];
-    clientCheckList = [];
-    designerCheckList = [];
-
-    for (let z = 0; z < processTargets.length; z++) {
-      temp = (processTargets[z].target.getBoundingClientRect().width - (circleMargin * ((processTargets.length / 2) - 1))) / (processTargets.length / 2);
-      processFontSize = temp / 7;
-      createNodes([
-        {
-          mother: processTargets[z].target,
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(temp) + ea,
-            height: String(temp) + ea,
-            borderRadius: String(temp) + ea,
-            textAlign: "center",
-            marginRight: String((z + 1) % (processTargets.length / 2) === 0 ? 0 : circleMargin) + ea,
-            marginBottom: String(z < (processTargets.length / 2) ? circleMargin : 0) + ea,
-            overflow: "hidden"
-          }
-        },
-        {
-          mother: 0,
-          text: processTargets[z].text,
-          style: {
-            position: "absolute",
-            width: String(120) + '%',
-            height: String(120) + '%',
-            top: String(-10) + '%',
-            left: String(-10) + '%',
-            transformOrigin: "50% 50%",
-            animation: processTargets[z].progress === 1 ? "rotateProgress 1s linear infinite" : "",
-            background: processTargets[z].progress <= 1 ? (processTargets[z].progress === 1 ? colorChip.gradientGreen2 : colorChip.deactive) : colorChip.gray1,
-            opacity: processTargets[z].progress === 0 ? String(1) : String(1),
-          }
-        },
-        {
-          mother: 0,
-          text: processTargets[z].text,
-          style: {
-            position: "absolute",
-            fontSize: String(processFontSize) + ea,
-            fontWeight: String(600),
-            color: processTargets[z].progress <= 1 ? (processTargets[z].progress === 1 ? colorChip.white : colorChip.gray0) : colorChip.deactive,
-            width: String(100) + '%',
-            textAlign: "center",
-            top: String((temp / 2) - (processFontSize / 2) - 3) + ea,
-          }
-        },
-      ]);
-
-      clientCheckList.push({
-        mother: 1,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          background: processTargets[z].progress <= 1 ? colorChip.white : colorChip.gray2,
-          borderRadius: String(3) + ea,
-          width: String(whiteCardWidth) + ea,
-          top: String(whiteCardMargin) + ea,
-          height: withOut(String(whiteCardMargin * 2), ea),
-          marginLeft: String(whiteCardMargin) + ea,
-        },
-      });
-
-      clientCheckList.push({
-        mother: -1,
-        text: "check " + String(z),
-        style: {
-          position: "absolute",
-          fontSize: String(12) + ea,
-          fontFamily: "graphik",
-          fontWeight: String(400),
-          fontStyle: "italic",
-          color: processTargets[z].progress <= 1 ? colorChip.green : colorChip.deactive,
-          top: String(12) + ea,
-          left: String(14) + ea,
-        },
-      });
-
-      for (let i = 0; i < (processTargets[z].client.length * 2); i++) {
-        if (i % 2 === 0) {
-          clientCheckList.push({
-            mother: -1 * (i + 1 + 1),
-            text: processTargets[z].client[i / 2].text,
-            style: {
-              position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(200),
-              color: processTargets[z].progress <= 1 ? colorChip.black : colorChip.deactive,
-              width: withOut(String(15), ea),
-              left: String(0) + ea,
-              top: String(40 + (24 * (i / 2))) + ea,
-              textAlign: "right",
-            },
-          });
-        } else {
-          clientCheckList.push({
-            mother: -1 * (i + 1 + 1),
-            mode: "svg",
-            source: instance.mother.returnCheckBox(processTargets[z].progress <= 1 ? colorChip.green : colorChip.deactive, processTargets[z].progress === 2),
-            style: {
-              position: "absolute",
-              width: String(10) + ea,
-              left: String(15) + ea,
-              top: String(40 + 5.5 + (24 * ((i - 1) / 2))) + ea,
-            },
-          });
-        }
-      }
-
-      designerCheckList.push({
-        mother: 1,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          background: processTargets[z].progress <= 1 ? colorChip.white : colorChip.gray2,
-          borderRadius: String(3) + ea,
-          width: String(whiteCardWidth) + ea,
-          top: String(whiteCardMargin) + ea,
-          height: withOut(String(whiteCardMargin * 2), ea),
-          marginLeft: String(whiteCardMargin) + ea,
-        },
-      });
-
-      designerCheckList.push({
-        mother: -1,
-        text: "check " + String(z),
-        style: {
-          position: "absolute",
-          fontSize: String(12) + ea,
-          fontFamily: "graphik",
-          fontWeight: String(400),
-          fontStyle: "italic",
-          color: processTargets[z].progress <= 1 ? colorChip.green : colorChip.deactive,
-          top: String(12) + ea,
-          left: String(14) + ea,
-        },
-      });
-
-      for (let i = 0; i < (processTargets[z].designer.length * 2); i++) {
-        if (i % 2 === 0) {
-          designerCheckList.push({
-            mother: -1 * (i + 1 + 1),
-            text: processTargets[z].designer[i / 2].text,
-            style: {
-              position: "absolute",
-              fontSize: String(14) + ea,
-              fontWeight: String(200),
-              color: processTargets[z].progress <= 1 ? colorChip.black : colorChip.deactive,
-              width: withOut(String(15), ea),
-              left: String(0) + ea,
-              top: String(40 + (24 * (i / 2))) + ea,
-              textAlign: "right",
-            },
-          });
-        } else {
-          designerCheckList.push({
-            mother: -1 * (i + 1 + 1),
-            mode: "svg",
-            source: instance.mother.returnCheckBox(processTargets[z].progress <= 1 ? colorChip.green : colorChip.deactive, processTargets[z].progress === 2),
-            style: {
-              position: "absolute",
-              width: String(10) + ea,
-              left: String(15) + ea,
-              top: String(40 + 5.5 + (24 * ((i - 1) / 2))) + ea,
-            },
-          });
-        }
-      }
-    }
-
-    createNodes([
-      {
-        mother: checkListBlocks[3],
-        style: {
-          position: "relative",
-          left: String(2) + ea,
-          width: withOut(String(2 * 2), ea),
-          height: String(190) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + ea,
-          overflow: "scroll"
-        }
-      },
-      {
-        mother: -1,
-        style: {
-          position: "absolute",
-          top: String(0) + ea,
-          left: String(0) + ea,
-          width: String((whiteCardWidth + whiteCardMargin) * (processTargets.length + 2)) + ea,
+          width: String(100) + '%',
           height: String(100) + '%',
-        }
-      },
-      ...clientCheckList
-    ]);
+          overflow: "hidden"
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnLoading(),
+            class: [ "loading" ],
+            style: {
+              position: "absolute",
+              width: String(loadingWidth) + ea,
+              top: withOut(50, loadingWidth / 2, ea),
+              left: withOut(50, loadingWidth / 2, ea),
+            }
+          }
+        ]
+      });
 
-    createNodes([
-      {
-        mother: checkListBlocks[5],
-        style: {
-          position: "relative",
-          left: String(2) + ea,
-          width: withOut(String(2 * 2), ea),
-          height: String(190) + ea,
-          background: colorChip.gray1,
-          borderRadius: String(3) + ea,
-          overflow: "scroll"
-        }
-      },
-      {
-        mother: -1,
-        style: {
-          position: "absolute",
-          top: String(0) + ea,
-          left: String(0) + ea,
-          width: String((whiteCardWidth + whiteCardMargin) * (processTargets.length + 2)) + ea,
-          height: String(100) + '%',
-        }
-      },
-      ...designerCheckList
-    ]);
+      ajaxJson({
+        noFlat: true,
+        whereQuery: { proid: thisCase[standard[1]] },
+      }, "/getProjects").then((obj) => {
+        const [ project ] = obj;
+        return ajaxJson({
+          mode: "read",
+          whereQuery: {
+            $and: [
+              { class: "style" },
+              { "links.cliid": project.cliid },
+              { "links.desid": project.desid },
+              { "links.proid": project.proid },
+              { "links.method": project.service.online ? "online" : "offline" },
+            ]
+          },
+        }, PYTHONHOST + "/generalBill", { equal: true });
+      }).then((obj) => {
+        if (obj.length > 0) {
+          const [ bill ] = obj;
+          GeneralJs.stacks[thisProjectBill] = bill;
+          const { proid, desid, cliid, method } = bill.links;
 
-    const calendar = instance.mother.makeCalendar(new Date(), function (e) {
-      let [ year, month, date ] = this.getAttribute("buttonValue").split("-");
-      console.log(year, month, date);
-    }, {
-      bigMode: true,
-      width: withOut(String(2 * 2), ea),
-      height: String(520) + ea,
-      events: [
-        { date: new Date(2021, 3, 6), title: "3차 디자인 제안", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 3, 8), title: "디자인 확정", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 3, 10), title: "시공 견적", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 3, 12), title: "시공사 컨택", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 3, 22), title: "샤시 공정 진행", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 3, 24), title: "도배 공정 진행", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 3, 28), title: "금속 공정 진행", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 3, 29), title: "욕실 공정 진행", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 3, 29), title: "타일 공정 진행", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 4, 10), title: "제품 리스트 발송", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 4, 12), title: "가구 구매 예정일", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 4, 24), title: "제작 가구 완성일", eventFunc: new Function(), hours: false },
-        { date: new Date(2021, 4, 30), title: "촬영 예정", eventFunc: new Function(), hours: false },
-      ],
-    });
-    calendar.calendarBase.style.left = String(2) + ea;
-    checkListBlocks[7].appendChild(calendar.calendarBase);
+          tong.removeChild(tong.firstChild);
 
-    historyBox.style.animation = "fadeout 0.3s ease forwards";
-    matrixBox.style.animation = "fadein 0.3s ease forwards";
+          let titleTong;
+          let scrollTong, num;
+          let scroll;
+          let historyArr;
+          let historyLoad;
+          let tempArr;
+          let tempObj;
+
+          historyLoad = () => {};
+          scrollTong = {};
+
+          historyArr = [];
+          for (let { date, name, id } of bill.requests) {
+            tempObj = {};
+            tempObj.text = "";
+            tempObj.text += dateToString(date, true).slice(2, -3);
+            tempObj.text += " | ";
+            tempObj.text += name.replace(/([^ ]*) ([^ ]*금)/g, (match, p1, p2) => {
+              return (p1 + " <b%" + p2 + "%b>");
+            });
+            tempObj.id = id;
+            historyArr.push(tempObj);
+          }
+
+          titleTong = createNode({
+            mother: tong,
+            style: {
+              position: "relative",
+              marginLeft: String(innerMargin) + ea,
+              width: withOut(innerMargin * 2, ea),
+              height: String(titleHeight) + ea,
+              borderBottom: "1px solid " + colorChip.gray3
+            },
+            children: [
+              {
+                text: "고객님의 견적서",
+                style: {
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(600),
+                  position: "absolute",
+                  bottom: String(titleBottom) + ea,
+                }
+              }
+            ]
+          });
+          scroll = createNode({
+            mother: tong,
+            style: {
+              position: "relative",
+              width: String(100) + '%',
+              height: withOut(titleHeight, ea),
+              overflow: "scroll"
+            }
+          });
+          scrollTong = createNode({
+            mother: scroll,
+            style: {
+              position: "absolute",
+              top: String(innerMargin) + ea,
+              left: String(innerMargin) + ea,
+              width: withOut(innerMargin * 2, ea),
+              height: String(4000) + ea,
+              paddingBottom: String(paddingBottom) + ea,
+            }
+          });
+
+          historyLoad = () => {
+            scrollTong.style.height = String(8000) + ea;
+            scrollTong.parentElement.setAttribute("proid", proid);
+            scrollTong.parentElement.setAttribute("desid", desid);
+            scrollTong.parentElement.setAttribute("cliid", cliid);
+            scrollTong.parentElement.setAttribute("method", method);
+            scrollTong.parentElement.addEventListener("contextmenu", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const thisRect = this.getBoundingClientRect();
+              const proid = this.getAttribute("proid");
+              const desid = this.getAttribute("desid");
+              const cliid = this.getAttribute("cliid");
+              const method = this.getAttribute("method");
+              let x, y;
+
+              x = e.x - thisRect.x;
+              y = e.y - thisRect.y;
+
+              const menuClass = "billMenu";
+              const menuContents = [
+                {
+                  text: "출장 견적 추가",
+                  eventFunction: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                },
+                {
+                  text: "촬영 견적 추가",
+                  eventFunction: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                },
+              ];
+              let menuFontSize;
+              let menuPaddingTop, menuPaddingBottom, menuPaddingLeft;
+              let menuMargin;
+              let menuTong;
+              let num;
+
+              menuFontSize = fontSize - 1;
+              menuPaddingTop = innerPaddingTop - 2;
+              menuPaddingBottom = innerPaddingBottom - 2;
+              menuPaddingLeft = innerPaddingLeft - 1;
+              menuMargin = imageMargin / 2;
+
+              createNode({
+                mother: this,
+                class: [ menuClass ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const targets = document.querySelectorAll('.' + menuClass);
+                      for (let dom of targets) {
+                        dom.remove();
+                      }
+                    }
+                  },
+                  {
+                    type: "contextmenu",
+                    event: function (e) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                  }
+                ],
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  background: "transparent",
+                  zIndex: String(1),
+                }
+              });
+
+              menuTong = createNode({
+                mother: this,
+                class: [ menuClass ],
+                events: [
+                  {
+                    type: "click",
+                    event: (e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                  }
+                ],
+                style: {
+                  position: "absolute",
+                  top: String(y) + ea,
+                  left: String(x) + ea,
+                  zIndex: String(1),
+                  animation: "fadeuplite 0.2s ease",
+                }
+              });
+
+              for (let { text, eventFunction } of menuContents) {
+                createNode({
+                  mother: menuTong,
+                  events: [
+                    {
+                      type: "click",
+                      event: eventFunction
+                    }
+                  ],
+                  text,
+                  style: {
+                    position: "relative",
+                    fontSize: String(menuFontSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.whiteBlack,
+                    background: colorChip.greenGray,
+                    paddingTop: String(menuPaddingTop) + ea,
+                    paddingBottom: String(menuPaddingBottom) + ea,
+                    paddingLeft: String(menuPaddingLeft) + ea,
+                    paddingRight: String(menuPaddingLeft) + ea,
+                    borderRadius: String(3) + "px",
+                    marginBottom: String(menuMargin) + ea,
+                    cursor: "pointer",
+                    textAlign: "center",
+                    boxShadow: "0px 2px 12px -9px " + colorChip.shadow,
+                  }
+                });
+              }
+
+            });
+            let num;
+            num = 0;
+            for (let { text, id } of historyArr) {
+              createNode({
+                mother: scrollTong,
+                attribute: [
+                  { index: id },
+                  { order: String(num) }
+                ],
+                style: {
+                  position: "relative",
+                  display: "block",
+                  width: String(100) + '%',
+                  height: "auto",
+                  marginBottom: String(imageMargin) + ea,
+                },
+                children: [
+                  {
+                    text: text.split('|')[0].trim(),
+                    events: [
+                      {
+                        type: "contextmenu",
+                        event: (e) => { e.stopPropagation(); e.preventDefault(); }
+                      }
+                    ],
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(400),
+                      color: colorChip.shadowWhite,
+                      background: colorChip.gray2,
+                      paddingTop: String(innerPaddingTop) + ea,
+                      paddingBottom: String(innerPaddingBottom) + ea,
+                      paddingLeft: String(innerPaddingLeft) + ea,
+                      paddingRight: String(innerPaddingLeft) + ea,
+                      borderRadius: String(3) + "px",
+                      marginRight: String(imageMargin) + ea,
+                    },
+                    bold: {
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.green,
+                    }
+                  },
+                  {
+                    text: text.split('|')[1].trim(),
+                    attribute: [
+                      { index: id },
+                      { first: text.split('|')[0].trim() },
+                      { name: text.split('|')[1].trim() },
+                      { proid },
+                      { desid },
+                      { cliid },
+                      { method }
+                    ],
+                    events: [
+                      {
+                        type: "click",
+                        event: function (e) {
+                          e.stopPropagation();
+                          const bill = GeneralJs.stacks[thisProjectBill];
+                          const index = this.getAttribute("index");
+                          const first = this.getAttribute("first");
+                          const itemClass = "items_";
+                          let thisRequest, items;
+                          let itemTong, itemDom;
+                          let num;
+                          let order;
+                          let toggle;
+                          let removeTargets;
+                          if (bill !== null) {
+                            thisRequest = null;
+
+                            for (let obj of bill.requests) {
+                              if (obj.id === index) {
+                                thisRequest = obj;
+                              }
+                            }
+
+                            if (thisRequest !== null) {
+                              toggle = false;
+                              removeTargets = [];
+                              for (let dom of scrollTong.children) {
+                                if (dom.getAttribute("index") === itemClass + index) {
+                                  toggle = true;
+                                  removeTargets.push(dom);
+                                }
+                              }
+                              if (toggle) {
+                                for (let dom of removeTargets) {
+                                  scrollTong.removeChild(dom);
+                                }
+                              } else {
+                                items = thisRequest.items;
+                                itemTong = [];
+                                for (let i of items) {
+                                  itemDom = createNode({
+                                    mother: scrollTong,
+                                    attribute: [
+                                      { index: itemClass + index },
+                                    ],
+                                    children: [
+                                      {
+                                        text: first,
+                                        style: {
+                                          position: "relative",
+                                          display: "inline-block",
+                                          fontSize: String(fontSize) + ea,
+                                          fontWeight: String(400),
+                                          color: "transparent",
+                                          background: "transparent",
+                                          paddingTop: String(innerPaddingTop) + ea,
+                                          paddingBottom: String(innerPaddingBottom) + ea,
+                                          paddingLeft: String(innerPaddingLeft) + ea,
+                                          paddingRight: String(innerPaddingLeft) + ea,
+                                          borderRadius: String(3) + "px",
+                                          marginRight: String(imageMargin) + ea,
+                                        },
+                                        bold: {
+                                          fontSize: String(fontSize) + ea,
+                                          fontWeight: String(600),
+                                          color: colorChip.green,
+                                        }
+                                      },
+                                      {
+                                        text: i.name,
+                                        style: {
+                                          position: "relative",
+                                          display: "inline-block",
+                                          fontSize: String(fontSize) + ea,
+                                          fontWeight: String(400),
+                                          color: colorChip.shadowWhite,
+                                          background: colorChip.gray2,
+                                          paddingTop: String(innerPaddingTop) + ea,
+                                          paddingBottom: String(innerPaddingBottom) + ea,
+                                          paddingLeft: String(innerPaddingLeft) + ea,
+                                          paddingRight: String(innerPaddingLeft) + ea,
+                                          borderRadius: String(3) + "px",
+                                          marginRight: String(imageMargin) + ea,
+                                        },
+                                        bold: {
+                                          fontSize: String(fontSize) + ea,
+                                          fontWeight: String(600),
+                                          color: colorChip.green,
+                                        }
+                                      },
+                                      {
+                                        text: "소비자가 : " + GeneralJs.autoComma(i.amount.consumer) + "원",
+                                        style: {
+                                          position: "relative",
+                                          display: "inline-block",
+                                          fontSize: String(fontSize) + ea,
+                                          fontWeight: String(400),
+                                          color: colorChip.shadowWhite,
+                                          background: colorChip.gray0,
+                                          paddingTop: String(innerPaddingTop) + ea,
+                                          paddingBottom: String(innerPaddingBottom) + ea,
+                                          paddingLeft: String(innerPaddingLeft) + ea,
+                                          paddingRight: String(innerPaddingLeft) + ea,
+                                          borderRadius: String(3) + "px",
+                                          marginRight: String(imageMargin) + ea,
+                                        },
+                                        bold: {
+                                          fontSize: String(fontSize) + ea,
+                                          fontWeight: String(600),
+                                          color: colorChip.green,
+                                        }
+                                      },
+                                      {
+                                        text: "횟수 : " + String(i.unit.number),
+                                        style: {
+                                          position: "relative",
+                                          display: "inline-block",
+                                          fontSize: String(fontSize) + ea,
+                                          fontWeight: String(400),
+                                          color: colorChip.shadowWhite,
+                                          background: colorChip.gray0,
+                                          paddingTop: String(innerPaddingTop) + ea,
+                                          paddingBottom: String(innerPaddingBottom) + ea,
+                                          paddingLeft: String(innerPaddingLeft) + ea,
+                                          paddingRight: String(innerPaddingLeft) + ea,
+                                          borderRadius: String(3) + "px",
+                                          marginRight: String(imageMargin) + ea,
+                                        },
+                                        bold: {
+                                          fontSize: String(fontSize) + ea,
+                                          fontWeight: String(600),
+                                          color: colorChip.green,
+                                        }
+                                      }
+                                    ],
+                                    style: {
+                                      position: "relative",
+                                      display: "block",
+                                      width: String(100) + '%',
+                                      height: "auto",
+                                      marginBottom: String(imageMargin) + ea,
+                                    }
+                                  });
+                                  itemTong.push(itemDom);
+                                }
+                                itemDom.style.paddingBottom = String(innerPaddingBottom) + ea;
+                                for (let i = 0; i < scrollTong.children.length; i++) {
+                                  if (scrollTong.children[i].getAttribute("index") === index) {
+                                    order = i;
+                                  }
+                                }
+                                num = 1;
+                                for (let dom of itemTong) {
+                                  scrollTong.insertBefore(dom, scrollTong.children[order + num]);
+                                  num++;
+                                }
+                              }
+
+                            }
+
+                          }
+                        }
+                      },
+                      {
+                        type: "contextmenu",
+                        event: function (e) {
+                          e.preventDefault();
+                          e.stopPropagation();
+
+                          const name = this.getAttribute("name");
+                          const proid = this.getAttribute("proid");
+                          const desid = this.getAttribute("desid");
+                          const cliid = this.getAttribute("cliid");
+                          const method = this.getAttribute("method");
+                          const height = this.getBoundingClientRect().height;
+                          const menuClass = "billMenu";
+                          const menuContents = [
+                            {
+                              text: "출장비 추가",
+                              eventFunction: function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }
+                            },
+                            {
+                              text: "출장비 삭제",
+                              eventFunction: function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }
+                            },
+                            {
+                              text: "견적서 보기",
+                              eventFunction: function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }
+                            },
+                            {
+                              text: "안내 발송",
+                              eventFunction: function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }
+                            },
+                            {
+                              text: "항목 삭제",
+                              eventFunction: function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }
+                            }
+                          ];
+                          let menuFontSize;
+                          let menuPaddingTop, menuPaddingBottom, menuPaddingLeft;
+                          let menuMargin;
+                          let menuTong;
+                          let num;
+
+                          menuFontSize = fontSize - 1;
+                          menuPaddingTop = innerPaddingTop - 2;
+                          menuPaddingBottom = innerPaddingBottom - 2;
+                          menuPaddingLeft = innerPaddingLeft - 1;
+                          menuMargin = imageMargin / 2;
+
+                          createNode({
+                            mother: this,
+                            class: [ menuClass ],
+                            events: [
+                              {
+                                type: "click",
+                                event: function (e) {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  const targets = document.querySelectorAll('.' + menuClass);
+                                  for (let dom of targets) {
+                                    dom.remove();
+                                  }
+                                }
+                              },
+                              {
+                                type: "contextmenu",
+                                event: function (e) {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                }
+                              }
+                            ],
+                            style: {
+                              position: "fixed",
+                              top: String(0),
+                              left: String(0),
+                              width: String(100) + '%',
+                              height: String(100) + '%',
+                              background: "transparent",
+                              zIndex: String(1),
+                            }
+                          });
+
+                          menuTong = createNode({
+                            mother: this,
+                            class: [ menuClass ],
+                            events: [
+                              {
+                                type: "click",
+                                event: (e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                }
+                              }
+                            ],
+                            style: {
+                              position: "absolute",
+                              top: String(height + imageMargin) + ea,
+                              left: String(0),
+                              zIndex: String(1),
+                              animation: "fadeuplite 0.2s ease",
+                            }
+                          });
+
+                          for (let { text, eventFunction } of menuContents) {
+                            createNode({
+                              mother: menuTong,
+                              events: [
+                                {
+                                  type: "click",
+                                  event: eventFunction
+                                }
+                              ],
+                              text,
+                              style: {
+                                position: "relative",
+                                fontSize: String(menuFontSize) + ea,
+                                fontWeight: String(500),
+                                color: colorChip.whiteBlack,
+                                background: colorChip.greenGray,
+                                paddingTop: String(menuPaddingTop) + ea,
+                                paddingBottom: String(menuPaddingBottom) + ea,
+                                paddingLeft: String(menuPaddingLeft) + ea,
+                                paddingRight: String(menuPaddingLeft) + ea,
+                                borderRadius: String(3) + "px",
+                                marginBottom: String(menuMargin) + ea,
+                                cursor: "pointer",
+                                textAlign: "center",
+                                boxShadow: "0px 2px 12px -9px " + colorChip.shadow,
+                              }
+                            });
+                          }
+
+                        }
+                      }
+                    ],
+                    style: {
+                      position: "relative",
+                      display: "inline-block",
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(300),
+                      color: colorChip.black,
+                      background: colorChip.gray0,
+                      paddingTop: String(innerPaddingTop) + ea,
+                      paddingBottom: String(innerPaddingBottom) + ea,
+                      paddingLeft: String(innerPaddingLeft) + ea,
+                      paddingRight: String(innerPaddingLeft) + ea,
+                      borderRadius: String(3) + "px",
+                      cursor: "pointer",
+                    },
+                    bold: {
+                      fontSize: String(fontSize) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.black,
+                    }
+                  }
+                ]
+              });
+              scrollTong.style.height = "auto";
+              num++;
+            }
+          }
+
+          historyLoad();
+          scrollTong.style.height = "auto";
+
+        } else {
+          window.alert("결과가 없습니다!");
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      historyBox.style.animation = "fadeout 0.3s ease forwards";
+      matrixBox.style.animation = "fadein 0.3s ease forwards";
+    }
   });
-
-  //dev ===================================================================================
 
   //get textAreaTong
   GeneralJs.ajax("id=" + thisCase[standard[1]], "/getProjectHistory", function (res) {

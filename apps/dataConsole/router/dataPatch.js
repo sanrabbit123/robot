@@ -3542,7 +3542,7 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
       { name: "선금 지급일", target: "paymentsFirstDate" },
       { name: "디자이너 잔금", target: "paymentsRemainAmount" },
       { name: "잔금 지급일", target: "paymentsRemainDate" },
-      { name: "촬영", target: "contentsPhotoDate", subTargets: [ "photographer", "interviewer" ], subTitles: [ "촬영일", "작가", "인터뷰어" ] },
+      { name: "촬영 상태", target: "photoStatus" },
     ],
   };
   return targetColumns;

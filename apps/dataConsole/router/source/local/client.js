@@ -2139,6 +2139,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   let textAreas;
   let callEvent;
   let dragstartEventFunction, dragendEventFunction, dragenterEventFunction, dragleaveEventFunction, dragoverEventFunction, dropEventFunction;
+  let betweenSpace;
+  let cliidDom;
 
   //entire box -------------------------------------
   div_clone = GeneralJs.nodes.div.cloneNode(true);
@@ -2206,13 +2208,14 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   div_clone2.appendChild(div_clone3);
 
   //cliid
+  betweenSpace = "&nbsp;&nbsp;<b style=\"color: " + GeneralJs.colorChip.gray3 + "\">/</b>&nbsp;&nbsp;";
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.textContent = thisCase[standard[1]];
+  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + "<b style=\"color: " + GeneralJs.colorChip.green + "\">" + thisCase.name + " (Ca)</b>"));
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
     color: GeneralJs.colorChip.green,
-    fontSize: String(titleFontSize * (19 / 42)) + ea,
+    fontSize: String(titleFontSize * (17 / 42)) + ea,
     bottom: String(leftMargin * (GeneralJs.isMac() ? (17 / 60) : (14 / 60))) + ea,
     left: String(leftMargin * (thisCase[standard[0]].length === 4 ? 3.6 : (thisCase[standard[0]].length === 2 ? 2.3 : 3))) + ea,
     cursor: "pointer",
@@ -2220,8 +2223,45 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   for (let i in style) {
     div_clone3.style[i] = style[i];
   }
-  div_clone3.addEventListener("click", callEvent);
   div_clone2.appendChild(div_clone3);
+  cliidDom = div_clone3;
+  GeneralJs.ajaxJson({ noFlat: true, whereQuery: { cliid: thisCase[standard[1]] } }, "/getProjects").then((projects) => {
+    const cliid = thisCase[standard[1]];
+    let project, tempFunction;
+    if (projects.length === 0) {
+      cliidDom.textContent = cliid;
+      tempFunction = instance.makeClipBoardEvent(cliid);
+      cliidDom.addEventListener("click", tempFunction);
+    } else {
+      project = projects[0];
+      if (/^d/.test(project.desid)) {
+        cliidDom.addEventListener("click", function (e) {
+          const slash = this.querySelector('b');
+          const slashPosition = slash.getBoundingClientRect().x;
+          if (e.x < slashPosition) {
+            tempFunction = instance.makeClipBoardEvent(cliid);
+            tempFunction.call(this, e);
+          } else {
+            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/project?proid=" + project.proid);
+          }
+        });
+      } else {
+        cliidDom.querySelectorAll('b')[1].textContent = cliidDom.querySelectorAll('b')[1].textContent.replace(/\(Ca\)/, "(Pr)");
+        cliidDom.addEventListener("click", function (e) {
+          const slash = this.querySelector('b');
+          const slashPosition = slash.getBoundingClientRect().x;
+          if (e.x < slashPosition) {
+            tempFunction = instance.makeClipBoardEvent(cliid);
+            tempFunction.call(this, e);
+          } else {
+            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/proposal?proid=" + project.proid);
+          }
+        });
+      }
+    }
+  }).catch((err) => {
+    console.log(err);
+  });
 
   //right arrow
   rightArrow = SvgTong.stringParsing(this.mother.returnArrow("right", GeneralJs.colorChip.green));

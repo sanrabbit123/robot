@@ -1298,6 +1298,9 @@ DataRouter.prototype.rou_post_getHistory = function () {
         }
       }
 
+      if (responseArr === null) {
+        responseArr = [];
+      }
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseArr));
     } catch (e) {

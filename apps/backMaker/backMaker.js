@@ -2765,19 +2765,24 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
     let tongLeft;
     let tongIds;
     let createQuery;
+    let idKeywords;
 
     if (/client/gi.test(method)) {
       collection = "clientHistory";
       sortStandard = "cliid";
+      idKeywords = 'c';
     } else if (/designer/gi.test(method)) {
       collection = "designerHistory";
       sortStandard = "desid";
+      idKeywords = 'd';
     } else if (/project/gi.test(method)) {
       collection = "projectHistory";
       sortStandard = "proid";
+      idKeywords = 'p';
     } else if (/contents/gi.test(method)) {
       collection = "contentsHistory";
       sortStandard = "conid";
+      idKeywords = 't';
     } else {
       throw new Error("invalid method");
     }
@@ -2829,7 +2834,9 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
         tongLeft = [];
         for (let id of idArr) {
           if (!tongIds.includes(id)) {
-            tongLeft.push(id);
+            if ((new RegExp("^" + idKeywords)).test(id)) {
+              tongLeft.push(id);
+            }
           }
         }
         for (let id of tongLeft) {
