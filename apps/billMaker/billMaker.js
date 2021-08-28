@@ -742,6 +742,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
       throw new Error("no client error");
     }
 
+    let targetProposals;
     let designerHistory;
     let thisMember;
     let bilid, bilidArr;
@@ -753,8 +754,19 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     let thisBill;
     let designer;
 
+    if (/^d/.test(project.desid)) {
+      targetProposals = [];
+      for (let proposal of project.proposal.detail) {
+        if (proposal.desid === project.desid) {
+          targetProposals.push(proposal);
+        }
+      }
+    } else {
+      targetProposals = project.proposal.detail;
+    }
+
     bilidArr = [];
-    for (let { desid, fee } of project.proposal.detail) {
+    for (let { desid, fee } of targetProposals) {
 
       designerHistory = await back.getHistoryById("designer", desid, { selfMongo: MONGOCONSOLEC });
       if (designerHistory === null) {
