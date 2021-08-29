@@ -271,12 +271,27 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // alive test
+
+    // const desid = "d1701_aa01s"
+    // const project = await back.getDesignerById(desid, { selfMongo: this.MONGOC });
+    // const p = (await this.MONGOC.db("miro81").collection("designer").find({ desid }).toArray())[0]
+    // delete p._id;
+    // console.log(JSON.stringify(project.toNormal()).length === JSON.stringify(p).length)
+    // const bilid = "b218s_aa04s";
+    // const b = await bill.getBillById(bilid);
+    // const MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+    // await MONGOC.connect();
+    // const p = (await MONGOC.db("miro81").collection("generalBill").find({ bilid }).toArray())[0]
+    // await MONGOC.close();
+    // delete p._id;
+    // console.log(JSON.stringify(b.toNormal()).length)
+    // console.log(JSON.stringify(p).length);
 
 
+    // create bill
 
-
-
-    // console.log(await bill.createStylingBill("p2108_aa56s"));
+    // console.log(await bill.createStylingBill("p2107_aa46s"));
     // console.log(await bill.createStylingBill("p2108_aa63s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC }));
     // console.log((await bill.getBillById("b218q_aa04s", { selfMongo: this.MONGOLOCALC })).responses[0].items);
     // console.log((await bill.getBillById("b218r_aa04s")));
