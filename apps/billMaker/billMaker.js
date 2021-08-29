@@ -981,6 +981,77 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
   }
 }
 
+BillMaker.prototype.requestEjection = async function (bilid, requestIndex, option = { selfMongo: null }) {
+  if (typeof bilid !== "string") {
+    throw new Error("invaild input");
+  }
+  let mode, thisId;
+  if (bilid.split("_").length === 3) {
+    mode = "id";
+    option = requestIndex;
+    thisId = bilid;
+    bilid = thisId.split("_").slice(0, 2).join("_");
+  } else {
+    if (typeof requestIndex !== "number") {
+      throw new Error("invaild input");
+    }
+    mode = "index";
+  }
+
+  const instance = this;
+  const { mongo, mongopythoninfo, equalJson } = this.mother;
+  try {
+    let MONGOC;
+    let selfBoo;
+    let thisBill;
+    let tempArr, finalArr;
+    let whereQuery, updateQuery;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+
+    tempArr = thisBill.requests.toNormal();
+
+    if (mode === "index") {
+      tempArr.splice(requestIndex, 1);
+      finalArr = equalJson(JSON.stringify(tempArr));
+    } else {
+      finalArr = [];
+      for (let obj of tempArr) {
+        if (obj.id !== thisId) {
+          finalArr.push(obj);
+        }
+      }
+    }
+
+    whereQuery = { bilid };
+    updateQuery = {};
+    updateQuery["requests"] = finalArr;
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.responseInjection = async function (bilid, responseKey, client, designer, project, method, option = { selfMongo: null }) {
   if (typeof bilid !== "string" || typeof responseKey !== "string" || typeof client !== "object" || typeof designer !== "object" || typeof project !== "object" || typeof method !== "string") {
     throw new Error("invaild input");
@@ -1091,6 +1162,77 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
     whereQuery = { bilid };
     updateQuery = {};
     updateQuery["responses"] = equalJson(JSON.stringify(tempArr));
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.responseEjection = async function (bilid, responseIndex, option = { selfMongo: null }) {
+  if (typeof bilid !== "string") {
+    throw new Error("invaild input");
+  }
+  let mode, thisId;
+  if (bilid.split("_").length === 3) {
+    mode = "id";
+    option = responseIndex;
+    thisId = bilid;
+    bilid = thisId.split("_").slice(0, 2).join("_");
+  } else {
+    if (typeof responseIndex !== "number") {
+      throw new Error("invaild input");
+    }
+    mode = "index";
+  }
+
+  const instance = this;
+  const { mongo, mongopythoninfo, equalJson } = this.mother;
+  try {
+    let MONGOC;
+    let selfBoo;
+    let thisBill;
+    let tempArr, finalArr;
+    let whereQuery, updateQuery;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+
+    tempArr = thisBill.responses.toNormal();
+
+    if (mode === "index") {
+      tempArr.splice(responseIndex, 1);
+      finalArr = equalJson(JSON.stringify(tempArr));
+    } else {
+      finalArr = [];
+      for (let obj of tempArr) {
+        if (obj.id !== thisId) {
+          finalArr.push(obj);
+        }
+      }
+    }
+
+    whereQuery = { bilid };
+    updateQuery = {};
+    updateQuery["responses"] = finalArr;
     await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
 
     if (!selfBoo) {
@@ -1398,11 +1540,15 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
   const stylingRequests = BillMaker.billDictionary.styling.requests;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
   const stylingResponses = BillMaker.billDictionary.styling.responses;
+  const itemKey = "travelExpenses";
+  const requestKey = "travelPayment";
+  const responseKey = "designerTravelFee";
   try {
     let MONGOC, MONGOCOREC;
     let selfBoo, selfCoreBoo;
     let client, designer, project;
     let thisBill, bilid;
+    let targetIndex;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -1454,12 +1600,27 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
 
     if (injectionCase === "request") {
 
-      await this.requestInjection(bilid, "travelPayment", client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
-      await this.responseInjection(bilid, "designerTravelFee", client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+      await this.requestInjection(bilid, requestKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+      await this.responseInjection(bilid, responseKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
 
-    } else if (injectionCase === "first") {
+    } else {
 
-    } else if (injectionCase === "remain") {
+      targetIndex = null;
+      if (typeof option.index === "number" && thisBill.requests[option.index] !== undefined) {
+        targetIndex = option.index;
+      } else {
+        for (let i = 0; i < thisBill.requests.length; i++) {
+          if (thisBill.requests[i].name.trim() === stylingRequests[injectionCase === "first" ? "firstPayment" : "secondPayment"].name) {
+            targetIndex = i;
+            break;
+          }
+        }
+      }
+      if (targetIndex !== null) {
+        await this.itemEjection(thisBill.requests[targetIndex].id, itemKey, { selfMongo: MONGOC });
+        await this.itemInjection(thisBill.requests[targetIndex].id, itemKey, client, designer, project, method, { selfMongo: MONGOC, number });
+      }
+      await this.responseInjection(bilid, responseKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
 
     }
 
