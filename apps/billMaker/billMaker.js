@@ -1264,6 +1264,217 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
   }
 }
 
+BillMaker.prototype.itemEjection = async function (id, itemKey, option = { selfMongo: null }) {
+  if (typeof id !== "string" || typeof itemKey !== "string") {
+    throw new Error("must be request or response id");
+  }
+  if (!/_/gi.test(id)) {
+    throw new Error("must be request or response id");
+  }
+  if (!(id.split('_').length === 3 && /^[rs]/.test(id.split('_')[2]))) {
+    throw new Error("must be request or response id");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
+  const bilid = id.split('_')[0] + "_" + id.split('_')[1];
+  const toggle = /^r/.test(id.split('_')[2]) ? true : false;
+  const stylingItems = BillMaker.billDictionary.styling.goods;
+  const stylingRequests = BillMaker.billDictionary.styling.requests;
+  const designerCalculation = BillMaker.billDictionary.styling.calculation;
+  const stylingResponses = BillMaker.billDictionary.styling.responses;
+  try {
+    let MONGOC;
+    let selfBoo;
+    let thisBill;
+    let item;
+    let targetR, targetIndex;
+    let num;
+    let whereQuery, updateQuery;
+    let itemsArr, commentsArr;
+    let newItemArr, newCommentsArr;
+
+    if (toggle) {
+      if (stylingItems[itemKey] === undefined) {
+        throw new Error("invaild item key");
+      }
+      item = stylingItems[itemKey];
+    } else {
+      if (designerCalculation[itemKey] === undefined) {
+        throw new Error("invaild item key");
+      }
+      item = designerCalculation[itemKey];
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+
+    targetR = null;
+    num = 0;
+    if (toggle) {
+      for (let obj of thisBill.requests) {
+        if (id === obj.id) {
+          targetR = obj;
+          targetIndex = num;
+        }
+        num++;
+      }
+    } else {
+      for (let obj of thisBill.responses) {
+        if (id === obj.id) {
+          targetR = obj;
+          targetIndex = num;
+        }
+        num++;
+      }
+    }
+    if (targetR === null) {
+      throw new Error("invaild request or response id");
+    }
+
+    itemsArr = targetR.items.toNormal();
+    commentsArr = targetR.comments.toNormal();
+
+    newItemArr = [];
+    for (let i of itemsArr) {
+      if (i.class !== itemKey) {
+        newItemArr.push(i);
+      }
+    }
+    newCommentsArr = [];
+    for (let i of commentsArr) {
+      if (!item.comments.includes(i)) {
+        newCommentsArr.push(i);
+      }
+    }
+
+    whereQuery = { bilid };
+    updateQuery = {};
+    updateQuery[(toggle ? "requests." : "responses.") + String(targetIndex) + ".items"] = newItemArr;
+    updateQuery[(toggle ? "requests." : "responses.") + String(targetIndex) + ".comments"] = newCommentsArr;
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.travelInjection = async function (injectionCase, proid, method, number, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof injectionCase !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof number !== "number") {
+    throw new Error("invaild input");
+  }
+  if (!([ "request", "first", "remain" ]).includes(injectionCase)) {
+    throw new Error("injection case must be request or first or remain");
+  }
+  if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(proid)) {
+    throw new Error("invaild proid");
+  }
+  if (method !== "offline" && method !== "online") {
+    throw new Error("invaild method");
+  }
+  if (number < 0 || 20 < number) {
+    throw new Error("invaild travel number");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const stylingItems = BillMaker.billDictionary.styling.goods;
+  const stylingRequests = BillMaker.billDictionary.styling.requests;
+  const designerCalculation = BillMaker.billDictionary.styling.calculation;
+  const stylingResponses = BillMaker.billDictionary.styling.responses;
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let client, designer, project;
+    let thisBill, bilid;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    if (project === null) {
+      throw new Error("invaild proid");
+    }
+    if (!/^d/.test(project.desid)) {
+      throw new Error("unable in this project");
+    }
+    designer = await back.getDesignerById(project.desid, { selfMongo: MONGOCOREC });
+    client = await back.getClientById(project.cliid, { selfMongo: MONGOCOREC });
+
+    thisBill = await this.getBillsByQuery({
+      $and: [
+        { "links.proid": project.proid },
+        { "links.cliid": client.cliid },
+        { "links.desid": designer.desid },
+        { "links.method": method },
+      ]
+    }, { selfMongo: MONGOC });
+    if (thisBill.length === 0) {
+      throw new Error("cannot found bill");
+    }
+    thisBill = thisBill[0];
+    bilid = thisBill.bilid;
+
+    if (injectionCase === "request") {
+
+      await this.requestInjection(bilid, "travelPayment", client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+      await this.responseInjection(bilid, "designerTravelFee", client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+
+    } else if (injectionCase === "first") {
+
+    } else if (injectionCase === "remain") {
+
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.designerSelect = async function (proid, desid, option = { selfMongo: null }) {
   if (typeof proid !== "string" || typeof desid !== "string" || typeof option !== "object") {
     throw new Error("must be proid, desid");
