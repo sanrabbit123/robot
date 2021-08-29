@@ -1636,6 +1636,242 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
   }
 }
 
+BillMaker.prototype.travelEjection = async function (injectionCase, proid, method, number, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof injectionCase !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof number !== "number") {
+    throw new Error("invaild input");
+  }
+  if (!([ "request", "first", "remain" ]).includes(injectionCase)) {
+    throw new Error("injection case must be request or first or remain");
+  }
+  if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(proid)) {
+    throw new Error("invaild proid");
+  }
+  if (method !== "offline" && method !== "online") {
+    throw new Error("invaild method");
+  }
+  if (number < 0 || 20 < number) {
+    throw new Error("invaild travel number");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const stylingItems = BillMaker.billDictionary.styling.goods;
+  const stylingRequests = BillMaker.billDictionary.styling.requests;
+  const designerCalculation = BillMaker.billDictionary.styling.calculation;
+  const stylingResponses = BillMaker.billDictionary.styling.responses;
+  const itemKey = "travelExpenses";
+  const requestKey = "travelPayment";
+  const responseKey = "designerTravelFee";
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let client, designer, project;
+    let thisBill, bilid;
+    let targetIndex;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    if (project === null) {
+      throw new Error("invaild proid");
+    }
+    if (!/^d/.test(project.desid)) {
+      throw new Error("unable in this project");
+    }
+    designer = await back.getDesignerById(project.desid, { selfMongo: MONGOCOREC });
+    client = await back.getClientById(project.cliid, { selfMongo: MONGOCOREC });
+
+    thisBill = await this.getBillsByQuery({
+      $and: [
+        { "links.proid": project.proid },
+        { "links.cliid": client.cliid },
+        { "links.desid": designer.desid },
+        { "links.method": method },
+      ]
+    }, { selfMongo: MONGOC });
+    if (thisBill.length === 0) {
+      throw new Error("cannot found bill");
+    }
+    thisBill = thisBill[0];
+    bilid = thisBill.bilid;
+
+    if (injectionCase === "request") {
+
+      await this.requestInjection(bilid, requestKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+      await this.responseInjection(bilid, responseKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+
+    } else {
+
+      targetIndex = null;
+      if (typeof option.index === "number" && thisBill.requests[option.index] !== undefined) {
+        targetIndex = option.index;
+      } else {
+        for (let i = 0; i < thisBill.requests.length; i++) {
+          if (thisBill.requests[i].name.trim() === stylingRequests[injectionCase === "first" ? "firstPayment" : "secondPayment"].name) {
+            targetIndex = i;
+            break;
+          }
+        }
+      }
+      if (targetIndex !== null) {
+        await this.itemEjection(thisBill.requests[targetIndex].id, itemKey, { selfMongo: MONGOC });
+        await this.itemInjection(thisBill.requests[targetIndex].id, itemKey, client, designer, project, method, { selfMongo: MONGOC, number });
+      }
+      await this.responseInjection(bilid, responseKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.travelModify = async function (injectionCase, proid, method, number, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof injectionCase !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof number !== "number") {
+    throw new Error("invaild input");
+  }
+  if (!([ "request", "first", "remain" ]).includes(injectionCase)) {
+    throw new Error("injection case must be request or first or remain");
+  }
+  if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(proid)) {
+    throw new Error("invaild proid");
+  }
+  if (method !== "offline" && method !== "online") {
+    throw new Error("invaild method");
+  }
+  if (number < 0 || 20 < number) {
+    throw new Error("invaild travel number");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const stylingItems = BillMaker.billDictionary.styling.goods;
+  const stylingRequests = BillMaker.billDictionary.styling.requests;
+  const designerCalculation = BillMaker.billDictionary.styling.calculation;
+  const stylingResponses = BillMaker.billDictionary.styling.responses;
+  const itemKey = "travelExpenses";
+  const requestKey = "travelPayment";
+  const responseKey = "designerTravelFee";
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let client, designer, project;
+    let thisBill, bilid;
+    let targetIndex;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    if (project === null) {
+      throw new Error("invaild proid");
+    }
+    if (!/^d/.test(project.desid)) {
+      throw new Error("unable in this project");
+    }
+    designer = await back.getDesignerById(project.desid, { selfMongo: MONGOCOREC });
+    client = await back.getClientById(project.cliid, { selfMongo: MONGOCOREC });
+
+    thisBill = await this.getBillsByQuery({
+      $and: [
+        { "links.proid": project.proid },
+        { "links.cliid": client.cliid },
+        { "links.desid": designer.desid },
+        { "links.method": method },
+      ]
+    }, { selfMongo: MONGOC });
+    if (thisBill.length === 0) {
+      throw new Error("cannot found bill");
+    }
+    thisBill = thisBill[0];
+    bilid = thisBill.bilid;
+
+    if (injectionCase === "request") {
+
+      await this.requestInjection(bilid, requestKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+      await this.responseInjection(bilid, responseKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+
+    } else {
+
+      targetIndex = null;
+      if (typeof option.index === "number" && thisBill.requests[option.index] !== undefined) {
+        targetIndex = option.index;
+      } else {
+        for (let i = 0; i < thisBill.requests.length; i++) {
+          if (thisBill.requests[i].name.trim() === stylingRequests[injectionCase === "first" ? "firstPayment" : "secondPayment"].name) {
+            targetIndex = i;
+            break;
+          }
+        }
+      }
+      if (targetIndex !== null) {
+        await this.itemEjection(thisBill.requests[targetIndex].id, itemKey, { selfMongo: MONGOC });
+        await this.itemInjection(thisBill.requests[targetIndex].id, itemKey, client, designer, project, method, { selfMongo: MONGOC, number });
+      }
+      await this.responseInjection(bilid, responseKey, client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: number } });
+
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.designerSelect = async function (proid, desid, option = { selfMongo: null }) {
   if (typeof proid !== "string" || typeof desid !== "string" || typeof option !== "object") {
     throw new Error("must be proid, desid");
