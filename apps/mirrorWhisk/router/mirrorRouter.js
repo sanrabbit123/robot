@@ -21,6 +21,8 @@ const MirrorRouter = function (MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOPYTHONC,
   this.human = humanInstance;
 }
 
+MirrorRouter.timeouts = {};
+
 MirrorRouter.prototype.emptyPromise = function () {
   return new Promise(function (resolve, reject) {
     resolve(null);
@@ -510,13 +512,13 @@ MirrorRouter.prototype.rou_post_clickDial = function () {
   return obj;
 }
 
-MirrorRouter.prototype.rou_post_receiveCall = function () {
+MirrorRouter.prototype.rou_post_parsingCall = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
   const { requestSystem } = this.mother;
   let obj = {};
-  obj.link = "/receiveCall";
+  obj.link = "/parsingCall";
   obj.func = async function (req, res) {
     try {
       res.set({
@@ -525,11 +527,11 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      if (req.body.sender === undefined) {
+      if (req.body.phoneNumber === undefined) {
         console.log(req.body);
         res.send(JSON.stringify({ error: "error" }));
       } else {
-        const { sender, kind } = req.body;
+        const { phoneNumber, kind } = req.body;
         const method = (kind === '1' ? "전화" : "문자");
         let client;
         let rows, temp, name, sub, text;
@@ -538,16 +540,16 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
         let projects;
         let boo;
 
-        if (!/^2/.test(sender)) {
+        if (!/^2/.test(phoneNumber)) {
           manager = null;
-          rows = await back.getClientsByQuery({ phone: sender }, { selfMongo: instance.mongo });
+          rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: instance.mongo });
           if (rows.length === 0) {
-            rows = await back.getDesignersByQuery({ "information.phone": sender }, { selfMongo: instance.mongo });
+            rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: instance.mongo });
             if (rows.length === 0) {
               temp = await back.setMemberObj({ selfMongo: instance.mongo, getMode: true });
               rows = [];
               for (let obj of temp) {
-                if (obj.phone === sender) {
+                if (obj.phone === phoneNumber) {
                   rows.push(obj);
                 }
               }
@@ -633,6 +635,87 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
   }
   return obj;
 }
+
+MirrorRouter.prototype.rou_post_receiveCall = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem } = this.mother;
+  let obj = {};
+  obj.link = "/receiveCall";
+  obj.func = async function (req, res) {
+    try {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.sender === undefined || req.body.kind === undefined) {
+        console.log(req.body);
+        res.send(JSON.stringify({ error: "error" }));
+      } else {
+        const { sender, kind } = req.body;
+        const timeoutConst = "receiveCall";
+        let phoneNumber, senderArr;
+        let part0, part1, part2;
+
+        senderArr = sender.split('');
+        phoneNumber = '';
+        part0 = '';
+        part1 = '';
+        part2 = '';
+        if (/^01/gi.test(sender)) {
+          for (let i = 0; i < 3; i++) {
+            part0 += senderArr.shift();
+          }
+          for (let i = 0; i < 4; i++) {
+            part2 = senderArr.pop() + part2;
+          }
+          part1 = senderArr.join('');
+          phoneNumber = part0 + '-' + part1 + '-' + part2;
+        } else if (/^02/gi.test(sender)) {
+          for (let i = 0; i < 2; i++) {
+            part0 += senderArr.shift();
+          }
+          for (let i = 0; i < 4; i++) {
+            part2 = senderArr.pop() + part2;
+          }
+          part1 = senderArr.join('');
+          phoneNumber = part0 + '-' + part1 + '-' + part2;
+        } else {
+          for (let i = 0; i < 3; i++) {
+            part0 += senderArr.shift();
+          }
+          for (let i = 0; i < 4; i++) {
+            part2 = senderArr.pop() + part2;
+          }
+          part1 = senderArr.join('');
+          phoneNumber = part0 + '-' + part1 + '-' + part2;
+        }
+
+        if (MirrorRouter.timeouts[timeoutConst] !== undefined || MirrorRouter.timeouts[timeoutConst] !== null) {
+          clearTimeout(MirrorRouter.timeouts[timeoutConst]);
+        }
+        MirrorRouter.timeouts[timeoutConst] = setTimeout(async () => {
+          try {
+            await requestSystem("http://" + instance.address.mirrorinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
+            clearTimeout(MirrorRouter.timeouts[timeoutConst]);
+            MirrorRouter.timeouts[timeoutConst] = null;
+          } catch (e) {
+            console.log(e);
+          }
+        }, 600);
+
+        res.send(JSON.stringify({ message: "success" }));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 
 MirrorRouter.prototype.getAll = function () {
   let result, result_arr;
