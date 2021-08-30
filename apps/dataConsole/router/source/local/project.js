@@ -4179,6 +4179,17 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 eventFunction: function (e) {
                                   e.preventDefault();
                                   e.stopPropagation();
+                                  const kind = "style";
+                                  let bill, thisIndex, url;
+                                  bill = GeneralJs.stacks[thisProjectBill];
+                                  for (let i = 0; i < bill.requests.length; i++) {
+                                    if (bill.requests[i].id === index) {
+                                      thisIndex = i;
+                                      break;
+                                    }
+                                  }
+                                  url = "https://" + GHOSTHOST + "/middle/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
+                                  GeneralJs.blankHref(url);
                                 }
                               },
                               {
@@ -4293,6 +4304,17 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 eventFunction: function (e) {
                                   e.preventDefault();
                                   e.stopPropagation();
+                                  const kind = "style";
+                                  let bill, thisIndex, url;
+                                  bill = GeneralJs.stacks[thisProjectBill];
+                                  for (let i = 0; i < bill.requests.length; i++) {
+                                    if (bill.requests[i].id === index) {
+                                      thisIndex = i;
+                                      break;
+                                    }
+                                  }
+                                  url = "https://" + GHOSTHOST + "/middle/estimation?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',') + "&view=test&request=" + String(thisIndex);
+                                  GeneralJs.blankHref(url);
                                 }
                               },
                               {

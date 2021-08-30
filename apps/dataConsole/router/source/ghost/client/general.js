@@ -174,7 +174,6 @@ GeneralJs.prototype.setNavigator = function (subTitle) {
       zIndex: String(1),
     }
   });
-  console.log(naviBase);
 
   createNodes([
     {
