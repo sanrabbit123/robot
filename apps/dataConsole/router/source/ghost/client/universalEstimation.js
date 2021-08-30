@@ -1120,7 +1120,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       }
     }
 
-    console.log(this.requestNumber)
     if (getObj.view === "test" && getObj.request !== undefined) {
       if (!Number.isNaN(Number(getObj.request.replace(/[^0-9]/gi, '')))) {
         this.requestNumber = Number(getObj.request.replace(/[^0-9]/gi, ''));
