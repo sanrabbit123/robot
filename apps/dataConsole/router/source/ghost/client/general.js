@@ -267,7 +267,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     }
     const { ajaxJson, returnGet } = GeneralJs;
     const { name, client, base, local } = obj;
-    let belowTarget, removeTargets;
+    let belowTarget, removeTargets, getObj;
 
     this.setGeneralBase(base);
     await local();
@@ -286,7 +286,8 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     }
     this.totalContents.style.height = "auto";
 
-    if (returnGet().mode !== "test") {
+    getObj = returnGet();
+    if (getObj.mode !== "test" && getObj.view !== "test") {
       await ajaxJson({
         page: name,
         mode: "page",

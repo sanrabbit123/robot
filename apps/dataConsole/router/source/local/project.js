@@ -3951,6 +3951,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                           const bill = GeneralJs.stacks[thisProjectBill];
                           const index = this.getAttribute("index");
                           const first = this.getAttribute("first");
+                          const proid = this.getAttribute("proid");
+                          const method = this.getAttribute("method");
+                          const name = this.getAttribute("name");
                           const itemClass = "items_";
                           let thisRequest, items;
                           let itemTong, itemDom;
@@ -4041,7 +4044,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           display: "inline-block",
                                           fontSize: String(fontSize) + ea,
                                           fontWeight: String(400),
-                                          color: colorChip.shadowWhite,
+                                          color: colorChip.black,
                                           background: colorChip.gray0,
                                           paddingTop: String(innerPaddingTop) + ea,
                                           paddingBottom: String(innerPaddingBottom) + ea,
@@ -4058,12 +4061,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       },
                                       {
                                         text: "횟수 : " + String(i.unit.number),
+                                        attribute: [ { iname: i.name } ],
                                         style: {
                                           position: "relative",
                                           display: "inline-block",
                                           fontSize: String(fontSize) + ea,
                                           fontWeight: String(400),
-                                          color: colorChip.shadowWhite,
+                                          color: colorChip.black,
                                           background: colorChip.gray0,
                                           paddingTop: String(innerPaddingTop) + ea,
                                           paddingBottom: String(innerPaddingBottom) + ea,
@@ -4071,12 +4075,58 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           paddingRight: String(innerPaddingLeft) + ea,
                                           borderRadius: String(3) + "px",
                                           marginRight: String(imageMargin) + ea,
+                                          cursor: "pointer",
                                         },
                                         bold: {
                                           fontSize: String(fontSize) + ea,
                                           fontWeight: String(600),
                                           color: colorChip.green,
-                                        }
+                                        },
+                                        events: [
+                                          {
+                                            type: "click",
+                                            event: async function (e) {
+                                              try {
+                                                const itemName = this.getAttribute("iname");
+                                                if (/출장/gi.test(itemName)) {
+                                                  if (window.confirm("출장 횟수를 변경할까요?")) {
+                                                    let position, thisIndex, number, pastBill, bill, tempObj;
+                                                    number = window.prompt("출장비를 몇 회로 설정할까요?").trim();
+                                                    number = Number(String(number).replace(/[^0-9]/gi, ''));
+                                                    if (Number.isNaN(number)) {
+                                                      number = 2;
+                                                    }
+                                                    pastBill = GeneralJs.stacks[thisProjectBill];
+                                                    for (let i = 0; i < pastBill.requests.length; i++) {
+                                                      if (pastBill.requests[i].id === index) {
+                                                        thisIndex = i;
+                                                        break;
+                                                      }
+                                                    }
+                                                    bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : (/계약/gi.test(name) ? "first" : "request"), proid, method, number, index: thisIndex }, PYTHONHOST + "/travelReconfig", { equal: true });
+                                                    GeneralJs.stacks[thisProjectBill] = bill;
+                                                    historyArr = [];
+                                                    for (let { date, name, id } of bill.requests) {
+                                                      tempObj = {};
+                                                      tempObj.text = "";
+                                                      tempObj.text += dateToString(date, true).slice(2, -3);
+                                                      tempObj.text += " | ";
+                                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                                                        return (p1 + " <b%" + p2 + "%b>");
+                                                      });
+                                                      tempObj.id = id;
+                                                      historyArr.push(tempObj);
+                                                    }
+                                                    cleanChildren(scrollTong);
+                                                    historyLoad();
+                                                  }
+                                                }
+                                              } catch (e) {
+                                                console.log(e);
+                                              }
+                                            }
+                                          }
+                                        ]
                                       }
                                     ],
                                     style: {
@@ -4144,9 +4194,15 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   e.preventDefault();
                                   e.stopPropagation();
                                   try {
-                                    let position, index, bill, tempObj;
-                                    index = 0;
-                                    bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, index }, PYTHONHOST + "/travelEjection", { equal: true });
+                                    let position, thisIndex, pastBill, bill, tempObj;
+                                    pastBill = GeneralJs.stacks[thisProjectBill];
+                                    for (let i = 0; i < pastBill.requests.length; i++) {
+                                      if (pastBill.requests[i].id === index) {
+                                        thisIndex = i;
+                                        break;
+                                      }
+                                    }
+                                    bill = await ajaxJson({ injectionCase: "request", proid, method, index: thisIndex }, PYTHONHOST + "/travelEjection", { equal: true });
                                     GeneralJs.stacks[thisProjectBill] = bill;
                                     historyArr = [];
                                     for (let { date, name, id } of bill.requests) {
