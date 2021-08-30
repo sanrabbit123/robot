@@ -134,7 +134,7 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
       message += "console : " + "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid + "\n";
       message += "drive : " + "https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-      ghostRequest("/voice", { text: obj.cliid + " 고객님의 새로운 파일이 전송되었어요. 서버와 슬렉을 확인해주세요!" }).catch((err) => {
+      ghostRequest("/voice", { text: obj.name + " 고객님의 새로운 파일이 전송되었어요. 서버와 슬렉을 확인해주세요!" }).catch((err) => {
         console.log(err);
       });
 

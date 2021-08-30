@@ -3747,9 +3747,39 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               const menuContents = [
                 {
                   text: "출장 견적 추가",
-                  eventFunction: function (e) {
+                  eventFunction: async function (e) {
                     e.preventDefault();
                     e.stopPropagation();
+                    try {
+                      let number, bill, tempObj, removeTargets;
+                      number = window.prompt("출장비를 몇 회로 설정할까요?").trim();
+                      number = Number(String(number).replace(/[^0-9]/gi, ''));
+                      if (Number.isNaN(number)) {
+                        number = 2;
+                      }
+                      bill = await ajaxJson({ injectionCase: "request", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
+                      GeneralJs.stacks[thisProjectBill] = bill;
+                      historyArr = [];
+                      for (let { date, name, id } of bill.requests) {
+                        tempObj = {};
+                        tempObj.text = "";
+                        tempObj.text += dateToString(date, true).slice(2, -3);
+                        tempObj.text += " | ";
+                        tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                          return (p1 + " <b%" + p2 + "%b>");
+                        });
+                        tempObj.id = id;
+                        historyArr.push(tempObj);
+                      }
+                      cleanChildren(scrollTong);
+                      historyLoad();
+                      removeTargets = document.querySelectorAll('.' + menuClass);
+                      for (let dom of removeTargets) {
+                        dom.remove();
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
                   }
                 },
                 {
@@ -4088,6 +4118,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                           const desid = this.getAttribute("desid");
                           const cliid = this.getAttribute("cliid");
                           const method = this.getAttribute("method");
+                          const index = this.getAttribute("index");
                           const height = this.getBoundingClientRect().height;
                           const menuClass = "billMenu";
                           let menuContents;
@@ -4109,9 +4140,31 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                               },
                               {
                                 text: "항목 삭제",
-                                eventFunction: function (e) {
+                                eventFunction: async function (e) {
                                   e.preventDefault();
                                   e.stopPropagation();
+                                  try {
+                                    let position, index, bill, tempObj;
+                                    index = 0;
+                                    bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, index }, PYTHONHOST + "/travelEjection", { equal: true });
+                                    GeneralJs.stacks[thisProjectBill] = bill;
+                                    historyArr = [];
+                                    for (let { date, name, id } of bill.requests) {
+                                      tempObj = {};
+                                      tempObj.text = "";
+                                      tempObj.text += dateToString(date, true).slice(2, -3);
+                                      tempObj.text += " | ";
+                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                                        return (p1 + " <b%" + p2 + "%b>");
+                                      });
+                                      tempObj.id = id;
+                                      historyArr.push(tempObj);
+                                    }
+                                    cleanChildren(scrollTong);
+                                    historyLoad();
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
                                 }
                               }
                             ];
