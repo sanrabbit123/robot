@@ -1636,7 +1636,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
       await MONGOCOREC.close();
     }
 
-    return bilid;
+    return thisBill;
 
   } catch (e) {
     console.log(e);
@@ -1806,7 +1806,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
       await MONGOCOREC.close();
     }
 
-    return "success";
+    return thisBill;
 
   } catch (e) {
     console.log(e);
@@ -1979,7 +1979,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
       await MONGOCOREC.close();
     }
 
-    return bilid;
+    return thisBill;
 
   } catch (e) {
     console.log(e);
