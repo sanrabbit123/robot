@@ -1554,6 +1554,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
     let client, designer, project;
     let thisBill, bilid;
     let targetIndex;
+    let updatedBill;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -1629,6 +1630,8 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
 
     }
 
+    updatedBill = await this.getBillById(thisBill.bilid, { selfMongo: MONGOC });
+
     if (!selfBoo) {
       await MONGOC.close();
     }
@@ -1636,7 +1639,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
       await MONGOCOREC.close();
     }
 
-    return thisBill;
+    return updatedBill;
 
   } catch (e) {
     console.log(e);
@@ -1674,6 +1677,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
     let targetIndex;
     let targetItem, targetNumber, targetResponse, targetResponseIndex;
     let num;
+    let updatedBill;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -1799,6 +1803,8 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
 
     }
 
+    updatedBill = await this.getBillById(thisBill.bilid, { selfMongo: MONGOC });
+
     if (!selfBoo) {
       await MONGOC.close();
     }
@@ -1806,7 +1812,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
       await MONGOCOREC.close();
     }
 
-    return thisBill;
+    return updatedBill;
 
   } catch (e) {
     console.log(e);
@@ -1852,6 +1858,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
     let whereQuery, updateQuery;
     let itemArr, oppositeItemArr;
     let feeObject, distance;
+    let updatedBill;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -1972,6 +1979,8 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
     updateQuery["responses." + String(targetResponseItemIndex) + ".items"] = equalJson(JSON.stringify(oppositeItemArr));
     await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
 
+    updatedBill = await this.getBillById(thisBill.bilid, { selfMongo: MONGOC });
+
     if (!selfBoo) {
       await MONGOC.close();
     }
@@ -1979,7 +1988,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
       await MONGOCOREC.close();
     }
 
-    return thisBill;
+    return updatedBill;
 
   } catch (e) {
     console.log(e);
