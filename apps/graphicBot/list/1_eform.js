@@ -62,7 +62,7 @@ module.exports = function (proid, info) {
             { id: "field_TEXT_5faa618f9da73962a9050efb", value: request.space.contract },
             { id: "field_TEXT_5faa618f9da73962a9050efd", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
             { id: "field_TEXT_5faa618f9da73962a9050efe", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
-            { id: "field_TEXT_5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(analytics.date.space.movein)) ? '-' : dateToString(analytics.date.space.movein)) },
+            { id: "field_TEXT_5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
             { id: "field_TEXT_5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
             { id: "field_TEXT_AREA_5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
             { id: "field_TEXT_5faa618f9da73962a9050f03", value: serviceParsing(project.service) },
