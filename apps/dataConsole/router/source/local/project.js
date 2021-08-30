@@ -4152,9 +4152,31 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                               },
                               {
                                 text: "출장비 삭제",
-                                eventFunction: function (e) {
+                                eventFunction: async function (e) {
                                   e.preventDefault();
                                   e.stopPropagation();
+                                  try {
+                                    let position, index, bill, tempObj;
+                                    index = 0;
+                                    bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, index }, PYTHONHOST + "/travelEjection", { equal: true });
+                                    GeneralJs.stacks[thisProjectBill] = bill;
+                                    historyArr = [];
+                                    for (let { date, name, id } of bill.requests) {
+                                      tempObj = {};
+                                      tempObj.text = "";
+                                      tempObj.text += dateToString(date, true).slice(2, -3);
+                                      tempObj.text += " | ";
+                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                                        return (p1 + " <b%" + p2 + "%b>");
+                                      });
+                                      tempObj.id = id;
+                                      historyArr.push(tempObj);
+                                    }
+                                    cleanChildren(scrollTong);
+                                    historyLoad();
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
                                 }
                               },
                               {
