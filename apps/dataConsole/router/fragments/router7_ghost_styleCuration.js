@@ -172,6 +172,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         } else {
 
+          instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서를 제작하려고 했으나 매칭되는 경우가 없어요!", channel: "#404_curation" });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ service: [], client, history }));
 

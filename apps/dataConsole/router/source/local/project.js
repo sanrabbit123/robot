@@ -3675,7 +3675,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             tempObj.text = "";
             tempObj.text += dateToString(date, true).slice(2, -3);
             tempObj.text += " | ";
-            tempObj.text += name.replace(/([^ ]*) ([^ ]*금)/g, (match, p1, p2) => {
+            tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
               return (p1 + " <b%" + p2 + "%b>");
             });
             tempObj.id = id;
@@ -4090,43 +4090,79 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                           const method = this.getAttribute("method");
                           const height = this.getBoundingClientRect().height;
                           const menuClass = "billMenu";
-                          const menuContents = [
-                            {
-                              text: "출장비 추가",
-                              eventFunction: function (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
+                          let menuContents;
+                          if (/출장/gi.test(name)) {
+                            menuContents = [
+                              {
+                                text: "견적서 보기",
+                                eventFunction: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }
+                              },
+                              {
+                                text: "안내 발송",
+                                eventFunction: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }
+                              },
+                              {
+                                text: "항목 삭제",
+                                eventFunction: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }
                               }
-                            },
-                            {
-                              text: "출장비 삭제",
-                              eventFunction: function (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                              }
-                            },
-                            {
-                              text: "견적서 보기",
-                              eventFunction: function (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                              }
-                            },
-                            {
-                              text: "안내 발송",
-                              eventFunction: function (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                              }
-                            },
-                            {
-                              text: "항목 삭제",
-                              eventFunction: function (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                              }
-                            }
-                          ];
+                            ];
+                          } else {
+                            menuContents = [
+                              {
+                                text: "출장비 추가",
+                                eventFunction: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  let position, number;
+
+                                  number = window.prompt("출장비를 몇 회로 설정할까요?").trim();
+                                  number = Number(String(number).replace(/[^0-9]/gi, ''));
+                                  if (Number.isNaN(number)) {
+                                    number = 2;
+                                  }
+
+                                  if (/잔금/gi.test(name)) {
+
+                                  } else {
+
+                                  }
+
+
+
+                                }
+                              },
+                              {
+                                text: "출장비 삭제",
+                                eventFunction: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }
+                              },
+                              {
+                                text: "견적서 보기",
+                                eventFunction: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }
+                              },
+                              {
+                                text: "안내 발송",
+                                eventFunction: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }
+                              },
+                            ];
+                          }
                           let menuFontSize;
                           let menuPaddingTop, menuPaddingBottom, menuPaddingLeft;
                           let menuMargin;

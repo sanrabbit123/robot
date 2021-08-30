@@ -4465,7 +4465,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
       const historyQuery = equalJson(req.body.historyQuery);
       const coreQuery = equalJson(req.body.coreQuery);
       const mode = req.body.mode;
-      let history;
+      let client, history;
 
       if (Object.keys(coreQuery).length > 0) {
         await back.updateClient([ { cliid }, coreQuery ], { selfMongo: instance.mongo });
@@ -4481,7 +4481,6 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
       }
 
       const clientCase = await back.getCaseProidById(cliid, { selfMongo: instance.mongo });
-      const client = clientCase.client;
       if (clientCase === null) {
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({}));
@@ -4490,6 +4489,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         const detail = await work.designerCuration(cliid, 6, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
         let detailUpdate, updateQuery;
         let newProid;
+
+        client = clientCase.client;
 
         if (detail.length !== 0) {
 

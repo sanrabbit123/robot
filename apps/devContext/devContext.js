@@ -300,10 +300,10 @@ DevContext.prototype.launching = async function () {
 
     // await bill.designerSelect("p2108_aa63s", "d2007_aa02s", { selfMongo: this.MONGOLOCALC });
 
-    // console.log(await bill.travelInjection("first", proid, "offline", 4, { selfMongo: this.MONGOLOCALC }));
-    // console.log(await bill.travelReconfig("request", proid, "offline", 0, 2, { selfMongo: this.MONGOLOCALC }));
+    // console.log(await bill.travelInjection("remain", proid, "offline", 4, { selfMongo: this.MONGOLOCALC }));
+    // console.log(await bill.travelReconfig("first", proid, "offline", 0, 2, { selfMongo: this.MONGOLOCALC }));
 
-    
+
 
 
     // const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
