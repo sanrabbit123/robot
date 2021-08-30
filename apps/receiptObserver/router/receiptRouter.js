@@ -949,7 +949,7 @@ ReceiptRouter.prototype.rou_post_travelInjection = function () {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
-      res.send(JSON.stringify({ bill: thisBill.toNormal() }));
+      res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelInjection): " + e.message, channel: "#error_log" });
       res.set({
