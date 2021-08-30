@@ -5193,7 +5193,7 @@ ClientJs.prototype.communicationRender = function () {
     },
     async function (e) {
       try {
-        let cliid, thisCase, serid, thisHistory, callBoo, liteBoo;
+        let cliid, thisCase, serid, thisHistory, callBoo, liteBoo, inspectionArr;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
             cliid = window.prompt("고객 아이디를 입력하세요!").trim();
@@ -5211,59 +5211,145 @@ ClientJs.prototype.communicationRender = function () {
         }
         if (thisCase !== null) {
           if (window.confirm(thisCase.name + " 고객님께 부재중 알림 알림톡을 전송합니다. 확실합니까?")) {
-
-            thisHistory = await ajaxJson({ rawMode: true, id: cliid }, "/getClientHistory");
-            liteBoo = false;
-            callBoo = false;
-            for (let { success } of thisHistory.curation.analytics.call.out) {
-              if (success) {
-                callBoo = true;
-              }
-            }
-            for (let { success } of thisHistory.curation.analytics.call.in) {
-              if (success) {
-                callBoo = true;
-              }
-            }
-
-            if (callBoo) {
-              liteBoo = window.confirm("전화에 성공한 기록이 있습니다. 1차 응대를 한 번 이상 정상적으로 된 적이 있었나요?");
-            }
-
-            if (/홈퍼/gi.test(thisCase.service)) {
-              serid = "s2011_aa01s";
-            } else if (/홈스/gi.test(thisCase.service)) {
-              serid = "s2011_aa02s";
-            } else if (/토탈/gi.test(thisCase.service)) {
-              serid = "s2011_aa03s";
+            inspectionArr = await ajaxJson({
+              mode: "inspection",
+              addressArr: [ { id: thisCase.cliid, address: thisCase.address } ],
+              liteMode: false,
+            }, "/parsingAddress");
+            if (inspectionArr.length !== 0) {
+              window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
+              window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionArr[0].id;
             } else {
-              serid = "s2011_aa04s";
-            }
-
-            if (!liteBoo) {
-
-              await ajaxJson({
-                id: cliid,
-                column: "curation.service.serid",
-                value: [ serid ],
-                email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
-                send: "styleCuration_general",
-              }, "/updateClientHistory");
-
-              await ajaxJson({
-                method: "outOfClient",
-                name: thisCase.name,
-                phone: thisCase.phone,
-                option: {
-                  client: thisCase.name,
-                  host: GHOSTHOST,
-                  path: "curation",
-                  cliid: cliid,
+              thisHistory = await ajaxJson({ rawMode: true, id: cliid }, "/getClientHistory");
+              liteBoo = false;
+              callBoo = false;
+              for (let { success } of thisHistory.curation.analytics.call.out) {
+                if (success) {
+                  callBoo = true;
                 }
-              }, "/alimTalk");
+              }
+              for (let { success } of thisHistory.curation.analytics.call.in) {
+                if (success) {
+                  callBoo = true;
+                }
+              }
 
+              if (callBoo) {
+                liteBoo = window.confirm("전화에 성공한 기록이 있습니다. 1차 응대를 한 번 이상 정상적으로 된 적이 있었나요?");
+              }
+
+              if (/홈퍼/gi.test(thisCase.service)) {
+                serid = "s2011_aa01s";
+              } else if (/홈스/gi.test(thisCase.service)) {
+                serid = "s2011_aa02s";
+              } else if (/토탈/gi.test(thisCase.service)) {
+                serid = "s2011_aa03s";
+              } else {
+                serid = "s2011_aa04s";
+              }
+
+              if (!liteBoo) {
+
+                await ajaxJson({
+                  id: cliid,
+                  column: "curation.service.serid",
+                  value: [ serid ],
+                  email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                  send: "styleCuration_general",
+                }, "/updateClientHistory");
+
+                await ajaxJson({
+                  method: "outOfClient",
+                  name: thisCase.name,
+                  phone: thisCase.phone,
+                  option: {
+                    client: thisCase.name,
+                    host: GHOSTHOST,
+                    path: "curation",
+                    cliid: cliid,
+                  }
+                }, "/alimTalk");
+
+              } else {
+
+                await ajaxJson({
+                  id: cliid,
+                  column: "curation.service.serid",
+                  value: [ serid ],
+                  email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                  send: "styleCuration_lite",
+                }, "/updateClientHistory");
+
+                await ajaxJson({
+                  method: "clientCuration",
+                  name: thisCase.name,
+                  phone: thisCase.phone,
+                  option: {
+                    client: thisCase.name,
+                    host: GHOSTHOST,
+                    path: "curation",
+                    cliid: cliid,
+                    mode: "lite"
+                  }
+                }, "/alimTalk");
+
+              }
+
+              await sleep(1000);
+              window.alert("알림톡 전송이 완료되었습니다!");
+            }
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  ]);
+  communication.setItem([
+    () => { return "스타일 체크"; },
+    function () {
+      return true;
+    },
+    async function (e) {
+      try {
+        let cliid, thisCase, serid, inspectionArr;
+        if (instance.whiteBox === null || instance.whiteBox === undefined) {
+          do {
+            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
+        } else {
+          cliid = instance.whiteBox.id;
+        }
+        thisCase = null;
+        for (let c of instance.cases) {
+          if (c !== null) {
+            if (c.cliid === cliid) {
+              thisCase = c;
+            }
+          }
+        }
+        if (thisCase !== null) {
+          if (window.confirm(thisCase.name + " 고객님께 스타일 체크 알림톡을 전송합니다. 확실합니까?")) {
+
+            inspectionArr = await ajaxJson({
+              mode: "inspection",
+              addressArr: [ { id: thisCase.cliid, address: thisCase.address } ],
+              liteMode: false,
+            }, "/parsingAddress");
+            if (inspectionArr.length !== 0) {
+              window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
+              window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionArr[0].id;
             } else {
 
+              if (/홈퍼/gi.test(thisCase.service)) {
+                serid = "s2011_aa01s";
+              } else if (/홈스/gi.test(thisCase.service)) {
+                serid = "s2011_aa02s";
+              } else if (/토탈/gi.test(thisCase.service)) {
+                serid = "s2011_aa03s";
+              } else {
+                serid = "s2011_aa04s";
+              }
               await ajaxJson({
                 id: cliid,
                 column: "curation.service.serid",
@@ -5284,75 +5370,10 @@ ClientJs.prototype.communicationRender = function () {
                   mode: "lite"
                 }
               }, "/alimTalk");
+              await sleep(1000);
+              window.alert("알림톡 전송이 완료되었습니다!");
 
             }
-
-            await sleep(1000);
-            window.alert("알림톡 전송이 완료되었습니다!");
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  ]);
-  communication.setItem([
-    () => { return "스타일 체크"; },
-    function () {
-      return true;
-    },
-    async function (e) {
-      try {
-        let cliid, thisCase, serid;
-        if (instance.whiteBox === null || instance.whiteBox === undefined) {
-          do {
-            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
-          } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
-        } else {
-          cliid = instance.whiteBox.id;
-        }
-        thisCase = null;
-        for (let c of instance.cases) {
-          if (c !== null) {
-            if (c.cliid === cliid) {
-              thisCase = c;
-            }
-          }
-        }
-        if (thisCase !== null) {
-          if (window.confirm(thisCase.name + " 고객님께 스타일 체크 알림톡을 전송합니다. 확실합니까?")) {
-
-            if (/홈퍼/gi.test(thisCase.service)) {
-              serid = "s2011_aa01s";
-            } else if (/홈스/gi.test(thisCase.service)) {
-              serid = "s2011_aa02s";
-            } else if (/토탈/gi.test(thisCase.service)) {
-              serid = "s2011_aa03s";
-            } else {
-              serid = "s2011_aa04s";
-            }
-            await ajaxJson({
-              id: cliid,
-              column: "curation.service.serid",
-              value: [ serid ],
-              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
-              send: "styleCuration_lite",
-            }, "/updateClientHistory");
-
-            await ajaxJson({
-              method: "clientCuration",
-              name: thisCase.name,
-              phone: thisCase.phone,
-              option: {
-                client: thisCase.name,
-                host: GHOSTHOST,
-                path: "curation",
-                cliid: cliid,
-                mode: "lite"
-              }
-            }, "/alimTalk");
-            await sleep(1000);
-            window.alert("알림톡 전송이 완료되었습니다!");
           }
         }
       } catch (e) {

@@ -2065,6 +2065,8 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let remain;
     let totalNum, payNum, cancelNum;
     let desid, cliid;
+    let designer, client;
+    let feeObject;
     let pastFeeObject;
     let newFeeObject;
     let remainIndex, remainItemIndex;
@@ -2146,7 +2148,6 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       }
       if (payNum === 0) {
 
-
         updateArr = thisBill.requests[remainIndex].items.toNormal();
         for (let i = 0; i < updateArr.length; i++) {
           if (updateArr[i].class === "designerTime") {
@@ -2159,6 +2160,12 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         updateArr[remainItemIndex].amount.consumer = updateArr[remainItemIndex].amount.supply * (1 + vatRatio);
 
 
+
+
+
+
+        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
 
 
 
