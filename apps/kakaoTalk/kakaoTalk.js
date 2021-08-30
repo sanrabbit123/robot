@@ -459,6 +459,30 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    travelPayment: {
+      name: "출장비 안내",
+      id: "TF_6513",
+      needs: [
+        "client",
+        "unit",
+        "total",
+        "host",
+        "path",
+        "cliid",
+        "needs"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "unit", to: obj.unit },
+          { from: "total", to: obj.total },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
+        ];
+      },
+    },
   };
   return tong[target];
 }

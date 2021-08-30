@@ -2045,6 +2045,158 @@ BillMaker.prototype.designerSelect = async function (proid, desid, option = { se
   }
 }
 
+BillMaker.prototype.serviceConverting = async function (proid, method, serid, option = { selfMongo: null, selfConsoleMongo: null }) {
+  if (typeof proid !== "string" || typeof method !== "string" || typeof serid !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+  const work = new BackWorker();
+  const back = this.back;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let project;
+    let thisBill, bilid;
+    let pastSerid;
+    let xValue;
+    let remain;
+    let totalNum, payNum, cancelNum;
+    let desid, cliid;
+    let pastFeeObject;
+    let newFeeObject;
+    let remainIndex, remainItemIndex;
+    let num;
+    let updateArr;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    if (project === null) {
+      throw new Error("invaild proid");
+    }
+    if (!/^d/.test(project.desid)) {
+      throw new Error("unable in this project");
+    }
+    desid = project.desid;
+    cliid = project.cliid;
+    pastSerid = project.service.serid;
+    xValue = project.service.xValue;
+    pastFeeObject = await work.getDesignerFee(desid, cliid, pastSerid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
+    newFeeObject = await work.getDesignerFee(desid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
+    if (newFeeObject.detail[method] === 0) {
+      return { error: "unable in this service" };
+    } else {
+      thisBill = await this.getBillsByQuery({
+        $and: [
+          { "links.proid": project.proid },
+          { "links.cliid": cliid },
+          { "links.desid": desid },
+          { "links.method": method },
+        ]
+      }, { selfMongo: MONGOC });
+      if (thisBill.length === 0) {
+        throw new Error("cannot found bill");
+      }
+      thisBill = thisBill[0];
+      bilid = thisBill.bilid;
+      num = 0;
+      for (let request of thisBill.requests) {
+        if (request.name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
+          remain = request;
+          remainIndex = num;
+        }
+        num++;
+      }
+      totalNum = 0;
+      for (let { amount: { consumer } } of remain.items) {
+        totalNum += consumer;
+      }
+      payNum = 0;
+      for (let { amount } of remain.pay) {
+        payNum += amount;
+      }
+      cancelNum = 0;
+      for (let { amount } of remain.cancel) {
+        cancelNum += amount;
+      }
+      if (payNum === 0) {
+
+
+        updateArr = thisBill.requests[remainIndex].items.toNormal();
+        for (let i = 0; i < updateArr.length; i++) {
+          if (updateArr[i].class === "designerTime") {
+            remainItemIndex = i;
+          }
+        }
+        updateArr[remainItemIndex].unit.price = updateArr[remainItemIndex].unit.price + newFeeObject.detail[method] - pastFeeObject.detail[method];
+        updateArr[remainItemIndex].amount.supply = updateArr[remainItemIndex].unit.price * updateArr[remainItemIndex].unit.number;
+        updateArr[remainItemIndex].amount.vat = updateArr[remainItemIndex].amount.supply * vatRatio;
+        updateArr[remainItemIndex].amount.consumer = updateArr[remainItemIndex].amount.supply * (1 + vatRatio);
+
+
+
+
+
+
+
+
+      } else if (totalNum <= payNum - cancelNum) {
+
+
+
+
+
+
+
+
+
+      } else {
+
+
+
+
+
+
+      }
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
   const instance = this;
   const back = this.back;

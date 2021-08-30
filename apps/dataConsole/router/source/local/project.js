@@ -4194,9 +4194,44 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                               },
                               {
                                 text: "안내 발송",
-                                eventFunction: function (e) {
+                                eventFunction: async function (e) {
                                   e.preventDefault();
                                   e.stopPropagation();
+                                  try {
+                                    let client;
+                                    let bill, thisIndex, targetItem;
+                                    client = (await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients"))[0];
+                                    bill = GeneralJs.stacks[thisProjectBill];
+                                    for (let i = 0; i < bill.requests.length; i++) {
+                                      if (bill.requests[i].id === index) {
+                                        thisIndex = i;
+                                        break;
+                                      }
+                                    }
+                                    for (let item of bill.requests[thisIndex].items) {
+                                      if (item.class === "travelExpenses") {
+                                        targetItem = item;
+                                      }
+                                    }
+                                    if (window.confirm(client.name + " 고객님께 출장비 안내를 보낼까요?")) {
+                                      await ajaxJson({
+                                        method: "travelPayment",
+                                        name: client.name,
+                                        phone: client.phone,
+                                        option: {
+                                          client: client.name,
+                                          unit: GeneralJs.autoComma(targetItem.amount.consumer / targetItem.unit.number),
+                                          total: GeneralJs.autoComma(targetItem.amount.consumer),
+                                          host: GHOSTHOST,
+                                          path: "estimation",
+                                          cliid: cliid,
+                                          needs: "style," + desid + "," + proid + "," + method,
+                                        }
+                                      }, "/alimTalk");
+                                    }
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
                                 }
                               },
                               {
@@ -4319,9 +4354,36 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                               },
                               {
                                 text: "안내 발송",
-                                eventFunction: function (e) {
+                                eventFunction: async function (e) {
                                   e.preventDefault();
                                   e.stopPropagation();
+                                  try {
+                                    let thisName, thisAlim, client;
+                                    if (/잔금/gi.test(name)) {
+                                      thisName = "잔금";
+                                      thisAlim = "secondPayment";
+                                    } else {
+                                      thisName = "계약금";
+                                      thisAlim = "firstPayment";
+                                    }
+                                    client = (await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients"))[0];
+                                    if (window.confirm(client.name + " 고객님께 " + thisName + " 안내를 보낼까요?")) {
+                                      await ajaxJson({
+                                        method: thisAlim,
+                                        name: client.name,
+                                        phone: client.phone,
+                                        option: {
+                                          client: client.name,
+                                          host: GHOSTHOST,
+                                          path: "estimation",
+                                          cliid: cliid,
+                                          needs: "style," + desid + "," + proid + "," + method,
+                                        }
+                                      }, "/alimTalk");
+                                    }
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
                                 }
                               },
                             ];
@@ -6195,6 +6257,7 @@ ProjectJs.prototype.communicationRender = function () {
           designer = thisCase.designer;
           desid = designer.split(' ')[1];
           designer = designer.split(' ')[0];
+
           if (window.confirm(thisCase.name + " 고객님께 계약금 안내를 보낼까요?")) {
 
             cliid = (await GeneralJs.ajaxJson({
@@ -6206,7 +6269,7 @@ ProjectJs.prototype.communicationRender = function () {
               whereQuery: { cliid }
             }, "/getClients"))[0];
 
-            onoff = window.confirm("해당 서비스가 오프라인 인가요? 맞으면 확인, 온라인이면 취소") ? "offline" : "online";
+            onoff = /온라인/gi.test(thisCase.service) ? "online" : "offline";
             await GeneralJs.ajaxJson({
               method: "firstPayment",
               name: client.name,
@@ -6268,7 +6331,7 @@ ProjectJs.prototype.communicationRender = function () {
               whereQuery: { cliid }
             }, "/getClients"))[0];
 
-            onoff = window.confirm("해당 서비스가 오프라인 인가요? 맞으면 확인, 온라인이면 취소") ? "offline" : "online";
+            onoff = /온라인/gi.test(thisCase.service) ? "online" : "offline";
             await GeneralJs.ajaxJson({
               method: "secondPayment",
               name: client.name,
