@@ -3152,7 +3152,7 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }).then((obj) => {
     if (typeof obj !== "object" || Object.keys(obj).length === 0) {
-      throw new Error("promise error");
+      throw new Error("promise error 0");
     } else if (obj.promisePass === true) {
       return new Promise((resolve, reject) => { resolve({ promisePass: true }); });
     } else {
@@ -3187,7 +3187,7 @@ StyleCurationJs.prototype.parsingValues = function () {
       });
 
       if (finalSerid.length === 0) {
-        throw new Error("promise error");
+        throw new Error("promise error 1");
       } else {
         grayLoading.remove();
         GeneralJs.scrollTo(window, 0);
@@ -3210,11 +3210,11 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }).then((message) => {
     if (message !== "done") {
-      throw new Error("promise error");
+      throw new Error("promise error 2");
     }
   }).catch((err) => {
     ajaxJson({
-      message: instance.client.name + " 고객님이 큐레이션 페이지를 제출하는 도중 오류를 만나 비정상 종료되었습니다! error 내용 : " + err.message + " / " + String(err.lineNumber),
+      message: instance.client.name + " 고객님이 큐레이션 페이지를 제출하는 도중 오류를 만나 비정상 종료되었습니다! error 내용 : " + err.message,
       channel: "#404_curation",
       voice: false,
     }, "/sendSlack").then(() => {
