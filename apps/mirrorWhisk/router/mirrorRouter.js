@@ -519,18 +519,17 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
   obj.link = "/receiveCall";
   obj.func = async function (req, res) {
     try {
-      console.log("this!");
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      if (req.body.phoneNumber === undefined) {
+      if (req.body.sender === undefined) {
         console.log(req.body);
         res.send(JSON.stringify({ error: "error" }));
       } else {
-        const { phoneNumber, kind } = req.body;
+        const { sender, kind } = req.body;
         const method = (kind === '1' ? "전화" : "문자");
         let client;
         let rows, temp, name, sub, text;
@@ -539,16 +538,16 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
         let projects;
         let boo;
 
-        if (!/^2/.test(phoneNumber)) {
+        if (!/^2/.test(sender)) {
           manager = null;
-          rows = await back.getClientsByQuery({ phone: phoneNumber }, { selfMongo: instance.mongo });
+          rows = await back.getClientsByQuery({ phone: sender }, { selfMongo: instance.mongo });
           if (rows.length === 0) {
-            rows = await back.getDesignersByQuery({ "information.phone": phoneNumber }, { selfMongo: instance.mongo });
+            rows = await back.getDesignersByQuery({ "information.phone": sender }, { selfMongo: instance.mongo });
             if (rows.length === 0) {
               temp = await back.setMemberObj({ selfMongo: instance.mongo, getMode: true });
               rows = [];
               for (let obj of temp) {
-                if (obj.phone === phoneNumber) {
+                if (obj.phone === sender) {
                   rows.push(obj);
                 }
               }
