@@ -1783,7 +1783,7 @@ GeneralJs.autoComma = function (str) {
   minus = /\-/g.test(str) ? /\-/g.exec(str)[0] : '';
   str = str.replace(/[^0-9]/g, '');
   if (str === '') {
-    throw new Error("invaild number");
+    throw new Error("invaild number : emptyString");
   }
   count = Math.ceil(str.length / 3);
   countArr = [];

@@ -303,27 +303,27 @@ DevContext.prototype.launching = async function () {
     // console.log(await bill.travelInjection("remain", proid, "offline", 4, { selfMongo: this.MONGOLOCALC }));
     // console.log(await bill.travelReconfig("first", proid, "offline", 0, 2, { selfMongo: this.MONGOLOCALC }));
 
-    await bill.serviceConverting(proid, "online", "s2011_aa01s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC })
+    // await bill.serviceConverting(proid, "online", "s2011_aa02s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC })
 
 
 
-    const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
-    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    let id;
-    let callbackurl;
-    let callbackhost;
-    let callbackport;
-    let num;
-    // phoneNumbers.push("0220392252")
-    // console.log(phoneNumbers);
-    num = 0;
-    for (let id of phoneNumbers) {
-      callbackurl = "/cloud" + String(num) + ".php";
-      callbackhost = "3.35.13.93";
-      callbackport = 80;
-      console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + callbackport, { id, pass, callbackurl, callbackhost, callbackport }, { headers: { "Content-Type": "application/json" } })).data);
-      num++;
-    }
+    // const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
+    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    // let id;
+    // let callbackurl;
+    // let callbackhost;
+    // let callbackport;
+    // let num;
+    // // phoneNumbers.push("0220392252")
+    // // console.log(phoneNumbers);
+    // num = 0;
+    // for (let id of phoneNumbers) {
+    //   callbackurl = "/cloud" + String(num) + ".php";
+    //   callbackhost = "3.35.13.93";
+    //   callbackport = 80;
+    //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + callbackport, { id, pass, callbackurl, callbackhost, callbackport }, { headers: { "Content-Type": "application/json" } })).data);
+    //   num++;
+    // }
 
     // const url = "https://centrex.uplus.co.kr/RestApi/getringcallback";
     // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;

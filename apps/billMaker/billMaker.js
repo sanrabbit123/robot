@@ -2055,6 +2055,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
   const back = this.back;
   const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
   const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
   try {
     let MONGOC, MONGOCOREC;
     let selfBoo, selfCoreBoo;
@@ -2072,6 +2073,14 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let remainIndex, remainItemIndex;
     let num;
     let updateArr;
+    let proposalIndex0, proposalIndex1;
+    let projectWhereQuery, projectUpdateQuery;
+    let whereQuery, updateQuery;
+    let newResponses;
+    let pastResponses;
+    let newSupply;
+    let classification, percentage;
+    let calculate, commission;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -2108,6 +2117,23 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     cliid = project.cliid;
     pastSerid = project.service.serid;
     xValue = project.service.xValue;
+    designer = await back.getDesignerById(desid, { selfMongo: MONGOCOREC });
+    client = await back.getClientById(cliid, { selfMongo: MONGOCOREC });
+    feeObject = null;
+    for (let i = 0; i < project.proposal.detail.length; i++) {
+      if (project.proposal.detail[i].desid === designer.desid) {
+        for (let j = 0; j < project.proposal.detail[i].fee.length; j++) {
+          if (project.proposal.detail[i].fee[j].method === method) {
+            feeObject = project.proposal.detail[i].fee[j];
+            proposalIndex0 = i;
+            proposalIndex1 = j;
+          }
+        }
+      }
+    }
+    if (feeObject === null) {
+      throw new Error("cannot find fee object");
+    }
     pastFeeObject = await work.getDesignerFee(desid, cliid, pastSerid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
     newFeeObject = await work.getDesignerFee(desid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
     if (newFeeObject.detail[method] === 0) {
@@ -2154,42 +2180,64 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
             remainItemIndex = i;
           }
         }
+
         updateArr[remainItemIndex].unit.price = updateArr[remainItemIndex].unit.price + newFeeObject.detail[method] - pastFeeObject.detail[method];
         updateArr[remainItemIndex].amount.supply = updateArr[remainItemIndex].unit.price * updateArr[remainItemIndex].unit.number;
-        updateArr[remainItemIndex].amount.vat = updateArr[remainItemIndex].amount.supply * vatRatio;
-        updateArr[remainItemIndex].amount.consumer = updateArr[remainItemIndex].amount.supply * (1 + vatRatio);
+        updateArr[remainItemIndex].amount.vat = Math.round(updateArr[remainItemIndex].amount.supply * vatRatio);
+        updateArr[remainItemIndex].amount.consumer = Math.round(updateArr[remainItemIndex].amount.supply * (1 + vatRatio));
+        project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = updateArr[remainItemIndex].unit.price;
+        newSupply = updateArr[remainItemIndex].unit.price;
 
+        whereQuery = { bilid };
+        updateQuery = {};
+        updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(updateArr));
 
+        pastResponses = thisBill.responses.toNormal();
+        newResponses = [];
+        for (let res of pastResponses) {
+          if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+            newResponses.push(res);
+          }
+        }
+        updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
 
-
-
-
+        await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
         await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
         await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
 
-
-
-
-
-
       } else if (totalNum <= payNum - cancelNum) {
-
-
-
-
-
-
-
 
 
       } else {
 
 
 
-
-
-
       }
+
+      projectWhereQuery = { proid };
+      projectUpdateQuery = {};
+      projectUpdateQuery["service.serid"] = serid;
+      projectUpdateQuery["service.online"] = !/off/gi.test(method);
+      projectUpdateQuery["process.contract.remain.calculation.amount.supply"] = Math.round(newSupply);
+      projectUpdateQuery["process.contract.remain.calculation.amount.vat"] = Math.round(newSupply * vatRatio);
+      projectUpdateQuery["process.contract.remain.calculation.amount.consumer"] = Math.round(newSupply * (1 + vatRatio));
+      classification = designer.information.business.businessInfo.classification.value;
+      percentage = designer.information.business.service.cost.percentage;
+      if (/일반/gi.test(classification)) {
+        calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
+      } else if (/간이/gi.test(classification)) {
+        calculate = Math.floor(newSupply * (1 - (percentage / 100)));
+      } else if (/프리/gi.test(classification)) {
+        calculate = Math.floor((newSupply - (newSupply * (percentage / 100))) * freeRatio);
+      } else {
+        calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
+      }
+      projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor((calculate / 2) / 10) * 10;
+      projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor((calculate / 2) / 10) * 10;
+      projectUpdateQuery["process.calculation.payments.totalAmount"] = projectUpdateQuery["process.calculation.payments.first.amount"] * 2;
+
+      await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
     }
 
     if (!selfBoo) {
