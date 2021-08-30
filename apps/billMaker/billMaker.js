@@ -1145,6 +1145,9 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
       } else {
         itemFactor.unit.number = item.number(method, distance, { client, designer, project });
       }
+      if (property === "travelExpenses") {
+        tempCommission = (tempCommission / distance.number) * itemFactor.unit.number;
+      }
       itemFactor.amount.pure = Math.floor(itemFactor.unit.price * itemFactor.unit.number);
       itemFactor.amount.commission = tempCommission;
       responseObject.items.push(equalJson(JSON.stringify(itemFactor)));
@@ -1536,6 +1539,7 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
     throw new Error("invaild travel number");
   }
   const instance = this;
+  const back = this.back;
   const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
@@ -1632,6 +1636,8 @@ BillMaker.prototype.travelInjection = async function (injectionCase, proid, meth
       await MONGOCOREC.close();
     }
 
+    return bilid;
+
   } catch (e) {
     console.log(e);
   }
@@ -1651,6 +1657,7 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
     throw new Error("invaild method");
   }
   const instance = this;
+  const back = this.back;
   const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
@@ -1799,6 +1806,8 @@ BillMaker.prototype.travelEjection = async function (injectionCase, proid, metho
       await MONGOCOREC.close();
     }
 
+    return "success";
+
   } catch (e) {
     console.log(e);
   }
@@ -1821,6 +1830,7 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
     throw new Error("invaild travel number");
   }
   const instance = this;
+  const back = this.back;
   const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
@@ -1948,8 +1958,8 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
     itemsArr = thisBill.requests[index].items.toNormal();
     itemsArr[targetItemIndex].unit.number = number;
     itemsArr[targetItemIndex].amount.supply = itemsArr[targetItemIndex].unit.price * itemsArr[targetItemIndex].unit.number;
-    itemsArr[targetItemIndex].amount.vat = itemsArr[targetItemIndex].amount.supply * vatRatio;
-    itemsArr[targetItemIndex].amount.consumer = itemsArr[targetItemIndex].amount.supply + itemsArr[targetItemIndex].amount.vat;
+    itemsArr[targetItemIndex].amount.vat = Math.round(itemsArr[targetItemIndex].amount.supply * vatRatio);
+    itemsArr[targetItemIndex].amount.consumer = Math.round(itemsArr[targetItemIndex].amount.supply + itemsArr[targetItemIndex].amount.vat);
 
     oppositeItemArr = thisBill.responses[targetResponseIndex].items.toNormal();
     oppositeItemArr[targetResponseItemIndex].unit.number = number;
@@ -1968,6 +1978,8 @@ BillMaker.prototype.travelReconfig = async function (injectionCase, proid, metho
     if (!selfCoreBoo) {
       await MONGOCOREC.close();
     }
+
+    return bilid;
 
   } catch (e) {
     console.log(e);

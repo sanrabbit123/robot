@@ -1180,7 +1180,7 @@ BackMaker.prototype.getCaseProidById = async function (id, option = { selfMongo:
           }
         }
       }
-      const resultObj = new ClientCase(targetClient, (targetClient === null) ? null : cases.parsingCases(targetClient));
+      const resultObj = new ClientCase(targetClient, cases.parsingCases(targetClient));
       return resultObj;
     }
   } catch (e) {

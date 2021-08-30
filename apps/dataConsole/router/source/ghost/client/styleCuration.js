@@ -3214,10 +3214,13 @@ StyleCurationJs.prototype.parsingValues = function () {
     }
   }).catch((err) => {
     ajaxJson({
-      message: instance.client.name + " 고객님이 큐레이션 페이지를 제출하는 도중 오류를 만나 비정상 종료되었습니다!",
+      message: instance.client.name + " 고객님이 큐레이션 페이지를 제출하는 도중 오류를 만나 비정상 종료되었습니다! error 내용 : " + err.message + " / " + String(err.lineNumber),
       channel: "#404_curation",
-      voice: true,
-    }, "/sendSlack").then(() => { window.alert("오류가 발생하였습니다! 관리자에게 문의 부탁드립니다!"); window.location.reload(); }).catch((err) => { console.log(err); });
+      voice: false,
+    }, "/sendSlack").then(() => {
+      window.alert("오류가 발생하였습니다! 다시 한번 제출을 시도해주시길 부탁드립니다!");
+      window.location.reload();
+    }).catch((err) => { console.log(err); });
   });
 
 }
