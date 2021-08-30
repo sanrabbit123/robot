@@ -2065,6 +2065,8 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let xValue;
     let remain;
     let totalNum, payNum, cancelNum;
+    let totalNumR0, payNumR0, cancelNumR0;
+    let totalNumR1, payNumR1, cancelNumR1;
     let desid, cliid;
     let designer, client;
     let feeObject;
@@ -2072,7 +2074,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let newFeeObject;
     let remainIndex, remainItemIndex;
     let num;
-    let updateArr;
+    let pastRemainArr;
     let proposalIndex0, proposalIndex1;
     let projectWhereQuery, projectUpdateQuery;
     let whereQuery, updateQuery;
@@ -2081,6 +2083,10 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let newSupply;
     let classification, percentage;
     let calculate, commission;
+    let pastRemainPrice;
+    let newRequestAmount;
+    let firstResponse, secondResponse;
+    let firstBoo, remainBoo;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -2172,25 +2178,27 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       for (let { amount } of remain.cancel) {
         cancelNum += amount;
       }
+
+      pastRemainArr = thisBill.requests[remainIndex].items.toNormal();
+      for (let i = 0; i < pastRemainArr.length; i++) {
+        if (pastRemainArr[i].class === "designerTime") {
+          remainItemIndex = i;
+        }
+      }
+      pastRemainPrice = pastRemainArr[remainItemIndex].unit.price;
+      whereQuery = { bilid };
+      updateQuery = {};
+
       if (payNum === 0) {
 
-        updateArr = thisBill.requests[remainIndex].items.toNormal();
-        for (let i = 0; i < updateArr.length; i++) {
-          if (updateArr[i].class === "designerTime") {
-            remainItemIndex = i;
-          }
-        }
+        pastRemainArr[remainItemIndex].unit.price = pastRemainPrice + newFeeObject.detail[method] - pastFeeObject.detail[method];
+        pastRemainArr[remainItemIndex].amount.supply = pastRemainArr[remainItemIndex].unit.price * pastRemainArr[remainItemIndex].unit.number;
+        pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
+        pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
+        project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = pastRemainArr[remainItemIndex].unit.price + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
+        newSupply = project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount;
 
-        updateArr[remainItemIndex].unit.price = updateArr[remainItemIndex].unit.price + newFeeObject.detail[method] - pastFeeObject.detail[method];
-        updateArr[remainItemIndex].amount.supply = updateArr[remainItemIndex].unit.price * updateArr[remainItemIndex].unit.number;
-        updateArr[remainItemIndex].amount.vat = Math.round(updateArr[remainItemIndex].amount.supply * vatRatio);
-        updateArr[remainItemIndex].amount.consumer = Math.round(updateArr[remainItemIndex].amount.supply * (1 + vatRatio));
-        project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = updateArr[remainItemIndex].unit.price;
-        newSupply = updateArr[remainItemIndex].unit.price;
-
-        whereQuery = { bilid };
-        updateQuery = {};
-        updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(updateArr));
+        updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
 
         pastResponses = thisBill.responses.toNormal();
         newResponses = [];
@@ -2207,7 +2215,122 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
 
       } else if (totalNum <= payNum - cancelNum) {
 
+        firstResponse = null;
+        secondResponse = null;
+        for (let res of thisBill.responses) {
+          if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+            firstResponse = res;
+          }
+          if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+            secondResponse = res;
+          }
+        }
+        if (firstResponse === null || secondResponse === null) {
+          throw new Error("invaild response structure");
+        }
 
+        firstBoo = false;
+        remainBoo = false;
+
+        totalNumR0 = 0;
+        for (let { amount: { pure } } of firstResponse.items) {
+          totalNumR0 += pure;
+        }
+        payNumR0 = 0;
+        for (let { amount } of remain.pay) {
+          payNumR0 += amount;
+        }
+        cancelNumR0 = 0;
+        for (let { amount } of remain.cancel) {
+          cancelNumR0 += amount;
+        }
+        firstBoo = (totalNumR0 <= payNumR0 - cancelNumR0);
+
+        totalNumR1 = 0;
+        for (let { amount: { pure } } of secondResponse.items) {
+          totalNumR1 += pure;
+        }
+        payNumR1 = 0;
+        for (let { amount } of remain.pay) {
+          payNumR1 += amount;
+        }
+        cancelNumR1 = 0;
+        for (let { amount } of remain.cancel) {
+          cancelNumR1 += amount;
+        }
+        remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
+
+        newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
+
+        if (newRequestAmount <= 0) {
+          if (!firstBoo && !remainBoo) {
+
+
+
+
+
+
+
+
+
+          } else if (firstBoo && !remainBoo) {
+
+
+
+
+
+
+
+
+
+
+          } else if (firstBoo && remainBoo) {
+
+
+
+
+
+
+
+
+
+
+          }
+        } else {
+          if (!firstBoo && !remainBoo) {
+
+
+
+
+
+
+
+
+
+          } else if (firstBoo && !remainBoo) {
+
+
+
+
+
+
+
+
+
+
+          } else if (firstBoo && remainBoo) {
+
+
+
+
+
+
+
+
+
+
+          }
+        }
       } else {
 
 
