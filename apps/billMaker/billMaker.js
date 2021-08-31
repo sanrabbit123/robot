@@ -139,7 +139,7 @@ BillMaker.billDictionary = {
         },
         item: (feeObject, subObj) => {
           return [
-            [ "designerFeeRemain", feeObject.amount ]
+            [ "designerFeeFirst", feeObject.amount ]
           ];
         },
         target: (client, designer, project, method, subObj = {}) => {
@@ -2087,6 +2087,15 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let newRequestAmount;
     let firstResponse, secondResponse;
     let firstBoo, remainBoo;
+    let newRequestPrice;
+    let remainResponse;
+    let remainResponseIndex;
+    let remainResponseRemainItem;
+    let remainResponseRemainItemIndex;
+    let responseBetween;
+    let newCommission;
+    let firstResponseIndex;
+    let firstResponseFirstItemIndex;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -2186,156 +2195,10 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         }
       }
       pastRemainPrice = pastRemainArr[remainItemIndex].unit.price;
-      whereQuery = { bilid };
-      updateQuery = {};
-
-      if (payNum === 0) {
-
-        pastRemainArr[remainItemIndex].unit.price = pastRemainPrice + newFeeObject.detail[method] - pastFeeObject.detail[method];
-        pastRemainArr[remainItemIndex].amount.supply = pastRemainArr[remainItemIndex].unit.price * pastRemainArr[remainItemIndex].unit.number;
-        pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
-        pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
-        project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = pastRemainArr[remainItemIndex].unit.price + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
-        newSupply = project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount;
-
-        updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
-
-        pastResponses = thisBill.responses.toNormal();
-        newResponses = [];
-        for (let res of pastResponses) {
-          if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
-            newResponses.push(res);
-          }
-        }
-        updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
-
-        await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-
-      } else if (totalNum <= payNum - cancelNum) {
-
-        firstResponse = null;
-        secondResponse = null;
-        for (let res of thisBill.responses) {
-          if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
-            firstResponse = res;
-          }
-          if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
-            secondResponse = res;
-          }
-        }
-        if (firstResponse === null || secondResponse === null) {
-          throw new Error("invaild response structure");
-        }
-
-        firstBoo = false;
-        remainBoo = false;
-
-        totalNumR0 = 0;
-        for (let { amount: { pure } } of firstResponse.items) {
-          totalNumR0 += pure;
-        }
-        payNumR0 = 0;
-        for (let { amount } of remain.pay) {
-          payNumR0 += amount;
-        }
-        cancelNumR0 = 0;
-        for (let { amount } of remain.cancel) {
-          cancelNumR0 += amount;
-        }
-        firstBoo = (totalNumR0 <= payNumR0 - cancelNumR0);
-
-        totalNumR1 = 0;
-        for (let { amount: { pure } } of secondResponse.items) {
-          totalNumR1 += pure;
-        }
-        payNumR1 = 0;
-        for (let { amount } of remain.pay) {
-          payNumR1 += amount;
-        }
-        cancelNumR1 = 0;
-        for (let { amount } of remain.cancel) {
-          cancelNumR1 += amount;
-        }
-        remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
-
-        newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
-
-        if (newRequestAmount <= 0) {
-          if (!firstBoo && !remainBoo) {
-
-
-
-
-
-
-
-
-
-          } else if (firstBoo && !remainBoo) {
-
-
-
-
-
-
-
-
-
-
-          } else if (firstBoo && remainBoo) {
-
-
-
-
-
-
-
-
-
-
-          }
-        } else {
-          if (!firstBoo && !remainBoo) {
-
-
-
-
-
-
-
-
-
-          } else if (firstBoo && !remainBoo) {
-
-
-
-
-
-
-
-
-
-
-          } else if (firstBoo && remainBoo) {
-
-
-
-
-
-
-
-
-
-
-          }
-        }
-      } else {
-
-
-
-      }
+      newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
+      newRequestPrice = pastRemainPrice + newRequestAmount;
+      project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
+      newSupply = project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount;
 
       projectWhereQuery = { proid };
       projectUpdateQuery = {};
@@ -2358,8 +2221,154 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.totalAmount"] = projectUpdateQuery["process.calculation.payments.first.amount"] * 2;
-
       await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+      newCommission = Math.floor((newSupply * (percentage / 100)) / 10) * 10;
+
+      whereQuery = { bilid };
+      updateQuery = {};
+
+      if (payNum === 0) {
+
+        pastRemainArr[remainItemIndex].unit.price = newRequestPrice;
+        pastRemainArr[remainItemIndex].amount.supply = newRequestPrice * pastRemainArr[remainItemIndex].unit.number;
+        pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
+        pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
+        updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
+
+        pastResponses = thisBill.responses.toNormal();
+        newResponses = [];
+        for (let res of pastResponses) {
+          if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+            newResponses.push(res);
+          }
+        }
+        updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
+
+        await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+
+      } else {
+
+        //request
+        if (newRequestAmount < 0) {
+          pastRemainArr[remainItemIndex].unit.price = newRequestPrice;
+          pastRemainArr[remainItemIndex].amount.supply = newRequestPrice * pastRemainArr[remainItemIndex].unit.number;
+          pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
+          pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
+          updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
+        } else if (newRequestAmount > 0) {
+          await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC });
+          pastRemainArr[remainItemIndex].unit.price = newRequestAmount;
+          pastRemainArr[remainItemIndex].amount.supply = newRequestAmount * pastRemainArr[remainItemIndex].unit.number;
+          pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
+          pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
+          updateQuery["requests." + String(0) + ".items." + String(0)] = equalJson(JSON.stringify(pastRemainArr[remainItemIndex]));
+        }
+        await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+        updateQuery = {};
+
+        //response
+        firstResponse = null;
+        secondResponse = null;
+        for (let res of thisBill.responses) {
+          if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+            firstResponse = res;
+          }
+          if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+            secondResponse = res;
+          }
+        }
+        if (firstResponse === null || secondResponse === null) {
+          throw new Error("invaild response structure");
+        }
+        firstBoo = false;
+        remainBoo = false;
+        totalNumR0 = 0;
+        for (let { amount: { pure } } of firstResponse.items) {
+          totalNumR0 += pure;
+        }
+        payNumR0 = 0;
+        for (let { amount } of firstResponse.pay) {
+          payNumR0 += amount;
+        }
+        cancelNumR0 = 0;
+        for (let { amount } of firstResponse.cancel) {
+          cancelNumR0 += amount;
+        }
+        firstBoo = (totalNumR0 <= payNumR0 - cancelNumR0);
+        totalNumR1 = 0;
+        for (let { amount: { pure } } of secondResponse.items) {
+          totalNumR1 += pure;
+        }
+        payNumR1 = 0;
+        for (let { amount } of secondResponse.pay) {
+          payNumR1 += amount;
+        }
+        cancelNumR1 = 0;
+        for (let { amount } of secondResponse.cancel) {
+          cancelNumR1 += amount;
+        }
+        remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
+
+        if (!firstBoo && !remainBoo) {
+
+          pastResponses = thisBill.responses.toNormal();
+          newResponses = [];
+          for (let res of pastResponses) {
+            if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+              newResponses.push(res);
+            }
+          }
+          updateQuery = {};
+          updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
+          await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+          await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+          await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+
+        } else {
+
+          pastResponses = thisBill.responses.toNormal();
+          for (let i = 0; i < pastResponses.length; i++) {
+            if (pastResponses[i].name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+              remainResponse = pastResponses[i];
+              remainResponseIndex = i;
+            }
+            if (pastResponses[i].name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+              firstResponse = pastResponses[i];
+              firstResponseIndex = i;
+            }
+          }
+          for (let i = 0; i < remainResponse.items.length; i++) {
+            if (remainResponse.items[i].class === "designerFeeRemain") {
+              remainResponseRemainItem = remainResponse.items[i];
+              remainResponseRemainItemIndex = i;
+            }
+          }
+          for (let i = 0; i < firstResponse.items.length; i++) {
+            if (firstResponse.items[i].class === "designerFeeFirst") {
+              firstResponseFirstItemIndex = i;
+            }
+          }
+
+          responseBetween = projectUpdateQuery["process.calculation.payments.totalAmount"] - (pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price + pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price);
+          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price + responseBetween;
+          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].amount.pure = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
+          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].amount.commission = newCommission - pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].amount.commission;
+          updateQuery = {};
+          updateQuery["responses." + String(remainResponseIndex) + ".items"] = pastResponses[remainResponseIndex].items;
+          await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+          projectUpdateQuery = {};
+          projectUpdateQuery["process.calculation.payments.first.amount"] = pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price;
+          projectUpdateQuery["process.calculation.payments.remain.amount"] = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
+          projectUpdateQuery["process.calculation.payments.totalAmount"] = pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price + pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
+          await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+        }
+
+      }
 
     }
 
