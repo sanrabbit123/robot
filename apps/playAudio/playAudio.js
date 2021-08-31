@@ -15,7 +15,6 @@ const PlayAudio = function (option = {}) {
   } else {
     this.players = option.players;
   }
-
   const findExec = function () {
     const isExec = function (command) {
       const { execSync: exec } = require('child_process');
@@ -47,14 +46,13 @@ const PlayAudio = function (option = {}) {
     });
     return command;
   }
-
   if (option.player === undefined) {
     this.player = findExec(this.players);
   } else {
     this.player = option.player;
   }
-
   this.urlRegex = /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/i;
+  this.restapiKey = "e0d7657d8f0da70f3df436046728c0a0";
 }
 
 PlayAudio.prototype.play = function (audio, options = {}) {
@@ -91,11 +89,11 @@ PlayAudio.prototype.play = function (audio, options = {}) {
 
 PlayAudio.prototype.textToVoice = async function (text = "안녕하세요?") {
   const instance = this;
+  const { restapiKey } = this;
   const { shell, shellLink, returnRandoms } = this.mother;
   try {
-    let restapiKey, command, tempDir, fileName, randoms;
+    let command, tempDir, fileName, randoms;
 
-    restapiKey = "e0d7657d8f0da70f3df436046728c0a0";
     randoms = await returnRandoms();
     text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)]/g, '');
     tempDir = process.cwd() + "/temp";
@@ -119,11 +117,11 @@ PlayAudio.prototype.textToVoice = async function (text = "안녕하세요?") {
 
 PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
   const instance = this;
+  const { restapiKey } = this;
   const { shell, shellLink, returnRandoms } = this.mother;
   try {
-    let restapiKey, command, tempDir, fileName, randoms;
+    let command, tempDir, fileName, randoms;
 
-    restapiKey = "e0d7657d8f0da70f3df436046728c0a0";
     randoms = await returnRandoms();
     text = text.replace(/[\[\]\{\}\"\'\<\>\/\\\~\`\+\=\-\_\@\#\$\%\^\&\*\(\)]/g, '');
     tempDir = process.cwd() + "/temp";
@@ -139,6 +137,41 @@ PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
     shell.exec(command, { silent: true });
 
     return (tempDir + "/" + fileName);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+PlayAudio.prototype.fileToText = async function (fileName) {
+  if (typeof fileName !== "string") {
+    throw new Error("input must be file name");
+  }
+  const instance = this;
+  const { restapiKey } = this;
+  const { shell, shellLink, fileSystem } = this.mother;
+  try {
+    let command, response, tempArr;
+    if (await fileSystem(`exist`, [ fileName ])) {
+      command = ``;
+      command += `curl -v -X POST "https://kakaoi-newtone-openapi.kakao.com/v1/recognize" `;
+      command += `-H "Transfer-Encoding: chunked" `;
+      command += `-H "Content-Type: application/octet-stream" `;
+      command += `-H "Authorization: ${restapiKey}" `;
+      command += `--data-binary @${fileName}`;
+
+      response = shell.exec(command, { silent: false });
+
+      tempArr = response.stdout.split("\n").map((i) => { return i.trim(); }).reverse().filter((i) => { return i !== '' }).filter((i) => { return /^[\{\[]/.test(i); });
+      if (tempArr.length === 0) {
+        return { text: '' };
+      } else {
+        return { text: JSON.parse(tempArr[0]).value };
+      }
+
+    } else {
+      throw new Error("there is no file");
+    }
 
   } catch (e) {
     console.log(e);

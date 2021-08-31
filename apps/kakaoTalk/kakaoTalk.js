@@ -483,6 +483,30 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    plusDesignFee: {
+      name: "서비스 변경 추가 금액 안내",
+      id: "TF_6757",
+      needs: [
+        "client",
+        "pastservice",
+        "newservice",
+        "host",
+        "path",
+        "cliid",
+        "needs"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "pastservice", to: obj.pastservice },
+          { from: "newservice", to: obj.newservice },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
+        ];
+      },
+    },
   };
   return tong[target];
 }
