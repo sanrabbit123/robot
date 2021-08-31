@@ -891,12 +891,11 @@ Ghost.prototype.ghostRouter = function (needs) {
           sitePhoto = sitePhoto.concat(sitePhotoList);
         }
 
-        if (mode === "fileMode") {
-          res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
-        } else {
+        if (mode !== "fileMode") {
           preferredPhoto = preferredPhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), ''))}`; });
           sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), ''))}`; });
         }
+        res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
