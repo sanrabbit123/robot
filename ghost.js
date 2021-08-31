@@ -871,8 +871,16 @@ Ghost.prototype.ghostRouter = function (needs) {
         preferredPhoto = [];
         sitePhoto = [];
         for (let t of totalList) {
-          preferredPhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + preferredPhotoName ])).filter((i) => { return i !== `.DS_Store`; }).map((i) => { return `${root}/${t}/${preferredPhotoName}/${i}`; });
-          sitePhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + sitePhotoName ])).filter((i) => { return i !== `.DS_Store`; }).map((i) => { return `${root}/${t}/${sitePhotoName}/${i}`; });
+          if (await fileSystem(`exist`, [ root + "/" + t + "/" + preferredPhotoName ])) {
+            preferredPhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + preferredPhotoName ])).filter((i) => { return i !== `.DS_Store`; }).map((i) => { return `${root}/${t}/${preferredPhotoName}/${i}`; });
+          } else {
+            preferredPhotoList = [];
+          }
+          if (await fileSystem(`exist`, [ root + "/" + t + "/" + sitePhotoName ])) {
+            sitePhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + sitePhotoName ])).filter((i) => { return i !== `.DS_Store`; }).map((i) => { return `${root}/${t}/${sitePhotoName}/${i}`; });
+          } else {
+            sitePhotoList = [];
+          }
           preferredPhoto = preferredPhoto.concat(preferredPhotoList);
           sitePhoto = sitePhoto.concat(sitePhotoList);
         }
