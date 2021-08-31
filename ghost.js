@@ -858,6 +858,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         let preferredPhoto, sitePhoto;
         let preferredPhotoList, sitePhotoList;
         let root;
+        let mode;
+
+        mode = "siteMode";
+        if (req.body.fileMode !== undefined) {
+          mode = "fileMode";
+        }
 
         client = await back.getClientById(cliid, { selfMongo: MONGOC });
         if (client === null) {
@@ -885,7 +891,12 @@ Ghost.prototype.ghostRouter = function (needs) {
           sitePhoto = sitePhoto.concat(sitePhotoList);
         }
 
-        res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
+        if (mode === "fileMode") {
+          res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
+        } else {
+          preferredPhoto = preferredPhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), ''))}`; });
+          sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), ''))}`; });
+        }
 
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
