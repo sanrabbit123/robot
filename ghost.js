@@ -810,7 +810,6 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_readDir = {
     link: [ "/readDir", "/ls" ],
     func: function (req, res) {
-      let command;
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
@@ -835,6 +834,39 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify(list_refined));
       }).catch((e) => { throw new Error(e); });
 
+    }
+  };
+
+  //POST - find client photos
+  funcObj.post_readDir = {
+    link: [ "/clientPhoto" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.cliid === undefined) {
+          throw new Error("invaild post");
+        }
+        const { cliid } = req.body;
+        let totalList, client, phone;
+
+        client = await back.getClientById(cliid, { selfMongo: MONGOC });
+        if (client === null) {
+          throw new Error("invaild cliid");
+        }
+        phone = client.phone.replace(/[^0-9]/g, '');
+        totalList = await fileSystem(`readDir`, [ instance.dirParsing("__photo__") ]);
+        totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
+
+        res.send(JSON.stringify(totalList));
+
+      } catch (e) {
+        res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
+      }
     }
   };
 
