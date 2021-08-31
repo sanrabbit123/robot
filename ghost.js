@@ -851,18 +851,33 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (req.body.cliid === undefined) {
           throw new Error("invaild post");
         }
+        const preferredPhotoName = "preferredPhoto";
+        const sitePhotoName = "sitePhoto";
         const { cliid } = req.body;
         let totalList, client, phone;
+        let preferredPhoto, sitePhoto;
+        let preferredPhotoList, sitePhotoList;
+        let root;
 
         client = await back.getClientById(cliid, { selfMongo: MONGOC });
         if (client === null) {
           throw new Error("invaild cliid");
         }
         phone = client.phone.replace(/[^0-9]/g, '');
-        totalList = await fileSystem(`readDir`, [ instance.dirParsing("__photo__") ]);
+        root = instance.dirParsing("__photo__");
+        totalList = await fileSystem(`readDir`, [ root ]);
         totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
 
-        res.send(JSON.stringify(totalList));
+        preferredPhoto = [];
+        sitePhoto = [];
+        for (let t of totalList) {
+          preferredPhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + preferredPhotoName ])).filter((i) => { return i !== `.DS_Store`; }).map((i) => { return `${root}/${t}/${preferredPhotoName}/${i}`; });
+          sitePhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + sitePhotoName ])).filter((i) => { return i !== `.DS_Store`; }).map((i) => { return `${root}/${t}/${sitePhotoName}/${i}`; });
+          preferredPhoto = preferredPhoto.concat(preferredPhotoList);
+          sitePhoto = sitePhoto.concat(sitePhotoList);
+        }
+
+        res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
