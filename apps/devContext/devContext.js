@@ -62,11 +62,7 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-
-
-    
-
-
+    console.log(await ghostRequest("ls", { target: "__photo__" }));
 
 
 
@@ -1123,6 +1119,8 @@ DevContext.prototype.launching = async function () {
     // await kakao.ready();
     // await kakao.sendTalk("clientCuration", "배창규", "010-2747-3403", {
     //   client: "배창규",
+    //   emoji0: "(방긋)",
+    //   emoji1: "(오케이)",
     //   host: "home-liaison.servehttp.com",
     //   path: "curation",
     //   cliid: "c1801_aa01s",

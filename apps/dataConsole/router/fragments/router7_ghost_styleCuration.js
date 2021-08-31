@@ -60,7 +60,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const instance = this;
   const back = this.back;
   const work = this.work;
-  const { equalJson, ghostRequest } = this.mother;
+  const address = this.address;
+  const { equalJson, ghostRequest, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res) {
@@ -144,23 +145,22 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               }
               return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
             }).then(() => {
-              if (newProid !== null) {
-                return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ]);
-              } else {
-                return passPromise();
+              if (newProid === null) {
+                throw new Error("promise error");
               }
+              return requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
+                id: cliid,
+                column: "action",
+                position: "requests.0.analytics.response.action",
+                pastValue: client.requests[0].analytics.response.action.value,
+                finalValue: "제안 발송 예정"
+              }, { headers: { "Content-Type": "application/json" } });
             }).then(() => {
-              if (newProid !== null) {
-                return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
-              } else {
-                return passPromise();
-              }
+              return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ], { selfMongo: instance.mongo });
             }).then(() => {
-              if (newProid !== null) {
-                return instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
-              } else {
-                return passPromise();
-              }
+              return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
+            }).then(() => {
+              return instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
             }).catch((err) => {
               console.log(err);
               instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });

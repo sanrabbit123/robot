@@ -553,6 +553,93 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_updateLog = function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, shell, shellLink } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateLog" ];
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.id === undefined || req.body.column === undefined || req.body.position === undefined || req.body.pastValue === undefined || req.body.finalValue === undefined) {
+        throw new Error("invaild post");
+      }
+      const { id: thisId, column, position, pastValue, finalValue } = req.body;
+      const fixedEmail = "uragenbooks@gmail.com";
+      const members = instance.members;
+      const logDir = `${instance.dir}/log`;
+      const today = new Date();
+      let thisPerson, fileTarget, thisPath, dir;
+      let updateTong;
+      let logCollectionName;
+
+      if (/^c/.test(thisId)) {
+        thisPath = "client";
+        logCollectionName = "updateClientLog";
+      } else if (/^d/.test(thisId)) {
+        thisPath = "designer";
+        logCollectionName = "updateDesignerLog";
+      } else if (/^p/.test(thisId)) {
+        thisPath = "project";
+        logCollectionName = "updateProjectLog";
+      } else if (/^t/.test(thisId)) {
+        thisPath = "contents";
+        logCollectionName = "updateContentsLog";
+      }
+
+      for (let { name, email } of members) {
+        if (email.includes(fixedEmail)) {
+          thisPerson = name;
+          break;
+        }
+      }
+
+      updateTong = {
+        user: {
+          name: thisPerson,
+          email: fixedEmail
+        },
+        where: thisId,
+        update: {
+          target: position,
+          value: finalValue,
+          pastValue: pastValue
+        },
+        date: today
+      };
+
+      back.mongoCreate(logCollectionName, updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
+        throw new Error(e);
+      });
+
+      await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: finalValue, date: today }) ]);
+      dir = await fileSystem(`readDir`, [ logDir ]);
+      fileTarget = null;
+      for (let fileName of dir) {
+        if ((new RegExp("^" + thisId)).test(fileName)) {
+          fileTarget = fileName;
+        }
+      }
+      if (fileTarget !== null) {
+        shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+      }
+      await fileSystem(`write`, [ `${logDir}/${thisId}__name__${thisPerson}`, `0` ]);
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const instance = this;
   const back = this.back;

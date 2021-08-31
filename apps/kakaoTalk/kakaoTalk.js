@@ -332,10 +332,12 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     clientCuration: {
-      name: "큐레이션 전송",
-      id: "TF_3950",
+      name: "스타일 찾기 전송",
+      id: "TF_6198",
       needs: [
         "client",
+        "emoji0",
+        "emoji1",
         "host",
         "path",
         "cliid",
@@ -344,6 +346,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       convert: function (obj) {
         return [
           { from: "client", to: obj.client },
+          { from: "emoji0", to: obj.emoji0 },
+          { from: "emoji1", to: obj.emoji1 },
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
           { from: "cliid", to: obj.cliid },

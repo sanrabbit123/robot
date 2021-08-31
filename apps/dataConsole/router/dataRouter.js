@@ -1154,6 +1154,93 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_updateLog = function () {
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, shell, shellLink } = this.mother;
+  let obj = {};
+  obj.link = [ "/updateLog" ];
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.id === undefined || req.body.column === undefined || req.body.position === undefined || req.body.pastValue === undefined || req.body.finalValue === undefined) {
+        throw new Error("invaild post");
+      }
+      const { id: thisId, column, position, pastValue, finalValue } = req.body;
+      const fixedEmail = "uragenbooks@gmail.com";
+      const members = instance.members;
+      const logDir = `${instance.dir}/log`;
+      const today = new Date();
+      let thisPerson, fileTarget, thisPath, dir;
+      let updateTong;
+      let logCollectionName;
+
+      if (/^c/.test(thisId)) {
+        thisPath = "client";
+        logCollectionName = "updateClientLog";
+      } else if (/^d/.test(thisId)) {
+        thisPath = "designer";
+        logCollectionName = "updateDesignerLog";
+      } else if (/^p/.test(thisId)) {
+        thisPath = "project";
+        logCollectionName = "updateProjectLog";
+      } else if (/^t/.test(thisId)) {
+        thisPath = "contents";
+        logCollectionName = "updateContentsLog";
+      }
+
+      for (let { name, email } of members) {
+        if (email.includes(fixedEmail)) {
+          thisPerson = name;
+          break;
+        }
+      }
+
+      updateTong = {
+        user: {
+          name: thisPerson,
+          email: fixedEmail
+        },
+        where: thisId,
+        update: {
+          target: position,
+          value: finalValue,
+          pastValue: pastValue
+        },
+        date: today
+      };
+
+      back.mongoCreate(logCollectionName, updateTong, { selfMongo: instance.mongolocal }).catch(function (e) {
+        throw new Error(e);
+      });
+
+      await fileSystem(`write`, [ logDir + "/" + thisPath + "_" + "latest.json", JSON.stringify({ path: thisPath, who: thisPerson, where: thisId, column: column, value: finalValue, date: today }) ]);
+      dir = await fileSystem(`readDir`, [ logDir ]);
+      fileTarget = null;
+      for (let fileName of dir) {
+        if ((new RegExp("^" + thisId)).test(fileName)) {
+          fileTarget = fileName;
+        }
+      }
+      if (fileTarget !== null) {
+        shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+      }
+      await fileSystem(`write`, [ `${logDir}/${thisId}__name__${thisPerson}`, `0` ]);
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const instance = this;
   const back = this.back;
@@ -4452,7 +4539,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const instance = this;
   const back = this.back;
   const work = this.work;
-  const { equalJson, ghostRequest } = this.mother;
+  const address = this.address;
+  const { equalJson, ghostRequest, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res) {
@@ -4536,23 +4624,22 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               }
               return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
             }).then(() => {
-              if (newProid !== null) {
-                return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ]);
-              } else {
-                return passPromise();
+              if (newProid === null) {
+                throw new Error("promise error");
               }
+              return requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
+                id: cliid,
+                column: "action",
+                position: "requests.0.analytics.response.action",
+                pastValue: client.requests[0].analytics.response.action.value,
+                finalValue: "제안 발송 예정"
+              }, { headers: { "Content-Type": "application/json" } });
             }).then(() => {
-              if (newProid !== null) {
-                return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
-              } else {
-                return passPromise();
-              }
+              return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ], { selfMongo: instance.mongo });
             }).then(() => {
-              if (newProid !== null) {
-                return instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
-              } else {
-                return passPromise();
-              }
+              return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
+            }).then(() => {
+              return instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
             }).catch((err) => {
               console.log(err);
               instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });

@@ -5286,6 +5286,8 @@ ClientJs.prototype.communicationRender = function () {
                   phone: thisCase.phone,
                   option: {
                     client: thisCase.name,
+                    emoji0: "(방긋)",
+                    emoji1: "(오케이)",
                     host: GHOSTHOST,
                     path: "curation",
                     cliid: cliid,
@@ -5364,6 +5366,8 @@ ClientJs.prototype.communicationRender = function () {
                 phone: thisCase.phone,
                 option: {
                   client: thisCase.name,
+                  emoji0: "(방긋)",
+                  emoji1: "(오케이)",
                   host: GHOSTHOST,
                   path: "curation",
                   cliid: cliid,

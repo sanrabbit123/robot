@@ -10,6 +10,9 @@ const Ghost = function () {
   this.drive = new GoogleDrive();
   this.address = ADDRESS;
   this.homeliaisonServer = this.address.officeinfo.ghost.file.static + "/" + this.address.officeinfo.ghost.file.office;
+  this.photoServer = this.address.officeinfo.ghost.file.static.split("/").slice(0, -1).join("/") + "photo";
+  this.photoServerClient = this.photoServer + "/고객 전송 사진";
+  this.photoServerDesigner = this.photoServer + "/디자이너 포트폴리오";
   this.alien = process.cwd() + "/alien.js";
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
@@ -518,6 +521,12 @@ Ghost.prototype.dirParsing = function (dir) {
   }
   if (/__samba__/g.test(dir)) {
     dir = dir.replace(/__samba__/, instance.homeliaisonServer);
+  }
+  if (/__photo__/g.test(dir)) {
+    dir = dir.replace(/__photo__/, instance.photoServerClient);
+  }
+  if (/__designer__/g.test(dir)) {
+    dir = dir.replace(/__designer__/, instance.photoServerDesigner);
   }
   return dir;
 }

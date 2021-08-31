@@ -4235,39 +4235,70 @@ DataPatch.prototype.projectMap = function () {
       [ online, "설계 변경", "premium" ],
     ];
 
-    endEvent = function (e) {
-      let onoffLine;
-      let inputs0 = document.querySelectorAll(".inputTargetOne");
-      let inputs1 = document.querySelectorAll(".inputTargetTwo");
-      let totalString = '';
+    endEvent = async function (e) {
+      try {
+        let onoffLine;
+        let inputs0 = document.querySelectorAll(".inputTargetOne");
+        let inputs1 = document.querySelectorAll(".inputTargetTwo");
+        let totalString = '';
+        let designer;
+        let onlineAble, designerAble;
+        let proid, project;
+        let x, y;
 
-      if (document.querySelector(".inputTargetZero").textContent === "온라인") {
-        onoffLine = "온라인";
-      } else {
-        onoffLine = "오프라인";
-      }
-
-      for (let i = 0; i < inputs0.length; i++) {
-        if (inputs0[i].getAttribute("switch") === "on") {
-          totalString += inputs0[i].getAttribute("target");
-          totalString += ' ';
+        proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
+        if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
+          proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
         }
-      }
-      for (let i = 0; i < inputs1.length; i++) {
-        if (inputs1[i].getAttribute("switch") === "on") {
-          totalString += inputs1[i].getAttribute("target");
+        project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
+        designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid: project.desid } }, "/getDesigners", { equal: true }))[0];
+
+        onlineAble = true;
+        if (document.querySelector(".inputTargetZero").textContent === "온라인") {
+          onoffLine = "온라인";
+          if (!designer.analytics.project.online) {
+            onlineAble = false;
+          }
+        } else {
+          onoffLine = "오프라인";
         }
+
+        for (let i = 0; i < inputs0.length; i++) {
+          if (inputs0[i].getAttribute("switch") === "on") {
+            totalString += inputs0[i].getAttribute("target");
+            totalString += ' ';
+            x = i;
+          }
+        }
+        for (let i = 0; i < inputs1.length; i++) {
+          if (inputs1[i].getAttribute("switch") === "on") {
+            totalString += inputs1[i].getAttribute("target");
+            y = i;
+          }
+        }
+
+        if (y === 3) {
+          y = 2;
+        }
+
+        totalString = onoffLine + " " + totalString;
+        designerAble = (designer.analytics.project.matrix[x][y] === 1);
+
+        if (onlineAble && designerAble) {
+          input.style.transition = "0s all ease";
+          input.style.color = "transparent";
+          input.value = totalString;
+          input.parentElement.style.transition = "";
+          input.parentElement.style.color = "inherit";
+          mother.removeChild(document.querySelector(".divTong"));
+          callback();
+        } else {
+          window.alert("이 디자이너는 해당 서비스를 운용할 수 없습니다!");
+        }
+
+      } catch (e) {
+        console.log(e);
       }
-
-      totalString = onoffLine + " " + totalString;
-
-      input.style.transition = "0s all ease";
-      input.style.color = "transparent";
-      input.value = totalString;
-      input.parentElement.style.transition = "";
-      input.parentElement.style.color = "inherit";
-      mother.removeChild(document.querySelector(".divTong"));
-      callback();
     };
 
     input.value = "입력중";
@@ -4479,6 +4510,7 @@ DataPatch.prototype.projectMap = function () {
       bottom: String(0),
       width: String(iconWidth) + ea,
       left: "calc(50% - " + String(iconWidth / 2) + ea + ")",
+      cursor: "pointer",
     };
     for (let i in style) {
       svg_clone.style[i] = style[i];

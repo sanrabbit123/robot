@@ -211,7 +211,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
     const { host } = this.address.homeinfo.ghost;
     const { requestSystem } = this.mother;
     const proid = arg;
-    let kakaoInstance, cliid, name, phone;
+    let kakaoInstance, cliid, name, phone, client;
     return new Promise(function (resolve, reject) {
       back.getProjectById(proid).then(function (project) {
         if (project === null) {
@@ -219,7 +219,8 @@ Robot.prototype.proposalMaker = function (button, arg) {
         }
         cliid = project.cliid;
         return back.getClientById(cliid);
-      }).then(function (client) {
+      }).then(function (data) {
+        client = data;
         name = client.name;
         phone = client.phone;
         kakaoInstance = new KakaoTalk();
@@ -228,6 +229,14 @@ Robot.prototype.proposalMaker = function (button, arg) {
         return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
       }).then(function () {
         return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": (new Date()) } ]);
+      }).then(() => {
+        return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateLog", {
+          id: cliid,
+          column: "action",
+          position: "requests.0.analytics.response.action",
+          pastValue: client.requests[0].analytics.response.action.value,
+          finalValue: "제안 피드백 예정"
+        }, { headers: { "Content-Type": "application/json" } });
       }).then(function () {
         return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 피드백 예정" } ]);
       }).then(function () {
