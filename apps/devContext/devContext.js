@@ -62,8 +62,8 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-    console.log(await ghostRequest("ls", { target: "__photo__" }));
-
+    // console.log(await ghostRequest("ls", { target: "__photo__" }));
+    
 
 
 
