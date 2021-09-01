@@ -466,7 +466,6 @@ DataRouter.prototype.rou_get_Trigger = function () {
 DataRouter.prototype.rou_get_ServerSent = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
   const { readFileSync } = require(`fs`);
   let obj = {};
@@ -488,7 +487,6 @@ DataRouter.prototype.rou_get_ServerSent = function () {
       const pusher = setInterval(async function () {
         try {
           log_new = String(readFileSync(instance.dir + "/log/" + thisPath + "_latest.json"));
-          console.log(log_new);
           if (log_new !== log_past) {
             sseStream.write({ event: 'updateTong', data: log_new });
           }
@@ -4012,43 +4010,6 @@ DataRouter.prototype.rou_post_callTo = function () {
   return obj;
 }
 
-DataRouter.prototype.rou_post_serviceConverting = function () {
-  const instance = this;
-  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
-  const bill = new BillMaker();
-  const { equalJson } = this.mother;
-  let obj = {};
-  obj.link = "/serviceConverting";
-  obj.func = async function (req, res) {
-    try {
-      if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
-        throw new Error("invaild post");
-      }
-      const selfMongo = instance.mongolocal;
-      const { proid, method, serid } = equalJson(req.body);
-      await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongolocal });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "success" }));
-    } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message, channel: "#error_log" });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "error" }));
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
 
 DataRouter.policy = function () {
   let text = '';
@@ -4699,7 +4660,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
                 position: "requests.0.analytics.response.action",
                 pastValue: client.requests[0].analytics.response.action.value,
                 finalValue: "제안 발송 예정"
-              }, { headers: { "Content-Type": "application/json" } });
+              }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
             }).then(() => {
               return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ], { selfMongo: instance.mongo });
             }).then(() => {

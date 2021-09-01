@@ -516,10 +516,6 @@ DataPatch.prototype.clientStandard = function () {
       name: "사진",
       width: 100,
     },
-    preferPicture: {
-      name: "선호 사진",
-      width: 100,
-    },
     phone: {
       name: "연락처",
       width: 120,
@@ -1596,7 +1592,6 @@ DataPatch.prototype.clientMap = function () {
     movein: { name: "예상 종료일", position: "requests.0.analytics.date.space.movein", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     expected: { name: "입주 예정일", position: "requests.0.request.space.resident.expected", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     spacePicture: { name: "사진", position: "requests.0.analytics.picture.space.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
-    preferPicture: { name: "선호 사진", position: "requests.0.analytics.picture.prefer.boo", type: "boolean", items: [ "제출", "미제출" ], searchBoo: false },
   };
   return map;
 }

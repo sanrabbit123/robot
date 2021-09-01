@@ -101,9 +101,10 @@ BridgeCloud.returnTimeline = function () {
   return (zeroAddition(year) + "-" + zeroAddition(month) + "-" + zeroAddition(day) + " " + zeroAddition(hours) + ":" + zeroAddition(minutes) + ":" + zeroAddition(seconds));
 }
 
-BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
+BridgeCloud.prototype.bridgeToGoogle = async function (obj, option = { selfMongo: null }) {
   const instance = this;
-  const { shell, slack_bot, shellLink, googleSystem, ghostRequest } = this.mother;
+  const back = this.back;
+  const { shell, slack_bot, shellLink, googleSystem, ghostRequest, requestSystem } = this.mother;
   try {
     const { tong, folder } = obj;
     let tongKeys = Object.keys(tong);
@@ -128,14 +129,32 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
 
     let message = "";
     let already, updatePortfolio;
+    let client, designer;
 
     if (obj.mode === "client") {
       message = obj.name + "(" + obj.cliid + ") 고객님의 파일 전송을 완료하였습니다!\n";
-      message += "console : " + "https://" + instance.address.backinfo.host + "/client?cliid=" + obj.cliid + "\n";
-      message += "drive : " + "https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-      ghostRequest("/voice", { text: obj.name + " 고객님의 새로운 파일이 전송되었어요!" }).catch((err) => {
+
+      back.getClientById(obj.cliid, option).then((data) => {
+        if (data === null) {
+          throw new Error("invaild cliid");
+        } else {
+          client = data;
+        }
+        return back.updateClient([ { cliid: obj.cliid }, { "requests.0.analytics.picture.space.boo": true, "requests.0.analytics.picture.prefer.boo": true } ], option);
+      }).then(() => {
+        return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateLog", {
+          id: obj.cliid,
+          column: "spacePicture",
+          position: "requests.0.analytics.picture.space.boo",
+          pastValue: client.requests[0].analytics.picture.space.boo,
+          finalValue: true
+        }, { headers: { "origin": "https://" + instance.address.bridgeinfo.host, "Content-Type": "application/json" } });
+      }).then(() => {
+        return ghostRequest("/voice", { text: obj.name + " 고객님의 새로운 파일이 전송되었어요!" });
+      }).catch((err) => {
         console.log(err);
+        slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 (bridgeToGoogle) : " + err.message, channel: "#error_log" });
       });
 
     } else if (obj.mode === "designer") {
@@ -162,7 +181,7 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj) {
 
     shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + folder)}`);
   } catch (e) {
-    slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 : " + e, channel: "#error_log" });
+    slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 (bridgeToGoogle) : " + e.message, channel: "#error_log" });
   }
 }
 
@@ -1064,7 +1083,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
           if (cliid !== null) {
             //upload google drive
-            instance.bridgeToGoogle({ tong: fileTong, name: name, phone: phone, mode: "client", cliid: cliid, folder: cilentFolderName });
+            instance.bridgeToGoogle({ tong: fileTong, name: name, phone: phone, mode: "client", cliid: cliid, folder: cilentFolderName }, { selfMongo: MONGOC });
             //kakao and slack
             KAKAO.sendTalk("photo", name, phone);
             slack_bot.chat.postMessage({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
@@ -1139,7 +1158,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
 
           //upload google drive
-          instance.bridgeToGoogle({ name: designer, phone: phone, tong: fileTong, folder: designerFolderName, mode: "designer" });
+          instance.bridgeToGoogle({ name: designer, phone: phone, tong: fileTong, folder: designerFolderName, mode: "designer" }, { selfMongo: MONGOC });
 
           //kakao and slack
           KAKAO.sendTalk("photo", designer, phone);
