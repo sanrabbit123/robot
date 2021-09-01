@@ -3927,6 +3927,33 @@ DataRouter.prototype.rou_post_pythonPass = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_ghostPass = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { ghostRequest, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/ghostPass_clientPhoto" ];
+  obj.func = async function (req, res) {
+    try {
+      const url = req.url.replace(/^\//gi, '');
+      if (url.split('_').length < 2) {
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ message: "OK" }));
+      } else {
+        const path = url.split('_')[1].trim();
+        let ghostResponse;
+        ghostResponse = await ghostRequest(path, equalJson(req.body));
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify(ghostResponse));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_callTo = function () {
   const instance = this;
   const back = this.back;
