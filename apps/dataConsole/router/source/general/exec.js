@@ -53,21 +53,23 @@ document.addEventListener("DOMContentLoaded", async function (e) {
             if (typeof value !== "string") {
               finalValue = String(value);
             }
-            if (thisMap[column].type === "boolean") {
-              if (!thisMap[column].items.includes(finalValue)) {
-                if (/true/gi.test(finalValue) || /True/gi.test(finalValue) || /1/gi.test(finalValue)) {
-                  finalValue = thisMap[column].items[0];
-                } else {
-                  finalValue = thisMap[column].items[1];
+            if (thisMap[column] !== undefined) {
+              if (thisMap[column].type === "boolean") {
+                if (!thisMap[column].items.includes(finalValue)) {
+                  if (/true/gi.test(finalValue) || /True/gi.test(finalValue) || /1/gi.test(finalValue)) {
+                    finalValue = thisMap[column].items[0];
+                  } else {
+                    finalValue = thisMap[column].items[1];
+                  }
                 }
               }
-            }
-            if (thisMap[column].moneyBoo === true) {
-              finalValue = GeneralJs.autoComma(Number(finalValue.replace(/[^0-9\.\-]/gi, '')));
-            }
-            if (thisMap[column].type === "date") {
-              if (/^1[6789]/.test(finalValue)) {
-                finalValue = '-';
+              if (thisMap[column].moneyBoo === true) {
+                finalValue = GeneralJs.autoComma(Number(finalValue.replace(/[^0-9\.\-]/gi, '')));
+              }
+              if (thisMap[column].type === "date") {
+                if (/^1[6789]/.test(finalValue)) {
+                  finalValue = '-';
+                }
               }
             }
 
