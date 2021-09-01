@@ -770,7 +770,9 @@ DataConsole.prototype.connect = async function (noStatic = false) {
 
           __vailHosts = [
             instance.address.backinfo.host,
+            instance.address.backinfo.host + ":3000",
             instance.address.homeinfo.ghost.host,
+            instance.address.homeinfo.ghost.host + ":3000",
             "localhost:3000",
             "localhost:8080",
             instance.address.officeinfo.ghost.host,
@@ -831,12 +833,6 @@ DataConsole.prototype.connect = async function (noStatic = false) {
 
     //set binary
     // await this.setBinary();
-
-    //error handle
-    // app.use(function (req, res, next) {
-    //   res.status(404);
-    //   res.send('<script>window.location.href = "https://' + instance.address.backinfo.host + '/client"</script>');
-    // });
 
     //server on
     https.createServer(pems, app).listen(3000, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });

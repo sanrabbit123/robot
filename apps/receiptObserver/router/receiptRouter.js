@@ -1040,6 +1040,42 @@ ReceiptRouter.prototype.rou_post_travelReconfig = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_serviceConverting = function () {
+  const instance = this;
+  const bill = this.bill;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/serviceConverting";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { proid, method, serid } = equalJson(req.body);
+      await bill.serviceConverting(proid, "online", "s2011_aa02s", { selfMongo, selfCoreMongo: instance.mongo });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 

@@ -154,7 +154,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
                 position: "requests.0.analytics.response.action",
                 pastValue: client.requests[0].analytics.response.action.value,
                 finalValue: "제안 발송 예정"
-              }, { headers: { "Content-Type": "application/json" } });
+              }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
             }).then(() => {
               return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ], { selfMongo: instance.mongo });
             }).then(() => {

@@ -2096,6 +2096,47 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let newCommission;
     let firstResponseIndex;
     let firstResponseFirstItemIndex;
+    let returnObject;
+
+    returnObject = {
+      service: {
+        from: {
+          serid: "",
+          xValue: "",
+          online: false
+        },
+        to: {
+          serid: "",
+          xValue: ""
+        }
+      },
+      request: {
+        from: {
+          supply: 0,
+          vat: 0,
+          consumer: 0
+        },
+        to: {
+          supply: 0,
+          vat: 0,
+          consumer: 0
+        },
+        additional: false
+      },
+      response: {
+        from: {
+          total: 0,
+          first: 0,
+          remain: 0
+        },
+        to: {
+          total: 0,
+          first: 0,
+          remain: 0
+        },
+        additional: false
+      }
+    };
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -2154,6 +2195,20 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     if (newFeeObject.detail[method] === 0) {
       return { error: "unable in this service" };
     } else {
+
+      returnObject.service.from.serid = project.service.serid;
+      returnObject.service.from.xValue = project.service.xValue;
+      returnObject.service.from.online = project.service.online;
+
+      returnObject.service.to.serid = serid;
+      returnObject.service.to.xValue = project.service.xValue;
+      returnObject.service.to.online = project.service.online;
+
+      returnObject.request.from.supply
+      returnObject.request.from.supply
+      returnObject.request.from.supply
+      
+
       thisBill = await this.getBillsByQuery({
         $and: [
           { "links.proid": project.proid },
@@ -2259,6 +2314,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
           pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
           updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
         } else if (newRequestAmount > 0) {
+          returnObject.request.additional = true;
           await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC });
           pastRemainArr[remainItemIndex].unit.price = newRequestAmount;
           pastRemainArr[remainItemIndex].amount.supply = newRequestAmount * pastRemainArr[remainItemIndex].unit.number;
@@ -2378,6 +2434,8 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     if (!selfCoreBoo) {
       await MONGOCOREC.close();
     }
+
+    return returnObject;
 
   } catch (e) {
     console.log(e);

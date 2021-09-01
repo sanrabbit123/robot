@@ -468,6 +468,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
   const back = this.back;
   const { fileSystem } = this.mother;
   const SseStream = require(`${this.module}/sseStream.js`);
+  const { readFileSync } = require(`fs`);
   let obj = {};
   obj.link = [ "/sse/get_client", "/sse/get_designer", "/sse/get_project", "/sse/get_contents" ];
   obj.func = async function (req, res) {
@@ -486,7 +487,8 @@ DataRouter.prototype.rou_get_ServerSent = function () {
 
       const pusher = setInterval(async function () {
         try {
-          log_new = await fileSystem(`readString`, [ instance.dir + "/log/" + thisPath + "_latest.json" ]);
+          log_new = String(readFileSync(instance.dir + "/log/" + thisPath + "_latest.json"));
+          console.log(log_new);
           if (log_new !== log_past) {
             sseStream.write({ event: 'updateTong', data: log_new });
           }
@@ -494,7 +496,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
         } catch (e) {
           console.log(e);
         }
-      }, 1000);
+      }, 400);
 
       res.on('close', function () {
         clearInterval(pusher);
@@ -559,7 +561,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
             totalOrder = connectionNumber;
           }
           try {
-            trigger = JSON.parse(readFileSync(sseFile));
+            trigger = JSON.parse(String(readFileSync(sseFile)));
           } catch (e) {
             trigger = [];
           }
@@ -4005,6 +4007,43 @@ DataRouter.prototype.rou_post_callTo = function () {
       instance.mother.slack_bot.chat.postMessage({ text: "Click Dial 서버 문제 생김 : " + JSON.stringify(req.body, null, 2) + "\n\n" + JSON.stringify(instance.members, null, 2), channel: "#error_log" });
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "OK" }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_serviceConverting = function () {
+  const instance = this;
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const bill = new BillMaker();
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = "/serviceConverting";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { proid, method, serid } = equalJson(req.body);
+      await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongolocal });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
     }
   }
   return obj;

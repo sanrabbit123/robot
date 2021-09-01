@@ -62,7 +62,6 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
 
 
-    console.log(await ghostRequest("clientPhoto", { cliid: "c2101_aa20s" }));
 
 
 
@@ -296,7 +295,10 @@ DevContext.prototype.launching = async function () {
 
     // console.log(await bill.travelInjection("remain", proid, "offline", 4, { selfMongo: this.MONGOLOCALC }));
     // console.log(await bill.travelReconfig("first", proid, "offline", 0, 2, { selfMongo: this.MONGOLOCALC }));
-    // await bill.serviceConverting(proid, "online", "s2011_aa02s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC })
+    console.log(await bill.serviceConverting(proid, "online", "s2011_aa02s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
+
+
+
 
 
 
@@ -1138,9 +1140,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김현애",
-    //     designer: "박주령",
-    //     link: "https://drive.google.com/drive/folders/1doatalOQU12nzCPMkJ1WZ-FjDt1z3Di6",
+    //     client: "엄진희",
+    //     designer: "임은숙",
+    //     link: "https://drive.google.com/drive/folders/1jkGz4y5CGDUbP-S0iQ96Bwj-aZhESm3H",
     //   },
     // ]);
 

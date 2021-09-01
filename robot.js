@@ -236,7 +236,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
           position: "requests.0.analytics.response.action",
           pastValue: client.requests[0].analytics.response.action.value,
           finalValue: "제안 피드백 예정"
-        }, { headers: { "Content-Type": "application/json" } });
+        }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
       }).then(function () {
         return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 피드백 예정" } ]);
       }).then(function () {

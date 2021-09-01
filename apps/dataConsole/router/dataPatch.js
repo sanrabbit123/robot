@@ -4245,10 +4245,13 @@ DataPatch.prototype.projectMap = function () {
         let onlineAble, designerAble;
         let proid, project;
         let x, y;
+        let currentMode;
 
         proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
+        currentMode = "row";
         if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
           proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+          currentMode = "card";
         }
         project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
         designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid: project.desid } }, "/getDesigners", { equal: true }))[0];
@@ -4285,13 +4288,12 @@ DataPatch.prototype.projectMap = function () {
         designerAble = (designer.analytics.project.matrix[x][y] === 1);
 
         if (onlineAble && designerAble) {
-          input.style.transition = "0s all ease";
-          input.style.color = "transparent";
-          input.value = totalString;
-          input.parentElement.style.transition = "";
-          input.parentElement.style.color = "inherit";
-          mother.removeChild(document.querySelector(".divTong"));
-          callback();
+          if (window.confirm("서비스를 바꾸시겠습니까? 추가 견적이 발생할 경우, 고객님께 추가 견적에 대한 안내 알림톡이 자동으로 발송됩니다!")) {
+            const { message } = await GeneralJs.ajaxJson({ proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` }, "/serviceConverting");
+            if (message === "success") {
+              window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + (currentMode === "card" ? "?proid=" + proid : "");
+            }
+          }
         } else {
           window.alert("이 디자이너는 해당 서비스를 운용할 수 없습니다!");
         }
