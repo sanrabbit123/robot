@@ -892,8 +892,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
 
         if (mode !== "fileMode") {
-          preferredPhoto = preferredPhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), ''))}`; });
-          sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), ''))}`; });
+          preferredPhoto = preferredPhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
+          sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
         }
         res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
