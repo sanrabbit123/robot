@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       "project"
     ];
     const thisPath = window.location.pathname.split("?")[0].replace(/\//g, '');
-    const thisMap = (DataPatch[thisPath + "Map"])();
     if (sseTarget.includes(thisPath)) {
+      const thisMap = (DataPatch[thisPath + "Map"])();
       const es = new EventSource("https://" + SSEHOST + ":3000/sse/get_" + thisPath);
       es.addEventListener("updateTong", function (e) {
         let domTarget, domTargetChild, domTargetGray, domTargetGrayChild;

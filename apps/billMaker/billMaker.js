@@ -2045,6 +2045,48 @@ BillMaker.prototype.designerSelect = async function (proid, desid, option = { se
   }
 }
 
+BillMaker.prototype.convertingDummy = function () {
+  return {
+    service: {
+      from: {
+        serid: "",
+        xValue: "",
+        online: false
+      },
+      to: {
+        serid: "",
+        xValue: ""
+      }
+    },
+    request: {
+      from: {
+        supply: 0,
+        vat: 0,
+        consumer: 0
+      },
+      to: {
+        supply: 0,
+        vat: 0,
+        consumer: 0
+      },
+      additional: false
+    },
+    response: {
+      from: {
+        total: 0,
+        first: 0,
+        remain: 0
+      },
+      to: {
+        total: 0,
+        first: 0,
+        remain: 0
+      },
+      additional: false
+    }
+  };
+}
+
 BillMaker.prototype.serviceConverting = async function (proid, method, serid, option = { selfMongo: null, selfConsoleMongo: null }) {
   if (typeof proid !== "string" || typeof method !== "string" || typeof serid !== "string") {
     throw new Error("invaild input");
@@ -2098,45 +2140,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let firstResponseFirstItemIndex;
     let returnObject;
 
-    returnObject = {
-      service: {
-        from: {
-          serid: "",
-          xValue: "",
-          online: false
-        },
-        to: {
-          serid: "",
-          xValue: ""
-        }
-      },
-      request: {
-        from: {
-          supply: 0,
-          vat: 0,
-          consumer: 0
-        },
-        to: {
-          supply: 0,
-          vat: 0,
-          consumer: 0
-        },
-        additional: false
-      },
-      response: {
-        from: {
-          total: 0,
-          first: 0,
-          remain: 0
-        },
-        to: {
-          total: 0,
-          first: 0,
-          remain: 0
-        },
-        additional: false
-      }
-    };
+    returnObject = this.convertingDummy();
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -2314,7 +2318,6 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
         await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
         await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-        returnObject.response.additional = true;
 
       } else {
 
@@ -2394,7 +2397,6 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
           await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
           await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
           await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-          returnObject.response.additional = true;
 
         } else {
 

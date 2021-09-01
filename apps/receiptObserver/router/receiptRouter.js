@@ -1042,8 +1042,10 @@ ReceiptRouter.prototype.rou_post_travelReconfig = function () {
 
 ReceiptRouter.prototype.rou_post_serviceConverting = function () {
   const instance = this;
+  const back = this.back;
   const bill = this.bill;
-  const { equalJson } = this.mother;
+  const address = this.address;
+  const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/serviceConverting";
   obj.func = async function (req, res) {
@@ -1053,7 +1055,37 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
       }
       const selfMongo = instance.mongolocal;
       const { proid, method, serid } = equalJson(req.body);
-      await bill.serviceConverting(proid, "online", "s2011_aa02s", { selfMongo, selfCoreMongo: instance.mongo });
+      const report = await bill.serviceConverting(proid, "online", "s2011_aa02s", { selfMongo, selfCoreMongo: instance.mongo });
+
+      // {
+      //   service: {
+      //     from: { serid: 's2011_aa02s', xValue: 'B', online: true },
+      //     to: { serid: 's2011_aa01s', xValue: 'B', online: true }
+      //   },
+      //   request: {
+      //     from: { supply: 2300000, vat: 230000, consumer: 2530000 },
+      //     to: { supply: 2089000, vat: 208900, consumer: 2297900 },
+      //     additional: false
+      //   },
+      //   response: {
+      //     from: { total: 1556860, first: 778430, remain: 778430 },
+      //     to: { total: 1414040, first: 707020, remain: 707020 },
+      //     additional: false
+      //   }
+      // }
+      //
+      // await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
+      //   id: obj.cliid,
+      //   column: "spacePicture",
+      //   position: "requests.0.analytics.picture.space.boo",
+      //   pastValue: client.requests[0].analytics.picture.space.boo,
+      //   finalValue: true
+      // }, { headers: { "origin": "https://" + address.bridgeinfo.host, "Content-Type": "application/json" } });
+
+
+
+
+
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
