@@ -132,6 +132,9 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj, option = { selfMongo
     let client, designer;
 
     if (obj.mode === "client") {
+      if (obj.cliid === "테스트") {
+        obj.cliid = "c1801_aa01s";
+      }
       message = obj.name + "(" + obj.cliid + ") 고객님의 파일 전송을 완료하였습니다!\n";
       slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
 
