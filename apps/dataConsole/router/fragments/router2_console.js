@@ -333,7 +333,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res) {
     try {
-      let { thisId, requestIndex, column, value, pastValue, user, thisCase } = req.body;
+      let { thisId, requestIndex, column, value, pastValue, user, thisCase } = equalJson(req.body);
       let thisPath;
       let map;
       let whereQuery, updateQuery;
@@ -556,7 +556,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
 DataRouter.prototype.rou_post_updateLog = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/updateLog" ];
   obj.func = async function (req, res) {
@@ -564,7 +564,7 @@ DataRouter.prototype.rou_post_updateLog = function () {
       if (req.body.id === undefined || req.body.column === undefined || req.body.position === undefined || req.body.pastValue === undefined || req.body.finalValue === undefined) {
         throw new Error("invaild post");
       }
-      const { id: thisId, column, position, pastValue, finalValue } = req.body;
+      const { id: thisId, column, position, pastValue, finalValue } = equalJson(req.body);
       const fixedEmail = "uragenbooks@gmail.com";
       const members = instance.members;
       const logDir = `${instance.dir}/log`;

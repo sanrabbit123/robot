@@ -48,11 +48,17 @@ document.addEventListener("DOMContentLoaded", async function (e) {
             const { path, who, where, column, value, date } = obj;
             let finalValue;
             let white, whiteChildren, whiteTarget;
+            let tempFunction;
 
             finalValue = value;
             if (typeof value !== "string") {
-              finalValue = String(value);
+              if (typeof value === "object" && !(value instanceof Date)) {
+                finalValue = value;
+              } else {
+                finalValue = String(value);
+              }
             }
+
             if (thisMap[column] !== undefined) {
               if (thisMap[column].type === "boolean") {
                 if (!thisMap[column].items.includes(finalValue)) {
@@ -69,6 +75,14 @@ document.addEventListener("DOMContentLoaded", async function (e) {
               if (thisMap[column].type === "date") {
                 if (/^1[6789]/.test(finalValue)) {
                   finalValue = '-';
+                }
+              }
+              if (thisMap[column].type === "object" && typeof finalValue === "object") {
+                if (thisMap[column].stringFunction !== undefined) {
+                  tempFunction = new Function("value", thisMap[column].stringFunction);
+                  finalValue = tempFunction(finalValue);
+                } else {
+                  finalValue = JSON.stringify(finalValue);
                 }
               }
             }

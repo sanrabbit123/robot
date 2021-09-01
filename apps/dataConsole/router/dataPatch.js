@@ -4284,10 +4284,17 @@ DataPatch.prototype.projectMap = function () {
 
         if (onlineAble && designerAble) {
           if (window.confirm("서비스를 바꾸시겠습니까? 추가 견적이 발생할 경우, 고객님께 추가 견적에 대한 안내 알림톡이 자동으로 발송됩니다!")) {
-            const { message } = await GeneralJs.ajaxJson({ proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` }, "/serviceConverting");
-            if (message === "success") {
+            GeneralJs.ajaxJson({ proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` }, PYTHONHOST + "/serviceConverting").then(() => {
               window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + (currentMode === "card" ? "?proid=" + proid : "");
-            }
+            }).catch((err) => {
+              throw new Error(err.message);
+            });
+            input.style.transition = "0s all ease";
+            input.style.color = "transparent";
+            input.value = totalString;
+            input.parentElement.style.transition = "";
+            input.parentElement.style.color = "inherit";
+            mother.removeChild(document.querySelector(".divTong"));
           }
         } else {
           window.alert("이 디자이너는 해당 서비스를 운용할 수 없습니다!");
@@ -4516,6 +4523,35 @@ DataPatch.prototype.projectMap = function () {
     div_clone.appendChild(svg_clone);
 
     mother.appendChild(div_clone);
+  };
+  const serviceToString = function (value) {
+    let str;
+
+    if (value.online) {
+      str = "온라인 ";
+    } else {
+      str = "오프라인 ";
+    }
+
+    if (value.serid === "s2011_aa01s") {
+      str += "홈퍼니싱 ";
+    } else if (value.serid === "s2011_aa02s") {
+      str += "홈스타일링 ";
+    } else if (value.serid === "s2011_aa03s") {
+      str += "토탈 스타일링 ";
+    } else if (value.serid === "s2011_aa04s") {
+      str += "설계 변경 ";
+    }
+
+    if (value.xValue === 'M') {
+      str += "mini";
+    } else if (value.xValue === 'B') {
+      str += "basic";
+    } else if (value.xValue === 'P') {
+      str += "premium";
+    }
+
+    return str;
   };
 
   const designerToObject = function (value, pastValue, vaildMode) {
@@ -5299,7 +5335,7 @@ DataPatch.prototype.projectMap = function () {
     cliid: { name: "고객", position: "cliid", type: "string", searchBoo: true, },
     desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
     designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    service: { name: "서비스", position: "service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    service: { name: "서비스", position: "service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: serviceToString.toString().replace(/\}$/, '').replace(/function \(value\) \{/gi, ''), searchBoo: true, },
     status: { name: "진행 상태", position: "process.status", type: "object", items: [ '대기', '진행중', '완료', '홀딩', '드랍' ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     action: { name: "응대", position: "process.action", type: "string", items: [ "응대 대기", "현장 미팅", "1차 제안", "수정 제안", "시공 진행", "제품 구매", "배송중", "촬영 컨택", "촬영 대기", "사진 대기", "사진 공유", "컨텐츠 공유", "응대 종료", "해당 없음" ], searchBoo: true, },
     next: { name: "전화 예정일", position: "process.call.next", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },

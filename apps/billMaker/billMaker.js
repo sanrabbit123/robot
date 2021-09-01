@@ -2093,9 +2093,10 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
   }
   const instance = this;
   const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+  const doingSignature = "billMaker_serviceConvertingDoing_" + proid;
   const work = new BackWorker();
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep } = this.mother;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
   const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
   const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
   try {
@@ -2139,6 +2140,11 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let firstResponseIndex;
     let firstResponseFirstItemIndex;
     let returnObject;
+
+    while (await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) {
+      await sleep(300);
+    }
+    await fileSystem(`write`, [ `${process.cwd()}/temp/${doingSignature}.json`, `{ "doing": 1 }` ]);
 
     returnObject = this.convertingDummy();
 
@@ -2453,6 +2459,8 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     if (!selfCoreBoo) {
       await MONGOCOREC.close();
     }
+
+    await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
 
     return returnObject;
 

@@ -934,7 +934,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res) {
     try {
-      let { thisId, requestIndex, column, value, pastValue, user, thisCase } = req.body;
+      let { thisId, requestIndex, column, value, pastValue, user, thisCase } = equalJson(req.body);
       let thisPath;
       let map;
       let whereQuery, updateQuery;
@@ -1157,7 +1157,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
 DataRouter.prototype.rou_post_updateLog = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, equalJson } = this.mother;
   let obj = {};
   obj.link = [ "/updateLog" ];
   obj.func = async function (req, res) {
@@ -1165,7 +1165,7 @@ DataRouter.prototype.rou_post_updateLog = function () {
       if (req.body.id === undefined || req.body.column === undefined || req.body.position === undefined || req.body.pastValue === undefined || req.body.finalValue === undefined) {
         throw new Error("invaild post");
       }
-      const { id: thisId, column, position, pastValue, finalValue } = req.body;
+      const { id: thisId, column, position, pastValue, finalValue } = equalJson(req.body);
       const fixedEmail = "uragenbooks@gmail.com";
       const members = instance.members;
       const logDir = `${instance.dir}/log`;
@@ -4005,6 +4005,109 @@ DataRouter.prototype.rou_post_callTo = function () {
       instance.mother.slack_bot.chat.postMessage({ text: "Click Dial 서버 문제 생김 : " + JSON.stringify(req.body, null, 2) + "\n\n" + JSON.stringify(instance.members, null, 2), channel: "#error_log" });
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "OK" }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_serviceConverting = function () {
+  const instance = this;
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const back = this.back;
+  const bill = new BillMaker();
+  const address = this.address;
+  const { equalJson, requestSystem, sleep } = this.mother;
+  let obj = {};
+  obj.link = "/serviceConverting";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { proid, method, serid } = equalJson(req.body);
+      const project = await back.getProjectById(proid, { selfMongo: instance.mongolocal });
+      const firstContract = project.process.contract.first.calculation.amount;
+      const pastService = equalJson(JSON.stringify(project.service));
+      const report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongolocal });
+      const timeConst = 410;
+      console.log(report);
+      const map = [
+        {
+          column: "service",
+          position: "service",
+          pastValue: report.service.from,
+          finalValue: report.service.to,
+        },
+        {
+          column: "remainSupply",
+          position: "process.contract.remain.calculation.amount.supply",
+          pastValue: report.request.from.supply,
+          finalValue: report.request.to.supply,
+        },
+        {
+          column: "remainVat",
+          position: "process.contract.remain.calculation.amount.vat",
+          pastValue: report.request.from.vat,
+          finalValue: report.request.to.vat,
+        },
+        {
+          column: "remainConsumer",
+          position: "process.contract.remain.calculation.amount.consumer",
+          pastValue: report.request.from.consumer,
+          finalValue: report.request.to.consumer,
+        },
+        {
+          column: "remainPure",
+          position: "process.contract.remain.calculation.amount.consumer",
+          pastValue: report.request.from.consumer - firstContract,
+          finalValue: report.request.to.consumer - firstContract,
+        },
+        {
+          column: "paymentsTotalAmount",
+          position: "process.calculation.payments.totalAmount",
+          pastValue: report.response.from.total,
+          finalValue: report.response.to.total,
+        },
+        {
+          column: "paymentsFirstAmount",
+          position: "process.calculation.payments.first.amount",
+          pastValue: report.response.from.first,
+          finalValue: report.response.to.first,
+        },
+        {
+          column: "paymentsRemainAmount",
+          position: "process.calculation.payments.remain.amount",
+          pastValue: report.response.from.remain,
+          finalValue: report.response.to.remain,
+        },
+      ];
+
+      const { Agent } = require(`https`);
+      const agent = new Agent({ rejectUnauthorized: false });
+
+      for (let { column, position, pastValue, finalValue } of map) {
+        await requestSystem("https://" + "localhost" + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { httpsAgent: agent, headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
+        await sleep(timeConst);
+      }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
     }
   }
   return obj;
