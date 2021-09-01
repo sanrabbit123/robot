@@ -2204,10 +2204,13 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       returnObject.service.to.xValue = project.service.xValue;
       returnObject.service.to.online = project.service.online;
 
-      returnObject.request.from.supply
-      returnObject.request.from.supply
-      returnObject.request.from.supply
-      
+      returnObject.request.from.supply = project.process.contract.remain.calculation.amount.supply;
+      returnObject.request.from.vat = project.process.contract.remain.calculation.amount.vat;
+      returnObject.request.from.consumer = project.process.contract.remain.calculation.amount.consumer;
+
+      returnObject.response.from.total = project.process.calculation.payments.totalAmount;
+      returnObject.response.from.first = project.process.calculation.payments.first.amount;
+      returnObject.response.from.remain = project.process.calculation.payments.remain.amount;
 
       thisBill = await this.getBillsByQuery({
         $and: [
@@ -2278,6 +2281,14 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       projectUpdateQuery["process.calculation.payments.totalAmount"] = projectUpdateQuery["process.calculation.payments.first.amount"] * 2;
       await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
 
+      returnObject.request.to.supply = projectUpdateQuery["process.contract.remain.calculation.amount.supply"];
+      returnObject.request.to.vat = projectUpdateQuery["process.contract.remain.calculation.amount.vat"];
+      returnObject.request.to.consumer = projectUpdateQuery["process.contract.remain.calculation.amount.consumer"];
+
+      returnObject.response.to.total = projectUpdateQuery["process.calculation.payments.totalAmount"];
+      returnObject.response.to.first = projectUpdateQuery["process.calculation.payments.first.amount"];
+      returnObject.response.to.remain = projectUpdateQuery["process.calculation.payments.remain.amount"];
+
       newCommission = Math.floor((newSupply * (percentage / 100)) / 10) * 10;
 
       whereQuery = { bilid };
@@ -2303,6 +2314,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
         await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
         await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+        returnObject.response.additional = true;
 
       } else {
 
@@ -2382,6 +2394,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
           await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
           await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
           await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+          returnObject.response.additional = true;
 
         } else {
 
@@ -2421,6 +2434,10 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
           projectUpdateQuery["process.calculation.payments.remain.amount"] = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
           projectUpdateQuery["process.calculation.payments.totalAmount"] = pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price + pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
           await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+          returnObject.response.to.total = projectUpdateQuery["process.calculation.payments.totalAmount"];
+          returnObject.response.to.first = projectUpdateQuery["process.calculation.payments.first.amount"];
+          returnObject.response.to.remain = projectUpdateQuery["process.calculation.payments.remain.amount"];
 
         }
 

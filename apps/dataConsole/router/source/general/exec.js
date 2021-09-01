@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       "project"
     ];
     const thisPath = window.location.pathname.split("?")[0].replace(/\//g, '');
+    const thisMap = (DataPatch[thisPath + "Map"])();
     if (sseTarget.includes(thisPath)) {
       const es = new EventSource("https://" + SSEHOST + ":3000/sse/get_" + thisPath);
       es.addEventListener("updateTong", function (e) {
@@ -43,10 +44,33 @@ document.addEventListener("DOMContentLoaded", async function (e) {
         if (/^{/.test(e.data)) {
           const obj = JSON.parse(e.data);
           if (obj.path !== undefined && obj.who !== undefined && obj.where !== undefined && obj.column !== undefined && obj.value !== undefined && obj.date !== undefined) {
-
             //start
             const { path, who, where, column, value, date } = obj;
+            let finalValue;
             let white, whiteChildren, whiteTarget;
+
+            finalValue = value;
+            if (typeof value !== "string") {
+              finalValue = String(value);
+            }
+            if (thisMap[column].type === "boolean") {
+              if (!thisMap[column].items.includes(finalValue)) {
+                if (/true/gi.test(finalValue) || /True/gi.test(finalValue) || /1/gi.test(finalValue)) {
+                  finalValue = thisMap[column].items[0];
+                } else {
+                  finalValue = thisMap[column].items[1];
+                }
+              }
+            }
+            if (thisMap[column].moneyBoo === true) {
+              finalValue = GeneralJs.autoComma(Number(finalValue.replace(/[^0-9\.\-]/gi, '')));
+            }
+            if (thisMap[column].type === "date") {
+              if (/^1[6789]/.test(finalValue)) {
+                finalValue = '-';
+              }
+            }
+
             if (path === thisPath) {
               if (document.querySelector("." + where) !== null) {
                 domTarget = document.querySelector("." + where);
@@ -57,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                   }
                 }
                 if (domTargetChild !== null) {
-                  domTargetChild.textContent = value;
+                  domTargetChild.textContent = finalValue;
                 }
                 if (document.querySelector("." + where + "_gray") !== null) {
                   domTargetGray = document.querySelector("." + where + "_gray");
@@ -68,7 +92,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     }
                   }
                   if (domTargetGrayChild !== null) {
-                    domTargetGrayChild.textContent = value;
+                    domTargetGrayChild.textContent = finalValue;
                   }
                 }
               }
@@ -87,9 +111,8 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     }
                   }
                   if (whiteTarget !== null) {
-                    whiteTarget.textContent = value;
+                    whiteTarget.textContent = finalValue;
                   }
-                  //white update end
                 }
               }
             }
