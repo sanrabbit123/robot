@@ -3943,6 +3943,9 @@ DataPatch.prototype.projectMap = function () {
 
     mother.appendChild(div_clone);
   };
+  const accountToString = function (value) {
+    return ("계좌번호 " + value.account + " / 수신자 " + value.to + " / 증명 " + value.proof);
+  };
 
   const methodToObject = function (value, pastValue, vaildMode) {
     let obj;
@@ -4614,14 +4617,57 @@ DataPatch.prototype.projectMap = function () {
 
     originalValue = input.value;
 
-    endEvent = function (e) {
-      input.style.transition = "0s all ease";
-      input.style.color = "transparent";
-      input.value = this.getAttribute("target");
-      input.parentElement.style.transition = "";
-      input.parentElement.style.color = "inherit";
-      mother.removeChild(document.querySelector(".divTong"));
-      callback();
+    endEvent = async function (e) {
+      try {
+        let thisDesigner;
+        let proid, project;
+        let currentMode;
+        let selectedDesid, selectedDesigner;
+        let designerAble;
+        let x, y;
+
+        proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
+        currentMode = "row";
+        if (!/p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g.test(proid)) {
+          proid = mother.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+          currentMode = "card";
+        }
+        project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
+        thisDesigner = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid: project.desid } }, "/getDesigners", { equal: true }))[0];
+
+        selectedDesid = this.getAttribute("target").split(' ')[1].trim();
+        selectedDesigner = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid: selectedDesid } }, "/getDesigners", { equal: true }))[0];
+
+        x = Number(project.service.serid.split('_')[1].replace(/[^0-9]/g, '').replace(/^0/, '')) - 1;
+        y = project.service.xValue === 'M' ? 0 : (project.service.xValue === 'B' ? 1 : 2);
+
+        if (project.service.online) {
+          designerAble = (selectedDesigner.analytics.project.matrix[x][y] === 1) && selectedDesigner.analytics.project.online;
+        } else {
+          designerAble = (selectedDesigner.analytics.project.matrix[x][y] === 1);
+        }
+
+        if (designerAble) {
+          if (window.confirm("디자이너를 바꾸시겠습니까? 추가 견적이 발생할 경우, 고객님께 추가 견적에 대한 안내 알림톡이 자동으로 발송됩니다!")) {
+            GeneralJs.ajaxJson({ proid, method: (!project.service.online ? "offline" : "online"), desid: selectedDesigner.desid }, "/designerConverting").then(() => {
+              window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + (currentMode === "card" ? "?proid=" + proid : "");
+            }).catch((err) => {
+              throw new Error(err.message);
+            });
+            input.style.transition = "0s all ease";
+            input.style.color = "transparent";
+            input.value = selectedDesigner.designer + " " + selectedDesigner.desid;
+            input.parentElement.style.transition = "";
+            input.parentElement.style.color = "inherit";
+            mother.removeChild(document.querySelector(".divTong"));
+          }
+        } else {
+          window.alert("이 디자이너는 해당 서비스를 운용할 수 없습니다!");
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
     };
 
     input.value = "입력중";
@@ -4737,6 +4783,14 @@ DataPatch.prototype.projectMap = function () {
     }
 
     mother.appendChild(div_clone);
+  };
+  const designerToString = async function (value) {
+    try {
+      const designer = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { desid: value.trim() } }, "/getDesigners"))[0];
+      return designer.designer + " " + designer.desid;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const statusToObject = function (value, pastValue, vaildMode) {
@@ -5334,7 +5388,7 @@ DataPatch.prototype.projectMap = function () {
     proid: { name: "아이디", position: "proid", type: "string", searchBoo: true, },
     cliid: { name: "고객", position: "cliid", type: "string", searchBoo: true, },
     desid: { name: "디자이너", position: "desid", type: "string", searchBoo: true, },
-    designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    designer: { name: "디자이너", position: "desid", type: "object", inputFunction: designerInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: designerToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: designerToString.toString().replace(/\}$/, '').replace(/async function \(value\) \{/gi, ''), stringFunctionAsync: true, searchBoo: true, },
     service: { name: "서비스", position: "service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: serviceToString.toString().replace(/\}$/, '').replace(/function \(value\) \{/gi, ''), searchBoo: true, },
     status: { name: "진행 상태", position: "process.status", type: "object", items: [ '대기', '진행중', '완료', '홀딩', '드랍' ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     action: { name: "응대", position: "process.action", type: "string", items: [ "응대 대기", "현장 미팅", "1차 제안", "수정 제안", "시공 진행", "제품 구매", "배송중", "촬영 컨택", "촬영 대기", "사진 대기", "사진 공유", "컨텐츠 공유", "응대 종료", "해당 없음" ], searchBoo: true, },
@@ -5365,7 +5419,7 @@ DataPatch.prototype.projectMap = function () {
     formDateCancel: { name: "계약 취소", position: "process.contract.form.date.cancel", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },
     method: { name: "정산 방식", position: "process.calculation.method", type: "string", items: [ "사업자(일반)", "사업자(간이)", "프리랜서" ], searchBoo: true, },
     percentage: { name: "수수료", position: "process.calculation.percentage", type: "number", searchBoo: true, },
-    calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", inputFunction: accountInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    calculationInfo: { name: "정산 정보", position: "process.calculation.info", type: "object", inputFunction: accountInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: accountToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), stringFunction: accountToString.toString().replace(/\}$/, '').replace(/function \(value\) \{/gi, ''), searchBoo: true, },
     paymentsTotalAmount: { name: "정산 총금액", position: "process.calculation.payments.totalAmount", type: "number", searchBoo: true, moneyBoo: true },
     paymentsFirstAmount: { name: "디자이너 선금", position: "process.calculation.payments.first.amount", type: "number", searchBoo: true, moneyBoo: true },
     paymentsFirstDate: { name: "선금 지급일", position: "process.calculation.payments.first.date", type: "date", searchBoo: true, yesNo: [ "Y", "N" ], },

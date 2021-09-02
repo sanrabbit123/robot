@@ -1547,7 +1547,7 @@ ProjectJs.prototype.spreadData = async function (search = null) {
       clients = [];
     }
 
-    whereQuery = {};
+    whereQuery = { "information.contract.status": { $regex: "완료" } };
     designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
     GeneralJs.stacks.allDesignerTong = designers;
 
@@ -6097,7 +6097,21 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value, pa
       meetingDate: realtimeDesigner,
       formDateFrom: realtimeDesigner,
       formDateTo: realtimeDesigner,
-      designer: designerChange,
+      remainSupply: async function (thisCase, column, value, pastValue) {
+        try {
+          await GeneralJs.sleep(1000);
+          const { proid } = thisCase;
+          const project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects"))[0];
+          const { process: { contract, calculation } } = project;
+
+
+          console.log(contract)
+          console.log(calculation)
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
     };
 
     let tempFunction;

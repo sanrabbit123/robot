@@ -31,8 +31,11 @@ BillMaker.billDictionary = {
           info.push({ method });
           return info;
         },
-        item: (feeObject, subObj = {}) => {
-          const contractAmount = 300000;
+        item: (feeObject, subObj) => {
+          let { project, vatRatio, contractAmount } = subObj;
+          if (project.process.contract.first.calculation.amount !== 0) {
+            contractAmount = project.process.contract.first.calculation.amount * (1 / (1 + vatRatio));
+          }
           return [
             [ "designerTime", contractAmount ]
           ];
@@ -62,10 +65,19 @@ BillMaker.billDictionary = {
           info.push({ method });
           return info;
         },
-        item: (feeObject, subObj = {}) => {
-          const contractAmount = 300000;
+        item: (feeObject, subObj) => {
+          let { project, vatRatio, contractAmount } = subObj;
+          let finalNumber;
+          if (project.process.contract.first.calculation.amount !== 0) {
+            contractAmount = project.process.contract.first.calculation.amount * (1 / (1 + vatRatio));
+          }
+          if (project.process.contract.remain.calculation.amount.supply !== 0) {
+            finalNumber = project.process.contract.remain.calculation.amount.supply - contractAmount;
+          } else {
+            finalNumber = feeObject.amount - contractAmount;
+          }
           return [
-            [ "designerTime", feeObject.amount - contractAmount ]
+            [ "designerTime", finalNumber ]
           ];
         },
         target: (client, designer, project, method, subObj = {}) => {
@@ -109,7 +121,7 @@ BillMaker.billDictionary = {
           info.push({ desid: designer.desid });
           return info;
         },
-        item: (feeObject, subObj = {}) => {
+        item: (feeObject, subObj) => {
           return [
             [ "travelExpenses", 0 ]
           ];
@@ -138,8 +150,15 @@ BillMaker.billDictionary = {
           return info;
         },
         item: (feeObject, subObj) => {
+          let { project } = subObj;
+          let finalNumber;
+          if (project.process.contract.remain.calculation.amount.supply !== 0) {
+            finalNumber = project.process.contract.remain.calculation.amount.supply;
+          } else {
+            finalNumber = feeObject.amount;
+          }
           return [
-            [ "designerFeeFirst", feeObject.amount ]
+            [ "designerFeeFirst", finalNumber ]
           ];
         },
         target: (client, designer, project, method, subObj = {}) => {
@@ -151,10 +170,10 @@ BillMaker.billDictionary = {
           };
         },
         comments: [
-          "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
-          "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
-          "결제해주신 디자인비는 서비스 정책상, 홈스타일링이 끝날 때까지 홈리에종에서 보관합니다.",
-          "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
+          "홈리에종 선금 정산은 디자이너님께 드리는 총 정산 비용의 50%입니다.",
+          "프로젝트가 모두 완료되고 고객님의 컨펌이 있은 후, 잔금 정산이 될 예정입니다.",
+          "총 정산 비용은 전체 디자인비에서 해당 디자이너님의 수수료 비율을 제한 금액입니다.",
+          "해당 디자이너님의 사업자 유형에 따라 정산의 방식이 다를 수 있습니다.",
         ]
       },
       secondDesignFee: {
@@ -169,8 +188,15 @@ BillMaker.billDictionary = {
           return info;
         },
         item: (feeObject, subObj) => {
+          let { project } = subObj;
+          let finalNumber;
+          if (project.process.contract.remain.calculation.amount.supply !== 0) {
+            finalNumber = project.process.contract.remain.calculation.amount.supply;
+          } else {
+            finalNumber = feeObject.amount;
+          }
           return [
-            [ "designerFeeRemain", feeObject.amount ]
+            [ "designerFeeRemain", finalNumber ]
           ];
         },
         target: (client, designer, project, method, subObj = {}) => {
@@ -182,10 +208,10 @@ BillMaker.billDictionary = {
           };
         },
         comments: [
-          "잔금은 총 디자인비에서 계약금을 제외한 금액입니다.",
-          "잔금을 입금해주시면 홈스타일링 서비스가 계속 진행됩니다.",
-          "결제해주신 디자인비는 서비스 정책상, 홈스타일링이 끝날 때까지 홈리에종에서 보관합니다.",
-          "홈스타일링이 모두 끝나게 되면 고객님께 확인을 받게 되며, 컨펌 후 디자이너에게 정산합니다.",
+          "홈리에종 잔금 정산은 디자이너님께 드리는 총 정산 비용의 50%입니다.",
+          "프로젝트가 모두 완료되고 고객님의 컨펌이 있은 후, 잔금 정산이 될 예정입니다.",
+          "총 정산 비용은 전체 디자인비에서 해당 디자이너님의 수수료 비율을 제한 금액입니다.",
+          "해당 디자이너님의 사업자 유형에 따라 정산의 방식이 다를 수 있습니다.",
         ]
       },
       designerTravelFee: {
@@ -236,8 +262,8 @@ BillMaker.billDictionary = {
         name: "디자인비",
         description: "디자이너가 인테리어 디자인 작업을 진행하는 비용입니다.",
         ea: null,
-        number: (method, distance, subObj = {}) => { return 1; },
-        amount: (method, amount, distance, subObj = {}) => { return amount; },
+        number: (method, distance, subObj) => { return 1; },
+        amount: (method, amount, distance, subObj) => { return amount; },
         comments: []
       },
       travelExpenses: {
@@ -245,8 +271,8 @@ BillMaker.billDictionary = {
         name: "출장비",
         description: "디자이너가 출장시 발생되는 왕복 비용입니다.",
         ea: "회",
-        number: (method, distance) => { return distance.number; },
-        amount: (method, amount, distance) => { return distance.amount; },
+        number: (method, distance, subObj) => { return distance.number; },
+        amount: (method, amount, distance, subObj) => { return distance.amount; },
         comments: [
           "출장비는 디자이너가 고객님의 집까지 이동하는 데에 발생하는 비용입니다.",
           "출장비는 도달 거리와 시간을 측정하여 계산되며, 왕복 비용으로 청구됩니다.",
@@ -261,10 +287,9 @@ BillMaker.billDictionary = {
         name: "디자인비 선금",
         description: "디자인 비용에 대한 선금입니다.",
         ea: null,
-        number: (method, distance, subObj = {}) => { return 1; },
+        number: (method, distance, subObj) => { return 1; },
         amount: (method, amount, distance, subObj) => {
-          const { designer } = subObj;
-          const freeRatio = 0.967;
+          const { designer, freeRatio } = subObj;
           let classification, percentage, calculate, commission;
 
           classification = designer.information.business.businessInfo.classification.value;
@@ -292,8 +317,7 @@ BillMaker.billDictionary = {
         ea: null,
         number: (method, distance, subObj = {}) => { return 1; },
         amount: (method, amount, distance, subObj) => {
-          const { designer } = subObj;
-          const freeRatio = 0.967;
+          const { designer, freeRatio } = subObj;
           let classification, percentage, calculate, commission;
 
           classification = designer.information.business.businessInfo.classification.value;
@@ -321,9 +345,7 @@ BillMaker.billDictionary = {
         ea: "회",
         number: (method, distance, subObj = {}) => { return distance.number; },
         amount: (method, amount, distance, subObj) => {
-          const { designer } = subObj;
-          const freeRatio = 0.967;
-          const distancePercentage = 10;
+          const { designer, freeRatio, distancePercentage } = subObj;
           let classification, calculate, commission, distanceFinalAmount;
 
           distanceFinalAmount = distance.amount * distance.number;
@@ -357,6 +379,25 @@ BillMaker.billDictionary = {
       vatRatio: 0.1,
       freeRatio: 0.967,
       distancePercentage: 10,
+      designerCancel: {
+        id: "_edcl",
+        class: "designerCancel",
+        name: "디자이너 1회 미팅 비용",
+        description: "취소된 디자이너의 1회 미팅에 대한 비용입니다.",
+        unit: {
+          ea: null,
+          price: 110000,
+          number: 1
+        },
+        amount: {
+          pure: 110000,
+          commission: 220000,
+        },
+        comments: [
+          "디자이너 변경으로 인해 미팅을 하신 프로젝트가 취소되었습니다.",
+          "1회 미팅에 대한 금액을 정산해드리는 비용입니다."
+        ]
+      }
     }
   },
 };
@@ -871,7 +912,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
   const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
   const stylingItems = BillMaker.billDictionary.styling.goods;
   const stylingRequests = BillMaker.billDictionary.styling.requests;
-  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  const { contractAmount, vatRatio, freeRatio, distancePercentage } = BillMaker.billDictionary.styling.etc;
   const requestConst = "_r";
   try {
     let requestObject;
@@ -903,7 +944,11 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
       }
     }
     if (feeObject === null) {
-      throw new Error("cannot find fee object");
+      if (option.feeObject !== undefined && option.feeObject !== null && typeof option.feeObject === "object") {
+        feeObject = option.feeObject;
+      } else {
+        throw new Error("cannot find fee object");
+      }
     }
     distance = feeObject.distance;
 
@@ -928,7 +973,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
     requestObject.id = bilid + requestConst + String(thisBill.requests.length);
     requestObject.info = thisRequest.info(client, designer, project, method, null);
 
-    itemMatrix = thisRequest.item(feeObject, null);
+    itemMatrix = thisRequest.item(feeObject, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
     commentsArr = thisRequest.comments;
     for (let [ property, thisAmount ] of itemMatrix) {
       await sleep(100);
@@ -942,15 +987,15 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
       itemFactor.name = item.name;
       itemFactor.description = item.description;
       itemFactor.unit.ea = item.ea;
-      itemFactor.unit.price = Math.round(item.amount(method, thisAmount, distance, { client, designer, project }));
+      itemFactor.unit.price = Math.round(item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
       if (typeof option.number === "object" && option.number !== null) {
         if (typeof option.number[property] === "number") {
           itemFactor.unit.number = option.number[property];
         } else {
-          itemFactor.unit.number = item.number(method, distance, { client, designer, project });
+          itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
         }
       } else {
-        itemFactor.unit.number = item.number(method, distance, { client, designer, project });
+        itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
       }
       itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
       itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
@@ -1061,6 +1106,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
   const { mongo, mongopythoninfo, equalJson, sleep } = this.mother;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
   const stylingResponses = BillMaker.billDictionary.styling.responses;
+  const { contractAmount, vatRatio, freeRatio, distancePercentage } = BillMaker.billDictionary.styling.etc;
   const responseConst = "_s";
   try {
     let responseObject;
@@ -1093,7 +1139,11 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
       }
     }
     if (feeObject === null) {
-      throw new Error("cannot find fee object");
+      if (option.feeObject !== undefined && option.feeObject !== null && typeof option.feeObject === "object") {
+        feeObject = option.feeObject;
+      } else {
+        throw new Error("cannot find fee object");
+      }
     }
     distance = feeObject.distance;
 
@@ -1118,7 +1168,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
     responseObject.id = bilid + responseConst + String(thisBill.responses.length);
     responseObject.info = thisResponse.info(client, designer, project, method, null);
 
-    itemMatrix = thisResponse.item(feeObject, { designer });
+    itemMatrix = thisResponse.item(feeObject, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
     commentsArr = thisResponse.comments;
     for (let [ property, thisAmount ] of itemMatrix) {
       await sleep(100);
@@ -1132,7 +1182,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
       itemFactor.name = item.name;
       itemFactor.description = item.description;
       itemFactor.unit.ea = item.ea;
-      tempObject = item.amount(method, thisAmount, distance, { client, designer, project });
+      tempObject = item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
       tempAmount = tempObject.amount;
       tempCommission = tempObject.commission;
       itemFactor.unit.price = tempAmount;
@@ -1140,10 +1190,10 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
         if (typeof option.number[property] === "number") {
           itemFactor.unit.number = option.number[property];
         } else {
-          itemFactor.unit.number = item.number(method, distance, { client, designer, project });
+          itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
         }
       } else {
-        itemFactor.unit.number = item.number(method, distance, { client, designer, project });
+        itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
       }
       if (property === "travelExpenses") {
         tempCommission = (tempCommission / distance.number) * itemFactor.unit.number;
@@ -1266,7 +1316,7 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
   const stylingRequests = BillMaker.billDictionary.styling.requests;
   const designerCalculation = BillMaker.billDictionary.styling.calculation;
   const stylingResponses = BillMaker.billDictionary.styling.responses;
-  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  const { contractAmount, vatRatio, freeRatio, distancePercentage } = BillMaker.billDictionary.styling.etc;
   try {
     let MONGOC;
     let feeObject;
@@ -1305,7 +1355,11 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
       }
     }
     if (feeObject === null) {
-      throw new Error("cannot find fee object");
+      if (option.feeObject !== undefined && option.feeObject !== null && typeof option.feeObject === "object") {
+        feeObject = option.feeObject;
+      } else {
+        throw new Error("cannot find fee object");
+      }
     }
     distance = feeObject.distance;
     amount = feeObject.amount;
@@ -1360,11 +1414,11 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
       itemFactor.name = item.name;
       itemFactor.description = item.description;
       itemFactor.unit.ea = item.ea;
-      itemFactor.unit.price = Math.round(item.amount(method, amount, distance, { client, designer, project }));
+      itemFactor.unit.price = Math.round(item.amount(method, amount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
       if (typeof option.number === "number") {
         itemFactor.unit.number = option.number;
       } else {
-        itemFactor.unit.number = item.number(method, distance, { client, designer, project });
+        itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
       }
       itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
       itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
@@ -1376,14 +1430,14 @@ BillMaker.prototype.itemInjection = async function (id, itemKey, client, designe
       itemFactor.name = item.name;
       itemFactor.description = item.description;
       itemFactor.unit.ea = item.ea;
-      tempObject = item.amount(method, amount, distance, { client, designer, project });
+      tempObject = item.amount(method, amount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
       tempAmount = tempObject.amount;
       tempCommission = tempObject.commission;
       itemFactor.unit.price = tempAmount;
       if (typeof option.number === "number") {
         itemFactor.unit.number = option.number;
       } else {
-        itemFactor.unit.number = item.number(method, distance, { client, designer, project });
+        itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
       }
       itemFactor.amount.pure = Math.floor(itemFactor.unit.price * itemFactor.unit.number);
       itemFactor.amount.commission = tempCommission;
@@ -2154,6 +2208,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let firstResponseIndex;
     let firstResponseFirstItemIndex;
     let returnObject;
+    let unknownDesignerFee, newDesignerFeeObject;
 
     while (await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) {
       await sleep(300);
@@ -2212,7 +2267,24 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       }
     }
     if (feeObject === null) {
-      throw new Error("cannot find fee object");
+      feeObject = project.proposal.detail[0].fee[0];
+      proposalIndex0 = 0;
+      proposalIndex1 = 0;
+      unknownDesignerFee = await work.getDesignerFee(desid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
+      newDesignerFeeObject = {
+        method: feeObject.method,
+        partial: feeObject.partial,
+        amount: feeObject.amount,
+        discount: feeObject.discount,
+        distance: {
+          number: (unknownDesignerFee.detail.distance === 0 ? 0 : feeObject.distance.number),
+          amount: unknownDesignerFee.detail.distance,
+          distance: unknownDesignerFee.detail.travel.distance,
+          time: unknownDesignerFee.detail.travel.time,
+          limit: feeObject.distance.limit
+        }
+      };
+      feeObject = equalJson(JSON.stringify(newDesignerFeeObject));
     }
     pastFeeObject = await work.getDesignerFee(desid, cliid, pastSerid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
     newFeeObject = await work.getDesignerFee(desid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
@@ -2264,9 +2336,11 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         if (request.name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
           remain = request;
           remainIndex = num;
+          break;
         }
         num++;
       }
+      num = thisBill.requests.length;
       totalNum = 0;
       for (let { amount: { consumer } } of remain.items) {
         totalNum += consumer;
@@ -2289,8 +2363,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       pastRemainPrice = pastRemainArr[remainItemIndex].unit.price;
       newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
       newRequestPrice = pastRemainPrice + newRequestAmount;
-      project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
-      newSupply = project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount;
+      newSupply = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
 
       projectWhereQuery = { proid };
       projectUpdateQuery = {};
@@ -2314,6 +2387,17 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.totalAmount"] = projectUpdateQuery["process.calculation.payments.first.amount"] * 2;
       await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+      feeObject.amount = newSupply;
+      project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = newSupply;
+      project.service.serid = projectUpdateQuery["service.serid"];
+      project.service.online = projectUpdateQuery["service.online"];
+      project.process.contract.remain.calculation.amount.supply = projectUpdateQuery["process.contract.remain.calculation.amount.supply"];
+      project.process.contract.remain.calculation.amount.vat = projectUpdateQuery["process.contract.remain.calculation.amount.vat"];
+      project.process.contract.remain.calculation.amount.consumer = projectUpdateQuery["process.contract.remain.calculation.amount.consumer"];
+      project.process.calculation.payments.first.amount = projectUpdateQuery["process.calculation.payments.first.amount"];
+      project.process.calculation.payments.remain.amount = projectUpdateQuery["process.calculation.payments.remain.amount"];
+      project.process.calculation.payments.totalAmount = projectUpdateQuery["process.calculation.payments.totalAmount"];
 
       returnObject.request.to.supply = projectUpdateQuery["process.contract.remain.calculation.amount.supply"];
       returnObject.request.to.vat = projectUpdateQuery["process.contract.remain.calculation.amount.vat"];
@@ -2346,8 +2430,8 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
 
         await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject });
+        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject });
 
       } else {
 
@@ -2360,7 +2444,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
           updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
         } else if (newRequestAmount > 0) {
           returnObject.request.additional = true;
-          await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC });
+          await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC, feeObject });
           pastRemainArr[remainItemIndex].unit.price = newRequestAmount;
           pastRemainArr[remainItemIndex].amount.supply = newRequestAmount * pastRemainArr[remainItemIndex].unit.number;
           pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
@@ -2376,9 +2460,13 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         for (let res of thisBill.responses) {
           if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
             firstResponse = res;
+            break;
           }
+        }
+        for (let res of thisBill.responses) {
           if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
             secondResponse = res;
+            break;
           }
         }
         if (firstResponse === null || secondResponse === null) {
@@ -2425,8 +2513,8 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
           updateQuery = {};
           updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
           await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-          await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-          await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+          await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject });
+          await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject });
 
         } else {
 
@@ -2435,10 +2523,14 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
             if (pastResponses[i].name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
               remainResponse = pastResponses[i];
               remainResponseIndex = i;
+              break;
             }
+          }
+          for (let i = 0; i < pastResponses.length; i++) {
             if (pastResponses[i].name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
               firstResponse = pastResponses[i];
               firstResponseIndex = i;
+              break;
             }
           }
           for (let i = 0; i < remainResponse.items.length; i++) {
@@ -2503,8 +2595,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
   const work = new BackWorker();
   const back = this.back;
   const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
-  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
-  const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
+  const { vatRatio, freeRatio, designerCancel } = BillMaker.billDictionary.styling.etc;
   try {
     let MONGOC, MONGOCOREC;
     let selfBoo, selfCoreBoo;
@@ -2512,7 +2603,8 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     let thisBill, bilid;
     let serid;
     let xValue;
-    let remain;
+    let remain, contract;
+    let totalNumContract, payNumContract, cancelNumContract;
     let totalNum, payNum, cancelNum;
     let totalNumR0, payNumR0, cancelNumR0;
     let totalNumR1, payNumR1, cancelNumR1;
@@ -2522,7 +2614,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     let feeObject;
     let pastFeeObject;
     let newFeeObject;
-    let remainIndex, remainItemIndex;
+    let remainIndex, remainItemIndex, contractIndex, contractItemIndex;
     let num;
     let pastRemainArr;
     let proposalIndex0, proposalIndex1;
@@ -2547,6 +2639,9 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     let firstResponseIndex;
     let firstResponseFirstItemIndex;
     let returnObject;
+    let bankName;
+    let bankTo;
+    let newDesignerFeeObject;
 
     while (await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) {
       await sleep(300);
@@ -2608,7 +2703,9 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       }
     }
     if (feeObject === null) {
-      throw new Error("cannot find fee object");
+      feeObject = project.proposal.detail[0].fee[0];
+      proposalIndex0 = 0;
+      proposalIndex1 = 0;
     }
 
     pastFeeObject = await work.getDesignerFee(pastDesid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
@@ -2657,12 +2754,37 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       bilid = thisBill.bilid;
       num = 0;
       for (let request of thisBill.requests) {
-        if (request.name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
-          remain = request;
-          remainIndex = num;
+        if (request.name === BillMaker.billDictionary.styling.requests.firstPayment.name) {
+          contract = request;
+          contractIndex = num;
+          break;
         }
         num++;
       }
+      num = 0;
+      for (let request of thisBill.requests) {
+        if (request.name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
+          remain = request;
+          remainIndex = num;
+          break;
+        }
+        num++;
+      }
+      num = thisBill.requests.length;
+
+      totalNumContract = 0;
+      for (let { amount: { consumer } } of contract.items) {
+        totalNumContract += consumer;
+      }
+      payNumContract = 0;
+      for (let { amount } of contract.pay) {
+        payNumContract += amount;
+      }
+      cancelNumContract = 0;
+      for (let { amount } of contract.cancel) {
+        cancelNumContract += amount;
+      }
+
       totalNum = 0;
       for (let { amount: { consumer } } of remain.items) {
         totalNum += consumer;
@@ -2685,8 +2807,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       pastRemainPrice = pastRemainArr[remainItemIndex].unit.price;
       newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
       newRequestPrice = pastRemainPrice + newRequestAmount;
-      project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
-      newSupply = project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount;
+      newSupply = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
 
       projectWhereQuery = { proid };
       projectUpdateQuery = {};
@@ -2705,10 +2826,32 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       } else {
         calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
       }
+      projectUpdateQuery["process.calculation.method"] = classification;
+      projectUpdateQuery["process.calculation.percentage"] = percentage;
+      if (designer.information.business.account.length > 0) {
+        bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
+        bankTo = designer.information.business.account[0].to;
+        projectUpdateQuery["process.calculation.info.account"] = bankName;
+        projectUpdateQuery["process.calculation.info.proof"] = bankTo;
+        projectUpdateQuery["process.calculation.info.to"] = bankTo;
+      }
+
       projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.totalAmount"] = projectUpdateQuery["process.calculation.payments.first.amount"] * 2;
       await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+      project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = newSupply;
+      project.service.serid = projectUpdateQuery["service.serid"];
+      project.service.online = projectUpdateQuery["service.online"];
+      project.process.contract.remain.calculation.amount.supply = projectUpdateQuery["process.contract.remain.calculation.amount.supply"];
+      project.process.contract.remain.calculation.amount.vat = projectUpdateQuery["process.contract.remain.calculation.amount.vat"];
+      project.process.contract.remain.calculation.amount.consumer = projectUpdateQuery["process.contract.remain.calculation.amount.consumer"];
+      project.process.calculation.payments.first.amount = projectUpdateQuery["process.calculation.payments.first.amount"];
+      project.process.calculation.payments.remain.amount = projectUpdateQuery["process.calculation.payments.remain.amount"];
+      project.process.calculation.payments.totalAmount = projectUpdateQuery["process.calculation.payments.totalAmount"];
+      project.process.calculation.method = projectUpdateQuery["process.calculation.method"];
+      project.process.calculation.percentage = projectUpdateQuery["process.calculation.percentage"];
 
       returnObject.request.to.supply = projectUpdateQuery["process.contract.remain.calculation.amount.supply"];
       returnObject.request.to.vat = projectUpdateQuery["process.contract.remain.calculation.amount.vat"];
@@ -2720,8 +2863,32 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
 
       newCommission = Math.floor((newSupply * (percentage / 100)) / 10) * 10;
 
+      newDesignerFeeObject = {
+        method: feeObject.method,
+        partial: feeObject.partial,
+        amount: newSupply,
+        discount: feeObject.discount,
+        distance: {
+          number: (newFeeObject.detail.distance === 0 ? 0 : feeObject.distance.number),
+          amount: newFeeObject.detail.distance,
+          distance: newFeeObject.detail.travel.distance,
+          time: newFeeObject.detail.travel.time,
+          limit: feeObject.distance.limit
+        }
+      };
+
       whereQuery = { bilid };
       updateQuery = {};
+      updateQuery["participant.designer.id"] = designer.desid;
+      updateQuery["participant.designer.name"] = designer.designer;
+      updateQuery["participant.designer.phone"] = designer.information.phone;
+      updateQuery["participant.designer.email"] = designer.information.email;
+      if (Array.isArray(thisBill.links.pastDesid)) {
+        updateQuery["links.pastDesid"] = equalJson(JSON.stringify(thisBill.links.pastDesid.unshift(pastDesid)));
+      } else {
+        updateQuery["links.pastDesid"] = [ pastDesid ];
+      }
+      updateQuery["links.desid"] = desid;
 
       if (payNum === 0) {
 
@@ -2733,16 +2900,35 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
 
         pastResponses = thisBill.responses.toNormal();
         newResponses = [];
-        for (let res of pastResponses) {
-          if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
-            newResponses.push(res);
+        if (payNumContract === 0) {
+          for (let res of pastResponses) {
+            if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+              newResponses.push(res);
+            }
+          }
+        } else {
+          returnObject.response.additional = true;
+          for (let res of pastResponses) {
+            if (res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+              if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+                res.items = res.items.slice(0, 1);
+                res.items[0].id = thisBill.bilid + designerCancel.id;
+                res.items[0].class = designerCancel.class;
+                res.items[0].name = designerCancel.name;
+                res.items[0].description = designerCancel.description;
+                res.items[0].unit = designerCancel.unit;
+                res.items[0].amount = designerCancel.amount;
+                res.comments = designerCancel.comments;
+              }
+              newResponses.push(res);
+              break;
+            }
           }
         }
         updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
-
         await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
+        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
 
       } else {
 
@@ -2755,7 +2941,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
           updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
         } else if (newRequestAmount > 0) {
           returnObject.request.additional = true;
-          await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC });
+          await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
           pastRemainArr[remainItemIndex].unit.price = newRequestAmount;
           pastRemainArr[remainItemIndex].amount.supply = newRequestAmount * pastRemainArr[remainItemIndex].unit.number;
           pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
@@ -2771,9 +2957,13 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
         for (let res of thisBill.responses) {
           if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
             firstResponse = res;
+            break;
           }
+        }
+        for (let res of thisBill.responses) {
           if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
             secondResponse = res;
+            break;
           }
         }
         if (firstResponse === null || secondResponse === null) {
@@ -2810,61 +3000,49 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
 
         if (!firstBoo && !remainBoo) {
 
+          returnObject.response.additional = true;
           pastResponses = thisBill.responses.toNormal();
           newResponses = [];
           for (let res of pastResponses) {
-            if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+            if (res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+              if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+                res.items = res.items.slice(0, 1);
+                res.items[0].id = thisBill.bilid + designerCancel.id;
+                res.items[0].class = designerCancel.class;
+                res.items[0].name = designerCancel.name;
+                res.items[0].description = designerCancel.description;
+                res.items[0].unit = designerCancel.unit;
+                res.items[0].amount = designerCancel.amount;
+                res.comments = designerCancel.comments;
+              }
               newResponses.push(res);
+              break;
             }
           }
           updateQuery = {};
           updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
           await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-          await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-          await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+          await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
+          await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
 
         } else {
 
-          pastResponses = thisBill.responses.toNormal();
-          for (let i = 0; i < pastResponses.length; i++) {
-            if (pastResponses[i].name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
-              remainResponse = pastResponses[i];
-              remainResponseIndex = i;
+          if (!remainBoo) {
+            pastResponses = thisBill.responses.toNormal();
+            newResponses = [];
+            for (let res of pastResponses) {
+              if (res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+                newResponses.push(res);
+              }
             }
-            if (pastResponses[i].name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
-              firstResponse = pastResponses[i];
-              firstResponseIndex = i;
-            }
-          }
-          for (let i = 0; i < remainResponse.items.length; i++) {
-            if (remainResponse.items[i].class === "designerFeeRemain") {
-              remainResponseRemainItem = remainResponse.items[i];
-              remainResponseRemainItemIndex = i;
-            }
-          }
-          for (let i = 0; i < firstResponse.items.length; i++) {
-            if (firstResponse.items[i].class === "designerFeeFirst") {
-              firstResponseFirstItemIndex = i;
-            }
+            updateQuery = {};
+            updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
+            await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
           }
 
-          responseBetween = projectUpdateQuery["process.calculation.payments.totalAmount"] - (pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price + pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price);
-          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price + responseBetween;
-          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].amount.pure = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
-          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].amount.commission = newCommission - pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].amount.commission;
-          updateQuery = {};
-          updateQuery["responses." + String(remainResponseIndex) + ".items"] = pastResponses[remainResponseIndex].items;
-          await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
-
-          projectUpdateQuery = {};
-          projectUpdateQuery["process.calculation.payments.first.amount"] = pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price;
-          projectUpdateQuery["process.calculation.payments.remain.amount"] = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
-          projectUpdateQuery["process.calculation.payments.totalAmount"] = pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price + pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
-          await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
-
-          returnObject.response.to.total = projectUpdateQuery["process.calculation.payments.totalAmount"];
-          returnObject.response.to.first = projectUpdateQuery["process.calculation.payments.first.amount"];
-          returnObject.response.to.remain = projectUpdateQuery["process.calculation.payments.remain.amount"];
+          returnObject.response.additional = true;
+          await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
+          await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC, feeObject: newDesignerFeeObject });
 
         }
 
@@ -2882,6 +3060,319 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
 
     return returnObject;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.amountConverting = async function (bilid, option = { selfMongo: null, selfConsoleMongo: null }) {
+  if (typeof bilid !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+  const doingSignature = "billMaker_amountConvertingDoing_" + bilid;
+  const work = new BackWorker();
+  const back = this.back;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
+  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
+  try {
+    let MONGOC, MONGOCOREC;
+    let proid;
+    let selfBoo, selfCoreBoo;
+    let project;
+    let thisBill;
+    let serid;
+    let xValue;
+    let desid, cliid;
+    let designer, client;
+    let remain, contract;
+    let first, second;
+    let remainIndex, contractIndex;
+    let firstIndex, secondIndex;
+    let remainIndexItem, contractIndexItem;
+    let firstIndexItem, secondIndexItem;
+    let requestsCopied, responsesCopied;
+    let whereQuery, updateQuery;
+    let contractAmount;
+    let supply, vat, consumer;
+    let contractAmountSupply;
+    let firstAmount, secondAmount;
+    let percentage;
+    let remainBoo, firstBoo;
+    let totalNum, payNum, cancelNum;
+    let feeObject, newDesignerFeeObject, unknownDesignerFee;
+    let proposalIndex0, proposalIndex1;
+    let method;
+    let pastRemainArr;
+    let newRequestAmount;
+    let totalAmount;
+
+    while (await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) {
+      await sleep(300);
+    }
+    await fileSystem(`write`, [ `${process.cwd()}/temp/${doingSignature}.json`, `{ "doing": 1 }` ]);
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+
+    proid = thisBill.links.proid;
+
+    project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    if (project === null) {
+      throw new Error("invaild proid");
+    }
+    if (!/^d/.test(project.desid)) {
+      throw new Error("unable in this project");
+    }
+
+    method = project.service.online ? "online" : "offline";
+    desid = project.desid;
+    cliid = project.cliid;
+    designer = await back.getDesignerById(desid, { selfMongo: MONGOCOREC });
+    client = await back.getClientById(cliid, { selfMongo: MONGOCOREC });
+    serid = project.service.serid;
+    xValue = project.service.xValue;
+    contractAmount = project.process.contract.first.calculation.amount;
+    contractAmountSupply = contractAmount * (1 / (1 + vatRatio));
+    supply = project.process.contract.remain.calculation.amount.supply;
+    vat = project.process.contract.remain.calculation.amount.vat;
+    consumer = project.process.contract.remain.calculation.amount.consumer;
+    firstAmount = project.process.calculation.payments.first.amount;
+    secondAmount = project.process.calculation.payments.remain.amount;
+    percentage = project.process.calculation.percentage;
+    totalAmount = firstAmount + secondAmount;
+
+    feeObject = null;
+    for (let i = 0; i < project.proposal.detail.length; i++) {
+      if (project.proposal.detail[i].desid === designer.desid) {
+        for (let j = 0; j < project.proposal.detail[i].fee.length; j++) {
+          if (project.proposal.detail[i].fee[j].method === method) {
+            feeObject = project.proposal.detail[i].fee[j];
+            proposalIndex0 = i;
+            proposalIndex1 = j;
+          }
+        }
+      }
+    }
+    if (feeObject === null) {
+      feeObject = project.proposal.detail[0].fee[0];
+      proposalIndex0 = 0;
+      proposalIndex1 = 0;
+      unknownDesignerFee = await work.getDesignerFee(desid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
+      newDesignerFeeObject = {
+        method: feeObject.method,
+        partial: feeObject.partial,
+        amount: feeObject.amount,
+        discount: feeObject.discount,
+        distance: {
+          number: (unknownDesignerFee.detail.distance === 0 ? 0 : feeObject.distance.number),
+          amount: unknownDesignerFee.detail.distance,
+          distance: unknownDesignerFee.detail.travel.distance,
+          time: unknownDesignerFee.detail.travel.time,
+          limit: feeObject.distance.limit
+        }
+      };
+      feeObject = equalJson(JSON.stringify(newDesignerFeeObject));
+    }
+    feeObject.amount = supply;
+
+    requestsCopied = thisBill.requests.toNormal();
+    responsesCopied = thisBill.responses.toNormal();
+
+    for (let i = 0; i < requestsCopied.length; i++) {
+      if (requestsCopied[i].name === BillMaker.billDictionary.styling.requests.firstPayment.name) {
+        contract = requestsCopied[i];
+        contractIndex = i;
+        break;
+      }
+    }
+    for (let i = 0; i < contract.items.length; i++) {
+      if (contract.items[i].class === "designerTime") {
+        contractIndexItem = i;
+        break;
+      }
+    }
+    for (let i = 0; i < requestsCopied.length; i++) {
+      if (requestsCopied[i].name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
+        remain = requestsCopied[i];
+        remainIndex = i;
+        break;
+      }
+    }
+    for (let i = 0; i < remain.items.length; i++) {
+      if (remain.items[i].class === "designerTime") {
+        remainIndexItem = i;
+        break;
+      }
+    }
+    for (let i = 0; i < responsesCopied.length; i++) {
+      if (responsesCopied[i].name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+        first = responsesCopied[i];
+        firstIndex = i;
+        break;
+      }
+    }
+    for (let i = 0; i < first.items.length; i++) {
+      if (first.items[i].class === "designerFeeFirst") {
+        firstIndexItem = i;
+        break;
+      }
+    }
+    for (let i = 0; i < responsesCopied.length; i++) {
+      if (responsesCopied[i].name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+        second = responsesCopied[i];
+        secondIndex = i;
+        break;
+      }
+    }
+    for (let i = 0; i < second.items.length; i++) {
+      if (second.items[i].class === "designerFeeRemain") {
+        secondIndexItem = i;
+        break;
+      }
+    }
+
+    remainBoo = false;
+    totalNum = 0;
+    for (let { amount: { consumer } } of remain.items) {
+      totalNum += consumer;
+    }
+    payNum = 0;
+    for (let { amount } of remain.pay) {
+      payNum += amount;
+    }
+    cancelNum = 0;
+    for (let { amount } of remain.cancel) {
+      cancelNum += amount;
+    }
+    remainBoo = (totalNum <= payNum + cancelNum);
+
+    firstBoo = false;
+    totalNum = 0;
+    for (let { amount: { pure } } of first.items) {
+      totalNum += consumer;
+    }
+    payNum = 0;
+    for (let { amount } of first.pay) {
+      payNum += amount;
+    }
+    cancelNum = 0;
+    for (let { amount } of first.cancel) {
+      cancelNum += amount;
+    }
+    firstBoo = (totalNum <= payNum + cancelNum);
+
+
+    whereQuery = { bilid };
+    if (!remainBoo && !firstBoo) {
+
+      updateQuery = {};
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
+      updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
+      updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".unit.price"] = firstAmount;
+      updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".amount.pure"] = firstAmount;
+      updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".amount.commission"] = (supply * (percentage / 100)) / 2;
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".unit.price"] = secondAmount;
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".amount.pure"] = secondAmount;
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".amount.commission"] = (supply * (percentage / 100)) / 2;
+
+    } else if (remainBoo && !firstBoo) {
+
+      newRequestAmount = supply - (remain.items[remainIndexItem].amount.supply + contractAmountSupply);
+      if (newRequestAmount <= 0) {
+        updateQuery = {};
+        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
+        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
+        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
+        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
+      } else {
+        await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC, feeObject });
+        pastRemainArr = remain.items.toNormal();
+        pastRemainArr[remainIndexItem].unit.price = newRequestAmount;
+        pastRemainArr[remainIndexItem].amount.supply = newRequestAmount * pastRemainArr[remainIndexItem].unit.number;
+        pastRemainArr[remainIndexItem].amount.vat = Math.round(pastRemainArr[remainIndexItem].amount.supply * vatRatio);
+        pastRemainArr[remainIndexItem].amount.consumer = Math.round(pastRemainArr[remainIndexItem].amount.supply * (1 + vatRatio));
+        updateQuery = {};
+        updateQuery["requests." + String(0) + ".items." + String(0)] = equalJson(JSON.stringify(pastRemainArr[remainIndexItem]));
+      }
+
+      updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".unit.price"] = firstAmount;
+      updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".amount.pure"] = firstAmount;
+      updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".amount.commission"] = (supply * (percentage / 100)) / 2;
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".unit.price"] = secondAmount;
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".amount.pure"] = secondAmount;
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".amount.commission"] = (supply * (percentage / 100)) / 2;
+
+    } else if (remainBoo && firstBoo) {
+
+      newRequestAmount = supply - (remain.items[remainIndexItem].amount.supply + contractAmountSupply);
+      if (newRequestAmount <= 0) {
+        updateQuery = {};
+        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
+        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
+        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
+        updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
+      } else {
+        await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC, feeObject });
+        pastRemainArr = remain.items.toNormal();
+        pastRemainArr[remainIndexItem].unit.price = newRequestAmount;
+        pastRemainArr[remainIndexItem].amount.supply = newRequestAmount * pastRemainArr[remainIndexItem].unit.number;
+        pastRemainArr[remainIndexItem].amount.vat = Math.round(pastRemainArr[remainIndexItem].amount.supply * vatRatio);
+        pastRemainArr[remainIndexItem].amount.consumer = Math.round(pastRemainArr[remainIndexItem].amount.supply * (1 + vatRatio));
+        updateQuery = {};
+        updateQuery["requests." + String(0) + ".items." + String(0)] = equalJson(JSON.stringify(pastRemainArr[remainIndexItem]));
+      }
+
+      updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".amount.commission"] = (supply * (percentage / 100)) * (first.items[firstIndexItem].amount.pure / totalAmount);
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".unit.price"] = totalAmount - first.items[firstIndexItem].amount.pure;
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".amount.pure"] = totalAmount - first.items[firstIndexItem].amount.pure;
+      updateQuery["responses." + String(secondIndex) + ".items." + String(secondIndexItem) + ".amount.commission"] = (supply * (percentage / 100)) * ((totalAmount - first.items[firstIndexItem].amount.pure) / totalAmount);
+
+    } else {
+      throw new Error("invaild case");
+    }
+
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+    await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
 
   } catch (e) {
     console.log(e);

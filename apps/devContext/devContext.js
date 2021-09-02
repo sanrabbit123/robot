@@ -68,6 +68,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+
+
     /*
     const selfMongo = this.MONGOLOCALC;
 
@@ -297,7 +300,7 @@ DevContext.prototype.launching = async function () {
     // console.log(await bill.travelInjection("remain", proid, "offline", 4, { selfMongo: this.MONGOLOCALC }));
     // console.log(await bill.travelReconfig("first", proid, "offline", 0, 2, { selfMongo: this.MONGOLOCALC }));
     // console.log(await bill.serviceConverting(proid, "online", "s2011_aa01s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
-    // console.log(await bill.designerConverting(proid, "online", "d1907_aa01s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
+    console.log(await bill.amountConverting("b2192_aa02s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
 
 
 

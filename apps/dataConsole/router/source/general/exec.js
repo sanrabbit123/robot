@@ -1,3 +1,4 @@
+const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 const local_funcs = new /<%name%>/Js();
 
 // document.getElementById("totalcontents").style.height = String(window.innerHeight) + "px";
@@ -39,109 +40,122 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     if (sseTarget.includes(thisPath)) {
       const thisMap = (DataPatch[thisPath + "Map"])();
       const es = new EventSource("https://" + SSEHOST + ":3000/sse/get_" + thisPath);
-      es.addEventListener("updateTong", function (e) {
-        let domTarget, domTargetChild, domTargetGray, domTargetGrayChild;
-        if (/^{/.test(e.data)) {
-          const obj = JSON.parse(e.data);
-          if (obj.path !== undefined && obj.who !== undefined && obj.where !== undefined && obj.column !== undefined && obj.value !== undefined && obj.date !== undefined) {
-            //start
-            const { path, who, where, column, value, date } = obj;
-            let finalValue;
-            let white, whiteChildren, whiteTarget;
-            let tempFunction;
+      es.addEventListener("updateTong", async function (e) {
+        try {
+          let domTarget, domTargetChild, domTargetGray, domTargetGrayChild;
+          if (/^{/.test(e.data)) {
+            const obj = JSON.parse(e.data);
+            if (obj.path !== undefined && obj.who !== undefined && obj.where !== undefined && obj.column !== undefined && obj.value !== undefined && obj.date !== undefined) {
+              //start
+              const { path, who, where, column, value, date } = obj;
+              let finalValue;
+              let white, whiteChildren, whiteTarget;
+              let tempFunction;
 
-            finalValue = value;
-            if (typeof value !== "string") {
-              if (typeof value === "object" && !(value instanceof Date)) {
-                finalValue = value;
-              } else {
-                finalValue = String(value);
-              }
-            }
-
-            if (thisMap[column] !== undefined) {
-              if (thisMap[column].type === "boolean") {
-                if (!thisMap[column].items.includes(finalValue)) {
-                  if (/true/gi.test(finalValue) || /True/gi.test(finalValue) || /1/gi.test(finalValue)) {
-                    finalValue = thisMap[column].items[0];
-                  } else {
-                    finalValue = thisMap[column].items[1];
-                  }
-                }
-              }
-              if (thisMap[column].moneyBoo === true) {
-                finalValue = GeneralJs.autoComma(Number(finalValue.replace(/[^0-9\.\-]/gi, '')));
-              }
-              if (thisMap[column].type === "date") {
-                if (/^1[6789]/.test(finalValue)) {
-                  finalValue = '-';
-                }
-              }
-              if (thisMap[column].type === "object" && typeof finalValue === "object") {
-                if (thisMap[column].stringFunction !== undefined) {
-                  tempFunction = new Function("value", thisMap[column].stringFunction);
-                  finalValue = tempFunction(finalValue);
+              finalValue = value;
+              if (typeof value !== "string") {
+                if (typeof value === "object" && !(value instanceof Date)) {
+                  finalValue = value;
                 } else {
-                  finalValue = JSON.stringify(finalValue);
+                  finalValue = String(value);
                 }
               }
-            }
 
-            if (path === thisPath) {
-              if (document.querySelector("." + where) !== null) {
-                domTarget = document.querySelector("." + where);
-                domTargetChild = null;
-                for (let i of domTarget.children) {
-                  if (i.getAttribute("column") === column) {
-                    domTargetChild = i;
+              if (thisMap[column] !== undefined) {
+                if (thisMap[column].type === "boolean") {
+                  if (!thisMap[column].items.includes(finalValue)) {
+                    if (/true/gi.test(finalValue) || /True/gi.test(finalValue) || /1/gi.test(finalValue)) {
+                      finalValue = thisMap[column].items[0];
+                    } else {
+                      finalValue = thisMap[column].items[1];
+                    }
                   }
                 }
-                if (domTargetChild !== null) {
-                  domTargetChild.textContent = finalValue;
+                if (thisMap[column].moneyBoo === true) {
+                  finalValue = GeneralJs.autoComma(Number(finalValue.replace(/[^0-9\.\-]/gi, '')));
                 }
-                if (document.querySelector("." + where + "_gray") !== null) {
-                  domTargetGray = document.querySelector("." + where + "_gray");
-                  domTargetGrayChild = null;
-                  for (let i of domTargetGray.children) {
+                if (thisMap[column].type === "date") {
+                  if (/^1[6789]/.test(finalValue)) {
+                    finalValue = '-';
+                  }
+                }
+                if (thisMap[column].type === "object") {
+                  if (thisMap[column].stringFunction !== undefined) {
+                    if (thisMap[column].stringFunctionAsync === true) {
+                      tempFunction = new AsyncFunction("value", thisMap[column].stringFunction);
+                      finalValue = await tempFunction(finalValue);
+                    } else {
+                      tempFunction = new Function("value", thisMap[column].stringFunction);
+                      finalValue = tempFunction(finalValue);
+                    }
+                  } else {
+                    if (typeof finalValue === "object") {
+                      finalValue = JSON.stringify(finalValue);
+                    } else {
+                      finalValue = String(finalValue);
+                    }
+                  }
+                }
+              }
+
+              if (path === thisPath) {
+                if (document.querySelector("." + where) !== null) {
+                  domTarget = document.querySelector("." + where);
+                  domTargetChild = null;
+                  for (let i of domTarget.children) {
                     if (i.getAttribute("column") === column) {
-                      domTargetGrayChild = i;
+                      domTargetChild = i;
                     }
                   }
-                  if (domTargetGrayChild !== null) {
-                    domTargetGrayChild.textContent = finalValue;
+                  if (domTargetChild !== null) {
+                    domTargetChild.textContent = finalValue;
+                  }
+                  if (document.querySelector("." + where + "_gray") !== null) {
+                    domTargetGray = document.querySelector("." + where + "_gray");
+                    domTargetGrayChild = null;
+                    for (let i of domTargetGray.children) {
+                      if (i.getAttribute("column") === column) {
+                        domTargetGrayChild = i;
+                      }
+                    }
+                    if (domTargetGrayChild !== null) {
+                      domTargetGrayChild.textContent = finalValue;
+                    }
                   }
                 }
               }
-            }
 
-            if (document.querySelector(".totalWhite") !== null) {
-              white = document.querySelector(".totalWhite");
-              if (white.hasAttribute("index")) {
-                if (white.getAttribute("index") === where) {
-                  //white update start
-                  whiteChildren = white.firstChild.children[1].firstChild.children;
-                  whiteTarget = null;
-                  for (let dom of whiteChildren) {
-                    if (dom.getAttribute("index") === column) {
-                      whiteTarget = dom.children[1];
+              if (document.querySelector(".totalWhite") !== null) {
+                white = document.querySelector(".totalWhite");
+                if (white.hasAttribute("index")) {
+                  if (white.getAttribute("index") === where) {
+                    //white update start
+                    whiteChildren = white.firstChild.children[1].firstChild.children;
+                    whiteTarget = null;
+                    for (let dom of whiteChildren) {
+                      if (dom.getAttribute("index") === column) {
+                        whiteTarget = dom.children[1];
+                      }
                     }
-                  }
-                  if (whiteTarget !== null) {
-                    whiteTarget.textContent = finalValue;
+                    if (whiteTarget !== null) {
+                      whiteTarget.textContent = finalValue;
+                    }
                   }
                 }
               }
-            }
 
-            //end
-          } else if (obj.email !== undefined && obj.prompt !== undefined && obj.url !== undefined) {
-            if (Array.isArray(obj.email)) {
-              if (obj.email.includes(GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail)) {
-                const promptResult = window.prompt(obj.prompt);
-                GeneralJs.ajax({ result: (promptResult ? 1 : 0) }, obj.url, () => {});
+              //end
+            } else if (obj.email !== undefined && obj.prompt !== undefined && obj.url !== undefined) {
+              if (Array.isArray(obj.email)) {
+                if (obj.email.includes(GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail)) {
+                  const promptResult = window.prompt(obj.prompt);
+                  GeneralJs.ajax({ result: (promptResult ? 1 : 0) }, obj.url, () => {});
+                }
               }
             }
           }
+        } catch (e) {
+          console.log(e);
         }
       });
       local_funcs.entireSse = es;

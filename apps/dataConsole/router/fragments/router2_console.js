@@ -3408,3 +3408,143 @@ DataRouter.prototype.rou_post_callTo = function () {
   }
   return obj;
 }
+
+DataRouter.prototype.rou_post_designerConverting = function () {
+  const instance = this;
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  const back = this.back;
+  const bill = new BillMaker();
+  const { Agent } = require(`https`);
+  const agent = new Agent({ rejectUnauthorized: false });
+
+  const address = this.address;
+  const kakao = this.kakao;
+  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing } = this.mother;
+  let obj = {};
+  obj.link = "/designerConverting";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined || req.body.method === undefined || req.body.desid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { proid, method, desid } = equalJson(req.body);
+      const project = (await back.getProjectById(proid, { selfMongo: instance.mongo })).toNormal();
+      const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
+      const pastDesigner = await back.getDesignerById(project.desid, { selfMongo: instance.mongo });
+      const designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+      const firstContract = project.process.contract.first.calculation.amount;
+      const report = await bill.designerConverting(proid, method, desid, { selfMongo, selfCoreMongo: instance.mongo });
+      const newProject = (await back.getProjectById(proid, { selfMongo: instance.mongo })).toNormal();
+      const timeConst = 410;
+      const map = [
+        {
+          column: "designer",
+          position: "desid",
+          pastValue: pastDesigner.desid,
+          finalValue: designer.desid,
+        },
+        {
+          column: "calculationInfo",
+          position: "process.calculation.info",
+          pastValue: project.process.calculation.info,
+          finalValue: newProject.process.calculation.info,
+        },
+        {
+          column: "method",
+          position: "process.calculation.method",
+          pastValue: project.process.calculation.method,
+          finalValue: newProject.process.calculation.method,
+        },
+        {
+          column: "percentage",
+          position: "process.calculation.percentage",
+          pastValue: project.process.calculation.percentage,
+          finalValue: newProject.process.calculation.percentage,
+        },
+        {
+          column: "remainSupply",
+          position: "process.contract.remain.calculation.amount.supply",
+          pastValue: report.request.from.supply,
+          finalValue: report.request.to.supply,
+        },
+        {
+          column: "remainVat",
+          position: "process.contract.remain.calculation.amount.vat",
+          pastValue: report.request.from.vat,
+          finalValue: report.request.to.vat,
+        },
+        {
+          column: "remainConsumer",
+          position: "process.contract.remain.calculation.amount.consumer",
+          pastValue: report.request.from.consumer,
+          finalValue: report.request.to.consumer,
+        },
+        {
+          column: "remainPure",
+          position: "process.contract.remain.calculation.amount.consumer",
+          pastValue: report.request.from.consumer - firstContract,
+          finalValue: report.request.to.consumer - firstContract,
+        },
+        {
+          column: "paymentsTotalAmount",
+          position: "process.calculation.payments.totalAmount",
+          pastValue: report.response.from.total,
+          finalValue: report.response.to.total,
+        },
+        {
+          column: "paymentsFirstAmount",
+          position: "process.calculation.payments.first.amount",
+          pastValue: report.response.from.first,
+          finalValue: report.response.to.first,
+        },
+        {
+          column: "paymentsRemainAmount",
+          position: "process.calculation.payments.remain.amount",
+          pastValue: report.response.from.remain,
+          finalValue: report.response.to.remain,
+        },
+      ];
+
+      for (let { column, position, pastValue, finalValue } of map) {
+        await requestSystem("https://localhost:3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { httpsAgent: agent, headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
+        await sleep(timeConst);
+      }
+
+      // if (report.request.additional) {
+      //   await kakao.sendTalk("plusDesignFee", client.name, client.phone, {
+      //     client: client.name,
+      //     pastservice: serviceParsing(report.service.from),
+      //     newservice: serviceParsing(report.service.to),
+      //     host: address.homeinfo.ghost.host,
+      //     path: "estimation",
+      //     cliid: client.cliid,
+      //     needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
+      //   });
+      //   instance.mother.slack_bot.chat.postMessage({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" });
+      //   ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" }).catch((err) => {
+      //     console.log(err);
+      //   });
+      // }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerConverting): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
