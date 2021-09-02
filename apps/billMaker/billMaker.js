@@ -2058,6 +2058,20 @@ BillMaker.prototype.convertingDummy = function () {
         xValue: ""
       }
     },
+    designer: {
+      from: {
+        id: "",
+        name: "",
+        phone: "",
+        email: ""
+      },
+      to: {
+        id: "",
+        name: "",
+        phone: "",
+        email: ""
+      }
+    },
     request: {
       from: {
         supply: 0,
@@ -2214,6 +2228,16 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       returnObject.service.to.xValue = project.service.xValue;
       returnObject.service.to.online = project.service.online;
 
+      returnObject.designer.from.id = designer.desid;
+      returnObject.designer.from.name = designer.designer;
+      returnObject.designer.from.phone = designer.information.phone;
+      returnObject.designer.from.email = designer.information.email;
+
+      returnObject.designer.to.id = designer.desid;
+      returnObject.designer.to.name = designer.designer;
+      returnObject.designer.to.phone = designer.information.phone;
+      returnObject.designer.to.email = designer.information.email;
+
       returnObject.request.from.supply = project.process.contract.remain.calculation.amount.supply;
       returnObject.request.from.vat = project.process.contract.remain.calculation.amount.vat;
       returnObject.request.from.consumer = project.process.contract.remain.calculation.amount.consumer;
@@ -2272,6 +2296,401 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       projectUpdateQuery = {};
       projectUpdateQuery["service.serid"] = serid;
       projectUpdateQuery["service.online"] = !/off/gi.test(method);
+      projectUpdateQuery["process.contract.remain.calculation.amount.supply"] = Math.round(newSupply);
+      projectUpdateQuery["process.contract.remain.calculation.amount.vat"] = Math.round(newSupply * vatRatio);
+      projectUpdateQuery["process.contract.remain.calculation.amount.consumer"] = Math.round(newSupply * (1 + vatRatio));
+      classification = designer.information.business.businessInfo.classification.value;
+      percentage = designer.information.business.service.cost.percentage;
+      if (/일반/gi.test(classification)) {
+        calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
+      } else if (/간이/gi.test(classification)) {
+        calculate = Math.floor(newSupply * (1 - (percentage / 100)));
+      } else if (/프리/gi.test(classification)) {
+        calculate = Math.floor((newSupply - (newSupply * (percentage / 100))) * freeRatio);
+      } else {
+        calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
+      }
+      projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor((calculate / 2) / 10) * 10;
+      projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor((calculate / 2) / 10) * 10;
+      projectUpdateQuery["process.calculation.payments.totalAmount"] = projectUpdateQuery["process.calculation.payments.first.amount"] * 2;
+      await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+      returnObject.request.to.supply = projectUpdateQuery["process.contract.remain.calculation.amount.supply"];
+      returnObject.request.to.vat = projectUpdateQuery["process.contract.remain.calculation.amount.vat"];
+      returnObject.request.to.consumer = projectUpdateQuery["process.contract.remain.calculation.amount.consumer"];
+
+      returnObject.response.to.total = projectUpdateQuery["process.calculation.payments.totalAmount"];
+      returnObject.response.to.first = projectUpdateQuery["process.calculation.payments.first.amount"];
+      returnObject.response.to.remain = projectUpdateQuery["process.calculation.payments.remain.amount"];
+
+      newCommission = Math.floor((newSupply * (percentage / 100)) / 10) * 10;
+
+      whereQuery = { bilid };
+      updateQuery = {};
+
+      if (payNum === 0) {
+
+        pastRemainArr[remainItemIndex].unit.price = newRequestPrice;
+        pastRemainArr[remainItemIndex].amount.supply = newRequestPrice * pastRemainArr[remainItemIndex].unit.number;
+        pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
+        pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
+        updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
+
+        pastResponses = thisBill.responses.toNormal();
+        newResponses = [];
+        for (let res of pastResponses) {
+          if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+            newResponses.push(res);
+          }
+        }
+        updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
+
+        await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+
+      } else {
+
+        //request
+        if (newRequestAmount < 0) {
+          pastRemainArr[remainItemIndex].unit.price = newRequestPrice;
+          pastRemainArr[remainItemIndex].amount.supply = newRequestPrice * pastRemainArr[remainItemIndex].unit.number;
+          pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
+          pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
+          updateQuery["requests." + String(remainIndex) + ".items"] = equalJson(JSON.stringify(pastRemainArr));
+        } else if (newRequestAmount > 0) {
+          returnObject.request.additional = true;
+          await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC });
+          pastRemainArr[remainItemIndex].unit.price = newRequestAmount;
+          pastRemainArr[remainItemIndex].amount.supply = newRequestAmount * pastRemainArr[remainItemIndex].unit.number;
+          pastRemainArr[remainItemIndex].amount.vat = Math.round(pastRemainArr[remainItemIndex].amount.supply * vatRatio);
+          pastRemainArr[remainItemIndex].amount.consumer = Math.round(pastRemainArr[remainItemIndex].amount.supply * (1 + vatRatio));
+          updateQuery["requests." + String(0) + ".items." + String(0)] = equalJson(JSON.stringify(pastRemainArr[remainItemIndex]));
+        }
+        await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+        updateQuery = {};
+
+        //response
+        firstResponse = null;
+        secondResponse = null;
+        for (let res of thisBill.responses) {
+          if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+            firstResponse = res;
+          }
+          if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+            secondResponse = res;
+          }
+        }
+        if (firstResponse === null || secondResponse === null) {
+          throw new Error("invaild response structure");
+        }
+        firstBoo = false;
+        remainBoo = false;
+        totalNumR0 = 0;
+        for (let { amount: { pure } } of firstResponse.items) {
+          totalNumR0 += pure;
+        }
+        payNumR0 = 0;
+        for (let { amount } of firstResponse.pay) {
+          payNumR0 += amount;
+        }
+        cancelNumR0 = 0;
+        for (let { amount } of firstResponse.cancel) {
+          cancelNumR0 += amount;
+        }
+        firstBoo = (totalNumR0 <= payNumR0 - cancelNumR0);
+        totalNumR1 = 0;
+        for (let { amount: { pure } } of secondResponse.items) {
+          totalNumR1 += pure;
+        }
+        payNumR1 = 0;
+        for (let { amount } of secondResponse.pay) {
+          payNumR1 += amount;
+        }
+        cancelNumR1 = 0;
+        for (let { amount } of secondResponse.cancel) {
+          cancelNumR1 += amount;
+        }
+        remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
+
+        if (!firstBoo && !remainBoo) {
+
+          pastResponses = thisBill.responses.toNormal();
+          newResponses = [];
+          for (let res of pastResponses) {
+            if (res.name !== BillMaker.billDictionary.styling.responses.firstDesignFee.name && res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+              newResponses.push(res);
+            }
+          }
+          updateQuery = {};
+          updateQuery["responses"] = equalJson(JSON.stringify(newResponses));
+          await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+          await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+          await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+
+        } else {
+
+          pastResponses = thisBill.responses.toNormal();
+          for (let i = 0; i < pastResponses.length; i++) {
+            if (pastResponses[i].name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+              remainResponse = pastResponses[i];
+              remainResponseIndex = i;
+            }
+            if (pastResponses[i].name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+              firstResponse = pastResponses[i];
+              firstResponseIndex = i;
+            }
+          }
+          for (let i = 0; i < remainResponse.items.length; i++) {
+            if (remainResponse.items[i].class === "designerFeeRemain") {
+              remainResponseRemainItem = remainResponse.items[i];
+              remainResponseRemainItemIndex = i;
+            }
+          }
+          for (let i = 0; i < firstResponse.items.length; i++) {
+            if (firstResponse.items[i].class === "designerFeeFirst") {
+              firstResponseFirstItemIndex = i;
+            }
+          }
+
+          responseBetween = projectUpdateQuery["process.calculation.payments.totalAmount"] - (pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price + pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price);
+          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price + responseBetween;
+          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].amount.pure = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
+          pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].amount.commission = newCommission - pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].amount.commission;
+          updateQuery = {};
+          updateQuery["responses." + String(remainResponseIndex) + ".items"] = pastResponses[remainResponseIndex].items;
+          await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+
+          projectUpdateQuery = {};
+          projectUpdateQuery["process.calculation.payments.first.amount"] = pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price;
+          projectUpdateQuery["process.calculation.payments.remain.amount"] = pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
+          projectUpdateQuery["process.calculation.payments.totalAmount"] = pastResponses[firstResponseIndex].items[firstResponseFirstItemIndex].unit.price + pastResponses[remainResponseIndex].items[remainResponseRemainItemIndex].unit.price;
+          await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+          returnObject.response.to.total = projectUpdateQuery["process.calculation.payments.totalAmount"];
+          returnObject.response.to.first = projectUpdateQuery["process.calculation.payments.first.amount"];
+          returnObject.response.to.remain = projectUpdateQuery["process.calculation.payments.remain.amount"];
+
+        }
+
+      }
+
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+    await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
+
+    return returnObject;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.designerConverting = async function (proid, method, desid, option = { selfMongo: null, selfConsoleMongo: null }) {
+  if (typeof proid !== "string" || typeof method !== "string" || typeof desid !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+  const doingSignature = "billMaker_designerConvertingDoing_" + proid;
+  const work = new BackWorker();
+  const back = this.back;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
+  const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
+  const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let project;
+    let thisBill, bilid;
+    let serid;
+    let xValue;
+    let remain;
+    let totalNum, payNum, cancelNum;
+    let totalNumR0, payNumR0, cancelNumR0;
+    let totalNumR1, payNumR1, cancelNumR1;
+    let pastDesid, cliid;
+    let pastDesigner;
+    let designer, client;
+    let feeObject;
+    let pastFeeObject;
+    let newFeeObject;
+    let remainIndex, remainItemIndex;
+    let num;
+    let pastRemainArr;
+    let proposalIndex0, proposalIndex1;
+    let projectWhereQuery, projectUpdateQuery;
+    let whereQuery, updateQuery;
+    let newResponses;
+    let pastResponses;
+    let newSupply;
+    let classification, percentage;
+    let calculate, commission;
+    let pastRemainPrice;
+    let newRequestAmount;
+    let firstResponse, secondResponse;
+    let firstBoo, remainBoo;
+    let newRequestPrice;
+    let remainResponse;
+    let remainResponseIndex;
+    let remainResponseRemainItem;
+    let remainResponseRemainItemIndex;
+    let responseBetween;
+    let newCommission;
+    let firstResponseIndex;
+    let firstResponseFirstItemIndex;
+    let returnObject;
+
+    while (await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) {
+      await sleep(300);
+    }
+    await fileSystem(`write`, [ `${process.cwd()}/temp/${doingSignature}.json`, `{ "doing": 1 }` ]);
+
+    returnObject = this.convertingDummy();
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    if (project === null) {
+      throw new Error("invaild proid");
+    }
+    if (!/^d/.test(project.desid)) {
+      throw new Error("unable in this project");
+    }
+    pastDesid = project.desid;
+    cliid = project.cliid;
+    serid = project.service.serid;
+    xValue = project.service.xValue;
+
+    pastDesigner = await back.getDesignerById(pastDesid, { selfMongo: MONGOCOREC });
+    designer = await back.getDesignerById(desid, { selfMongo: MONGOCOREC });
+    client = await back.getClientById(cliid, { selfMongo: MONGOCOREC });
+
+    feeObject = null;
+    for (let i = 0; i < project.proposal.detail.length; i++) {
+      if (project.proposal.detail[i].desid === pastDesid) {
+        for (let j = 0; j < project.proposal.detail[i].fee.length; j++) {
+          if (project.proposal.detail[i].fee[j].method === method) {
+            feeObject = project.proposal.detail[i].fee[j];
+            proposalIndex0 = i;
+            proposalIndex1 = j;
+          }
+        }
+      }
+    }
+    if (feeObject === null) {
+      throw new Error("cannot find fee object");
+    }
+
+    pastFeeObject = await work.getDesignerFee(pastDesid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
+    newFeeObject = await work.getDesignerFee(desid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
+
+    if (newFeeObject.detail[method] === 0) {
+      return { error: "unable in this designer" };
+    } else {
+      returnObject.service.from.serid = serid;
+      returnObject.service.from.xValue = project.service.xValue;
+      returnObject.service.from.online = project.service.online;
+      returnObject.service.to.serid = serid;
+      returnObject.service.to.xValue = project.service.xValue;
+      returnObject.service.to.online = project.service.online;
+
+      returnObject.designer.from.id = pastDesigner.desid;
+      returnObject.designer.from.name = pastDesigner.designer;
+      returnObject.designer.from.phone = pastDesigner.information.phone;
+      returnObject.designer.from.email = pastDesigner.information.email;
+
+      returnObject.designer.to.id = designer.desid;
+      returnObject.designer.to.name = designer.designer;
+      returnObject.designer.to.phone = designer.information.phone;
+      returnObject.designer.to.email = designer.information.email;
+
+      returnObject.request.from.supply = project.process.contract.remain.calculation.amount.supply;
+      returnObject.request.from.vat = project.process.contract.remain.calculation.amount.vat;
+      returnObject.request.from.consumer = project.process.contract.remain.calculation.amount.consumer;
+
+      returnObject.response.from.total = project.process.calculation.payments.totalAmount;
+      returnObject.response.from.first = project.process.calculation.payments.first.amount;
+      returnObject.response.from.remain = project.process.calculation.payments.remain.amount;
+
+      thisBill = await this.getBillsByQuery({
+        $and: [
+          { "links.proid": project.proid },
+          { "links.cliid": cliid },
+          { "links.desid": pastDesid },
+          { "links.method": method },
+        ]
+      }, { selfMongo: MONGOC });
+      if (thisBill.length === 0) {
+        throw new Error("cannot found bill");
+      }
+      thisBill = thisBill[0];
+      bilid = thisBill.bilid;
+      num = 0;
+      for (let request of thisBill.requests) {
+        if (request.name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
+          remain = request;
+          remainIndex = num;
+        }
+        num++;
+      }
+      totalNum = 0;
+      for (let { amount: { consumer } } of remain.items) {
+        totalNum += consumer;
+      }
+      payNum = 0;
+      for (let { amount } of remain.pay) {
+        payNum += amount;
+      }
+      cancelNum = 0;
+      for (let { amount } of remain.cancel) {
+        cancelNum += amount;
+      }
+
+      pastRemainArr = thisBill.requests[remainIndex].items.toNormal();
+      for (let i = 0; i < pastRemainArr.length; i++) {
+        if (pastRemainArr[i].class === "designerTime") {
+          remainItemIndex = i;
+        }
+      }
+      pastRemainPrice = pastRemainArr[remainItemIndex].unit.price;
+      newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
+      newRequestPrice = pastRemainPrice + newRequestAmount;
+      project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
+      newSupply = project.proposal.detail[proposalIndex0].fee[proposalIndex1].amount;
+
+      projectWhereQuery = { proid };
+      projectUpdateQuery = {};
+      projectUpdateQuery["desid"] = desid;
       projectUpdateQuery["process.contract.remain.calculation.amount.supply"] = Math.round(newSupply);
       projectUpdateQuery["process.contract.remain.calculation.amount.vat"] = Math.round(newSupply * vatRatio);
       projectUpdateQuery["process.contract.remain.calculation.amount.consumer"] = Math.round(newSupply * (1 + vatRatio));
