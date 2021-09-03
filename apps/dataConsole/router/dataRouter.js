@@ -1127,7 +1127,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       if (map[column].calendar !== undefined) {
         if (typeof map[column].calendar === "function") {
           let calendObj, start, id, to, title;
-          calendObj = map[column].calendar(JSON.parse(thisCase));
+          calendObj = map[column].calendar(equalJson(thisCase));
           id = calendObj.id;
           to = calendObj.to;
           title = calendObj.title;
@@ -1147,7 +1147,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김(rou_post_updateDocument) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -3177,7 +3177,7 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김(rou_post_generalCalendar) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -4458,8 +4458,10 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
         designer: designer,
-        host: address.frontinfo.host,
-        path: "payment.php",
+        host: address.homeinfo.ghost.host,
+        path: "estimation",
+        cliid: cliid,
+        needs: ("style," + desid + "," + proid + "," + method),
       });
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {

@@ -28,8 +28,6 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   return obj;
 }
 
-
-
 DataRouter.prototype.rou_post_designerProposal_policy = function () {
   const instance = this;
   const { slack_bot } = this.mother;

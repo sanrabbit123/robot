@@ -290,6 +290,10 @@ DevContext.prototype.launching = async function () {
 
     const proid = "p2107_aa46s";
 
+    // const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" }, "process.status": { $regex: "^[대진홀]" } });
+    //
+    // console.log(projects);
+
     // console.log(await bill.createStylingBill("p2107_aa46s"));
     // console.log(await bill.createStylingBill("p2108_aa63s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC }));
     // console.log((await bill.getBillById("b218q_aa04s", { selfMongo: this.MONGOLOCALC })).responses[0].items);

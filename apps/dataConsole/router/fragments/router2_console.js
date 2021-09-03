@@ -526,7 +526,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       if (map[column].calendar !== undefined) {
         if (typeof map[column].calendar === "function") {
           let calendObj, start, id, to, title;
-          calendObj = map[column].calendar(JSON.parse(thisCase));
+          calendObj = map[column].calendar(equalJson(thisCase));
           id = calendObj.id;
           to = calendObj.to;
           title = calendObj.title;
@@ -546,7 +546,7 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김(rou_post_updateDocument) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1653,7 +1653,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
   const back = this.back;
   const sheets = this.sheets;
   const drive = this.drive;
-  const { ghostRequest } = this.mother;
+  const { ghostRequest, equalJson } = this.mother;
   let obj = {};
   obj.link = "/sendSheets";
   obj.func = async function (req, res) {
@@ -1675,7 +1675,7 @@ DataRouter.prototype.rou_post_sendSheets = function () {
           if (req.body.tapName !== undefined) {
             await sheets.update_defaultSheetName_inPython(sheetsId, req.body.tapName);
           }
-          values = JSON.parse(req.body.values);
+          values = equalJson(req.body.values);
           await sheets.update_value_inPython(sheetsId, (req.body.tapName !== undefined ? req.body.tapName : ''), values, [ 0, 0 ]);
           await sheets.setting_cleanView_inPython(sheetsId);
           response = await drive.read_webView_inPython(sheetsId);
@@ -1908,7 +1908,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
 
 DataRouter.prototype.rou_post_getAnalytics = function () {
   const instance = this;
-  const { shell, shellLink } = this.mother;
+  const { shell, shellLink, equalJson } = this.mother;
   const stringToArr = function (dateString) {
     let tempArr0, tempArr1, tempArr2;
     tempArr0 = dateString.split(' ');
@@ -1920,7 +1920,7 @@ DataRouter.prototype.rou_post_getAnalytics = function () {
   obj.link = "/getAnalytics_total";
   obj.func = async function (req, res) {
     try {
-      let rangeObj = JSON.parse(req.body.range);
+      let rangeObj = equalJson(req.body.range);
       let { startDate, endDate } = rangeObj;
       let searchQuery, rows;
       let andSearchQuery, orSearchQuery, search;
@@ -2054,7 +2054,7 @@ DataRouter.prototype.rou_post_analyticsReport = function () {
 
 DataRouter.prototype.rou_post_parsingLatestLog = function () {
   const instance = this;
-  const { fileSystem } = this.mother;
+  const { fileSystem, equalJson } = this.mother;
   let obj = {};
   obj.link = "/parsingLatestLog";
   obj.func = async function (req, res) {
@@ -2063,7 +2063,7 @@ DataRouter.prototype.rou_post_parsingLatestLog = function () {
         throw new Error("must be id arr: Array");
       }
       const logDir = `${instance.dir}/log`;
-      const idArr = JSON.parse(req.body.idArr);
+      const idArr = equalJson(req.body.idArr);
       const logAll = await fileSystem(`readDir`, [ logDir ]);
 
       let logParsing, logIdArr;
@@ -2576,7 +2576,7 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김(rou_post_generalCalendar) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -2604,7 +2604,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
         if (req.body.addressArr === undefined) {
           throw new Error("must be addressArr");
         }
-        const addressArr = JSON.parse(req.body.addressArr);
+        const addressArr = equalJson(req.body.addressArr);
         const liteMode = req.body.liteMode === undefined ? false : (typeof req.body.liteMode === "string" ? req.body.liteMode === "true" : req.body.liteMode);
         for (let obj of addressArr) {
           if (obj.id === undefined || obj.address === undefined) {
@@ -2643,7 +2643,7 @@ DataRouter.prototype.rou_post_parsingAddress = function () {
         tong.designers = [];
         for (let i in tong) {
           if (i !== "designers" && i !== "standard") {
-            tong.designers.push(JSON.parse(JSON.stringify(tong[i])));
+            tong.designers.push(equalJson(JSON.stringify(tong[i])));
             delete tong[i];
           }
         }

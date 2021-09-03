@@ -850,7 +850,7 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
           bilid = await this.createBill({}, { selfMongo: MONGOC });
           updateMode = false;
         } else {
-          thisBill = temp[0].bilid;
+          thisBill = temp[0];
           bilid = thisBill.bilid;
           updateMode = true;
         }
