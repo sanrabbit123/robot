@@ -67,7 +67,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
 
 
@@ -297,7 +296,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // console.log(await bill.createStylingBill("p2107_aa46s"));
+    // console.log(await bill.createStylingBill("p1801_aa01s"));
     // console.log(await bill.createStylingBill("p2108_aa63s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC }));
     // console.log((await bill.getBillById("b218q_aa04s", { selfMongo: this.MONGOLOCALC })).responses[0].items);
     // console.log((await bill.getBillById("b218r_aa04s")));
