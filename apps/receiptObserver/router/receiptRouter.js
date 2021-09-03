@@ -627,6 +627,8 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           }
         }
 
+        instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+
       } else {
 
         instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
@@ -639,9 +641,10 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
         });
 
+        instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!", channel: "#700_operation" });
+
       }
 
-      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
       res.set({
@@ -888,7 +891,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount) : " + e.message, channel: "#error_log" });
       res.set({ "Content-Type": "text/plain" });
       res.send("FAIL");
       console.log(e);

@@ -906,6 +906,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           }
           form.action = "https://mobile.inicis.com/smart/payment/";
           form.target = "_self";
+          if (/card/gi.test(motherMethod)) {
+            window.open('', "_self", '');
+          }
           form.submit();
         }
       } catch (e) {
