@@ -224,13 +224,15 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     designerSelect: {
-      name: "고객 디자이너 선택",
-      id: "TE_4039",
+      name: "고객 디자이너 선택 최종 수정",
+      id: "TF_7147",
       needs: [
         "client",
         "designer",
         "host",
-        "path"
+        "path",
+        "cliid",
+        "needs"
       ],
       convert: function (obj) {
         return [
@@ -238,6 +240,8 @@ KakaoTalk.prototype.templateTong = function (target) {
           { from: "designer", to: obj.designer },
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
         ];
       },
     },
@@ -504,6 +508,30 @@ KakaoTalk.prototype.templateTong = function (target) {
           { from: "client", to: obj.client },
           { from: "pastservice", to: obj.pastservice },
           { from: "newservice", to: obj.newservice },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
+        ];
+      },
+    },
+    plusDesignerFee: {
+      name: "디자이너 변경 추가 견적",
+      id: "TF_7173",
+      needs: [
+        "client",
+        "pastdesigner",
+        "newdesigner",
+        "host",
+        "path",
+        "cliid",
+        "needs"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "pastdesigner", to: obj.pastdesigner },
+          { from: "newdesigner", to: obj.newdesigner },
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
           { from: "cliid", to: obj.cliid },

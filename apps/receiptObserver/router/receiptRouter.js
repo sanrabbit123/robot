@@ -341,7 +341,12 @@ ReceiptRouter.prototype.rou_post_createStylingBill = function () {
         throw new Error("invaild post, must be { proid }");
       }
       const { proid } = req.body;
-      const bilidArr = await bill.createStylingBill(proid, { selfCoreMongo: instance.mongo, selfMongo: instance.mongolocal });
+      let option, bilidArr;
+      option = { selfCoreMongo: instance.mongo, selfMongo: instance.mongolocal };
+      if (req.body.desid !== undefined) {
+        option.forceDesid = req.body.desid;
+      }
+      bilidArr = await bill.createStylingBill(proid, option);
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1254,21 +1259,21 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
         await sleep(timeConst);
       }
 
-      // if (report.request.additional) {
-      //   await kakao.sendTalk("plusDesignFee", client.name, client.phone, {
-      //     client: client.name,
-      //     pastservice: serviceParsing(report.service.from),
-      //     newservice: serviceParsing(report.service.to),
-      //     host: address.homeinfo.ghost.host,
-      //     path: "estimation",
-      //     cliid: client.cliid,
-      //     needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
-      //   });
-      //   instance.mother.slack_bot.chat.postMessage({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" });
-      //   ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" }).catch((err) => {
-      //     console.log(err);
-      //   });
-      // }
+      if (report.request.additional) {
+        await kakao.sendTalk("plusDesignerFee", client.name, client.phone, {
+          client: client.name,
+          pastdesigner: pastDesigner.designer,
+          newdesigner: designer.designer,
+          host: address.homeinfo.ghost.host,
+          path: "estimation",
+          cliid: client.cliid,
+          needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
+        });
+        instance.mother.slack_bot.chat.postMessage({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" });
+        ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" }).catch((err) => {
+          console.log(err);
+        });
+      }
 
       res.set({
         "Content-Type": "application/json",
@@ -1309,7 +1314,7 @@ ReceiptRouter.prototype.rou_post_amountConverting = function () {
       const selfMongo = instance.mongolocal;
       const { bilid } = equalJson(req.body);
       await bill.amountConverting(bilid, { selfMongo, selfCoreMongo: instance.mongo });
-      
+
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",

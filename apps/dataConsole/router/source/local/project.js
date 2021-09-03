@@ -3661,15 +3661,20 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let titleTong;
           let scrollTong, num;
           let scroll;
-          let historyArr;
-          let historyLoad;
+          let requestArr, responseArr;
+          let requestLoad, responseLoad;
           let tempArr;
           let tempObj;
+          let totalNum, payNum, cancelNum;
+          let responseBoo;
 
-          historyLoad = () => {};
+          responseBoo = /미화/gi.test(instance.mother.member.name);
+
+          requestLoad = () => {};
+          responseLoad = () => {};
           scrollTong = {};
 
-          historyArr = [];
+          requestArr = [];
           for (let { date, name, id } of bill.requests) {
             tempObj = {};
             tempObj.text = "";
@@ -3679,7 +3684,42 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               return (p1 + " <b%" + p2 + "%b>");
             });
             tempObj.id = id;
-            historyArr.push(tempObj);
+            requestArr.push(tempObj);
+          }
+
+          responseArr = [];
+          for (let { date, id, items, pay, cancel } of bill.responses) {
+            totalNum = 0;
+            for (let { amount: { consumer } } of items) {
+              totalNum += consumer;
+            }
+            payNum = 0;
+            for (let { amount } of pay) {
+              payNum += amount;
+            }
+            cancelNum = 0;
+            for (let { amount } of cancel) {
+              cancelNum += amount;
+            }
+            for (let { name, unit: { number }, amount: { pure } } of items) {
+              tempObj = {};
+              tempObj.text = "";
+              tempObj.text += dateToString(date, true).slice(2, -3);
+              tempObj.text += " | ";
+              tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                return (p1 + " <b%" + p2 + "%b>");
+              });
+              tempObj.text += " | ";
+              tempObj.text += "정산 금액 : ";
+              tempObj.text += GeneralJs.autoComma(pure) + '원';
+              tempObj.text += " | ";
+              tempObj.text += "횟수 : ";
+              tempObj.text += String(number);
+              tempObj.text += " | ";
+              tempObj.text += (totalNum <= payNum - cancelNum ? "정산" : "미정산");
+              tempObj.id = id;
+              responseArr.push(tempObj);
+            }
           }
 
           titleTong = createNode({
@@ -3699,6 +3739,41 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   fontWeight: String(600),
                   position: "absolute",
                   bottom: String(titleBottom) + ea,
+                }
+              },
+              {
+                class: [ "hoverDefault_lite" ],
+                attribute: [
+                  { toggle: responseBoo ? "on" : "off" }
+                ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      const toggle = this.getAttribute("toggle");
+                      const textDom = this.previousElementSibling;
+                      if (toggle === "off") {
+                        cleanChildren(scrollTong);
+                        responseLoad();
+                        textDom.textContent = "프로젝트 정산 목록";
+                        this.setAttribute("toggle", "on");
+                      } else {
+                        cleanChildren(scrollTong);
+                        requestLoad();
+                        textDom.textContent = "고객님의 견적서";
+                        this.setAttribute("toggle", "off");
+                      }
+                    }
+                  }
+                ],
+                style: {
+                  position: "absolute",
+                  bottom: String(circleBottom) + ea,
+                  right: String(circleRight) + ea,
+                  width: String(circleRadius) + ea,
+                  height: String(circleRadius) + ea,
+                  background: colorChip.red,
+                  borderRadius: String(circleRadius) + ea,
                 }
               }
             ]
@@ -3724,7 +3799,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           });
 
-          historyLoad = () => {
+          requestLoad = () => {
             scrollTong.style.height = String(8000) + ea;
             scrollTong.parentElement.setAttribute("proid", proid);
             scrollTong.parentElement.setAttribute("desid", desid);
@@ -3751,31 +3826,34 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                     e.preventDefault();
                     e.stopPropagation();
                     try {
-                      let number, bill, tempObj, removeTargets;
-                      number = window.prompt("출장비를 몇 회로 설정할까요?").trim();
-                      number = Number(String(number).replace(/[^0-9]/gi, ''));
-                      if (Number.isNaN(number)) {
-                        number = 2;
-                      }
-                      bill = await ajaxJson({ injectionCase: "request", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
-                      GeneralJs.stacks[thisProjectBill] = bill;
-                      historyArr = [];
-                      for (let { date, name, id } of bill.requests) {
-                        tempObj = {};
-                        tempObj.text = "";
-                        tempObj.text += dateToString(date, true).slice(2, -3);
-                        tempObj.text += " | ";
-                        tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                          return (p1 + " <b%" + p2 + "%b>");
-                        });
-                        tempObj.id = id;
-                        historyArr.push(tempObj);
-                      }
-                      cleanChildren(scrollTong);
-                      historyLoad();
-                      removeTargets = document.querySelectorAll('.' + menuClass);
-                      for (let dom of removeTargets) {
-                        dom.remove();
+                      let number, bill, tempObj, removeTargets, promptValue;
+                      promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
+                      if (promptValue !== null) {
+                        number = promptValue.trim();
+                        number = Number(String(number).replace(/[^0-9]/gi, ''));
+                        if (Number.isNaN(number)) {
+                          number = 2;
+                        }
+                        bill = await ajaxJson({ injectionCase: "request", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
+                        GeneralJs.stacks[thisProjectBill] = bill;
+                        requestArr = [];
+                        for (let { date, name, id } of bill.requests) {
+                          tempObj = {};
+                          tempObj.text = "";
+                          tempObj.text += dateToString(date, true).slice(2, -3);
+                          tempObj.text += " | ";
+                          tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                            return (p1 + " <b%" + p2 + "%b>");
+                          });
+                          tempObj.id = id;
+                          requestArr.push(tempObj);
+                        }
+                        cleanChildren(scrollTong);
+                        requestLoad();
+                        removeTargets = document.querySelectorAll('.' + menuClass);
+                        for (let dom of removeTargets) {
+                          dom.remove();
+                        }
                       }
                     } catch (e) {
                       console.log(e);
@@ -3889,7 +3967,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             });
             let num;
             num = 0;
-            for (let { text, id } of historyArr) {
+            for (let { text, id } of requestArr) {
               createNode({
                 mother: scrollTong,
                 attribute: [
@@ -4090,35 +4168,38 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 const itemName = this.getAttribute("iname");
                                                 if (/출장/gi.test(itemName)) {
                                                   if (window.confirm("출장 횟수를 변경할까요?")) {
-                                                    let position, thisIndex, number, pastBill, bill, tempObj;
-                                                    number = window.prompt("출장비를 몇 회로 설정할까요?").trim();
-                                                    number = Number(String(number).replace(/[^0-9]/gi, ''));
-                                                    if (Number.isNaN(number)) {
-                                                      number = 2;
-                                                    }
-                                                    pastBill = GeneralJs.stacks[thisProjectBill];
-                                                    for (let i = 0; i < pastBill.requests.length; i++) {
-                                                      if (pastBill.requests[i].id === index) {
-                                                        thisIndex = i;
-                                                        break;
+                                                    let position, thisIndex, number, pastBill, bill, tempObj, promptValue;
+                                                    promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
+                                                    if (promptValue !== null) {
+                                                      number = promptValue.trim();
+                                                      number = Number(String(number).replace(/[^0-9]/gi, ''));
+                                                      if (Number.isNaN(number)) {
+                                                        number = 2;
                                                       }
+                                                      pastBill = GeneralJs.stacks[thisProjectBill];
+                                                      for (let i = 0; i < pastBill.requests.length; i++) {
+                                                        if (pastBill.requests[i].id === index) {
+                                                          thisIndex = i;
+                                                          break;
+                                                        }
+                                                      }
+                                                      bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : (/계약/gi.test(name) ? "first" : "request"), proid, method, number, index: thisIndex }, PYTHONHOST + "/travelReconfig", { equal: true });
+                                                      GeneralJs.stacks[thisProjectBill] = bill;
+                                                      requestArr = [];
+                                                      for (let { date, name, id } of bill.requests) {
+                                                        tempObj = {};
+                                                        tempObj.text = "";
+                                                        tempObj.text += dateToString(date, true).slice(2, -3);
+                                                        tempObj.text += " | ";
+                                                        tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                                                          return (p1 + " <b%" + p2 + "%b>");
+                                                        });
+                                                        tempObj.id = id;
+                                                        requestArr.push(tempObj);
+                                                      }
+                                                      cleanChildren(scrollTong);
+                                                      requestLoad();
                                                     }
-                                                    bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : (/계약/gi.test(name) ? "first" : "request"), proid, method, number, index: thisIndex }, PYTHONHOST + "/travelReconfig", { equal: true });
-                                                    GeneralJs.stacks[thisProjectBill] = bill;
-                                                    historyArr = [];
-                                                    for (let { date, name, id } of bill.requests) {
-                                                      tempObj = {};
-                                                      tempObj.text = "";
-                                                      tempObj.text += dateToString(date, true).slice(2, -3);
-                                                      tempObj.text += " | ";
-                                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                                                        return (p1 + " <b%" + p2 + "%b>");
-                                                      });
-                                                      tempObj.id = id;
-                                                      historyArr.push(tempObj);
-                                                    }
-                                                    cleanChildren(scrollTong);
-                                                    historyLoad();
                                                   }
                                                 }
                                               } catch (e) {
@@ -4250,7 +4331,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     }
                                     bill = await ajaxJson({ injectionCase: "request", proid, method, index: thisIndex }, PYTHONHOST + "/travelEjection", { equal: true });
                                     GeneralJs.stacks[thisProjectBill] = bill;
-                                    historyArr = [];
+                                    requestArr = [];
                                     for (let { date, name, id } of bill.requests) {
                                       tempObj = {};
                                       tempObj.text = "";
@@ -4260,10 +4341,10 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                         return (p1 + " <b%" + p2 + "%b>");
                                       });
                                       tempObj.id = id;
-                                      historyArr.push(tempObj);
+                                      requestArr.push(tempObj);
                                     }
                                     cleanChildren(scrollTong);
-                                    historyLoad();
+                                    requestLoad();
                                   } catch (e) {
                                     console.log(e);
                                   }
@@ -4278,28 +4359,31 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   e.preventDefault();
                                   e.stopPropagation();
                                   try {
-                                    let position, number, bill, tempObj;
-                                    number = window.prompt("출장비를 몇 회로 설정할까요?").trim();
-                                    number = Number(String(number).replace(/[^0-9]/gi, ''));
-                                    if (Number.isNaN(number)) {
-                                      number = 2;
+                                    let position, number, bill, tempObj, promptValue;
+                                    promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
+                                    if (promptValue !== null) {
+                                      number = promptValue.trim();
+                                      number = Number(String(number).replace(/[^0-9]/gi, ''));
+                                      if (Number.isNaN(number)) {
+                                        number = 2;
+                                      }
+                                      bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
+                                      GeneralJs.stacks[thisProjectBill] = bill;
+                                      requestArr = [];
+                                      for (let { date, name, id } of bill.requests) {
+                                        tempObj = {};
+                                        tempObj.text = "";
+                                        tempObj.text += dateToString(date, true).slice(2, -3);
+                                        tempObj.text += " | ";
+                                        tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                                          return (p1 + " <b%" + p2 + "%b>");
+                                        });
+                                        tempObj.id = id;
+                                        requestArr.push(tempObj);
+                                      }
+                                      cleanChildren(scrollTong);
+                                      requestLoad();
                                     }
-                                    bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
-                                    GeneralJs.stacks[thisProjectBill] = bill;
-                                    historyArr = [];
-                                    for (let { date, name, id } of bill.requests) {
-                                      tempObj = {};
-                                      tempObj.text = "";
-                                      tempObj.text += dateToString(date, true).slice(2, -3);
-                                      tempObj.text += " | ";
-                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                                        return (p1 + " <b%" + p2 + "%b>");
-                                      });
-                                      tempObj.id = id;
-                                      historyArr.push(tempObj);
-                                    }
-                                    cleanChildren(scrollTong);
-                                    historyLoad();
                                   } catch (e) {
                                     console.log(e);
                                   }
@@ -4315,7 +4399,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     index = 0;
                                     bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, index }, PYTHONHOST + "/travelEjection", { equal: true });
                                     GeneralJs.stacks[thisProjectBill] = bill;
-                                    historyArr = [];
+                                    requestArr = [];
                                     for (let { date, name, id } of bill.requests) {
                                       tempObj = {};
                                       tempObj.text = "";
@@ -4325,10 +4409,10 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                         return (p1 + " <b%" + p2 + "%b>");
                                       });
                                       tempObj.id = id;
-                                      historyArr.push(tempObj);
+                                      requestArr.push(tempObj);
                                     }
                                     cleanChildren(scrollTong);
-                                    historyLoad();
+                                    requestLoad();
                                   } catch (e) {
                                     console.log(e);
                                   }
@@ -4514,7 +4598,95 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           }
 
-          historyLoad();
+          responseLoad = () => {
+            scrollTong.style.height = String(8000) + ea;
+            scrollTong.parentElement.setAttribute("proid", proid);
+            scrollTong.parentElement.setAttribute("desid", desid);
+            scrollTong.parentElement.setAttribute("cliid", cliid);
+            scrollTong.parentElement.setAttribute("method", method);
+            let num;
+            num = 0;
+            for (let { text, id } of responseArr) {
+              tempArr = text.split('|').map((i) => { return i.trim(); });
+              children = tempArr.map((t, index) => {
+                return {
+                  text: t,
+                  attribute: [
+                    { index: id },
+                    { first: tempArr[0] },
+                    { name: t },
+                    { proid },
+                    { desid },
+                    { cliid },
+                    { method }
+                  ],
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(fontSize) + ea,
+                    fontWeight: String(300),
+                    color: colorChip.black,
+                    background: colorChip.gray0,
+                    paddingTop: String(innerPaddingTop) + ea,
+                    paddingBottom: String(innerPaddingBottom) + ea,
+                    paddingLeft: String(innerPaddingLeft) + ea,
+                    paddingRight: String(innerPaddingLeft) + ea,
+                    borderRadius: String(3) + "px",
+                    marginRight: String(imageMargin) + ea,
+                    cursor: "pointer",
+                  },
+                  bold: {
+                    fontSize: String(fontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
+                  }
+                };
+              });
+              children[0].style = {
+                position: "relative",
+                display: "inline-block",
+                fontSize: String(fontSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.shadowWhite,
+                background: colorChip.gray2,
+                paddingTop: String(innerPaddingTop) + ea,
+                paddingBottom: String(innerPaddingBottom) + ea,
+                paddingLeft: String(innerPaddingLeft) + ea,
+                paddingRight: String(innerPaddingLeft) + ea,
+                borderRadius: String(3) + "px",
+                marginRight: String(imageMargin) + ea,
+              };
+              children[0].bold = {
+                fontSize: String(fontSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.green,
+              };
+              createNode({
+                mother: scrollTong,
+                attribute: [
+                  { index: id },
+                  { order: String(num) }
+                ],
+                style: {
+                  position: "relative",
+                  display: "block",
+                  width: String(100) + '%',
+                  height: "auto",
+                  marginBottom: String(imageMargin) + ea,
+                },
+                children
+              });
+              scrollTong.style.height = "auto";
+              num++;
+            }
+          }
+
+          if (responseBoo) {
+            responseLoad();
+          } else {
+            requestLoad();
+          }
+
           scrollTong.style.height = "auto";
 
         } else {
@@ -5986,132 +6158,53 @@ ProjectJs.prototype.globalChaining = async function (thisCase, column, value, pa
         console.log(e);
       }
     }
-    const designerChange = async function (thisCase, column, value, pastValue) {
+    const syncBill = async function (thisCase, column, value, pastValue) {
       try {
-        const { ajaxJson, autoComma } = GeneralJs;
+        const { ajaxJson, sleep } = GeneralJs;
+        await sleep(1000);
         const { proid } = thisCase;
-        let targetIndex, targetDom, targetDomChildren, tempArr, desid;
-        let selectedDesigner, updateQuery;
-        let classification, percentage, method;
-        let bankName, bankTo;
-        let calculate;
-        let ratio, supply;
-
-        for (let i = 0; i < instance.cases.length; i++) {
-          if (instance.cases[i] !== null) {
-            if (instance.cases[i].proid === proid) {
-              targetIndex = i;
+        const project = (await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true }))[0];
+        const desid = proid.desid;
+        const cliid = proid.cliid;
+        const method = (project.service.online ? "online" : "offline");
+        let thisBill, bilid;
+        if (desid !== '') {
+          thisBill = await ajaxJson({
+            mode: "read",
+            whereQuery: {
+              $and: [
+                { "links.proid": proid },
+                { "links.desid": desid },
+                { "links.cliid": cliid },
+                { "links.method": method },
+              ]
             }
+          }, PYTHONHOST + "/generalBill");
+          if (thisBill.length > 0) {
+            thisBill = thisBill[0];
+            bilid = thisBill.bilid;
+            await ajaxJson({ bilid }, PYTHONHOST + "/amountConverting");
           }
         }
-        targetDom = document.querySelector('.' + proid);
-        targetDomChildren = targetDom.children;
-
-        tempArr = value.split(' ');
-        desid = tempArr[1].trim();
-        supply = Number(thisCase.remainSupply.replace(/[^0-9\-\.]/g, ''));
-        selectedDesigner = await ajaxJson({
-          noFlat: true,
-          whereQuery: { desid },
-        }, "/getDesigners");
-        if (selectedDesigner.length === 0) {
-          return;
-        } else {
-          selectedDesigner = selectedDesigner[0];
-        }
-        updateQuery = { desid };
-
-        classification = selectedDesigner.information.business.businessInfo.classification;
-        percentage = Number(selectedDesigner.information.business.service.cost.percentage);
-        method = "사업자(일반)";
-        if (/사업자/g.test(classification)) {
-          if (/일반/g.test(classification)) {
-            method = "사업자(일반)";
-          } else {
-            method = "사업자(간이)";
-          }
-        } else {
-          method = "프리랜서";
-        }
-        updateQuery["process.calculation.method"] = method;
-        updateQuery["process.calculation.percentage"] = Number(percentage);
-
-        if (selectedDesigner.information.business.account.length > 0) {
-          bankName = selectedDesigner.information.business.account[0].bankName + " " + String(selectedDesigner.information.business.account[0].accountNumber);
-          bankTo = selectedDesigner.information.business.account[0].to;
-          updateQuery["process.calculation.info.account"] = bankName;
-          updateQuery["process.calculation.info.proof"] = bankTo;
-          updateQuery["process.calculation.info.to"] = bankTo;
-        }
-
-        if (/일반/gi.test(method)) {
-          calculate = Math.round((supply * 1.1) * (1 - (percentage / 100)));
-        } else if (/간이/gi.test(method)) {
-          calculate = Math.round(supply * (1 - (percentage / 100)));
-        } else if (/프리/gi.test(method)) {
-          ratio = 0.967;
-          calculate = Math.round((supply - (supply * (percentage / 100))) * ratio);
-        } else {
-          calculate = Math.round((supply * 1.1) * (1 - (percentage / 100)));
-        }
-        updateQuery["process.calculation.payments.totalAmount"] = calculate;
-        updateQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
-        updateQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
-
-        await ajaxJson({ whereQuery: { proid }, updateQuery }, "/rawUpdateProject");
-
-        instance.cases[targetIndex].calculationInfo = "계좌번호 " + bankName + " / 수신자 " + bankTo + " / 증명 " + bankTo;
-        instance.cases[targetIndex].method = method;
-        instance.cases[targetIndex].paymentsTotalAmount = calculate;
-        instance.cases[targetIndex].paymentsFirstAmount = Math.round(calculate / 2);
-        instance.cases[targetIndex].paymentsRemainAmount = Math.round(calculate / 2);
-        instance.cases[targetIndex].percentage = percentage;
-
-        for (let dom of targetDomChildren) {
-          if (dom.getAttribute("column") === "calculationInfo") {
-            dom.textContent = "계좌번호 " + bankName + " / 수신자 " + bankTo + " / 증명 " + bankTo;
-          }
-          if (dom.getAttribute("column") === "method") {
-            dom.textContent = method;
-          }
-          if (dom.getAttribute("column") === "paymentsTotalAmount") {
-            dom.textContent = autoComma(calculate);
-          }
-          if (dom.getAttribute("column") === "paymentsFirstAmount") {
-            dom.textContent = autoComma(Math.round(calculate / 2));
-          }
-          if (dom.getAttribute("column") === "paymentsRemainAmount") {
-            dom.textContent = autoComma(Math.round(calculate / 2));
-          }
-          if (dom.getAttribute("column") === "percentage") {
-            dom.textContent = String(percentage);
-          }
-        }
-
       } catch (e) {
         console.log(e);
       }
     }
-
     const dictionary = {
       meetingDate: realtimeDesigner,
       formDateFrom: realtimeDesigner,
       formDateTo: realtimeDesigner,
-      remainSupply: async function (thisCase, column, value, pastValue) {
-        try {
-          await GeneralJs.sleep(1000);
-          const { proid } = thisCase;
-          const project = (await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects"))[0];
-          const { process: { contract, calculation } } = project;
-
-
-          console.log(contract)
-          console.log(calculation)
-
-        } catch (e) {
-          console.log(e);
-        }
-      }
+      remainSupply: syncBill,
+      remainVat: syncBill,
+      remainConsumer: syncBill,
+      remainPure: syncBill,
+      method: syncBill,
+      percentage: syncBill,
+      paymentsTotalAmount: syncBill,
+      paymentsFirstAmount: syncBill,
+      paymentsRemainAmount: syncBill,
+      paymentsFirstDate: syncBill,
+      paymentsRemainDate: syncBill,
     };
 
     let tempFunction;
@@ -6139,7 +6232,7 @@ ProjectJs.prototype.communicationRender = function () {
         let proid, thisCase;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            proid = window.prompt("프로젝트 아이디를 입력하세요!").trim();
+            proid = window.prompt("프로젝트 아이디를 입력하세요!");
           } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
         } else {
           proid = instance.whiteBox.id;
@@ -6254,7 +6347,7 @@ ProjectJs.prototype.communicationRender = function () {
         let cliid, client;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            proid = window.prompt("프로젝트 아이디를 입력하세요!").trim();
+            proid = window.prompt("프로젝트 아이디를 입력하세요!");
           } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
         } else {
           proid = instance.whiteBox.id;
@@ -6317,7 +6410,7 @@ ProjectJs.prototype.communicationRender = function () {
         let cliid, client;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            proid = window.prompt("프로젝트 아이디를 입력하세요!").trim();
+            proid = window.prompt("프로젝트 아이디를 입력하세요!");
           } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
         } else {
           proid = instance.whiteBox.id;

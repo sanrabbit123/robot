@@ -3986,6 +3986,8 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     let target = null;
     let desid = null;
     let realName = null;
+    let thisProposal;
+    let method;
     for (let dom of instance.designerButtons) {
       if (dom.getAttribute("toggle") === "on") {
         target = dom;
@@ -4000,7 +4002,19 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
     } else {
       if (!instance.designers.pick(desid).end) {
         if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
-          instance.submitEvent(desid, realName);
+
+          for (let p of instance.proposal.detail) {
+            if (p.desid === desid) {
+              thisProposal = p;
+            }
+          }
+          if (thisProposal.fee.length === 1) {
+            method = thisProposal.fee[0].method;
+          } else if (thisProposal.fee.length > 1) {
+            method = (window.confirm("오프라인 서비스를 선택하시겠습니까? (온라인을 희망하실 경우, '취소' 버튼을 눌러주세요!)") ? "offline" : "online");
+          }
+
+          instance.submitEvent(desid, realName, method);
         } else {
           return;
         }
@@ -4045,11 +4059,12 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
 
 }
 
-DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
+DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
   const instance = this;
   const { frontPage } = this;
   const getObj = GeneralJs.returnGet();
   let name, phone;
+
   name = instance.client.name;
   phone = instance.client.phone;
 
@@ -4086,11 +4101,12 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer) {
                 name: name,
                 phone: phone,
                 designer: designer,
+                method: method,
               }, "/designerProposal_submit");
               await GeneralJs.sleep(500);
               document.body.removeChild(box);
               document.body.removeChild(back);
-              window.location.href = frontPage + "/payment.php?card=true";
+              window.location.href = window.location.protocol + "//" + window.location.host + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method;
             } catch (e) {
               console.log(e);
             }

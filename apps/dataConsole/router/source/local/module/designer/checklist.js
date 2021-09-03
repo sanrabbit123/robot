@@ -2121,7 +2121,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
       ]
     },
     {
-      name: "태도",
+      name: "성향",
       children: [
         {
           name: "미팅 준비성",
@@ -2203,6 +2203,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "진행 스타일",
@@ -2257,6 +2258,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "홈리에종 관계",
@@ -3134,7 +3136,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         style: {
           position: "absolute",
           fontSize: String(size + (mobile ? 0.8 : 0)) + ea,
-          fontWeight: String(700),
+          fontWeight: String(600),
           color: colorChip.black,
           top: String(topMargin + 1) + ea,
           left: String(leftMargin) + ea,

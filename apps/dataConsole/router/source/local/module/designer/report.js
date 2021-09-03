@@ -1863,7 +1863,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
         style: {
           position: "absolute",
           fontSize: String(size) + ea,
-          fontWeight: String(700),
+          fontWeight: String(600),
           color: colorChip.black,
           top: String(topMargin + 1) + ea,
           left: String(leftMargin) + ea,

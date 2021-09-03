@@ -300,8 +300,7 @@ DevContext.prototype.launching = async function () {
     // console.log(await bill.travelInjection("remain", proid, "offline", 4, { selfMongo: this.MONGOLOCALC }));
     // console.log(await bill.travelReconfig("first", proid, "offline", 0, 2, { selfMongo: this.MONGOLOCALC }));
     // console.log(await bill.serviceConverting(proid, "online", "s2011_aa01s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
-    console.log(await bill.amountConverting("b2192_aa02s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
-
+    // console.log(await bill.amountConverting("b2192_aa02s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC }))
 
 
     // const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
@@ -1121,15 +1120,15 @@ DevContext.prototype.launching = async function () {
     // kakao test
     // const kakao = new KakaoTalk();
     // await kakao.ready();
-    // await kakao.sendTalk("clientCuration", "배창규", "010-2747-3403", {
+    // await kakao.sendTalk("designerSelect", "배창규", "010-2747-3403", {
     //   client: "배창규",
-    //   emoji0: "(방긋)",
-    //   emoji1: "(오케이)",
+    //   designer: "배창규",
     //   host: "home-liaison.servehttp.com",
-    //   path: "curation",
+    //   path: "estimation",
     //   cliid: "c1801_aa01s",
-    //   mode: "lite",
+    //   needs: "style,d2104_aa07s,p2107_aa46s,online",
     // });
+
 
 
 
@@ -1168,7 +1167,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p116");
+    // await this.getCorePortfolio("p125");
 
 
     // aspirant to designer

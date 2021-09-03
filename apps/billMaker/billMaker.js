@@ -807,6 +807,15 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
       targetProposals = project.proposal.detail;
     }
 
+    if (option.forceDesid !== undefined) {
+      targetProposals = [];
+      for (let proposal of project.proposal.detail) {
+        if (proposal.desid === option.forceDesid) {
+          targetProposals.push(proposal);
+        }
+      }
+    }
+
     bilidArr = [];
     for (let { desid, fee } of targetProposals) {
 
@@ -3078,6 +3087,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
   const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
   const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
   const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
+  const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
   try {
     let MONGOC, MONGOCOREC;
     let proid;
@@ -3109,9 +3119,15 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
     let pastRemainArr;
     let newRequestAmount;
     let totalAmount;
+    let safeNum;
+    let payObject;
+    let tempQuery;
+    let payArr;
 
-    while (await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) {
+    safeNum = 0;
+    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 200) {
       await sleep(300);
+      safeNum++;
     }
     await fileSystem(`write`, [ `${process.cwd()}/temp/${doingSignature}.json`, `{ "doing": 1 }` ]);
 
@@ -3361,6 +3377,24 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
 
     } else {
       throw new Error("invaild case");
+    }
+
+    if (project.process.calculation.payments.first.date.valueOf() > emptyDateValue && project.process.calculation.payments.first.cancel.valueOf() < emptyDateValue) {
+      payObject = this.returnBillDummies("pay");
+      payObject.date = project.process.calculation.payments.first.date.toNormal();
+      payObject.amount = project.process.calculation.payments.first.amount;
+      payArr = thisBill.responses[firstIndex].pay.toNormal();
+      payArr.unshift(payObject);
+      updateQuery["responses." + String(firstIndex) + ".pay"] = payArr;
+    }
+
+    if (project.process.calculation.payments.remain.date.valueOf() > emptyDateValue && project.process.calculation.payments.remain.cancel.valueOf() < emptyDateValue) {
+      payObject = this.returnBillDummies("pay");
+      payObject.date = project.process.calculation.payments.remain.date.toNormal();
+      payObject.amount = project.process.calculation.payments.remain.amount;
+      payArr = thisBill.responses[secondIndex].pay.toNormal();
+      payArr.unshift(payObject);
+      updateQuery["responses." + String(secondIndex) + ".pay"] = payArr;
     }
 
     await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });

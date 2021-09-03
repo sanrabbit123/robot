@@ -45,10 +45,11 @@ const DesignerConsoleJs = function () {
   this.totalContents = document.getElementById("totalcontents");
 }
 
-DesignerConsoleJs.prototype.leftPannel = function () {
+DesignerConsoleJs.prototype.navigatorLaunching = function () {
   const instance = this;
   const { ea, designer, desid, modes, media } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo } = GeneralJs;
+  const totalContents = document.getElementById("totalcontents");
   const totalMother = document.querySelector(".totalMother");
   const mother = totalMother.firstChild;
   const mobile = media[4];
@@ -250,6 +251,17 @@ DesignerConsoleJs.prototype.leftPannel = function () {
   let factorSize;
   let factorTextTop;
   let naviHeight;
+  let mobileNavigator;
+  let style;
+  let fontTop;
+  let fontLeft;
+  let naviDesignerWidth;
+  let naviBetweenMargin;
+  let iconTop;
+  let iconWidth;
+  let iconIndent;
+  let popupTop;
+  let menuOnEvent;
 
   cleanChildren(mother);
 
@@ -357,6 +369,15 @@ DesignerConsoleJs.prototype.leftPannel = function () {
     factorSize = 4;
     factorTextTop = 1.4;
     naviHeight = 60;
+    size = 20;
+    fontTop = 12;
+    fontLeft = 7.2;
+    naviDesignerWidth = 85;
+    naviBetweenMargin = 7;
+    iconTop = 17;
+    iconWidth = size + 1;
+    iconIndent = 3;
+    popupTop = 29;
 
     menu = [];
     for (let { title, mode, position, mobile } of menuMap) {
@@ -409,6 +430,169 @@ DesignerConsoleJs.prototype.leftPannel = function () {
       },
       children: menu
     });
+
+    mobileNavigator = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "fixed",
+      top: String(0),
+      left: String(0),
+      width: String(100) + '%',
+      height: String(naviHeight) + "px",
+      zIndex: String(2),
+      background: "transparent"
+    };
+    for (let i in style) {
+      mobileNavigator.style[i] = style[i];
+    }
+    totalContents.insertBefore(mobileNavigator, totalMother);
+
+    menuOnEvent = function (direction = "down") {
+      return function (e) {
+        const self = this;
+        const id0 = "mobileMenu_cancelBox";
+        const id1 = "mobileMenu_menuBox"
+        let mobileNavigator, menus, cancelBox, style;
+
+        cancelBox = GeneralJs.nodes.div.cloneNode(true);
+        cancelBox.id = id0;
+        style = {
+          position: "fixed",
+          top: String(0),
+          right: String(0),
+          width: String(98) + "vw",
+          height: String(100) + "vh",
+          zIndex: String(3),
+        };
+        for (let i in style) {
+          cancelBox.style[i] = style[i];
+        }
+        cancelBox.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.removeChild(document.getElementById(id1));
+          self.removeChild(document.getElementById(id0));
+        });
+        this.appendChild(cancelBox);
+
+        mobileNavigator = instance.mobileNavigator.cloneNode(true);
+        mobileNavigator.id = id1;
+        if (direction === "down") {
+          mobileNavigator.style.top = String(popupTop) + "px";
+        } else {
+          mobileNavigator.style.bottom = String(14) + ea;
+        }
+        mobileNavigator.style.right = String(0);
+        mobileNavigator.style.zIndex = String(3);
+        mobileNavigator.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+        this.appendChild(mobileNavigator);
+
+        menus = mobileNavigator.children;
+        for (let m of menus) {
+          m.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const mode = this.getAttribute("mode");
+            const position = Number(this.getAttribute("position"));
+            const naviHeight = Number(this.getAttribute("naviHeight"));
+            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            if (instance.mode === mode) {
+              scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
+            } else {
+              scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
+            }
+            instance.mode = mode;
+            self.removeChild(document.getElementById(id1));
+            self.removeChild(document.getElementById(id0));
+          });
+        }
+      }
+    }
+
+    this.listIcon.addEventListener("click", menuOnEvent("up"));
+
+    createNodes([
+      {
+        mother: mobileNavigator,
+        style: {
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+        }
+      },
+      {
+        mother: -1,
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.black,
+          opacity: String(0.88),
+          backdropFilter: "blur(" + String(10) + "px" + ")",
+          top: String(0),
+          left: String(0)
+        }
+      },
+      {
+        mother: -2,
+        text: "Designer",
+        style: {
+          position: "absolute",
+          fontSize: String(size) + "px",
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          fontStyle: "italic",
+          color: colorChip.white,
+          top: String(fontTop) + "px",
+          left: String(fontLeft) + ea,
+        }
+      },
+      {
+        mother: -3,
+        text: "console",
+        style: {
+          position: "absolute",
+          fontSize: String(size) + "px",
+          fontFamily: "graphik",
+          fontWeight: String(200),
+          color: colorChip.white,
+          top: String(fontTop) + "px",
+          left: "calc(" + String(fontLeft) + ea + " + " + String(naviDesignerWidth + naviBetweenMargin) + "px" + ")",
+        }
+      },
+      {
+        mother: -4,
+        events: [
+          {
+            type: "click",
+            event: menuOnEvent(),
+          }
+        ],
+        style: {
+          position: "absolute",
+          top: String(iconTop) + "px",
+          right: String(fontLeft) + ea,
+          width: String(iconWidth) + "px",
+          height: String(iconWidth) + "px",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: this.mother.returnHamburger(colorChip.white),
+            style: {
+              position: "absolute",
+              top: String(iconIndent) + "px",
+              right: String(0),
+              height: withOut(100, iconIndent * 2, "px"),
+            }
+          }
+        ]
+      },
+    ]);
 
   }
 
@@ -490,8 +674,10 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         pass = true;
 
         return GeneralJs.ajaxPromise({
-          name: designer.designer,
-          phone: designer.information.phone,
+          // name: designer.designer,
+          // phone: designer.information.phone,
+          name: "배창규",
+          phone: "010-2747-3403",
           certification,
         }, BRIDGEHOST + "/certification");
 
@@ -658,200 +844,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
   try {
     await this.checkListView();
     this.checkListDetailLaunching(desid);
-    this.leftPannel();
-    if (mobile) {
-      const totalContents = document.getElementById("totalcontents");
-      const totalMother = document.querySelector(".totalMother");
-      let mobileNavigator;
-      let naviHeight;
-      let style;
-      let size;
-      let fontTop;
-      let fontLeft;
-      let naviDesignerWidth;
-      let naviBetweenMargin;
-      let iconTop;
-      let iconWidth;
-      let iconIndent;
-      let popupTop;
-      let menuOnEvent;
-
-      naviHeight = 60;
-      size = 20;
-      fontTop = 12;
-      fontLeft = 7.2;
-      naviDesignerWidth = 85;
-      naviBetweenMargin = 7;
-      iconTop = 17;
-      iconWidth = size + 1;
-      iconIndent = 3;
-      popupTop = 29;
-
-      mobileNavigator = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "fixed",
-        top: String(0),
-        left: String(0),
-        width: String(100) + '%',
-        height: String(naviHeight) + "px",
-        zIndex: String(2),
-        background: "transparent"
-      };
-      for (let i in style) {
-        mobileNavigator.style[i] = style[i];
-      }
-      totalContents.insertBefore(mobileNavigator, totalMother);
-
-      menuOnEvent = function (direction = "down") {
-        return function (e) {
-          const self = this;
-          const id0 = "mobileMenu_cancelBox";
-          const id1 = "mobileMenu_menuBox"
-          let mobileNavigator, menus, cancelBox, style;
-
-          cancelBox = GeneralJs.nodes.div.cloneNode(true);
-          cancelBox.id = id0;
-          style = {
-            position: "fixed",
-            top: String(0),
-            right: String(0),
-            width: String(98) + "vw",
-            height: String(100) + "vh",
-            zIndex: String(3),
-          };
-          for (let i in style) {
-            cancelBox.style[i] = style[i];
-          }
-          cancelBox.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            self.removeChild(document.getElementById(id1));
-            self.removeChild(document.getElementById(id0));
-          });
-          this.appendChild(cancelBox);
-
-          mobileNavigator = instance.mobileNavigator.cloneNode(true);
-          mobileNavigator.id = id1;
-          if (direction === "down") {
-            mobileNavigator.style.top = String(popupTop) + "px";
-          } else {
-            mobileNavigator.style.bottom = String(14) + ea;
-          }
-          mobileNavigator.style.right = String(0);
-          mobileNavigator.style.zIndex = String(3);
-          mobileNavigator.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-          });
-          this.appendChild(mobileNavigator);
-
-          menus = mobileNavigator.children;
-          for (let m of menus) {
-            m.addEventListener("click", function (e) {
-              e.stopPropagation();
-              const mode = this.getAttribute("mode");
-              const position = Number(this.getAttribute("position"));
-              const naviHeight = Number(this.getAttribute("naviHeight"));
-              const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-              if (instance.mode === mode) {
-                scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
-              } else {
-                scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
-              }
-              instance.mode = mode;
-              self.removeChild(document.getElementById(id1));
-              self.removeChild(document.getElementById(id0));
-            });
-          }
-        }
-      }
-
-      this.listIcon.addEventListener("click", menuOnEvent("up"));
-
-      createNodes([
-        {
-          mother: mobileNavigator,
-          style: {
-            position: "relative",
-            top: String(0),
-            left: String(0),
-            width: String(100) + '%',
-            height: String(100) + '%',
-          }
-        },
-        {
-          mother: -1,
-          style: {
-            position: "absolute",
-            width: String(100) + '%',
-            height: String(100) + '%',
-            background: colorChip.black,
-            opacity: String(0.88),
-            backdropFilter: "blur(" + String(10) + "px" + ")",
-            top: String(0),
-            left: String(0)
-          }
-        },
-        {
-          mother: -2,
-          text: "Designer",
-          style: {
-            position: "absolute",
-            fontSize: String(size) + "px",
-            fontFamily: "graphik",
-            fontWeight: String(400),
-            fontStyle: "italic",
-            color: colorChip.white,
-            top: String(fontTop) + "px",
-            left: String(fontLeft) + ea,
-          }
-        },
-        {
-          mother: -3,
-          text: "console",
-          style: {
-            position: "absolute",
-            fontSize: String(size) + "px",
-            fontFamily: "graphik",
-            fontWeight: String(200),
-            color: colorChip.white,
-            top: String(fontTop) + "px",
-            left: "calc(" + String(fontLeft) + ea + " + " + String(naviDesignerWidth + naviBetweenMargin) + "px" + ")",
-          }
-        },
-        {
-          mother: -4,
-          events: [
-            {
-              type: "click",
-              event: menuOnEvent(),
-            }
-          ],
-          style: {
-            position: "absolute",
-            top: String(iconTop) + "px",
-            right: String(fontLeft) + ea,
-            width: String(iconWidth) + "px",
-            height: String(iconWidth) + "px",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: this.mother.returnHamburger(colorChip.white),
-              style: {
-                position: "absolute",
-                top: String(iconIndent) + "px",
-                right: String(0),
-                height: withOut(100, iconIndent * 2, "px"),
-              }
-            }
-          ]
-        },
-      ]);
-
-
-    }
+    this.navigatorLaunching();
   } catch (e) {
     console.log(e);
   }
@@ -879,7 +872,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.belowHeight = 0;
     this.designer = designer;
     this.desid = desid;
-    this.modes = [ "checklist", "report" ];
+    this.modes = [ "checklist", "report", "request" ];
     this.mode = this.modes[0];
 
     if (window.localStorage.getItem("desid") === this.desid) {

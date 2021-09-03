@@ -1,6 +1,6 @@
 DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const instance = this;
-  const { slack_bot } = this.mother;
+  const { slack_bot, requestSystem } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
@@ -8,13 +8,16 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   obj.func = async function (req, res) {
     try {
       res.set({ "Content-Type": "application/json" });
-      let { cliid, proid, desid, name, phone, designer } = req.body;
+      let { cliid, proid, desid, name, phone, designer, method } = req.body;
+      await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}&mode=test\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#400_customer" });
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
         designer: designer,
-        host: address.frontinfo.host,
-        path: "payment.php",
+        host: address.homeinfo.ghost.host,
+        path: "estimation",
+        cliid: cliid,
+        needs: ("style," + desid + "," + proid + "," + method),
       });
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
@@ -24,6 +27,8 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   }
   return obj;
 }
+
+
 
 DataRouter.prototype.rou_post_designerProposal_policy = function () {
   const instance = this;
