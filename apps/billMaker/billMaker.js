@@ -879,19 +879,25 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
         updateQuery["links.cliid"] = client.cliid;
         updateQuery["links.desid"] = desid;
         updateQuery["links.method"] = method;
-        res = await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
 
-        await this.requestInjection(bilid, "firstPayment", client, designer, project, method, { selfMongo: MONGOC });
-        await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC });
-        // await this.requestInjection(bilid, "travelPayment", client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: 5 } });
+        if (!updateMode) {
 
-        await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-        await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
-        // await this.responseInjection(bilid, "designerTravelFee", client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: 5 } });
+          res = await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
 
-        if (res === "success") {
-          bilidArr.push(bilid);
+          await this.requestInjection(bilid, "firstPayment", client, designer, project, method, { selfMongo: MONGOC });
+          await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC });
+          // await this.requestInjection(bilid, "travelPayment", client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: 5 } });
+
+          await this.responseInjection(bilid, "firstDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+          await this.responseInjection(bilid, "secondDesignFee", client, designer, project, method, { selfMongo: MONGOC });
+          // await this.responseInjection(bilid, "designerTravelFee", client, designer, project, method, { selfMongo: MONGOC, number: { travelExpenses: 5 } });
+
+          if (res === "success") {
+            bilidArr.push(bilid);
+          }
+
         }
+
       }
 
     }
