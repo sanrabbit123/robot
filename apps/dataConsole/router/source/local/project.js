@@ -3690,8 +3690,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           responseArr = [];
           for (let { date, id, items, pay, cancel } of bill.responses) {
             totalNum = 0;
-            for (let { amount: { consumer } } of items) {
-              totalNum += consumer;
+            for (let { amount: { pure } } of items) {
+              totalNum += pure;
             }
             payNum = 0;
             for (let { amount } of pay) {

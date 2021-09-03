@@ -2164,7 +2164,7 @@ BillMaker.prototype.convertingDummy = function () {
   };
 }
 
-BillMaker.prototype.serviceConverting = async function (proid, method, serid, option = { selfMongo: null, selfConsoleMongo: null }) {
+BillMaker.prototype.serviceConverting = async function (proid, method, serid, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof proid !== "string" || typeof method !== "string" || typeof serid !== "string") {
     throw new Error("invaild input");
   }
@@ -2594,7 +2594,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
   }
 }
 
-BillMaker.prototype.designerConverting = async function (proid, method, desid, option = { selfMongo: null, selfConsoleMongo: null }) {
+BillMaker.prototype.designerConverting = async function (proid, method, desid, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof proid !== "string" || typeof method !== "string" || typeof desid !== "string") {
     throw new Error("invaild input");
   }
@@ -3075,7 +3075,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
   }
 }
 
-BillMaker.prototype.amountConverting = async function (bilid, option = { selfMongo: null, selfConsoleMongo: null }) {
+BillMaker.prototype.amountConverting = async function (bilid, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof bilid !== "string") {
     throw new Error("invaild input");
   }
