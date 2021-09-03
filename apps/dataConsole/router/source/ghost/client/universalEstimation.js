@@ -857,13 +857,16 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           gopaymethod: (/card/gi.test(motherMethod) ? "Card" : "VBank"),
           device: (desktop ? "desktop" : "mobile"),
         }, "/inicisPayment");
+        const formMother = document.createElement("DIV");
         const form = document.createElement("FORM");
         let value, formId, plugin;
         let mobileInisisInfo;
         formId = "form" + String((new Date()).valueOf());
         form.id = formId;
         form.style.display = "none";
-        document.body.appendChild(form);
+        formMother.style.display = "none";
+        document.body.appendChild(formMother);
+        formMother.appendChild(form);
         if (desktop) {
           for (let name in formValue) {
             value = String(formValue[name]);
@@ -905,11 +908,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             });
           }
           form.action = "https://mobile.inicis.com/smart/payment/";
-          form.target = "_self";
-          if (/card/gi.test(motherMethod)) {
-            window.open('', "_self", '');
-          }
+          form.target = "_top";
           form.submit();
+          formMother.remove();
         }
       } catch (e) {
         console.log(e);
