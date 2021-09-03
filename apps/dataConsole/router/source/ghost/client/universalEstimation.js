@@ -892,6 +892,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             P_CHARSET: "utf8",
             P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
           };
+          if (/card/gi.test(motherMethod)) {
+            mobileInisisInfo.P_RESERVED = "twotrs_isp=Y&block_isp=Y&twotrs_isp_noti=N";
+          }
           for (let name in mobileInisisInfo) {
             value = String(mobileInisisInfo[name]);
             createNode({
