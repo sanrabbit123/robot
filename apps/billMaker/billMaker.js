@@ -402,6 +402,103 @@ BillMaker.billDictionary = {
   },
 };
 
+BillMaker.returnBankCode = function (name, mode = "code") {
+  if (typeof name !== "string") {
+    throw new Error("invaild input");
+  }
+  name = name.trim().replace(/은행/gi, '').trim().replace(/ /gi, '').trim();
+  const bankMatrix = [
+    [ "농협중앙회", "11" ],
+    [ "단위농협", "12" ],
+    [ "축협중앙회", "16" ],
+    [ "우리", "20" ],
+    [ "조흥", "21" ],
+    [ "상업", "22" ],
+    [ "SC제일", "23" ],
+    [ "한일", "24" ],
+    [ "서울", "25" ],
+    [ "신한", "88" ],
+    [ "구신한", "26" ],
+    [ "한미", "27" ],
+    [ "대구", "31" ],
+    [ "부산", "32" ],
+    [ "광주", "34" ],
+    [ "제주", "35" ],
+    [ "전북", "37" ],
+    [ "강원", "38" ],
+    [ "경남", "39" ],
+    [ "비씨카드", "41" ],
+    [ "새마을금고", "45" ],
+    [ "신용협동조합중앙회", "48" ],
+    [ "상호저축", "50" ],
+    [ "한국씨티", "53" ],
+    [ "홍콩상하이", "54" ],
+    [ "도이치", "55" ],
+    [ "ABN암로", "56" ],
+    [ "JP모건", "57" ],
+    [ "미쓰비시도쿄", "59" ],
+    [ "BOA", "60" ],
+    [ "산림조합", "64" ],
+    [ "신안상호저축", "70" ],
+    [ "우체국", "71" ],
+    [ "하나", "81" ],
+    [ "평화", "83" ],
+    [ "신세계", "87" ],
+    [ "케이뱅크", "89" ],
+    [ "카카오뱅크", "90" ],
+    [ "네이버포인트", "91" ],
+    [ "토스뱅크", "92" ],
+    [ "토스머니", "93" ],
+    [ "SSG머니", "94" ],
+    [ "엘포인트", "96" ],
+    [ "카카오머니", "97" ],
+    [ "페이코", "98" ],
+    [ "한국산업", "02" ],
+    [ "기업", "03" ],
+    [ "국민", "04" ],
+    [ "외환", "05" ],
+    [ "주택", "06" ],
+    [ "수협중앙회", "07" ],
+    [ "유안타증권", "D1" ],
+    [ "현대증권", "D2" ],
+    [ "미래에셋증권", "D3" ],
+    [ "한국투자증권", "D4" ],
+    [ "우리투자증권", "D5" ],
+    [ "하이투자증권", "D6" ],
+    [ "HMC투자증권", "D7" ],
+    [ "SK증권", "D8" ],
+    [ "대신증권", "D9" ],
+    [ "하나대투증권", "DA" ],
+    [ "굿모닝신한증권", "DB" ],
+    [ "동부증권", "DC" ],
+    [ "유진투자증권", "DD" ],
+    [ "메리츠증권", "DE" ],
+    [ "신영증권", "DF" ],
+    [ "대우증권", "DG" ],
+    [ "삼성증권", "DH" ],
+    [ "교보증권", "DI" ],
+    [ "키움증권", "DJ" ],
+    [ "이트레이드", "DK" ],
+    [ "솔로몬증권", "DL" ],
+    [ "한화증권", "DM" ],
+    [ "NH증권", "DN" ],
+    [ "부국증권", "DO" ],
+    [ "LIG증권", "DP" ],
+    [ "뱅크월렛", "BW" ]
+  ];
+  let result;
+  if (mode === "code") {
+    result = "00";
+    for (let arr of bankMatrix) {
+      if (name === arr[0]) {
+        result = arr[1];
+        break;
+      }
+    }
+    return result;
+  }
+}
+
 BillMaker.prototype.createBill = async function (collection, updateQueryArr, option = { selfMongo: null }) {
   const instance = this;
   const { mongo, mongopythoninfo } = this.mother;
@@ -3413,6 +3510,353 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
     }
 
     await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex, payIndex, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof method !== "string" || typeof bilid !== "string" || typeof requestIndex !== "number" || typeof payIndex !== "number") {
+    throw new Error("invaild input");
+  }
+  if (!([ "cardEntire", "cardPartial", "vaccountEntire", "vaccountPartial" ]).includes(method)) {
+    throw new Error("invaild method, must be : [ cardEntire, cardPartial, vaccountEntire, vaccountPartial ]");
+  }
+  if (/Partial/gi.test(method)) {
+    if (typeof option.percentage !== "number") {
+      throw new Error("invaild option");
+    }
+  }
+  if (/vaccount/gi.test(method)) {
+    if (typeof option.accountNumber !== "string" || typeof option.bankName !== "string" || typeof option.accountName !== "string") {
+      throw new Error("invaild option");
+    }
+  }
+  const instance = this;
+  const address = this.address;
+  const back = this.back;
+  const crypto = require("crypto");
+  const { cryptoString, requestSystem, ipCheck, equalJson } = this.mother;
+  const dateToTimestamp = (date) => {
+    const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
+    return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
+  }
+  const url = "https://iniapi.inicis.com/api/v1/refund";
+  const msg = "콘솔로부터 환불 요청";
+  const currency = "WON";
+  const sha = "sha512";
+  const algorithm = "aes-128-cbc";
+  const digest = "base64";
+  const contentType = "application/x-www-form-urlencoded;charset=utf-8";
+  const hashType = "hex";
+  const status = /Partial/gi.test(method) ? "부분 환불" : "전체 환불";
+  const now = new Date();
+  const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
+  try {
+    let type, paymethod, timestamp;
+    let clientIp;
+    let mid, tid;
+    let price, confirmPrice;
+    let currency;
+    let hash;
+    let accountNumber, bankName;
+    let refundAcctNum, refundBankCode, refundAcctName;
+    let response;
+    let thisBill, thisRequest, thisData;
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let infoCopied, infoCopiedCopied;
+    let originalPrice;
+    let percentage;
+    let whereQuery, updateQuery;
+    let cancelArr;
+    let proofsArr;
+    let resultObj;
+    let client, project;
+    let projectWhereQuery, projectUpdateQuery;
+    let totalNumR0, payNumR0, cancelNumR0;
+    let totalNumR1, payNumR1, cancelNumR1;
+    let firstBoo, remainBoo;
+    let firstResponse, secondResponse;
+    let firstResponseIndex, secondResponseIndex;
+    let firstResponseIndexItemIndex, secondResponseIndexItemIndex;
+    let refreshTotalAmount, refreshTotalAmountRaw;
+    let calculate;
+    let commission;
+    let classification;
+    let num;
+    let refreshRemainAmount;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+    if (thisBill.requests[requestIndex] === undefined) {
+      throw new Error("invaild request index");
+    }
+    thisRequest = thisBill.requests[requestIndex];
+    if (thisRequest.pay[payIndex] === undefined) {
+      throw new Error("invaild pay index");
+    }
+
+    firstResponse = null;
+    secondResponse = null;
+    num = 0;
+    for (let res of thisBill.responses) {
+      if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+        firstResponse = res;
+        firstResponseIndex = num;
+        break;
+      }
+      num++;
+    }
+    num = 0;
+    for (let item of thisBill.responses[firstResponseIndex].items) {
+      if (item.class === "designerFeeFirst") {
+        firstResponseIndexItemIndex = num;
+      }
+      num++;
+    }
+    num = 0;
+    for (let res of thisBill.responses) {
+      if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+        secondResponse = res;
+        secondResponseIndex = num;
+        break;
+      }
+      num++;
+    }
+    num = 0;
+    for (let item of thisBill.responses[firstResponseIndex].items) {
+      if (item.class === "designerFeeRemain") {
+        secondResponseIndexItemIndex = num;
+      }
+      num++;
+    }
+    if (firstResponse === null || secondResponse === null) {
+      throw new Error("invaild response structure");
+    }
+    firstBoo = false;
+    remainBoo = false;
+    totalNumR0 = 0;
+    for (let { amount: { pure } } of firstResponse.items) {
+      totalNumR0 += pure;
+    }
+    payNumR0 = 0;
+    for (let { amount } of firstResponse.pay) {
+      payNumR0 += amount;
+    }
+    cancelNumR0 = 0;
+    for (let { amount } of firstResponse.cancel) {
+      cancelNumR0 += amount;
+    }
+    firstBoo = (totalNumR0 <= payNumR0 - cancelNumR0);
+    totalNumR1 = 0;
+    for (let { amount: { pure } } of secondResponse.items) {
+      totalNumR1 += pure;
+    }
+    payNumR1 = 0;
+    for (let { amount } of secondResponse.pay) {
+      payNumR1 += amount;
+    }
+    cancelNumR1 = 0;
+    for (let { amount } of secondResponse.cancel) {
+      cancelNumR1 += amount;
+    }
+    remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
+
+    client = await back.getClientById(thisRequest.links.cliid, { selfMongo: MONGOCOREC });
+    project = await back.getProjectById(thisRequest.links.proid, { selfMongo: MONGOCOREC });
+
+    infoCopied = thisRequest.info.toNormal();
+    infoCopiedCopied = equalJson(JSON.stringify(infoCopied));
+    infoCopiedCopied = infoCopiedCopied.filter((obj) => {
+      return (typeof obj.data === "object");
+    }).filter((obj) => {
+      return (obj.data.mid !== undefined && obj.data.tid !== undefined && obj.data.TotPrice !== undefined);
+    });
+    if (infoCopiedCopied[payIndex] === undefined) {
+      throw new Error("invaild pay index");
+    }
+    thisData = infoCopiedCopied[payIndex];
+    originalPrice = Number(thisData.data.TotPrice.replace(/[^0-9\.\-]/gi, ''));
+
+    if (typeof option.percentage === "number") {
+      percentage = option.percentage;
+    } else {
+      percentage = 100;
+    }
+
+    price = Math.floor(originalPrice * (percentage / 100) / 10) * 10;
+    confirmPrice = originalPrice - price;
+
+    timestamp = dateToTimestamp(now);
+    clientIp = (await ipCheck()).ip;
+    mid = address.officeinfo.inicis.mid;
+    tid = thisData.data.tid;
+
+    if (method === "cardEntire") {
+
+      type = "Refund";
+      paymethod = "Card";
+      hash = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid).digest(hashType);
+      res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, hashData: hash }, { "Content-Type": contentType });
+      price = originalPrice;
+
+    } else if (method === "cardPartial") {
+
+      type = "PartialRefund";
+      paymethod = "Card";
+      hash = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + price + confirmPrice).digest(hashType);
+      res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, price, confirmPrice, currency, hashData: hash }, { "Content-Type": contentType });
+
+    } else if (method === "vaccountEntire") {
+
+      type = "Refund";
+      paymethod = "Vacct";
+      refundAcctNum = await cryptoString(address.officeinfo.inicis.key, option.accountNumber, { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest });
+      refundBankCode = BillMaker.returnBankCode(option.bankName);
+      refundAcctName = option.accountName;
+      hash = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + refundAcctNum).digest(hashType);
+      res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, refundAcctNum, refundBankCode, refundAcctName, hashData: hash }, { "Content-Type": contentType });
+      price = originalPrice;
+
+    } else if (method === "vaccountPartial") {
+
+      type = "PartialRefund";
+      paymethod = "Vacct";
+      refundAcctNum = await cryptoString(address.officeinfo.inicis.key, option.accountNumber, { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest });
+      refundBankCode = BillMaker.returnBankCode(option.bankName);
+      refundAcctName = option.accountName;
+      hash = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + price + confirmPrice + refundAcctNum).digest(hashType);
+      res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, price, confirmPrice, refundAcctNum, refundBankCode, refundAcctName, hashData: hash }, { "Content-Type": contentType });
+
+    }
+
+    if (res.status === 200 && typeof res.data === "object" && res.data.resultCode === "00") {
+
+      if (/vaccount/gi.test(method)) {
+        res.data.refundAcctNum = option.accountNumber;
+        res.data.refundBankCode = option.bankName;
+        res.data.refundAcctName = option.accountName;
+      }
+
+      //report
+      resultObj = { bilid };
+      resultObj.proid = project.proid;
+      resultObj.cliid = project.cliid;
+      resultObj.method = method;
+      resultObj.price = {};
+      resultObj.price.partial = (price !== originalPrice);
+      resultObj.price.refund = price;
+      resultObj.price.original = originalPrice;
+      resultObj.rawData = res.data;
+
+      whereQuery = { bilid };
+      updateQuery = {};
+      projectWhereQuery = { proid: project.proid };
+      projectUpdateQuery = {};
+
+      infoCopied.unshift(res.data);
+      cancelArr = thisRequest.cancel.toNormal();
+      cancelArr.unshift({ date: now, amount: price });
+      proofsArr = thisRequest.proofs.toNormal();
+      proofsArr.unshift({
+        date: now,
+        method: ((/vaccount/gi.test(method) ? "무통장 입금" : "카드") + "(" + thisData.data.P_FN_NM.replace(/카드/gi, '') + ")"),
+        proof: "이니시스",
+        to: client.name,
+      });
+
+      refreshTotalAmountRaw = project.process.calculation.payments.totalAmount - price;
+      classification = project.process.calculation.method;
+      if (/일반/gi.test(classification)) {
+        calculate = Math.floor((refreshTotalAmountRaw * 1.1) * (1 - (project.process.calculation.method.percentage / 100)));
+      } else if (/간이/gi.test(classification)) {
+        calculate = Math.floor(refreshTotalAmountRaw * (1 - (project.process.calculation.method.percentage / 100)));
+      } else if (/프리/gi.test(classification)) {
+        calculate = Math.floor((refreshTotalAmountRaw - (refreshTotalAmountRaw * (project.process.calculation.method.percentage / 100))) * freeRatio);
+      } else {
+        calculate = Math.floor((refreshTotalAmountRaw * 1.1) * (1 - (project.process.calculation.method.percentage / 100)));
+      }
+      commission = refreshTotalAmountRaw * (project.process.calculation.method.percentage / 100);
+      commission = Math.floor(commission / 10) * 10;
+      refreshTotalAmount = Math.floor(calculate / 10) * 10;
+
+      if (!firstBoo && !remainBoo) {
+
+        updateQuery["responses." + String(firstResponseIndex) + ".items." + String(firstResponseIndexItemIndex) + ".unit.price"] = (refreshTotalAmount / 2);
+        updateQuery["responses." + String(firstResponseIndex) + ".items." + String(firstResponseIndexItemIndex) + ".amount.pure"] = (refreshTotalAmount / 2);
+        updateQuery["responses." + String(firstResponseIndex) + ".items." + String(firstResponseIndexItemIndex) + ".amount.commission"] = (commission / 2);
+        updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".unit.price"] = (refreshTotalAmount / 2);
+        updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.pure"] = (refreshTotalAmount / 2);
+        updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.commission"] = (commission / 2);
+
+        projectUpdateQuery["process.calculation.payments.totalAmount"] = refreshTotalAmount;
+        projectUpdateQuery["process.calculation.payments.first.amount"] = (refreshTotalAmount / 2);
+        projectUpdateQuery["process.calculation.payments.remain.amount"] = (refreshTotalAmount / 2);
+
+      } else {
+
+        refreshRemainAmount = refreshTotalAmount - thisBill.responses[firstResponseIndex].items[firstResponseIndexItemIndex].unit.price;
+        commission = commission - thisBill.responses[firstResponseIndex].items[firstResponseIndexItemIndex].amount.commission;
+        updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".unit.price"] = refreshRemainAmount;
+        updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.pure"] = refreshRemainAmount;
+        updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.commission"] = commission;
+
+        projectUpdateQuery["process.calculation.payments.totalAmount"] = refreshTotalAmount;
+        projectUpdateQuery["process.calculation.payments.remain.amount"] = refreshRemainAmount;
+
+      }
+
+      updateQuery["requests." + String(requestNumber) + ".info"] = equalJson(JSON.stringify(infoCopied));
+      updateQuery["requests." + String(requestNumber) + ".cancel"] = cancelArr;
+      updateQuery["requests." + String(requestNumber) + ".status"] = status;
+
+      projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestNumber].name) ? "first" : "remain") + ".cancel"] = now;
+      projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestNumber].name) ? "first" : "remain") + ".calculation.refund"] = price;
+      projectUpdateQuery["process.contract.form.date.cancel"] = now;
+
+      await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+      await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+    } else {
+      resultObj = null;
+      console.log("error : " + JSON.stringify(res.data, null, 2));
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+    return resultObj;
 
   } catch (e) {
     console.log(e);

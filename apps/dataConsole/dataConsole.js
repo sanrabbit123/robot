@@ -269,7 +269,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const instance = this;
   const { minify } = require("terser");
   const generalMap = require(`${process.cwd()}/apps/mapMaker/map/general.js`);
-  const { fileSystem, shell, shellLink, babelSystem, treeParsing, cryptoString } = this.mother;
+  const { fileSystem, shell, shellLink, babelSystem, treeParsing } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
   const SSEHOST = (isGhost ? (address.host === this.address.officeinfo.ghost.host ? address.host : this.address.backinfo.host) : address.host);
   const SSEHOST_CONSOLE = this.address.backinfo.host;

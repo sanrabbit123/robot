@@ -417,7 +417,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   const FormData = require('form-data');
 
   let method, dataKeys, configKeys;
-  let dataBoo, configBoo, jsonBoo;
+  let dataBoo, configBoo, jsonBoo, nvpBoo;
   let options;
   let form;
   let finalConfig;
@@ -430,6 +430,7 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   dataBoo = false;
   configBoo = false;
   jsonBoo = false;
+  nvpBoo = false;
 
   if (dataKeys.length === 0 && configKeys.length === 0) {
     method = "get";
@@ -450,6 +451,10 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
   if (configBoo) {
     if (/json/gi.test(JSON.stringify(config))) {
       jsonBoo = true;
+    } else if (/x\-www\-form\-urlencoded/gi.test(JSON.stringify(config))) {
+      nvpBoo = true;
+      querystring = require("querystring");
+      data = querystring.stringify(data);
     } else if (config.method === "get") {
       method = "get";
       querystring = require("querystring");
@@ -479,6 +484,12 @@ Mother.prototype.requestSystem = function (url, data = {}, config = {}) {
     } else if (method === "post") {
 
       if (jsonBoo) {
+        axios.post(url, data, config).then(function (response) {
+          resolve(response);
+        }).catch(function (error) {
+          reject(error);
+        });
+      } else if (nvpBoo) {
         axios.post(url, data, config).then(function (response) {
           resolve(response);
         }).catch(function (error) {
@@ -1925,53 +1936,132 @@ Mother.prototype.returnRandoms = function (num = 10, length = false) {
   });
 }
 
-Mother.prototype.cryptoString = function (password, string) {
-  const crypto = require('crypto');
-  const algorithm = 'aes-192-cbc';
-  return new Promise(function (resolve, reject) {
-    crypto.scrypt(password, 'salt', 24, function (err, key) {
-      if (err) {
-        reject(err);
-      } else {
-        const cipher = crypto.createCipheriv(algorithm, key, Buffer.alloc(16, 0));
-        let encrypted = '';
-        cipher.setEncoding('hex');
-        cipher.on('data', function (chunk) {
-          encrypted += chunk;
-        });
-        cipher.on('end', function () {
-          resolve(encrypted);
-        });
-        cipher.write(string);
-        cipher.end();
-      }
+Mother.prototype.cryptoString = function (password, string, option = { algorithm: "aes-192-cbc", makeKey: true, iv: null, digest: "hex" }) {
+  if (typeof password !== "string" || typeof string !== "string" || typeof option !== "object") {
+    throw new Error("invaild input");
+  }
+  if (option.algorithm === undefined || option.makeKey === undefined || option.iv === undefined || option.digest === undefined) {
+    throw new Error("invaild option");
+  }
+
+  const crypto = require("crypto");
+  const algorithms = crypto.getCiphers();
+  let algorithm, iv, digest;
+
+  if (!algorithms.includes(option.algorithm)) {
+    throw new Error("invaild algorithm");
+  }
+  if (option.digest !== "hex" && option.digest !== "base64" && option.digest !== "latin1") {
+    throw new Error("invaild digest");
+  }
+  if (typeof option.makeKey !== "boolean") {
+    throw new Error("invaild make key property");
+  }
+  if (typeof option.iv !== "string") {
+    option.iv = Buffer.alloc(16, 0);
+  }
+
+  algorithm = option.algorithm;
+  iv = option.iv;
+  digest = option.digest;
+
+  if (option.makeKey) {
+    return new Promise(function (resolve, reject) {
+      crypto.scrypt(password, "salt", 24, function (err, key) {
+        if (err) {
+          reject(err);
+        } else {
+          const cipher = crypto.createCipheriv(algorithm, key, iv);
+          let encrypted = '';
+          cipher.setEncoding(digest);
+          cipher.on("data", (chunk) => { encrypted += chunk; });
+          cipher.on("end", () => { resolve(encrypted); });
+          cipher.write(string);
+          cipher.end();
+        }
+      });
     });
-  });
+  } else {
+    return new Promise(function (resolve, reject) {
+      const cipher = crypto.createCipheriv(algorithm, password, iv);
+      let encrypted = '';
+      cipher.setEncoding(digest);
+      cipher.on("data", (chunk) => { encrypted += chunk; });
+      cipher.on("end", () => { resolve(encrypted); });
+      cipher.write(string);
+      cipher.end();
+    });
+  }
 }
 
-Mother.prototype.decryptoHash = function (password, hash) {
-  const crypto = require('crypto');
-  const algorithm = 'aes-192-cbc';
-  return new Promise(function (resolve, reject) {
-    crypto.scrypt(password, 'salt', 24, function (err, key) {
-      if (err) {
-        reject(err);
-      } else {
-        const decipher = crypto.createDecipheriv(algorithm, key, Buffer.alloc(16, 0));
-        let decrypted = '';
-        decipher.on('readable', function () {
-          while (null !== (chunk = decipher.read())) {
-            decrypted += chunk.toString('utf8');
-          }
-        });
-        decipher.on('end', function () {
-          resolve(decrypted);
-        });
-        decipher.write(hash, 'hex');
-        decipher.end();
-      }
+Mother.prototype.decryptoHash = function (password, hash, option = { algorithm: "aes-192-cbc", makeKey: true, iv: null, digest: "hex" }) {
+  if (typeof password !== "string" || typeof hash !== "string" || typeof option !== "object") {
+    throw new Error("invaild input");
+  }
+  if (option.algorithm === undefined || option.makeKey === undefined || option.iv === undefined || option.digest === undefined) {
+    throw new Error("invaild option");
+  }
+
+  const crypto = require("crypto");
+  const algorithms = crypto.getCiphers();
+  let algorithm, iv, digest;
+
+  if (!algorithms.includes(option.algorithm)) {
+    throw new Error("invaild algorithm");
+  }
+  if (option.digest !== "hex" && option.digest !== "base64" && option.digest !== "latin1") {
+    throw new Error("invaild digest");
+  }
+  if (typeof option.makeKey !== "boolean") {
+    throw new Error("invaild make key property");
+  }
+  if (typeof option.iv !== "string") {
+    option.iv = Buffer.alloc(16, 0);
+  }
+
+  algorithm = option.algorithm;
+  iv = option.iv;
+  digest = option.digest;
+
+  if (option.makeKey) {
+    return new Promise(function (resolve, reject) {
+      crypto.scrypt(password, "salt", 24, function (err, key) {
+        if (err) {
+          reject(err);
+        } else {
+          const decipher = crypto.createDecipheriv(algorithm, key, iv);
+          let decrypted = '';
+          decipher.on("readable", () => {
+            let chunk;
+            chunk = decipher.read();
+            while (chunk !== null) {
+              decrypted += chunk.toString("utf8");
+              chunk = decipher.read();
+            }
+          });
+          decipher.on("end", () => { resolve(decrypted); });
+          decipher.write(hash, digest);
+          decipher.end();
+        }
+      });
     });
-  });
+  } else {
+    return new Promise(function (resolve, reject) {
+      const decipher = crypto.createDecipheriv(algorithm, password, iv);
+      let decrypted = '';
+      decipher.on("readable", () => {
+        let chunk;
+        chunk = decipher.read();
+        while (chunk !== null) {
+          decrypted += chunk.toString("utf8");
+          chunk = decipher.read();
+        }
+      });
+      decipher.on("end", () => { resolve(decrypted); });
+      decipher.write(hash, digest);
+      decipher.end();
+    });
+  }
 }
 
 Mother.prototype.mysqlQuery = function (query, option = { local: false, front: true }) {
