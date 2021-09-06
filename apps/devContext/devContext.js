@@ -73,11 +73,13 @@ DevContext.prototype.launching = async function () {
     // }, { headers: { "Content-Type": "application/json" } });
 
     const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/requestRefund", {
-      kind: "cardPartial",
+      kind: "vaccountEntire",
       bilid: "b2196_aa03s",
       requestIndex: 0,
       payIndex: 0,
-      percentage: 50,
+      accountNumber: "1002437398777",
+      bankName: "우리",
+      accountName: "배창규",
     }, { headers: { "Content-Type": "application/json" } });
 
     console.log(res.data);
