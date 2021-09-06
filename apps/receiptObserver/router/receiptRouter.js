@@ -453,6 +453,8 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       let payObject;
       let paymentComplete;
 
+      console.log(requestNumber)
+
       thisBill = await bill.getBillById(bilid, { selfMongo });
       if (thisBill === null) {
         throw new Error("there is no bill");

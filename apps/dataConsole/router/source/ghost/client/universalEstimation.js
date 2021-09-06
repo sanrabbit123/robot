@@ -1133,8 +1133,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       }
     }
 
-    console.log(this.requestNumber);
-
     this.request = {
       name: "",
       amount: 0,
