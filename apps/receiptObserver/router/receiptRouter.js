@@ -428,6 +428,12 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       if (typeof data.MOID !== "string") {
         throw new Error("invaild post");
       }
+      if (Number.isNaN(Number(requestNumber))) {
+        throw new Error("invaild request number");
+      }
+      if (/잔금/gi.test(data.goodName) && Number(requestNumber) === 0) {
+        throw new Error("invaild request number");
+      }
       const oid = data.MOID;
       const inisis = "이니시스";
       let whereQuery, updateQuery, method;
@@ -452,8 +458,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       let itemNum, payNum, cancelNum;
       let payObject;
       let paymentComplete;
-
-      console.log(requestNumber)
 
       thisBill = await bill.getBillById(bilid, { selfMongo });
       if (thisBill === null) {

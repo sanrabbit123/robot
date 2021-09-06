@@ -996,15 +996,28 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
 
 UniversalEstimationJs.prototype.payComplete = async function (data) {
   const instance = this;
-  const { ajaxJson } = GeneralJs;
+  const { ajaxJson, returnGet } = GeneralJs;
   const { bill, requestNumber, completeInfo } = this;
   try {
     if (typeof data.MOID !== "string") {
       throw new Error("invaild data");
     }
+    const getObj = returnGet();
     const bilid = bill.bilid;
     let year, month, date;
     let to;
+    let requestNumber;
+
+    requestNumber = this.requestNumber;
+    if (getObj.request !== undefined) {
+      if (!Number.isNaN(Number(getObj.request.replace(/[^0-9]/gi, '')))) {
+        requestNumber = Number(getObj.request.replace(/[^0-9]/gi, ''));
+      }
+    }
+    if (/잔금/gi.test(data.goodName) && requestNumber === 0) {
+      requestNumber = 1;
+    }
+
     await ajaxJson({ bilid, requestNumber, data }, "/pythonPass_ghostClientBill");
 
     completeInfo.raw = data;
