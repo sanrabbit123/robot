@@ -1363,6 +1363,78 @@ ReceiptRouter.prototype.rou_post_amountConverting = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_requestRefund = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const address = this.address;
+  const kakao = this.kakao;
+  const { equalJson, sleep } = this.mother;
+  let obj = {};
+  obj.link = "/requestRefund";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.kind === undefined || req.body.bilid === undefined || req.body.requestIndex === undefined || req.body.payIndex === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { kind, bilid } = equalJson(req.body);
+      const requestIndex = Number(req.body.requestIndex);
+      const payIndex = Number(req.body.payIndex);
+      if (!([ "cardEntire", "cardPartial", "vaccountEntire", "vaccountPartial" ]).includes(kind)) {
+        throw new Error("invaild post, kind must be : [ cardEntire, cardPartial, vaccountEntire, vaccountPartial ]");
+      }
+      if (Number.isNaN(requestIndex) || Number.isNaN(payIndex)) {
+        throw new Error("invaild post");
+      }
+      let report, option, client, designer;
+
+      option = { selfMongo, selfCoreMongo: instance.mongo };
+      if (req.body.percentage !== undefined) {
+        if (!Number.isNaN(Number(req.body.percentage))) {
+          option.percentage = req.body.percentage;
+        }
+      }
+      if (req.body.accountNumber !== undefined && req.body.bankName !== undefined && req.body.accountName !== undefined) {
+        option.accountNumber = req.body.accountNumber;
+        option.bankName = req.body.bankName;
+        option.accountName = req.body.accountName;
+      }
+
+      report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
+      client = report.client;
+      designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
+
+      kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
+        client: client.name,
+        designer: designer.designer,
+        percentage: (!Number.isNaN(Number(req.body.percentage)) ? Number(req.body.percentage) : 100),
+        amount: report.price.refund
+      });
+      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation" });
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify(report));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 

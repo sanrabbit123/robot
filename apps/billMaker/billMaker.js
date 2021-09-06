@@ -3589,6 +3589,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     let refreshRemainAmount;
     let oid;
     let tempObj;
+    let allCancelPrice;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -3627,6 +3628,8 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
     firstResponse = null;
     secondResponse = null;
+    firstResponseIndexItemIndex = null;
+    secondResponseIndexItemIndex = null;
     num = 0;
     for (let res of thisBill.responses) {
       if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
@@ -3653,13 +3656,13 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       num++;
     }
     num = 0;
-    for (let item of thisBill.responses[firstResponseIndex].items) {
+    for (let item of thisBill.responses[secondResponseIndex].items) {
       if (item.class === "designerFeeRemain") {
         secondResponseIndexItemIndex = num;
       }
       num++;
     }
-    if (firstResponse === null || secondResponse === null) {
+    if (firstResponse === null || secondResponse === null || firstResponseIndexItemIndex === null || secondResponseIndexItemIndex === null) {
       throw new Error("invaild response structure");
     }
     firstBoo = false;
@@ -3762,8 +3765,6 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
     if (res.status === 200 && typeof res.data === "object" && res.data.resultCode === "00") {
 
-      console.log(res.data);
-
       if (/vaccount/gi.test(method)) {
         res.data.refundAcctNum = option.accountNumber;
         res.data.refundBankCode = option.bankName;
@@ -3772,8 +3773,12 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
       //report
       resultObj = { bilid };
+      resultObj.bill = thisBill;
       resultObj.proid = project.proid;
       resultObj.cliid = project.cliid;
+      resultObj.desid = thisBill.links.desid;
+      resultObj.project = project;
+      resultObj.client = client;
       resultObj.method = method;
       resultObj.price = {};
       resultObj.price.partial = (price !== originalPrice);
@@ -3796,23 +3801,31 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       proofsArr = thisRequest.proofs.toNormal();
       tempObj = this.returnBillDummies("proofs");
       tempObj.date = now;
-      tempObj.method = ((/vaccount/gi.test(method) ? "무통장 입금" : "카드") + "(" + thisData.data.P_FN_NM.replace(/카드/gi, '') + ")");
+      tempObj.method = ((/vaccount/gi.test(method) ? "무통장 입금" : "카드") + "(" + thisData.data.P_FN_NM.replace(/카드/gi, '') + ") 취소");
       tempObj.proof = "이니시스";
       tempObj.to = client.name;
       proofsArr.unshift(tempObj);
 
-      refreshTotalAmountRaw = project.process.calculation.payments.totalAmount - price;
+      allCancelPrice = 0;
+      for (let { amount } of cancelArr) {
+        allCancelPrice += amount;
+      }
+
+      refreshTotalAmountRaw = project.process.contract.remain.calculation.amount.supply - Math.round(allCancelPrice * (10 / 11));
+      if (refreshTotalAmountRaw < 10) {
+        refreshTotalAmountRaw = 0;
+      }
       classification = project.process.calculation.method;
       if (/일반/gi.test(classification)) {
-        calculate = Math.floor((refreshTotalAmountRaw * 1.1) * (1 - (project.process.calculation.method.percentage / 100)));
+        calculate = Math.floor((refreshTotalAmountRaw * 1.1) * (1 - (project.process.calculation.percentage / 100)));
       } else if (/간이/gi.test(classification)) {
-        calculate = Math.floor(refreshTotalAmountRaw * (1 - (project.process.calculation.method.percentage / 100)));
+        calculate = Math.floor(refreshTotalAmountRaw * (1 - (project.process.calculation.percentage / 100)));
       } else if (/프리/gi.test(classification)) {
-        calculate = Math.floor((refreshTotalAmountRaw - (refreshTotalAmountRaw * (project.process.calculation.method.percentage / 100))) * freeRatio);
+        calculate = Math.floor((refreshTotalAmountRaw - (refreshTotalAmountRaw * (project.process.calculation.percentage / 100))) * freeRatio);
       } else {
-        calculate = Math.floor((refreshTotalAmountRaw * 1.1) * (1 - (project.process.calculation.method.percentage / 100)));
+        calculate = Math.floor((refreshTotalAmountRaw * 1.1) * (1 - (project.process.calculation.percentage / 100)));
       }
-      commission = refreshTotalAmountRaw * (project.process.calculation.method.percentage / 100);
+      commission = refreshTotalAmountRaw * (project.process.calculation.percentage / 100);
       commission = Math.floor(commission / 10) * 10;
       refreshTotalAmount = Math.floor(calculate / 10) * 10;
 
@@ -3844,10 +3857,11 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
       updateQuery["requests." + String(requestIndex) + ".info"] = equalJson(JSON.stringify(infoCopied));
       updateQuery["requests." + String(requestIndex) + ".cancel"] = cancelArr;
+      updateQuery["requests." + String(requestIndex) + ".proofs"] = proofsArr;
       updateQuery["requests." + String(requestIndex) + ".status"] = status;
 
       projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestIndex].name) ? "first" : "remain") + ".cancel"] = now;
-      projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestIndex].name) ? "first" : "remain") + ".calculation.refund"] = price;
+      projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestIndex].name) ? "first" : "remain") + ".calculation.refund"] = allCancelPrice;
       projectUpdateQuery["process.contract.form.date.cancel"] = now;
 
       await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
