@@ -3801,7 +3801,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       proofsArr = thisRequest.proofs.toNormal();
       tempObj = this.returnBillDummies("proofs");
       tempObj.date = now;
-      tempObj.method = ((/vaccount/gi.test(method) ? "무통장 입금" : "카드") + (thisData.data.P_FN_NM !== undefined ? "(" + thisData.data.P_FN_NM.replace(/카드/gi, '') + ")" : "") + " 취소");
+      tempObj.method = ((/vaccount/gi.test(method) ? "무통장 입금" : "카드") + (thisData.data.P_FN_NM !== undefined ? "(" + thisData.data.P_FN_NM.replace(/카드/gi, '').replace(/은행/gi, '') + ")" : "(" + thisData.data.vactBankName.replace(/카드/gi, '').replace(/은행/gi, '') + ")") + " 취소");
       tempObj.proof = "이니시스";
       tempObj.to = client.name;
       proofsArr.unshift(tempObj);

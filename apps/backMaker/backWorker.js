@@ -717,7 +717,7 @@ BackWorker.prototype.designerCalculation = async function () {
       infoDetail = {
         desid: designer.desid,
         designer: designer.designer,
-        classification: designer.information.business.businessInfo.classification.toNormal(),
+        classification: designer.information.business.businessInfo.classification,
         free: (/프리/gi.test(designer.information.business.businessInfo.classification)),
         simple: (/간이/gi.test(designer.information.business.businessInfo.classification)),
         business: /프리/gi.test(designer.information.business.businessInfo.classification) ? "" : designer.information.business.businessInfo.businessNumber.replace(/-/g, ''),

@@ -72,184 +72,23 @@ DevContext.prototype.launching = async function () {
     //   desid
     // }, { headers: { "Content-Type": "application/json" } });
 
-    const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/requestRefund", {
-      kind: "vaccountEntire",
-      bilid: "b2196_aa03s",
-      requestIndex: 0,
-      payIndex: 0,
-      accountNumber: "1002437398777",
-      bankName: "우리",
-      accountName: "배창규",
-    }, { headers: { "Content-Type": "application/json" } });
+    // const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/requestRefund", {
+    //   kind: "vaccountPartial",
+    //   bilid: "b2196_aa03s",
+    //   requestIndex: 1,
+    //   payIndex: 0,
+    //   percentage: 50,
+    //   accountNumber: "1002437398777",
+    //   bankName: "우리",
+    //   accountName: "배창규",
+    // }, { headers: { "Content-Type": "application/json" } });
+    //
+    // console.log(res.data);
 
-    console.log(res.data);
-
-
-
-
-
-    /*
-
-    //가상 부분 취소
-
-    const crypto = require("crypto");
-    const url = "https://iniapi.inicis.com/api/v1/refund";
-    const dateToTimestamp = (date) => {
-      const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
-      return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
-    }
-    const type = "PartialRefund";
-    const paymethod = "Vacct";
-    const timestamp = dateToTimestamp(new Date());
-    const clientIp = "220.117.13.12";
-    const mid = this.address.officeinfo.inicis.mid;
-    const tid = "INIMX_VBNKMOIhomeli120210904002842335727";
-    const msg = "환불 요청";
-    const price = 1100;
-    const confirmPrice = 1100;
-    const accountNumber = "1002437398777";
-    const bankName = "우리";
-    const refundAcctNum = await cryptoString(this.address.officeinfo.inicis.key, accountNumber, { algorithm: "aes-128-cbc", makeKey: false, iv: this.address.officeinfo.inicis.iv, digest: "base64" });
-    const refundBankCode = BillMaker.returnBankCode(bankName);
-    const refundAcctName = "배창규";
-    const hash = crypto.createHash("sha512").update(this.address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + price + confirmPrice + refundAcctNum).digest("hex");
-    let res;
-
-    res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, price, confirmPrice, refundAcctNum, refundBankCode, refundAcctName, hashData: hash }, { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" });
-    console.log(res);
-
-    //부분 취소 결과
-    {
-      resultCode: '00',
-      resultMsg: '정상처리되었습니다.',
-      tid: 'INIAPIRPAYMOIhomeli120210904162044092107',
-      prtcTid: 'INIMX_VBNKMOIhomeli120210904002842335727',
-      prtcRemains: '1100',
-      prtcPrice: '1100',
-      prtcType: '1',
-      prtcCnt: '1',
-      prtcDate: '20210904',
-      prtcTime: '162044',
-      receiptInfo: ''
-    }
+    
 
 
 
-    //가상 전체 취소
-
-    const crypto = require("crypto");
-    const url = "https://iniapi.inicis.com/api/v1/refund";
-    const dateToTimestamp = (date) => {
-      const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
-      return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
-    }
-    const type = "Refund";
-    const paymethod = "Vacct";
-    const timestamp = dateToTimestamp(new Date());
-    const clientIp = "220.117.13.12";
-    const mid = this.address.officeinfo.inicis.mid;
-    const tid = "INIMX_VBNKMOIhomeli120210904011332965244";
-    const msg = "환불 요청";
-    const accountNumber = "1002437398777";
-    const bankName = "우리";
-    const refundAcctNum = await cryptoString(this.address.officeinfo.inicis.key, accountNumber, { algorithm: "aes-128-cbc", makeKey: false, iv: this.address.officeinfo.inicis.iv, digest: "base64" });
-    const refundBankCode = BillMaker.returnBankCode(bankName);
-    const refundAcctName = "배창규";
-    const hash = crypto.createHash("sha512").update(this.address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + refundAcctNum).digest("hex");
-    let res;
-
-    res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, refundAcctNum, refundBankCode, refundAcctName, hashData: hash }, { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" });
-    console.log(res);
-
-    //전체 취소 결과
-    {
-      resultCode: '00',
-      resultMsg: '정상처리되었습니다.',
-      cancelDate: '20210904',
-      cancelTime: '160116',
-      receiptInfo: '',
-      detailResultCode: ''
-    }
-
-
-
-    //카드 부분 취소
-
-    const crypto = require("crypto");
-    const url = "https://iniapi.inicis.com/api/v1/refund";
-    const dateToTimestamp = (date) => {
-      const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
-      return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
-    }
-    const type = "PartialRefund";
-    const paymethod = "Card";
-    const timestamp = dateToTimestamp(new Date());
-    const clientIp = "220.117.13.12";
-    const mid = this.address.officeinfo.inicis.mid;
-    const tid = "INIMX_ISP_MOIhomeli120210904001217395813";
-    const msg = "환불 요청";
-    const price = 1100;
-    const confirmPrice = 1100;
-    const currency = "WON";
-    const hash = crypto.createHash("sha512").update(this.address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid + price + confirmPrice).digest("hex");
-    let res;
-
-    res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, price, confirmPrice, currency, hashData: hash }, { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" });
-
-    console.log(res);
-
-    //부분 취소 결과
-    {
-      resultCode: '00',
-      resultMsg: '정상완료',
-      tid: 'INIAPIRPAYMOIhomeli120210904135945683194',
-      prtcTid: 'INIMX_ISP_MOIhomeli120210904001217395813',
-      prtcRemains: '1100',
-      prtcPrice: '1100',
-      prtcType: '1',
-      prtcCnt: '1',
-      prtcDate: '20210904',
-      prtcTime: '135945',
-      receiptInfo: ''
-    }
-
-
-
-    //카드 전체 취소
-
-    const crypto = require("crypto");
-    const url = "https://iniapi.inicis.com/api/v1/refund";
-    const dateToTimestamp = (date) => {
-      const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
-      return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
-    }
-
-    const type = "Refund";
-    const paymethod = "Card";
-    const timestamp = dateToTimestamp(new Date());
-    const clientIp = "220.117.13.12";
-    const mid = this.address.officeinfo.inicis.mid;
-    const tid = "INIMX_ISP_MOIhomeli120210903195502375438";
-    const msg = "환불 요청";
-    const hash = crypto.createHash("sha512").update(this.address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + tid).digest("hex");
-    let res;
-
-    res = await requestSystem(url, { type, paymethod, timestamp, clientIp, mid, tid, msg, hashData: hash }, { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8" });
-
-    console.log(res);
-
-    //전체 취소 결과
-    {
-      resultCode: '00',
-      resultMsg: '정상완료',
-      cancelDate: '20210904',
-      cancelTime: '134640',
-      receiptInfo: '',
-      cshrCancelNum: '',
-      detailResultCode: ''
-    }
-
-    */
 
 
 

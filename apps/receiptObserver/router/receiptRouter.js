@@ -803,7 +803,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
       proofs = bill.returnBillDummies("proofs");
-      proofs.method = "무통장 입금(" + bankFrom + ")";
+      proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
       proofs.proof = inisis;
       proofs.to = nameFrom;
       thisBill.requests[requestNumber].proofs.unshift(proofs);

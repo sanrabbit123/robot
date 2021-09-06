@@ -3667,6 +3667,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           let tempObj;
           let totalNum, payNum, cancelNum;
           let responseBoo;
+          let requestArrMake, responseArrMake;
 
           responseBoo = /미화/gi.test(instance.mother.member.name);
 
@@ -3675,33 +3676,10 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           scrollTong = {};
 
           requestArr = [];
-          for (let { date, name, id } of bill.requests) {
-            tempObj = {};
-            tempObj.text = "";
-            tempObj.text += dateToString(date, true).slice(2, -3);
-            tempObj.text += " | ";
-            tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-              return (p1 + " <b%" + p2 + "%b>");
-            });
-            tempObj.id = id;
-            requestArr.push(tempObj);
-          }
-
-          responseArr = [];
-          for (let { date, id, items, pay, cancel } of bill.responses) {
-            totalNum = 0;
-            for (let { amount: { pure } } of items) {
-              totalNum += pure;
-            }
-            payNum = 0;
-            for (let { amount } of pay) {
-              payNum += amount;
-            }
-            cancelNum = 0;
-            for (let { amount } of cancel) {
-              cancelNum += amount;
-            }
-            for (let { name, unit: { number }, amount: { pure } } of items) {
+          requestArrMake = () => {
+            const bill = GeneralJs.stacks[thisProjectBill];
+            requestArr = [];
+            for (let { date, name, id } of bill.requests) {
               tempObj = {};
               tempObj.text = "";
               tempObj.text += dateToString(date, true).slice(2, -3);
@@ -3709,18 +3687,51 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
                 return (p1 + " <b%" + p2 + "%b>");
               });
-              tempObj.text += " | ";
-              tempObj.text += "정산 금액 : ";
-              tempObj.text += GeneralJs.autoComma(pure) + '원';
-              tempObj.text += " | ";
-              tempObj.text += "횟수 : ";
-              tempObj.text += String(number);
-              tempObj.text += " | ";
-              tempObj.text += (totalNum <= payNum - cancelNum ? "정산" : "미정산");
               tempObj.id = id;
-              responseArr.push(tempObj);
+              requestArr.push(tempObj);
             }
           }
+          requestArrMake();
+
+          responseArr = [];
+          responseArrMake = () => {
+            const bill = GeneralJs.stacks[thisProjectBill];
+            responseArr = [];
+            for (let { date, id, items, pay, cancel } of bill.responses) {
+              totalNum = 0;
+              for (let { amount: { pure } } of items) {
+                totalNum += pure;
+              }
+              payNum = 0;
+              for (let { amount } of pay) {
+                payNum += amount;
+              }
+              cancelNum = 0;
+              for (let { amount } of cancel) {
+                cancelNum += amount;
+              }
+              for (let { name, unit: { number }, amount: { pure } } of items) {
+                tempObj = {};
+                tempObj.text = "";
+                tempObj.text += dateToString(date, true).slice(2, -3);
+                tempObj.text += " | ";
+                tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                  return (p1 + " <b%" + p2 + "%b>");
+                });
+                tempObj.text += " | ";
+                tempObj.text += "정산 금액 : ";
+                tempObj.text += GeneralJs.autoComma(pure) + '원';
+                tempObj.text += " | ";
+                tempObj.text += "횟수 : ";
+                tempObj.text += String(number);
+                tempObj.text += " | ";
+                tempObj.text += (totalNum <= payNum - cancelNum ? "정산" : "미정산");
+                tempObj.id = id;
+                responseArr.push(tempObj);
+              }
+            }
+          }
+          responseArrMake();
 
           titleTong = createNode({
             mother: tong,
@@ -3849,6 +3860,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                           requestArr.push(tempObj);
                         }
                         cleanChildren(scrollTong);
+                        requestArrMake();
+                        responseArrMake();
                         requestLoad();
                         removeTargets = document.querySelectorAll('.' + menuClass);
                         for (let dom of removeTargets) {
@@ -4039,6 +4052,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                           let order;
                           let toggle;
                           let removeTargets;
+                          let children;
+                          let pay, cancel;
+                          let infoCopied;
                           if (bill !== null) {
                             thisRequest = null;
 
@@ -4063,153 +4079,196 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 }
                               } else {
                                 items = thisRequest.items;
+                                pay = thisRequest.pay;
+                                cancel = thisRequest.cancel;
+                                infoCopied = GeneralJs.equalJson(JSON.stringify(thisRequest.info));
+                                infoCopied = infoCopied.filter((obj) => {
+                                  return (typeof obj.data === "object");
+                                }).filter((obj) => {
+                                  return (obj.data.mid !== undefined && obj.data.tid !== undefined && obj.data.TotPrice !== undefined && obj.data.MOID !== undefined);
+                                });
+                                pay = pay.map((obj, index) => {
+                                  let total, amount;
+                                  obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : "무통장";
+                                  obj.detail = obj.payMethod === "카드" ? infoCopied[index].data.P_FN_NM : infoCopied[index].data.vactBankName;
+                                  obj.detail = obj.detail.replace(/카드/gi, '').replace(/은행/gi, '');
+                                  obj.payMethod = obj.payMethod + "(" + obj.detail + ") : " + GeneralJs.autoComma(obj.amount) + "원";
+                                  obj.cancel = false;
+                                  obj.cancelDetail = "";
+                                  for (let i of cancel) {
+                                    if (obj.oid === i.oid) {
+                                      obj.cancel = true;
+                                      if (obj.amount === i.amount) {
+                                        obj.cancelDetail = "전체 환불";
+                                      } else {
+                                        obj.cancelDetail = String(Math.round((i.amount / obj.amount) * 100)) + "% 환불";
+                                      }
+                                    }
+                                  }
+                                  return obj;
+                                });
+
                                 itemTong = [];
                                 for (let i of items) {
+                                  children = [
+                                    {
+                                      text: first,
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: "transparent",
+                                        background: "transparent",
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      }
+                                    },
+                                    {
+                                      text: i.name,
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: colorChip.shadowWhite,
+                                        background: colorChip.gray2,
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      }
+                                    },
+                                    {
+                                      text: "소비자가 : " + GeneralJs.autoComma(i.amount.consumer) + "원",
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: colorChip.black,
+                                        background: colorChip.gray0,
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                        cursor: "pointer"
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      }
+                                    },
+                                    {
+                                      text: "횟수 : " + String(i.unit.number),
+                                      attribute: [ { name: i.name } ],
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: colorChip.black,
+                                        background: colorChip.gray0,
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                        cursor: "pointer",
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      },
+                                      events: [
+                                        {
+                                          type: "click",
+                                          event: async function (e) {
+                                            try {
+                                              const itemName = this.getAttribute("name");
+                                              if (/출장/gi.test(itemName)) {
+                                                if (window.confirm("출장 횟수를 변경할까요?")) {
+                                                  let position, thisIndex, number, pastBill, bill, tempObj, promptValue;
+                                                  promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
+                                                  if (promptValue !== null) {
+                                                    number = promptValue.trim();
+                                                    number = Number(String(number).replace(/[^0-9]/gi, ''));
+                                                    if (Number.isNaN(number)) {
+                                                      number = 2;
+                                                    }
+                                                    pastBill = GeneralJs.stacks[thisProjectBill];
+                                                    for (let i = 0; i < pastBill.requests.length; i++) {
+                                                      if (pastBill.requests[i].id === index) {
+                                                        thisIndex = i;
+                                                        break;
+                                                      }
+                                                    }
+                                                    bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : (/계약/gi.test(name) ? "first" : "request"), proid, method, number, index: thisIndex }, PYTHONHOST + "/travelReconfig", { equal: true });
+                                                    GeneralJs.stacks[thisProjectBill] = bill;
+                                                    requestArr = [];
+                                                    for (let { date, name, id } of bill.requests) {
+                                                      tempObj = {};
+                                                      tempObj.text = "";
+                                                      tempObj.text += dateToString(date, true).slice(2, -3);
+                                                      tempObj.text += " | ";
+                                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                                                        return (p1 + " <b%" + p2 + "%b>");
+                                                      });
+                                                      tempObj.id = id;
+                                                      requestArr.push(tempObj);
+                                                    }
+                                                    cleanChildren(scrollTong);
+                                                    requestArrMake();
+                                                    responseArrMake();
+                                                    requestLoad();
+                                                  }
+                                                }
+                                              }
+                                            } catch (e) {
+                                              console.log(e);
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ];
                                   itemDom = createNode({
                                     mother: scrollTong,
                                     attribute: [
                                       { index: itemClass + index },
                                     ],
-                                    children: [
+                                    events: [
                                       {
-                                        text: first,
-                                        style: {
-                                          position: "relative",
-                                          display: "inline-block",
-                                          fontSize: String(fontSize) + ea,
-                                          fontWeight: String(400),
-                                          color: "transparent",
-                                          background: "transparent",
-                                          paddingTop: String(innerPaddingTop) + ea,
-                                          paddingBottom: String(innerPaddingBottom) + ea,
-                                          paddingLeft: String(innerPaddingLeft) + ea,
-                                          paddingRight: String(innerPaddingLeft) + ea,
-                                          borderRadius: String(3) + "px",
-                                          marginRight: String(imageMargin) + ea,
-                                        },
-                                        bold: {
-                                          fontSize: String(fontSize) + ea,
-                                          fontWeight: String(600),
-                                          color: colorChip.green,
-                                        }
+                                        type: "click",
+                                        event: (e) => { e.stopPropagation(); e.preventDefault(); }
                                       },
                                       {
-                                        text: i.name,
-                                        style: {
-                                          position: "relative",
-                                          display: "inline-block",
-                                          fontSize: String(fontSize) + ea,
-                                          fontWeight: String(400),
-                                          color: colorChip.shadowWhite,
-                                          background: colorChip.gray2,
-                                          paddingTop: String(innerPaddingTop) + ea,
-                                          paddingBottom: String(innerPaddingBottom) + ea,
-                                          paddingLeft: String(innerPaddingLeft) + ea,
-                                          paddingRight: String(innerPaddingLeft) + ea,
-                                          borderRadius: String(3) + "px",
-                                          marginRight: String(imageMargin) + ea,
-                                        },
-                                        bold: {
-                                          fontSize: String(fontSize) + ea,
-                                          fontWeight: String(600),
-                                          color: colorChip.green,
-                                        }
-                                      },
-                                      {
-                                        text: "소비자가 : " + GeneralJs.autoComma(i.amount.consumer) + "원",
-                                        style: {
-                                          position: "relative",
-                                          display: "inline-block",
-                                          fontSize: String(fontSize) + ea,
-                                          fontWeight: String(400),
-                                          color: colorChip.black,
-                                          background: colorChip.gray0,
-                                          paddingTop: String(innerPaddingTop) + ea,
-                                          paddingBottom: String(innerPaddingBottom) + ea,
-                                          paddingLeft: String(innerPaddingLeft) + ea,
-                                          paddingRight: String(innerPaddingLeft) + ea,
-                                          borderRadius: String(3) + "px",
-                                          marginRight: String(imageMargin) + ea,
-                                        },
-                                        bold: {
-                                          fontSize: String(fontSize) + ea,
-                                          fontWeight: String(600),
-                                          color: colorChip.green,
-                                        }
-                                      },
-                                      {
-                                        text: "횟수 : " + String(i.unit.number),
-                                        attribute: [ { iname: i.name } ],
-                                        style: {
-                                          position: "relative",
-                                          display: "inline-block",
-                                          fontSize: String(fontSize) + ea,
-                                          fontWeight: String(400),
-                                          color: colorChip.black,
-                                          background: colorChip.gray0,
-                                          paddingTop: String(innerPaddingTop) + ea,
-                                          paddingBottom: String(innerPaddingBottom) + ea,
-                                          paddingLeft: String(innerPaddingLeft) + ea,
-                                          paddingRight: String(innerPaddingLeft) + ea,
-                                          borderRadius: String(3) + "px",
-                                          marginRight: String(imageMargin) + ea,
-                                          cursor: "pointer",
-                                        },
-                                        bold: {
-                                          fontSize: String(fontSize) + ea,
-                                          fontWeight: String(600),
-                                          color: colorChip.green,
-                                        },
-                                        events: [
-                                          {
-                                            type: "click",
-                                            event: async function (e) {
-                                              try {
-                                                const itemName = this.getAttribute("iname");
-                                                if (/출장/gi.test(itemName)) {
-                                                  if (window.confirm("출장 횟수를 변경할까요?")) {
-                                                    let position, thisIndex, number, pastBill, bill, tempObj, promptValue;
-                                                    promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
-                                                    if (promptValue !== null) {
-                                                      number = promptValue.trim();
-                                                      number = Number(String(number).replace(/[^0-9]/gi, ''));
-                                                      if (Number.isNaN(number)) {
-                                                        number = 2;
-                                                      }
-                                                      pastBill = GeneralJs.stacks[thisProjectBill];
-                                                      for (let i = 0; i < pastBill.requests.length; i++) {
-                                                        if (pastBill.requests[i].id === index) {
-                                                          thisIndex = i;
-                                                          break;
-                                                        }
-                                                      }
-                                                      bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : (/계약/gi.test(name) ? "first" : "request"), proid, method, number, index: thisIndex }, PYTHONHOST + "/travelReconfig", { equal: true });
-                                                      GeneralJs.stacks[thisProjectBill] = bill;
-                                                      requestArr = [];
-                                                      for (let { date, name, id } of bill.requests) {
-                                                        tempObj = {};
-                                                        tempObj.text = "";
-                                                        tempObj.text += dateToString(date, true).slice(2, -3);
-                                                        tempObj.text += " | ";
-                                                        tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                                                          return (p1 + " <b%" + p2 + "%b>");
-                                                        });
-                                                        tempObj.id = id;
-                                                        requestArr.push(tempObj);
-                                                      }
-                                                      cleanChildren(scrollTong);
-                                                      requestLoad();
-                                                    }
-                                                  }
-                                                }
-                                              } catch (e) {
-                                                console.log(e);
-                                              }
-                                            }
-                                          }
-                                        ]
+                                        type: "contextmenu",
+                                        event: (e) => { e.stopPropagation(); e.preventDefault(); }
                                       }
                                     ],
+                                    children: children,
                                     style: {
                                       position: "relative",
                                       display: "block",
@@ -4217,6 +4276,147 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       height: "auto",
                                       marginBottom: String(imageMargin) + ea,
                                     }
+                                  });
+                                  itemTong.push(itemDom);
+                                }
+                                for (let i of pay) {
+                                  children = [
+                                    {
+                                      text: first,
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: "transparent",
+                                        background: "transparent",
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      }
+                                    },
+                                    {
+                                      text: items[items.length - 1].name,
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: "transparent",
+                                        background: "transparent",
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      }
+                                    },
+                                    {
+                                      text: dateToString(i.date, true).slice(2, -3),
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: colorChip.shadowWhite,
+                                        background: colorChip.gray2,
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      }
+                                    },
+                                    {
+                                      text: i.payMethod,
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: colorChip.black,
+                                        background: colorChip.gray0,
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      }
+                                    },
+                                  ];
+                                  if (i.cancel) {
+                                    children.push({
+                                      text: i.cancelDetail,
+                                      style: {
+                                        position: "relative",
+                                        display: "inline-block",
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(400),
+                                        color: colorChip.black,
+                                        background: colorChip.gray0,
+                                        paddingTop: String(innerPaddingTop) + ea,
+                                        paddingBottom: String(innerPaddingBottom) + ea,
+                                        paddingLeft: String(innerPaddingLeft) + ea,
+                                        paddingRight: String(innerPaddingLeft) + ea,
+                                        borderRadius: String(3) + "px",
+                                        marginRight: String(imageMargin) + ea,
+                                      },
+                                      bold: {
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(600),
+                                        color: colorChip.green,
+                                      }
+                                    });
+                                  }
+                                  itemDom = createNode({
+                                    mother: scrollTong,
+                                    attribute: [
+                                      { index: itemClass + index },
+                                    ],
+                                    events: [
+                                      {
+                                        type: "click",
+                                        event: (e) => { e.stopPropagation(); e.preventDefault(); }
+                                      },
+                                      {
+                                        type: "contextmenu",
+                                        event: (e) => { e.stopPropagation(); e.preventDefault(); }
+                                      }
+                                    ],
+                                    children: children,
+                                    style: {
+                                      position: "relative",
+                                      display: "block",
+                                      width: String(100) + '%',
+                                      height: "auto",
+                                      marginBottom: String(imageMargin) + ea,
+                                    },
                                   });
                                   itemTong.push(itemDom);
                                 }
@@ -4231,6 +4431,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   scrollTong.insertBefore(dom, scrollTong.children[order + num]);
                                   num++;
                                 }
+
                               }
 
                             }
@@ -4344,6 +4545,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       requestArr.push(tempObj);
                                     }
                                     cleanChildren(scrollTong);
+                                    requestArrMake();
+                                    responseArrMake();
                                     requestLoad();
                                   } catch (e) {
                                     console.log(e);
@@ -4382,6 +4585,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                         requestArr.push(tempObj);
                                       }
                                       cleanChildren(scrollTong);
+                                      requestArrMake();
+                                      responseArrMake();
                                       requestLoad();
                                     }
                                   } catch (e) {
@@ -4412,6 +4617,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       requestArr.push(tempObj);
                                     }
                                     cleanChildren(scrollTong);
+                                    requestArrMake();
+                                    responseArrMake();
                                     requestLoad();
                                   } catch (e) {
                                     console.log(e);

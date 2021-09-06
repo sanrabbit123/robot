@@ -2395,6 +2395,8 @@ DataRouter.prototype.rou_post_proposalReset = function () {
   obj.func = async function (req, res) {
     try {
       let id, historyObj;
+      let requestObj;
+
       if (req.body.proid === undefined) {
         id = req.body.cliid;
       }
@@ -2421,12 +2423,18 @@ DataRouter.prototype.rou_post_proposalReset = function () {
 
               historyObj = await back.getHistoryById("client", id, { selfMongo: instance.mongolocal });
               if (historyObj !== null && historyObj.curation.image.length > 0) {
-                requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", {
+
+                requestObj = {
                   cliid: id,
                   historyQuery: { "curation.service.serid": [ req.body.serid ] },
                   coreQuery: {},
                   mode: "create"
-                }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
+                };
+                if (req.body.silent !== undefined) {
+                  requestObj.slient = true;
+                }
+                
+                requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
                   //pass
                 }).catch((err) => {
                   console.log(err);
@@ -4652,7 +4660,11 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               if (newProid === null) {
                 newProid = proid;
               }
-              return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+              if (req.body.slient === undefined) {
+                return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+              } else {
+                return passPromise();
+              }
             }).then(() => {
               if (newProid === null) {
                 throw new Error("promise error");
