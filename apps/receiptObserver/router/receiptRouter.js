@@ -506,6 +506,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
         payObject = bill.returnBillDummies("pay");
         payObject.amount = amount;
+        payObject.oid = oid;
         payArr.unshift(payObject);
 
         itemNum = 0;
@@ -773,6 +774,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
       cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
       payObject = bill.returnBillDummies("pay");
+      payObject.oid = oid;
       payObject.amount = amount;
       payArr.unshift(payObject);
 

@@ -3587,6 +3587,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     let classification;
     let num;
     let refreshRemainAmount;
+    let oid;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -3697,7 +3698,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     infoCopiedCopied = infoCopiedCopied.filter((obj) => {
       return (typeof obj.data === "object");
     }).filter((obj) => {
-      return (obj.data.mid !== undefined && obj.data.tid !== undefined && obj.data.TotPrice !== undefined);
+      return (obj.data.mid !== undefined && obj.data.tid !== undefined && obj.data.TotPrice !== undefined && obj.data.MOID !== undefined);
     });
     if (infoCopiedCopied[payIndex] === undefined) {
       throw new Error("invaild pay index");
@@ -3718,6 +3719,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     clientIp = (await ipCheck()).ip;
     mid = address.officeinfo.inicis.mid;
     tid = thisData.data.tid;
+    oid = thisData.data.MOID;
 
     if (method === "cardEntire") {
 

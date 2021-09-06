@@ -70,6 +70,10 @@ DevContext.prototype.launching = async function () {
     // const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
     // console.log(res.data);
 
+    // await bill.requestRefund("cardEntire", "b2196_aa03s", 1, 0);
+
+
+
 
 
 

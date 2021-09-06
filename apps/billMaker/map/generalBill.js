@@ -100,7 +100,8 @@ module.exports = {
     } else if (subject === "pay") {
       dummy = {
         date: new Date(),
-        amount: 0
+        amount: 0,
+        oid: "",
       };
     }
     return dummy;
@@ -110,11 +111,13 @@ module.exports = {
       constructor(json) {
         this.date = json.date;
         this.amount = json.amount;
+        this.oid = json.oid;
       }
       toNormal() {
         let obj = {};
         obj.date = this.date;
         obj.amount = this.amount;
+        obj.oid = this.oid;
         return obj;
       }
     }
