@@ -4401,6 +4401,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     attribute: [
                                       { index: itemClass + index },
                                       { method: i.method },
+                                      { cancel: i.cancel ? "true" : "false" }
                                     ],
                                     events: [
                                       {
@@ -4413,26 +4414,86 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           e.stopPropagation();
                                           e.preventDefault();
                                           const method = /카/gi.test(this.getAttribute("method"));
+                                          const cancel = this.getAttribute("cancel") === "true";
+                                          let raw;
                                           let percentage, accountNumber, bankName, accountName;
+                                          let bankCode;
                                           try {
+                                            // if (!cancel && window.confirm("환불을 진행할까요?")) {
                                             if (window.confirm("환불을 진행할까요?")) {
-                                              if (window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
-                                                //entire
-                                                if (method) {
+                                              percentage = 100;
+                                              if (!window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
+                                                do {
+                                                  raw = window.prompt("부분 환불의 비율을 알려주세요! (예: 50%)");
+                                                  if (raw !== null) {
+                                                    percentage = Number(window.prompt("부분 환불의 비율을 알려주세요! (예: 50%)").replace(/[^0-9]/gi, ''));
+                                                  } else {
+                                                    percentage = 0;
+                                                  }
+                                                } while (percentage === 0 || Number.isNaN(percentage))
+                                              }
+                                              if (method) {
 
+                                                // "/requestRefund"
+                                                // {
+                                                //   kind: "vaccountPartial",
+                                                //   bilid: "b2196_aa03s",
+                                                //   requestIndex: 1,
+                                                //   payIndex: 0,
+                                                //   percentage,
+                                                // }
 
-                                                } else {
-
-                                                }
                                               } else {
-                                                //partial
+                                                bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
+                                                do {
+                                                  raw = window.prompt("은행 이름을 알려주세요!");
+                                                  if (raw !== null) {
+                                                    raw = raw.trim();
+                                                    bankName = null;
+                                                    for (let arr of bankCode) {
+                                                      if ((new RegExp(arr[0], "gi")).test(raw)) {
+                                                        if (window.confirm("은행 이름이 '" + arr[0] + "'가 맞나요?")) {
+                                                          bankName = arr[0];
+                                                        }
+                                                      }
+                                                    }
+                                                  } else {
+                                                    bankName = null;
+                                                  }
+                                                } while (bankName === null)
+                                                do {
+                                                  raw = window.prompt("계좌 번호를 알려주세요!");
+                                                  if (raw !== null) {
+                                                    accountNumber = null;
+                                                    accountNumber = raw.replace(/[^0-9]/gi, '').trim();
+                                                  } else {
+                                                    accountNumber = null;
+                                                  }
+                                                } while (accountNumber === null)
+                                                do {
+                                                  raw = window.prompt("예금주를 알려주세요!");
+                                                  if (raw !== null) {
+                                                    accountName = null;
+                                                    accountName = raw.replace(/[^0-9]/gi, '').trim();
+                                                  } else {
+                                                    accountName = null;
+                                                  }
+                                                } while (accountName === null)
 
-
-                                                window.prompt("부분 환불의 비율을 알려주세요! (예: 50%)");
-                                                window.prompt()
-
+                                                // "/requestRefund"
+                                                // {
+                                                //   kind: "vaccountPartial",
+                                                //   bilid: "b2196_aa03s",
+                                                //   requestIndex: 1,
+                                                //   payIndex: 0,
+                                                //   percentage,
+                                                //   accountNumber,
+                                                //   bankName,
+                                                //   accountName,
+                                                // }
 
                                               }
+
                                             }
                                           } catch (e) {
                                             console.log(e);
