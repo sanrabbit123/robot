@@ -20,6 +20,7 @@ const ReceiptRouter = function (MONGOC, MONGOLOCALC, kakaoInstance, humanInstanc
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.kakao = kakaoInstance;
   this.human = humanInstance;
+  this.bankCode = BillMaker.returnBankCode("", "matrix");
 }
 
 ReceiptRouter.prototype.rou_get_Root = function () {
@@ -1423,6 +1424,36 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
         "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
       });
       res.send(JSON.stringify(report));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_returnBankCode = function () {
+  const instance = this;
+  const bankCode = this.bankCode;
+  const { equalJson, sleep } = this.mother;
+  let obj = {};
+  obj.link = "/returnBankCode";
+  obj.func = async function (req, res) {
+    try {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify(bankCode));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message, channel: "#error_log" });
       res.set({

@@ -496,6 +496,8 @@ BillMaker.returnBankCode = function (name, mode = "code") {
       }
     }
     return result;
+  } else if (mode === "matrix") {
+    return bankMatrix;
   }
 }
 

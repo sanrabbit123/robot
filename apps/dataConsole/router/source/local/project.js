@@ -4092,6 +4092,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : "무통장";
                                   obj.detail = obj.payMethod === "카드" ? infoCopied[index].data.P_FN_NM : infoCopied[index].data.vactBankName;
                                   obj.detail = obj.detail.replace(/카드/gi, '').replace(/은행/gi, '');
+                                  obj.method = obj.payMethod;
                                   obj.payMethod = obj.payMethod + "(" + obj.detail + ") : " + GeneralJs.autoComma(obj.amount) + "원";
                                   obj.cancel = false;
                                   obj.cancelDetail = "";
@@ -4362,6 +4363,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                         paddingRight: String(innerPaddingLeft) + ea,
                                         borderRadius: String(3) + "px",
                                         marginRight: String(imageMargin) + ea,
+                                        cursor: "pointer",
                                       },
                                       bold: {
                                         fontSize: String(fontSize) + ea,
@@ -4398,6 +4400,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     mother: scrollTong,
                                     attribute: [
                                       { index: itemClass + index },
+                                      { method: i.method },
                                     ],
                                     events: [
                                       {
@@ -4406,7 +4409,35 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       },
                                       {
                                         type: "contextmenu",
-                                        event: (e) => { e.stopPropagation(); e.preventDefault(); }
+                                        event: async function (e) {
+                                          e.stopPropagation();
+                                          e.preventDefault();
+                                          const method = /카/gi.test(this.getAttribute("method"));
+                                          let percentage, accountNumber, bankName, accountName;
+                                          try {
+                                            if (window.confirm("환불을 진행할까요?")) {
+                                              if (window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
+                                                //entire
+                                                if (method) {
+
+
+                                                } else {
+
+                                                }
+                                              } else {
+                                                //partial
+
+
+                                                window.prompt("부분 환불의 비율을 알려주세요! (예: 50%)");
+                                                window.prompt()
+
+
+                                              }
+                                            }
+                                          } catch (e) {
+                                            console.log(e);
+                                          }
+                                        }
                                       }
                                     ],
                                     children: children,
