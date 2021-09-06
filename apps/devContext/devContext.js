@@ -67,10 +67,22 @@ DevContext.prototype.launching = async function () {
 
     // const proid = "p1801_aa01s";
     // const desid = "d1701_aa01s";
-    // const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
-    // console.log(res.data);
+    // const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", {
+    //   proid,
+    //   desid
+    // }, { headers: { "Content-Type": "application/json" } });
 
-    // console.log(await bill.requestRefund("cardEntire", "b2196_aa03s", 1, 0));
+    const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/requestRefund", {
+      kind: "cardPartial",
+      bilid: "b2196_aa03s",
+      requestIndex: 0,
+      payIndex: 0,
+      percentage: 50,
+    }, { headers: { "Content-Type": "application/json" } });
+
+    console.log(res.data);
+
+
 
 
 

@@ -1127,11 +1127,13 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       }
     }
 
-    if (getObj.view === "test" && getObj.request !== undefined) {
+    if (getObj.request !== undefined) {
       if (!Number.isNaN(Number(getObj.request.replace(/[^0-9]/gi, '')))) {
         this.requestNumber = Number(getObj.request.replace(/[^0-9]/gi, ''));
       }
     }
+
+    console.log(this.requestNumber);
 
     this.request = {
       name: "",
