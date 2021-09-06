@@ -292,7 +292,7 @@ BillMaker.billDictionary = {
           const { designer, freeRatio } = subObj;
           let classification, percentage, calculate, commission;
 
-          classification = designer.information.business.businessInfo.classification.value;
+          classification = designer.information.business.businessInfo.classification;
           percentage = designer.information.business.service.cost.percentage;
 
           if (/일반/gi.test(classification)) {
@@ -320,7 +320,7 @@ BillMaker.billDictionary = {
           const { designer, freeRatio } = subObj;
           let classification, percentage, calculate, commission;
 
-          classification = designer.information.business.businessInfo.classification.value;
+          classification = designer.information.business.businessInfo.classification;
           percentage = designer.information.business.service.cost.percentage;
 
           if (/일반/gi.test(classification)) {
@@ -349,7 +349,7 @@ BillMaker.billDictionary = {
           let classification, calculate, commission, distanceFinalAmount;
 
           distanceFinalAmount = distance.amount * distance.number;
-          classification = designer.information.business.businessInfo.classification.value;
+          classification = designer.information.business.businessInfo.classification;
 
           if (/일반/gi.test(classification)) {
             calculate = Math.floor((distanceFinalAmount * 1.1) * (1 - (distancePercentage / 100)));
@@ -2484,7 +2484,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       projectUpdateQuery["process.contract.remain.calculation.amount.supply"] = Math.round(newSupply);
       projectUpdateQuery["process.contract.remain.calculation.amount.vat"] = Math.round(newSupply * vatRatio);
       projectUpdateQuery["process.contract.remain.calculation.amount.consumer"] = Math.round(newSupply * (1 + vatRatio));
-      classification = designer.information.business.businessInfo.classification.value;
+      classification = designer.information.business.businessInfo.classification;
       percentage = designer.information.business.service.cost.percentage;
       if (/일반/gi.test(classification)) {
         calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
@@ -2927,7 +2927,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       projectUpdateQuery["process.contract.remain.calculation.amount.supply"] = Math.round(newSupply);
       projectUpdateQuery["process.contract.remain.calculation.amount.vat"] = Math.round(newSupply * vatRatio);
       projectUpdateQuery["process.contract.remain.calculation.amount.consumer"] = Math.round(newSupply * (1 + vatRatio));
-      classification = designer.information.business.businessInfo.classification.value;
+      classification = designer.information.business.businessInfo.classification;
       percentage = designer.information.business.service.cost.percentage;
       if (/일반/gi.test(classification)) {
         calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
@@ -2938,7 +2938,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       } else {
         calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
       }
-      projectUpdateQuery["process.calculation.method"] = classification;
+      projectUpdateQuery["process.calculation.method"] = classification.toNormal();
       projectUpdateQuery["process.calculation.percentage"] = percentage;
       if (designer.information.business.account.length > 0) {
         bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
@@ -3537,7 +3537,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
   const address = this.address;
   const back = this.back;
   const crypto = require("crypto");
-  const { cryptoString, requestSystem, ipCheck, equalJson } = this.mother;
+  const { mongo, mongopythoninfo, mongoinfo, cryptoString, requestSystem, ipCheck, equalJson } = this.mother;
   const dateToTimestamp = (date) => {
     const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
     return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
@@ -3588,6 +3588,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     let num;
     let refreshRemainAmount;
     let oid;
+    let tempObj;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -3690,8 +3691,8 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     }
     remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
 
-    client = await back.getClientById(thisRequest.links.cliid, { selfMongo: MONGOCOREC });
-    project = await back.getProjectById(thisRequest.links.proid, { selfMongo: MONGOCOREC });
+    client = await back.getClientById(thisBill.links.cliid, { selfMongo: MONGOCOREC });
+    project = await back.getProjectById(thisBill.links.proid, { selfMongo: MONGOCOREC });
 
     infoCopied = thisRequest.info.toNormal();
     infoCopiedCopied = equalJson(JSON.stringify(infoCopied));
@@ -3761,6 +3762,8 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
     if (res.status === 200 && typeof res.data === "object" && res.data.resultCode === "00") {
 
+      console.log(res.data);
+
       if (/vaccount/gi.test(method)) {
         res.data.refundAcctNum = option.accountNumber;
         res.data.refundBankCode = option.bankName;
@@ -3785,14 +3788,18 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
       infoCopied.unshift(res.data);
       cancelArr = thisRequest.cancel.toNormal();
-      cancelArr.unshift({ date: now, amount: price });
+      tempObj = this.returnBillDummies("pay");
+      tempObj.date = now;
+      tempObj.amount = price;
+      tempObj.oid = oid;
+      cancelArr.unshift(tempObj);
       proofsArr = thisRequest.proofs.toNormal();
-      proofsArr.unshift({
-        date: now,
-        method: ((/vaccount/gi.test(method) ? "무통장 입금" : "카드") + "(" + thisData.data.P_FN_NM.replace(/카드/gi, '') + ")"),
-        proof: "이니시스",
-        to: client.name,
-      });
+      tempObj = this.returnBillDummies("proofs");
+      tempObj.date = now;
+      tempObj.method = ((/vaccount/gi.test(method) ? "무통장 입금" : "카드") + "(" + thisData.data.P_FN_NM.replace(/카드/gi, '') + ")");
+      tempObj.proof = "이니시스";
+      tempObj.to = client.name;
+      proofsArr.unshift(tempObj);
 
       refreshTotalAmountRaw = project.process.calculation.payments.totalAmount - price;
       classification = project.process.calculation.method;
@@ -3835,12 +3842,12 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
 
       }
 
-      updateQuery["requests." + String(requestNumber) + ".info"] = equalJson(JSON.stringify(infoCopied));
-      updateQuery["requests." + String(requestNumber) + ".cancel"] = cancelArr;
-      updateQuery["requests." + String(requestNumber) + ".status"] = status;
+      updateQuery["requests." + String(requestIndex) + ".info"] = equalJson(JSON.stringify(infoCopied));
+      updateQuery["requests." + String(requestIndex) + ".cancel"] = cancelArr;
+      updateQuery["requests." + String(requestIndex) + ".status"] = status;
 
-      projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestNumber].name) ? "first" : "remain") + ".cancel"] = now;
-      projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestNumber].name) ? "first" : "remain") + ".calculation.refund"] = price;
+      projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestIndex].name) ? "first" : "remain") + ".cancel"] = now;
+      projectUpdateQuery["process.contract." + (/계약/gi.test(thisBill.requests[requestIndex].name) ? "first" : "remain") + ".calculation.refund"] = price;
       projectUpdateQuery["process.contract.form.date.cancel"] = now;
 
       await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
