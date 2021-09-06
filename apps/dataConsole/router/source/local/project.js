@@ -3847,18 +3847,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                         }
                         bill = await ajaxJson({ injectionCase: "request", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
                         GeneralJs.stacks[thisProjectBill] = bill;
-                        requestArr = [];
-                        for (let { date, name, id } of bill.requests) {
-                          tempObj = {};
-                          tempObj.text = "";
-                          tempObj.text += dateToString(date, true).slice(2, -3);
-                          tempObj.text += " | ";
-                          tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                            return (p1 + " <b%" + p2 + "%b>");
-                          });
-                          tempObj.id = id;
-                          requestArr.push(tempObj);
-                        }
                         cleanChildren(scrollTong);
                         requestArrMake();
                         responseArrMake();
@@ -4040,6 +4028,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                         event: function (e) {
                           e.stopPropagation();
                           const bill = GeneralJs.stacks[thisProjectBill];
+                          const bilid = bill.bilid;
                           const index = this.getAttribute("index");
                           const first = this.getAttribute("first");
                           const proid = this.getAttribute("proid");
@@ -4055,13 +4044,19 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                           let children;
                           let pay, cancel;
                           let infoCopied;
+                          let requestIndex, payIndex;
+                          let tempNum;
+
                           if (bill !== null) {
                             thisRequest = null;
 
+                            tempNum = 0;
                             for (let obj of bill.requests) {
                               if (obj.id === index) {
                                 thisRequest = obj;
+                                requestIndex = tempNum;
                               }
+                              tempNum++;
                             }
 
                             if (thisRequest !== null) {
@@ -4227,18 +4222,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                     }
                                                     bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : (/계약/gi.test(name) ? "first" : "request"), proid, method, number, index: thisIndex }, PYTHONHOST + "/travelReconfig", { equal: true });
                                                     GeneralJs.stacks[thisProjectBill] = bill;
-                                                    requestArr = [];
-                                                    for (let { date, name, id } of bill.requests) {
-                                                      tempObj = {};
-                                                      tempObj.text = "";
-                                                      tempObj.text += dateToString(date, true).slice(2, -3);
-                                                      tempObj.text += " | ";
-                                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                                                        return (p1 + " <b%" + p2 + "%b>");
-                                                      });
-                                                      tempObj.id = id;
-                                                      requestArr.push(tempObj);
-                                                    }
                                                     cleanChildren(scrollTong);
                                                     requestArrMake();
                                                     responseArrMake();
@@ -4280,6 +4263,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   });
                                   itemTong.push(itemDom);
                                 }
+
+                                tempNum = 0;
                                 for (let i of pay) {
                                   children = [
                                     {
@@ -4401,7 +4386,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     attribute: [
                                       { index: itemClass + index },
                                       { method: i.method },
-                                      { cancel: i.cancel ? "true" : "false" }
+                                      { cancel: i.cancel ? "true" : "false" },
+                                      { pay: String(tempNum) },
                                     ],
                                     events: [
                                       {
@@ -4415,35 +4401,37 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           e.preventDefault();
                                           const method = /카/gi.test(this.getAttribute("method"));
                                           const cancel = this.getAttribute("cancel") === "true";
+                                          const payIndex = Number(this.getAttribute("pay"));
                                           let raw;
                                           let percentage, accountNumber, bankName, accountName;
                                           let bankCode;
+                                          let kind;
+                                          let res;
                                           try {
-                                            // if (!cancel && window.confirm("환불을 진행할까요?")) {
-                                            if (window.confirm("환불을 진행할까요?")) {
+                                            if (!cancel && window.confirm("환불을 진행할까요?")) {
                                               percentage = 100;
                                               if (!window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
                                                 do {
                                                   raw = window.prompt("부분 환불의 비율을 알려주세요! (예: 50%)");
                                                   if (raw !== null) {
-                                                    percentage = Number(window.prompt("부분 환불의 비율을 알려주세요! (예: 50%)").replace(/[^0-9]/gi, ''));
+                                                    percentage = Number(raw.replace(/[^0-9]/gi, ''));
                                                   } else {
                                                     percentage = 0;
                                                   }
                                                 } while (percentage === 0 || Number.isNaN(percentage))
                                               }
                                               if (method) {
-
-                                                // "/requestRefund"
-                                                // {
-                                                //   kind: "vaccountPartial",
-                                                //   bilid: "b2196_aa03s",
-                                                //   requestIndex: 1,
-                                                //   payIndex: 0,
-                                                //   percentage,
-                                                // }
-
+                                                kind = "card" + (percentage === 100 ? "Entire" : "Partial");
+                                                if (window.confirm("카드 " + String(percentage) + "% 환불을 진행합니다. 확실합니까?")) {
+                                                  res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                  GeneralJs.stacks[thisProjectBill] = res.bill;
+                                                  cleanChildren(scrollTong);
+                                                  requestArrMake();
+                                                  responseArrMake();
+                                                  requestLoad();
+                                                }
                                               } else {
+                                                kind = "vaccount" + (percentage === 100 ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
                                                 do {
                                                   raw = window.prompt("은행 이름을 알려주세요!");
@@ -4474,23 +4462,20 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                   raw = window.prompt("예금주를 알려주세요!");
                                                   if (raw !== null) {
                                                     accountName = null;
-                                                    accountName = raw.replace(/[^0-9]/gi, '').trim();
+                                                    accountName = raw.trim();
                                                   } else {
                                                     accountName = null;
                                                   }
                                                 } while (accountName === null)
 
-                                                // "/requestRefund"
-                                                // {
-                                                //   kind: "vaccountPartial",
-                                                //   bilid: "b2196_aa03s",
-                                                //   requestIndex: 1,
-                                                //   payIndex: 0,
-                                                //   percentage,
-                                                //   accountNumber,
-                                                //   bankName,
-                                                //   accountName,
-                                                // }
+                                                if (window.confirm("무통장 " + String(percentage) + "% 환불을 진행합니다.(" + bankName + " " + accountNumber + " " + accountName + ") 확실합니까?")) {
+                                                  res = await GeneralJs.ajaxJson({ kind, bilid, requestIndex, payIndex, percentage, accountNumber, bankName, accountName }, PYTHONHOST + "/requestRefund", { equal: true });
+                                                  GeneralJs.stacks[thisProjectBill] = res.bill;
+                                                  cleanChildren(scrollTong);
+                                                  requestArrMake();
+                                                  responseArrMake();
+                                                  requestLoad();
+                                                }
 
                                               }
 
@@ -4511,6 +4496,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     },
                                   });
                                   itemTong.push(itemDom);
+                                  tempNum++;
                                 }
                                 itemDom.style.paddingBottom = String(innerPaddingBottom) + ea;
                                 for (let i = 0; i < scrollTong.children.length; i++) {
@@ -4624,18 +4610,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     }
                                     bill = await ajaxJson({ injectionCase: "request", proid, method, index: thisIndex }, PYTHONHOST + "/travelEjection", { equal: true });
                                     GeneralJs.stacks[thisProjectBill] = bill;
-                                    requestArr = [];
-                                    for (let { date, name, id } of bill.requests) {
-                                      tempObj = {};
-                                      tempObj.text = "";
-                                      tempObj.text += dateToString(date, true).slice(2, -3);
-                                      tempObj.text += " | ";
-                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                                        return (p1 + " <b%" + p2 + "%b>");
-                                      });
-                                      tempObj.id = id;
-                                      requestArr.push(tempObj);
-                                    }
                                     cleanChildren(scrollTong);
                                     requestArrMake();
                                     responseArrMake();
@@ -4664,18 +4638,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       }
                                       bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
                                       GeneralJs.stacks[thisProjectBill] = bill;
-                                      requestArr = [];
-                                      for (let { date, name, id } of bill.requests) {
-                                        tempObj = {};
-                                        tempObj.text = "";
-                                        tempObj.text += dateToString(date, true).slice(2, -3);
-                                        tempObj.text += " | ";
-                                        tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                                          return (p1 + " <b%" + p2 + "%b>");
-                                        });
-                                        tempObj.id = id;
-                                        requestArr.push(tempObj);
-                                      }
                                       cleanChildren(scrollTong);
                                       requestArrMake();
                                       responseArrMake();
@@ -4696,18 +4658,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     index = 0;
                                     bill = await ajaxJson({ injectionCase: /잔금/gi.test(name) ? "remain" : "first", proid, method, index }, PYTHONHOST + "/travelEjection", { equal: true });
                                     GeneralJs.stacks[thisProjectBill] = bill;
-                                    requestArr = [];
-                                    for (let { date, name, id } of bill.requests) {
-                                      tempObj = {};
-                                      tempObj.text = "";
-                                      tempObj.text += dateToString(date, true).slice(2, -3);
-                                      tempObj.text += " | ";
-                                      tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                                        return (p1 + " <b%" + p2 + "%b>");
-                                      });
-                                      tempObj.id = id;
-                                      requestArr.push(tempObj);
-                                    }
                                     cleanChildren(scrollTong);
                                     requestArrMake();
                                     responseArrMake();

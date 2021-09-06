@@ -1406,6 +1406,9 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       }
 
       report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
+      report.bill = report.bill.toNormal();
+      report.project = report.project.toNormal();
+      report.client = report.client.toNormal();
       client = report.client;
       designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
 
