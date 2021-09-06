@@ -431,9 +431,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       if (Number.isNaN(Number(requestNumber))) {
         throw new Error("invaild request number");
       }
-      if (/잔금/gi.test(data.goodName) && Number(requestNumber) === 0) {
-        throw new Error("invaild request number");
-      }
       const oid = data.MOID;
       const inisis = "이니시스";
       let whereQuery, updateQuery, method;

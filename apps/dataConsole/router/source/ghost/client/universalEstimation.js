@@ -1014,9 +1014,6 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
         requestNumber = Number(getObj.request.replace(/[^0-9]/gi, ''));
       }
     }
-    if (/잔금/gi.test(data.goodName) && requestNumber === 0) {
-      requestNumber = 1;
-    }
 
     await ajaxJson({ bilid, requestNumber, data }, "/pythonPass_ghostClientBill");
 
