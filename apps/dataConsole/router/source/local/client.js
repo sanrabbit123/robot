@@ -5669,7 +5669,7 @@ ClientJs.prototype.communicationRender = function () {
               send: "styleCuration_lite",
             }, "/updateClientHistory");
 
-            await ajaxJson({ cliid, serid }, "/proposalCreate");
+            await ajaxJson({ cliid, serid, slient: true }, "/proposalCreate");
 
             await sleep(1000);
             window.alert("제안서 제작 요청이 완료되었습니다!");

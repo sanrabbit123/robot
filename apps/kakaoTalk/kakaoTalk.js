@@ -403,6 +403,22 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    remainPaymentAndChannel: {
+      name: "잔금 입금 완료",
+      id: "TF_7399",
+      needs: [
+        "client",
+        "designer",
+        "emoji"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "designer", to: obj.designer },
+          { from: "emoji", to: obj.emoji },
+        ];
+      },
+    },
     virtualAccount: {
       name: "가상계좌 안내 수정",
       id: "TF_5485",
@@ -536,6 +552,42 @@ KakaoTalk.prototype.templateTong = function (target) {
           { from: "path", to: obj.path },
           { from: "cliid", to: obj.cliid },
           { from: "needs", to: obj.needs },
+        ];
+      },
+    },
+    refundCard: {
+      name: "환불 신청 완료 카드",
+      id: "TF_7403",
+      needs: [
+        "client",
+        "designer",
+        "percentage",
+        "amount",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "designer", to: obj.designer },
+          { from: "percentage", to: obj.percentage },
+          { from: "amount", to: obj.amount },
+        ];
+      },
+    },
+    refundVAccount: {
+      name: "환불 신청 완료 가상계좌",
+      id: "TF_7406",
+      needs: [
+        "client",
+        "designer",
+        "percentage",
+        "amount",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "designer", to: obj.designer },
+          { from: "percentage", to: obj.percentage },
+          { from: "amount", to: obj.amount },
         ];
       },
     },

@@ -470,7 +470,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       proposal = project.selectProposal(desid);
 
       if (client === null || designer === null || project === null || proposal === null) {
-        throw new Error("invaild proposal");
+        throw new Error("invaild id");
       }
 
       if (Array.isArray(thisBill.links.oid)) {
@@ -535,6 +535,9 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         proofs.to = data.buyerName;
         thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
         updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
+
+        instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
         if (paymentComplete) {
           if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
@@ -611,23 +614,33 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
               await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
 
+              await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+              await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
+
               instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
                 client: client.name,
                 designer: designer.designer,
               });
 
             } else if (data.goodName.trim() === "홈리에종 잔금") {
+
               projectQuery["process.contract.remain.date"] = new Date();
               projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
               projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
               projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
+
+              await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+              instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
+                client: client.name,
+                designer: designer.designer,
+                emoji: "(방긋)",
+              });
+
             }
 
-            await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
           }
         }
-
-        instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
 
       } else {
 
@@ -642,10 +655,9 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         });
 
         instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!", channel: "#700_operation" });
+        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
       }
-
-      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
       res.set({
         "Content-Type": "application/json",
@@ -792,6 +804,9 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       thisBill.requests[requestNumber].proofs.unshift(proofs);
       updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
 
+      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
       if (paymentComplete) {
         if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
 
@@ -867,6 +882,9 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
             await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
             await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
 
+            await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+            await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
+
             instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
               client: client.name,
               designer: designer.designer,
@@ -877,16 +895,19 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
             projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
             projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
             projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
-          }
 
-          await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+            await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+            instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
+              client: client.name,
+              designer: designer.designer,
+              emoji: "(방긋)",
+            });
+
+          }
 
         }
       }
-
-      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
-      await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-
 
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");

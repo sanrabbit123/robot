@@ -143,7 +143,11 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               if (newProid === null) {
                 newProid = proid;
               }
-              return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+              if (req.body.slient === undefined) {
+                return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
+              } else {
+                return passPromise();
+              }
             }).then(() => {
               if (newProid === null) {
                 throw new Error("promise error");

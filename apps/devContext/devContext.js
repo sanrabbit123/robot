@@ -65,6 +65,13 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
 
 
+    // const proid = "p1801_aa01s";
+    // const desid = "d1701_aa01s";
+    // const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
+    // console.log(res.data);
+
+
+
 
 
 
@@ -459,11 +466,7 @@ DevContext.prototype.launching = async function () {
 
     // create bill
 
-    const proid = "p2107_aa46s";
-
-
-
-
+    // const proid = "p2107_aa46s";
 
     // console.log(await bill.createStylingBill("p1801_aa01s"));
     // console.log(await bill.createStylingBill("p2108_aa63s", { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC }));
