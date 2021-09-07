@@ -925,15 +925,27 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invaild name in images : " + JSON.stringify(images));
         }
 
-        let pidArr;
+        let pidArr, raw, contents, contentsArr, desidArr;
 
         pidArr = images.map((i) => {
           return i.replace(/\.[a-z]+$/gi, '').replace(/^[it][0-9]+/gi, '');
         });
 
+        contentsArr = [];
+        for (let pid of pidArr) {
+          raw = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo: MONGOLOCALC });
+          if (raw.length !== 0) {
+            throw new Error("invaild pid : " + JSON.stringify(pidArr));
+          }
+          [ contents ] = raw;
+          contentsArr.push(contents);
+        }
 
+        desidArr = Array.from(new Set(contentsArr.map((c) => {
+          return c.desid;
+        })));
 
-        res.send(JSON.stringify(pidArr));
+        res.send(JSON.stringify(desidArr));
 
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
