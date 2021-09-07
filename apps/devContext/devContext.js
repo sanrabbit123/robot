@@ -70,6 +70,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     /*
     const selfMongo = this.MONGOLOCALC;
 
@@ -351,6 +352,20 @@ DevContext.prototype.launching = async function () {
     // let id;
     // let status;
     //
+    //
+    // targets = [];
+    // for (let phone of phoneNumbers) {
+    //   query = { id: phone, pass };
+    //   tempRes = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+    //   console.log(tempRes.data);
+    //   if (tempRes.data.SVC_RT !== "0000") {
+    //     targets.push(phone);
+    //   }
+    // }
+    // console.log(targets);
+
+
+
     // id = "07046037707";
     // query = { id, pass };
     //

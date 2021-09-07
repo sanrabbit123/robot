@@ -298,55 +298,7 @@ MirrorRouter.prototype.callObserver = async function (client, id, pass) {
 
       sendJandi(client.name + " Observer");
 
-      /*
-
-      if (id === null) {
-        targets = [];
-        for (let phone of phoneNumbers) {
-          query = { id: phone, pass };
-          tempRes = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-          if (tempRes.data.SVC_RT !== "0000") {
-            targets.push(phone);
-          }
-        }
-
-        num = 0;
-        status = 0;
-        while (num < 40) {
-          for (let phone of targets) {
-            query = { id: phone, pass };
-            response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-            if (response.data.SVC_RT === "0000") {
-              id = phone;
-              break;
-            }
-          }
-          if (id !== null) {
-            break;
-          }
-          await sleep(500);
-          num++;
-        }
-        if (id !== null) {
-          query = { id, pass };
-          status = 1;
-          num2 = 0;
-          while (true) {
-            response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-            if (response2.data.SVC_RT !== "0000") {
-              break;
-            }
-            await sleep(2000);
-            num2++;
-          }
-          if (num2 >= ((30 * 5) - 1)) {
-            status = 2;
-          } else {
-            status = 3;
-          }
-        }
-
-      } else {
+      if (id !== null) {
 
         query = { id, pass };
         num = 0;
@@ -375,22 +327,19 @@ MirrorRouter.prototype.callObserver = async function (client, id, pass) {
           num++;
         }
 
+        if (status === 0) {
+          sendJandi(client.name + " 부재중");
+          //fail => "부재중"
+        } else if (status === 2) {
+          sendJandi(client.name + " 스타일 찾기");
+          //success => "스타일 찾기"
+        } else if (status === 3) {
+          sendJandi(client.name + " 부재중");
+          //fail => "부재중"
+        }
+        sendJandi(client.name + String(status));
+
       }
-
-      if (status === 0) {
-        sendJandi(client.name + " 부재중");
-        //fail => "부재중"
-      } else if (status === 2) {
-        sendJandi(client.name + " 스타일 찾기");
-        //success => "스타일 찾기"
-      } else if (status === 3) {
-        sendJandi(client.name + " 부재중");
-        //fail => "부재중"
-      }
-
-      sendJandi(client.name + String(status));
-
-      */
 
     }
 

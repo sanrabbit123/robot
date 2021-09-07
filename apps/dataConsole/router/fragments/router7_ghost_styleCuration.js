@@ -213,6 +213,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
+
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message, channel: "#error_log" });
       res.set({ "Content-Type": "application/json" });
