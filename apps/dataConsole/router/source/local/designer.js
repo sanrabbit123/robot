@@ -1670,7 +1670,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
           class: !force ? [ "totalFather", "fadein" ] : [ "totalFather" ],
           style: {
             zIndex: String(1),
-            background: colorChip.gradientGreen3,
+            background: colorChip.gradientGreen,
             overflow: "hidden",
           }
         },

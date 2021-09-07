@@ -2375,68 +2375,84 @@ Mother.prototype.ipParsing = function (ip) {
 }
 
 Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
-  if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
-    throw new Error("invaild service object");
-  }
-  let { online, serid, xValue } = serviceObj;
-  let finalWords;
-  let startDateNumber;
+  const onoffString = [ "온라인", "오프라인" ];
+  const serviceString = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
+  const startDateNumbers = [ 30, 45, 60, 75 ];
+  const xValueString = [ "mini", "basic", "premium" ];
 
-  if (online) {
-    finalWords = "온라인 ";
-  } else {
-    finalWords = "오프라인 ";
-  }
+  if (typeof serviceObj === "object") {
+    if (serviceObj.online === undefined || serviceObj.serid === undefined || serviceObj.xValue === undefined) {
+      throw new Error("invaild service object");
+    }
+    let { online, serid, xValue } = serviceObj;
+    let finalWords;
+    let startDateNumber;
 
-  if (/_/gi.test(serid) && serid.split('_').length === 2) {
-    serid = serid.split('_')[1];
-    if (/aa01s/gi.test(serid)) {
-      finalWords += "홈퍼니싱 ";
-      startDateNumber = 30;
-    } else if (/aa02s/gi.test(serid)) {
-      finalWords += "홈스타일링 ";
-      startDateNumber = 45;
-    } else if (/aa03s/gi.test(serid)) {
-      finalWords += "토탈 스타일링 ";
-      startDateNumber = 60;
-    } else if (/aa04s/gi.test(serid)) {
-      finalWords += "엑스트라 스타일링 ";
-      startDateNumber = 75;
+    if (online) {
+      finalWords = onoffString[0] + " ";
+    } else {
+      finalWords = onoffString[1] + " ";
+    }
+
+    if (/_/gi.test(serid) && serid.split('_').length === 2) {
+      serid = serid.split('_')[1];
+      if (/aa01s/gi.test(serid)) {
+        finalWords += serviceString[0] + " ";
+        startDateNumber = startDateNumbers[0];
+      } else if (/aa02s/gi.test(serid)) {
+        finalWords += serviceString[1] + " ";
+        startDateNumber = startDateNumbers[1];
+      } else if (/aa03s/gi.test(serid)) {
+        finalWords += serviceString[2] + " ";
+        startDateNumber = startDateNumbers[2];
+      } else if (/aa04s/gi.test(serid)) {
+        finalWords += serviceString[3] + " ";
+        startDateNumber = startDateNumbers[3];
+      } else {
+        throw new Error("invaild service object");
+      }
+    } else {
+      if (/1/gi.test(serid)) {
+        finalWords += serviceString[0] + " ";
+        startDateNumber = startDateNumbers[0];
+      } else if (/2/gi.test(serid)) {
+        finalWords += serviceString[1] + " ";
+        startDateNumber = startDateNumbers[1];
+      } else if (/3/gi.test(serid)) {
+        finalWords += serviceString[2] + " ";
+        startDateNumber = startDateNumbers[2];
+      } else if (/4/gi.test(serid)) {
+        finalWords += serviceString[3] + " ";
+        startDateNumber = startDateNumbers[3];
+      } else {
+        throw new Error("invaild service object");
+      }
+    }
+
+    if (/M/gi.test(xValue)) {
+      finalWords += xValueString[0];
+    } else if (/B/gi.test(xValue)) {
+      finalWords += xValueString[1];
+    } else if (/P/gi.test(xValue)) {
+      finalWords += xValueString[2];
     } else {
       throw new Error("invaild service object");
     }
-  } else {
-    if (/1/gi.test(serid)) {
-      finalWords += "홈퍼니싱 ";
-      startDateNumber = 30;
-    } else if (/2/gi.test(serid)) {
-      finalWords += "홈스타일링 ";
-      startDateNumber = 45;
-    } else if (/3/gi.test(serid)) {
-      finalWords += "토탈 스타일링 ";
-      startDateNumber = 60;
-    } else if (/4/gi.test(serid)) {
-      finalWords += "엑스트라 스타일링 ";
-      startDateNumber = 75;
+
+    if (!startDateMode) {
+      return finalWords;
     } else {
-      throw new Error("invaild service object");
+      return startDateNumber;
     }
-  }
 
-  if (/M/gi.test(xValue)) {
-    finalWords += "mini";
-  } else if (/B/gi.test(xValue)) {
-    finalWords += "basic ";
-  } else if (/P/gi.test(xValue)) {
-    finalWords += "premium";
-  } else {
-    throw new Error("invaild service object");
-  }
+  } else if (typeof serviceObj === "string") {
+    let tempArr, serviceNumber;
+    tempArr = serviceObj.split('_');
+    serviceNumber = Number(tempArr[1].replace(/[a-z]/gi, '').replace(/^0/g, '').replace(/^0/g, '')) - 1;
+    return serviceString[serviceNumber];
 
-  if (!startDateMode) {
-    return finalWords;
   } else {
-    return startDateNumber;
+    throw new Error("invaild input");
   }
 }
 

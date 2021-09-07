@@ -3184,7 +3184,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
   rInitialBox.addEventListener("click", function (e) {
-    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, serviceParsing } = GeneralJs;
     let matrixBox;
     let loadingWidth;
     let tong;
@@ -3197,6 +3197,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     let circleRadius, circleBottom, circleRight;
     let images, analytics;
     let obj;
+    let styleAnalytics;
+    let curation;
 
     loadingWidth = fontSize * (40 / 15);
     innerMargin = fontSize * (20 / 15);
@@ -3269,15 +3271,24 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }, "/ghostPass_photoParsing");
 
       }).then((raw) => {
+        let imageNothing;
+
+        imageNothing = false;
         if (raw === null) {
-          throw new Error("결과 없음");
+          imageNothing = true;
+        }
+        if (typeof raw !== "object") {
+          imageNothing = true;
+        }
+        if (Object.keys(raw).length === 1 && typeof raw.message === "string") {
+          imageNothing = true;
         }
 
-        console.log(raw);
-
+        styleAnalytics = raw;
         tong.removeChild(tong.firstChild);
-        analytics = obj[thisCase[standard[1]]].analytics;
-        images = obj[thisCase[standard[1]]].image.map((image) => {
+        curation = obj[thisCase[standard[1]]];
+        analytics = curation.analytics;
+        images = curation.image.map((image) => {
           const imageLink = "/corePortfolio/listImage";
           let pid;
           pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
@@ -3472,255 +3483,456 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         });
 
         imageLoad = () => {
-          scrollTong.style.height = String(8000) + ea;
-          let num;
-          num = 0;
+          if (!imageNothing) {
+            scrollTong.style.height = String(8000) + ea;
 
-          for (let image of images) {
-            createNode({
-              mother: scrollTong,
-              mode: "img",
-              attribute: [
-                { src: image },
-                { index: String(num) },
-                { method: /sitePhoto/g.test(image) ? "site" : (/preferredPhoto/g.test(image) ? "preferred" : "selected") },
-                { length: String(images.length) }
-              ],
-              style: {
-                position: "relative",
-                display: "inline-block",
-                width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
-                height: "auto",
-                marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
-                marginBottom: String(imageMargin) + ea,
-                borderRadius: String(3) + "px",
-                verticalAlign: "top",
-                cursor: "pointer",
-              },
-              events: [
-                {
-                  type: "click",
-                  event: function (e) {
-                    e.stopPropagation();
-                    const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                    const totalImages = equalJson(JSON.stringify(images));
-                    const mother = document.getElementById("totalcontents");
-                    const className = "photoSelectedTarget";
-                    const length = Number(this.getAttribute("length"));
-                    const zIndex = 2;
-                    const wordDictionary = {
-                      selected: "고객님이 선택한 사진",
-                      site: "고객님이 보낸 현장",
-                      preferred: "고객님의 선호 사진"
-                    };
-                    let img, height, imgBox;
-                    let title, titleSize, bottom;
-                    let titleBox;
-                    let leftArrow, rightArrow;
-                    let leftArrowBox, rightArrowBox;
-                    let arrowHeight;
-                    let arrowMargin;
-                    let index, method, src;
-                    let convertEvent;
+            let num, children;
+            let analyticsWidth, analyticsTop, analyticsBottom;
+            let analyticsSizeVisual;
 
-                    index = Number(this.getAttribute("index"));
-                    method = this.getAttribute("method");
-                    src = this.getAttribute("src");
+            analyticsWidth = 106;
+            analyticsTop = -2;
+            analyticsBottom = 3;
+            analyticsSizeVisual = 1;
+            num = 0;
 
-                    height = 78;
-                    titleSize = 2;
-                    bottom = 6.6;
-                    arrowHeight = 1.7;
-                    arrowMargin = 78;
+            for (let image of images) {
+              createNode({
+                mother: scrollTong,
+                mode: "img",
+                attribute: [
+                  { src: image },
+                  { index: String(num) },
+                  { method: /sitePhoto/g.test(image) ? "site" : (/preferredPhoto/g.test(image) ? "preferred" : "selected") },
+                  { length: String(images.length) }
+                ],
+                style: {
+                  position: "relative",
+                  display: "inline-block",
+                  width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
+                  height: "auto",
+                  marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
+                  marginBottom: String(imageMargin) + ea,
+                  borderRadius: String(3) + "px",
+                  verticalAlign: "top",
+                  cursor: "pointer",
+                },
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      e.stopPropagation();
+                      const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
+                      const totalImages = equalJson(JSON.stringify(images));
+                      const mother = document.getElementById("totalcontents");
+                      const className = "photoSelectedTarget";
+                      const length = Number(this.getAttribute("length"));
+                      const zIndex = 2;
+                      const wordDictionary = {
+                        selected: "고객님이 선택한 사진",
+                        site: "고객님이 보낸 현장",
+                        preferred: "고객님의 선호 사진"
+                      };
+                      let img, height, imgBox;
+                      let title, titleSize, bottom;
+                      let titleBox;
+                      let leftArrow, rightArrow;
+                      let leftArrowBox, rightArrowBox;
+                      let arrowHeight;
+                      let arrowMargin;
+                      let index, method, src;
+                      let convertEvent;
 
-                    createNode({
-                      mother,
-                      class: [ className ],
-                      events: [
-                        {
-                          type: "click",
-                          event: function (e) {
-                            const removeTargets = document.querySelectorAll('.' + className);
-                            for (let dom of removeTargets) {
-                              mother.removeChild(dom);
+                      index = Number(this.getAttribute("index"));
+                      method = this.getAttribute("method");
+                      src = this.getAttribute("src");
+
+                      height = 78;
+                      titleSize = 2;
+                      bottom = 6.6;
+                      arrowHeight = 1.7;
+                      arrowMargin = 78;
+
+                      createNode({
+                        mother,
+                        class: [ className ],
+                        events: [
+                          {
+                            type: "click",
+                            event: function (e) {
+                              const removeTargets = document.querySelectorAll('.' + className);
+                              for (let dom of removeTargets) {
+                                mother.removeChild(dom);
+                              }
                             }
                           }
+                        ],
+                        style: {
+                          position: "fixed",
+                          top: String(0),
+                          left: String(0),
+                          width: String(100) + '%',
+                          height: String(100) + '%',
+                          background: colorChip.darkDarkShadow,
+                          zIndex: String(zIndex),
+                          animation: "justfadeineight 0.2s ease forwards",
                         }
-                      ],
-                      style: {
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        width: String(100) + '%',
-                        height: String(100) + '%',
-                        background: colorChip.darkDarkShadow,
-                        zIndex: String(zIndex),
-                        animation: "justfadeineight 0.2s ease forwards",
-                      }
-                    });
+                      });
 
-                    img = createNode({
-                      mother,
-                      class: [ className ],
-                      mode: "img",
-                      attribute: [
-                        { src },
-                      ],
-                      events: [
-                        {
-                          type: "dblclick",
-                          event: function (e) {
-                            e.preventDefault();
-                            downloadFile(this.getAttribute("src"));
-                          }
-                        },
-                      ],
-                      style: {
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        height: String(height) + '%',
-                        width: "auto",
-                        zIndex: String(zIndex),
-                        transition: "all 0s ease",
-                        animation: "fadeuplite 0.2s ease forwards",
-                        borderRadius: String(3) + "px",
-                      }
-                    });
-                    imgBox = img.getBoundingClientRect();
-                    img.style.top = withOut(50, imgBox.height / 2, ea);
-                    img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                    title = createNode({
-                      mother,
-                      events: [
-                        {
-                          type: [ "click", "dblclick", "selectstart" ],
-                          event: (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                          }
+                      img = createNode({
+                        mother,
+                        class: [ className ],
+                        mode: "img",
+                        attribute: [
+                          { src },
+                        ],
+                        events: [
+                          {
+                            type: "dblclick",
+                            event: function (e) {
+                              e.preventDefault();
+                              downloadFile(this.getAttribute("src"));
+                            }
+                          },
+                        ],
+                        style: {
+                          position: "fixed",
+                          top: String(0),
+                          left: String(0),
+                          height: String(height) + '%',
+                          width: "auto",
+                          zIndex: String(zIndex),
+                          transition: "all 0s ease",
+                          animation: "fadeuplite 0.2s ease forwards",
+                          borderRadius: String(3) + "px",
                         }
-                      ],
-                      class: [ className ],
-                      text: wordDictionary[method],
-                      style: {
-                        position: "fixed",
-                        bottom: String(bottom) + '%',
-                        fontSize: String(titleSize) + "vh",
-                        fontWeight: String(600),
-                        color: colorChip.whiteBlack,
-                        left: String(50) + '%',
-                        zIndex: String(zIndex),
-                        transition: "all 0s ease",
-                        animation: "fadeuplite 0.2s ease forwards",
-                      }
-                    });
-                    titleBox = title.getBoundingClientRect();
-                    title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                    leftArrow = createNode({
-                      mother,
-                      events: [
-                        {
-                          type: [ "dblclick", "selectstart" ],
-                          event: (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                          }
-                        }
-                      ],
-                      attribute: [
-                        { direction: "left" }
-                      ],
-                      class: [ className ],
-                      mode: "svg",
-                      source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                      style: {
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        height: String(arrowHeight) + "vh",
-                        zIndex: String(zIndex),
-                        transition: "all 0s ease",
-                        animation: "fadeuplite 0.2s ease forwards",
-                        cursor: "pointer"
-                      }
-                    });
-                    leftArrowBox = leftArrow.getBoundingClientRect();
-                    leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                    rightArrow = createNode({
-                      mother,
-                      events: [
-                        {
-                          type: [ "dblclick", "selectstart" ],
-                          event: (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                          }
-                        }
-                      ],
-                      attribute: [
-                        { direction: "right" }
-                      ],
-                      class: [ className ],
-                      mode: "svg",
-                      source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                      style: {
-                        position: "fixed",
-                        top: String(0),
-                        left: String(0),
-                        height: String(arrowHeight) + "vh",
-                        zIndex: String(zIndex),
-                        transition: "all 0s ease",
-                        animation: "fadeuplite 0.2s ease forwards",
-                        cursor: "pointer"
-                      }
-                    });
-                    rightArrowBox = rightArrow.getBoundingClientRect();
-                    rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                    convertEvent = function (e) {
-                      const direction = this.getAttribute("direction");
-                      let targetIndex, targetImage;
-                      if (direction === "left") {
-                        targetIndex = index - 1;
-                        if (totalImages[targetIndex] === undefined) {
-                          targetIndex = length - 1;
-                        }
-                      } else {
-                        targetIndex = index + 1;
-                        if (totalImages[targetIndex] === undefined) {
-                          targetIndex = 0;
-                        }
-                      }
-                      targetImage = totalImages[targetIndex];
-                      img.setAttribute("src", targetImage);
+                      });
                       imgBox = img.getBoundingClientRect();
+                      img.style.top = withOut(50, imgBox.height / 2, ea);
                       img.style.left = withOut(50, imgBox.width / 2, ea);
-                      leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                      rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
 
-                      index = targetIndex;
-                      src = targetImage;
-                      method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
-
-                      title.textContent = wordDictionary[method];
+                      title = createNode({
+                        mother,
+                        events: [
+                          {
+                            type: [ "click", "dblclick", "selectstart" ],
+                            event: (e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                            }
+                          }
+                        ],
+                        class: [ className ],
+                        text: wordDictionary[method],
+                        style: {
+                          position: "fixed",
+                          bottom: String(bottom) + '%',
+                          fontSize: String(titleSize) + "vh",
+                          fontWeight: String(600),
+                          color: colorChip.whiteBlack,
+                          left: String(50) + '%',
+                          zIndex: String(zIndex),
+                          transition: "all 0s ease",
+                          animation: "fadeuplite 0.2s ease forwards",
+                        }
+                      });
                       titleBox = title.getBoundingClientRect();
                       title.style.left = withOut(50, titleBox.width / 2, ea);
-                    }
-                    leftArrow.addEventListener("click", convertEvent);
-                    rightArrow.addEventListener("click", convertEvent);
 
+                      leftArrow = createNode({
+                        mother,
+                        events: [
+                          {
+                            type: [ "dblclick", "selectstart" ],
+                            event: (e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                            }
+                          }
+                        ],
+                        attribute: [
+                          { direction: "left" }
+                        ],
+                        class: [ className ],
+                        mode: "svg",
+                        source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+                        style: {
+                          position: "fixed",
+                          top: String(0),
+                          left: String(0),
+                          height: String(arrowHeight) + "vh",
+                          zIndex: String(zIndex),
+                          transition: "all 0s ease",
+                          animation: "fadeuplite 0.2s ease forwards",
+                          cursor: "pointer"
+                        }
+                      });
+                      leftArrowBox = leftArrow.getBoundingClientRect();
+                      leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+                      leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+
+                      rightArrow = createNode({
+                        mother,
+                        events: [
+                          {
+                            type: [ "dblclick", "selectstart" ],
+                            event: (e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                            }
+                          }
+                        ],
+                        attribute: [
+                          { direction: "right" }
+                        ],
+                        class: [ className ],
+                        mode: "svg",
+                        source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+                        style: {
+                          position: "fixed",
+                          top: String(0),
+                          left: String(0),
+                          height: String(arrowHeight) + "vh",
+                          zIndex: String(zIndex),
+                          transition: "all 0s ease",
+                          animation: "fadeuplite 0.2s ease forwards",
+                          cursor: "pointer"
+                        }
+                      });
+                      rightArrowBox = rightArrow.getBoundingClientRect();
+                      rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+                      rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                      convertEvent = function (e) {
+                        const direction = this.getAttribute("direction");
+                        let targetIndex, targetImage;
+                        if (direction === "left") {
+                          targetIndex = index - 1;
+                          if (totalImages[targetIndex] === undefined) {
+                            targetIndex = length - 1;
+                          }
+                        } else {
+                          targetIndex = index + 1;
+                          if (totalImages[targetIndex] === undefined) {
+                            targetIndex = 0;
+                          }
+                        }
+                        targetImage = totalImages[targetIndex];
+                        img.setAttribute("src", targetImage);
+                        imgBox = img.getBoundingClientRect();
+                        img.style.left = withOut(50, imgBox.width / 2, ea);
+                        leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+                        rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                        index = targetIndex;
+                        src = targetImage;
+                        method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
+
+                        title.textContent = wordDictionary[method];
+                        titleBox = title.getBoundingClientRect();
+                        title.style.left = withOut(50, titleBox.width / 2, ea);
+                      }
+                      leftArrow.addEventListener("click", convertEvent);
+                      rightArrow.addEventListener("click", convertEvent);
+
+                    }
                   }
-                }
-              ]
+                ]
+              });
+              scrollTong.style.height = "auto";
+              num++;
+            }
+
+            createNode({
+              mother: scrollTong,
+              style: {
+                position: "relative",
+                display: "block",
+                width: String(100) + '%',
+                height: String(imageMargin * 3) + ea,
+              }
             });
-            scrollTong.style.height = "auto";
-            num++;
+
+            for (let i in styleAnalytics) {
+              children = [
+                {
+                  text: i.slice(0, 1).toUpperCase() + i.slice(1),
+                  style: {
+                    position: "relative",
+                    display: "block",
+                    fontSize: String(fontSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.black,
+                    background: "transparent",
+                    paddingTop: String(innerPaddingTop) + ea,
+                    paddingBottom: String(innerPaddingBottom) + ea,
+                    borderRadius: String(3) + "px",
+                    marginRight: String(imageMargin) + ea,
+                    fontFamily: "graphik",
+                  }
+                },
+              ];
+              for (let j in styleAnalytics[i]) {
+                children.push({
+                  text: j.slice(0, 1).toUpperCase() + j.slice(1),
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(fontSize - analyticsSizeVisual) + ea,
+                    fontWeight: String(300),
+                    color: colorChip.shadowWhite,
+                    background: "transparent",
+                    paddingBottom: String(analyticsBottom) + ea,
+                    borderRadius: String(3) + "px",
+                    width: String(analyticsWidth) + ea,
+                    textAlign: "left",
+                    marginBottom: String(imageMargin) + ea,
+                    marginRight: String(imageMargin) + ea,
+                    fontFamily: "graphik",
+                  },
+                });
+                children.push({
+                  text: j,
+                  style: {
+                    position: "relative",
+                    display: "inline-block",
+                    fontSize: String(fontSize - analyticsSizeVisual) + ea,
+                    fontWeight: String(300),
+                    color: "transparent",
+                    background: colorChip.gray0,
+                    paddingBottom: String(analyticsBottom) + ea,
+                    borderRadius: String(3) + "px",
+                    width: withOut(analyticsWidth + imageMargin, ea),
+                    marginBottom: String(imageMargin) + ea,
+                    fontFamily: "graphik",
+                  },
+                  children: [
+                    {
+                      style: {
+                        position: "absolute",
+                        left: String(0),
+                        top: String(0),
+                        width: String((styleAnalytics[i][j] / 10) * 100) + '%',
+                        height: String(100) + '%',
+                        background: colorChip.gradientGreen3,
+                        borderRadius: String(3) + "px",
+                      }
+                    }
+                  ]
+                });
+              }
+              createNode({
+                mother: scrollTong,
+                style: {
+                  position: "relative",
+                  display: "block",
+                  width: String(100) + '%',
+                  height: "auto",
+                  marginBottom: String(imageMargin) + ea,
+                },
+                children
+              });
+            }
+
+            createNode({
+              mother: scrollTong,
+              style: {
+                position: "relative",
+                display: "block",
+                width: String(100) + '%',
+                height: String(imageMargin * 3) + ea,
+              }
+            });
+
+            children = [
+              {
+                text: "고객님이 선택한 서비스와 시공",
+                style: {
+                  position: "relative",
+                  display: "block",
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.black,
+                  background: "transparent",
+                  paddingTop: String(innerPaddingTop) + ea,
+                  paddingBottom: String(innerPaddingBottom) + ea,
+                  borderRadius: String(3) + "px",
+                  marginRight: String(imageMargin) + ea,
+                }
+              },
+              {
+                text: serviceParsing(curation.service.serid[0]),
+                events: [
+                  {
+                    type: "contextmenu",
+                    event: (e) => { e.stopPropagation(); e.preventDefault(); }
+                  }
+                ],
+                style: {
+                  position: "relative",
+                  display: "inline-block",
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  background: colorChip.gray0,
+                  paddingTop: String(innerPaddingTop) + ea,
+                  paddingBottom: String(innerPaddingBottom) + ea,
+                  paddingLeft: String(innerPaddingLeft) + ea,
+                  paddingRight: String(innerPaddingLeft) + ea,
+                  borderRadius: String(3) + "px",
+                  marginRight: String(imageMargin) + ea,
+                },
+                bold: {
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.green,
+                }
+              },
+            ];
+
+            for (let s of curation.construct.items) {
+              children.push({
+                text: s,
+                events: [
+                  {
+                    type: "contextmenu",
+                    event: (e) => { e.stopPropagation(); e.preventDefault(); }
+                  }
+                ],
+                style: {
+                  position: "relative",
+                  display: "inline-block",
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.shadowWhite,
+                  background: colorChip.gray2,
+                  paddingTop: String(innerPaddingTop) + ea,
+                  paddingBottom: String(innerPaddingBottom) + ea,
+                  paddingLeft: String(innerPaddingLeft) + ea,
+                  paddingRight: String(innerPaddingLeft) + ea,
+                  borderRadius: String(3) + "px",
+                  marginRight: String(imageMargin) + ea,
+                },
+                bold: {
+                  fontSize: String(fontSize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.green,
+                }
+              });
+            }
+
+            createNode({
+              mother: scrollTong,
+              style: {
+                position: "relative",
+                display: "block",
+                width: String(100) + '%',
+                height: "auto",
+                marginBottom: String(imageMargin) + ea,
+              },
+              children
+            });
+
           }
         }
 

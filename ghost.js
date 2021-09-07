@@ -919,6 +919,9 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
         const selfMongo = MONGOLOCALC;
         const { images } = equalJson(req.body);
+        if (images === undefined) {
+          throw new Error("images must be array");
+        }
         if (!Array.isArray(images)) {
           throw new Error("images must be array");
         }
@@ -971,6 +974,7 @@ Ghost.prototype.ghostRouter = function (needs) {
               totalObj[i][j] = Math.round((totalObj[i][j] / designers.length) * 100) / 100;
             }
           }
+
           res.send(JSON.stringify(totalObj));
         } else {
           throw new Error("There is no designer : " + JSON.stringify(desidArr));
