@@ -838,7 +838,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   };
 
   //POST - find client photos
-  funcObj.post_readDir = {
+  funcObj.post_clientPhoto = {
     link: [ "/clientPhoto" ],
     func: async function (req, res) {
       res.set({
@@ -896,6 +896,38 @@ Ghost.prototype.ghostRouter = function (needs) {
           sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
         }
         res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
+
+      } catch (e) {
+        res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
+      }
+    }
+  };
+
+  //POST - photo parsing
+  funcObj.post_photoParsing = {
+    link: [ "/photoParsing" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.images === undefined) {
+          throw new Error("invaild post");
+        }
+        const { images } = equalJson(req.body);
+        if (!Array.isArray(images)) {
+          throw new Error("invaild post");
+        }
+
+
+        console.log(images);
+
+
+
+        res.send(JSON.stringify(images));
 
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));

@@ -65,25 +65,7 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
 
 
-    // const proid = "p1801_aa01s";
-    // const desid = "d1701_aa01s";
-    // const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", {
-    //   proid,
-    //   desid
-    // }, { headers: { "Content-Type": "application/json" } });
-
-    // const res = await requestSystem("https://" + address.pythoninfo.host + ":3000/requestRefund", {
-    //   kind: "vaccountPartial",
-    //   bilid: "b2196_aa03s",
-    //   requestIndex: 1,
-    //   payIndex: 0,
-    //   percentage: 50,
-    //   accountNumber: "1002437398777",
-    //   bankName: "우리",
-    //   accountName: "배창규",
-    // }, { headers: { "Content-Type": "application/json" } });
-    //
-    // console.log(res.data);
+    
 
 
 
