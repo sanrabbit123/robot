@@ -915,7 +915,7 @@ Ghost.prototype.ghostRouter = function (needs) {
       });
       try {
         if (req.body.images === undefined) {
-          throw new Error("invaild post");
+          throw new Error("invaild post, must be 'images' array");
         }
         const { images } = equalJson(req.body);
         if (!Array.isArray(images)) {
@@ -934,7 +934,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         contentsArr = [];
         for (let pid of pidArr) {
           raw = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo: MONGOLOCALC });
-          if (raw.length !== 0) {
+          if (raw.length !== 1) {
             throw new Error("invaild pid : " + JSON.stringify(pidArr));
           }
           [ contents ] = raw;
@@ -948,7 +948,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify(desidArr));
 
       } catch (e) {
-        res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
+        res.send(JSON.stringify({ message: e.message }));
       }
     }
   };
