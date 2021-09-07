@@ -917,6 +917,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (req.body.images === undefined) {
           throw new Error("invaild post, must be 'images' array");
         }
+        const selfMongo = MONGOLOCALC;
         const { images } = equalJson(req.body);
         if (!Array.isArray(images)) {
           throw new Error("images must be array");
@@ -926,6 +927,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
 
         let pidArr, raw, contents, contentsArr, desidArr;
+        let designers;
+        let totalObj;
 
         pidArr = images.map((i) => {
           return i.replace(/\.[a-z]+$/gi, '').replace(/^[it][0-9]+/gi, '');
@@ -933,7 +936,7 @@ Ghost.prototype.ghostRouter = function (needs) {
 
         contentsArr = [];
         for (let pid of pidArr) {
-          raw = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo: MONGOLOCALC });
+          raw = await back.getContentsArrByQuery({ "contents.portfolio.pid": pid }, { selfMongo });
           if (raw.length !== 1) {
             throw new Error("invaild pid : " + JSON.stringify(pidArr));
           }
@@ -945,7 +948,33 @@ Ghost.prototype.ghostRouter = function (needs) {
           return c.desid;
         })));
 
-        res.send(JSON.stringify(desidArr));
+        designers = (await back.getDesignersByQuery({ $or: desidArr.map((desid) => { return { desid }; }) }, { selfMongo })).map((d) => {
+          return d.analytics.styling.tendency.toNormal();
+        });
+
+        if (designers.length > 0) {
+          totalObj = equalJson(JSON.stringify(designers[0]));
+          for (let i in totalObj) {
+            for (let j in totalObj[i]) {
+              totalObj[i][j] = 0;
+            }
+          }
+          for (let style of designers) {
+            for (let i in style) {
+              for (let j in style[i]) {
+                totalObj[i][j] += style[i][j];
+              }
+            }
+          }
+          for (let i in totalObj) {
+            for (let j in totalObj[i]) {
+              totalObj[i][j] = Math.round((totalObj[i][j] / designers.length) * 100) / 100;
+            }
+          }
+          res.send(JSON.stringify(totalObj));
+        } else {
+          throw new Error("There is no designer : " + JSON.stringify(desidArr));
+        }
 
       } catch (e) {
         res.send(JSON.stringify({ message: e.message }));
