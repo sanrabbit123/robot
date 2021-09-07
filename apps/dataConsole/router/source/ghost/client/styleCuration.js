@@ -1252,6 +1252,12 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           cliid: instance.client.cliid,
           image: image
         }, "/ghostClient_updateAnalytics");
+      }).then(() => {
+        return ajaxJson({
+          cliid: instance.client.cliid,
+          name: instance.client.name,
+          image: image,
+        }, "/styleCuration_styleCheckComplete");
       }).catch((err) => {
         console.log(err);
       });
