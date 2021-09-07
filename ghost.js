@@ -919,15 +919,21 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
         const { images } = equalJson(req.body);
         if (!Array.isArray(images)) {
-          throw new Error("invaild post");
+          throw new Error("images must be array");
+        }
+        if (!images.every((i) => { return /[ap]/gi.test(i) && /^[it]/i.test(i); })) {
+          throw new Error("invaild name in images : " + JSON.stringify(images));
         }
 
+        let pidArr;
 
-        console.log(images);
+        pidArr = images.map((i) => {
+          return i.replace(/\.[a-z]+$/gi, '').replace(/^[it][0-9]+/gi, '');
+        });
 
 
 
-        res.send(JSON.stringify(images));
+        res.send(JSON.stringify(pidArr));
 
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
