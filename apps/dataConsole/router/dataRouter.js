@@ -2433,7 +2433,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
                 if (req.body.silent !== undefined) {
                   requestObj.slient = true;
                 }
-                
+
                 requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
                   //pass
                 }).catch((err) => {
@@ -3941,7 +3941,7 @@ DataRouter.prototype.rou_post_ghostPass = function () {
   const address = this.address;
   const { ghostRequest, equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/ghostPass_clientPhoto" ];
+  obj.link = [ "/ghostPass_clientPhoto", "/ghostPass_photoParsing" ];
   obj.func = async function (req, res) {
     try {
       const url = req.url.replace(/^\//gi, '');
