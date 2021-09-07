@@ -980,7 +980,7 @@ DesignerProposalJs.prototype.insertInitBox = function () {
   if (desktop) {
     initWordingBox.insertAdjacentHTML("beforeend", this.client.name + " 고객님께" + ((!media[2] && !media[3]) ? " 고객 맞춤 커스터마이징 : " : " ") + "<b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
   } else {
-    initWordingBox.insertAdjacentHTML("beforeend", this.client.name + " 고객님께 고객 커스터마이징" + "<b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
+    initWordingBox.insertAdjacentHTML("beforeend", this.client.name + " 고객님께 고객 커스터마이징 " + "<b style=\"color:" + GeneralJs.colorChip.green + "\">" + GeneralJs.serviceParsing(this.project.service) + " 서비스</b>를 제안드립니다.");
   }
   style = {
     position: "absolute",

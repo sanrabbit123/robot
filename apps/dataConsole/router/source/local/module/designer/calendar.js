@@ -225,7 +225,7 @@ DesignerJs.prototype.calendarMatrix = function () {
       }
     }
   }
-  const length = 14;
+  const length = 13;
   let past, future;
   let date, week;
   let dateMatrix;
@@ -469,216 +469,149 @@ DesignerJs.prototype.calendarMonthYSearch = function (arr) {
   }
 }
 
-DesignerJs.prototype.calendarContentsTime = function (search = null) {
+DesignerJs.prototype.calendarContentsTime = async function (search = null, loadingIcon = null) {
   const instance = this;
   const { ea } = this;
   const { createNode, createNodes, colorChip, ajaxJson, withOut, cleanChildren, isMac } = GeneralJs;
   const { contentsTime: mother, designerWidth: box0Width, projectWidth: box1Width } = this.calendarSpec;
   const { DateX, DesignerDate, DesignerDates } = this.calendarDateClass;
   let designers;
-
-  if (mother.firstChild !== null && mother.firstChild !== undefined) {
-    cleanChildren(mother);
-  }
-
-  if (search === null || search === undefined) {
-    designers = this.designers;
-  } else if (typeof search === "string") {
-    if (/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/i.test(search.trim())) {
-      designers = this.designers.search(search);
+  try {
+    if (mother.firstChild !== null && mother.firstChild !== undefined) {
+      cleanChildren(mother);
+    }
+    if (search === null || search === undefined) {
+      designers = this.designers;
+    } else if (typeof search === "string") {
+      if (/^d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/i.test(search.trim())) {
+        designers = this.designers.search(search);
+      } else {
+        this.calendarPastQueries.push(search);
+        if (search !== '0') {
+          // if (/^[0-9]+$/.test(search.replace(/[\,\.\/ ]/g, '').trim())) {
+          //   if (this.calendarPastQueries.length > 1) {
+          //     search = this.calendarPastQueries[this.calendarPastQueries.length - 2].replace(/0/g, '') + ',' + search;
+          //   }
+          // }
+        }
+        if (/[0-9]/g.test(search)) {
+          this.calendarMonthYSearch([ ...search.replace(/[^0-9\,]/g, '').split(',') ]);
+          search = search.replace(/[0-9]/g, '');
+        }
+        designers = this.designers.search(search);
+      }
     } else {
-      this.calendarPastQueries.push(search);
-      if (search !== '0') {
-        if (/^[0-9]+$/.test(search.replace(/[\,\.\/ ]/g, '').trim())) {
-          if (this.calendarPastQueries.length > 1) {
-            search = this.calendarPastQueries[this.calendarPastQueries.length - 2].replace(/0/g, '') + ',' + search;
-          }
-        }
-      }
-      if (/[0-9]/g.test(search)) {
-        this.calendarMonthYSearch([ ...search.replace(/[^0-9\,]/g, '').split(',') ]);
-        search = search.replace(/[0-9]/g, '');
-      }
-      designers = this.designers.search(search);
+      throw new Error("invaild search");
     }
-  } else {
-    throw new Error("invaild search");
-  }
 
-  const { width, margin, height } = this.moduleBox;
-  const { classNameX, classNameY, classNameXY, classNameTextY, classNameDesid, classDesignerBox, classCalendarBarName } = this.calendarClass;
-  const matrix = this.matrix;
-  const stringToDate = function (str) {
-    if (!/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/.test(str)) {
-      throw new Error("invaild input");
+    const { width, margin, height } = this.moduleBox;
+    const { classNameX, classNameY, classNameXY, classNameTextY, classNameDesid, classDesignerBox, classCalendarBarName } = this.calendarClass;
+    const matrix = this.matrix;
+    const stringToDate = function (str) {
+      if (!/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/.test(str)) {
+        throw new Error("invaild input");
+      }
+      const arr = str.split('-');
+      return new Date(Number(arr[0]), Number(arr[1].replace(/^0/, '')) - 1, Number(arr[2].replace(/^0/, '')));
     }
-    const arr = str.split('-');
-    return new Date(Number(arr[0]), Number(arr[1].replace(/^0/, '')) - 1, Number(arr[2].replace(/^0/, '')));
-  }
-  this.detailTimeEvent = function (e) {
-    const that = this;
-    const { ea } = instance;
-    const x = Number(this.getAttribute('x'));
-    const y = Number(this.getAttribute('y'));
-    const text = this.getAttribute("value");
-    const meeting = this.getAttribute("meeting");
-    const possibleTimes = (this.getAttribute("possible") === "true");
-    const start = this.getAttribute("start");
-    const end = this.getAttribute("end");
-    const spot = this.getAttribute("spot");
-    const { createNodes, colorChip, withOut, isMac } = GeneralJs;
-    let width, height, outerMargin, margin;
-    let doms;
-    let nodeArr;
-    let topMargin, leftMargin, bottomMargin;
-    let size;
+    this.detailTimeEvent = function (e) {
+      const that = this;
+      const { ea } = instance;
+      const x = Number(this.getAttribute('x'));
+      const y = Number(this.getAttribute('y'));
+      const text = this.getAttribute("value");
+      const meeting = this.getAttribute("meeting");
+      const possibleTimes = (this.getAttribute("possible") === "true");
+      const start = this.getAttribute("start");
+      const end = this.getAttribute("end");
+      const spot = this.getAttribute("spot");
+      const { createNodes, colorChip, withOut, isMac } = GeneralJs;
+      let width, height, outerMargin, margin;
+      let doms;
+      let nodeArr;
+      let topMargin, leftMargin, bottomMargin;
+      let size;
 
-    width = 218;
-    height = meeting !== "on" ? (isMac() ? 82 : 80) : 58;
-    outerMargin = 10;
-    margin = 5;
+      width = 218;
+      height = meeting !== "on" ? (isMac() ? 82 : 80) : 58;
+      outerMargin = 10;
+      margin = 5;
 
-    size = 17;
-    topMargin = isMac() ? 10 : 13;
-    leftMargin = 18;
-    bottomMargin = 7;
+      size = 17;
+      topMargin = isMac() ? 10 : 13;
+      leftMargin = 18;
+      bottomMargin = 7;
 
-    if (this.getAttribute("memo") !== "on") {
+      if (this.getAttribute("memo") !== "on") {
 
-      nodeArr = [
-        {
-          mother: this,
-          mode: "aside",
-          events: [
-            {
-              type: "click",
-              event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-              }
-            },
-            {
-              type: "contextmenu",
-              event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const doms = that.querySelectorAll("aside");
-                for (let dom of doms) {
-                  that.removeChild(dom);
-                }
-                that.setAttribute("memo", "off");
-              }
-            },
-          ],
-          style: {
-            position: y < 0 ? "fixed" : "absolute",
-            width: String(width) + ea,
-            height: String(height) + ea,
-            top: String(y < 0 ? this.getBoundingClientRect().top - height - outerMargin : -1 * (height + outerMargin)) + ea,
-            left: y < 0 ? String(this.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (width / 2)) + ea : withOut(50, width / 2, ea),
-            background: meeting === "on" ? colorChip.red : (!possibleTimes ? colorChip.gradientGreen : colorChip.yellow),
-            borderRadius: String(3) + "px",
-            zIndex: String(3),
-            opacity: String(0.95),
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          }
-        },
-        {
-          mother: -1,
-          style: {
-            position: "absolute",
-            width: withOut(margin * 2, ea),
-            height: withOut(margin * 2, ea),
-            top: String(margin) + ea,
-            left: String(margin) + ea,
-            borderRadius: String(3) + "px",
-            background: colorChip.white,
-          }
-        }
-      ];
-
-      nodeArr.push({
-        mother: -1,
-        text: "시작 날짜 : ",
-        style: {
-          position: "absolute",
-          top: String(topMargin) + ea,
-          left: String(leftMargin) + ea,
-          fontSize: String(size) + ea,
-          fontWeight: String(600),
-        }
-      });
-      nodeArr.push({
-        mother: -2,
-        mode: "input",
-        attribute: [
-          { value: /_/g.test(spot) ? (spot.split('_')[0] !== "null" ? spot.split('_')[0] : start.split('_')[0]) : (spot !== "null" ? spot : start) },
-          { type: "text" },
-        ],
-        events: [
+        nodeArr = [
           {
-            type: "blur",
-            event: function (e) {
-              if (/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/.test(this.value.trim())) {
-                const desid = that.getAttribute("desid");
-                const proid = that.getAttribute("proid");
-                const x = /_/g.test(that.getAttribute("x")) ? that.getAttribute("x").split('_')[0] : that.getAttribute("x");
-                const y = that.getAttribute("y");
-                const target = document.getElementById(classNameDesid + '-' + desid + '-' + proid + '-' + x);
-                const startDate = stringToDate(target.getAttribute("start"));
-                const endDate = stringToDate(target.getAttribute("end"));
-                const thisDate = stringToDate(this.value.trim());
-                if (thisDate.valueOf() >= startDate.valueOf() && thisDate.valueOf() <= endDate.valueOf()) {
-                  target.setAttribute("spot", this.value.trim());
-                  if (/_/g.test(spot)) {
-                    that.setAttribute("spot", this.value.trim() + '_' + spot.split('_')[1]);
-                  }
-                  instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y), x, e.type, e.altKey).then((resultNumber) => {
-                    if (resultNumber !== 1) {
-                      throw new Error("update error");
-                    }
-                  }).catch((err) => {
-                    console.log(err);
-                  });
-                } else {
-                  this.value = (/_/g.test(spot) ? (spot.split('_')[0] !== "null" ? spot.split('_')[0] : start.split('_')[0]) : (spot !== "null" ? spot : start));
+            mother: this,
+            mode: "aside",
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
                 }
-              } else {
-                this.value = (/_/g.test(spot) ? (spot.split('_')[0] !== "null" ? spot.split('_')[0] : start.split('_')[0]) : (spot !== "null" ? spot : start));
-              }
+              },
+              {
+                type: "contextmenu",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const doms = that.querySelectorAll("aside");
+                  for (let dom of doms) {
+                    that.removeChild(dom);
+                  }
+                  that.setAttribute("memo", "off");
+                }
+              },
+            ],
+            style: {
+              position: y < 0 ? "fixed" : "absolute",
+              width: String(width) + ea,
+              height: String(height) + ea,
+              top: String(y < 0 ? this.getBoundingClientRect().top - height - outerMargin : -1 * (height + outerMargin)) + ea,
+              left: y < 0 ? String(this.getBoundingClientRect().left + (this.getBoundingClientRect().width / 2) - (width / 2)) + ea : withOut(50, width / 2, ea),
+              background: meeting === "on" ? colorChip.red : (!possibleTimes ? colorChip.gradientGreen : colorChip.yellow),
+              borderRadius: String(3) + "px",
+              zIndex: String(3),
+              opacity: String(0.95),
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            }
+          },
+          {
+            mother: -1,
+            style: {
+              position: "absolute",
+              width: withOut(margin * 2, ea),
+              height: withOut(margin * 2, ea),
+              top: String(margin) + ea,
+              left: String(margin) + ea,
+              borderRadius: String(3) + "px",
+              background: colorChip.white,
             }
           }
-        ],
-        style: {
-          position: "absolute",
-          top: String(topMargin) + ea,
-          right: String(leftMargin + 1) + ea,
-          fontSize: String(size) + ea,
-          border: String(0),
-          outline: String(0),
-          width: String(98) + ea,
-          textAlign: "right",
-          fontWeight: String(200),
-        }
-      });
+        ];
 
-      if (meeting !== "on") {
         nodeArr.push({
-          mother: -3,
-          text: "종료 날짜 : ",
+          mother: -1,
+          text: "시작 날짜 : ",
           style: {
             position: "absolute",
-            top: String(size + bottomMargin + topMargin) + ea,
+            top: String(topMargin) + ea,
             left: String(leftMargin) + ea,
             fontSize: String(size) + ea,
             fontWeight: String(600),
           }
         });
         nodeArr.push({
-          mother: -4,
+          mother: -2,
           mode: "input",
           attribute: [
-            { value: /_/g.test(spot) ? (spot.split('_')[1] !== "null" ? spot.split('_')[1] : end.split('_')[1]) : (spot !== "null" ? spot : end) },
+            { value: /_/g.test(spot) ? (spot.split('_')[0] !== "null" ? spot.split('_')[0] : start.split('_')[0]) : (spot !== "null" ? spot : start) },
             { type: "text" },
           ],
           events: [
@@ -688,7 +621,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                 if (/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/.test(this.value.trim())) {
                   const desid = that.getAttribute("desid");
                   const proid = that.getAttribute("proid");
-                  const x = /_/g.test(that.getAttribute("x")) ? that.getAttribute("x").split('_')[1] : that.getAttribute("x");
+                  const x = /_/g.test(that.getAttribute("x")) ? that.getAttribute("x").split('_')[0] : that.getAttribute("x");
                   const y = that.getAttribute("y");
                   const target = document.getElementById(classNameDesid + '-' + desid + '-' + proid + '-' + x);
                   const startDate = stringToDate(target.getAttribute("start"));
@@ -697,7 +630,7 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                   if (thisDate.valueOf() >= startDate.valueOf() && thisDate.valueOf() <= endDate.valueOf()) {
                     target.setAttribute("spot", this.value.trim());
                     if (/_/g.test(spot)) {
-                      that.setAttribute("spot", spot.split('_')[1] + '_' + this.value.trim());
+                      that.setAttribute("spot", this.value.trim() + '_' + spot.split('_')[1]);
                     }
                     instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y), x, e.type, e.altKey).then((resultNumber) => {
                       if (resultNumber !== 1) {
@@ -707,17 +640,17 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
                       console.log(err);
                     });
                   } else {
-                    this.value = (/_/g.test(spot) ? (spot.split('_')[1] !== "null" ? spot.split('_')[1] : end.split('_')[1]) : (spot !== "null" ? spot : end));
+                    this.value = (/_/g.test(spot) ? (spot.split('_')[0] !== "null" ? spot.split('_')[0] : start.split('_')[0]) : (spot !== "null" ? spot : start));
                   }
                 } else {
-                  this.value = (/_/g.test(spot) ? (spot.split('_')[1] !== "null" ? spot.split('_')[1] : end.split('_')[1]) : (spot !== "null" ? spot : end));
+                  this.value = (/_/g.test(spot) ? (spot.split('_')[0] !== "null" ? spot.split('_')[0] : start.split('_')[0]) : (spot !== "null" ? spot : start));
                 }
               }
             }
           ],
           style: {
             position: "absolute",
-            top: String(size + bottomMargin + topMargin) + ea,
+            top: String(topMargin) + ea,
             right: String(leftMargin + 1) + ea,
             fontSize: String(size) + ea,
             border: String(0),
@@ -727,683 +660,767 @@ DesignerJs.prototype.calendarContentsTime = function (search = null) {
             fontWeight: String(200),
           }
         });
-      }
 
-      createNodes(nodeArr);
-      this.setAttribute("memo", "on");
-
-    } else {
-      doms = this.querySelectorAll("aside");
-      for (let dom of doms) {
-        this.removeChild(dom);
-      }
-      this.setAttribute("memo", "off");
-    }
-
-  }
-  this.moduleEvent = function (e) {
-    if (e.cancelable) {
-      e.preventDefault();
-    }
-    e.stopPropagation();
-    const that = this;
-    const { createNode, cleanChildren, colorChip, isMac } = GeneralJs;
-    const x = Number(this.getAttribute('x'));
-    const y = Number(this.getAttribute('y'));
-    const toggle = this.getAttribute("toggle");
-    const text = this.getAttribute("value");
-    const possibleTimes = (this.getAttribute("possible") === "true");
-    const lineDoms = document.querySelectorAll('.' + classNameY + '_' + y);
-    let num, domX;
-    let tempArr, tempDom;
-    let textDom;
-    let firstDom, lastDom;
-    let directNum;
-    let linkFirstNum, linkLastNum;
-    let size0, size1;
-    let textTop0, textTop1;
-    let calendarBar;
-    let updateBoo;
-
-    size0 = 16;
-    size1 = 17;
-    textTop0 = isMac() ? 6 : 8;
-    textTop1 = 3;
-
-    if (toggle === "off") {
-      updateBoo = true;
-      num = 0;
-      directNum = 0;
-      for (let dom of lineDoms) {
-        if (dom.getAttribute("toggle") === "on") {
-          num = num + 1;
-          if (dom.getAttribute("link") !== "on" && dom.getAttribute("meeting") !== "on") {
-            domX = Number(dom.getAttribute('x'));
-          }
-        }
-        if (dom.getAttribute("direct") === "on") {
-          directNum = directNum + 1;
-        }
-      }
-      if (directNum % 2 === 0 || (e.type === "contextmenu" && !possibleTimes)) {
-        this.style.background = !possibleTimes ? (e.type === "click" ? colorChip.gradientGreen4 : colorChip.red) : colorChip.yellow;
-        this.setAttribute("toggle", "on");
-        if (!possibleTimes) {
-          if (e.type === "click") {
-            this.setAttribute("direct", "on");
-          } else {
-            this.setAttribute("meeting", "on");
-          }
-        } else {
-          this.setAttribute("direct", "on");
-        }
-
-      } else if (directNum % 2 === 1) {
-        tempArr = [];
-        tempArr.push(x);
-        tempArr.push(domX);
-        tempArr.sort((a, b) => { return a - b; });
-        for (let i = tempArr[0]; i < tempArr[1] + 1; i++) {
-          tempDom = document.querySelector('.' + classNameXY + '_' + String(i) + '_' + String(y));
-          tempDom.style.background = !possibleTimes ? colorChip.gradientGreen4 : colorChip.yellow;
-          tempDom.setAttribute("toggle", "on");
-          tempDom.setAttribute("link", "on");
-          if (i === tempArr[0]) {
-            firstDom = tempDom;
-          }
-          if (i === tempArr[1]) {
-            lastDom = tempDom;
-          }
-          if (i !== tempArr[0] && i !== tempArr[1] && possibleTimes) {
-            createNode({
-              mother: tempDom,
-              attribute: [ { value: text } ],
-              text: "가능",
-              style: {
-                position: "absolute",
-                width: String(width) + ea,
-                textAlign: "center",
-                fontSize: String(size0) + ea,
-                top: String(textTop0) + ea,
-                fontWeight: String(300),
-                color: colorChip.white,
-                zIndex: String(2),
-              }
-            });
-          }
-        }
-        firstDom.setAttribute("direct", "on");
-        lastDom.setAttribute("direct", "on");
-        if (!possibleTimes) {
-          calendarBar = createNode({
-            mother: firstDom,
-            class: [ classCalendarBarName ],
+        if (meeting !== "on") {
+          nodeArr.push({
+            mother: -3,
+            text: "종료 날짜 : ",
+            style: {
+              position: "absolute",
+              top: String(size + bottomMargin + topMargin) + ea,
+              left: String(leftMargin) + ea,
+              fontSize: String(size) + ea,
+              fontWeight: String(600),
+            }
+          });
+          nodeArr.push({
+            mother: -4,
+            mode: "input",
             attribute: [
-              { value: text },
-              { start: firstDom.getAttribute("start") + "_" + lastDom.getAttribute("start") },
-              { end: firstDom.getAttribute("end") + "_" + lastDom.getAttribute("end") },
-              { spot: firstDom.getAttribute("spot") + "_" + lastDom.getAttribute("spot") },
-              { x: firstDom.getAttribute("x") + "_" + lastDom.getAttribute("x") },
-              { y: firstDom.getAttribute("y") },
-              { desid: firstDom.getAttribute("desid") },
-              { proid: firstDom.getAttribute("proid") }
+              { value: /_/g.test(spot) ? (spot.split('_')[1] !== "null" ? spot.split('_')[1] : end.split('_')[1]) : (spot !== "null" ? spot : end) },
+              { type: "text" },
             ],
             events: [
               {
-                type: "click",
+                type: "blur",
                 event: function (e) {
-                  if (e.cancelable) {
-                    e.preventDefault();
-                  }
-                  if (this.getAttribute("memo") === "on") {
-                    e.stopPropagation();
-                    instance.detailTimeEvent.call(this, e);
+                  if (/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/.test(this.value.trim())) {
+                    const desid = that.getAttribute("desid");
+                    const proid = that.getAttribute("proid");
+                    const x = /_/g.test(that.getAttribute("x")) ? that.getAttribute("x").split('_')[1] : that.getAttribute("x");
+                    const y = that.getAttribute("y");
+                    const target = document.getElementById(classNameDesid + '-' + desid + '-' + proid + '-' + x);
+                    const startDate = stringToDate(target.getAttribute("start"));
+                    const endDate = stringToDate(target.getAttribute("end"));
+                    const thisDate = stringToDate(this.value.trim());
+                    if (thisDate.valueOf() >= startDate.valueOf() && thisDate.valueOf() <= endDate.valueOf()) {
+                      target.setAttribute("spot", this.value.trim());
+                      if (/_/g.test(spot)) {
+                        that.setAttribute("spot", spot.split('_')[1] + '_' + this.value.trim());
+                      }
+                      instance.calendarData.updateByDoms(document.querySelectorAll('.' + instance.calendarClass.classNameY + '_' + y), x, e.type, e.altKey).then((resultNumber) => {
+                        if (resultNumber !== 1) {
+                          throw new Error("update error");
+                        }
+                      }).catch((err) => {
+                        console.log(err);
+                      });
+                    } else {
+                      this.value = (/_/g.test(spot) ? (spot.split('_')[1] !== "null" ? spot.split('_')[1] : end.split('_')[1]) : (spot !== "null" ? spot : end));
+                    }
+                  } else {
+                    this.value = (/_/g.test(spot) ? (spot.split('_')[1] !== "null" ? spot.split('_')[1] : end.split('_')[1]) : (spot !== "null" ? spot : end));
                   }
                 }
-              },
-              {
-                type: "contextmenu",
-                event: function (e) {
-                  if (e.cancelable) {
-                    e.preventDefault();
-                  }
-                  e.stopPropagation();
-                  instance.detailTimeEvent.call(this, e);
-                }
-              },
+              }
             ],
             style: {
               position: "absolute",
-              width: String(lastDom.getBoundingClientRect().left - firstDom.getBoundingClientRect().left + width) + ea,
-              top: String(0) + ea,
-              left: String(0) + ea,
-              height: String(100) + '%',
-              background: colorChip.gradientGreen4,
-              borderRadius: String(3) + "px",
+              top: String(size + bottomMargin + topMargin) + ea,
+              right: String(leftMargin + 1) + ea,
+              fontSize: String(size) + ea,
+              border: String(0),
+              outline: String(0),
+              width: String(98) + ea,
+              textAlign: "right",
+              fontWeight: String(200),
+            }
+          });
+        }
+
+        createNodes(nodeArr);
+        this.setAttribute("memo", "on");
+
+      } else {
+        doms = this.querySelectorAll("aside");
+        for (let dom of doms) {
+          this.removeChild(dom);
+        }
+        this.setAttribute("memo", "off");
+      }
+
+    }
+    this.moduleEvent = function (e) {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+      e.stopPropagation();
+      const that = this;
+      const { createNode, cleanChildren, colorChip, isMac } = GeneralJs;
+      const x = Number(this.getAttribute('x'));
+      const y = Number(this.getAttribute('y'));
+      const toggle = this.getAttribute("toggle");
+      const text = this.getAttribute("value");
+      const possibleTimes = (this.getAttribute("possible") === "true");
+      const lineDoms = document.querySelectorAll('.' + classNameY + '_' + y);
+      let num, domX;
+      let tempArr, tempDom;
+      let textDom;
+      let firstDom, lastDom;
+      let directNum;
+      let linkFirstNum, linkLastNum;
+      let size0, size1;
+      let textTop0, textTop1;
+      let calendarBar;
+      let updateBoo;
+
+      size0 = 16;
+      size1 = 17;
+      textTop0 = isMac() ? 6 : 8;
+      textTop1 = 3;
+
+      if (toggle === "off") {
+        updateBoo = true;
+        num = 0;
+        directNum = 0;
+        for (let dom of lineDoms) {
+          if (dom.getAttribute("toggle") === "on") {
+            num = num + 1;
+            if (dom.getAttribute("link") !== "on" && dom.getAttribute("meeting") !== "on") {
+              domX = Number(dom.getAttribute('x'));
+            }
+          }
+          if (dom.getAttribute("direct") === "on") {
+            directNum = directNum + 1;
+          }
+        }
+        if (directNum % 2 === 0 || (e.type === "contextmenu" && !possibleTimes)) {
+          this.style.background = !possibleTimes ? (e.type === "click" ? colorChip.gradientGreen4 : colorChip.red) : colorChip.yellow;
+          this.setAttribute("toggle", "on");
+          if (!possibleTimes) {
+            if (e.type === "click") {
+              this.setAttribute("direct", "on");
+            } else {
+              this.setAttribute("meeting", "on");
+            }
+          } else {
+            this.setAttribute("direct", "on");
+          }
+
+        } else if (directNum % 2 === 1) {
+          tempArr = [];
+          tempArr.push(x);
+          tempArr.push(domX);
+          tempArr.sort((a, b) => { return a - b; });
+          for (let i = tempArr[0]; i < tempArr[1] + 1; i++) {
+            tempDom = document.querySelector('.' + classNameXY + '_' + String(i) + '_' + String(y));
+            tempDom.style.background = !possibleTimes ? colorChip.gradientGreen4 : colorChip.yellow;
+            tempDom.setAttribute("toggle", "on");
+            tempDom.setAttribute("link", "on");
+            if (i === tempArr[0]) {
+              firstDom = tempDom;
+            }
+            if (i === tempArr[1]) {
+              lastDom = tempDom;
+            }
+            if (i !== tempArr[0] && i !== tempArr[1] && possibleTimes) {
+              createNode({
+                mother: tempDom,
+                attribute: [ { value: text } ],
+                text: "가능",
+                style: {
+                  position: "absolute",
+                  width: String(width) + ea,
+                  textAlign: "center",
+                  fontSize: String(size0) + ea,
+                  top: String(textTop0) + ea,
+                  fontWeight: String(300),
+                  color: colorChip.white,
+                  zIndex: String(2),
+                }
+              });
+            }
+          }
+          firstDom.setAttribute("direct", "on");
+          lastDom.setAttribute("direct", "on");
+          if (!possibleTimes) {
+            calendarBar = createNode({
+              mother: firstDom,
+              class: [ classCalendarBarName ],
+              attribute: [
+                { value: text },
+                { start: firstDom.getAttribute("start") + "_" + lastDom.getAttribute("start") },
+                { end: firstDom.getAttribute("end") + "_" + lastDom.getAttribute("end") },
+                { spot: firstDom.getAttribute("spot") + "_" + lastDom.getAttribute("spot") },
+                { x: firstDom.getAttribute("x") + "_" + lastDom.getAttribute("x") },
+                { y: firstDom.getAttribute("y") },
+                { desid: firstDom.getAttribute("desid") },
+                { proid: firstDom.getAttribute("proid") }
+              ],
+              events: [
+                {
+                  type: "click",
+                  event: function (e) {
+                    if (e.cancelable) {
+                      e.preventDefault();
+                    }
+                    if (this.getAttribute("memo") === "on") {
+                      e.stopPropagation();
+                      instance.detailTimeEvent.call(this, e);
+                    }
+                  }
+                },
+                {
+                  type: "contextmenu",
+                  event: function (e) {
+                    if (e.cancelable) {
+                      e.preventDefault();
+                    }
+                    e.stopPropagation();
+                    instance.detailTimeEvent.call(this, e);
+                  }
+                },
+              ],
+              style: {
+                position: "absolute",
+                width: String(lastDom.getBoundingClientRect().left - firstDom.getBoundingClientRect().left + width) + ea,
+                top: String(0) + ea,
+                left: String(0) + ea,
+                height: String(100) + '%',
+                background: colorChip.gradientGreen4,
+                borderRadius: String(3) + "px",
+                zIndex: String(2),
+              }
+            });
+            firstDom.appendChild(firstDom.firstChild);
+          }
+        }
+
+        if (!possibleTimes) {
+          textDom = createNode({
+            mother: this,
+            attribute: [ { value: text } ],
+            text: e.type === "click" ? text : "미팅",
+            style: {
+              position: "absolute",
+              width: String(width) + ea,
+              textAlign: "center",
+              fontSize: String(e.type === "click" ? size1 : size0) + ea,
+              top: String(e.type === "click" ? textTop1 : textTop0) + ea,
+              fontFamily: e.type === "click" ? "graphik" : "",
+              fontWeight: String(300),
+              color: colorChip.whiteBlack,
               zIndex: String(2),
             }
           });
-          firstDom.appendChild(firstDom.firstChild);
-        }
-      }
-
-      if (!possibleTimes) {
-        textDom = createNode({
-          mother: this,
-          attribute: [ { value: text } ],
-          text: e.type === "click" ? text : "미팅",
-          style: {
-            position: "absolute",
-            width: String(width) + ea,
-            textAlign: "center",
-            fontSize: String(e.type === "click" ? size1 : size0) + ea,
-            top: String(e.type === "click" ? textTop1 : textTop0) + ea,
-            fontFamily: e.type === "click" ? "graphik" : "",
-            fontWeight: String(300),
-            color: colorChip.whiteBlack,
-            zIndex: String(2),
-          }
-        });
-        textDom.style.wordSpacing = String(-4) + ea;
-      } else {
-        createNode({
-          mother: this,
-          attribute: [ { value: text } ],
-          text: "가능",
-          style: {
-            position: "absolute",
-            width: String(width) + ea,
-            textAlign: "center",
-            fontSize: String(size0) + ea,
-            top: String(textTop0) + ea,
-            fontWeight: String(300),
-            color: colorChip.white,
-            zIndex: String(2),
-          }
-        });
-      }
-
-    } else {
-
-      updateBoo = false;
-
-      if (e.type === "click" && this.getAttribute("memo") !== "on") {
-
-        if (e.altKey) {
-          updateBoo = true;
-          if (this.getAttribute("link") === "off") {
-            this.style.background = !possibleTimes ? colorChip.gray2 : colorChip.gray3;
-            this.setAttribute("toggle", "off");
-            this.setAttribute("direct", "off");
-            this.setAttribute("link", "off");
-            this.setAttribute("meeting", "off");
-            cleanChildren(this);
-          } else {
-            num = x;
-            do {
-              linkFirstNum = num;
-              num = num - 1;
-            } while (lineDoms[num] !== undefined && lineDoms[num].getAttribute("link") === "on");
-            num = x;
-            do {
-              linkLastNum = num;
-              num = num + 1;
-            } while (lineDoms[num] !== undefined && lineDoms[num].getAttribute("link") === "on");
-            for (let i = linkFirstNum; i < linkLastNum + 1; i++) {
-              lineDoms[i].style.background = !possibleTimes ? colorChip.gray2 : colorChip.gray3;
-              lineDoms[i].setAttribute("toggle", "off");
-              lineDoms[i].setAttribute("direct", "off");
-              lineDoms[i].setAttribute("link", "off");
-              lineDoms[i].setAttribute("meeting", "off");
-              cleanChildren(lineDoms[i]);
-            }
-          }
+          textDom.style.wordSpacing = String(-4) + ea;
         } else {
-          if (this.querySelector('.' + classCalendarBarName) !== null) {
-            instance.detailTimeEvent.call(this.querySelector('.' + classCalendarBarName), e);
-          } else {
-            if (this.getAttribute("link") === "off") {
-              instance.detailTimeEvent.call(this, e);
+          createNode({
+            mother: this,
+            attribute: [ { value: text } ],
+            text: "가능",
+            style: {
+              position: "absolute",
+              width: String(width) + ea,
+              textAlign: "center",
+              fontSize: String(size0) + ea,
+              top: String(textTop0) + ea,
+              fontWeight: String(300),
+              color: colorChip.white,
+              zIndex: String(2),
             }
-          }
+          });
         }
 
       } else {
-        instance.detailTimeEvent.call(this, e);
-      }
 
-    }
+        updateBoo = false;
 
-    if (updateBoo) {
-      if (!e.ctrlKey) {
-        instance.calendarData.updateByDoms(lineDoms, x, e.type, e.altKey).then((resultNumber) => {
-          if (resultNumber !== 1) {
-            throw new Error("update error");
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-      }
-    }
+        if (e.type === "click" && this.getAttribute("memo") !== "on") {
 
-  }
-  this.countEvent = function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.altKey) {
-      const x = this.getAttribute('x');
-      const y = this.getAttribute('y');
-      const desid = this.getAttribute('desid');
-      const proid = this.getAttribute('proid');
-      const { classNameDesid } = instance.calendarClass;
-      const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
-      let thisValue = Number(this.firstChild.textContent);
-      if (e.type === "click") {
-        thisValue = thisValue + 1;
-      } else {
-        thisValue = thisValue - 1;
-      }
-      this.firstChild.textContent = String(thisValue);
-      this.setAttribute("value", String(thisValue));
-      if (!e.ctrlKey) {
-        instance.calendarData.updateByDoms(lineDoms, x, e.type, e.altKey).then((resultNumber) => {
-          if (resultNumber !== 1) {
-            throw new Error("update error");
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-      }
-    }
-  }
-  const createBlock = function (mother, desid, proid, width, margin, barHeight, y, possibleTimes) {
-    let totalWidth;
-    let nodeArr;
-    let tempObj;
-    let entireTong;
-    let x;
-    let countMode;
-
-    if (possibleTimes === 0) {
-      countMode = true;
-      possibleTimes = false;
-    } else if (possibleTimes === 1) {
-      countMode = false;
-      possibleTimes = true;
-    } else {
-      countMode = false;
-      possibleTimes = false;
-    }
-
-    totalWidth = matrix.getEntireWidth(width, margin);
-
-    entireTong = createNode({
-      mother,
-      attribute: [
-        { y },
-      ],
-      class: [ "moveTarget" ],
-      events: [
-        {
-          type: "mouseover",
-          event: function (e) {
-            const y = Number(this.getAttribute('y'));
-            const targets = document.querySelectorAll('.' + classNameTextY + '_' + y);
-            for (let dom of targets) {
-              dom.style.color = colorChip.green;
+          if (e.altKey) {
+            updateBoo = true;
+            if (this.getAttribute("link") === "off") {
+              this.style.background = !possibleTimes ? colorChip.gray2 : colorChip.gray3;
+              this.setAttribute("toggle", "off");
+              this.setAttribute("direct", "off");
+              this.setAttribute("link", "off");
+              this.setAttribute("meeting", "off");
+              cleanChildren(this);
+            } else {
+              num = x;
+              do {
+                linkFirstNum = num;
+                num = num - 1;
+              } while (lineDoms[num] !== undefined && lineDoms[num].getAttribute("link") === "on");
+              num = x;
+              do {
+                linkLastNum = num;
+                num = num + 1;
+              } while (lineDoms[num] !== undefined && lineDoms[num].getAttribute("link") === "on");
+              for (let i = linkFirstNum; i < linkLastNum + 1; i++) {
+                lineDoms[i].style.background = !possibleTimes ? colorChip.gray2 : colorChip.gray3;
+                lineDoms[i].setAttribute("toggle", "off");
+                lineDoms[i].setAttribute("direct", "off");
+                lineDoms[i].setAttribute("link", "off");
+                lineDoms[i].setAttribute("meeting", "off");
+                cleanChildren(lineDoms[i]);
+              }
             }
-          }
-        },
-        {
-          type: "mouseleave",
-          event: function (e) {
-            const y = Number(this.getAttribute('y'));
-            const targets = document.querySelectorAll('.' + classNameTextY + '_' + y);
-            for (let dom of targets) {
-              if (dom.getAttribute("color") !== null) {
-                dom.style.color = dom.getAttribute("color");
-              } else {
-                dom.style.color = colorChip.black;
+          } else {
+            if (this.querySelector('.' + classCalendarBarName) !== null) {
+              instance.detailTimeEvent.call(this.querySelector('.' + classCalendarBarName), e);
+            } else {
+              if (this.getAttribute("link") === "off") {
+                instance.detailTimeEvent.call(this, e);
               }
             }
           }
-        },
-      ],
-      style: {
-        position: "relative",
-        width: String(totalWidth) + ea,
-        height: String(barHeight) + ea,
-        marginTop: String(margin * 1) + ea,
-        marginLeft: String((margin * 4) - 1) + ea,
-        borderRadius: String(3) + "px",
-        transform: instance.calendarPastTranslate,
-      }
-    });
 
-    if (!countMode) {
-      nodeArr = [];
-      x = 0;
-      if (instance.calendarX === null) {
-        instance.calendarX = [];
+        } else {
+          instance.detailTimeEvent.call(this, e);
+        }
+
       }
-      for (let i = 0; i < matrix.length; i++) {
-        tempObj = {
-          mother: entireTong,
-          class: [ 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month) ],
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(matrix[i].getEntireWidth(width, margin)) + ea,
-            height: String(barHeight) + ea,
-            opacity: instance.calendarMonthY['y' + String(matrix[i].year) + 'm' + String(matrix[i].month)] === "on" ? String(1) : String(0.3),
-          }
-        };
-        nodeArr.push(tempObj);
-        for (let j = 0; j < matrix[i].children.length; j++) {
-          tempObj = {
-            mother: -1 * ((1 * j) + 1),
-            id: classNameDesid + "-" + desid + "-" + proid + '-' + String(x),
+
+      if (updateBoo) {
+        if (!e.ctrlKey) {
+          instance.calendarData.updateByDoms(lineDoms, x, e.type, e.altKey).then((resultNumber) => {
+            if (resultNumber !== 1) {
+              throw new Error("update error");
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+      }
+
+    }
+    this.countEvent = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.altKey) {
+        const x = this.getAttribute('x');
+        const y = this.getAttribute('y');
+        const desid = this.getAttribute('desid');
+        const proid = this.getAttribute('proid');
+        const { classNameDesid } = instance.calendarClass;
+        const lineDoms = document.querySelectorAll('.' + classNameDesid + "-" + desid + "-" + proid);
+        let thisValue = Number(this.firstChild.textContent);
+        if (e.type === "click") {
+          thisValue = thisValue + 1;
+        } else {
+          thisValue = thisValue - 1;
+        }
+        this.firstChild.textContent = String(thisValue);
+        this.setAttribute("value", String(thisValue));
+        if (!e.ctrlKey) {
+          instance.calendarData.updateByDoms(lineDoms, x, e.type, e.altKey).then((resultNumber) => {
+            if (resultNumber !== 1) {
+              throw new Error("update error");
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+      }
+    }
+    let designerBox;
+    let pastTop;
+    let boxHeight;
+    let nodeArr;
+    let size;
+    let textTop;
+    let y;
+    let designerNameBox, designerNameBox_clone;
+
+    size = 16;
+    pastTop = 0;
+    textTop = isMac() ? 14 : 16;
+    y = 0;
+
+    setTimeout(async () => {
+      for (let i = 0; i < designers.length; i++) {
+        boxHeight = (margin * 5) + ((height + (margin * 1)) * (designers[i].projects.length + 2));
+
+        nodeArr = [
+          {
+            mother,
             attribute: [
-              { x: String(x) },
-              { y: String(y) },
-              { toggle: "off" },
-              { direct: "off" },
-              { link: "off" },
-              { meeting: "off" },
-              { value: String(matrix[i].month) + ' - ' + String((i === 0 ? instance.matrix.weekOrder : 1) + j) },
-              { start: matrix[i].children[j].start },
-              { end: matrix[i].children[j].end },
-              { spot: "null" },
-              { possible: possibleTimes ? "true" : "false" },
-              { desid },
-              { proid },
-            ],
-            events: [
-              {
-                type: "click",
-                event: instance.moduleEvent
-              },
-              // {
-              //   type: "contextmenu",
-              //   event: instance.moduleEvent
-              // },
-            ],
-            class: [
-              classNameX + "_" + String(x),
-              classNameY + "_" + String(y),
-              classNameXY + "_" + String(x) + '_' + String(y),
-              classNameDesid + "-" + desid + "-" + proid,
+              { desid: designers[i].desid },
             ],
             style: {
-              display: "inline-block",
-              position: "relative",
-              width: String(width) + ea,
-              height: withOut(0, ea),
-              marginRight: String(margin) + ea,
-              background: !possibleTimes ? colorChip.gray2 : colorChip.gray3,
-              borderRadius: String(3) + "px",
-              cursor: "pointer",
-              transition: "all 0s ease",
+              display: "block",
+              position: "absolute",
+              width: String(box0Width) + ea,
+              top: String(pastTop) + ea,
+              left: String(0) + ea,
+              height: String(boxHeight) + ea,
+              borderBottom: "1px solid " + colorChip.gray4,
+              background: colorChip.white,
+              zIndex: String(1),
             }
-          };
-          nodeArr.push(tempObj);
+          },
+          {
+            mother: -1,
+            text: designers[i].designer,
+            attribute: [
+              { desid: designers[i].desid },
+            ],
+            class: [ classNameTextY + "_" + String(y), classDesignerBox ],
+            style: {
+              position: "absolute",
+              fontSize: String(size) + ea,
+              fontWeight: String(600),
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(textTop) + ea,
+            }
+          },
+          {
+            mother,
+            style: {
+              display: "block",
+              position: "absolute",
+              width: String(box1Width) + ea,
+              top: String(pastTop) + ea,
+              left: String(box0Width) + ea,
+              height: String(boxHeight) + ea,
+              borderBottom: "1px solid " + colorChip.gray4,
+              borderLeft: "1px solid " + colorChip.gray4,
+              background: colorChip.white,
+              zIndex: String(1),
+            }
+          },
+          {
+            mother: -1,
+            text: "가능 개수",
+            class: [ classNameTextY + "_" + String(y) ],
+            style: {
+              position: "absolute",
+              fontSize: String(size) + ea,
+              fontWeight: String(300),
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(textTop) + ea,
+            }
+          },
+          {
+            mother: -2,
+            text: "가능 시간",
+            class: [ classNameTextY + "_" + String(y + 1) ],
+            style: {
+              position: "absolute",
+              fontSize: String(size) + ea,
+              fontWeight: String(300),
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(textTop + height + margin) + ea,
+            }
+          },
+        ];
 
-          if (instance.calendarX.break !== true) {
-            instance.calendarX.push({
-              start: matrix[i].children[j].start,
-              end: matrix[i].children[j].end
-            });
-          }
-          x++;
-        }
-      }
-      if (instance.calendarX.break !== true) {
-        instance.calendarX.break = true;
-      }
-      createNodes(nodeArr);
-    } else {
-      nodeArr = [];
-      x = 0;
-      for (let i = 0; i < matrix.length; i++) {
-        tempObj = {
-          mother: entireTong,
-          class: [ 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month) ],
-          style: {
-            display: "inline-block",
-            position: "relative",
-            width: String(matrix[i].getEntireWidth(width, margin)) + ea,
-            height: String(barHeight) + ea,
-            opacity: instance.calendarMonthY['y' + String(matrix[i].year) + 'm' + String(matrix[i].month)] === "on" ? String(1) : String(0.3),
-          }
-        };
-        nodeArr.push(tempObj);
-        tempObj = {
-          mother: -1,
-          id: classNameDesid + "-" + desid + "-" + proid + '-' + String(x),
-          attribute: [
-            { x: String(x) },
-            { y: String(y) },
-            { value: String(5) },
-            { start: matrix[i].children[0].start },
-            { end: matrix[i].children[matrix[i].children.length - 1].end },
-            { desid },
-            { proid },
-            { year: String(matrix[i].year) },
-            { month: String(matrix[i].month) }
-          ],
-          class: [
-            classNameY + "_" + String(y),
-            classNameXY + "_" + String(x) + '_' + String(y),
-            classNameDesid + "-" + desid + "-" + proid,
-            desid + '-' + proid + '-' + 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month),
-          ],
-          events: [
-            {
-              type: "click",
-              event: instance.countEvent
-            },
-            {
-              type: "contextmenu",
-              event: instance.countEvent
+        for (let j = 0; j < designers[i].projects.length; j++) {
+          nodeArr.push({
+            mother: -1 + (-1 * (j + 2)),
+            text: designers[i].projects[j].name,
+            attribute: [ { color: /^대/i.test(designers[i].projects[j].process.status) ? colorChip.red : (/^홀/.test(designers[i].projects[j].process.status) ? colorChip.purple : colorChip.black) } ],
+            class: [ classNameTextY + "_" + String(y + (j + 2)) ],
+            style: {
+              position: "absolute",
+              fontSize: String(size) + ea,
+              fontWeight: String(300),
+              width: String(100) + '%',
+              textAlign: "center",
+              top: String(textTop + ((height + (margin * 1)) * (j + 2))) + ea,
+              color: /^대/i.test(designers[i].projects[j].process.status) ? colorChip.red : (/^홀/.test(designers[i].projects[j].process.status) ? colorChip.purple : colorChip.black),
             }
-          ],
+          });
+          nodeArr[nodeArr.length - 1 - 2 + (-1 * (j + 2))].class.push(classNameTextY + "_" + String(y + (j + 2)));
+        }
+
+        [ designerNameBox ] = createNodes(nodeArr);
+        designerNameBox_clone = designerNameBox.cloneNode(false);
+        designerNameBox_clone.style.background = "transparent";
+        designerNameBox_clone.style.border = String(0);
+        designerNameBox_clone.style.zIndex = String(3);
+        designerNameBox_clone.style.height = String(Number(designerNameBox_clone.style.height.replace(/[^0-9\-\.]/gi, '')) / 2) + ea;
+        designerNameBox_clone.classList.add("hoverDefault");
+        designerNameBox_clone.addEventListener("click", function (e) {
+          const desid = this.getAttribute("desid");
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + desid;
+        });
+        mother.appendChild(designerNameBox_clone);
+
+        pastTop += boxHeight + 1;
+
+        designerBox = createNode({
+          mother,
           style: {
-            display: "inline-block",
+            display: "block",
             position: "relative",
-            width: String((width * matrix[i].children.length) + (margin * (matrix[i].children.length - 1))) + ea,
-            height: withOut(0, ea),
-            marginRight: String(margin) + ea,
-            background: colorChip.gray2,
-            borderRadius: String(3) + "px",
-            cursor: "pointer",
-            transition: "all 0s ease",
+            left: String(box0Width + box1Width) + ea,
+            width: withOut(box0Width + box1Width, ea),
+            paddingTop: String(margin * 2) + ea,
+            paddingBottom: String(margin * 3) + ea,
+            borderBottom: "1px solid " + colorChip.gray4,
+            marginBottom: (i === designers.length - 1) ? String(window.innerHeight / 2) + ea : "",
           }
-        };
-        nodeArr.push(tempObj);
-        tempObj = {
-          mother: -1,
-          text: String(5),
-          events: [
-            {
-              type: "selectstart",
-              event: function (e) {
-                e.preventDefault();
-                return false;
+        });
+        for (let j = 0; j < designers[i].projects.length + 2; j++) {
+          let mother, desid, proid, barHeight, possibleTimes;
+          let totalWidth;
+          let nodeArr;
+          let tempObj;
+          let entireTong;
+          let x;
+          let countMode;
+
+          mother = designerBox;
+          desid = designers[i].desid;
+          proid = (j > 1 ? designers[i].projects[j - 2].proid : (j === 1 ? "possible" : "count"));
+          barHeight = height;
+          possibleTimes = j;
+
+          if (possibleTimes === 0) {
+            countMode = true;
+            possibleTimes = false;
+          } else if (possibleTimes === 1) {
+            countMode = false;
+            possibleTimes = true;
+          } else {
+            countMode = false;
+            possibleTimes = false;
+          }
+
+          totalWidth = matrix.getEntireWidth(width, margin);
+
+          entireTong = createNode({
+            mother,
+            attribute: [
+              { y },
+            ],
+            class: [ "moveTarget" ],
+            events: [
+              {
+                type: "mouseover",
+                event: function (e) {
+                  const y = Number(this.getAttribute('y'));
+                  const targets = document.querySelectorAll('.' + classNameTextY + '_' + y);
+                  for (let dom of targets) {
+                    dom.style.color = colorChip.green;
+                  }
+                }
+              },
+              {
+                type: "mouseleave",
+                event: function (e) {
+                  const y = Number(this.getAttribute('y'));
+                  const targets = document.querySelectorAll('.' + classNameTextY + '_' + y);
+                  for (let dom of targets) {
+                    if (dom.getAttribute("color") !== null) {
+                      dom.style.color = dom.getAttribute("color");
+                    } else {
+                      dom.style.color = colorChip.black;
+                    }
+                  }
+                }
+              },
+            ],
+            style: {
+              position: "relative",
+              opacity: String(0),
+              width: String(totalWidth) + ea,
+              height: String(barHeight) + ea,
+              marginTop: String(margin * 1) + ea,
+              marginLeft: String((margin * 4) - 1) + ea,
+              borderRadius: String(3) + "px",
+              transform: instance.calendarPastTranslate,
+              transition: "all 0.3s ease",
+            }
+          });
+
+          GeneralJs.setTimeout(() => {
+            entireTong.style.opacity = String(1);
+          }, 300);
+
+          if (!countMode) {
+            nodeArr = [];
+            x = 0;
+            if (instance.calendarX === null) {
+              instance.calendarX = [];
+            }
+            for (let i = 0; i < matrix.length; i++) {
+              tempObj = {
+                mother: entireTong,
+                class: [ 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month) ],
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(matrix[i].getEntireWidth(width, margin)) + ea,
+                  height: String(barHeight) + ea,
+                  opacity: instance.calendarMonthY['y' + String(matrix[i].year) + 'm' + String(matrix[i].month)] === "on" ? String(1) : String(0.3),
+                }
+              };
+              nodeArr.push(tempObj);
+              for (let j = 0; j < matrix[i].children.length; j++) {
+                tempObj = {
+                  mother: -1 * ((1 * j) + 1),
+                  id: classNameDesid + "-" + desid + "-" + proid + '-' + String(x),
+                  attribute: [
+                    { x: String(x) },
+                    { y: String(y) },
+                    { toggle: "off" },
+                    { direct: "off" },
+                    { link: "off" },
+                    { meeting: "off" },
+                    { value: String(matrix[i].month) + ' - ' + String((i === 0 ? instance.matrix.weekOrder : 1) + j) },
+                    { start: matrix[i].children[j].start },
+                    { end: matrix[i].children[j].end },
+                    { spot: "null" },
+                    { possible: possibleTimes ? "true" : "false" },
+                    { desid },
+                    { proid },
+                  ],
+                  events: [
+                    {
+                      type: "click",
+                      event: instance.moduleEvent
+                    },
+                    // {
+                    //   type: "contextmenu",
+                    //   event: instance.moduleEvent
+                    // },
+                  ],
+                  class: [
+                    classNameX + "_" + String(x),
+                    classNameY + "_" + String(y),
+                    classNameXY + "_" + String(x) + '_' + String(y),
+                    classNameDesid + "-" + desid + "-" + proid,
+                  ],
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    width: String(width) + ea,
+                    height: withOut(0, ea),
+                    marginRight: String(margin) + ea,
+                    background: !possibleTimes ? colorChip.gray2 : colorChip.gray3,
+                    borderRadius: String(3) + "px",
+                    cursor: "pointer",
+                    transition: "all 0s ease",
+                  }
+                };
+                nodeArr.push(tempObj);
+
+                if (instance.calendarX.break !== true) {
+                  instance.calendarX.push({
+                    start: matrix[i].children[j].start,
+                    end: matrix[i].children[j].end
+                  });
+                }
+                x++;
               }
             }
-          ],
-          style: {
-            position: "absolute",
-            width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(17) + ea,
-            top: String(3) + ea,
-            fontFamily: "graphik",
-            fontWeight: String(500),
-            color: colorChip.deactive,
-            zIndex: String(2),
+            if (instance.calendarX.break !== true) {
+              instance.calendarX.break = true;
+            }
+            createNodes(nodeArr);
+          } else {
+            nodeArr = [];
+            x = 0;
+            for (let i = 0; i < matrix.length; i++) {
+              tempObj = {
+                mother: entireTong,
+                class: [ 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month) ],
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String(matrix[i].getEntireWidth(width, margin)) + ea,
+                  height: String(barHeight) + ea,
+                  opacity: instance.calendarMonthY['y' + String(matrix[i].year) + 'm' + String(matrix[i].month)] === "on" ? String(1) : String(0.3),
+                }
+              };
+              nodeArr.push(tempObj);
+              tempObj = {
+                mother: -1,
+                id: classNameDesid + "-" + desid + "-" + proid + '-' + String(x),
+                attribute: [
+                  { x: String(x) },
+                  { y: String(y) },
+                  { value: String(5) },
+                  { start: matrix[i].children[0].start },
+                  { end: matrix[i].children[matrix[i].children.length - 1].end },
+                  { desid },
+                  { proid },
+                  { year: String(matrix[i].year) },
+                  { month: String(matrix[i].month) }
+                ],
+                class: [
+                  classNameY + "_" + String(y),
+                  classNameXY + "_" + String(x) + '_' + String(y),
+                  classNameDesid + "-" + desid + "-" + proid,
+                  desid + '-' + proid + '-' + 'y' + String(matrix[i].year) + 'm' + String(matrix[i].month),
+                ],
+                events: [
+                  {
+                    type: "click",
+                    event: instance.countEvent
+                  },
+                  {
+                    type: "contextmenu",
+                    event: instance.countEvent
+                  }
+                ],
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  width: String((width * matrix[i].children.length) + (margin * (matrix[i].children.length - 1))) + ea,
+                  height: withOut(0, ea),
+                  marginRight: String(margin) + ea,
+                  background: colorChip.gray2,
+                  borderRadius: String(3) + "px",
+                  cursor: "pointer",
+                  transition: "all 0s ease",
+                }
+              };
+              nodeArr.push(tempObj);
+              tempObj = {
+                mother: -1,
+                text: String(5),
+                events: [
+                  {
+                    type: "selectstart",
+                    event: function (e) {
+                      e.preventDefault();
+                      return false;
+                    }
+                  }
+                ],
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  textAlign: "center",
+                  fontSize: String(17) + ea,
+                  top: String(3) + ea,
+                  fontFamily: "graphik",
+                  fontWeight: String(500),
+                  color: colorChip.deactive,
+                  zIndex: String(2),
+                }
+              };
+              nodeArr.push(tempObj);
+              x = x + matrix[i].children.length;
+            }
+            createNodes(nodeArr);
           }
-        };
-        nodeArr.push(tempObj);
-        x = x + matrix[i].children.length;
+
+          y++;
+        }
+
       }
-      createNodes(nodeArr);
-    }
-
-  }
-  let designerBox;
-  let pastTop;
-  let boxHeight;
-  let nodeArr;
-  let size;
-  let textTop;
-  let y;
-  let designerNameBox, designerNameBox_clone;
-
-  size = 16;
-  pastTop = 0;
-  textTop = isMac() ? 14 : 16;
-  y = 0;
-
-  for (let i = 0; i < designers.length; i++) {
-    boxHeight = (margin * 5) + ((height + (margin * 1)) * (designers[i].projects.length + 2));
-
-    nodeArr = [
-      {
-        mother,
-        attribute: [
-          { desid: designers[i].desid },
-        ],
-        style: {
-          display: "block",
-          position: "absolute",
-          width: String(box0Width) + ea,
-          top: String(pastTop) + ea,
-          left: String(0) + ea,
-          height: String(boxHeight) + ea,
-          borderBottom: "1px solid " + colorChip.gray4,
-          background: colorChip.white,
-          zIndex: String(1),
-        }
-      },
-      {
-        mother: -1,
-        text: designers[i].designer,
-        attribute: [
-          { desid: designers[i].desid },
-        ],
-        class: [ classNameTextY + "_" + String(y), classDesignerBox ],
-        style: {
-          position: "absolute",
-          fontSize: String(size) + ea,
-          fontWeight: String(600),
-          width: String(100) + '%',
-          textAlign: "center",
-          top: String(textTop) + ea,
-        }
-      },
-      {
-        mother,
-        style: {
-          display: "block",
-          position: "absolute",
-          width: String(box1Width) + ea,
-          top: String(pastTop) + ea,
-          left: String(box0Width) + ea,
-          height: String(boxHeight) + ea,
-          borderBottom: "1px solid " + colorChip.gray4,
-          borderLeft: "1px solid " + colorChip.gray4,
-          background: colorChip.white,
-          zIndex: String(1),
-        }
-      },
-      {
-        mother: -1,
-        text: "가능 개수",
-        class: [ classNameTextY + "_" + String(y) ],
-        style: {
-          position: "absolute",
-          fontSize: String(size) + ea,
-          fontWeight: String(300),
-          width: String(100) + '%',
-          textAlign: "center",
-          top: String(textTop) + ea,
-        }
-      },
-      {
-        mother: -2,
-        text: "가능 시간",
-        class: [ classNameTextY + "_" + String(y + 1) ],
-        style: {
-          position: "absolute",
-          fontSize: String(size) + ea,
-          fontWeight: String(300),
-          width: String(100) + '%',
-          textAlign: "center",
-          top: String(textTop + height + margin) + ea,
-        }
-      },
-    ];
-
-    for (let j = 0; j < designers[i].projects.length; j++) {
-      nodeArr.push({
-        mother: -1 + (-1 * (j + 2)),
-        text: designers[i].projects[j].name,
-        attribute: [ { color: /^대/i.test(designers[i].projects[j].process.status) ? colorChip.red : (/^홀/.test(designers[i].projects[j].process.status) ? colorChip.purple : colorChip.black) } ],
-        class: [ classNameTextY + "_" + String(y + (j + 2)) ],
-        style: {
-          position: "absolute",
-          fontSize: String(size) + ea,
-          fontWeight: String(300),
-          width: String(100) + '%',
-          textAlign: "center",
-          top: String(textTop + ((height + (margin * 1)) * (j + 2))) + ea,
-          color: /^대/i.test(designers[i].projects[j].process.status) ? colorChip.red : (/^홀/.test(designers[i].projects[j].process.status) ? colorChip.purple : colorChip.black),
-        }
-      });
-      nodeArr[nodeArr.length - 1 - 2 + (-1 * (j + 2))].class.push(classNameTextY + "_" + String(y + (j + 2)));
-    }
-
-    [ designerNameBox ] = createNodes(nodeArr);
-    designerNameBox_clone = designerNameBox.cloneNode(false);
-    designerNameBox_clone.style.background = "transparent";
-    designerNameBox_clone.style.border = String(0);
-    designerNameBox_clone.style.zIndex = String(3);
-    designerNameBox_clone.style.height = String(Number(designerNameBox_clone.style.height.replace(/[^0-9\-\.]/gi, '')) / 2) + ea;
-    designerNameBox_clone.classList.add("hoverDefault");
-    designerNameBox_clone.addEventListener("click", function (e) {
-      const desid = this.getAttribute("desid");
-      window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + desid;
-    });
-    mother.appendChild(designerNameBox_clone);
-
-    pastTop += boxHeight + 1;
-
-    designerBox = createNode({
-      mother,
-      style: {
-        display: "block",
-        position: "relative",
-        left: String(box0Width + box1Width) + ea,
-        width: withOut(box0Width + box1Width, ea),
-        paddingTop: String(margin * 2) + ea,
-        paddingBottom: String(margin * 3) + ea,
-        borderBottom: "1px solid " + colorChip.gray4,
-        marginBottom: (i === designers.length - 1) ? String(window.innerHeight / 2) + ea : "",
+      if (loadingIcon !== null) {
+        loadingIcon.parentElement.removeChild(loadingIcon);
       }
-    });
-    for (let j = 0; j < designers[i].projects.length + 2; j++) {
-      createBlock(designerBox, designers[i].desid, (j > 1 ? designers[i].projects[j - 2].proid : (j === 1 ? "possible" : "count")), width, margin, height, y, j);
-      y++;
-    }
+      instance.calendarDashBoardLaunching();
+      if (instance.calendarX.constructor.name !== "DateX") {
+        instance.calendarX = new DateX(instance.calendarX);
+      }
+      instance.calendarData.render();
+    }, 0);
+    
+  } catch (e) {
+    console.log(e);
   }
-
-  this.calendarDashBoardLaunching();
-  if (this.calendarX.constructor.name !== "DateX") {
-    this.calendarX = new DateX(this.calendarX);
-  }
-  this.calendarData.render();
-
 }
 
 DesignerJs.prototype.calendarDashBoardLaunching = function () {
@@ -1598,9 +1615,18 @@ DesignerJs.prototype.calendarSearchEvent = function () {
 
   input.parentNode.style.width = String(width) + ea;
   input.parentNode.style.left = GeneralJs.withOut(50, width / 2, ea);
-  input.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      instance.calendarContentsTime(this.value.trim());
+  input.addEventListener("keypress", async function (e) {
+    try {
+      const value = this.value.trim();
+      if (e.key === "Enter") {
+        instance.mother.loadingRun().then((loading) => {
+          return instance.calendarContentsTime(value, loading);
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   });
 }

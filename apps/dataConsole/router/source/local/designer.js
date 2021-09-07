@@ -3919,6 +3919,15 @@ DesignerJs.prototype.launching = async function () {
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 
+    } else if (getObj.mode === "request") {
+
+      await protoPatch(instance, `${modulePath}/request.js`);
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.requestView();
+      this.addTransFormEvent();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
+
     } else {
 
       tempFunction = this.cardViewMaker(true);
