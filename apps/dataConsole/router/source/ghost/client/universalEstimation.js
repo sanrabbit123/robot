@@ -1008,6 +1008,22 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
     let year, month, date;
     let to;
     let requestNumber;
+    let pastOid;
+    let refresh;
+
+    refresh = false;
+    pastOid = window.localStorage.getItem("oid");
+    if (typeof pastOid === "string") {
+      if (pastOid === data.MOID) {
+        refresh = true;
+      } else {
+        refresh = false;
+        window.localStorage.setItem("oid", data.MOID);
+      }
+    } else {
+      refresh = false;
+      window.localStorage.setItem("oid", data.MOID);
+    }
 
     requestNumber = this.requestNumber;
     if (getObj.request !== undefined) {
@@ -1016,7 +1032,9 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
       }
     }
 
-    await ajaxJson({ bilid, requestNumber, data }, "/pythonPass_ghostClientBill");
+    if (!refresh) {
+      await ajaxJson({ bilid, requestNumber, data }, "/pythonPass_ghostClientBill");
+    }
 
     completeInfo.raw = data;
 
