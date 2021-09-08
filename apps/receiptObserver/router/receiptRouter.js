@@ -629,6 +629,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
 
             } else if (data.goodName.trim() === "홈리에종 잔금") {
 
+              projectQuery["process.status"] = "진행중";
               projectQuery["process.contract.remain.date"] = new Date();
               projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
               projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
@@ -897,6 +898,8 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
             });
 
           } else if (data.goodName.trim() === "홈리에종 잔금") {
+
+            projectQuery["process.status"] = "진행중";
             projectQuery["process.contract.remain.date"] = new Date();
             projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
             projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
