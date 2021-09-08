@@ -36,6 +36,7 @@ const ReceiptObserver = require(APP_PATH + "/receiptObserver/receiptObserver.js"
 const GraphicBot = require(APP_PATH + "/graphicBot/graphicBot.js");
 const GaroseroParser = require(APP_PATH + "/garoseroParser/garoseroParser.js");
 const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
+const MirrorRouter = require(APP_PATH + "/mirrorWhisk/router/mirrorRouter.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -63,8 +64,6 @@ DevContext.prototype.launching = async function () {
     const { Agent } = require(`https`);
     const agent = new Agent({ rejectUnauthorized: false });
     // in config { httpsAgent: agent }
-
-
 
 
 

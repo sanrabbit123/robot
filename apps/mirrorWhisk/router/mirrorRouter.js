@@ -298,48 +298,48 @@ MirrorRouter.prototype.callObserver = async function (client, id, pass) {
 
       sendJandi(client.name + " Observer");
 
-      if (id !== null) {
-
-        query = { id, pass };
-        num = 0;
-        status = 0;
-        while (num < 40) {
-          response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-          if (response.data.SVC_RT === "0000") {
-            status = 1;
-            num2 = 0;
-            while (true) {
-              response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-              if (response2.data.SVC_RT !== "0000") {
-                break;
-              }
-              await sleep(2000);
-              num2++;
-            }
-            if (num2 >= ((30 * 5) - 1)) {
-              status = 2;
-            } else {
-              status = 3;
-            }
-            break;
-          }
-          await sleep(2000);
-          num++;
-        }
-
-        if (status === 0) {
-          sendJandi(client.name + " 부재중");
-          //fail => "부재중"
-        } else if (status === 2) {
-          sendJandi(client.name + " 스타일 찾기");
-          //success => "스타일 찾기"
-        } else if (status === 3) {
-          sendJandi(client.name + " 부재중");
-          //fail => "부재중"
-        }
-        sendJandi(client.name + String(status));
-
-      }
+      // if (id !== null) {
+      //
+      //   query = { id, pass };
+      //   num = 0;
+      //   status = 0;
+      //   while (num < 40) {
+      //     response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+      //     if (response.data.SVC_RT === "0000") {
+      //       status = 1;
+      //       num2 = 0;
+      //       while (true) {
+      //         response2 = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+      //         if (response2.data.SVC_RT !== "0000") {
+      //           break;
+      //         }
+      //         await sleep(2000);
+      //         num2++;
+      //       }
+      //       if (num2 >= ((30 * 5) - 1)) {
+      //         status = 2;
+      //       } else {
+      //         status = 3;
+      //       }
+      //       break;
+      //     }
+      //     await sleep(2000);
+      //     num++;
+      //   }
+      //
+      //   if (status === 0) {
+      //     sendJandi(client.name + " 부재중");
+      //     //fail => "부재중"
+      //   } else if (status === 2) {
+      //     sendJandi(client.name + " 스타일 찾기");
+      //     //success => "스타일 찾기"
+      //   } else if (status === 3) {
+      //     sendJandi(client.name + " 부재중");
+      //     //fail => "부재중"
+      //   }
+      //   sendJandi(client.name + String(status));
+      //
+      // }
 
     }
 
