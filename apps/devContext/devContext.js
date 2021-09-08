@@ -64,9 +64,9 @@ DevContext.prototype.launching = async function () {
     const { Agent } = require(`https`);
     const agent = new Agent({ rejectUnauthorized: false });
     // in config { httpsAgent: agent }
-    console.log(await this.findCode("* 1.1)", false));
-    console.log(await this.findCode("/프", false));
-    console.log(await this.findCode(".967", false));
+    // console.log(await this.findCode("* 1.1)", false));
+    // console.log(await this.findCode("/프", false));
+
 
 
 
