@@ -4472,6 +4472,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               let thisProject_raw;
               let selectedDesigner;
               let designerHistory;
+              let designerCalculationData;
               try {
                 selectedDesigner = instance.designers.pick(desid);
                 thisProject_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: proid }), "/getProjects"));
@@ -4511,16 +4512,12 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                   updateQuery["process.calculation.info.to"] = bankTo;
                 }
 
-                if (/일반/gi.test(method)) {
-                  calculate = Math.round((supply * 1.1) * (1 - (percentage / 100)));
-                } else if (/간이/gi.test(method)) {
-                  calculate = Math.round(supply * (1 - (percentage / 100)));
-                } else if (/프리/gi.test(method)) {
-                  ratio = 0.967;
-                  calculate = Math.round((supply - (supply * (percentage / 100))) * ratio);
-                } else {
-                  calculate = Math.round((supply * 1.1) * (1 - (percentage / 100)));
+                designerCalculationData = await GeneralJs.ajaxJson({ supply, classification, percentage, cliid: thisProject_raw[0].cliid }, PYTHONHOST + "/designerCalculation", { equal: true });
+                if (designerCalculationData.calculate === undefined) {
+                  throw new Error("ajax error");
                 }
+                calculate = Number(designerCalculationData.calculate);
+
                 updateQuery["process.calculation.payments.totalAmount"] = calculate;
                 updateQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
                 updateQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
@@ -4530,14 +4527,16 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
 
                 designerHistory = await GeneralJs.ajaxJson({ idArr: [ desid ], method: "designer", property: "manager" }, "/getHistoryProperty");
                 await GeneralJs.ajaxJson({ method: "project", id: proid, column: "manager", value: designerHistory[desid], email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail }, "/updateHistory");
-                
+
                 await GeneralJs.ajaxJson({ proid, desid }, PYTHONHOST + "/createStylingBill");
                 await GeneralJs.ajaxJson({ proid, desid }, PYTHONHOST + "/designerSelect");
 
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
 
               } catch (e) {
+                window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
                 GeneralJs.ajax("message=proposal고객선택에러&channel=#error_log", "/sendSlack", function () {});
+                window.location.reload();
                 console.log(e);
               }
             });

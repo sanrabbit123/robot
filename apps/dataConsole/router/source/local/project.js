@@ -565,7 +565,7 @@ ProjectJs.prototype.infoArea = function (info) {
           if (chainingTargets.includes(column)) {
             idDomChildren = idDom.children;
             tempFunction = chainingMethods[column];
-            let { chainingColumns, chainingValues } = tempFunction(thisCase, finalValue);
+            let { chainingColumns, chainingValues } = await tempFunction(thisCase, finalValue);
             for (let c of chainingColumns) {
               chainingFinalValue = GeneralJs.vaildValue(c, chainingValues[c], thisCase[c]);
               await GeneralJs.updateValue({
@@ -2685,7 +2685,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             idDomChildren = idDom.children;
             motherChildren = mother.parentNode.children;
             tempFunction = chainingMethods[column];
-            let { chainingColumns, chainingValues } = tempFunction(thisCaseOriginal, finalValue);
+            let { chainingColumns, chainingValues } = await tempFunction(thisCaseOriginal, finalValue);
             for (let c of chainingColumns) {
               chainingFinalValue = GeneralJs.vaildValue(c, chainingValues[c], thisCaseOriginal[c]);
               await GeneralJs.updateValue({

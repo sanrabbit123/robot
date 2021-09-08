@@ -64,15 +64,13 @@ DevContext.prototype.launching = async function () {
     const { Agent } = require(`https`);
     const agent = new Agent({ rejectUnauthorized: false });
     // in config { httpsAgent: agent }
-    // console.log(await this.findCode("* 1.1)", false));
-    // console.log(await this.findCode("/프", false));
+    console.log(await this.findCode("* 1.1)", false));
+    console.log(await this.findCode("/프", false));
+    console.log(await this.findCode(".967", false));
 
 
-    const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOLOCALC });
-    const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC });
-    const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: this.MONGOLOCALC });
-    console.log(BillMaker.designerCalculation(projects[102], clients[0], { toArray: true }));
-    console.log(work.designerCalculation(projects[102], clients[0], { toArray: true }));
+
+
 
     /*
     const selfMongo = this.MONGOLOCALC;

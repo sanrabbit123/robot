@@ -3567,7 +3567,7 @@ DataPatch.prototype.projectChainingTarget = function () {
   };
 
   const chainingMethods = {
-    remainSupply: function (thisCase, value) {
+    remainSupply: async function (thisCase, value) {
       if (typeof value === "string") {
         value = Number(value.replace(/[^0-9\.\-]/g, ''));
       }
@@ -3587,7 +3587,7 @@ DataPatch.prototype.projectChainingTarget = function () {
       resultObj = { remainVat, remainConsumer, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
-    remainVat: function (thisCase, value) {
+    remainVat: async function (thisCase, value) {
       if (typeof value === "string") {
         value = Number(value.replace(/[^0-9\.\-]/g, ''));
       }
@@ -3607,7 +3607,7 @@ DataPatch.prototype.projectChainingTarget = function () {
       resultObj = { remainSupply, remainConsumer, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
-    remainConsumer: function (thisCase, value) {
+    remainConsumer: async function (thisCase, value) {
       if (typeof value === "string") {
         value = Number(value.replace(/[^0-9\.\-]/g, ''));
       }
@@ -3627,7 +3627,7 @@ DataPatch.prototype.projectChainingTarget = function () {
       resultObj = { remainSupply, remainVat, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
-    remainPure: function (thisCase, value) {
+    remainPure: async function (thisCase, value) {
       if (typeof value === "string") {
         value = Number(value.replace(/[^0-9\.\-]/g, ''));
       }
@@ -3647,7 +3647,7 @@ DataPatch.prototype.projectChainingTarget = function () {
       resultObj = { remainSupply, remainVat, remainConsumer, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
-    method: function (thisCase, value) {
+    method: async function (thisCase, value) {
 
       let resultObj;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
@@ -3659,7 +3659,7 @@ DataPatch.prototype.projectChainingTarget = function () {
       resultObj = { paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
-    percentage: function (thisCase, value) {
+    percentage: async function (thisCase, value) {
       if (typeof value === "string") {
         value = Number(value.replace(/[^0-9\.\-]/g, ''));
       }
@@ -3674,7 +3674,7 @@ DataPatch.prototype.projectChainingTarget = function () {
       resultObj = { paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
-    paymentsTotalAmount: function (thisCase, value) {
+    paymentsTotalAmount: async function (thisCase, value) {
       if (typeof value === "string") {
         value = Number(value.replace(/[^0-9\.\-]/g, ''));
       }
@@ -3688,7 +3688,7 @@ DataPatch.prototype.projectChainingTarget = function () {
       resultObj = { paymentsFirstAmount, paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
-    paymentsFirstAmount: function (thisCase, value) {
+    paymentsFirstAmount: async function (thisCase, value) {
       if (typeof value === "string") {
         value = Number(value.replace(/[^0-9\.\-]/g, ''));
       }
@@ -3701,7 +3701,7 @@ DataPatch.prototype.projectChainingTarget = function () {
       resultObj = { paymentsRemainAmount };
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
-    paymentsRemainAmount: function (thisCase, value) {
+    paymentsRemainAmount: async function (thisCase, value) {
       if (typeof value === "string") {
         value = Number(value.replace(/[^0-9\.\-]/g, ''));
       }
