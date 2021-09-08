@@ -56,4 +56,13 @@ Client.prototype.stringify = function () {
   return this.toString();
 }
 
+Client.prototype.returnPyeongArr = function () {
+  let pyeongArr;
+  pyeongArr = [];
+  for (let obj of this.requests) {
+    pyeongArr.push(obj.request.space.pyeong.value);
+  }
+  return pyeongArr;
+}
+
 module.exports = Client;

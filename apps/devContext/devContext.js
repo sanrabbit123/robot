@@ -64,23 +64,14 @@ DevContext.prototype.launching = async function () {
     const { Agent } = require(`https`);
     const agent = new Agent({ rejectUnauthorized: false });
     // in config { httpsAgent: agent }
+    // console.log(await this.findCode("* 1.1)", false));
+    // console.log(await this.findCode("/프", false));
 
 
-
-    let targets;
-    let apps;
-
-    targets = [];
-    apps = await treeParsing(`${process.cwd()}/apps`);
-
-    console.log(apps);
+    const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOLOCALC });
 
 
-
-
-
-
-
+    console.log(BillMaker.designerCalculation(1400000, "프리랜서", 10, clients[0], { forcePercentage: undefined }));
 
 
     /*
@@ -1296,6 +1287,56 @@ DevContext.prototype.launching = async function () {
     await this.MONGOC.close();
     await this.MONGOLOCALC.close();
     console.log(`done`);
+  }
+}
+
+DevContext.prototype.findCode = async function (str, openMode = false) {
+  if (typeof str !== "string" || typeof openMode !== "boolean") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { treeParsing, fileSystem, shell, shellLink } = this.mother;
+  const entryPoints = [ "robot.js", "ghost.js", "alien.js", "setup.py" ];
+  const escapeReg = function (s) {
+    s = s.replace(/\*/gi, "\\*");
+    s = s.replace(/\+/gi, "\\+");
+    s = s.replace(/\^/gi, "\\^");
+    s = s.replace(/\(/gi, "\\(");
+    s = s.replace(/\)/gi, "\\)");
+    s = s.replace(/\[/gi, "\\[");
+    s = s.replace(/\]/gi, "\\]");
+    s = s.replace(/\./gi, "\\.");
+    s = s.replace(/\=/gi, "\\=");
+    s = s.replace(/\&/gi, "\\&");
+    s = s.replace(/\-/gi, "\\-");
+    s = s.replace(/\$/gi, "\\$");
+    s = s.replace(/\//gi, "\\/");
+    return s;
+  }
+  try {
+    let targets, script, report;
+    str = escapeReg(str);
+    targets = (await treeParsing(`${process.cwd()}/apps`)).flatDeath.filter((obj) => { return !obj.directory; }).map((obj) => { return obj.absolute; }).concat(entryPoints.map((i) => { return process.cwd() + "/" + i; }));
+    report = {
+      date: new Date(),
+      input: str,
+      target: new RegExp(str, 'g'),
+      scripts: []
+    };
+    for (let absolute of targets) {
+      script = await fileSystem(`readString`, [ absolute ]);
+      if ((new RegExp(str, 'g')).test(script)) {
+        report.scripts.push(absolute.replace(new RegExp('^' + escapeReg(process.cwd())), ''));
+      }
+    }
+    if (openMode) {
+      for (let s of report.scripts) {
+        shell.exec(`atom ${shellLink(process.cwd() + s)};`);
+      }
+    }
+    return report;
+  } catch (e) {
+    console.log(e);
   }
 }
 

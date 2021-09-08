@@ -69,9 +69,10 @@ UniversalEstimationJs.prototype.billWordings = function () {
   let tempArr;
   let sum0, sum1;
   let between;
-  end = analytics.date.space.movein;
-  start = new Date(end.getFullYear(), end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds());
-  start.setDate(start.getDate() - spendDates);
+
+  end = project.process.contract.form.date.to;
+  start = project.process.contract.form.date.from;
+
   wordings = {
     mainTitle: [
       client.name + " 고객님",

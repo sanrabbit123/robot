@@ -16,6 +16,149 @@ BillMaker.billCollections = [
   "stylingForm",
 ];
 
+BillMaker.designerCalculation = function (supply, classification, percentage, client, option) {
+  const vatRatio = 0.1;
+  const consumerRatio = 1 + vatRatio;
+  const freeRatio = 0.967;
+  const pyeongStandard = 15;
+  const pyeongMinAmount = 130 * (10000);
+  const pyeongMinConst = 0.5;
+  const pyeongPercentage = 20;
+  const minimumPercentage = 20;
+  const initialPyeong = 34;
+  const classRegExpCase = [ "일반", "간이", "프리" ];
+  const moneyCuttingConst = 10;
+
+  let pyeong;
+  let calculate, commission;
+
+  if (typeof supply === "number" && typeof classification === "string" && typeof percentage === "number" && (typeof client === "object" || client === null) && typeof option === "object") {
+    // case 0 pass
+  } else if (typeof supply === "number" && typeof classification === "object" && (typeof percentage === "object" || percentage === null) && typeof client === "object" && option === undefined) {
+    if (classification.proid !== undefined) {
+      // case 1 project, client
+    } else if (classification.desid !== undefined) {
+      // case 2 designer, client
+    } else {
+      throw new Error("invaild input");
+    }
+  } else if (typeof supply === "object" && (typeof classification === "object" || classification === null) && typeof percentage === "object" && client === undefined && option === undefined) {
+    // case 3 project, client, no supply
+  } else {
+    throw new Error("invaild input");
+  }
+
+  if (typeof supply !== "number" || typeof classification !== "string" || typeof percentage !== "number" || typeof option !== "object") {
+    throw new Error("invaild input");
+  }
+
+  pyeong = null;
+  if (client === null) {
+    pyeong = null;
+  } else if (typeof client === "object" && !Array.isArray(client)) {
+    if (client.cliid !== undefined && client.name !== undefined && client.requests !== undefined) {
+      if (Array.isArray(client.requests)) {
+        if (client.requests.length !== 0) {
+          pyeong = [];
+          for (let r of client.requests) {
+            pyeong.push(r.request.space.pyeong);
+          }
+        } else {
+          throw new Error("invaild client input");
+        }
+      } else {
+        throw new Error("invaild client input");
+      }
+    } else {
+      throw new Error("invaild client input");
+    }
+  } else {
+    throw new Error("invaild client input");
+  }
+  if (pyeong === null) {
+    pyeong = initialPyeong;
+  }
+  if (typeof pyeong !== "number" && !Array.isArray(pyeong)) {
+    throw new Error("invaild pyeong input");
+  }
+  if (!(new RegExp(classRegExpCase[0], "gi")).test(classification) && !(new RegExp(classRegExpCase[1], "gi")).test(classification) && !(new RegExp(classRegExpCase[2], "gi")).test(classification)) {
+    throw new Error("invaild classification");
+  }
+  if (Array.isArray(pyeong)) {
+    if (pyeong.length === 0) {
+      throw new Error("invaild pyeong");
+    }
+    if (!pyeong.every((n) => { return (typeof n === "number"); })) {
+      if (pyeong.every((obj) => { return (typeof obj === "object"); })) {
+        pyeong = pyeong.map((obj) => { return obj.value; });
+        if (!pyeong.every((n) => { return (typeof n === "number"); })) {
+          throw new Error("invaild pyeong");
+        }
+      } else {
+        throw new Error("invaild pyeong");
+      }
+    }
+    if (pyeong.length === 1) {
+      pyeong = pyeong[0];
+      if (typeof pyeong !== "number") {
+        throw new Error("invaild pyeong");
+      }
+    }
+  }
+
+  if (Array.isArray(pyeong)) {
+    if (pyeong.every((n) => { return n >= pyeongStandard; })) {
+      pyeong = pyeong[0];
+    } else {
+      if (supply < pyeongMinAmount) {
+        pyeong = pyeong.find((n) => { return n < pyeongStandard });
+      } else {
+        if (pyeong.every((n) => { return n < pyeongStandard; })) {
+          pyeong = pyeong[0];
+        } else {
+          if (supply <= pyeongMinAmount * (1 + pyeongMinConst)) {
+            pyeong = pyeong[0];
+          } else {
+            pyeong = pyeong.find((n) => { return n >= pyeongStandard });
+          }
+        }
+      }
+    }
+  }
+
+  if (option.forcePercentage !== true) {
+    if (pyeong < pyeongStandard) {
+      percentage = pyeongPercentage;
+    }
+    if (percentage <= minimumPercentage) {
+      percentage = minimumPercentage;
+    }
+  }
+
+  if ((new RegExp(classRegExpCase[0], "gi")).test(classification)) {
+    calculate = Math.floor((supply * consumerRatio) * (1 - (percentage / 100)));
+  } else if ((new RegExp(classRegExpCase[1], "gi")).test(classification)) {
+    calculate = Math.floor(supply * (1 - (percentage / 100)));
+  } else if ((new RegExp(classRegExpCase[2], "gi")).test(classification)) {
+    calculate = Math.floor((supply - (supply * (percentage / 100))) * freeRatio);
+  }
+  calculate = Math.floor(calculate / moneyCuttingConst) * moneyCuttingConst;
+
+  commission = supply * (percentage / 100);
+  commission = Math.floor(commission / moneyCuttingConst) * moneyCuttingConst;
+
+  if (option.toArray === true) {
+    return [ calculate, commission ];
+  } else {
+    return { calculate, commission };
+  }
+}
+
+BillMaker.prototype.designerCalculation = function (supply, classification, percentage, client, option) {
+  const instance = this;
+  return BillMaker.designerCalculation(supply, classification, percentage, client, option);
+}
+
 BillMaker.billDictionary = {
   styling: {
     class: "style",
@@ -289,24 +432,12 @@ BillMaker.billDictionary = {
         ea: null,
         number: (method, distance, subObj) => { return 1; },
         amount: (method, amount, distance, subObj) => {
-          const { designer, freeRatio } = subObj;
+          const { client, designer, freeRatio } = subObj;
           let classification, percentage, calculate, commission;
-
           classification = designer.information.business.businessInfo.classification;
           percentage = designer.information.business.service.cost.percentage;
-
-          if (/일반/gi.test(classification)) {
-            calculate = Math.floor((amount * 1.1) * (1 - (percentage / 100)));
-          } else if (/간이/gi.test(classification)) {
-            calculate = Math.floor(amount * (1 - (percentage / 100)));
-          } else if (/프리/gi.test(classification)) {
-            calculate = Math.floor((amount - (amount * (percentage / 100))) * freeRatio);
-          } else {
-            calculate = Math.floor((amount * 1.1) * (1 - (percentage / 100)));
-          }
-          commission = (amount * (percentage / 100)) / 2;
-          commission = Math.floor(commission / 10) * 10;
-          return { amount: Math.floor((calculate / 2) / 10) * 10, commission };
+          [ calculate, commission ] = BillMaker.designerCalculation(amount, classification, percentage, client, { toArray: true });
+          return { amount: Math.floor((calculate / 2) / 10) * 10, commission: Math.floor((commission / 2) / 10) * 10 };
         },
         comments: []
       },
@@ -317,24 +448,12 @@ BillMaker.billDictionary = {
         ea: null,
         number: (method, distance, subObj = {}) => { return 1; },
         amount: (method, amount, distance, subObj) => {
-          const { designer, freeRatio } = subObj;
+          const { client, designer, freeRatio } = subObj;
           let classification, percentage, calculate, commission;
-
           classification = designer.information.business.businessInfo.classification;
           percentage = designer.information.business.service.cost.percentage;
-
-          if (/일반/gi.test(classification)) {
-            calculate = Math.floor((amount * 1.1) * (1 - (percentage / 100)));
-          } else if (/간이/gi.test(classification)) {
-            calculate = Math.floor(amount * (1 - (percentage / 100)));
-          } else if (/프리/gi.test(classification)) {
-            calculate = Math.floor((amount - (amount * (percentage / 100))) * freeRatio);
-          } else {
-            calculate = Math.floor((amount * 1.1) * (1 - (percentage / 100)));
-          }
-          commission = (amount * (percentage / 100)) / 2;
-          commission = Math.floor(commission / 10) * 10;
-          return { amount: Math.floor((calculate / 2) / 10) * 10, commission };
+          [ calculate, commission ] = BillMaker.designerCalculation(amount, classification, percentage, client, { toArray: true });
+          return { amount: Math.floor((calculate / 2) / 10) * 10, commission: Math.floor((commission / 2) / 10) * 10 };
         },
         comments: []
       },
@@ -347,23 +466,10 @@ BillMaker.billDictionary = {
         amount: (method, amount, distance, subObj) => {
           const { designer, freeRatio, distancePercentage } = subObj;
           let classification, calculate, commission, distanceFinalAmount;
-
           distanceFinalAmount = distance.amount * distance.number;
           classification = designer.information.business.businessInfo.classification;
-
-          if (/일반/gi.test(classification)) {
-            calculate = Math.floor((distanceFinalAmount * 1.1) * (1 - (distancePercentage / 100)));
-          } else if (/간이/gi.test(classification)) {
-            calculate = Math.floor(distanceFinalAmount * (1 - (distancePercentage / 100)));
-          } else if (/프리/gi.test(classification)) {
-            calculate = Math.floor((distanceFinalAmount - (distanceFinalAmount * (distancePercentage / 100))) * freeRatio);
-          } else {
-            calculate = Math.floor((distanceFinalAmount * 1.1) * (1 - (distancePercentage / 100)));
-          }
-          commission = Math.floor(distanceFinalAmount * (distancePercentage / 100));
-
+          [ calculate, commission ] = BillMaker.designerCalculation(distanceFinalAmount, classification, distancePercentage, null, { toArray: true, forcePercentage: true });
           calculate = (distance.number === 0 ? 0 : Math.floor(calculate / distance.number));
-
           return { amount: calculate, commission };
         },
         comments: [
@@ -2488,15 +2594,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       projectUpdateQuery["process.contract.remain.calculation.amount.consumer"] = Math.round(newSupply * (1 + vatRatio));
       classification = designer.information.business.businessInfo.classification;
       percentage = designer.information.business.service.cost.percentage;
-      if (/일반/gi.test(classification)) {
-        calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
-      } else if (/간이/gi.test(classification)) {
-        calculate = Math.floor(newSupply * (1 - (percentage / 100)));
-      } else if (/프리/gi.test(classification)) {
-        calculate = Math.floor((newSupply - (newSupply * (percentage / 100))) * freeRatio);
-      } else {
-        calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
-      }
+      [ calculate ] = BillMaker.designerCalculation(newSupply, classification, percentage, client, { toArray: true });
       projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.totalAmount"] = projectUpdateQuery["process.calculation.payments.first.amount"] * 2;
@@ -2931,15 +3029,9 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       projectUpdateQuery["process.contract.remain.calculation.amount.consumer"] = Math.round(newSupply * (1 + vatRatio));
       classification = designer.information.business.businessInfo.classification;
       percentage = designer.information.business.service.cost.percentage;
-      if (/일반/gi.test(classification)) {
-        calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
-      } else if (/간이/gi.test(classification)) {
-        calculate = Math.floor(newSupply * (1 - (percentage / 100)));
-      } else if (/프리/gi.test(classification)) {
-        calculate = Math.floor((newSupply - (newSupply * (percentage / 100))) * freeRatio);
-      } else {
-        calculate = Math.floor((newSupply * 1.1) * (1 - (percentage / 100)));
-      }
+
+      [ calculate ] = BillMaker.designerCalculation(newSupply, classification, percentage, client, { toArray: true });
+
       projectUpdateQuery["process.calculation.method"] = classification.toNormal();
       projectUpdateQuery["process.calculation.percentage"] = percentage;
       if (designer.information.business.account.length > 0) {
@@ -3818,17 +3910,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
         refreshTotalAmountRaw = 0;
       }
       classification = project.process.calculation.method;
-      if (/일반/gi.test(classification)) {
-        calculate = Math.floor((refreshTotalAmountRaw * 1.1) * (1 - (project.process.calculation.percentage / 100)));
-      } else if (/간이/gi.test(classification)) {
-        calculate = Math.floor(refreshTotalAmountRaw * (1 - (project.process.calculation.percentage / 100)));
-      } else if (/프리/gi.test(classification)) {
-        calculate = Math.floor((refreshTotalAmountRaw - (refreshTotalAmountRaw * (project.process.calculation.percentage / 100))) * freeRatio);
-      } else {
-        calculate = Math.floor((refreshTotalAmountRaw * 1.1) * (1 - (project.process.calculation.percentage / 100)));
-      }
-      commission = refreshTotalAmountRaw * (project.process.calculation.percentage / 100);
-      commission = Math.floor(commission / 10) * 10;
+      [ calculate, commission ] = BillMaker.designerCalculation(refreshTotalAmountRaw, classification, project.process.calculation.percentage, client, { toArray: true });
       refreshTotalAmount = Math.floor(calculate / 10) * 10;
 
       if (!firstBoo && !remainBoo) {
