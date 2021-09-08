@@ -1478,8 +1478,26 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
       const { classification, cliid } = equalJson(req.body);
       const supply = Number(req.body.supply);
       const percentage = Number(req.body.percentage);
-      const client = await back.getClientById(cliid, { selfMongo: instance.mongo });
       let calculate, commission;
+      let project, client;
+
+      if (/^c/.test(req.body.cliid)) {
+        client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+        if (client === null) {
+          throw new Error("invaild cliid");
+        }
+      } else if (/^p/.test(req.body.proid)) {
+        project = await back.getProjectById(cliid, { selfMongo: instance.mongo });
+        if (project === null) {
+          throw new Error("invaild proid");
+        }
+        client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
+        if (client === null) {
+          throw new Error("invaild cliid");
+        }
+      } else {
+        throw new Error("invaild cliid");
+      }
 
       [ calculate, commission ] = bill.designerCalculation(supply, classification, percentage, client, { toArray: true });
 

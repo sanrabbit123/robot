@@ -4706,6 +4706,38 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, ghostRequest, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = "/styleCuration_styleCheckComplete";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.cliid === undefined || req.body.name === undefined || req.body.image === undefined) {
+        throw new Error("invaild post");
+      }
+      const { cliid, name, image } = equalJson(req.body);
+      let text, channel;
+
+      text = name + " 고객님이 스타일 찾기의 사진 선택을 완료하였습니다!";
+      channel = "#404_curation";
+
+      instance.mother.slack_bot.chat.postMessage({ text, channel });
+      ghostRequest("voice", { text });
+
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify({ message: "done" }));
+
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message, channel: "#error_log" });
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 
 //ROUTING ----------------------------------------------------------------------
 

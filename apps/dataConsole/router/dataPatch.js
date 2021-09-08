@@ -3544,28 +3544,6 @@ DataPatch.prototype.projectWhiteViewStandard = function () {
 }
 
 DataPatch.prototype.projectChainingTarget = function () {
-  const methodFilter = function (supply, method, percentage) {
-    let result, ratio, fee;
-
-    if (typeof supply === "string") {
-      supply = Number(supply.replace(/[^0-9\.\-]/g, ''));
-    }
-    fee = percentage / 100;
-
-    if (/일반/gi.test(method)) {
-      result = Math.round((supply * 1.1) * (1 - fee));
-    } else if (/간이/gi.test(method)) {
-      result = Math.round(supply * (1 - fee));
-    } else if (/프리/gi.test(method)) {
-      ratio = 0.967;
-      result = Math.round((supply - (supply * fee)) * ratio);
-    } else {
-      result = Math.round((supply * 1.1) * (1 - fee));
-    }
-
-    return result;
-  };
-
   const chainingMethods = {
     remainSupply: async function (thisCase, value) {
       if (typeof value === "string") {
@@ -3575,16 +3553,25 @@ DataPatch.prototype.projectChainingTarget = function () {
       let resultObj;
       let remainVat, remainConsumer, remainPure;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+      let res;
 
       remainVat = Math.round(value * 0.1);
       remainConsumer = Math.round(value * 1.1);
       remainPure = remainConsumer - Number(thisCase.firstAmount.replace(/[^0-9\.\-]/g, ''));
 
-      paymentsTotalAmount = methodFilter(value, thisCase.method, thisCase.percentage);
+      res = await GeneralJs.ajaxJson({
+        supply: value,
+        classification: thisCase.method,
+        percentage: thisCase.percentage,
+        cliid: thisCase.proid
+      }, PYTHONHOST + "/designerCalculation");
+
+      paymentsTotalAmount = Number(res.calculate);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
       resultObj = { remainVat, remainConsumer, remainPure, paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount };
+
       return { chainingColumns: Object.keys(resultObj), chainingValues: resultObj };
     },
     remainVat: async function (thisCase, value) {
@@ -3595,12 +3582,20 @@ DataPatch.prototype.projectChainingTarget = function () {
       let resultObj;
       let remainSupply, remainConsumer, remainPure;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+      let res;
 
       remainSupply = value * 10;
       remainConsumer = remainSupply + value;
       remainPure = remainConsumer - Number(thisCase.firstAmount.replace(/[^0-9\.\-]/g, ''));
 
-      paymentsTotalAmount = methodFilter(value * 10, thisCase.method, thisCase.percentage);
+      res = await GeneralJs.ajaxJson({
+        supply: value * 10,
+        classification: thisCase.method,
+        percentage: thisCase.percentage,
+        cliid: thisCase.proid
+      }, PYTHONHOST + "/designerCalculation");
+
+      paymentsTotalAmount = Number(res.calculate);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
@@ -3615,12 +3610,20 @@ DataPatch.prototype.projectChainingTarget = function () {
       let resultObj;
       let remainSupply, remainVat, remainPure;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+      let res;
 
       remainVat = Math.round(value / 11);
       remainSupply = value - remainVat;
       remainPure = value - Number(thisCase.firstAmount.replace(/[^0-9\.\-]/g, ''));
 
-      paymentsTotalAmount = methodFilter(remainSupply, thisCase.method, thisCase.percentage);
+      res = await GeneralJs.ajaxJson({
+        supply: remainSupply,
+        classification: thisCase.method,
+        percentage: thisCase.percentage,
+        cliid: thisCase.proid
+      }, PYTHONHOST + "/designerCalculation");
+
+      paymentsTotalAmount = Number(res.calculate);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
@@ -3635,12 +3638,20 @@ DataPatch.prototype.projectChainingTarget = function () {
       let resultObj;
       let remainSupply, remainVat, remainConsumer;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+      let res;
 
       remainConsumer = value + Number(thisCase.firstAmount.replace(/[^0-9\.\-]/g, ''));
       remainVat = Math.round(remainConsumer / 11);
       remainSupply = remainConsumer - remainVat;
 
-      paymentsTotalAmount = methodFilter(remainSupply, thisCase.method, thisCase.percentage);
+      res = await GeneralJs.ajaxJson({
+        supply: remainSupply,
+        classification: thisCase.method,
+        percentage: thisCase.percentage,
+        cliid: thisCase.proid
+      }, PYTHONHOST + "/designerCalculation");
+
+      paymentsTotalAmount = Number(res.calculate);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
@@ -3651,8 +3662,16 @@ DataPatch.prototype.projectChainingTarget = function () {
 
       let resultObj;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+      let res;
 
-      paymentsTotalAmount = methodFilter(thisCase.remainSupply, value, thisCase.percentage);
+      res = await GeneralJs.ajaxJson({
+        supply: thisCase.remainSupply,
+        classification: value,
+        percentage: thisCase.percentage,
+        cliid: thisCase.proid
+      }, PYTHONHOST + "/designerCalculation");
+
+      paymentsTotalAmount = Number(res.calculate);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
@@ -3666,8 +3685,16 @@ DataPatch.prototype.projectChainingTarget = function () {
 
       let resultObj;
       let paymentsTotalAmount, paymentsFirstAmount, paymentsRemainAmount;
+      let res;
 
-      paymentsTotalAmount = methodFilter(thisCase.remainSupply, thisCase.method, value);
+      res = await GeneralJs.ajaxJson({
+        supply: thisCase.remainSupply,
+        classification: thisCase.method,
+        percentage: value,
+        cliid: thisCase.proid
+      }, PYTHONHOST + "/designerCalculation");
+
+      paymentsTotalAmount = Number(res.calculate);
       paymentsFirstAmount = Math.round(paymentsTotalAmount / 2);
       paymentsRemainAmount = Math.round(paymentsTotalAmount / 2);
 
