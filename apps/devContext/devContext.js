@@ -69,10 +69,10 @@ DevContext.prototype.launching = async function () {
 
 
     const clients = await back.getClientsByQuery({}, { selfMongo: this.MONGOLOCALC });
-
-
-    console.log(BillMaker.designerCalculation(1400000, "프리랜서", 10, clients[0], { forcePercentage: undefined }));
-
+    const designers = await back.getDesignersByQuery({}, { selfMongo: this.MONGOLOCALC });
+    const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo: this.MONGOLOCALC });
+    console.log(BillMaker.designerCalculation(projects[102], clients[0], { toArray: true }));
+    console.log(work.designerCalculation(projects[102], clients[0], { toArray: true }));
 
     /*
     const selfMongo = this.MONGOLOCALC;

@@ -1,9 +1,11 @@
 const BackWorker = function () {
-  const Mother = require(process.cwd() + "/apps/mother.js");
-  this.mother = new Mother();
   this.dir = process.cwd() + "/apps/backMaker";
+  const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(this.dir + "/backMaker.js");
+  const BillMaker = require(process.cwd() + "/apps/billMaker/billMaker.js");
+  this.mother = new Mother();
   this.back = new BackMaker();
+  this.bill = new BillMaker();
   this.mapDir = this.dir + "/map";
   this.pastDir = this.dir + "/intoMap";
   this.tempDir = process.cwd() + "/temp";
@@ -1595,6 +1597,10 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
   } catch (e) {
     console.log(e);
   }
+}
+
+BackWorker.prototype.designerCalculation = function (supply, classification, percentage, client, option) {
+  return this.bill.designerCalculation(supply, classification, percentage, client, option);
 }
 
 module.exports = BackWorker;

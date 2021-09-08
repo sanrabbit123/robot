@@ -28,38 +28,53 @@ BillMaker.designerCalculation = function (supply, classification, percentage, cl
   const initialPyeong = 34;
   const classRegExpCase = [ "일반", "간이", "프리" ];
   const moneyCuttingConst = 10;
-
+  let thisMode;
   let pyeong;
   let calculate, commission;
 
   if (typeof supply === "number" && typeof classification === "string" && typeof percentage === "number" && (typeof client === "object" || client === null) && typeof option === "object") {
+
     // case 0 pass
+    thisMode = 0;
+
   } else if (typeof supply === "number" && typeof classification === "object" && (typeof percentage === "object" || percentage === null) && typeof client === "object" && option === undefined) {
     if (classification.proid !== undefined) {
+
       // case 1 project, client
-
-      
-
-
-
+      option = client;
+      client = percentage;
+      percentage = classification.process.calculation.percentage;
+      classification = classification.process.calculation.method;
+      thisMode = 1;
 
     } else if (classification.desid !== undefined) {
+
       // case 2 designer, client
-
-
-
+      option = client;
+      client = percentage;
+      percentage = classification.information.business.service.cost.percentage;
+      classification = classification.information.business.businessInfo.classification;
+      thisMode = 2;
 
     } else {
       throw new Error("invaild input");
     }
   } else if (typeof supply === "object" && (typeof classification === "object" || classification === null) && typeof percentage === "object" && client === undefined && option === undefined) {
+
     // case 3 project, client, no supply
-
-
-
+    option = percentage;
+    client = classification;
+    percentage = supply.process.calculation.percentage;
+    classification = supply.process.calculation.method;
+    supply = supply.process.contract.remain.calculation.amount.supply;
+    thisMode = 3;
 
   } else {
     throw new Error("invaild input");
+  }
+
+  if (typeof classification === "object" && classification.value !== undefined) {
+    classification = classification.value;
   }
 
   if (typeof supply !== "number" || typeof classification !== "string" || typeof percentage !== "number" || typeof option !== "object") {
@@ -169,7 +184,6 @@ BillMaker.designerCalculation = function (supply, classification, percentage, cl
 }
 
 BillMaker.prototype.designerCalculation = function (supply, classification, percentage, client, option) {
-  const instance = this;
   return BillMaker.designerCalculation(supply, classification, percentage, client, option);
 }
 
