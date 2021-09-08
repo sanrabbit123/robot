@@ -68,6 +68,20 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // let targets;
+    // let apps;
+    //
+    // targets = [];
+    //
+    // apps = await treeParsing(`${process.cwd()}/apps`);
+    //
+    // console.log(apps);
+
+
+
+
+
+
 
 
 
@@ -1191,7 +1205,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2008_aa01s" ]);
+    // await work.newDesignerToFront([ "d2104_aa07s" ]);
 
 
     // new designer set proposal setting

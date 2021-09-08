@@ -3560,7 +3560,6 @@ DataPatch.prototype.projectChainingTarget = function () {
       ratio = 0.967;
       result = Math.round((supply - (supply * fee)) * ratio);
     } else {
-      console.log("사업자 일반으로 계산");
       result = Math.round((supply * 1.1) * (1 - fee));
     }
 

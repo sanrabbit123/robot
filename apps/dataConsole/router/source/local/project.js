@@ -4412,7 +4412,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                               percentage = 100;
                                               if (!window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
                                                 do {
-                                                  raw = window.prompt("부분 환불의 비율을 알려주세요! (예: 50%)");
+                                                  raw = window.prompt("돌려줄 금액의 비율을 알려주세요! (예: 50%)");
                                                   if (raw !== null) {
                                                     percentage = Number(raw.replace(/[^0-9]/gi, ''));
                                                   } else {
