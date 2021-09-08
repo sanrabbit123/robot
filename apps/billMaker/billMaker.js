@@ -23,7 +23,6 @@ BillMaker.designerCalculation = function (supply, classification, percentage, cl
   const pyeongStandard = 15;
   const pyeongMinAmount = 130 * (10000);
   const pyeongMinConst = 0.5;
-  const pyeongPercentage = 20;
   const minimumPercentage = 20;
   const initialPyeong = 34;
   const classRegExpCase = [ "일반", "간이", "프리" ];
@@ -171,7 +170,7 @@ BillMaker.designerCalculation = function (supply, classification, percentage, cl
 
   if (option.forcePercentage !== true) {
     if (pyeong < pyeongStandard) {
-      percentage = pyeongPercentage;
+      percentage = minimumPercentage;
     }
     if (percentage <= minimumPercentage) {
       percentage = minimumPercentage;
