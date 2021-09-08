@@ -103,6 +103,7 @@ MirrorRouter.prototype.callHistory = async function () {
         query = { id, pass, calltype, page };
         res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
         data = res.data;
+        console.log(data);
         if (data.DATAS === null) {
           break;
         }
