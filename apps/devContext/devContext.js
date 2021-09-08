@@ -66,22 +66,14 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
 
 
-    const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    await MONGOCONSOLEC.connect();
 
-    const r = new MirrorRouter(null, null, MONGOCONSOLEC);
-    await r.callHistory();
+    let targets;
+    let apps;
 
-    await MONGOCONSOLEC.close();
+    targets = [];
+    apps = await treeParsing(`${process.cwd()}/apps`);
 
-    // let targets;
-    // let apps;
-    //
-    // targets = [];
-    //
-    // apps = await treeParsing(`${process.cwd()}/apps`);
-    //
-    // console.log(apps);
+    console.log(apps);
 
 
 
