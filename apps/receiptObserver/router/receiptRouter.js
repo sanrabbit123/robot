@@ -1393,9 +1393,12 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       }
       let report, option, client, designer;
 
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + req.body.percentage, channel: "#error_log" });
+
       option = { selfMongo, selfCoreMongo: instance.mongo };
       if (req.body.percentage !== undefined) {
         if (!Number.isNaN(Number(req.body.percentage))) {
+          instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + req.body.percentage, channel: "#error_log" });
           option.percentage = req.body.percentage;
         }
       }
