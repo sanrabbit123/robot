@@ -1358,7 +1358,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, sleep } = this.mother;
+  const { equalJson, sleep, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/requestRefund";
   obj.func = async function (req, res) {
@@ -1376,7 +1376,8 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       if (Number.isNaN(requestIndex) || Number.isNaN(payIndex)) {
         throw new Error("invaild post");
       }
-      let report, option, client, designer;
+      let report, option, client, designer, project, pastProject, proid;
+      let timeConst, map;
 
       option = { selfMongo, selfCoreMongo: instance.mongo };
       if (req.body.percentage !== undefined) {
@@ -1398,10 +1399,41 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
 
       report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
       report.bill = report.bill.toNormal();
+      report.pastProject = report.pastProject.toNormal();
       report.project = report.project.toNormal();
       report.client = report.client.toNormal();
       client = report.client;
+      pastProject = report.pastProject;
+      project = report.project;
+      proid = project.proid;
       designer = await back.getDesignerById(report.desid, { selfMongo: instance.mongo });
+
+      timeConst = 410;
+      map = [
+        {
+          column: "paymentsTotalAmount",
+          position: "process.calculation.payments.totalAmount",
+          pastValue: pastProject.process.calculation.payments.totalAmount,
+          finalValue: project.process.calculation.payments.totalAmount,
+        },
+        {
+          column: "paymentsFirstAmount",
+          position: "process.calculation.payments.first.amount",
+          pastValue: pastProject.process.calculation.payments.first.amount,
+          finalValue: project.process.calculation.payments.first.amount,
+        },
+        {
+          column: "paymentsRemainAmount",
+          position: "process.calculation.payments.remain.amount",
+          pastValue: pastProject.process.calculation.payments.remain.amount,
+          finalValue: project.process.calculation.payments.remain.amount,
+        },
+      ];
+
+      for (let { column, position, pastValue, finalValue } of map) {
+        await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
+        await sleep(timeConst);
+      }
 
       kakao.sendTalk((/card/gi.test(kind) ? "refundCard" : "refundVAccount"), client.name, client.phone, {
         client: client.name,

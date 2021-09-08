@@ -3980,6 +3980,8 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
 
       resultObj.bill = await this.getBillById(bilid, { selfMongo: MONGOC });
+      resultObj.pastProject = resultObj.project;
+      resultObj.project = await back.getProjectById(thisBill.links.proid, { selfMongo: MONGOCOREC });
 
     } else {
       resultObj = null;
