@@ -1481,12 +1481,12 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
       let calculate, commission;
       let project, client;
 
-      if (/^c/.test(req.body.cliid)) {
+      if (/^c/.test(cliid)) {
         client = await back.getClientById(cliid, { selfMongo: instance.mongo });
         if (client === null) {
           throw new Error("invaild cliid");
         }
-      } else if (/^p/.test(req.body.proid)) {
+      } else if (/^p/.test(cliid)) {
         project = await back.getProjectById(cliid, { selfMongo: instance.mongo });
         if (project === null) {
           throw new Error("invaild proid");
