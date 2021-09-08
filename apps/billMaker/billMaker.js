@@ -37,13 +37,27 @@ BillMaker.designerCalculation = function (supply, classification, percentage, cl
   } else if (typeof supply === "number" && typeof classification === "object" && (typeof percentage === "object" || percentage === null) && typeof client === "object" && option === undefined) {
     if (classification.proid !== undefined) {
       // case 1 project, client
+
+      
+
+
+
+
     } else if (classification.desid !== undefined) {
       // case 2 designer, client
+
+
+
+
     } else {
       throw new Error("invaild input");
     }
   } else if (typeof supply === "object" && (typeof classification === "object" || classification === null) && typeof percentage === "object" && client === undefined && option === undefined) {
     // case 3 project, client, no supply
+
+
+
+
   } else {
     throw new Error("invaild input");
   }

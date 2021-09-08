@@ -4588,6 +4588,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           needs: "style," + desid + "," + proid + "," + method,
                                         }
                                       }, "/alimTalk");
+                                      window.alert("안내 발송을 완료하였습니다!");
                                     }
                                   } catch (e) {
                                     console.log(e);
@@ -4713,6 +4714,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           needs: "style," + desid + "," + proid + "," + method,
                                         }
                                       }, "/alimTalk");
+                                      window.alert("안내 발송을 완료하였습니다!");
                                     }
                                   } catch (e) {
                                     console.log(e);
