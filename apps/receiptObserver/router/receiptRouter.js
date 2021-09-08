@@ -1393,13 +1393,16 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       }
       let report, option, client, designer;
 
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + req.body.percentage, channel: "#error_log" });
-
       option = { selfMongo, selfCoreMongo: instance.mongo };
       if (req.body.percentage !== undefined) {
-        if (!Number.isNaN(Number(req.body.percentage))) {
-          instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + req.body.percentage, channel: "#error_log" });
-          option.percentage = req.body.percentage;
+        if (typeof req.body.percentage === "string") {
+          if (!Number.isNaN(Number(req.body.percentage.replace(/[^0-9]/gi, '')))) {
+            option.percentage = Number(req.body.percentage);
+          }
+        } else if (typeof req.body.percentage === "number") {
+          if (!Number.isNaN(req.body.percentage)) {
+            option.percentage = Number(req.body.percentage);
+          }
         }
       }
       if (req.body.accountNumber !== undefined && req.body.bankName !== undefined && req.body.accountName !== undefined) {
