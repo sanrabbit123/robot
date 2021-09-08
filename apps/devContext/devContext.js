@@ -66,6 +66,10 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
 
 
+    const r = new MirrorRouter();
+
+    await r.callHistory();
+    console.log("done");
 
     // let targets;
     // let apps;
