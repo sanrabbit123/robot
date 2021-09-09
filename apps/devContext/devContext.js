@@ -68,7 +68,50 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("/프", false));
 
 
-    // console.log(await requestSystem(`http://172.30.1.47:3000/shell`, { command: "python3 ./temp/app.py" }, { headers: { "Content-Type": "application/json" } }))
+    // console.log((await requestSystem(`http://172.30.1.47:3000/shell`, { command: "python3 ./temp/app.py" }, { headers: { "Content-Type": "application/json" } })).data.stdout.split("\n").filter((n) => { return n.trim() !== '' }).map((n) => { return Number(n.trim()); }));
+
+
+
+
+    const selfMongo = this.MONGOLOCALC;
+    const selfPythonMongo = this.MONGOLOCALC;
+    const projects = await back.getProjectsByQuery({
+      $and: [
+        { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } },
+        { "process.contract.remain.date": { $lt: new Date(2000, 0, 1) } },
+        { "process.status": { $regex: "^[대진홀]" } }
+      ]
+    }, { selfMongo });
+    let thisBills, thisBill;
+    let whereQuery;
+
+    for (let p of projects) {
+      whereQuery = {};
+      whereQuery["links.proid"] = p.proid;
+      whereQuery["links.method"] = p.service.online ? "online" : "offline";
+      thisBills = await bill.getBillsByQuery(whereQuery, { selfMongo });
+      if (thisBills.length !== 1) {
+        console.log(p.proid, p.service.online);
+      }
+
+    }
+
+
+
+
+
+
+
+    // await bill.passiveSync("b2193_aa10s", "최미란", 1, 330000, new Date(2021, 7, 26, 15, 0, 0), "계좌이체", "현금 영수증");
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1246,6 +1289,10 @@ DevContext.prototype.launching = async function () {
     //   subject: "안녕하세요!",
     //   contents: "안녕하세요.",
     // }));
+
+
+    // bill passive sync
+    // console.log(await bill.passiveSync("b2193_aa10s", "최미란", 1, 330000, new Date(2021, 7, 26, 15, 0, 0), "계좌이체", "현금 영수증"));
 
 
     // ready page block

@@ -1547,7 +1547,7 @@ ProjectJs.prototype.spreadData = async function (search = null) {
       clients = [];
     }
 
-    whereQuery = { "information.contract.status": { $regex: "완료" } };
+    whereQuery = {};
     designers = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getDesigners"));
     GeneralJs.stacks.allDesignerTong = designers;
 

@@ -548,20 +548,19 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
         if (paymentComplete) {
-          if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
-
+          if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
             projectQuery = {};
             if (proposal.fee.length === 1) {
               pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
             } else {
-              for (let obj of fee) {
+              for (let obj of proposal.fee) {
                 if (obj.method === thisBill.links.method) {
                   pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
                 }
               }
             }
 
-            if (data.goodName.trim() === "홈리에종 계약금") {
+            if (/계약금/gi.test(data.goodName.trim())) {
               projectQuery["process.contract.first.date"] = new Date();
               projectQuery["process.contract.first.calculation.amount"] = amount;
               projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
@@ -621,7 +620,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
                 designer: designer.designer,
               });
 
-            } else if (data.goodName.trim() === "홈리에종 잔금") {
+            } else if (/잔금/gi.test(data.goodName.trim())) {
 
               projectQuery["process.status"] = "진행중";
               projectQuery["process.contract.remain.date"] = new Date();
@@ -695,7 +694,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   obj.func = async function (req, res) {
     try {
       const oid = req.body.no_oid;
-      const inisis = "이니시스";
+      const inisis = "현금 영수증";
       const bankFrom = req.body.nm_inputbank;
       const nameFrom = req.body.nm_input;
       const bills = await bill.getBillsByQuery({ "links.oid": { $elemMatch: { $regex: oid } } }, { selfMongo: instance.mongolocal });
@@ -814,20 +813,20 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       if (paymentComplete) {
-        if (data.goodName.trim() === "홈리에종 계약금" || data.goodName.trim() === "홈리에종 잔금") {
+        if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
 
           projectQuery = {};
           if (proposal.fee.length === 1) {
             pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
           } else {
-            for (let obj of fee) {
+            for (let obj of proposal.fee) {
               if (obj.method === thisBill.links.method) {
                 pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
               }
             }
           }
 
-          if (data.goodName.trim() === "홈리에종 계약금") {
+          if (/계약금/gi.test(data.goodName.trim())) {
             projectQuery["process.contract.first.date"] = new Date();
             projectQuery["process.contract.first.calculation.amount"] = amount;
             projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
@@ -887,7 +886,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
               designer: designer.designer,
             });
 
-          } else if (data.goodName.trim() === "홈리에종 잔금") {
+          } else if (/잔금/gi.test(data.goodName.trim())) {
 
             projectQuery["process.status"] = "진행중";
             projectQuery["process.contract.remain.date"] = new Date();

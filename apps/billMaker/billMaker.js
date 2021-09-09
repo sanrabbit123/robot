@@ -1837,6 +1837,92 @@ BillMaker.prototype.itemEjection = async function (id, itemKey, option = { selfM
   }
 }
 
+BillMaker.prototype.passiveSync = async function (bilid, clientName, requestNumber, amount, payDate, method, proof, option = { selfMongo: null }) {
+  if (typeof bilid !== "string" || typeof clientName !== "string") {
+    throw new Error("invaild input");
+  }
+  if (typeof requestNumber !== "number" || typeof amount !== "number") {
+    throw new Error("invaild input");
+  }
+  if (!(payDate instanceof Date)) {
+    throw new Error("invaild input");
+  }
+  if (typeof method !== "string" || typeof proof !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { mongo, mongopythoninfo, equalJson } = this.mother;
+  const address = this.address;
+  let selfMongo, selfBoo;
+  if (option.selfMongo === undefined || option.selfMongo === null) {
+    selfMongo = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+    selfBoo = false;
+  } else {
+    selfMongo = option.selfMongo;
+    selfBoo = true;
+  }
+  try {
+    if (!selfBoo){
+      await selfMongo.connect();
+    }
+
+    let whereQuery, updateQuery;
+    let itemArr, payArr, cancelArr;
+    let infoArr;
+    let payObject;
+    let proofs;
+    let thisBill;
+
+    thisBill = await this.getBillById(bilid, { selfMongo });
+
+    whereQuery = { bilid };
+    updateQuery = {};
+
+    infoArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].info));
+    infoArr.unshift({
+      data: {
+        "mid": address.officeinfo.inicis.mid,
+        "tid": "",
+        "TotPrice": amount,
+        "MOID": "",
+        "payMethod": method,
+        "vactBankName": method,
+      }
+    });
+    updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
+
+    itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
+    payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
+    cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
+    payObject = this.returnBillDummies("pay");
+    payObject.date = payDate;
+    payObject.amount = amount;
+    payObject.oid = "";
+    payArr.unshift(payObject);
+
+    updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+    updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
+
+    proofs = this.returnBillDummies("proofs");
+    proofs.date = payDate;
+    proofs.method = method;
+    proofs.proof = proof;
+    proofs.to = clientName;
+    thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
+    updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
+
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo });
+
+    return "done";
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (!selfBoo){
+      await selfMongo.close();
+    }
+  }
+}
+
 BillMaker.prototype.travelInjection = async function (injectionCase, proid, method, number, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof injectionCase !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof number !== "number") {
     throw new Error("invaild input");
@@ -3693,7 +3779,6 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     let clientIp;
     let mid, tid;
     let price, confirmPrice;
-    let currency;
     let hash;
     let accountNumber, bankName;
     let refundAcctNum, refundBankCode, refundAcctName;
@@ -4000,6 +4085,154 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
       resultObj = null;
       console.log("error : " + JSON.stringify(res.data, null, 2));
     }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+    return resultObj;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof bilid !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongopythoninfo, mongoinfo, requestSystem, ipCheck, equalJson } = this.mother;
+  const now = new Date();
+  const designerCancel = BillMaker.billDictionary.styling.etc.designerCancel;
+  try {
+    let response;
+    let thisBill, thisData;
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let whereQuery, updateQuery;
+    let resultObj;
+    let project;
+    let projectWhereQuery, projectUpdateQuery;
+    let firstBoo, remainBoo;
+    let firstResponse, secondResponse;
+    let firstResponseIndex, secondResponseIndex;
+    let firstResponseIndexItemIndex, secondResponseIndexItemIndex;
+    let num;
+    let tempObj;
+    let cancelItem;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+
+    firstResponse = null;
+    secondResponse = null;
+    firstResponseIndexItemIndex = null;
+    secondResponseIndexItemIndex = null;
+    num = 0;
+    for (let res of thisBill.responses) {
+      if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+        firstResponse = res;
+        firstResponseIndex = num;
+        break;
+      }
+      num++;
+    }
+    num = 0;
+    for (let item of thisBill.responses[firstResponseIndex].items) {
+      if (item.class === "designerFeeFirst") {
+        firstResponseIndexItemIndex = num;
+      }
+      num++;
+    }
+    num = 0;
+    for (let res of thisBill.responses) {
+      if (res.name === BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
+        secondResponse = res;
+        secondResponseIndex = num;
+        break;
+      }
+      num++;
+    }
+    num = 0;
+    for (let item of thisBill.responses[secondResponseIndex].items) {
+      if (item.class === "designerFeeRemain") {
+        secondResponseIndexItemIndex = num;
+      }
+      num++;
+    }
+    if (firstResponse === null || secondResponse === null || firstResponseIndexItemIndex === null || secondResponseIndexItemIndex === null) {
+      throw new Error("invaild response structure");
+    }
+
+    project = await back.getProjectById(thisBill.links.proid, { selfMongo: MONGOCOREC });
+
+    //report
+    resultObj = { bilid };
+    resultObj.bill = thisBill;
+    resultObj.proid = project.proid;
+    resultObj.cliid = project.cliid;
+    resultObj.desid = thisBill.links.desid;
+    resultObj.project = project;
+
+    whereQuery = { bilid };
+    updateQuery = {};
+    projectWhereQuery = { proid: project.proid };
+    projectUpdateQuery = {};
+
+    cancelItem = this.returnBillDummies("responseItems");
+    cancelItem.id = thisBill.bilid + designerCancel.id;
+    cancelItem.class = designerCancel.class;
+    cancelItem.name = designerCancel.name;
+    cancelItem.description = designerCancel.description;
+    cancelItem.unit = designerCancel.unit;
+    cancelItem.amount = designerCancel.amount;
+
+    updateQuery["responses." + String(firstResponseIndex) + ".items"] = [ cancelItem ];
+    updateQuery["responses." + String(firstResponseIndex) + ".comments"] = designerCancel.comments;
+    updateQuery["responses." + String(secondResponseIndex) + ".removal"] = now;
+
+    projectUpdateQuery["process.contract.first.cancel"] = now;
+    projectUpdateQuery["process.contract.form.date.cancel"] = now;
+    projectUpdateQuery["process.calculation.payments.totalAmount"] = designerCancel.amount.pure;
+    projectUpdateQuery["process.calculation.payments.first.amount"] = designerCancel.amount.pure;
+    projectUpdateQuery["process.calculation.payments.remain.amount"] = 0;
+
+    await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });
+    await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
+
+    resultObj.bill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    resultObj.pastProject = resultObj.project;
+    resultObj.project = await back.getProjectById(thisBill.links.proid, { selfMongo: MONGOCOREC });
 
     if (!selfBoo) {
       await MONGOC.close();
