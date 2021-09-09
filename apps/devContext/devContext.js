@@ -68,7 +68,9 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("/프", false));
 
 
+    const voice = new PlayAudio();
 
+    voice.textToVoice(String("안녕하세요!"));
 
 
 
