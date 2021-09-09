@@ -1537,7 +1537,7 @@ ReceiptRouter.prototype.rou_post_contractCancel = function () {
       });
       res.send(JSON.stringify(report));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_contractCancel): " + e.message, channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",

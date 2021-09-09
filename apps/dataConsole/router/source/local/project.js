@@ -4593,6 +4593,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     }
                                     if (window.confirm(client.name + " 고객님께 출장비 안내를 보낼까요?")) {
                                       await ajaxJson({
+                                        id: client.cliid,
+                                        column: null,
+                                        value: null,
+                                        email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                                        send: "universalEstimation",
+                                      }, "/updateClientHistory");
+                                      await ajaxJson({
                                         method: "travelPayment",
                                         name: client.name,
                                         phone: client.phone,
@@ -4720,6 +4727,13 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                     }
                                     client = (await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients"))[0];
                                     if (window.confirm(client.name + " 고객님께 " + thisName + " 안내를 보낼까요?")) {
+                                      await ajaxJson({
+                                        id: client.cliid,
+                                        column: null,
+                                        value: null,
+                                        email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                                        send: "universalEstimation",
+                                      }, "/updateClientHistory");
                                       await ajaxJson({
                                         method: thisAlim,
                                         name: client.name,

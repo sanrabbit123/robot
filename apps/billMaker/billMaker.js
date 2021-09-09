@@ -1885,8 +1885,9 @@ BillMaker.prototype.passiveSync = async function (bilid, clientName, requestNumb
         "tid": "",
         "TotPrice": amount,
         "MOID": "",
-        "payMethod": method,
+        "payMethod": (/card/gi.test(method) || /카드/gi.test(method)) ? "CARD" : "CASH",
         "vactBankName": method,
+        "P_FN_NM": method
       }
     });
     updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;

@@ -4464,7 +4464,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               moneyParsingTargetArr = moneyParsingTarget.split(" ");
 
               const desid = /d[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]/.exec(this.textContent)[0];
-              const onoffLine = /온라인/gi.test(this.textContent);
+              const onoffLine = /온/gi.test(this.textContent);
               const thisMoney = Number((moneyParsingTargetArr[moneyParsingTargetArr.length - 1]).replace(/[^0-9\.]/g, '')) * 10000;
               let contractFirst, supply, vat, consumer, classification, percentage, bankName, bankTo, calculate, ratio;
               let method;

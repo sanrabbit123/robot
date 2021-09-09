@@ -1474,10 +1474,12 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         if (column === "important") {
           updateQuery[column] = (Number(value) === 1);
         } else {
-          if (value === "true" || value === "false") {
-            updateQuery[column] = (value === "true");
-          } else {
-            updateQuery[column] = value;
+          if (column !== null) {
+            if (value === "true" || value === "false") {
+              updateQuery[column] = (value === "true");
+            } else {
+              updateQuery[column] = value;
+            }
           }
         }
         await back.createHistory(method, updateQuery, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
@@ -1485,30 +1487,35 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       } else {
         whereQuery = {};
         whereQuery[standard] = id;
+        updateQuery = {};
         if (column === "important") {
           updateQuery[column] = (Number(value) === 1);
         } else {
-          if (value === "true" || value === "false") {
-            updateQuery[column] = (value === "true");
-          } else {
-            updateQuery[column] = value;
+          if (colmun !== null) {
+            if (value === "true" || value === "false") {
+              updateQuery[column] = (value === "true");
+            } else {
+              updateQuery[column] = value;
+            }
           }
         }
         await back.updateHistory(method, [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
       }
 
-      await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
-      const dir = await fileSystem(`readDir`, [ logDir ]);
-      fileTarget = null;
-      for (let fileName of dir) {
-        if ((new RegExp("^" + id)).test(fileName)) {
-          fileTarget = fileName;
+      if (column !== null) {
+        await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
+        const dir = await fileSystem(`readDir`, [ logDir ]);
+        fileTarget = null;
+        for (let fileName of dir) {
+          if ((new RegExp("^" + id)).test(fileName)) {
+            fileTarget = fileName;
+          }
         }
+        if (fileTarget !== null) {
+          shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
+        }
+        await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
       }
-      if (fileTarget !== null) {
-        shell.exec(`rm -rf ${shellLink(logDir)}/${fileTarget}`);
-      }
-      await fileSystem(`write`, [ `${instance.dir}/log/${id}__name__${thisPerson}`, `0` ]);
 
       if (column === "manager") {
         if (managerInteraction[method] !== undefined) {
@@ -1724,6 +1731,30 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         if (req.body.retryProposal === undefined) {
           await back.updateProject([ { proid }, { "proposal.date": new Date() } ], { selfMongo: instance.mongo });
         }
+
+        historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        if (historyObj === null) {
+          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
+          historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
+        }
+        page = "designerProposal";
+        cookies = DataRouter.cookieParsing(req);
+        dummy = {
+          page,
+          date: new Date(),
+          mode: null,
+          who: {
+            name: cookies.homeliaisonConsoleLoginedName,
+            email: cookies.homeliaisonConsoleLoginedEmail
+          }
+        };
+        if (Array.isArray(historyObj.curation.analytics.send)) {
+          historyObj.curation.analytics.send.push(dummy);
+        } else {
+          historyObj.curation.analytics.send = [ dummy ];
+        }
+        await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
+
         if (req.body.year !== undefined && req.body.month !== undefined && req.body.date !== undefined && req.body.hour !== undefined && req.body.minute !== undefined && req.body.second !== undefined) {
           const { year, month, date, hour, minute, second } = req.body;
           let message, command, time;
@@ -1748,30 +1779,6 @@ DataRouter.prototype.rou_post_createAiDocument = function () {
         } else {
           throw new Error("invaild post")
         }
-
-        historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        if (historyObj === null) {
-          await back.createHistory("client", { cliid }, { selfMongo: instance.mongolocal, secondMongo: instance.mongo });
-          historyObj = await back.getHistoryById("client", cliid, { selfMongo: instance.mongolocal });
-        }
-
-        page = "designerProposal";
-        cookies = DataRouter.cookieParsing(req);
-        dummy = {
-          page,
-          date: new Date(),
-          mode: null,
-          who: {
-            name: cookies.homeliaisonConsoleLoginedName,
-            email: cookies.homeliaisonConsoleLoginedEmail
-          }
-        };
-        if (Array.isArray(historyObj.curation.analytics.send)) {
-          historyObj.curation.analytics.send.push(dummy);
-        } else {
-          historyObj.curation.analytics.send = [ dummy ];
-        }
-        await back.updateHistory("client", [ { cliid }, { "curation.analytics.send": historyObj.curation.analytics.send } ], { selfMongo: instance.mongolocal });
 
       }
 
@@ -3409,7 +3416,7 @@ DataRouter.prototype.rou_post_callTo = function () {
       }
     } catch (e) {
       console.log(e);
-      instance.mother.slack_bot.chat.postMessage({ text: "Click Dial 서버 문제 생김 : " + JSON.stringify(req.body, null, 2) + "\n\n" + JSON.stringify(instance.members, null, 2), channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 (rou_post_callTo): " + e.message, channel: "#error_log" });
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "OK" }));
     }

@@ -3375,6 +3375,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             }
           } else if (/proposal/gi.test(obj.page)) {
             pageName = "제안서";
+          } else if (/estimation/gi.test(obj.page)) {
+            pageName = "견적서";
           } else {
             pageName = obj.page;
           }
