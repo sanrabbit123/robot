@@ -4220,6 +4220,9 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
     updateQuery["responses." + String(firstResponseIndex) + ".items"] = [ cancelItem ];
     updateQuery["responses." + String(firstResponseIndex) + ".comments"] = designerCancel.comments;
     updateQuery["responses." + String(secondResponseIndex) + ".removal"] = now;
+    updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".unit.price"] = 0;
+    updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.pure"] = 0;
+    updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.commission"] = 0;
 
     projectUpdateQuery["process.contract.first.cancel"] = now;
     projectUpdateQuery["process.contract.form.date.cancel"] = now;
