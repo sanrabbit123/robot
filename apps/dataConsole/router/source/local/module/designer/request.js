@@ -371,6 +371,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
 
 DesignerJs.prototype.requestContents = async function (board, designer, project, client) {
   const instance = this;
+  const mother = this.mother;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
@@ -381,9 +382,13 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const title = "홈스타일링 의뢰서";
   try {
 
-    console.log(title);
 
-    console.log("this!");
+    mother.makeTable([
+      [ "property0", "property1", "property2", "property3" ],
+      [ 0, 3, 5, 4 ],
+      [ 6, 3, 5, 4 ],
+    ]);;
+
 
 
 

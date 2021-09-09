@@ -3730,6 +3730,31 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   return resultObj;
 }
 
+GeneralJs.prototype.makeTable = function (matrix) {
+  const instance = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
+  if (!Array.isArray(matrix)) {
+    throw new Error("input must be matrix");
+  }
+  if (!matrix.every((arr) => { return Array.isArray(arr); })) {
+    throw new Error("input must be matrix");
+  }
+
+  const [ comlums ] = matrix;
+  const columnsLength = comlums.length;
+
+
+  
+
+
+
+
+
+
+  console.log("this!");
+
+}
+
 GeneralJs.prototype.generalStacks = function () {
   const instance = this;
   GeneralJs.stacks["latestSort"] = [ null ];

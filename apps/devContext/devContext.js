@@ -68,9 +68,9 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("/프", false));
 
 
-    const voice = new PlayAudio();
+    // console.log(await requestSystem(`http://172.30.1.47:3000/shell`, { command: "python3 ./temp/app.py" }, { headers: { "Content-Type": "application/json" } }))
 
-    voice.textToVoice(String("안녕하세요!"));
+
 
 
 

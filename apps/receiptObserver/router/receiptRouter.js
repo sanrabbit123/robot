@@ -416,7 +416,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, autoComma } = this.mother;
+  const { equalJson, autoComma, ghostRequest } = this.mother;
   let obj = {};
   obj.link = "/ghostClientBill";
   obj.func = async function (req, res) {
@@ -456,6 +456,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       let itemNum, payNum, cancelNum;
       let payObject;
       let paymentComplete;
+      let message;
 
       thisBill = await bill.getBillById(bilid, { selfMongo });
       if (thisBill === null) {
@@ -541,7 +542,9 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
         updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
-        instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+        message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
+        instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#700_operation" });
+        ghostRequest("/voice", { text: message });
         await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
         if (paymentComplete) {
@@ -651,7 +654,9 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
         });
 
-        instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!", channel: "#700_operation" });
+        message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
+        instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#700_operation" });
+        ghostRequest("/voice", { text: message });
         await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
       }
@@ -682,7 +687,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, requestSystem } = this.mother;
+  const { equalJson, requestSystem, ghostRequest } = this.mother;
   const ParsingHangul = require(`${process.cwd()}/apps/parsingHangul/parsingHangul.js`);
   let obj = {};
   obj.link = "/webHookVAccount";
@@ -722,6 +727,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       let itemNum, payNum, cancelNum;
       let payObject;
       let paymentComplete;
+      let message;
 
       thisBill = bills[0];
       thisBill = thisBill.toNormal();
@@ -802,7 +808,9 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       thisBill.requests[requestNumber].proofs.unshift(proofs);
       updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
 
-      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!", channel: "#700_operation" });
+      message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
+      instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#700_operation" });
+      ghostRequest("/voice", { text: message });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       if (paymentComplete) {
