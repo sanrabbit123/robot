@@ -1491,7 +1491,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         if (column === "important") {
           updateQuery[column] = (Number(value) === 1);
         } else {
-          if (colmun !== null) {
+          if (column !== null) {
             if (value === "true" || value === "false") {
               updateQuery[column] = (value === "true");
             } else {
