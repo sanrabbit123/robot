@@ -3268,15 +3268,29 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     let proposal;
     let feeObject;
 
+    proposal = null;
     for (let p of project.proposal.detail) {
       if (p.desid === desid) {
         proposal = p;
       }
     }
 
-    for (let f of proposal.fee) {
-      if (f.method === thisOnOff) {
-        feeObject = f;
+    if (proposal !== null) {
+      feeObject = null;
+      for (let f of proposal.fee) {
+        if (f.method === thisOnOff) {
+          feeObject = f;
+        }
+      }
+      if (feeObject === null) {
+        feeObject = proposal.fee[0];
+      }
+    } else {
+      feeObject = {
+        distance: {
+          amount: 0,
+          distance: "0km"
+        }
       }
     }
 
@@ -3679,7 +3693,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           requestArrMake = () => {
             const bill = GeneralJs.stacks[thisProjectBill];
             requestArr = [];
-            for (let { date, name, id } of bill.requests) {
+            for (let { date, name, id, removal } of bill.requests) {
               tempObj = {};
               tempObj.text = "";
               tempObj.text += dateToString(date, true).slice(2, -3);
@@ -3688,6 +3702,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 return (p1 + " <b%" + p2 + "%b>");
               });
               tempObj.id = id;
+              tempObj.deactive = (removal.valueOf() > (new Date(2000, 0, 1)).valueOf());
               requestArr.push(tempObj);
             }
           }
@@ -3697,7 +3712,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
           responseArrMake = () => {
             const bill = GeneralJs.stacks[thisProjectBill];
             responseArr = [];
-            for (let { date, id, items, pay, cancel } of bill.responses) {
+            for (let { date, id, items, pay, cancel, removal } of bill.responses) {
               totalNum = 0;
               for (let { amount: { pure } } of items) {
                 totalNum += pure;
@@ -3727,6 +3742,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 tempObj.text += " | ";
                 tempObj.text += (totalNum <= payNum - cancelNum ? "정산" : "미정산");
                 tempObj.id = id;
+
+                tempObj.deactive = (removal.valueOf() > (new Date(2000, 0, 1)).valueOf());
                 responseArr.push(tempObj);
               }
             }
@@ -3968,7 +3985,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             });
             let num;
             num = 0;
-            for (let { text, id } of requestArr) {
+            for (let { text, id, deactive } of requestArr) {
               createNode({
                 mother: scrollTong,
                 attribute: [
@@ -3981,6 +3998,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   width: String(100) + '%',
                   height: "auto",
                   marginBottom: String(imageMargin) + ea,
+                  opacity: String(deactive ? 0.4 : 1),
                 },
                 children: [
                   {
@@ -4722,6 +4740,28 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 }
                               },
                             ];
+                            if (/계약/gi.test(name)) {
+                              menuContents.unshift({
+                                text: "계약 취소",
+                                eventFunction: async function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  try {
+                                    let data;
+                                    if (window.confirm("계약 취소를 진행할까요?")) {
+                                      data = await ajaxJson({ bilid: GeneralJs.stacks[thisProjectBill].bilid }, PYTHONHOST + "/contractCancel", { equal: true });
+                                      GeneralJs.stacks[thisProjectBill] = data.bill;
+                                      cleanChildren(scrollTong);
+                                      requestArrMake();
+                                      responseArrMake();
+                                      requestLoad();
+                                    }
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              });
+                            }
                           }
                           let menuFontSize;
                           let menuPaddingTop, menuPaddingBottom, menuPaddingLeft;
@@ -4857,7 +4897,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             scrollTong.parentElement.setAttribute("method", method);
             let num;
             num = 0;
-            for (let { text, id } of responseArr) {
+            for (let { text, id, deactive } of responseArr) {
               tempArr = text.split('|').map((i) => { return i.trim(); });
               children = tempArr.map((t, index) => {
                 return {
@@ -4924,6 +4964,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   width: String(100) + '%',
                   height: "auto",
                   marginBottom: String(imageMargin) + ea,
+                  opacity: String(deactive ? 0.4 : 1),
                 },
                 children
               });

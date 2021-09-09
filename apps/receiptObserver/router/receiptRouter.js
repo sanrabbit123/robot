@@ -1472,6 +1472,85 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_contractCancel = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const address = this.address;
+  const kakao = this.kakao;
+  const { equalJson, sleep, requestSystem } = this.mother;
+  let obj = {};
+  obj.link = "/contractCancel";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.bilid === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { bilid } = equalJson(req.body);
+      let report, option, project, pastProject, proid;
+      let timeConst, map;
+
+      option = { selfMongo, selfCoreMongo: instance.mongo };
+
+      report = await bill.contractCancel(bilid, option);
+      report.bill = report.bill.toNormal();
+      report.pastProject = report.pastProject.toNormal();
+      report.project = report.project.toNormal();
+
+      pastProject = report.pastProject;
+      project = report.project;
+      proid = project.proid;
+
+      timeConst = 410;
+      map = [
+        {
+          column: "paymentsTotalAmount",
+          position: "process.calculation.payments.totalAmount",
+          pastValue: pastProject.process.calculation.payments.totalAmount,
+          finalValue: project.process.calculation.payments.totalAmount,
+        },
+        {
+          column: "paymentsFirstAmount",
+          position: "process.calculation.payments.first.amount",
+          pastValue: pastProject.process.calculation.payments.first.amount,
+          finalValue: project.process.calculation.payments.first.amount,
+        },
+        {
+          column: "paymentsRemainAmount",
+          position: "process.calculation.payments.remain.amount",
+          pastValue: pastProject.process.calculation.payments.remain.amount,
+          finalValue: project.process.calculation.payments.remain.amount,
+        },
+      ];
+
+      for (let { column, position, pastValue, finalValue } of map) {
+        await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
+        await sleep(timeConst);
+      }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify(report));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message, channel: "#error_log" });
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_returnBankCode = function () {
   const instance = this;
   const bankCode = this.bankCode;

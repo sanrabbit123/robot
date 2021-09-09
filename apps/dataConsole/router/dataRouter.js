@@ -4419,6 +4419,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       res.set({ "Content-Type": "application/json" });
       let { cliid, proid, desid, name, phone, designer, method } = req.body;
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
+      await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}&mode=test\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#400_customer" });
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
