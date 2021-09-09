@@ -3163,7 +3163,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const signkey = instance.address.officeinfo.inicis.signkey;
         const timestamp = String(now.valueOf());
         const oid = oidConst + timestamp;
-        const price = Number(req.body.price);
+        const price = Math.round(Number(req.body.price));
         const signature = crypto.createHash("sha256").update(`oid=${oid}&price=${String(price)}&timestamp=${timestamp}`).digest("hex");
         const mKey = crypto.createHash("sha256").update(signkey).digest("hex");
         const currency = "WON";

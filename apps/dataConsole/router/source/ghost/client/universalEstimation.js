@@ -878,7 +878,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
               style: { display: "none" }
             });
           }
-          console.log(formValue);
           plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
           plugin();
         } else {
