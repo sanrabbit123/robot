@@ -3,7 +3,6 @@ const PlayAudio = function (option = {}) {
   this.mother = new Mother();
   if (option.players === undefined) {
     this.players = [
-      'mocp',
       'mplayer',
       'afplay',
       'mpg123',
