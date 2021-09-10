@@ -383,11 +383,11 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   try {
 
 
-    mother.makeTable([
+    board.appendChild(mother.makeTable([
       [ "property0", "property1", "property2", "property3" ],
-      [ 0, 3, 5, 4 ],
-      [ 6, 3, 5, 4 ],
-    ]);;
+      [ 0, "홈홈", 5, 4 ],
+      [ 6, 3, 5, "안녕" ],
+    ]));
 
 
 

@@ -6172,6 +6172,12 @@ ProjectJs.prototype.addExtractEvent = function () {
         for (let i = 1; i < valuesArr.length; i++) {
           valuesArr[i].push(obj[valuesArr[i].find((c) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); })]);
         }
+        return GeneralJs.ajaxJson({ idArr: proidArr, method: "project", property: "issue" }, "/getHistoryProperty");
+      }).then((obj2) => {
+        valuesArr[0].push("메모");
+        for (let i = 1; i < valuesArr.length; i++) {
+          valuesArr[i].push(obj2[valuesArr[i].find((c) => { return /^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/.test(c); })]);
+        }
         return GeneralJs.ajaxJson({
           values: valuesArr,
           newMake: true,

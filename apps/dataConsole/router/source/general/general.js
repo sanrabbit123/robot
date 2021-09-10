@@ -3730,7 +3730,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
   return resultObj;
 }
 
-GeneralJs.prototype.makeTable = function (matrix) {
+GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   const instance = this;
   const { createNode, colorChip, withOut } = GeneralJs;
   if (!Array.isArray(matrix)) {
@@ -3739,20 +3739,211 @@ GeneralJs.prototype.makeTable = function (matrix) {
   if (!matrix.every((arr) => { return Array.isArray(arr); })) {
     throw new Error("input must be matrix");
   }
+  if (typeof option !== "object") {
+    throw new Error("invaild option");
+  }
+  const [ columns ] = matrix;
+  const columnsLength = columns.length;
+  const dataLength = matrix.length - 1;
+  const totalLength = dataLength + 1;
+  let table, mother;
+  let ea;
+  let blockWidth, blockHeight;
+  let size;
+  let rows, all, rowBlock, eachBlock;
+  let domMatrix;
+  let tempArr;
+  let innerMargin;
+  let borderWeight;
+  let textTop;
+  let mergeMap;
 
-  const [ comlums ] = matrix;
-  const columnsLength = comlums.length;
+  ea = <%% "px", "px", "px", "px", "vw" %%>;
+
+  blockWidth = 120;
+  if (typeof option.width === "number") {
+    blockWidth = option.width;
+  }
+  if (typeof option.blockWidth === "number") {
+    blockWidth = option.blockWidth;
+  }
+  if (typeof option.totalWidth === "number") {
+    blockWidth = option.totalWidth / columnsLength;
+  }
+  blockHeight = 80;
+  if (typeof option.height === "number") {
+    blockHeight = option.height;
+  }
+  if (typeof option.blockHeight === "number") {
+    blockHeight = option.blockHeight;
+  }
+  if (typeof option.totalHeight === "number") {
+    blockWidth = option.totalHeight / totalLength;
+  }
+
+  borderWeight = 1;
+
+  size = 15;
+  if (typeof option.size === "number") {
+    size = option.size;
+  }
+  if (typeof option.fontSize === "number") {
+    size = option.fontSize;
+  }
+
+  innerMargin = 6;
+  if (typeof option.innerMargin === "number") {
+    innerMargin = option.innerMargin;
+  }
+
+  textTop = 2;
+  if (typeof option.textTop === "number") {
+    textTop = option.textTop;
+  }
 
 
-  
+  mergeMap = [
+    [ null, null, null, null ],
+    [ null, null, null, [ 0, 3 ] ],
+    [ null, null, null, null ],
+  ];
+  if (Array.isArray(option.mergeMap)) {
+    mergeMap = option.mergeMap;
+  }
 
+  if (matrix.length !== mergeMap.length || !mergeMap.every((arr) => { return Array.isArray(arr); })) {
+    throw new Error("invaild merge map");
+  }
+  if (!mergeMap.every((arr) => { return arr.length === columnsLength; })) {
+    throw new Error("invaild merge map");
+  }
+  if (!mergeMap.every((arr) => { return arr.every((i) => { return (i === null || Array.isArray(i)); }); })) {
+    throw new Error("invaild merge map");
+  }
 
+  mother = document.createDocumentFragment();
+  table = createNode({
+    mother,
+    style: {
+      position: "relative",
+      display: "block",
+      width: String(blockWidth * columnsLength) + ea,
+      height: String((blockHeight * totalLength) + (borderWeight * totalLength)) + ea,
+      overflow: "hidden",
+      border: String(borderWeight) + "px solid " + colorChip.gray4,
+      boxSizing: "border-box",
+      borderRadius: String(3) + "px",
+    }
+  });
 
+  rows = [];
+  all = [];
+  domMatrix = [];
+  for (let i = 0; i < totalLength; i++) {
+    rowBlock = createNode({
+      mother: table,
+      style: {
+        position: "relative",
+        display: "block",
+        width: String(100) + '%',
+        height: String(blockHeight) + ea,
+        borderTop: String(borderWeight) + "px solid " + colorChip.gray4,
+        boxSizing: "border-box",
+        overflow: "visible",
+      }
+    });
+    if (i === 0) {
+      rowBlock.style.borderTop = "";
+    }
 
+    tempArr = [];
+    for (let j = 0; j < columnsLength; j++) {
+      eachBlock = createNode({
+        mother: rowBlock,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(100% / " + String(columnsLength) + ")",
+          height: String(blockHeight) + ea,
+          borderRight: String(borderWeight) + "px solid " + colorChip.gray4,
+          boxSizing: "border-box",
+          overflow: "hidden",
+          background: colorChip[i === 0 ? "gray1" : "white"],
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              display: "block",
+              marginTop: String(innerMargin) + ea,
+              marginLeft: String(innerMargin) + ea,
+              width: withOut(innerMargin * 2, ea),
+              height: withOut(innerMargin * 2, ea),
+              overflow: "scroll",
+            },
+            children: [
+              {
+                text: String(matrix[i][j]),
+                style: {
+                  position: "relative",
+                  display: "block",
+                  width: String(100) + '%',
+                  textAlign: "center",
+                  fontSize: String(size) + ea,
+                  fontWeight: String(i === 0 ? 600 : 300),
+                  color: colorChip.black,
+                  top: withOut(50, (size - textTop), ea),
+                }
+              }
+            ]
+          }
+        ],
+      });
+      if (j === columnsLength - 1) {
+        eachBlock.style.borderRight = "";
+      }
+      all.push(eachBlock);
+      tempArr.push(eachBlock);
+    }
+    domMatrix.push(tempArr);
+    rows.push(rowBlock);
+  }
 
+  for (let i = 0; i < totalLength; i++) {
+    for (let j = 0; j < columnsLength; j++) {
+      if (mergeMap[i][j] !== null) {
+        if (!Array.isArray(mergeMap[i][j])) {
+          throw new Error("invaild merge map");
+        }
+        if (mergeMap[i][j].length !== 2) {
+          throw new Error("invaild merge map");
+        }
+        if (!(mergeMap[i][j][0] === i && mergeMap[i][j][1] === j)) {
+          if (mergeMap[i][j][0] === i || mergeMap[i][j][1] === j) {
+            if (mergeMap[i][j][0] === i) {
+              if (mergeMap[i][j][1] < j) {
+                for (let k = mergeMap[i][j][1]; k < j; k++) {
+                  domMatrix[i][k + 1].remove();
+                }
+                domMatrix[i][mergeMap[i][j][1]].style.width = "calc(calc(100% / " + String(columnsLength) + ") * " + String(j - mergeMap[i][j][1] + 1) + ")";
+                if (j === columnsLength - 1) {
+                  domMatrix[i][mergeMap[i][j][1]].style.borderRight = "";
+                }
+              }
+            } else if (mergeMap[i][j][1] === j) {
+              if (mergeMap[i][j][0] < i) {
+                for (let k = mergeMap[i][j][0]; k < i; k++) {
+                  // domMatrix[k + 1][j].remove();
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-  console.log("this!");
-
+  return mother;
 }
 
 GeneralJs.prototype.generalStacks = function () {
