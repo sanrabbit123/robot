@@ -93,7 +93,7 @@ GeneralJs.colorSet = {
     gradientGreenWhite: "#dddddd",
     greenGray: "#303030",
     greenWhite: "#ececec",
-    greenBlack: "#0d0d0d",
+    greenBlack: "#0b0b0b",
     cancelBlack: "#303030",
     green: "#2fa678",
     darkGreen: "#009b6a",

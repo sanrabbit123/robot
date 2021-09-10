@@ -372,7 +372,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
 DesignerJs.prototype.requestContents = async function (board, designer, project, client) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -546,11 +546,193 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       [ null, divToInput, null, null ],
       [ null, divToInput, null, null ],
       [ null, divToInput, null, null ],
-    ]
+    ];
+    const boldMap = [
+      [ 0, 0, 0, 0 ],
+      [ 1, 0, 1, 0 ],
+      [ 1, 0, 1, 0 ],
+      [ 1, 0, 1, 0 ],
+      [ 1, 0, 1, 0 ],
+      [ 1, 0, 1, 0 ],
+      [ 1, 0, 1, 0 ],
+      [ 0, 0, 0, 0 ],
+      [ 1, 0, 0, 0 ],
+      [ 1, 0, 0, 0 ],
+      [ 1, 0, 0, 0 ],
+      [ 1, 0, 0, 0 ],
+    ];
     const titleMap = [ 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ];
     const widthRatio = [ 1, 3, 1, 3 ];
+    const today = new Date();
+    const initialContents = "안녕하세요, <b%권미정%b> 실장님!\n홈리에종에 의뢰하신 이경숙 고객님 관련 정보를 보내드립니다. <b%오프라인 엑스트라 토탈 스타일링 서비스%b>를 진행합니다.";
+    const clientInfoWhereWhen = [
+      "현장 미팅",
+      "2021-09-02 (목) 오후 12:00시 정오",
+      "주소",
+      "외부 카페 (장소가 정해지면 전달드리겠습니다.)",
+    ];
+    let titleArea;
+    let contentsArea;
+    let topMargin;
+    let leftMargin;
+    let titleHeight;
+    let titleSize;
+    let titleBottom;
+    let titlePaddingBottom;
+    let fontSize;
+    let sum;
+    let titleDateVisualBottom;
+    let contentsBetween;
+    let contentsClientInfo;
+    let clientInfoLeftWidth;
+    let width;
+    let wordsBetween0, wordsBetween1;
+    let leftIndent;
+    let words;
+    let arrowTop, arrowWidth, arrowLeft;
 
-    board.appendChild(mother.makeTable(matrix, { mergeMap, callbackMap, titleMap, widthRatio }));
+    topMargin = 42;
+    leftMargin = 50;
+    titleSize = 35;
+    titleBottom = 35;
+    titlePaddingBottom = 18;
+    titlePaddingLeft = 1;
+    fontSize = 15;
+    titleDateVisualBottom = 2;
+    contentsBetween = 28;
+    clientInfoLeftWidth = 340;
+    wordsBetween0 = 6;
+    wordsBetween1 = 18;
+    leftIndent = 15;
+    arrowTop = 5.5;
+    arrowWidth = 8;
+    arrowLeft = 1;
+
+    sum = 0;
+    for (let i of widthRatio) {
+      sum += i;
+    }
+
+    board.style.paddingTop = String(topMargin) + ea;
+
+    titleArea = createNode({
+      mother: board,
+      style: {
+        marginLeft: String(leftMargin) + ea,
+        paddingLeft: String(titlePaddingLeft) + ea,
+        width: withOut((leftMargin * 2) + titlePaddingLeft, ea),
+        borderBottom: "1px solid " + colorChip.gray3,
+        marginBottom: String(titleBottom) + ea,
+        paddingBottom: String(titlePaddingBottom) + ea,
+        position: "relative",
+      },
+      children: [
+        {
+          text: title,
+          style: {
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: dateToString(today),
+          style: {
+            position: "absolute",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            right: String(titlePaddingLeft) + ea,
+            textAlign: "right",
+            bottom: String(titlePaddingBottom - titleDateVisualBottom) + ea,
+          }
+        }
+      ]
+    });
+
+    contentsArea = createNode({
+      mother: board,
+      style: {
+        marginLeft: String(leftMargin) + ea,
+        width: withOut(leftMargin * 2, ea),
+      },
+      children: [
+        {
+          text: initialContents,
+          style: {
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+            marginBottom: String(contentsBetween) + ea,
+          },
+          bold: {
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        }
+      ]
+    });
+
+    contentsClientInfo = createNode({
+      mother: contentsArea,
+      style: {
+        position: "relative",
+        display: "block",
+        width: String(100) + '%',
+        textAlign: "right",
+      },
+      children: [
+        {
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(leftIndent) + ea,
+            width: String(clientInfoLeftWidth) + ea,
+            height: String(100) + '%',
+            verticalAlign: "top",
+            textAlign: "left",
+          }
+        }
+      ]
+    });
+
+    width = (contentsClientInfo.getBoundingClientRect().width - clientInfoLeftWidth - contentsBetween - leftIndent) / sum;
+
+    contentsClientInfo.appendChild(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
+    contentsClientInfo.children[1].style.display = "inline-block";
+    contentsClientInfo.children[1].style.verticalAlign = "top";
+
+    for (let i = 0; i < clientInfoWhereWhen.length; i++) {
+      words = createNode({
+        mother: contentsClientInfo.children[0],
+        text: clientInfoWhereWhen[i],
+        style: {
+          position: "relative",
+          fontSize: String(fontSize) + ea,
+          fontWeight: String(i % 2 === 0 ? 600 : 400),
+          color: colorChip.black,
+          marginBottom: String(i % 2 === 1 ? wordsBetween1 : wordsBetween0) + ea,
+        }
+      });
+      if (i % 2 === 0) {
+        createNode({
+          mother: words,
+          mode: "svg",
+          source: mother.returnArrow("right", colorChip.green),
+          style: {
+            position: "absolute",
+            width: String(arrowWidth) + ea,
+            left: String((-1 * leftIndent) + arrowLeft) + ea,
+            top: String(arrowTop) + ea,
+          }
+        });
+      }
+
+    }
+
 
 
 

@@ -3771,6 +3771,9 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   let borderColor;
   let callbackMap;
   let temp;
+  let boldMap;
+  let boldWeight, generalWeight;
+  let boldBackground;
 
   [ columns ] = matrix;
   columnsLength = columns.length;
@@ -3822,6 +3825,18 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     });
   });
 
+  boldMap = [];
+  for (let i = 0; i < totalLength; i++) {
+    temp = [];
+    for (let j = 0; j < columnsLength; j++) {
+      temp.push(0);
+    }
+    boldMap.push(temp);
+  }
+  if (Array.isArray(option.boldMap)) {
+    boldMap = option.boldMap;
+  }
+
   widthRatio = (new Array(columnsLength)).fill(1, 0);
   if (Array.isArray(option.widthRatio)) {
     widthRatio = option.widthRatio;
@@ -3847,6 +3862,16 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     }
 
     for (let arr of callbackMap) {
+      num = 0;
+      for (let i of widthRatio) {
+        for (let j = 0; j < i; j++) {
+          arr.splice(num + 1, 0, arr[num]);
+        }
+        num += (i + 1);
+      }
+    }
+
+    for (let arr of boldMap) {
       num = 0;
       for (let i of widthRatio) {
         for (let j = 0; j < i; j++) {
@@ -3939,6 +3964,15 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   if (!callbackMap.every((arr) => { return arr.every((i) => { return typeof i === "function"; }); })) {
     throw new Error("invaild callback map");
   }
+  if (totalLength !== boldMap.length || !boldMap.every((arr) => { return Array.isArray(arr); })) {
+    throw new Error("invaild bold map");
+  }
+  if (!boldMap.every((arr) => { return arr.length === columnsLength; })) {
+    throw new Error("invaild bold map");
+  }
+  if (!boldMap.every((arr) => { return arr.every((i) => { return (i === 1 || i === 0); }); })) {
+    throw new Error("invaild bold map");
+  }
 
   ea = <%% "px", "px", "px", "px", "vw" %%>;
 
@@ -3952,7 +3986,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   if (typeof option.style.totalWidth === "number") {
     blockWidth = option.style.totalWidth / columnsLength;
   }
-  blockHeight = 54;
+  blockHeight = 50;
   if (typeof option.style.height === "number") {
     blockHeight = option.style.height;
   }
@@ -3973,7 +4007,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     size = option.style.fontSize;
   }
 
-  innerMargin = 6;
+  innerMargin = 15;
   if (typeof option.style.innerMargin === "number") {
     innerMargin = option.style.innerMargin;
   }
@@ -4006,6 +4040,21 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   borderColor = "gray3";
   if (typeof option.style.borderColor === "string") {
     titleBackground = option.style.borderColor;
+  }
+
+  boldWeight = 600;
+  if (typeof option.style.boldWeight === "number") {
+    boldWeight = option.style.boldWeight;
+  }
+
+  generalWeight = 400;
+  if (typeof option.style.generalWeight === "number") {
+    generalWeight = option.style.generalWeight;
+  }
+
+  boldBackground = "gray0";
+  if (typeof option.style.boldBackground === "string") {
+    boldBackground = option.style.boldBackground;
   }
 
   mother = document.createDocumentFragment();
@@ -4061,7 +4110,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
           borderRight: String(borderWeight) + "px solid " + colorChip[borderColor],
           boxSizing: "border-box",
           overflow: "hidden",
-          background: colorChip[titleMap[i] === 1 ? titleBackground : generalBackground],
+          background: colorChip[titleMap[i] === 1 ? titleBackground : (boldMap[i][j] === 1 ? boldBackground : generalBackground)],
           verticalAlign: "top",
         },
         children: [
@@ -4086,7 +4135,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
                   width: String(100) + '%',
                   textAlign: "center",
                   fontSize: String(size) + ea,
-                  fontWeight: String(titleMap[i] === 1 ? 600 : 400),
+                  fontWeight: String(titleMap[i] === 1 ? boldWeight : (boldMap[i][j] === 1 ? boldWeight : generalWeight)),
                   color: colorChip[titleMap[i] === 1 ? titleColor : generalColor],
                   top: String(textTop) + ea,
                 }
