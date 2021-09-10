@@ -381,17 +381,176 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const cliid = project.cliid;
   const title = "홈스타일링 의뢰서";
   try {
+    const divToInput = async function (e) {
+      try {
+        const { ajaxJson, createNode, withOut, colorChip, equalJson } = GeneralJs;
+        const removeClassName = "divToInputRemove";
+        const target = this.firstChild.firstChild;
+        const text = target.textContent;
+        const mother = this.firstChild;
+        let styleCopied, styleRaw, style;
+        let input, cancel;
+        let updateEvent;
 
+        if (this.querySelector("input") === null) {
 
-    board.appendChild(mother.makeTable([
-      [ "property0", "property1", "property2", "property3" ],
-      [ 0, "홈홈", 5, 4 ],
-      [ 6, 3, 5, "안녕" ],
-    ]));
+          styleRaw = equalJson(JSON.stringify(target.style));
+          styleCopied = {};
+          for (let i in styleRaw) {
+            if (styleRaw[i] !== '' && !/^[0-9]+$/.test(i)) {
+              styleCopied[i] = styleRaw[i];
+            }
+          }
+          style = equalJson(JSON.stringify(styleCopied));
+          styleCopied.outline = String(0);
+          styleCopied.border = String(0);
+          styleCopied.background = "transparent";
+          styleCopied.color = colorChip.green;
+          styleCopied.zIndex = String(2);
 
+          updateEvent = async function (value) {
+            try {
+              const targets = document.querySelectorAll('.' + removeClassName);
+              for (let dom of targets) {
+                dom.parentElement.removeChild(dom);
+              }
+              createNode({ mother, text: value, style });
+            } catch (e) {
+              console.log(e);
+            }
+          }
 
+          cancel = createNode({
+            mother,
+            class: [ removeClassName ],
+            events: [
+              {
+                type: "click",
+                event: (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const targets = document.querySelectorAll('.' + removeClassName);
+                  for (let dom of targets) {
+                    dom.parentElement.removeChild(dom);
+                  }
+                  createNode({ mother, text, style });
+                }
+              }
+            ],
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: "transparent",
+              zIndex: String(2),
+            }
+          });
 
+          input = createNode({
+            mother,
+            class: [ removeClassName ],
+            mode: "input",
+            events: [
+              {
+                type: "click",
+                event: (e) => { e.preventDefault(); e.stopPropagation(); }
+              },
+              {
+                type: "keydown",
+                event: function (e) {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                  }
+                }
+              },
+              {
+                type: "keyup",
+                event: async function (e) {
+                  try {
+                    if (e.key === "Tab") {
+                      await updateEvent(this.value);
+                    }
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              {
+                type: "keypress",
+                event: async function (e) {
+                  try {
+                    if (e.key === "Enter") {
+                      await updateEvent(this.value);
+                    }
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            ],
+            attribute: [
+              { value: text }
+            ],
+            style: styleCopied
+          });
 
+          mother.removeChild(target);
+          input.focus();
+
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    const matrix = [
+      [ "고객 정보", "", "공간 정보", "" ],
+      [ "고객명", "이경숙", "계약 형태", "자가" ],
+      [ "연락처", "010-4928-2754", "사전점검일", "거주중" ],
+      [ "가족구성원", "부부, 아들 1", "집 비는 날", "2021-12-23 예정" ],
+      [ "주소", "서울 성북구 보문사길 111 보문파크뷰자이 아파트 109동 1004호 34A형", "입주 예정일", "2022-01월말 입주" ],
+      [ "", "", "특이 사항", "공사 기간 1달 소요 예상" ],
+      [ "예산", "1억~ 최대 1억 5000만원 계획", "공간구성", "방3, 화장실2, 발코니 확장" ],
+      [ "서비스 정보", "", "고객 요청", "" ],
+      [ "서비스", "엑스트라 스타일링", "깔끔하고 수납 전체적인인테리어와 스타일링", "" ],
+      [ "선호 컨셉", "베이지톤, 아늑, 감성적인 분위기", "", "" ],
+      [ "시공", "전체 시공, 디자인 시공", "", "" ],
+      [ "스타일링", "전체 구매", "", "" ],
+    ];
+    const mergeMap = [
+      [ null, [ 0, 0 ], null, [ 0, 2 ] ],
+      [ null, null, null, null ],
+      [ null, null, null, null ],
+      [ null, null, null, null ],
+      [ null, null, null, null ],
+      [ [ 4, 0 ], [ 4, 1 ], null, null ],
+      [ null, null, null, null ],
+      [ null, [ 7, 0 ], null, [ 7, 2 ] ],
+      [ null, null, null, [ 8, 2 ] ],
+      [ null, null, null, [ 9, 2 ] ],
+      [ null, null, null, [ 10, 2 ] ],
+      [ null, null, [ 8, 2 ], [ 11, 2 ] ],
+    ];
+    const callbackMap = [
+      [ null, null, null, null ],
+      [ null, divToInput, null, divToInput ],
+      [ null, divToInput, null, divToInput ],
+      [ null, divToInput, null, divToInput ],
+      [ null, divToInput, null, divToInput ],
+      [ null, divToInput, null, divToInput ],
+      [ null, divToInput, null, divToInput ],
+      [ null, null, null, null ],
+      [ null, divToInput, divToInput, null ],
+      [ null, divToInput, null, null ],
+      [ null, divToInput, null, null ],
+      [ null, divToInput, null, null ],
+    ]
+    const titleMap = [ 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ];
+    const widthRatio = [ 1, 3, 1, 3 ];
+
+    board.appendChild(mother.makeTable(matrix, { mergeMap, callbackMap, titleMap, widthRatio }));
 
 
 
