@@ -280,12 +280,10 @@ OfficePolling.prototype.routingCloud = function () {
 
 OfficePolling.firstDo = {
   proposal: true,
-  notion: true,
 };
 
 OfficePolling.timeout = {
   proposal: null,
-  notion: null,
 };
 
 OfficePolling.prototype.routingOffice = function () {

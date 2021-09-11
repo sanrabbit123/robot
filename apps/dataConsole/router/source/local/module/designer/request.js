@@ -876,7 +876,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           fontWeight: String(600),
           color: colorChip.black,
           marginBottom: String(wordsBetween0) + ea,
-          paddingLeft: String(leftIndent) + ea,
+          paddingLeft: mobile ? String(leftIndent) + ea : "",
         }
       });
       createNode({

@@ -65,21 +65,8 @@ DevContext.prototype.launching = async function () {
     const { Agent } = require(`https`);
     const agent = new Agent({ rejectUnauthorized: false });
     // in config { httpsAgent: agent }
-    // console.log(await this.findCode("* 1.1)", false));
-    // console.log(await this.findCode("/프", false));
-
-
-    // console.log((await requestSystem(`http://172.30.1.47:3000/shell`, { command: "python3 ./temp/app.py" }, { headers: { "Content-Type": "application/json" } })).data.stdout.split("\n").filter((n) => { return n.trim() !== '' }).map((n) => { return Number(n.trim()); }));
-
-
-
-
-
-
-
-
-
-
+    // console.log(await this.findCode("* 1.1)"));
+    // console.log(await this.findCode("/프"));
 
 
 

@@ -312,19 +312,10 @@ Robot.prototype.consoleSource = function () {
 
 Robot.prototype.getConsulting = async function (sw = "1", cliid = "latest") {
   try {
-    const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
     const GetConsulting = require(`${process.cwd()}/apps/getConsulting/getConsulting.js`);
-
     let app;
-
-    if (sw === "notion" || sw === "1") {
-      app = new NotionAPIs();
-      await app.launching(cliid);
-    } else {
-      app = new GetConsulting();
-      await app.launching(false);
-    }
-
+    app = new GetConsulting();
+    await app.launching(false);
   } catch (e) {
     console.log(e);
   }
@@ -345,16 +336,6 @@ Robot.prototype.officePolling = async function (sw, boo = true) {
         await app.injectionLaunching();
         break;
     }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-Robot.prototype.robotPass = async function () {
-  try {
-    const PythonCloud = require(`${process.cwd()}/apps/pythonCloud/pythonCloud.js`);
-    const app = new PythonCloud();
-    await app.serverLaunching();
   } catch (e) {
     console.log(e);
   }
@@ -743,20 +724,6 @@ Robot.prototype.launching = async function () {
     } else if (re === "front" || re === "6") {
       this.frontMaker(false);
 
-    //consulting
-    } else if (re === "consulting" || re === "7") {
-      re2 = await consoleQ(`Choose commands : 1.notion 2.junk\n`);
-      if (re2 === "notion" || re2 === "1") {
-        re3 = await consoleQ(`Client id? (default: latest, if you want press 'none')\n`);
-        if (re3 === "none" || re3 === "latest" || re3 === "") {
-          await this.getConsulting(re2, "latest");
-        } else {
-          await this.getConsulting(re2, re3);
-        }
-      } else {
-        await this.getConsulting(re2);
-      }
-
     //exit
     } else if (re === "exit" || re === "10") {
       process.exit();
@@ -1088,13 +1055,6 @@ const MENU = {
   cashReceipt: async function () {
     try {
       await robot.cashReceipt();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  robotPass: async function () {
-    try {
-      await robot.robotPass();
     } catch (e) {
       console.log(e);
     }

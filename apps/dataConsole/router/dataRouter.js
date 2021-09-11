@@ -141,23 +141,6 @@ DataRouter.stringFilter = function (str) {
   return filtered;
 }
 
-DataRouter.notionArrRefine = function (arr) {
-  let target;
-  let targetTong;
-  target = [];
-  for (let obj of arr) {
-    if (obj.title_plaintext !== undefined && obj.title_plaintext !== '') {
-      targetTong = {};
-      targetTong.title_plaintext = DataRouter.stringFilter(obj.title_plaintext);
-      if (obj.children !== undefined) {
-        targetTong.children = DataRouter.notionArrRefine(obj.children);
-      }
-      target.push(targetTong);
-    }
-  }
-  return target;
-}
-
 DataRouter.objectToFlat = function (arr) {
   let totalString;
   let temp, tempArr;
