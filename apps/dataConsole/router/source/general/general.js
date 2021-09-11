@@ -3753,7 +3753,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   let table, mother;
   let ea;
   let blockWidth, blockHeight;
-  let size;
+  let size, titleSize;
   let rows, all, rowBlock, eachBlock;
   let domMatrix;
   let tempArr;
@@ -3976,7 +3976,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
 
   ea = <%% "px", "px", "px", "px", "vw" %%>;
 
-  blockWidth = 120;
+  blockWidth = <%% 120, 120, 120, 120, 14 %%>;
   if (typeof option.style.width === "number") {
     blockWidth = option.style.width;
   }
@@ -3986,7 +3986,8 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   if (typeof option.style.totalWidth === "number") {
     blockWidth = option.style.totalWidth / columnsLength;
   }
-  blockHeight = 50;
+
+  blockHeight = <%% 52, 52, 52, 52, 9 %%>;
   if (typeof option.style.height === "number") {
     blockHeight = option.style.height;
   }
@@ -3997,9 +3998,9 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     blockWidth = option.style.totalHeight / totalLength;
   }
 
-  borderWeight = 1;
+  borderWeight = <%% 1, 1, 1, 1, 1 %%>;
 
-  size = 15;
+  size = <%% 15, 15, 15, 15, 3 %%>;
   if (typeof option.style.size === "number") {
     size = option.style.size;
   }
@@ -4007,12 +4008,17 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     size = option.style.fontSize;
   }
 
-  innerMargin = 15;
+  titleSize = <%% 15, 15, 15, 15, 3.2 %%>;
+  if (typeof option.style.titleSize === "number") {
+    titleSize = option.style.titleSize;
+  }
+
+  innerMargin = <%% 15, 15, 15, 15, 1 %%>;
   if (typeof option.style.innerMargin === "number") {
     innerMargin = option.style.innerMargin;
   }
 
-  textTop = -2;
+  textTop = <%% -2, -2, -2, -2, -0.2 %%>;
   if (typeof option.style.textTop === "number") {
     textTop = option.style.textTop;
   }
@@ -4064,7 +4070,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
       position: "relative",
       display: "block",
       width: String(blockWidth * columnsLength) + ea,
-      height: String((blockHeight * totalLength) + (borderWeight * totalLength * heightVisualRatio)) + ea,
+      // height: String((blockHeight * totalLength) + (borderWeight * totalLength * heightVisualRatio)) + ea,
       overflow: "hidden",
       border: String(borderWeight) + "px solid " + colorChip[borderColor],
       boxSizing: "border-box",
@@ -4134,7 +4140,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
                   display: "block",
                   width: String(100) + '%',
                   textAlign: "center",
-                  fontSize: String(size) + ea,
+                  fontSize: String(titleMap[i] === 1 ? titleSize : size) + ea,
                   fontWeight: String(titleMap[i] === 1 ? boldWeight : (boldMap[i][j] === 1 ? boldWeight : generalWeight)),
                   color: colorChip[titleMap[i] === 1 ? titleColor : generalColor],
                   top: String(textTop) + ea,

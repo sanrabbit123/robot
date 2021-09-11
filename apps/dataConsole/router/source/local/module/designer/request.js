@@ -125,7 +125,7 @@ DesignerJs.prototype.requestList = function (desid) {
   designer = this.designers.pick(desid);
   projects = designer.projects;
 
-  boxNumber = 6;
+  boxNumber = <%% 6, 6, 6, 6, 2 %%>;
   maxBoxNumber = projects.length;
 
   margin = 8;
@@ -156,9 +156,9 @@ DesignerJs.prototype.requestList = function (desid) {
   boxMargin = <%% 13, 13, 12, 10, 2 %%>;
 
   requestSize = <%% 26, 26, 25, 24, 5 %%>;
-  requestWordMargin = <%% 1, 1, 1, 1, 0.2 %%>;
+  requestWordMargin = <%% 1, 1, 1, 1, 0 %%>;
   requestWordPaddingTop = <%% 24, 24, 24, 24, 3 %%>;
-  requestWordPaddingBottom = <%% 32, 32, 32, 32, 3 %%>;
+  requestWordPaddingBottom = <%% 32, 32, 32, 32, 4 %%>;
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -179,7 +179,7 @@ DesignerJs.prototype.requestList = function (desid) {
       top: String(0) + ea,
       left: String(0) + ea,
       width: String(100) + '%',
-      borderRadius: String(5) + ea,
+      borderRadius: String(5) + "px",
       border: desktop ? ("1px solid " + colorChip.gray4) : "",
       background: colorChip.white,
       height: "auto",
@@ -240,7 +240,7 @@ DesignerJs.prototype.requestList = function (desid) {
           },
           children: [
             {
-              text: "고객님",
+              text: (desktop ? "고객님" : "고객님 의뢰서"),
               style: {
                 fontSize: String(requestSize) + ea,
                 fontWeight: String(200),
@@ -261,7 +261,7 @@ DesignerJs.prototype.requestList = function (desid) {
                 fontSize: String(requestSize) + ea,
                 fontWeight: String(200),
                 color: colorChip.black,
-                display: "inline-block",
+                display: desktop ? "inline-block" : "none",
               }
             }
           ]
@@ -276,7 +276,9 @@ DesignerJs.prototype.requestList = function (desid) {
     }
     thisChildWidth = thisChildWidth + (requestWordPaddingBottom * 3.2);
 
-    boxNumber = Math.floor((baseTong.getBoundingClientRect().width - (boxMargin * 2)) / (thisChildWidth + boxMargin));
+    if (desktop) {
+      boxNumber = Math.floor((baseTong.getBoundingClientRect().width - (boxMargin * 2)) / (thisChildWidth + boxMargin));
+    }
 
     requestBox.style.width = "calc(calc(100% - " + String((boxNumber + 2) * boxMargin) + ea + ") / " + String(boxNumber) + ")";
     requestBox.style.marginTop = String(Math.floor(i / boxNumber) === 0 ? boxMargin * 1.5 : boxMargin) + ea;
@@ -303,38 +305,56 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
       let thisBlock, motherTop;
       let visualSpecific;
 
-      mother.style.height = String(mother.getBoundingClientRect().height) + ea;
-      motherTop = mother.getBoundingClientRect().top;
+      if (desktop) {
 
-      visualSpecific = <%% 1, 1, 1, 0, 0 %%>;
+        mother.style.height = String(mother.getBoundingClientRect().height) + ea;
+        motherTop = mother.getBoundingClientRect().top;
 
-      for (let i = 0; i < blocks.length; i++) {
-        blocks[i].setAttribute("top", String(Math.floor(blocks[i].getBoundingClientRect().top - mother.getBoundingClientRect().top)) + ea);
-        blocks[i].setAttribute("left", String(Math.floor(blocks[i].getBoundingClientRect().left - Math.ceil(mother.getBoundingClientRect().left))) + ea);
-        if (i !== index) {
+        visualSpecific = <%% 1, 1, 1, 0, 0 %%>;
+
+        for (let i = 0; i < blocks.length; i++) {
+          blocks[i].setAttribute("top", String(Math.floor(blocks[i].getBoundingClientRect().top - mother.getBoundingClientRect().top)) + ea);
+          blocks[i].setAttribute("left", String(Math.floor(blocks[i].getBoundingClientRect().left - Math.ceil(mother.getBoundingClientRect().left))) + ea);
+          if (i !== index) {
+            blocks[i].style.animation = "fadedownlite 0.2s ease forwards";
+          } else {
+            for (let dom of blocks[i].children) {
+              dom.style.opacity = String(0);
+              thisBlock = blocks[i];
+            }
+          }
+        }
+
+        for (let block of blocks) {
+          block.style.position = "absolute";
+          block.style.margin = String(0);
+          block.style.left = block.getAttribute("left");
+          block.style.top = block.getAttribute("top");
+        }
+      } else {
+        motherTop = 3.8;
+
+        for (let i = 0; i < blocks.length; i++) {
           blocks[i].style.animation = "fadedownlite 0.2s ease forwards";
-        } else {
-          for (let dom of blocks[i].children) {
-            dom.style.opacity = String(0);
+          if (i === index) {
             thisBlock = blocks[i];
           }
         }
       }
 
-      for (let block of blocks) {
-        block.style.position = "absolute";
-        block.style.margin = String(0);
-        block.style.left = block.getAttribute("left");
-        block.style.top = block.getAttribute("top");
-      }
-
       GeneralJs.setTimeout(function () {
-        thisBlock.style.transition = "all 0.4s ease";
-        thisBlock.style.position = "absolute";
-        thisBlock.style.left = String(0);
-        thisBlock.style.top = String(0);
-        thisBlock.style.width = String(100) + '%';
-        thisBlock.style.height = String(100) + '%';
+        if (desktop) {
+          thisBlock.style.transition = "all 0.4s ease";
+          thisBlock.style.position = "absolute";
+          thisBlock.style.left = String(0);
+          thisBlock.style.top = String(0);
+          thisBlock.style.width = String(100) + '%';
+          thisBlock.style.height = String(100) + '%';
+        } else {
+          for (let block of blocks) {
+            block.style.position = "absolute";
+          }
+        }
 
         mother.parentElement.style.height = withOut((motherTop * 2) + visualSpecific, ea);
         mother.style.paddingTop = String(motherTop) + ea;
@@ -359,6 +379,9 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
             }
           });
           instance.requestContents(board, designer, project, client);
+          if (mobile) {
+            mother.style.marginBottom = "";
+          }
         }, 500);
 
       }, 400);
@@ -380,6 +403,122 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const proid = project.proid;
   const cliid = project.cliid;
   const title = "홈스타일링 의뢰서";
+  const initialContents = "안녕하세요, <b%권미정%b> 실장님!\n홈리에종에 의뢰하신 이경숙 고객님 관련 정보를 보내드립니다. <b%오프라인 엑스트라 토탈 스타일링 서비스%b>를 진행합니다.";
+  const mainContents = [
+    {
+      title: "현장 미팅",
+      contents: [
+        "2021-09-02 (목) 오후 12:00시 정오",
+      ]
+    },
+    {
+      title: "주소",
+      contents: [
+        "외부 카페 (장소가 정해지면 전달드리겠습니다.)",
+      ]
+    },
+    {
+      title: "현장 관련",
+      contents: [
+        "보문파크뷰자이 아파트",
+        "사용승인일 : 2017년 01월 18일",
+        "확장은 되어 있음",
+      ]
+    },
+    {
+      title: "시공 관련",
+      contents: [
+        "전체 시공 + 구조 변경 가능성 + 디자인 시공",
+        "샤시 제외",
+        "주방 및 화장실 쪽 구조 변경에도 관심 있음",
+        "명확한 공정별 디자인 니즈가 정해지지는 않았고 디자이너의 기획이 필요함",
+        "사업장 인테리어 경험 있음",
+        "당시에는 동네 개인업체에서 했고 디자인에 대한 만족도는 있었는데 마감이 부족했다고 함",
+        "꼼꼼한 마감 완성도에 대한 기대가 있습니다. ",
+      ]
+    },
+    {
+      title: "스타일링 관련",
+      contents: [
+        "의류 사업을 하시는 분",
+        "거실에서 제품 촬영도 할 수 있는 감성적인 공간 원함",
+        "가전 및 가구 전체 구매",
+      ]
+    },
+    {
+      title: "예산 관련",
+      contents: [
+        "총 1억 ~ 최대 1억 5000만원",
+        "가전까지 구매했을 때 최대 1억 5000을 생각하시는 것 같습니다.",
+        "현재 2~3개 업체 비딩 중이어서 가용예산에 대해서는 변동 가능성이 있습니다. ",
+        "고객의 전체 예산과 예산 활용 관련하여 미팅시 꼭 논의해주세요! 이슈가 발생하는 부분입니다.",
+        "시공에 필요한 대략의 예산과 스타일링에 필요한 예산을 구분해서 대략적으로 안내해주셔야 합니다.",
+      ]
+    }
+  ];
+  const pictureContents = "고객님이 선택하고 전송한 사진";
+  const pictures = [
+      "t5a77.jpg",
+      "t2a62.jpg",
+      "t3p10.jpg",
+      "t1p76.jpg",
+      "t14a81.jpg",
+      "t7a54.jpg",
+      "t7p101.jpg",
+      "t6p75.jpg",
+      "t1p74.jpg",
+      "t7p46.jpg",
+      "t7p50.jpg",
+      "t9p112.jpg"
+  ];
+  const noticeContents = [
+    {
+      title: "서비스비 안내",
+      contents: [
+        "이번 현장의 서비스비는 4,200,000원(VAT별도)으로 책정되어 있습니다.",
+        "홈리에종의 계약금은 300,000원(VAT별도)으로 책정되어 있습니다. ",
+        "현재 고객은 홈리에종에 계약금 330,000원을 입금한 상태며, 현장 미팅 후 계약금을 제외한 서비스비를 전액 입금할 경우 서비스가 계속 진행됩니다.",
+        "★ 현장 미팅 후 서비스비 지불 전에는 디자이너와 스타일링 논의를 할 수 없는 것이 원칙입니다.(고객에게도 필요시 안내해주세요)",
+        "★ 서비스 진행중 타 공간에 대한 전체적인 스타일링이 추가되는 경우 꼭! 홈리에종을 통해 디자인비 조정이 될 수 있도록 해주세요.",
+        "법인/개인사업자(일반과세), 개인사업자(간이과세), 프리랜서 정산 중에 정산 방식을 알려주시면 수수료를 제외한 정확한 정산액은 계산하여 말씀드리겠습니다.",
+      ]
+    },
+    {
+      title: "고객 안내 사항과 서비스 구성",
+      contents: [
+        "디자이너와 카톡(문자)/전화/메일 등의 채널을 통해 커뮤니케이션 하면서 전체 스타일링을 완성합니다. 커뮤니케이션에 적극적으로 참여해주시면 더 좋은 결과물을 얻으실 수 있습니다.",
+        "디자이너와 현장 미팅을 진행하며 집컨디션/취향/생활특징/예산을 고려하여 컨설팅 해드립니다.",
+        "시공팀은 추천하는 시공팀 외에 고객이 개별적으로 알아본 시공팀과 진행 가능합니다.",
+        "시공 진행시 디자이너는 시공 방향 제시 및 전체 마감재를 셀렉해드립니다.",
+        "기존에 사용하시는 가구들 중 가져갈 가구와 버릴가구 선택 및 배치/활용 제안 드립니다. 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
+        "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
+        "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4품목중에서 셀렉은 가능합니다.",
+        "디자이너 제안 후 고객 컨펌이 완료된 구매제품은 고객이 구매하실 수 있도록 안내드립니다. 연계 업체의 제품 구매시에는 할인혜택을 받으실 수 있습니다. 모든 제품이 해당되는 것은 아니며 업체마다 차이가 있습니다.",
+        "제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다. 배송된 제품의 수령, 언박싱, 조립, 1차배치는 고객님께서 진행하시게 됩니다. 구매 및 물품배치가 완료되면 디자이너의 마무리터치 후 인터뷰와 촬영을 진행합니다.",
+      ]
+    },
+    {
+      title: "시공 연계수수료 안내",
+      contents: [
+        "고객이 시공 계약을 체결한 곳에 공사진행과 A/S에 대한 책임이 있습니다. (고객에게 동일하게 안내합니다.)",
+        "고객이 데려온 시공팀과 진행할 경우 디자이너는 시공자재 셀렉과 필요시 시공관련 커뮤니케이션 업무가 있을 수 있습니다.",
+        "고객이 실장님 또는 실장님과 협업하시는 시공사와 시공 계약을 체결할 경우 전체 계약 금액의 5%가 시공 연계 수수료 입니다.",
+        "홈리에종은 적법한 방식의 시공계약을 권장하며, (세금 없는) 현금 거래로 시공을 진행했을 경우에도 시공 연계 수수료는 공급가에 VAT 10%를 더한 금액으로 전자세금계산서를 발행합니다. 입금하실 때에도 공급가에 VAT10% 더한 금액을 입금해주셔야합니다.",
+      ]
+    },
+    {
+      title: "정산 안내",
+      contents: [
+        "홈리에종에서 받은 서비스비는 수수료를 제하고 스타일링 시작 후 실장님께 선금 50%를 먼저 정산하고",
+        "스타일링이 마무리되면 나머지 50%를 정산합니다.",
+        "스타일링 마무리는",
+        "1) 스타일링 제안이 마무리되어 제품들이 배송단계에 있고",
+        "2) 촬영일이 (변동되더라도) 어느정도 정해지고",
+        "3) 실장님께서 디자이너의 디자인 의도가 담긴 글(폼을 따로 드립니다) 저희쪽에 주시면",
+        "4) 홈리에종에서 고객님께 정산 여부를 확인 후 정산을 진행합니다.",
+      ]
+    }
+  ];
   try {
     const divToInput = async function (e) {
       try {
@@ -507,15 +646,15 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     }
     const matrix = [
       [ "고객 정보", "", "공간 정보", "" ],
-      [ "고객명", "이경숙", "계약 형태", "자가" ],
-      [ "연락처", "010-4928-2754", "사전점검일", "거주중" ],
-      [ "가족구성원", "부부, 아들 1", "집 비는 날", "2021-12-23 예정" ],
-      [ "주소", "서울 성북구 보문사길 111 보문파크뷰자이 아파트 109동 1004호 34A형", "입주 예정일", "2022-01월말 입주" ],
-      [ "", "", "특이 사항", "공사 기간 1달 소요 예상" ],
-      [ "예산", "1억~ 최대 1억 5000만원 계획", "공간구성", "방3, 화장실2, 발코니 확장" ],
+      [ (desktop ? "고객명" : "성함"), "이경숙", (desktop ? "계약 형태" : "계약"), "자가" ],
+      [ "연락처", "010-4928-2754", (desktop ? "사전 점검일" : "사전점검"), "거주중" ],
+      [ (desktop ? "가족 구성원" : "가족"), "부부, 아들 1", (desktop ? "집 비는 날" : "비는 날"), "2021-12-23 예정" ],
+      [ "주소", "서울 성북구 보문사길 111 보문파크뷰자이 아파트 109동 1004호 34A형", (desktop ? "입주 예정일" : "입주일"), "2022-01월말 입주" ],
+      [ "", "", (desktop ? "특이 사항" : "기타"), "공사 기간 1달 소요 예상" ],
+      [ "예산", "1억~ 최대 1억 5000만원 계획", (desktop ? "공간구성" : "구성"), "방3, 화장실2, 발코니 확장" ],
       [ "서비스 정보", "", "고객 요청", "" ],
       [ "서비스", "엑스트라 스타일링", "깔끔하고 수납 전체적인인테리어와 스타일링", "" ],
-      [ "선호 컨셉", "베이지톤, 아늑, 감성적인 분위기", "", "" ],
+      [ (desktop ? "선호 컨셉" : "컨셉"), "베이지톤, 아늑, 감성적인 분위기", "", "" ],
       [ "시공", "전체 시공, 디자인 시공", "", "" ],
       [ "스타일링", "전체 구매", "", "" ],
     ];
@@ -562,15 +701,8 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       [ 1, 0, 0, 0 ],
     ];
     const titleMap = [ 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ];
-    const widthRatio = [ 1, 3, 1, 3 ];
+    const widthRatio = desktop ? [ 1, 3, 1, 3 ] : [ 1, 2, 1, 2 ];
     const today = new Date();
-    const initialContents = "안녕하세요, <b%권미정%b> 실장님!\n홈리에종에 의뢰하신 이경숙 고객님 관련 정보를 보내드립니다. <b%오프라인 엑스트라 토탈 스타일링 서비스%b>를 진행합니다.";
-    const clientInfoWhereWhen = [
-      "현장 미팅",
-      "2021-09-02 (목) 오후 12:00시 정오",
-      "주소",
-      "외부 카페 (장소가 정해지면 전달드리겠습니다.)",
-    ];
     let titleArea;
     let contentsArea;
     let topMargin;
@@ -586,27 +718,46 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     let contentsClientInfo;
     let clientInfoLeftWidth;
     let width;
-    let wordsBetween0, wordsBetween1;
+    let wordsBetween0, wordsBetween1, wordsBetween2;
     let leftIndent;
     let words;
     let arrowTop, arrowWidth, arrowLeft;
+    let tempDom;
+    let tableVisual;
+    let lineHeight;
+    let contentsClientPhoto;
+    let contentsClientPhotoTong;
+    let images;
+    let photoWidth;
+    let photoMargin;
+    let photoNumber;
+    let clientInfoBottom;
+    let noticeDom;
+    let finalBottom;
 
-    topMargin = 42;
-    leftMargin = 50;
-    titleSize = 35;
-    titleBottom = 35;
-    titlePaddingBottom = 18;
-    titlePaddingLeft = 1;
-    fontSize = 15;
-    titleDateVisualBottom = 2;
-    contentsBetween = 28;
-    clientInfoLeftWidth = 340;
-    wordsBetween0 = 6;
-    wordsBetween1 = 18;
-    leftIndent = 15;
-    arrowTop = 5.5;
-    arrowWidth = 8;
-    arrowLeft = 1;
+    topMargin = <%% 42, 42, 42, 42, 5.5 %%>;
+    leftMargin = <%% 50, 50, 50, 50, 5.5 %%>;
+    titleSize = <%% 35, 35, 35, 35, 5.5 %%>;
+    titlePaddingLeft = <%% 1, 1, 1, 1, 0 %%>;
+    titleBottom = <%% 35, 35, 35, 35, 4 %%>;
+    titlePaddingBottom = <%% 18, 18, 18, 18, 2.8 %%>;
+    titleDateVisualBottom = <%% 2, 2, 2, 2, 0.5 %%>;
+    clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
+    fontSize = <%% 15, 15, 15, 15, 3.5 %%>;
+    contentsBetween = <%% 32, 32, 32, 32, 5 %%>;
+    clientInfoLeftWidth = <%% 400, 400, 400, 400, 20 %%>;
+    wordsBetween0 = <%% 6, 6, 6, 6, 0.5 %%>;
+    wordsBetween1 = <%% 22, 22, 22, 22, 2.5 %%>;
+    wordsBetween2 = <%% 10, 10, 10, 10, 1 %%>;
+    tableVisual = <%% 20, 20, 20, 20, 2 %%>;
+    leftIndent = <%% 15, 15, 15, 15, 2.5 %%>;
+    arrowTop = <%% 5.5, 5.5, 5.5, 5.5, 1.6 %%>;
+    arrowWidth = <%% 8, 8, 8, 8, 1.6 %%>;
+    arrowLeft = <%% 1, 1, 1, 1, 0 %%>;
+    lineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.65 %%>;
+    photoWidth = <%% 260, 260, 260, 260, 20 %%>;
+    photoMargin = <%% 10, 10, 10, 10, 1.5 %%>;
+    finalBottom = <%% 240, 240, 240, 240, 10 %%>;
 
     sum = 0;
     for (let i of widthRatio) {
@@ -665,8 +816,8 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             fontSize: String(fontSize) + ea,
             fontWeight: String(400),
             color: colorChip.black,
-            lineHeight: String(1.6),
-            marginBottom: String(contentsBetween) + ea,
+            lineHeight: String(lineHeight),
+            marginBottom: String(titleBottom) + ea,
           },
           bold: {
             fontWeight: String(600),
@@ -683,62 +834,209 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
         display: "block",
         width: String(100) + '%',
         textAlign: "right",
+        marginBottom: String(clientInfoBottom) + ea,
       },
       children: [
         {
           style: {
-            position: "absolute",
+            position: desktop ? "absolute" : "relative",
             top: String(0),
-            left: String(leftIndent) + ea,
-            width: String(clientInfoLeftWidth) + ea,
+            paddingLeft: String(desktop ? leftIndent : 0) + ea,
+            width: desktop ? String(clientInfoLeftWidth) + ea : String(100) + '%',
             height: String(100) + '%',
             verticalAlign: "top",
             textAlign: "left",
+            overflow: "scroll",
+            borderBottom: "1px solid " + colorChip.gray3,
+            boxSizing: "border-box",
+            paddingBottom: desktop ? "" : String(titleBottom) + ea
           }
         }
       ]
     });
 
-    width = (contentsClientInfo.getBoundingClientRect().width - clientInfoLeftWidth - contentsBetween - leftIndent) / sum;
+    if (desktop) {
+      width = (contentsClientInfo.getBoundingClientRect().width - clientInfoLeftWidth - contentsBetween - leftIndent - tableVisual) / sum;
+      contentsClientInfo.appendChild(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
+      contentsClientInfo.children[1].style.display = "inline-block";
+      contentsClientInfo.children[1].style.verticalAlign = "top";
+    } else {
+      width = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2)) / sum;
+      contentsClientInfo.insertBefore(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }), contentsClientInfo.firstChild);
+      contentsClientInfo.children[0].style.marginBottom = String(titleBottom) + ea;
+    }
 
-    contentsClientInfo.appendChild(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
-    contentsClientInfo.children[1].style.display = "inline-block";
-    contentsClientInfo.children[1].style.verticalAlign = "top";
-
-    for (let i = 0; i < clientInfoWhereWhen.length; i++) {
+    for (let { title, contents } of mainContents) {
       words = createNode({
-        mother: contentsClientInfo.children[0],
-        text: clientInfoWhereWhen[i],
+        mother: contentsClientInfo.children[desktop ? 0 : 1],
+        text: title,
         style: {
           position: "relative",
           fontSize: String(fontSize) + ea,
-          fontWeight: String(i % 2 === 0 ? 600 : 400),
+          fontWeight: String(600),
           color: colorChip.black,
-          marginBottom: String(i % 2 === 1 ? wordsBetween1 : wordsBetween0) + ea,
+          marginBottom: String(wordsBetween0) + ea,
+          paddingLeft: String(leftIndent) + ea,
         }
       });
-      if (i % 2 === 0) {
-        createNode({
-          mother: words,
-          mode: "svg",
-          source: mother.returnArrow("right", colorChip.green),
-          style: {
-            position: "absolute",
-            width: String(arrowWidth) + ea,
-            left: String((-1 * leftIndent) + arrowLeft) + ea,
-            top: String(arrowTop) + ea,
-          }
-        });
-      }
-
+      createNode({
+        mother: words,
+        mode: "svg",
+        source: mother.returnArrow("right", colorChip.green),
+        style: {
+          position: "absolute",
+          width: String(arrowWidth) + ea,
+          left: String(desktop ? (-1 * leftIndent) + arrowLeft : 0) + ea,
+          top: String(arrowTop) + ea,
+        }
+      });
+      createNode({
+        mother: contentsClientInfo.children[desktop ? 0 : 1],
+        text: contents.map((z) => { return "<b%-%b> " + z; }).join("\n"),
+        style: {
+          position: "relative",
+          fontSize: String(fontSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.black,
+          lineHeight: String(lineHeight),
+          marginBottom: String(wordsBetween1) + ea,
+        },
+        bold: {
+          color: colorChip.gray4,
+        }
+      });
     }
 
+    contentsClientPhoto = createNode({
+      mother: contentsArea,
+      style: {
+        position: "relative",
+        display: "block",
+        width: String(100) + '%',
+        marginBottom: String(clientInfoBottom) + ea,
+      },
+      children: [
+        {
+          text: pictureContents,
+          style: {
+            paddingLeft: String(leftIndent) + ea,
+            position: "relative",
+            display: "block",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            marginBottom: String(wordsBetween1) + ea,
+          },
+          children: [
+            {
+              mode: "svg",
+              source: mother.returnArrow("right", colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(arrowWidth) + ea,
+                left: String(arrowLeft) + ea,
+                top: String(arrowTop) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            display: "block",
+          },
+        }
+      ]
+    });
 
+    contentsClientPhotoTong = contentsClientPhoto.children[1];
+    images = pictures.map((image) => {
+      const imageLink = "/corePortfolio/listImage";
+      let pid;
+      pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
+      return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
+    });
 
+    if (desktop) {
+      photoNumber = Math.floor((contentsClientPhotoTong.getBoundingClientRect().width + photoMargin) / (photoWidth + photoMargin));
+      photoWidth = (contentsClientPhotoTong.getBoundingClientRect().width - (photoMargin * (photoNumber - 1))) / photoNumber;
+    } else {
+      photoNumber = 2;
+      photoWidth = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2) - photoMargin) / photoNumber;
+    }
 
+    for (let i = 0; i < images.length; i++) {
+      createNode({
+        mother: contentsClientPhotoTong,
+        mode: "img",
+        class: [ "hoverDefault_lite" ],
+        attribute: [
+          { src: images[i] }
+        ],
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: String(photoWidth) + ea,
+          borderRadius: String(3) + "px",
+          marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
+          marginBottom: String(Math.floor(i / photoNumber) === Math.floor((images.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
+        }
+      });
+    }
 
+    for (let { title, contents } of noticeContents) {
+      noticeDom = createNode({
+        mother: contentsArea,
+        style: {
+          position: "relative",
+          display: "block",
+          width: String(100) + '%',
+          marginBottom: String(contentsBetween) + ea,
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              paddingLeft: String(leftIndent) + ea,
+              position: "relative",
+              display: "block",
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              marginBottom: String(wordsBetween2) + ea,
+            },
+            children: [
+              {
+                mode: "svg",
+                source: mother.returnArrow("right", colorChip.green),
+                style: {
+                  position: "absolute",
+                  width: String(arrowWidth) + ea,
+                  left: String(arrowLeft) + ea,
+                  top: String(arrowTop) + ea,
+                }
+              }
+            ]
+          },
+          {
+            text: contents.map((z) => { return "<b%-%b> " + z; }).join("\n"),
+            style: {
+              position: "relative",
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              lineHeight: String(lineHeight),
+            },
+            bold: {
+              color: colorChip.gray4,
+            }
+          }
+        ]
+      });
+    }
 
-
+    board.style.height = "auto";
+    board.style.paddingBottom = String(finalBottom) + ea;
 
   } catch (e) {
     console.log(e);
@@ -837,7 +1135,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     {
       mother,
       style: {
-        display: (instance.middleMode ? "none" : "block"),
+        display: (instance.middleMode || mobile ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -862,7 +1160,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: ((instance.middleMode || mobile) ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -887,7 +1185,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     {
       mother,
       style: {
-        display: (instance.middleMode ? "none" : "block"),
+        display: (instance.middleMode || mobile ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -912,7 +1210,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: ((instance.middleMode || mobile) ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -937,7 +1235,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     {
       mother,
       style: {
-        display: (instance.middleMode ? "none" : "block"),
+        display: (instance.middleMode || mobile ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
