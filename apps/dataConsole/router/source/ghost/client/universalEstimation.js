@@ -1210,8 +1210,11 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         oid: getObj.oid,
         impId: getObj.imp_uid,
       }, "/inicisPayment");
-      alert(hash)
-      window.location.href = window.location.protocol + "//" + window.location.host + window.window.pathname + "?cliid=" + cliid + "&needs=" + getObj.needs + "&request=" + String(instance.requestNumber) + "&mode=complete&hash=" + hash;
+      data = await ajaxJson({
+        hash: getObj.hash,
+        mode: "decrypto",
+      }, "/inicisPayment", { equal: true });
+      await this.payComplete(data);
     }
 
     if (getObj.hash !== undefined) {
