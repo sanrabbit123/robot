@@ -4350,6 +4350,7 @@ DataPatch.prototype.projectMap = function () {
                 input.parentElement.style.transition = "";
                 input.parentElement.style.color = "inherit";
                 mother.removeChild(document.querySelector(".divTong"));
+                window.location.reload();
               }
             }).catch((err) => {
               throw new Error(err.message);
