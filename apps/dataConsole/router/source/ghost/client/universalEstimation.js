@@ -1204,17 +1204,14 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     this.completeInfo = {};
 
     if (getObj.mobilecard !== undefined) {
-      const { hash } = await ajaxJson({
+      const { convertingData } = await ajaxJson({
         mode: "mobileCard",
         mid: getObj.mid,
         oid: getObj.oid,
         impId: getObj.imp_uid,
       }, "/inicisPayment");
-      data = await ajaxJson({
-        hash: getObj.hash,
-        mode: "decrypto",
-      }, "/inicisPayment", { equal: true });
-      await this.payComplete(data);
+      console.log(convertingData);
+      await this.payComplete(convertingData);
     }
 
     if (getObj.hash !== undefined) {

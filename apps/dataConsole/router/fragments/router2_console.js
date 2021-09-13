@@ -3239,10 +3239,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           payDevice: "MOBILE",
           P_FN_NM: paymentData.card_name,
         };
-        const responseData = await cryptoString(password, JSON.stringify(convertingData));
-
         res.set({ "Content-Type": "application/json" });
-        res.send(JSON.stringify({ hash: responseData }));
+        res.send(JSON.stringify({ convertingData }));
 
       } else {
 
