@@ -3245,7 +3245,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         };
         const responseData = await cryptoString(password, JSON.stringify(convertingData));
 
-        res.redirect("/middle/estimation?cliid=" + cliid + "&needs=" + needs + "&request=" + String(requestNumber) + "&mode=complete" + "&hash=" + responseData);
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ hash: responseData }));
 
       } else {
 

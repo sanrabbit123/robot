@@ -1204,18 +1204,16 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     this.completeInfo = {};
 
     if (getObj.mobilecard !== undefined) {
-      ajaxJson({
+      alert("success");
+      const { hash } = await ajaxJson({
         mode: "mobileCard",
         mid: formValue.mid,
         oid: formValue.oid,
         requestNumber: String(instance.requestNumber),
         cliid: cliid,
         needs: getObj.needs
-      }, "/inicisPayment").then(() => {
-        console.log("done");
-      }).catch((err) => {
-        console.log(err);
-      });
+      }, "/inicisPayment");
+      window.location.href = window.location.protocol + "//" + window.location.host + window.window.pathname + "?cliid=" + cliid + "&needs=" + getObj.needs + "&request=" + String(instance.requestNumber) + "&mode=complete&hash=" + hash;
     }
 
     if (getObj.hash !== undefined) {
