@@ -302,11 +302,8 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   return async function (e) {
     try {
       const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients");
-      const clientHistory = await ajaxJson({ id: client.cliid }, "/getClientHistory");
-      const projectHistory = await ajaxJson({ id: project.proid }, "/getProjectHistory");
-
-      console.log(clientHistory);
-      console.log(projectHistory);
+      const clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
+      const projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory");
 
       let thisBlock, motherTop;
       let visualSpecific;
@@ -384,7 +381,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
               marginBottom: String(motherTop) + ea,
             }
           });
-          instance.requestContents(board, designer, project, client);
+          instance.requestContents(board, designer, project, client, clientHistory, projectHistory);
           if (mobile) {
             mother.style.marginBottom = "";
           }
@@ -398,7 +395,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   }
 }
 
-DesignerJs.prototype.requestContents = async function (board, designer, project, client) {
+DesignerJs.prototype.requestContents = async function (board, designer, project, client, clientHistory, projectHistory) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
@@ -409,7 +406,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const proid = project.proid;
   const cliid = project.cliid;
   const title = "홈스타일링 의뢰서";
-  const initialContents = "안녕하세요, <b%권미정%b> 실장님!\n홈리에종에 의뢰하신 이경숙 고객님 관련 정보를 보내드립니다. <b%오프라인 엑스트라 토탈 스타일링 서비스%b>를 진행합니다.";
+  const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" +   GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
   const mainContents = [
     {
       title: "현장 미팅",
@@ -463,20 +460,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     }
   ];
   const pictureContents = "고객님이 선택하고 전송한 사진";
-  const pictures = [
-      "t5a77.jpg",
-      "t2a62.jpg",
-      "t3p10.jpg",
-      "t1p76.jpg",
-      "t14a81.jpg",
-      "t7a54.jpg",
-      "t7p101.jpg",
-      "t6p75.jpg",
-      "t1p74.jpg",
-      "t7p46.jpg",
-      "t7p50.jpg",
-      "t9p112.jpg"
-  ];
+  const pictures = clientHistory.curation.image;
   const noticeContents = [
     {
       title: "서비스비 안내",
