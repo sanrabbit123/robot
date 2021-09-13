@@ -4327,6 +4327,7 @@ DataPatch.prototype.projectMap = function () {
             GeneralJs.ajaxJson(ajaxData, PYTHONHOST + "/serviceConverting").then((report) => {
               let message;
               message = "다음 상세 사항을 확인해주세요! 추가 견적이 발생할 경우 자동으로 알림톡이 발송될 예정입니다, 확실합니까?\n";
+              message += "기존 공급가 : " + GeneralJs.autoComma(report.price.past) + '원' + '\n';
               message += "새로운 공급가 : " + GeneralJs.autoComma(report.price.supply) + '원' + '\n';
               message += "새로운 잔금 : " + GeneralJs.autoComma(report.price.remain) + '원' + '\n';
               message += "안내될 차액 : " + GeneralJs.autoComma(report.price.between) + '원' + '\n';
@@ -4340,14 +4341,16 @@ DataPatch.prototype.projectMap = function () {
                   resolve(null);
                 });
               }
-            }).then(() => {
-              window.alert("성공적으로 전환되었습니다!");
-              input.style.transition = "0s all ease";
-              input.style.color = "transparent";
-              input.value = totalString;
-              input.parentElement.style.transition = "";
-              input.parentElement.style.color = "inherit";
-              mother.removeChild(document.querySelector(".divTong"));
+            }).then((res) => {
+              if (res !== null) {
+                window.alert("성공적으로 전환되었습니다!");
+                input.style.transition = "0s all ease";
+                input.style.color = "transparent";
+                input.value = totalString;
+                input.parentElement.style.transition = "";
+                input.parentElement.style.color = "inherit";
+                mother.removeChild(document.querySelector(".divTong"));
+              }
             }).catch((err) => {
               throw new Error(err.message);
             });

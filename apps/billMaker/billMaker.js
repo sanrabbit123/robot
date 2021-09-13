@@ -2745,6 +2745,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
 
         return {
           price: {
+            past: process.contract.remain.calculation.amount.supply,
             supply: newSupply,
             remain: newRequestPrice,
             between: newRequestAmount
@@ -2952,6 +2953,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     return returnObject;
 
   } catch (e) {
+    await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
     console.log(e);
   }
 }
@@ -3430,6 +3432,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     return returnObject;
 
   } catch (e) {
+    await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
     console.log(e);
   }
 }
