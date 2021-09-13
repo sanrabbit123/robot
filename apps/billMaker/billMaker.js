@@ -533,17 +533,18 @@ BillMaker.billDictionary = {
         description: "취소된 디자이너의 1회 미팅에 대한 비용입니다.",
         unit: {
           ea: null,
-          price: 110000,
+          price: 100000,
           number: 1
         },
         amount: {
-          pure: 110000,
+          pure: 100000,
           commission: 220000,
         },
         comments: [
           "디자이너 변경으로 인해 미팅을 하신 프로젝트가 취소되었습니다.",
           "1회 미팅에 대한 금액을 정산해드리는 비용입니다."
-        ]
+        ],
+        total: 330000,
       }
     }
   },
@@ -3035,6 +3036,8 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     let bankTo;
     let newDesignerFeeObject;
     let safeNum;
+    let designerCancelObject;
+    let designerCancelCalculate;
 
     safeNum = 0;
     while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 200) {
@@ -3300,14 +3303,22 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
           for (let res of pastResponses) {
             if (res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
               if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+
+                designerCancelObject = equalJson(JSON.stringify(designerCancel));
+                [ designerCancelCalculate ] = BillMaker.designerCalculation(designerCancelObject.unit.price, classification, 0, null, { toArray: true, forcePercentage: true });
+                designerCancelObject.unit.price = designerCancelCalculate;
+                designerCancelObject.amount.pure = designerCancelCalculate;
+                designerCancelObject.amount.commission = designerCancelObject.total - designerCancelCalculate;
+
                 res.items = res.items.slice(0, 1);
-                res.items[0].id = thisBill.bilid + designerCancel.id;
-                res.items[0].class = designerCancel.class;
-                res.items[0].name = designerCancel.name;
-                res.items[0].description = designerCancel.description;
-                res.items[0].unit = designerCancel.unit;
-                res.items[0].amount = designerCancel.amount;
-                res.comments = designerCancel.comments;
+                res.items[0].id = thisBill.bilid + designerCancelObject.id;
+                res.items[0].class = designerCancelObject.class;
+                res.items[0].name = designerCancelObject.name;
+                res.items[0].description = designerCancelObject.description;
+                res.items[0].unit = designerCancelObject.unit;
+                res.items[0].amount = designerCancelObject.amount;
+                res.comments = designerCancelObject.comments;
+
               }
               newResponses.push(res);
               break;
@@ -3395,14 +3406,22 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
           for (let res of pastResponses) {
             if (res.name !== BillMaker.billDictionary.styling.responses.secondDesignFee.name) {
               if (res.name === BillMaker.billDictionary.styling.responses.firstDesignFee.name) {
+
+                designerCancelObject = equalJson(JSON.stringify(designerCancel));
+                [ designerCancelCalculate ] = BillMaker.designerCalculation(designerCancelObject.unit.price, classification, 0, null, { toArray: true, forcePercentage: true });
+                designerCancelObject.unit.price = designerCancelCalculate;
+                designerCancelObject.amount.pure = designerCancelCalculate;
+                designerCancelObject.amount.commission = designerCancelObject.total - designerCancelCalculate;
+
                 res.items = res.items.slice(0, 1);
-                res.items[0].id = thisBill.bilid + designerCancel.id;
-                res.items[0].class = designerCancel.class;
-                res.items[0].name = designerCancel.name;
-                res.items[0].description = designerCancel.description;
-                res.items[0].unit = designerCancel.unit;
-                res.items[0].amount = designerCancel.amount;
-                res.comments = designerCancel.comments;
+                res.items[0].id = thisBill.bilid + designerCancelObject.id;
+                res.items[0].class = designerCancelObject.class;
+                res.items[0].name = designerCancelObject.name;
+                res.items[0].description = designerCancelObject.description;
+                res.items[0].unit = designerCancelObject.unit;
+                res.items[0].amount = designerCancelObject.amount;
+                res.comments = designerCancelObject.comments;
+
               }
               newResponses.push(res);
               break;
@@ -4182,6 +4201,10 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
     let num;
     let tempObj;
     let cancelItem;
+    let designer;
+    let designerCancelObject;
+    let classification;
+    let designerCancelCalculate;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -4252,6 +4275,8 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
     }
 
     project = await back.getProjectById(thisBill.links.proid, { selfMongo: MONGOCOREC });
+    designer = await back.getDesignerById(project.desid, { selfMongo: MONGOCOREC });
+    classification = designer.information.business.businessInfo.classification;
 
     //report
     resultObj = { bilid };
@@ -4267,15 +4292,22 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
     projectUpdateQuery = {};
 
     cancelItem = this.returnBillDummies("responseItems");
-    cancelItem.id = thisBill.bilid + designerCancel.id;
-    cancelItem.class = designerCancel.class;
-    cancelItem.name = designerCancel.name;
-    cancelItem.description = designerCancel.description;
-    cancelItem.unit = designerCancel.unit;
-    cancelItem.amount = designerCancel.amount;
+
+    designerCancelObject = equalJson(JSON.stringify(designerCancel));
+    [ designerCancelCalculate ] = BillMaker.designerCalculation(designerCancelObject.unit.price, classification, 0, null, { toArray: true, forcePercentage: true });
+    designerCancelObject.unit.price = designerCancelCalculate;
+    designerCancelObject.amount.pure = designerCancelCalculate;
+    designerCancelObject.amount.commission = designerCancelObject.total - designerCancelCalculate;
+
+    cancelItem.id = thisBill.bilid + designerCancelObject.id;
+    cancelItem.class = designerCancelObject.class;
+    cancelItem.name = designerCancelObject.name;
+    cancelItem.description = designerCancelObject.description;
+    cancelItem.unit = designerCancelObject.unit;
+    cancelItem.amount = designerCancelObject.amount;
 
     updateQuery["responses." + String(firstResponseIndex) + ".items"] = [ cancelItem ];
-    updateQuery["responses." + String(firstResponseIndex) + ".comments"] = designerCancel.comments;
+    updateQuery["responses." + String(firstResponseIndex) + ".comments"] = designerCancelObject.comments;
     updateQuery["responses." + String(secondResponseIndex) + ".removal"] = now;
     updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".unit.price"] = 0;
     updateQuery["responses." + String(secondResponseIndex) + ".items." + String(secondResponseIndexItemIndex) + ".amount.pure"] = 0;
@@ -4283,8 +4315,8 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
 
     projectUpdateQuery["process.contract.first.cancel"] = now;
     projectUpdateQuery["process.contract.form.date.cancel"] = now;
-    projectUpdateQuery["process.calculation.payments.totalAmount"] = designerCancel.amount.pure;
-    projectUpdateQuery["process.calculation.payments.first.amount"] = designerCancel.amount.pure;
+    projectUpdateQuery["process.calculation.payments.totalAmount"] = designerCancelObject.amount.pure;
+    projectUpdateQuery["process.calculation.payments.first.amount"] = designerCancelObject.amount.pure;
     projectUpdateQuery["process.calculation.payments.remain.amount"] = 0;
 
     await this.updateBill([ whereQuery, updateQuery ], { selfMongo: MONGOC });

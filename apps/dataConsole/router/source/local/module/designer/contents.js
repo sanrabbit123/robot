@@ -2865,7 +2865,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
                       dateValue = thisCase["date"].textContent.trim();
 
-                      if (dateValue !== "미정" && dateValue !== "해당 없음") {
+                      if (dateValue !== "미정" && dateValue !== "해당 없음" && /디자이너/gi.test(thisCase["photographer"].textContent) && /고객/gi.test(thisCase["photographer"].textContent)) {
                         tempArr = dateValue.split('-');
                         updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
                         start = updateDate;
