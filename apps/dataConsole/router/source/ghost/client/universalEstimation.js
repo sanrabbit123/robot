@@ -926,7 +926,60 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                 buyer_tel: instance.client.phone,
             }, (rsp) => {
               if (rsp.success) {
-                ajaxJson({
+                alert("안녕하세요!");
+                const ajaxPromise = function (data, url) {
+                  if (data === undefined && url === undefined) {
+                    throw new Error("must be arguments (data, url)");
+                  } else if (data !== undefined && url === undefined) {
+                    url = data;
+                    data = "";
+                  }
+                  let dataString;
+                  if (typeof data === "object") {
+                    dataString = "";
+                    for (let i in data) {
+                      dataString += i.replace(/[\=\&]/g, '');
+                      dataString += '=';
+                      if (typeof data[i] === "object") {
+                        if (data[i] instanceof Date) {
+                          dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
+                        } else {
+                          dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+                        }
+                      } else {
+                        dataString += String(data[i]).replace(/[\=\&]/g, '');
+                      }
+                      dataString += '&';
+                    }
+                    data = dataString.slice(0, -1);
+                  }
+                  return new Promise(function (resolve, reject) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("POST", url);
+                    xhr.onload = function () {
+                     if (xhr.readyState !== 4) { return }
+                     if (xhr.status >= 200 && xhr.status < 300) {
+                       resolve(xhr.response);
+                     } else {
+                       reject({
+                         status: this.status,
+                         statusText: xhr.statusText
+                       });
+                     }
+                    };
+                    xhr.onerror = function () {
+                     reject({
+                       status: this.status,
+                       statusText: xhr.statusText
+                     });
+                    };
+                    if (typeof data === "string") {
+                      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    }
+                    xhr.send(data);
+                  });
+                }
+                ajaxPromise({
                   mode: "mobileCard",
                   mid: formValue.mid,
                   oid: formValue.oid,
