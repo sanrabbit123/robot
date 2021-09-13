@@ -67,8 +67,17 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
 
+    const impId = "imp_824242496119";
+    const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+      imp_key: address.officeinfo.import.key,
+      imp_secret: address.officeinfo.import.secret
+    }, { headers: { "Content-Type": "application/json" } }));
+    const data = await requestSystem("https://api.iamport.kr/payments/find/homeliaisonBill_1631523985563", {}, {
+      method: "get",
+      headers: { "Authorization": accessToken }
+    });
 
-    
+    console.log(data);
 
 
 

@@ -830,14 +830,15 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     }
   });
 
-  window.addEventListener("message", function (e) {
+  GeneralJs.stacks.messageCancelEvent = function (e) {
     for (let i = 0; i < 3; i++) {
       document.body.removeChild(document.body.lastChild);
     }
     document.head.removeChild(document.head.lastChild);
     //close callback
     window.alert("결제가 취소되었습니다! 다시 시도해주세요!");
-  });
+  }
+  window.addEventListener("message", GeneralJs.stacks.messageCancelEvent);
 
   paymentEvent = function (motherMethod) {
     return async function (e) {
@@ -881,38 +882,70 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
           plugin();
         } else {
-          form.setAttribute("method", "post");
-          form.setAttribute("accept-charset", "euc-kr");
-          mobileInisisInfo = {
-            P_INI_PAYMENT: (/card/gi.test(motherMethod) ? "CARD" : "VBANK"),
-            P_MID: formValue.mid,
-            P_OID: formValue.oid,
-            P_AMT: Math.round(request.amount),
-            P_GOODS: formValue.goodname,
-            P_UNAME: instance.client.name,
-            P_NEXT_URL: formValue.returnUrl,
-            P_NOTI_URL: PYTHONHOST.replace(/\:3000/gi, '') + "/webHookVAccount.php",
-            P_HPP_METHOD: String(1),
-            P_CHARSET: "utf8",
-            P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
-          };
-          if (/card/gi.test(motherMethod)) {
-            mobileInisisInfo.P_RESERVED = "twotrs_isp=Y&block_isp=Y&twotrs_isp_noti=N";
-          }
-          for (let name in mobileInisisInfo) {
-            value = String(mobileInisisInfo[name]);
-            createNode({
-              mother: form,
-              mode: "input",
-              attribute: [ { name }, { value } ],
-              style: { display: "none" }
+          if (!/card/gi.test(motherMethod)) {
+            form.setAttribute("method", "post");
+            form.setAttribute("accept-charset", "euc-kr");
+            mobileInisisInfo = {
+              P_INI_PAYMENT: "VBANK",
+              P_MID: formValue.mid,
+              P_OID: formValue.oid,
+              P_AMT: Math.floor(request.amount),
+              P_GOODS: formValue.goodname,
+              P_UNAME: instance.client.name,
+              P_NEXT_URL: formValue.returnUrl,
+              P_NOTI_URL: PYTHONHOST.replace(/\:3000/gi, '') + "/webHookVAccount.php",
+              P_HPP_METHOD: String(1),
+              P_CHARSET: "utf8",
+              P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
+            };
+            for (let name in mobileInisisInfo) {
+              value = String(mobileInisisInfo[name]);
+              createNode({
+                mother: form,
+                mode: "input",
+                attribute: [ { name }, { value } ],
+                style: { display: "none" }
+              });
+            }
+            form.action = "https://mobile.inicis.com/smart/payment/";
+            form.target = "_self";
+            form.submit();
+          } else {
+            window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
+
+            plugin = new Function(pluginScript);
+            plugin();
+
+            window.IMP.init("imp71921105");
+            window.IMP.request_pay({
+                merchant_uid: formValue.oid,
+                name: formValue.goodname,
+                amount: Math.floor(request.amount),
+                buyer_email: instance.client.email,
+                buyer_name: instance.client.name,
+                buyer_tel: instance.client.phone,
+                m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid;
+            }, (rsp) => {
+              if (rsp.success) {
+                ajaxJson({
+                  mode: "mobileCard",
+                  mid: formValue.mid,
+                  oid: formValue.oid,
+                  impId: rsp.imp_uid,
+                  requestNumber: String(instance.requestNumber),
+                  cliid: instance.client.cliid,
+                  needs: GeneralJs.returnGet().needs
+                }, "/inicisPayment").then(() => {
+                  console.log("done");
+                }).catch((err) => {
+                  console.log(err);
+                });
+              } else {
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=fail";
+              }
             });
+
           }
-          window.open('', "_self");
-          form.action = "https://mobile.inicis.com/smart/payment";
-          form.target = "_top";
-          form.submit();
-          formMother.parentElement.removeChild(formMother);
         }
       } catch (e) {
         console.log(e);
