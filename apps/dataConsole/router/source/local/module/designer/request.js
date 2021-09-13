@@ -407,56 +407,30 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const cliid = project.cliid;
   const title = "홈스타일링 의뢰서";
   const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" +   GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
-  const mainContents = [
+  const mainContents = mainContents = [
     {
       title: "현장 미팅",
-      contents: [
-        "2021-09-02 (목) 오후 12:00시 정오",
-      ]
+      contents: projectHistory.request.about.when,
     },
     {
       title: "주소",
-      contents: [
-        "외부 카페 (장소가 정해지면 전달드리겠습니다.)",
-      ]
+      contents: projectHistory.request.about.where,
     },
     {
       title: "현장 관련",
-      contents: [
-        "보문파크뷰자이 아파트",
-        "사용승인일 : 2017년 01월 18일",
-        "확장은 되어 있음",
-      ]
+      contents: projectHistory.request.about.site,
     },
     {
       title: "시공 관련",
-      contents: [
-        "전체 시공 + 구조 변경 가능성 + 디자인 시공",
-        "샤시 제외",
-        "주방 및 화장실 쪽 구조 변경에도 관심 있음",
-        "명확한 공정별 디자인 니즈가 정해지지는 않았고 디자이너의 기획이 필요함",
-        "사업장 인테리어 경험 있음",
-        "당시에는 동네 개인업체에서 했고 디자인에 대한 만족도는 있었는데 마감이 부족했다고 함",
-        "꼼꼼한 마감 완성도에 대한 기대가 있습니다. ",
-      ]
+      contents: projectHistory.request.about.construct,
     },
     {
       title: "스타일링 관련",
-      contents: [
-        "의류 사업을 하시는 분",
-        "거실에서 제품 촬영도 할 수 있는 감성적인 공간 원함",
-        "가전 및 가구 전체 구매",
-      ]
+      contents: projectHistory.request.about.styling,
     },
     {
       title: "예산 관련",
-      contents: [
-        "총 1억 ~ 최대 1억 5000만원",
-        "가전까지 구매했을 때 최대 1억 5000을 생각하시는 것 같습니다.",
-        "현재 2~3개 업체 비딩 중이어서 가용예산에 대해서는 변동 가능성이 있습니다. ",
-        "고객의 전체 예산과 예산 활용 관련하여 미팅시 꼭 논의해주세요! 이슈가 발생하는 부분입니다.",
-        "시공에 필요한 대략의 예산과 스타일링에 필요한 예산을 구분해서 대략적으로 안내해주셔야 합니다.",
-      ]
+      contents: projectHistory.request.about.budget,
     }
   ];
   const pictureContents = "고객님이 선택하고 전송한 사진";

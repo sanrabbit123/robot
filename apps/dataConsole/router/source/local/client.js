@@ -3270,6 +3270,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       //   }, "/getHistoryProperty");
       //
       // }).then((raw) => {
+
         if (typeof raw !== "object" || Array.isArray(raw)) {
           throw new Error("결과 없음");
         }

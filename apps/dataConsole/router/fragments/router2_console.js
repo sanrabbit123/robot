@@ -3147,6 +3147,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
 DataRouter.prototype.rou_post_inicisPayment = function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { requestSystem, cryptoString, decryptoHash, equalJson } = this.mother;
   const crypto = require("crypto");
   const password = "homeliaison";
@@ -3178,8 +3179,16 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
         let pluginScript, formValue;
 
-        pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
-        formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
+        if (device === "mobile" && gopaymethod === "Card") {
+          pluginScript = '';
+          pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
+          pluginScript += "\n\n";
+          pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
+          formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
+        } else {
+          pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
+          formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
+        }
 
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ pluginScript, formValue }));
@@ -3195,6 +3204,44 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ result }));
         }
+
+
+      } else if (req.body.mode === "mobileCard") {
+
+        const { mid, oid, impId, requestNumber, cliid, needs } = req.body;
+        const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
+          imp_key: address.officeinfo.import.key,
+          imp_secret: address.officeinfo.import.secret
+        }, { headers: { "Content-Type": "application/json" } }));
+        const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
+          method: "get",
+          headers: { "Authorization": accessToken }
+        });
+        const today = new Date();
+        const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+        const convertingData = {
+          goodName: paymentData.name,
+          goodsName: paymentData.name,
+          resultCode: "0000",
+          resultMsg: "성공적으로 처리 하였습니다.",
+          tid: paymentData.pg_tid,
+          payMethod: "CARD",
+          applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
+          mid: mid,
+          MOID: oid,
+          TotPrice: String(paymentData.amount),
+          buyerName: paymentData.buyer_name,
+          CARD_BankCode: paymentData.card_code,
+          CARD_Num: paymentData.card_number,
+          CARD_ApplPrice: String(paymentData.amount),
+          CARD_Code: paymentData.card_code,
+          vactBankName: paymentData.card_name,
+          payDevice: "MOBILE",
+          P_FN_NM: paymentData.card_name,
+        };
+        const responseData = await cryptoString(password, JSON.stringify(convertingData));
+
+        res.redirect("/middle/estimation?cliid=" + cliid + "&needs=" + needs + "&request=" + String(requestNumber) + "&mode=complete" + "&hash=" + responseData);
 
       } else {
 
