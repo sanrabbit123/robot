@@ -923,23 +923,24 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                 buyer_name: instance.client.name,
                 buyer_tel: instance.client.phone,
             }, (rsp) => {
-                if (rsp.success) {
-                  ajaxJson({
-                    mode: "mobileCard",
-                    mid: formValue.mid,
-                    oid: formValue.oid,
-                    impId: rsp.imp_uid,
-                    requestNumber: String(instance.requestNumber),
-                    cliid: instance.client.cliid,
-                    needs: GeneralJs.returnGet().needs
-                  }, "/inicisPayment").then(() => {
-                    console.log("done");
-                  }).catch((err) => {
-                    console.log(err);
-                  });
-                } else {
-                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=fail";
-                }
+              console.log(rsp);
+              // if (rsp.success) {
+              //   ajaxJson({
+              //     mode: "mobileCard",
+              //     mid: formValue.mid,
+              //     oid: formValue.oid,
+              //     impId: rsp.imp_uid,
+              //     requestNumber: String(instance.requestNumber),
+              //     cliid: instance.client.cliid,
+              //     needs: GeneralJs.returnGet().needs
+              //   }, "/inicisPayment").then(() => {
+              //     console.log("done");
+              //   }).catch((err) => {
+              //     console.log(err);
+              //   });
+              // } else {
+              //   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=fail";
+              // }
             });
 
           }
