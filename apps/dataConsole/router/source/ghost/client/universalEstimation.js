@@ -912,6 +912,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           } else {
             plugin = new Function(pluginScript);
             plugin();
+            console.log(formValue);
+            console.log(formValue.oid);
             window.IMP.init("imp71921105");
             window.IMP.request_pay({
                 merchant_uid: formValue.oid,
@@ -920,7 +922,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                 buyer_email: instance.client.email,
                 buyer_name: instance.client.name,
                 buyer_tel: instance.client.phone,
-              }, (rsp) => {
+            }, (rsp) => {
                 if (rsp.success) {
                   ajaxJson({
                     mode: "mobileCard",
