@@ -68,6 +68,22 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("* 1.1)"));
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+
+    const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+    await MONGOCONSOLEC.connect();
     const requestObj = {
       analytics: {
         make: [],
@@ -109,11 +125,19 @@ DevContext.prototype.launching = async function () {
         budget: [],
       }
     };
+    const targets = await MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).find({}).toArray();
+    let whereQuery, updateQuery;
+    // for (let t of targets) {
+    //   whereQuery = { proid: t.proid };
+    //   updateQuery = {};
+    //   updateQuery["request"] = equalJson(JSON.stringify(requestObj));
+    //   await MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).updateMany(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery);
+    // }
+    console.log(targets);
+    await MONGOCONSOLEC.close();
 
-
-
-
-
+    */
 
 
 
