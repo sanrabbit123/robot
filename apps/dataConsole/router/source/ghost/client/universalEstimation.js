@@ -908,7 +908,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
               style: { display: "none" }
             });
           }
-          form.action = "https://mobile.inicis.com/smart/payment/";
+          window.open('', "_self");
+          form.action = "https://mobile.inicis.com/smart/payment";
           form.target = "_top";
           form.submit();
           formMother.parentElement.removeChild(formMother);
