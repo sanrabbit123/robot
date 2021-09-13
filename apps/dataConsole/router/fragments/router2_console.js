@@ -3371,6 +3371,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
       }
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
