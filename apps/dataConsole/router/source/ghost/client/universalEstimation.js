@@ -1210,7 +1210,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         oid: getObj.oid,
         impId: getObj.imp_uid,
       }, "/inicisPayment");
-      console.log(convertingData);
       await this.payComplete(convertingData);
     }
 
