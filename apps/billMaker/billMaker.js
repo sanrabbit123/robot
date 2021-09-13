@@ -2745,7 +2745,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
 
         return {
           price: {
-            past: process.contract.remain.calculation.amount.supply,
+            past: project.process.contract.remain.calculation.amount.supply,
             supply: newSupply,
             remain: newRequestPrice,
             between: newRequestAmount
