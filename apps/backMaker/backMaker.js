@@ -3128,10 +3128,6 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
             construct: "",
             styling: ""
           },
-          site: {
-            meeting: "",
-            address: "",
-          },
           about: {
             when: [],
             where: [],
