@@ -67,9 +67,10 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
 
-    const pluginScript = (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data
-    await fileSystem(`write`, [ `${process.cwd()}/temp/aaa.js`, pluginScript ])
-    shell.exec(`atom ${process.cwd()}/temp/aaa.js`)
+
+    
+
+
 
     // let whereQuery, updateQuery;
     //

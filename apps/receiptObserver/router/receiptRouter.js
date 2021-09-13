@@ -514,25 +514,29 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         payObject.oid = oid;
         payArr.unshift(payObject);
 
-        itemNum = 0;
-        for (let { amount: { consumer } } of itemArr) {
-          itemNum += consumer;
-        }
-        payNum = 0;
-        for (let { amount: payAmount } of payArr) {
-          payNum += payAmount;
-        }
-        cancelNum = 0;
-        for (let { amount: cancelAmount } of cancelArr) {
-          cancelNum += cancelAmount;
-        }
+        // itemNum = 0;
+        // for (let { amount: { consumer } } of itemArr) {
+        //   itemNum += consumer;
+        // }
+        // payNum = 0;
+        // for (let { amount: payAmount } of payArr) {
+        //   payNum += payAmount;
+        // }
+        // cancelNum = 0;
+        // for (let { amount: cancelAmount } of cancelArr) {
+        //   cancelNum += cancelAmount;
+        // }
+        //
+        // if (itemNum <= payNum - cancelNum) {
+        //   updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+        //   paymentComplete = true;
+        // } else {
+        //   paymentComplete = false;
+        // }
 
-        if (itemNum <= payNum - cancelNum) {
-          updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-          paymentComplete = true;
-        } else {
-          paymentComplete = false;
-        }
+        updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+        paymentComplete = true;
+
         updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
         proofs = bill.returnBillDummies("proofs");
@@ -779,28 +783,29 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       payObject.amount = amount;
       payArr.unshift(payObject);
 
-      itemNum = 0;
-      for (let { amount: { consumer } } of itemArr) {
-        itemNum += consumer;
-      }
-      payNum = 0;
-      for (let { amount: payAmount } of payArr) {
-        payNum += payAmount;
-      }
-      cancelNum = 0;
-      for (let { amount: cancelAmount } of cancelArr) {
-        cancelNum += cancelAmount;
-      }
+      // itemNum = 0;
+      // for (let { amount: { consumer } } of itemArr) {
+      //   itemNum += consumer;
+      // }
+      // payNum = 0;
+      // for (let { amount: payAmount } of payArr) {
+      //   payNum += payAmount;
+      // }
+      // cancelNum = 0;
+      // for (let { amount: cancelAmount } of cancelArr) {
+      //   cancelNum += cancelAmount;
+      // }
+      // if (itemNum <= payNum - cancelNum) {
+      //   updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+      //   paymentComplete = true;
+      // } else {
+      //   paymentComplete = false;
+      // }
 
-      if (itemNum <= payNum - cancelNum) {
-        updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-        paymentComplete = true;
-      } else {
-        paymentComplete = false;
-      }
+      updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+      paymentComplete = true;
+
       updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
-
-      console.log(itemNum, payNum, cancelNum, paymentComplete)
 
       proofs = bill.returnBillDummies("proofs");
       proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
