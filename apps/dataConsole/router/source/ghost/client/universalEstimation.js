@@ -830,14 +830,14 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     }
   });
 
-  window.addEventListener("message", function (e) {
-    for (let i = 0; i < 3; i++) {
-      document.body.removeChild(document.body.lastChild);
-    }
-    document.head.removeChild(document.head.lastChild);
-    //close callback
-    window.alert("결제가 취소되었습니다! 다시 시도해주세요!");
-  });
+  // window.addEventListener("message", function (e) {
+  //   for (let i = 0; i < 3; i++) {
+  //     document.body.removeChild(document.body.lastChild);
+  //   }
+  //   document.head.removeChild(document.head.lastChild);
+  //   //close callback
+  //   window.alert("결제가 취소되었습니다! 다시 시도해주세요!");
+  // });
 
   paymentEvent = function (motherMethod) {
     return async function (e) {
@@ -862,7 +862,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
         const form = document.createElement("FORM");
         let value, formId, plugin;
         let mobileInisisInfo;
-        let tempString, tempFunction;
         formId = "form" + String((new Date()).valueOf());
         form.id = formId;
         form.style.display = "none";
@@ -911,10 +910,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             form.target = "_self";
             form.submit();
           } else {
-            tempString = await GeneralJs.requestPromise("https://code.jquery.com/jquery-1.12.4.min.js");
-            tempFunction = new Function(tempString);
-            tempFunction();
-
             plugin = new Function(pluginScript);
             plugin();
 
