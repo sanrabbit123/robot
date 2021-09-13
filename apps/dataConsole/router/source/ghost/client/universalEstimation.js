@@ -913,6 +913,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           } else {
             window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
 
+            alert("안녕?");
+
             plugin = new Function(pluginScript);
             plugin();
 
