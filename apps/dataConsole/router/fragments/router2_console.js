@@ -3209,22 +3209,14 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
       } else if (req.body.mode === "mobileCard") {
 
         const { mid, oid, impId } = req.body;
-        instance.mother.slack_bot.chat.postMessage({ text: mid, channel: "#error_log" });
-        instance.mother.slack_bot.chat.postMessage({ text: oid, channel: "#error_log" });
-        instance.mother.slack_bot.chat.postMessage({ text: impId, channel: "#error_log" });
-
         const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
           imp_key: address.officeinfo.import.key,
           imp_secret: address.officeinfo.import.secret
         }, { headers: { "Content-Type": "application/json" } }));
-        instance.mother.slack_bot.chat.postMessage({ text: "a1", channel: "#error_log" });
-
         const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
           method: "get",
           headers: { "Authorization": accessToken }
         });
-        instance.mother.slack_bot.chat.postMessage({ text: "a2", channel: "#error_log" });
-
         const today = new Date();
         const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
         const convertingData = {
@@ -3247,11 +3239,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           payDevice: "MOBILE",
           P_FN_NM: paymentData.card_name,
         };
-        instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(convertingData), channel: "#error_log" });
-
         const responseData = await cryptoString(password, JSON.stringify(convertingData));
-
-        instance.mother.slack_bot.chat.postMessage({ text: "f", channel: "#error_log" });
 
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ hash: responseData }));

@@ -1206,8 +1206,8 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     if (getObj.mobilecard !== undefined) {
       const { hash } = await ajaxJson({
         mode: "mobileCard",
-        mid: formValue.mid,
-        oid: formValue.oid,
+        mid: getObj.mid,
+        oid: getObj.oid,
         impId: getObj.imp_uid,
       }, "/inicisPayment");
       alert(hash)
