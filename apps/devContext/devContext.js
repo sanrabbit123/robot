@@ -67,21 +67,16 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
 
-    const impId = "imp_824242496119";
-    const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
-      imp_key: address.officeinfo.import.key,
-      imp_secret: address.officeinfo.import.secret
-    }, { headers: { "Content-Type": "application/json" } }));
-    const data = await requestSystem("https://api.iamport.kr/payments/find/homeliaisonBill_1631523985563", {}, {
-      method: "get",
-      headers: { "Authorization": accessToken }
-    });
 
-    console.log(data);
+
 
 
 
     // let whereQuery, updateQuery;
+    //
+    // whereQuery = { proid: "p1801_aa01s" };
+    //
+    // updateQuery = {};
     //
     // updateQuery["request.about"] = {
     //   when: [
@@ -136,62 +131,12 @@ DevContext.prototype.launching = async function () {
     // updateQuery["request.service.concept"] = "베이지톤, 아늑, 감성적인 분위기";
     // updateQuery["request.service.construct"] = "전체 시공, 디자인 시공";
     // updateQuery["request.service.styling"] = "전체 구매";
+    //
+    //
+    // await back.updateHistory("project", [ whereQuery, updateQuery ], { fromConsole: true });
 
-    /*
 
-    const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    await MONGOCONSOLEC.connect();
-    const requestObj = {
-      analytics: {
-        make: [],
-        page: [],
-        update: [],
-        send: [],
-      },
-      client: {
-        name: "",
-        phone: "",
-        family: "",
-        address: "",
-        budget: "",
-        etc: "",
-      },
-      space: {
-        contract: "",
-        precheck: "",
-        empty: "",
-        movein: "",
-        special: "",
-        composition: "",
-      },
-      service: {
-        service: "",
-        concept: "",
-        construct: "",
-        styling: ""
-      },
-      about: {
-        when: [],
-        where: [],
-        site: [],
-        construct: [],
-        styling: [],
-        budget: [],
-      }
-    };
-    const targets = await MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).find({}).toArray();
-    let whereQuery, updateQuery;
-    for (let t of targets) {
-      whereQuery = { proid: t.proid };
-      updateQuery = {};
-      updateQuery["request"] = equalJson(JSON.stringify(requestObj));
-      await MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).updateMany(whereQuery, { $set: updateQuery });
-      console.log(whereQuery);
-    }
-    // console.log(targets[100].request);
-    await MONGOCONSOLEC.close();
 
-    */
 
 
 

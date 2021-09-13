@@ -3790,7 +3790,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
       } else if (req.body.mode === "mobileCard") {
 
-        const { mid, oid, impId, requestNumber, cliid, needs } = req.body;
+        const { mid, oid, impId } = req.body;
         const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
           imp_key: address.officeinfo.import.key,
           imp_secret: address.officeinfo.import.secret
@@ -3821,9 +3821,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           payDevice: "MOBILE",
           P_FN_NM: paymentData.card_name,
         };
-        const responseData = await cryptoString(password, JSON.stringify(convertingData));
-
-        res.redirect("/middle/estimation?cliid=" + cliid + "&needs=" + needs + "&request=" + String(requestNumber) + "&mode=complete" + "&hash=" + responseData);
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ convertingData }));
 
       } else {
 
@@ -3940,6 +3939,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
       }
 
     } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }

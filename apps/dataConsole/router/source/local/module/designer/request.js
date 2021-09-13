@@ -407,7 +407,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const cliid = project.cliid;
   const title = "홈스타일링 의뢰서";
   const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" +   GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
-  const mainContents = mainContents = [
+  const mainContents = [
     {
       title: "현장 미팅",
       contents: projectHistory.request.about.when,
@@ -484,128 +484,140 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     }
   ];
   try {
-    const divToInput = async function (e) {
-      try {
-        const { ajaxJson, createNode, withOut, colorChip, equalJson } = GeneralJs;
-        const removeClassName = "divToInputRemove";
-        const target = this.firstChild.firstChild;
-        const text = target.textContent;
-        const mother = this.firstChild;
-        let styleCopied, styleRaw, style;
-        let input, cancel;
-        let updateEvent;
+    const divToInput = function (position) {
+      return async function (e) {
+        try {
+          const { ajaxJson, createNode, withOut, colorChip, equalJson } = GeneralJs;
+          const removeClassName = "divToInputRemove";
+          const target = this.firstChild.firstChild;
+          const text = target.textContent;
+          const mother = this.firstChild;
+          const proid = project.proid;
+          let styleCopied, styleRaw, style;
+          let input, cancel;
+          let updateEvent;
 
-        if (this.querySelector("input") === null) {
+          if (this.querySelector("input") === null) {
 
-          styleRaw = equalJson(JSON.stringify(target.style));
-          styleCopied = {};
-          for (let i in styleRaw) {
-            if (styleRaw[i] !== '' && !/^[0-9]+$/.test(i)) {
-              styleCopied[i] = styleRaw[i];
-            }
-          }
-          style = equalJson(JSON.stringify(styleCopied));
-          styleCopied.outline = String(0);
-          styleCopied.border = String(0);
-          styleCopied.background = "transparent";
-          styleCopied.color = colorChip.green;
-          styleCopied.zIndex = String(2);
-
-          updateEvent = async function (value) {
-            try {
-              const targets = document.querySelectorAll('.' + removeClassName);
-              for (let dom of targets) {
-                dom.parentElement.removeChild(dom);
+            styleRaw = equalJson(JSON.stringify(target.style));
+            styleCopied = {};
+            for (let i in styleRaw) {
+              if (styleRaw[i] !== '' && !/^[0-9]+$/.test(i)) {
+                styleCopied[i] = styleRaw[i];
               }
-              createNode({ mother, text: value, style });
-            } catch (e) {
-              console.log(e);
             }
-          }
+            style = equalJson(JSON.stringify(styleCopied));
+            styleCopied.outline = String(0);
+            styleCopied.border = String(0);
+            styleCopied.background = "transparent";
+            styleCopied.color = colorChip.green;
+            styleCopied.zIndex = String(2);
 
-          cancel = createNode({
-            mother,
-            class: [ removeClassName ],
-            events: [
-              {
-                type: "click",
-                event: (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const targets = document.querySelectorAll('.' + removeClassName);
-                  for (let dom of targets) {
-                    dom.parentElement.removeChild(dom);
-                  }
-                  createNode({ mother, text, style });
+            updateEvent = async function (column, value) {
+              try {
+                const targets = document.querySelectorAll('.' + removeClassName);
+                await ajaxJson({
+                  id: proid,
+                  column,
+                  value,
+                  email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                }, "/updateProjectHistory");
+                for (let dom of targets) {
+                  dom.parentElement.removeChild(dom);
                 }
+                createNode({ mother, text: value, style });
+              } catch (e) {
+                console.log(e);
               }
-            ],
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              height: String(100) + '%',
-              background: "transparent",
-              zIndex: String(2),
             }
-          });
 
-          input = createNode({
-            mother,
-            class: [ removeClassName ],
-            mode: "input",
-            events: [
-              {
-                type: "click",
-                event: (e) => { e.preventDefault(); e.stopPropagation(); }
-              },
-              {
-                type: "keydown",
-                event: function (e) {
-                  if (e.key === "Tab") {
+            cancel = createNode({
+              mother,
+              class: [ removeClassName ],
+              events: [
+                {
+                  type: "click",
+                  event: (e) => {
                     e.preventDefault();
-                  }
-                }
-              },
-              {
-                type: "keyup",
-                event: async function (e) {
-                  try {
-                    if (e.key === "Tab") {
-                      await updateEvent(this.value);
+                    e.stopPropagation();
+                    const targets = document.querySelectorAll('.' + removeClassName);
+                    for (let dom of targets) {
+                      dom.parentElement.removeChild(dom);
                     }
-                  } catch (e) {
-                    console.log(e);
+                    createNode({ mother, text, style });
                   }
                 }
-              },
-              {
-                type: "keypress",
-                event: async function (e) {
-                  try {
-                    if (e.key === "Enter") {
-                      await updateEvent(this.value);
-                    }
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
+              ],
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                background: "transparent",
+                zIndex: String(2),
               }
-            ],
-            attribute: [
-              { value: text }
-            ],
-            style: styleCopied
-          });
+            });
 
-          mother.removeChild(target);
-          input.focus();
+            input = createNode({
+              mother,
+              class: [ removeClassName ],
+              attribute: [
+                { column: position },
+                { value: text }
+              ],
+              mode: "input",
+              events: [
+                {
+                  type: "click",
+                  event: (e) => { e.preventDefault(); e.stopPropagation(); }
+                },
+                {
+                  type: "keydown",
+                  event: function (e) {
+                    if (e.key === "Tab") {
+                      e.preventDefault();
+                    }
+                  }
+                },
+                {
+                  type: "keyup",
+                  event: async function (e) {
+                    try {
+                      const column = this.getAttribute("column");
+                      if (e.key === "Tab") {
+                        await updateEvent(column, this.value);
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                {
+                  type: "keypress",
+                  event: async function (e) {
+                    try {
+                      const column = this.getAttribute("column");
+                      if (e.key === "Enter") {
+                        await updateEvent(column, this.value);
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                }
+              ],
+              style: styleCopied
+            });
 
+            mother.removeChild(target);
+            input.focus();
+
+          }
+
+        } catch (e) {
+          console.log(e);
         }
-
-      } catch (e) {
-        console.log(e);
       }
     }
     const matrix = [
@@ -638,17 +650,17 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     ];
     const callbackMap = [
       [ null, null, null, null ],
-      [ null, divToInput, null, divToInput ],
-      [ null, divToInput, null, divToInput ],
-      [ null, divToInput, null, divToInput ],
-      [ null, divToInput, null, divToInput ],
-      [ null, divToInput, null, divToInput ],
-      [ null, divToInput, null, divToInput ],
+      [ null, divToInput("request.client.name"), null, divToInput("request.space.contract") ],
+      [ null, divToInput("request.client.phone"), null, divToInput("request.space.precheck") ],
+      [ null, divToInput("request.client.family"), null, divToInput("request.space.empty") ],
+      [ null, divToInput("request.client.address"), null, divToInput("request.space.movein") ],
+      [ null, divToInput("request.client.address"), null, divToInput("request.space.special") ],
+      [ null, divToInput("request.client.budget"), null, divToInput("request.space.composition") ],
       [ null, null, null, null ],
-      [ null, divToInput, divToInput, null ],
-      [ null, divToInput, null, null ],
-      [ null, divToInput, null, null ],
-      [ null, divToInput, null, null ],
+      [ null, divToInput("request.service.service"), divToInput("request.client.etc"), null ],
+      [ null, divToInput("request.service.concept"), null, null ],
+      [ null, divToInput("request.service.construct"), null, null ],
+      [ null, divToInput("request.service.styling"), null, null ],
     ];
     const boldMap = [
       [ 0, 0, 0, 0 ],
