@@ -1104,6 +1104,8 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
           newPrice = Math.round(Number(req.body.newPrice));
           report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice, confirmMode });
         }
+        
+        console.log(report);
 
         res.set({
           "Content-Type": "application/json",
