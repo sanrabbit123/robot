@@ -3208,11 +3208,15 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
       } else if (req.body.mode === "mobileCard") {
 
-        const { mid, oid, impId, requestNumber, cliid, needs } = req.body;
+        const { mid, oid, requestNumber, cliid, needs } = req.body;
         const { data: { response: { access_token: accessToken } } } = (await requestSystem("https://api.iamport.kr/users/getToken", {
           imp_key: address.officeinfo.import.key,
           imp_secret: address.officeinfo.import.secret
         }, { headers: { "Content-Type": "application/json" } }));
+        const { data: { response: { imp_uid: impId } } } = await requestSystem("https://api.iamport.kr/payments/find/" + oid, {}, {
+          method: "get",
+          headers: { "Authorization": accessToken }
+        });
         const { data: { response: paymentData } } = await requestSystem("https://api.iamport.kr/payments/" + impId, {}, {
           method: "get",
           headers: { "Authorization": accessToken }
