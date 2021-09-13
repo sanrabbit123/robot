@@ -1087,87 +1087,113 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
       const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
       const firstContract = project.process.contract.first.calculation.amount;
       const pastService = equalJson(JSON.stringify(project.service));
-      const report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo });
       const timeConst = 410;
-      const map = [
-        {
-          column: "service",
-          position: "service",
-          pastValue: report.service.from,
-          finalValue: report.service.to,
-        },
-        {
-          column: "remainSupply",
-          position: "process.contract.remain.calculation.amount.supply",
-          pastValue: report.request.from.supply,
-          finalValue: report.request.to.supply,
-        },
-        {
-          column: "remainVat",
-          position: "process.contract.remain.calculation.amount.vat",
-          pastValue: report.request.from.vat,
-          finalValue: report.request.to.vat,
-        },
-        {
-          column: "remainConsumer",
-          position: "process.contract.remain.calculation.amount.consumer",
-          pastValue: report.request.from.consumer,
-          finalValue: report.request.to.consumer,
-        },
-        {
-          column: "remainPure",
-          position: "process.contract.remain.calculation.amount.consumer",
-          pastValue: report.request.from.consumer - firstContract,
-          finalValue: report.request.to.consumer - firstContract,
-        },
-        {
-          column: "paymentsTotalAmount",
-          position: "process.calculation.payments.totalAmount",
-          pastValue: report.response.from.total,
-          finalValue: report.response.to.total,
-        },
-        {
-          column: "paymentsFirstAmount",
-          position: "process.calculation.payments.first.amount",
-          pastValue: report.response.from.first,
-          finalValue: report.response.to.first,
-        },
-        {
-          column: "paymentsRemainAmount",
-          position: "process.calculation.payments.remain.amount",
-          pastValue: report.response.from.remain,
-          finalValue: report.response.to.remain,
-        },
-      ];
+      let report, map;
+      let newPrice, confirmMode;
 
-      for (let { column, position, pastValue, finalValue } of map) {
-        await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
-        await sleep(timeConst);
-      }
+      if (req.body.mode === "confirm") {
 
-      if (report.request.additional) {
-        await kakao.sendTalk("plusDesignFee", client.name, client.phone, {
-          client: client.name,
-          pastservice: serviceParsing(report.service.from),
-          newservice: serviceParsing(report.service.to),
-          host: address.homeinfo.ghost.host,
-          path: "estimation",
-          cliid: client.cliid,
-          needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
+        if (req.body.newPrice === undefined) {
+          throw new Error("must be newPrice in confirm mode");
+        }
+        if (Number.isNaN(Number(req.body.newPrice))) {
+          throw new Error("must be newPrice(number) in confirm mode");
+        }
+        newPrice = Math.round(Number(req.body.newPrice));
+        confirmMode = true;
+        report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice, confirmMode });
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
         });
-        instance.mother.slack_bot.chat.postMessage({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" });
-        ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" }).catch((err) => {
-          console.log(err);
-        });
-      }
+        res.send(JSON.stringify(report));
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "success" }));
+      } else {
+
+        report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo });
+        map = [
+          {
+            column: "service",
+            position: "service",
+            pastValue: report.service.from,
+            finalValue: report.service.to,
+          },
+          {
+            column: "remainSupply",
+            position: "process.contract.remain.calculation.amount.supply",
+            pastValue: report.request.from.supply,
+            finalValue: report.request.to.supply,
+          },
+          {
+            column: "remainVat",
+            position: "process.contract.remain.calculation.amount.vat",
+            pastValue: report.request.from.vat,
+            finalValue: report.request.to.vat,
+          },
+          {
+            column: "remainConsumer",
+            position: "process.contract.remain.calculation.amount.consumer",
+            pastValue: report.request.from.consumer,
+            finalValue: report.request.to.consumer,
+          },
+          {
+            column: "remainPure",
+            position: "process.contract.remain.calculation.amount.consumer",
+            pastValue: report.request.from.consumer - firstContract,
+            finalValue: report.request.to.consumer - firstContract,
+          },
+          {
+            column: "paymentsTotalAmount",
+            position: "process.calculation.payments.totalAmount",
+            pastValue: report.response.from.total,
+            finalValue: report.response.to.total,
+          },
+          {
+            column: "paymentsFirstAmount",
+            position: "process.calculation.payments.first.amount",
+            pastValue: report.response.from.first,
+            finalValue: report.response.to.first,
+          },
+          {
+            column: "paymentsRemainAmount",
+            position: "process.calculation.payments.remain.amount",
+            pastValue: report.response.from.remain,
+            finalValue: report.response.to.remain,
+          },
+        ];
+
+        for (let { column, position, pastValue, finalValue } of map) {
+          await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
+          await sleep(timeConst);
+        }
+
+        if (report.request.additional) {
+          await kakao.sendTalk("plusDesignFee", client.name, client.phone, {
+            client: client.name,
+            pastservice: serviceParsing(report.service.from),
+            newservice: serviceParsing(report.service.to),
+            host: address.homeinfo.ghost.host,
+            path: "estimation",
+            cliid: client.cliid,
+            needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
+          });
+          instance.mother.slack_bot.chat.postMessage({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" });
+          ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" }).catch((err) => {
+            console.log(err);
+          });
+        }
+
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send(JSON.stringify({ message: "success" }));
+
+      }
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message, channel: "#error_log" });
       res.set({

@@ -321,21 +321,11 @@ Robot.prototype.getConsulting = async function (sw = "1", cliid = "latest") {
   }
 }
 
-Robot.prototype.officePolling = async function (sw, boo = true) {
+Robot.prototype.recordCloud = async function (sw, boo = true) {
   try {
-    const OfficePolling = require(`${process.cwd()}/apps/officePolling/officePolling.js`);
-    const app = new OfficePolling();
-    switch (sw) {
-      case "server":
-        await app.serverLaunching(boo);
-        break;
-      case "receive":
-        await app.receiveLaunching();
-        break;
-      case "injection":
-        await app.injectionLaunching();
-        break;
-    }
+    const RecordCloud = require(`${process.cwd()}/apps/recordCloud/recordCloud.js`);
+    const app = new RecordCloud();
+    await app.recordServerLaunching();
   } catch (e) {
     console.log(e);
   }
@@ -823,30 +813,9 @@ const MENU = {
       console.log(e);
     }
   },
-  pollingserver: async function () {
+  recordCloud: async function () {
     try {
-      await robot.officePolling("server", true);
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  pollingoffice: async function () {
-    try {
-      await robot.officePolling("server", false);
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  pollingreceive: async function () {
-    try {
-      await robot.officePolling("receive");
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  pollinginjection: async function () {
-    try {
-      await robot.officePolling("injection");
+      await robot.recordCloud();
     } catch (e) {
       console.log(e);
     }

@@ -3098,6 +3098,47 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         },
         important: false,
         issue: "",
+        request: {
+          analytics: {
+            make: [],
+            page: [],
+            update: [],
+            send: [],
+          },
+          client: {
+            name: "",
+            phone: "",
+            family: "",
+            address: "",
+            budget: "",
+            etc: "",
+          },
+          space: {
+            contract: "",
+            precheck: "",
+            empty: "",
+            movein: "",
+            special: "",
+            composition: "",
+            etc: "",
+          },
+          service: {
+            service: "",
+            concept: "",
+            construct: "",
+            styling: ""
+          },
+          site: {
+            meeting: "",
+            address: "",
+          },
+          about: {
+            site: [],
+            construct: [],
+            styling: [],
+            budget: [],
+          }
+        },
         manager: projectManager
       };
     } else if (/contents/gi.test(method)) {

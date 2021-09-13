@@ -66,8 +66,49 @@ DevContext.prototype.launching = async function () {
     const agent = new Agent({ rejectUnauthorized: false });
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
-    // console.log(await this.findCode("/프"));
 
+
+    const requestObj = {
+      analytics: {
+        make: [],
+        page: [],
+        update: [],
+        send: [],
+      },
+      client: {
+        name: "",
+        phone: "",
+        family: "",
+        address: "",
+        budget: "",
+        etc: "",
+      },
+      space: {
+        contract: "",
+        precheck: "",
+        empty: "",
+        movein: "",
+        special: "",
+        composition: "",
+        etc: "",
+      },
+      service: {
+        service: "",
+        concept: "",
+        construct: "",
+        styling: ""
+      },
+      site: {
+        meeting: "",
+        address: "",
+      },
+      about: {
+        site: [],
+        construct: [],
+        styling: [],
+        budget: [],
+      }
+    };
 
 
 

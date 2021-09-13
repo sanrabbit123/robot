@@ -2354,6 +2354,11 @@ Mother.prototype.ipParsing = function (ip) {
       resolve(null);
     });
   }
+  if (!/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/g.test(ip)) {
+    return new Promise(function (resolve, reject) {
+      resolve(null);
+    });
+  }
   const axios = require('axios');
   let url;
 
@@ -2369,7 +2374,7 @@ Mother.prototype.ipParsing = function (ip) {
         resolve(response.data);
       }
     }).catch(function (error) {
-      reject(error);
+      resolve(null);
     });
   });
 }

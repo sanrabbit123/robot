@@ -2557,9 +2557,12 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let firstResponseFirstItemIndex;
     let returnObject;
     let unknownDesignerFee, newDesignerFeeObject;
+    let safeNum;
 
-    while (await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) {
+    safeNum = 0;
+    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 200) {
       await sleep(300);
+      safeNum++;
     }
     await fileSystem(`write`, [ `${process.cwd()}/temp/${doingSignature}.json`, `{ "doing": 1 }` ]);
 
@@ -2709,7 +2712,11 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         }
       }
       pastRemainPrice = pastRemainArr[remainItemIndex].unit.price;
-      newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
+      if (typeof option.newPrice === "number") {
+        newRequestAmount = option.newPrice - pastRemainPrice;
+      } else {
+        newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
+      }
       newRequestPrice = pastRemainPrice + newRequestAmount;
       newSupply = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
 
@@ -2726,6 +2733,30 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       projectUpdateQuery["process.calculation.payments.first.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.remain.amount"] = Math.floor((calculate / 2) / 10) * 10;
       projectUpdateQuery["process.calculation.payments.totalAmount"] = projectUpdateQuery["process.calculation.payments.first.amount"] * 2;
+
+      if (typeof option.confirmMode === "boolean" && option.confirmMode) {
+        if (!selfBoo) {
+          await MONGOC.close();
+        }
+        if (!selfCoreBoo) {
+          await MONGOCOREC.close();
+        }
+        await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
+
+        return {
+          price: {
+            supply: newSupply,
+            remain: newRequestPrice,
+            between: newRequestAmount
+          },
+          calculate: {
+            total: projectUpdateQuery["process.calculation.payments.totalAmount"],
+            first: (project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? project.process.calculation.payments.first.amount : projectUpdateQuery["process.calculation.payments.first.amount"]),
+            remain: (project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? (projectUpdateQuery["process.calculation.payments.totalAmount"] - project.process.calculation.payments.first.amount) : projectUpdateQuery["process.calculation.payments.remain.amount"])
+          }
+        };
+      }
+
       await back.updateProject([ projectWhereQuery, projectUpdateQuery ], { selfMongo: MONGOCOREC });
 
       feeObject.amount = newSupply;
@@ -2982,9 +3013,12 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     let bankName;
     let bankTo;
     let newDesignerFeeObject;
+    let safeNum;
 
-    while (await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) {
+    safeNum = 0;
+    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 200) {
       await sleep(300);
+      safeNum++;
     }
     await fileSystem(`write`, [ `${process.cwd()}/temp/${doingSignature}.json`, `{ "doing": 1 }` ]);
 

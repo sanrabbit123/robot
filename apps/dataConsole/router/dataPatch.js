@@ -4270,6 +4270,8 @@ DataPatch.prototype.projectMap = function () {
         let proid, project;
         let x, y;
         let currentMode;
+        let newPrice;
+        let ajaxData;
 
         proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
         currentMode = "row";
@@ -4312,18 +4314,43 @@ DataPatch.prototype.projectMap = function () {
         designerAble = (designer.analytics.project.matrix[x][y] === 1);
 
         if (onlineAble && designerAble) {
-          if (window.confirm("서비스를 바꾸시겠습니까? 추가 견적이 발생할 경우, 고객님께 추가 견적에 대한 안내 알림톡이 자동으로 발송됩니다!")) {
-            GeneralJs.ajaxJson({ proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` }, PYTHONHOST + "/serviceConverting").then(() => {
-              window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + (currentMode === "card" ? "?proid=" + proid : "");
+          if (window.confirm("서비스를 바꾸시겠습니까?")) {
+
+            ajaxData = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s`, mode: "confirm" };
+            newPrice = window.prompt("새로운 가격을 숫자로만 적어주세요! (만원 표기 안 됨) 자동 계산을 원할 시, '자동'이라고 써주세요!");
+            if (!Number.isNaN(Number(newPrice.replace(/[^0-9]/gi, '')))) {
+              if (Number(newPrice.replace(/[^0-9]/gi, '')) !== 0) {
+                ajaxData.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
+              }
+            }
+
+            GeneralJs.ajaxJson(ajaxData, PYTHONHOST + "/serviceConverting").then((report) => {
+              let message;
+              message = "다음 상세 사항을 확인해주세요! 추가 견적이 발생할 경우 자동으로 알림톡이 발송될 예정입니다, 확실합니까?\n";
+              message += "새로운 공급가 : " + GeneralJs.autoComma(report.price.supply) + '원' + '\n';
+              message += "새로운 잔금 : " + GeneralJs.autoComma(report.price.remain) + '원' + '\n';
+              message += "안내될 차액 : " + GeneralJs.autoComma(report.price.between) + '원' + '\n';
+              message += "새로운 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total) + '원' + '\n';
+              message += "새로운 정산 선금 : " + GeneralJs.autoComma(report.calculate.first) + '원' + '\n';
+              message += "새로운 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain) + '원' + '\n';
+              if (window.confirm(message)) {
+                return GeneralJs.ajaxJson({ proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` }, PYTHONHOST + "/serviceConverting");
+              } else {
+                return new Promise((resolve, reject) => {
+                  resolve(null);
+                });
+              }
+            }).then(() => {
+              window.alert("성공적으로 전환되었습니다!");
+              input.style.transition = "0s all ease";
+              input.style.color = "transparent";
+              input.value = totalString;
+              input.parentElement.style.transition = "";
+              input.parentElement.style.color = "inherit";
+              mother.removeChild(document.querySelector(".divTong"));
             }).catch((err) => {
               throw new Error(err.message);
             });
-            input.style.transition = "0s all ease";
-            input.style.color = "transparent";
-            input.value = totalString;
-            input.parentElement.style.transition = "";
-            input.parentElement.style.color = "inherit";
-            mother.removeChild(document.querySelector(".divTong"));
           }
         } else {
           window.alert("이 디자이너는 해당 서비스를 운용할 수 없습니다!");
