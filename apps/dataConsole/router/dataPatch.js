@@ -4271,7 +4271,7 @@ DataPatch.prototype.projectMap = function () {
         let x, y;
         let currentMode;
         let newPrice;
-        let ajaxData;
+        let ajaxData, ajaxData2;
 
         proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
         currentMode = "row";
@@ -4317,10 +4317,12 @@ DataPatch.prototype.projectMap = function () {
           if (window.confirm("서비스를 바꾸시겠습니까?")) {
 
             ajaxData = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s`, mode: "confirm" };
+            ajaxData2 = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` };
             newPrice = window.prompt("새로운 가격을 숫자로만 적어주세요! (만원 표기 안 됨) 자동 계산을 원할 시, '자동'이라고 써주세요!");
             if (!Number.isNaN(Number(newPrice.replace(/[^0-9]/gi, '')))) {
               if (Number(newPrice.replace(/[^0-9]/gi, '')) !== 0) {
                 ajaxData.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
+                ajaxData2.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
               }
             }
 
@@ -4335,7 +4337,7 @@ DataPatch.prototype.projectMap = function () {
               message += "새로운 정산 선금 : " + GeneralJs.autoComma(report.calculate.first) + '원' + '\n';
               message += "새로운 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain) + '원' + '\n';
               if (window.confirm(message)) {
-                return GeneralJs.ajaxJson({ proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` }, PYTHONHOST + "/serviceConverting");
+                return GeneralJs.ajaxJson(ajaxData2, PYTHONHOST + "/serviceConverting");
               } else {
                 return new Promise((resolve, reject) => {
                   resolve(null);

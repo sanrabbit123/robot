@@ -1115,7 +1115,13 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
 
       } else {
 
-        report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo });
+        if (req.body.newPrice !== undefined && !Number.isNaN(Number(req.body.newPrice))) {
+          newPrice = Math.round(Number(req.body.newPrice));
+          report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice });
+        } else {
+          report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo });
+        }
+
         map = [
           {
             column: "service",
