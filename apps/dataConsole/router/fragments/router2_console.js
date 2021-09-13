@@ -3299,9 +3299,11 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             if (convertTong.resultCode === "0000") {
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
             } else {
+              instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 : " + e.message, channel: "#error_log" });
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
             }
           } else {
+            instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 : " + e.message, channel: "#error_log" });
             res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
           }
         }
