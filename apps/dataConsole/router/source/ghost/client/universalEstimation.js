@@ -912,39 +912,38 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           } else {
             plugin = new Function(pluginScript);
             plugin();
-            console.log(formValue);
-            console.log(formValue.oid);
-            window.IMP.init("imp71921105");
-            console.log(window.IMP);
-            /*
-            window.IMP.request_pay({
-                merchant_uid: formValue.oid,
-                name: formValue.goodname,
-                amount: Math.floor(request.amount),
-                buyer_email: instance.client.email,
-                buyer_name: instance.client.name,
-                buyer_tel: instance.client.phone,
-            }, (rsp) => {
-              console.log(rsp);
-              // if (rsp.success) {
-              //   ajaxJson({
-              //     mode: "mobileCard",
-              //     mid: formValue.mid,
-              //     oid: formValue.oid,
-              //     impId: rsp.imp_uid,
-              //     requestNumber: String(instance.requestNumber),
-              //     cliid: instance.client.cliid,
-              //     needs: GeneralJs.returnGet().needs
-              //   }, "/inicisPayment").then(() => {
-              //     console.log("done");
-              //   }).catch((err) => {
-              //     console.log(err);
-              //   });
-              // } else {
-              //   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=fail";
-              // }
-            });
-            */
+
+            (function () {
+              window.IMP.init("imp71921105");
+              window.IMP.request_pay({
+                  merchant_uid: formValue.oid,
+                  name: formValue.goodname,
+                  amount: Math.floor(request.amount),
+                  buyer_email: instance.client.email,
+                  buyer_name: instance.client.name,
+                  buyer_tel: instance.client.phone,
+              }, (rsp) => {
+                console.log(rsp);
+                // if (rsp.success) {
+                //   ajaxJson({
+                //     mode: "mobileCard",
+                //     mid: formValue.mid,
+                //     oid: formValue.oid,
+                //     impId: rsp.imp_uid,
+                //     requestNumber: String(instance.requestNumber),
+                //     cliid: instance.client.cliid,
+                //     needs: GeneralJs.returnGet().needs
+                //   }, "/inicisPayment").then(() => {
+                //     console.log("done");
+                //   }).catch((err) => {
+                //     console.log(err);
+                //   });
+                // } else {
+                //   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=fail";
+                // }
+              });
+            })();
+
           }
         }
       } catch (e) {
