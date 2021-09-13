@@ -68,23 +68,35 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("* 1.1)"));
 
 
-    const desktop = true;
 
-    const matrix = [
-      [ "고객 정보", "", "공간 정보", "" ],
-      [ (desktop ? "고객명" : "성함"), "이경숙", (desktop ? "계약 형태" : "계약"), "자가" ],
-      [ "연락처", "010-4928-2754", (desktop ? "사전 점검일" : "사전점검"), "거주중" ],
-      [ (desktop ? "가족 구성원" : "가족"), "부부, 아들 1", (desktop ? "집 비는 날" : "비는 날"), "2021-12-23 예정" ],
-      [ "주소", "서울 성북구 보문사길 111 보문파크뷰자이 아파트 109동 1004호 34A형", (desktop ? "입주 예정일" : "입주일"), "2022-01월말 입주" ],
-      [ "", "", (desktop ? "특이 사항" : "기타"), "공사 기간 1달 소요 예상" ],
-      [ "예산", "1억~ 최대 1억 5000만원 계획", (desktop ? "공간구성" : "구성"), "방3, 화장실2, 발코니 확장" ],
-      [ "서비스 정보", "", "고객 요청", "" ],
-      [ "서비스", "엑스트라 스타일링", "깔끔하고 수납 전체적인인테리어와 스타일링", "" ],
-      [ (desktop ? "선호 컨셉" : "컨셉"), "베이지톤, 아늑, 감성적인 분위기", "", "" ],
-      [ "시공", "전체 시공, 디자인 시공", "", "" ],
-      [ "스타일링", "전체 구매", "", "" ],
+    const mainContents = [
+      {
+        title: "현장 미팅",
+        contents: projectHistory.request.about.when,
+      },
+      {
+        title: "주소",
+        contents: projectHistory.request.about.where,
+      },
+      {
+        title: "현장 관련",
+        contents: projectHistory.request.about.site,
+      },
+      {
+        title: "시공 관련",
+        contents: projectHistory.request.about.construct,
+      },
+      {
+        title: "스타일링 관련",
+        contents: projectHistory.request.about.styling,
+      },
+      {
+        title: "예산 관련",
+        contents: projectHistory.request.about.budget,
+      }
     ];
 
+    let whereQuery, updateQuery;
 
     updateQuery["request.about"] = {
       when: [
@@ -195,14 +207,14 @@ DevContext.prototype.launching = async function () {
     };
     const targets = await MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).find({}).toArray();
     let whereQuery, updateQuery;
-    // for (let t of targets) {
-    //   whereQuery = { proid: t.proid };
-    //   updateQuery = {};
-    //   updateQuery["request"] = equalJson(JSON.stringify(requestObj));
-    //   await MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).updateMany(whereQuery, { $set: updateQuery });
-    //   console.log(whereQuery);
-    // }
-    console.log(targets[100].request);
+    for (let t of targets) {
+      whereQuery = { proid: t.proid };
+      updateQuery = {};
+      updateQuery["request"] = equalJson(JSON.stringify(requestObj));
+      await MONGOCONSOLEC.db(`miro81`).collection(`projectHistory`).updateMany(whereQuery, { $set: updateQuery });
+      console.log(whereQuery);
+    }
+    // console.log(targets[100].request);
     await MONGOCONSOLEC.close();
 
     */
