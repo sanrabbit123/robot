@@ -882,6 +882,9 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
           plugin();
         } else {
+
+          alert("안녕하세요!");
+
           if (!/card/gi.test(motherMethod)) {
             form.setAttribute("method", "post");
             form.setAttribute("accept-charset", "euc-kr");
@@ -912,8 +915,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             form.submit();
           } else {
             window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
-
-            alert("안녕?");
 
             plugin = new Function(pluginScript);
             plugin();
