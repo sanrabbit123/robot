@@ -858,7 +858,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           gopaymethod: (/card/gi.test(motherMethod) ? "Card" : "VBank"),
           device: (desktop ? "desktop" : "mobile"),
         }, "/inicisPayment");
-        console.log(request.name);
+        console.log(formValue);
         const formMother = document.createElement("DIV");
         const form = document.createElement("FORM");
         let value, formId, plugin;
