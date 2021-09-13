@@ -915,6 +915,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             console.log(formValue);
             console.log(formValue.oid);
             window.IMP.init("imp71921105");
+            console.log(window.IMP);
+            /*
             window.IMP.request_pay({
                 merchant_uid: formValue.oid,
                 name: formValue.goodname,
@@ -942,7 +944,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
               //   window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=fail";
               // }
             });
-
+            */
           }
         }
       } catch (e) {
