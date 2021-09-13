@@ -882,9 +882,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
           plugin();
         } else {
-
-          alert("안녕하세요!");
-
           if (!/card/gi.test(motherMethod)) {
             form.setAttribute("method", "post");
             form.setAttribute("accept-charset", "euc-kr");
@@ -914,6 +911,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             form.target = "_self";
             form.submit();
           } else {
+
             window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
 
             plugin = new Function(pluginScript);
@@ -927,7 +925,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                 buyer_email: instance.client.email,
                 buyer_name: instance.client.name,
                 buyer_tel: instance.client.phone,
-                m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid;
+                m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid,
             }, (rsp) => {
               if (rsp.success) {
                 ajaxJson({
@@ -1106,7 +1104,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
     this.mother.setGeneralProperties(this);
-
     const { returnGet, ajaxJson, requestPromise } = GeneralJs;
     const getObj = returnGet();
     if (getObj.needs === undefined || getObj.cliid === undefined) {
