@@ -915,9 +915,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             tempFunction = new Function(tempString);
             tempFunction();
 
-            tempString = await GeneralJs.requestPromise("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js");
-            tempFunction = new Function(tempString);
-            tempFunction();
+            plugin = new Function(pluginScript);
+            plugin();
 
             window.IMP.init("imp71921105");
             window.IMP.request_pay({
