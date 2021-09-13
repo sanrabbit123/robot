@@ -302,6 +302,12 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   return async function (e) {
     try {
       const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients");
+      const clientHistory = await ajaxJson({ id: client.cliid }, "/getClientHistory");
+      const projectHistory = await ajaxJson({ id: project.proid }, "/getProjectHistory");
+
+      console.log(clientHistory);
+      console.log(projectHistory);
+
       let thisBlock, motherTop;
       let visualSpecific;
 

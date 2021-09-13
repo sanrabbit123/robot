@@ -15,7 +15,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         standard = instance.patch.clientStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
-          optionQuery.sort = JSON.parse(req.body.sort);
+          optionQuery.sort = equalJson(req.body.sort);
         }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
@@ -33,7 +33,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         standard = instance.patch.designerStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
-          optionQuery.sort = JSON.parse(req.body.sort);
+          optionQuery.sort = equalJson(req.body.sort);
         }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
@@ -51,7 +51,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         standard = instance.patch.projectStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
-          optionQuery.sort = JSON.parse(req.body.sort);
+          optionQuery.sort = equalJson(req.body.sort);
         }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
@@ -70,7 +70,7 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         standard = instance.patch.contentsStandard();
         optionQuery = { withTools: true, selfMongo: instance.mongo };
         if (req.body.sort !== undefined) {
-          optionQuery.sort = JSON.parse(req.body.sort);
+          optionQuery.sort = equalJson(req.body.sort);
         }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
@@ -1298,6 +1298,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 DataRouter.prototype.rou_post_getHistory = function () {
   const instance = this;
   const back = this.back;
+  const { equalJson } = this.mother;
   const stringFilter = function (raw) {
     const originalValue = raw;
     const originalValueArr = originalValue.split("\n");
@@ -1372,14 +1373,14 @@ DataRouter.prototype.rou_post_getHistory = function () {
         }
 
       } else if (req.url === "/getHistoryProperty") {
-        if (JSON.parse(req.body.idArr).length > 0) {
-          responseArr = await back.getHistoryProperty(req.body.method, req.body.property, JSON.parse(req.body.idArr), { selfMongo: instance.mongolocal });
+        if (equalJson(req.body.idArr).length > 0) {
+          responseArr = await back.getHistoryProperty(req.body.method, req.body.property, equalJson(req.body.idArr), { selfMongo: instance.mongolocal });
         } else {
           responseArr = [];
         }
       } else if (req.url === "/getHistoryTotal") {
-        if (JSON.parse(req.body.idArr).length > 0) {
-          responseArr = await back.getHistoryProperty(req.body.method, "$all", JSON.parse(req.body.idArr), { selfMongo: instance.mongolocal });
+        if (equalJson(req.body.idArr).length > 0) {
+          responseArr = await back.getHistoryProperty(req.body.method, "$all", equalJson(req.body.idArr), { selfMongo: instance.mongolocal });
         } else {
           responseArr = [];
         }
@@ -1600,7 +1601,7 @@ DataRouter.prototype.rou_post_getContentsDetail = function () {
 DataRouter.prototype.rou_post_sendSlack = function () {
   const instance = this;
   const back = this.back;
-  const { ghostRequest, slack_bot: slack } = this.mother;
+  const { ghostRequest, slack_bot: slack, equalJson } = this.mother;
   const url = require("url");
   let obj = {};
   obj.link = "/sendSlack";
@@ -1618,7 +1619,7 @@ DataRouter.prototype.rou_post_sendSlack = function () {
       new_message = '';
 
       if (req.body.linkmake !== undefined) {
-        query = JSON.parse(req.body.query);
+        query = equalJson(req.body.query);
         requrl = url.format({
             protocol: req.protocol,
             host: req.get('host'),
@@ -2145,6 +2146,7 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
 DataRouter.prototype.rou_post_manageDeadline = function () {
   const instance = this;
   const back = this.back;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/manageDeadline";
   obj.func = async function (req, res) {
@@ -2153,7 +2155,7 @@ DataRouter.prototype.rou_post_manageDeadline = function () {
         throw new Error("must be json");
       }
       const { json } = req.body;
-      const obj = JSON.parse(json);
+      const obj = equalJson(json);
       const now = new Date();
       let rows, resultObj;
 

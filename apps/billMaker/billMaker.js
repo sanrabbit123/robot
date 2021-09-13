@@ -2713,12 +2713,14 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
       }
       pastRemainPrice = pastRemainArr[remainItemIndex].unit.price;
       if (typeof option.newPrice === "number") {
-        newRequestAmount = option.newPrice - pastRemainPrice;
+        newSupply = option.newPrice;
+        newRequestPrice = newSupply - Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
+        newRequestAmount = newRequestPrice - pastRemainPrice;
       } else {
         newRequestAmount = newFeeObject.detail[method] - pastFeeObject.detail[method];
+        newRequestPrice = pastRemainPrice + newRequestAmount;
+        newSupply = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
       }
-      newRequestPrice = pastRemainPrice + newRequestAmount;
-      newSupply = newRequestPrice + Math.round(project.process.contract.first.calculation.amount * (1 / (1 + vatRatio)));
 
       projectWhereQuery = { proid };
       projectUpdateQuery = {};
