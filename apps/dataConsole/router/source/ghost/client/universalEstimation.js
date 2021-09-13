@@ -910,10 +910,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           }
           form.action = "https://mobile.inicis.com/smart/payment/";
           form.target = "_self";
-          console.log(formValue);
-
-          // form.submit();
-          // formMother.remove();
+          form.submit();
         }
       } catch (e) {
         console.log(e);
