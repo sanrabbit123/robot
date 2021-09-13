@@ -4342,13 +4342,17 @@ DataPatch.prototype.projectMap = function () {
                 GeneralJs.ajaxJson(ajaxData, PYTHONHOST + "/serviceConverting").then((report) => {
                   let message;
                   message = "다음 상세 사항을 확인해주세요! 추가 견적이 발생할 경우 자동으로 알림톡이 발송될 예정입니다, 확실합니까?\n";
-                  message += "기존 공급가 : " + GeneralJs.autoComma(report.price.past) + '원' + '\n';
-                  message += "새로운 공급가 : " + GeneralJs.autoComma(report.price.supply) + '원' + '\n';
-                  message += "새로운 잔금 : " + GeneralJs.autoComma(report.price.remain) + '원' + '\n';
-                  message += "안내될 차액 : " + GeneralJs.autoComma(report.price.between) + '원' + '\n';
-                  message += "새로운 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total) + '원' + '\n';
-                  message += "새로운 정산 선금 : " + GeneralJs.autoComma(report.calculate.first) + '원' + '\n';
-                  message += "새로운 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain) + '원' + '\n';
+                  message += "기존 공급가 : " + GeneralJs.autoComma(report.price.supply.from) + '원' + '\n';
+                  message += "기존 잔금 : " + GeneralJs.autoComma(report.price.remain.from) + '원' + '\n';
+                  message += "새로운 공급가 : " + GeneralJs.autoComma(report.price.supply.to) + '원' + '\n';
+                  message += "새로운 잔금 : " + GeneralJs.autoComma(report.price.remain.to) + '원' + '\n';
+                  message += "안내될 차액 : " + GeneralJs.autoComma(report.price.between.consumer) + '원' + '\n';
+                  message += "기존 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total.from) + '원' + '\n';
+                  message += "기존 정산 선금 : " + GeneralJs.autoComma(report.calculate.first.from) + '원' + '\n';
+                  message += "기존 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain.from) + '원' + '\n';
+                  message += "새로운 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total.to) + '원' + '\n';
+                  message += "새로운 정산 선금 : " + GeneralJs.autoComma(report.calculate.first.to) + '원' + '\n';
+                  message += "새로운 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain.to) + '원' + '\n';
                   if (window.confirm(message)) {
                     return GeneralJs.ajaxJson(ajaxData2, PYTHONHOST + "/serviceConverting");
                   } else {

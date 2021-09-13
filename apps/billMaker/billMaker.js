@@ -2747,15 +2747,32 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
 
         return {
           price: {
-            past: project.process.contract.remain.calculation.amount.supply,
-            supply: newSupply,
-            remain: newRequestPrice,
-            between: newRequestAmount
+            supply: {
+              from: project.process.contract.remain.calculation.amount.supply,
+              to: newSupply,
+            },
+            remain: {
+              from: project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount,
+              to: newRequestPrice * (1 + vatRatio),
+            },
+            between: {
+              supply: newRequestAmount,
+              consumer: newRequestAmount * (1 + vatRatio),
+            }
           },
           calculate: {
-            total: projectUpdateQuery["process.calculation.payments.totalAmount"],
-            first: (project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? project.process.calculation.payments.first.amount : projectUpdateQuery["process.calculation.payments.first.amount"]),
-            remain: (project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? (projectUpdateQuery["process.calculation.payments.totalAmount"] - project.process.calculation.payments.first.amount) : projectUpdateQuery["process.calculation.payments.remain.amount"])
+            total: {
+              from: project.process.calculation.payments.totalAmount,
+              to: projectUpdateQuery["process.calculation.payments.totalAmount"]
+            },
+            first: {
+              from: project.process.calculation.payments.first.amount,
+              to: (project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? project.process.calculation.payments.first.amount : projectUpdateQuery["process.calculation.payments.first.amount"]),
+            },
+            remain: {
+              from: project.process.calculation.payments.remain.amount,
+              to: (project.process.calculation.payments.first.date.valueOf() > (new Date(2000, 0, 1).valueOf()) ? (projectUpdateQuery["process.calculation.payments.totalAmount"] - project.process.calculation.payments.first.amount) : projectUpdateQuery["process.calculation.payments.remain.amount"])
+            }
           }
         };
       }
