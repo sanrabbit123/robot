@@ -888,7 +888,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             P_MID: formValue.mid,
             P_OID: formValue.oid,
             P_AMT: request.amount,
-            P_GOODS: formValue.goodname,
+            P_GOODS: "홈리에종",
             P_UNAME: instance.client.name,
             P_NEXT_URL: formValue.returnUrl,
             P_NOTI_URL: PYTHONHOST.replace(/\:3000/gi, '') + "/webHookVAccount.php",
