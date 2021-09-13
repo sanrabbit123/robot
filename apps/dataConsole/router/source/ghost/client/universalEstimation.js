@@ -830,14 +830,15 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     }
   });
 
-  // window.addEventListener("message", function (e) {
-  //   for (let i = 0; i < 3; i++) {
-  //     document.body.removeChild(document.body.lastChild);
-  //   }
-  //   document.head.removeChild(document.head.lastChild);
-  //   //close callback
-  //   window.alert("결제가 취소되었습니다! 다시 시도해주세요!");
-  // });
+  GeneralJs.stacks.messageCancelEvent = function (e) {
+    for (let i = 0; i < 3; i++) {
+      document.body.removeChild(document.body.lastChild);
+    }
+    document.head.removeChild(document.head.lastChild);
+    //close callback
+    window.alert("결제가 취소되었습니다! 다시 시도해주세요!");
+  }
+  window.addEventListener("message", GeneralJs.stacks.messageCancelEvent);
 
   paymentEvent = function (motherMethod) {
     return async function (e) {
@@ -910,6 +911,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             form.target = "_self";
             form.submit();
           } else {
+            window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
+
             plugin = new Function(pluginScript);
             plugin();
 
