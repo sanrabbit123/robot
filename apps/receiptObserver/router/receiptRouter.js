@@ -1093,15 +1093,18 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
 
       if (req.body.mode === "confirm") {
 
-        if (req.body.newPrice === undefined) {
-          throw new Error("must be newPrice in confirm mode");
-        }
-        if (Number.isNaN(Number(req.body.newPrice))) {
-          throw new Error("must be newPrice(number) in confirm mode");
-        }
-        newPrice = Math.round(Number(req.body.newPrice));
         confirmMode = true;
-        report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice, confirmMode });
+
+        if (req.body.newPrice === undefined) {
+          report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, confirmMode });
+        } else {
+          if (Number.isNaN(Number(req.body.newPrice))) {
+            throw new Error("must be newPrice(number) in confirm mode");
+          }
+          newPrice = Math.round(Number(req.body.newPrice));
+          report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice, confirmMode });
+        }
+
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
