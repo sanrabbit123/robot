@@ -888,7 +888,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
               P_INI_PAYMENT: "VBANK",
               P_MID: formValue.mid,
               P_OID: formValue.oid,
-              P_AMT: Math.round(request.amount),
+              P_AMT: Math.floor(request.amount),
               P_GOODS: formValue.goodname,
               P_UNAME: instance.client.name,
               P_NEXT_URL: formValue.returnUrl,
@@ -916,7 +916,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             window.IMP.request_pay({
                 merchant_uid: formValue.oid,
                 name: formValue.goodname,
-                amount: Math.round(request.amount),
+                amount: Math.floor(request.amount),
                 buyer_email: instance.client.email,
                 buyer_name: instance.client.name,
                 buyer_tel: instance.client.phone,
