@@ -862,6 +862,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
         const form = document.createElement("FORM");
         let value, formId, plugin;
         let mobileInisisInfo;
+        let tempString, tempFunction;
         formId = "form" + String((new Date()).valueOf());
         form.id = formId;
         form.style.display = "none";
@@ -910,9 +911,14 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             form.target = "_self";
             form.submit();
           } else {
-            plugin = new Function(pluginScript);
-            plugin();
-            formMother.remove();
+            tempString = await GeneralJs.requestPromise("https://code.jquery.com/jquery-1.12.4.min.js");
+            tempFunction = new Function(tempString);
+            tempFunction();
+
+            tempString = await GeneralJs.requestPromise("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js");
+            tempFunction = new Function(tempString);
+            tempFunction();
+
             window.IMP.init("imp71921105");
             window.IMP.request_pay({
                 merchant_uid: formValue.oid,
