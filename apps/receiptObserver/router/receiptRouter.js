@@ -1178,8 +1178,6 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
           await sleep(timeConst);
         }
 
-        console.log(report);
-
         if (report.request.additional) {
           await kakao.sendTalk("plusDesignFee", client.name, client.phone, {
             client: client.name,

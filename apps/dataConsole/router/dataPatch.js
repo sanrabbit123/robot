@@ -4345,13 +4345,6 @@ DataPatch.prototype.projectMap = function () {
               }
             }).then((res) => {
               if (res !== null) {
-                window.alert("성공적으로 전환되었습니다!");
-                input.style.transition = "0s all ease";
-                input.style.color = "transparent";
-                input.value = totalString;
-                input.parentElement.style.transition = "";
-                input.parentElement.style.color = "inherit";
-                mother.removeChild(document.querySelector(".divTong"));
                 window.location.reload();
               }
             }).catch((err) => {
