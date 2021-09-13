@@ -881,7 +881,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
           plugin();
         } else {
+          console.log(motherMethod);
+
           if (!/card/gi.test(motherMethod)) {
+            console.log("this!");
+
             form.setAttribute("method", "post");
             form.setAttribute("accept-charset", "euc-kr");
             mobileInisisInfo = {
@@ -910,6 +914,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             form.target = "_self";
             form.submit();
           } else {
+            console.log("this!?");
+
             plugin = new Function(pluginScript);
             plugin();
 

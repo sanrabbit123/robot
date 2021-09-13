@@ -3182,7 +3182,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         if (device === "mobile" && gopaymethod === "Card") {
           pluginScript = '';
           pluginScript += (await requestSystem("https://code.jquery.com/jquery-1.12.4.min.js")).data;
-          pluginScript += "\n\n";
+          pluginScript += "\n";
           pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
         } else {
