@@ -769,7 +769,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       updateQuery = {};
       updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
 
-      amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
+      amount = Number(equalJson(JSON.stringify(req.body)).amt_input.replace(/[^0-9]/gi, ''));
 
       itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
       payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
