@@ -1071,12 +1071,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         sitePhoto = [];
         for (let t of totalList) {
           if (await fileSystem(`exist`, [ root + "/" + t + "/" + preferredPhotoName ])) {
-            preferredPhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + preferredPhotoName ])).filter((i) => { return i !== `.DS_Store`; }).map((i) => { return `${root}/${t}/${preferredPhotoName}/${i}`; });
+            preferredPhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + preferredPhotoName ])).filter((i) => { return i !== `.DS_Store` && !/^\.\_/.test(i); }).map((i) => { return `${root}/${t}/${preferredPhotoName}/${i}`; });
           } else {
             preferredPhotoList = [];
           }
           if (await fileSystem(`exist`, [ root + "/" + t + "/" + sitePhotoName ])) {
-            sitePhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + sitePhotoName ])).filter((i) => { return i !== `.DS_Store`; }).map((i) => { return `${root}/${t}/${sitePhotoName}/${i}`; });
+            sitePhotoList = (await fileSystem(`readDir`, [ root + "/" + t + "/" + sitePhotoName ])).filter((i) => { return i !== `.DS_Store` && !/^\.\_/.test(i); }).map((i) => { return `${root}/${t}/${sitePhotoName}/${i}`; });
           } else {
             sitePhotoList = [];
           }
