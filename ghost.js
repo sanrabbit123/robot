@@ -1034,7 +1034,6 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_clientPhoto = {
     link: [ "/clientPhoto" ],
     func: async function (req, res) {
-      console.log(req);
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
@@ -1059,8 +1058,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           mode = "fileMode";
         }
 
-        console.log(cliid);
-
         client = await back.getClientById(cliid, { selfMongo: MONGOC });
         if (client === null) {
           throw new Error("invaild cliid");
@@ -1069,8 +1066,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         root = instance.dirParsing("__photo__");
         totalList = await fileSystem(`readDir`, [ root ]);
         totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
-
-        console.log(totalList);
 
         preferredPhoto = [];
         sitePhoto = [];
@@ -1096,7 +1091,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
       } catch (e) {
-        console.log("aaa");
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
       }
     }
@@ -1112,7 +1106,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      console.log(req);
       try {
         if (req.body.images === undefined) {
           throw new Error("invaild post, must be 'images' array");
@@ -1151,33 +1144,35 @@ Ghost.prototype.ghostRouter = function (needs) {
           return c.desid;
         })));
 
-        designers = (await back.getDesignersByQuery({ $or: desidArr.map((desid) => { return { desid }; }) }, { selfMongo })).map((d) => {
-          return d.analytics.styling.tendency.toNormal();
-        });
-
-        if (designers.length > 0) {
-          totalObj = equalJson(JSON.stringify(designers[0]));
-          for (let i in totalObj) {
-            for (let j in totalObj[i]) {
-              totalObj[i][j] = 0;
-            }
-          }
-          for (let style of designers) {
-            for (let i in style) {
-              for (let j in style[i]) {
-                totalObj[i][j] += style[i][j];
+        if (desidArr > 0) {
+          designers = (await back.getDesignersByQuery({ $or: desidArr.map((desid) => { return { desid }; }) }, { selfMongo })).map((d) => {
+            return d.analytics.styling.tendency.toNormal();
+          });
+          if (designers.length > 0) {
+            totalObj = equalJson(JSON.stringify(designers[0]));
+            for (let i in totalObj) {
+              for (let j in totalObj[i]) {
+                totalObj[i][j] = 0;
               }
             }
-          }
-          for (let i in totalObj) {
-            for (let j in totalObj[i]) {
-              totalObj[i][j] = Math.round((totalObj[i][j] / designers.length) * 100) / 100;
+            for (let style of designers) {
+              for (let i in style) {
+                for (let j in style[i]) {
+                  totalObj[i][j] += style[i][j];
+                }
+              }
             }
+            for (let i in totalObj) {
+              for (let j in totalObj[i]) {
+                totalObj[i][j] = Math.round((totalObj[i][j] / designers.length) * 100) / 100;
+              }
+            }
+            res.send(JSON.stringify(totalObj));
+          } else {
+            throw new Error("There is no designer : " + JSON.stringify(desidArr));
           }
-
-          res.send(JSON.stringify(totalObj));
         } else {
-          throw new Error("There is no designer : " + JSON.stringify(desidArr));
+          res.send(JSON.stringify([]));
         }
 
       } catch (e) {
