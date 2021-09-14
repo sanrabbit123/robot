@@ -1925,8 +1925,12 @@ Ghost.prototype.photoRouter = function (needs) {
             zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;`;
             shell.exec(command);
 
-            zipId = await googleDrive.upload_andView(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
-            // shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+            upload_inPython
+            read_webView_inPython
+
+            zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+            zipLink = await googleDrive.read_webView_inPython(zipId);
+            shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
 
             res.send(JSON.stringify({ link: zipLink }));
           }
