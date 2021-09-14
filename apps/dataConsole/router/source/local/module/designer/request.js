@@ -188,6 +188,7 @@ DesignerJs.prototype.requestList = function (desid) {
     }
   });
 
+  this.requestBoxes = [];
   for (let i = 0; i < maxBoxNumber; i++) {
     requestBox = createNode({
       mother: baseTong,
@@ -197,6 +198,10 @@ DesignerJs.prototype.requestList = function (desid) {
           type: "click",
           event: this.requestDocument(baseTong, i, designer, projects[i])
         }
+      ],
+      attribute: [
+        { cliid: projects[i].cliid },
+        { proid: projects[i].proid },
       ],
       style: {
         position: "relative",
@@ -284,6 +289,8 @@ DesignerJs.prototype.requestList = function (desid) {
     requestBox.style.marginTop = String(Math.floor(i / boxNumber) === 0 ? boxMargin * 1.5 : boxMargin) + ea;
     requestBox.style.marginLeft = String(i % boxNumber === 0 ? boxMargin * 1.5 : 0) + ea;
     requestBox.style.marginBottom = String(Math.floor(i / boxNumber) === Math.floor((maxBoxNumber - 1) / boxNumber) ? (boxMargin * 1.5) : 0) + ea;
+
+    this.requestBoxes.push(requestBox);
   }
 
   this.mainBaseTong = baseTong0;
@@ -710,6 +717,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     let clientInfoBottom;
     let noticeDom;
     let finalBottom;
+    let num;
 
     topMargin = <%% 42, 42, 42, 42, 5.5 %%>;
     leftMargin = <%% 50, 50, 50, 50, 5.5 %%>;
@@ -842,6 +850,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       contentsClientInfo.children[0].style.marginBottom = String(titleBottom) + ea;
     }
 
+    num = 0;
     for (let { title, contents } of mainContents) {
       words = createNode({
         mother: contentsClientInfo.children[desktop ? 0 : 1],
@@ -868,7 +877,89 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       });
       createNode({
         mother: contentsClientInfo.children[desktop ? 0 : 1],
-        text: contents.map((z) => { return "<b%-%b> " + z; }).join("\n"),
+        events: [
+          {
+            type: "click",
+            event: async function (e) {
+              try {
+                const { title, contents } = mainContents[Number(this.getAttribute("index"))];
+                const whiteCardClassName = "mainContentsWhiteCardClass";
+                const widthStandard = this.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().width;
+                const heightStandard = this.parentElement.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().height;
+                let width, height;
+                let topVisual;
+
+                width = widthStandard * (3 / 4);
+                height = heightStandard * (3 / 4);
+                topVisual = 10;
+
+                GeneralJs.scrollTo(this.parentElement.parentElement.parentElement.parentElement.parentElement, 0);
+
+                createNode({
+                  mother: this,
+                  class: [ whiteCardClassName ],
+                  events: [
+                    {
+                      type: "click",
+                      event: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const doms = document.querySelectorAll('.' + whiteCardClassName);
+                        for (let dom of doms) {
+                          dom.remove();
+                        }
+                      }
+                    },
+                  ],
+                  style: {
+                    position: "fixed",
+                    top: String(0),
+                    left: String(0),
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: colorChip.shadow,
+                    zIndex: String(2),
+                    animation: "justfadein 0.3s ease forwards",
+                  }
+                });
+
+                createNode({
+                  mother: this,
+                  class: [ whiteCardClassName ],
+                  events: [
+                    {
+                      type: "click",
+                      event: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }
+                    },
+                  ],
+                  style: {
+                    position: "fixed",
+                    top: String((heightStandard * (1 / 4) * (1 / 2)) - topVisual) + ea,
+                    left: withOut(50, width / 2, ea),
+                    width: String(width) + ea,
+                    height: String(height) + ea,
+                    background: colorChip.white,
+                    borderRadius: String(3) + "px",
+                    zIndex: String(2),
+                    animation: "fadeup 0.3s ease forwards",
+                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow
+                  }
+                });
+
+
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
+        ],
+        text: contents.map((z) => { return "<b%-%b> " + z.replace(/^\-/, '').replace(/^\- /, ''); }).join("\n"),
+        attribute: [
+          { index: String(num) }
+        ],
         style: {
           position: "relative",
           fontSize: String(fontSize) + ea,
@@ -881,6 +972,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           color: colorChip.gray4,
         }
       });
+      num++;
     }
 
     contentsClientPhoto = createNode({
@@ -1550,8 +1642,32 @@ DesignerJs.prototype.requestView = async function () {
 
     loading.parentNode.removeChild(loading);
 
+    window.addEventListener("resize", (e) => {
+      window.location.reload();
+    });
+
     //launching
+    this.requestBoxes = [];
     this.requestDetailLaunching(this.desid);
+
+    if (getObj.cliid !== undefined) {
+      if (getObj.desid === undefined) {
+        if ((clients.find((obj) => { return obj.cliid === getObj.cliid })) !== undefined) {
+          this.requestDetailLaunching(projects.find((obj) => { return obj.cliid === getObj.cliid }).desid);
+          for (let box of this.requestBoxes) {
+            if (box.getAttribute("cliid") === getObj.cliid) {
+              box.click();
+            }
+          }
+        }
+      } else {
+        for (let box of this.requestBoxes) {
+          if (box.getAttribute("cliid") === getObj.cliid) {
+            box.click();
+          }
+        }
+      }
+    }
 
   } catch (e) {
     console.log(e);
