@@ -3254,9 +3254,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       ajaxJson({
         cliid: thisCase[standard[1]]
       }, "/ghostPass_clientPhoto").then((obj) => {
-
-        console.log(obj);
-
         images = images.concat(obj.sitePhoto);
         images = images.concat(obj.preferredPhoto);
         return ajaxJson({
