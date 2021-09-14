@@ -1474,6 +1474,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
           marginBottom: String(Math.floor(i / photoNumber) === Math.floor((images.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
           cursor: "pointer",
+          verticalAlign: "top",
         }
       });
     }
