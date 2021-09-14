@@ -103,33 +103,28 @@ BridgeCloud.returnTimeline = function () {
 
 BridgeCloud.prototype.bridgeToGoogle = async function (obj, option = { selfMongo: null }) {
   const instance = this;
+  const address = this.address;
   const back = this.back;
-  const { shell, slack_bot, shellLink, googleSystem, ghostRequest, requestSystem } = this.mother;
+  const { shell, slack_bot, shellLink, googleSystem, ghostRequest, requestSystem, generalFileUpload } = this.mother;
   try {
     const { tong, folder } = obj;
+    const binaryFolder = instance.dir + "/binary";
     let tongKeys = Object.keys(tong);
-    const targetFolder = (obj.mode === "client") ? "1zB5SdQ1PLoE37870wlSBWk01AJvXwSRo" : "1i5A9i3OXHTyvMHoOr1-QuSuZXukhZBVm";
-    const googleDrive = googleSystem("drive");
-
-    //make client folder
-    const folderId = await googleDrive.makeFolder_andMove(folder, targetFolder);
-
-    //make detail folders
-    let detailFolderId = [];
-    for (let i = 0; i < tongKeys.length; i++) {
-      detailFolderId.push(await googleDrive.makeFolder_andMove(tongKeys[i], folderId));
-    }
-
-    //upload files
-    for (let i = 0; i < tongKeys.length; i++) {
-      for (let j of tong[tongKeys[i]]) {
-        await googleDrive.upload_andView(detailFolderId[i], j);
-      }
-    }
-
+    let fromArr, toArr;
     let message = "";
     let already, updatePortfolio;
     let client, designer;
+
+    fromArr = [];
+    toArr = [];
+    for (let i = 0; i < tongKeys.length; i++) {
+      for (let j of tong[tongKeys[i]]) {
+        fromArr.push(j);
+        toArr.push(j.replace((new RegExp('^' + binaryFolder)), '').slice(1));
+      }
+    }
+
+    await generalFileUpload(address.officeinfo.ghost.protocol + "//" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.port) + "/fileUpload", fromArr, toArr);
 
     if (obj.mode === "client") {
       if (obj.cliid === "테스트") {
