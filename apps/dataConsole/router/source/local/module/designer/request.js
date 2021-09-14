@@ -298,7 +298,7 @@ DesignerJs.prototype.requestList = function (desid) {
 
 DesignerJs.prototype.requestDocument = function (mother, index, designer, project) {
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, serviceParsing } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -308,12 +308,62 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   const blocks = mother.children;
   return async function (e) {
     try {
-      const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients");
-      const clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
-      const projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory");
-
+      const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
+      let clientHistory, projectHistory;
       let thisBlock, motherTop;
       let visualSpecific;
+      let requestNumber, thisRequest;
+
+      clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
+      projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory");
+
+      if (JSON.stringify(projectHistory.request).replace(/[\{\}\[\]\"\' ]/gi, '').trim().replace(/[a-z]/gi, '').trim().replace(/[\:\,]/gi, '').trim().length === 0) {
+        requestNumber = 0;
+        for (let i = 0; i < client.requests.length; i++) {
+          if (project.proposal.date.valueOf() >= client.requests[i].request.timeline.valueOf()) {
+            requestNumber = i;
+          }
+        }
+        thisRequest = client.requests[requestNumber];
+        projectHistory.request = {
+          client: {
+            name: client.name,
+            phone: client.phone,
+            family: thisRequest.request.family,
+            address: thisRequest.request.space.address,
+            budget: thisRequest.request.budget,
+            etc: thisRequest.request.etc.comment
+          },
+          space: {
+            contract: thisRequest.request.space.contract,
+            precheck: dateToString(thisRequest.analytics.date.space.precheck),
+            empty: dateToString(thisRequest.analytics.date.space.empty),
+            movein: dateToString(thisRequest.analytics.date.space.movein),
+            special: "",
+            composition: "방 " + String(thisRequest.request.space.spec.room) + "개, 화장실 " + String(thisRequest.request.space.spec.bathroom) + "개, 발코니 확장" + (thisRequest.request.space.spec.valcony ? "" : " 없음"),
+          },
+          service: {
+            service: serviceParsing(project.service),
+            concept: "모던 그레이",
+            construct: clientHistory.curation.construct.items.length === 0 ? "시공 없음" : clientHistory.curation.construct.items.join(", "),
+            styling: "전체 구매 또는 재배치"
+          },
+          about: {
+            when: [ dateToString(project.process.contract.meeting.date, true) ],
+            where: [ thisRequest.request.space.address ],
+            site: clientHistory.space.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; }),
+            construct: clientHistory.construct.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; }),
+            styling: clientHistory.styling.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; }),
+            budget: clientHistory.budget.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; })
+          }
+        };
+        await ajaxJson({
+          id: proid,
+          column: "request",
+          value: projectHistory.request,
+          email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+        }, "/updateProjectHistory");
+      }
 
       if (desktop) {
 
@@ -417,26 +467,38 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const mainContents = [
     {
       title: "현장 미팅",
+      className: "mainContents_when",
+      position: "request.about.when",
       contents: projectHistory.request.about.when,
     },
     {
       title: "주소",
+      className: "mainContents_where",
+      position: "request.about.where",
       contents: projectHistory.request.about.where,
     },
     {
       title: "현장 관련",
+      className: "mainContents_site",
+      position: "request.about.site",
       contents: projectHistory.request.about.site,
     },
     {
       title: "시공 관련",
+      className: "mainContents_construct",
+      position: "request.about.construct",
       contents: projectHistory.request.about.construct,
     },
     {
       title: "스타일링 관련",
+      className: "mainContents_styling",
+      position: "request.about.styling",
       contents: projectHistory.request.about.styling,
     },
     {
       title: "예산 관련",
+      className: "mainContents_budget",
+      position: "request.about.budget",
       contents: projectHistory.request.about.budget,
     }
   ];
@@ -718,6 +780,8 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     let noticeDom;
     let finalBottom;
     let num;
+    let whitePopupEvent;
+    let clientPhoto;
 
     topMargin = <%% 42, 42, 42, 42, 5.5 %%>;
     leftMargin = <%% 50, 50, 50, 50, 5.5 %%>;
@@ -850,10 +914,189 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       contentsClientInfo.children[0].style.marginBottom = String(titleBottom) + ea;
     }
 
+    whitePopupEvent = async function (e) {
+      try {
+        const self = this;
+        const index = Number(this.getAttribute("index"));
+        const { title, contents } = mainContents[index];
+        const position = this.getAttribute("position");
+        const proid = this.getAttribute("proid");
+        const className = this.getAttribute("className");
+        const whiteCardClassName = "mainContentsWhiteCardClass";
+        const widthStandard = this.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().width;
+        const heightStandard = this.parentElement.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().height;
+        const [ titleDom, contentsDom ] = document.querySelectorAll('.' + className);
+        let width, height;
+        let topVisual;
+        let frame;
+        let textArea;
+        let innerMargin, innerTopMargin;
+        let base;
+        let lineHeight, updateEvent;
+
+        innerMargin = 38;
+        innerTopMargin = 30;
+        width = widthStandard * (3 / 4);
+        height = heightStandard * (3 / 4);
+        topVisual = 10;
+        lineHeight = 1.7;
+
+        updateEvent = async function (value) {
+          try {
+            let tempArr, doms;
+            tempArr = value.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
+            await ajaxJson({
+              id: proid,
+              column: position,
+              value: tempArr,
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+            }, "/updateProjectHistory");
+            mainContents[index].contents = tempArr;
+            value = tempArr.map((i) => { return `<b style="${colorChip.gray4}">-</b> ${i}`; }).join("<br>");
+            GeneralJs.cleanChildren(contentsDom);
+            contentsDom.insertAdjacentHTML("beforeend", value);
+            doms = document.querySelectorAll('.' + whiteCardClassName);
+            for (let dom of doms) {
+              dom.remove();
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+
+        GeneralJs.scrollTo(this.parentElement.parentElement.parentElement.parentElement.parentElement, 0);
+
+        createNode({
+          mother: this,
+          class: [ whiteCardClassName ],
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const doms = document.querySelectorAll('.' + whiteCardClassName);
+                for (let dom of doms) {
+                  dom.remove();
+                }
+              }
+            },
+          ],
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(100) + '%',
+            background: colorChip.shadow,
+            zIndex: String(2),
+            animation: "justfadein 0.3s ease forwards",
+          }
+        });
+
+        base = createNode({
+          mother: this,
+          class: [ whiteCardClassName ],
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            },
+          ],
+          style: {
+            position: "fixed",
+            top: String((heightStandard * (1 / 4) * (1 / 2)) - topVisual) + ea,
+            left: withOut(50, width / 2, ea),
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            borderRadius: String(3) + "px",
+            zIndex: String(2),
+            animation: "fadeup 0.3s ease forwards",
+            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        });
+        frame = createNode({
+          mother: base,
+          style: {
+            position: "relative",
+            top: String(innerTopMargin) + ea,
+            left: String(innerMargin) + ea,
+            width: withOut(100, innerMargin * 2, ea),
+            height: withOut(100, innerTopMargin * 2, ea),
+          }
+        });
+        textArea = createNode({
+          mother: frame,
+          mode: "textarea",
+          text: contents.join("\n"),
+          events: [
+            {
+              type: "click",
+              event: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            },
+            {
+              type: "keydown",
+              event: async function (e) {
+                try {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    await updateEvent(this.value);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+          ],
+          style: {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(100) + '%',
+            fontSize: String(fontSize) + ea,
+            overflow: "scroll",
+            border: String(0),
+            outline: String(0),
+            lineHeight: String(lineHeight),
+            background: "transparent",
+          }
+        });
+
+        textArea.focus();
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
     num = 0;
-    for (let { title, contents } of mainContents) {
+    for (let { title, className, contents, position } of mainContents) {
       words = createNode({
         mother: contentsClientInfo.children[desktop ? 0 : 1],
+        attribute: [
+          { index: String(num) },
+          { position },
+          { proid },
+          { className }
+        ],
+        events: [
+          {
+            type: "click",
+            event: whitePopupEvent
+          }
+        ],
+        class: [ className ],
         text: title,
         style: {
           position: "relative",
@@ -862,6 +1105,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           color: colorChip.black,
           marginBottom: String(wordsBetween0) + ea,
           paddingLeft: mobile ? String(leftIndent) + ea : "",
+          cursor: "pointer",
         }
       });
       createNode({
@@ -877,89 +1121,20 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       });
       createNode({
         mother: contentsClientInfo.children[desktop ? 0 : 1],
+        attribute: [
+          { index: String(num) },
+          { position },
+          { proid },
+          { className }
+        ],
+        class: [ className ],
         events: [
           {
             type: "click",
-            event: async function (e) {
-              try {
-                const { title, contents } = mainContents[Number(this.getAttribute("index"))];
-                const whiteCardClassName = "mainContentsWhiteCardClass";
-                const widthStandard = this.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().width;
-                const heightStandard = this.parentElement.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().height;
-                let width, height;
-                let topVisual;
-
-                width = widthStandard * (3 / 4);
-                height = heightStandard * (3 / 4);
-                topVisual = 10;
-
-                GeneralJs.scrollTo(this.parentElement.parentElement.parentElement.parentElement.parentElement, 0);
-
-                createNode({
-                  mother: this,
-                  class: [ whiteCardClassName ],
-                  events: [
-                    {
-                      type: "click",
-                      event: function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const doms = document.querySelectorAll('.' + whiteCardClassName);
-                        for (let dom of doms) {
-                          dom.remove();
-                        }
-                      }
-                    },
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    width: String(100) + '%',
-                    height: String(100) + '%',
-                    background: colorChip.shadow,
-                    zIndex: String(2),
-                    animation: "justfadein 0.3s ease forwards",
-                  }
-                });
-
-                createNode({
-                  mother: this,
-                  class: [ whiteCardClassName ],
-                  events: [
-                    {
-                      type: "click",
-                      event: function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }
-                    },
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String((heightStandard * (1 / 4) * (1 / 2)) - topVisual) + ea,
-                    left: withOut(50, width / 2, ea),
-                    width: String(width) + ea,
-                    height: String(height) + ea,
-                    background: colorChip.white,
-                    borderRadius: String(3) + "px",
-                    zIndex: String(2),
-                    animation: "fadeup 0.3s ease forwards",
-                    boxShadow: "0px 3px 15px -9px " + colorChip.shadow
-                  }
-                });
-
-
-              } catch (e) {
-                console.log(e);
-              }
-            }
+            event: whitePopupEvent
           }
         ],
         text: contents.map((z) => { return "<b%-%b> " + z.replace(/^\-/, '').replace(/^\- /, ''); }).join("\n"),
-        attribute: [
-          { index: String(num) }
-        ],
         style: {
           position: "relative",
           fontSize: String(fontSize) + ea,
@@ -1025,6 +1200,10 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
     });
 
+    clientPhoto = await ajaxJson({ cliid }, "/ghostPass_clientPhoto");
+    images = images.concat(clientPhoto.sitePhoto);
+    images = images.concat(clientPhoto.preferredPhoto);
+
     if (desktop) {
       photoNumber = Math.floor((contentsClientPhotoTong.getBoundingClientRect().width + photoMargin) / (photoWidth + photoMargin));
       photoWidth = (contentsClientPhotoTong.getBoundingClientRect().width - (photoMargin * (photoNumber - 1))) / photoNumber;
@@ -1039,7 +1218,228 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
         mode: "img",
         class: [ "hoverDefault_lite" ],
         attribute: [
-          { src: images[i] }
+          { src: images[i] },
+          { index: String(i) },
+          { method: /sitePhoto/g.test(images[i]) ? "site" : (/preferredPhoto/g.test(images[i]) ? "preferred" : "selected") },
+          { length: String(images.length) }
+        ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
+              const totalImages = equalJson(JSON.stringify(images));
+              const mother = document.getElementById("totalcontents");
+              const className = "photoSelectedTarget";
+              const length = Number(this.getAttribute("length"));
+              const zIndex = 3;
+              const wordDictionary = {
+                selected: "고객님이 선택한 사진",
+                site: "고객님이 보낸 현장",
+                preferred: "고객님의 선호 사진"
+              };
+              let img, height, imgBox;
+              let title, titleSize, bottom;
+              let titleBox;
+              let leftArrow, rightArrow;
+              let leftArrowBox, rightArrowBox;
+              let arrowHeight;
+              let arrowMargin;
+              let index, method, src;
+              let convertEvent;
+
+              index = Number(this.getAttribute("index"));
+              method = this.getAttribute("method");
+              src = this.getAttribute("src");
+
+              convertEvent = () => {};
+
+              height = 78;
+              titleSize = 2;
+              bottom = 6.6;
+              arrowHeight = 1.7;
+              arrowMargin = 78;
+
+              createNode({
+                mother,
+                class: [ className ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      const removeTargets = document.querySelectorAll('.' + className);
+                      for (let dom of removeTargets) {
+                        mother.removeChild(dom);
+                      }
+                    }
+                  }
+                ],
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  background: colorChip.darkDarkShadow,
+                  zIndex: String(zIndex),
+                  animation: "justfadeineight 0.2s ease forwards",
+                }
+              });
+
+              img = createNode({
+                mother,
+                class: [ className ],
+                mode: "img",
+                attribute: [
+                  { src },
+                  { direction: "right" }
+                ],
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  height: String(height) + '%',
+                  width: "auto",
+                  zIndex: String(zIndex),
+                  transition: "all 0s ease",
+                  animation: "fadeuplite 0.2s ease forwards",
+                  borderRadius: String(3) + "px",
+                }
+              });
+              imgBox = img.getBoundingClientRect();
+              img.style.top = withOut(50, imgBox.height / 2, ea);
+              img.style.left = withOut(50, imgBox.width / 2, ea);
+
+              title = createNode({
+                mother,
+                events: [
+                  {
+                    type: [ "click", "dblclick", "selectstart" ],
+                    event: (e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                  }
+                ],
+                class: [ className ],
+                text: wordDictionary[method],
+                style: {
+                  position: "fixed",
+                  bottom: String(bottom) + '%',
+                  fontSize: String(titleSize) + "vh",
+                  fontWeight: String(600),
+                  color: colorChip.whiteBlack,
+                  left: String(50) + '%',
+                  zIndex: String(zIndex),
+                  transition: "all 0s ease",
+                  animation: "fadeuplite 0.2s ease forwards",
+                }
+              });
+              titleBox = title.getBoundingClientRect();
+              title.style.left = withOut(50, titleBox.width / 2, ea);
+
+              leftArrow = createNode({
+                mother,
+                events: [
+                  {
+                    type: [ "dblclick", "selectstart" ],
+                    event: (e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                  }
+                ],
+                attribute: [
+                  { direction: "left" }
+                ],
+                class: [ className ],
+                mode: "svg",
+                source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  height: String(arrowHeight) + "vh",
+                  zIndex: String(zIndex),
+                  transition: "all 0s ease",
+                  animation: "fadeuplite 0.2s ease forwards",
+                  cursor: "pointer"
+                }
+              });
+              leftArrowBox = leftArrow.getBoundingClientRect();
+              leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+              leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+
+              rightArrow = createNode({
+                mother,
+                events: [
+                  {
+                    type: [ "dblclick", "selectstart" ],
+                    event: (e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                  }
+                ],
+                attribute: [
+                  { direction: "right" }
+                ],
+                class: [ className ],
+                mode: "svg",
+                source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  height: String(arrowHeight) + "vh",
+                  zIndex: String(zIndex),
+                  transition: "all 0s ease",
+                  animation: "fadeuplite 0.2s ease forwards",
+                  cursor: "pointer"
+                }
+              });
+              rightArrowBox = rightArrow.getBoundingClientRect();
+              rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+              rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+              convertEvent = function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                const direction = this.getAttribute("direction");
+                let targetIndex, targetImage;
+                if (direction === "left") {
+                  targetIndex = index - 1;
+                  if (totalImages[targetIndex] === undefined) {
+                    targetIndex = length - 1;
+                  }
+                } else {
+                  targetIndex = index + 1;
+                  if (totalImages[targetIndex] === undefined) {
+                    targetIndex = 0;
+                  }
+                }
+                targetImage = totalImages[targetIndex];
+                img.setAttribute("src", targetImage);
+                imgBox = img.getBoundingClientRect();
+                img.style.left = withOut(50, imgBox.width / 2, ea);
+                leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+                rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                index = targetIndex;
+                src = targetImage;
+                method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
+
+                title.textContent = wordDictionary[method];
+                titleBox = title.getBoundingClientRect();
+                title.style.left = withOut(50, titleBox.width / 2, ea);
+              }
+              leftArrow.addEventListener("click", convertEvent);
+              rightArrow.addEventListener("click", convertEvent);
+              img.addEventListener("click", convertEvent);
+            }
+          }
         ],
         style: {
           display: "inline-block",
@@ -1048,6 +1448,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           borderRadius: String(3) + "px",
           marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
           marginBottom: String(Math.floor(i / photoNumber) === Math.floor((images.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
+          cursor: "pointer",
         }
       });
     }

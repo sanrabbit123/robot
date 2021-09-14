@@ -69,9 +69,10 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const projectHistory = await back.getHistoryById("project", "p2001_aa03s");
+    const res = JSON.stringify(projectHistory.request).replace(/[\{\}\[\]\"\' ]/gi, '').trim().replace(/[a-z]/gi, '').trim().replace(/[\:\,]/gi, '').trim().length
 
-
-
+    console.log(res);
 
 
 
@@ -1277,9 +1278,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "엄진희",
-    //     designer: "임은숙",
-    //     link: "https://drive.google.com/drive/folders/1jkGz4y5CGDUbP-S0iQ96Bwj-aZhESm3H",
+    //     client: "임현서",
+    //     designer: "김지은",
+    //     link: "https://drive.google.com/drive/folders/12gMkHpLcXOcYft5uF2ZvoooACpMiTDRI",
     //   },
     // ]);
 

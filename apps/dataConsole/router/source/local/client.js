@@ -3551,6 +3551,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       method = this.getAttribute("method");
                       src = this.getAttribute("src");
 
+                      convertEvent = () => {};
+
                       height = 78;
                       titleSize = 2;
                       bottom = 6.6;
@@ -3589,15 +3591,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                         mode: "img",
                         attribute: [
                           { src },
-                        ],
-                        events: [
-                          {
-                            type: "dblclick",
-                            event: function (e) {
-                              e.preventDefault();
-                              downloadFile(this.getAttribute("src"));
-                            }
-                          },
+                          { direction: "right" }
                         ],
                         style: {
                           position: "fixed",
@@ -3708,6 +3702,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
 
                       convertEvent = function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
                         const direction = this.getAttribute("direction");
                         let targetIndex, targetImage;
                         if (direction === "left") {
@@ -3738,7 +3734,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       }
                       leftArrow.addEventListener("click", convertEvent);
                       rightArrow.addEventListener("click", convertEvent);
-
+                      img.addEventListener("click", convertEvent);
                     }
                   }
                 ]
