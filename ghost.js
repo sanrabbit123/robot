@@ -9,7 +9,7 @@ const Ghost = function () {
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
   this.address = ADDRESS;
-  this.homeliaisonServer = this.address.officeinfo.ghost.file.static + "/" + this.address.officeinfo.ghost.file.office;
+  this.homeliaisonServer = this.address.officeinfo.ghost.file.static + this.address.officeinfo.ghost.file.office;
   this.photoServer = this.address.officeinfo.ghost.file.static + "/photo";
   this.photoServerClient = this.photoServer + "/고객 전송 사진";
   this.photoServerDesigner = this.photoServer + "/디자이너 포트폴리오";
@@ -1870,6 +1870,8 @@ Ghost.prototype.photoRouter = function (needs) {
           res.send(JSON.stringify({ message: "invaild body : must be 'pid'" }));
         } else {
 
+          const targetFolder = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
+          const googleDrive = instance.mother.googleSystem("drive");
           const { pid } = req.body;
           const c780 = "780";
           const list = await fileSystem(`readDir`, [ sambaDir ]);
@@ -1920,21 +1922,13 @@ Ghost.prototype.photoRouter = function (needs) {
             shareName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
             command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};
-            zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;
-            scp ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ${fileServerUser}@${fileServerIp}:${shellLink(instance.address.officeinfo.ghost.file.static + "/" + instance.address.officeinfo.ghost.file.share)};`;
+            zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;`;
             shell.exec(command);
 
-            zipId = await drive.searchId_inPython(shareName);
-            while (zipId === null) {
-              await sleep(1000);
-              zipId = await drive.searchId_inPython(shareName);
-            }
-
+            zipId = await googleDrive.upload_andView(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
             shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
 
-            zipLink = await drive.read_webView_inPython(zipId);
             res.send(JSON.stringify({ link: zipLink }));
-
           }
 
         }

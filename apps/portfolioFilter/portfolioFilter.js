@@ -350,12 +350,11 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   }
   try {
     const photoFolderConst = "사진_등록_포트폴리오";
-    const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
+    const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
     await this.static_setting();
 
     let thisFolderId, folderId_780, folderId_original;
     let pidFolder, fromArr, toArr;
-    let webViewLink;
     let resultFolder;
     let ghostPhotos, ghostPhotosTarget;
     let scpTarget;
@@ -385,28 +384,16 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     scpTarget = `${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + this.folderName)}/`;
 
     if (!liteMode) {
-      shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(fileList_original[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
+      shell.exec(`scp -r ${shellLink(fileList_original[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
       for (let f of fileList_png) {
-        shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} ${shellLink(f)} ${scpTarget}`);
+        shell.exec(`scp ${shellLink(f)} ${scpTarget}`);
       }
     } else {
-      shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
-    }
-
-    console.log(await photoRequest("fixDir", { target: this.folderName }));
-
-    thisFolderId = await drive.searchId_inPython(this.folderName);
-    while (thisFolderId === null) {
-      for (let z = 0; z < 5; z++) {
-        console.log(`insync waiting... ${String(5 - z)}s`);
-        await sleep(1000);
-      }
-      thisFolderId = await drive.searchId_inPython(this.folderName);
+      shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
     }
 
     //slack
-    webViewLink = await drive.read_webView_inPython(thisFolderId);
-    await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다! : \n${webViewLink}`, channel: `#502_sns_contents` });
+    await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다!`, channel: `#502_sns_contents` });
 
     //s3 upload
     if (!liteMode) {
@@ -434,7 +421,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       console.log(`ghost upload done`);
     }
 
-    return { folderName: this.folderName, webViewLink };
+    return { folderName: this.folderName };
 
   } catch (e) {
     console.log(e);
@@ -635,7 +622,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const AppleNotes = require(`${process.cwd()}/apps/appleAPIs/appleNotes.js`);
   const errorMessage = `argument must be => [ { client: "", designer: "", link: "" } ... ]`;
   const photoFolderConst = "사진_등록_포트폴리오";
-  const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}/${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
+  const sambaPhotoPath = `${this.address.officeinfo.ghost.file.static}${this.address.officeinfo.ghost.file.office}/${photoFolderConst}`;
   const foreCastContant = `/corePortfolio/forecast`;
   const forecastPath = this.address.homeinfo.ghost.file.static + foreCastContant;
   class RawArray extends Array {
@@ -766,7 +753,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         ghostPhotos = await photoRequest("ls");
       }
 
-      shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
+      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
       console.log(`original copy done`);
 
       for (let item of folderPathList) {
@@ -799,7 +786,6 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
           { proid: project.proid },
           {
             "contents.raw.photo.status": "원본 보정 완료",
-            "contents.raw.photo.link": totalMakeResult.webViewLink,
             "contents.share.client.photo": new Date(),
             "contents.share.designer.photo": new Date(),
           }
