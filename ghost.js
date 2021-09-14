@@ -1034,6 +1034,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_clientPhoto = {
     link: [ "/clientPhoto" ],
     func: async function (req, res) {
+      console.log(req);
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
@@ -1057,6 +1058,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (req.body.fileMode !== undefined) {
           mode = "fileMode";
         }
+
+        console.log(cliid);
 
         client = await back.getClientById(cliid, { selfMongo: MONGOC });
         if (client === null) {
@@ -1093,6 +1096,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
       } catch (e) {
+        console.log("aaa");
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
       }
     }
@@ -1108,6 +1112,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
+      console.log(req);
       try {
         if (req.body.images === undefined) {
           throw new Error("invaild post, must be 'images' array");
