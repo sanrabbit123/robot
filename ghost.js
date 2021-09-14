@@ -1088,6 +1088,9 @@ Ghost.prototype.ghostRouter = function (needs) {
           preferredPhoto = preferredPhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
           sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
         }
+
+        console.log(preferredPhoto);
+        console.log(sitePhoto);
         res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
       } catch (e) {
