@@ -1286,6 +1286,7 @@ Ghost.prototype.ghostRouter = function (needs) {
       }
       target = instance.dirParsing(target);
       makeFileArr(target).then((list) => {
+        console.log(list);
         res.send(JSON.stringify(list));
       }).catch((err) => {
         res.send(JSON.stringify({ message: "error" }));
