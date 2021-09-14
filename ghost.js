@@ -1208,6 +1208,7 @@ Ghost.prototype.ghostRouter = function (needs) {
       }
       const makeFileArr = async function (target) {
         try {
+          const targetFolderName = (target.split("/"))[target.split("/").length - 1];
           const stdout = await lsAl(target);
           let fileList;
           let tempArr, tempArr2, tempArr3, tempArr4, tempArr5;
