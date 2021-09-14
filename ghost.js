@@ -1264,12 +1264,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           for (let i of tempArr3) {
             tempArr4.push(i);
           }
-          tempArr4.unshift({
-            directory: true,
-            fileName: targetFolderName,
-            hidden: (/^\./.test(targetFolderName)),
-            absolute: target,
-          });
+
           return tempArr4;
         } catch (e) {
           console.log(e);
