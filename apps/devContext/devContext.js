@@ -69,7 +69,7 @@ DevContext.prototype.launching = async function () {
 
     const photoRequest = ghostRequest().bind("photo");
 
-    const shareLink = (await photoRequest("zip", { pid: "p140" })).link;
+    const shareLink = (await photoRequest("zip", { pid: "p48" })).link;
 
     console.log(shareLink);
 
