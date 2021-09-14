@@ -10,7 +10,7 @@ const Ghost = function () {
   this.drive = new GoogleDrive();
   this.address = ADDRESS;
   this.homeliaisonServer = this.address.officeinfo.ghost.file.static + "/" + this.address.officeinfo.ghost.file.office;
-  this.photoServer = this.address.officeinfo.ghost.file.static.split("/").slice(0, -1).join("/") + "/photo";
+  this.photoServer = this.address.officeinfo.ghost.file.static + "samba/photo";
   this.photoServerClient = this.photoServer + "/고객 전송 사진";
   this.photoServerDesigner = this.photoServer + "/디자이너 포트폴리오";
   this.alien = process.cwd() + "/alien.js";
@@ -1089,8 +1089,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           sitePhoto = sitePhoto.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
         }
 
-        console.log(preferredPhoto);
-        console.log(sitePhoto);
         res.send(JSON.stringify({ sitePhoto, preferredPhoto }));
 
       } catch (e) {
