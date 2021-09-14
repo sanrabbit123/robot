@@ -2448,7 +2448,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //proid
   betweenSpace = "&nbsp;&nbsp;<b style=\"color: " + GeneralJs.colorChip.gray3 + "\">/</b>&nbsp;&nbsp;";
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Cl)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)"));
+  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Cl)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서"));
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
@@ -2465,6 +2465,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const slashes = this.querySelectorAll('b');
       const slashesPosition0 = slashes[0].getBoundingClientRect().x;
       const slashesPosition1 = slashes[1].getBoundingClientRect().x;
+      const slashesPosition2 = slashes[2].getBoundingClientRect().x;
       const proid = thisCase[standard[1]];
       let projects, project, tempFunction;
       if (e.x < slashesPosition0) {
@@ -2474,10 +2475,14 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
         project = projects[0];
         GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/client?cliid=" + project.cliid);
-      } else {
+      } else if (e.x < slashesPosition2) {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
         project = projects[0];
         GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?desid=" + project.desid);
+      } else {
+        projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
+        project = projects[0];
+        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=request&desid=" + project.desid + "&cliid=" + project.cliid;
       }
     } catch (e) {
       console.log(e);

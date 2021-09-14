@@ -1650,7 +1650,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: (e) => { modeHref("price"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 관리", event: (e) => { modeHref("calendar"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>체크리스트", event: (e) => { modeHref("checklist"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>컨텐츠 관리", event: (e) => { modeHref("contents"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>의뢰서 관리", event: (e) => { modeHref("request"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: (e) => { modeHref("report"); } },
       ];
       let totalFather, tong, nodeArr;

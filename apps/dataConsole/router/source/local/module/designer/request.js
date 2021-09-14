@@ -306,6 +306,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   const proid = project.proid;
   const cliid = project.cliid;
   const blocks = mother.children;
+  this.proid = null;
   return async function (e) {
     try {
       const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
@@ -575,6 +576,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       ]
     }
   ];
+  this.proid = proid;
   try {
     const divToInput = function (position) {
       return async function (e) {
@@ -1784,11 +1786,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
         }
       } while (boo);
       scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
-      if (instance.modes.indexOf(instance.mode) === 0) {
-        instance.checkListDetailLaunching(previousDesid);
-      } else {
-        instance.reportDetailLaunching(previousDesid);
-      }
+      instance.requestDetailLaunching(previousDesid);
     });
 
     nextIcon.addEventListener("click", function (e) {
@@ -1804,11 +1802,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
         }
       } while (boo);
       scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
-      if (instance.modes.indexOf(instance.mode) === 0) {
-        instance.checkListDetailLaunching(nextDesid);
-      } else {
-        instance.reportDetailLaunching(nextDesid);
-      }
+      instance.requestDetailLaunching(nextDesid);
     });
 
   } else if (desktop) {
@@ -1863,7 +1857,11 @@ DesignerJs.prototype.requestIconSet = function (desid) {
   }
 
   rInitialIcon.addEventListener("click", function (e) {
-    instance.reportDetailLaunching(desid);
+    if (instance.proid === null) {
+      window.alert("의뢰서를 선택해주세요!");
+    } else {
+      window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + instance.proid;
+    }
   });
 
   mInitialIcon.addEventListener("click", async function (e) {
@@ -2070,6 +2068,7 @@ DesignerJs.prototype.requestView = async function () {
     });
 
     //launching
+    this.proid = null;
     this.requestBoxes = [];
     this.requestDetailLaunching(this.desid);
 
