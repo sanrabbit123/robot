@@ -1286,9 +1286,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
       }
       target = instance.dirParsing(target);
-      makeFileArr(target).then((list) => {
+      makeFileArr(target.replace(/\/$/i, '')).then((list) => {
         console.log(list);
-        res.send(JSON.stringify(list));
+        res.send(JSON.stringify(list.map((i) => {
+          i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
+          return i;
+        })));
       }).catch((err) => {
         res.send(JSON.stringify({ message: "error" }));
       });
