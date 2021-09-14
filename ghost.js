@@ -724,8 +724,6 @@ Ghost.prototype.ghostRouter = function (needs) {
               fromArr.push(files[key]);
             }
 
-            console.log(fromArr, toArr)
-
             num = 0;
             for (let { path } of fromArr) {
               tempArr = toArr[num].split("/");
