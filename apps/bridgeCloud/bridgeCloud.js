@@ -1233,7 +1233,6 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
   const { parse } = require("url");
   const express = require("express");
-  const bodyParser = require("body-parser");
   const useragent = require("express-useragent");
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
@@ -1241,8 +1240,8 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   //express
   const app = express();
   app.use(useragent.express());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  app.use(express.json({ limit : "50mb" }));
 
   //set needs
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });

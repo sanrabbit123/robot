@@ -69,6 +69,42 @@ DevContext.prototype.launching = async function () {
 
 
 
+    if (process.argv[3] === "server") {
+      const http = require("http");
+      const express = require("express");
+      const app = express();
+      const formidable = require("formidable");
+
+      app.use(express.json({ limit : "50mb" }));
+      app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+      app.post("/test", async (req, res) => {
+        const form = formidable({ multiples: true });
+        form.parse(req, async function (err, fields, files) {
+          console.log(files);
+          console.log(fields);
+          res.set({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+            "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+          });
+          res.send({ message: "yes" });
+        });
+      });
+
+      http.createServer(app).listen(3000, () => {
+        console.log(`Server running`);
+      });
+    } else {
+
+
+      await requestSystem("http://localhost:3000/test", { data: "Aaa" });
+
+
+    }
+
+
 
 
 
