@@ -70,10 +70,11 @@ DevContext.prototype.launching = async function () {
     const photoRequest = ghostRequest().bind("photo");
 
     const shareLink = (await photoRequest("zip", { pid: "p48" })).link;
-
+    const drive = new GoogleDrive();
     console.log(shareLink);
+    console.log(drive.general.parsingId(shareLink))
 
-
+    
 
     // let whereQuery, updateQuery;
     //
