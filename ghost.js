@@ -1067,6 +1067,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         totalList = await fileSystem(`readDir`, [ root ]);
         totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
 
+        console.log(totalList);
+
         preferredPhoto = [];
         sitePhoto = [];
         for (let t of totalList) {
