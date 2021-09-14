@@ -694,6 +694,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     binary: true,
     link: [ "/fileUpload" ],
     func: function (req, res) {
+      console.log(req);
       const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         try {
