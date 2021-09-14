@@ -125,7 +125,7 @@ BridgeCloud.prototype.bridgeToGoogle = async function (obj, option = { selfMongo
     }
     slack_bot.chat.postMessage({ text: JSON.stringify(fromArr, null, 2), channel: "#error_log" });
     slack_bot.chat.postMessage({ text: JSON.stringify(toArr, null, 2), channel: "#error_log" });
-    await generalFileUpload(address.officeinfo.ghost.protocol + "//" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.port) + "/fileUpload", fromArr, toArr);
+    await generalFileUpload(address.officeinfo.ghost.protocol + "://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.port) + "/fileUpload", fromArr, toArr);
 
     if (obj.mode === "client") {
       if (obj.cliid === "테스트") {
