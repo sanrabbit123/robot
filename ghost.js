@@ -689,6 +689,68 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - file upload
+  funcObj.post_fileUpload = {
+    binary: true,
+    link: [ "/fileUpload" ],
+    func: function (req, res) {
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
+      form.parse(req, async function (err, fields, files) {
+        try {
+          if (err) {
+            throw new Error(err);
+            return;
+          } else {
+            res.set({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": '*',
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+              "Access-Control-Allow-Headers": '*',
+            });
+
+            const staticFolder = instance.address.officeinfo.ghost.file.static;
+            const toArr = JSON.parse(fields.toArr);
+            let filesKey, fromArr, num;
+            let tempArr, tempString, tempDir;
+
+            filesKey = Object.keys(files);
+            filesKey.sort((a, b) => {
+              return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
+            });
+
+            fromArr = [];
+            for (let key of filesKey) {
+              fromArr.push(files[key]);
+            }
+
+            num = 0;
+            for (let { path } of fromArr) {
+              tempArr = toArr[num].split("/");
+              tempString = staticFolder;
+              if (tempArr.length === 0) {
+                throw new Error("invaild to array");
+              }
+              for (let i = 0; i < tempArr.length - 1; i++) {
+                tempDir = await fileSystem(`readDir`, [ tempString ]);
+                if (!tempDir.includes(tempArr[i])) {
+                  shell.exec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+                }
+                tempString += '/';
+                tempString += tempArr[i];
+              }
+              shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
+              num++;
+            }
+
+            res.json({ "message": "done" });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+  };
+
   //GET - polling test
   funcObj.get_polling = {
     link: [ "/polling" ],
@@ -2054,7 +2116,6 @@ Ghost.prototype.fileRouter = function (static) {
 
             const staticFolder = instance.address.homeinfo.ghost.file.static;
             const toArr = JSON.parse(fields.toArr);
-            let staticFolderDir;
             let filesKey, fromArr, num;
             let tempArr, tempString, tempDir;
 
@@ -2068,7 +2129,6 @@ Ghost.prototype.fileRouter = function (static) {
               fromArr.push(files[key]);
             }
 
-            staticFolderDir = await fileSystem(`readDir`, [ staticFolder ]);
             num = 0;
             for (let { path } of fromArr) {
               tempArr = toArr[num].split("/");
@@ -2287,18 +2347,14 @@ Ghost.prototype.serverLaunching = async function () {
   const https = require("https");
   const express = require("express");
   const app = express();
-  const bodyParser = require("body-parser");
-  const multer = require("multer");
-  const multiForms = multer();
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
   const WebSocket = require("ws");
   const url = require("url");
 
   app.use(useragent.express());
-  app.use(bodyParser.json());
-  app.use(multiForms.array());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json({ limit : "50mb" }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(staticFolder));
 
   try {
@@ -2439,13 +2495,12 @@ Ghost.prototype.fileLaunching = async function () {
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo } = this.mother;
   const https = require("https");
   const express = require("express");
-  const bodyParser = require("body-parser");
   const useragent = require("express-useragent");
   const app = express();
 
   app.use(useragent.express());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
+  app.use(express.json({ limit : "50mb" }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
   try {
     let message = '';

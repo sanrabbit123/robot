@@ -52,7 +52,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck } = this.mother;
+  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -74,15 +74,50 @@ DevContext.prototype.launching = async function () {
       const express = require("express");
       const app = express();
       const formidable = require("formidable");
+      const multer = require("multer");
+      const multiForms = multer();
 
+      app.use(multiForms.array());
       app.use(express.json({ limit : "50mb" }));
       app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
       app.post("/test", async (req, res) => {
-        const form = formidable({ multiples: true });
+        const form = formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
         form.parse(req, async function (err, fields, files) {
-          console.log(files);
-          console.log(fields);
+          const staticFolder = process.cwd() + "/temp/result";
+          const toArr = JSON.parse(fields.toArr);
+          let filesKey, fromArr, num;
+          let tempArr, tempString, tempDir;
+
+          filesKey = Object.keys(files);
+          filesKey.sort((a, b) => {
+            return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
+          });
+
+          fromArr = [];
+          for (let key of filesKey) {
+            fromArr.push(files[key]);
+          }
+
+          num = 0;
+          for (let { path } of fromArr) {
+            tempArr = toArr[num].split("/");
+            tempString = staticFolder;
+            if (tempArr.length === 0) {
+              throw new Error("invaild to array");
+            }
+            for (let i = 0; i < tempArr.length - 1; i++) {
+              tempDir = await fileSystem(`readDir`, [ tempString ]);
+              if (!tempDir.includes(tempArr[i])) {
+                shell.exec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
+              }
+              tempString += '/';
+              tempString += tempArr[i];
+            }
+            shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
+            num++;
+          }
+
           res.set({
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
@@ -99,7 +134,17 @@ DevContext.prototype.launching = async function () {
     } else {
 
 
-      await requestSystem("http://localhost:3000/test", { data: "Aaa" });
+      await generalFileUpload("http://localhost:3000/test", [
+        `${process.cwd()}/temp/aaa.jpg`,
+        `${process.cwd()}/temp/bbb.jpg`,
+        `${process.cwd()}/temp/ccc.jpg`,
+      ], [
+        "sample/kkk.jpg",
+        "sample/jjj.jpg",
+        "sample/hhh.jpg",
+      ]);
+
+
 
 
     }

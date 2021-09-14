@@ -3251,25 +3251,18 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
       images = [];
 
-
       ajaxJson({
-        idArr: [ thisCase[standard[1]] ],
-        method: "client",
-        property: "curation",
-      }, "/getHistoryProperty").then((raw) => {
+        cliid: thisCase[standard[1]]
+      }, "/ghostPass_clientPhoto").then((obj) => {
+        images = images.concat(obj.sitePhoto);
+        images = images.concat(obj.preferredPhoto);
+        return ajaxJson({
+          idArr: [ thisCase[standard[1]] ],
+          method: "client",
+          property: "curation",
+        }, "/getHistoryProperty");
 
-      // ajaxJson({
-      //   cliid: thisCase[standard[1]]
-      // }, "/ghostPass_clientPhoto").then((obj) => {
-      //   images = images.concat(obj.sitePhoto);
-      //   images = images.concat(obj.preferredPhoto);
-      //   return ajaxJson({
-      //     idArr: [ thisCase[standard[1]] ],
-      //     method: "client",
-      //     property: "curation",
-      //   }, "/getHistoryProperty");
-      //
-      // }).then((raw) => {
+      }).then((raw) => {
 
         if (typeof raw !== "object" || Array.isArray(raw)) {
           throw new Error("결과 없음");

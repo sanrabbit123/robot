@@ -1226,6 +1226,41 @@ Mother.prototype.ghostFileList = function (dir) {
   });
 }
 
+Mother.prototype.generalFileUpload = async function (url, fromArr, toArr) {
+  if (typeof url !== "string" || !Array.isArray(fromArr) || !Array.isArray(toArr)) {
+    throw new Error("input must be url, from array, to array");
+  }
+  const fs = require(`fs`);
+  const FormData = require('form-data');
+  const axios = require(`axios`);
+  const form = new FormData();
+  try {
+    let num, formHeaders, toList;
+
+    for (let i = 0; i < toArr.length; i++) {
+      if (/^\//.test(toArr[i])) {
+        toArr[i] = toArr[i].slice(1);
+      }
+    }
+    toList = toArr;
+    form.append("toArr", JSON.stringify(toList));
+
+    num = 0;
+    for (let fileName of fromArr) {
+      form.append("file" + String(num), fs.createReadStream(fileName));
+      num++;
+    }
+    formHeaders = form.getHeaders();
+    await axios.post(url, form, {
+      headers: { ...formHeaders },
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Mother.prototype.sleep = function (time) {
   let timeoutId = null;
   return new Promise(function (resolve, reject) {
