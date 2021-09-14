@@ -121,9 +121,9 @@ BridgeCloud.prototype.bridgeToOffice = async function (obj, option = { selfMongo
       for (let j of tong[tongKeys[i]]) {
         fromArr.push(j);
         if (obj.mode === "client") {
-          toArr.push(j.replace(address.officeinfo.ghost.file.client + (new RegExp('^' + binaryFolder)), ''));
+          toArr.push(address.officeinfo.ghost.file.client + j.replace((new RegExp('^' + binaryFolder)), ''));
         } else {
-          toArr.push(j.replace(address.officeinfo.ghost.file.designer + (new RegExp('^' + binaryFolder)), ''));
+          toArr.push(address.officeinfo.ghost.file.designer + j.replace((new RegExp('^' + binaryFolder)), ''));
         }
       }
     }
