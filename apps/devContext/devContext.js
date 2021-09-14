@@ -67,9 +67,11 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
 
+    const photoRequest = ghostRequest().bind("photo");
 
+    const shareLink = (await photoRequest("zip", { pid: "p140" })).link;
 
-    
+    console.log(shareLink);
 
 
 
