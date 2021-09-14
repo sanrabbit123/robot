@@ -1183,6 +1183,33 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - list files
+  funcObj.post_listFiles = {
+    link: [ "/listFiles" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      let target, result;
+      if (req.body.path === undefined) {
+        target = "__samba__";
+      } else {
+        if (!/^\//.test(req.body.path)) {
+          target = "__samba__/" + req.body.path;
+        } else {
+          target = "__samba__" + req.body.path;
+        }
+      }
+      target = instance.dirParsing(target);
+      const { stdout } = shell.exec(`ls -al ${shellLink(target)}`);
+      result = stdout.split("\n").filter((i) => { return i !== ""; }).map((i) => { return i.trim(); });
+      res.send(JSON.stringify(result));
+    }
+  };
+
   //POST - pwd
   funcObj.post_pwd = {
     link: [ "/pwd" ],

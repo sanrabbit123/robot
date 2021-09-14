@@ -313,6 +313,10 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
       let thisBlock, motherTop;
       let visualSpecific;
       let requestNumber, thisRequest;
+      let site;
+      let construct;
+      let styling;
+      let budget;
 
       clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
       projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory");
@@ -325,6 +329,25 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
           }
         }
         thisRequest = client.requests[requestNumber];
+
+        site = clientHistory.space.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
+        construct = clientHistory.construct.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
+        styling = clientHistory.styling.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
+        budget = clientHistory.budget.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
+
+        if (site.length === 0) {
+          site = [ "현장 관련 상세 사항 없음" ];
+        }
+        if (construct.length === 0) {
+          construct = [ "시공 관련 상세 사항 없음" ];
+        }
+        if (styling.length === 0) {
+          styling = [ "스타일링 관련 상세 사항 없음" ];
+        }
+        if (budget.length === 0) {
+          budget = [ "예산 관련 상세 사항 없음" ];
+        }
+
         projectHistory.request = {
           client: {
             name: client.name,
@@ -351,10 +374,10 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
           about: {
             when: [ dateToString(project.process.contract.meeting.date, true) ],
             where: [ thisRequest.request.space.address ],
-            site: clientHistory.space.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; }),
-            construct: clientHistory.construct.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; }),
-            styling: clientHistory.styling.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; }),
-            budget: clientHistory.budget.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; })
+            site: site,
+            construct: construct,
+            styling: styling,
+            budget: budget
           }
         };
         await ajaxJson({
@@ -1999,16 +2022,15 @@ DesignerJs.prototype.requestView = async function () {
           const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
           let target;
           if (value === "") {
-            // instance.checkListDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
+            instance.requestDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
           } else {
             searchResult = instance.designers.search(value);
             if (searchResult.length > 0) {
-              // instance.checkListDetailLaunching(searchResult[0].desid);
+              instance.requestDetailLaunching(searchResult[0].desid);
             }
           }
         }
       });
-      // searchInput.addEventListener("contextmenu", this.checkListDetailSearchBox());
     }
 
     //standard doms event
@@ -2028,7 +2050,7 @@ DesignerJs.prototype.requestView = async function () {
       this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
       this.standardDoms[i].style.transition = "all 0s ease";
       this.standardDoms[i].addEventListener("click", (e) => {
-        // instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
+        instance.requestDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
       });
       children = this.standardDoms[i].children;
       childrenLength = children.length;

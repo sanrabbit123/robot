@@ -351,6 +351,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "proposal";
           } else if (/^con/i.test(req.params.id)) {
             target = "contents";
+          } else if (/^fil/i.test(req.params.id)) {
+            target = "file";
           } else {
             target = "client";
           }
