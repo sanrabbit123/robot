@@ -1245,8 +1245,8 @@ DevContext.prototype.launching = async function () {
 
 
     // spawn catfish
-    // const app = new SpawnBoradoli();
-    // await app.spawnPython("copyTemplate");
+    const app = new SpawnBoradoli();
+    await app.spawnPython("studyCloud");
 
 
     // kakao token
