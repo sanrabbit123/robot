@@ -69,8 +69,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const voice = new PlayAudio();
-    await voice.textToVoice();
+
 
 
 

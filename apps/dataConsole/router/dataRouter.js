@@ -3141,7 +3141,6 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
   obj.func = async function (req, res) {
     try {
       let resultObj;
-      console.log(req.url);
       if (req.url === "/makeSchedule") {
         if (req.body.to === undefined || req.body.title === undefined || req.body.start === undefined) {
           throw new Error("invaild body");
@@ -3151,7 +3150,6 @@ DataRouter.prototype.rou_post_generalCalendar = function () {
         const end = (req.body.end !== undefined) ? new Date(req.body.end.replace(/"/g, '')) : null;
         const description = (req.body.description !== undefined) ? req.body.description : "";
         resultObj = await calendar.makeSchedule(to, title, description, start, end);
-        console.log(resultObj)
       } else if (req.url === "/listSchedule") {
         if (req.body.from === undefined) {
           throw new Error("invaild body");
