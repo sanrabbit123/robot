@@ -68,12 +68,8 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("* 1.1)"));
 
 
-
-    const projectHistory = await back.getHistoryById("project", "p2001_aa03s");
-    const res = JSON.stringify(projectHistory.request).replace(/[\{\}\[\]\"\' ]/gi, '').trim().replace(/[a-z]/gi, '').trim().replace(/[\:\,]/gi, '').trim().length
-
-    console.log(res);
-
+    const photoRequest = ghostRequest().bind("photo")
+    console.log(await photoRequest("zip", { pid: "p149" }));
 
 
 
@@ -1245,8 +1241,8 @@ DevContext.prototype.launching = async function () {
 
 
     // spawn catfish
-    const app = new SpawnBoradoli();
-    await app.spawnPython("studyCloud");
+    // const app = new SpawnBoradoli();
+    // await app.spawnPython("studyCloud");
 
 
     // kakao token
@@ -1278,9 +1274,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "임현서",
-    //     designer: "김지은",
-    //     link: "https://drive.google.com/drive/folders/12gMkHpLcXOcYft5uF2ZvoooACpMiTDRI",
+    //     client: "이은영",
+    //     designer: "김소영",
+    //     link: "https://drive.google.com/drive/folders/1XXs-8T-mvgTwAqUIhbYy_XPLE51kKrBq",
     //   },
     // ]);
 

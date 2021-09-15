@@ -657,6 +657,10 @@ DataConsole.prototype.setBinary = async function () {
 DataConsole.prototype.connect = async function (noStatic = false) {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const PORT = 3000;
+  const TESTINBOUND = 55555;
+  const TESTOUTBOUND = 55556;
+
   const https = require("https");
   const express = require("express");
   const app = express();
@@ -732,6 +736,13 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     pems = {};
     pemsLink = process.cwd() + "/pems/" + address.host;
 
+    if (process.argv.length > 3) {
+      if (process.argv[3] === "--test") {
+        pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
+        console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `test mode from window to port => ${String(TESTINBOUND)}`);
+      }
+    }
+
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
     caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
@@ -778,6 +789,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
             instance.address.pythoninfo.host,
             instance.address.pythoninfo.host + ":3000",
             instance.address.officeinfo.ghost.host,
+            instance.address.officeinfo.ghost.host + ":" + String(TESTINBOUND),
             "localhost:3000",
             "localhost:8080",
             "stdpay.inicis.com",
@@ -839,7 +851,15 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     // await this.setBinary();
 
     //server on
-    https.createServer(pems, app).listen(3000, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    if (process.argv.length > 3) {
+      if (process.argv[3] === "--test") {
+        https.createServer(pems, app).listen(TESTOUTBOUND, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+      } else {
+        https.createServer(pems, app).listen(PORT, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+      }
+    } else {
+      https.createServer(pems, app).listen(PORT, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+    }
 
   } catch (e) {
     console.log(e);

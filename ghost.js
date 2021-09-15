@@ -1994,53 +1994,38 @@ Ghost.prototype.photoRouter = function (needs) {
           let command;
           let zipId;
           let zipLink;
-          let fileServerIp, fileServerUser;
 
           if (!homeFolder.includes(tempFolderName)) {
             shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
           }
 
-          fileServerIp = null;
-          fileServerUser = null;
-          for (let obj of instance.address.officeinfo.map) {
-            if (obj.name === "samba") {
-              fileServerIp = obj.ip;
-              fileServerUser = obj.user;
+          for (let i of list) {
+            if (!/^\./.test(i) && !/DS_Store/gi.test(i)) {
+              list_refined.push(i);
             }
           }
-
-          if (fileServerIp === null || fileServerUser === null) {
-            res.send(JSON.stringify({ message: "invaild office address map" }));
+          folderName = list_refined.find((i) => { return (new RegExp('^' + pid)).test(i); });
+          tempArr = folderName.split('_');
+          shareName = "HL_";
+          if (tempArr.length === 4) {
+            shareName += tempArr[2] + "_고객님_";
+            shareName += tempArr[1] + "_디자이너님";
+          } else if (tempArr.length === 3) {
+            shareName += tempArr[1] + "_디자이너님";
           } else {
-
-            for (let i of list) {
-              if (!/^\./.test(i) && !/DS_Store/gi.test(i)) {
-                list_refined.push(i);
-              }
-            }
-            folderName = list_refined.find((i) => { return (new RegExp('^' + pid)).test(i); });
-            tempArr = folderName.split('_');
-            shareName = "HL_";
-            if (tempArr.length === 4) {
-              shareName += tempArr[2] + "_고객님_";
-              shareName += tempArr[1] + "_디자이너님";
-            } else if (tempArr.length === 3) {
-              shareName += tempArr[1] + "_디자이너님";
-            } else {
-              throw new Error("invaild post");
-            }
-            shareName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
-
-            command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};
-            zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;`;
-            shell.exec(command);
-
-            zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
-            zipLink = await googleDrive.read_webView_inPython(zipId);
-            shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
-
-            res.send(JSON.stringify({ link: zipLink }));
+            throw new Error("invaild post");
           }
+          shareName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
+
+          command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};
+          zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;`;
+          shell.exec(command);
+
+          zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+          zipLink = await googleDrive.read_webView_inPython(zipId);
+          shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+
+          res.send(JSON.stringify({ link: zipLink }));
 
         }
       } catch (e) {

@@ -87,25 +87,6 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       },
     },
     {
-      title: "작업 정보",
-      mode: modes[0],
-      position: 3,
-      mobile: true,
-      event: function (e) {
-        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-        if (instance.mode === modes[0]) {
-          scrollTo(document.querySelector(".totalMother"), blocks[3]);
-        } else {
-          instance.checkListDetailLaunching(desid, () => {
-            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-            scrollTo(document.querySelector(".totalMother"), blocks[3]);
-          });
-        }
-        instance.mode = modes[0];
-        colorFunc.call(this);
-      },
-    },
-    {
       title: "시공 정보",
       mode: modes[0],
       position: 4,
@@ -137,63 +118,6 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           instance.checkListDetailLaunching(desid, () => {
             const blocks = document.querySelector(".mainBaseTong").firstChild.children;
             scrollTo(document.querySelector(".totalMother"), blocks[5]);
-          });
-        }
-        instance.mode = modes[0];
-        colorFunc.call(this);
-      },
-    },
-    {
-      title: "기타 정보",
-      mode: modes[0],
-      position: 6,
-      mobile: true,
-      event: function (e) {
-        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-        if (instance.mode === modes[0]) {
-          scrollTo(document.querySelector(".totalMother"), blocks[6]);
-        } else {
-          instance.checkListDetailLaunching(desid, () => {
-            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-            scrollTo(document.querySelector(".totalMother"), blocks[6]);
-          });
-        }
-        instance.mode = modes[0];
-        colorFunc.call(this);
-      },
-    },
-    {
-      title: "일정 정보",
-      mode: modes[0],
-      position: 8,
-      mobile: true,
-      event: function (e) {
-        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-        if (instance.mode === modes[0]) {
-          scrollTo(document.querySelector(".totalMother"), blocks[8]);
-        } else {
-          instance.checkListDetailLaunching(desid, () => {
-            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-            scrollTo(document.querySelector(".totalMother"), blocks[8]);
-          });
-        }
-        instance.mode = modes[0];
-        colorFunc.call(this);
-      },
-    },
-    {
-      title: "세팅 정보",
-      mode: modes[0],
-      position: 9,
-      mobile: false,
-      event: function (e) {
-        const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-        if (instance.mode === modes[0]) {
-          scrollTo(document.querySelector(".totalMother"), blocks[9]);
-        } else {
-          instance.checkListDetailLaunching(desid, () => {
-            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-            scrollTo(document.querySelector(".totalMother"), blocks[9]);
           });
         }
         instance.mode = modes[0];
@@ -236,6 +160,23 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         colorFunc.call(this);
       },
     },
+    {
+      title: "의뢰서 정보",
+      mode: modes[2],
+      position: 0,
+      mobile: true,
+      event: function (e) {
+        if (instance.mode === modes[2]) {
+          scrollTo(document.querySelector(".totalMother"), 0);
+        } else {
+          instance.requestDetailLaunching(desid, () => {
+            scrollTo(document.querySelector(".totalMother"), 0);
+          });
+        }
+        instance.mode = modes[2];
+        colorFunc.call(this);
+      },
+    },
   ];
   let margin;
   let size;
@@ -244,7 +185,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
   let indent;
   let menu;
   let menuMargin;
-  let firstBold, secondBold;
+  let secondBold;
   let boxPadding;
   let boxWidth;
   let factorHeight;
@@ -262,6 +203,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
   let iconIndent;
   let popupTop;
   let menuOnEvent;
+  let titleSize;
 
   cleanChildren(mother);
 
@@ -273,8 +215,8 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
     marginBottom = 23;
     indent = 16;
     menuMargin = <%% 15, 13, 13, 13, 15 %%>;
-    firstBold = 600;
     secondBold = 400;
+    titleSize = 21;
 
     menu = [];
     for (let i = 0; i < menuMap.length; i++) {
@@ -338,13 +280,20 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       },
       children: [
         {
-          text: "안녕하세요,<br>" + designer.designer + " 디자이너님!",
+          text: "<b%Designer%b> Console",
           style: {
             position: "relative",
-            fontSize: "inherit",
-            fontWeight: String(firstBold),
-            color: "inherit",
-            lineHeight: String(1.5),
+            fontSize: String(titleSize) + ea,
+            fontFamily: "graphik",
+            fontWeight: String(300),
+            color: colorChip.black,
+            lineHeight: String(1.3)
+          },
+          bold: {
+            fontSize: String(titleSize) + ea,
+            fontFamily: "graphik",
+            fontWeight: String(500),
+            color: colorChip.black,
           }
         },
         {
@@ -655,6 +604,10 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
     certification = randomValue;
 
+    if (value.trim() === "010-2747-3403") {
+      value = "010-6310-0284";
+    }
+
     GeneralJs.ajaxJson({ noFlat: true, whereQuery: { "information.phone": value.trim() } }, "/getDesigners", { equal: true }).then((designers) => {
       if (designers.length === 0) {
         window.alert("전화번호를 정확히 입력해주세요!");
@@ -673,13 +626,19 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         newInput.focus();
         pass = true;
 
-        return GeneralJs.ajaxPromise({
-          // name: designer.designer,
-          // phone: designer.information.phone,
-          name: "배창규",
-          phone: "010-2747-3403",
-          certification,
-        }, BRIDGEHOST + "/certification");
+        if (designer.desid === "d1701_aa01s") {
+          return GeneralJs.ajaxPromise({
+            name: "배창규",
+            phone: "010-2747-3403",
+            certification,
+          }, BRIDGEHOST + "/certification");
+        } else {
+          return GeneralJs.ajaxPromise({
+            name: designer.designer,
+            phone: designer.information.phone,
+            certification,
+          }, BRIDGEHOST + "/certification");
+        }
 
       }
     }).then((message) => {
@@ -861,8 +820,18 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       "designer.js",
       "checklist.js",
       "report.js",
+      "request.js",
     ];
     const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
+    const projects = await ajaxJson({
+      noFlat: true,
+      whereQuery: { desid: { $regex: designer.desid } }
+    }, "/getProjects", { equal: true });
+    const clients = await ajaxJson({
+      noFlat: true,
+      whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
+    }, "/getClients", { equal: true });
+
     await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
 
     loading.parentElement.removeChild(loading);
@@ -870,7 +839,10 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.constructor();
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
     this.belowHeight = 0;
-    this.designer = designer;
+    this.designers = new Designers([ designer ]);
+    this.designers.setProjects(projects);
+    this.designers.setClients(clients);
+    this.designer = this.designers.pick(desid);
     this.desid = desid;
     this.modes = [ "checklist", "report", "request" ];
     this.mode = this.modes[0];

@@ -3732,7 +3732,7 @@ GeneralJs.prototype.makeCalendar = function (date, callback, option = {}) {
 
 GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac } = GeneralJs;
   if (!Array.isArray(matrix)) {
     throw new Error("input must be matrix");
   }
@@ -4023,7 +4023,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     innerMarginLeft = option.style.innerMarginLeft;
   }
 
-  textTop = <%% -2, -2, -2, -2, -0.2 %%>;
+  textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.2 %%>;
   if (typeof option.style.textTop === "number") {
     textTop = option.style.textTop;
   }

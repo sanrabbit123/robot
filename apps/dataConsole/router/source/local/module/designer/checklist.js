@@ -2149,6 +2149,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "응대 적극성",

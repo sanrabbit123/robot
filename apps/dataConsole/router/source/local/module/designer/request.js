@@ -157,8 +157,8 @@ DesignerJs.prototype.requestList = function (desid) {
 
   requestSize = <%% 26, 26, 25, 24, 5 %%>;
   requestWordMargin = <%% 1, 1, 1, 1, 0 %%>;
-  requestWordPaddingTop = <%% 24, 24, 24, 24, 3 %%>;
-  requestWordPaddingBottom = <%% 32, 32, 32, 32, 4 %%>;
+  requestWordPaddingTop = <%% (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), 3 %%>;
+  requestWordPaddingBottom = <%% (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), 4 %%>;
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -479,7 +479,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
 DesignerJs.prototype.requestContents = async function (board, designer, project, client, clientHistory, projectHistory) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -532,8 +532,8 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     {
       title: "서비스비 안내",
       contents: [
-        "이번 현장의 서비스비는 4,200,000원(VAT별도)으로 책정되어 있습니다.",
-        "홈리에종의 계약금은 300,000원(VAT별도)으로 책정되어 있습니다. ",
+        "이번 현장의 서비스비는 " + autoComma(project.process.contract.remain.calculation.amount.supply) + "원(VAT별도)으로 책정되어 있습니다.",
+        "홈리에종의 계약금은 300,000원(VAT별도)으로 책정되어 있습니다.",
         "현재 고객은 홈리에종에 계약금 330,000원을 입금한 상태며, 현장 미팅 후 계약금을 제외한 서비스비를 전액 입금할 경우 서비스가 계속 진행됩니다.",
         "★ 현장 미팅 후 서비스비 지불 전에는 디자이너와 스타일링 논의를 할 수 없는 것이 원칙입니다.(고객에게도 필요시 안내해주세요)",
         "★ 서비스 진행중 타 공간에 대한 전체적인 스타일링이 추가되는 경우 꼭! 홈리에종을 통해 디자인비 조정이 될 수 있도록 해주세요.",
@@ -813,8 +813,8 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     titleSize = <%% 35, 35, 35, 35, 5.5 %%>;
     titlePaddingLeft = <%% 1, 1, 1, 1, 0 %%>;
     titleBottom = <%% 35, 35, 35, 35, 4 %%>;
-    titlePaddingBottom = <%% 18, 18, 18, 18, 2.8 %%>;
-    titleDateVisualBottom = <%% 2, 2, 2, 2, 0.5 %%>;
+    titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 2.8 %%>;
+    titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
     clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
     fontSize = <%% 15, 15, 15, 14, 3.5 %%>;
     contentsBetween = <%% 32, 32, 32, 32, 5 %%>;
@@ -824,7 +824,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     wordsBetween2 = <%% 10, 10, 10, 10, 1 %%>;
     tableVisual = <%% 18, 18, 16, 10, 2 %%>;
     leftIndent = <%% 15, 15, 15, 15, 2.5 %%>;
-    arrowTop = <%% 5.5, 5.5, 5.5, 5.5, 1.6 %%>;
+    arrowTop = <%% (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), 1.6 %%>;
     arrowWidth = <%% 8, 8, 8, 8, 1.6 %%>;
     arrowLeft = <%% 1, 1, 1, 1, 0 %%>;
     lineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.65 %%>;
