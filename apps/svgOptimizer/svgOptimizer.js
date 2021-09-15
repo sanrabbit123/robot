@@ -885,8 +885,9 @@ SvgOptimizer.prototype.loadSVG = async function (file, liteMode = false) {
       svgString = svgString.replace(/\.[0-9][0-9][0-9][0-9]+/gi, (match) => {
         return match.slice(0, 4);
       });
-      svgString = svgString.replace(/ id = "/gi, ' id="');
+      svgString = svgString.replace(/\<\!\-\-[^\>]+\-\-\>/gi, "");
 
+      svgString = svgString.replace(/ id = "/gi, ' id="');
       if (/id\=\"([^\"]+)\"/gi.test(svgString)) {
         pastIds = [ ...svgString.matchAll(/id\=\"([^\"]+)\"/gi) ].map((arr) => {
           return arr[1];

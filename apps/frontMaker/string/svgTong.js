@@ -50,7 +50,6 @@ SvgTong.getRatio = function (svgDom) {
   }
 
   let viewBoxString, viewBoxArr;
-
   viewBoxString = svgDom.getAttribute("viewBox");
   if (viewBoxString === undefined || viewBoxString === null) {
     throw new Error("invaild svg");

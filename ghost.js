@@ -663,7 +663,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, rootParsing } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const audio = new PlayAudio();
   let funcObj = {};
@@ -1204,7 +1204,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
       }
       target = instance.dirParsing(target);
-      rootParsing(target).then((list) => {
+      leafParsing(target).then((list) => {
         res.send(JSON.stringify(list.map((i) => {
           i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
           return i;

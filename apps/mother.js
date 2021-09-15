@@ -1943,7 +1943,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
   }
 }
 
-Mother.prototype.rootParsing = async function (target) {
+Mother.prototype.leafParsing = async function (target) {
   if (typeof target !== "string") {
     throw new Error("invaild input");
   }
