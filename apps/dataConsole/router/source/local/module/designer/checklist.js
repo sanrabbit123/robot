@@ -3073,13 +3073,13 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   leftMargin = <%% 34, 34, 34, 34, 8 %%>;
   bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
   baseTongMarginBottom = <%% 80, 80, 80, 80, 40 %%>;
-  size = <%% 16, 15, 15, 15, 4 %%>;
+  size = <%% 16, 15, 15, 15, 3.5 %%>;
 
   tendencyTop = <%% 3, 3, 3, 3, 0.8 %%>;
   tendencyHeight = <%% 16, 16, 16, 16, 4 %%>;
   alphabetWidth = <%% 30, 30, 30, 30, 7 %%>;
 
-  factorHeight = <%% 38, 36, 36, 36, 8.5 %%>;
+  factorHeight = <%% 38, 36, 36, 36, 8.2 %%>;
   factorWidth = <%% 210, 172, 172, 172, 210 %%>;
   tendencyFactorHeight = <%% 30, 30, 30, 30, 7 %%>;
   tendencyIndent = <%% 105, 71, 71, 71, 65 %%>;
@@ -3136,7 +3136,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         text: checkListData[i].name,
         style: {
           position: "absolute",
-          fontSize: String(size + (mobile ? 0.8 : 0)) + ea,
+          fontSize: String(size + (mobile ? 0.5 : 0)) + ea,
           fontWeight: String(600),
           color: colorChip.black,
           top: String(topMargin + 1) + ea,
@@ -3193,7 +3193,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
         mother: eachTotalTong,
         style: {
           position: "absolute",
-          top: String(topMargin + 1 + 3.2) + ea,
+          top: String(topMargin + 3.5) + ea,
           left: String(leftMargin) + ea,
           width: withOut(leftMargin * 2, ea),
           borderBottom: "1px dashed " + colorChip.green,

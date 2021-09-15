@@ -3842,10 +3842,10 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     widthRatio = option.widthRatio;
   }
   if (widthRatio.length !== columnsLength) {
-    throw new Error("invaild width ratio");
+    throw new Error("invaild width ratio 1");
   }
   if (!widthRatio.every((i) => { return typeof i === "number"; })) {
-    throw new Error("invaild width ratio");
+    throw new Error("invaild width ratio 2");
   }
   if (!widthRatio.every((i) => { return i === 1; })) {
 

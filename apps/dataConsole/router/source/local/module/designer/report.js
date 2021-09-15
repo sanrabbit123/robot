@@ -1,5 +1,8 @@
 DesignerJs.prototype.reportDataRendering = async function (desid) {
   const instance = this;
+  const { ea, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   try {
     const { ajaxJson, dateToString, autoComma } = GeneralJs;
     const today = new Date();
@@ -1263,6 +1266,7 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
     let requests;
     let boo;
     let contents;
+    let tempArr;
 
     allDesigners = [ this.designers.pick(desid) ];
 
@@ -1433,6 +1437,45 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
       }
       entireTong.contents = contents;
 
+      //mobile
+      if (mobile) {
+        entireTong.mobile = {
+          proposal: [],
+          contract: [],
+          contents: [],
+        };
+
+        for (let obj of entireTong.proposal) {
+          tempArr = [
+            obj.client.name,
+            String(obj.client.pyeong) + "평",
+            dateToString(obj.date).slice(2).replace(/\-/gi, '.'),
+            autoComma(obj.detail.amount) + "원",
+          ];
+          entireTong.mobile.proposal.push(tempArr);
+        }
+
+        for (let obj of entireTong.contract) {
+          tempArr = [
+            obj.client.name,
+            dateToString(obj.project.start).slice(2).replace(/\-/gi, '.'),
+            dateToString(obj.project.end).slice(2).replace(/\-/gi, '.'),
+            autoComma(obj.payments.amount) + "원",
+          ];
+          entireTong.mobile.contract.push(tempArr);
+        }
+
+        for (let obj of entireTong.contents) {
+          tempArr = [
+            (obj.name === undefined ? "개인" : obj.name),
+            dateToString(obj.contents.portfolio.date).slice(2).replace(/\-/gi, '.'),
+            FRONTHOST + "/portdetail.php?qqq=" + obj.contents.portfolio.pid,
+          ];
+          entireTong.mobile.contents.push(tempArr);
+        }
+
+      }
+
       tong.push(entireTong);
     }
 
@@ -1537,8 +1580,11 @@ DesignerJs.prototype.reportDetail = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll } = GeneralJs;
-  const { totalMother, ea, grayBarWidth } = this;
+  const mother = this.mother;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, equalJson } = GeneralJs;
+  const { totalMother, ea, grayBarWidth, media } = this;
+  const mobile = media[4];
+  const desktop = !mobile;
   const matrixButtonConst = "matrixButtons_" + desid;
   const cookies = getCookiesAll();
   const overConst = 3;
@@ -1579,6 +1625,9 @@ DesignerJs.prototype.reportDetail = function (desid) {
   let overWidth, overRadius;
   let offConst;
   let mediaWidthRatio;
+  let mobileReportData;
+  let mergeMap, callbackMap, boldMap, titleMap, widthRatio;
+  let table;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -1593,12 +1642,12 @@ DesignerJs.prototype.reportDetail = function (desid) {
   mediaWidthRatio = <%% 1, 0.82, 0.82, 0.82, 0.82 %%>;
 
   margin = 8;
-  level1Width = <%% 130, 110, 110, 110, 110 %%>;
-  level1Left = <%% 120, 110, 110, 110, 110 %%>;
-  topMargin = isMac() ? 30 : 34;
-  leftMargin = 34;
-  bottomMargin = isMac() ? 15 : 13;
-  baseTongMarginBottom = 80;
+  level1Width = <%% 130, 110, 110, 110, 34 %%>;
+  level1Left = <%% 120, 110, 110, 110, 0 %%>;
+  topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
+  leftMargin = <%% 34, 34, 34, 34, 8 %%>;
+  bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
+  baseTongMarginBottom = <%% 80, 80, 80, 80, 40 %%>;
   size = <%% 16, 15, 15, 15, 3 %%>;
   tendencyTop = 3;
   tendencyHeight = 16;
@@ -1791,14 +1840,50 @@ DesignerJs.prototype.reportDetail = function (desid) {
     });
   }
 
+  // mobile
+  if (mobile) {
+    mobileReportData = equalJson(JSON.stringify(reportData));
+    mobileReportData.splice(2, 1);
+    mobileReportData[0].children = thisReport.mobile.proposal;
+    mobileReportData[1].children = thisReport.mobile.contract;
+    mobileReportData[2].children = thisReport.mobile.contents;
+
+    for (let i = 0; i < mobileReportData.length; i++) {
+      if (i === 0) {
+        mobileReportData[i].columns = [ "고객", "평수", "제안일", "금액" ];
+        mobileReportData[i].widthRatio = [ 1, 1, 1, 1 ];
+      } else if (i === 1) {
+        mobileReportData[i].columns = [ "고객", "시작일", "종료일", "금액" ];
+        mobileReportData[i].widthRatio = [ 1, 1, 1, 1 ];
+      } else if (i === 2) {
+        mobileReportData[i].columns = [ "고객", "발행일", "홈페이지 링크" ];
+        mobileReportData[i].widthRatio = [ 1, 1, 2 ];
+      }
+
+      mobileReportData[i].boldMap = [];
+      if (mobileReportData[i].children.length > 0) {
+        for (let j = 0; j < mobileReportData[i].children.length + 1; j++) {
+          mobileReportData[i].boldMap.push((new Array(mobileReportData[i].children[0].length)).fill(0, 0));
+        }
+      }
+
+      mobileReportData[i].titleMap = (new Array(mobileReportData[i].boldMap.length)).fill(0, 0);
+      if (mobileReportData[i].boldMap.length > 0) {
+        mobileReportData[i].boldMap[0].fill(1, 0);
+        mobileReportData[i].titleMap[0] = 1;
+      }
+    }
+
+  }
+
   baseTong0 = createNode({
     mother: totalMother,
     class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
-      top: String(margin * 3) + ea,
-      left: String(grayBarWidth + (margin * 3)) + ea,
-      width: withOut(grayBarWidth + (margin * 6), ea),
+      top: desktop ? String(margin * 3) + ea : (this.middleMode ? String(60) + "px" : String(0)),
+      left: String(grayBarWidth + (desktop ? margin * 3 : 0)) + ea,
+      width: withOut(grayBarWidth + (desktop ? margin * 6 : 0), ea),
       height: "auto",
       animation: "",
     }
@@ -1811,7 +1896,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
       left: String(0) + ea,
       width: String(100) + '%',
       borderRadius: String(5) + ea,
-      border: "1px solid " + colorChip.gray4,
+      border: desktop ? ("1px solid " + colorChip.gray4) : "",
       background: colorChip.white,
       height: "auto",
       overflow: "hidden",
@@ -1819,346 +1904,370 @@ DesignerJs.prototype.reportDetail = function (desid) {
     }
   });
 
-  for (let i = 0; i < reportData.length; i++) {
-    nodeArr = createNodes([
-      {
-        mother: baseTong,
-        class: [ "totalname_" + String(i) ],
-        attribute: [
-          { x: String(i) },
-        ],
-        style: {
-          position: "relative",
-          width: String(100) + '%',
-          height: "auto",
-          overflow: "hidden",
-          borderBottom: i !== reportData.length - 1 ? "1px solid " + colorChip.gray4 : "",
+  if (desktop) {
+    for (let i = 0; i < reportData.length; i++) {
+      nodeArr = createNodes([
+        {
+          mother: baseTong,
+          class: [ "totalname_" + String(i) ],
+          attribute: [
+            { x: String(i) },
+          ],
+          style: {
+            position: "relative",
+            width: String(100) + '%',
+            height: "auto",
+            overflow: "hidden",
+            borderBottom: (desktop ? (i !== reportData.length - 1 ? "1px solid " + colorChip.gray4 : "") : ""),
+          }
+        },
+        {
+          mother: -1,
+          class: [ "hoverDefault" ],
+          text: reportData[i].name,
+          events: [
+            {
+              type: "click",
+              event: function (e) {
+                const x = Number(this.getAttribute('x'));
+                const toggle = this.getAttribute("toggle");
+                const target = document.querySelector(".totalname_" + String(x));
+                if (toggle === "on") {
+                  target.style.height = String(offConst) + ea;
+                  this.setAttribute("toggle", "off");
+                } else {
+                  target.style.height = "auto";
+                  this.setAttribute("toggle", "on");
+                }
+              }
+            }
+          ],
+          attribute: [
+            { x: String(i) },
+            { toggle: "on" },
+          ],
+          style: {
+            position: "absolute",
+            fontSize: String(size) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            top: String(topMargin + 1) + ea,
+            left: String(leftMargin) + ea,
+          }
+        },
+        {
+          mother: -2,
+          style: {
+            position: "absolute",
+            width: String(level1Width) + ea,
+            top: String(0) + ea,
+            left: String(level1Left) + ea,
+            paddingTop: String(topMargin) + ea,
+          }
+        },
+        {
+          mother: -3,
+          style: {
+            position: "relative",
+            width: withOut(level1Width + level1Left, ea),
+            top: String(0) + ea,
+            left: String(level1Width + level1Left) + ea,
+            height: String(100) + '%',
+            paddingTop: String(topMargin) + ea,
+          }
+        },
+      ]);
+
+      eachTotalTong = nodeArr[0];
+      eachNameTong = nodeArr[2];
+      eachValueTong = nodeArr[3];
+
+      for (let j = 0; j < reportData[i].children.length; j++) {
+        tempArr = [];
+        tempObj = {
+          mother: eachNameTong,
+          class: [ "name_" + String(i) + "_" + String(j), ((reportData[i].children[j].matrix !== undefined && reportData[i].children[j].over) ? "overTarget" : "generalTarget") ],
+          attribute: [
+            { x: String(i) },
+            { y: String(j) },
+          ],
+          text: reportData[i].children[j].name,
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(size - 2) + ea,
+            fontWeight: String(600),
+            color: colorChip.green,
+            height: String(reportData[i].children[j].height) + ea,
+            width: String(100) + '%',
+            marginBottom: String((j !== reportData[i].children.length - 1) ? factorMarginTop : 0) + ea,
+            borderBottom: j !== reportData[i].children.length - 1 ? ("1px solid " + colorChip.gray4) : "",
+          }
+        };
+        tempArr.push(tempObj);
+
+        tempObj = {
+          mother: eachValueTong,
+          class: [ "report_" + String(i) + "_" + String(j) ],
+          attribute: [
+            { x: String(i) },
+            { y: String(j) },
+          ],
+          style: {
+            display: "block",
+            position: "relative",
+            height: String(reportData[i].children[j].height) + ea,
+            width: String(100) + '%',
+            overflow: "hidden",
+            marginBottom: String((j !== reportData[i].children.length - 1) ? factorMarginTop : 0) + ea,
+            borderBottom: j !== reportData[i].children.length - 1 ? ("1px solid " + colorChip.gray4) : "",
+          }
+        };
+        tempArr.push(tempObj);
+
+        if (reportData[i].children[j].matrix !== undefined) {
+          for (let h = 0; h < reportData[i].children[j].matrix.length; h++) {
+            tempObj = {
+              mother: -1 + (-1 * h * (reportData[i].children[j].width.length + 1)),
+              class: [ "report_" + String(i) + "_" + String(j), "report_" + String(i) + "_" + String(j) + "_" + String(h) ],
+              attribute: [
+                { x: String(i) },
+                { y: String(j) },
+                { z: String(h) },
+              ],
+              style: {
+                display: ((i === 2) || (h < overConst)) ? "block" : "none",
+                position: "relative",
+                height: String(factorHeight) + ea,
+                width: String(100) + '%',
+                left: String(0) + ea,
+                overflow: "hidden"
+              }
+            };
+            tempArr.push(tempObj);
+            left = 0;
+            for (let k = 0; k < reportData[i].children[j].width.length; k++) {
+              tempObj = {
+                mother: -1 + (-1 * k),
+                text: String(reportData[i].children[j].matrix[h][k]),
+                style: {
+                  position: "absolute",
+                  fontSize: String(size - 2) + ea,
+                  fontWeight: String(j === 0 ? 600 : 400),
+                  color: colorChip.black,
+                  height: String(100) + '%',
+                  width: String(reportData[i].children[j].width[k] * mediaWidthRatio) + ea,
+                  top: String(0) + ea,
+                  left: String(left) + ea,
+                  textAlign: "center",
+                }
+              };
+              tempArr.push(tempObj);
+              left += reportData[i].children[j].width[k] * mediaWidthRatio;
+            }
+          }
+        } else if (reportData[i].children[j].result !== undefined) {
+
+          for (let h = 0; h < reportData[i].children[j].result.words.length; h++) {
+            tempObj = {
+              mother: -1 + (-1 * h * ((reportData[i].children[j].result.words[h].values.length * 2) + 1 + 1)),
+              class: [ "report_" + String(i) + "_" + String(j), "report_" + String(i) + "_" + String(j) + "_" + String(h) ],
+              attribute: [
+                { x: String(i) },
+                { y: String(j) },
+                { z: String(h) },
+              ],
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(factorHeight) + ea,
+                width: String(100) + '%',
+                left: String(0) + ea,
+                overflow: "hidden"
+              }
+            };
+            tempArr.push(tempObj);
+
+            tempObj = {
+              mother: -3 + (-1 * h * ((reportData[i].children[j].result.words[h].values.length * 2) + 1 + 1)),
+              text: String(reportData[i].children[j].result.words[h].name),
+              style: {
+                display: "block",
+                position: "relative",
+                height: String(factorHeight) + ea,
+                fontSize: String(size - 2) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                width: String(100) + '%',
+                top: String(0) + ea,
+                left: String(0) + ea,
+                textAlign: "left",
+              }
+            };
+            tempArr.push(tempObj);
+
+            left = sumStartLeft;
+            for (let k = 0; k < reportData[i].children[j].result.words[h].values.length; k++) {
+              tempObj = {
+                mother: -2 + (-2 * k),
+                text: String(reportData[i].children[j].result.words[h].values[k].name),
+                style: {
+                  position: "absolute",
+                  fontSize: String(size - 2) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.green,
+                  height: String(100) + '%',
+                  width: String(reportData[i].children[j].result.words[h].values[k].width[0] * mediaWidthRatio) + ea,
+                  top: String(0) + ea,
+                  left: String(left) + ea,
+                  textAlign: "left",
+                }
+              };
+              tempArr.push(tempObj);
+              left += reportData[i].children[j].result.words[h].values[k].width[0] * mediaWidthRatio;
+
+              tempObj = {
+                mother: -3 + (-2 * k),
+                text: String(reportData[i].children[j].result.words[h].values[k].value),
+                style: {
+                  position: "absolute",
+                  fontSize: String(size - 2) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                  height: String(100) + '%',
+                  width: String(reportData[i].children[j].result.words[h].values[k].width[1] * mediaWidthRatio) + ea,
+                  top: String(0) + ea,
+                  left: String(left) + ea,
+                  textAlign: "left",
+                }
+              };
+              tempArr.push(tempObj);
+              left += reportData[i].children[j].result.words[h].values[k].width[1] * mediaWidthRatio;
+            }
+          }
         }
-      },
-      {
-        mother: -1,
-        class: [ "hoverDefault" ],
-        text: reportData[i].name,
+        createNodes(tempArr);
+      }
+    }
+    overTargets = document.querySelectorAll('.' + "overTarget");
+    for (let dom of overTargets) {
+      createNode({
+        mother: dom,
+        attribute: [
+          { x: dom.getAttribute('x') },
+          { y: dom.getAttribute('y') },
+          { toggle: "off" },
+        ],
         events: [
           {
             type: "click",
             event: function (e) {
               const x = Number(this.getAttribute('x'));
+              const y = Number(this.getAttribute('y'));
               const toggle = this.getAttribute("toggle");
-              const target = document.querySelector(".totalname_" + String(x));
-              if (toggle === "on") {
-                target.style.height = String(offConst) + ea;
-                this.setAttribute("toggle", "off");
-              } else {
-                target.style.height = "auto";
-                this.setAttribute("toggle", "on");
-              }
-            }
-          }
-        ],
-        attribute: [
-          { x: String(i) },
-          { toggle: "on" },
-        ],
-        style: {
-          position: "absolute",
-          fontSize: String(size) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
-          top: String(topMargin + 1) + ea,
-          left: String(leftMargin) + ea,
-        }
-      },
-      {
-        mother: -2,
-        style: {
-          position: "absolute",
-          width: String(level1Width) + ea,
-          top: String(0) + ea,
-          left: String(level1Left) + ea,
-          paddingTop: String(topMargin) + ea,
-        }
-      },
-      {
-        mother: -3,
-        style: {
-          position: "relative",
-          width: withOut(level1Width + level1Left, ea),
-          top: String(0) + ea,
-          left: String(level1Width + level1Left) + ea,
-          height: String(100) + '%',
-          paddingTop: String(topMargin) + ea,
-        }
-      },
-    ]);
+              let targets, temp, length;
 
-    eachTotalTong = nodeArr[0];
-    eachNameTong = nodeArr[2];
-    eachValueTong = nodeArr[3];
+              targets = [];
+              temp = document.querySelector(".report_" + String(x) + "_" + String(y));
+              targets.push(temp);
+              temp = document.querySelector(".name_" + String(x) + "_" + String(y));
+              targets.push(temp);
+              length = targets[0].children.length;
 
-    for (let j = 0; j < reportData[i].children.length; j++) {
-      tempArr = [];
-      tempObj = {
-        mother: eachNameTong,
-        class: [ "name_" + String(i) + "_" + String(j), ((reportData[i].children[j].matrix !== undefined && reportData[i].children[j].over) ? "overTarget" : "generalTarget") ],
-        attribute: [
-          { x: String(i) },
-          { y: String(j) },
-        ],
-        text: reportData[i].children[j].name,
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(size - 2) + ea,
-          fontWeight: String(600),
-          color: colorChip.green,
-          height: String(reportData[i].children[j].height) + ea,
-          width: String(100) + '%',
-          marginBottom: String((j !== reportData[i].children.length - 1) ? factorMarginTop : 0) + ea,
-          borderBottom: j !== reportData[i].children.length - 1 ? ("1px solid " + colorChip.gray4) : "",
-        }
-      };
-      tempArr.push(tempObj);
-
-      tempObj = {
-        mother: eachValueTong,
-        class: [ "report_" + String(i) + "_" + String(j) ],
-        attribute: [
-          { x: String(i) },
-          { y: String(j) },
-        ],
-        style: {
-          display: "block",
-          position: "relative",
-          height: String(reportData[i].children[j].height) + ea,
-          width: String(100) + '%',
-          overflow: "hidden",
-          marginBottom: String((j !== reportData[i].children.length - 1) ? factorMarginTop : 0) + ea,
-          borderBottom: j !== reportData[i].children.length - 1 ? ("1px solid " + colorChip.gray4) : "",
-        }
-      };
-      tempArr.push(tempObj);
-
-      if (reportData[i].children[j].matrix !== undefined) {
-        for (let h = 0; h < reportData[i].children[j].matrix.length; h++) {
-          tempObj = {
-            mother: -1 + (-1 * h * (reportData[i].children[j].width.length + 1)),
-            class: [ "report_" + String(i) + "_" + String(j), "report_" + String(i) + "_" + String(j) + "_" + String(h) ],
-            attribute: [
-              { x: String(i) },
-              { y: String(j) },
-              { z: String(h) },
-            ],
-            style: {
-              display: ((i === 2) || (h < overConst)) ? "block" : "none",
-              position: "relative",
-              height: String(factorHeight) + ea,
-              width: String(100) + '%',
-              left: String(0) + ea,
-              overflow: "hidden"
-            }
-          };
-          tempArr.push(tempObj);
-          left = 0;
-          for (let k = 0; k < reportData[i].children[j].width.length; k++) {
-            tempObj = {
-              mother: -1 + (-1 * k),
-              text: String(reportData[i].children[j].matrix[h][k]),
-              style: {
-                position: "absolute",
-                fontSize: String(size - 2) + ea,
-                fontWeight: String(j === 0 ? 600 : 400),
-                color: colorChip.black,
-                height: String(100) + '%',
-                width: String(reportData[i].children[j].width[k] * mediaWidthRatio) + ea,
-                top: String(0) + ea,
-                left: String(left) + ea,
-                textAlign: "center",
-              }
-            };
-            tempArr.push(tempObj);
-            left += reportData[i].children[j].width[k] * mediaWidthRatio;
-          }
-        }
-      } else if (reportData[i].children[j].result !== undefined) {
-
-        for (let h = 0; h < reportData[i].children[j].result.words.length; h++) {
-          tempObj = {
-            mother: -1 + (-1 * h * ((reportData[i].children[j].result.words[h].values.length * 2) + 1 + 1)),
-            class: [ "report_" + String(i) + "_" + String(j), "report_" + String(i) + "_" + String(j) + "_" + String(h) ],
-            attribute: [
-              { x: String(i) },
-              { y: String(j) },
-              { z: String(h) },
-            ],
-            style: {
-              display: "block",
-              position: "relative",
-              height: String(factorHeight) + ea,
-              width: String(100) + '%',
-              left: String(0) + ea,
-              overflow: "hidden"
-            }
-          };
-          tempArr.push(tempObj);
-
-          tempObj = {
-            mother: -3 + (-1 * h * ((reportData[i].children[j].result.words[h].values.length * 2) + 1 + 1)),
-            text: String(reportData[i].children[j].result.words[h].name),
-            style: {
-              display: "block",
-              position: "relative",
-              height: String(factorHeight) + ea,
-              fontSize: String(size - 2) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-              width: String(100) + '%',
-              top: String(0) + ea,
-              left: String(0) + ea,
-              textAlign: "left",
-            }
-          };
-          tempArr.push(tempObj);
-
-          left = sumStartLeft;
-          for (let k = 0; k < reportData[i].children[j].result.words[h].values.length; k++) {
-            tempObj = {
-              mother: -2 + (-2 * k),
-              text: String(reportData[i].children[j].result.words[h].values[k].name),
-              style: {
-                position: "absolute",
-                fontSize: String(size - 2) + ea,
-                fontWeight: String(400),
-                color: colorChip.green,
-                height: String(100) + '%',
-                width: String(reportData[i].children[j].result.words[h].values[k].width[0] * mediaWidthRatio) + ea,
-                top: String(0) + ea,
-                left: String(left) + ea,
-                textAlign: "left",
-              }
-            };
-            tempArr.push(tempObj);
-            left += reportData[i].children[j].result.words[h].values[k].width[0] * mediaWidthRatio;
-
-            tempObj = {
-              mother: -3 + (-2 * k),
-              text: String(reportData[i].children[j].result.words[h].values[k].value),
-              style: {
-                position: "absolute",
-                fontSize: String(size - 2) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                height: String(100) + '%',
-                width: String(reportData[i].children[j].result.words[h].values[k].width[1] * mediaWidthRatio) + ea,
-                top: String(0) + ea,
-                left: String(left) + ea,
-                textAlign: "left",
-              }
-            };
-            tempArr.push(tempObj);
-            left += reportData[i].children[j].result.words[h].values[k].width[1] * mediaWidthRatio;
-          }
-        }
-      }
-      createNodes(tempArr);
-    }
-  }
-
-  overTargets = document.querySelectorAll('.' + "overTarget");
-  for (let dom of overTargets) {
-    createNode({
-      mother: dom,
-      attribute: [
-        { x: dom.getAttribute('x') },
-        { y: dom.getAttribute('y') },
-        { toggle: "off" },
-      ],
-      events: [
-        {
-          type: "click",
-          event: function (e) {
-            const x = Number(this.getAttribute('x'));
-            const y = Number(this.getAttribute('y'));
-            const toggle = this.getAttribute("toggle");
-            let targets, temp, length;
-
-            targets = [];
-            temp = document.querySelector(".report_" + String(x) + "_" + String(y));
-            targets.push(temp);
-            temp = document.querySelector(".name_" + String(x) + "_" + String(y));
-            targets.push(temp);
-            length = targets[0].children.length;
-
-            if (toggle === "off") {
-              for (let target of targets) {
-                target.style.height = String((factorHeight * length) + factorMarginBottom) + ea;
-              }
-              for (let child of targets[0].children) {
-                child.style.display = "block";
-              }
-              this.setAttribute("toggle", "on");
-            } else {
-              for (let target of targets) {
-                target.style.height = String((factorHeight * overConst) + factorMarginBottom) + ea;
-              }
-              for (let i = 0; i < length; i++) {
-                if (i < overConst) {
-                  targets[0].children[i].style.display = "block";
-                } else {
-                  targets[0].children[i].style.display = "none";
+              if (toggle === "off") {
+                for (let target of targets) {
+                  target.style.height = String((factorHeight * length) + factorMarginBottom) + ea;
                 }
+                for (let child of targets[0].children) {
+                  child.style.display = "block";
+                }
+                this.setAttribute("toggle", "on");
+              } else {
+                for (let target of targets) {
+                  target.style.height = String((factorHeight * overConst) + factorMarginBottom) + ea;
+                }
+                for (let i = 0; i < length; i++) {
+                  if (i < overConst) {
+                    targets[0].children[i].style.display = "block";
+                  } else {
+                    targets[0].children[i].style.display = "none";
+                  }
+                }
+                this.setAttribute("toggle", "off");
               }
-              this.setAttribute("toggle", "off");
             }
           }
-        }
-      ],
-      class: [ "hoverDefault" ],
-      style: {
-        position: "absolute",
-        bottom: String(factorMarginTop + factorMarginBottom - 3) + ea,
-        left: String(0) + ea,
-        width: String(overWidth) + ea,
-        height: String(overRadius + 12) + ea,
-        background: colorChip.white,
-        cursor: "pointer",
-      },
-      children: [
-        {
-          style: {
-            position: "absolute",
-            height: String(overRadius) + ea,
-            width: String(overRadius) + ea,
-            background: colorChip.green,
-            borderRadius: String(overRadius) + ea,
-            bottom: String(0) + ea,
-            left: String(0) + ea,
-          }
+        ],
+        class: [ "hoverDefault" ],
+        style: {
+          position: "absolute",
+          bottom: String(factorMarginTop + factorMarginBottom - 3) + ea,
+          left: String(0) + ea,
+          width: String(overWidth) + ea,
+          height: String(overRadius + 12) + ea,
+          background: colorChip.white,
+          cursor: "pointer",
         },
-        {
-          style: {
-            position: "absolute",
-            height: String(overRadius) + ea,
-            width: String(overRadius) + ea,
-            background: colorChip.green,
-            borderRadius: String(overRadius) + ea,
-            bottom: String(0) + ea,
-            left: String(overRadius * 1.5) + ea,
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            height: String(overRadius) + ea,
-            width: String(overRadius) + ea,
-            background: colorChip.green,
-            borderRadius: String(overRadius) + ea,
-            bottom: String(0) + ea,
-            left: String(overRadius * 3) + ea,
-          }
-        },
-      ]
-    });
+        children: [
+          {
+            style: {
+              position: "absolute",
+              height: String(overRadius) + ea,
+              width: String(overRadius) + ea,
+              background: colorChip.green,
+              borderRadius: String(overRadius) + ea,
+              bottom: String(0) + ea,
+              left: String(0) + ea,
+            }
+          },
+          {
+            style: {
+              position: "absolute",
+              height: String(overRadius) + ea,
+              width: String(overRadius) + ea,
+              background: colorChip.green,
+              borderRadius: String(overRadius) + ea,
+              bottom: String(0) + ea,
+              left: String(overRadius * 1.5) + ea,
+            }
+          },
+          {
+            style: {
+              position: "absolute",
+              height: String(overRadius) + ea,
+              width: String(overRadius) + ea,
+              background: colorChip.green,
+              borderRadius: String(overRadius) + ea,
+              bottom: String(0) + ea,
+              left: String(overRadius * 3) + ea,
+            }
+          },
+        ]
+      });
+    }
+  } else {
+    for (let { name, children: matrix, boldMap, titleMap, widthRatio, columns } of mobileReportData) {
+      if (matrix.length > 0) {
+
+        
+
+
+        matrix.unshift(columns);
+        table = mother.makeTable(matrix, { style: {
+          width: (100 - (leftMargin * 2)) / matrix[0].length,
+          height: 9
+        }, boldMap, titleMap, widthRatio });
+        baseTong.appendChild(table);
+        table = baseTong.lastChild;
+        table.style.position = "relative";
+        table.style.display = "block";
+        table.style.left = String(leftMargin) + ea;
+
+
+
+
+      }
+    }
   }
 
   this.mainBaseTong = baseTong0;
@@ -2171,6 +2280,8 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   const instance = this;
   const { createNode, createNodes, colorChip, withOut, blankHref } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, motherHeight } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
   const designer = this.designers.pick(desid);
   let mother;
   let radius;
@@ -2181,22 +2292,24 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, cInitialIcon;
 
-  radius = <%% 20, 20, 20, 20, 20 %%>;
-  left = <%% 40, 35, 35, 35, 35 %%>;
-  bottom = <%% 40, 35, 35, 35, 35 %%>;
-  margin = <%% 6, 6, 6, 6, 6 %%>;
+  radius = <%% 20, 20, 20, 20, 6 %%>;
+  left = <%% 40, 35, 35, 35, 0 %%>;
+  bottom = <%% 40, 35, 35, 35, 7.2 %%>;
+  margin = <%% 6, 6, 6, 6, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = 12.5;
+  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
     style: {
+      display: "block",
       position: "fixed",
-      height: String(motherHeight) + ea,
-      width: String(grayBarWidth) + ea,
-      left: String(0),
+      height: String(desktop ? motherHeight : (bottom + (radius * 2))) + ea,
+      width: String(desktop ? grayBarWidth : (bottom + (radius * 2))) + ea,
+      left: desktop ? String(0) : "",
+      right: desktop ? "" : String(0),
       bottom: String(belowHeight) + ea,
-      background: colorChip.gray0,
+      background: desktop ? colorChip.gray0 : "transparent",
       zIndex: String(2),
     }
   });
@@ -2254,6 +2367,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother,
       style: {
+        display: ((instance.middleMode && mobile) ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2303,6 +2417,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother,
       style: {
+        display: ((instance.middleMode && mobile) ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2341,12 +2456,12 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother: -1,
       mode: "svg",
-      source: this.mother.returnCinitialGeneral(colorChip.whiteIcon),
+      source: this.mother.returnRinitial(colorChip.whiteIcon),
       style: {
         position: "absolute",
-        width: String(17.5) + ea,
-        left: String(11) + ea,
-        top: String(10) + ea,
+        width: String(14) + ea,
+        left: String(13.5) + ea,
+        top: String(10.5) + ea,
       }
     },
   ]);

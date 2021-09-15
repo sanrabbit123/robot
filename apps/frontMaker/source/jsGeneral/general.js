@@ -1815,6 +1815,7 @@ GeneralJs.autoComma = function (str) {
 
 GeneralJs.dateToString = function (date, detail = false) {
   if (!(date instanceof Date)) {
+    console.log(date);
     throw new Error("invaild input");
   }
   if (detail === undefined || detail === null) {
