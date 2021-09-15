@@ -47,7 +47,7 @@ const DesignerConsoleJs = function () {
 
 DesignerConsoleJs.prototype.navigatorLaunching = function () {
   const instance = this;
-  const { ea, designer, desid, modes, media } = this;
+  const { ea, designer, desid, modes, media, grayBarWidth } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo } = GeneralJs;
   const totalContents = document.getElementById("totalcontents");
   const totalMother = document.querySelector(".totalMother");
@@ -268,11 +268,11 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
     createNode({
       mother,
       style: {
-        position: "relative",
+        position: "fixed",
         top: String(margin) + ea,
         marginLeft: String(margin) + ea,
         marginRight: String(margin) + ea,
-        width: withOut(100, margin * 2, ea),
+        width: String(grayBarWidth - (margin * 2)) + ea,
         height: withOut(100, margin * 2, ea),
         fontSize: String(size) + ea,
         fontWeight: String(secondBold),

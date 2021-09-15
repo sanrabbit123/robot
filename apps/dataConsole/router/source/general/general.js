@@ -3757,7 +3757,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   let rows, all, rowBlock, eachBlock;
   let domMatrix;
   let tempArr;
-  let innerMargin, innerMarginLeft;
+  let innerMargin, innerMarginLeft, innerMarginTitleLeft;
   let borderWeight;
   let textTop;
   let mergeMap;
@@ -3987,7 +3987,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     blockWidth = option.style.totalWidth / columnsLength;
   }
 
-  blockHeight = <%% 52, 52, 52, 52, 9 %%>;
+  blockHeight = <%% 52, 52, 52, 52, 11.3 %%>;
   if (typeof option.style.height === "number") {
     blockHeight = option.style.height;
   }
@@ -4000,7 +4000,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
 
   borderWeight = <%% 1, 1, 1, 1, 1 %%>;
 
-  size = <%% 15, 14, 14, 13, 3 %%>;
+  size = <%% 15, 14, 14, 13, 2.6 %%>;
   if (typeof option.style.size === "number") {
     size = option.style.size;
   }
@@ -4008,19 +4008,24 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     size = option.style.fontSize;
   }
 
-  titleSize = <%% 15, 14, 14, 13, 3.2 %%>;
+  titleSize = <%% 15, 14, 14, 13, 3.1 %%>;
   if (typeof option.style.titleSize === "number") {
     titleSize = option.style.titleSize;
   }
 
-  innerMargin = <%% 8, 8, 8, 6, 1 %%>;
+  innerMargin = <%% 8, 8, 8, 6, 2 %%>;
   if (typeof option.style.innerMargin === "number") {
     innerMargin = option.style.innerMargin;
   }
 
-  innerMarginLeft = <%% 15, 15, 15, 12, 1 %%>;
+  innerMarginLeft = <%% 15, 15, 15, 12, 3 %%>;
   if (typeof option.style.innerMarginLeft === "number") {
     innerMarginLeft = option.style.innerMarginLeft;
+  }
+
+  innerMarginTitleLeft = <%% 15, 15, 15, 12, 2 %%>;
+  if (typeof option.style.innerMarginTitleLeft === "number") {
+    innerMarginTitleLeft = option.style.innerMarginTitleLeft;
   }
 
   textTop = <%% (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), (isMac() ? -2 : 0), -0.2 %%>;
@@ -4131,8 +4136,8 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
               flexDirection: "column",
               justifyContent: "center",
               marginTop: String(innerMargin) + ea,
-              marginLeft: String(innerMarginLeft) + ea,
-              width: withOut(innerMarginLeft * 2, ea),
+              marginLeft: String(titleMap[i] === 1 ? innerMarginTitleLeft : (boldMap[i][j] === 1 ? innerMarginTitleLeft : innerMarginLeft)) + ea,
+              width: (titleMap[i] === 1 ? withOut(innerMarginTitleLeft * 2, ea) : (boldMap[i][j] === 1 ? withOut(innerMarginTitleLeft * 2, ea) : withOut(innerMarginLeft * 2, ea))),
               height: withOut(innerMargin * 2, ea),
               overflow: "scroll",
             },

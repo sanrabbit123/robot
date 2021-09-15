@@ -52,7 +52,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck } = this.mother;
+  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, rootParsing } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -68,8 +68,21 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("* 1.1)"));
 
 
-    const photoRequest = ghostRequest().bind("photo")
-    console.log(await photoRequest("zip", { pid: "p149" }));
+
+    const res = await rootParsing(process.env.HOME + "/Downloads");
+    console.log(res);
+
+
+
+
+
+
+    // for (let name in optimizeResult) {
+    //   await fileSystem(`write`, [ `${process.cwd()}/temp/result/${name}.svg`, optimizeResult[name] ]);
+    // }
+
+    // console.log(optimizeResult);
+
 
 
 

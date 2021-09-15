@@ -84,7 +84,7 @@ DesignerJs.prototype.requestList = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, dateToString } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const matrixButtonConst = "matrixButtons_" + desid;
   const cookies = getCookiesAll();
@@ -121,6 +121,7 @@ DesignerJs.prototype.requestList = function (desid) {
   let requestWordPaddingTop;
   let requestWordPaddingBottom;
   let thisChildWidth;
+  let dateString;
 
   designer = this.designers.pick(desid);
   projects = designer.projects;
@@ -155,10 +156,10 @@ DesignerJs.prototype.requestList = function (desid) {
 
   boxMargin = <%% 13, 13, 12, 10, 2 %%>;
 
-  requestSize = <%% 26, 26, 25, 24, 5 %%>;
+  requestSize = <%% 22, 22, 21, 20, 4.5 %%>;
   requestWordMargin = <%% 1, 1, 1, 1, 0 %%>;
-  requestWordPaddingTop = <%% (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), 3 %%>;
-  requestWordPaddingBottom = <%% (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), 4 %%>;
+  requestWordPaddingTop = <%% (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), 4 %%>;
+  requestWordPaddingBottom = <%% (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), 5.5 %%>;
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -190,6 +191,13 @@ DesignerJs.prototype.requestList = function (desid) {
 
   this.requestBoxes = [];
   for (let i = 0; i < maxBoxNumber; i++) {
+
+    if (/없음/gi.test(dateToString(projects[i].process.contract.form.date.from)) || /예정/gi.test(dateToString(projects[i].process.contract.form.date.from))) {
+      dateString = "00.00.00";
+    } else {
+      dateString = dateToString(projects[i].process.contract.form.date.from).slice(2).replace(/\-/g, '.');
+    }
+
     requestBox = createNode({
       mother: baseTong,
       class: [ "hoverDefault_lite" ],
@@ -245,7 +253,7 @@ DesignerJs.prototype.requestList = function (desid) {
           },
           children: [
             {
-              text: (desktop ? "고객님" : "고객님 의뢰서"),
+              text: (desktop ? "고객님" : "고객님 (" + dateString.slice(0, -3) + ")"),
               style: {
                 fontSize: String(requestSize) + ea,
                 fontWeight: String(200),
@@ -261,7 +269,7 @@ DesignerJs.prototype.requestList = function (desid) {
           },
           children: [
             {
-              text: "의뢰서",
+              text: dateString.slice(0, -3),
               style: {
                 fontSize: String(requestSize) + ea,
                 fontWeight: String(200),
@@ -810,14 +818,14 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
 
     topMargin = <%% 42, 42, 42, 42, 5.5 %%>;
     leftMargin = <%% 50, 50, 50, 50, 5.5 %%>;
-    titleSize = <%% 35, 35, 35, 35, 5.5 %%>;
+    titleSize = <%% 35, 35, 35, 35, 5.2 %%>;
     titlePaddingLeft = <%% 1, 1, 1, 1, 0 %%>;
-    titleBottom = <%% 35, 35, 35, 35, 4 %%>;
-    titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 2.8 %%>;
+    titleBottom = <%% 35, 35, 35, 35, 5 %%>;
+    titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.2 %%>;
     titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
     clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
     fontSize = <%% 15, 15, 15, 14, 3.5 %%>;
-    contentsBetween = <%% 32, 32, 32, 32, 5 %%>;
+    contentsBetween = <%% 32, 32, 32, 32, 6 %%>;
     clientInfoLeftWidth = <%% 380, 300, 260, 200, 20 %%>;
     wordsBetween0 = <%% 6, 6, 6, 6, 0.5 %%>;
     wordsBetween1 = <%% 22, 22, 22, 22, 2.5 %%>;
@@ -936,7 +944,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     } else {
       width = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2)) / sum;
       contentsClientInfo.insertBefore(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }), contentsClientInfo.firstChild);
-      contentsClientInfo.children[0].style.marginBottom = String(titleBottom) + ea;
+      contentsClientInfo.children[0].style.marginBottom = String(contentsBetween) + ea;
     }
 
     whitePopupEvent = async function (e) {

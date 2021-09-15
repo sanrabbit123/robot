@@ -299,6 +299,17 @@ Mother.prototype.fileSystem = function (sw, arr) {
         mkdir.stderr.on("data", (data) => { reject(String(data)); });
         mkdir.on("close", (code) => { resolve(arr[0]); });
       });
+    case "open":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        const { spawn } = require("child_process");
+        const open = spawn("open", [ arr[0] ]);
+        let out;
+        out = "";
+        open.stdout.on("data", (data) => { out += String(data); });
+        open.stderr.on("data", (data) => { reject(String(data)); });
+        open.on("close", (code) => { resolve(arr[0]); });
+      });
   }
 }
 
@@ -1930,6 +1941,146 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
   } catch (e) {
     console.log(e);
   }
+}
+
+Mother.prototype.rootParsing = async function (target) {
+  if (typeof target !== "string") {
+    throw new Error("invaild input");
+  }
+  target = target.replace(/\/$/i, '');
+  const { exec } = require(`child_process`);
+  const shellLink = function (str) {
+    let arr = str.split('/');
+    let newStr = '';
+    for (let i of arr) {
+      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+        newStr += i + '/';
+      } else if (!/'/g.test(i)) {
+        newStr += "'" + i + "'" + '/';
+      } else if (!/"/g.test(i)) {
+        newStr += '"' + i + '"' + '/';
+      } else {
+        newStr += i + '/';
+      }
+    }
+    newStr = newStr.slice(0, -1);
+    return newStr;
+  }
+  const lsAl = function (target) {
+    return new Promise(function (resolve, reject) {
+      exec(`ls -al ${shellLink(target)}`, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(stdout);
+        }
+        return;
+      });
+    });
+  }
+  const makeFileArr = async function (target) {
+    try {
+      const targetFolderName = (target.split("/"))[target.split("/").length - 1];
+      const stdout = await lsAl(target);
+      let fileList;
+      let tempArr, tempArr2, tempArr3, tempArr4, tempArr5;
+      let temp, str;
+      let newArr;
+      fileList = stdout.split("\n");
+      fileList.shift();
+      fileList.pop();
+      tempArr = [];
+      for (let i of fileList) {
+        newArr = [];
+        for (let j of i.split(" ")) {
+          if (j !== '' && j !== ' ') {
+            newArr.push(j);
+          }
+        }
+        tempArr.push(newArr);
+      }
+      tempArr2 = [];
+      for (let i of tempArr) {
+        temp = {};
+        if (i[0][0] === 'd') {
+          temp.directory = true;
+        } else {
+          temp.directory = false;
+        }
+        if (i.length > 9) {
+          str = '';
+          for (let j = 8; j < i.length; j++) {
+            str += i[j];
+            str += ' ';
+          }
+          temp.fileName = str.slice(0, -1);
+        } else {
+          temp.fileName = i[8];
+        }
+        if (temp.fileName[0] === '.') {
+          temp.hidden = true;
+        } else {
+          temp.hidden = false;
+        }
+        temp.absolute = target + "/" + temp.fileName;
+        temp.length = temp.absolute.split("/").length;
+        tempArr2.push(temp);
+      }
+      tempArr3 = [];
+      for (let i of tempArr2) {
+        if (i.fileName !== '.' && i.fileName !== ".." && !/\-\>/gi.test(i.fileName) && i.fileName !== ".DS_Store") {
+          tempArr3.push(i);
+        }
+      }
+      tempArr4 = [];
+      for (let i of tempArr3) {
+        tempArr4.push(i);
+      }
+
+      tempArr4 = tempArr4.map((obj) => {
+        delete obj.length;
+        const { directory, fileName } = obj;
+        if (directory) {
+          obj.kind = "folder";
+        } else {
+          if (/\.(js|py|c|scpt|html|css|xml|java|json|cfg|bash|csh|md)$/gi.test(fileName)) {
+            obj.kind = "code";
+          } else if (/\.(ai|eps|svg)$/gi.test(fileName)) {
+            obj.kind = "ai";
+          } else if (/\.(png|psd|iff|pcx|raw|tga|psb)$/gi.test(fileName)) {
+            obj.kind = "png";
+          } else if (/\.(jpg|jpeg|gif|jpf|jps|bmp|heic|jfif)$/gi.test(fileName)) {
+            obj.kind = "jpg";
+          } else if (/\.(pdf)$/gi.test(fileName)) {
+            obj.kind = "pdf";
+          } else if (/\.(pptx|pptm|ppt)$/gi.test(fileName)) {
+            obj.kind = "powerpoint";
+          } else if (/\.(xlsx|xlsm|xlsb|xltx|xltxm|xls|xlt|xlam)$/gi.test(fileName)) {
+            obj.kind = "excel";
+          } else if (/\.(docx|docm|doc|dotx|dotm|dot|hwp)$/gi.test(fileName)) {
+            obj.kind = "word";
+          } else if (/\.(txt|wps|odt|rtf)$/gi.test(fileName)) {
+            obj.kind = "txt";
+          } else if (/\.(exe|pkg|dmg|iso)$/gi.test(fileName)) {
+            obj.kind = "exe";
+          } else if (/\.(mp3|wav|m4a|m4b|m4v|m4r|3gp|aac|wv|aiff|aif|aifc|ogg)$/gi.test(fileName)) {
+            obj.kind = "mp3";
+          } else if (/\.(mp4|avi|mov|wmv|mkv|mpg|flv|asf|asx|ogm|ogv|webm|vob|qt|amv|m4p|mpv|mpg|nsv)$/gi.test(fileName)) {
+            obj.kind = "mp4";
+          } else if (/\.(zip|egg|7z|tar|rar|apk|alz|tgz|zoo|cab|img|pak|war)$/gi.test(fileName)) {
+            obj.kind = "zip";
+          } else {
+            obj.kind = "general";
+          }
+        }
+        return obj;
+      });
+      return tempArr4;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return makeFileArr(target);
 }
 
 Mother.prototype.returnRandoms = function (num = 10, length = false) {

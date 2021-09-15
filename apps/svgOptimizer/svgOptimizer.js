@@ -831,10 +831,10 @@ SvgOptimizer.prototype.setDcimal = function (number) {
   this.decimal = number;
 }
 
-SvgOptimizer.prototype.loadSVG = async function (file) {
+SvgOptimizer.prototype.loadSVG = async function (file, liteMode = false) {
+  const instance  = this;
   const { JSDOM } = require("jsdom");
   const { window } = new JSDOM(`<!DOCTYPE html><html></html>`);
-  let svgDoc_raw, svgDoc, svgObj, svgStringNew, newFilterId;
   const parseXML = function(data) {
     let xml;
     if (!data || typeof data !== "string") { return null; }
@@ -842,24 +842,67 @@ SvgOptimizer.prototype.loadSVG = async function (file) {
     catch (e) { xml = undefined; }
     return xml;
   };
+  const { fileSystem } = this.mother;
+  let svgDoc_raw, svgDoc, svgObj, svgStringNew, newFilterId, svgString, pastId, newId, pastIds;
+  let tempReg;
   try {
-    let svgString = await this.mother.fileSystem(`readString`, [ file ]);
-    if (!svgString) { throw new Error("invalid svg"); }
-    svgDoc = parseXML(svgString);
-    svgObj = new SVG_Object(svgDoc.children[0], this.decimal);
-    svgObj.originalString = svgString;
-    svgObj.options.removeIDs = true;
-    svgStringNew = svgObj.toString();
-    if (/xlink/.test(svgStringNew)) {
-      svgStringNew = '<svg xmlns:xlink="http://www.w3.org/1999/xlink"' + svgStringNew.slice(4);
+    if (await fileSystem(`exist`, [ file ])) {
+      svgString = await fileSystem(`readString`, [ file ]);
+    } else {
+      console.log("There is no " + file);
     }
-    if (/\<filter\>\<feGaussianBlur stdDeviation=['"][0-9]+['"]\/\>\<\/filter\>/gi.test(svgStringNew) && /filter:url\(#[^\)]+\)/gi.test(svgStringNew)) {
-      newFilterId = /filter:url\(#([^\)]+)\)/gi.exec(svgStringNew)[1];
-      newFilterId = newFilterId + this.fileToName(file) + String((new Date()).valueOf()) + String(Math.round(Math.random() * 100));
-      svgStringNew = svgStringNew.replace(/filter:url\(#([^\)]+)\)/gi, "filter:url(#" + newFilterId + ")");
-      svgStringNew = svgStringNew.replace(/\<filter\>\<feGaussianBlur stdDeviation=/i, "\<filter id=\"" + newFilterId + "\"\>\<feGaussianBlur stdDeviation=");
+
+    if (!liteMode) {
+
+      svgDoc = parseXML(svgString);
+      svgObj = new SVG_Object(svgDoc.children[0], this.decimal);
+      svgObj.originalString = svgString;
+      svgObj.options.removeIDs = true;
+      svgStringNew = svgObj.toString();
+
+      if (/xlink/.test(svgStringNew)) {
+        svgStringNew = '<svg xmlns:xlink="http://www.w3.org/1999/xlink"' + svgStringNew.slice(4);
+      }
+      if (/\<filter\>\<feGaussianBlur stdDeviation=['"][0-9]+['"]\/\>\<\/filter\>/gi.test(svgStringNew) && /filter:url\(#[^\)]+\)/gi.test(svgStringNew)) {
+        newFilterId = /filter:url\(#([^\)]+)\)/gi.exec(svgStringNew)[1];
+        newFilterId = newFilterId + this.fileToName(file) + String((new Date()).valueOf()).slice(5) + String(Math.round(Math.random() * 1000000));
+        svgStringNew = svgStringNew.replace(/filter:url\(#([^\)]+)\)/gi, "filter:url(#" + newFilterId + ")");
+        svgStringNew = svgStringNew.replace(/\<filter\>\<feGaussianBlur stdDeviation=/i, "\<filter id=\"" + newFilterId + "\"\>\<feGaussianBlur stdDeviation=");
+      }
+
+    } else {
+
+      svgString = svgString.replace(/\<\?[^\?]+\?\>/gi, '').replace(/[\t\n]/gi, '').trim().replace(/   /g, ' ').replace(/  /g, ' ').replace(/   /g, ' ').replace(/  /g, ' ').replace(/   /g, ' ').replace(/  /g, ' ').replace(/   /g, ' ').replace(/  /g, ' ').replace(/   /g, ' ').replace(/  /g, ' ').replace(/\> \</g, '><').replace(/\> \</g, '><');
+      if (/[^0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\-\_\+\=\"\'\:\;\<\>\,\.\/\?\\\|\~\` \n\t]/gi.test(svgString)) {
+        svgString = svgString.replace(/[^0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\-\_\+\=\"\'\:\;\<\>\,\.\/\?\\\|\~\` \n\t]/gi, (match) => {
+          console.log("invaild language : " + match);
+          return '';
+        });
+      }
+      if (/\<style/gi.test(svgString) && !/<\/style/gi.test(svgString)) {
+        svgString = svgString.replace(/\<style[^\>]+\>/gi, '');
+      }
+      svgString = svgString.replace(/\.[0-9][0-9][0-9][0-9]+/gi, (match) => {
+        return match.slice(0, 4);
+      });
+      svgString = svgString.replace(/ id = "/gi, ' id="');
+
+      if (/id\=\"([^\"]+)\"/gi.test(svgString)) {
+        pastIds = [ ...svgString.matchAll(/id\=\"([^\"]+)\"/gi) ].map((arr) => {
+          return arr[1];
+        });
+        for (let id of pastIds) {
+          newId = id + this.fileToName(file) + String((new Date()).valueOf()).slice(5) + String(Math.round(Math.random() * 1000000));
+          svgString = svgString.replace(new RegExp('\\=\\"' + id + '\\"', "gi"), `="${newId}"`);
+          svgString = svgString.replace(new RegExp('\\=\\"\\#' + id + '\\"', "gi"), `="#${newId}"`);
+          svgString = svgString.replace(new RegExp("url\\(\\#" + id + "\\)", "gi"), `url(#${newId})`);
+        }
+        svgStringNew = svgString;
+      }
     }
+
     return svgStringNew;
+
   } catch (e) {
     console.log(e);
     return;
@@ -873,12 +916,60 @@ SvgOptimizer.prototype.fileToName = function (fileName) {
   return string;
 }
 
-SvgOptimizer.prototype.launching = async function () {
+SvgOptimizer.prototype.launching = async function (liteMode = false) {
   try {
     for (let f of this.files) {
-      this.result[this.fileToName(f)] = await this.loadSVG(f);
+      this.result[this.fileToName(f)] = await this.loadSVG(f, liteMode);
       console.log(this.fileToName(f) + " optimize success");
     }
+    return this.result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+SvgOptimizer.prototype.toScript = async function (liteMode = false) {
+  const instance = this;
+  const { fileSystem } = this.mother;
+  const folderName = "optimizeResult";
+  const tempFolder = process.cwd() + "/temp";
+  const resultFolderName = "result";
+  const scriptName = "script";
+  const htmlName = "test";
+  try {
+    let script;
+    let html;
+    let tempFolderDir;
+
+    for (let f of this.files) {
+      this.result[this.fileToName(f)] = await this.loadSVG(f, liteMode);
+      console.log(this.fileToName(f) + " optimize success");
+    }
+
+    script = "SampleClassName.staticSvg = " + JSON.stringify(this.result, null, 2).replace(/\n  \"([^\"]+)\"\: /gi, (match, key) => {
+      return "\n  " + key + ": ";
+    }) + ';';
+    html = `<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8"><title></title></head><body>\n\n`;
+    for (let name in this.result) {
+      html += this.result[name] + "\n\n";
+    }
+    html += `\n</body></html>`;
+
+    tempFolderDir = await fileSystem(`readDir`, [ tempFolder ]);
+    if (tempFolderDir.includes(folderName)) {
+      await fileSystem(`remove`, [ `${tempFolder}/${folderName}` ]);
+    }
+
+    await fileSystem(`mkdir`, [ `${tempFolder}/${folderName}` ]);
+    await fileSystem(`mkdir`, [ `${tempFolder}/${folderName}/${resultFolderName}` ]);
+    for (let name in this.result) {
+      await fileSystem(`write`, [ `${tempFolder}/${folderName}/${resultFolderName}/${name}.svg`, this.result[name] ]);
+    }
+    await fileSystem(`write`, [ `${tempFolder}/${folderName}/${scriptName}.js`, script ]);
+    await fileSystem(`write`, [ `${tempFolder}/${folderName}/${htmlName}.html`, html ]);
+
+    await fileSystem(`open`, [ `${tempFolder}/${folderName}` ]);
+
     return this.result;
   } catch (e) {
     console.log(e);

@@ -663,7 +663,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, rootParsing } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const audio = new PlayAudio();
   let funcObj = {};
@@ -1193,83 +1193,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      const { exec } = require(`child_process`);
-      const lsAl = function (target) {
-        return new Promise(function (resolve, reject) {
-          exec(`ls -al ${shellLink(target)}`, (error, stdout, stderr) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(stdout);
-            }
-            return;
-          });
-        });
-      }
-      const makeFileArr = async function (target) {
-        try {
-          const targetFolderName = (target.split("/"))[target.split("/").length - 1];
-          const stdout = await lsAl(target);
-          let fileList;
-          let tempArr, tempArr2, tempArr3, tempArr4, tempArr5;
-          let temp, str;
-          let newArr;
-          fileList = stdout.split("\n");
-          fileList.shift();
-          fileList.pop();
-          tempArr = [];
-          for (let i of fileList) {
-            newArr = [];
-            for (let j of i.split(" ")) {
-              if (j !== '' && j !== ' ') {
-                newArr.push(j);
-              }
-            }
-            tempArr.push(newArr);
-          }
-          tempArr2 = [];
-          for (let i of tempArr) {
-            temp = {};
-            if (i[0][0] === 'd') {
-              temp.directory = true;
-            } else {
-              temp.directory = false;
-            }
-            if (i.length > 9) {
-              str = '';
-              for (let j = 8; j < i.length; j++) {
-                str += i[j];
-                str += ' ';
-              }
-              temp.fileName = str.slice(0, -1);
-            } else {
-              temp.fileName = i[8];
-            }
-            if (temp.fileName[0] === '.') {
-              temp.hidden = true;
-            } else {
-              temp.hidden = false;
-            }
-            temp.absolute = target + "/" + temp.fileName;
-            temp.length = temp.absolute.split("/").length;
-            tempArr2.push(temp);
-          }
-          tempArr3 = [];
-          for (let i of tempArr2) {
-            if (i.fileName !== '.' && i.fileName !== ".." && !/\-\>/gi.test(i.fileName) && i.fileName !== ".DS_Store") {
-              tempArr3.push(i);
-            }
-          }
-          tempArr4 = [];
-          for (let i of tempArr3) {
-            tempArr4.push(i);
-          }
-
-          return tempArr4;
-        } catch (e) {
-          console.log(e);
-        }
-      }
       let target, result;
       if (req.body.path === undefined) {
         target = "__samba__";
@@ -1281,8 +1204,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
       }
       target = instance.dirParsing(target);
-      makeFileArr(target.replace(/\/$/i, '')).then((list) => {
-        console.log(list);
+      rootParsing(target).then((list) => {
         res.send(JSON.stringify(list.map((i) => {
           i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
           return i;
