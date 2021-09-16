@@ -83,7 +83,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const tree = await treeParsing(process.env.HOME + "/Desktop");
+    const tree = await treeParsing(process.env.HOME + "/samba");
     const bashScript = (tree.flatDeath.map((obj) => { return obj.absolute; }).filter((i) => { return /\/\.\_/gi.test(i); }).map((str) => {
       return "rm -rf " + shellLink(str) + ';';
     }).join("\n"));
