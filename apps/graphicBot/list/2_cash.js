@@ -32,7 +32,7 @@ module.exports = function (arg, info) {
       document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
     },
     async function () {
-      const firstTargetButtonId = "myMenuQuickLi2";
+      const firstTargetButtonId = "myMenuQuickLi4";
       while (document.getElementById(firstTargetButtonId) === null) {
         await sleep(500);
       }
@@ -123,11 +123,11 @@ module.exports = function (arg, info) {
       document.getElementById(homeButtonId).click();
     },
     async function () {
-      while (document.getElementById("myMenuQuickLi3") === null) {
+      while (document.getElementById("myMenuQuickLi5") === null) {
         await sleep(500);
       }
       await endFront();
-      document.getElementById("myMenuQuickLi3").click();
+      document.getElementById("myMenuQuickLi5").click();
     },
     async function () {
       const iframeId = "txppIframe";
