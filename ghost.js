@@ -1248,25 +1248,25 @@ Ghost.prototype.ghostRouter = function (needs) {
         let tempArr;
         let command;
 
-        if (!homeFolder.includes(tempFolderName)) {
-          shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
+        if (homeFolder.includes(tempFolderName)) {
+          shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
         }
-
+        shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
         shareName = "delivery_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)) + "_" + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
-        command = `zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`;
+        command = "";
         for (let { absolute, type } of files) {
-          command += " ";
           if (type === "folder") {
-            command += shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, '')) + "/*";
+            command += `cp -r ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
           } else {
-            command += shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''));
+            command += `cp ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
           }
         }
+        command += `;zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*`;
         shell.exec(command, { async: true }, async (code, stdout, stderr) => {
           try {
             zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
             zipLink = await googleDrive.read_webView_inPython(zipId);
-            shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+            shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
             text = "파일 배달이 완료되었습니다! : " + zipLink;
             instance.mother.slack_bot.chat.postMessage({ text, channel: "#general" });
           } catch (e) {
