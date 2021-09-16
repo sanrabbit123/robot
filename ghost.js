@@ -1261,7 +1261,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             command += `cp ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
           }
         }
-        command += `;zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*`;
+        command += `zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*`;
         shell.exec(command, { async: true }, async (code, stdout, stderr) => {
           try {
             zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
