@@ -224,7 +224,7 @@ FileJs.prototype.fileLoad = async function (path) {
         class: [ "hoverDefault_lite" ],
         attribute: [
           { absolute },
-          { directory: directory ? "true" : "false" }.
+          { directory: directory ? "true" : "false" },
           { toggle: "off" },
         ],
         events: [
