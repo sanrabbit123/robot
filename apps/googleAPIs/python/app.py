@@ -169,6 +169,11 @@ try:
         result = driveApp.searchId(data["name"])
         print(result)
 
+    elif argv[1] == 'drive' and argv[2] == 'delete':
+        driveApp = GoogleDrive()
+        result = driveApp.deleteFile(data["targetId"])
+        print(result)
+
     elif argv[1] == 'docs' and argv[2] == 'readDocs':
         docsApp = GoogleDocs()
         result = docsApp.readDocs(data["id"])

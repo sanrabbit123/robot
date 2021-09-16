@@ -96,6 +96,10 @@ class GoogleDrive:
         self.app.revisions().update(fileId=file_id, revisionId='1', body=revision).execute()
         return dumps({ "link": "https://docs.google.com/spreadsheets/d/" + file_id + "/pubhtml?widget=true&headers=false&embedded=true" })
 
+    def deleteFile(self, file_id):
+        self.app.files().delete(fileId=file_id).execute()
+        return dumps({ "message": "done" })
+
     def searchId(self, name):
         response = self.app.files().list(q=f"name contains '{name}'", spaces='drive').execute()
         id = None

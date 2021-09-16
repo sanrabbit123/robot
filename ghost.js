@@ -1241,6 +1241,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
         const tempFolderName = "temp";
         const currentFolder = process.cwd();
+        const future = new Date();
         let shareName;
         let zipId;
         let zipLink;
@@ -1248,6 +1249,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         let folderName;
         let tempArr;
         let command;
+
+        future.setHours(future.getHours() + 3);
 
         if (homeFolder.includes(tempFolderName)) {
           shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
@@ -1268,13 +1271,21 @@ Ghost.prototype.ghostRouter = function (needs) {
             zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
             zipLink = await googleDrive.read_webView_inPython(zipId);
             shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
-            text = "파일 배달이 완료되었습니다! : " + zipLink;
-            instance.mother.slack_bot.chat.postMessage({ text, channel: "#general" });
+            text = "파일 배달이 완료되었습니다! 유효 시간은 " + dateToString(future, true) + " 까지, 총 3시간입니다. : " + zipLink;
+            instance.mother.slack_bot.chat.postMessage({ text, channel: "#file" });
+            instance.setTimer(async function () {
+              try {
+                const googleDrive = instance.mother.googleSystem("drive");
+                await googleDrive.delete_inPython(targetUrl);
+              } catch (e) {
+                console.log(e);
+              }
+            }, future);
           } catch (e) {
             console.log(e);
           }
         });
-        res.send(JSON.stringify({ message: "will done" }));
+        res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
@@ -2924,9 +2935,7 @@ Ghost.prototype.wssLaunching = async function () {
 // EXE --------------------------------------------------------------------------------------
 
 const app = new Ghost();
-if (process.argv[2] === "request") {
-  app.requestObject();
-} else if (process.argv[2] === undefined || /server/gi.test(process.argv[2]) || /ghost/gi.test(process.argv[2])) {
+if (process.argv[2] === undefined || /server/gi.test(process.argv[2]) || /ghost/gi.test(process.argv[2])) {
   app.serverLaunching();
 } else if (/file/gi.test(process.argv[2]) || /ftp/gi.test(process.argv[2])) {
   app.fileLaunching();

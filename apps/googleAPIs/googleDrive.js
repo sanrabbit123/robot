@@ -325,6 +325,17 @@ GoogleDrive.prototype.upload_inPython = async function (folder_id, file) {
   }
 }
 
+GoogleDrive.prototype.delete_inPython = async function (id) {
+  const instance = this;
+  const mother = this.general;
+  try {
+    let result = await mother.pythonExecute(this.pythonApp, [ "drive", "delete" ], { targetId: this.general.parsingId(id) });
+    return result.id;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
 GoogleDrive.prototype.makeFolder_inPython = async function (folderName) {
   const instance = this;
   const mother = this.general;
