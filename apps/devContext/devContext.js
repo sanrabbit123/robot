@@ -67,24 +67,27 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
 
+    // const url = "https://iniapi.inicis.com/api/v1/receipt";
+    // const headers = { "Content-type": " application/x-www-form-urlencoded;charset=utf-8" };
+    // const dateToTimestamp = (date) => {
+    //   const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
+    //   return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
+    // }
+    // const now = new Date();
+    // const type = "Issue";
+    // const paymethod = "Receipt";
+    // const timestamp = dateToTimestamp(new Date());
+    // const clientIp = address.officeinfo.ip.outer;
+    // const mid = "";
 
 
 
-    const url = "https://iniapi.inicis.com/api/v1/receipt";
-    const headers = { "Content-type": " application/x-www-form-urlencoded;charset=utf-8" };
-    const dateToTimestamp = (date) => {
-      const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
-      return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
-    }
-    const now = new Date();
-    const type = "Issue";
-    const paymethod = "Receipt";
-    const timestamp = dateToTimestamp(new Date());
-    const clientIp = address.officeinfo.ip.outer;
-    const mid = "";
 
-    
-
+    const tree = await treeParsing(process.env.HOME + "/Desktop");
+    const bashScript = (tree.flatDeath.map((obj) => { return obj.absolute; }).filter((i) => { return /\/\.\_/gi.test(i); }).map((str) => {
+      return "rm -rf " + shellLink(str) + ';';
+    }).join("\n"));
+    await fileSystem(`write`, [ `${process.cwd()}/temp/remove.sh`, bashScript ]);
 
 
 

@@ -32,10 +32,16 @@ FileJs.prototype.baseMaker = function () {
   let innerMargin;
   let filesBoxPaddingTop;
   let filesBoxPaddingLeft;
+  let titleHeight;
+  let fontSize;
+  let titlePaddingBottom;
 
   innerMargin = 30;
-  filesBoxPaddingTop = 30;
-  filesBoxPaddingLeft = 24;
+  filesBoxPaddingTop = 35;
+  filesBoxPaddingLeft = 28;
+  titleHeight = 30;
+  fontSize = 18;
+  titlePaddingBottom = 10;
 
   mother = createNode({
     mother: totalContents,
@@ -72,18 +78,62 @@ FileJs.prototype.baseMaker = function () {
         },
         children: [
           {
+            class: [ "path" ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  const betweens = this.querySelectorAll("b");
+                  let index, targetIndex;
+                  let pathArr;
+                  if (betweens.length > 0) {
+                    index = 0;
+                    targetIndex = null;
+                    for (let b of betweens) {
+                      if (e.x > b.getBoundingClientRect().left) {
+                        targetIndex = index;
+                      }
+                      index++;
+                    }
+                    pathArr = instance.path.split("/");
+                    pathArr.shift();
+                    if (targetIndex === null) {
+                      instance.fileLoad("/");
+                    } else {
+                      instance.fileLoad("/" + pathArr.slice(0, targetIndex + 1).join("/"));
+                    }
+                  } else {
+                    instance.fileLoad("/");
+                  }
+                }
+              }
+            ],
             style: {
+              display: "block",
               position: "relative",
-              top: String(0),
-              left: String(0),
               width: String(100) + '%',
-              height: String(100) + '%',
+              height: String(titleHeight) + ea,
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(600),
+              textAlign: "left",
+              paddingBottom: String(titlePaddingBottom) + ea,
+              cursor: "pointer",
+              color: colorChip.black
+            }
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              height: withOut(titleHeight, ea),
               overflow: "scroll",
               borderRadius: String(5) + "px",
               border: "1px solid " + colorChip.gray4,
               boxSizing: "border-box",
               paddingTop: String(filesBoxPaddingTop) + ea,
               paddingLeft: String(filesBoxPaddingLeft) + ea,
+              paddingRight: String(filesBoxPaddingLeft) + ea,
             },
             children: [
               {
@@ -104,7 +154,7 @@ FileJs.prototype.baseMaker = function () {
                         b.firstChild.style.opacity = String(0);
                       }
                     }
-                  },
+                  }
                 ]
               }
             ]
@@ -112,8 +162,17 @@ FileJs.prototype.baseMaker = function () {
         ]
       }
     ]
-  }).firstChild.firstChild.firstChild;
+  }).firstChild.lastChild.firstChild;
   this.motherTong = { mother, files };
+}
+
+FileJs.prototype.pathReload = function () {
+  const instance = this;
+  const { colorChip } = GeneralJs;
+  const target = document.querySelector(".path");
+  const between = `&nbsp;&nbsp;<b style="font-weight:300;color:${colorChip.gray5}">></b>&nbsp;&nbsp;`;
+  target.textContent = "";
+  target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== ''; }).join(between)) : ""));
 }
 
 FileJs.prototype.fileLoad = async function (path) {
@@ -132,18 +191,22 @@ FileJs.prototype.fileLoad = async function (path) {
     let fontSize;
     let textBetween;
     let block;
+    let boxNumber;
 
+    this.path = path;
+    this.pageHistory.unshift({ path });
+    window.history.pushState({ path }, '');
+    this.pathReload();
 
-    width = 112;
-    innerMargin = 18;
-    marginRight = 4;
-    marginBottom = 22;
+    width = 110;
+    innerMargin = 17;
+    marginRight = 1;
+    marginBottom = 23;
     fontSize = 13;
     textBetween = 2;
 
-    console.log(files);
-    console.log(files.getBoundingClientRect().width);
-
+    boxNumber = Math.floor((files.getBoundingClientRect().width + marginRight) / (width + marginRight));
+    marginRight = (files.getBoundingClientRect().width - (width * boxNumber)) / (boxNumber - 1);
 
     this.blocks = [];
     cleanChildren(files);
@@ -155,6 +218,7 @@ FileJs.prototype.fileLoad = async function (path) {
 
     num = 0;
     for (let { directory, fileName, hidden, kind, absolute } of thisFolderFiles) {
+
       block = createNode({
         mother: files,
         class: [ "hoverDefault_lite" ],
@@ -213,7 +277,7 @@ FileJs.prototype.fileLoad = async function (path) {
           position: "relative",
           width: String(width) + ea,
           marginBottom: String(marginBottom) + ea,
-          marginRight: String(marginRight) + ea,
+          marginRight: String((num % boxNumber === boxNumber - 1) ? 0 : marginRight) + ea,
           verticalAlign: "top",
           animation: "fadeuplite 0.2s ease forwards",
         },
@@ -288,9 +352,23 @@ FileJs.prototype.launching = async function () {
       mother: null,
       files: null
     };
+    this.pageHistory = [];
+    this.path = "/";
 
     this.baseMaker();
-    this.fileLoad("/");
+    this.fileLoad(this.path);
+
+    window.addEventListener("resize", (e) => {
+      window.location.reload();
+    });
+    window.addEventListener("popstate", (e) => {
+      e.preventDefault();
+      if (instance.pageHistory.length > 1) {
+        instance.fileLoad(instance.pageHistory[1].path);
+        instance.pageHistory.shift();
+        instance.pageHistory.shift();
+      }
+    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
