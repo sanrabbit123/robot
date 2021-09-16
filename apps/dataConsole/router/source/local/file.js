@@ -291,7 +291,7 @@ FileJs.prototype.fileLoad = async function (path) {
                 }).catch((err) => {
                   console.log(err);
                 });
-                window.alert("배달 요청이 완료되었습니다! 슬렉의 #file에서 배송이 도착하면 받으시면 됩니다!")
+                window.alert("배달 요청이 완료되었습니다! 슬렉의 #file에서 배송이 도착하면 받으시면 됩니다! 유효 시간은 지금부터 3시간입니다.");
               }
             }
           }
