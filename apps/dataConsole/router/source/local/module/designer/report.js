@@ -1488,12 +1488,17 @@ DesignerJs.prototype.reportDataRendering = async function (desid) {
 
 DesignerJs.prototype.reportDetailLaunching = function (desid, callback = null) {
   const instance = this;
-  const { ea, belowHeight, firstTop, motherHeight } = this;
+  const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
   const { colorChip } = GeneralJs;
   let target;
   let loading;
+
+  if (!middleMode) {
+    this.pageHistory.unshift({ path: "report", status: "list", desid });
+  }
+  window.history.pushState({ path: "report", status: "list", desid }, '');
 
   this.desid = desid;
 
@@ -1628,6 +1633,17 @@ DesignerJs.prototype.reportDetail = function (desid) {
   let mobileReportData;
   let mergeMap, callbackMap, boldMap, titleMap, widthRatio;
   let table;
+  let mobileBlock;
+  let mobileBlockPaddingTop;
+  let mobileBlockLineTop;
+  let mobileBlockLineBetween;
+  let mobileBlockTitleSize;
+  let mobileBlockTableBetween;
+  let mobileTableFontSize;
+  let mobileTableBlockHeight;
+  let mobileTableMarginBottom;
+  let mobileTableInnderMargin;
+  let baseTongPaddingTop;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -1670,6 +1686,19 @@ DesignerJs.prototype.reportDetail = function (desid) {
   offConst = 102;
 
   textAreaTop = isMac() ? -3 : -4;
+
+  baseTongPaddingTop = 2;
+
+  mobileBlockPaddingTop = 7;
+  mobileBlockLineTop = 2.4;
+  mobileBlockTitleSize = 4;
+  mobileBlockLineBetween = 3;
+  mobileBlockTableBetween = 3.5;
+
+  mobileTableFontSize = 2.8;
+  mobileTableMarginBottom = 2;
+  mobileTableBlockHeight = 8.9;
+  mobileTableInnderMargin = 1;
 
   reportData[0].children.push({
     name: "",
@@ -1851,19 +1880,30 @@ DesignerJs.prototype.reportDetail = function (desid) {
     for (let i = 0; i < mobileReportData.length; i++) {
       if (i === 0) {
         mobileReportData[i].columns = [ "고객", "평수", "제안일", "금액" ];
-        mobileReportData[i].widthRatio = [ 1, 1, 1, 1 ];
+        mobileReportData[i].widthRatio = [ 1, 1, 1, 2 ];
       } else if (i === 1) {
         mobileReportData[i].columns = [ "고객", "시작일", "종료일", "금액" ];
-        mobileReportData[i].widthRatio = [ 1, 1, 1, 1 ];
+        mobileReportData[i].widthRatio = [ 1, 1, 1, 2 ];
       } else if (i === 2) {
         mobileReportData[i].columns = [ "고객", "발행일", "홈페이지 링크" ];
-        mobileReportData[i].widthRatio = [ 1, 1, 2 ];
+        mobileReportData[i].widthRatio = [ 1, 1, 3 ];
       }
 
       mobileReportData[i].boldMap = [];
+      mobileReportData[i].callbackMap = [];
       if (mobileReportData[i].children.length > 0) {
         for (let j = 0; j < mobileReportData[i].children.length + 1; j++) {
           mobileReportData[i].boldMap.push((new Array(mobileReportData[i].children[0].length)).fill(0, 0));
+          mobileReportData[i].callbackMap.push((new Array(mobileReportData[i].children[0].length)).fill(null, 0));
+        }
+        if (i === 2) {
+          for (let j = 0; j < mobileReportData[i].callbackMap.length; j++) {
+            mobileReportData[i].callbackMap[j][mobileReportData[i].callbackMap[j].length - 1] = function (e) {
+              const target = this.firstChild.firstChild;
+              const link = target.textContent;
+              GeneralJs.blankHref(link);
+            }
+          }
         }
       }
 
@@ -1901,6 +1941,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
       height: "auto",
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
+      paddingTop: desktop ? "" : String(baseTongPaddingTop) + ea,
     }
   });
 
@@ -2246,25 +2287,57 @@ DesignerJs.prototype.reportDetail = function (desid) {
       });
     }
   } else {
-    for (let { name, children: matrix, boldMap, titleMap, widthRatio, columns } of mobileReportData) {
+    for (let { name, children: matrix, boldMap, titleMap, callbackMap, widthRatio, columns } of mobileReportData) {
       if (matrix.length > 0) {
 
-        
-
+        mobileBlock = createNode({
+          mother: baseTong,
+          style: {
+            display: "block",
+            position: "relative",
+            marginLeft: String(leftMargin) + ea,
+            width: withOut(100, leftMargin * 2, ea),
+            paddingTop: String(mobileBlockPaddingTop) + ea,
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                top: String(mobileBlockPaddingTop) + ea,
+                left: String(0),
+                height: String(mobileBlockLineTop) + ea,
+                width: String(100) + '%',
+                borderBottom: "1px dashed " + colorChip.green,
+              }
+            },
+            {
+              text: name,
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(mobileBlockTitleSize) + ea,
+                fontWeight: String(600),
+                marginBottom: String(mobileBlockTableBetween) + ea,
+                paddingRight: String(mobileBlockLineBetween) + ea,
+                background: colorChip.white,
+              }
+            }
+          ]
+        });
 
         matrix.unshift(columns);
         table = mother.makeTable(matrix, { style: {
-          width: (100 - (leftMargin * 2)) / matrix[0].length,
-          height: 9
-        }, boldMap, titleMap, widthRatio });
-        baseTong.appendChild(table);
+          width: (100 - (leftMargin * 2)) / (widthRatio.reduce((accumulator, current) => { return accumulator + current; })),
+          height: mobileTableBlockHeight,
+          size: mobileTableFontSize,
+          innerMargin: mobileTableInnderMargin,
+          innerMarginLeft: mobileTableInnderMargin
+        }, boldMap, titleMap, callbackMap, widthRatio });
+        mobileBlock.appendChild(table);
         table = baseTong.lastChild;
         table.style.position = "relative";
         table.style.display = "block";
-        table.style.left = String(leftMargin) + ea;
-
-
-
+        table.style.marginBottom = String(mobileTableMarginBottom) + ea;
 
       }
     }
@@ -2736,7 +2809,7 @@ DesignerJs.prototype.reportView = async function () {
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
     this.result = null;
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report" ];
+    this.modes = [ "checklist", "report", "request" ];
     this.mode = this.modes[1];
 
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
@@ -2801,6 +2874,21 @@ DesignerJs.prototype.reportView = async function () {
     });
 
     loading.parentNode.removeChild(loading);
+
+    this.pageHistory = [];
+    window.addEventListener("resize", (e) => {
+      window.location.reload();
+    });
+    window.addEventListener("popstate", (e) => {
+      e.preventDefault();
+      if (instance.pageHistory.length > 1) {
+        if (getObj.mode === instance.pageHistory[1].path) {
+          instance.reportDetailLaunching(instance.pageHistory[1].desid);
+          instance.pageHistory.shift();
+          instance.pageHistory.shift();
+        }
+      }
+    });
 
     //launching
     this.reportDetailLaunching(this.desid);

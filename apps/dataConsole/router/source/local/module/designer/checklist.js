@@ -1781,7 +1781,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             }
             return { "analytics.styling.fabric.curtain": target };
           },
-          height: desktop ? factorHeight : factorHeight * 1.8,
+          height: desktop ? factorHeight : factorHeight * 2.8,
           width: factorWidth,
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
@@ -2947,7 +2947,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
 
 DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null) {
   const instance = this;
-  const { ea, belowHeight, firstTop, motherHeight } = this;
+  const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
   const { scrollTo } = GeneralJs;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
@@ -2956,6 +2956,11 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
+
+  if (!middleMode) {
+    this.pageHistory.unshift({ path: "checklist", status: "list", desid });
+  }
+  window.history.pushState({ path: "checklist", status: "list", desid }, '');
 
   if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
     this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
@@ -3061,6 +3066,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   let mobileTendencyTop;
   let mobileTendencyVisualMargin;
   let mobileTendencyIntend;
+  let baseTongPaddingTop;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -3071,7 +3077,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   level1Left = <%% 160, 136, 136, 136, 0 %%>;
   topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
   leftMargin = <%% 34, 34, 34, 34, 8 %%>;
-  bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
+  bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 11 %%>;
   baseTongMarginBottom = <%% 80, 80, 80, 80, 40 %%>;
   size = <%% 16, 15, 15, 15, 3.5 %%>;
 
@@ -3090,6 +3096,8 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   mobileTendencyTop = 8;
   mobileTendencyVisualMargin = 13;
   mobileTendencyIntend = 20;
+
+  baseTongPaddingTop = 2;
 
   checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin);
 
@@ -3118,6 +3126,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
       height: "auto",
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
+      paddingTop: desktop ? "" : String(baseTongPaddingTop) + ea,
     }
   });
 
@@ -5000,7 +5009,7 @@ DesignerJs.prototype.checkListView = async function () {
 
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report" ];
+    this.modes = [ "checklist", "report", "request" ];
     this.mode = this.modes[0];
     this.result = null;
     this.searchCondition = {
@@ -5076,6 +5085,61 @@ DesignerJs.prototype.checkListView = async function () {
     });
 
     loading.parentNode.removeChild(loading);
+
+    this.pageHistory = [];
+    window.addEventListener("resize", (e) => {
+      window.location.reload();
+    });
+    window.addEventListener("popstate", (e) => {
+      let targets, targetIndex;
+      e.preventDefault();
+      if (instance.pageHistory.length > 1) {
+        if (!middleMode) {
+          if (getObj.mode === instance.pageHistory[1].path) {
+            instance.checkListDetailLaunching(instance.pageHistory[1].desid);
+            instance.pageHistory.shift();
+            instance.pageHistory.shift();
+          }
+        } else {
+
+          targets = document.querySelectorAll(".leftMenus");
+          if (instance.pageHistory[1].status === "page") {
+            if (targets[instance.pageHistory[1].index] !== undefined) {
+              targets[instance.pageHistory[1].index].click();
+            } else if (instance.menuMap[instance.pageHistory[1].index] !== undefined) {
+              instance.menuMap[instance.pageHistory[1].index].event.call(({
+                getAttribute: (index) => {
+                  return instance.pageHistory[1].index;
+                }
+              }));
+            }
+            instance.pageHistory.shift();
+            instance.pageHistory.shift();
+          } else if (instance.pageHistory[1].status === "card") {
+            targetIndex = 5;
+            if (targets[targetIndex] !== undefined) {
+              targets[targetIndex].click();
+            } else if (instance.menuMap[targetIndex] !== undefined) {
+              instance.menuMap[targetIndex].event.call(({
+                getAttribute: (index) => {
+                  return targetIndex;
+                }
+              }));
+            }
+            instance.pageHistory.shift();
+            for (let box of instance.requestBoxes) {
+              if (box.getAttribute("cliid") === instance.pageHistory[1].cliid) {
+                box.click();
+              }
+            }
+            instance.pageHistory.shift();
+            instance.pageHistory.shift();
+          }
+
+        }
+      }
+    });
+
 
     //launching
     this.checkListDetailLaunching(this.desid);

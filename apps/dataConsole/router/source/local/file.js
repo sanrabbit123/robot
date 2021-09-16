@@ -30,8 +30,12 @@ FileJs.prototype.baseMaker = function () {
   const { createNode, colorChip, withOut } = GeneralJs;
   let mother, files;
   let innerMargin;
+  let filesBoxPaddingTop;
+  let filesBoxPaddingLeft;
 
   innerMargin = 30;
+  filesBoxPaddingTop = 30;
+  filesBoxPaddingLeft = 24;
 
   mother = createNode({
     mother: totalContents,
@@ -75,6 +79,11 @@ FileJs.prototype.baseMaker = function () {
               width: String(100) + '%',
               height: String(100) + '%',
               overflow: "scroll",
+              borderRadius: String(5) + "px",
+              border: "1px solid " + colorChip.gray4,
+              boxSizing: "border-box",
+              paddingTop: String(filesBoxPaddingTop) + ea,
+              paddingLeft: String(filesBoxPaddingLeft) + ea,
             },
             children: [
               {
@@ -124,12 +133,17 @@ FileJs.prototype.fileLoad = async function (path) {
     let textBetween;
     let block;
 
-    width = 120;
+
+    width = 112;
     innerMargin = 18;
-    marginRight = 3;
+    marginRight = 4;
     marginBottom = 22;
     fontSize = 13;
     textBetween = 2;
+
+    console.log(files);
+    console.log(files.getBoundingClientRect().width);
+
 
     this.blocks = [];
     cleanChildren(files);

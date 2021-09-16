@@ -54,17 +54,20 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
   const mother = totalMother.firstChild;
   const mobile = media[4];
   const desktop = !mobile;
+  const menuClassName = "leftMenus";
   const colorFunc = function () {
-    const doms = document.querySelectorAll(".leftTitles");
-    const menus = document.querySelectorAll(".leftMenus");
-    for (let dom of doms) {
-      dom.style.color = (dom === this.children[1]) ? colorChip.green : colorChip.black;
-    }
-    for (let dom of menus) {
-      if (dom === this) {
-        dom.setAttribute("toggle", "on");
-      } else {
-        dom.setAttribute("toggle", "off");
+    if (this.children !== undefined) {
+      const doms = document.querySelectorAll(".leftTitles");
+      const menus = document.querySelectorAll("." + menuClassName);
+      for (let dom of doms) {
+        dom.style.color = (dom === this.children[1]) ? colorChip.green : colorChip.black;
+      }
+      for (let dom of menus) {
+        if (dom === this) {
+          dom.setAttribute("toggle", "on");
+        } else {
+          dom.setAttribute("toggle", "off");
+        }
       }
     }
   }
@@ -75,6 +78,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         if (instance.mode === modes[0]) {
           scrollTo(document.querySelector(".totalMother"), 0);
         } else {
@@ -92,6 +96,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 4,
       mobile: true,
       event: function (e) {
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[0]) {
           scrollTo(document.querySelector(".totalMother"), blocks[4]);
@@ -111,6 +116,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 5,
       mobile: true,
       event: function (e) {
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[0]) {
           scrollTo(document.querySelector(".totalMother"), blocks[5]);
@@ -128,8 +134,9 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       title: "정산 정보",
       mode: modes[1],
       position: 0,
-      mobile: false,
+      mobile: true,
       event: function (e) {
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         if (instance.mode === modes[1]) {
           scrollTo(document.querySelector(".totalMother"), 0);
         } else {
@@ -145,15 +152,16 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       title: "컨텐츠 정보",
       mode: modes[0],
       position: 3,
-      mobile: false,
+      mobile: true,
       event: function (e) {
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[1]) {
-          scrollTo(document.querySelector(".totalMother"), blocks[3]);
+          scrollTo(document.querySelector(".totalMother"), blocks[blocks.length - 1]);
         } else {
           instance.reportDetailLaunching(desid, () => {
             const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-            scrollTo(document.querySelector(".totalMother"), blocks[3]);
+            scrollTo(document.querySelector(".totalMother"), blocks[blocks.length - 1]);
           });
         }
         instance.mode = modes[1];
@@ -166,18 +174,16 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
-        if (instance.mode === modes[2]) {
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
+        instance.requestDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
-        } else {
-          instance.requestDetailLaunching(desid, () => {
-            scrollTo(document.querySelector(".totalMother"), 0);
-          });
-        }
+        });
         instance.mode = modes[2];
         colorFunc.call(this);
       },
     },
   ];
+  this.menuMap = menuMap;
   let margin;
   let size;
   let barHeight;
@@ -207,6 +213,8 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
 
   cleanChildren(mother);
 
+  this.pageHistory.unshift({ index: 0, status: "page" });
+
   if (desktop) {
 
     margin = <%% 40, 35, 35, 35, 35 %%>;
@@ -221,9 +229,11 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
     menu = [];
     for (let i = 0; i < menuMap.length; i++) {
       menu.push({
-        class: [ "hoverDefault", "leftMenus" ],
+        class: [ "hoverDefault", menuClassName ],
         attribute: [
-          { toggle: (i === 0) ? "on" : "off" }
+          { toggle: (i === 0) ? "on" : "off" },
+          { index: String(i) },
+          { mode: menuMap[i].mode }
         ],
         events: [
           {
@@ -439,23 +449,28 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         this.appendChild(mobileNavigator);
 
         menus = mobileNavigator.children;
-        for (let m of menus) {
-          m.addEventListener("click", function (e) {
-            e.stopPropagation();
-            const mode = this.getAttribute("mode");
+
+        for (let z = 0; z < menus.length; z++) {
+          menus[z].setAttribute("mode", menuMap[z].mode);
+          menus[z].setAttribute("index", String(z));
+          menus[z].classList.add(menuClassName);
+          menus[z].addEventListener("click", function (e) {
+            const index = Number(this.getAttribute("index"));
             const position = Number(this.getAttribute("position"));
             const naviHeight = Number(this.getAttribute("naviHeight"));
-            const blocks = document.querySelector(".mainBaseTong").firstChild.children;
-            if (instance.mode === mode) {
-              scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
-            } else {
+            let blocks;
+
+            blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            menuMap[index].event.call(this, e);
+            if (position !== 0 && blocks[position] !== undefined) {
               scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
             }
-            instance.mode = mode;
+
             self.removeChild(document.getElementById(id1));
             self.removeChild(document.getElementById(id0));
           });
         }
+
       }
     }
 
@@ -799,11 +814,36 @@ DesignerConsoleJs.prototype.consoleView = async function () {
   const { ea, desid, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, colorChip, withOut, scrollTo } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, scrollTo, returnGet } = GeneralJs;
   try {
+    const getObj = returnGet();
+    let targetIndex;
+
     await this.checkListView();
     this.checkListDetailLaunching(desid);
     this.navigatorLaunching();
+
+    if (this.menuMap !== undefined && getObj.mode !== undefined && getObj.cliid !== undefined) {
+      targetIndex = null;
+      for (let i = 0; i < this.menuMap.length; i++) {
+        if (this.menuMap[i].mode === getObj.mode.trim()) {
+          targetIndex = i;
+        }
+      }
+      if (targetIndex !== null) {
+        this.menuMap[targetIndex].event.call(({
+          getAttribute: (index) => {
+            return targetIndex;
+          }
+        }));
+        for (let box of this.requestBoxes) {
+          if (box.getAttribute("cliid") === getObj.cliid.trim()) {
+            box.click();
+          }
+        }
+      }
+    }
+
   } catch (e) {
     console.log(e);
   }

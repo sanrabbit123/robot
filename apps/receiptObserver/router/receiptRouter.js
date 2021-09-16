@@ -672,7 +672,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -917,7 +917,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount) : " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount) : " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({ "Content-Type": "text/plain" });
       res.send("FAIL");
       console.log(e);
@@ -948,7 +948,7 @@ ReceiptRouter.prototype.rou_post_designerSelect = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerSelect): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerSelect): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -985,7 +985,7 @@ ReceiptRouter.prototype.rou_post_travelInjection = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelInjection): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelInjection): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1022,7 +1022,7 @@ ReceiptRouter.prototype.rou_post_travelEjection = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelEjection): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelEjection): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1060,7 +1060,7 @@ ReceiptRouter.prototype.rou_post_travelReconfig = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelEjection): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelEjection): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1211,7 +1211,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
 
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1347,7 +1347,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerConverting): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerConverting): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1387,7 +1387,7 @@ ReceiptRouter.prototype.rou_post_amountConverting = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_amountConverting): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_amountConverting): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1500,7 +1500,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       });
       res.send(JSON.stringify(report));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1579,7 +1579,7 @@ ReceiptRouter.prototype.rou_post_contractCancel = function () {
       });
       res.send(JSON.stringify(report));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_contractCancel): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_contractCancel): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1609,7 +1609,7 @@ ReceiptRouter.prototype.rou_post_returnBankCode = function () {
       });
       res.send(JSON.stringify(bankCode));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1675,7 +1675,7 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
         res.send(JSON.stringify({ calculate }));
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerCalculation): " + e.message, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerCalculation): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
