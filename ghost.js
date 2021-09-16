@@ -1245,7 +1245,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         let zipLink;
         let text;
         let folderName;
-        let shareName;
         let tempArr;
         let command;
 
