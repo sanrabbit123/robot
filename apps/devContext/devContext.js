@@ -84,8 +84,16 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // const tree = await treeParsing(process.env.HOME + "/samba");
+    // const bashScript = (tree.flatDeath.map((obj) => { return obj.absolute; }).filter((i) => { return /\/\.\_/gi.test(i); }).map((str) => {
+    //   return "rm -rf " + shellLink(str) + ';';
+    // }).join("\n"));
+    // await fileSystem(`write`, [ `${process.cwd()}/temp/remove.sh`, bashScript ]);
+
+
+
+
     // let updateQuery;
-    //
     // updateQuery = {};
     // updateQuery["checklist"] = {
     //   analytics: {
@@ -108,18 +116,14 @@ DevContext.prototype.launching = async function () {
     //     send: [],
     //   },
     // };
-    //
     // const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
     // await MONGOC.connect();
-    //
     // const rows = await MONGOC.db(`miro81`).collection(`designerHistory`).find({}).toArray();
     // let d, result;
-    //
     // for (let { desid } of rows) {
     //   await MONGOC.db(`miro81`).collection(`designerHistory`).updateMany({ desid }, { $set: updateQuery });
     //   console.log(desid);
     // }
-    //
     // await MONGOC.close();
 
 
