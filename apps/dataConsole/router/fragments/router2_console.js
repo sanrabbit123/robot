@@ -3398,7 +3398,7 @@ DataRouter.prototype.rou_post_ghostPass = function () {
   const address = this.address;
   const { ghostRequest, equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/ghostPass_clientPhoto", "/ghostPass_photoParsing", "/ghostPass_listFiles" ];
+  obj.link = [ "/ghostPass_clientPhoto", "/ghostPass_photoParsing", "/ghostPass_listFiles", "/ghostPass_deliveryFiles" ];
   obj.func = async function (req, res) {
     try {
       const url = req.url.replace(/^\//gi, '');

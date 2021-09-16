@@ -1967,16 +1967,22 @@ GeneralJs.prototype.greenBar = function () {
     div_clone.insertAdjacentHTML(`beforeend`, this.returnCircle("right:" + String(start + (margin * i)) + ea, colors[i]));
   }
 
-  div_clone.lastChild.addEventListener("click", function (e) {
-    if (!GeneralJs.stacks["dashboardBoxBoo"]) {
-      instance.dashboardBox();
-    } else {
-      instance.below.removeChild(GeneralJs.stacks["dashboardBoxMother"]);
-      GeneralJs.stacks["dashboardBoxBoo"] = false;
-      GeneralJs.stacks["dashboardBox"] = null;
-      GeneralJs.stacks["dashboardBoxMother"] = null;
-    }
-  });
+  for (let dom of div_clone.children) {
+    dom.lastChild.addEventListener("click", function (e) {
+      if (GeneralJs.colorMode === "light") {
+        GeneralJs.colorChip = JSON.parse(JSON.stringify(GeneralJs.colorSet.dark));
+        GeneralJs.colorMode = "dark";
+        window.localStorage.setItem("colorChip", JSON.stringify(GeneralJs.colorChip));
+        window.localStorage.setItem("colorMode", GeneralJs.colorMode);
+      } else {
+        GeneralJs.colorChip = JSON.parse(JSON.stringify(GeneralJs.colorSet.light));
+        GeneralJs.colorMode = "light";
+        window.localStorage.setItem("colorChip", JSON.stringify(GeneralJs.colorChip));
+        window.localStorage.setItem("colorMode", GeneralJs.colorMode);
+      }
+      window.location.reload();
+    });
+  }
 
   //arrow - left
   move = 300;
@@ -2265,18 +2271,7 @@ GeneralJs.prototype.greenBar = function () {
     svg_icon.style[i] = additionalStyle[i];
   }
   svg_icon.addEventListener("click", function (e) {
-    if (GeneralJs.colorMode === "light") {
-      GeneralJs.colorChip = JSON.parse(JSON.stringify(GeneralJs.colorSet.dark));
-      GeneralJs.colorMode = "dark";
-      window.localStorage.setItem("colorChip", JSON.stringify(GeneralJs.colorChip));
-      window.localStorage.setItem("colorMode", GeneralJs.colorMode);
-    } else {
-      GeneralJs.colorChip = JSON.parse(JSON.stringify(GeneralJs.colorSet.light));
-      GeneralJs.colorMode = "light";
-      window.localStorage.setItem("colorChip", JSON.stringify(GeneralJs.colorChip));
-      window.localStorage.setItem("colorMode", GeneralJs.colorMode);
-    }
-    window.location.reload();
+    window.location.href = window.location.protocol + "//" + window.location.host + "/file";
   });
   this.belowButtons.sub.folder = svg_icon;
   div_clone.appendChild(svg_icon);

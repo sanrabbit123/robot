@@ -224,7 +224,8 @@ FileJs.prototype.fileLoad = async function (path) {
         class: [ "hoverDefault_lite" ],
         attribute: [
           { absolute },
-          { directory: directory ? "true" : "false" }
+          { directory: directory ? "true" : "false" }.
+          { toggle: "off" },
         ],
         events: [
           {
@@ -236,8 +237,10 @@ FileJs.prototype.fileLoad = async function (path) {
               for (let b of blocks) {
                 if (b === this) {
                   b.firstChild.style.opacity = String(1);
+                  b.setAttribute("toggle", "on");
                 } else {
                   b.firstChild.style.opacity = String(0);
+                  b.setAttribute("toggle", "off");
                 }
               }
             }
@@ -269,6 +272,27 @@ FileJs.prototype.fileLoad = async function (path) {
             event: (e) => {
               e.preventDefault();
               e.stopPropagation();
+            }
+          },
+          {
+            type: "contextmenu",
+            event: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              const absolute = this.getAttribute("absolute");
+              const directory = this.getAttribute("directory") === "true";
+              if (window.confirm("다운로드를 진행할까요?")) {
+                let type;
+                let files;
+                files = [];
+                files.push({ absolute, type: (directory ? "folder" : "file") });
+                GeneralJs.ajaxJson({ files }, "/ghostPass_deliveryFiles").then((obj) => {
+                  console.log(obj);
+                }).catch((err) => {
+                  console.log(err);
+                });
+                window.alert("배달 요청이 완료되었습니다! 슬렉의 #general에서 배송이 도착하면 받으시면 됩니다!")
+              }
             }
           }
         ],

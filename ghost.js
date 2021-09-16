@@ -1215,6 +1215,72 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - file delivery
+  funcObj.post_deliveryFiles = {
+    link: [ "/deliveryFiles" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (!Array.isArray(req.body.files)) {
+          throw new Error("invaild post");
+        }
+        const targetFolder = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
+        const googleDrive = instance.mother.googleSystem("drive");
+        const { files } = equalJson(req.body);
+        if (!files.every((i) => { return typeof i === "object" })) {
+          throw new Error("invaild post");
+        }
+        if (!files.every((i) => { return (typeof i.absolute === "string") && (i.type === "folder" || i.type === "file"); })) {
+          throw new Error("invaild post");
+        }
+        const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
+        const tempFolderName = "temp";
+        let shareName;
+        let zipId;
+        let zipLink;
+        let text;
+        let folderName;
+        let shareName;
+        let tempArr;
+        let command;
+
+        if (!homeFolder.includes(tempFolderName)) {
+          shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
+        }
+
+        shareName = "delivery_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)) + "_" + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
+        command = `zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`;
+        for (let { absolute, type } of files) {
+          command += " ";
+          if (type === "folder") {
+            command += shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, '')) + "/*";
+          } else {
+            command += shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''));
+          }
+        }
+        shell.exec(command, { async: true }, async (code, stdout, stderr) => {
+          try {
+            zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+            zipLink = await googleDrive.read_webView_inPython(zipId);
+            shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+            text = "파일 배달이 완료되었습니다! : " + zipLink;
+            instance.mother.slack_bot.chat.postMessage({ text, channel: "#general" });
+          } catch (e) {
+            console.log(e);
+          }
+        });
+        res.send(JSON.stringify({ message: "will done" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //POST - pwd
   funcObj.post_pwd = {
     link: [ "/pwd" ],
