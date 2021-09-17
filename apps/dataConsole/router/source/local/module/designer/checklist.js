@@ -236,7 +236,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             updateQuery["information.business.career.relatedY"] = relatedY;
                                             updateQuery["information.business.career.relatedM"] = relatedM;
                                             text = `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월`;
-                                            if (window.confirm("수정이 확실합니까?") || instance.middleMode) {
+                                            if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
                                               await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                               await ajaxJson({
                                                 mode: "sse",
@@ -393,7 +393,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             updateQuery["information.business.career.startY"] = startY;
                                             updateQuery["information.business.career.startM"] = startM;
                                             text = `스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
-                                            if (window.confirm("수정이 확실합니까?") || instance.middleMode) {
+                                            if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
                                               await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                               await ajaxJson({
                                                 mode: "sse",
@@ -3330,7 +3330,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                   const designer = instance.designers.pick(desid);
                                   const whereQuery = { desid };
                                   const { updateQuery, text } = checkListData[x].children[y].update(this.value, designer);
-                                  const confirm = window.confirm("수정이 확실합니까?") || instance.middleMode;
+                                  const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
                                   if (updateQuery === "error" || !confirm) {
                                     this.value = this.getAttribute("past");
                                   } else {
@@ -3437,7 +3437,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                     let anothers, resultArr;
                     let whereQuery, updateQuery;
 
-                    if (window.confirm("수정이 확실합니까?") || instance.middleMode) {
+                    if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
                       anothers = [];
                       for (let dom of thisButtons) {
                         if (this !== dom) {
@@ -3563,7 +3563,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       const designer = instance.designers.pick(desid);
                       let whereQuery, updateQuery;
 
-                      if (window.confirm("수정이 확실합니까?") || instance.middleMode) {
+                      if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
                         for (let i = 0; i < thisButtons.length; i++) {
                           if (i <= t) {
                             thisButtons[i].setAttribute("toggle", String(1));
@@ -3687,7 +3687,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       const designer = instance.designers.pick(desid);
                       const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
                       const whereQuery = { desid };
-                      const confirm = window.confirm("수정이 확실합니까?") || instance.middleMode;
+                      const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
                       if (updateQuery === "error" || !confirm) {
                         this.value = this.getAttribute("past");
                       } else {
@@ -3949,29 +3949,6 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   const mobile = this.media[4];
   const desktop = !mobile;
   const designer = this.designers.pick(desid);
-  const expiredStringReturn = function () {
-    const today = new Date();
-    const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
-    let expiredString = '';
-    if (today.getDay() !== 5 && today.getDay() !== 6) {
-      today.setDate(today.getDate() + 1);
-    } else {
-      if (today.getDay() === 5) {
-        today.setDate(today.getDate() + 3);
-      } else {
-        today.setDate(today.getDate() + 2);
-      }
-    }
-    expiredString += String(today.getMonth() + 1) + "월";
-    expiredString += " ";
-    expiredString += String(today.getDate()) + "일";
-    expiredString += " ";
-    expiredString += dayArr[today.getDay()] + "요일";
-    expiredString += " ";
-    expiredString += String(12) + "시";
-
-    return expiredString;
-  }
   let mother;
   let radius;
   let left, bottom;
@@ -4311,51 +4288,29 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   });
 
   aInitialIcon.addEventListener("click", function (e) {
-    const expiredString = expiredStringReturn();
-    if (window.confirm(designer.designer + " 디자이너님에게 알림톡을 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
+    if (window.confirm(designer.designer + " 디자이너님에게 디자이너 콘솔 알림톡을 전송합니다. 확실합니까?")) {
       GeneralJs.ajaxJson({
-        method: "designerCheckList",
+        method: "designerConsole",
         name: designer.designer,
         phone: designer.information.phone,
         option: {
-          date: expiredString,
-          desid: desid,
-          host: "ADDRESS[homeinfo(ghost)]"
+          desid: designer.desid,
+          designer: designer.designer,
+          host: GHOSTHOST,
+          path: "console",
         }
-      }, "/alimTalk").then((json) => {
-        let middleDate, deadDate;
-        if (json.message !== "success") {
-          throw new Error("alimTalk error");
-        } else {
-          instance.mother.greenAlert("알림톡이 전송되었습니다!");
-        }
+      }, "/alimTalk").then(() => {
+        return GeneralJs.ajaxJson({
+          page: "checklist",
+          mode: "send",
+          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          desid: designer.desid,
+        }, "/ghostDesigner_updateAnalytics");
+      }).then(() => {
+        instance.mother.greenAlert("알림톡이 전송되었습니다!");
       }).catch((err) => {
         console.log(err);
       });
-    } else {
-      instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
-    }
-  });
-
-  aInitialIcon.addEventListener("contextmenu", async function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const expiredString = expiredStringReturn();
-    if (window.confirm("모든 디자이너들에게 알림톡을 모두 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
-
-      const targetDesigners = instance.designers.returnFriendDesigners();
-      for (let d of targetDesigners) {
-        await GeneralJs.ajaxJson({
-          method: "designerCheckList",
-          name: d.designer,
-          phone: d.information.phone,
-          option: {
-            date: expiredString,
-            desid: d.desid,
-            host: "ADDRESS[homeinfo(ghost)]"
-          }
-        }, "/alimTalk");
-      }
     } else {
       instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
     }
@@ -4389,6 +4344,7 @@ DesignerJs.prototype.checkListSseParsing = function (orders) {
         if (targetDom !== null && targetDom !== undefined) {
           if (type === "string") {
             targetDom.removeChild(targetDom.firstChild);
+            targetDom.textContent = "";
             targetDom.insertAdjacentHTML("beforeend", value);
           } else if (type === "matrix") {
             const children = targetDom.children;

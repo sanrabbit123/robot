@@ -342,6 +342,8 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   const cliid = project.cliid;
   const blocks = mother.children;
   this.proid = null;
+  this.project = null;
+  this.client = null;
   return async function (e) {
     try {
       const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
@@ -623,6 +625,8 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     }
   ];
   this.proid = proid;
+  this.client = client;
+  this.project = project;
   try {
     const divToInput = function (position) {
       return async function (e) {
@@ -2181,29 +2185,6 @@ DesignerJs.prototype.requestIconSet = function (desid) {
   const mobile = this.media[4];
   const desktop = !mobile;
   const designer = this.designers.pick(desid);
-  const expiredStringReturn = function () {
-    const today = new Date();
-    const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
-    let expiredString = '';
-    if (today.getDay() !== 5 && today.getDay() !== 6) {
-      today.setDate(today.getDate() + 1);
-    } else {
-      if (today.getDay() === 5) {
-        today.setDate(today.getDate() + 3);
-      } else {
-        today.setDate(today.getDate() + 2);
-      }
-    }
-    expiredString += String(today.getMonth() + 1) + "월";
-    expiredString += " ";
-    expiredString += String(today.getDate()) + "일";
-    expiredString += " ";
-    expiredString += dayArr[today.getDay()] + "요일";
-    expiredString += " ";
-    expiredString += String(12) + "시";
-
-    return expiredString;
-  }
   let mother;
   let radius;
   let left, bottom;
@@ -2539,53 +2520,63 @@ DesignerJs.prototype.requestIconSet = function (desid) {
   });
 
   aInitialIcon.addEventListener("click", function (e) {
-    const expiredString = expiredStringReturn();
-    if (window.confirm(designer.designer + " 디자이너님에게 알림톡을 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
-      GeneralJs.ajaxJson({
-        method: "designerCheckList",
-        name: designer.designer,
-        phone: designer.information.phone,
-        option: {
-          date: expiredString,
-          desid: desid,
-          host: "ADDRESS[homeinfo(ghost)]"
-        }
-      }, "/alimTalk").then((json) => {
-        let middleDate, deadDate;
-        if (json.message !== "success") {
-          throw new Error("alimTalk error");
-        } else {
-          instance.mother.greenAlert("알림톡이 전송되었습니다!");
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
-    } else {
-      instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
-    }
-  });
-
-  aInitialIcon.addEventListener("contextmenu", async function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const expiredString = expiredStringReturn();
-    if (window.confirm("모든 디자이너들에게 알림톡을 모두 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
-
-      const targetDesigners = instance.designers.returnFriendDesigners();
-      for (let d of targetDesigners) {
-        await GeneralJs.ajaxJson({
-          method: "designerCheckList",
-          name: d.designer,
-          phone: d.information.phone,
+    if (instance.proid === null) {
+      if (window.confirm(designer.designer + " 디자이너님에게 디자이너 콘솔 알림톡을 전송합니다. 확실합니까?")) {
+        GeneralJs.ajaxJson({
+          method: "designerConsole",
+          name: designer.designer,
+          phone: designer.information.phone,
           option: {
-            date: expiredString,
-            desid: d.desid,
-            host: "ADDRESS[homeinfo(ghost)]"
+            desid: designer.desid,
+            designer: designer.designer,
+            host: GHOSTHOST,
+            path: "console",
           }
-        }, "/alimTalk");
+        }, "/alimTalk").then(() => {
+          return GeneralJs.ajaxJson({
+            page: "request",
+            mode: "send",
+            who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            desid: designer.desid,
+          }, "/ghostDesigner_updateAnalytics");
+        }).then(() => {
+          instance.mother.greenAlert("알림톡이 전송되었습니다!");
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else {
+        instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
       }
     } else {
-      instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
+      if (window.confirm(designer.designer + " 디자이너님에게 " + instance.client.name + " 고객님 홈스타일링 의뢰서 알림톡을 전송합니다. 확실합니까?")) {
+        GeneralJs.ajaxJson({
+          method: "designerConsoleRequest",
+          name: designer.designer,
+          phone: designer.information.phone,
+          option: {
+            desid: designer.desid,
+            designer: designer.designer,
+            client: instance.client.name,
+            host: GHOSTHOST,
+            path: "console",
+            mode: "request",
+            cliid: instance.client.cliid,
+          }
+        }, "/alimTalk").then(() => {
+          return GeneralJs.ajaxJson({
+            page: "request",
+            mode: "send",
+            who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            desid: designer.desid,
+          }, "/ghostDesigner_updateAnalytics");
+        }).then(() => {
+          instance.mother.greenAlert("알림톡이 전송되었습니다!");
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else {
+        instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
+      }
     }
   });
 
@@ -2727,6 +2718,8 @@ DesignerJs.prototype.requestView = async function () {
 
     //launching
     this.proid = null;
+    this.project = null;
+    this.client = null;
     this.requestBoxes = [];
     this.requestDetailLaunching(this.desid);
 

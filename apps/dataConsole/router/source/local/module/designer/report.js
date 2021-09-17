@@ -2686,45 +2686,28 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   });
 
   aInitialIcon.addEventListener("click", function (e) {
-    const today = new Date();
-    const dayArr = [ '일', '월', '화', '수', '목', '금', '토' ];
-    let expiredString = '';
-
-    if (today.getDay() !== 0 && today.getDay() !== 6) {
-      //pyeong-day
-      today.setDate(today.getDate() + 7);
-    } else {
-      if (today.getDay() !== 0) {
-        //saturday
-        today.setDate(today.getDate() + 9);
-      } else {
-        //sunday
-        today.setDate(today.getDate() + 8);
-      }
-    }
-
-    expiredString += String(today.getMonth() + 1) + "월";
-    expiredString += " ";
-    expiredString += String(today.getDate()) + "일";
-    expiredString += " ";
-    expiredString += dayArr[today.getDay()] + "요일";
-    expiredString += " ";
-    expiredString += String(14) + "시";
-
-    if (window.confirm(designer.designer + " 디자이너님에게 알림톡을 전송합니다. 확실합니까?\n메세지에 기입될 마감 기한 => " + expiredString)) {
-      GeneralJs.ajax("method=designerCheckList&name=" + designer.designer + "&phone=" + designer.information.phone + "&option=" + JSON.stringify({ date: expiredString, desid: desid, host: "ADDRESS[homeinfo(ghost)]" }), "/alimTalk", function (rawJson) {
-        let middleDate, deadDate;
-        if (JSON.parse(rawJson).message !== "success") {
-          throw new Error("alimTalk error");
-        } else {
-          instance.mother.greenAlert("알림톡이 전송되었습니다!");
-          //set deadline
-          middleDate = new Date();
-          middleDate.setHours(middleDate.getHours() + 8);
-          deadDate = new Date();
-          deadDate.setDate(deadDate.getDate() + 9);
-          GeneralJs.ajax("json=" + JSON.stringify({ deadline: deadDate, middleline: middleDate, name: "designerCheckList_" + desid, mode: "set" }), "/manageDeadline", function (res) {});
+    if (window.confirm(designer.designer + " 디자이너님에게 디자이너 콘솔 알림톡을 전송합니다. 확실합니까?")) {
+      GeneralJs.ajaxJson({
+        method: "designerConsole",
+        name: designer.designer,
+        phone: designer.information.phone,
+        option: {
+          desid: designer.desid,
+          designer: designer.designer,
+          host: GHOSTHOST,
+          path: "console",
         }
+      }, "/alimTalk").then(() => {
+        return GeneralJs.ajaxJson({
+          page: "report",
+          mode: "send",
+          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          desid: designer.desid,
+        }, "/ghostDesigner_updateAnalytics");
+      }).then(() => {
+        instance.mother.greenAlert("알림톡이 전송되었습니다!");
+      }).catch((err) => {
+        console.log(err);
       });
     } else {
       instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
