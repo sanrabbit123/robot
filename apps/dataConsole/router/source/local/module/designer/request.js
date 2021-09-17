@@ -1,10 +1,9 @@
 DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) {
   const instance = this;
   const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
-  const { scrollTo } = GeneralJs;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
-  const { colorChip } = GeneralJs;
+  const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target, pastScrollTop;
 
   if (!middleMode) {
@@ -72,6 +71,19 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
         standardBar.parentElement.scrollTo({ top: 0 });
       }
     }
+  }
+
+  if (middleMode) {
+    ajaxJson({
+      page: "request",
+      mode: "page",
+      who: instance.designer.information.phone,
+      desid,
+    }, "/ghostDesigner_updateAnalytics").then((message) => {
+      console.log(message);
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
   this.requestList(desid);

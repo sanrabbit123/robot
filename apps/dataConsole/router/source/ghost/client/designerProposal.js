@@ -3037,7 +3037,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   let buttonTong, buttonHeight, buttonTongHeight;
   let buttonOff = {}, buttonOn = {};
   let finalBottom;
-  let tempBlock, tempChild, tempDom;
+  let tempBlock, tempChild, tempDom, tempTitle;
   let whiteBlockHeight, whiteBlockMargin, whiteBlockPaddingTop, whiteBlockPaddingLeft, whiteBlockVisual;
   let methodsTongTop, methodsTongBottom, methodsTongLeft, methodsBlockBottom;
   let methodsTitleWidth;
@@ -3056,6 +3056,9 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   let processBlockPaddingBottom;
   let processThirdBlockBottom;
   let amountTextVisual, amountTextTop;
+  let mobileAllViewBottom, mobileAllViewRight;
+  let mobileAllViewInitialHeight;
+  let mobileAllViewClassNameService, mobileAllViewClassNameProcess;
 
   top = <%% topMargin - 2, topMargin - 2, topMargin - 2, topMargin - 2, 5 %%>;
   bottom = <%% topMargin - 3, topMargin - 3, topMargin - 2, topMargin - 2, 4 %%>;
@@ -3129,6 +3132,13 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
 
   amountTextVisual = <%% 3, 3, 3, 3, 0.8 %%>;
   amountTextTop = <%% 20, 20, 20, 18, 0.1 %%>;
+
+  mobileAllViewBottom = 0.3;
+  mobileAllViewRight = 0.3;
+  mobileAllViewInitialHeight = 20;
+
+  mobileAllViewClassNameService = "mobileAllViewClassNameService";
+  mobileAllViewClassNameProcess = "mobileAllViewClassNameProcess";
 
   [ whiteBlock, wordsTable ] = createNodes([
     {
@@ -3391,7 +3401,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
       }
     });
 
-    createNode({
+    tempTitle = createNode({
       mother: tempBlock,
       text: serviceObj.methods.name,
       style: {
@@ -3409,8 +3419,38 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
         fontWeight: String(600),
         textAlign: "left",
         color: colorChip.black,
+        cursor: "pointer",
       }
     });
+
+    if (mobile) {
+      createNode({
+        mother: tempTitle,
+        text: "전체 보기",
+        style: {
+          fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
+          position: "absolute",
+          bottom: String(mobileAllViewBottom) + ea,
+          right: String(mobileAllViewRight) + ea,
+          fontWeight: String(400),
+          color: colorChip.green,
+        }
+      });
+      tempTitle.addEventListener("click", function (e) {
+        const target = document.querySelector('.' + mobileAllViewClassNameService);
+        const toggle = target.getAttribute("toggle");
+        const height = target.getAttribute("height");
+        if (toggle === "off") {
+          target.style.overflow = "";
+          target.style.height = "auto";
+          target.setAttribute("toggle", "on");
+        } else {
+          target.style.overflow = "hidden";
+          target.style.height = height;
+          target.setAttribute("toggle", "off");
+        }
+      });
+    }
 
     if (desktop) {
       createNode({
@@ -3436,6 +3476,11 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
     [ grayTong, grayTextTong ] = createNodes([
       {
         mother: tempBlock,
+        attribute: [
+          { toggle: "off" },
+          { height: String(mobileAllViewInitialHeight) + ea }
+        ],
+        class: [ mobileAllViewClassNameService ],
         style: {
           display: desktop ? "inline-block" : "block",
           position: "relative",
@@ -3459,6 +3504,11 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
         }
       },
     ]);
+
+    if (mobile) {
+      grayTong.style.overflow = "hidden";
+      grayTong.style.height = String(mobileAllViewInitialHeight) + ea;
+    }
 
     for (let i = 0; i < serviceObj.methods.contents.length; i++) {
       tempChild = createNode({
@@ -3570,7 +3620,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
     }
   });
 
-  createNode({
+  tempTitle = createNode({
     mother: tempBlock,
     text: serviceObj.process.name,
     style: {
@@ -3588,8 +3638,38 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
       fontWeight: String(600),
       textAlign: "left",
       color: colorChip.black,
+      cursor: "pointer",
     }
   });
+
+  if (mobile) {
+    createNode({
+      mother: tempTitle,
+      text: "전체 보기",
+      style: {
+        fontSize: String(wordSize - methodsTextVisual - amountTextVisual) + ea,
+        position: "absolute",
+        bottom: String(mobileAllViewBottom) + ea,
+        right: String(mobileAllViewRight) + ea,
+        fontWeight: String(400),
+        color: colorChip.green,
+      }
+    });
+    tempTitle.addEventListener("click", function (e) {
+      const target = document.querySelector('.' + mobileAllViewClassNameProcess);
+      const toggle = target.getAttribute("toggle");
+      const height = target.getAttribute("height");
+      if (toggle === "off") {
+        target.style.overflow = "";
+        target.style.height = "auto";
+        target.setAttribute("toggle", "on");
+      } else {
+        target.style.overflow = "hidden";
+        target.style.height = height;
+        target.setAttribute("toggle", "off");
+      }
+    });
+  }
 
   if (desktop) {
     createNode({
@@ -3615,6 +3695,11 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
   [ grayTong, grayTextTong ] = createNodes([
     {
       mother: tempBlock,
+      attribute: [
+        { toggle: "off" },
+        { height: String(mobileAllViewInitialHeight) + ea }
+      ],
+      class: [ mobileAllViewClassNameProcess ],
       style: {
         display: desktop ? "inline-block" : "block",
         position: "relative",
@@ -3638,6 +3723,11 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
       }
     },
   ]);
+
+  if (mobile) {
+    grayTong.style.overflow = "hidden";
+    grayTong.style.height = String(mobileAllViewInitialHeight) + ea;
+  }
 
   for (let i = 0; i < serviceObj.process.contents.length; i++) {
     tempChild = createNode({

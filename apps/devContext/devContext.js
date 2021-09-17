@@ -96,25 +96,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const MONGOC = this.MONGOCONSOLEC;
-    const collection = "designerHistory";
-    const db = "miro81";
-    let whereQuery, updateQuery;
-    await MONGOC.connect();
-    const rows = await MONGOC.db(db).collection(collection).find({}).toArray();
-    for (let { desid } of rows) {
-      whereQuery = { desid };
-      updateQuery = {};
-      updateQuery["request"] = {
-        analytics: {
-          page: [],
-          send: [],
-        }
-      };
-      await MONGOC.db(db).collection(collection).updateMany(whereQuery, { $set: updateQuery });
-      console.log(whereQuery);
-    }
-    await MONGOC.close();
 
 
 

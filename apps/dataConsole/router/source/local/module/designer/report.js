@@ -1491,7 +1491,7 @@ DesignerJs.prototype.reportDetailLaunching = function (desid, callback = null) {
   const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
   const totalMother = document.querySelector(".totalMother");
   const standardBar = this.standardDoms[0].parentElement;
-  const { colorChip } = GeneralJs;
+  const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target;
   let loading;
 
@@ -1559,6 +1559,19 @@ DesignerJs.prototype.reportDetailLaunching = function (desid, callback = null) {
         standardBar.parentElement.scrollTo({ top: 0 });
       }
     }
+  }
+
+  if (middleMode) {
+    ajaxJson({
+      page: "report",
+      mode: "page",
+      who: instance.designer.information.phone,
+      desid,
+    }, "/ghostDesigner_updateAnalytics").then((message) => {
+      console.log(message);
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
   totalMother.scrollTo({ top: 0, behavior: "smooth" });
