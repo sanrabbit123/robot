@@ -1208,6 +1208,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify(list.map((i) => {
           i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
           return i;
+        }).filter((i) => {
+          return i !== ".DS_Store" && /^\.\_/.test(i);
         })));
       }).catch((err) => {
         res.send(JSON.stringify({ message: "error" }));
@@ -1243,6 +1245,8 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify(list.map((i) => {
             i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
             return i;
+          }).filter((i) => {
+            return i !== ".DS_Store" && /^\.\_/.test(i);
           })));
         }).catch((err) => {
           res.send(JSON.stringify({ message: "error" }));
