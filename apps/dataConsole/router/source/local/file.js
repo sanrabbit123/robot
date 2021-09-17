@@ -166,16 +166,20 @@ FileJs.prototype.baseMaker = function () {
   this.motherTong = { mother, files };
 }
 
-FileJs.prototype.pathReload = function () {
+FileJs.prototype.pathReload = function (searchResult = false) {
   const instance = this;
   const { colorChip } = GeneralJs;
   const target = document.querySelector(".path");
   const between = `&nbsp;&nbsp;<b style="font-weight:300;color:${colorChip.gray5}">></b>&nbsp;&nbsp;`;
-  target.textContent = "";
-  target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== ''; }).join(between)) : ""));
+  if (!searchResult) {
+    target.textContent = "";
+    target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== ''; }).join(between)) : ""));
+  } else {
+    target.textContent = "검색 결과";
+  }
 }
 
-FileJs.prototype.fileLoad = async function (path) {
+FileJs.prototype.fileLoad = async function (path, searchMode = false) {
   if (typeof path !== "string") {
     throw new Error("invaild input");
   }
@@ -192,11 +196,16 @@ FileJs.prototype.fileLoad = async function (path) {
     let textBetween;
     let block;
     let boxNumber;
+    let loading;
+    let loadingWidth, loadingHeight;
 
-    this.path = path;
-    this.pageHistory.unshift({ path });
-    window.history.pushState({ path }, '');
-    this.pathReload();
+    if (!searchMode) {
+      this.path = path;
+      this.pageHistory.unshift({ path });
+      window.history.pushState({ path }, '');
+    }
+
+    this.pathReload(searchMode);
 
     width = 110;
     innerMargin = 17;
@@ -205,16 +214,32 @@ FileJs.prototype.fileLoad = async function (path) {
     fontSize = 13;
     textBetween = 2;
 
+    loadingWidth = 50;
+    loadingHeight = 50;
+
     boxNumber = Math.floor((files.getBoundingClientRect().width + marginRight) / (width + marginRight));
     marginRight = (files.getBoundingClientRect().width - (width * boxNumber)) / (boxNumber - 1);
 
     this.blocks = [];
     cleanChildren(files);
 
-    thisFolderFiles = await ajaxJson({ path }, "/ghostPass_listFiles");
+    loading = this.mother.returnLoadingIcon();
+    loading.style.width = String(loadingWidth) + ea;
+    loading.style.height = String(loadingHeight) + ea;
+    loading.style.left = withOut(50, loadingWidth / 2, ea);
+    loading.style.top = withOut(50, loadingHeight / 2, ea);
+    files.parentNode.appendChild(loading);
+
+    if (!searchMode) {
+      thisFolderFiles = await ajaxJson({ path }, "/ghostPass_listFiles");
+    } else {
+      thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, "/ghostPass_searchFiles");
+    }
     thisFolderFiles.sort((a, b) => {
       return a.fileName >= b.fileName ? 1 : -1;
-    })
+    });
+
+    files.parentNode.removeChild(loading);
 
     num = 0;
     for (let { directory, fileName, hidden, kind, absolute } of thisFolderFiles) {
@@ -391,6 +416,17 @@ FileJs.prototype.launching = async function () {
         instance.fileLoad(instance.pageHistory[1].path);
         instance.pageHistory.shift();
         instance.pageHistory.shift();
+      }
+    });
+    this.searchInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const value = this.value.trim();
+        if (value === '') {
+          instance.fileLoad('/');
+        } else {
+          instance.fileLoad(this.value.trim(), true);
+        }
       }
     });
 

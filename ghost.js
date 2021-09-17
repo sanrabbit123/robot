@@ -1193,7 +1193,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      let target, result;
+      let target;
       if (req.body.path === undefined) {
         target = "__samba__";
       } else {
@@ -1228,7 +1228,18 @@ Ghost.prototype.ghostRouter = function (needs) {
       if (req.body.keyword === undefined) {
         res.send(JSON.stringify({ message: "error" }));
       } else {
-        leafParsing(instance.homeliaisonServer, true, req.body.keyword).then((list) => {
+        let target;
+        if (req.body.path === undefined) {
+          target = "__samba__";
+        } else {
+          if (!/^\//.test(req.body.path)) {
+            target = "__samba__/" + req.body.path;
+          } else {
+            target = "__samba__" + req.body.path;
+          }
+        }
+        target = instance.dirParsing(target);
+        leafParsing(target, true, req.body.keyword).then((list) => {
           res.send(JSON.stringify(list.map((i) => {
             i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
             return i;
