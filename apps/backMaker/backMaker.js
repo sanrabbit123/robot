@@ -3060,6 +3060,12 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
             send: [],
           },
         },
+        request: {
+          analytics: {
+            page: [],
+            send: [],
+          }
+        },
         possible: {
           analytics: {
             page: [],

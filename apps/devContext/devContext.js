@@ -45,6 +45,7 @@ const DevContext = function () {
   this.MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   this.MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   this.MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+  this.MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
   this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.dir = `${process.cwd()}/apps/devContext`;
 }
@@ -95,116 +96,27 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    // let updateQuery;
-    // updateQuery = {};
-    // updateQuery["checklist"] = {
-    //   analytics: {
-    //     page: [],
-    //     update: [],
-    //     send: [],
-    //   },
-    // };
-    // updateQuery["report"] = {
-    //   analytics: {
-    //     page: [],
-    //     update: [],
-    //     send: [],
-    //   },
-    // };
-    // updateQuery["possible"] = {
-    //   analytics: {
-    //     page: [],
-    //     update: [],
-    //     send: [],
-    //   },
-    // };
-    // const MONGOC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-    // await MONGOC.connect();
-    // const rows = await MONGOC.db(`miro81`).collection(`designerHistory`).find({}).toArray();
-    // let d, result;
-    // for (let { desid } of rows) {
-    //   await MONGOC.db(`miro81`).collection(`designerHistory`).updateMany({ desid }, { $set: updateQuery });
-    //   console.log(desid);
-    // }
-    // await MONGOC.close();
+    const MONGOC = this.MONGOCONSOLEC;
+    const collection = "designerHistory";
+    const db = "miro81";
+    let whereQuery, updateQuery;
+    await MONGOC.connect();
+    const rows = await MONGOC.db(db).collection(collection).find({}).toArray();
+    for (let { desid } of rows) {
+      whereQuery = { desid };
+      updateQuery = {};
+      updateQuery["request"] = {
+        analytics: {
+          page: [],
+          send: [],
+        }
+      };
+      await MONGOC.db(db).collection(collection).updateMany(whereQuery, { $set: updateQuery });
+      console.log(whereQuery);
+    }
+    await MONGOC.close();
 
 
-
-
-
-
-    // for (let name in optimizeResult) {
-    //   await fileSystem(`write`, [ `${process.cwd()}/temp/result/${name}.svg`, optimizeResult[name] ]);
-    // }
-
-    // console.log(optimizeResult);
-
-
-
-
-    // let whereQuery, updateQuery;
-    //
-    // whereQuery = { proid: "p1801_aa01s" };
-    //
-    // updateQuery = {};
-    //
-    // updateQuery["request.about"] = {
-    //   when: [
-    //     "2021-09-02 (목) 오후 12:00시 정오",
-    //   ],
-    //   where: [
-    //     "외부 카페 (장소가 정해지면 전달드리겠습니다.)",
-    //   ],
-    //   site: [
-    //     "보문파크뷰자이 아파트",
-    //     "사용승인일 : 2017년 01월 18일",
-    //     "확장은 되어 있음",
-    //   ],
-    //   construct: [
-    //     "전체 시공 + 구조 변경 가능성 + 디자인 시공",
-    //     "샤시 제외",
-    //     "주방 및 화장실 쪽 구조 변경에도 관심 있음",
-    //     "명확한 공정별 디자인 니즈가 정해지지는 않았고 디자이너의 기획이 필요함",
-    //     "사업장 인테리어 경험 있음",
-    //     "당시에는 동네 개인업체에서 했고 디자인에 대한 만족도는 있었는데 마감이 부족했다고 함",
-    //     "꼼꼼한 마감 완성도에 대한 기대가 있습니다. ",
-    //   ],
-    //   styling: [
-    //     "의류 사업을 하시는 분",
-    //     "거실에서 제품 촬영도 할 수 있는 감성적인 공간 원함",
-    //     "가전 및 가구 전체 구매",
-    //   ],
-    //   budget: [
-    //     "총 1억 ~ 최대 1억 5000만원",
-    //     "가전까지 구매했을 때 최대 1억 5000을 생각하시는 것 같습니다.",
-    //     "현재 2~3개 업체 비딩 중이어서 가용예산에 대해서는 변동 가능성이 있습니다. ",
-    //     "고객의 전체 예산과 예산 활용 관련하여 미팅시 꼭 논의해주세요! 이슈가 발생하는 부분입니다.",
-    //     "시공에 필요한 대략의 예산과 스타일링에 필요한 예산을 구분해서 대략적으로 안내해주셔야 합니다.",
-    //   ]
-    // };
-    //
-    // updateQuery["request.client.name"] = "배창규";
-    // updateQuery["request.client.phone"] = "010-2747-3403";
-    // updateQuery["request.client.family"] = "부부, 아들 1";
-    // updateQuery["request.client.address"] = "서울 성북구 보문사길 111 보문파크뷰자이 아파트 109동 1004호 34A형";
-    // updateQuery["request.client.budget"] = "1억~ 최대 1억 5000만원 계획";
-    // updateQuery["request.client.etc"] = "깔끔하고 수납 전체적인인테리어와 스타일링";
-    //
-    // updateQuery["request.space.contract"] = "자가";
-    // updateQuery["request.space.precheck"] = "거주중";
-    // updateQuery["request.space.empty"] = "2021-12-23 예정";
-    // updateQuery["request.space.movein"] = "2022-01월말 입주";
-    // updateQuery["request.space.special"] = "공사 기간 1달 소요 예상";
-    // updateQuery["request.space.composition"] = "방3, 화장실2, 발코니 확장";
-    //
-    // updateQuery["request.service.service"] = "엑스트라 스타일링";
-    // updateQuery["request.service.concept"] = "베이지톤, 아늑, 감성적인 분위기";
-    // updateQuery["request.service.construct"] = "전체 시공, 디자인 시공";
-    // updateQuery["request.service.styling"] = "전체 구매";
-    //
-    //
-    // await back.updateHistory("project", [ whereQuery, updateQuery ], { fromConsole: true });
 
 
 
@@ -1370,7 +1282,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p140");
+    // await this.getCorePortfolio("p118");
 
 
     // aspirant to designer
