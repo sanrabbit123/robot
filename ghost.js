@@ -1209,9 +1209,9 @@ Ghost.prototype.ghostRouter = function (needs) {
           i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
           return i;
         }).filter((i) => {
-          return !/^\.\_/.test(i);
+          return !/^\.\_/.test(i.split("/")[i.split("/").length - 1]);
         }).filter((i) => {
-          return i !== ".DS_Store";
+          return i.split("/")[i.split("/").length - 1] !== ".DS_Store";
         })));
       }).catch((err) => {
         res.send(JSON.stringify({ message: "error" }));
@@ -1248,9 +1248,9 @@ Ghost.prototype.ghostRouter = function (needs) {
             i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
             return i;
           }).filter((i) => {
-            return !/^\.\_/.test(i);
+            return !/^\.\_/.test(i.split("/")[i.split("/").length - 1]);
           }).filter((i) => {
-            return i !== ".DS_Store";
+            return i.split("/")[i.split("/").length - 1] !== ".DS_Store";
           })));
         }).catch((err) => {
           res.send(JSON.stringify({ message: "error" }));
