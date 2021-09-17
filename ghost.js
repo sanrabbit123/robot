@@ -1301,7 +1301,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             instance.setTimer(async function () {
               try {
                 const googleDrive = instance.mother.googleSystem("drive");
-                await googleDrive.delete_inPython(targetUrl);
+                await googleDrive.delete_inPython(zipLink);
               } catch (e) {
                 console.log(e);
               }
