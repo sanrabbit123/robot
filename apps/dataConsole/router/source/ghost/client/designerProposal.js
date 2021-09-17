@@ -3432,7 +3432,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
           position: "absolute",
           bottom: String(mobileAllViewBottom) + ea,
           right: String(mobileAllViewRight) + ea,
-          fontWeight: String(400),
+          fontWeight: String(600),
           color: colorChip.green,
         }
       });
@@ -3651,7 +3651,7 @@ DesignerProposalJs.prototype.insertServiceBox = function () {
         position: "absolute",
         bottom: String(mobileAllViewBottom) + ea,
         right: String(mobileAllViewRight) + ea,
-        fontWeight: String(400),
+        fontWeight: String(600),
         color: colorChip.green,
       }
     });
