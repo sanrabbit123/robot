@@ -949,12 +949,22 @@ GeneralJs.vwConvert = function (num) {
 
 GeneralJs.setTimeout = function (callback, time) {
   let propertyName;
-  propertyName = "tempTimeout_" + String((new Date()).valueOf());
-  GeneralJs.timeouts[propertyName] = setTimeout(function () {
+  propertyName = "tempTimeout_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
+  GeneralJs.timeouts[propertyName] = setTimeout(() => {
     callback();
     clearTimeout(propertyName);
     GeneralJs.timeouts[propertyName] = null;
   }, time);
+}
+
+GeneralJs.setQueue = function (callback) {
+  let propertyName;
+  propertyName = "tempQueue_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
+  GeneralJs.timeouts[propertyName] = setTimeout(() => {
+    callback();
+    clearTimeout(propertyName);
+    GeneralJs.timeouts[propertyName] = null;
+  }, 0);
 }
 
 GeneralJs.willDo = function (func) {

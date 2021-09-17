@@ -4526,7 +4526,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
 
 DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const instance = this;
-  const { slack_bot, requestSystem } = this.mother;
+  const { slack_bot, requestSystem, ghostRequest } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
@@ -4538,6 +4538,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}&mode=test\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#400_customer" });
+      ghostRequest("voice", { text: `${name} 고객님이 ${designer} 디자이너를 선택하셨습니다!` });
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
         designer: designer,

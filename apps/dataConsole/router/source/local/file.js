@@ -27,7 +27,7 @@ FileJs.prototype.staticSvg = FileJs.staticSvg;
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
   let mother, files;
   let innerMargin;
   let filesBoxPaddingTop;
@@ -35,6 +35,7 @@ FileJs.prototype.baseMaker = function () {
   let titleHeight;
   let fontSize;
   let titlePaddingBottom;
+  let calculationEvent;
 
   innerMargin = 30;
   filesBoxPaddingTop = 35;
@@ -42,6 +43,78 @@ FileJs.prototype.baseMaker = function () {
   titleHeight = 30;
   fontSize = 18;
   titlePaddingBottom = 10;
+
+  calculationEvent = function (e) {
+    e.stopPropagation();
+    if (instance.dragArea !== null) {
+      const blocks = instance.blocks;
+      const box = this.getBoundingClientRect();
+      let blockBox, blockPointX, blockPointY;
+      let x, y, width, height;
+      let startX, startY;
+      let endX, endY;
+      let index;
+      let targets;
+      let targetBlocks;
+
+      x = Number(instance.dragArea.getAttribute("x"));
+      y = Number(instance.dragArea.getAttribute("y"));
+      width = Number(instance.dragArea.getAttribute("width"));
+      height = Number(instance.dragArea.getAttribute("height"));
+
+      if (width >= 0) {
+        startX = x - width;
+        endX = x;
+      } else {
+        startX = x;
+        endX = x - width;
+      }
+      if (height >= 0) {
+        startY = y - height;
+        endY = y;
+      } else {
+        startY = y;
+        endY = y - height;
+      }
+
+      if (e.ctrlKey || e.metaKey) {
+        for (let i = 0; i < blocks.length; i++) {
+          blockBox = blocks[i].getBoundingClientRect();
+          blockPointY = blockBox.top - box.top + (blockBox.height / 2);
+          blockPointX = blockBox.left - box.left + (blockBox.width / 2);
+          if (startX < blockPointX && blockPointX < endX && startY < blockPointY && blockPointY < endY) {
+            if (!instance.selected.includes(blocks[i])) {
+              instance.selected.push(blocks[i]);
+            }
+          }
+        }
+      } else {
+        instance.selected = [];
+        for (let i = 0; i < blocks.length; i++) {
+          blockBox = blocks[i].getBoundingClientRect();
+          blockPointY = blockBox.top - box.top + (blockBox.height / 2);
+          blockPointX = blockBox.left - box.left + (blockBox.width / 2);
+          if (startX < blockPointX && blockPointX < endX && startY < blockPointY && blockPointY < endY) {
+            instance.selected.push(blocks[i]);
+          }
+        }
+      }
+
+      for (let b of blocks) {
+        if (instance.selected.includes(b)) {
+          b.firstChild.style.opacity = String(1);
+          b.setAttribute("toggle", "on");
+        } else {
+          b.firstChild.style.opacity = String(0);
+          b.setAttribute("toggle", "off");
+        }
+      }
+
+      this.removeChild(instance.dragArea);
+      instance.dragArea = null;
+      this.style.cursor = "";
+    }
+  }
 
   mother = createNode({
     mother: totalContents,
@@ -65,6 +138,17 @@ FileJs.prototype.baseMaker = function () {
     },
     children: [
       {
+        events: [
+          {
+            type: "mousemove",
+            event: function (e) {
+              if (instance.dragArea !== null) {
+                instance.dragArea.parentNode.removeChild(instance.dragArea);
+                instance.dragArea = null;
+              }
+            }
+          }
+        ],
         style: {
           position: "relative",
           top: String(0),
@@ -106,6 +190,15 @@ FileJs.prototype.baseMaker = function () {
                     instance.fileLoad("/");
                   }
                 }
+              },
+              {
+                type: "mousemove",
+                event: function (e) {
+                  if (instance.dragArea !== null) {
+                    instance.dragArea.parentNode.removeChild(instance.dragArea);
+                    instance.dragArea = null;
+                  }
+                }
               }
             ],
             style: {
@@ -122,6 +215,152 @@ FileJs.prototype.baseMaker = function () {
             }
           },
           {
+            attribute: [
+              { draggable: "true" }
+            ],
+            events: [
+              {
+                type: "mousedown",
+                event: function (e) {
+                  instance.pastDown = (new Date()).valueOf();
+                }
+              },
+              {
+                type: "selectstart",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              },
+              {
+                type: "dragstart",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const box = this.getBoundingClientRect();
+                  let clientX, clientY;
+
+                  clientX = e.clientX - box.left;
+                  clientY = e.clientY - box.top;
+
+                  instance.dragArea = createNode({
+                    mother: this,
+                    attribute: [
+                      { x: String(clientX) },
+                      { y: String(clientY) },
+                      { width: String(0) },
+                      { height: String(0) }
+                    ],
+                    style: {
+                      position: "absolute",
+                      top: String(clientY) + ea,
+                      left: String(clientX) + ea,
+                      background: colorChip.green,
+                      width: String(0) + ea,
+                      height: String(0) + ea,
+                      borderRadius: String(2) + "px",
+                      transition: "all 0s ease",
+                      opacity: String(0.2),
+                      zIndex: String(1),
+                    }
+                  });
+                  instance.pastX = clientX;
+                  instance.pastY = clientY;
+                }
+              },
+              {
+                type: "dragenter",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              },
+              {
+                type: "dragleave",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              },
+              {
+                type: "drag",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              },
+              {
+                type: "dragover",
+                event: function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              },
+              {
+                type: "mousemove",
+                event: function (e) {
+                  e.stopPropagation();
+                  if (e.buttons === 1 && instance.dragArea !== null) {
+                    const standard = 300;
+                    const box = this.getBoundingClientRect();
+                    let clientX, clientY;
+                    let width, height, top, left;
+
+                    clientX = e.clientX - box.left;
+                    clientY = e.clientY - box.top;
+
+                    if (Math.abs(instance.pastX - clientX) <= standard && Math.abs(instance.pastY - clientY) <= standard) {
+                      this.style.cursor = "pointer";
+                      width = Number(instance.dragArea.getAttribute("x")) - clientX;
+                      height = Number(instance.dragArea.getAttribute("y")) - clientY;
+                      instance.dragArea.style.width = String(Math.abs(width)) + ea;
+                      instance.dragArea.style.height = String(Math.abs(height)) + ea;
+                      instance.dragArea.setAttribute("width", String(width));
+                      instance.dragArea.setAttribute("height", String(height));
+                      if (width >= 0) {
+                        instance.dragArea.style.left = String(clientX) + ea;
+                      }
+                      if (height >= 0) {
+                        instance.dragArea.style.top = String(clientY) + ea;
+                      }
+
+                      instance.pastX = clientX;
+                      instance.pastY = clientY;
+                    }
+                  }
+                }
+              },
+              {
+                type: "mouseup",
+                event: function (e) {
+                  if (typeof instance.pastDown === "number") {
+                    if ((new Date()).valueOf() - instance.pastDown < 500) {
+                      for (let b of instance.blocks) {
+                        b.firstChild.style.opacity = String(0);
+                        b.setAttribute("toggle", "off");
+                      }
+                      instance.selected = [];
+                    }
+                    calculationEvent.call(this, e);
+                    instance.pastDown = null;
+                  }
+                }
+              },
+              {
+                type: "dragend",
+                event: function (e) {
+                  e.preventDefault();
+                  calculationEvent.call(this, e);
+                }
+              },
+              {
+                type: "drop",
+                event: function (e) {
+                  e.preventDefault();
+                  calculationEvent.call(this, e);
+                }
+              },
+            ],
             style: {
               display: "block",
               position: "relative",
@@ -203,6 +442,9 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
       this.path = path;
       this.pageHistory.unshift({ path });
       window.history.pushState({ path }, '');
+    } else {
+      this.pageHistory.unshift({ path: this.path });
+      window.history.pushState({ path: this.path }, '');
     }
 
     this.pathReload(searchMode);
@@ -220,7 +462,6 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     boxNumber = Math.floor((files.getBoundingClientRect().width + marginRight) / (width + marginRight));
     marginRight = (files.getBoundingClientRect().width - (width * boxNumber)) / (boxNumber - 1);
 
-    this.blocks = [];
     cleanChildren(files);
 
     loading = this.mother.returnLoadingIcon();
@@ -235,7 +476,6 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     } else {
       thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, "/ghostPass_searchFiles");
     }
-    console.log(thisFolderFiles)
     thisFolderFiles.sort((a, b) => {
       return a.fileName >= b.fileName ? 1 : -1;
     });
@@ -243,8 +483,10 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     files.parentNode.removeChild(loading);
 
     num = 0;
+    this.current = [];
+    this.blocks = [];
     for (let { directory, fileName, hidden, kind, absolute } of thisFolderFiles) {
-
+      this.current.push({ directory, fileName, hidden, kind, absolute });
       block = createNode({
         mother: files,
         class: [ "hoverDefault_lite" ],
@@ -252,6 +494,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
           { absolute },
           { directory: directory ? "true" : "false" },
           { toggle: "off" },
+          { index: String(num) }
         ],
         events: [
           {
@@ -260,15 +503,86 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
               e.stopPropagation();
               e.preventDefault();
               const blocks = instance.blocks;
-              for (let b of blocks) {
-                if (b === this) {
-                  b.firstChild.style.opacity = String(1);
-                  b.setAttribute("toggle", "on");
+              const index = Number(this.getAttribute("index"));
+              let indexArr, tempIndex;
+
+              if (e.ctrlKey || e.metaKey) {
+
+                if (this.getAttribute("toggle") === "off") {
+                  this.firstChild.style.opacity = String(1);
+                  this.setAttribute("toggle", "on");
+                  instance.selected.push(this);
                 } else {
-                  b.firstChild.style.opacity = String(0);
-                  b.setAttribute("toggle", "off");
+                  this.firstChild.style.opacity = String(0);
+                  this.setAttribute("toggle", "off");
+                  tempIndex = instance.selected.findIndex((dom) => { return Number(dom.getAttribute("index")) === index; });
+                  if (typeof tempIndex === "number") {
+                    instance.selected.splice(tempIndex, 1);
+                  }
                 }
+
+              } else if (e.shiftKey) {
+
+                indexArr = [];
+                for (let dom of instance.selected) {
+                  indexArr.push(Number(dom.getAttribute("index")));
+                }
+                indexArr.sort((a, b) => { return b - a; });
+
+                if (indexArr.length !== 0) {
+                  if (index <= indexArr[0]) {
+                    instance.selected = [];
+                    for (let b of blocks) {
+                      b.firstChild.style.opacity = String(0);
+                      b.setAttribute("toggle", "off");
+                    }
+                    for (let i = index; i < indexArr[0] + 1; i++) {
+                      blocks[i].firstChild.style.opacity = String(1);
+                      blocks[i].setAttribute("toggle", "on");
+                      instance.selected.push(blocks[i]);
+                    }
+                  } else {
+                    instance.selected = [];
+                    for (let b of blocks) {
+                      b.firstChild.style.opacity = String(0);
+                      b.setAttribute("toggle", "off");
+                    }
+                    for (let i = indexArr[indexArr.length - 1]; i < index + 1; i++) {
+                      blocks[i].firstChild.style.opacity = String(1);
+                      blocks[i].setAttribute("toggle", "on");
+                      instance.selected.push(blocks[i]);
+                    }
+                  }
+                } else {
+                  instance.selected = [];
+                  for (let b of blocks) {
+                    if (b === this) {
+                      b.firstChild.style.opacity = String(1);
+                      b.setAttribute("toggle", "on");
+                      instance.selected.push(b);
+                    } else {
+                      b.firstChild.style.opacity = String(0);
+                      b.setAttribute("toggle", "off");
+                    }
+                  }
+                }
+
+              } else {
+
+                instance.selected = [];
+                for (let b of blocks) {
+                  if (b === this) {
+                    b.firstChild.style.opacity = String(1);
+                    b.setAttribute("toggle", "on");
+                    instance.selected.push(b);
+                  } else {
+                    b.firstChild.style.opacity = String(0);
+                    b.setAttribute("toggle", "off");
+                  }
+                }
+
               }
+              console.log(instance.selected)
             }
           },
           {
@@ -403,7 +717,13 @@ FileJs.prototype.launching = async function () {
       files: null
     };
     this.pageHistory = [];
+    this.current = [];
+    this.selected = [];
     this.path = "/";
+    this.dragArea = null;
+    this.pastX = null;
+    this.pastY = null;
+    this.pastDown = null;
 
     this.baseMaker();
     this.fileLoad(this.path);
