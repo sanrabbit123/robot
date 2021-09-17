@@ -1943,7 +1943,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
   }
 }
 
-Mother.prototype.leafParsing = async function (target) {
+Mother.prototype.leafParsing = async function (target, searchMode = false, keyword = '') {
   if (typeof target !== "string") {
     throw new Error("invaild input");
   }
@@ -1975,6 +1975,91 @@ Mother.prototype.leafParsing = async function (target) {
           resolve(stdout);
         }
         return;
+      });
+    });
+  }
+  const execPromise = function (command) {
+    return new Promise((resolve, reject) => {
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(stdout);
+        }
+      })
+    });
+  }
+  const kindFilter = function (fileName) {
+    let str;
+    if (/\.(js|py|c|scpt|html|css|xml|java|json|cfg|bash|csh|md)$/gi.test(fileName)) {
+      str = "code";
+    } else if (/\.(ai|eps|svg)$/gi.test(fileName)) {
+      str = "ai";
+    } else if (/\.(png|psd|iff|pcx|raw|tga|psb)$/gi.test(fileName)) {
+      str = "png";
+    } else if (/\.(jpg|jpeg|gif|jpf|jps|bmp|heic|jfif)$/gi.test(fileName)) {
+      str = "jpg";
+    } else if (/\.(pdf)$/gi.test(fileName)) {
+      str = "pdf";
+    } else if (/\.(pptx|pptm|ppt)$/gi.test(fileName)) {
+      str = "powerpoint";
+    } else if (/\.(xlsx|xlsm|xlsb|xltx|xltxm|xls|xlt|xlam)$/gi.test(fileName)) {
+      str = "excel";
+    } else if (/\.(docx|docm|doc|dotx|dotm|dot|hwp)$/gi.test(fileName)) {
+      str = "word";
+    } else if (/\.(txt|wps|odt|rtf)$/gi.test(fileName)) {
+      str = "txt";
+    } else if (/\.(exe|pkg|dmg|iso)$/gi.test(fileName)) {
+      str = "exe";
+    } else if (/\.(mp3|wav|m4a|m4b|m4v|m4r|3gp|aac|wv|aiff|aif|aifc|ogg)$/gi.test(fileName)) {
+      str = "mp3";
+    } else if (/\.(mp4|avi|mov|wmv|mkv|mpg|flv|asf|asx|ogm|ogv|webm|vob|qt|amv|m4p|mpv|mpg|nsv)$/gi.test(fileName)) {
+      str = "mp4";
+    } else if (/\.(zip|egg|7z|tar|rar|apk|alz|tgz|zoo|cab|img|pak|war)$/gi.test(fileName)) {
+      str = "zip";
+    } else {
+      str = "general";
+    }
+    return str;
+  }
+  const findTarget = function (where, searchTarget) {
+    let files, folders, tong, tempObj, targetName;
+    return new Promise((resolve, reject) => {
+      execPromise(`find ${shellLink(where)} -name "*${searchTarget.trim()}*"`).then((stdout) => {
+        files = stdout.split("\n").map((i) => {
+          return i.trim();
+        }).filter((i) => {
+          return i !== '' && i !== ".DS_Store" && !/^\.\_/.test(i);
+        });
+        return execPromise(`find ${shellLink(where)} -name "*${searchTarget.trim()}*" -type d`);
+      }).then((stdout) => {
+        folders = stdout.split("\n").map((i) => {
+          return i.trim();
+        }).filter((i) => {
+          return i !== '' && i !== ".DS_Store" && !/^\.\_/.test(i);
+        });
+        tong = [];
+        for (let f of files) {
+          tempObj = {};
+          targetName = (f.split("/"))[f.split("/").length - 1];
+          if (folders.includes(f)) {
+            tempObj.directory = true;
+            tempObj.fileName = targetName;
+            tempObj.hidden = /^\./.test(targetName);
+            tempObj.absolute = f;
+            tempObj.kind = "folder";
+          } else {
+            tempObj.directory = false;
+            tempObj.fileName = targetName;
+            tempObj.hidden = /^\./.test(targetName);
+            tempObj.absolute = f;
+            tempObj.kind = kindFilter(f);
+          }
+          tong.push(tempObj);
+        }
+        resolve(tong);
+      }).catch((err) => {
+        reject(err);
       });
     });
   }
@@ -2043,35 +2128,7 @@ Mother.prototype.leafParsing = async function (target) {
         if (directory) {
           obj.kind = "folder";
         } else {
-          if (/\.(js|py|c|scpt|html|css|xml|java|json|cfg|bash|csh|md)$/gi.test(fileName)) {
-            obj.kind = "code";
-          } else if (/\.(ai|eps|svg)$/gi.test(fileName)) {
-            obj.kind = "ai";
-          } else if (/\.(png|psd|iff|pcx|raw|tga|psb)$/gi.test(fileName)) {
-            obj.kind = "png";
-          } else if (/\.(jpg|jpeg|gif|jpf|jps|bmp|heic|jfif)$/gi.test(fileName)) {
-            obj.kind = "jpg";
-          } else if (/\.(pdf)$/gi.test(fileName)) {
-            obj.kind = "pdf";
-          } else if (/\.(pptx|pptm|ppt)$/gi.test(fileName)) {
-            obj.kind = "powerpoint";
-          } else if (/\.(xlsx|xlsm|xlsb|xltx|xltxm|xls|xlt|xlam)$/gi.test(fileName)) {
-            obj.kind = "excel";
-          } else if (/\.(docx|docm|doc|dotx|dotm|dot|hwp)$/gi.test(fileName)) {
-            obj.kind = "word";
-          } else if (/\.(txt|wps|odt|rtf)$/gi.test(fileName)) {
-            obj.kind = "txt";
-          } else if (/\.(exe|pkg|dmg|iso)$/gi.test(fileName)) {
-            obj.kind = "exe";
-          } else if (/\.(mp3|wav|m4a|m4b|m4v|m4r|3gp|aac|wv|aiff|aif|aifc|ogg)$/gi.test(fileName)) {
-            obj.kind = "mp3";
-          } else if (/\.(mp4|avi|mov|wmv|mkv|mpg|flv|asf|asx|ogm|ogv|webm|vob|qt|amv|m4p|mpv|mpg|nsv)$/gi.test(fileName)) {
-            obj.kind = "mp4";
-          } else if (/\.(zip|egg|7z|tar|rar|apk|alz|tgz|zoo|cab|img|pak|war)$/gi.test(fileName)) {
-            obj.kind = "zip";
-          } else {
-            obj.kind = "general";
-          }
+          obj.kind = kindFilter(fileName);
         }
         return obj;
       });
@@ -2080,7 +2137,11 @@ Mother.prototype.leafParsing = async function (target) {
       console.log(e);
     }
   }
-  return makeFileArr(target);
+  if (!searchMode) {
+    return makeFileArr(target);
+  } else {
+    return findTarget(target, keyword);
+  }
 }
 
 Mother.prototype.returnRandoms = function (num = 10, length = false) {

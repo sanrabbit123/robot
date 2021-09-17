@@ -1215,6 +1215,31 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - search files
+  funcObj.post_searchFiles = {
+    link: [ "/searchFiles" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      if (req.body.keyword === undefined) {
+        res.send(JSON.stringify({ message: "error" }));
+      } else {
+        leafParsing(instance.homeliaisonServer, true, req.body.keyword).then((list) => {
+          res.send(JSON.stringify(list.map((i) => {
+            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
+            return i;
+          })));
+        }).catch((err) => {
+          res.send(JSON.stringify({ message: "error" }));
+        });
+      }
+    }
+  };
+
   //POST - file delivery
   funcObj.post_deliveryFiles = {
     link: [ "/deliveryFiles" ],
