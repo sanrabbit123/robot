@@ -1257,7 +1257,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p118");
+    // await this.getRawPortfolio("p106");
 
 
     // get corePortfolio by pid
@@ -2109,7 +2109,7 @@ DevContext.prototype.getRawPortfolio = async function (pid) {
         targetLink = shellLink((await photoRequest("pwd", { target })).absolute + "/" + pid);
         scpFrom = this.address.officeinfo.ghost.user + "@" + this.address.officeinfo.ghost.host + ":" + targetLink;
         scpTo = shellLink(process.cwd() + "/temp");
-        shell.exec(`scp -P ${String(this.address.officeinfo.ghost.file.port)} -r ${scpFrom} ${scpTo}`);
+        shell.exec(`scp -r ${scpFrom} ${scpTo}`);
       }
     }
 
