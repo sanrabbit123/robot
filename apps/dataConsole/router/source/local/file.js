@@ -27,7 +27,7 @@ FileJs.prototype.staticSvg = FileJs.staticSvg;
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const contextmenuItems = [
@@ -434,8 +434,8 @@ FileJs.prototype.baseMaker = function () {
   titlePaddingBottom = 10;
   contextmenuWidth = 95;
   contextmenuFontSize = 14;
-  contextmenuPaddingTop = 6;
-  contextmenuPaddingBottom = 8;
+  contextmenuPaddingTop = isMac() ? 6 : 7;
+  contextmenuPaddingBottom = isMac() ? 8 : 7;
   contextmenuBetween = 2;
 
   calculationEvent = function (e) {
@@ -924,7 +924,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
   }
   const instance = this;
   const { ea, motherTong: { mother, files } } = this;
-  const { createNode, colorChip, withOut, ajaxJson, cleanChildren } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, cleanChildren, isMac } = GeneralJs;
   try {
     let thisFolderFiles;
     let width;
@@ -954,7 +954,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     marginRight = 1;
     marginBottom = 23;
     fontSize = 13;
-    textBetween = 2;
+    textBetween = isMac() ? 2 : 3;
 
     loadingWidth = 50;
     loadingHeight = 50;
