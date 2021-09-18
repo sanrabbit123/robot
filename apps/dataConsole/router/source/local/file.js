@@ -27,7 +27,42 @@ FileJs.prototype.staticSvg = FileJs.staticSvg;
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson } = GeneralJs;
+  const fileBaseClassName = "fileBase";
+  const contextmenuClassName = "contextmenuFactor";
+  const contextmenuItems = [
+    {
+      text: "다운로드",
+      event: function (e) {
+        const selected = instance.selected;
+        const who = nstance.mother.member.name;
+        const targets = document.querySelectorAll('.' + contextmenuClassName);
+        let files;
+        let absolute;
+        let directory;
+        files = [];
+        for (let dom of selected) {
+          absolute = dom.getAttribute("absolute");
+          directory = (dom.getAttribute("directory") === "true");
+          files.push({ absolute, type: (directory ? "folder" : "file") });
+        }
+        ajaxJson({ files, who }, "/ghostPass_deliveryFiles")).then(() => {
+          window.alert("배달 요청이 완료되었습니다! 슬렉의 #file에서 배송이 도착하면 받으시면 됩니다! 유효 시간은 지금부터 3시간입니다.");
+          for (let dom of targets) {
+            dom.parentNode.removeChild(dom);
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+    },
+    {
+      text: "미리보기",
+      event: function (e) {
+
+      }
+    }
+  ];
   let mother, files;
   let innerMargin;
   let filesBoxPaddingTop;
@@ -36,6 +71,10 @@ FileJs.prototype.baseMaker = function () {
   let fontSize;
   let titlePaddingBottom;
   let calculationEvent;
+  let contextmenuEvent;
+  let contextmenuWidth, contextmenuFontSize;
+  let contextmenuPaddingTop, contextmenuPaddingBottom;
+  let contextmenuBetween;
 
   innerMargin = 30;
   filesBoxPaddingTop = 35;
@@ -43,6 +82,11 @@ FileJs.prototype.baseMaker = function () {
   titleHeight = 30;
   fontSize = 18;
   titlePaddingBottom = 10;
+  contextmenuWidth = 95;
+  contextmenuFontSize = 14;
+  contextmenuPaddingTop = 6;
+  contextmenuPaddingBottom = 8;
+  contextmenuBetween = 2;
 
   calculationEvent = function (e) {
     e.stopPropagation();
@@ -114,6 +158,97 @@ FileJs.prototype.baseMaker = function () {
       instance.dragArea = null;
       this.style.cursor = "";
     }
+  }
+
+  contextmenuEvent = function (e) {
+    const base = document.querySelector('.' + fileBaseClassName);
+    const { top, left } = base.getBoundingClientRect();
+    const { clientX, clientY } = e;
+    const x = clientX - left;
+    const y = clientY - top;
+    let tong;
+
+    createNode({
+      mother: base,
+      class: [ contextmenuClassName ],
+      events: [
+        {
+          type: [ "mouseup", "mousedown", "mousemove" ],
+          event: (e) => { e.stopPropagation(); }
+        },
+        {
+          type: [ "contextmenu" ],
+          event: (e) => { e.stopPropagation(); e.preventDefault(); }
+        },
+        {
+          type: "click",
+          event: function (e) {
+            e.stopPropagation();
+            const targets = document.querySelectorAll('.' + contextmenuClassName);
+            for (let dom of targets) {
+              dom.parentNode.removeChild(dom);
+            }
+          }
+        }
+      ],
+      style: {
+        position: "fixed",
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(100) + '%',
+        height: String(100) + '%',
+        cursor: "pointer",
+      }
+    });
+
+    tong = createNode({
+      mother: base,
+      class: [ contextmenuClassName ],
+      events: [
+        {
+          type: [ "mouseup", "mousedown", "mousemove" ],
+          event: (e) => { e.stopPropagation(); }
+        },
+        {
+          type: [ "contextmenu", "click" ],
+          event: (e) => { e.stopPropagation(); e.preventDefault(); }
+        },
+      ],
+      style: {
+        position: "absolute",
+        top: String(y) + ea,
+        left: String(x) + ea,
+        width: String(contextmenuWidth) + ea,
+        height: "auto",
+      }
+    });
+    for (let { text, event } of contextmenuItems) {
+      createNode({
+        mother: tong,
+        text,
+        events: [
+          { type: "click", event }
+        ],
+        style: {
+          position: "relative",
+          display: "block",
+          width: String(100) + '%',
+          fontSize: String(contextmenuFontSize) + ea,
+          fontWeight: String(600),
+          paddingTop: String(contextmenuPaddingTop) + ea,
+          paddingBottom: String(contextmenuPaddingBottom) + ea,
+          background: colorChip.green,
+          color: colorChip.white,
+          textAlign: "center",
+          marginBottom: String(contextmenuBetween) + ea,
+          boxShadow: "0px 2px 13px -9px " + colorChip.shadow,
+          borderRadius: String(3) + ea,
+          animation: "fadeuplite 0.2s ease forwards",
+          cursor: "pointer",
+        }
+      })
+    }
+
   }
 
   mother = createNode({
@@ -218,6 +353,7 @@ FileJs.prototype.baseMaker = function () {
             attribute: [
               { draggable: "true" }
             ],
+            class: [ fileBaseClassName ],
             events: [
               {
                 type: "mousedown",
@@ -334,12 +470,14 @@ FileJs.prototype.baseMaker = function () {
                 type: "mouseup",
                 event: function (e) {
                   if (typeof instance.pastDown === "number") {
-                    if ((new Date()).valueOf() - instance.pastDown < 500) {
-                      for (let b of instance.blocks) {
-                        b.firstChild.style.opacity = String(0);
-                        b.setAttribute("toggle", "off");
+                    if (/DIV/gi.test(e.target.nodeName) && !e.target.parentNode.hasAttribute("absolute") && !e.target.hasAttribute("absolute")) {
+                      if ((new Date()).valueOf() - instance.pastDown < 500) {
+                        for (let b of instance.blocks) {
+                          b.firstChild.style.opacity = String(0);
+                          b.setAttribute("toggle", "off");
+                        }
+                        instance.selected = [];
                       }
-                      instance.selected = [];
                     }
                     calculationEvent.call(this, e);
                     instance.pastDown = null;
@@ -360,6 +498,16 @@ FileJs.prototype.baseMaker = function () {
                   calculationEvent.call(this, e);
                 }
               },
+              {
+                type: "contextmenu",
+                event: function (e) {
+                  const self = this;
+                  e.preventDefault();
+                  setQueue(() => {
+                    contextmenuEvent.call(self, e);
+                  });
+                }
+              }
             ],
             style: {
               display: "block",
@@ -582,7 +730,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
                 }
 
               }
-              console.log(instance.selected)
+
             }
           },
           {
@@ -618,21 +766,15 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
             type: "contextmenu",
             event: function (e) {
               e.preventDefault();
-              e.stopPropagation();
-              const absolute = this.getAttribute("absolute");
-              const directory = this.getAttribute("directory") === "true";
-              if (window.confirm("다운로드를 진행할까요?")) {
-                let type;
-                let files;
-                files = [];
-                files.push({ absolute, type: (directory ? "folder" : "file") });
-                GeneralJs.ajaxJson({ files }, "/ghostPass_deliveryFiles").then((obj) => {
-                  console.log(obj);
-                }).catch((err) => {
-                  console.log(err);
-                });
-                window.alert("배달 요청이 완료되었습니다! 슬렉의 #file에서 배송이 도착하면 받으시면 됩니다! 유효 시간은 지금부터 3시간입니다.");
+              const blocks = instance.blocks;
+              const index = Number(this.getAttribute("index"));
+              this.firstChild.style.opacity = String(1);
+              this.setAttribute("toggle", "on");
+              tempIndex = instance.selected.findIndex((dom) => { return Number(dom.getAttribute("index")) === index; });
+              if (typeof tempIndex === "number") {
+                instance.selected.splice(tempIndex, 1);
               }
+              instance.selected.push(this);
             }
           }
         ],

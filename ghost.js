@@ -1271,11 +1271,14 @@ Ghost.prototype.ghostRouter = function (needs) {
       });
       try {
         if (!Array.isArray(req.body.files)) {
-          throw new Error("invaild post");
+          throw new Error("invaild post : files must be array");
+        }
+        if (typeof req.body.who !== "string") {
+          throw new Error("invaild post : who must be string");
         }
         const targetFolder = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
         const googleDrive = instance.mother.googleSystem("drive");
-        const { files } = equalJson(req.body);
+        const { files, who } = equalJson(req.body);
         if (!files.every((i) => { return typeof i === "object" })) {
           throw new Error("invaild post");
         }
@@ -1315,7 +1318,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
             zipLink = await googleDrive.read_webView_inPython(zipId);
             shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
-            text = "파일 배달이 완료되었습니다! 유효 시간은 " + dateToString(future, true) + " 까지, 총 3시간입니다. : " + zipLink;
+            text = who + "님! 요청하셨던 파일 배달이 완료되었습니다.\n유효 시간은 " + dateToString(future, true) + " 까지, 총 3시간입니다.\n다운로드 : " + zipLink;
             instance.mother.slack_bot.chat.postMessage({ text, channel: "#file" });
             instance.setTimer(async function () {
               try {
