@@ -53,7 +53,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading, errorLog } = this.mother;
+  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading, errorLog, messageLog } = this.mother;
   try {
     // await this.MONGOC.connect();
     // await this.MONGOLOCALC.connect();
@@ -92,13 +92,6 @@ DevContext.prototype.launching = async function () {
     // await fileSystem(`write`, [ `${process.cwd()}/temp/remove.sh`, bashScript ]);
 
 
-    statusReading().catch((err) => {
-      console.log(err);
-    });
-
-    // errorLog("안녕?").catch((err) => {
-    //   console.log(err);
-    // })
 
 
 
