@@ -2,6 +2,7 @@ const RecordCloud = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const NotionAPIs = require(`${process.cwd()}/apps/notionAPIs/notionAPIs.js`);
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.notion = new NotionAPIs();
@@ -48,6 +49,7 @@ const RecordCloud = function () {
 RecordCloud.prototype.recordServerLaunching = async function () {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { webHook, dir, responseHeader, db, router, notion } = this;
   const { fileSystem, shell, shellLink, mongo, mongolocalinfo, requestSystem, slack_bot, ipParsing, equalJson } = this.mother;
   const http = require("http");
@@ -139,11 +141,19 @@ RecordCloud.prototype.recordServerLaunching = async function () {
       res.set(responseHeader);
       try {
         const status = equalJson(req.body);
-        let ipObj, notionObj;
+        let ipObj, notionObj, thisName;
 
         ipObj = await ipParsing(ip);
         if (ipObj === null) {
           ipObj = { ip };
+        }
+
+        thisName = "unknown";
+        for (let info in address) {
+          if (ip === address[info].ip.outer) {
+            thisName = info.replace(/info$/, '');
+            break;
+          }
         }
 
         await MONGOLOCALC.db(db).collection(router.status.collection).insertOne({
@@ -153,22 +163,19 @@ RecordCloud.prototype.recordServerLaunching = async function () {
         });
 
         notionObj = {};
-        notionObj.date = status.date;
 
+        notionObj.title = thisName;
+        notionObj.date = status.date;
         notionObj.cpu_used = String(Math.round(status.cpu.used * 100 * 100) / 100) + '%';
         notionObj.cpu_idle = String(Math.round(status.cpu.idle * 100 * 100) / 100) + '%';
         notionObj.processes_total = status.processes.total;
         notionObj.processes_running = status.processes.running;
-
         notionObj.memory_total = String(Math.round((Math.round(status.memory.total / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
         notionObj.memory_used = String(Math.round((Math.round((status.memory.total - status.memory.free) / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-
         notionObj.start = status.start;
-
         notionObj.disk_total = String(Math.round((Math.round(status.disk.total / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
         notionObj.disk_used = String(Math.round((Math.round(status.disk.used / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
         notionObj.disk_available = String(Math.round((Math.round(status.disk.available / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-
         notionObj.pm2_number = status.pm2.length;
         notionObj.pm2_names = status.pm2.map((obj) => { return obj.name; }).join(", ");
         notionObj.pm2_uptime = status.pm2.map((obj) => { return obj.uptime; }).join(", ");
