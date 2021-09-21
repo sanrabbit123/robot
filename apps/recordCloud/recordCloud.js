@@ -51,7 +51,7 @@ RecordCloud.prototype.recordServerLaunching = async function () {
   const back = this.back;
   const address = this.address;
   const { webHook, dir, responseHeader, db, router, notion } = this;
-  const { fileSystem, shell, shellLink, mongo, mongolocalinfo, requestSystem, slack_bot, ipParsing, equalJson } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongolocalinfo, requestSystem, slack_bot, ipParsing, equalJson, statusReading } = this.mother;
   const http = require("http");
   const express = require("express");
   const app = express();
@@ -73,6 +73,14 @@ RecordCloud.prototype.recordServerLaunching = async function () {
     console.log(`set db`);
 
     //set router
+    app.get("/ssl", (req, res) => {
+      statusReading().catch((err) => {
+        console.log(err);
+      });
+      res.set("Content-Type", "application/json");
+      res.send(JSON.stringify({ message: "hi" }));
+    });
+
     app.post(router.message.router, async (req, res) => {
       const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;

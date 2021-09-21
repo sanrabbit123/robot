@@ -663,7 +663,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const audio = new PlayAudio();
   let funcObj = {};
@@ -673,7 +673,9 @@ Ghost.prototype.ghostRouter = function (needs) {
     link: [ "/ssl" ],
     func: async function (req, res) {
       try {
-        instance.stylingFormSync(MONGOC).catch((err) => {
+        instance.stylingFormSync(MONGOC).then(() => {
+          return statusReading();
+        }).catch((err) => {
           console.log(err);
         });
         res.set({

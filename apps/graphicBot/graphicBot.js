@@ -731,7 +731,7 @@ GraphicBot.prototype.startWork = function () {
 GraphicBot.prototype.botRouter = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix } = this.mother;
+  const { fileSystem, shell, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, statusReading } = this.mother;
   const orderConst = 'g';
   const tong = this.tong;
   const address = this.address;
@@ -1089,6 +1089,9 @@ GraphicBot.prototype.botRouter = function () {
   funcObj.get_ssl = {
     link: [ "/ssl" ],
     func: function (req, res) {
+      statusReading().catch((err) => {
+        console.log(err);
+      });
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify({ message: "hi" }));
     }

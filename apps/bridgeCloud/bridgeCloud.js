@@ -309,7 +309,7 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, ghostRequest, headRequest, sleep } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, ghostRequest, headRequest, sleep, statusReading } = this.mother;
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, KAKAO, HUMAN ] = needs;
   const ignorePhone = this.ignorePhone;
@@ -318,6 +318,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
   //GET - ssl test
   funcObj.get_ssl = async function (req, res) {
     try {
+      statusReading().catch((err) => {
+        console.log(err);
+      });
       res.set({ "Content-Type": "text/plain" });
       res.send('this is new bridge cloud');
     } catch (e) {

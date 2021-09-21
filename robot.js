@@ -122,20 +122,21 @@ Robot.prototype.contentsMaker = function (button, arg) {
 Robot.prototype.aliveTest = function () {
   const instance = this;
   const address = this.address;
-  const { requestSystem } = this.mother;
+  const { requestSystem, messageLog, errorLog } = this.mother;
   const generalPort = 3000;
   const ghostPort = 8080;
   const controlPath = "/ssl";
-  const protocol = "https:";
   let res, targets, targetNumber, successNum, failNum, message;
 
   targets = [
-    { name: "python", host: address.pythoninfo.host, port: generalPort, },
-    { name: "console", host: address.backinfo.host, port: generalPort, },
-    { name: "bridge", host: address.bridgeinfo.host, port: generalPort, },
-    { name: "home", host: address.homeinfo.ghost.host, port: generalPort, },
-    { name: "office", host: address.officeinfo.ghost.host, port: ghostPort, },
-    { name: "homeGraphic", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
+    { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
+    { name: "console", protocol: "https:", host: address.backinfo.host, port: generalPort, },
+    { name: "bridge", protocol: "https:", host: address.bridgeinfo.host, port: generalPort, },
+    { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
+    { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
+    { name: "homeGraphic", protocol: "https:", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
+    { name: "mirror", protocol: "http:", host: address.mirrorinfo.host, port: generalPort, },
+    { name: "record", protocol: "http:", host: address.recordinfo.host, port: generalPort, },
   ];
 
   targetNumber = targets.length;
@@ -143,7 +144,7 @@ Robot.prototype.aliveTest = function () {
   failNum = 0;
   message = '';
 
-  for (let { name, host, port } of targets) {
+  for (let { name, protocol, host, port } of targets) {
     requestSystem(protocol + "//" + host + ':' + String(port) + controlPath).then((res) => {
       let boo = false;
       let timeoutTime = 1000 * 20;
@@ -157,12 +158,12 @@ Robot.prototype.aliveTest = function () {
             if (successNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "all alive");
               message = "server all alive";
-              instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+              messageLog(message).catch((e) => { console.log(e); });
             } else if (successNum + failNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "something death");
               message += "\n======================================";
               message += "\nsomething death";
-              instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+              errorLog(message).catch((e) => { console.log(e); });
             }
           }
         }
@@ -175,7 +176,7 @@ Robot.prototype.aliveTest = function () {
           console.log("\x1b[33m%s\x1b[0m", "something death");
           message += "\n======================================";
           message += "\nsomething death";
-          instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+          errorLog(message).catch((e) => { console.log(e); });
         }
       }
     }).catch((e) => {
@@ -186,7 +187,7 @@ Robot.prototype.aliveTest = function () {
         console.log("\x1b[33m%s\x1b[0m", "something death");
         message += "\n======================================";
         message += "\nsomething death";
-        instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
+        errorLog(message).catch((e) => { console.log(e); });
       }
     });
   }

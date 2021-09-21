@@ -3002,4 +3002,24 @@ Mother.prototype.errorLog = function (message) {
   });
 }
 
+Mother.prototype.messageLog = function (message) {
+  if (typeof message !== "string") {
+    throw new Error("invaild input");
+  }
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const recordUrl = "http://" + ADDRESS.recordinfo.host + ":3000/message";
+  const axios = require("axios");
+  return new Promise((resolve, reject) => {
+    axios.post(recordUrl, { message }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
 module.exports = Mother;

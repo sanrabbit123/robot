@@ -126,6 +126,7 @@ DataRouter.prototype.rou_get_Root = function () {
 
 DataRouter.prototype.rou_get_First = function () {
   const instance = this;
+  const { statusReading } = this.mother;
   let obj = {};
   let ipTong;
   ipTong = [ 127001, 172301254 ];
@@ -156,6 +157,9 @@ DataRouter.prototype.rou_get_First = function () {
 
       if (req.params.id === "ssl") {
 
+        statusReading().catch((err) => {
+          console.log(err);
+        });
         res.set({ "Content-Type": "text/plain" });
         res.send("hi");
 
