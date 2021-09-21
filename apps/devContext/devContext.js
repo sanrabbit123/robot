@@ -92,19 +92,13 @@ DevContext.prototype.launching = async function () {
     // await fileSystem(`write`, [ `${process.cwd()}/temp/remove.sh`, bashScript ]);
 
 
-
-    const notion = new NotionAPIs();
-
-
-    await notion.appendRow("815f5b7b6491497d96f47b693bf6664c", {
-      cscs: '',
-      num: 200,
-      c: new Date(),
-      boo: false,
-      name: 'jsName'
+    statusReading().then((obj) => {
+      return requestSystem("http://" + instance.address.recordinfo.host + ":3000/status", obj, { headers: { "Content-Type": "application/json" } });
+    }).then((res) => {
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
     });
-
-
 
 
 

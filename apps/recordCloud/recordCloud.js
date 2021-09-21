@@ -165,16 +165,16 @@ RecordCloud.prototype.recordServerLaunching = async function () {
 
         notionObj.start = status.start;
 
-        notionObj.disk_total = String(((Math.round(status.disk.total / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-        notionObj.disk_used = String(((Math.round(status.disk.used / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-        notionObj.disk_available = String(((Math.round(status.disk.available / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
+        notionObj.disk_total = String(Math.round((Math.round(status.disk.total / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
+        notionObj.disk_used = String(Math.round((Math.round(status.disk.used / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
+        notionObj.disk_available = String(Math.round((Math.round(status.disk.available / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
 
         notionObj.pm2_number = status.pm2.length;
         notionObj.pm2_names = status.pm2.map((obj) => { return obj.name; }).join(", ");
         notionObj.pm2_uptime = status.pm2.map((obj) => { return obj.uptime; }).join(", ");
         notionObj.pm2_status = status.pm2.map((obj) => { return obj.status; }).join(", ");
         notionObj.pm2_cpu = status.pm2.map((obj) => { return String(Math.round(obj.cpu * 100 * 100) / 100) + '%'; }).join(", ");
-        notionObj.pm2_memory = status.pm2.map((obj) => { return String(((Math.round(obj.memory / 1024) / 1024) * 1000) / 1000) + "Mb"; }).join(", ");
+        notionObj.pm2_memory = status.pm2.map((obj) => { return String(Math.round((Math.round(obj.memory / 1024) / 1024) * 1000) / 1000) + "Mb"; }).join(", ");
 
         notion.appendRow(router.status.notion, notionObj).then((message) => {
           console.log(message);
