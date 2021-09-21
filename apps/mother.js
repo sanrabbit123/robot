@@ -2732,11 +2732,28 @@ Mother.prototype.sendJandi = function (message) {
   });
 }
 
-Mother.prototype.statusReading = function () {
+Mother.prototype.statusReading = function (sendLog = true) {
   const os = require("os");
   const mac = /darwin/gi.test(os.platform());
   const { spawn } = require("child_process");
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const recordUrl = "http://" + ADDRESS.recordinfo.host + ":3000/status";
+  const axios = require("axios");
   const now = new Date();
+  const jandi = {
+    url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Accept": "application/vnd.tosslab.jandi-v2+json"
+    },
+    message: (message) => {
+      return {
+        body: message,
+        connectColor: "#FAC11B",
+        connectInfo: []
+      }
+    }
+  };
   const pm2Promise = () => {
     const pm2 = spawn("pm2", [ "list" ]);
     let result;
@@ -2939,6 +2956,18 @@ Mother.prototype.statusReading = function () {
             return pm2Promise();
           }).then((pm2Result) => {
             result.pm2 = pm2Result;
+            if (sendLog) {
+              return axios.post(recordUrl, result, { headers: { "Content-Type": "application/json" } });
+            } else {
+              return { status: 200 };
+            }
+          }).then((res) => {
+            if (res.status === 200) {
+              return axios.post(jandi.url, jandi.message(res.data.name + " statusReading success"), { headers: jandi.headers });
+            } else {
+              reject("axios request error");
+            }
+          }).then(() => {
             resolve(result);
           }).catch((err) => {
             reject(err);
@@ -2950,6 +2979,26 @@ Mother.prototype.statusReading = function () {
       num++;
     });
     top.stderr.on("data", (data) => { reject(data); });
+  });
+}
+
+Mother.prototype.errorLog = function (message) {
+  if (typeof message !== "string") {
+    throw new Error("invaild input");
+  }
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const recordUrl = "http://" + ADDRESS.recordinfo.host + ":3000/error;
+  const axios = require("axios");
+  return new Promise((resolve, reject) => {
+    axios.post(recordUrl, { message }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
   });
 }
 

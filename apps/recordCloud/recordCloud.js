@@ -83,16 +83,25 @@ RecordCloud.prototype.recordServerLaunching = async function () {
         if (typeof req.body.message !== "string") {
           throw new Error("must be message string field");
         }
-        let ipObj;
+        let ipObj, thisName;
 
         ipObj = await ipParsing(ip);
         if (ipObj === null) {
           ipObj = { ip };
         }
+
+        thisName = "unknown";
+        for (let info in address) {
+          if (ip === address[info].ip.outer) {
+            thisName = info.replace(/info$/, '');
+            break;
+          }
+        }
+
         await MONGOLOCALC.db(db).collection(router.message.collection).insertOne({
           date: new Date(),
           message: req.body.message,
-          from: { referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
+          from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
         await requestSystem(webHook.url, webHook.message(req.body.message), { headers: webHook.headers });
         res.send(JSON.stringify({ message: "done" }));
@@ -111,23 +120,31 @@ RecordCloud.prototype.recordServerLaunching = async function () {
         if (req.body.message === undefined) {
           throw new Error("must be message field");
         }
-        let ipObj;
+        let ipObj, thisName;
 
         ipObj = await ipParsing(ip);
         if (ipObj === null) {
           ipObj = { ip };
         }
 
+        thisName = "unknown";
+        for (let info in address) {
+          if (ip === address[info].ip.outer) {
+            thisName = info.replace(/info$/, '');
+            break;
+          }
+        }
+
         await MONGOLOCALC.db(db).collection(router.error.collection).insertOne({
           date: new Date(),
           message: req.body.message,
-          from: { referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
+          from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
 
         await requestSystem(webHook.url, webHook.message(req.body.message), { headers: webHook.headers });
         slack_bot.chat.postMessage({ text: req.body.message, channel: webHook.channel });
 
-        res.send(JSON.stringify({ message: "done" }));
+        res.send(JSON.stringify({ name: thisName, message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
@@ -159,7 +176,7 @@ RecordCloud.prototype.recordServerLaunching = async function () {
         await MONGOLOCALC.db(db).collection(router.status.collection).insertOne({
           date: new Date(),
           status: equalJson(JSON.stringify(status)),
-          from: { referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
+          from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
 
         notionObj = {};

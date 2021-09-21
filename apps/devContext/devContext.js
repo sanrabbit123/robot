@@ -92,11 +92,7 @@ DevContext.prototype.launching = async function () {
     // await fileSystem(`write`, [ `${process.cwd()}/temp/remove.sh`, bashScript ]);
 
 
-    statusReading().then((obj) => {
-      return requestSystem("http://" + instance.address.recordinfo.host + ":3000/status", obj, { headers: { "Content-Type": "application/json" } });
-    }).then((res) => {
-      console.log(res);
-    }).catch((err) => {
+    statusReading(true).catch((err) => {
       console.log(err);
     });
 
