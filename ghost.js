@@ -91,7 +91,7 @@ Ghost.prototype.consoleQ = function (question) {
 
 Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
   const instance = this;
-  const { requestSystem, equalJson, stringToDate, sendJandi } = this.mother;
+  const { requestSystem, equalJson, stringToDate, sendJandi, messageLog, errorLog } = this.mother;
   const { mongo, mongopythoninfo } = this.mother;
   const { officeinfo: { widsign: { id, key, endPoint } } } = this.address;
   const collection = "stylingForm";
@@ -207,13 +207,13 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
         }
       }
 
-      await sendJandi("계약서 동기화 완료");
     }
 
   } catch (e) {
-    console.log(e);
+    await errorLog(e.message);
   } finally {
     await MONGOC.close();
+    await messageLog("styling form sync success : " + JSON.stringify(new Date()));
   }
 }
 

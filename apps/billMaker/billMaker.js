@@ -4343,7 +4343,7 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
 BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, slack_bot, autoComma } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, slack_bot, autoComma, messageLog, errorLog } = this.mother;
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
     const collection = "taxBill";
@@ -4720,10 +4720,10 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
     }
 
   } catch (e) {
-    console.log(e);
+    await errorLog(e.message);
   } finally {
     await MONGOLOCALC.close();
-    await slack_bot.chat.postMessage({ text: "taxBill success : " + JSON.stringify(new Date()), channel: "#error_log" });
+    await messageLog("taxBill success : " + JSON.stringify(new Date()));
   }
 }
 

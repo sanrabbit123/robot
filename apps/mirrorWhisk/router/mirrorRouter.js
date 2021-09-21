@@ -395,16 +395,15 @@ MirrorRouter.prototype.rou_get_Ssl = function () {
 
 MirrorRouter.prototype.rou_get_callHistory = function () {
   const instance = this;
-  const { sendJandi } = this.mother;
+  const { messageLog, errorLog } = this.mother;
   let obj = {};
   obj.link = "/callHistory";
   obj.func = async function (req, res) {
     try {
       instance.callHistory().then(() => {
-        return sendJandi("callHistory update success : " + JSON.stringify(new Date()));
+        return messageLog("callHistory update success : " + JSON.stringify(new Date()));
       }).catch((err) => {
-        instance.mother.slack_bot.chat.postMessage({ text: "callHistory error : " + err.message, channel: "#error_log" });
-        console.log(err);
+        errorLog("callHistory error : " + err.message).catch((e) => { console.log(e); });
       });
       res.set({
         "Content-Type": "application/json",
