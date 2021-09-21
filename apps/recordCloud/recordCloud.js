@@ -112,7 +112,7 @@ RecordCloud.prototype.recordServerLaunching = async function () {
           from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
         await requestSystem(webHook.url, webHook.message(req.body.message), { headers: webHook.headers });
-        res.send(JSON.stringify({ message: "done" }));
+        res.send(JSON.stringify({ name: thisName, message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
@@ -214,7 +214,7 @@ RecordCloud.prototype.recordServerLaunching = async function () {
           throw new Error(err);
         });
 
-        res.send(JSON.stringify({ message: "done" }));
+        res.send(JSON.stringify({ name: thisName, message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
