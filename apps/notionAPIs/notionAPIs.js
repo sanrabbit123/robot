@@ -11,6 +11,7 @@ const NotionAPIs = function () {
     "Content-Type": "application/json",
     "Notion-Version": "2021-08-16"
   };
+  this.pythonApp = this.dir + "/python/app.py";
 }
 
 NotionAPIs.pageDictionay = {
@@ -33,6 +34,99 @@ NotionAPIs.prototype.hexToId = function (hex) {
     return ([ f1, f2, f3, f4, f5 ]).join('-');
   } else {
     throw new Error("invaild input");
+  }
+}
+
+NotionAPIs.prototype.getCollection = async function (id) {
+  if (typeof id !== "string") {
+    throw new Error("input must be collection id");
+  }
+  const instance = this;
+  const { stringToDate, pythonExecute, equalJson } = this.mother;
+  try {
+    let result, temp, typeArr, keyArr;
+
+    temp = await pythonExecute(this.pythonApp, [ "getCollection" ], { id });
+
+    if (temp.length > 0) {
+
+      keyArr = Object.keys(temp[0]);
+      typeArr = (new Array(keyArr.length)).fill(null, 0);
+
+      for (let obj of temp) {
+        for (let i = 0; i < keyArr.length; i++) {
+          if (typeArr[i] === null) {
+            typeArr[i] = obj[keyArr[i]];
+          }
+        }
+      }
+
+      typeArr = typeArr.map((i) => {
+        let first;
+        first = typeof i;
+        if (first === "object") {
+          if (first instanceof Date) {
+            return "date";
+          } else if (first === null) {
+            return "null";
+          } else if (Array.isArray(first)) {
+            return "array";
+          } else {
+            return "null";
+          }
+        } else if (first === "string") {
+          if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] [0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/gi.test(i)) {
+            return "date";
+          } else if (/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(i)) {
+            return "date";
+          } else {
+            return first;
+          }
+        } else {
+          return first;
+        }
+      });
+
+      result = temp.map((obj) => {
+        let newObj;
+        newObj = {};
+        for (let i = 0; i < keyArr.length; i++) {
+          if (typeArr[i] === "date") {
+            newObj[keyArr[i]] = stringToDate(obj[keyArr[i]] === null ? "해당 없음" : obj[keyArr[i]]);
+          } else if (typeArr[i] === "number") {
+            newObj[keyArr[i]] = obj[keyArr[i]] === null ? 0 : obj[keyArr[i]];
+          } else {
+            newObj[keyArr[i]] = obj[keyArr[i]];
+          }
+        }
+        return newObj;
+      });
+
+      return result;
+    } else {
+      return [];
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+NotionAPIs.prototype.appendRow = async function (id, dictionary) {
+  if (typeof id !== "string" || typeof dictionary !== "object") {
+    throw new Error("input must be collection id, row dictionary");
+  }
+  const instance = this;
+  const { dateToString, pythonExecute } = this.mother;
+  try {
+    for (let k in dictionary) {
+      if (dictionary[k] instanceof Date) {
+        dictionary[k] = dateToString(dictionary[k], true);
+      }
+    }
+    await pythonExecute(this.pythonApp, [ "appendRow" ], { id, dictionary });
+    return "done";
+  } catch (e) {
+    console.log(e);
   }
 }
 

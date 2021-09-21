@@ -53,10 +53,10 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing } = this.mother;
+  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading } = this.mother;
   try {
-    await this.MONGOC.connect();
-    await this.MONGOLOCALC.connect();
+    // await this.MONGOC.connect();
+    // await this.MONGOLOCALC.connect();
     const address = this.address;
     const back = this.back;
     const report = new BackReport();
@@ -93,9 +93,16 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const notion = new NotionAPIs();
 
 
-
+    await notion.appendRow("815f5b7b6491497d96f47b693bf6664c", {
+      cscs: '',
+      num: 200,
+      c: new Date(),
+      boo: false,
+      name: 'jsName'
+    });
 
 
 
@@ -1365,8 +1372,8 @@ DevContext.prototype.launching = async function () {
   } catch (e) {
     console.log(e);
   } finally {
-    await this.MONGOC.close();
-    await this.MONGOLOCALC.close();
+    // await this.MONGOC.close();
+    // await this.MONGOLOCALC.close();
     console.log(`done`);
   }
 }

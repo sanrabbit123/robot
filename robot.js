@@ -331,6 +331,15 @@ Robot.prototype.recordCloud = async function (sw, boo = true) {
   }
 }
 
+Robot.prototype.statusReading = async function (sw, boo = true) {
+  try {
+    const result = await this.mother.statusReading();
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.pythonCloud = async function () {
   try {
     const ReceiptObserver = require(`${process.cwd()}/apps/receiptObserver/receiptObserver.js`);
@@ -1062,6 +1071,13 @@ const MENU = {
   mirrorWhisk: async function () {
     try {
       await robot.mirrorWhisk();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  statusReading: async function () {
+    try {
+      await robot.statusReading();
     } catch (e) {
       console.log(e);
     }

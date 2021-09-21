@@ -2732,7 +2732,7 @@ Mother.prototype.sendJandi = function (message) {
   });
 }
 
-Mother.prototype.computerReading = function () {
+Mother.prototype.statusReading = function () {
   const os = require("os");
   const mac = /darwin/gi.test(os.platform());
   const { spawn } = require("child_process");
@@ -2767,11 +2767,11 @@ Mother.prototype.computerReading = function () {
             let memory;
             memory = arr[memIndex];
             if (/mb/gi.test(memory)) {
-              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1000 * 1000);
+              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1024 * 1024);
             } else if (/kb/gi.test(memory)) {
-              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1000);
+              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1024);
             } else if (/gb/gi.test(memory)) {
-              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1000 * 1000 * 1000);
+              memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')) * 1024 * 1024 * 1024);
             } else {
               memory = Math.round(Number(memory.replace(/[^0-9\-\.]/gi, '')));
             }
@@ -2824,35 +2824,35 @@ Mother.prototype.computerReading = function () {
 
             total = Math.floor(Number(arr[totalIndex].replace(/[^0-9\.\-]/gi, '')) * 100) / 100;
             if (/T/gi.test(arr[totalIndex])) {
-              total = total * 1000 * 1000 * 1000 * 1000;
+              total = total * 1024 * 1024 * 1024 * 1024;
             } else if (/G/gi.test(arr[totalIndex])) {
-              total = total * 1000 * 1000 * 1000;
+              total = total * 1024 * 1024 * 1024;
             } else if (/M/gi.test(arr[totalIndex])) {
-              total = total * 1000 * 1000;
+              total = total * 1024 * 1024;
             } else if (/K/gi.test(arr[totalIndex])) {
-              total = total * 1000;
+              total = total * 1024;
             }
 
             used = Math.floor(Number(arr[usedIndex].replace(/[^0-9\.\-]/gi, '')) * 100) / 100;
             if (/T/gi.test(arr[usedIndex])) {
-              used = used * 1000 * 1000 * 1000 * 1000;
+              used = used * 1024 * 1024 * 1024 * 1024;
             } else if (/G/gi.test(arr[usedIndex])) {
-              used = used * 1000 * 1000 * 1000;
+              used = used * 1024 * 1024 * 1024;
             } else if (/M/gi.test(arr[usedIndex])) {
-              used = used * 1000 * 1000;
+              used = used * 1024 * 1024;
             } else if (/K/gi.test(arr[usedIndex])) {
-              used = used * 1000;
+              used = used * 1024;
             }
 
             available = Math.floor(Number(arr[availableIndex].replace(/[^0-9\.\-]/gi, '')) * 100) / 100;
             if (/T/gi.test(arr[availableIndex])) {
-              available = available * 1000 * 1000 * 1000 * 1000;
+              available = available * 1024 * 1024 * 1024 * 1024;
             } else if (/G/gi.test(arr[availableIndex])) {
-              available = available * 1000 * 1000 * 1000;
+              available = available * 1024 * 1024 * 1024;
             } else if (/M/gi.test(arr[availableIndex])) {
-              available = available * 1000 * 1000;
+              available = available * 1024 * 1024;
             } else if (/K/gi.test(arr[availableIndex])) {
-              available = available * 1000;
+              available = available * 1024;
             }
 
             return { position, total, used, available };
