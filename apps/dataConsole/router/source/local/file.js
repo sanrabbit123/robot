@@ -89,11 +89,8 @@ FileJs.prototype.baseMaker = function () {
           }
 
           parsingLinks = await ajaxJson({ targets: images.map((i) => { return i.image }), frontMode: true }, "/ghostPass_dirParsing");
-
-          console.log(parsingLinks);
-
           images = images.map((obj, index) => {
-            obj.image = window.encodeURIComponent(parsingLinks[index]);
+            obj.image = fileServerAddress + parsingLinks[index].split('/').map((i) => { return window.encodeURIComponent(i); }).join('/');
             return obj;
           });
 
