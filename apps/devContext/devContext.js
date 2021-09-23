@@ -69,8 +69,6 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("* 1.1)"));
 
 
-    const audio = new PlayAudio();
-    await audio.textToVoice("안녕하세요!");
 
 
     // 현금영수증 발급

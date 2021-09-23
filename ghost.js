@@ -1828,46 +1828,9 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      const map = instance.address.officeinfo.map;
-      const targetMac = instance.address.officeinfo.ghost.voice.mac;
-      const targetPort = instance.address.officeinfo.ghost.voice.port;
-      let target, text;
-      target = null;
-      for (let { mac, ip } of map) {
-        if (mac === targetMac) {
-          target = ip;
-        }
-      }
-      if (target !== null) {
-        target = "http://" + target + ":" + String(targetPort);
-        text = (req.body.text === undefined ? "안녕하세요!" : req.body.text);
-        headRequest(target + "/confirm").then(async (response) => {
-          const { statusCode } = response;
-          let raw, res, doing;
-          if (statusCode === 200) {
-            raw = await requestSystem(target + "/confirm");
-            if (raw.data.doing !== undefined) {
-              await sleep(1000);
-              doing = raw.data.doing;
-              while (doing === 1) {
-                console.log("waiting...");
-                await sleep(1000);
-                raw = await requestSystem(target + "/confirm");
-                if (raw.data.doing !== undefined) {
-                  doing = raw.data.doing;
-                } else {
-                  doing = 2;
-                }
-              }
-              if (doing === 0) {
-                await requestSystem(target + "/voice", { text }, { headers: { "Content-Type": "application/json" } });
-              }
-            }
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-      }
+      audio.textToVoice(typeof req.body.text !== "string" ? "안녕하세요!" : req.body.text).catch((err) => {
+        console.log(err);
+      });
       res.send(JSON.stringify({ message: "will do" }));
     }
   };
