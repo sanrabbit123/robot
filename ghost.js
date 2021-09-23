@@ -716,6 +716,8 @@ Ghost.prototype.ghostRouter = function (needs) {
             let filesKey, fromArr, num;
             let tempArr, tempString, tempDir;
 
+            console.log(toArr);
+
             filesKey = Object.keys(files);
             filesKey.sort((a, b) => {
               return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
@@ -725,6 +727,8 @@ Ghost.prototype.ghostRouter = function (needs) {
             for (let key of filesKey) {
               fromArr.push(files[key]);
             }
+
+            console.log(fromArr);
 
             num = 0;
             for (let { path } of fromArr) {
@@ -745,7 +749,7 @@ Ghost.prototype.ghostRouter = function (needs) {
               num++;
             }
 
-            res.json({ "message": "done" });
+            res.send(JSON.stringify({ "message": "done" }));
           }
         } catch (e) {
           console.log(e);

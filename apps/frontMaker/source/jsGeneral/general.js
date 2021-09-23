@@ -536,6 +536,7 @@ GeneralJs.nodes = {
   aside: document.createElement('ASIDE'),
   video: document.createElement('VIDEO'),
   source: document.createElement('SOURCE'),
+  form: document.createElement('FORM')
 }
 
 GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0) {

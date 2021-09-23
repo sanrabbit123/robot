@@ -864,6 +864,55 @@ FileJs.prototype.baseMaker = function () {
                 type: "drop",
                 event: function (e) {
                   e.preventDefault();
+                  if (e.dataTransfer.files.length > 0) {
+                    console.log(e.dataTransfer.files);
+                    let form, input;
+
+                    form = createNode({
+                      mother: document.body,
+                      mode: "form",
+                      attribute: [
+                        { action: OFFICEHOST + "/fileUpload" },
+                        { method: "post" }
+                      ],
+                      style: {
+                        display: "none",
+                      },
+                      children: [
+                        {
+                          mode: "input",
+                          attribute: [
+                            { type: "file" }
+                          ],
+                          style: {
+                            display: "none",
+                          }
+                        },
+                        {
+                          mode: "input",
+                          attribute: [
+                            { type: "text" },
+                            { value: JSON.stringify([ "/drive/HomeLiaisonServer/test.jpg" ]) }
+                          ],
+                          style: {
+                            display: "none",
+                          }
+                        },
+                      ]
+                    });
+                    input = form.firstChild;
+
+                    input.files = e.dataTransfer.files;
+
+                    console.log(OFFICEHOST + "/fileUpload");
+
+                    console.log(form);
+                    console.log(input);
+
+                    form.submit();
+                    console.log("success");
+
+                  }
                   calculationEvent.call(this, e);
                 }
               },
