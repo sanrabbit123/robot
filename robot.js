@@ -135,8 +135,7 @@ Robot.prototype.aliveTest = function () {
     { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
     { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
     { name: "homeGraphic", protocol: "https:", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
-    { name: "mirror", protocol: "http:", host: address.mirrorinfo.host, port: generalPort, },
-    { name: "record", protocol: "http:", host: address.recordinfo.host, port: generalPort, },
+    { name: "mirror", protocol: "http:", host: address.mirrorinfo.host, port: generalPort, }
   ];
 
   targetNumber = targets.length;
