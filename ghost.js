@@ -714,7 +714,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             });
 
             const staticFolder = instance.address.officeinfo.ghost.file.static;
-            const toArr = JSON.parse(fields.toArr);
+            const toArr = JSON.parse(fields.toArr).map((path) => { return hangul.fixString(path); });
             let filesKey, fromArr, num;
             let tempArr, tempString, tempDir;
 
@@ -743,7 +743,7 @@ Ghost.prototype.ghostRouter = function (needs) {
                 tempString += '/';
                 tempString += tempArr[i];
               }
-              shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + hangul.fixString(toArr[num]))}`);
+              shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
               num++;
             }
 
