@@ -1465,7 +1465,11 @@ Ghost.prototype.ghostRouter = function (needs) {
         for (let path of targets) {
           result.push(instance.dirParsing(path));
         }
-        res.send(JSON.stringify(result));
+        if (req.body.frontMode !== undefined) {
+          res.send(JSON.stringify(result.map((i) => { return i.replace(new RegExp('^' + instance.address.officeinfo.ghost.file.static, 'i'), ''); })));
+        } else {
+          res.send(JSON.stringify(result));
+        }
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }

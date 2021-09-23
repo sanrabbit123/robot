@@ -67,6 +67,7 @@ FileJs.prototype.baseMaker = function () {
       text: "미리보기",
       event: async function (e) {
         const previewClassName = "previewWhiteBase";
+        const fileServerAddress = OFFICEHOST.split(':').slice(0, -1).join(':');
         const base = document.querySelector('.' + fileBaseClassName);
         const targets = document.querySelectorAll('.' + contextmenuClassName);
         let images, tong;
@@ -87,7 +88,7 @@ FileJs.prototype.baseMaker = function () {
             }
           }
 
-          parsingLinks = await ajaxJson({ targets: images.map((i) => { return i.image }) }, "/ghostPass_dirParsing");
+          parsingLinks = await ajaxJson({ targets: images.map((i) => { return i.image }), frontMode: true }, "/ghostPass_dirParsing");
 
           images = images.map((obj, index) => {
             obj.image = window.encodeURIComponent(parsingLinks[index]);
@@ -927,7 +928,6 @@ FileJs.prototype.pathReload = function (searchResult = false) {
   const { colorChip } = GeneralJs;
   const target = document.querySelector(".path");
   const between = `&nbsp;&nbsp;<b style="font-weight:300;color:${colorChip.gray5}">></b>&nbsp;&nbsp;`;
-  console.log(this.path);
   if (!searchResult) {
     target.textContent = "";
     if (!/^__photo__/.test(this.path) && !/^__designer__/.test(this.path)) {
