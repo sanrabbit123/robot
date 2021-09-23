@@ -70,7 +70,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // 현금영수증 발급
     // const url = "https://iniapi.inicis.com/api/v1/receipt";
     // const headers = { "Content-type": " application/x-www-form-urlencoded;charset=utf-8" };
