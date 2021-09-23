@@ -838,11 +838,8 @@ MirrorRouter.prototype.rou_post_statusLog = function () {
       "Access-Control-Allow-Headers": '*',
     });
     try {
-      if (typeof req.body.message !== "string") {
-        throw new Error("must be message string field");
-      }
       const db = "miro81";
-      const collection = "messageLog";
+      const collection = "statusLog";
       const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
       const rawUserAgent = req.useragent;
       const { source: userAgent, browser, os, platform } = rawUserAgent;

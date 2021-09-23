@@ -68,9 +68,6 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
 
-    console.log(await errorLog("test"));
-
-
     // 현금영수증 발급
     // const url = "https://iniapi.inicis.com/api/v1/receipt";
     // const headers = { "Content-type": " application/x-www-form-urlencoded;charset=utf-8" };
