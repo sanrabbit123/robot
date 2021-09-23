@@ -1211,12 +1211,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         target = instance.dirParsing(target);
         leafParsing(target).then((list) => {
           res.send(JSON.stringify(list.map((i) => {
-            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
+            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__").replace(/^\//, '');
             if (/^\//i.test(i.absolute)) {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
             }
             if (/^\//i.test(i.absolute)) {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__").replace(/^\//, '');
             }
             return i;
           }).filter((i) => {
@@ -1232,12 +1232,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         finalTong = [];
         leafParsing(target).then((list) => {
           finalTong = finalTong.concat(list.map((i) => {
-            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
+            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__").replace(/^\//, '');
             if (/^\//i.test(i.absolute)) {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
             }
             if (/^\//i.test(i.absolute)) {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__").replace(/^\//, '');
             }
             return i;
           }).filter((i) => {
@@ -1299,12 +1299,12 @@ Ghost.prototype.ghostRouter = function (needs) {
           target = instance.dirParsing(target);
           leafParsing(target, true, req.body.keyword).then((list) => {
             res.send(JSON.stringify(list.map((i) => {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__").replace(/^\//, '');
               if (/^\//i.test(i.absolute)) {
-                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
               }
               if (/^\//i.test(i.absolute)) {
-                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__").replace(/^\//, '');
               }
               return i;
             }).filter((i) => {
@@ -1320,12 +1320,12 @@ Ghost.prototype.ghostRouter = function (needs) {
           finalTong = [];
           leafParsing(target, true, req.body.keyword).then((list) => {
             finalTong = finalTong.concat(list.map((i) => {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__").replace(/^\//, '');
               if (/^\//i.test(i.absolute)) {
-                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
               }
               if (/^\//i.test(i.absolute)) {
-                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__").replace(/^\//, '');
               }
               return i;
             }).filter((i) => {
@@ -1336,7 +1336,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             return leafParsing(instance.photoServerClient, true, req.body.keyword);
           }).then((list) => {
             finalTong = finalTong.concat(list.map((i) => {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
               return i;
             }).filter((i) => {
               return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
@@ -1346,7 +1346,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             return leafParsing(instance.photoServerDesigner, true, req.body.keyword);
           }).then((list) => {
             finalTong = finalTong.concat(list.map((i) => {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__designer__");
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__designer__").replace(/^\//, '');
               return i;
             }).filter((i) => {
               return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
@@ -1410,18 +1410,10 @@ Ghost.prototype.ghostRouter = function (needs) {
         shareName = "delivery_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)) + "_" + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
         command = "";
         for (let { absolute, type } of files) {
-          if (!/__photo__/gi.test(absolute) && !/__designer__/gi.test(absolute)) {
-            if (type === "folder") {
-              command += `cp -r ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
-            } else {
-              command += `cp ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
-            }
+          if (type === "folder") {
+            command += `cp -r ${shellLink(instance.dirParsing(absolute))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
           } else {
-            if (type === "folder") {
-              command += `cp -r ${shellLink(instance.dirParsing(absolute))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
-            } else {
-              command += `cp ${shellLink(instance.dirParsing(absolute))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
-            }
+            command += `cp ${shellLink(instance.dirParsing(absolute))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
           }
         }
         command += `cd ${shellLink(process.env.HOME + "/" + tempFolderName)};zip -r ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;cd ${shellLink(currentFolder)}`;
@@ -1445,6 +1437,35 @@ Ghost.prototype.ghostRouter = function (needs) {
           }
         });
         res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
+  //POST - dirParsing
+  funcObj.post_dirParsing = {
+    link: [ "/dirParsing" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.targets === undefined) {
+          throw new Error("invaild post : targets must be array");
+        }
+        const { targets } = equalJson(req.body);
+        if (!Array.isArray(targets)) {
+          throw new Error("invaild post : targets must be array");
+        }
+        let result = [];
+        for (let path of targets) {
+          result.push(instance.dirParsing(path));
+        }
+        res.send(JSON.stringify(result));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }

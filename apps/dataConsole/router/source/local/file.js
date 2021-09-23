@@ -65,9 +65,8 @@ FileJs.prototype.baseMaker = function () {
     },
     {
       text: "미리보기",
-      event: function (e) {
+      event: async function (e) {
         const previewClassName = "previewWhiteBase";
-        const fileServerAddress = OFFICEHOST.split(':').slice(0, -1).join(':') + "/drive/HomeLiaisonServer";
         const base = document.querySelector('.' + fileBaseClassName);
         const targets = document.querySelectorAll('.' + contextmenuClassName);
         let images, tong;
@@ -75,341 +74,351 @@ FileJs.prototype.baseMaker = function () {
         let num;
         let imageMargin;
         let columnsLength;
+        let parsingLinks;
+        try {
+          imageMargin = 3;
+          columnsLength = 5;
+          previewMargin = 28;
 
-        imageMargin = 3;
-        columnsLength = 5;
-        previewMargin = 28;
-
-        images = [];
-        for (let dom of instance.blocks) {
-          if (/png/gi.test(dom.getAttribute("kind")) || /jpg/gi.test(dom.getAttribute("kind"))) {
-            images.push({ image: fileServerAddress + window.encodeURIComponent(dom.getAttribute("absolute")), name: dom.getAttribute("name") });
-          }
-        }
-
-        for (let dom of targets) {
-          dom.parentNode.removeChild(dom);
-        }
-
-        createNode({
-          mother: base,
-          class: [ previewClassName ],
-          events: [
-            {
-              type: [ "mouseup", "mousedown", "mousemove" ],
-              event: (e) => { e.stopPropagation(); }
-            },
-            {
-              type: [ "contextmenu" ],
-              event: (e) => { e.stopPropagation(); e.preventDefault(); }
-            },
-            {
-              type: "click",
-              event: function (e) {
-                e.stopPropagation();
-                const targets = document.querySelectorAll('.' + previewClassName);
-                for (let dom of targets) {
-                  dom.parentNode.removeChild(dom);
-                }
-              }
+          images = [];
+          for (let dom of instance.blocks) {
+            if (/png/gi.test(dom.getAttribute("kind")) || /jpg/gi.test(dom.getAttribute("kind"))) {
+              images.push({ image: dom.getAttribute("absolute"), name: dom.getAttribute("name") });
             }
-          ],
-          style: {
-            position: "fixed",
-            top: String(0) + ea,
-            left: String(0) + ea,
-            width: String(100) + '%',
-            height: String(100) + '%',
-            cursor: "pointer",
-            background: colorChip.gray3,
-            zIndex: String(2),
-            animation: "justfadein 0.3s ease forwards",
           }
-        });
 
-        tong = createNode({
-          mother: base,
-          class: [ previewClassName ],
-          events: [
-            {
-              type: [ "mouseup", "mousedown", "mousemove" ],
-              event: (e) => { e.stopPropagation(); }
-            },
-            {
-              type: [ "contextmenu", "click" ],
-              event: (e) => { e.stopPropagation(); e.preventDefault(); }
-            },
-          ],
-          style: {
-            position: "absolute",
-            top: String(previewMargin) + ea,
-            left: String(previewMargin) + ea,
-            width: withOut(previewMargin * 2, ea),
-            height: withOut(previewMargin * 2, ea),
-            background: colorChip.white,
-            borderRadius: String(3) + "px",
-            boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-            zIndex: String(2),
-            animation: "fadeuphard 0.3s ease forwards",
-          },
-          children: [
-            {
-              style: {
-                position: "relative",
-                top: String(previewMargin) + ea,
-                marginLeft: String(previewMargin) + ea,
-                width: withOut(previewMargin * 2, ea),
-                height: withOut(previewMargin, ea),
-                overflow: "scroll",
-              },
-              children: [
-                {
-                  style: {
-                    position: "relative",
-                    width: String(100) + '%',
-                    height: "auto",
-                  }
-                }
-              ]
-            }
-          ]
-        }).firstChild.firstChild;
+          parsingLinks = await ajaxJson({ targets: images.map((i) => { return i.image }) }, "/ghostPass_dirParsing");
 
-        num = 0;
-        for (let { image, name } of images) {
+          images = images.map((obj, index) => {
+            obj.image = window.encodeURIComponent(parsingLinks[index]);
+            return obj;
+          });
+
+          for (let dom of targets) {
+            dom.parentNode.removeChild(dom);
+          }
+
           createNode({
-            mother: tong,
-            mode: "img",
-            attribute: [
-              { src: image },
-              { index: String(num) },
-              { length: String(images.length) }
-            ],
-            style: {
-              position: "relative",
-              display: "inline-block",
-              width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
-              height: "auto",
-              marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
-              marginBottom: String(imageMargin) + ea,
-              borderRadius: String(3) + "px",
-              verticalAlign: "top",
-              cursor: "pointer",
-            },
+            mother: base,
+            class: [ previewClassName ],
             events: [
+              {
+                type: [ "mouseup", "mousedown", "mousemove" ],
+                event: (e) => { e.stopPropagation(); }
+              },
+              {
+                type: [ "contextmenu" ],
+                event: (e) => { e.stopPropagation(); e.preventDefault(); }
+              },
               {
                 type: "click",
                 event: function (e) {
                   e.stopPropagation();
-                  const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                  const totalImages = equalJson(JSON.stringify(images));
-                  const mother = document.getElementById("totalcontents");
-                  const className = "photoSelectedTarget";
-                  const length = Number(this.getAttribute("length"));
-                  const zIndex = 3;
-                  let img, height, imgBox;
-                  let title, titleSize, bottom;
-                  let titleBox;
-                  let leftArrow, rightArrow;
-                  let leftArrowBox, rightArrowBox;
-                  let arrowHeight;
-                  let arrowMargin;
-                  let index, src;
-                  let convertEvent;
-
-                  index = Number(this.getAttribute("index"));
-                  src = this.getAttribute("src");
-
-                  convertEvent = () => {};
-
-                  height = 78;
-                  titleSize = 2;
-                  bottom = 6.6;
-                  arrowHeight = 1.7;
-                  arrowMargin = 78;
-
-                  createNode({
-                    mother,
-                    class: [ className ],
-                    events: [
-                      {
-                        type: "click",
-                        event: function (e) {
-                          const removeTargets = document.querySelectorAll('.' + className);
-                          for (let dom of removeTargets) {
-                            mother.removeChild(dom);
-                          }
-                        }
-                      }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      width: String(100) + '%',
-                      height: String(100) + '%',
-                      background: colorChip.darkDarkShadow,
-                      zIndex: String(zIndex),
-                      animation: "justfadeineight 0.2s ease forwards",
-                    }
-                  });
-
-                  img = createNode({
-                    mother,
-                    class: [ className ],
-                    mode: "img",
-                    attribute: [
-                      { src },
-                      { direction: "right" }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(height) + '%',
-                      width: "auto",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      borderRadius: String(3) + "px",
-                    }
-                  });
-                  imgBox = img.getBoundingClientRect();
-                  img.style.top = withOut(50, imgBox.height / 2, ea);
-                  img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                  title = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "click", "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    class: [ className ],
-                    text: name,
-                    style: {
-                      position: "fixed",
-                      bottom: String(bottom) + '%',
-                      fontSize: String(titleSize) + "vh",
-                      fontWeight: String(600),
-                      color: colorChip.whiteBlack,
-                      left: String(50) + '%',
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                    }
-                  });
-                  titleBox = title.getBoundingClientRect();
-                  title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                  leftArrow = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    attribute: [
-                      { direction: "left" }
-                    ],
-                    class: [ className ],
-                    mode: "svg",
-                    source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(arrowHeight) + "vh",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      cursor: "pointer"
-                    }
-                  });
-                  leftArrowBox = leftArrow.getBoundingClientRect();
-                  leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                  rightArrow = createNode({
-                    mother,
-                    events: [
-                      {
-                        type: [ "dblclick", "selectstart" ],
-                        event: (e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                        }
-                      }
-                    ],
-                    attribute: [
-                      { direction: "right" }
-                    ],
-                    class: [ className ],
-                    mode: "svg",
-                    source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      height: String(arrowHeight) + "vh",
-                      zIndex: String(zIndex),
-                      transition: "all 0s ease",
-                      animation: "fadeuplite 0.2s ease forwards",
-                      cursor: "pointer"
-                    }
-                  });
-                  rightArrowBox = rightArrow.getBoundingClientRect();
-                  rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                  convertEvent = function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    const direction = this.getAttribute("direction");
-                    let targetIndex, targetImage;
-                    if (direction === "left") {
-                      targetIndex = index - 1;
-                      if (totalImages[targetIndex] === undefined) {
-                        targetIndex = length - 1;
-                      }
-                    } else {
-                      targetIndex = index + 1;
-                      if (totalImages[targetIndex] === undefined) {
-                        targetIndex = 0;
-                      }
-                    }
-                    targetImage = totalImages[targetIndex];
-                    img.setAttribute("src", targetImage.image);
-                    imgBox = img.getBoundingClientRect();
-                    img.style.left = withOut(50, imgBox.width / 2, ea);
-                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                    index = targetIndex;
-                    src = targetImage.image;
-
-                    title.textContent = name;
-                    titleBox = title.getBoundingClientRect();
-                    title.style.left = withOut(50, titleBox.width / 2, ea);
+                  const targets = document.querySelectorAll('.' + previewClassName);
+                  for (let dom of targets) {
+                    dom.parentNode.removeChild(dom);
                   }
-                  leftArrow.addEventListener("click", convertEvent);
-                  rightArrow.addEventListener("click", convertEvent);
-                  img.addEventListener("click", convertEvent);
                 }
               }
-            ]
+            ],
+            style: {
+              position: "fixed",
+              top: String(0) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: String(100) + '%',
+              cursor: "pointer",
+              background: colorChip.gray3,
+              zIndex: String(2),
+              animation: "justfadein 0.3s ease forwards",
+            }
           });
-          num++;
-        }
 
+          tong = createNode({
+            mother: base,
+            class: [ previewClassName ],
+            events: [
+              {
+                type: [ "mouseup", "mousedown", "mousemove" ],
+                event: (e) => { e.stopPropagation(); }
+              },
+              {
+                type: [ "contextmenu", "click" ],
+                event: (e) => { e.stopPropagation(); e.preventDefault(); }
+              },
+            ],
+            style: {
+              position: "absolute",
+              top: String(previewMargin) + ea,
+              left: String(previewMargin) + ea,
+              width: withOut(previewMargin * 2, ea),
+              height: withOut(previewMargin * 2, ea),
+              background: colorChip.white,
+              borderRadius: String(3) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              zIndex: String(2),
+              animation: "fadeuphard 0.3s ease forwards",
+            },
+            children: [
+              {
+                style: {
+                  position: "relative",
+                  top: String(previewMargin) + ea,
+                  marginLeft: String(previewMargin) + ea,
+                  width: withOut(previewMargin * 2, ea),
+                  height: withOut(previewMargin, ea),
+                  overflow: "scroll",
+                },
+                children: [
+                  {
+                    style: {
+                      position: "relative",
+                      width: String(100) + '%',
+                      height: "auto",
+                    }
+                  }
+                ]
+              }
+            ]
+          }).firstChild.firstChild;
+
+          num = 0;
+          for (let { image, name } of images) {
+            createNode({
+              mother: tong,
+              mode: "img",
+              attribute: [
+                { src: image },
+                { index: String(num) },
+                { length: String(images.length) }
+              ],
+              style: {
+                position: "relative",
+                display: "inline-block",
+                width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
+                height: "auto",
+                marginRight: String(num % columnsLength === columnsLength - 1 ? 0 : imageMargin) + ea,
+                marginBottom: String(imageMargin) + ea,
+                borderRadius: String(3) + "px",
+                verticalAlign: "top",
+                cursor: "pointer",
+              },
+              events: [
+                {
+                  type: "click",
+                  event: function (e) {
+                    e.stopPropagation();
+                    const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
+                    const totalImages = equalJson(JSON.stringify(images));
+                    const mother = document.getElementById("totalcontents");
+                    const className = "photoSelectedTarget";
+                    const length = Number(this.getAttribute("length"));
+                    const zIndex = 3;
+                    let img, height, imgBox;
+                    let title, titleSize, bottom;
+                    let titleBox;
+                    let leftArrow, rightArrow;
+                    let leftArrowBox, rightArrowBox;
+                    let arrowHeight;
+                    let arrowMargin;
+                    let index, src;
+                    let convertEvent;
+
+                    index = Number(this.getAttribute("index"));
+                    src = this.getAttribute("src");
+
+                    convertEvent = () => {};
+
+                    height = 78;
+                    titleSize = 2;
+                    bottom = 6.6;
+                    arrowHeight = 1.7;
+                    arrowMargin = 78;
+
+                    createNode({
+                      mother,
+                      class: [ className ],
+                      events: [
+                        {
+                          type: "click",
+                          event: function (e) {
+                            const removeTargets = document.querySelectorAll('.' + className);
+                            for (let dom of removeTargets) {
+                              mother.removeChild(dom);
+                            }
+                          }
+                        }
+                      ],
+                      style: {
+                        position: "fixed",
+                        top: String(0),
+                        left: String(0),
+                        width: String(100) + '%',
+                        height: String(100) + '%',
+                        background: colorChip.darkDarkShadow,
+                        zIndex: String(zIndex),
+                        animation: "justfadeineight 0.2s ease forwards",
+                      }
+                    });
+
+                    img = createNode({
+                      mother,
+                      class: [ className ],
+                      mode: "img",
+                      attribute: [
+                        { src },
+                        { direction: "right" }
+                      ],
+                      style: {
+                        position: "fixed",
+                        top: String(0),
+                        left: String(0),
+                        height: String(height) + '%',
+                        width: "auto",
+                        zIndex: String(zIndex),
+                        transition: "all 0s ease",
+                        animation: "fadeuplite 0.2s ease forwards",
+                        borderRadius: String(3) + "px",
+                      }
+                    });
+                    imgBox = img.getBoundingClientRect();
+                    img.style.top = withOut(50, imgBox.height / 2, ea);
+                    img.style.left = withOut(50, imgBox.width / 2, ea);
+
+                    title = createNode({
+                      mother,
+                      events: [
+                        {
+                          type: [ "click", "dblclick", "selectstart" ],
+                          event: (e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                          }
+                        }
+                      ],
+                      class: [ className ],
+                      text: name,
+                      style: {
+                        position: "fixed",
+                        bottom: String(bottom) + '%',
+                        fontSize: String(titleSize) + "vh",
+                        fontWeight: String(600),
+                        color: colorChip.whiteBlack,
+                        left: String(50) + '%',
+                        zIndex: String(zIndex),
+                        transition: "all 0s ease",
+                        animation: "fadeuplite 0.2s ease forwards",
+                      }
+                    });
+                    titleBox = title.getBoundingClientRect();
+                    title.style.left = withOut(50, titleBox.width / 2, ea);
+
+                    leftArrow = createNode({
+                      mother,
+                      events: [
+                        {
+                          type: [ "dblclick", "selectstart" ],
+                          event: (e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                          }
+                        }
+                      ],
+                      attribute: [
+                        { direction: "left" }
+                      ],
+                      class: [ className ],
+                      mode: "svg",
+                      source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+                      style: {
+                        position: "fixed",
+                        top: String(0),
+                        left: String(0),
+                        height: String(arrowHeight) + "vh",
+                        zIndex: String(zIndex),
+                        transition: "all 0s ease",
+                        animation: "fadeuplite 0.2s ease forwards",
+                        cursor: "pointer"
+                      }
+                    });
+                    leftArrowBox = leftArrow.getBoundingClientRect();
+                    leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+
+                    rightArrow = createNode({
+                      mother,
+                      events: [
+                        {
+                          type: [ "dblclick", "selectstart" ],
+                          event: (e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                          }
+                        }
+                      ],
+                      attribute: [
+                        { direction: "right" }
+                      ],
+                      class: [ className ],
+                      mode: "svg",
+                      source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+                      style: {
+                        position: "fixed",
+                        top: String(0),
+                        left: String(0),
+                        height: String(arrowHeight) + "vh",
+                        zIndex: String(zIndex),
+                        transition: "all 0s ease",
+                        animation: "fadeuplite 0.2s ease forwards",
+                        cursor: "pointer"
+                      }
+                    });
+                    rightArrowBox = rightArrow.getBoundingClientRect();
+                    rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                    convertEvent = function (e) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const direction = this.getAttribute("direction");
+                      let targetIndex, targetImage;
+                      if (direction === "left") {
+                        targetIndex = index - 1;
+                        if (totalImages[targetIndex] === undefined) {
+                          targetIndex = length - 1;
+                        }
+                      } else {
+                        targetIndex = index + 1;
+                        if (totalImages[targetIndex] === undefined) {
+                          targetIndex = 0;
+                        }
+                      }
+                      targetImage = totalImages[targetIndex];
+                      img.setAttribute("src", targetImage.image);
+                      imgBox = img.getBoundingClientRect();
+                      img.style.left = withOut(50, imgBox.width / 2, ea);
+                      leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+                      rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                      index = targetIndex;
+                      src = targetImage.image;
+
+                      title.textContent = name;
+                      titleBox = title.getBoundingClientRect();
+                      title.style.left = withOut(50, titleBox.width / 2, ea);
+                    }
+                    leftArrow.addEventListener("click", convertEvent);
+                    rightArrow.addEventListener("click", convertEvent);
+                    img.addEventListener("click", convertEvent);
+                  }
+                }
+              ]
+            });
+            num++;
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
   ];
@@ -656,7 +665,7 @@ FileJs.prototype.baseMaker = function () {
                 event: function (e) {
                   const betweens = this.querySelectorAll("b");
                   let index, targetIndex;
-                  let pathArr;
+                  let pathArr, token;
                   if (betweens.length > 0) {
                     index = 0;
                     targetIndex = null;
@@ -667,11 +676,19 @@ FileJs.prototype.baseMaker = function () {
                       index++;
                     }
                     pathArr = instance.path.split("/");
-                    pathArr.shift();
-                    if (targetIndex === null) {
-                      instance.fileLoad("/");
+                    token = pathArr.shift();
+                    if (!/__photo__/g.test(token) && !/__designer__/g.test(token)) {
+                      if (targetIndex === null) {
+                        instance.fileLoad(token + "/");
+                      } else {
+                        instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex + 1).join("/"));
+                      }
                     } else {
-                      instance.fileLoad("/" + pathArr.slice(0, targetIndex + 1).join("/"));
+                      if (targetIndex === null) {
+                        instance.fileLoad("/");
+                      } else {
+                        instance.fileLoad(token + "/" + pathArr.slice(0, targetIndex).join("/"));
+                      }
                     }
                   } else {
                     instance.fileLoad("/");
@@ -912,7 +929,13 @@ FileJs.prototype.pathReload = function (searchResult = false) {
   const between = `&nbsp;&nbsp;<b style="font-weight:300;color:${colorChip.gray5}">></b>&nbsp;&nbsp;`;
   if (!searchResult) {
     target.textContent = "";
-    target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== ''; }).join(between)) : ""));
+    if (!/^__photo__/.test(this.path) && !/^__designer__/.test(this.path)) {
+      target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' && !(/^__/.test(i) && /__$/.test(i)); }).join(between)) : ""));
+    } else if (/^__photo__/.test(this.path)) {
+      target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' }).map((i) => { return i.replace(/__photo__/, "고객 전송 사진"); }).join(between)) : ""));
+    } else if (/^__designer__/.test(this.path)) {
+      target.insertAdjacentHTML("beforeend", "바탕 화면" + (this.path.split("/").filter((i) => { return i.trim() !== ''; }).length > 0 ? (between + this.path.split("/").filter((i) => { return i.trim() !== '' }).map((i) => { return i.replace(/__designer__/, "디자이너 포트폴리오"); }).join(between)) : ""));
+    }
   } else {
     target.textContent = "검색 결과";
   }
@@ -976,7 +999,6 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     } else {
       thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, "/ghostPass_searchFiles");
     }
-    console.log(thisFolderFiles);
     thisFolderFiles.sort((a, b) => {
       return a.fileName >= b.fileName ? 1 : -1;
     });
