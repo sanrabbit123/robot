@@ -1224,14 +1224,14 @@ DevContext.prototype.launching = async function () {
 
 
     // raw photo to raw portfolio
-    // const filter = new PortfolioFilter();
-    // await filter.rawToRaw([
-    //   {
-    //     client: "최소나",
-    //     designer: "이연주",
-    //     link: "https://drive.google.com/drive/folders/1Ndtp4xP1WYQCbwfQICIl2xb7M6r_9J7h",
-    //   },
-    // ]);
+    const filter = new PortfolioFilter();
+    await filter.rawToRaw([
+      {
+        client: "최소나",
+        designer: "이연주",
+        link: "https://drive.google.com/drive/folders/1Ndtp4xP1WYQCbwfQICIl2xb7M6r_9J7h",
+      },
+    ]);
 
 
 

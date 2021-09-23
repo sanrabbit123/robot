@@ -103,7 +103,6 @@ DesignerJs.prototype.requestList = function (desid) {
   const instance = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, dateToString } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
-  const matrixButtonConst = "matrixButtons_" + desid;
   const cookies = getCookiesAll();
   const mobile = this.media[4];
   const desktop = !mobile;

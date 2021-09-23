@@ -86,7 +86,7 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
     });
   }
 
-  this.possibleList(desid);
+  this.possibleContents(desid);
   this.possibleIconSet(desid);
   scrollTo(totalMother, pastScrollTop);
   if (callback !== null) {
@@ -96,85 +96,40 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   }
 }
 
-DesignerJs.prototype.possibleList = function (desid) {
+DesignerJs.prototype.possibleContents = function (desid) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, dateToString } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
-  const matrixButtonConst = "matrixButtons_" + desid;
-  const cookies = getCookiesAll();
   const mobile = this.media[4];
   const desktop = !mobile;
-  let designer;
   let margin;
   let baseTong0, baseTong;
   let matrix;
   let tempArr;
   let tempObj, nodeArr, subNodeArr;
   let eachTotalTong, eachNameTong, eachValueTong;
-  let level1Width, level1Left;
   let topMargin, leftMargin, bottomMargin;
   let size;
   let tempMatrix;
-  let alphabetWidth;
   let temp;
-  let factorHeight, factorWidth;
-  let tendencyTop, tendencyHeight;
-  let tendencyFactorHeight, tendencyIndent, tendencyWidthIndent;
-  let textAreaTop;
   let baseTongMarginBottom;
   let checkListData;
   let middleAdjustTong;
-  let mobileTendencyTop;
-  let mobileTendencyVisualMargin;
-  let mobileTendencyIntend;
-  let requestBox, boxMargin;
-  let projects;
-  let requestSize;
-  let requestWordMargin;
-  let requestWordPaddingTop;
-  let requestWordPaddingBottom;
   let thisChildWidth;
   let dateString;
   let outerMargin;
-
-  designer = this.designers.pick(desid);
-  projects = designer.projects;
+  let contentsBox;
 
   margin = 8;
   outerMargin = <%% (margin * 3), (margin * 3), (margin * 3), (margin * 3), 0 %%>;
-  level1Width = <%% 210, 172, 172, 172, 34 %%>;
-  level1Left = <%% 160, 136, 136, 136, 0 %%>;
   topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
   leftMargin = <%% 34, 34, 34, 34, 8 %%>;
   bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
   baseTongMarginBottom = <%% 80, 80, 80, 80, 40 %%>;
   size = <%% 16, 15, 15, 15, 4 %%>;
-
-  tendencyTop = <%% 3, 3, 3, 3, 0.8 %%>;
-  tendencyHeight = <%% 16, 16, 16, 16, 4 %%>;
-  alphabetWidth = <%% 30, 30, 30, 30, 7 %%>;
-
-  factorHeight = <%% 38, 36, 36, 36, 8.5 %%>;
-  factorWidth = <%% 210, 172, 172, 172, 210 %%>;
-  tendencyFactorHeight = <%% 30, 30, 30, 30, 7 %%>;
-  tendencyIndent = <%% 105, 71, 71, 71, 65 %%>;
-  tendencyWidthIndent = -135;
-
-  textAreaTop = <%% (isMac() ? -3 : -4), (isMac() ? -3 : -4), (isMac() ? -3 : -4), (isMac() ? -3 : -4), -0.7 %%>;
-
-  mobileTendencyTop = 8;
-  mobileTendencyVisualMargin = 13;
-  mobileTendencyIntend = 20;
-
-  boxMargin = <%% 13, 13, 12, 10, 2 %%>;
-
-  requestSize = <%% 22, 22, 21, 20, 4.5 %%>;
-  requestWordMargin = <%% 1, 1, 1, 1, 0 %%>;
-  requestWordPaddingTop = <%% (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), 4 %%>;
-  requestWordPaddingBottom = <%% (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), 5.5 %%>;
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -204,30 +159,59 @@ DesignerJs.prototype.possibleList = function (desid) {
     }
   });
 
-  this.requestBoxes = [];
-
-  createNode({
+  contentsBox = createNode({
     mother: baseTong,
     style: {
       position: "relative",
-      top: String(outerMargin),
+      top: String(outerMargin) + ea,
       marginLeft: String(outerMargin) + ea,
       marginRight: String(outerMargin) + ea,
-      marginBottom: String(outerMargin) + ea,
+      marginBottom: String(outerMargin * 2) + ea,
       width: withOut(outerMargin * 2, ea),
       display: "block",
-      height: String(500) + ea,
-      background: colorChip.green,
+      height: String(900) + ea,
     }
   });
 
-
-
-
-
-
+  this.possibleMatrix(contentsBox, desid).catch((err) => {
+    console.log(err);
+  });
 
   this.mainBaseTong = baseTong0;
+}
+
+DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
+  const instance = this;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll } = this.mother;
+  const { totalMother, ea, grayBarWidth } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
+  const designer = this.designers.pick(desid);
+  const cookies = getCookiesAll();
+  try {
+    let size;
+
+    size = <%% 16, 15, 15, 15, 4 %%>;
+
+    console.log(mother);
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 DesignerJs.prototype.possibleIconSet = function (desid) {
@@ -758,11 +742,11 @@ DesignerJs.prototype.possibleView = async function () {
           } else {
             instance.possibleDetailLaunching(instance.pageHistory[1].desid);
             instance.pageHistory.shift();
-            for (let box of instance.requestBoxes) {
-              if (box.getAttribute("cliid") === instance.pageHistory[1].cliid) {
-                box.click();
-              }
-            }
+            // for (let box of instance.requestBoxes) {
+            //   if (box.getAttribute("cliid") === instance.pageHistory[1].cliid) {
+            //     box.click();
+            //   }
+            // }
             instance.pageHistory.shift();
             instance.pageHistory.shift();
           }
@@ -774,7 +758,6 @@ DesignerJs.prototype.possibleView = async function () {
     this.proid = null;
     this.project = null;
     this.client = null;
-    this.requestBoxes = [];
     this.possibleDetailLaunching(this.desid);
 
   } catch (e) {

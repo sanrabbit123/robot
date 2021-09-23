@@ -2027,21 +2027,21 @@ Ghost.prototype.photoRouter = function (needs) {
         if (req.body.pid === undefined) {
           res.send(JSON.stringify({ message: "invaild body : must be 'pid'" }));
         } else {
-
-          const targetFolder = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
+          const targetFolderId = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
           const googleDrive = instance.mother.googleSystem("drive");
           const { pid } = req.body;
           const c780 = "780";
+          const c1500 = "1500";
           const list = await fileSystem(`readDir`, [ sambaDir ]);
           const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
           const tempFolderName = "temp";
           let list_refined = [];
           let folderName;
-          let shareName;
+          let shareClientName, shareDesignerName;
           let tempArr;
           let command;
-          let zipId;
-          let zipLink;
+          let zipIdClient, zipIdDesigner;
+          let zipLinkClient, zipLinkDesigner;
 
           if (!homeFolder.includes(tempFolderName)) {
             shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
@@ -2054,26 +2054,41 @@ Ghost.prototype.photoRouter = function (needs) {
           }
           folderName = list_refined.find((i) => { return (new RegExp('^' + pid)).test(i); });
           tempArr = folderName.split('_');
-          shareName = "HL_";
+          shareClientName = "HL_";
+          shareDesignerName = "HL_";
           if (tempArr.length === 4) {
-            shareName += tempArr[2] + "_고객님_";
-            shareName += tempArr[1] + "_디자이너님";
+            shareClientName += tempArr[2] + "_고객님_";
+            shareClientName += tempArr[1] + "_디자이너님";
+            shareDesignerName += tempArr[1] + "_디자이너님_";
+            shareDesignerName += tempArr[2] + "_고객님";
           } else if (tempArr.length === 3) {
-            shareName += tempArr[1] + "_디자이너님";
+            shareDesignerName += tempArr[1] + "_디자이너님";
           } else {
             throw new Error("invaild post");
           }
-          shareName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
+          shareClientName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
+          shareDesignerName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
           command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};
-          zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;`;
+          zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)} ./*;
+          cd ${shellLink(sambaDir + "/" + folderName + "/" + c1500)};
+          zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)} ./*;`;
           shell.exec(command);
 
-          zipId = await googleDrive.upload_inPython(targetFolder, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
-          zipLink = await googleDrive.read_webView_inPython(zipId);
-          shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)}`);
+          zipIdDesigner = await googleDrive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
+          zipLinkDesigner = await googleDrive.read_webView_inPython(zipIdDesigner);
 
-          res.send(JSON.stringify({ link: zipLink }));
+          if (tempArr.length === 3) {
+            zipLinkClient = null;
+          } else {
+            zipIdClient = await googleDrive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)}`);
+            zipLinkClient = await googleDrive.read_webView_inPython(zipIdClient);
+          }
+
+          shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)}`);
+          shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
+
+          res.send(JSON.stringify({ designer: zipLinkDesigner, client: zipLinkClient }));
 
         }
       } catch (e) {

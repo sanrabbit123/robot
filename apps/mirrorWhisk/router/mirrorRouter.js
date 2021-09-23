@@ -668,7 +668,6 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
   return obj;
 }
 
-
 MirrorRouter.prototype.getAll = function () {
   let result, result_arr;
 

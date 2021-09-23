@@ -195,7 +195,7 @@ PortfolioFilter.prototype.to_portfolio = async function (liteMode = false) {
     await fileSystem(`write`, [ `${this.options.home_dir}/script/raw.js`, this.generator.factory.rawFilter(rawFix_file_list, options) ]);
     shell.exec(`osascript ${this.options.home_dir}/factory/applescript/raw.scpt`);
 
-    photo_sizes = liteMode ? [ "780" ] : [ "780", "3508" ];
+    photo_sizes = liteMode ? [ "780", "1500" ] : [ "780", "3508" ];
 
     resultFolderBoo = await fileSystem(`readDir`, [ this.options.result_dir ]);
     for (let i of resultFolderBoo) {
@@ -242,8 +242,8 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
   const instance = this;
   const { fileSystem } = this.mother;
   try {
-    let fileList_780_raw, fileList_original_raw, fileList_png_raw;
-    let fileList_780, fileList_original, fileList_png;
+    let fileList_780_raw, fileList_1500_raw, fileList_original_raw, fileList_png_raw;
+    let fileList_780, fileList_1500, fileList_original, fileList_png;
     let resultFolderArr, resultFolderParent;
 
     resultFolderArr = resultFolder.split('/');
@@ -251,6 +251,7 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
     resultFolderParent = resultFolderArr.join('/');
 
     fileList_780 = [];
+    fileList_1500 = [];
     fileList_original = [];
     fileList_png = [];
 
@@ -258,6 +259,8 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
     if (!liteMode) {
       fileList_original_raw = await fileSystem(`readDir`, [ `${resultFolder}/3508` ]);
       fileList_png_raw = await fileSystem(`readDir`, [ resultFolderParent ]);
+    } else {
+      fileList_1500_raw = await fileSystem(`readDir`, [ `${resultFolder}/1500` ]);
     }
 
     for (let i of fileList_780_raw) {
@@ -278,9 +281,15 @@ PortfolioFilter.prototype.parsing_fileList = async function (resultFolder, liteM
           console.log(i);
         }
       }
+    } else {
+      for (let i of fileList_1500_raw) {
+        if (i !== `.DS_Store`) {
+          fileList_1500.push(resultFolder + "/1500/" + i);
+        }
+      }
     }
 
-    return { fileList_780, fileList_original, fileList_png };
+    return { fileList_780, fileList_1500, fileList_original, fileList_png };
   } catch (e) {
     console.log(e);
   }
@@ -360,10 +369,9 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     let scpTarget;
 
     resultFolder = await this.to_portfolio(liteMode);
-    const { fileList_780, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
-    console.log(fileList_780, fileList_original, fileList_png);
+    const { fileList_780, fileList_1500, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
+    console.log(fileList_780, fileList_1500, fileList_original, fileList_png);
 
-    //google drive upload
     if (liteMode || this.clientNullATarget.includes(this.clientName)) {
       console.log(await photoRequest("mkdir", { name: this.folderName }));
     } else {
@@ -662,9 +670,10 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let note;
     let projects, project;
     let totalMakeResult;
-    let shareLink;
-    let shareGoogleId;
+    let shareLinkClient, shareLinkDeginer;
+    let shareGoogleIdClient, shareGoogleIdDesigner;
     let clientObj, designerObj;
+    let zipLinks;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -774,8 +783,13 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await sleep(1000);
       }
 
-      shareLink = (await photoRequest("zip", { pid: nextPid })).link;
-      shareGoogleId = drive.general.parsingId(shareLink);
+      zipLinks = await photoRequest("zip", { pid: nextPid });
+      shareLinkClient = zipLinks.client;
+      shareLinkDeginer = zipLinks.designer;
+      if (shareLinkClient !== null) {
+        shareGoogleIdClient = drive.general.parsingId(shareLinkClient);
+      }
+      shareGoogleIdDesigner = drive.general.parsingId(shareLinkDeginer);
 
       shell.exec(`rm -rf ${shellLink(folderPath)};`);
 
@@ -794,8 +808,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         designerObj = await back.getDesignerById(project.desid);
 
         if (clientObj !== null && designerObj !== null) {
-          await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleId });
-          await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleId });
+          await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
+          await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });
           await this.mother.slack_bot.chat.postMessage({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
         }
 
