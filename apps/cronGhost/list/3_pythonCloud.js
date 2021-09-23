@@ -39,8 +39,8 @@ module.exports = [
     order: "cashReceipt",
     time: {
       day_of_week: "mon",
-      hour: 18,
-      minute: 10,
+      hour: 17,
+      minute: 40,
       second: 10,
     }
   },
@@ -48,8 +48,8 @@ module.exports = [
     name: "designerCalculation",
     time: {
       day_of_week: "mon",
-      hour: 18,
-      minute: 30,
+      hour: 17,
+      minute: 58,
       second: 30,
     }
   },

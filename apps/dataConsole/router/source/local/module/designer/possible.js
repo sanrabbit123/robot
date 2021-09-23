@@ -206,13 +206,15 @@ DesignerJs.prototype.possibleList = function (desid) {
 
   this.requestBoxes = [];
 
-  console.log("this!");
-
-
   createNode({
     mother: baseTong,
     style: {
       position: "relative",
+      top: String(outerMargin),
+      marginLeft: String(outerMargin) + ea,
+      marginRight: String(outerMargin) + ea,
+      marginBottom: String(outerMargin) + ea,
+      width: withOut(outerMargin * 2, ea),
       display: "block",
       height: String(500) + ea,
       background: colorChip.green,

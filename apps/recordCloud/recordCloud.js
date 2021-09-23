@@ -188,7 +188,6 @@ RecordCloud.prototype.recordServerLaunching = async function () {
         });
 
         // notionObj = {};
-        //
         // notionObj.title = thisName;
         // notionObj.date = status.date;
         // notionObj.cpu_used = String(Math.round(status.cpu.used * 100 * 100) / 100) + '%';
