@@ -2,6 +2,7 @@ const MirrorWhisk = function () {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
   const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
   const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+  this.address = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
   this.bill = new BillMaker();
@@ -12,6 +13,7 @@ const MirrorWhisk = function () {
 MirrorWhisk.prototype.scriptReady = async function () {
   const instance = this;
   const indent = 2;
+  const address = this.address;
   const { fileSystem } = this.mother;
   const { workList } = this;
   const pythonAppName = "mirrorWhisk.py";
@@ -33,7 +35,7 @@ MirrorWhisk.prototype.scriptReady = async function () {
     pythonScript = script.split("\n").map((s) => { return s.trim(); }).filter((s) => { return s !== ''; }).join("\n") + "\n\n";
 
     for (let { method, name, target, data, headers, minute } of workList) {
-      url = "http://localhost:" + String(3000) + target
+      url = "https://" + address.mirrorinfo.host + ":" + String(3000) + target
       if (method === "get") {
         pythonArr = [
           `async def ${name}():`,
@@ -87,7 +89,7 @@ MirrorWhisk.prototype.scriptReady = async function () {
 MirrorWhisk.prototype.mirrorServerLaunching = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, mongopythoninfo } = this.mother;
-  const http = require("http");
+  const https = require("https");
   const express = require("express");
   const app = express();
   const multer = require("multer");
@@ -122,6 +124,35 @@ MirrorWhisk.prototype.mirrorServerLaunching = async function () {
     const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     const humanInstance = new HumanPacket();
 
+    //set pem key
+    let pems, pemsLink;
+    let certDir, keyDir, caDir;
+
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + this.address.mirrorinfo.host;
+
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
+
     //set router
     const MirrorRouter = require(`${this.dir}/router/mirrorRouter.js`);
     const router = new MirrorRouter(MONGOC, MONGOLOCALC, MONGOCONSOLEC, MONGOPYTHONC, kakaoInstance, humanInstance);
@@ -135,7 +166,7 @@ MirrorWhisk.prototype.mirrorServerLaunching = async function () {
     console.log(`set router`);
 
     //server on
-    http.createServer(app).listen(3000, () => {
+    https.createServer(pems, app).listen(3000, () => {
       console.log(``);
       console.log(`\x1b[33m%s\x1b[0m`, `Server running`);
     });

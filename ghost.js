@@ -1195,29 +1195,73 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
       });
-      let target;
+      let target, finalTong;
       if (req.body.path === undefined) {
         target = "__samba__";
       } else {
-        if (!/^\//.test(req.body.path)) {
-          target = "__samba__/" + req.body.path;
-        } else {
-          target = "__samba__" + req.body.path;
-        }
+        target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
       }
-      target = instance.dirParsing(target);
-      leafParsing(target).then((list) => {
-        res.send(JSON.stringify(list.map((i) => {
-          i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
-          return i;
-        }).filter((i) => {
-          return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
-        }).filter((i) => {
-          return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
-        })));
-      }).catch((err) => {
-        res.send(JSON.stringify({ message: "error : " + err.message }));
-      });
+
+      if (target.replace(/\/$/, '') !== "__samba__") {
+        target = instance.dirParsing(target);
+        leafParsing(target).then((list) => {
+          res.send(JSON.stringify(list.map((i) => {
+            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
+            if (/^\//i.test(i.absolute)) {
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+            }
+            if (/^\//i.test(i.absolute)) {
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
+            }
+            return i;
+          }).filter((i) => {
+            return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+          }).filter((i) => {
+            return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
+          })));
+        }).catch((err) => {
+          res.send(JSON.stringify({ message: "error : " + err.message }));
+        });
+      } else {
+        target = instance.dirParsing(target);
+        finalTong = [];
+        leafParsing(target).then((list) => {
+          finalTong = finalTong.concat(list.map((i) => {
+            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
+            if (/^\//i.test(i.absolute)) {
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+            }
+            if (/^\//i.test(i.absolute)) {
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
+            }
+            return i;
+          }).filter((i) => {
+            return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+          }).filter((i) => {
+            return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
+          }));
+          return leafParsing(instance.photoServer);
+        }).then((list) => {
+          finalTong = finalTong.concat(list.map((i) => {
+            if (/고객/gi.test(i.absolute)) {
+              i.absolute = "__photo__";
+            } else if (/디자이너/gi.test(i.absolute)) {
+              i.absolute = "__designer__";
+            } else {
+              i.absolute = ".DS_Store";
+            }
+            return i;
+          }).filter((i) => {
+            return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+          }).filter((i) => {
+            return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
+          }));
+          res.send(JSON.stringify(finalTong));
+        }).catch((err) => {
+          res.send(JSON.stringify({ message: "error : " + err.message }));
+        });
+
+      }
     }
   };
 
@@ -1234,29 +1278,76 @@ Ghost.prototype.ghostRouter = function (needs) {
       if (req.body.keyword === undefined) {
         res.send(JSON.stringify({ message: "error" }));
       } else {
-        let target;
+        let target, finalTong;
         if (req.body.path === undefined) {
           target = "__samba__";
         } else {
-          if (!/^\//.test(req.body.path)) {
-            target = "__samba__/" + req.body.path;
-          } else {
-            target = "__samba__" + req.body.path;
-          }
+          target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
         }
-        target = instance.dirParsing(target);
-        leafParsing(target, true, req.body.keyword).then((list) => {
-          res.send(JSON.stringify(list.map((i) => {
-            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), '');
-            return i;
-          }).filter((i) => {
-            return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
-          }).filter((i) => {
-            return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
-          })));
-        }).catch((err) => {
-          res.send(JSON.stringify({ message: "error : " + err.message }));
-        });
+        if (target.replace(/\/$/, '') !== "__samba__") {
+          target = instance.dirParsing(target);
+          leafParsing(target, true, req.body.keyword).then((list) => {
+            res.send(JSON.stringify(list.map((i) => {
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
+              if (/^\//i.test(i.absolute)) {
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+              }
+              if (/^\//i.test(i.absolute)) {
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
+              }
+              return i;
+            }).filter((i) => {
+              return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+            }).filter((i) => {
+              return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
+            })));
+          }).catch((err) => {
+            res.send(JSON.stringify({ message: "error : " + err.message }));
+          });
+        } else {
+          target = instance.dirParsing(target);
+          finalTong = [];
+          leafParsing(target, true, req.body.keyword).then((list) => {
+            finalTong = finalTong.concat(list.map((i) => {
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
+              if (/^\//i.test(i.absolute)) {
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+              }
+              if (/^\//i.test(i.absolute)) {
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
+              }
+              return i;
+            }).filter((i) => {
+              return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+            }).filter((i) => {
+              return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
+            }));
+            return leafParsing(instance.photoServerClient, true, req.body.keyword);
+          }).then((list) => {
+            finalTong = finalTong.concat(list.map((i) => {
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
+              return i;
+            }).filter((i) => {
+              return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+            }).filter((i) => {
+              return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
+            }));
+            return leafParsing(instance.photoServerDesigner, true, req.body.keyword);
+          }).then((list) => {
+            finalTong = finalTong.concat(list.map((i) => {
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__designer__");
+              return i;
+            }).filter((i) => {
+              return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
+            }).filter((i) => {
+              return i.absolute.split("/")[i.absolute.split("/").length - 1] !== ".DS_Store";
+            }));
+            res.send(JSON.stringify(finalTong));
+          }).catch((err) => {
+            res.send(JSON.stringify({ message: "error : " + err.message }));
+          });
+
+        }
       }
     }
   };
@@ -1308,10 +1399,18 @@ Ghost.prototype.ghostRouter = function (needs) {
         shareName = "delivery_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)) + "_" + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
         command = "";
         for (let { absolute, type } of files) {
-          if (type === "folder") {
-            command += `cp -r ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
+          if (!/__photo__/gi.test(absolute) && !/__designer__/gi.test(absolute)) {
+            if (type === "folder") {
+              command += `cp -r ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
+            } else {
+              command += `cp ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
+            }
           } else {
-            command += `cp ${shellLink(instance.homeliaisonServer + absolute.replace(/\/$/, ''))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
+            if (type === "folder") {
+              command += `cp -r ${shellLink(instance.dirParsing(absolute))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
+            } else {
+              command += `cp ${shellLink(instance.dirParsing(absolute))} ${shellLink(process.env.HOME + "/" + tempFolderName)};`;
+            }
           }
         }
         command += `cd ${shellLink(process.env.HOME + "/" + tempFolderName)};zip -r ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareName)} ./*;cd ${shellLink(currentFolder)}`;

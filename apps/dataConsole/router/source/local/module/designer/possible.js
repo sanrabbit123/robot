@@ -169,7 +169,6 @@ DesignerJs.prototype.possibleContents = function (desid) {
       marginBottom: String(outerMargin * 2) + ea,
       width: withOut(outerMargin * 2, ea),
       display: "block",
-      height: String(900) + ea,
     }
   });
 
@@ -182,32 +181,163 @@ DesignerJs.prototype.possibleContents = function (desid) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll } = this.mother;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   const designer = this.designers.pick(desid);
   const cookies = getCookiesAll();
+  const now = new Date();
+  const futureLength = 13;
   try {
+    let dateMatrix;
+    let map;
     let size;
+    let tempObj;
+    let block;
+    let titleField, matrixField;
+    let titleWidth;
+    let titlePaddingLeft;
+    let titlePaddingRight;
+    let titleLineHeight;
+    let weekBlock;
+    let weekBlockHeight;
+    let num;
+    let blockMarginBottom;
+    let dateBox;
+    let dateSize;
 
     size = <%% 16, 15, 15, 15, 4 %%>;
+    titleWidth = <%% 100, 100, 100, 100, 20 %%>;
+    titlePaddingLeft = <%% 5, 5, 5, 5, 0.1 %%>;
+    titlePaddingRight = <%% 45, 45, 45, 45, 5 %%>;
+    titleLineHeight = 1.6;
 
-    console.log(mother);
+    weekBlockHeight = <%% 80, 80, 80, 80, 4 %%>;
 
-    
+    blockMarginBottom = <%% 48, 48, 48, 48, 4 %%>;
 
+    dateSize = <%% 20, 20, 20, 20, 4 %%>;
 
+    dateMatrix = getDateMatrix(now.getFullYear(), now.getMonth());
+    map = [];
+    for (let i = 0; i < futureLength; i++) {
+      tempObj = {};
+      tempObj.year = dateMatrix.getYearString();
+      tempObj.month = dateMatrix.getMonthString();
+      tempObj.matrix = dateMatrix.returnSundayMatrix();
+      map.push(tempObj);
+      dateMatrix = dateMatrix.nextMatrix();
+    }
 
+    console.log(map);
+    num = 0;
+    for (let { year, month, matrix } of map) {
+      block = createNode({
+        mother,
+        style: {
+          position: "relative",
+          display: "block",
+          verticalAlign: "top",
+          paddingBottom: String(blockMarginBottom) + ea,
+        }
+      });
+      titleField = createNode({
+        mother: block,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: String(titleWidth - titlePaddingLeft - titlePaddingRight) + ea,
+          paddingLeft: String(titlePaddingLeft) + ea,
+          paddingRight: String(titlePaddingRight) + ea,
+          height: String(100) + '%',
+          verticalAlign: "top"
+        },
+        children: [
+          {
+            text: year + " " + month,
+            style: {
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+              lineHeight: String(titleLineHeight),
+            }
+          }
+        ]
+      });
+      matrixField = createNode({
+        mother: block,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          verticalAlign: "top",
+          width: withOut(titleWidth, ea),
+          height: String(100) + '%',
+        }
+      });
 
+      for (let i = 0; i < matrix.length; i++) {
+        weekBlock = createNode({
+          mother: matrixField,
+          style: {
+            position: "relative",
+            display: "block",
+            width: String(100) + '%',
+            height: String(weekBlockHeight) + ea,
+            boxSizing: "border-box",
+            borderRadius: String(5) + "px",
+            borderTop: "1px solid " + colorChip.gray3,
+            borderRight: "1px solid " + colorChip.gray3,
+            borderLeft: "1px solid " + colorChip.gray3,
+          }
+        });
 
+        for (let j = 0; j < 7; j++) {
+          dateBox = createNode({
+            mother: weekBlock,
+            style: {
+              position: "relative",
+              display: "inline-block",
+              width: "calc(100% / 7)",
+              height: String(100) + '%',
+              boxSizing: "border-box",
+              borderRight: (j === 7 - 1 ? "" : "1px solid " + colorChip.gray3),
+              background: (matrix[i][j] === null ? colorChip.gray0 : colorChip.white),
+            }
+          });
 
+          if (matrix[i][j] !== null) {
+            createNode({
+              mother: dateBox,
+              text: String(matrix[i][j].date),
+              style: {
+                position: "absolute",
+                fontStyle: "graphik",
+                fontSize: String(dateSize) + ea,
+                fontWeight: String(300),
+              }
+            });
+          }
 
+        }
 
+      }
+      weekBlock.style.borderBottom = "1px solid " + colorChip.gray3;
 
+      createNode({
+        mother: block,
+        style: {
+          position: "absolute",
+          bottom: String(blockMarginBottom / 2) + ea,
+          left: String(titleWidth) + ea,
+          width: withOut(titleWidth, ea),
+          height: String(0),
+          borderBottom: "1px dashed " + colorChip.gray3,
+        }
+      });
 
-
-
+      num++;
+    }
 
   } catch (e) {
     console.log(e);

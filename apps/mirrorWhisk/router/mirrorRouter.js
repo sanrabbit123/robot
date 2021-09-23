@@ -651,7 +651,7 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
         }
         MirrorRouter.timeouts[timeoutConst] = setTimeout(async () => {
           try {
-            await requestSystem("http://" + instance.address.mirrorinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
+            await requestSystem("https://" + instance.address.mirrorinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
             clearTimeout(MirrorRouter.timeouts[timeoutConst]);
             MirrorRouter.timeouts[timeoutConst] = null;
           } catch (e) {

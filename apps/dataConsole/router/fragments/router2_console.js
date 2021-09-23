@@ -3457,7 +3457,7 @@ DataRouter.prototype.rou_post_callTo = function () {
           throw new Error("invaild post");
         } else {
           number = address.officeinfo.phone.numbers[index];
-          await requestSystem("http://" + address.mirrorinfo.host + ":3000/clickDial", {
+          await requestSystem("https://" + address.mirrorinfo.host + ":3000/clickDial", {
             id: number,
             destnumber: phone.replace(/[^0-9]/g, '')
           }, { headers: { "Content-Type": "application/json" } });
