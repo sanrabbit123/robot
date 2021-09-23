@@ -735,10 +735,7 @@ Ghost.prototype.ghostRouter = function (needs) {
               }
               for (let i = 0; i < tempArr.length - 1; i++) {
                 tempDir = await fileSystem(`readDir`, [ tempString ]);
-                console.log(tempDir);
-                console.log(tempArr);
-                console.log(tempArr[i]);
-                if (!tempDir.includes(tempArr[i])) {
+                if (!tempDir.includes(tempArr[i]) && tempArr[i] !== "") {
                   shell.exec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
                 }
                 tempString += '/';
@@ -2396,7 +2393,7 @@ Ghost.prototype.fileRouter = function (static) {
               }
               for (let i = 0; i < tempArr.length - 1; i++) {
                 tempDir = await fileSystem(`readDir`, [ tempString ]);
-                if (!tempDir.includes(tempArr[i])) {
+                if (!tempDir.includes(tempArr[i]) && tempArr[i] !== '') {
                   shell.exec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
                 }
                 tempString += '/';
@@ -2406,7 +2403,7 @@ Ghost.prototype.fileRouter = function (static) {
               num++;
             }
 
-            res.json({ "message": "done" });
+            res.send(JSON.stringify({ message: "done" }));
           }
         } catch (e) {
           console.log(e);
