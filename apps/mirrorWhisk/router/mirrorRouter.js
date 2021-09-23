@@ -673,7 +673,7 @@ MirrorRouter.prototype.rou_post_messageLog = function () {
   const back = this.back;
   const address = this.address;
   const { requestSystem, ipParsing } = this.mother;
-  const webhook = {
+  const webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -687,7 +687,7 @@ MirrorRouter.prototype.rou_post_messageLog = function () {
       }
     },
     channel: "#error_log"
-  }
+  };
   let obj = {};
   obj.link = "/message";
   obj.func = async function (req, res) {
@@ -742,7 +742,7 @@ MirrorRouter.prototype.rou_post_errorLog = function () {
   const back = this.back;
   const address = this.address;
   const { requestSystem, ipParsing } = this.mother;
-  const webhook = {
+  const webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -756,7 +756,7 @@ MirrorRouter.prototype.rou_post_errorLog = function () {
       }
     },
     channel: "#error_log"
-  }
+  };
   let obj = {};
   obj.link = "/error";
   obj.func = async function (req, res) {
@@ -813,7 +813,7 @@ MirrorRouter.prototype.rou_post_statusLog = function () {
   const back = this.back;
   const address = this.address;
   const { requestSystem, ipParsing, equalJson } = this.mother;
-  const webhook = {
+  const webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -827,7 +827,7 @@ MirrorRouter.prototype.rou_post_statusLog = function () {
       }
     },
     channel: "#error_log"
-  }
+  };
   let obj = {};
   obj.link = "/status";
   obj.func = async function (req, res) {
