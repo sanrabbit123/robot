@@ -665,7 +665,9 @@ Ghost.prototype.ghostRouter = function (needs) {
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
   const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
+  const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
+  const hangul = new ParsingHangul();
   let funcObj = {};
 
   //GET - ssl test
@@ -741,7 +743,7 @@ Ghost.prototype.ghostRouter = function (needs) {
                 tempString += '/';
                 tempString += tempArr[i];
               }
-              shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + toArr[num])}`);
+              shell.exec(`mv ${shellLink(path)} ${shellLink(staticFolder + "/" + hangul.fixString(toArr[num]))}`);
               num++;
             }
 

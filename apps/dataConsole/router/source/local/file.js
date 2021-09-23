@@ -865,37 +865,31 @@ FileJs.prototype.baseMaker = function () {
                 event: function (e) {
                   e.preventDefault();
                   if (e.dataTransfer.files.length > 0) {
-                    console.log(e.dataTransfer.files);
                     let formData, files, fileNames, toArr;
 
                     formData = new FormData();
                     formData.enctype = "multipart/form-data";
 
                     files = [ ...e.dataTransfer.files ];
-
-                    fileNames = files.map((obj) => { return obj.name });
-                    fileNames.sort((a, b) => {
-                      return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
+                    files.sort((a, b) => {
+                      return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
                     });
-
-                    console.log(files);
-                    console.log(fileNames);
-                    console.log(instance.path);
-
-
+                    fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}]/gi, ''); });
                     for (let i = 0; i < files.length; i++) {
                       formData.append("upload" + String(i), files[i]);
                     }
 
-                    formData.append("toArr", JSON.stringify([ "/drive/HomeLiaisonServer/test.jpg" ]));
-
-
                     ajaxJson({ targets: [ instance.path ], frontMode: true }, "/ghostPass_dirParsing").then((data) => {
-                      console.log(data);
-                    })
-
-                    ajaxForm(formData, OFFICEHOST + "/fileUpload").then((data) => {
-                      console.log(data);
+                      let [ path ] = data;
+                      path = path.replace(/\/$/, '');
+                      toArr = [];
+                      for (let i = 0; i < fileNames.length; i++) {
+                        toArr.push(path + "/" + fileNames[i]);
+                      }
+                      formData.append("toArr", JSON.stringify(toArr));
+                      return ajaxForm(formData, OFFICEHOST + "/fileUpload");
+                    }).then(() => {
+                      instance.fileLoad(instance.path);
                     }).catch((e) => {
                       console.log(e);
                     });
