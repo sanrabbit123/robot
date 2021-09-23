@@ -927,6 +927,7 @@ FileJs.prototype.pathReload = function (searchResult = false) {
   const { colorChip } = GeneralJs;
   const target = document.querySelector(".path");
   const between = `&nbsp;&nbsp;<b style="font-weight:300;color:${colorChip.gray5}">></b>&nbsp;&nbsp;`;
+  console.log(this.path);
   if (!searchResult) {
     target.textContent = "";
     if (!/^__photo__/.test(this.path) && !/^__designer__/.test(this.path)) {

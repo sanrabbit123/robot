@@ -1211,12 +1211,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         target = instance.dirParsing(target);
         leafParsing(target).then((list) => {
           res.send(JSON.stringify(list.map((i) => {
-            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__").replace(/^\//, '');
+            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
             if (/^\//i.test(i.absolute)) {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
             }
             if (/^\//i.test(i.absolute)) {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__").replace(/^\//, '');
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
             }
             return i;
           }).filter((i) => {
@@ -1232,12 +1232,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         finalTong = [];
         leafParsing(target).then((list) => {
           finalTong = finalTong.concat(list.map((i) => {
-            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__").replace(/^\//, '');
+            i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
             if (/^\//i.test(i.absolute)) {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
             }
             if (/^\//i.test(i.absolute)) {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__").replace(/^\//, '');
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
             }
             return i;
           }).filter((i) => {
@@ -1299,12 +1299,12 @@ Ghost.prototype.ghostRouter = function (needs) {
           target = instance.dirParsing(target);
           leafParsing(target, true, req.body.keyword).then((list) => {
             res.send(JSON.stringify(list.map((i) => {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__").replace(/^\//, '');
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
               if (/^\//i.test(i.absolute)) {
-                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
               }
               if (/^\//i.test(i.absolute)) {
-                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__").replace(/^\//, '');
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
               }
               return i;
             }).filter((i) => {
@@ -1320,12 +1320,12 @@ Ghost.prototype.ghostRouter = function (needs) {
           finalTong = [];
           leafParsing(target, true, req.body.keyword).then((list) => {
             finalTong = finalTong.concat(list.map((i) => {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__").replace(/^\//, '');
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.homeliaisonServer, "i"), "__samba__");
               if (/^\//i.test(i.absolute)) {
-                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
               }
               if (/^\//i.test(i.absolute)) {
-                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__").replace(/^\//, '');
+                i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerDesigner, "i"), "__designer__");
               }
               return i;
             }).filter((i) => {
@@ -1336,7 +1336,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             return leafParsing(instance.photoServerClient, true, req.body.keyword);
           }).then((list) => {
             finalTong = finalTong.concat(list.map((i) => {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__").replace(/^\//, '');
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__photo__");
               return i;
             }).filter((i) => {
               return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
@@ -1346,7 +1346,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             return leafParsing(instance.photoServerDesigner, true, req.body.keyword);
           }).then((list) => {
             finalTong = finalTong.concat(list.map((i) => {
-              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__designer__").replace(/^\//, '');
+              i.absolute = i.absolute.replace(new RegExp("^" + instance.photoServerClient, "i"), "__designer__");
               return i;
             }).filter((i) => {
               return !/^\.\_/.test(i.absolute.split("/")[i.absolute.split("/").length - 1]);
