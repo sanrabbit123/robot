@@ -1201,7 +1201,7 @@ Ghost.prototype.ghostRouter = function (needs) {
       } else {
         target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
       }
-
+      console.log(target);
       if (target.replace(/\/$/, '') !== "__samba__") {
         target = instance.dirParsing(target);
         leafParsing(target).then((list) => {
