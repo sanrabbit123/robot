@@ -27,7 +27,7 @@ FileJs.prototype.staticSvg = FileJs.staticSvg;
 FileJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac } = GeneralJs;
+  const { createNode, colorChip, withOut, setQueue, ajaxJson, isMac, ajaxForm } = GeneralJs;
   const fileBaseClassName = "fileBase";
   const contextmenuClassName = "contextmenuFactor";
   const contextmenuItems = [
@@ -866,12 +866,22 @@ FileJs.prototype.baseMaker = function () {
                   e.preventDefault();
                   if (e.dataTransfer.files.length > 0) {
                     console.log(e.dataTransfer.files);
-                    let formData, files;
+                    let formData, files, fileNames, toArr;
 
                     formData = new FormData();
                     formData.enctype = "multipart/form-data";
 
                     files = [ ...e.dataTransfer.files ];
+
+                    fileNames = files.map((obj) => { return obj.name });
+                    fileNames.sort((a, b) => {
+                      return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
+                    });
+
+                    console.log(files);
+                    console.log(fileNames);
+                    console.log(instance.path);
+
 
                     for (let i = 0; i < files.length; i++) {
                       formData.append("upload" + String(i), files[i]);
@@ -879,7 +889,12 @@ FileJs.prototype.baseMaker = function () {
 
                     formData.append("toArr", JSON.stringify([ "/drive/HomeLiaisonServer/test.jpg" ]));
 
-                    GeneralJs.ajaxForm(formData, OFFICEHOST + "/fileUpload").then((data) => {
+
+                    ajaxJson({ targets: [ instance.path ], frontMode: true }, "/ghostPass_dirParsing").then((data) => {
+                      console.log(data);
+                    })
+
+                    ajaxForm(formData, OFFICEHOST + "/fileUpload").then((data) => {
                       console.log(data);
                     }).catch((e) => {
                       console.log(e);

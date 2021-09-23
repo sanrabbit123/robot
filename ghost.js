@@ -1463,6 +1463,9 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
         let result = [];
         for (let path of targets) {
+          if (/^\//.test(path)) {
+            path = "__samba__" + path.replace(/^\//g, '');
+          }
           result.push(instance.dirParsing(path));
         }
         if (req.body.frontMode !== undefined) {
