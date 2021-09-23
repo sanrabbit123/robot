@@ -668,6 +668,215 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
   return obj;
 }
 
+MirrorRouter.prototype.rou_post_messageLog = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, ipParsing } = this.mother;
+  const webhook = {
+    url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Accept": "application/vnd.tosslab.jandi-v2+json"
+    },
+    message: (message) => {
+      return {
+        body: message,
+        connectColor: "#FAC11B",
+        connectInfo: []
+      }
+    },
+    channel: "#error_log"
+  }
+  let obj = {};
+  obj.link = "/message";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": '*',
+    });
+    try {
+      if (typeof req.body.message !== "string") {
+        throw new Error("must be message string field");
+      }
+      const db = "miro81";
+      const collection = "messageLog";
+      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const rawUserAgent = req.useragent;
+      const { source: userAgent, browser, os, platform } = rawUserAgent;
+      const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+      let ipObj, thisName;
+
+      ipObj = await ipParsing(ip);
+      if (ipObj === null) {
+        ipObj = { ip };
+      }
+
+      thisName = "unknown";
+      for (let info in address) {
+        if (ip === address[info].ip.outer) {
+          thisName = info.replace(/info$/, '');
+          break;
+        }
+      }
+
+      await instance.mongolocal.db(db).collection(router.message.collection).insertOne({
+        date: new Date(),
+        message: req.body.message,
+        from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
+      });
+      await requestSystem(webHook.url, webHook.message(req.body.message), { headers: webHook.headers });
+      res.send(JSON.stringify({ name: thisName, message: "done" }));
+
+    } catch (e) {
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+MirrorRouter.prototype.rou_post_errorLog = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, ipParsing } = this.mother;
+  const webhook = {
+    url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Accept": "application/vnd.tosslab.jandi-v2+json"
+    },
+    message: (message) => {
+      return {
+        body: message,
+        connectColor: "#FAC11B",
+        connectInfo: []
+      }
+    },
+    channel: "#error_log"
+  }
+  let obj = {};
+  obj.link = "/error";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": '*',
+    });
+    try {
+      if (typeof req.body.message !== "string") {
+        throw new Error("must be message string field");
+      }
+      const db = "miro81";
+      const collection = "errorLog";
+      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const rawUserAgent = req.useragent;
+      const { source: userAgent, browser, os, platform } = rawUserAgent;
+      const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+      let ipObj, thisName;
+
+      ipObj = await ipParsing(ip);
+      if (ipObj === null) {
+        ipObj = { ip };
+      }
+
+      thisName = "unknown";
+      for (let info in address) {
+        if (ip === address[info].ip.outer) {
+          thisName = info.replace(/info$/, '');
+          break;
+        }
+      }
+
+      await instance.mongolocal.db(db).collection(router.message.collection).insertOne({
+        date: new Date(),
+        message: req.body.message,
+        from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
+      });
+      await requestSystem(webHook.url, webHook.message(req.body.message), { headers: webHook.headers });
+      instance.mother.slack_bot.chat.postMessage({ text: req.body.message, channel: webHook.channel });
+
+      res.send(JSON.stringify({ name: thisName, message: "done" }));
+
+    } catch (e) {
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
+MirrorRouter.prototype.rou_post_statusLog = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, ipParsing, equalJson } = this.mother;
+  const webhook = {
+    url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Accept": "application/vnd.tosslab.jandi-v2+json"
+    },
+    message: (message) => {
+      return {
+        body: message,
+        connectColor: "#FAC11B",
+        connectInfo: []
+      }
+    },
+    channel: "#error_log"
+  }
+  let obj = {};
+  obj.link = "/status";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": '*',
+    });
+    try {
+      if (typeof req.body.message !== "string") {
+        throw new Error("must be message string field");
+      }
+      const db = "miro81";
+      const collection = "messageLog";
+      const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+      const rawUserAgent = req.useragent;
+      const { source: userAgent, browser, os, platform } = rawUserAgent;
+      const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+      const status = equalJson(req.body);
+      let ipObj, thisName;
+
+      ipObj = await ipParsing(ip);
+      if (ipObj === null) {
+        ipObj = { ip };
+      }
+
+      thisName = "unknown";
+      for (let info in address) {
+        if (ip === address[info].ip.outer) {
+          thisName = info.replace(/info$/, '');
+          break;
+        }
+      }
+
+      await instance.mongolocal.db(db).collection(router.message.collection).insertOne({
+        date: new Date(),
+        status: equalJson(JSON.stringify(status)),
+        from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
+      });
+      res.send(JSON.stringify({ name: thisName, message: "done" }));
+
+    } catch (e) {
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 MirrorRouter.prototype.getAll = function () {
   let result, result_arr;
 

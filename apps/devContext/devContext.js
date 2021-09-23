@@ -382,12 +382,12 @@ DevContext.prototype.launching = async function () {
     // let callbackhost;
     // let callbackport;
     // let num;
-    // // phoneNumbers.push("0220392252")
-    // // console.log(phoneNumbers);
+    // phoneNumbers.push("0220392252")
+    // console.log(phoneNumbers);
     // num = 0;
     // for (let id of phoneNumbers) {
     //   callbackurl = "/cloud" + String(num) + ".php";
-    //   callbackhost = "3.35.13.93";
+    //   callbackhost = "3.35.212.109";
     //   callbackport = 80;
     //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + callbackport, { id, pass, callbackurl, callbackhost, callbackport }, { headers: { "Content-Type": "application/json" } })).data);
     //   num++;
@@ -400,14 +400,12 @@ DevContext.prototype.launching = async function () {
     // let callbackhost;
     // let callbackport;
     // let num;
-    //
     // phoneNumbers.push("0220392252")
     // console.log(phoneNumbers);
-    //
     // num = 0;
     // for (let id of phoneNumbers) {
     //   callbackurl = "/cloud" + String(num) + ".php";
-    //   callbackhost = "3.35.13.93";
+    //   callbackhost = "3.35.212.109";
     //   callbackport = 80;
     //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } })).data);
     //   num++;
@@ -1224,14 +1222,14 @@ DevContext.prototype.launching = async function () {
 
 
     // raw photo to raw portfolio
-    const filter = new PortfolioFilter();
-    await filter.rawToRaw([
-      {
-        client: "최소나",
-        designer: "이연주",
-        link: "https://drive.google.com/drive/folders/1Ndtp4xP1WYQCbwfQICIl2xb7M6r_9J7h",
-      },
-    ]);
+    // const filter = new PortfolioFilter();
+    // await filter.rawToRaw([
+    //   {
+    //     client: "최소나",
+    //     designer: "이연주",
+    //     link: "https://drive.google.com/drive/folders/1Ndtp4xP1WYQCbwfQICIl2xb7M6r_9J7h",
+    //   },
+    // ]);
 
 
 

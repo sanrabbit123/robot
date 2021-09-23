@@ -92,7 +92,9 @@ MirrorWhisk.prototype.mirrorServerLaunching = async function () {
   const app = express();
   const multer = require("multer");
   const multiForms = multer();
+  const useragent = require("express-useragent");
 
+  app.use(useragent.express());
   app.use(express.json({ limit : "50mb" }));
   app.use(multiForms.array());
   app.use(express.urlencoded({ limit: "50mb", extended: true }));

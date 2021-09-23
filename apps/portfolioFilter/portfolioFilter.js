@@ -810,7 +810,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         designerObj = await back.getDesignerById(project.desid);
 
         if (clientObj !== null && designerObj !== null) {
-          consoleQInput = await consoleQ(`Is it OK? (press 'OK')`);
+          consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
           if (/OK/gi.test(consoleQInput.trim())) {
             await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
             await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });

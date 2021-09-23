@@ -2737,7 +2737,7 @@ Mother.prototype.statusReading = function (sendLog = true) {
   const mac = /darwin/gi.test(os.platform());
   const { spawn } = require("child_process");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "http://" + ADDRESS.recordinfo.host + ":3000/status";
+  const recordUrl = "http://" + ADDRESS.mirrorinfo.host + ":3000/status";
   const axios = require("axios");
   const now = new Date();
   const jandi = {
@@ -2987,7 +2987,7 @@ Mother.prototype.errorLog = function (message) {
     throw new Error("invaild input");
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "http://" + ADDRESS.recordinfo.host + ":3000/error";
+  const recordUrl = "http://" + ADDRESS.mirrorinfo.host + ":3000/error";
   const axios = require("axios");
   return new Promise((resolve, reject) => {
     axios.post(recordUrl, { message }, { headers: { "Content-Type": "application/json" } }).then((res) => {
@@ -3007,7 +3007,7 @@ Mother.prototype.messageLog = function (message) {
     throw new Error("invaild input");
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "http://" + ADDRESS.recordinfo.host + ":3000/message";
+  const recordUrl = "http://" + ADDRESS.mirrorinfo.host + ":3000/message";
   const axios = require("axios");
   return new Promise((resolve, reject) => {
     axios.post(recordUrl, { message }, { headers: { "Content-Type": "application/json" } }).then((res) => {
