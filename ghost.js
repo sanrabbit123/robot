@@ -1201,8 +1201,12 @@ Ghost.prototype.ghostRouter = function (needs) {
       } else {
         target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
       }
-      console.log(req.body.path);
-      console.log(target);
+      if (target.trim() === '') {
+        target = "__samba__";
+      }
+      if (!/^__/.test(target)) {
+        target = "__samba__" + "/" + target;
+      }
       if (target.replace(/\/$/, '') !== "__samba__") {
         target = instance.dirParsing(target);
         leafParsing(target).then((list) => {
@@ -1285,7 +1289,12 @@ Ghost.prototype.ghostRouter = function (needs) {
         } else {
           target = req.body.path.replace(/^\//i, '').replace(/\/$/i, '');
         }
-        console.log(target);
+        if (target.trim() === '') {
+          target = "__samba__";
+        }
+        if (!/^__/.test(target)) {
+          target = "__samba__" + "/" + target;
+        }
         if (target.replace(/\/$/, '') !== "__samba__") {
           target = instance.dirParsing(target);
           leafParsing(target, true, req.body.keyword).then((list) => {
