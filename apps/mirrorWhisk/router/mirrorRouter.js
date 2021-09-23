@@ -874,6 +874,48 @@ MirrorRouter.prototype.rou_post_statusLog = function () {
   return obj;
 }
 
+MirrorRouter.prototype.rou_post_proposalLog = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/proposalSend" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": '*',
+    });
+    try {
+      if (req.body.proid) {
+        throw new Error("invaild post, must be proid");
+      }
+      const db = "miro81";
+      const collection = "proposalLog";
+      const { proid } = equalJson(req.body);
+      const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+      if (project === null) {
+        throw new Error("invaild project");
+      }
+
+      if (/proposalSend/gi.test(req.url)) {
+        await instance.mongolocal.db(db).collection(collection).insertOne({
+          method: "send",
+          date: new Date(),
+          project: project.toNormal(),
+        });
+      }
+
+      res.send(JSON.stringify({ message: "success" }));
+    } catch (e) {
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  }
+  return obj;
+}
+
 MirrorRouter.prototype.getAll = function () {
   let result, result_arr;
 
