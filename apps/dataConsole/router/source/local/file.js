@@ -976,6 +976,7 @@ FileJs.prototype.fileLoad = async function (path, searchMode = false) {
     } else {
       thisFolderFiles = await ajaxJson({ path: this.path, keyword: path }, "/ghostPass_searchFiles");
     }
+    console.log(thisFolderFiles);
     thisFolderFiles.sort((a, b) => {
       return a.fileName >= b.fileName ? 1 : -1;
     });

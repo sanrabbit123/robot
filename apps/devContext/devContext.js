@@ -68,7 +68,6 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
 
-    console.log(await this.findCode("mirrorinfo"));
 
 
     // 현금영수증 발급
