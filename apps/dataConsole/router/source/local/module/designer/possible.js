@@ -189,6 +189,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
   const cookies = getCookiesAll();
   const now = new Date();
   const futureLength = 13;
+  const okClassName = "okSvg";
+  const cancelClassName = "cancelSvg";
+  const numberClassName = "numberWord";
   try {
     let dateMatrix;
     let map;
@@ -205,7 +208,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     let num;
     let blockMarginBottom;
     let dateBox;
-    let dateSize;
+    let dateNumberSize, dateNumberTop, dateNumberLeft;
+    let dateIconTop, dateIconWidth, dateIconRight;
 
     size = <%% 16, 15, 15, 15, 4 %%>;
     titleWidth = <%% 100, 100, 100, 100, 20 %%>;
@@ -213,11 +217,17 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     titlePaddingRight = <%% 45, 45, 45, 45, 5 %%>;
     titleLineHeight = 1.6;
 
-    weekBlockHeight = <%% 80, 80, 80, 80, 4 %%>;
+    weekBlockHeight = <%% 72, 72, 72, 72, 4 %%>;
 
     blockMarginBottom = <%% 48, 48, 48, 48, 4 %%>;
 
-    dateSize = <%% 20, 20, 20, 20, 4 %%>;
+    dateNumberSize = <%% 20, 20, 20, 20, 4 %%>;
+    dateNumberTop = <%% 17, 17, 17, 17, 4 %%>;
+    dateNumberLeft = <%% 23, 23, 23, 23, 4 %%>;
+
+    dateIconTop = <%% 22, 22, 22, 22, 4 %%>;
+    dateIconWidth = <%% 22, 22, 22, 22, 5 %%>;
+    dateIconRight = <%% 24, 24, 24, 24, 4 %%>;
 
     dateMatrix = getDateMatrix(now.getFullYear(), now.getMonth());
     map = [];
@@ -230,7 +240,6 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
       dateMatrix = dateMatrix.nextMatrix();
     }
 
-    console.log(map);
     num = 0;
     for (let { year, month, matrix } of map) {
       block = createNode({
@@ -295,6 +304,13 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
         for (let j = 0; j < 7; j++) {
           dateBox = createNode({
             mother: weekBlock,
+            class: [ "hoverDefault_lite" ],
+            attribute: [
+              { toggle: "off" },
+              { year: year.replace(/[^0-9]/gi, '') },
+              { month: month.replace(/[^0-9]/gi, '') },
+              { date: (matrix[i][j] !== null ? String(matrix[i][j].date) : "0") }
+            ],
             style: {
               position: "relative",
               display: "inline-block",
@@ -302,21 +318,52 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
               height: String(100) + '%',
               boxSizing: "border-box",
               borderRight: (j === 7 - 1 ? "" : "1px solid " + colorChip.gray3),
-              background: (matrix[i][j] === null ? colorChip.gray0 : colorChip.white),
+              borderRadius: String(5) + "px",
+              background: (matrix[i][j] === null ? colorChip.gray1 : colorChip.white),
             }
           });
 
           if (matrix[i][j] !== null) {
             createNode({
               mother: dateBox,
+              class: [ numberClassName ],
               text: String(matrix[i][j].date),
               style: {
                 position: "absolute",
                 fontStyle: "graphik",
-                fontSize: String(dateSize) + ea,
-                fontWeight: String(300),
+                fontSize: String(dateNumberSize) + ea,
+                fontWeight: String(200),
+                top: String(dateNumberTop) + ea,
+                left: String(dateNumberLeft) + ea,
               }
             });
+            createNode({
+              mother: dateBox,
+              class: [ okClassName ],
+              mode: "svg",
+              source: instance.mother.returnCancelCircle(colorChip.red),
+              style: {
+                position: "absolute",
+                top: String(dateIconTop) + ea,
+                right: String(dateIconRight) + ea,
+                width: String(dateIconWidth) + ea,
+                opacity: String(0),
+              }
+            });
+            createNode({
+              mother: dateBox,
+              class: [ cancelClassName ],
+              mode: "svg",
+              source: instance.mother.returnCancelCircle(colorChip.red),
+              style: {
+                position: "absolute",
+                top: String(dateIconTop) + ea,
+                right: String(dateIconRight) + ea,
+                width: String(dateIconWidth) + ea,
+                opacity: String(1),
+              }
+            });
+
           }
 
         }
