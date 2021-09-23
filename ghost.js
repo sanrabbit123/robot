@@ -701,6 +701,7 @@ Ghost.prototype.ghostRouter = function (needs) {
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {
+            console.log(err);
             throw new Error(err);
             return;
           } else {
