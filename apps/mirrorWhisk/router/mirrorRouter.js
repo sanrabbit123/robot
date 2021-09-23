@@ -722,7 +722,7 @@ MirrorRouter.prototype.rou_post_messageLog = function () {
         }
       }
 
-      await instance.mongolocal.db(db).collection(router.message.collection).insertOne({
+      await instance.mongolocal.db(db).collection(collection).insertOne({
         date: new Date(),
         message: req.body.message,
         from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
@@ -791,7 +791,7 @@ MirrorRouter.prototype.rou_post_errorLog = function () {
         }
       }
 
-      await instance.mongolocal.db(db).collection(router.message.collection).insertOne({
+      await instance.mongolocal.db(db).collection(collection).insertOne({
         date: new Date(),
         message: req.body.message,
         from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
@@ -863,7 +863,7 @@ MirrorRouter.prototype.rou_post_statusLog = function () {
         }
       }
 
-      await instance.mongolocal.db(db).collection(router.message.collection).insertOne({
+      await instance.mongolocal.db(db).collection(collection).insertOne({
         date: new Date(),
         status: equalJson(JSON.stringify(status)),
         from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
