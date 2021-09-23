@@ -866,51 +866,24 @@ FileJs.prototype.baseMaker = function () {
                   e.preventDefault();
                   if (e.dataTransfer.files.length > 0) {
                     console.log(e.dataTransfer.files);
-                    let form, input;
+                    let formData, files;
 
-                    form = createNode({
-                      mother: document.body,
-                      mode: "form",
-                      attribute: [
-                        { action: OFFICEHOST + "/fileUpload" },
-                        { method: "post" }
-                      ],
-                      style: {
-                        display: "none",
-                      },
-                      children: [
-                        {
-                          mode: "input",
-                          attribute: [
-                            { type: "file" }
-                          ],
-                          style: {
-                            display: "none",
-                          }
-                        },
-                        {
-                          mode: "input",
-                          attribute: [
-                            { type: "text" },
-                            { value: JSON.stringify([ "/drive/HomeLiaisonServer/test.jpg" ]) }
-                          ],
-                          style: {
-                            display: "none",
-                          }
-                        },
-                      ]
+                    formData = new FormData();
+                    formData.enctype = "multipart/form-data";
+
+                    files = [ ...e.dataTransfer.files ];
+
+                    for (let i = 0; i < files.length; i++) {
+                      formData.append("upload" + String(i), files[i]);
+                    }
+
+                    formData.append("toArr", JSON.stringify([ "/drive/HomeLiaisonServer/test.jpg" ]));
+
+                    GeneralJs.ajaxForm(formData, OFFICEHOST + "/fileUpload").then((data) => {
+                      console.log(data);
+                    }).catch((e) => {
+                      console.log(e);
                     });
-                    input = form.firstChild;
-
-                    input.files = e.dataTransfer.files;
-
-                    console.log(OFFICEHOST + "/fileUpload");
-
-                    console.log(form);
-                    console.log(input);
-
-                    form.submit();
-                    console.log("success");
 
                   }
                   calculationEvent.call(this, e);

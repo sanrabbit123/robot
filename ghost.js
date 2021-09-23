@@ -701,7 +701,6 @@ Ghost.prototype.ghostRouter = function (needs) {
       form.parse(req, async function (err, fields, files) {
         try {
           if (err) {
-            console.log(err);
             throw new Error(err);
             return;
           } else {
@@ -717,8 +716,6 @@ Ghost.prototype.ghostRouter = function (needs) {
             let filesKey, fromArr, num;
             let tempArr, tempString, tempDir;
 
-            console.log(toArr);
-
             filesKey = Object.keys(files);
             filesKey.sort((a, b) => {
               return Number(a.replace(/[^0-9]/gi, '')) - Number(b.replace(/[^0-9]/gi, ''));
@@ -729,8 +726,6 @@ Ghost.prototype.ghostRouter = function (needs) {
               fromArr.push(files[key]);
             }
 
-            console.log(fromArr);
-
             num = 0;
             for (let { path } of fromArr) {
               tempArr = toArr[num].split("/");
@@ -740,6 +735,9 @@ Ghost.prototype.ghostRouter = function (needs) {
               }
               for (let i = 0; i < tempArr.length - 1; i++) {
                 tempDir = await fileSystem(`readDir`, [ tempString ]);
+                console.log(tempDir);
+                console.log(tempArr);
+                console.log(tempArr[i]);
                 if (!tempDir.includes(tempArr[i])) {
                   shell.exec(`mkdir ${shellLink(tempString + "/" + tempArr[i])}`);
                 }

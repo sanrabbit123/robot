@@ -535,8 +535,7 @@ GeneralJs.nodes = {
   iframe: document.createElement('IFRAME'),
   aside: document.createElement('ASIDE'),
   video: document.createElement('VIDEO'),
-  source: document.createElement('SOURCE'),
-  form: document.createElement('FORM')
+  source: document.createElement('SOURCE')
 }
 
 GeneralJs.scrollTo = function (from, valueOrTo, visualSpecific = 0) {
