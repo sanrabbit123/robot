@@ -187,32 +187,32 @@ RecordCloud.prototype.recordServerLaunching = async function () {
           from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
 
-        notionObj = {};
-
-        notionObj.title = thisName;
-        notionObj.date = status.date;
-        notionObj.cpu_used = String(Math.round(status.cpu.used * 100 * 100) / 100) + '%';
-        notionObj.cpu_idle = String(Math.round(status.cpu.idle * 100 * 100) / 100) + '%';
-        notionObj.processes_total = status.processes.total;
-        notionObj.processes_running = status.processes.running;
-        notionObj.memory_total = String(Math.round((Math.round(status.memory.total / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-        notionObj.memory_used = String(Math.round((Math.round((status.memory.total - status.memory.free) / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-        notionObj.start = status.start;
-        notionObj.disk_total = String(Math.round((Math.round(status.disk.total / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-        notionObj.disk_used = String(Math.round((Math.round(status.disk.used / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-        notionObj.disk_available = String(Math.round((Math.round(status.disk.available / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
-        notionObj.pm2_number = status.pm2.length;
-        notionObj.pm2_names = status.pm2.map((obj) => { return obj.name; }).join(", ");
-        notionObj.pm2_uptime = status.pm2.map((obj) => { return obj.uptime; }).join(", ");
-        notionObj.pm2_status = status.pm2.map((obj) => { return obj.status; }).join(", ");
-        notionObj.pm2_cpu = status.pm2.map((obj) => { return String(Math.round(obj.cpu * 100 * 100) / 100) + '%'; }).join(", ");
-        notionObj.pm2_memory = status.pm2.map((obj) => { return String(Math.round((Math.round(obj.memory / 1024) / 1024) * 1000) / 1000) + "Mb"; }).join(", ");
-
-        notion.appendRow(router.status.notion, notionObj).then((message) => {
-          console.log(message);
-        }).catch((err) => {
-          throw new Error(err);
-        });
+        // notionObj = {};
+        //
+        // notionObj.title = thisName;
+        // notionObj.date = status.date;
+        // notionObj.cpu_used = String(Math.round(status.cpu.used * 100 * 100) / 100) + '%';
+        // notionObj.cpu_idle = String(Math.round(status.cpu.idle * 100 * 100) / 100) + '%';
+        // notionObj.processes_total = status.processes.total;
+        // notionObj.processes_running = status.processes.running;
+        // notionObj.memory_total = String(Math.round((Math.round(status.memory.total / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
+        // notionObj.memory_used = String(Math.round((Math.round((status.memory.total - status.memory.free) / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
+        // notionObj.start = status.start;
+        // notionObj.disk_total = String(Math.round((Math.round(status.disk.total / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
+        // notionObj.disk_used = String(Math.round((Math.round(status.disk.used / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
+        // notionObj.disk_available = String(Math.round((Math.round(status.disk.available / (1024 * 1024)) / 1024) * 1000) / 1000) + "Gb";
+        // notionObj.pm2_number = status.pm2.length;
+        // notionObj.pm2_names = status.pm2.map((obj) => { return obj.name; }).join(", ");
+        // notionObj.pm2_uptime = status.pm2.map((obj) => { return obj.uptime; }).join(", ");
+        // notionObj.pm2_status = status.pm2.map((obj) => { return obj.status; }).join(", ");
+        // notionObj.pm2_cpu = status.pm2.map((obj) => { return String(Math.round(obj.cpu * 100 * 100) / 100) + '%'; }).join(", ");
+        // notionObj.pm2_memory = status.pm2.map((obj) => { return String(Math.round((Math.round(obj.memory / 1024) / 1024) * 1000) / 1000) + "Mb"; }).join(", ");
+        //
+        // notion.appendRow(router.status.notion, notionObj).then((message) => {
+        //   console.log(message);
+        // }).catch((err) => {
+        //   throw new Error(err);
+        // });
 
         res.send(JSON.stringify({ name: thisName, message: "done" }));
       } catch (e) {

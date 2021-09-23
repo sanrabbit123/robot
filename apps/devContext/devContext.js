@@ -1227,9 +1227,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박혜정",
-    //     designer: "오정수",
-    //     link: "https://drive.google.com/drive/folders/19ie2LcswgUGH1_EVj_dglyAiVnFtbIRS",
+    //     client: "최소나",
+    //     designer: "이연주",
+    //     link: "https://drive.google.com/drive/folders/1Ndtp4xP1WYQCbwfQICIl2xb7M6r_9J7h",
     //   },
     // ]);
 
