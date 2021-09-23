@@ -398,6 +398,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       }
     } else {
       shell.exec(`scp -r ${shellLink(fileList_780[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
+      shell.exec(`scp -r ${shellLink(fileList_1500[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
     }
 
     //slack
@@ -674,6 +675,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let shareGoogleIdClient, shareGoogleIdDesigner;
     let clientObj, designerObj;
     let zipLinks;
+    let consoleQInput;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -808,9 +810,12 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         designerObj = await back.getDesignerById(project.desid);
 
         if (clientObj !== null && designerObj !== null) {
-          await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
-          await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });
-          await this.mother.slack_bot.chat.postMessage({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+          consoleQInput = await consoleQ(`Is it OK? (press 'OK')`);
+          if (/OK/gi.test(consoleQInput.trim())) {
+            await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
+            await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });
+            await this.mother.slack_bot.chat.postMessage({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+          }
         }
 
       }
