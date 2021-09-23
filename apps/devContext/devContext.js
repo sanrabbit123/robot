@@ -55,8 +55,8 @@ DevContext.prototype.launching = async function () {
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
   const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading, errorLog, messageLog } = this.mother;
   try {
-    // await this.MONGOC.connect();
-    // await this.MONGOLOCALC.connect();
+    await this.MONGOC.connect();
+    await this.MONGOLOCALC.connect();
     const address = this.address;
     const back = this.back;
     const report = new BackReport();
@@ -1216,12 +1216,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-    // addtional photo repair
-    // const filter = new PortfolioFilter();
-    // await filter.additionalRepair("p90", 13);
-
-
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
@@ -1239,10 +1233,6 @@ DevContext.prototype.launching = async function () {
     // await drive.get_folder("https://drive.google.com/drive/folders/1f7TO4P5SoSPoI9v6ZgVNEohwhTsNEquf", "p96");
 
 
-    // send checklist
-    // await this.sendChecklist();
-
-
     // spell check
     // await this.spellCheck("p116");
 
@@ -1252,7 +1242,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p118");
+    // await this.getCorePortfolio("p106");
 
 
     // aspirant to designer
@@ -1356,8 +1346,8 @@ DevContext.prototype.launching = async function () {
   } catch (e) {
     console.log(e);
   } finally {
-    // await this.MONGOC.close();
-    // await this.MONGOLOCALC.close();
+    await this.MONGOC.close();
+    await this.MONGOLOCALC.close();
     console.log(`done`);
   }
 }
