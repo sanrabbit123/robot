@@ -76,7 +76,15 @@ DevContext.prototype.launching = async function () {
 
 
     shell.exec(`lpstat -p`, (error, stdout, stderr) => {
-      console.log(stdout);
+      const arr = stdout.split("\n").map((i) => { return i.trim(); });
+      const printerRaw = arr.find((i) => { return /^printer/gi.test(i); });
+      if (typeof printerRaw !== "string") {
+        throw new Error("There is no printer");
+      }
+
+      console.log(printerRaw);
+
+
     });
 
 
