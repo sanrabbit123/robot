@@ -1091,10 +1091,10 @@ const MENU = {
 let launchingFunc;
 
 if (process.argv[2] === undefined) {
-  robot.launching();
+  robot.launching().catch((err) => { console.log(err); });
 } else {
   launchingFunc = MENU[process.argv[2]];
   if (launchingFunc !== undefined) {
-    launchingFunc();
+    launchingFunc().catch((err) => { console.log(err); });
   }
 }

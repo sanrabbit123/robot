@@ -505,59 +505,33 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }).catch((err) => {
             console.log(err);
           });
+        } else {
+          cliid = "c1801_aa01s";
         }
 
         //send slack message
         if (!instance.ignorePhone.includes(requestObj["phone"])) {
           thisClientArr = await instance.back.getClientsByQuery({ phone: requestObj["phone"] }, { withTools: true, selfMongo: MONGOC });
           thisClient = thisClientArr[0];
-
           message = '';
           message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!\n";
           message += thisClient.toMessage();
+          slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
         } else {
           message = '';
           message += JSON.stringify(requestObj, null, 2);
+          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
 
         //send alimtalk
         KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]);
         message = message + "\n\n" + requestObj["name"] + "님에게 알림톡 전송을 완료하였습니다!";
 
-        //to google
-        const toGoogle = {
-          "entry.1330142163": requestObj["name"],
-          "entry.113799560": requestObj["phone"],
-          "entry.2114079722": requestObj["requests.0.request.space.address"],
-          "entry.132869049": requestObj["requests.0.request.family"],
-          "entry.1481370131": requestObj["email"],
-          "entry.795490298": requestObj["requests.0.request.budget"],
-          "entry.1040328027": filterAll(resultObj["area"]),
-          "entry.2088583577": filterAll(filterDate(resultObj["movingdate"])),
-          "entry.2069033904": requestObj["requests.0.request.space.contract"],
-          "entry.1127622227": filterAll(resultObj["spotspec"]),
-          "entry.462371043": requestObj["requests.0.request.etc.comment"],
-          "entry.795957898": requestObj["requests.0.request.etc.channel"],
-          "entry.1749939672": String(requestObj["requests.0.request.timeline"].getFullYear()) + ". " + String(requestObj["requests.0.request.timeline"].getMonth() + 1) + ". " + String(requestObj["requests.0.request.timeline"].getDate()) + " " + String(requestObj["requests.0.request.timeline"].getHours()) + ":" + String(requestObj["requests.0.request.timeline"].getMinutes()),
-        };
-        const { status: googleStatus } = await requestSystem("https://docs.google.com/forms/u/0/d/e/1FAIpQLSfqd1Q-En9K7YbQpknPE3OkqobzCMJaSO9G33W6KRodoE0I8g/formResponse", toGoogle);
-        if (googleStatus !== 200) {
-          message = message + "\n\n" + "구글 설문지로 옮겨지는 과정에서 문제 생김";
-        }
-
+        //print
         console.log(message);
-        ghostRequest("/print", {}).then(() => {
-          return ghostRequest("/voice", { text: "새로운 상담 문의가 왔어요! 성함은 " + requestObj["name"] + " 고객님 입니다." });
-        }).catch((err) => {
+        ghostRequest("/print", { cliid }).catch((err) => {
           console.log(err);
         });
-
-        // to slack
-        if (!instance.ignorePhone.includes(requestObj["phone"])) {
-          slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
-        } else {
-          slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
-        }
 
       }
 

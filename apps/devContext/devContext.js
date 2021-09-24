@@ -70,36 +70,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const getPrinterName = function () {
-      const { spawn } = require("child_process");
-      const lpstat = spawn("lpstat", [ "-p" ]);
-      let printer;
-      return new Promise((resolve, reject) => {
-        lpstat.stdout.on("data", (data) => {
-          const arr = String(data).split("\n").map((i) => { return i.trim(); });
-          const printerRaw = arr.find((i) => { return /^printer/gi.test(i); });
-          if (typeof printerRaw !== "string") {
-            reject("There is no printer");
-          }
-          printer = printerRaw.trim().split(' ')[1];
-          lpstat.kill();
-          resolve(printer);
-        });
-      });
-    }
-    const getPrintCommand = function (printer, targetFile) {
-      return `uniprint -printer ${printer} -size 9 -hsize 0 -font /usr/share/fonts/truetype/nanum/NanumBarunGothic.ttf ${targetFile}`;
-    }
-    const nowValue = (new Date()).valueOf();
-    const tempFileName = (cliid) => { return `printerTemp_${cliid}_${String(nowValue)}.txt`; };
-    const client = await back.getClientById("c2109_aa45s", { selfMongo: this.MONGOLOCALC, withTools: true });
-    const targetFile = `${shellLink(process.cwd())}/temp/${tempFileName(client.cliid)}`;
-    await fileSystem(`write`, [ targetFile, client.toPrint() ]);
-    const printer = await getPrinterName();
-    shell.exec(getPrintCommand(printer, targetFile));
-    shell.exec(`rm -rf ${targetFile}`);
-
-
 
 
 

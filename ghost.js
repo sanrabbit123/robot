@@ -78,6 +78,57 @@ Ghost.prototype.setTimer = function (callback, timeObj) {
   });
 }
 
+Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
+  if (typeof cliid !== "string") {
+    throw new Error("invalid input");
+  }
+  const instance = this;
+  const back = this.back;
+  const { fileSystem, shell, shellLink } = this.mother;
+  const getPrinterName = function () {
+    const { spawn } = require("child_process");
+    const lpstat = spawn("lpstat", [ "-p" ]);
+    let printer;
+    return new Promise((resolve, reject) => {
+      lpstat.stdout.on("data", (data) => {
+        const arr = String(data).split("\n").map((i) => { return i.trim(); });
+        const printerRaw = arr.find((i) => { return /^printer/gi.test(i); });
+        if (typeof printerRaw !== "string") {
+          reject("There is no printer");
+        }
+        printer = printerRaw.trim().split(' ')[1];
+        lpstat.kill();
+        resolve(printer);
+      });
+    });
+  }
+  const getPrintCommand = function (printer, targetFile) {
+    return `uniprint -printer ${printer} -size 9 -hsize 0 -font /usr/share/fonts/truetype/nanum/NanumBarunGothic.ttf ${targetFile}`;
+  }
+  const nowValue = (new Date()).valueOf();
+  const tempFileName = (cliid) => { return `printerTemp_${cliid}_${String(nowValue)}.txt`; };
+  try {
+    let client, targetFile, printer;
+
+    client = await back.getClientById(cliid, { selfMongo: MONGOC, withTools: true });
+    if (client === null) {
+      throw new Error("invalid cliid");
+    }
+    targetFile = `${shellLink(process.cwd())}/temp/${tempFileName(client.cliid)}`;
+    await fileSystem(`write`, [ targetFile, client.toPrint() ]);
+
+    printer = await getPrinterName();
+
+    shell.exec(getPrintCommand(printer, targetFile));
+    shell.exec(`rm -rf ${targetFile}`);
+
+    return client;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Ghost.prototype.consoleQ = function (question) {
   const readline = require(`readline`);
   const rL = readline.createInterface({ input : process.stdin, output : process.stdout });
@@ -663,7 +714,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
@@ -1783,41 +1834,18 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_printer = {
     link: [ "/printer", "/print" ],
     func: function (req, res) {
+
+      instance.clientPrint(req.body.cliid, MONGOC).then((client) => {
+        return ghostRequest("/voice", { text: "새로운 상담 문의가 왔어요! 성함은 " + client.name + " 고객님 입니다." });
+      }).catch((err) => {
+        console.log(err);
+      });
+
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": '*',
-      });
-      let target;
-      target = "http://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port[0]);
-      headRequest(target + "/confirm").then(async (response) => {
-        const { statusCode } = response;
-        let raw, res, doing;
-        if (statusCode === 200) {
-          raw = await requestSystem(target + "/confirm");
-          if (raw.data.doing !== undefined) {
-            await sleep(1000);
-            doing = raw.data.doing;
-            while (doing === 1) {
-              console.log("waiting...");
-              await sleep(1000);
-              raw = await requestSystem(target + "/confirm");
-              if (raw.data.doing !== undefined) {
-                doing = raw.data.doing;
-              } else {
-                doing = 2;
-              }
-            }
-            if (doing === 0) {
-              res = await requestSystem(target + "/print");
-              await slack_bot.chat.postMessage({ text: "프린트 출력을 완료하였습니다!", channel: "#401_consulting" });
-              console.log("print", res.data);
-            }
-          }
-        }
-      }).catch((err) => {
-        console.log(err);
       });
       res.send(JSON.stringify({ message: "will do" }));
     }
@@ -3103,11 +3131,13 @@ Ghost.prototype.wssLaunching = async function () {
 
 const app = new Ghost();
 if (process.argv[2] === undefined || /server/gi.test(process.argv[2]) || /ghost/gi.test(process.argv[2])) {
-  app.serverLaunching();
+  app.serverLaunching().catch((err) => { console.log(err); });
 } else if (/file/gi.test(process.argv[2]) || /ftp/gi.test(process.argv[2])) {
-  app.fileLaunching();
+  app.fileLaunching().catch((err) => { console.log(err); });
 } else if (/ai/gi.test(process.argv[2]) || /robot/gi.test(process.argv[2]) || /pass/gi.test(process.argv[2])) {
-  app.robotPassLaunching();
+  app.robotPassLaunching().catch((err) => { console.log(err); });
 } else if (/wss/gi.test(process.argv[2])) {
-  app.wssLaunching();
+  app.wssLaunching().catch((err) => { console.log(err); });
+} else if (/print/gi.test(process.argv[2])) {
+  app.clientPrint(process.argv[3].trim(), null).catch((err) => { console.log(err); });
 }
