@@ -69,6 +69,21 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("* 1.1)"));
 
 
+    // const client = await back.getClientById("c2109_aa45s", { selfMongo: this.MONGOLOCALC, withTools: true });
+    // await fileSystem(`write`, [ `${process.cwd()}/temp/test.txt`, client.toPrint() ]);
+
+
+
+
+    shell.exec(`lpstat -p`, (error, stdout, stderr) => {
+      console.log(stdout);
+    });
+
+
+
+
+
+
 
     // 현금영수증 발급
     // const url = "https://iniapi.inicis.com/api/v1/receipt";

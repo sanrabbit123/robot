@@ -436,7 +436,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
                 background: "transparent",
                 borderRadius: String(5) + "px",
                 transition: "all 0s ease",
-                opacity: String(0.1),
+                opacity: String(0.08),
               }
             });
             createNode({
@@ -461,7 +461,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
               under: {
                 fontSize: String(dateNumberSize) + ea,
                 fontWeight: String(300),
-                color: colorChip.gray3,
+                color: colorChip.gray4,
               }
             });
             createNode({

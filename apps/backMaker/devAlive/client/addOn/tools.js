@@ -216,6 +216,55 @@ const withTools = function (Client) {
     return message.replace(/\n$/, '');
   }
 
+  Client.prototype.toPrint = function () {
+    const { request } = this.requests[0];
+    const indent = "    ";
+    const bar = "=======================================================================";
+    const wordEaLength = 52;
+    let documentArr, comment, commentArr;
+    let tempStr;
+
+    documentArr = [];
+
+    documentArr.push("\n\n");
+    documentArr.push(bar + "\n");
+    documentArr.push(`상담 신청서  /  ${this.cliid}  /  ${request.timeline.toString(true)}\n`);
+    documentArr.push(bar);
+    documentArr.push("\n\n");
+    documentArr.push(`${this.name} (${this.phone})`);
+    documentArr.push("\n\n");
+
+    documentArr.push("주소 : " + request.space.address.value + "\n\n");
+    documentArr.push("가족 구성원 : " + request.family.value + "\n\n");
+    documentArr.push("예산 : " + request.budget.value + "\n\n");
+    documentArr.push("평수 : " + request.space.pyeong.toMessage() + "\n\n");
+    documentArr.push("입주 예정일 : " + request.space.resident.expected.toString() + "\n\n");
+    documentArr.push("계약 형태 : " + request.space.contract.value + "\n\n");
+    documentArr.push("공간 상태 : " + request.space.spec.toMessage() + "\n\n");
+    documentArr.push("유입 경로 : " + request.etc.channel + "\n\n");
+
+    comment = "요청 사항 : " + request.etc.comment;
+    commentArr = [];
+    tempStr = '';
+    for (let i = 0; i < comment.length; i++) {
+      tempStr += comment[i];
+      if (i % wordEaLength === wordEaLength - 1) {
+        commentArr.push(tempStr);
+        tempStr = '';
+      }
+    }
+    commentArr.push(tempStr);
+
+    commentArr = commentArr.filter((s) => { return s !== ""; }).map((s) => { return s.trim() + "\n"; });
+    commentArr.push("\n\n");
+
+    documentArr = documentArr.concat(commentArr);
+    documentArr.push(bar);
+    documentArr = documentArr.map((s) => { return indent + s; });
+
+    return documentArr.join("\n");
+  }
+
   Client.prototype.toGoogleAnalyticsSheet = function () {
     const { request, analytics: { googleAnalytics } } = this.requests[0];
     let sheet = [];
