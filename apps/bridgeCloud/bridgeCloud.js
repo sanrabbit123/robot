@@ -523,13 +523,10 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
         }
 
-        //send alimtalk
-        KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]);
-        message = message + "\n\n" + requestObj["name"] + "님에게 알림톡 전송을 완료하였습니다!";
-
-        //print
-        console.log(message);
-        ghostRequest("/print", { cliid }).catch((err) => {
+        //send alimtalk and print
+        KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).then(() => {
+          return ghostRequest("/print", { cliid });
+        }).catch((err) => {
           console.log(err);
         });
 
