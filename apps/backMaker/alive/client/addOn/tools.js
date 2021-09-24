@@ -226,13 +226,12 @@ const withTools = function (Client) {
 
     documentArr = [];
 
-    documentArr.push("\n\n");
     documentArr.push(bar + "\n");
     documentArr.push(`상담 신청서  /  ${this.cliid}  /  ${request.timeline.toString(true)}\n`);
     documentArr.push(bar);
     documentArr.push("\n\n");
     documentArr.push(`${this.name} (${this.phone})`);
-    documentArr.push("\n\n");
+    documentArr.push("\n");
 
     documentArr.push("주소 : " + request.space.address.value + "\n\n");
     documentArr.push("가족 구성원 : " + request.family.value + "\n\n");
