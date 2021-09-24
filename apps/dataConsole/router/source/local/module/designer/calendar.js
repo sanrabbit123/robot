@@ -225,7 +225,7 @@ DesignerJs.prototype.calendarMatrix = function () {
       }
     }
   }
-  const length = 13;
+  const length = 18;
   let past, future;
   let date, week;
   let dateMatrix;
@@ -1417,7 +1417,7 @@ DesignerJs.prototype.calendarContentsTime = async function (search = null, loadi
       }
       instance.calendarData.render();
     }, 0);
-    
+
   } catch (e) {
     console.log(e);
   }
