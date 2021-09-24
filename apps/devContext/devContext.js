@@ -74,18 +74,22 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const { spawn } = require("child_process");
+    const lpstat = spawn("lpstat", [ "-p" ]);
+    let printer;
 
-    shell.exec(`lpstat -p`, (error, stdout, stderr) => {
-      const arr = stdout.split("\n").map((i) => { return i.trim(); });
+    lpstat.stdout.on("data", (data) => {
+      const arr = data.split("\n").map((i) => { return i.trim(); });
       const printerRaw = arr.find((i) => { return /^printer/gi.test(i); });
       if (typeof printerRaw !== "string") {
         throw new Error("There is no printer");
       }
-
       console.log(printerRaw);
-
-
+      lpstat.kill();
     });
+
+
+
 
 
 
