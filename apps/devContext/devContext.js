@@ -71,18 +71,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await ghostRequest("/print", { cliid: "c2109_aa45s" });
-
-
-
-
-
-
-
-
-
-
-
 
     // 현금영수증 발급
     // const url = "https://iniapi.inicis.com/api/v1/receipt";
@@ -1252,7 +1240,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p146");
+    await this.getRawPortfolio("p124");
 
 
     // get corePortfolio by pid
