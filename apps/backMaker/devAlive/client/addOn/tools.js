@@ -219,8 +219,8 @@ const withTools = function (Client) {
   Client.prototype.toPrint = function () {
     const { request } = this.requests[0];
     const indent = "    ";
-    const bar = "===============================================================";
-    const wordEaLength = 72;
+    const bar = "=============================================================";
+    const wordEaLength = 70;
     let documentArr, comment, commentArr;
     let tempStr;
 
