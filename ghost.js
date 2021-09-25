@@ -85,6 +85,7 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
   const instance = this;
   const back = this.back;
   const { fileSystem, shell, shellLink } = this.mother;
+  const fontName = `/usr/share/fonts/truetype/sandoll/AppleSDGothicNeoSB00-05.ttf`;
   const getPrinterName = function () {
     const { spawn } = require("child_process");
     const lpstat = spawn("lpstat", [ "-p" ]);
@@ -103,7 +104,7 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
     });
   }
   const getPrintCommand = function (printer, targetFile) {
-    return `uniprint -printer ${printer} -size 9 -hsize 0 -font /usr/share/fonts/truetype/nanum/NanumBarunGothic.ttf ${targetFile}`;
+    return `uniprint -printer ${printer} -size 9 -hsize 0 -font ${fontName} ${targetFile}`;
   }
   const nowValue = (new Date()).valueOf();
   const tempFileName = (cliid) => { return `printerTemp_${cliid}_${String(nowValue)}.txt`; };
