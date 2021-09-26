@@ -182,7 +182,7 @@ DesignerJs.prototype.possibleContents = function (desid) {
 DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
   const instance = this;
   const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix } = GeneralJs;
-  const { totalMother, ea, grayBarWidth } = this;
+  const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   const designer = this.designers.pick(desid);
@@ -204,6 +204,20 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
   const scrollEventName = "scrollYEvent";
   const scrollEventTimeout = "scrollYTimeout";
   const daydayWords = [ "일", "월", "화", "수", "목", "금", "토" ];
+  const functionPannelContents = [
+    {
+      name: "프로젝트 보기",
+      event: function (e) {
+        console.log("this!");
+      }
+    },
+    {
+      name: "달력 띄우기",
+      event: function (e) {
+        console.log("this!");
+      }
+    }
+  ];
   try {
     let magin, outerMargin;
     let dateMatrix;
@@ -238,6 +252,17 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     let daydaySize, daydayTextTop;
     let daydayBarTop, daydayBarBottom;
     let daydayIndent;
+    let functionPannel;
+    let functionPannelBottom;
+    let functionPannelRight;
+    let functionPannelWidth;
+    let functionPannelBlockHeight;
+    let functionPannelSize;
+    let functionPannelLeft;
+    let functionPannelTextTop0;
+    let functionPannelTextTop1;
+    let functionPannelPaddingTop;
+    let functionPannelPaddingBottom;
 
     margin = 8;
     outerMargin = <%% (margin * 3), (margin * 3), (margin * 3), (margin * 3), 0 %%>;
@@ -266,6 +291,19 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     daydayBarTop = <%% 16, 16, 16, 16, 4 %%>;
     daydayBarBottom = <%% 18, 18, 18, 18, 4 %%>;
     daydayIndent = <%% 7, 7, 7, 7, 0 %%>;
+
+    functionPannelBottom = <%% 36, 36, 36, 36, 6 %%>;
+    functionPannelRight = <%% 10, 10, 10, 10, 3 %%>;
+    functionPannelWidth = <%% 150, 150, 150, 150, 14 %%>;
+
+    functionPannelPaddingTop = <%% 12, 12, 12, 12, 6 %%>;
+    functionPannelPaddingBottom = <%% 12, 12, 12, 12, 6 %%>;
+
+    functionPannelBlockHeight = <%% 24, 24, 24, 24, 5 %%>;
+    functionPannelSize = <%% 14, 14, 14, 14, 3 %%>;
+    functionPannelLeft = <%% 18, 18, 18, 18, 4 %%>;
+    functionPannelTextTop0 = <%% 2, 2, 2, 2, 0 %%>;
+    functionPannelTextTop1 = <%% 3, 3, 3, 3, 0 %%>;
 
     dateMatrix = getDateMatrix(now.getFullYear(), now.getMonth());
     map = [];
@@ -299,18 +337,17 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
       daydayField = createNode({
         mother: block,
         style: {
+          position: "fixed",
           width: withOut(grayBarWidth + (outerMargin * 4) + titleWidth + (daydayIndent * 2), ea),
           height: String(weekBlockHeight) + ea,
-          display: "block",
           background: colorChip.white,
-          position: "fixed",
           top: String(outerMargin * 2) + ea,
           left: String(grayBarWidth + (outerMargin * 2) + titleWidth + 1 + daydayIndent) + ea,
           boxSizing: "border-box",
           zIndex: String(1),
           borderRadius: String(50) + ea,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          opacity: String(0.9),
+          animation: "fadeuplite 0.3s ease forwards",
         }
       });
 
@@ -348,6 +385,64 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
           ]
         });
       }
+
+      functionPannel = createNode({
+        mother: block,
+        style: {
+          position: "fixed",
+          bottom: String(belowHeight + functionPannelBottom) + ea,
+          right: String((outerMargin * 2) + functionPannelRight) + ea,
+          width: String(functionPannelWidth) + ea,
+          height: "auto",
+          background: colorChip.white,
+          zIndex: String(1),
+          borderRadius: String(5) + ea,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          animation: "fadeuplite 0.3s ease forwards",
+          paddingTop: String(functionPannelPaddingTop) + ea,
+          paddingBottom: String(functionPannelPaddingBottom) + ea,
+        }
+      });
+
+      for (let { name, event } of functionPannelContents) {
+        createNode({
+          mother: functionPannel,
+          class: [ "hoverDefault_lite" ],
+          style: {
+            position: "relative",
+            display: "block",
+            width: String(100) + '%',
+            height: String(functionPannelBlockHeight) + ea,
+          },
+          children: [
+            {
+              text: name,
+              style: {
+                position: "absolute",
+                fontSize: String(functionPannelSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                left: String(functionPannelLeft) + ea,
+                top: String(functionPannelTextTop0) + ea,
+              }
+            },
+            {
+              text: "off",
+              style: {
+                position: "absolute",
+                fontSize: String(functionPannelSize) + ea,
+                fontWeight: String(400),
+                fontStyle: "graphik",
+                color: colorChip.red,
+                right: String(functionPannelLeft) + ea,
+                top: String(functionPannelTextTop1) + ea,
+              }
+            }
+          ]
+        });
+      }
+
+
 
       titleField = createNode({
         mother: block,
