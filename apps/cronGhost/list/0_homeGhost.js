@@ -47,4 +47,12 @@ module.exports = [
       second: 30,
     }
   },
+  {
+    name: "passiveSync",
+    time: {
+      hour: 5,
+      minute: 30,
+      second: 30,
+    }
+  }
 ];

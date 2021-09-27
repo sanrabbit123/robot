@@ -101,9 +101,6 @@ DevContext.prototype.launching = async function () {
 
     //all passive sync
 
-    await bill.passiveSyncAll();
-
-
 
 
     /*
