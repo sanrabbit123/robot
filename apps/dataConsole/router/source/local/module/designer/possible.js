@@ -181,7 +181,7 @@ DesignerJs.prototype.possibleContents = function (desid) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -203,21 +203,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
   const joinToken = "_";
   const scrollEventName = "scrollYEvent";
   const scrollEventTimeout = "scrollYTimeout";
+  const dummyDatesClassName = "dummyDummyDate";
   const daydayWords = [ "일", "월", "화", "수", "목", "금", "토" ];
-  const functionPannelContents = [
-    {
-      name: "프로젝트 보기",
-      event: function (e) {
-        console.log("this!");
-      }
-    },
-    {
-      name: "달력 띄우기",
-      event: function (e) {
-        console.log("this!");
-      }
-    }
-  ];
+  const daydayLength = 7;
   try {
     let magin, outerMargin;
     let dateMatrix;
@@ -263,6 +251,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     let functionPannelTextTop1;
     let functionPannelPaddingTop;
     let functionPannelPaddingBottom;
+    let functionPannelContents;
+
+    firstBlock = {};
 
     margin = 8;
     outerMargin = <%% (margin * 3), (margin * 3), (margin * 3), (margin * 3), 0 %%>;
@@ -304,6 +295,154 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     functionPannelLeft = <%% 18, 18, 18, 18, 4 %%>;
     functionPannelTextTop0 = <%% 2, 2, 2, 2, 0 %%>;
     functionPannelTextTop1 = <%% 3, 3, 3, 3, 0 %%>;
+
+    functionPannelContents = [
+      {
+        name: "프로젝트 보기",
+        attribute: [
+          { toggle: "off" }
+        ],
+        event: function (e) {
+          const toggle = this.getAttribute("toggle");
+          const dateDoms = instance.dateDoms;
+          const { projects } = designer;
+          let start, target, targets, tempStr;
+
+          if (toggle === "off") {
+
+            for (let { process: { contract: { form: { date: { from, to } } } } } of projects) {
+              if (from.valueOf() <= to.valueOf()) {
+
+                console.log(from, to);
+
+                tempStr = JSON.stringify(from);
+
+                console.log(tempStr);
+                console.log(new Date(tempStr));
+                console.log(new Date("2018-10-09T15:00:00.000Z"));
+
+                start = new Date(tempStr);
+                console.log(start);
+                targets = [];
+                while (start.valueOf() <= to.valueOf()) {
+                  target = findByAttribute(dateDoms, [ "year", "month", "date" ], [ start.getFullYear(), start.getMonth() + 1, start.getDate() ]);
+                  console.log(start);
+                  if (target !== null) {
+                    targets.push(target);
+                  }
+                  start.setDate(start.getDate() + 1);
+                }
+
+                console.log(targets);
+
+
+              }
+            }
+
+
+
+
+            this.lastChild.textContent = "on";
+            this.firstChild.style.color = colorChip.green;
+            this.lastChild.style.color = colorChip.green;
+            this.setAttribute("toggle", "on");
+          } else {
+
+
+
+            this.lastChild.textContent = "off";
+            this.firstChild.style.color = colorChip.black;
+            this.lastChild.style.color = colorChip.red;
+            this.setAttribute("toggle", "off");
+          }
+        }
+      },
+      {
+        name: "달력 띄우기",
+        attribute: [
+          { toggle: "off" }
+        ],
+        event: function (e) {
+          const toggle = this.getAttribute("toggle");
+          const dateDoms = instance.dateDoms;
+          const dummyWeekLength = 2;
+          const titleTargets = document.querySelectorAll('.' + titleGeneralName);
+          let targets, parent, style, index, dummyIndex, tempArr, firstWeek;
+          let dummyDoms, dummyDom;
+
+          if (toggle === "off") {
+            targets = [];
+            for (let dom of dateDoms) {
+              if (Number(dom.getAttribute("date")) === 1) {
+                targets.push(dom);
+              }
+            }
+            targets.shift();
+            for (let dom of targets) {
+              parent = dom.parentNode;
+              index = Number(dom.getAttribute("index"));
+              for (let j = 0; j < (daydayLength * dummyWeekLength); j++) {
+                dummyIndex = (j + index >= daydayLength ? j + index - daydayLength : j + index);
+                dummyDom = GeneralJs.nodes.div.cloneNode(true);
+                dummyDom.setAttribute("toggle", "off");
+                dummyDom.setAttribute("year", "null");
+                dummyDom.setAttribute("month", "null");
+                dummyDom.setAttribute("date", "0");
+                dummyDom.setAttribute("value", "null");
+                dummyDom.setAttribute("past", "true");
+                dummyDom.setAttribute("index", String(dummyIndex));
+                dummyDom.classList.add(dummyDatesClassName);
+                style = {
+                  position: "relative",
+                  display: "inline-block",
+                  width: "calc(100% / 7)",
+                  height: String(weekBlockHeight) + ea,
+                  boxSizing: "border-box",
+                  borderTop: "1px solid " + colorChip.gray3,
+                  borderLeft: "1px solid " + colorChip.gray3,
+                  borderRight: (dummyIndex !== daydayLength - 1 ? "" : "1px solid " + colorChip.gray3),
+                  borderRadius: String(5) + "px",
+                  background: colorChip.gray0,
+                  transition: "all 0.1s ease",
+                };
+                for (let i in style) {
+                  dummyDom.style[i] = style[i];
+                }
+                parent.insertBefore(dummyDom, dom);
+              }
+
+            }
+            for (let i = 1; i < titleTargets.length; i++) {
+              firstWeek = findByAttribute('.' + [ weekClassName, titleTargets[i].getAttribute("year"), titleTargets[i].getAttribute("month") ].join(joinToken), "first", "true");
+              if (firstWeek !== null) {
+                titleTargets[i].style.top = String(findByAttribute(firstWeek, "date", "1").getBoundingClientRect().top - firstBlock.getBoundingClientRect().top + weekBlockHeight + daydayMargin) + ea;
+              }
+            }
+            this.lastChild.textContent = "on";
+            this.firstChild.style.color = colorChip.green;
+            this.lastChild.style.color = colorChip.green;
+            this.setAttribute("toggle", "on");
+          } else {
+
+            dummyDoms = document.querySelectorAll('.' + dummyDatesClassName);
+            for (let dom of dummyDoms) {
+              dom.parentElement.removeChild(dom);
+            }
+            for (let i = 1; i < titleTargets.length; i++) {
+              firstWeek = findByAttribute('.' + [ weekClassName, titleTargets[i].getAttribute("year"), titleTargets[i].getAttribute("month") ].join(joinToken), "first", "true");
+              if (firstWeek !== null) {
+                titleTargets[i].style.top = String(findByAttribute(firstWeek, "date", "1").getBoundingClientRect().top - firstBlock.getBoundingClientRect().top + weekBlockHeight + daydayMargin) + ea;
+              }
+            }
+            this.lastChild.textContent = "off";
+            this.firstChild.style.color = colorChip.black;
+            this.lastChild.style.color = colorChip.red;
+            this.setAttribute("toggle", "off");
+          }
+
+        }
+      }
+    ];
 
     dateMatrix = getDateMatrix(now.getFullYear(), now.getMonth());
     map = [];
@@ -351,7 +490,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
         }
       });
 
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < daydayLength; i++) {
         createNode({
           mother: daydayField,
           style: {
@@ -404,10 +543,17 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
         }
       });
 
-      for (let { name, event } of functionPannelContents) {
+      for (let { name, attribute, event } of functionPannelContents) {
         createNode({
           mother: functionPannel,
           class: [ "hoverDefault_lite" ],
+          attribute,
+          events: [
+            {
+              type: "click",
+              event,
+            }
+          ],
           style: {
             position: "relative",
             display: "block",
@@ -441,8 +587,6 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
           ]
         });
       }
-
-
 
       titleField = createNode({
         mother: block,
@@ -496,13 +640,13 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
             position: "relative",
             display: "block",
             width: String(100) + '%',
-            height: String(weekBlockHeight) + ea,
+            height: "auto",
             boxSizing: "border-box",
             borderRadius: String(5) + "px",
             transition: "all 0.1s ease",
           }
         });
-        for (let j = 0; j < 7; j++) {
+        for (let j = 0; j < daydayLength; j++) {
           if (matrix[i][j] !== null) {
             pastBoo = nowValue >= (new Date(Number(year.replace(/[^0-9]/gi, '')), Number(month.replace(/[^0-9]/gi, '')) - 1, matrix[i][j].date)).valueOf();
           }
@@ -628,11 +772,11 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
               position: "relative",
               display: "inline-block",
               width: "calc(100% / 7)",
-              height: String(100) + '%',
+              height: String(weekBlockHeight) + ea,
               boxSizing: "border-box",
               borderTop: "1px solid " + colorChip.gray3,
               borderLeft: "1px solid " + colorChip.gray3,
-              borderRight: (j !== 7 - 1 ? "" : "1px solid " + colorChip.gray3),
+              borderRight: (j !== daydayLength - 1 ? "" : "1px solid " + colorChip.gray3),
               borderRadius: String(5) + "px",
               background: (matrix[i][j] === null ? colorChip.gray0 : (pastBoo ? colorChip.gray0 : colorChip.white)),
               transition: "all 0.1s ease",

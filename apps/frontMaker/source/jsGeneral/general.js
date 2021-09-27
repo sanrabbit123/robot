@@ -1966,6 +1966,64 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
   }
 }
 
+GeneralJs.findByAttribute = function (dom, attributeName, attributeValue) {
+  if (typeof dom !== "string" && typeof dom !== "object") {
+    throw new Error("input must be => [ HTMLCollections or className, attribute name, attribute value ]");
+  }
+  if (typeof attributeName !== "string" && !Array.isArray(attributeName)) {
+    throw new Error("input must be => [ HTMLCollections or className, attribute name, attribute value ]");
+  }
+  if (typeof attributeValue !== "string" && !Array.isArray(attributeValue)) {
+    attributeValue = String(attributeValue);
+  }
+  if (Array.isArray(attributeName)) {
+    if (!Array.isArray(attributeValue)) {
+      throw new Error("if multiple attribute name, attribute value must be same array");
+    }
+    if (attributeName.length !== attributeValue.length) {
+      throw new Error("if multiple attribute name, attribute value must be same array");
+    }
+    if (!attributeName.every((s) => { return typeof s === "string"; })) {
+      throw new Error("invalid attribute name array");
+    }
+    if (!attributeValue.every((s) => { return typeof s === "string"; })) {
+      attributeValue = attributeValue.map((i) => { return String(i); });
+    }
+  }
+  if (typeof dom === "string") {
+    if (!/^\./.test(dom)) {
+      throw new Error("input must be => [ HTMLCollections or className, attribute name, attribute value ]");
+    } else {
+      dom = document.querySelectorAll(dom);
+    }
+  } else {
+    if (dom[Symbol.iterator] === undefined) {
+      dom = dom.children;
+    }
+  }
+  let targets, resultDom;
+
+  targets = [ ...dom ];
+
+  if (Array.isArray(attributeName)) {
+    for (let i = 0; i < attributeName.length; i++) {
+      targets = targets.filter((d) => { return d.getAttribute(attributeName[i]) === attributeValue[i]; });
+    }
+    if (targets.length !== 0) {
+      return targets[0];
+    } else {
+      return null;
+    }
+  } else {
+    resultDom = targets.find((d) => { return d.getAttribute(attributeName) === attributeValue; });
+    if (resultDom === undefined) {
+      return null;
+    } else {
+      return resultDom;
+    }
+  }
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;
