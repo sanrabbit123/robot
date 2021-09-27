@@ -166,21 +166,20 @@ BridgeCloud.prototype.bridgeToOffice = async function (obj, option = { selfMongo
         updatePortfolio.unshift({
           date: new Date(),
           confirm: [],
-          folderId: folderId
+          folderId: ""
         });
         await instance.back.updateAspirant([
           { phone: obj.phone },
           { portfolio: updatePortfolio }
         ]);
-      } else {
-        console.log(obj, folderId);
       }
 
-      message = "파일 전송을 완료하였습니다! (" + folder + ") link : https://drive.google.com/drive/folders/" + folderId + "?usp=sharing";
+      message = obj.name + " 디자이너 신청자의 파일 전송을 완료하였습니다!";
       slack_bot.chat.postMessage({ text: message, channel: "#300_designer" });
+      ghostRequest("/voice", { text: message }).catch((err) => { console.log(err); });
     }
 
-    shell.exec(`rm -rf ${shellLink(this.dir + '/binary/' + folder)}`);
+    shell.exec(`rm -rf ${shellLink(this.dir + "/binary/" + folder)}`);
   } catch (e) {
     slack_bot.chat.postMessage({ text: "파일 서버 문제 생김 (bridgeToOffice) : " + e.message, channel: "#error_log" });
   }

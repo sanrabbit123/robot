@@ -306,9 +306,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     functionPannelTextTop0 = <%% 2, 2, 2, 2, 0 %%>;
     functionPannelTextTop1 = <%% 3, 3, 3, 3, 0 %%>;
 
-    clientPopupWordPadding = <%% 16, 16, 16, 16, 1 %%>;
-    clientPopupWordPaddingTop = <%% 7, 7, 7, 7, 1 %%>;
-    clientPopupWordPaddingBottom = <%% 10, 10, 10, 10, 1 %%>;
+    clientPopupWordPadding = <%% 17, 17, 17, 17, 1 %%>;
+    clientPopupWordPaddingTop = <%% 8, 8, 8, 8, 1 %%>;
+    clientPopupWordPaddingBottom = <%% 11, 11, 11, 11, 1 %%>;
     clientPopupWordPaddingHeightPadding = <%% 1.5, 1.5, 1.5, 1.5, 0 %%>;
     clientPopupWordSize = <%% 14, 14, 14, 14, 2.8 %%>;
     clientPopupTopMargin = <%% 7, 7, 7, 7, 1 %%>;
