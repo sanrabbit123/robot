@@ -98,9 +98,16 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
       whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
     }, "/getClients", { equal: true });
   }).then((clients) => {
-    loading.parentNode.removeChild(loading);
     instance.designers.setClients(clients);
-    instance.possibleContents(desid);
+    return ajaxJson({
+      mode: "read",
+      db: "console",
+      collection: "realtimeDesigner",
+      whereQuery: { desid },
+    }, "/generalMongo", { equal: true });
+  }).then((realtimeDesigner) => {
+    loading.parentNode.removeChild(loading);
+    instance.possibleContents(desid, realtimeDesigner);
     scrollTo(totalMother, pastScrollTop);
     if (callback !== null) {
       if (typeof callback === "function") {
@@ -112,7 +119,7 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   });
 }
 
-DesignerJs.prototype.possibleContents = function (desid) {
+DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
@@ -188,16 +195,16 @@ DesignerJs.prototype.possibleContents = function (desid) {
     }
   });
 
-  this.possibleMatrix(contentsBox, desid).catch((err) => {
+  this.possibleMatrix(contentsBox, desid, realtimeDesigner).catch((err) => {
     console.log(err);
   });
 
   this.mainBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
+DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDesigner) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, equalJson } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -223,6 +230,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
   const dummyDatesClassName = "dummyDummyDate";
   const daydayWords = [ "일", "월", "화", "수", "목", "금", "토" ];
   const daydayLength = 7;
+  const countKeyMake = (dateObj) => { return `y${String(dateObj.getFullYear())}m${String(dateObj.getMonth() + 1)}`; }
   try {
     let magin, outerMargin;
     let dateMatrix;
@@ -277,6 +285,69 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     let clientPopupWordSize;
     let clientPopupTopMargin;
     let from, to, doingArr, doingBooArr;
+    let updateQuery;
+    let tempDate, keyName;
+    let updateBoo;
+
+    if (realtimeDesigner.length === 0) {
+
+      updateQuery = { desid };
+      updateQuery.count = {};
+      tempDate = new Date();
+      for (let i = 0; i < futureLength; i++) {
+        keyName = countKeyMake(tempDate);
+        updateQuery.count[keyName] = 5;
+        tempDate.setMonth(tempDate.getMonth() + 1);
+      }
+      updateQuery.possible = [];
+      updateQuery.projects = [];
+      for (let project of projects) {
+        updateQuery.projects.push({ proid: project.proid, meeting: [ project.process.contract.meeting.date ], project: [ { start: project.process.contract.form.date.from, end: project.process.contract.form.date.to } ] });
+      }
+      realtimeDesigner = updateQuery;
+
+      ajaxJson({
+        mode: "create",
+        db: "console",
+        collection: "realtimeDesigner",
+        updateQuery,
+      }, "/generalMongo", { equal: true }).catch((err) => { console.log(err); });
+
+    } else {
+
+      [ realtimeDesigner ] = realtimeDesigner;
+
+      delete realtimeDesigner._id;
+
+      tempDate = new Date();
+      updateBoo = false;
+      for (let i = 0; i < futureLength; i++) {
+        keyName = countKeyMake(tempDate);
+        if (realtimeDesigner.count[keyName] === undefined) {
+          updateBoo = true;
+          realtimeDesigner.count[keyName] = 5;
+        }
+        tempDate.setMonth(tempDate.getMonth() + 1);
+      }
+      realtimeDesigner.projects = [];
+      for (let project of projects) {
+        realtimeDesigner.projects.push({ proid: project.proid, meeting: [ project.process.contract.meeting.date ], project: [ { start: project.process.contract.form.date.from, end: project.process.contract.form.date.to } ] });
+      }
+
+      if (updateBoo) {
+        updateQuery = equalJson(JSON.stringify(realtimeDesigner));
+        ajaxJson({
+          mode: "update",
+          db: "console",
+          collection: "realtimeDesigner",
+          whereQuery: { desid },
+          updateQuery,
+        }, "/generalMongo", { equal: true }).catch((err) => { console.log(err); });
+      }
+
+    }
+
+    console.log(realtimeDesigner);
 
     firstBlock = {};
     allSvgs = [];
