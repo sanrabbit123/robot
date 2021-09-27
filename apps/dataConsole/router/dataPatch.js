@@ -4723,7 +4723,7 @@ DataPatch.prototype.projectMap = function () {
 
         if (designerAble) {
           if (window.confirm("디자이너를 바꾸시겠습니까? 추가 견적이 발생할 경우, 고객님께 추가 견적에 대한 안내 알림톡이 자동으로 발송됩니다!")) {
-            GeneralJs.ajaxJson({ proid, method: (!project.service.online ? "offline" : "online"), desid: selectedDesigner.desid }, "/designerConverting").then(() => {
+            GeneralJs.ajaxJson({ proid, method: (!project.service.online ? "offline" : "online"), desid: selectedDesigner.desid }, PYTHONHOST + "/designerConverting").then(() => {
               window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + (currentMode === "card" ? "?proid=" + proid : "");
             }).catch((err) => {
               throw new Error(err.message);

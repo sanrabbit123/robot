@@ -181,7 +181,7 @@ DesignerJs.prototype.possibleContents = function (desid) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -252,11 +252,21 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     let functionPannelPaddingTop;
     let functionPannelPaddingBottom;
     let functionPannelContents;
+    let allSvgs, tempSvg;
+    let dateBoxOpacity;
+    let clientPopupWordPadding;
+    let clientPopupWordPaddingTop, clientPopupWordPaddingBottom;
+    let clientPopupWordPaddingHeightPadding;
+    let clientPopupWordSize;
+    let clientPopupTopMargin;
 
     firstBlock = {};
+    allSvgs = [];
 
     margin = 8;
     outerMargin = <%% (margin * 3), (margin * 3), (margin * 3), (margin * 3), 0 %%>;
+
+    dateBoxOpacity = 0.08;
 
     size = <%% 16, 15, 15, 15, 4 %%>;
     titleWidth = <%% 120, 120, 120, 120, 20 %%>;
@@ -269,10 +279,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     blockMarginBottom = <%% 48, 48, 48, 48, 4 %%>;
 
     dateNumberSize = <%% 18, 18, 18, 18, 4 %%>;
-    dateNumberTop = <%% 16, 16, 16, 16, 4 %%>;
+    dateNumberTop = <%% 15, 15, 15, 15, 4 %%>;
     dateNumberLeft = <%% 23, 23, 23, 23, 4 %%>;
 
-    dateIconTop = <%% 19, 19, 19, 19, 4 %%>;
+    dateIconTop = <%% 18, 18, 18, 18, 4 %%>;
     dateIconWidth = <%% 22, 22, 22, 22, 5 %%>;
     dateIconRight = <%% 24, 24, 24, 24, 4 %%>;
 
@@ -296,6 +306,13 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
     functionPannelTextTop0 = <%% 2, 2, 2, 2, 0 %%>;
     functionPannelTextTop1 = <%% 3, 3, 3, 3, 0 %%>;
 
+    clientPopupWordPadding = <%% 16, 16, 16, 16, 1 %%>;
+    clientPopupWordPaddingTop = <%% 7, 7, 7, 7, 1 %%>;
+    clientPopupWordPaddingBottom = <%% 10, 10, 10, 10, 1 %%>;
+    clientPopupWordPaddingHeightPadding = <%% 1.5, 1.5, 1.5, 1.5, 0 %%>;
+    clientPopupWordSize = <%% 14, 14, 14, 14, 2.8 %%>;
+    clientPopupTopMargin = <%% 7, 7, 7, 7, 1 %%>;
+
     functionPannelContents = [
       {
         name: "프로젝트 보기",
@@ -305,42 +322,73 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
         event: function (e) {
           const toggle = this.getAttribute("toggle");
           const dateDoms = instance.dateDoms;
-          const { projects } = designer;
-          let start, target, targets, tempStr;
+          const projects = designer.projects.filter((p) => { return /^[대진]/.test(p.process.status); });
+          let start, end;
+          let target, targets, targets2;
+          let tempStr, dom;
+          let clientsArr;
 
           if (toggle === "off") {
 
-            for (let { process: { contract: { form: { date: { from, to } } } } } of projects) {
-              if (from.valueOf() <= to.valueOf()) {
-
-                console.log(from, to);
-
-                tempStr = JSON.stringify(from);
-
-                console.log(tempStr);
-                console.log(new Date(tempStr));
-                console.log(new Date("2018-10-09T15:00:00.000Z"));
-
-                start = new Date(tempStr);
-                console.log(start);
-                targets = [];
-                while (start.valueOf() <= to.valueOf()) {
-                  target = findByAttribute(dateDoms, [ "year", "month", "date" ], [ start.getFullYear(), start.getMonth() + 1, start.getDate() ]);
-                  console.log(start);
-                  if (target !== null) {
-                    targets.push(target);
-                  }
-                  start.setDate(start.getDate() + 1);
-                }
-
-                console.log(targets);
-
-
+            targets2 = [];
+            for (let svg of allSvgs) {
+              svg.style.opacity = String(0);
+              svg.parentElement.children[0].style.background = colorChip.white;
+              svg.setAttribute("mode", "projects");
+              if ([ 0, 6 ].includes(Number(svg.parentElement.getAttribute("index")))) {
+                targets2.push(svg.parentElement.children[1]);
               }
             }
 
+            setQueue(() => {
+              for (let { name, process: { status, contract: { form: { date: { from, to } } } } } of projects) {
+                if (from.valueOf() <= to.valueOf()) {
 
+                  tempStr = String(JSON.stringify(from));
 
+                  start = new Date(JSON.stringify(from).slice(1, -1));
+                  end = new Date(JSON.stringify(to).slice(1, -1));
+                  end.setDate(end.getDate() + 1);
+                  targets = [];
+                  while (start.valueOf() < end.valueOf()) {
+                    target = findByAttribute(dateDoms, [ "year", "month", "date" ], [ start.getFullYear(), start.getMonth() + 1, start.getDate() ]);
+                    if (target !== null) {
+                      targets.push(target);
+                    }
+                    start.setDate(start.getDate() + 1);
+                  }
+
+                  for (let dom of targets) {
+                    if (dom.getAttribute("past") !== "true") {
+                      dom.firstChild.style.background = colorChip.green;
+                      if (dom.firstChild.hasAttribute("projects")) {
+                        dom.firstChild.setAttribute("projects", String(Number(dom.firstChild.getAttribute("projects")) + 1));
+                      } else {
+                        dom.firstChild.setAttribute("projects", String(1));
+                      }
+                      if (dom.firstChild.hasAttribute("clients")) {
+                        clientsArr = GeneralJs.equalJson(dom.firstChild.getAttribute("clients"));
+                        clientsArr.push(`${name} (${status})`);
+                        dom.firstChild.setAttribute("clients", JSON.stringify(clientsArr));
+                      } else {
+                        dom.firstChild.setAttribute("clients", JSON.stringify([ `${name} (${status})` ]));
+                      }
+                      dom.firstChild.style.background = colorChip.green;
+                      dom.querySelector("aside").style.opacity = String(1);
+                      dom.querySelector("aside").textContent = dom.firstChild.getAttribute("projects");
+                      dom.firstChild.style.opacity = String(dateBoxOpacity * Number(dom.firstChild.getAttribute("projects")));
+                    }
+                  }
+
+                }
+              }
+              setQueue(() => {
+                for (let dom of targets2) {
+                  dom.style.color = colorChip.darkGreen;
+                  dom.querySelector('b').style.color = colorChip.darkGreen;
+                }
+              }, 900);
+            }, 301);
 
             this.lastChild.textContent = "on";
             this.firstChild.style.color = colorChip.green;
@@ -348,7 +396,47 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
             this.setAttribute("toggle", "on");
           } else {
 
+            setQueue(() => {
+              let targets2, dom;
+              targets2 = [];
+              for (let svg of allSvgs) {
+                dom = svg.parentElement;
+                dom.querySelector("aside").textContent = String(0);
+                dom.firstChild.style.opacity = String(dateBoxOpacity);
+                dom.firstChild.setAttribute("projects", String(0));
+                dom.firstChild.setAttribute("clients", JSON.stringify([]));
+                if (dom.getAttribute("toggle") === "on") {
+                  dom.firstChild.style.background = colorChip.green;
+                  if (svg.getAttribute("kind") === "ok") {
+                    svg.style.opacity = String(1);
+                  } else {
+                    svg.style.opacity = String(0);
+                  }
+                } else {
+                  dom.firstChild.style.background = colorChip.white;
+                  if (svg.getAttribute("kind") === "ok") {
+                    svg.style.opacity = String(0);
+                  } else {
+                    svg.style.opacity = String(1);
+                  }
+                }
+                if ([ 0, 6 ].includes(Number(dom.getAttribute("index")))) {
+                  targets2.push(dom.children[1]);
+                }
+              }
+              setQueue(() => {
+                for (let dom of targets2) {
+                  dom.style.color = colorChip.red;
+                  dom.querySelector('b').style.color = colorChip.red;
+                }
+              }, 900);
+            }, 301);
 
+            for (let svg of allSvgs) {
+              svg.setAttribute("mode", "possible");
+              dom = svg.parentElement;
+              dom.querySelector("aside").style.opacity = String(0);
+            }
 
             this.lastChild.textContent = "off";
             this.firstChild.style.color = colorChip.black;
@@ -577,8 +665,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
               style: {
                 position: "absolute",
                 fontSize: String(functionPannelSize) + ea,
-                fontWeight: String(400),
-                fontStyle: "graphik",
+                fontWeight: String(300),
+                fontFamily: "graphik",
                 color: colorChip.red,
                 right: String(functionPannelLeft) + ea,
                 top: String(functionPannelTextTop1) + ea,
@@ -652,17 +740,21 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
           }
           dateBox = createNode({
             mother: weekBlock,
-            class: [ "hoverDefault_lite", (matrix[i][j] !== null ? generalDateClassName : nullClassName) ],
+            class: [ (matrix[i][j] !== null ? generalDateClassName : nullClassName) ],
             attribute: [
               { toggle: "off" },
               { year: year.replace(/[^0-9]/gi, '') },
               { month: month.replace(/[^0-9]/gi, '') },
               { date: (matrix[i][j] !== null ? String(matrix[i][j].date) : "0") },
-              { value: (matrix[i][j] !== null ? JSON.stringify(new Date(Number(year.replace(/[^0-9]/gi, '')), Number(month.replace(/[^0-9]/gi, '')) - 1, matrix[i][j].date)) : "null") },
+              { value: (matrix[i][j] !== null ? JSON.stringify(new Date(Number(year.replace(/[^0-9]/gi, '')), Number(month.replace(/[^0-9]/gi, '')) - 1, matrix[i][j].date)).slice(1, -1) : "null") },
               { past: pastBoo ? "true" : "false" },
               { index: String(j) }
             ],
             events: [
+              {
+                type: "selectstart",
+                event: (e) => { e.preventDefault(); }
+              },
               {
                 type: "click",
                 event: function (e) {
@@ -676,46 +768,130 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
                   const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
                   const thisBack = this.querySelector('.' + backClassName);
                   const pastBoo = (this.getAttribute("past") === "true");
+                  const mode = thisOk.getAttribute("mode");
                   let index, first, last;
+                  let clients, clientTong, clientDom, widthArr;
                   if (!pastBoo) {
-                    if (toggle === "off") {
-                      index = instance.dateDoms.findIndex((d) => { return d === self; });
-                      thisWords.style.color = colorChip.green;
-                      thisMonth.style.color = colorChip.green;
-                      thisBack.style.background = colorChip.green;
-                      thisOk.style.opacity = String(1);
-                      thisCancel.style.opacity = String(0);
-                      if (instance.selection.length === 0) {
-                        instance.selection.push(index);
-                      } else {
-                        if (index < instance.selection[0]) {
-                          first = index;
-                          last = instance.selection[0];
+
+                    if (mode !== "projects") {
+                      if (toggle === "off") {
+                        index = instance.dateDoms.findIndex((d) => { return d === self; });
+                        thisWords.style.color = colorChip.green;
+                        thisMonth.style.color = colorChip.green;
+                        thisBack.style.background = colorChip.green;
+                        thisOk.style.opacity = String(1);
+                        thisCancel.style.opacity = String(0);
+                        if (instance.selection.length === 0) {
+                          instance.selection.push(index);
                         } else {
-                          last = index;
-                          first = instance.selection[0];
+                          if (index < instance.selection[0]) {
+                            first = index;
+                            last = instance.selection[0];
+                          } else {
+                            last = index;
+                            first = instance.selection[0];
+                          }
+                          for (let i = first; i < last; i++) {
+                            instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(1);
+                            instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(0);
+                            instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.green;
+                            instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
+                            instance.dateDoms[i].querySelector('.' + backClassName).style.background = colorChip.green;
+                            instance.dateDoms[i].setAttribute("toggle", "on");
+                          }
+                          instance.selection = [];
                         }
-                        for (let i = first; i < last; i++) {
-                          instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(1);
-                          instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(0);
-                          instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.green;
-                          instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
-                          instance.dateDoms[i].querySelector('.' + backClassName).style.background = colorChip.green;
-                          instance.dateDoms[i].setAttribute("toggle", "on");
-                        }
-                        instance.selection = [];
+                        this.setAttribute("toggle", "on");
+                      } else {
+                        thisWords.style.color = colorChip.black;
+                        thisMonth.style.color = colorChip.black;
+                        thisBack.style.background = "transparent";
+                        thisOk.style.opacity = String(0);
+                        thisCancel.style.opacity = String(1);
+                        this.setAttribute("toggle", "off");
                       }
-                      this.setAttribute("toggle", "on");
                     } else {
+                      if (this.firstChild.getAttribute("clients") !== null) {
+                        clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
+                        if (clients.length > 0) {
+                          createNode({
+                            mother: this,
+                            events: [
+                              {
+                                type: [ "click", "contextmenu" ],
+                                event: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  self.removeChild(self.lastChild);
+                                  self.removeChild(self.lastChild);
+                                }
+                              }
+                            ],
+                            style: {
+                              position: "fixed",
+                              top: String(0),
+                              left: String(0),
+                              width: String(100) + '%',
+                              height: String(100) + '%',
+                              background: "transparent",
+                              zIndex: String(2),
+                            }
+                          });
 
-                      thisWords.style.color = colorChip.black;
-                      thisMonth.style.color = colorChip.black;
-                      thisBack.style.background = "transparent";
-                      thisOk.style.opacity = String(0);
-                      thisCancel.style.opacity = String(1);
+                          clientTong = createNode({
+                            mother: this,
+                            events: [
+                              {
+                                type: [ "click", "contextmenu" ],
+                                event: function (e) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }
+                              }
+                            ],
+                            style: {
+                              position: "absolute",
+                              bottom: String(weekBlockHeight + clientPopupTopMargin) + ea,
+                              left: String(0) + ea,
+                              width: String(600) + ea,
+                              borderRadius: String(5) + "px",
+                              background: colorChip.gradientGreen,
+                              zIndex: String(2),
+                              paddingTop: String(clientPopupWordPaddingTop) + ea,
+                              paddingBottom: String(clientPopupWordPaddingBottom) + ea,
+                              animation: "fadeuplite 0.2s ease forwards",
+                              transition: "all 0s ease",
+                            }
+                          });
 
-                      this.setAttribute("toggle", "off");
+                          widthArr = [];
+                          for (let client of clients) {
+                            clientDom = createNode({
+                              mother: clientTong,
+                              text: client,
+                              style: {
+                                display: "inline-block",
+                                position: "relative",
+                                fontSize: String(clientPopupWordSize) + ea,
+                                fontWeight: String(500),
+                                color: colorChip.white,
+                                paddingLeft: String(clientPopupWordPadding) + ea,
+                                paddingRight: String(clientPopupWordPadding) + ea,
+                                paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
+                                paddingBottom: String(clientPopupWordPaddingHeightPadding) + ea,
+                              }
+                            });
+                            widthArr.push(clientDom.getBoundingClientRect().width);
+                          }
+
+                          widthArr.sort((a, b) => { return b - a; });
+
+                          clientTong.style.width = String(widthArr[0]) + ea;
+                          clientTong.style.left = withOut(50, widthArr[0] / 2, ea);
+                        }
+                      }
                     }
+
                   }
                 }
               },
@@ -733,37 +909,38 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
                   const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
                   const thisBack = this.querySelector('.' + backClassName);
                   const pastBoo = (this.getAttribute("past") === "true");
+                  const mode = thisOk.getAttribute("mode");
                   let index, first, last;
                   let num;
                   if (!pastBoo) {
-                    index = instance.dateDoms.findIndex((d) => { return d === self; });
-                    if (toggle === "on") {
-                      num = 1;
-                      last = index;
-                      while (instance.dateDoms[index + num].getAttribute("toggle") === "on") {
-                        last = index + num;
-                        num++;
+                    if (mode !== "projects") {
+                      index = instance.dateDoms.findIndex((d) => { return d === self; });
+                      if (toggle === "on") {
+                        num = 1;
+                        last = index;
+                        while (instance.dateDoms[index + num].getAttribute("toggle") === "on") {
+                          last = index + num;
+                          num++;
+                        }
+                        num = 1;
+                        first = index;
+                        while (instance.dateDoms[index - num].getAttribute("toggle") === "on") {
+                          first = index - num;
+                          num++;
+                        }
+                      } else {
+                        first = index;
+                        last = index;
                       }
-                      num = 1;
-                      first = index;
-                      while (instance.dateDoms[index - num].getAttribute("toggle") === "on") {
-                        first = index - num;
-                        num++;
+                      for (let i = first; i < last + 1; i++) {
+                        instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
+                        instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
+                        instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.black;
+                        instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
+                        instance.dateDoms[i].querySelector('.' + backClassName).style.background = "transparent";
+                        instance.dateDoms[i].setAttribute("toggle", "off");
                       }
-                    } else {
-                      first = index;
-                      last = index;
                     }
-
-                    for (let i = first; i < last + 1; i++) {
-                      instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
-                      instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
-                      instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.black;
-                      instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
-                      instance.dateDoms[i].querySelector('.' + backClassName).style.background = "transparent";
-                      instance.dateDoms[i].setAttribute("toggle", "off");
-                    }
-
                   }
                 }
               },
@@ -780,12 +957,16 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
               borderRadius: String(5) + "px",
               background: (matrix[i][j] === null ? colorChip.gray0 : (pastBoo ? colorChip.gray0 : colorChip.white)),
               transition: "all 0.1s ease",
+              cursor: "pointer",
             }
           });
           if (matrix[i][j] !== null) {
             createNode({
               mother: dateBox,
               class: [ backClassName ],
+              attribute: [
+                { projects: String(0) }
+              ],
               style: {
                 position: "absolute",
                 top: String(0) + ea,
@@ -795,7 +976,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
                 background: "transparent",
                 borderRadius: String(5) + "px",
                 transition: "all 0s ease",
-                opacity: String(0.08),
+                opacity: String(dateBoxOpacity),
               }
             });
             createNode({
@@ -804,26 +985,31 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
               text: String("<b%" + month.replace(/[^0-9]/gi, '') + "%b><u% / %u>" + matrix[i][j].date),
               style: {
                 position: "absolute",
-                fontStyle: "graphik",
+                fontFamily: "graphik",
                 fontSize: String(dateNumberSize) + ea,
-                fontWeight: String(matrix[i][j].date === 1 ? 600 : 300),
+                fontWeight: String(matrix[i][j].date === 1 ? 400 : 300),
                 color: (pastBoo ? colorChip.deactive : ((j === 0 || j === 6) ? colorChip.red : colorChip.black)),
                 top: String(dateNumberTop) + ea,
                 left: String(dateNumberLeft) + ea,
               },
               bold: {
                 fontSize: String(dateNumberSize) + ea,
-                fontWeight: String(matrix[i][j].date === 1 ? 600 : 300),
+                fontFamily: "graphik",
+                fontWeight: String(matrix[i][j].date === 1 ? 400 : 300),
                 color: (pastBoo ? colorChip.deactive : ((j === 0 || j === 6) ? colorChip.red : colorChip.black)),
               },
               under: {
+                fontFamily: "graphik",
                 fontSize: String(dateNumberSize) + ea,
                 fontWeight: String(300),
                 color: colorChip.gray4,
               }
             });
-            createNode({
+            tempSvg = createNode({
               mother: dateBox,
+              attribute: [
+                { kind: "ok" }
+              ],
               class: [ okClassName ],
               mode: "svg",
               source: instance.mother.returnCheckCircle(pastBoo ? colorChip.deactive : colorChip.green),
@@ -835,8 +1021,14 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
                 opacity: String(pastBoo ? 1 : 0),
               }
             });
-            createNode({
+            if (!pastBoo) {
+              allSvgs.push(tempSvg);
+            }
+            tempSvg = createNode({
               mother: dateBox,
+              attribute: [
+                { kind: "cancel" }
+              ],
               class: [ cancelClassName ],
               mode: "svg",
               source: instance.mother.returnCancelCircle(pastBoo ? colorChip.deactive : colorChip.red),
@@ -848,6 +1040,27 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid) {
                 opacity: String(pastBoo ? 0 : 1),
               }
             });
+            if (!pastBoo) {
+              allSvgs.push(tempSvg);
+
+              createNode({
+                mode: "aside",
+                mother: dateBox,
+                text: String(0),
+                style: {
+                  position: "absolute",
+                  fontSize: String(dateNumberSize) + ea,
+                  fontWeight: String(300),
+                  fontFamily: "graphik",
+                  top: String(dateNumberTop) + ea,
+                  right: String(dateNumberLeft) + ea,
+                  textAlign: "right",
+                  opacity: String(0),
+                  color: colorChip.darkGreen
+                }
+              });
+            }
+
             this.dateDoms.push(dateBox);
           }
         }

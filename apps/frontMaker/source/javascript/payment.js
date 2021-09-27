@@ -1242,6 +1242,7 @@ PaymentJs.prototype.launching = async function () {
   if (getObj.type === undefined) {
     getObj.type = "contract";
   }
+  window.location.href = "https://home-liaison.com";
   this.initialDom(getObj.type);
   this.baseMaker(getObj.type);
 }

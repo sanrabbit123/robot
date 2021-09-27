@@ -674,6 +674,16 @@ Robot.prototype.graphicServer = async function () {
   }
 }
 
+Robot.prototype.passiveSync = async function () {
+  try {
+    const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
+    const bill = new BillMaker();
+    bill.passiveSyncAll();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -1083,6 +1093,13 @@ const MENU = {
   statusReading: async function () {
     try {
       await robot.statusReading();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  passiveSync: async function () {
+    try {
+      await robot.passiveSync();
     } catch (e) {
       console.log(e);
     }

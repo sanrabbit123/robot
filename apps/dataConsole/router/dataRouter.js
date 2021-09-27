@@ -3933,11 +3933,11 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             if (convertTong.resultCode === "0000") {
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=complete" + "&hash=" + responseData);
             } else {
-              instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 : " + e.message, channel: "#error_log" });
+              instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 (rou_post_inicisPayment) : " + JSON.stringify(convertTong, null, 2) + "\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
               res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail" + "&hash=" + responseData);
             }
           } else {
-            instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 : " + e.message, channel: "#error_log" });
+            instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 (rou_post_inicisPayment) : " + resultCode + "\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
             res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
           }
         }
@@ -3945,8 +3945,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
       }
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 : " + e.message, channel: "#error_log" });
-      console.log(e);
+      instance.mother.slack_bot.chat.postMessage({ text: "결제 문제 생김 (rou_post_inicisPayment) : " + e.message, channel: "#error_log" });
+      res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
     }
   }
   return obj;

@@ -957,14 +957,20 @@ GeneralJs.setTimeout = function (callback, time) {
   }, time);
 }
 
-GeneralJs.setQueue = function (callback) {
+GeneralJs.setQueue = function (callback, delay = 0) {
+  if (typeof callback !== "function") {
+    throw new Error("invaild input");
+  }
+  if (typeof delay !== "number") {
+    delay = 0;
+  }
   let propertyName;
   propertyName = "tempQueue_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
   GeneralJs.timeouts[propertyName] = setTimeout(() => {
     callback();
     clearTimeout(propertyName);
     GeneralJs.timeouts[propertyName] = null;
-  }, 0);
+  }, delay);
 }
 
 GeneralJs.willDo = function (func) {

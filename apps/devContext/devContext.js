@@ -99,49 +99,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+    //all passive sync
 
-    // await this.MONGOPYTHONC.connect();
-    // const selfMongo = this.MONGOC;
-    // const selfPythonMongo = this.MONGOPYTHONC;
-    // const projects = await back.getProjectsByQuery({
-    //   $and: [
-    //     { "desid": { $regex: "^d" } },
-    //     { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } },
-    //     { "process.contract.remain.date": { $lt: new Date(2000, 0, 1) } },
-    //     { "process.status": { $regex: "^[대진홀]" } }
-    //   ]
-    // }, { selfMongo });
-    // let thisBills, thisBill;
-    // let whereQuery;
-    // let client;
-    // let method;
-    // let bilid;
-    // let bilidLog;
-    //
-    // bilidLog = [];
-    // for (let project of projects) {
-    //   whereQuery = {};
-    //   whereQuery["links.proid"] = project.proid;
-    //   whereQuery["links.method"] = project.service.online ? "online" : "offline";
-    //   thisBills = await bill.getBillsByQuery(whereQuery, { selfMongo: selfPythonMongo });
-    //   client = await back.getClientById(project.cliid, { selfMongo });
-    //   if (thisBills.length === 1) {
-    //     [ thisBill ] = thisBills;
-    //     if (thisBill.requests[1].pay.length !== 1) {
-    //       bilid = thisBill.bilid;
-    //       method = project.process.contract.first.calculation.info.method.trim();
-    //       if (method === '' || method === '-') {
-    //         method = "계좌";
-    //       }
-    //       await bill.passiveSync(bilid, client.name, 1, 330000, project.process.contract.first.date, method, project.process.contract.first.calculation.info.proof, { selfMongo: selfPythonMongo });
-    //       bilidLog.push(bilid);
-    //     }
-    //   }
-    // }
-    //
-    // console.log(bilidLog);
-    // await fileSystem(`writeJson`, [ `${process.cwd()}/temp/bilidLog.json`, bilidLog ]);
-    // await this.MONGOPYTHONC.close();
+    await bill.passiveSyncAll();
 
 
 
@@ -1309,7 +1269,7 @@ DevContext.prototype.launching = async function () {
 
 
     // bill passive sync
-    // console.log(await bill.passiveSync("b2193_aa10s", "최미란", 1, 330000, new Date(2021, 7, 26, 15, 0, 0), "계좌이체", "현금 영수증"));
+    // console.log(await bill.passiveSync("b219g_aa02s", "김수진", 1, 330000, new Date(2021, 8, 15, 15, 0, 0), "카드(삼성)", "이니시스"));
 
 
     // ready page block

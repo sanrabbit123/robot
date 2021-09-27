@@ -1925,6 +1925,137 @@ BillMaker.prototype.passiveSync = async function (bilid, clientName, requestNumb
   }
 }
 
+BillMaker.prototype.passiveSyncAll = async function () {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongopythoninfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+  try {
+    await MONGOC.connect();
+    await MONGOPYTHONC.connect();
+
+    const selfMongo = MONGOC;
+    const selfPythonMongo = MONGOPYTHONC;
+    let projects;
+    let thisBills, thisBill;
+    let whereQuery;
+    let client;
+    let method;
+    let bilid;
+    let bilidLog;
+    let proof;
+    let requestNumber;
+
+    bilidLog = {
+      contract: [],
+      left: [],
+    };
+
+    projects = await back.getProjectsByQuery({
+      $and: [
+        { "desid": { $regex: "^d" } },
+        { "process.contract.first.date": { $gte: new Date(2000, 0, 1) } },
+        { "process.status": { $regex: "^[대진홀]" } }
+      ]
+    }, { selfMongo });
+
+    for (let project of projects) {
+      whereQuery = {};
+      whereQuery["links.proid"] = project.proid;
+      whereQuery["links.desid"] = project.desid;
+      whereQuery["links.method"] = project.service.online ? "online" : "offline";
+      thisBills = await this.getBillsByQuery(whereQuery, { selfMongo: selfPythonMongo });
+      client = await back.getClientById(project.cliid, { selfMongo });
+      if (thisBills.length >= 1) {
+        [ thisBill ] = thisBills;
+        for (let i = 0; i < thisBill.requests.length; i++) {
+          if (/계약/gi.test(thisBill.requests[i].name)) {
+            requestNumber = i;
+            break;
+          }
+        }
+        if (thisBill.requests[requestNumber].pay.length === 0) {
+          bilid = thisBill.bilid;
+          method = project.process.contract.first.calculation.info.method.trim();
+          if (method === '' || method === '-') {
+            method = "계좌";
+          }
+          proof = project.process.contract.first.calculation.info.proof.trim();
+          if (proof === '' || proof === '-') {
+            if (/계좌/gi.test(method)) {
+              proof = "현금영수증";
+            } else if (/카드/gi.test(method)) {
+              proof = "이니시스";
+            } else {
+              proof = "현금영수증";
+            }
+          }
+          console.log(bilid, client.name, requestNumber, project.process.contract.first.calculation.amount, project.process.contract.first.date, method, proof);
+          await this.passiveSync(bilid, client.name, requestNumber, project.process.contract.first.calculation.amount, project.process.contract.first.date, method, proof, { selfMongo: selfPythonMongo });
+          bilidLog.contract.push(bilid);
+        }
+      }
+    }
+
+    projects = await back.getProjectsByQuery({
+      $and: [
+        { "desid": { $regex: "^d" } },
+        { "process.contract.remain.date": { $gte: new Date(2000, 0, 1) } },
+        { "process.status": { $regex: "^[대진홀]" } }
+      ]
+    }, { selfMongo });
+
+    for (let project of projects) {
+      whereQuery = {};
+      whereQuery["links.proid"] = project.proid;
+      whereQuery["links.desid"] = project.desid;
+      whereQuery["links.method"] = project.service.online ? "online" : "offline";
+      thisBills = await this.getBillsByQuery(whereQuery, { selfMongo: selfPythonMongo });
+      client = await back.getClientById(project.cliid, { selfMongo });
+      if (thisBills.length >= 1) {
+        [ thisBill ] = thisBills;
+        for (let i = 0; i < thisBill.requests.length; i++) {
+          if (/잔금/gi.test(thisBill.requests[i].name)) {
+            requestNumber = i;
+            break;
+          }
+        }
+        if (thisBill.requests[requestNumber].pay.length === 0) {
+          bilid = thisBill.bilid;
+          method = project.process.contract.remain.calculation.info.method.trim();
+          if (method === '' || method === '-') {
+            method = "계좌";
+          }
+          proof = project.process.contract.remain.calculation.info.proof.trim();
+          if (proof === '' || proof === '-') {
+            if (/계좌/gi.test(method)) {
+              proof = "현금영수증";
+            } else if (/카드/gi.test(method)) {
+              proof = "이니시스";
+            } else {
+              proof = "현금영수증";
+            }
+          }
+          console.log(bilid, client.name, requestNumber, project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount, project.process.contract.remain.date, method, proof);
+          await this.passiveSync(bilid, client.name, requestNumber, project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount, project.process.contract.remain.date, method, proof, { selfMongo: selfPythonMongo });
+          bilidLog.left.push(bilid);
+        }
+      }
+    }
+
+    console.log(bilidLog);
+
+    return bilidLog;
+
+  } catch (e) {
+    console.log(e);
+  } finally {
+    await MONGOC.close();
+    await MONGOPYTHONC.close();
+  }
+}
+
 BillMaker.prototype.travelInjection = async function (injectionCase, proid, method, number, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof injectionCase !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof number !== "number") {
     throw new Error("invaild input");
@@ -3222,7 +3353,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
       projectUpdateQuery["process.calculation.percentage"] = percentage;
       if (designer.information.business.account.length > 0) {
         bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
-        bankTo = designer.information.business.account[0].to;
+        bankTo = designer.information.business.account[0].to === undefined ? designer.designer : designer.information.business.account[0].to;
         projectUpdateQuery["process.calculation.info.account"] = bankName;
         projectUpdateQuery["process.calculation.info.proof"] = bankTo;
         projectUpdateQuery["process.calculation.info.to"] = bankTo;

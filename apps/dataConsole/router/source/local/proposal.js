@@ -4506,7 +4506,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
 
                 if (selectedDesigner.information.business.account.length > 0) {
                   bankName = selectedDesigner.information.business.account[0].bankName + " " + String(selectedDesigner.information.business.account[0].accountNumber);
-                  bankTo = selectedDesigner.information.business.account[0].to;
+                  bankTo = selectedDesigner.information.business.account[0].to === undefined ? selectedDesigner.designer : selectedDesigner.information.business.account[0].to;
                   updateQuery["process.calculation.info.account"] = bankName;
                   updateQuery["process.calculation.info.proof"] = bankTo;
                   updateQuery["process.calculation.info.to"] = bankTo;
