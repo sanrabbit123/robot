@@ -2786,7 +2786,7 @@ DesignerJs.prototype.reportView = async function () {
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight } = this;
     const standardBar = totalMother.firstChild;
-    const designers = await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true });
+    const designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
     const length = designers.length;
     const getObj = returnGet();
     let boxTong;
@@ -2847,17 +2847,21 @@ DesignerJs.prototype.reportView = async function () {
     totalMother.insertBefore(standardBar_mother, standardBar);
     standardBar_mother.appendChild(standardBar);
     for (let i = 1; i < this.standardDoms.length; i++) {
-      this.standardDoms[i].style.color = colorChip[(/완료/g.test(this.designers.pick(this.standardDoms[i].getAttribute("desid")).information.contract.status)) ? "black" : "deactive"];
-      this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
-      this.standardDoms[i].style.transition = "all 0s ease";
-      this.standardDoms[i].addEventListener("click", (e) => {
-        instance.reportDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
-      });
-      children = this.standardDoms[i].children;
-      childrenLength = children.length;
-      for (let j = 0; j < childrenLength; j++) {
-        children[j].style.color = "inherit";
-        children[j].style.transition = "all 0s ease";
+      if (this.designers.pick(this.standardDoms[i].getAttribute("desid")) !== null) {
+        this.standardDoms[i].style.color = colorChip[(/완료/g.test(this.designers.pick(this.standardDoms[i].getAttribute("desid")).information.contract.status)) ? "black" : "deactive"];
+        this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
+        this.standardDoms[i].style.transition = "all 0s ease";
+        this.standardDoms[i].addEventListener("click", (e) => {
+          instance.reportDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
+        });
+        children = this.standardDoms[i].children;
+        childrenLength = children.length;
+        for (let j = 0; j < childrenLength; j++) {
+          children[j].style.color = "inherit";
+          children[j].style.transition = "all 0s ease";
+        }
+      } else {
+        this.standardDoms[i].style.display = "none";
       }
     }
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;

@@ -5,6 +5,7 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
   const standardBar = this.standardDoms[0].parentElement;
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target, pastScrollTop;
+  let loading;
 
   if (!middleMode) {
     this.pageHistory.unshift({ path: "request", status: "list", desid });
@@ -86,14 +87,29 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
     });
   }
 
-  this.requestList(desid);
   this.requestIconSet(desid);
-  scrollTo(totalMother, pastScrollTop);
-  if (callback !== null) {
-    if (typeof callback === "function") {
-      callback();
+  this.mother.loadingRun().then((dom) => {
+    loading = dom;
+    return ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getProjects", { equal: true });
+  }).then((projects) => {
+    instance.designers.setProjects(projects);
+    return ajaxJson({
+      noFlat: true,
+      whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
+    }, "/getClients", { equal: true });
+  }).then((clients) => {
+    loading.parentNode.removeChild(loading);
+    instance.designers.setClients(clients);
+    instance.requestList(desid);
+    scrollTo(totalMother, pastScrollTop);
+    if (callback !== null) {
+      if (typeof callback === "function") {
+        callback();
+      }
     }
-  }
+  }).catch((err) => {
+    console.log(err);
+  });
 }
 
 DesignerJs.prototype.requestList = function (desid) {
@@ -2591,15 +2607,7 @@ DesignerJs.prototype.requestView = async function () {
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight } = this;
     const standardBar = totalMother.firstChild;
-    const designers = await ajaxJson({ noFlat: true }, "/getDesigners", { equal: true });
-    const projects = await ajaxJson({
-      noFlat: true,
-      whereQuery: { desid: { $regex: "^d" } }
-    }, "/getProjects", { equal: true });
-    const clients = await ajaxJson({
-      noFlat: true,
-      whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
-    }, "/getClients", { equal: true });
+    const designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
     const length = designers.length;
     const getObj = returnGet();
     let boxTong;
@@ -2616,8 +2624,6 @@ DesignerJs.prototype.requestView = async function () {
     let searchResult;
 
     this.designers = new Designers(designers);
-    this.designers.setProjects(projects);
-    this.designers.setClients(clients);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
     this.modes = [ "checklist", "report", "request" ];
@@ -2669,17 +2675,21 @@ DesignerJs.prototype.requestView = async function () {
     totalMother.insertBefore(standardBar_mother, standardBar);
     standardBar_mother.appendChild(standardBar);
     for (let i = 1; i < this.standardDoms.length; i++) {
-      this.standardDoms[i].style.color = colorChip[(/완료/g.test(this.designers.pick(this.standardDoms[i].getAttribute("desid")).information.contract.status)) ? "black" : "deactive"];
-      this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
-      this.standardDoms[i].style.transition = "all 0s ease";
-      this.standardDoms[i].addEventListener("click", (e) => {
-        instance.requestDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
-      });
-      children = this.standardDoms[i].children;
-      childrenLength = children.length;
-      for (let j = 0; j < childrenLength; j++) {
-        children[j].style.color = "inherit";
-        children[j].style.transition = "all 0s ease";
+      if (this.designers.pick(this.standardDoms[i].getAttribute("desid")) !== null) {
+        this.standardDoms[i].style.color = colorChip[(/완료/g.test(this.designers.pick(this.standardDoms[i].getAttribute("desid")).information.contract.status)) ? "black" : "deactive"];
+        this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
+        this.standardDoms[i].style.transition = "all 0s ease";
+        this.standardDoms[i].addEventListener("click", (e) => {
+          instance.requestDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
+        });
+        children = this.standardDoms[i].children;
+        childrenLength = children.length;
+        for (let j = 0; j < childrenLength; j++) {
+          children[j].style.color = "inherit";
+          children[j].style.transition = "all 0s ease";
+        }
+      } else {
+        this.standardDoms[i].style.display = "none";
       }
     }
 
@@ -2724,8 +2734,9 @@ DesignerJs.prototype.requestView = async function () {
 
     if (getObj.cliid !== undefined) {
       if (getObj.desid === undefined) {
-        if ((clients.find((obj) => { return obj.cliid === getObj.cliid })) !== undefined) {
-          this.requestDetailLaunching(projects.find((obj) => { return obj.cliid === getObj.cliid }).desid);
+        projects = await ajaxJson({ noFlat: true, whereQuery: { $and: [ { cliid: getObj.cliid }, { desid: { $regex: "^d" } } ] } }, "/getProjects");
+        if (projects.length > 0) {
+          this.requestDetailLaunching(projects[0].desid);
           for (let box of this.requestBoxes) {
             if (box.getAttribute("cliid") === getObj.cliid) {
               box.click();

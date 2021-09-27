@@ -1269,6 +1269,9 @@ DevContext.prototype.launching = async function () {
     // console.log(await bill.passiveSync("b219g_aa02s", "김수진", 1, 330000, new Date(2021, 8, 15, 15, 0, 0), "카드(삼성)", "이니시스"));
 
 
+    // front designer sync
+    // await this.frontDesignerSync();
+
     // ready page block
     // await this.pageReady("webProposal");
 

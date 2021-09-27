@@ -862,15 +862,6 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       "report.js",
       "request.js",
     ];
-    const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
-    const projects = await ajaxJson({
-      noFlat: true,
-      whereQuery: { desid: { $regex: designer.desid } }
-    }, "/getProjects", { equal: true });
-    const clients = await ajaxJson({
-      noFlat: true,
-      whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
-    }, "/getClients", { equal: true });
 
     await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
 
@@ -879,11 +870,6 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.constructor();
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
     this.belowHeight = 0;
-    this.designers = new Designers([ designer ]);
-    this.designers.setProjects(projects);
-    this.designers.setClients(clients);
-    this.designer = this.designers.pick(desid);
-    this.desid = desid;
     this.modes = [ "checklist", "report", "request" ];
     this.mode = this.modes[0];
 

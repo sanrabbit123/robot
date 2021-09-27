@@ -18,10 +18,6 @@ class Designers extends Array {
         break;
       }
     }
-    if (target === null) {
-      console.log(desid);
-      throw new Error("invaild desid");
-    }
     return target;
   }
 
