@@ -967,7 +967,7 @@ PortfolioJs.prototype.infinityScroll = function (queryObj) {
   }
 
   //set by throttle
-  GeneralJs.events.portfolioScroll = GeneralJs.throTtle(scrollEvent, 300);
+  GeneralJs.events.portfolioScroll = GeneralJs.setThrottle(scrollEvent, 300);
   window.addEventListener("scroll", GeneralJs.events.portfolioScroll);
 }
 

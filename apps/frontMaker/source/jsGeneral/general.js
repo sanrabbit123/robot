@@ -977,25 +977,26 @@ GeneralJs.willDo = function (func) {
   GeneralJs.setTimeout(func, 0);
 }
 
-GeneralJs.deBounce = function (func, wait, immediate) {
-  let timeout;
-  return function() {
-    let context = this;
-    let args = arguments;
-    function later() {
-      timeout = null;
-      if (!immediate) { func.apply(context, args); };
-    }
-    let callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) { func.apply(context, args); };
+GeneralJs.setDebounce = function (callback, name, delay = 200) {
+  if (typeof callback !== "function" || typeof name !== "string" || typeof delay !== "number") {
+    throw new Error("invaild input");
   }
+  if (GeneralJs.timeouts[name] !== null || GeneralJs.timeouts[name] !== undefined) {
+    clearTimeout(GeneralJs.timeouts[name]);
+  }
+  GeneralJs.timeouts[name] = setTimeout(() => {
+    callback();
+    clearTimeout(GeneralJs.timeouts[name]);
+    GeneralJs.timeouts[name] = null;
+  }, delay);
 }
 
-GeneralJs.throTtle = function (callback, ms) {
-  let timeout;
-  let waiting = false;
+GeneralJs.setThrottle = function (callback, ms = 100) {
+  if (typeof callback !== "function" || typeof ms !== "number") {
+    throw new Error("invaild input");
+  }
+  let timeout, waiting;
+  waiting = false;
   return function () {
     if (!waiting) {
       callback.apply(this, arguments);

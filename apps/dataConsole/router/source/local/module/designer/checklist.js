@@ -243,7 +243,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 db: "console",
                                                 collection: "sse_checklistDesigner",
                                                 log: true,
-                                                who: cookies.homeliaisonConsoleLoginedEmail,
+                                                who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
                                                 updateQuery: {
                                                   desid,
                                                   type: "async__function__{ mother.querySelectorAll('div')[0].textContent __equal__ value; }",
@@ -400,7 +400,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 db: "console",
                                                 collection: "sse_checklistDesigner",
                                                 log: true,
-                                                who: cookies.homeliaisonConsoleLoginedEmail,
+                                                who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
                                                 updateQuery: {
                                                   desid,
                                                   type: "async__function__{ mother.querySelectorAll('div')[2].textContent __equal__ value; }",
@@ -2522,7 +2522,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                             db: "console",
                             collection: "sse_checklistDesigner",
                             log: true,
-                            who: cookies.homeliaisonConsoleLoginedEmail,
+                            who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
                             updateQuery: {
                               desid: instance.desid,
                               type: ("async__function__{ " + sseFunc.toString().replace(/\n/g, '').trim().replace(/=/gi, "__equal__").replace(/&/gi, "__ampersand__").replace(/\+/gi, "__plus__").replace(/\}$/, '').replace(/^function \(\) \{/gi, '') + " }"),
@@ -3337,7 +3337,14 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                     this.parentElement.removeChild(this.parentElement.firstChild);
                                     this.parentElement.insertAdjacentHTML("beforeend", text);
                                     await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                                    await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: text, position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
+                                    await ajaxJson({
+                                      mode: "sse",
+                                      db: "console",
+                                      collection: "sse_checklistDesigner",
+                                      log: true,
+                                      who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                                      updateQuery: { desid, type: checkListData[x].children[y].type, value: text, position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
+                                      update: { whereQuery, updateQuery } } }, "/generalMongo");
                                     await ajaxJson({
                                       page: "checklist",
                                       mode: "update",
@@ -3466,7 +3473,14 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       whereQuery = { desid };
 
                       await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                      await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: resultArr, position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
+                      await ajaxJson({
+                        mode: "sse",
+                        db: "console",
+                        collection: "sse_checklistDesigner",
+                        log: true,
+                        who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                        updateQuery: { desid, type: checkListData[x].children[y].type, value: resultArr, position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
+                        update: { whereQuery, updateQuery } } }, "/generalMongo");
                       await ajaxJson({
                         page: "checklist",
                         mode: "update",
@@ -3591,7 +3605,14 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         updateQuery = checkListData[x].children[y].update(z, t, designer);
 
                         await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                        await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: [ z, t, (checkListData[x].children[y].opposite === true), matrixButtonConst ], position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
+                        await ajaxJson({
+                          mode: "sse",
+                          db: "console",
+                          collection: "sse_checklistDesigner",
+                          log: true,
+                          who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                          updateQuery: { desid, type: checkListData[x].children[y].type, value: [ z, t, (checkListData[x].children[y].opposite === true), matrixButtonConst ], position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
+                          update: { whereQuery, updateQuery } } }, "/generalMongo");
                         await ajaxJson({
                           page: "checklist",
                           mode: "update",
@@ -3692,7 +3713,14 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         this.value = this.getAttribute("past");
                       } else {
                         await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                        await ajaxJson({ mode: "sse", db: "console", collection: "sse_checklistDesigner", log: true, who: cookies.homeliaisonConsoleLoginedEmail, updateQuery: { desid, type: checkListData[x].children[y].type, value: this.value.trim(), position: { x, y, class: "dom_" + String(x) + "_" + String(y) }, update: { whereQuery, updateQuery } } }, "/generalMongo");
+                        await ajaxJson({
+                          mode: "sse",
+                          db: "console",
+                          collection: "sse_checklistDesigner",
+                          log: true,
+                          who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
+                          updateQuery: { desid, type: checkListData[x].children[y].type, value: this.value.trim(), position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
+                          update: { whereQuery, updateQuery } } }, "/generalMongo");
                         await ajaxJson({
                           page: "checklist",
                           mode: "update",
