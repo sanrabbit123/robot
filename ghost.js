@@ -2052,8 +2052,9 @@ Ghost.prototype.designerRouter = function (needs) {
 
           do {
             await sleep(2000);
-            folderId = await drive.searchId_inPython(folderName);
-          } while (folderId === null);
+            folderId = await drive.makeFolder_inPython(folderName);
+            await drive.moveFolder_inPython(folderId, "19QfiKKbRvOZwPwDmUDtJre8AUA1OEEmv");
+          } while (folderId === null || folderId === undefined);
 
           docsId = await docs.create_newDocs_inPython(folderName + '_' + "docs", folderId);
           sheetsId = await sheets.create_newSheets_inPython(folderName + '_' + "sheets", folderId);

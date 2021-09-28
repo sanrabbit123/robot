@@ -58,10 +58,7 @@ class GoogleDrive:
     def moveFolder(self, targetId, parent):
         file = self.app.files().get(fileId=targetId, fields='parents').execute()
         previous_parents = ",".join(file.get('parents'))
-        file = self.app.files().update(fileId=targetId,
-                                            addParents=parent,
-                                            removeParents=previous_parents,
-                                            fields='id, parents').execute()
+        file = self.app.files().update(fileId=targetId, addParents=parent, removeParents=previous_parents, fields='id, parents').execute()
         return dumps({ "message": "success" })
 
 
