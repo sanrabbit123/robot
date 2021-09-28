@@ -1203,9 +1203,9 @@ DevContext.prototype.launching = async function () {
 
 
     // aspirant to designer
-    await this.aspirantToDesigner([
-      [ "김도현", "2021-09-28" ],
-    ]);
+    // await this.aspirantToDesigner([
+    //   [ "김도현", "2021-09-28" ],
+    // ]);
 
 
     // new designer to front web
@@ -1213,16 +1213,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2106_aa01s", [
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 7 },
+    // await this.setProposalSettingForDesigner("d2109_aa01s", [
     //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 8 },
-    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 7 },
+    //   { porlid: "ghost", index: 1 },
     // ], [
-    //   "아늑하고 따뜻한 스타일의 내추럴 무드와 모던한 스타일을 지향하는 편입니다.",
-    //   "클라이언트의 예산에 맞추며, 빠른 진행을 원할시 스케줄에 최대한 맞추어 드리려고 합니다.",
-    //   "고객님께서 원하시는 공간의 활용과 무드를 구현시키는 것을 중요하게 생각합니다."
+    //   "폭넓은 실무 경험을 바탕으로 유연하고 합리적인 해법을 제안합니다.",
+    //   "시공 경험이 풍부하여 홈스타일링부터 설계 및 시공까지 총체적인 작업이 가능합니다.",
+    //   "단순한 트렌드에 얽매이지 않고, 폭넓은 디자인적 가능성을 열어두고 작업합니다."
     // ]);
 
 

@@ -2459,35 +2459,66 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
   domTong = [];
   num = 0;
   for (let { text, year, month, date: { first, last } } of blockMap) {
-    createNode({
-      mother: dateBlockMother,
-      style: {
-        position: "relative",
-        display: "inline-block",
-        width: text !== "initial" ? "calc(calc(100% - " + String(maxLength * blockMargin) + ea + " - " + String(blockHeight) + ea + ") / " + String(maxLength) + ")" : String(blockHeight) + ea,
-        height: String(blockHeight) + ea,
-        background: text !== "" ? colorChip.deactive : colorChip.white,
-        marginRight: String((num % (maxLength + 1)) === maxLength ? 0 : blockMargin) + ea,
-        marginBottom: String(blockMargin) + ea,
-        borderRadius: String(3) + "px",
-        verticalAlign: "top",
-      },
-      children: [
-        {
-          text,
-          style: {
-            position: "absolute",
-            left: String(0),
-            top: String(textTop) + ea,
-            width: String(100) + '%',
-            fontSize: String(size) + ea,
-            fontWeight: String(500),
-            textAlign: "center",
-            color: colorChip.black,
+
+    if (text !== "initial") {
+      createNode({
+        mother: dateBlockMother,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(100% - " + String(maxLength * blockMargin) + ea + " - " + String(blockHeight) + ea + ") / " + String(maxLength) + ")",
+          height: String(blockHeight) + ea,
+          background: text !== "" ? colorChip.shadow : colorChip.white,
+          marginRight: String((num % (maxLength + 1)) === maxLength ? 0 : blockMargin) + ea,
+          marginBottom: String(blockMargin) + ea,
+          borderRadius: String(3) + "px",
+          verticalAlign: "top",
+        },
+        children: [
+          {
+            text,
+            style: {
+              position: "absolute",
+              left: String(0),
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              textAlign: "center",
+              color: colorChip.white,
+            }
           }
-        }
-      ]
-    });
+        ]
+      });
+    } else {
+      createNode({
+        mother: dateBlockMother,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: String(blockHeight) + ea,
+          height: String(blockHeight) + ea,
+          background: text !== "" ? colorChip.deactive : colorChip.white,
+          marginRight: String((num % (maxLength + 1)) === maxLength ? 0 : blockMargin) + ea,
+          marginBottom: String(blockMargin) + ea,
+          borderRadius: String(3) + "px",
+          verticalAlign: "top",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnCheckCircle(colorChip.white),
+            style: {
+              position: "absolute",
+              left: String(blockHeight / 4) + ea,
+              top: String(blockHeight / 4) + ea,
+              width: String(blockHeight / 2) + ea,
+            }
+          }
+        ]
+      });
+    }
     num++;
   }
   searchCondition.blocks = domTong;
