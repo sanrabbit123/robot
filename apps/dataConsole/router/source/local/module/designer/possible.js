@@ -7,6 +7,21 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   let target, pastScrollTop;
   let loading;
 
+
+  if (typeof this.possiblePannelStatus !== "object" || this.possiblePannelStatus === null) {
+    this.possiblePannelStatus = {
+      project: false,
+      calendar: false,
+    };
+  }
+  if (typeof this.possiblePannelStatus.project !== "boolean") {
+    this.possiblePannelStatus.project = false;
+  }
+  if (typeof this.possiblePannelStatus.calendar !== "boolean") {
+    this.possiblePannelStatus.calendar = false;
+  }
+
+
   if (!middleMode) {
     this.pageHistory.unshift({ path: "possible", status: "list", desid });
   }
@@ -92,11 +107,15 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
     loading = dom;
     return ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getProjects", { equal: true });
   }).then((projects) => {
-    instance.designers.setProjects(projects);
-    return ajaxJson({
-      noFlat: true,
-      whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
-    }, "/getClients", { equal: true });
+    if (projects.length === 0) {
+      return [];
+    } else {
+      instance.designers.setProjects(projects);
+      return ajaxJson({
+        noFlat: true,
+        whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
+      }, "/getClients", { equal: true });
+    }
   }).then((clients) => {
     instance.designers.setClients(clients);
     return ajaxJson({
@@ -204,7 +223,7 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDesigner) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, equalJson } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, equalJson, dateToString, stringToDate } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -230,7 +249,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
   const dummyDatesClassName = "dummyDummyDate";
   const daydayWords = [ "일", "월", "화", "수", "목", "금", "토" ];
   const daydayLength = 7;
-  const countKeyMake = (dateObj) => { return `y${String(dateObj.getFullYear())}m${String(dateObj.getMonth() + 1)}`; }
+  const countKeyMake = (dateObj) => { return `y${String(dateObj.getFullYear())}m${String(dateObj.getMonth() + 1)}`; };
+  const countKeyClass = "countKeyClass";
   try {
     let magin, outerMargin;
     let dateMatrix;
@@ -288,6 +308,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     let updateQuery;
     let tempDate, keyName;
     let updateBoo;
+    let possibleUpdate;
+    let targetDom;
+    let pannelDoms;
+    let projectPannel, calendarPannel;
 
     if (realtimeDesigner.length === 0) {
 
@@ -347,7 +371,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
     }
 
-    console.log(realtimeDesigner);
+    this.realtimeDesigner = realtimeDesigner;
 
     firstBlock = {};
     allSvgs = [];
@@ -485,6 +509,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             this.firstChild.style.color = colorChip.green;
             this.lastChild.style.color = colorChip.green;
             this.setAttribute("toggle", "on");
+            instance.possiblePannelStatus.project = true;
+
           } else {
 
             setQueue(() => {
@@ -535,6 +561,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             this.firstChild.style.color = colorChip.black;
             this.lastChild.style.color = colorChip.red;
             this.setAttribute("toggle", "off");
+            instance.possiblePannelStatus.project = false;
+
           }
         }
       },
@@ -603,6 +631,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             this.firstChild.style.color = colorChip.green;
             this.lastChild.style.color = colorChip.green;
             this.setAttribute("toggle", "on");
+            instance.possiblePannelStatus.calendar = true;
           } else {
 
             dummyDoms = document.querySelectorAll('.' + dummyDatesClassName);
@@ -619,11 +648,66 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             this.firstChild.style.color = colorChip.black;
             this.lastChild.style.color = colorChip.red;
             this.setAttribute("toggle", "off");
+            instance.possiblePannelStatus.calendar = false;
           }
 
         }
       }
     ];
+
+    possibleUpdate = async function () {
+      try {
+        const dateDoms = instance.dateDoms;
+        const onDoms = dateDoms.filter((d) => { return d.getAttribute("toggle") === "on"; });
+        const rawDates = onDoms.map((d) => { return new Date(d.getAttribute("value")); });
+        let removeDates, tempDate, tempDate2;
+        let filteredDates;
+        let possible;
+        let tempObj;
+        let num;
+
+        removeDates = [];
+        for (let i = 1; i < rawDates.length - 1; i++) {
+          tempDate = new Date(JSON.stringify(rawDates[i - 1]).slice(1, -1));
+          tempDate2 = new Date(JSON.stringify(rawDates[i + 1]).slice(1, -1));
+          tempDate.setDate(tempDate.getDate() + 1);
+          tempDate2.setDate(tempDate2.getDate() - 1);
+          if (dateToString(tempDate) === dateToString(rawDates[i]) && dateToString(tempDate2) === dateToString(rawDates[i])) {
+            removeDates.push(dateToString(rawDates[i]));
+          }
+        }
+
+        filteredDates = rawDates.filter((d) => { return !removeDates.includes(dateToString(d)); });
+        filteredDates.sort((a, b) => { return a.valueOf() - b.valueOf(); });
+
+        possible = [];
+        tempObj = {};
+        for (let date of filteredDates) {
+          tempDate = new Date(JSON.stringify(date).slice(1, -1));
+          tempDate.setDate(tempDate.getDate() + 1);
+          if (removeDates.includes(dateToString(tempDate))) {
+            tempObj.start = date;
+          } else {
+            if (tempObj.start === undefined) {
+              tempObj.start = date;
+            }
+            tempObj.end = date;
+            possible.push(tempObj);
+            tempObj = {};
+          }
+        }
+
+        await ajaxJson({
+          mode: "update",
+          db: "console",
+          collection: "realtimeDesigner",
+          whereQuery: { desid },
+          updateQuery: { possible },
+        }, "/generalMongo", { equal: true });
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
     dateMatrix = getDateMatrix(now.getFullYear(), now.getMonth());
 
@@ -671,121 +755,118 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       });
       if (num === 0) {
         firstMother = block;
-      }
-
-      daydayField = createNode({
-        mother: block,
-        style: {
-          position: "fixed",
-          width: withOut(grayBarWidth + (outerMargin * 4) + titleWidth + (daydayIndent * 2), ea),
-          height: String(weekBlockHeight) + ea,
-          background: colorChip.white,
-          top: String(outerMargin * 2) + ea,
-          left: String(grayBarWidth + (outerMargin * 2) + titleWidth + 1 + daydayIndent) + ea,
-          boxSizing: "border-box",
-          zIndex: String(1),
-          borderRadius: String(50) + ea,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          opacity: String(0.95),
-        }
-      });
-
-      for (let i = 0; i < daydayLength; i++) {
-        createNode({
-          mother: daydayField,
+        daydayField = createNode({
+          mother: block,
           style: {
-            display: "inline-block",
-            width: (i !== 0 && i !== 6 ? "calc(calc(100% + " + String(daydayIndent * 2) + ea + ") / 7)" : "calc(calc(calc(100% + " + String(daydayIndent * 2) + ea + ") / 7) - " + String(daydayIndent) + ea + ")"),
-            height: String(100) + '%',
-            position: "relative",
-          },
-          children: [
-            {
-              style: {
-                position: "absolute",
-                width: String(100) + '%',
-                top: String(daydayBarTop) + ea,
-                height: withOut(daydayBarTop + daydayBarBottom, ea),
-                borderRight: (i !== 6 ? "1px solid " + colorChip.gray3 : ""),
-              }
-            },
-            {
-              text: daydayWords[i],
-              style: {
-                position: "absolute",
-                top: String(daydayTextTop) + ea,
-                width: String(100) + '%',
-                textAlign: "center",
-                fontSize: String(daydaySize) + ea,
-                fontWeight: String(600),
-                color: colorChip[(i === 0 || i === 6 ? "red" : "black")],
-              }
-            }
-          ]
+            position: "fixed",
+            width: withOut(grayBarWidth + (outerMargin * 4) + titleWidth + (daydayIndent * 2), ea),
+            height: String(weekBlockHeight) + ea,
+            background: colorChip.white,
+            top: String(outerMargin * 2) + ea,
+            left: String(grayBarWidth + (outerMargin * 2) + titleWidth + 1 + daydayIndent) + ea,
+            boxSizing: "border-box",
+            zIndex: String(1),
+            borderRadius: String(50) + ea,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            opacity: String(0.95),
+          }
         });
-      }
-
-      functionPannel = createNode({
-        mother: block,
-        style: {
-          position: "fixed",
-          bottom: String(belowHeight + functionPannelBottom) + ea,
-          right: String((outerMargin * 2) + functionPannelRight) + ea,
-          width: String(functionPannelWidth) + ea,
-          height: "auto",
-          background: colorChip.white,
-          zIndex: String(1),
-          borderRadius: String(5) + ea,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          opacity: String(0.95),
-          paddingTop: String(functionPannelPaddingTop) + ea,
-          paddingBottom: String(functionPannelPaddingBottom) + ea,
+        for (let i = 0; i < daydayLength; i++) {
+          createNode({
+            mother: daydayField,
+            style: {
+              display: "inline-block",
+              width: (i !== 0 && i !== 6 ? "calc(calc(100% + " + String(daydayIndent * 2) + ea + ") / 7)" : "calc(calc(calc(100% + " + String(daydayIndent * 2) + ea + ") / 7) - " + String(daydayIndent) + ea + ")"),
+              height: String(100) + '%',
+              position: "relative",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  width: String(100) + '%',
+                  top: String(daydayBarTop) + ea,
+                  height: withOut(daydayBarTop + daydayBarBottom, ea),
+                  borderRight: (i !== 6 ? "1px solid " + colorChip.gray3 : ""),
+                }
+              },
+              {
+                text: daydayWords[i],
+                style: {
+                  position: "absolute",
+                  top: String(daydayTextTop) + ea,
+                  width: String(100) + '%',
+                  textAlign: "center",
+                  fontSize: String(daydaySize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip[(i === 0 || i === 6 ? "red" : "black")],
+                }
+              }
+            ]
+          });
         }
-      });
-
-      for (let { name, attribute, event } of functionPannelContents) {
-        createNode({
-          mother: functionPannel,
-          class: [ "hoverDefault_lite" ],
-          attribute,
-          events: [
-            {
-              type: "click",
-              event,
-            }
-          ],
+        functionPannel = createNode({
+          mother: block,
           style: {
-            position: "relative",
-            display: "block",
-            width: String(100) + '%',
-            height: String(functionPannelBlockHeight) + ea,
-          },
-          children: [
-            {
-              text: name,
-              style: {
-                position: "absolute",
-                fontSize: String(functionPannelSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                left: String(functionPannelLeft) + ea,
-                top: String(functionPannelTextTop0) + ea,
-              }
-            },
-            {
-              text: "off",
-              style: {
-                position: "absolute",
-                fontSize: String(functionPannelSize) + ea,
-                fontWeight: String(300),
-                fontFamily: "graphik",
-                color: colorChip.red,
-                right: String(functionPannelLeft) + ea,
-                top: String(functionPannelTextTop1) + ea,
-              }
-            }
-          ]
+            position: "fixed",
+            bottom: String(belowHeight + functionPannelBottom) + ea,
+            right: String((outerMargin * 2) + functionPannelRight) + ea,
+            width: String(functionPannelWidth) + ea,
+            height: "auto",
+            background: colorChip.white,
+            zIndex: String(1),
+            borderRadius: String(5) + ea,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            opacity: String(0.95),
+            paddingTop: String(functionPannelPaddingTop) + ea,
+            paddingBottom: String(functionPannelPaddingBottom) + ea,
+          }
         });
+        pannelDoms = [];
+        for (let { name, attribute, event } of functionPannelContents) {
+          pannelDoms.push(createNode({
+            mother: functionPannel,
+            class: [ "hoverDefault_lite" ],
+            attribute,
+            events: [
+              {
+                type: "click",
+                event,
+              }
+            ],
+            style: {
+              position: "relative",
+              display: "block",
+              width: String(100) + '%',
+              height: String(functionPannelBlockHeight) + ea,
+            },
+            children: [
+              {
+                text: name,
+                style: {
+                  position: "absolute",
+                  fontSize: String(functionPannelSize) + ea,
+                  fontWeight: String(600),
+                  color: colorChip.black,
+                  left: String(functionPannelLeft) + ea,
+                  top: String(functionPannelTextTop0) + ea,
+                }
+              },
+              {
+                text: "off",
+                style: {
+                  position: "absolute",
+                  fontSize: String(functionPannelSize) + ea,
+                  fontWeight: String(300),
+                  fontFamily: "graphik",
+                  color: colorChip.red,
+                  right: String(functionPannelLeft) + ea,
+                  top: String(functionPannelTextTop1) + ea,
+                }
+              }
+            ]
+          }));
+        }
       }
 
       titleField = createNode({
@@ -809,12 +890,70 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         },
         children: [
           {
-            text: year + "\n" + month + "\n<b%========%b>\n<u%가능 : 5\n진행중 : " + String(doing) + "\n대기 : " + String(standing) + "%u>",
+            attribute: [
+              { year: year.replace(/[^0-9]/g, '') },
+              { month: month.replace(/[^0-9]/g, '') },
+            ],
+            text: `${year}\n${month}\n<b%========%b>\n<u%가능 : <b class="${countKeyClass}" style="color:${colorChip.green}">${String(instance.realtimeDesigner.count[countKeyMake(new Date(Number(year.replace(/[^0-9]/g, '')), Number(month.replace(/[^0-9]/g, '')) - 1, 1))])}</b>\n진행중 : ${doing}\n대기 : ${standing}%u>`,
+            events: [
+              {
+                type: "selectstart",
+                event: (e) => { e.preventDefault(); }
+              },
+              {
+                type: "click",
+                event: async function (e) {
+                  e.stopPropagation();
+                  try {
+                    const year = Number(this.getAttribute("year"));
+                    const month = Number(this.getAttribute("month"));
+                    const thisKey = countKeyMake(new Date(year, month - 1, 1));
+                    const target = this.querySelector('.' + countKeyClass);
+                    instance.realtimeDesigner.count[thisKey] = instance.realtimeDesigner.count[thisKey] + 1;
+                    target.textContent = String(instance.realtimeDesigner.count[thisKey]);
+                    await ajaxJson({
+                      mode: "update",
+                      db: "console",
+                      collection: "realtimeDesigner",
+                      whereQuery: { desid },
+                      updateQuery: { count: instance.realtimeDesigner.count },
+                    }, "/generalMongo", { equal: true });
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              },
+              {
+                type: "contextmenu",
+                event: async function (e) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  try {
+                    const year = Number(this.getAttribute("year"));
+                    const month = Number(this.getAttribute("month"));
+                    const thisKey = countKeyMake(new Date(year, month - 1, 1));
+                    const target = this.querySelector('.' + countKeyClass);
+                    instance.realtimeDesigner.count[thisKey] = instance.realtimeDesigner.count[thisKey] - 1;
+                    target.textContent = String(instance.realtimeDesigner.count[thisKey]);
+                    await ajaxJson({
+                      mode: "update",
+                      db: "console",
+                      collection: "realtimeDesigner",
+                      whereQuery: { desid },
+                      updateQuery: { count: instance.realtimeDesigner.count },
+                    }, "/generalMongo", { equal: true });
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
+              }
+            ],
             style: {
               fontSize: String(size) + ea,
               fontWeight: String(600),
               color: colorChip.black,
               lineHeight: String(titleLineHeight),
+              cursor: "pointer",
             },
             bold: {
               fontSize: String(size - 1) + ea,
@@ -881,271 +1020,279 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               },
               {
                 type: "click",
-                event: function (e) {
+                event: async function (e) {
                   e.stopPropagation();
                   const self = this;
-                  const toggle = this.getAttribute("toggle");
-                  const thisDate = new Date(this.getAttribute("value"));
-                  const thisOk = this.querySelector('.' + okClassName);
-                  const thisCancel = this.querySelector('.' + cancelClassName);
-                  const thisWords = this.querySelector('.' + numberClassName);
-                  const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
-                  const thisBack = this.querySelector('.' + backClassName);
-                  const pastBoo = (this.getAttribute("past") === "true");
-                  const mode = thisOk.getAttribute("mode");
-                  let index, first, last;
-                  let clients, clientTong, clientDom, widthArr;
-                  if (!pastBoo) {
-
-                    if (mode !== "projects") {
-                      if (toggle === "off") {
-                        index = instance.dateDoms.findIndex((d) => { return d === self; });
-                        thisWords.style.color = colorChip.green;
-                        thisMonth.style.color = colorChip.green;
-                        thisBack.style.background = colorChip.green;
-                        thisOk.style.opacity = String(1);
-                        thisCancel.style.opacity = String(0);
-                        if (instance.selection.length === 0) {
-                          instance.selection.push(index);
-                        } else {
-                          if (index < instance.selection[0]) {
-                            first = index;
-                            last = instance.selection[0];
+                  try {
+                    const toggle = this.getAttribute("toggle");
+                    const thisDate = new Date(this.getAttribute("value"));
+                    const thisOk = this.querySelector('.' + okClassName);
+                    const thisCancel = this.querySelector('.' + cancelClassName);
+                    const thisWords = this.querySelector('.' + numberClassName);
+                    const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
+                    const thisBack = this.querySelector('.' + backClassName);
+                    const pastBoo = (this.getAttribute("past") === "true");
+                    const mode = thisOk.getAttribute("mode");
+                    let index, first, last;
+                    let clients, clientTong, clientDom, widthArr;
+                    if (!pastBoo) {
+                      if (mode !== "projects") {
+                        if (toggle === "off") {
+                          index = instance.dateDoms.findIndex((d) => { return d === self; });
+                          thisWords.style.color = colorChip.green;
+                          thisMonth.style.color = colorChip.green;
+                          thisBack.style.background = colorChip.green;
+                          thisOk.style.opacity = String(1);
+                          thisCancel.style.opacity = String(0);
+                          if (instance.selection.length === 0) {
+                            instance.selection.push(index);
                           } else {
-                            last = index;
-                            first = instance.selection[0];
+                            if (index < instance.selection[0]) {
+                              first = index;
+                              last = instance.selection[0];
+                            } else {
+                              last = index;
+                              first = instance.selection[0];
+                            }
+                            for (let i = first; i < last; i++) {
+                              instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(1);
+                              instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(0);
+                              instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.green;
+                              instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
+                              instance.dateDoms[i].querySelector('.' + backClassName).style.background = colorChip.green;
+                              instance.dateDoms[i].setAttribute("toggle", "on");
+                            }
+                            instance.selection = [];
                           }
-                          for (let i = first; i < last; i++) {
-                            instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(1);
-                            instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(0);
-                            instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.green;
-                            instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
-                            instance.dateDoms[i].querySelector('.' + backClassName).style.background = colorChip.green;
-                            instance.dateDoms[i].setAttribute("toggle", "on");
-                          }
-                          instance.selection = [];
+                          this.setAttribute("toggle", "on");
+                        } else {
+                          thisWords.style.color = colorChip.black;
+                          thisMonth.style.color = colorChip.black;
+                          thisBack.style.background = "transparent";
+                          thisOk.style.opacity = String(0);
+                          thisCancel.style.opacity = String(1);
+                          this.setAttribute("toggle", "off");
                         }
-                        this.setAttribute("toggle", "on");
+                        await possibleUpdate();
                       } else {
-                        thisWords.style.color = colorChip.black;
-                        thisMonth.style.color = colorChip.black;
-                        thisBack.style.background = "transparent";
-                        thisOk.style.opacity = String(0);
-                        thisCancel.style.opacity = String(1);
-                        this.setAttribute("toggle", "off");
-                      }
-                    } else {
-                      if (this.firstChild.getAttribute("clients") !== null) {
-                        clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
-                        if (clients.length > 0) {
-                          createNode({
-                            mother: this,
-                            events: [
-                              {
-                                type: [ "click", "contextmenu" ],
-                                event: function (e) {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  self.removeChild(self.lastChild);
-                                  self.removeChild(self.lastChild);
+                        if (this.firstChild.getAttribute("clients") !== null) {
+                          clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
+                          if (clients.length > 0) {
+                            createNode({
+                              mother: this,
+                              events: [
+                                {
+                                  type: [ "click", "contextmenu" ],
+                                  event: function (e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    self.removeChild(self.lastChild);
+                                    self.removeChild(self.lastChild);
+                                  }
                                 }
-                              }
-                            ],
-                            style: {
-                              position: "fixed",
-                              top: String(0),
-                              left: String(0),
-                              width: String(100) + '%',
-                              height: String(100) + '%',
-                              background: "transparent",
-                              zIndex: String(2),
-                            }
-                          });
-
-                          clientTong = createNode({
-                            mother: this,
-                            events: [
-                              {
-                                type: [ "click", "contextmenu" ],
-                                event: function (e) {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                }
-                              }
-                            ],
-                            style: {
-                              position: "absolute",
-                              bottom: String(weekBlockHeight + clientPopupTopMargin) + ea,
-                              left: String(0) + ea,
-                              width: String(600) + ea,
-                              borderRadius: String(5) + "px",
-                              background: colorChip.gradientGreen,
-                              zIndex: String(2),
-                              paddingTop: String(clientPopupWordPaddingTop) + ea,
-                              paddingBottom: String(clientPopupWordPaddingBottom) + ea,
-                              animation: "fadeuplite 0.2s ease forwards",
-                              transition: "all 0s ease",
-                            }
-                          });
-
-                          widthArr = [];
-                          for (let client of clients) {
-                            clientDom = createNode({
-                              mother: clientTong,
-                              text: client,
+                              ],
                               style: {
-                                display: "inline-block",
-                                position: "relative",
-                                fontSize: String(clientPopupWordSize) + ea,
-                                fontWeight: String(500),
-                                color: colorChip.white,
-                                paddingLeft: String(clientPopupWordPadding) + ea,
-                                paddingRight: String(clientPopupWordPadding) + ea,
-                                paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
-                                paddingBottom: String(clientPopupWordPaddingHeightPadding) + ea,
+                                position: "fixed",
+                                top: String(0),
+                                left: String(0),
+                                width: String(100) + '%',
+                                height: String(100) + '%',
+                                background: "transparent",
+                                zIndex: String(2),
                               }
                             });
-                            widthArr.push(clientDom.getBoundingClientRect().width);
+
+                            clientTong = createNode({
+                              mother: this,
+                              events: [
+                                {
+                                  type: [ "click", "contextmenu" ],
+                                  event: function (e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                  }
+                                }
+                              ],
+                              style: {
+                                position: "absolute",
+                                bottom: String(weekBlockHeight + clientPopupTopMargin) + ea,
+                                left: String(0) + ea,
+                                width: String(600) + ea,
+                                borderRadius: String(5) + "px",
+                                background: colorChip.gradientGreen,
+                                zIndex: String(2),
+                                paddingTop: String(clientPopupWordPaddingTop) + ea,
+                                paddingBottom: String(clientPopupWordPaddingBottom) + ea,
+                                animation: "fadeuplite 0.2s ease forwards",
+                                transition: "all 0s ease",
+                              }
+                            });
+
+                            widthArr = [];
+                            for (let client of clients) {
+                              clientDom = createNode({
+                                mother: clientTong,
+                                text: client,
+                                style: {
+                                  display: "inline-block",
+                                  position: "relative",
+                                  fontSize: String(clientPopupWordSize) + ea,
+                                  fontWeight: String(500),
+                                  color: colorChip.white,
+                                  paddingLeft: String(clientPopupWordPadding) + ea,
+                                  paddingRight: String(clientPopupWordPadding) + ea,
+                                  paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
+                                  paddingBottom: String(clientPopupWordPaddingHeightPadding) + ea,
+                                }
+                              });
+                              widthArr.push(clientDom.getBoundingClientRect().width);
+                            }
+
+                            widthArr.sort((a, b) => { return b - a; });
+
+                            clientTong.style.width = String(widthArr[0]) + ea;
+                            clientTong.style.left = withOut(50, widthArr[0] / 2, ea);
                           }
-
-                          widthArr.sort((a, b) => { return b - a; });
-
-                          clientTong.style.width = String(widthArr[0]) + ea;
-                          clientTong.style.left = withOut(50, widthArr[0] / 2, ea);
                         }
                       }
                     }
-
+                  } catch (e) {
+                    console.log(e);
                   }
                 }
               },
               {
                 type: "contextmenu",
-                event: function (e) {
+                event: async function (e) {
                   e.stopPropagation();
                   e.preventDefault();
                   const self = this;
-                  const toggle = this.getAttribute("toggle");
-                  const thisDate = new Date(this.getAttribute("value"));
-                  const thisOk = this.querySelector('.' + okClassName);
-                  const thisCancel = this.querySelector('.' + cancelClassName);
-                  const thisWords = this.querySelector('.' + numberClassName);
-                  const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
-                  const thisBack = this.querySelector('.' + backClassName);
-                  const pastBoo = (this.getAttribute("past") === "true");
-                  const mode = thisOk.getAttribute("mode");
-                  let index, first, last;
-                  let num;
-                  let clients, clientTong, clientDom, widthArr;
-                  if (!pastBoo) {
-                    if (mode !== "projects") {
-                      index = instance.dateDoms.findIndex((d) => { return d === self; });
-                      if (toggle === "on") {
-                        num = 1;
-                        last = index;
-                        while (instance.dateDoms[index + num].getAttribute("toggle") === "on") {
-                          last = index + num;
-                          num++;
+                  try {
+                    const toggle = this.getAttribute("toggle");
+                    const thisDate = new Date(this.getAttribute("value"));
+                    const thisOk = this.querySelector('.' + okClassName);
+                    const thisCancel = this.querySelector('.' + cancelClassName);
+                    const thisWords = this.querySelector('.' + numberClassName);
+                    const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
+                    const thisBack = this.querySelector('.' + backClassName);
+                    const pastBoo = (this.getAttribute("past") === "true");
+                    const mode = thisOk.getAttribute("mode");
+                    let index, first, last;
+                    let num;
+                    let clients, clientTong, clientDom, widthArr;
+                    if (!pastBoo) {
+                      if (mode !== "projects") {
+                        index = instance.dateDoms.findIndex((d) => { return d === self; });
+                        if (toggle === "on") {
+                          num = 1;
+                          last = index;
+                          while (instance.dateDoms[index + num].getAttribute("toggle") === "on") {
+                            last = index + num;
+                            num++;
+                          }
+                          num = 1;
+                          first = index;
+                          while (instance.dateDoms[index - num].getAttribute("toggle") === "on") {
+                            first = index - num;
+                            num++;
+                          }
+                        } else {
+                          first = index;
+                          last = index;
                         }
-                        num = 1;
-                        first = index;
-                        while (instance.dateDoms[index - num].getAttribute("toggle") === "on") {
-                          first = index - num;
-                          num++;
+                        for (let i = first; i < last + 1; i++) {
+                          instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
+                          instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
+                          instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.black;
+                          instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
+                          instance.dateDoms[i].querySelector('.' + backClassName).style.background = "transparent";
+                          instance.dateDoms[i].setAttribute("toggle", "off");
                         }
+                        await possibleUpdate();
                       } else {
-                        first = index;
-                        last = index;
-                      }
-                      for (let i = first; i < last + 1; i++) {
-                        instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
-                        instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
-                        instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.black;
-                        instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
-                        instance.dateDoms[i].querySelector('.' + backClassName).style.background = "transparent";
-                        instance.dateDoms[i].setAttribute("toggle", "off");
-                      }
-                    } else {
-                      if (this.firstChild.getAttribute("clients") !== null) {
-                        clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
-                        if (clients.length > 0) {
-                          createNode({
-                            mother: this,
-                            events: [
-                              {
-                                type: [ "click", "contextmenu" ],
-                                event: function (e) {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  self.removeChild(self.lastChild);
-                                  self.removeChild(self.lastChild);
+                        if (this.firstChild.getAttribute("clients") !== null) {
+                          clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
+                          if (clients.length > 0) {
+                            createNode({
+                              mother: this,
+                              events: [
+                                {
+                                  type: [ "click", "contextmenu" ],
+                                  event: function (e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    self.removeChild(self.lastChild);
+                                    self.removeChild(self.lastChild);
+                                  }
                                 }
-                              }
-                            ],
-                            style: {
-                              position: "fixed",
-                              top: String(0),
-                              left: String(0),
-                              width: String(100) + '%',
-                              height: String(100) + '%',
-                              background: "transparent",
-                              zIndex: String(2),
-                            }
-                          });
-
-                          clientTong = createNode({
-                            mother: this,
-                            events: [
-                              {
-                                type: [ "click", "contextmenu" ],
-                                event: function (e) {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                }
-                              }
-                            ],
-                            style: {
-                              position: "absolute",
-                              bottom: String(weekBlockHeight + clientPopupTopMargin) + ea,
-                              left: String(0) + ea,
-                              width: String(600) + ea,
-                              borderRadius: String(5) + "px",
-                              background: colorChip.gradientGreen,
-                              zIndex: String(2),
-                              paddingTop: String(clientPopupWordPaddingTop) + ea,
-                              paddingBottom: String(clientPopupWordPaddingBottom) + ea,
-                              animation: "fadeuplite 0.2s ease forwards",
-                              transition: "all 0s ease",
-                            }
-                          });
-
-                          widthArr = [];
-                          for (let client of clients) {
-                            clientDom = createNode({
-                              mother: clientTong,
-                              text: client,
+                              ],
                               style: {
-                                display: "inline-block",
-                                position: "relative",
-                                fontSize: String(clientPopupWordSize) + ea,
-                                fontWeight: String(500),
-                                color: colorChip.white,
-                                paddingLeft: String(clientPopupWordPadding) + ea,
-                                paddingRight: String(clientPopupWordPadding) + ea,
-                                paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
-                                paddingBottom: String(clientPopupWordPaddingHeightPadding) + ea,
+                                position: "fixed",
+                                top: String(0),
+                                left: String(0),
+                                width: String(100) + '%',
+                                height: String(100) + '%',
+                                background: "transparent",
+                                zIndex: String(2),
                               }
                             });
-                            widthArr.push(clientDom.getBoundingClientRect().width);
+
+                            clientTong = createNode({
+                              mother: this,
+                              events: [
+                                {
+                                  type: [ "click", "contextmenu" ],
+                                  event: function (e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                  }
+                                }
+                              ],
+                              style: {
+                                position: "absolute",
+                                bottom: String(weekBlockHeight + clientPopupTopMargin) + ea,
+                                left: String(0) + ea,
+                                width: String(600) + ea,
+                                borderRadius: String(5) + "px",
+                                background: colorChip.gradientGreen,
+                                zIndex: String(2),
+                                paddingTop: String(clientPopupWordPaddingTop) + ea,
+                                paddingBottom: String(clientPopupWordPaddingBottom) + ea,
+                                animation: "fadeuplite 0.2s ease forwards",
+                                transition: "all 0s ease",
+                              }
+                            });
+
+                            widthArr = [];
+                            for (let client of clients) {
+                              clientDom = createNode({
+                                mother: clientTong,
+                                text: client,
+                                style: {
+                                  display: "inline-block",
+                                  position: "relative",
+                                  fontSize: String(clientPopupWordSize) + ea,
+                                  fontWeight: String(500),
+                                  color: colorChip.white,
+                                  paddingLeft: String(clientPopupWordPadding) + ea,
+                                  paddingRight: String(clientPopupWordPadding) + ea,
+                                  paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
+                                  paddingBottom: String(clientPopupWordPaddingHeightPadding) + ea,
+                                }
+                              });
+                              widthArr.push(clientDom.getBoundingClientRect().width);
+                            }
+
+                            widthArr.sort((a, b) => { return b - a; });
+
+                            clientTong.style.width = String(widthArr[0]) + ea;
+                            clientTong.style.left = withOut(50, widthArr[0] / 2, ea);
                           }
-
-                          widthArr.sort((a, b) => { return b - a; });
-
-                          clientTong.style.width = String(widthArr[0]) + ea;
-                          clientTong.style.left = withOut(50, widthArr[0] / 2, ea);
                         }
                       }
                     }
+                  } catch (e) {
+                    console.log(e);
                   }
                 }
               },
@@ -1368,6 +1515,35 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       mother.removeChild(mother.lastChild);
     }
 
+    this.selection = [];
+    for (let { start, end } of this.realtimeDesigner.possible) {
+      if (dateToString(start) === dateToString(end)) {
+        targetDom = findByAttribute(this.dateDoms, [ "year", "month", "date" ], [ start.getFullYear(), start.getMonth() + 1, start.getDate() ]);
+        if (targetDom !== null) {
+          targetDom.click();
+        }
+        this.selection = [];
+      } else {
+        targetDom = findByAttribute(this.dateDoms, [ "year", "month", "date" ], [ start.getFullYear(), start.getMonth() + 1, start.getDate() ]);
+        if (targetDom !== null) {
+          targetDom.click();
+        }
+        targetDom = findByAttribute(this.dateDoms, [ "year", "month", "date" ], [ end.getFullYear(), end.getMonth() + 1, end.getDate() ]);
+        if (targetDom !== null) {
+          targetDom.click();
+        }
+        this.selection = [];
+      }
+    }
+
+    [ projectPannel, calendarPannel ] = pannelDoms;
+    if (this.possiblePannelStatus.project) {
+      projectPannel.click();
+    }
+    if (this.possiblePannelStatus.calendar) {
+      calendarPannel.click();
+    }
+
   } catch (e) {
     console.log(e);
   }
@@ -1583,7 +1759,7 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
   if (!this.middleMode) {
 
     listIcon.addEventListener("click", function (e) {
-      blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general");
+      blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=calendar");
     });
 
     previousIcon.addEventListener("click", function (e) {
@@ -1670,11 +1846,7 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
   }
 
   rInitialIcon.addEventListener("click", function (e) {
-    if (instance.proid === null) {
-      window.alert("의뢰서를 선택해주세요!");
-    } else {
-      window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + instance.proid;
-    }
+    blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=calendar");
   });
 
   mInitialIcon.addEventListener("click", async function (e) {
@@ -1718,63 +1890,31 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
   });
 
   aInitialIcon.addEventListener("click", function (e) {
-    if (instance.proid === null) {
-      if (window.confirm(designer.designer + " 디자이너님에게 디자이너 콘솔 알림톡을 전송합니다. 확실합니까?")) {
-        GeneralJs.ajaxJson({
-          method: "designerConsole",
-          name: designer.designer,
-          phone: designer.information.phone,
-          option: {
-            desid: designer.desid,
-            designer: designer.designer,
-            host: GHOSTHOST,
-            path: "console",
-          }
-        }, "/alimTalk").then(() => {
-          return GeneralJs.ajaxJson({
-            page: "possible",
-            mode: "send",
-            who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
-            desid: designer.desid,
-          }, "/ghostDesigner_updateAnalytics");
-        }).then(() => {
-          instance.mother.greenAlert("알림톡이 전송되었습니다!");
-        }).catch((err) => {
-          console.log(err);
-        });
-      } else {
-        instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
-      }
+    if (window.confirm(designer.designer + " 디자이너님에게 디자이너 콘솔 알림톡을 전송합니다. 확실합니까?")) {
+      GeneralJs.ajaxJson({
+        method: "designerConsole",
+        name: designer.designer,
+        phone: designer.information.phone,
+        option: {
+          desid: designer.desid,
+          designer: designer.designer,
+          host: GHOSTHOST,
+          path: "console",
+        }
+      }, "/alimTalk").then(() => {
+        return GeneralJs.ajaxJson({
+          page: "possible",
+          mode: "send",
+          who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+          desid: designer.desid,
+        }, "/ghostDesigner_updateAnalytics");
+      }).then(() => {
+        instance.mother.greenAlert("알림톡이 전송되었습니다!");
+      }).catch((err) => {
+        console.log(err);
+      });
     } else {
-      if (window.confirm(designer.designer + " 디자이너님에게 " + instance.client.name + " 고객님 홈스타일링 의뢰서 알림톡을 전송합니다. 확실합니까?")) {
-        GeneralJs.ajaxJson({
-          method: "designerConsoleRequest",
-          name: designer.designer,
-          phone: designer.information.phone,
-          option: {
-            desid: designer.desid,
-            designer: designer.designer,
-            client: instance.client.name,
-            host: GHOSTHOST,
-            path: "console",
-            mode: "request",
-            cliid: instance.client.cliid,
-          }
-        }, "/alimTalk").then(() => {
-          return GeneralJs.ajaxJson({
-            page: "possible",
-            mode: "send",
-            who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
-            desid: designer.desid,
-          }, "/ghostDesigner_updateAnalytics");
-        }).then(() => {
-          instance.mother.greenAlert("알림톡이 전송되었습니다!");
-        }).catch((err) => {
-          console.log(err);
-        });
-      } else {
-        instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
-      }
+      instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
     }
   });
 
@@ -1910,9 +2050,6 @@ DesignerJs.prototype.possibleView = async function () {
     });
 
     //launching
-    this.proid = null;
-    this.project = null;
-    this.client = null;
     this.possibleDetailLaunching(this.desid);
 
   } catch (e) {

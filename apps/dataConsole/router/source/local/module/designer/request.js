@@ -92,11 +92,15 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
     loading = dom;
     return ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getProjects", { equal: true });
   }).then((projects) => {
-    instance.designers.setProjects(projects);
-    return ajaxJson({
-      noFlat: true,
-      whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
-    }, "/getClients", { equal: true });
+    if (projects.length === 0) {
+      return [];
+    } else {
+      instance.designers.setProjects(projects);
+      return ajaxJson({
+        noFlat: true,
+        whereQuery: { $or: projects.map((obj) => { return { cliid: obj.cliid } }) }
+      }, "/getClients", { equal: true });
+    }
   }).then((clients) => {
     loading.parentNode.removeChild(loading);
     instance.designers.setClients(clients);
