@@ -246,7 +246,7 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDesigner) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate, isMac } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -410,7 +410,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
     daydayMargin = <%% 20, 20, 20, 20, 4 %%>;
     daydaySize = <%% 16, 16, 16, 16, 4 %%>;
-    daydayTextTop = <%% 16, 16, 16, 16, 4 %%>;
+    daydayTextTop = <%% (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 4 %%>;
     daydayBarTop = <%% 16, 16, 16, 16, 4 %%>;
     daydayBarBottom = <%% 18, 18, 18, 18, 4 %%>;
     daydayIndent = <%% 7, 7, 7, 7, 0 %%>;
@@ -425,7 +425,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     functionPannelBlockHeight = <%% 24, 24, 24, 24, 5 %%>;
     functionPannelSize = <%% 14, 14, 14, 14, 3 %%>;
     functionPannelLeft = <%% 18, 18, 18, 18, 4 %%>;
-    functionPannelTextTop0 = <%% 2, 2, 2, 2, 0 %%>;
+    functionPannelTextTop0 = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0 %%>;
     functionPannelTextTop1 = <%% 3, 3, 3, 3, 0 %%>;
 
     clientPopupWordPadding = <%% 18, 18, 18, 18, 1 %%>;
@@ -2262,8 +2262,8 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
   modeCircleTop = isMac() ? 7 : 5;
   blockMargin = 6;
   blockHeight = 36;
-  textTop = 7;
-  titleBottomMargin = 16;
+  textTop = isMac() ? 7 : 8;
+  titleBottomMargin = isMac() ? 16 : 13;
 
   dateMatrix = getDateMatrix(now.getFullYear(), now.getMonth());
   map = [];

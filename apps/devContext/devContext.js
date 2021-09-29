@@ -72,6 +72,7 @@ DevContext.prototype.launching = async function () {
     // await ghostRequest("print", { cliid: "c2109_aa98s" });
 
 
+    /*
 
     const apartNameSearch = async function (words) {
       const apartSearch = async function (words) {
@@ -172,18 +173,14 @@ DevContext.prototype.launching = async function () {
 
       }
     }
-
-
-
     const clients = await back.getClientsByQuery({});
-
-    for (var i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i++) {
       console.log(i, clients[i].name);
       console.log(await apartNameSearch(clients[i].requests[0].request.space.address.value));
       console.log(`===============================`);
     }
 
-
+    */
 
 
     // await apartSearch("서울 광진구 아차산로70길 62 광장현대3단지아파트")
