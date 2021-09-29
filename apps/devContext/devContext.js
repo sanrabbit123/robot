@@ -72,6 +72,124 @@ DevContext.prototype.launching = async function () {
     // await ghostRequest("print", { cliid: "c2109_aa98s" });
 
 
+
+    const apartNameSearch = async function (words) {
+      const apartSearch = async function (words) {
+        const protocol = "https:";
+        const host = "search.naver.com";
+        const path = "/search.naver";
+        const booKeywords = "플레이스";
+        const token = "__split__";
+        const junkList = [
+          "로딩중",
+          "우편번호",
+          "도로명",
+          "지번",
+          "이 주소의 장소",
+          "길찾기",
+          "VIEW",
+          "문서 저장하기",
+          "Keep에 저장",
+          "전체",
+        ]
+        try {
+          const url = `${protocol}//${host}${path}?query=${global.encodeURIComponent(words)}`;
+          let response, arr, rawString, window, document, html, link;
+
+          response = await requestSystem(url);
+
+          if (response.status < 300) {
+            const { data } = response;
+            if ((new RegExp(booKeywords, "gi")).test(data)) {
+
+              rawString = data.replace(/<[^\>]+>/gi, token);
+              arr = rawString.split(token);
+              arr = arr.map((str) => { return str.trim(); }).filter((str) => { return str.trim() !== ''; });
+              arr = arr.slice(arr.findIndex((str) => { return str.trim() === booKeywords }) + 1);
+              arr = arr.filter((str) => { return !junkList.includes(str.trim()); });
+              arr = arr.map((str) => { if (/^[\'\"]/.test(str.trim()) || /[\'\"]$/.test(str.trim())) { return str.trim().slice(1, -1); } else { return str.trim(); } });
+              arr = arr.filter((str) => { return !(/function/g.test(str) || /var/g.test(str) || /root/g.test(str) || /flex/g.test(str)) });
+              arr = arr.filter((str) => { return str.trim() !== '' && str.trim() !== '|' && str.trim() !== '~' });
+              arr = arr.slice(0, arr.findIndex((str) => { return /더보기/gi.test(str); }));
+              arr = arr.filter((str) => { return str.trim().replace(/[0-9\-]/gi, '') !== '' });
+
+              return arr;
+            } else {
+              return null;
+              throw new Error("invalid words");
+            }
+          } else {
+            throw new Error("response error");
+          }
+        } catch (e) {
+          console.log(e.message);
+          return null;
+        }
+      }
+      const limit = 5;
+      let num, resultArr, addressArr, targetIndex, fromClient, final;
+      num = 0;
+      do {
+        resultArr = await apartSearch(words);
+        num++;
+      } while (!Array.isArray(resultArr) && num <= limit);
+
+      if (resultArr === null) {
+        return null;
+      } else {
+        addressArr = words.split(' ').map((i) => { return i.trim(); });
+        targetIndex = null;
+        for (let i = 0; i < addressArr.length; i++) {
+          if (/[동로가리길]$/i.test(addressArr[i])) {
+            targetIndex = i;
+            break;
+          }
+        }
+        fromClient = addressArr.slice(targetIndex + 2).map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).join(' ');
+        if (resultArr.slice(0, 2).every((s) => { return (new RegExp("^" + words.slice(0, 2), 'i')).test(s); })) {
+          final = fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
+        } else {
+          if (/^[a-zA-Z가-힣0-9]/.test(resultArr[1].trim())) {
+            final = resultArr[1].replace(/\([^\)]+\)/gi, '').trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
+          } else {
+            final = fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
+          }
+        }
+        if (final === '') {
+          return null;
+        } else {
+          if (final.replace(/[0-9 \-]/gi, '') === '') {
+            return null;
+          } else {
+            final = final.split(' ').map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).filter((str) => { return str.replace(/[0-9\-동호]/gi, '') !== ''; }).join(' ').trim();
+            if (final !== '') {
+              return final;
+            } else {
+              return null;
+            }
+          }
+        }
+
+      }
+    }
+
+
+
+    const clients = await back.getClientsByQuery({});
+
+    for (var i = 0; i < 100; i++) {
+      console.log(i, clients[i].name);
+      console.log(await apartNameSearch(clients[i].requests[0].request.space.address.value));
+      console.log(`===============================`);
+    }
+
+
+
+
+    // await apartSearch("서울 광진구 아차산로70길 62 광장현대3단지아파트")
+
+
+
     // 현금영수증 발급
     // const url = "https://iniapi.inicis.com/api/v1/receipt";
     // const headers = { "Content-type": " application/x-www-form-urlencoded;charset=utf-8" };
