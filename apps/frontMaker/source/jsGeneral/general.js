@@ -743,9 +743,13 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           for (let a of style.attribute) {
             if (typeof a === "object") {
               for (let key in a) {
-                dom_clone.setAttribute(key, a[key]);
+                dom_clone.setAttribute(key, String(a[key]));
               }
             }
+          }
+        } else if (typeof style.attribute === "object" && style.attribute !== null) {
+          for (let key in style.attribute) {
+            dom_clone.setAttribute(key, String(style.attribute[key]));
           }
         }
         delete style.attribute;
@@ -763,16 +767,25 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       for (let i in targetStyle) {
         dom_clone.style[i] = targetStyle[i];
       }
-      if (style.events !== undefined && Array.isArray(style.events)) {
-        for (let obj of style.events) {
-          if (Array.isArray(obj.type)) {
-            for (let str of obj.type) {
-              dom_clone.addEventListener(str, obj.event);
+      if (style.event !== undefined) {
+        style.events = style.event;
+      }
+      if (style.events !== undefined) {
+        if (Array.isArray(style.events)) {
+          for (let obj of style.events) {
+            if (Array.isArray(obj.type)) {
+              for (let str of obj.type) {
+                dom_clone.addEventListener(str, obj.event);
+              }
+            } else if (typeof obj.type === "string") {
+              dom_clone.addEventListener(obj.type, obj.event);
+            } else {
+              throw new Error("invaild type");
             }
-          } else if (typeof obj.type === "string") {
-            dom_clone.addEventListener(obj.type, obj.event);
-          } else {
-            throw new Error("invaild type");
+          }
+        } else if (typeof style.events === "object" && style.events !== null) {
+          for (let type in style.events) {
+            dom_clone.addEventListener(type, style.events[type]);
           }
         }
       }
@@ -814,9 +827,13 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           for (let a of style.attribute) {
             if (typeof a === "object") {
               for (let key in a) {
-                dom_clone.setAttribute(key, a[key]);
+                dom_clone.setAttribute(key, String(a[key]));
               }
             }
+          }
+        } else if (typeof style.attribute === "object" && style.attribute !== null) {
+          for (let key in style.attribute) {
+            dom_clone.setAttribute(key, String(style.attribute[key]));
           }
         }
         delete style.attribute;
@@ -845,16 +862,25 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       for (let i in targetStyle) {
         dom_clone.style[i] = targetStyle[i];
       }
-      if (style.events !== undefined && Array.isArray(style.events)) {
-        for (let obj of style.events) {
-          if (Array.isArray(obj.type)) {
-            for (let str of obj.type) {
-              dom_clone.addEventListener(str, obj.event);
+      if (style.event !== undefined) {
+        style.events = style.event;
+      }
+      if (style.events !== undefined) {
+        if (Array.isArray(style.events)) {
+          for (let obj of style.events) {
+            if (Array.isArray(obj.type)) {
+              for (let str of obj.type) {
+                dom_clone.addEventListener(str, obj.event);
+              }
+            } else if (typeof obj.type === "string") {
+              dom_clone.addEventListener(obj.type, obj.event);
+            } else {
+              throw new Error("invaild type");
             }
-          } else if (typeof obj.type === "string") {
-            dom_clone.addEventListener(obj.type, obj.event);
-          } else {
-            throw new Error("invaild type");
+          }
+        } else if (typeof style.events === "object" && style.events !== null) {
+          for (let type in style.events) {
+            dom_clone.addEventListener(type, style.events[type]);
           }
         }
       }

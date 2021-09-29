@@ -69,6 +69,8 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("* 1.1)"));
 
 
+    // await ghostRequest("print", { cliid: "c2109_aa98s" });
+
 
     // 현금영수증 발급
     // const url = "https://iniapi.inicis.com/api/v1/receipt";
@@ -1177,9 +1179,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이혜지",
-    //     designer: "김지은",
-    //     link: "https://drive.google.com/drive/folders/188uxw3ktwKy8JA7joGgoZ7yjew_5IrkM",
+    //     client: "백효진",
+    //     designer: "강진아",
+    //     link: "https://drive.google.com/drive/folders/1lLWZfNaDriKPb_hmWbBgI9kNUTWXuKz6",
     //   },
     // ]);
 
@@ -1199,7 +1201,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p106");
+    // await this.getCorePortfolio("p120");
 
 
     // aspirant to designer

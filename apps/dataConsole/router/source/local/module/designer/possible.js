@@ -246,7 +246,7 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDesigner) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, equalJson, dateToString, stringToDate } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -325,6 +325,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       updateQuery = { desid };
       updateQuery.count = {};
       tempDate = new Date();
+      tempDate.setDate(1);
       for (let i = 0; i < futureLength; i++) {
         keyName = countKeyMake(tempDate);
         updateQuery.count[keyName] = 5;
@@ -351,6 +352,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       delete realtimeDesigner._id;
 
       tempDate = new Date();
+      tempDate.setDate(1);
       updateBoo = false;
       for (let i = 0; i < futureLength; i++) {
         keyName = countKeyMake(tempDate);
@@ -1622,6 +1624,31 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       calendarPannel.click();
     }
 
+    if (typeof GeneralJs.stacks.motherScrollEvent === "function") {
+      totalMother.removeEventListener("scroll", GeneralJs.stacks.motherScrollEvent);
+    }
+    GeneralJs.stacks.motherScrollEvent = (e) => {
+      let scrollValueFrom, scrollValueTo;
+      let topMap, targetDomsIndex;
+
+      setDebounce(() => {
+        scrollValueFrom = (outerMargin * 2);
+        scrollValueTo = (window.innerHeight - belowHeight) - (instance.titleFields[0].getBoundingClientRect().height * 1.5);
+        topMap = instance.titleFields.map((dom, index) => { return [ dom.getBoundingClientRect().top, index ]; });
+        targetDomsIndex = topMap.filter((arr) => { return (scrollValueFrom <= arr[0] && arr[0] <= scrollValueTo); }).map((arr) => { return arr[1]; });
+
+        for (let i = 0; i < instance.titleFields.length; i++) {
+          if (targetDomsIndex.includes(i)) {
+            instance.titleFields[i].firstChild.style.color = colorChip.green;
+          } else {
+            instance.titleFields[i].firstChild.style.color = colorChip.black;
+          }
+        }
+
+      }, "baseScroll");
+    }
+    totalMother.addEventListener("scroll", GeneralJs.stacks.motherScrollEvent);
+
   } catch (e) {
     console.log(e);
   }
@@ -2130,9 +2157,17 @@ DesignerJs.prototype.possibleDetailSearchBox = function () {
             event: function (e) {
               e.preventDefault();
               e.stopPropagation();
-              instance.possibleDetailSearchParsing();
+              let loading;
               totalMother.removeChild(totalMother.lastChild);
-              totalMother.removeChild(totalMother.lastChild);
+              instance.mother.loadingRun().then((dom) => {
+                loading = dom;
+                return instance.possibleDetailSearchParsing();
+              }).then(() => {
+                loading.remove();
+                totalMother.removeChild(totalMother.lastChild);
+              }).catch((err) => {
+                console.log(err);
+              })
             }
           }
         ]
@@ -2206,6 +2241,14 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
   let num;
   let blockMargin;
   let blockHeight, textTop;
+  let titleBottomMargin;
+  let conditionReload;
+
+  this.searchSelection = [];
+  this.searchDomTong = [];
+  this.searchCheckTong = [];
+  this.searchCondition.conditions = [];
+  this.searchCondition.blocks = [];
 
   motherWidth = mother.getBoundingClientRect().width;
   titleSize = 25;
@@ -2220,6 +2263,7 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
   blockMargin = 6;
   blockHeight = 36;
   textTop = 7;
+  titleBottomMargin = 16;
 
   dateMatrix = getDateMatrix(now.getFullYear(), now.getMonth());
   map = [];
@@ -2244,8 +2288,8 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
 
     tempObj = {};
     tempObj.text = "initial";
-    tempObj.year = 0;
-    tempObj.month = 0;
+    tempObj.year = Number(year.replace(/[^0-9]/gi, ''));
+    tempObj.month = Number(month.replace(/[^0-9]/gi, ''));
     tempObj.date = {};
     tempObj.date.first = 0;
     tempObj.date.last = 0;
@@ -2302,8 +2346,8 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
         style: {
           position: "absolute",
           top: String(modeTop + modeCircleTop) + ea,
-          right: String((modeRight * 2) + modeWidth + modeMargin) + ea,
-          background: colorChip.black,
+          right: String(0 + modeWidth + modeMargin) + ea,
+          background: colorChip.deactive,
           width: String((radius - 1) * 2) + ea,
           height: String((radius - 1) * 2) + ea,
           borderRadius: String((radius - 1) * 2) + ea,
@@ -2315,7 +2359,7 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
         style: {
           position: "absolute",
           top: String(modeTop) + ea,
-          right: String(modeRight * 2) + ea,
+          right: String(0) + ea,
           fontSize: String(size - 1) + ea,
           fontWeight: String(500),
           color: colorChip.black,
@@ -2324,107 +2368,19 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
           {
             type: "click",
             event: function (e) {
-              let targetTongs;
-              let children;
-              targetTongs = [];
               for (let b of searchCondition.blocks) {
-                children = b.querySelectorAll(".hoverDefault_lite");
-                for (let c of children) {
-                  targetTongs.push(c);
+                if (b.querySelector("svg") !== null) {
+                  b.style.background = colorChip.deactive;
+                  b.firstChild.firstChild.setAttribute("fill", colorChip.white);
+                  b.setAttribute("toggle", "off");
+                } else {
+                  b.style.background = colorChip.gray5;
+                  b.firstChild.style.color = colorChip.white;
+                  b.setAttribute("toggle", "off");
                 }
               }
-              for (let dom of targetTongs) {
-                dom.setAttribute("toggle", "off");
-                dom.firstChild.style.background = colorChip.gray2;
-                dom.lastChild.style.color = colorChip.black;
-              }
+              instance.searchSelection = [];
               searchCondition.conditions = [];
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "absolute",
-          top: String(modeTop + modeCircleTop) + ea,
-          right: String(modeRight + modeWidth + modeMargin) + ea,
-          background: searchCondition.mode === "and" ? colorChip.green : colorChip.deactive,
-          width: String((radius - 1) * 2) + ea,
-          height: String((radius - 1) * 2) + ea,
-          borderRadius: String((radius - 1) * 2) + ea,
-        }
-      },
-      {
-        text: "교집합",
-        class: [ "hoverDefault_lite" ],
-        style: {
-          position: "absolute",
-          top: String(modeTop) + ea,
-          right: String(modeRight) + ea,
-          fontSize: String(size - 1) + ea,
-          fontWeight: String(500),
-          color: searchCondition.mode === "and" ? colorChip.green : colorChip.deactive,
-        },
-        events: [
-          {
-            type: "click",
-            event: function (e) {
-              if (searchCondition.mode === "and") {
-                searchCondition.mode = "or";
-                this.style.color = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 1].style.color = colorChip.green;
-              } else {
-                searchCondition.mode = "and";
-                this.style.color = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 1].style.color = colorChip.deactive;
-              }
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "absolute",
-          top: String(modeTop + modeCircleTop) + ea,
-          right: String(0 + modeWidth + modeMargin) + ea,
-          background: searchCondition.mode === "and" ? colorChip.deactive : colorChip.green,
-          width: String((radius - 1) * 2) + ea,
-          height: String((radius - 1) * 2) + ea,
-          borderRadius: String((radius - 1) * 2) + ea,
-        }
-      },
-      {
-        text: "합집합",
-        class: [ "hoverDefault_lite" ],
-        style: {
-          position: "absolute",
-          top: String(modeTop) + ea,
-          right: String(0) + ea,
-          fontSize: String(size - 1) + ea,
-          fontWeight: String(500),
-          color: searchCondition.mode === "and" ? colorChip.deactive : colorChip.green,
-        },
-        events: [
-          {
-            type: "click",
-            event: function (e) {
-              if (searchCondition.mode === "and") {
-                searchCondition.mode = "or";
-                this.style.color = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 3].style.color = colorChip.deactive;
-              } else {
-                searchCondition.mode = "and";
-                this.style.color = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 3].style.color = colorChip.green;
-              }
             }
           }
         ]
@@ -2442,7 +2398,7 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
       height: "auto",
       fontSize: String(size) + ea,
       fontWeight: String(500),
-      marginBottom: String(20) + ea,
+      marginBottom: String(titleBottomMargin) + ea,
     },
   });
 
@@ -2456,23 +2412,104 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
     },
   });
 
-  domTong = [];
+  conditionReload = () => {
+    instance.searchCondition.conditions = instance.searchDomTong.filter((dom) => {
+      return dom.getAttribute("toggle") === "on";
+    }).map((dom) => {
+      return [ Number(dom.getAttribute("year")), Number(dom.getAttribute("month")), Number(dom.getAttribute("first")), Number(dom.getAttribute("last")) ];
+    });
+  }
+
   num = 0;
   for (let { text, year, month, date: { first, last } } of blockMap) {
 
     if (text !== "initial") {
-      createNode({
+      this.searchDomTong.push(createNode({
         mother: dateBlockMother,
+        attribute: {
+          toggle: "off",
+          exception: text !== "" ? "false" : "true",
+          year,
+          month,
+          first,
+          last
+        },
+        event: {
+          selectstart: (e) => { e.stopPropagation(); e.preventDefault(); },
+          click: function (e) {
+            const exception = (this.getAttribute("exception") === "true");
+            if (!exception) {
+              const toggle = this.getAttribute("toggle");
+              const index = Number(this.getAttribute("index"));
+              const token = "_";
+              let onTong;
+              let yearMonthTong;
+              let targetDom;
+              let filtering;
+              if (toggle === "off") {
+                onTong = [];
+                if (instance.searchSelection.length > 0) {
+                  if (instance.searchSelection[0] >= index) {
+                    for (let i = index; i < instance.searchSelection[0] + 1; i++) {
+                      instance.searchDomTong[i].style.background = colorChip.green;
+                      instance.searchDomTong[i].firstChild.style.color = colorChip.whiteBlack;
+                      instance.searchDomTong[i].setAttribute("toggle", "on");
+                      onTong.push(instance.searchDomTong[i]);
+                    }
+                  } else {
+                    for (let i = instance.searchSelection[0]; i < index + 1; i++) {
+                      instance.searchDomTong[i].style.background = colorChip.green;
+                      instance.searchDomTong[i].firstChild.style.color = colorChip.whiteBlack;
+                      instance.searchDomTong[i].setAttribute("toggle", "on");
+                      onTong.push(instance.searchDomTong[i]);
+                    }
+                  }
+                  instance.searchSelection = [];
+                } else {
+                  this.style.background = colorChip.green;
+                  this.firstChild.style.color = colorChip.whiteBlack;
+                  this.setAttribute("toggle", "on");
+                  instance.searchSelection.push(index);
+                  onTong.push(this);
+                }
+
+                yearMonthTong = [];
+                for (let dom of onTong) {
+                  yearMonthTong.push(dom.getAttribute("year") + token + dom.getAttribute("month"));
+                }
+                yearMonthTong = [ ...(new Set(yearMonthTong)) ];
+                yearMonthTong = yearMonthTong.map((str) => { return str.split(token).map((s) => { return Number(s); }); });
+
+                for (let [ year, month ] of yearMonthTong) {
+                  filtering = (dom) => { return dom.getAttribute("year") === String(year) && dom.getAttribute("month") === String(month); }
+                  if (instance.searchDomTong.filter(filtering).length === onTong.filter(filtering).length) {
+                    targetDom = instance.searchCheckTong.find(filtering);
+                    targetDom.style.background = colorChip.green;
+                    targetDom.firstChild.firstChild.setAttribute("fill", colorChip.whiteBlack);
+                    targetDom.setAttribute("toggle", "on");
+                  }
+                }
+              } else {
+                this.style.background = colorChip.gray5;
+                this.firstChild.style.color = colorChip.white;
+                this.setAttribute("toggle", "off");
+              }
+              conditionReload();
+            }
+          }
+        },
         style: {
           position: "relative",
           display: "inline-block",
           width: "calc(calc(100% - " + String(maxLength * blockMargin) + ea + " - " + String(blockHeight) + ea + ") / " + String(maxLength) + ")",
           height: String(blockHeight) + ea,
-          background: text !== "" ? colorChip.shadow : colorChip.white,
+          background: text !== "" ? colorChip.gray5 : colorChip.white,
           marginRight: String((num % (maxLength + 1)) === maxLength ? 0 : blockMargin) + ea,
           marginBottom: String(blockMargin) + ea,
           borderRadius: String(3) + "px",
           verticalAlign: "top",
+          cursor: text !== "" ? "pointer" : "",
+          transition: "all 0.2s ease",
         },
         children: [
           {
@@ -2489,10 +2526,54 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
             }
           }
         ]
-      });
+      }));
     } else {
-      createNode({
+      this.searchCheckTong.push(createNode({
         mother: dateBlockMother,
+        attribute: {
+          toggle: "off",
+          year,
+          month,
+        },
+        event: {
+          click: function (e) {
+            const toggle = this.getAttribute("toggle");
+            const year = Number(this.getAttribute("year"));
+            const month = Number(this.getAttribute("month"));
+            let targets;
+            targets = instance.searchDomTong.filter((dom) => {
+              return (dom.getAttribute("year") === String(year) && dom.getAttribute("month") === String(month));
+            });
+            if (toggle === "off") {
+
+              for (let dom of targets) {
+                dom.style.background = colorChip.green;
+                dom.firstChild.style.color = colorChip.whiteBlack;
+                dom.setAttribute("toggle", "on");
+              }
+
+              this.style.background = colorChip.green;
+              this.firstChild.firstChild.setAttribute("fill", colorChip.whiteBlack);
+
+              this.setAttribute("toggle", "on");
+
+            } else {
+
+              for (let dom of targets) {
+                dom.style.background = colorChip.gray5;
+                dom.firstChild.style.color = colorChip.white;
+                dom.setAttribute("toggle", "off");
+              }
+
+              this.style.background = colorChip.deactive;
+              this.firstChild.firstChild.setAttribute("fill", colorChip.white);
+              this.setAttribute("toggle", "off");
+
+            }
+            conditionReload();
+            instance.searchSelection = [];
+          }
+        },
         style: {
           position: "relative",
           display: "inline-block",
@@ -2517,11 +2598,17 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
             }
           }
         ]
-      });
+      }));
     }
     num++;
   }
-  searchCondition.blocks = domTong;
+  this.searchDomTong = this.searchDomTong.filter((dom) => {
+    return dom.getAttribute("exception") !== "true";
+  }).map((dom, index) => {
+    dom.setAttribute("index", String(index));
+    return dom;
+  });
+  searchCondition.blocks = this.searchDomTong.concat(this.searchCheckTong);
 
   createNode({
     mother,
@@ -2539,115 +2626,96 @@ DesignerJs.prototype.possibleDetailSearchContents = function (mother) {
 
 }
 
-DesignerJs.prototype.possibleDetailSearchParsing = function () {
+DesignerJs.prototype.possibleDetailSearchParsing = async function () {
   const instance = this;
   const { searchCondition, standardDoms, designers } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
-  const checkListData = this.checkListData();
+  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
   const token = "_";
-  let tempArr, tempObj;
-  let x, y, z;
-  let desidArr, desidArr2;
-  let blocks;
+  try {
+    let tempArr, tempObj, tempDate;
+    let desidArr, desidArr2;
+    let blocks;
+    let realtimes;
+    let boo;
+    let conditions;
+    let num;
 
-  Set.prototype.union = function (setB) {
-    let union = new Set(this);
-    for (let elem of setB) {
-      union.add(elem);
-    }
-    return union;
-  }
-
-  Set.prototype.intersection = function (setB) {
-    let intersection = new Set();
-    for (let elem of setB) {
-      if (this.has(elem)) {
-        intersection.add(elem);
+    if (searchCondition.conditions.length === 0) {
+      desidArr = [];
+      for (let { desid } of designers) {
+        desidArr.push(desid);
       }
-    }
-    return intersection;
-  }
+    } else {
 
-  class SetArray extends Array {
-    union() {
-      let finalSet;
-      finalSet = new Set([]);
-      for (let set of this) {
-        finalSet = finalSet.union(set);
-      }
-      return Array.from(finalSet);
-    }
-    intersection() {
-      let finalSet;
-      if (this.length === 0) {
-        return [];
-      } else {
-        finalSet = this[0];
-        if (this.length > 1) {
-          for (let i = 1; i < this.length; i++) {
-            finalSet = finalSet.intersection(this[i]);
+      realtimes = await ajaxJson({
+        mode: "read",
+        db: "console",
+        collection: "realtimeDesigner",
+        whereQuery: {},
+      }, "/generalMongo", { equal: true });
+
+      conditions = [];
+      num = 0;
+      tempObj = {};
+      for (let [ year, month, first, last ] of searchCondition.conditions) {
+        if (tempObj.start === undefined) {
+          tempObj.start = new Date(year, month - 1, first);
+        }
+        if (searchCondition.conditions[num + 1] !== undefined) {
+          tempDate = new Date(year, month - 1, last);
+          tempDate.setDate(tempDate.getDate() + 1);
+          if (tempDate.getFullYear() === searchCondition.conditions[num + 1][0] && tempDate.getMonth() + 1 === searchCondition.conditions[num + 1][1] && tempDate.getDate() === searchCondition.conditions[num + 1][2]) {
+            tempObj.end = new Date(searchCondition.conditions[num + 1][0], searchCondition.conditions[num + 1][1] - 1, searchCondition.conditions[num + 1][3]);
+          } else {
+            tempObj.end = new Date(year, month - 1, last);
+            conditions.push(tempObj);
+            tempObj = {};
           }
-          return Array.from(finalSet);
         } else {
-          return Array.from(finalSet);
+          tempObj.end = new Date(year, month - 1, last);
+          conditions.push(tempObj);
+        }
+        num++;
+      }
+
+      desidArr = [];
+      for (let { desid, possible } of realtimes) {
+        boo = false;
+        for (let { start, end } of conditions) {
+          for (let { start: possibleStart, end: possibleEnd } of possible) {
+            if (end.valueOf() >= possibleStart.valueOf() && possibleEnd.valueOf() >= start.valueOf()) {
+              boo = true;
+              break;
+            }
+          }
+          if (boo) {
+            break;
+          }
+        }
+        if (boo) {
+          desidArr.push(desid);
         }
       }
     }
-  }
 
-  if (searchCondition.conditions.length === 0) {
-    desidArr = [];
-    for (let { desid } of designers) {
-      desidArr.push(desid);
-    }
-  } else {
-    desidArr = new SetArray();
-    for (let order of searchCondition.conditions) {
-      tempArr = order.split(token);
-      if (tempArr.length !== 3) {
-        throw new Error("invaild order");
+    blocks = [];
+    for (let i = 1; i < standardDoms.length; i++) {
+      if (desidArr.includes(standardDoms[i].getAttribute("desid"))) {
+        standardDoms[i].style.display = "block";
+        blocks.push(standardDoms[i]);
+      } else {
+        standardDoms[i].style.display = "none";
       }
-      x = Number(tempArr[0]);
-      y = Number(tempArr[1]);
-      z = Number(tempArr[2]);
-
-      desidArr2 = [];
-      for (let designer of designers) {
-        if (checkListData[x].children[y].type === "matrix") {
-          tempObj = checkListData[x].children[y].value(designer);
-          tempObj.result = (tempObj.value[z] === 1);
-        } else {
-          tempObj = checkListData[x].children[y].search(designer, z);
-        }
-        if (tempObj.result) {
-          desidArr2.push(designer.desid);
-        }
-      }
-      desidArr.push(new Set(desidArr2));
     }
-    if (searchCondition.mode === "and") {
-      desidArr = desidArr.intersection();
-    } else {
-      desidArr = desidArr.union();
+
+    if (blocks.length > 0) {
+      setTimeout(() => {
+        blocks[0].click();
+      }, 0);
     }
+  } catch (e) {
+    console.log(e);
   }
-
-  blocks = [];
-  for (let i = 1; i < standardDoms.length; i++) {
-    if (desidArr.includes(standardDoms[i].getAttribute("desid"))) {
-      standardDoms[i].style.display = "block";
-      blocks.push(standardDoms[i]);
-    } else {
-      standardDoms[i].style.display = "none";
-    }
-  }
-
-  if (blocks.length > 0) {
-    setTimeout(() => {
-      blocks[0].click();
-    }, 0);
-  }
-
 }
 
 DesignerJs.prototype.possibleView = async function () {
