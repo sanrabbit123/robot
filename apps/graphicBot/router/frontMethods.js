@@ -88,6 +88,8 @@ FrontMethods.prototype.addFrontMethods = async function () {
       if (typeof keyName !== "string") {
         throw new Error("invaild input");
       }
+      console.log("this!");
+      console.log(keyName);
       await sleep(200);
       await ajaxPromise({ key: keyName }, HOSTCONST + "/pressKey");
       await sleep(500);
