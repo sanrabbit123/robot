@@ -72,22 +72,12 @@ DevContext.prototype.launching = async function () {
     // await ghostRequest("print", { cliid: "c2109_aa98s" });
 
 
-    // /*
 
-    const addr = new AddressParser();
-
-
-    const clients = await back.getClientsByQuery({});
-    await requestSystem("http://localhost:3000/apartment", (await addr.apartNameSearch(clients[5].requests[0].request.space.address.value)), {
-      headers: { "Content-Type": "application/json" }
-    });
-
-
-
-
-
-
-    // */
+    // const addr = new AddressParser();
+    // const clients = await back.getClientsByQuery({});
+    // await requestSystem("http://localhost:3000/apartment", (await addr.apartNameSearch(clients[5].requests[0].request.space.address.value)), {
+    //   headers: { "Content-Type": "application/json" }
+    // });
 
 
 
@@ -1221,7 +1211,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p120");
+    // await this.getCorePortfolio("p124");
 
 
     // aspirant to designer
