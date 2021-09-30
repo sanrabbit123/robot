@@ -246,7 +246,7 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDesigner) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate, isMac } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate, isMac, swipePatch } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -255,6 +255,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
   const cookies = getCookiesAll();
   const now = new Date();
   const nowValue = now.valueOf();
+  const between = "&nbsp;&nbsp;&nbsp;&nbsp;";
   const { futureLength, okClassName, cancelClassName, numberClassName, backClassName, nullClassName, generalDateClassName, weekClassName, weekGeneralClassName, titleClassName, titleGeneralName, joinToken, scrollEventName, scrollEventTimeout, dummyDatesClassName, daydayWords, daydayLength, countKeyClass, countKeyMake } = possibleConst;
   try {
     let magin, outerMargin;
@@ -317,6 +318,11 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     let targetDom;
     let pannelDoms;
     let projectPannel, calendarPannel;
+    let daydayVisualLeft;
+    let titleMobileIndent, titleMobileMarginBottom;
+    let sizeVisual;
+    let blockPaddingTop, blockBarBottom;
+    let mobileTotalPaddingTop;
 
     this.designer = designer;
 
@@ -386,34 +392,41 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     allSvgs = [];
 
     margin = 8;
-    outerMargin = <%% (margin * 3), (margin * 3), (margin * 3), (margin * 3), 0 %%>;
+    outerMargin = <%% (margin * 3), (margin * 3), (margin * 3), (margin * 3), 2.5 %%>;
 
     dateBoxOpacity = 0.08;
 
-    size = <%% 16, 16, 16, 16, 4 %%>;
-    titleWidth = <%% 120, 120, 120, 120, 20 %%>;
+    size = <%% 16, 16, 16, 16, 3.6 %%>;
+    sizeVisual = <%% 1, 1, 1, 1, 0.6 %%>;
+    titleWidth = <%% 120, 120, 120, 120, 0 %%>;
     titlePaddingLeft = <%% 5, 5, 5, 5, 0.1 %%>;
     titlePaddingRight = <%% 50, 50, 50, 50, 5 %%>;
     titleLineHeight = 1.55;
+    titleMobileIndent = 0.5;
+    titleMobileMarginBottom = 2;
 
-    weekBlockHeight = <%% 60, 60, 60, 60, 4 %%>;
+    weekBlockHeight = <%% 60, 60, 60, 60, 8.6 %%>;
 
-    blockMarginBottom = <%% 48, 48, 48, 48, 4 %%>;
+    mobileTotalPaddingTop = 14;
+    blockPaddingTop = 5;
+    blockMarginBottom = <%% 48, 48, 48, 48, 12 %%>;
+    blockBarBottom = 2.7;
 
-    dateNumberSize = <%% 18, 18, 18, 18, 4 %%>;
-    dateNumberTop = <%% 15, 15, 15, 15, 4 %%>;
-    dateNumberLeft = <%% 23, 23, 23, 23, 4 %%>;
+    dateNumberSize = <%% 18, 18, 18, 18, 2.9 %%>;
+    dateNumberTop = <%% 15, 15, 15, 15, 1.8 %%>;
+    dateNumberLeft = <%% 23, 23, 23, 23, 0 %%>;
 
     dateIconTop = <%% 18, 18, 18, 18, 4 %%>;
     dateIconWidth = <%% 22, 22, 22, 22, 5 %%>;
     dateIconRight = <%% 24, 24, 24, 24, 4 %%>;
 
     daydayMargin = <%% 20, 20, 20, 20, 4 %%>;
-    daydaySize = <%% 16, 16, 16, 16, 4 %%>;
-    daydayTextTop = <%% (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 4 %%>;
-    daydayBarTop = <%% 16, 16, 16, 16, 4 %%>;
-    daydayBarBottom = <%% 18, 18, 18, 18, 4 %%>;
-    daydayIndent = <%% 7, 7, 7, 7, 0 %%>;
+    daydaySize = <%% 16, 16, 16, 16, 3.3 %%>;
+    daydayTextTop = <%% (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 1.7 %%>;
+    daydayBarTop = <%% 16, 16, 16, 16, 2 %%>;
+    daydayBarBottom = <%% 18, 18, 18, 18, 2 %%>;
+    daydayIndent = <%% 7, 7, 7, 7, 0.8 %%>;
+    daydayVisualLeft = <%% 1, 1, 1, 1, 0 %%>;
 
     functionPannelBottom = <%% 36, 36, 36, 36, 6 %%>;
     functionPannelRight = <%% 10, 10, 10, 10, 3 %%>;
@@ -499,7 +512,12 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                       }
                       dom.firstChild.style.background = colorChip.green;
                       dom.querySelector("aside").style.opacity = String(1);
-                      dom.querySelector("aside").textContent = dom.firstChild.getAttribute("projects");
+                      if (desktop) {
+                        dom.querySelector("aside").textContent = dom.firstChild.getAttribute("projects");
+                      } else {
+                        dom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
+                        dom.querySelector("aside").textContent = dom.firstChild.getAttribute("projects") + " Prj";
+                      }
                       dom.firstChild.style.opacity = String(dateBoxOpacity * Number(dom.firstChild.getAttribute("projects")));
                     }
                   }
@@ -531,6 +549,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                 dom.firstChild.style.opacity = String(dateBoxOpacity);
                 dom.firstChild.setAttribute("projects", String(0));
                 dom.firstChild.setAttribute("clients", JSON.stringify([]));
+                dom.children[1].style.opacity = String(1);
                 if (dom.getAttribute("toggle") === "on") {
                   dom.firstChild.style.background = colorChip.green;
                   if (svg.getAttribute("kind") === "ok") {
@@ -778,6 +797,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       dateMatrix = dateMatrix.nextMatrix();
     }
 
+    if (mobile) {
+      mother.style.paddingTop = String(mobileTotalPaddingTop) + ea;
+    }
+
     this.dateDoms = [];
     this.titleFields = [];
     weekBlocks = [];
@@ -790,7 +813,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           display: "block",
           verticalAlign: "top",
           paddingBottom: String(blockMarginBottom) + ea,
-          paddingTop: String(weekBlockHeight + daydayMargin) + ea,
+          paddingTop: String(desktop ? weekBlockHeight + daydayMargin : blockPaddingTop) + ea,
         }
       });
       if (num === 0) {
@@ -803,7 +826,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             height: String(weekBlockHeight) + ea,
             background: colorChip.white,
             top: String(outerMargin * 2) + ea,
-            left: String(grayBarWidth + (outerMargin * 2) + titleWidth + 1 + daydayIndent) + ea,
+            left: String(grayBarWidth + (outerMargin * 2) + titleWidth + daydayVisualLeft + daydayIndent) + ea,
             boxSizing: "border-box",
             zIndex: String(1),
             borderRadius: String(50) + ea,
@@ -845,67 +868,69 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             ]
           });
         }
-        functionPannel = createNode({
-          mother: block,
-          style: {
-            position: "fixed",
-            bottom: String(belowHeight + functionPannelBottom) + ea,
-            right: String((outerMargin * 2) + functionPannelRight) + ea,
-            width: String(functionPannelWidth) + ea,
-            height: "auto",
-            background: colorChip.white,
-            zIndex: String(1),
-            borderRadius: String(5) + ea,
-            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-            opacity: String(0.95),
-            paddingTop: String(functionPannelPaddingTop) + ea,
-            paddingBottom: String(functionPannelPaddingBottom) + ea,
-          }
-        });
         pannelDoms = [];
-        for (let { name, attribute, event } of functionPannelContents) {
-          pannelDoms.push(createNode({
-            mother: functionPannel,
-            class: [ "hoverDefault_lite" ],
-            attribute,
-            events: [
-              {
-                type: "click",
-                event,
-              }
-            ],
+        if (desktop) {
+          functionPannel = createNode({
+            mother: block,
             style: {
-              position: "relative",
-              display: "block",
-              width: String(100) + '%',
-              height: String(functionPannelBlockHeight) + ea,
-            },
-            children: [
-              {
-                text: name,
-                style: {
-                  position: "absolute",
-                  fontSize: String(functionPannelSize) + ea,
-                  fontWeight: String(600),
-                  color: colorChip.black,
-                  left: String(functionPannelLeft) + ea,
-                  top: String(functionPannelTextTop0) + ea,
+              position: "fixed",
+              bottom: String(belowHeight + functionPannelBottom) + ea,
+              right: String((outerMargin * 2) + functionPannelRight) + ea,
+              width: String(functionPannelWidth) + ea,
+              height: "auto",
+              background: colorChip.white,
+              zIndex: String(1),
+              borderRadius: String(5) + ea,
+              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+              opacity: String(0.95),
+              paddingTop: String(functionPannelPaddingTop) + ea,
+              paddingBottom: String(functionPannelPaddingBottom) + ea,
+            }
+          });
+          for (let { name, attribute, event } of functionPannelContents) {
+            pannelDoms.push(createNode({
+              mother: functionPannel,
+              class: [ "hoverDefault_lite" ],
+              attribute,
+              events: [
+                {
+                  type: "click",
+                  event,
                 }
+              ],
+              style: {
+                position: "relative",
+                display: "block",
+                width: String(100) + '%',
+                height: String(functionPannelBlockHeight) + ea,
               },
-              {
-                text: "off",
-                style: {
-                  position: "absolute",
-                  fontSize: String(functionPannelSize) + ea,
-                  fontWeight: String(300),
-                  fontFamily: "graphik",
-                  color: colorChip.red,
-                  right: String(functionPannelLeft) + ea,
-                  top: String(functionPannelTextTop1) + ea,
+              children: [
+                {
+                  text: name,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(functionPannelSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
+                    left: String(functionPannelLeft) + ea,
+                    top: String(functionPannelTextTop0) + ea,
+                  }
+                },
+                {
+                  text: "off",
+                  style: {
+                    position: "absolute",
+                    fontSize: String(functionPannelSize) + ea,
+                    fontWeight: String(300),
+                    fontFamily: "graphik",
+                    color: colorChip.red,
+                    right: String(functionPannelLeft) + ea,
+                    top: String(functionPannelTextTop1) + ea,
+                  }
                 }
-              }
-            ]
-          }));
+              ]
+            }));
+          }
         }
       }
 
@@ -921,10 +946,12 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         ],
         style: {
           position: "relative",
-          display: "inline-block",
-          width: String(titleWidth - titlePaddingLeft - titlePaddingRight) + ea,
-          paddingLeft: String(titlePaddingLeft) + ea,
-          paddingRight: String(titlePaddingRight) + ea,
+          display: desktop ? "inline-block" : "block",
+          width: desktop ? String(titleWidth - titlePaddingLeft - titlePaddingRight) + ea : withOut(outerMargin * 4, ea),
+          paddingLeft: desktop ? String(titlePaddingLeft) + ea : "",
+          paddingRight: desktop ? String(titlePaddingRight) + ea : "",
+          marginLeft: desktop ? "" : String(outerMargin * 2) + ea,
+          marginBottom: desktop ? "" : String(titleMobileMarginBottom) + ea,
           height: String(100) + '%',
           verticalAlign: "top"
         },
@@ -934,7 +961,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               { year: year.replace(/[^0-9]/g, '') },
               { month: month.replace(/[^0-9]/g, '') },
             ],
-            text: `${year}\n${month}\n<b%========%b>\n<u%가능 : <b class="${countKeyClass}" style="color:${colorChip.green}">${String(instance.realtimeDesigner.count[countKeyMake(new Date(Number(year.replace(/[^0-9]/g, '')), Number(month.replace(/[^0-9]/g, '')) - 1, 1))])}</b>\n진행중 : ${doing}\n대기 : ${standing}%u>`,
+            text: (desktop ?
+              `${year}\n${month}\n<b%========%b>\n<u%가능 : <b class="${countKeyClass}" style="color:${colorChip.green}">${String(instance.realtimeDesigner.count[countKeyMake(new Date(Number(year.replace(/[^0-9]/g, '')), Number(month.replace(/[^0-9]/g, '')) - 1, 1))])}</b>\n진행중 : ${doing}\n대기 : ${standing}%u>`
+              :
+              `${year} ${month}<u%가능 <b class="${countKeyClass}" style="color:${colorChip.green}">${String(instance.realtimeDesigner.count[countKeyMake(new Date(Number(year.replace(/[^0-9]/g, '')), Number(month.replace(/[^0-9]/g, '')) - 1, 1))])}</b>${between}진행중 ${doing}${between}대기 ${standing}%u>`),
             events: [
               {
                 type: "selectstart",
@@ -951,6 +981,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                     const target = this.querySelector('.' + countKeyClass);
                     let whereQuery, updateQuery;
                     instance.realtimeDesigner.count[thisKey] = instance.realtimeDesigner.count[thisKey] + 1;
+                    if (instance.realtimeDesigner.count[thisKey] < 0 || instance.realtimeDesigner.count[thisKey] > 10) {
+                      instance.realtimeDesigner.count[thisKey] = 0;
+                    }
                     target.textContent = String(instance.realtimeDesigner.count[thisKey]);
 
                     whereQuery = { desid };
@@ -1004,6 +1037,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                     const target = this.querySelector('.' + countKeyClass);
                     let whereQuery, updateQuery;
                     instance.realtimeDesigner.count[thisKey] = instance.realtimeDesigner.count[thisKey] - 1;
+                    if (instance.realtimeDesigner.count[thisKey] < 0 || instance.realtimeDesigner.count[thisKey] > 10) {
+                      instance.realtimeDesigner.count[thisKey] = 0;
+                    }
                     target.textContent = String(instance.realtimeDesigner.count[thisKey]);
 
                     whereQuery = { desid };
@@ -1047,6 +1083,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               }
             ],
             style: {
+              position: "relative",
+              left: desktop ? "" : String(titleMobileIndent) + ea,
               fontSize: String(size) + ea,
               fontWeight: String(600),
               color: colorChip.black,
@@ -1054,13 +1092,16 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               cursor: "pointer",
             },
             bold: {
-              fontSize: String(size - 1) + ea,
+              fontSize: String(size - sizeVisual) + ea,
               fontWeight: String(200),
               color: colorChip.deactive,
               lineHeight: String(titleLineHeight),
             },
             under: {
-              fontSize: String(size - 1) + ea,
+              position: desktop ? "" : "absolute",
+              top: desktop ? "" : String(sizeVisual) + ea,
+              right: desktop ? "" : String(titleMobileIndent) + ea,
+              fontSize: String(size - sizeVisual) + ea,
               fontWeight: String(400),
               color: colorChip.black,
               lineHeight: String(titleLineHeight),
@@ -1072,9 +1113,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         mother: block,
         style: {
           position: "relative",
-          display: "inline-block",
+          display: desktop ? "inline-block" : "block",
           verticalAlign: "top",
-          width: withOut(titleWidth, ea),
+          width: desktop ? withOut(titleWidth, ea) : withOut(outerMargin * 4, ea),
+          marginLeft: desktop ? "" : String(outerMargin * 2) + ea,
           height: String(100) + '%',
         }
       });
@@ -1122,18 +1164,18 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                   e.stopPropagation();
                   const self = this;
                   try {
-                    const toggle = this.getAttribute("toggle");
-                    const thisDate = new Date(this.getAttribute("value"));
-                    const thisOk = this.querySelector('.' + okClassName);
-                    const thisCancel = this.querySelector('.' + cancelClassName);
-                    const thisWords = this.querySelector('.' + numberClassName);
-                    const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
-                    const thisBack = this.querySelector('.' + backClassName);
-                    const pastBoo = (this.getAttribute("past") === "true");
-                    const mode = thisOk.getAttribute("mode");
-                    let index, first, last;
-                    let clients, clientTong, clientDom, widthArr;
+                    const pastBoo = (this.getAttribute("past") === "true" || this.getAttribute("value") === "null");
                     if (!pastBoo) {
+                      const toggle = this.getAttribute("toggle");
+                      const thisDate = new Date(this.getAttribute("value"));
+                      const thisOk = this.querySelector('.' + okClassName);
+                      const thisCancel = this.querySelector('.' + cancelClassName);
+                      const thisWords = this.querySelector('.' + numberClassName);
+                      const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
+                      const thisBack = this.querySelector('.' + backClassName);
+                      const mode = thisOk.getAttribute("mode");
+                      let index, first, last;
+                      let clients, clientTong, clientDom, widthArr;
                       if (mode !== "projects") {
                         if (toggle === "off") {
                           index = instance.dateDoms.findIndex((d) => { return d === self; });
@@ -1266,19 +1308,19 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                   e.preventDefault();
                   const self = this;
                   try {
-                    const toggle = this.getAttribute("toggle");
-                    const thisDate = new Date(this.getAttribute("value"));
-                    const thisOk = this.querySelector('.' + okClassName);
-                    const thisCancel = this.querySelector('.' + cancelClassName);
-                    const thisWords = this.querySelector('.' + numberClassName);
-                    const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
-                    const thisBack = this.querySelector('.' + backClassName);
-                    const pastBoo = (this.getAttribute("past") === "true");
-                    const mode = thisOk.getAttribute("mode");
-                    let index, first, last;
-                    let num;
-                    let clients, clientTong, clientDom, widthArr;
+                    const pastBoo = (this.getAttribute("past") === "true" || this.getAttribute("value") === "null");
                     if (!pastBoo) {
+                      const toggle = this.getAttribute("toggle");
+                      const thisDate = new Date(this.getAttribute("value"));
+                      const thisOk = this.querySelector('.' + okClassName);
+                      const thisCancel = this.querySelector('.' + cancelClassName);
+                      const thisWords = this.querySelector('.' + numberClassName);
+                      const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
+                      const thisBack = this.querySelector('.' + backClassName);
+                      const mode = thisOk.getAttribute("mode");
+                      let index, first, last;
+                      let num;
+                      let clients, clientTong, clientDom, widthArr;
                       if (mode !== "projects") {
                         index = instance.dateDoms.findIndex((d) => { return d === self; });
                         if (toggle === "on") {
@@ -1404,6 +1446,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               borderTop: "1px solid " + colorChip.gray3,
               borderLeft: "1px solid " + colorChip.gray3,
               borderRight: (j !== daydayLength - 1 ? "" : "1px solid " + colorChip.gray3),
+              borderBottom: desktop ? "" : (i !== matrix.length - 1 ? "" : "1px solid " + colorChip.gray3),
               borderRadius: String(5) + "px",
               background: (matrix[i][j] === null ? colorChip.gray0 : (pastBoo ? colorChip.gray0 : colorChip.white)),
               transition: "all 0.1s ease",
@@ -1441,6 +1484,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                 color: (pastBoo ? colorChip.deactive : ((j === 0 || j === 6) ? colorChip.red : colorChip.black)),
                 top: String(dateNumberTop) + ea,
                 left: String(dateNumberLeft) + ea,
+                width: desktop ? "" : String(100) + '%',
+                textAlign: desktop ? "" : "center",
               },
               bold: {
                 fontSize: String(dateNumberSize) + ea,
@@ -1464,6 +1509,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               mode: "svg",
               source: instance.mother.returnCheckCircle(pastBoo ? colorChip.deactive : colorChip.green),
               style: {
+                display: desktop ? "block" : "none",
                 position: "absolute",
                 top: String(dateIconTop) + ea,
                 right: String(dateIconRight) + ea,
@@ -1483,6 +1529,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               mode: "svg",
               source: instance.mother.returnCancelCircle(pastBoo ? colorChip.deactive : colorChip.red),
               style: {
+                display: desktop ? "block" : "none",
                 position: "absolute",
                 top: String(dateIconTop) + ea,
                 right: String(dateIconRight) + ea,
@@ -1492,7 +1539,6 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             });
             if (!pastBoo) {
               allSvgs.push(tempSvg);
-
               createNode({
                 mode: "aside",
                 mother: dateBox,
@@ -1503,8 +1549,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                   fontWeight: String(300),
                   fontFamily: "graphik",
                   top: String(dateNumberTop) + ea,
-                  right: String(dateNumberLeft) + ea,
-                  textAlign: "right",
+                  right: desktop ? String(dateNumberLeft) + ea : "",
+                  left: desktop ? "" : String(0) + ea,
+                  width: desktop ? "" : String(100) + '%',
+                  textAlign: desktop ? "right" : "center",
                   opacity: String(0),
                   color: colorChip.darkGreen
                 }
@@ -1521,7 +1569,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         mother: block,
         style: {
           position: "absolute",
-          bottom: String(blockMarginBottom / 2) + ea,
+          bottom: String(desktop ? blockMarginBottom / 2 : blockBarBottom) + ea,
           left: String(titleWidth) + ea,
           width: withOut(titleWidth, ea),
           height: String(0),
@@ -1533,121 +1581,140 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       num++;
     }
 
-    weekTotalLength = weekBlocks.length;
-    for (let i = 0; i < weekTotalLength; i++) {
-      if (i !== 0) {
-        if (weekBlocks[i + 1] !== undefined && weekBlocks[i].querySelector('.' + nullClassName) !== null && weekBlocks[i + 1].querySelector('.' + nullClassName) !== null) {
-          removeTargets = weekBlocks[i].querySelectorAll('.' + nullClassName);
-          for (let dom of removeTargets) {
-            weekBlocks[i].removeChild(dom);
-          }
-          removeTargets = weekBlocks[i + 1].querySelectorAll('.' + nullClassName);
-          for (let dom of removeTargets) {
-            weekBlocks[i + 1].removeChild(dom);
-          }
-          children = weekBlocks[i + 1].querySelectorAll('.' + generalDateClassName);
-          length = children.length;
-          for (let j = 0; j < length; j++) {
-            weekBlocks[i].appendChild(children[j]);
-          }
-        }
-      }
-    }
-    for (let i = 0; i < weekTotalLength; i++) {
-      if (weekBlocks[i].children.length !== 0) {
-        firstBlock.appendChild(weekBlocks[i]);
-      }
-    }
-    weekBlocks[weekTotalLength - 1].style.borderBottom = "1px solid " + colorChip.gray3;
-
-    weekBlocks = [];
-    for (let dom of firstBlock.children) {
-      tempArr = ([ ...dom.children ]).map((d) => { return (Number(d.getAttribute("year")) * 100) + Number(d.getAttribute("month")); });
-      tempArr.sort((a, b) => { return b - a; });
-      if (tempArr.reduce((accumulator, currentValue) => { return accumulator + currentValue; }) !== (tempArr[0] * (tempArr.length)) || dom.firstChild.getAttribute("date") === String(1)) {
-        dom.setAttribute("first", "true");
-      } else {
-        dom.setAttribute("first", "false");
-      }
-      dom.setAttribute("year", String(Math.floor(tempArr[0] / 100)));
-      dom.setAttribute("month", String(tempArr[0] % 100));
-      dom.classList.add([ weekClassName, String(Math.floor(tempArr[0] / 100)), String(tempArr[0] % 100) ].join(joinToken));
-      dom.classList.add(weekGeneralClassName);
-      weekBlocks.push(dom);
-    }
-
-    titleTargets = document.querySelectorAll('.' + titleGeneralName);
-    topMap = (new Array(titleTargets.length - 1)).fill(null, 0);
-    for (let i = 1; i < titleTargets.length; i++) {
-      tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[i].getAttribute("year"), titleTargets[i].getAttribute("month") ].join(joinToken)) ];
-      if (tempArr.find((d) => { return d.getAttribute("first") === "true"; }) !== undefined) {
-        firstMother.appendChild(titleTargets[i]);
-        titleTargets[i].style.position = "absolute";
-        titleTargets[i].style.left = String(0) + ea;
-        tempObj = {};
-        tempObj.year = Number(titleTargets[i].getAttribute("year"));
-        tempObj.month = Number(titleTargets[i].getAttribute("month"));
-        tempObj.top = tempArr.find((d) => { return d.getAttribute("first") === "true"; }).getBoundingClientRect().top;
-        tempObj.targetDoms = [];
-        tempObj.targetDoms = tempObj.targetDoms.concat(tempArr.filter((d) => { return d.getAttribute("first") !== "true"; }));
-        tempObj.targetDoms = tempObj.targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[i].getAttribute("year") && d.getAttribute("month") === titleTargets[i].getAttribute("month")) }));
-        if (topMap[i - 2] !== undefined) {
-          topMap[i - 2].targetDoms = topMap[i - 2].targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[i - 1].getAttribute("year") && d.getAttribute("month") === titleTargets[i - 1].getAttribute("month")) }));
-        }
-        titleTargets[i].style.top = String(tempArr.find((d) => { return d.getAttribute("first") === "true"; }).getBoundingClientRect().top - firstBlock.getBoundingClientRect().top + weekBlockHeight + daydayMargin) + ea;
-        titleTargets[i].style.height = String(weekBlockHeight * tempArr.length) + ea;
-        topMap[i - 1] = tempObj;
-      }
-    }
-    topMap.unshift({
-      year: Number(titleTargets[0].getAttribute("year")),
-      month: Number(titleTargets[0].getAttribute("month")),
-      top: weekBlockHeight * 2,
-      targetDoms: []
-    });
-    tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[0].getAttribute("year"), titleTargets[0].getAttribute("month") ].join(joinToken)) ];
-    topMap[0].targetDoms = topMap[0].targetDoms.concat(tempArr);
-    tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[1].getAttribute("year"), titleTargets[1].getAttribute("month") ].join(joinToken)) ];
-    topMap[0].targetDoms = topMap[0].targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[0].getAttribute("year") && d.getAttribute("month") === titleTargets[0].getAttribute("month")) }));
-
-    while (mother.children.length !== 1) {
-      mother.removeChild(mother.lastChild);
-    }
-
-    this.possibleReload("possible");
-
-    [ projectPannel, calendarPannel ] = pannelDoms;
-    if (this.possiblePannelStatus.project) {
-      projectPannel.click();
-    }
-    if (this.possiblePannelStatus.calendar) {
-      calendarPannel.click();
-    }
-
-    if (typeof GeneralJs.stacks.motherScrollEvent === "function") {
-      totalMother.removeEventListener("scroll", GeneralJs.stacks.motherScrollEvent);
-    }
-    GeneralJs.stacks.motherScrollEvent = (e) => {
-      let scrollValueFrom, scrollValueTo;
-      let topMap, targetDomsIndex;
-
-      setDebounce(() => {
-        scrollValueFrom = (outerMargin * 2);
-        scrollValueTo = (window.innerHeight - belowHeight) - (instance.titleFields[0].getBoundingClientRect().height * 1.5);
-        topMap = instance.titleFields.map((dom, index) => { return [ dom.getBoundingClientRect().top, index ]; });
-        targetDomsIndex = topMap.filter((arr) => { return (scrollValueFrom <= arr[0] && arr[0] <= scrollValueTo); }).map((arr) => { return arr[1]; });
-
-        for (let i = 0; i < instance.titleFields.length; i++) {
-          if (targetDomsIndex.includes(i)) {
-            instance.titleFields[i].firstChild.style.color = colorChip.green;
-          } else {
-            instance.titleFields[i].firstChild.style.color = colorChip.black;
+    if (desktop) {
+      weekTotalLength = weekBlocks.length;
+      for (let i = 0; i < weekTotalLength; i++) {
+        if (i !== 0) {
+          if (weekBlocks[i + 1] !== undefined && weekBlocks[i].querySelector('.' + nullClassName) !== null && weekBlocks[i + 1].querySelector('.' + nullClassName) !== null) {
+            removeTargets = weekBlocks[i].querySelectorAll('.' + nullClassName);
+            for (let dom of removeTargets) {
+              weekBlocks[i].removeChild(dom);
+            }
+            removeTargets = weekBlocks[i + 1].querySelectorAll('.' + nullClassName);
+            for (let dom of removeTargets) {
+              weekBlocks[i + 1].removeChild(dom);
+            }
+            children = weekBlocks[i + 1].querySelectorAll('.' + generalDateClassName);
+            length = children.length;
+            for (let j = 0; j < length; j++) {
+              weekBlocks[i].appendChild(children[j]);
+            }
           }
         }
+      }
+      for (let i = 0; i < weekTotalLength; i++) {
+        if (weekBlocks[i].children.length !== 0) {
+          firstBlock.appendChild(weekBlocks[i]);
+        }
+      }
+      weekBlocks[weekTotalLength - 1].style.borderBottom = "1px solid " + colorChip.gray3;
 
-      }, "baseScroll");
+      weekBlocks = [];
+      for (let dom of firstBlock.children) {
+        tempArr = ([ ...dom.children ]).map((d) => { return (Number(d.getAttribute("year")) * 100) + Number(d.getAttribute("month")); });
+        tempArr.sort((a, b) => { return b - a; });
+        if (tempArr.reduce((accumulator, currentValue) => { return accumulator + currentValue; }) !== (tempArr[0] * (tempArr.length)) || dom.firstChild.getAttribute("date") === String(1)) {
+          dom.setAttribute("first", "true");
+        } else {
+          dom.setAttribute("first", "false");
+        }
+        dom.setAttribute("year", String(Math.floor(tempArr[0] / 100)));
+        dom.setAttribute("month", String(tempArr[0] % 100));
+        dom.classList.add([ weekClassName, String(Math.floor(tempArr[0] / 100)), String(tempArr[0] % 100) ].join(joinToken));
+        dom.classList.add(weekGeneralClassName);
+        weekBlocks.push(dom);
+      }
+
+      titleTargets = document.querySelectorAll('.' + titleGeneralName);
+      topMap = (new Array(titleTargets.length - 1)).fill(null, 0);
+      for (let i = 1; i < titleTargets.length; i++) {
+        tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[i].getAttribute("year"), titleTargets[i].getAttribute("month") ].join(joinToken)) ];
+        if (tempArr.find((d) => { return d.getAttribute("first") === "true"; }) !== undefined) {
+          firstMother.appendChild(titleTargets[i]);
+          titleTargets[i].style.position = "absolute";
+          titleTargets[i].style.left = String(0) + ea;
+          tempObj = {};
+          tempObj.year = Number(titleTargets[i].getAttribute("year"));
+          tempObj.month = Number(titleTargets[i].getAttribute("month"));
+          tempObj.top = tempArr.find((d) => { return d.getAttribute("first") === "true"; }).getBoundingClientRect().top;
+          tempObj.targetDoms = [];
+          tempObj.targetDoms = tempObj.targetDoms.concat(tempArr.filter((d) => { return d.getAttribute("first") !== "true"; }));
+          tempObj.targetDoms = tempObj.targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[i].getAttribute("year") && d.getAttribute("month") === titleTargets[i].getAttribute("month")) }));
+          if (topMap[i - 2] !== undefined) {
+            topMap[i - 2].targetDoms = topMap[i - 2].targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[i - 1].getAttribute("year") && d.getAttribute("month") === titleTargets[i - 1].getAttribute("month")) }));
+          }
+          titleTargets[i].style.top = String(tempArr.find((d) => { return d.getAttribute("first") === "true"; }).getBoundingClientRect().top - firstBlock.getBoundingClientRect().top + weekBlockHeight + daydayMargin) + ea;
+          titleTargets[i].style.height = String(weekBlockHeight * tempArr.length) + ea;
+          topMap[i - 1] = tempObj;
+        }
+      }
+      topMap.unshift({
+        year: Number(titleTargets[0].getAttribute("year")),
+        month: Number(titleTargets[0].getAttribute("month")),
+        top: weekBlockHeight * 2,
+        targetDoms: []
+      });
+      tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[0].getAttribute("year"), titleTargets[0].getAttribute("month") ].join(joinToken)) ];
+      topMap[0].targetDoms = topMap[0].targetDoms.concat(tempArr);
+      tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[1].getAttribute("year"), titleTargets[1].getAttribute("month") ].join(joinToken)) ];
+      topMap[0].targetDoms = topMap[0].targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[0].getAttribute("year") && d.getAttribute("month") === titleTargets[0].getAttribute("month")) }));
+
+      while (mother.children.length !== 1) {
+        mother.removeChild(mother.lastChild);
+      }
+
+      this.possibleReload("possible");
+
+      [ projectPannel, calendarPannel ] = pannelDoms;
+      if (this.possiblePannelStatus.project) {
+        projectPannel.click();
+      }
+      if (this.possiblePannelStatus.calendar) {
+        calendarPannel.click();
+      }
+      if (typeof GeneralJs.stacks.motherScrollEvent === "function") {
+        totalMother.removeEventListener("scroll", GeneralJs.stacks.motherScrollEvent);
+      }
+      GeneralJs.stacks.motherScrollEvent = (e) => {
+        let scrollValueFrom, scrollValueTo;
+        let topMap, targetDomsIndex;
+
+        setDebounce(() => {
+          scrollValueFrom = (outerMargin * 2);
+          scrollValueTo = (window.innerHeight - belowHeight) - (instance.titleFields[0].getBoundingClientRect().height * 1.5);
+          topMap = instance.titleFields.map((dom, index) => { return [ dom.getBoundingClientRect().top, index ]; });
+          targetDomsIndex = topMap.filter((arr) => { return (scrollValueFrom <= arr[0] && arr[0] <= scrollValueTo); }).map((arr) => { return arr[1]; });
+
+          for (let i = 0; i < instance.titleFields.length; i++) {
+            if (targetDomsIndex.includes(i)) {
+              instance.titleFields[i].firstChild.style.color = colorChip.green;
+            } else {
+              instance.titleFields[i].firstChild.style.color = colorChip.black;
+            }
+          }
+
+        }, "baseScroll");
+      }
+      totalMother.addEventListener("scroll", GeneralJs.stacks.motherScrollEvent);
+
+    } else {
+
+      projectPannel = createNode({
+        mother,
+        attribute: { toggle: "off" },
+        style: { display: "none" },
+        children: [ { style: { display: "none" } } ],
+      });
+      swipePatch({
+        left: (e) => {
+          functionPannelContents.find((obj) => { return /프로젝트 보기/gi.test(obj.name); }).event.call(projectPannel, {});
+        },
+        right: (e) => {
+          functionPannelContents.find((obj) => { return /프로젝트 보기/gi.test(obj.name); }).event.call(projectPannel, {});
+        },
+      });
+      this.possibleReload("possible");
     }
-    totalMother.addEventListener("scroll", GeneralJs.stacks.motherScrollEvent);
 
   } catch (e) {
     console.log(e);
@@ -2030,6 +2097,7 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
   const { ea, possibleConst } = this;
   const { colorChip, dateToString, findByAttribute } = GeneralJs;
   const { futureLength, okClassName, cancelClassName, numberClassName, backClassName, nullClassName, generalDateClassName, weekClassName, weekGeneralClassName, titleClassName, titleGeneralName, joinToken, scrollEventName, scrollEventTimeout, dummyDatesClassName, daydayWords, daydayLength, countKeyClass, countKeyMake } = possibleConst;
+  const redIndexTargets = [ 0, 6 ];
   let targetDom;
   let dateLength;
   let tempDate;
@@ -2064,8 +2132,8 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
     }
     for (let dom of this.dateDoms) {
       if (!onTargets.includes(dom)) {
-        dom.querySelector('.' + numberClassName).style.color = colorChip.black;
-        dom.querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
+        dom.querySelector('.' + numberClassName).style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
+        dom.querySelector('.' + numberClassName).querySelector('b').style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
         dom.querySelector('.' + backClassName).style.background = "transparent";
         dom.querySelector('.' + okClassName).style.opacity = String(0);
         dom.querySelector('.' + cancelClassName).style.opacity = String(1);

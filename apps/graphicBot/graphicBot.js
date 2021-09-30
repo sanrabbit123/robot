@@ -1150,8 +1150,32 @@ GraphicBot.prototype.botRouter = function () {
     link: [ "/form" ],
     func: async function (req, res) {
       try {
-        const taskNumber = 1;
+        const taskNumber = 3;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
+        if (instance.task !== null) {
+          clearTimeout(instance.task);
+          instance.task = null;
+        }
+        instance.task = setTimeout(instance.startWork(), 3000);
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "will do" });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  funcObj.get_apartment = {
+    link: [ "/apartment" ],
+    func: async function (req, res) {
+      try {
+        const taskNumber = 2;
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
         if (instance.task !== null) {
           clearTimeout(instance.task);
           instance.task = null;
@@ -1264,7 +1288,6 @@ GraphicBot.prototype.botServer = async function () {
   const instance = this;
   const { fileSystem, shell, shellLink } = this.mother;
   const express = require("express");
-  const bodyParser = require("body-parser");
   const multer = require("multer");
   const multiForms = multer();
   const useragent = require("express-useragent");
@@ -1272,9 +1295,9 @@ GraphicBot.prototype.botServer = async function () {
   const app = express();
 
   app.use(useragent.express());
-  app.use(bodyParser.json());
+  app.use(express.json());
   app.use(multiForms.array());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true }));
 
   try {
     let front, routerObj;

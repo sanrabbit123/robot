@@ -72,27 +72,139 @@ DevContext.prototype.launching = async function () {
     // await ghostRequest("print", { cliid: "c2109_aa98s" });
 
 
-    /*
+    // /*
 
+    const junkList = [
+      '로딩중',
+      '우편번호',
+      '도로명',
+      '지번',
+      '이 주소의 장소',
+      '길찾기',
+      'VIEW',
+      '문서 저장하기',
+      'Keep에 저장',
+      'Keep 바로가기',
+      '전체',
+      '메뉴 영역으로 바로가기',
+      '본문 영역으로 바로가기',
+      'NAVER',
+      '검색',
+      '한글 입력기',
+      '자동완성 레이어',
+      '최근검색어',
+      '전체삭제',
+      '컨텍스트 자동완성',
+      'ON/OFF 설정은',
+      '해당기기(브라우저)에 저장됩니다.',
+      '자세히',
+      '동일한 시간대/연령/남녀별',
+      '사용자 그룹의',
+      '관심사에 맞춰 자동완성을 제공합니다.',
+      '로그인',
+      '자세히',
+      '컨텍스트 자동완성 레이어 닫기',
+      '도움말',
+      '신고',
+      '자동완성 끄기',
+      '검색',
+      '통합',
+      'VIEW',
+      '이미지',
+      '지식iN',
+      '동영상',
+      '쇼핑',
+      '뉴스',
+      '어학사전',
+      '지도',
+      '책',
+      '더보기',
+      '뮤직',
+      '지식백과',
+      '오디오클립',
+      '학술정보',
+      '검색옵션',
+      '공유',
+      '추가',
+      '자세히보기',
+      '바로가기',
+      '검색옵션 닫기',
+      '정렬',
+      '관련도순',
+      '최신순',
+      '기간',
+      '직접입력',
+      '옵션',
+      '펼치기',
+      '접기',
+      '삭제',
+      '검색어 저장 기능이 꺼져 있습니다.',
+      '설정이 초기화 된다면',
+      '을 확인해주세요.',
+      '최근 검색어 내역이 없습니다.',
+      '설정이 초기화 된다면',
+      '을 확인해주세요.',
+      '자동저장 끄기',
+      '기간 설정시작',
+      '기간 설정끝',
+      '적용',
+      '옵션초기화',
+      '검색옵션 가이드',
+      '관심사를 반영한 컨텍스트 자동완성',
+      '지급기한 1년',
+      '블로그',
+      '카페',
+      '기본뷰',
+      '타임라인뷰',
+      '멀티미디어뷰',
+      'VIEW 더보기',
+      '정보를 가져오는 중입니다.',
+      '검색결과가 없습니다.',
+      '옵션을 재선택 하시거나 초기화 해보시기 바랍니다.',
+      '초기화',
+      '죄송합니다. 일시적인 오류입니다.',
+      '잠시 후 다시 시도해주십시오.',
+      '재시도',
+      'MS엑셀(xls)',
+      '리뷰월드',
+      '년(Year)',
+      '월(Month)',
+      '일(Day)',
+      '이 정보가 표시된 이유',
+      '네이버가 운영하는 부동산 서비스입니다.',
+      '정보확인 레이어 닫기',
+      '다른 사이트를 보시려면 클릭하세요',
+      '다른 사이트 더보기',
+      '관심단지',
+      '‘관심 단지’',
+      '에 저장되었습니다',
+    ];
+    const junkRegList = [
+      /function/gi,
+      /var/g,
+      /root/g,
+      /flex/g,
+      /background/g,
+      /hidden/g,
+      /margin/g,
+      /jQuery/gi,
+      /^KEEP/gi,
+      /\@\.?$/,
+      /charCodeAt/g,
+      /통합검색/gi,
+      /setTimeout/gi,
+      /\>\>/gi,
+    ];
     const apartNameSearch = async function (words) {
-      const apartSearch = async function (words) {
+      if (typeof words !== "string") {
+        throw new Error("invaild input");
+      }
+      words = words.trim();
+      const naverSearch = async function (words) {
         const protocol = "https:";
         const host = "search.naver.com";
         const path = "/search.naver";
-        const booKeywords = "플레이스";
         const token = "__split__";
-        const junkList = [
-          "로딩중",
-          "우편번호",
-          "도로명",
-          "지번",
-          "이 주소의 장소",
-          "길찾기",
-          "VIEW",
-          "문서 저장하기",
-          "Keep에 저장",
-          "전체",
-        ]
         try {
           const url = `${protocol}//${host}${path}?query=${global.encodeURIComponent(words)}`;
           let response, arr, rawString, window, document, html, link;
@@ -101,24 +213,17 @@ DevContext.prototype.launching = async function () {
 
           if (response.status < 300) {
             const { data } = response;
-            if ((new RegExp(booKeywords, "gi")).test(data)) {
+            rawString = data.replace(/<[^\>]+>/gi, token);
+            arr = rawString.split(token);
+            arr = arr.map((str) => { return str.trim(); }).filter((str) => { return str.trim() !== ''; });
+            arr = arr.map((str) => { if (/^[\'\"]/.test(str.trim()) || /[\'\"]$/.test(str.trim())) { return str.trim().slice(1, -1); } else { return str.trim(); } });
+            arr = arr.filter((str) => { return junkRegList.every((reg) => { return !reg.test(str) }); });
+            arr = arr.filter((str) => { return !junkList.includes(str.trim()); });
+            arr = arr.filter((str) => { return str.trim() !== '' && str.trim() !== '|' && str.trim() !== '~' });
+            arr = arr.slice(arr.findIndex((str) => { return (new RegExp('^' + words.slice(0, 2), 'i')).test(str) && / /g.test(str) && str.split(' ').map((a) => { return a.trim() }).some((a) => { return /[동로가리길]$/i.test(a); }) }));
+            arr = arr.filter((str) => { return str.trim().replace(/[0-9\-]/gi, '') !== '' });
 
-              rawString = data.replace(/<[^\>]+>/gi, token);
-              arr = rawString.split(token);
-              arr = arr.map((str) => { return str.trim(); }).filter((str) => { return str.trim() !== ''; });
-              arr = arr.slice(arr.findIndex((str) => { return str.trim() === booKeywords }) + 1);
-              arr = arr.filter((str) => { return !junkList.includes(str.trim()); });
-              arr = arr.map((str) => { if (/^[\'\"]/.test(str.trim()) || /[\'\"]$/.test(str.trim())) { return str.trim().slice(1, -1); } else { return str.trim(); } });
-              arr = arr.filter((str) => { return !(/function/g.test(str) || /var/g.test(str) || /root/g.test(str) || /flex/g.test(str)) });
-              arr = arr.filter((str) => { return str.trim() !== '' && str.trim() !== '|' && str.trim() !== '~' });
-              arr = arr.slice(0, arr.findIndex((str) => { return /더보기/gi.test(str); }));
-              arr = arr.filter((str) => { return str.trim().replace(/[0-9\-]/gi, '') !== '' });
-
-              return arr;
-            } else {
-              return null;
-              throw new Error("invalid words");
-            }
+            return arr;
           } else {
             throw new Error("response error");
           }
@@ -127,11 +232,11 @@ DevContext.prototype.launching = async function () {
           return null;
         }
       }
-      const limit = 5;
+      const limit = 3;
       let num, resultArr, addressArr, targetIndex, fromClient, final;
       num = 0;
       do {
-        resultArr = await apartSearch(words);
+        resultArr = await naverSearch(words);
         num++;
       } while (!Array.isArray(resultArr) && num <= limit);
 
@@ -157,33 +262,29 @@ DevContext.prototype.launching = async function () {
           }
         }
         if (final === '') {
-          return null;
+          return fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
         } else {
           if (final.replace(/[0-9 \-]/gi, '') === '') {
-            return null;
+            return fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
           } else {
             final = final.split(' ').map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).filter((str) => { return str.replace(/[0-9\-동호]/gi, '') !== ''; }).join(' ').trim();
-            if (final !== '') {
-              return final;
-            } else {
-              return null;
-            }
+            return final;
           }
         }
 
       }
     }
+
     const clients = await back.getClientsByQuery({});
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 20; i++) {
       console.log(i, clients[i].name);
+      console.log(clients[i].requests[0].request.space.address.value);
       console.log(await apartNameSearch(clients[i].requests[0].request.space.address.value));
       console.log(`===============================`);
     }
 
-    */
+    // */
 
-
-    // await apartSearch("서울 광진구 아차산로70길 62 광장현대3단지아파트")
 
 
 

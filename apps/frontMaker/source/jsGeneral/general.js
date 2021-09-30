@@ -1003,7 +1003,7 @@ GeneralJs.willDo = function (func) {
   GeneralJs.setTimeout(func, 0);
 }
 
-GeneralJs.setDebounce = function (callback, name, delay = 200) {
+GeneralJs.setDebounce = function (callback, name, delay = 300) {
   if (typeof callback !== "function" || typeof name !== "string" || typeof delay !== "number") {
     throw new Error("invaild input");
   }
@@ -2055,6 +2055,141 @@ GeneralJs.findByAttribute = function (dom, attributeName, attributeValue) {
       return resultDom;
     }
   }
+}
+
+GeneralJs.swipePatch = function (direction, callback = function () {}) {
+  const stackConst = "swipeStack_";
+  const xDown = "xDown";
+  const yDown = "yDown";
+  const xDiff = "xDiff";
+  const yDiff = "yDiff";
+  const timeDown = "timeDown";
+  const startElement = "startElement";
+  const handleTouchEnd = "handleTouchEnd";
+  const handleTouchStart = "handleTouchStart";
+  const handleTouchMove = "handleTouchMove";
+  const getNearestAttribute = function (el, attributeName, defaultValue) {
+    let attributeValue;
+    while (el && el !== document.documentElement) {
+      attributeValue = el.getAttribute(attributeName);
+      if (attributeValue) {
+        return attributeValue;
+      }
+      el = el.parentNode;
+    }
+    return defaultValue;
+  }
+
+  if (typeof direction === "string") {
+    if (!([ "up", "down", "left", "right" ].includes(direction))) {
+      throw new Error("must be direction: [ up, down, left, right ]");
+    }
+    if (typeof callback !== "function") {
+      throw new Error("must be function input");
+    }
+    GeneralJs.stacks[stackConst + direction] = callback;
+  } else if (typeof direction === "object") {
+    for (let i in direction) {
+      if (!([ "up", "down", "left", "right" ].includes(i))) {
+        throw new Error("must be direction: [ up, down, left, right ]");
+      }
+      if (typeof direction[i] !== "function") {
+        throw new Error("must be function input");
+      }
+      GeneralJs.stacks[stackConst + i] = direction[i];
+    }
+  } else {
+    throw new Error("invaild input");
+  }
+
+  if (typeof GeneralJs.stacks[stackConst + handleTouchStart] === "function") {
+    document.removeEventListener("touchstart", GeneralJs.stacks[stackConst + handleTouchStart]);
+  }
+  if (typeof GeneralJs.stacks[stackConst + handleTouchMove] === "function") {
+    document.removeEventListener("touchmove", GeneralJs.stacks[stackConst + handleTouchMove]);
+  }
+  if (typeof GeneralJs.stacks[stackConst + handleTouchEnd] === "function") {
+    document.removeEventListener("touchend", GeneralJs.stacks[stackConst + handleTouchEnd]);
+  }
+
+  GeneralJs.stacks[stackConst + xDown] = null;
+  GeneralJs.stacks[stackConst + yDown] = null;
+  GeneralJs.stacks[stackConst + xDiff] = null;
+  GeneralJs.stacks[stackConst + yDiff] = null;
+  GeneralJs.stacks[stackConst + timeDown] = null;
+  GeneralJs.stacks[stackConst + startElement] = null;
+
+  GeneralJs.stacks[stackConst + handleTouchStart] = function (e) {
+    GeneralJs.stacks[stackConst + startElement] = e.target;
+    GeneralJs.stacks[stackConst + timeDown] = Date.now();
+    GeneralJs.stacks[stackConst + xDown] = e.touches[0].clientX;
+    GeneralJs.stacks[stackConst + yDown] = e.touches[0].clientY;
+    GeneralJs.stacks[stackConst + xDiff] = 0;
+    GeneralJs.stacks[stackConst + yDiff] = 0;
+  }
+  GeneralJs.stacks[stackConst + handleTouchMove] = function (e) {
+    if (!GeneralJs.stacks[stackConst + xDown] || !GeneralJs.stacks[stackConst + yDown]) {
+      return;
+    }
+    GeneralJs.stacks[stackConst + xDiff] = GeneralJs.stacks[stackConst + xDown] - e.touches[0].clientX;
+    GeneralJs.stacks[stackConst + yDiff] = GeneralJs.stacks[stackConst + yDown] - e.touches[0].clientY;
+  }
+  GeneralJs.stacks[stackConst + handleTouchEnd] = function (e) {
+    if (GeneralJs.stacks[stackConst + startElement] !== e.target) {
+      return;
+    }
+    const thresholdKey = "data-swipe-threshold";
+    const timeoutKey = "data-swipe-timeout";
+    const thresholdValue = 20;
+    const timeoutValue = 500;
+    let swipeThreshold, swipeTimeout;
+    let timeDiff;
+    let direction;
+    let changedTouches;
+    let eventData;
+
+    swipeThreshold = parseInt(getNearestAttribute(GeneralJs.stacks[stackConst + startElement], thresholdKey, String(thresholdValue)), 10);
+    swipeTimeout = parseInt(getNearestAttribute(GeneralJs.stacks[stackConst + startElement], timeoutKey, String(timeoutValue)), 10);
+
+    timeDiff = Date.now() - GeneralJs.stacks[stackConst + timeDown];
+    changedTouches = e.changedTouches || e.touches || [];
+
+    direction = null;
+    if (Math.abs(GeneralJs.stacks[stackConst + xDiff]) > Math.abs(GeneralJs.stacks[stackConst + yDiff])) {
+      if (Math.abs(GeneralJs.stacks[stackConst + xDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
+        if (GeneralJs.stacks[stackConst + xDiff] > 0) {
+          direction = "left";
+        } else {
+          direction = "right";
+        }
+      }
+    } else if (Math.abs(GeneralJs.stacks[stackConst + yDiff]) > swipeThreshold && timeDiff < swipeTimeout) {
+      if (GeneralJs.stacks[stackConst + yDiff] > 0) {
+        direction = "up";
+      } else {
+        direction = "down";
+      }
+    }
+
+    if (direction !== null) {
+      eventData = {
+        direction,
+        start: [ parseInt(GeneralJs.stacks[stackConst + xDown], 10), parseInt(GeneralJs.stacks[stackConst + yDown], 10) ],
+        end: [ parseInt((changedTouches[0] || {}).clientX || -1, 10), parseInt((changedTouches[0] || {}).clientY || -1, 10) ],
+      };
+      if (typeof GeneralJs.stacks[stackConst + direction] === "function") {
+        (GeneralJs.stacks[stackConst + direction])(eventData);
+      }
+    }
+
+    GeneralJs.stacks[stackConst + xDown] = null;
+    GeneralJs.stacks[stackConst + yDown] = null;
+    GeneralJs.stacks[stackConst + timeDown] = null;
+  }
+
+  document.addEventListener("touchstart", GeneralJs.stacks[stackConst + handleTouchStart], false);
+  document.addEventListener("touchmove", GeneralJs.stacks[stackConst + handleTouchMove], false);
+  document.addEventListener("touchend", GeneralJs.stacks[stackConst + handleTouchEnd], false);
 }
 
 GeneralJs.prototype.resizeLaunching = function (callback) {
