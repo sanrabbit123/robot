@@ -935,6 +935,9 @@ GraphicBot.prototype.botRouter = function () {
         const chromeLeft = chromeSize.left;
         const robot = instance.bot;
         let { key } = req.body;
+
+        console.log(key)
+
         await instance.pressKey(key);
         res.set({
           "Content-Type": "application/json",
