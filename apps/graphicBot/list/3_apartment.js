@@ -1,31 +1,55 @@
 module.exports = function (arg, info) {
   return [
-    "https://map.naver.com/v5",
+    "https://new.land.naver.com/complexes",
     async function () {
       try {
-        let rawAddress;
-
-
-        rawAddress = "세종특별자치시 다솜로 50 중흥 센텀뷰";
-
-        if (document.querySelector('.input_search') !== null) {
-          await injectionInput(document.querySelector('.input_search'), rawAddress);
-          await pressKey("enter");
-        }
-
-
-
-
-        console.log("this!");
-        await sleep(30000);
-
-
-
-
-
+        const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
+        await injectionInput(document.querySelector(".search_input"), apart);
+        document.querySelector(".button_search--icon").click();
       } catch (e) {
         console.log(e);
       }
-    }
+    },
+    async function () {
+      try {
+        await sleep(1000);
+        if (document.querySelector('.complex_detail_link') !== null) {
+          document.querySelector('.complex_detail_link').firstChild.click();
+          await sleep(1000);
+          // document.querySelector('.info_table_wrap')
+          await ajaxPromise({ to: 0, data: 2 }, ENDCONST);
+          return true;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    "toss: https://map.naver.com/v5",
+    async function () {
+      try {
+        const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
+        await injectionInput(document.querySelector('.input_search'), raw);
+        await pressKey("enter");
+        await crossIframe(document.getElementById("searchIframe"));
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async function () {
+      try {
+        if (document.getElementById('_pcmap_list_scroll_container') !== null) {
+          const words = document.getElementById('_pcmap_list_scroll_container').querySelectorAll('li')[0].querySelector('a').querySelectorAll("span");
+          // words[0].textContent
+          // words[1].textContent
+          await sleep(500000);
+        } else {
+
+
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
   ];
 };

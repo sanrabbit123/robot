@@ -91,6 +91,20 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       },
     },
     {
+      title: "일정 관리",
+      mode: modes[3],
+      position: 0,
+      mobile: true,
+      event: function (e) {
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
+        instance.possibleDetailLaunching(desid, () => {
+          scrollTo(document.querySelector(".totalMother"), 0);
+        });
+        instance.mode = modes[3];
+        colorFunc.call(this);
+      },
+    },
+    {
       title: "시공 정보",
       mode: modes[0],
       position: 4,
@@ -861,6 +875,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       "checklist.js",
       "report.js",
       "request.js",
+      "possible.js",
     ];
 
     await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
@@ -870,8 +885,9 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.constructor();
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
     this.belowHeight = 0;
-    this.modes = [ "checklist", "report", "request" ];
+    this.modes = [ "checklist", "report", "request", "possible" ];
     this.mode = this.modes[0];
+    this.desid = getObj.desid;
 
     if (window.localStorage.getItem("desid") === this.desid) {
       await this.consoleView();

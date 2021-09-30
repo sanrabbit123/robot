@@ -414,7 +414,7 @@ GraphicBot.prototype.copyText = async function () {
 GraphicBot.prototype.pasteText = async function () {
   const instance = this;
   const { bot } = this;
-  const { sleep, pasteToClipboard } = this.mother;
+  const { sleep } = this.mother;
   try {
     let command;
     if (this.os === "mac") {
@@ -507,6 +507,9 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const scrollWindow = " + this.frontGeneral.scrollWindow.toString() + ";\n\n";
     frontFirst += "const clickElement = " + this.frontGeneral.clickElement.toString() + ";\n\n";
     frontFirst += "const calendarInput = " + this.frontGeneral.calendarInput.toString() + ";\n\n";
+    frontFirst += "const pressKey = " + this.frontGeneral.pressKey.toString() + ";\n\n";
+    frontFirst += "const crossIframe = " + this.frontGeneral.crossIframe.toString() + ";\n\n";
+
     frontFirst += "const endFront = async () => { await ajaxPromise({ to: 0, data: 0 }, ENDCONST); };\n\n";
 
     frontFirst += "await ajaxPromise({ to: 0, data: 0 }, HOSTCONST + '/frontProcess');\n\n";
@@ -541,6 +544,15 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           await this.chromeOpen(i);
         } else if (i === "close") {
           await this.chromeClose();
+        } else if (/^toss\: /.test(i)) {
+
+          //DEV
+
+          throw new Error("this is dev area");
+
+          //DEV
+
+
         } else if (i === "copy") {
           await this.copyText();
         } else if (i === "paste") {
@@ -612,6 +624,10 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
             await sleep(500);
             return false;
           }
+        }
+        if (instance.front === 2) {
+          instance.front = 0;
+          break;
         }
       }
     }
@@ -755,7 +771,7 @@ GraphicBot.prototype.botRouter = function () {
   funcObj.post_frontEnd = {
     link: [ "/frontEnd" ],
     func: function (req, res) {
-      instance.front = 0;
+      instance.front = Number(req.body.data);
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -936,8 +952,6 @@ GraphicBot.prototype.botRouter = function () {
         const robot = instance.bot;
         let { key } = req.body;
 
-        console.log(key)
-
         await instance.pressKey(key);
         res.set({
           "Content-Type": "application/json",
@@ -972,6 +986,44 @@ GraphicBot.prototype.botRouter = function () {
 
         robot.moveMouse(x, y);
         robot.mouseClick("left");
+
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "OK" });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  funcObj.post_crossIframe = {
+    link: [ "/crossIframe" ],
+    func: async function (req, res) {
+      try {
+        if (req.body.x === undefined || req.body.y === undefined) {
+          throw new Error("must be x, y");
+        }
+        const { screenSize, chromeSize } = instance;
+        const chromeHeight = chromeSize.top;
+        const chromeLeft = chromeSize.left;
+        const robot = instance.bot;
+        let { x, y } = req.body;
+
+        x = Number(x);
+        y = Number(y);
+        x = x + chromeLeft;
+        y = y + chromeHeight;
+
+        robot.moveMouse(x, y);
+        robot.mouseClick("right");
+        robot.moveMouse(x + 22, y + 275);
+        await sleep(200);
+        robot.mouseClick("left");
+        await sleep(200);
 
         res.set({
           "Content-Type": "application/json",
@@ -1199,12 +1251,12 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
-  funcObj.get_apartment = {
+  funcObj.post_apartment = {
     link: [ "/apartment" ],
     func: async function (req, res) {
       try {
         const taskNumber = 3;
-        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
+        await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
         if (instance.task !== null) {
           clearTimeout(instance.task);
           instance.task = null;

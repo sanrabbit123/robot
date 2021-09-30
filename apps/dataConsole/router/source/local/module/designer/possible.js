@@ -7,6 +7,8 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   let target, pastScrollTop;
   let loading;
 
+  this.dateDoms = [];
+  this.selection = [];
 
   if (typeof this.possiblePannelStatus !== "object" || this.possiblePannelStatus === null) {
     this.possiblePannelStatus = {
@@ -323,6 +325,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     let sizeVisual;
     let blockPaddingTop, blockBarBottom;
     let mobileTotalPaddingTop;
+    let daydayFieldTop;
 
     this.designer = designer;
 
@@ -396,7 +399,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
     dateBoxOpacity = 0.08;
 
-    size = <%% 16, 16, 16, 16, 3.6 %%>;
+    size = <%% 15, 15, 15, 15, 3.6 %%>;
     sizeVisual = <%% 1, 1, 1, 1, 0.6 %%>;
     titleWidth = <%% 120, 120, 120, 120, 0 %%>;
     titlePaddingLeft = <%% 5, 5, 5, 5, 0.1 %%>;
@@ -412,14 +415,15 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     blockMarginBottom = <%% 48, 48, 48, 48, 12 %%>;
     blockBarBottom = 2.7;
 
-    dateNumberSize = <%% 18, 18, 18, 18, 2.9 %%>;
+    dateNumberSize = <%% 17, 17, 17, 17, 2.9 %%>;
     dateNumberTop = <%% 15, 15, 15, 15, 1.8 %%>;
     dateNumberLeft = <%% 23, 23, 23, 23, 0 %%>;
 
     dateIconTop = <%% 18, 18, 18, 18, 4 %%>;
-    dateIconWidth = <%% 22, 22, 22, 22, 5 %%>;
+    dateIconWidth = <%% 20, 20, 20, 20, 5 %%>;
     dateIconRight = <%% 24, 24, 24, 24, 4 %%>;
 
+    daydayFieldTop = <%% (outerMargin * 2), (outerMargin * 2), (outerMargin * 2), (outerMargin * 2), 21 %%>;
     daydayMargin = <%% 20, 20, 20, 20, 4 %%>;
     daydaySize = <%% 16, 16, 16, 16, 3.3 %%>;
     daydayTextTop = <%% (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 1.7 %%>;
@@ -825,12 +829,12 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             width: withOut(grayBarWidth + (outerMargin * 4) + titleWidth + (daydayIndent * 2), ea),
             height: String(weekBlockHeight) + ea,
             background: colorChip.white,
-            top: String(outerMargin * 2) + ea,
+            top: String(daydayFieldTop) + ea,
             left: String(grayBarWidth + (outerMargin * 2) + titleWidth + daydayVisualLeft + daydayIndent) + ea,
             boxSizing: "border-box",
             zIndex: String(1),
             borderRadius: String(50) + ea,
-            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            boxShadow: desktop ? "0px 3px 14px -9px " + colorChip.shadow : "0px 2px 14px -9px " + colorChip.shadow,
             opacity: String(0.95),
           }
         });

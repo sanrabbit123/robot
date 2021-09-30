@@ -88,9 +88,6 @@ FrontMethods.prototype.addFrontMethods = async function () {
       if (typeof keyName !== "string") {
         throw new Error("invaild input");
       }
-      console.log("this!");
-      console.log(keyName);
-      await sleep(200);
       await ajaxPromise({ key: keyName }, HOSTCONST + "/pressKey");
       await sleep(500);
     }
@@ -144,6 +141,23 @@ FrontMethods.prototype.addFrontMethods = async function () {
 
       await ajaxPromise(data, HOSTCONST + "/clickElement");
 
+    }
+
+    frontGeneral.crossIframe = async function (dom) {
+      if (dom === undefined || dom === null) {
+        throw new Error("must be dom");
+      }
+      let rect;
+      let x, y;
+      let data;
+
+      rect = dom.getBoundingClientRect();
+      x = rect.left + (rect.width / 2);
+      y = rect.top + (rect.height / 2);
+
+      data = { x, y };
+
+      await ajaxPromise(data, HOSTCONST + "/crossIframe");
     }
 
     frontGeneral.calendarInput = async function (input, value, calendarBox, iframeBoo = false, iframe = null) {
