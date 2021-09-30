@@ -10,6 +10,7 @@ module.exports = function (arg, info) {
 
         if (document.querySelector('.input_search') !== null) {
           await injectionInput(document.querySelector('.input_search'), rawAddress);
+          await pressKey("enter");
         }
 
 

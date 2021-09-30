@@ -84,6 +84,15 @@ FrontMethods.prototype.addFrontMethods = async function () {
       await sleep(1000);
     }
 
+    frontGeneral.pressKey = async function (keyName) {
+      if (typeof keyName !== "string") {
+        throw new Error("invaild input");
+      }
+      await sleep(200);
+      await ajaxPromise({ key: keyName }, HOSTCONST + "/pressKey");
+      await sleep(500);
+    }
+
     frontGeneral.clickElement = async function (dom, iframeBoo = false, iframe = null) {
       if (dom === undefined || dom === null) {
         throw new Error("must be dom");

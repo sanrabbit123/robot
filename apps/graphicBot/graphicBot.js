@@ -464,7 +464,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       throw new Error("front render first");
     }
     let listDir = await fileSystem(`readDir`, [ this.list ]);
-    listDir = listDir.filter((a) => { return a !== `.DS_Store` }).filter((a) => { return !/\._/.test(a); });
+    listDir = listDir.filter((a) => { return a !== `.DS_Store` }).filter((a) => { return /^[0-9]/.test(a); });
     listDir.sort((a, b) => { return Number(a.split('_')[0].replace(/[^0-9]/g, '')) - Number(b.split('_')[0].replace(/[^0-9]/g, '')); });
     if (listDir[num] === undefined) {
       throw new Error("index out error");
@@ -910,6 +910,32 @@ GraphicBot.prototype.botRouter = function () {
         await instance.clipBoard(text);
         await instance.pasteText();
 
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "OK" });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  funcObj.post_pressKey = {
+    link: [ "/pressKey" ],
+    func: async function (req, res) {
+      try {
+        if (req.body.key === undefined) {
+          throw new Error("must key name");
+        }
+        const { screenSize, chromeSize } = instance;
+        const chromeHeight = chromeSize.top;
+        const chromeLeft = chromeSize.left;
+        const robot = instance.bot;
+        let { key } = req.body;
+        await instance.pressKey(key);
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
