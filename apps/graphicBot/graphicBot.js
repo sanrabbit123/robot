@@ -464,15 +464,12 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
       throw new Error("front render first");
     }
     let listDir = await fileSystem(`readDir`, [ this.list ]);
-    listDir = listDir.filter((a) => { return a !== `.DS_Store` });
+    listDir = listDir.filter((a) => { return a !== `.DS_Store` }).filter((a) => { return !/\._/.test(a); });
     listDir.sort((a, b) => { return Number(a.split('_')[0].replace(/[^0-9]/g, '')) - Number(b.split('_')[0].replace(/[^0-9]/g, '')); });
     if (listDir[num] === undefined) {
       throw new Error("index out error");
     }
-    console.log(listDir)
     const arrFunc = require(this.list + "/" + listDir[num]);
-    console.log(num);
-    console.log(listDir[num]);
     const arr = arrFunc(arg, this.info);
     if (!Array.isArray(arr)) {
       throw new Error("must be array");
