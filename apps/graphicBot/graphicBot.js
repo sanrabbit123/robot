@@ -1174,7 +1174,7 @@ GraphicBot.prototype.botRouter = function () {
     link: [ "/apartment" ],
     func: async function (req, res) {
       try {
-        const taskNumber = 2;
+        const taskNumber = 3;
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, "" ]);
         if (instance.task !== null) {
           clearTimeout(instance.task);
