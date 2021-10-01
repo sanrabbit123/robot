@@ -381,7 +381,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
     size = <%% 15, 15, 14, 13, 3.6 %%>;
     sizeVisual = <%% 1, 1, 1, 1, 0.6 %%>;
-    titleWidth = <%% 120, 120, 120, 80, 0 %%>;
+    titleWidth = <%% 130, 120, 120, 80, 0 %%>;
     titlePaddingLeft = <%% 5, 5, 3, 1, 0.1 %%>;
     titlePaddingRight = <%% 50, 50, 30, 18, 5 %%>;
     titleLineHeight = 1.55;
