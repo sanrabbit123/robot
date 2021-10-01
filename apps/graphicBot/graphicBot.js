@@ -865,6 +865,8 @@ GraphicBot.prototype.botRouter = function () {
         console.log(map(to), path, data);
         console.log(JSON.stringify(data, null, 2));
 
+        console.log(map(to) + path, data);
+
         responseData_raw = await requestSystem(map(to) + path, data, { headers: { "Content-Type": "application/json" } });
         responseData = responseData_raw.data;
 
