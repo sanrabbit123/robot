@@ -12,6 +12,7 @@ module.exports = function (arg, info) {
     },
     async function () {
       try {
+        const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') !== null) {
           document.querySelector('.complex_detail_link').firstChild.click();
@@ -90,6 +91,8 @@ module.exports = function (arg, info) {
           }
 
           final = {
+            raw, apart, cliid,
+            id: window.location.pathname.split("/")[1],
             entire: result,
             detail: pyeongArr,
             link: (window.location.protocol + "//" + window.location.host + window.location.pathname)
@@ -145,6 +148,8 @@ module.exports = function (arg, info) {
     },
     async function () {
       try {
+        const { raw, cliid } = equalJson(JSON.stringify(POSTCONST));
+        const { apartName: apart } = equalJson(JSON.stringify(ACCUMULATIONDATA));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') !== null) {
           document.querySelector('.complex_detail_link').firstChild.click();
@@ -223,6 +228,8 @@ module.exports = function (arg, info) {
           }
 
           final = {
+            raw, apart, cliid,
+            id: window.location.pathname.split("/")[1],
             entire: result,
             detail: pyeongArr,
             link: (window.location.protocol + "//" + window.location.host + window.location.pathname)
