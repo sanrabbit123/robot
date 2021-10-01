@@ -396,7 +396,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     blockBarBottom = 2.7;
 
     dateNumberSize = <%% 17, 16, 14, 12, 2.9 %%>;
-    dateNumberTop = <%% 15, 14, 13, 10, 1.6 %%>;
+    dateNumberTop = <%% 15, 14, 13, 10, 1.5 %%>;
     dateNumberLeft = <%% 23, 20, 15, 12, 0 %%>;
     dateNumberWidth = <%% 60, 56, 50, 42, 0 %%>;
 
@@ -406,8 +406,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
     daydayFieldTop = <%% (outerMargin * 2), (outerMargin * 2), (outerMargin * 2), (outerMargin * 2), 21 %%>;
     daydayMargin = <%% 20, 20, 20, 20, 4 %%>;
-    daydaySize = <%% 16, 16, 14, 13, 3.3 %%>;
-    daydayTextTop = <%% (isMac() ? 16 : 18), (isMac() ? 16 : 18), 12, 10, 1.5 %%>;
+    daydaySize = <%% 16, 16, 14, 13, 3.2 %%>;
+    daydayTextTop = <%% (isMac() ? 16 : 18), (isMac() ? 16 : 18), 12, 10, 1.4 %%>;
     daydayBarTop = <%% 16, 16, 16, 16, 2 %%>;
     daydayBarBottom = <%% 18, 18, 18, 18, 2 %%>;
     daydayIndent = <%% 7, 7, 7, 7, 0.8 %%>;
