@@ -13,8 +13,8 @@ const DataConsole = function () {
 DataConsole.prototype.mediaQuery = function (code) {
   const conditions = [
     "window.innerWidth > 1450",
-    "window.innerWidth <= 1450 && window.innerWidth > 1050",
-    "window.innerWidth <= 1050 && window.innerWidth > 900",
+    "window.innerWidth <= 1450 && window.innerWidth > 1100",
+    "window.innerWidth <= 1100 && window.innerWidth > 900",
     "window.innerWidth <= 900 && window.innerWidth > 760",
     "window.innerWidth <= 760"
   ];
