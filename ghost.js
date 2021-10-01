@@ -1885,9 +1885,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invalid post");
         }
         const data = equalJson(req.body.json);
-        const { entire, detail, link } = data;
-
-        console.log(entire, detail, link);
+        console.log(data);
 
         res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
