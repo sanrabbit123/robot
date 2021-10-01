@@ -1869,6 +1869,32 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - apartment info
+  funcObj.post_apartmentInfo = {
+    link: [ "/apartmentInfo" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.data === undefined) {
+          throw new Error("invalid post");
+        }
+        const { data } = equalJson(req.body);
+        const { entire, detail, link } = data;
+
+        console.log(entire, detail, link);
+
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {

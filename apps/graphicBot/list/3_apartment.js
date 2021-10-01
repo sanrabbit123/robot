@@ -16,7 +16,91 @@ module.exports = function (arg, info) {
         if (document.querySelector('.complex_detail_link') !== null) {
           document.querySelector('.complex_detail_link').firstChild.click();
           await sleep(1000);
-          // document.querySelector('.info_table_wrap')
+
+          const infoTable = document.querySelector('.info_table_wrap');
+          const items = infoTable.querySelectorAll('.info_table_item');
+          let length;
+          let keyArr, valueArr;
+          let result;
+          let pyeongs;
+          let pyeongArr;
+          let pyeongItems;
+          let tempArr;
+          let final;
+
+          keyArr = [];
+          valueArr = [];
+          for (let item of items) {
+            length = item.children.length;
+            for (let i = 0; i < length; i++) {
+              if (i % 2 === 0) {
+                keyArr.push(item.children[i].textContent);
+              } else {
+                valueArr.push(item.children[i].textContent);
+              }
+            }
+          }
+          result = [];
+          for (let i = 0; i < keyArr.length; i++) {
+            result.push({
+              name: keyArr[i].trim(),
+              value: valueArr[i].trim()
+            });
+          }
+
+          if (document.querySelector('.btn_moretab') !== null) {
+            document.querySelector('.btn_moretab').click();
+          }
+
+          if (document.getElementById("complex_pyeong_tab_list") !== null) {
+            pyeongs = document.getElementById("complex_pyeong_tab_list").querySelectorAll('a');
+            pyeongArr = [];
+            for (let dom of pyeongs) {
+              dom.click();
+              pyeongItems = document.getElementById("tabpanel").querySelector('.info_table_wrap').querySelectorAll('.info_table_item');
+              keyArr = [];
+              valueArr = [];
+              for (let item of pyeongItems) {
+                length = item.children.length;
+                for (let i = 0; i < length; i++) {
+                  if (i % 2 === 0) {
+                    keyArr.push(item.children[i].textContent);
+                  } else {
+                    valueArr.push(item.children[i].textContent);
+                  }
+                }
+              }
+
+              if (keyArr.length !== valueArr.length) {
+                if (keyArr.length > valueArr.length) {
+                  keyArr = keyArr.slice(0, valueArr.length);
+                } else {
+                  valueArr = valueArr.slice(0, keyArr.length);
+                }
+              }
+              tempArr = [];
+              for (let i = 0; i < keyArr.length; i++) {
+                tempArr.push({
+                  name: keyArr[i].trim(),
+                  value: valueArr[i].trim()
+                });
+              }
+              pyeongArr.push(tempArr);
+            }
+          }
+
+          final = {
+            entire: result,
+            detail: pyeongArr,
+            link: (window.location.protocol + "//" + window.location.host + window.location.pathname)
+          };
+
+          await ajaxPromise({
+            to: "office",
+            path: "/apartmentInfo",
+            data: final,
+          }, HOSTCONST + "/receive");
+
           await ajaxPromise({ to: 0, data: 2 }, ENDCONST);
           return true;
         }
@@ -65,7 +149,91 @@ module.exports = function (arg, info) {
         if (document.querySelector('.complex_detail_link') !== null) {
           document.querySelector('.complex_detail_link').firstChild.click();
           await sleep(1000);
-          // document.querySelector('.info_table_wrap')
+
+          const infoTable = document.querySelector('.info_table_wrap');
+          const items = infoTable.querySelectorAll('.info_table_item');
+          let length;
+          let keyArr, valueArr;
+          let result;
+          let pyeongs;
+          let pyeongArr;
+          let pyeongItems;
+          let tempArr;
+          let final;
+
+          keyArr = [];
+          valueArr = [];
+          for (let item of items) {
+            length = item.children.length;
+            for (let i = 0; i < length; i++) {
+              if (i % 2 === 0) {
+                keyArr.push(item.children[i].textContent);
+              } else {
+                valueArr.push(item.children[i].textContent);
+              }
+            }
+          }
+          result = [];
+          for (let i = 0; i < keyArr.length; i++) {
+            result.push({
+              name: keyArr[i].trim(),
+              value: valueArr[i].trim()
+            });
+          }
+
+          if (document.querySelector('.btn_moretab') !== null) {
+            document.querySelector('.btn_moretab').click();
+          }
+
+          if (document.getElementById("complex_pyeong_tab_list") !== null) {
+            pyeongs = document.getElementById("complex_pyeong_tab_list").querySelectorAll('a');
+            pyeongArr = [];
+            for (let dom of pyeongs) {
+              dom.click();
+              pyeongItems = document.getElementById("tabpanel").querySelector('.info_table_wrap').querySelectorAll('.info_table_item');
+              keyArr = [];
+              valueArr = [];
+              for (let item of pyeongItems) {
+                length = item.children.length;
+                for (let i = 0; i < length; i++) {
+                  if (i % 2 === 0) {
+                    keyArr.push(item.children[i].textContent);
+                  } else {
+                    valueArr.push(item.children[i].textContent);
+                  }
+                }
+              }
+
+              if (keyArr.length !== valueArr.length) {
+                if (keyArr.length > valueArr.length) {
+                  keyArr = keyArr.slice(0, valueArr.length);
+                } else {
+                  valueArr = valueArr.slice(0, keyArr.length);
+                }
+              }
+              tempArr = [];
+              for (let i = 0; i < keyArr.length; i++) {
+                tempArr.push({
+                  name: keyArr[i].trim(),
+                  value: valueArr[i].trim()
+                });
+              }
+              pyeongArr.push(tempArr);
+            }
+          }
+
+          final = {
+            entire: result,
+            detail: pyeongArr,
+            link: (window.location.protocol + "//" + window.location.host + window.location.pathname)
+          };
+
+          await ajaxPromise({
+            to: "office",
+            path: "/apartmentInfo",
+            data: final,
+          }, HOSTCONST + "/receive");
+
           await ajaxPromise({ to: 0, data: 2 }, ENDCONST);
           return true;
         } else {
