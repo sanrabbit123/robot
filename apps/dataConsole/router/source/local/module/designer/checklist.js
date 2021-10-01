@@ -2969,6 +2969,7 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
+  this.fixTargets = [];
 
   if (!middleMode) {
     this.pageHistory.unshift({ path: "checklist", status: "list", desid });
@@ -2981,31 +2982,10 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
     for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].style.color = colorChip.black;
     }
-    if (this.rInitialIcon !== undefined && this.rInitialIcon !== null) {
-      this.rInitialIcon.parentElement.removeChild(this.rInitialIcon);
+    if (this.iconTong !== undefined && this.iconTong !== null) {
+      this.iconTong.parentElement.removeChild(this.iconTong);
     }
-    if (this.nextIcon !== undefined && this.nextIcon !== null) {
-      this.nextIcon.parentElement.removeChild(this.nextIcon);
-    }
-    if (this.mInitialIcon !== undefined && this.mInitialIcon !== null) {
-      this.mInitialIcon.parentElement.removeChild(this.mInitialIcon);
-    }
-    if (this.previousIcon !== undefined && this.previousIcon !== null) {
-      this.previousIcon.parentElement.removeChild(this.previousIcon);
-    }
-    if (this.aInitialIcon !== undefined && this.aInitialIcon !== null) {
-      this.aInitialIcon.parentElement.removeChild(this.aInitialIcon);
-    }
-    if (this.listIcon !== undefined && this.listIcon !== null) {
-      this.listIcon.parentElement.removeChild(this.listIcon);
-    }
-    this.listIcon = null;
-    this.aInitialIcon = null;
-    this.previousIcon = null;
-    this.mInitialIcon = null;
-    this.nextIcon = null;
-    this.rInitialIcon = null;
-
+    this.iconTong = null;
     if (document.getElementById("memoTong") !== null) {
       totalMother.removeChild(document.getElementById("memoTong"));
     }
@@ -3980,21 +3960,24 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   let mother;
   let radius;
   let left, bottom;
+  let left2;
   let margin;
   let color;
   let iconTop;
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 18.5, 17, 14, 6 %%>;
-  left = <%% 40, 30, 25, 20, 0 %%>;
+  radius = <%% 20, 18.5, 17, 15, 6 %%>;
+  left = <%% 40, 30, 25, 19, 0 %%>;
+  left2 = <%% 40, 36, 36, 19, 0 %%>;
   bottom = <%% 40, 36, 30, 22, 7.2 %%>;
   margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12, 11, 11, 3.8 %%>;
+  iconTop = <%% 12.5, 12, 11, 10, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
+    class: [ "iconTong" ],
     style: {
       display: "block",
       position: "fixed",
@@ -4061,7 +4044,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -4111,7 +4094,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -4167,6 +4150,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   nextIcon = nodeArr[8];
   rInitialIcon = nodeArr[10];
 
+  this.iconTong = mother;
   this.listIcon = listIcon;
   this.aInitialIcon = aInitialIcon;
   this.previousIcon = previousIcon;
@@ -4229,31 +4213,26 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
         const totalMother = document.querySelector(".totalMother");
         const grayBack = totalContents.children[0];
         const listPannel = totalMother.children[0].children[0];
-        const pastIconSetPannel = totalMother.children[1];
-        const mainBaseTong = totalMother.children[2];
-        const iconSetPannel = totalMother.lastChild;
+        const iconSetPannel = instance.iconTong;
+        const mainBaseTong = instance.mainBaseTong;
         const outerMargin = Number(mainBaseTong.style.top.replace(/[^0-9\.\-]/gi, ''));
 
         if (grayBack.getAttribute("toggle") !== "off") {
-
           grayBack.style.width = String(0) + ea;
-          listPannel.style.transform = "translateX(" + String(instance.grayBarWidth * -1) + ea + ")";
-          pastIconSetPannel.style.background = "transparent";
+          listPannel.style.transform = "translateX(" + String((instance.grayBarWidth + instance.tabletWidth) * -1) + ea + ")";
           iconSetPannel.style.background = "transparent";
           mainBaseTong.style.left = String(outerMargin) + ea;
           mainBaseTong.style.width = withOut(outerMargin * 2, ea);
+          instance.listIcon.style.left = String(left2) + ea;
           grayBack.setAttribute("toggle", "off");
-
         } else {
-
           grayBack.style.width = String(instance.grayBarWidth) + ea;
           listPannel.style.transform = "translateX(" + String(0) + ea + ")";
-          pastIconSetPannel.style.background = colorChip.gray0;
           iconSetPannel.style.background = colorChip.gray0;
           mainBaseTong.style.left = String(instance.grayBarWidth + outerMargin) + ea;
           mainBaseTong.style.width = withOut(instance.grayBarWidth + (outerMargin * 2), ea);
+          instance.listIcon.style.left = String(left) + ea;
           grayBack.setAttribute("toggle", "on");
-
         }
 
       });

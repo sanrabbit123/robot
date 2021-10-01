@@ -46,7 +46,6 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
     };
   }
 
-
   if (!middleMode) {
     this.pageHistory.unshift({ path: "possible", status: "list", desid });
   }
@@ -54,6 +53,7 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
+  this.fixTargets = [];
 
   if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
     this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
@@ -61,31 +61,10 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
     for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].style.color = colorChip.black;
     }
-    if (this.rInitialIcon !== undefined && this.rInitialIcon !== null) {
-      this.rInitialIcon.parentElement.removeChild(this.rInitialIcon);
+    if (this.iconTong !== undefined && this.iconTong !== null) {
+      this.iconTong.parentElement.removeChild(this.iconTong);
     }
-    if (this.nextIcon !== undefined && this.nextIcon !== null) {
-      this.nextIcon.parentElement.removeChild(this.nextIcon);
-    }
-    if (this.mInitialIcon !== undefined && this.mInitialIcon !== null) {
-      this.mInitialIcon.parentElement.removeChild(this.mInitialIcon);
-    }
-    if (this.previousIcon !== undefined && this.previousIcon !== null) {
-      this.previousIcon.parentElement.removeChild(this.previousIcon);
-    }
-    if (this.aInitialIcon !== undefined && this.aInitialIcon !== null) {
-      this.aInitialIcon.parentElement.removeChild(this.aInitialIcon);
-    }
-    if (this.listIcon !== undefined && this.listIcon !== null) {
-      this.listIcon.parentElement.removeChild(this.listIcon);
-    }
-    this.listIcon = null;
-    this.aInitialIcon = null;
-    this.previousIcon = null;
-    this.mInitialIcon = null;
-    this.nextIcon = null;
-    this.rInitialIcon = null;
-
+    this.iconTong = null;
     if (document.getElementById("memoTong") !== null) {
       totalMother.removeChild(document.getElementById("memoTong"));
     }
@@ -399,34 +378,34 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
     dateBoxOpacity = 0.08;
 
-    size = <%% 15, 15, 15, 15, 3.6 %%>;
+    size = <%% 15, 15, 14, 13, 3.6 %%>;
     sizeVisual = <%% 1, 1, 1, 1, 0.6 %%>;
-    titleWidth = <%% 120, 120, 120, 120, 0 %%>;
-    titlePaddingLeft = <%% 5, 5, 5, 5, 0.1 %%>;
-    titlePaddingRight = <%% 50, 50, 50, 50, 5 %%>;
+    titleWidth = <%% 120, 120, 120, 80, 0 %%>;
+    titlePaddingLeft = <%% 5, 5, 3, 1, 0.1 %%>;
+    titlePaddingRight = <%% 50, 50, 30, 18, 5 %%>;
     titleLineHeight = 1.55;
     titleMobileIndent = 0.5;
     titleMobileMarginBottom = 2;
 
-    weekBlockHeight = <%% 60, 57, 54, 50, 8.6 %%>;
+    weekBlockHeight = <%% 60, 57, 50, 42, 8.6 %%>;
 
     mobileTotalPaddingTop = 14;
     blockPaddingTop = 5;
     blockMarginBottom = <%% 48, 48, 48, 48, 12 %%>;
     blockBarBottom = 2.7;
 
-    dateNumberSize = <%% 17, 16, 15, 15, 2.9 %%>;
-    dateNumberTop = <%% 15, 14, 13, 13, 1.8 %%>;
-    dateNumberLeft = <%% 23, 20, 19, 18, 0 %%>;
+    dateNumberSize = <%% 17, 16, 14, 12, 2.9 %%>;
+    dateNumberTop = <%% 15, 14, 13, 10, 1.8 %%>;
+    dateNumberLeft = <%% 23, 20, 15, 12, 0 %%>;
 
-    dateIconTop = <%% 18, 17, 17, 17, 4 %%>;
-    dateIconWidth = <%% 20, 19, 18, 17, 5 %%>;
-    dateIconRight = <%% 24, 20, 19, 18, 4 %%>;
+    dateIconTop = <%% 18, 18, 15, 13, 4 %%>;
+    dateIconWidth = <%% 20, 18, 16, 13, 5 %%>;
+    dateIconRight = <%% 24, 19, 15, 12, 4 %%>;
 
     daydayFieldTop = <%% (outerMargin * 2), (outerMargin * 2), (outerMargin * 2), (outerMargin * 2), 21 %%>;
     daydayMargin = <%% 20, 20, 20, 20, 4 %%>;
-    daydaySize = <%% 16, 16, 16, 16, 3.3 %%>;
-    daydayTextTop = <%% (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), (isMac() ? 16 : 18), 1.7 %%>;
+    daydaySize = <%% 16, 16, 14, 13, 3.3 %%>;
+    daydayTextTop = <%% (isMac() ? 16 : 18), (isMac() ? 16 : 18), 14, 10, 1.7 %%>;
     daydayBarTop = <%% 16, 16, 16, 16, 2 %%>;
     daydayBarBottom = <%% 18, 18, 18, 18, 2 %%>;
     daydayIndent = <%% 7, 7, 7, 7, 0.8 %%>;
@@ -436,11 +415,11 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     functionPannelRight = <%% 10, 10, 10, 10, 3 %%>;
     functionPannelWidth = <%% 150, 150, 150, 150, 14 %%>;
 
-    functionPannelPaddingTop = <%% 12, 12, 12, 12, 6 %%>;
+    functionPannelPaddingTop = <%% 12, 12, 11, 11, 6 %%>;
     functionPannelPaddingBottom = <%% 12, 12, 12, 12, 6 %%>;
 
-    functionPannelBlockHeight = <%% 24, 24, 24, 24, 5 %%>;
-    functionPannelSize = <%% 14, 14, 14, 14, 3 %%>;
+    functionPannelBlockHeight = <%% 24, 24, 22, 20, 5 %%>;
+    functionPannelSize = <%% 14, 14, 13, 12, 3 %%>;
     functionPannelLeft = <%% 18, 18, 18, 18, 4 %%>;
     functionPannelTextTop0 = <%% (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), (isMac() ? 2 : 4), 0 %%>;
     functionPannelTextTop1 = <%% 3, 3, 3, 3, 0 %%>;
@@ -838,6 +817,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             opacity: String(0.95),
           }
         });
+        this.fixTargets.push(daydayField);
         for (let i = 0; i < daydayLength; i++) {
           createNode({
             mother: daydayField,
@@ -1738,21 +1718,24 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
   let mother;
   let radius;
   let left, bottom;
+  let left2;
   let margin;
   let color;
   let iconTop;
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 18.5, 17, 14, 6 %%>;
-  left = <%% 40, 30, 25, 20, 0 %%>;
-  bottom = <%% 40, 36, 28, 22, 7.2 %%>;
+  radius = <%% 20, 18.5, 17, 15, 6 %%>;
+  left = <%% 40, 30, 25, 19, 0 %%>;
+  left2 = <%% 40, 36, 36, 19, 0 %%>;
+  bottom = <%% 40, 36, 30, 22, 7.2 %%>;
   margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12, 11.5, 11, 3.8 %%>;
+  iconTop = <%% 12.5, 12, 11, 10, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
+    class: [ "iconTong" ],
     style: {
       display: "block",
       position: "fixed",
@@ -1819,7 +1802,7 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -1869,7 +1852,7 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -1925,6 +1908,7 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
   nextIcon = nodeArr[8];
   rInitialIcon = nodeArr[10];
 
+  this.iconTong = mother;
   this.listIcon = listIcon;
   this.aInitialIcon = aInitialIcon;
   this.previousIcon = previousIcon;
@@ -1975,14 +1959,39 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
     if (desktop) {
 
       listIcon.addEventListener("click", function (e) {
-        let num = designer.information.did.replace(/[^0-9]/g, '');
-        let id;
-        id = '';
-        for (let i = 0; i < 3 - num.length; i++) {
-          id += '0';
+        const totalContents = document.getElementById("totalcontents");
+        const totalMother = document.querySelector(".totalMother");
+        const grayBack = totalContents.children[0];
+        const listPannel = totalMother.children[0].children[0];
+        const iconSetPannel = instance.iconTong;
+        const mainBaseTong = instance.mainBaseTong;
+        const outerMargin = Number(mainBaseTong.style.top.replace(/[^0-9\.\-]/gi, ''));
+        const [ fixTarget ] = instance.fixTargets;
+
+        if (grayBack.getAttribute("toggle") !== "off") {
+          grayBack.style.width = String(0) + ea;
+          listPannel.style.transform = "translateX(" + String((instance.grayBarWidth + instance.tabletWidth) * -1) + ea + ")";
+          iconSetPannel.style.background = "transparent";
+          mainBaseTong.style.left = String(outerMargin) + ea;
+          mainBaseTong.style.width = withOut(outerMargin * 2, ea);
+          grayBack.setAttribute("toggle", "off");
+          instance.listIcon.style.left = String(left2) + ea;
+
+          fixTarget.style.left = String(Number(fixTarget.style.left.replace(/[^0-9\.\-]/gi, '')) - instance.grayBarWidth) + ea;
+          fixTarget.style.width = "calc(100% - " + String(Number(fixTarget.style.width.split('-')[1].replace(/[^0-9\.\-]/gi, '')) - instance.grayBarWidth) + ea + ")";
+        } else {
+          grayBack.style.width = String(instance.grayBarWidth) + ea;
+          listPannel.style.transform = "translateX(" + String(0) + ea + ")";
+          iconSetPannel.style.background = colorChip.gray0;
+          mainBaseTong.style.left = String(instance.grayBarWidth + outerMargin) + ea;
+          mainBaseTong.style.width = withOut(instance.grayBarWidth + (outerMargin * 2), ea);
+          grayBack.setAttribute("toggle", "on");
+          instance.listIcon.style.left = String(left) + ea;
+
+          fixTarget.style.left = String(Number(fixTarget.style.left.replace(/[^0-9\.\-]/gi, '')) + instance.grayBarWidth) + ea;
+          fixTarget.style.width = "calc(100% - " + String(Number(fixTarget.style.width.split('-')[1].replace(/[^0-9\.\-]/gi, '')) + instance.grayBarWidth) + ea + ")";
         }
-        id += num;
-        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+
       });
 
     } else {

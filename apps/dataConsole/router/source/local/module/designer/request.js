@@ -14,6 +14,7 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
+  this.fixTargets = [];
 
   if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
     this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
@@ -21,31 +22,10 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
     for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].style.color = colorChip.black;
     }
-    if (this.rInitialIcon !== undefined && this.rInitialIcon !== null) {
-      this.rInitialIcon.parentElement.removeChild(this.rInitialIcon);
+    if (this.iconTong !== undefined && this.iconTong !== null) {
+      this.iconTong.parentElement.removeChild(this.iconTong);
     }
-    if (this.nextIcon !== undefined && this.nextIcon !== null) {
-      this.nextIcon.parentElement.removeChild(this.nextIcon);
-    }
-    if (this.mInitialIcon !== undefined && this.mInitialIcon !== null) {
-      this.mInitialIcon.parentElement.removeChild(this.mInitialIcon);
-    }
-    if (this.previousIcon !== undefined && this.previousIcon !== null) {
-      this.previousIcon.parentElement.removeChild(this.previousIcon);
-    }
-    if (this.aInitialIcon !== undefined && this.aInitialIcon !== null) {
-      this.aInitialIcon.parentElement.removeChild(this.aInitialIcon);
-    }
-    if (this.listIcon !== undefined && this.listIcon !== null) {
-      this.listIcon.parentElement.removeChild(this.listIcon);
-    }
-    this.listIcon = null;
-    this.aInitialIcon = null;
-    this.previousIcon = null;
-    this.mInitialIcon = null;
-    this.nextIcon = null;
-    this.rInitialIcon = null;
-
+    this.iconTong = null;
     if (document.getElementById("memoTong") !== null) {
       totalMother.removeChild(document.getElementById("memoTong"));
     }
@@ -497,7 +477,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
           }
         }
 
-        mother.parentElement.style.height = withOut((motherTop * 2) + visualSpecific, ea);
+        mother.parentElement.style.height = withOut(motherTop, ea);
         mother.style.paddingTop = String(motherTop) + ea;
         mother.style.height = withOut(motherTop, ea);
         mother.style.overflow = "scroll";
@@ -878,25 +858,32 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     let whitePopupEvent;
     let clientPhoto;
 
-    topMargin = <%% 42, 42, 40, 42, 5.5 %%>;
-    leftMargin = <%% 50, 50, 48, 50, 5.5 %%>;
-    titleSize = <%% 35, 33, 30, 30, 5.2 %%>;
+    topMargin = <%% 42, 38, 32, 30, 5.5 %%>;
+    leftMargin = <%% 50, 46, 38, 32, 5.5 %%>;
+
+    titleSize = <%% 35, 33, 30, 26, 5.2 %%>;
     titlePaddingLeft = <%% 1, 1, 1, 1, 0 %%>;
-    titleBottom = <%% 35, 35, 35, 35, 5 %%>;
+    titleBottom = <%% 35, 29, 28, 20, 5 %%>;
     titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.2 %%>;
     titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
-    clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
+
     fontSize = <%% 15, 14, 13, 12, 3.5 %%>;
-    contentsBetween = <%% 32, 32, 32, 32, 6 %%>;
-    clientInfoLeftWidth = <%% 380, 260, 240, 200, 20 %%>;
+    contentsBetween = <%% 32, 28, 25, 22, 6 %%>;
+
+    clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
+    clientInfoLeftWidth = <%% 380, 260, 215, 130, 20 %%>;
+
     wordsBetween0 = <%% 6, 6, 6, 6, 0.5 %%>;
     wordsBetween1 = <%% 22, 22, 22, 22, 2.5 %%>;
     wordsBetween2 = <%% 10, 10, 10, 10, 1 %%>;
+
     tableVisual = <%% 18, 18, 16, 10, 2 %%>;
-    leftIndent = <%% 15, 15, 15, 15, 2.5 %%>;
+    leftIndent = <%% 15, 14, 13, 12, 2.5 %%>;
+
     arrowTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 5 : 4), 1.6 %%>;
-    arrowWidth = <%% 8, 8, 8, 8, 1.6 %%>;
+    arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
     arrowLeft = <%% 1, 1, 1, 1, 0 %%>;
+
     lineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.65 %%>;
     photoWidth = <%% 260, 260, 260, 260, 20 %%>;
     photoMargin = <%% 10, 10, 10, 10, 1.5 %%>;
@@ -1003,10 +990,12 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       contentsClientInfo.appendChild(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
       contentsClientInfo.children[1].style.display = "inline-block";
       contentsClientInfo.children[1].style.verticalAlign = "top";
+      this.fixTargets.push(contentsClientInfo.lastChild);
     } else {
       width = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2)) / sum;
       contentsClientInfo.insertBefore(mother.makeTable(matrix, { style: { width }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }), contentsClientInfo.firstChild);
       contentsClientInfo.children[0].style.marginBottom = String(contentsBetween) + ea;
+      this.fixTargets.push(contentsClientInfo.firstChild);
     }
 
     whitePopupEvent = async function (e) {
@@ -2207,21 +2196,24 @@ DesignerJs.prototype.requestIconSet = function (desid) {
   let mother;
   let radius;
   let left, bottom;
+  let left2;
   let margin;
   let color;
   let iconTop;
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 18.5, 17, 14, 6 %%>;
-  left = <%% 40, 30, 25, 20, 0 %%>;
-  bottom = <%% 40, 36, 28, 22, 7.2 %%>;
+  radius = <%% 20, 18.5, 17, 15, 6 %%>;
+  left = <%% 40, 30, 25, 19, 0 %%>;
+  left2 = <%% 40, 36, 36, 19, 0 %%>;
+  bottom = <%% 40, 36, 30, 22, 7.2 %%>;
   margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12, 11.5, 11, 3.8 %%>;
+  iconTop = <%% 12.5, 12, 11, 10, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
+    class: [ "iconTong" ],
     style: {
       display: "block",
       position: "fixed",
@@ -2288,7 +2280,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2338,7 +2330,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2394,6 +2386,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
   nextIcon = nodeArr[8];
   rInitialIcon = nodeArr[10];
 
+  this.iconTong = mother;
   this.listIcon = listIcon;
   this.aInitialIcon = aInitialIcon;
   this.previousIcon = previousIcon;
@@ -2444,14 +2437,38 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     if (desktop) {
 
       listIcon.addEventListener("click", function (e) {
-        let num = designer.information.did.replace(/[^0-9]/g, '');
-        let id;
-        id = '';
-        for (let i = 0; i < 3 - num.length; i++) {
-          id += '0';
+        const totalContents = document.getElementById("totalcontents");
+        const totalMother = document.querySelector(".totalMother");
+        const grayBack = totalContents.children[0];
+        const listPannel = totalMother.children[0].children[0];
+        const iconSetPannel = instance.iconTong;
+        const mainBaseTong = instance.mainBaseTong;
+        const outerMargin = Number(mainBaseTong.style.top.replace(/[^0-9\.\-]/gi, ''));
+
+        if (grayBack.getAttribute("toggle") !== "off") {
+          grayBack.style.width = String(0) + ea;
+          listPannel.style.transform = "translateX(" + String((instance.grayBarWidth + instance.tabletWidth) * -1) + ea + ")";
+          iconSetPannel.style.background = "transparent";
+          mainBaseTong.style.left = String(outerMargin) + ea;
+          mainBaseTong.style.width = withOut(outerMargin * 2, ea);
+          instance.listIcon.style.left = String(left2) + ea;
+          grayBack.setAttribute("toggle", "off");
+          if (instance.fixTargets.length > 0) {
+            instance.fixTargets[0].style.width = String(Number(instance.fixTargets[0].style.width.replace(/[^0-9\-\.]/gi, '')) + instance.grayBarWidth) + ea;
+          }
+        } else {
+          grayBack.style.width = String(instance.grayBarWidth) + ea;
+          listPannel.style.transform = "translateX(" + String(0) + ea + ")";
+          iconSetPannel.style.background = colorChip.gray0;
+          mainBaseTong.style.left = String(instance.grayBarWidth + outerMargin) + ea;
+          mainBaseTong.style.width = withOut(instance.grayBarWidth + (outerMargin * 2), ea);
+          instance.listIcon.style.left = String(left) + ea;
+          grayBack.setAttribute("toggle", "on");
+          if (instance.fixTargets.length > 0) {
+            instance.fixTargets[0].style.width = String(Number(instance.fixTargets[0].style.width.replace(/[^0-9\-\.]/gi, '')) - instance.grayBarWidth) + ea;
+          }
         }
-        id += num;
-        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+
       });
 
     } else {

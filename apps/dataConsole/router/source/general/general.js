@@ -4001,7 +4001,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
 
   borderWeight = <%% 1, 1, 1, 1, 1 %%>;
 
-  size = <%% 15, 14, 14, 13, 2.6 %%>;
+  size = <%% 15, 14, 13, 11, 2.6 %%>;
   if (typeof option.style.size === "number") {
     size = option.style.size;
   }
@@ -4009,22 +4009,22 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     size = option.style.fontSize;
   }
 
-  titleSize = <%% 15, 14, 14, 13, 3.1 %%>;
+  titleSize = <%% 15, 14, 13, 11, 3.1 %%>;
   if (typeof option.style.titleSize === "number") {
     titleSize = option.style.titleSize;
   }
 
-  innerMargin = <%% 8, 8, 8, 6, 2 %%>;
+  innerMargin = <%% 8, 8, 7, 6, 2 %%>;
   if (typeof option.style.innerMargin === "number") {
     innerMargin = option.style.innerMargin;
   }
 
-  innerMarginLeft = <%% 15, 15, 15, 12, 3 %%>;
+  innerMarginLeft = <%% 15, 10, 10, 6, 3 %%>;
   if (typeof option.style.innerMarginLeft === "number") {
     innerMarginLeft = option.style.innerMarginLeft;
   }
 
-  innerMarginTitleLeft = <%% 15, 15, 15, 12, 2 %%>;
+  innerMarginTitleLeft = <%% 15, 10, 10, 6, 2 %%>;
   if (typeof option.style.innerMarginTitleLeft === "number") {
     innerMarginTitleLeft = option.style.innerMarginTitleLeft;
   }

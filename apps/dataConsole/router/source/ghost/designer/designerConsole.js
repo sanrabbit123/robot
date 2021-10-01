@@ -47,8 +47,8 @@ const DesignerConsoleJs = function () {
 
 DesignerConsoleJs.prototype.navigatorLaunching = function () {
   const instance = this;
-  const { ea, designer, desid, modes, media, grayBarWidth } = this;
-  const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo } = GeneralJs;
+  const { ea, designer, desid, modes, media, grayBarWidth, tabletWidth } = this;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo, setQueue } = GeneralJs;
   const totalContents = document.getElementById("totalcontents");
   const totalMother = document.querySelector(".totalMother");
   const mother = totalMother.firstChild;
@@ -231,14 +231,14 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
 
   if (desktop) {
 
-    margin = <%% 40, 31, 27, 20, 35 %%>;
+    margin = <%% 40, 31, 27, 24, 35 %%>;
     size = <%% 16, 15, 14, 13, 15 %%>;
     barHeight = 19;
     marginBottom = 23;
     indent = 16;
     menuMargin = <%% 15, 11, 9, 8, 15 %%>;
     secondBold = 500;
-    titleSize = <%% 21, 19, 18, 16, 3 %%>;
+    titleSize = <%% 21, 19, 17, 15, 3 %%>;
 
     menu = [];
     for (let i = 0; i < menuMap.length; i++) {
@@ -249,12 +249,17 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           { index: String(i) },
           { mode: menuMap[i].mode }
         ],
-        events: [
-          {
-            type: "click",
-            event: menuMap[i].event,
+        event: {
+          click: function (e) {
+            const index = Number(this.getAttribute("index"));
+            menuMap[index].event.call(this, e);
+            if (tabletWidth !== 0) {
+              setQueue(() => {
+                instance.listIcon.click();
+              }, 500);
+            }
           }
-        ],
+        },
         style: {
           position: "relative",
           fontSize: "inherit",
@@ -296,13 +301,26 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         top: String(margin) + ea,
         marginLeft: String(margin) + ea,
         marginRight: String(margin) + ea,
-        width: String(grayBarWidth - (margin * 2)) + ea,
+        width: String(grayBarWidth + tabletWidth - (margin * 2)) + ea,
         height: withOut(100, margin * 2, ea),
         fontSize: String(size) + ea,
         fontWeight: String(secondBold),
         color: colorChip.black
       },
       children: [
+        {
+          style: {
+            display: tabletWidth === 0 ? "none" : "block",
+            position: "absolute",
+            top: String(-1 * margin) + ea,
+            left: String(-1 * margin) + ea,
+            width: withOut(-1 * 2 * margin, ea),
+            height: withOut(-1 * 2 * margin, ea),
+            boxShadow: "1px 0px 13px -9px " + colorChip.shadow,
+            background: colorChip.gray0,
+            opacity: String(0.9),
+          }
+        },
         {
           text: "<b%Designer%b> Console",
           style: {
@@ -644,7 +662,6 @@ DesignerConsoleJs.prototype.initialLogin = function () {
         pass = false;
       } else {
         const [ designer ] = designers;
-        window.alert(`${designer.designer} 디자이너님 안녕하세요! 인증번호를 입력해주세요!`);
         instance.designer = designer;
         instance.desid = designer.desid;
         newInput = input.cloneNode(true);
@@ -825,10 +842,10 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
 DesignerConsoleJs.prototype.consoleView = async function () {
   const instance = this;
-  const { ea, desid, media } = this;
+  const { ea, desid, media, tabletWidth } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, colorChip, withOut, scrollTo, returnGet } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, scrollTo, returnGet, setQueue } = GeneralJs;
   try {
     const getObj = returnGet();
     let targetIndex;
@@ -858,6 +875,12 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       }
     }
 
+    if (tabletWidth !== 0) {
+      setQueue(() => {
+        instance.listIcon.click();
+      }, 500);
+    }
+
   } catch (e) {
     console.log(e);
   }
@@ -883,7 +906,8 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     loading.parentElement.removeChild(loading);
 
     this.constructor();
-    this.grayBarWidth = <%% 210, 180, 160, 150, 0 %%>;
+    this.grayBarWidth = <%% 210, 180, 0, 0, 0 %%>;
+    this.tabletWidth = <%% 0, 0, 148, 140, 0 %%>;
     this.belowHeight = 0;
     this.modes = [ "checklist", "report", "request", "possible" ];
     this.mode = this.modes[0];

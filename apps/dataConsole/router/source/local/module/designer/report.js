@@ -1501,6 +1501,7 @@ DesignerJs.prototype.reportDetailLaunching = function (desid, callback = null) {
   window.history.pushState({ path: "report", status: "list", desid }, '');
 
   this.desid = desid;
+  this.fixTargets = [];
 
   if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
     this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
@@ -1508,31 +1509,10 @@ DesignerJs.prototype.reportDetailLaunching = function (desid, callback = null) {
     for (let i = 1; i < this.standardDoms.length; i++) {
       this.standardDoms[i].style.color = colorChip.black;
     }
-    if (this.cInitialIcon !== undefined && this.cInitialIcon !== null) {
-      this.cInitialIcon.parentElement.removeChild(this.cInitialIcon);
+    if (this.iconTong !== undefined && this.iconTong !== null) {
+      this.iconTong.parentElement.removeChild(this.iconTong);
     }
-    if (this.nextIcon !== undefined && this.nextIcon !== null) {
-      this.nextIcon.parentElement.removeChild(this.nextIcon);
-    }
-    if (this.mInitialIcon !== undefined && this.mInitialIcon !== null) {
-      this.mInitialIcon.parentElement.removeChild(this.mInitialIcon);
-    }
-    if (this.previousIcon !== undefined && this.previousIcon !== null) {
-      this.previousIcon.parentElement.removeChild(this.previousIcon);
-    }
-    if (this.aInitialIcon !== undefined && this.aInitialIcon !== null) {
-      this.aInitialIcon.parentElement.removeChild(this.aInitialIcon);
-    }
-    if (this.listIcon !== undefined && this.listIcon !== null) {
-      this.listIcon.parentElement.removeChild(this.listIcon);
-    }
-    this.listIcon = null;
-    this.aInitialIcon = null;
-    this.previousIcon = null;
-    this.mInitialIcon = null;
-    this.nextIcon = null;
-    this.cInitialIcon = null;
-
+    this.iconTong = null;
     if (document.getElementById("memoTong") !== null) {
       totalMother.removeChild(document.getElementById("memoTong"));
     }
@@ -2372,21 +2352,24 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   let mother;
   let radius;
   let left, bottom;
+  let left2;
   let margin;
   let color;
   let iconTop;
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, cInitialIcon;
 
-  radius = <%% 20, 18.5, 17, 14, 6 %%>;
-  left = <%% 40, 30, 25, 20, 0 %%>;
-  bottom = <%% 40, 36, 28, 22, 7.2 %%>;
+  radius = <%% 20, 18.5, 17, 15, 6 %%>;
+  left = <%% 40, 30, 25, 19, 0 %%>;
+  left2 = <%% 40, 36, 36, 19, 0 %%>;
+  bottom = <%% 40, 36, 30, 22, 7.2 %%>;
   margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12, 11.5, 11, 3.8 %%>;
+  iconTop = <%% 12.5, 12, 11, 10, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
+    class: [ "iconTong" ],
     style: {
       display: "block",
       position: "fixed",
@@ -2453,7 +2436,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2503,7 +2486,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     {
       mother,
       style: {
-        display: ((instance.middleMode && mobile) ? "none" : "block"),
+        display: (instance.middleMode ? "none" : "block"),
         position: "absolute",
         width: String(radius * 2) + ea,
         height: String(radius * 2) + ea,
@@ -2559,6 +2542,7 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   nextIcon = nodeArr[8];
   cInitialIcon = nodeArr[10];
 
+  this.iconTong = mother;
   this.listIcon = listIcon;
   this.aInitialIcon = aInitialIcon;
   this.previousIcon = previousIcon;
@@ -2595,14 +2579,32 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     if (desktop) {
 
       listIcon.addEventListener("click", function (e) {
-        let num = designer.information.did.replace(/[^0-9]/g, '');
-        let id;
-        id = '';
-        for (let i = 0; i < 3 - num.length; i++) {
-          id += '0';
+        const totalContents = document.getElementById("totalcontents");
+        const totalMother = document.querySelector(".totalMother");
+        const grayBack = totalContents.children[0];
+        const listPannel = totalMother.children[0].children[0];
+        const iconSetPannel = instance.iconTong;
+        const mainBaseTong = instance.mainBaseTong;
+        const outerMargin = Number(mainBaseTong.style.top.replace(/[^0-9\.\-]/gi, ''));
+
+        if (grayBack.getAttribute("toggle") !== "off") {
+          grayBack.style.width = String(0) + ea;
+          listPannel.style.transform = "translateX(" + String((instance.grayBarWidth + instance.tabletWidth) * -1) + ea + ")";
+          iconSetPannel.style.background = "transparent";
+          mainBaseTong.style.left = String(outerMargin) + ea;
+          mainBaseTong.style.width = withOut(outerMargin * 2, ea);
+          grayBack.setAttribute("toggle", "off");
+          instance.listIcon.style.left = String(left2) + ea;
+        } else {
+          grayBack.style.width = String(instance.grayBarWidth) + ea;
+          listPannel.style.transform = "translateX(" + String(0) + ea + ")";
+          iconSetPannel.style.background = colorChip.gray0;
+          mainBaseTong.style.left = String(instance.grayBarWidth + outerMargin) + ea;
+          mainBaseTong.style.width = withOut(instance.grayBarWidth + (outerMargin * 2), ea);
+          grayBack.setAttribute("toggle", "on");
+          instance.listIcon.style.left = String(left) + ea;
         }
-        id += num;
-        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+
       });
 
     } else {
