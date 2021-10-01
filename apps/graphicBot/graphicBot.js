@@ -405,7 +405,7 @@ GraphicBot.prototype.selectAll = async function () {
 
 GraphicBot.prototype.copyText = async function () {
   const instance = this;
-  const { bot } = this;
+  const { bot, os } = this;
   const { sleep } = this.mother;
   try {
     bot.keyTap("c", os === "mac" ? "command" : "control");
@@ -458,7 +458,7 @@ GraphicBot.prototype.clipBoard = async function (text) {
 
 GraphicBot.prototype.botOrders = async function (num, arg) {
   const instance = this;
-  const { bot, screenSize, chromeSize } = this;
+  const { bot, screenSize, chromeSize, os } = this;
   const { sleep, fileSystem, copyToClipboard } = this.mother;
   try {
     if (typeof num !== "number") {
@@ -1027,7 +1027,7 @@ GraphicBot.prototype.botRouter = function () {
 
         robot.moveMouse(x, y);
         await sleep(500);
-        robot.keyTap("c", [ "shift", "command" ]);
+        robot.keyTap("c", [ "shift", (instance.os === "mac" ? "command" : "control") ]);
         robot.moveMouse(x, y);
         robot.mouseClick("left");
         await sleep(500);

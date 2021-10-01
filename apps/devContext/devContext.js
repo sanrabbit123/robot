@@ -77,7 +77,7 @@ DevContext.prototype.launching = async function () {
     const clients = await back.getClientsByQuery({});
     const data = await addr.apartNameSearch(clients[9].requests[0].request.space.address.value);
     console.log(data);
-    await requestSystem("http://localhost:3000/apartment", data, {
+    await requestSystem("https://home-liaison.serveftp.com:55556/apartment", data, {
       headers: { "Content-Type": "application/json" }
     });
 
