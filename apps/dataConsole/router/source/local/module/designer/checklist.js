@@ -3986,12 +3986,12 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 20, 20, 20, 6 %%>;
-  left = <%% 40, 35, 35, 35, 0 %%>;
-  bottom = <%% 40, 35, 35, 35, 7.2 %%>;
-  margin = <%% 6, 6, 6, 6, 0 %%>;
+  radius = <%% 20, 18.5, 17, 14, 6 %%>;
+  left = <%% 40, 30, 25, 20, 0 %%>;
+  bottom = <%% 40, 36, 30, 22, 7.2 %%>;
+  margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3.8 %%>;
+  iconTop = <%% 12.5, 12, 11, 11, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
@@ -4229,20 +4229,29 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
         const totalMother = document.querySelector(".totalMother");
         const grayBack = totalContents.children[0];
         const listPannel = totalMother.children[0].children[0];
+        const pastIconSetPannel = totalMother.children[1];
+        const mainBaseTong = totalMother.children[2];
         const iconSetPannel = totalMother.lastChild;
+        const outerMargin = Number(mainBaseTong.style.top.replace(/[^0-9\.\-]/gi, ''));
 
         if (grayBack.getAttribute("toggle") !== "off") {
 
           grayBack.style.width = String(0) + ea;
           listPannel.style.transform = "translateX(" + String(instance.grayBarWidth * -1) + ea + ")";
-          iconSetPannel.style.background = colorChip.white;
+          pastIconSetPannel.style.background = "transparent";
+          iconSetPannel.style.background = "transparent";
+          mainBaseTong.style.left = String(outerMargin) + ea;
+          mainBaseTong.style.width = withOut(outerMargin * 2, ea);
           grayBack.setAttribute("toggle", "off");
 
         } else {
 
           grayBack.style.width = String(instance.grayBarWidth) + ea;
           listPannel.style.transform = "translateX(" + String(0) + ea + ")";
+          pastIconSetPannel.style.background = colorChip.gray0;
           iconSetPannel.style.background = colorChip.gray0;
+          mainBaseTong.style.left = String(instance.grayBarWidth + outerMargin) + ea;
+          mainBaseTong.style.width = withOut(instance.grayBarWidth + (outerMargin * 2), ea);
           grayBack.setAttribute("toggle", "on");
 
         }

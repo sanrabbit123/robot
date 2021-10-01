@@ -775,17 +775,23 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           for (let obj of style.events) {
             if (Array.isArray(obj.type)) {
               for (let str of obj.type) {
-                dom_clone.addEventListener(str, obj.event);
+                if (typeof obj.event === "function") {
+                  dom_clone.addEventListener(str, obj.event);
+                }
               }
             } else if (typeof obj.type === "string") {
-              dom_clone.addEventListener(obj.type, obj.event);
+              if (typeof obj.event === "function") {
+                dom_clone.addEventListener(obj.type, obj.event);
+              }
             } else {
               throw new Error("invaild type");
             }
           }
         } else if (typeof style.events === "object" && style.events !== null) {
           for (let type in style.events) {
-            dom_clone.addEventListener(type, style.events[type]);
+            if (typeof style.events[type] === "function") {
+              dom_clone.addEventListener(type, style.events[type]);
+            }
           }
         }
       }
@@ -870,17 +876,23 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           for (let obj of style.events) {
             if (Array.isArray(obj.type)) {
               for (let str of obj.type) {
-                dom_clone.addEventListener(str, obj.event);
+                if (typeof obj.event === "function") {
+                  dom_clone.addEventListener(str, obj.event);
+                }
               }
             } else if (typeof obj.type === "string") {
-              dom_clone.addEventListener(obj.type, obj.event);
+              if (typeof obj.event === "function") {
+                dom_clone.addEventListener(obj.type, obj.event);
+              }
             } else {
               throw new Error("invaild type");
             }
           }
         } else if (typeof style.events === "object" && style.events !== null) {
           for (let type in style.events) {
-            dom_clone.addEventListener(type, style.events[type]);
+            if (typeof style.events[type] === "function") {
+              dom_clone.addEventListener(type, style.events[type]);
+            }
           }
         }
       }

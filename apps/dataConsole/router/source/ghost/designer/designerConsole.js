@@ -231,14 +231,14 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
 
   if (desktop) {
 
-    margin = <%% 40, 35, 35, 35, 35 %%>;
-    size = <%% 16, 15, 15, 15, 15 %%>;
+    margin = <%% 40, 31, 27, 20, 35 %%>;
+    size = <%% 16, 15, 14, 13, 15 %%>;
     barHeight = 19;
     marginBottom = 23;
     indent = 16;
-    menuMargin = <%% 15, 13, 13, 13, 15 %%>;
+    menuMargin = <%% 15, 11, 9, 8, 15 %%>;
     secondBold = 500;
-    titleSize = 21;
+    titleSize = <%% 21, 19, 18, 16, 3 %%>;
 
     menu = [];
     for (let i = 0; i < menuMap.length; i++) {
@@ -883,7 +883,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     loading.parentElement.removeChild(loading);
 
     this.constructor();
-    this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
+    this.grayBarWidth = <%% 210, 180, 160, 150, 0 %%>;
     this.belowHeight = 0;
     this.modes = [ "checklist", "report", "request", "possible" ];
     this.mode = this.modes[0];

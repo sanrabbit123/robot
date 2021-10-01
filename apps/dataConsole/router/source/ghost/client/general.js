@@ -181,9 +181,8 @@ GeneralJs.prototype.setNavigator = function (subTitle) {
       mode: "svg",
       source: this.returnLogo(colorChip.white, 0),
       class: [ "hoverDefault" ],
-      events: {
-        type: "click",
-        event: (e) => {
+      event: {
+        click: (e) => {
           blankHref(frontPage);
         }
       },

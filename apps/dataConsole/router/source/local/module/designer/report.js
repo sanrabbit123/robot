@@ -2378,12 +2378,12 @@ DesignerJs.prototype.reportIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, cInitialIcon;
 
-  radius = <%% 20, 20, 20, 20, 6 %%>;
-  left = <%% 40, 35, 35, 35, 0 %%>;
-  bottom = <%% 40, 35, 35, 35, 7.2 %%>;
-  margin = <%% 6, 6, 6, 6, 0 %%>;
+  radius = <%% 20, 18.5, 17, 14, 6 %%>;
+  left = <%% 40, 30, 25, 20, 0 %%>;
+  bottom = <%% 40, 36, 28, 22, 7.2 %%>;
+  margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3.8 %%>;
+  iconTop = <%% 12.5, 12, 11.5, 11, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),

@@ -408,20 +408,20 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     titleMobileIndent = 0.5;
     titleMobileMarginBottom = 2;
 
-    weekBlockHeight = <%% 60, 60, 60, 60, 8.6 %%>;
+    weekBlockHeight = <%% 60, 57, 54, 50, 8.6 %%>;
 
     mobileTotalPaddingTop = 14;
     blockPaddingTop = 5;
     blockMarginBottom = <%% 48, 48, 48, 48, 12 %%>;
     blockBarBottom = 2.7;
 
-    dateNumberSize = <%% 17, 17, 17, 17, 2.9 %%>;
-    dateNumberTop = <%% 15, 15, 15, 15, 1.8 %%>;
-    dateNumberLeft = <%% 23, 23, 23, 23, 0 %%>;
+    dateNumberSize = <%% 17, 16, 15, 15, 2.9 %%>;
+    dateNumberTop = <%% 15, 14, 13, 13, 1.8 %%>;
+    dateNumberLeft = <%% 23, 20, 19, 18, 0 %%>;
 
-    dateIconTop = <%% 18, 18, 18, 18, 4 %%>;
-    dateIconWidth = <%% 20, 20, 20, 20, 5 %%>;
-    dateIconRight = <%% 24, 24, 24, 24, 4 %%>;
+    dateIconTop = <%% 18, 17, 17, 17, 4 %%>;
+    dateIconWidth = <%% 20, 19, 18, 17, 5 %%>;
+    dateIconRight = <%% 24, 20, 19, 18, 4 %%>;
 
     daydayFieldTop = <%% (outerMargin * 2), (outerMargin * 2), (outerMargin * 2), (outerMargin * 2), 21 %%>;
     daydayMargin = <%% 20, 20, 20, 20, 4 %%>;
@@ -1744,12 +1744,12 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 20, 20, 20, 6 %%>;
-  left = <%% 40, 35, 35, 35, 0 %%>;
-  bottom = <%% 40, 35, 35, 35, 7.2 %%>;
-  margin = <%% 6, 6, 6, 6, 0 %%>;
+  radius = <%% 20, 18.5, 17, 14, 6 %%>;
+  left = <%% 40, 30, 25, 20, 0 %%>;
+  bottom = <%% 40, 36, 28, 22, 7.2 %%>;
+  margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3.8 %%>;
+  iconTop = <%% 12.5, 12, 11.5, 11, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),

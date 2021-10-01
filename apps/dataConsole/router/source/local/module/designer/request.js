@@ -878,17 +878,17 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     let whitePopupEvent;
     let clientPhoto;
 
-    topMargin = <%% 42, 42, 42, 42, 5.5 %%>;
-    leftMargin = <%% 50, 50, 50, 50, 5.5 %%>;
-    titleSize = <%% 35, 35, 35, 35, 5.2 %%>;
+    topMargin = <%% 42, 42, 40, 42, 5.5 %%>;
+    leftMargin = <%% 50, 50, 48, 50, 5.5 %%>;
+    titleSize = <%% 35, 33, 30, 30, 5.2 %%>;
     titlePaddingLeft = <%% 1, 1, 1, 1, 0 %%>;
     titleBottom = <%% 35, 35, 35, 35, 5 %%>;
     titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.2 %%>;
     titleDateVisualBottom = <%% (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), (isMac() ? 2 : -3), 0.5 %%>;
     clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
-    fontSize = <%% 15, 15, 15, 14, 3.5 %%>;
+    fontSize = <%% 15, 14, 13, 12, 3.5 %%>;
     contentsBetween = <%% 32, 32, 32, 32, 6 %%>;
-    clientInfoLeftWidth = <%% 380, 300, 260, 200, 20 %%>;
+    clientInfoLeftWidth = <%% 380, 260, 240, 200, 20 %%>;
     wordsBetween0 = <%% 6, 6, 6, 6, 0.5 %%>;
     wordsBetween1 = <%% 22, 22, 22, 22, 2.5 %%>;
     wordsBetween2 = <%% 10, 10, 10, 10, 1 %%>;
@@ -2213,12 +2213,12 @@ DesignerJs.prototype.requestIconSet = function (desid) {
   let nodeArr;
   let listIcon, previousIcon, nextIcon, aInitialIcon, mInitialIcon, rInitialIcon;
 
-  radius = <%% 20, 20, 20, 20, 6 %%>;
-  left = <%% 40, 35, 35, 35, 0 %%>;
-  bottom = <%% 40, 35, 35, 35, 7.2 %%>;
-  margin = <%% 6, 6, 6, 6, 0 %%>;
+  radius = <%% 20, 18.5, 17, 14, 6 %%>;
+  left = <%% 40, 30, 25, 20, 0 %%>;
+  bottom = <%% 40, 36, 28, 22, 7.2 %%>;
+  margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12.5, 12.5, 12.5, 3.8 %%>;
+  iconTop = <%% 12.5, 12, 11.5, 11, 3.8 %%>;
 
   mother = createNode({
     mother: document.querySelector(".totalMother"),
