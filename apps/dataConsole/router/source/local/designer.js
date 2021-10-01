@@ -1648,7 +1648,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: (e) => { modeHref("general"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>정산 정보", event: (e) => { modeHref("calculation"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: (e) => { modeHref("price"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 관리", event: (e) => { modeHref("calendar"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 관리", event: (e) => { modeHref("calendar"); }, contextmenu: (e) => { modeHref("possible"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>체크리스트", event: (e) => { modeHref("checklist"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>의뢰서 관리", event: (e) => { modeHref("request"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: (e) => { modeHref("report"); } },
@@ -1692,10 +1692,25 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
             mother: tong,
             text: cards[i].name,
             class: [ "hoverDefault_lite" ],
+            attribute: {
+              index: String(i),
+            },
             events: [
               {
                 type: "click",
                 event: cards[i].event
+              },
+              {
+                type: "contextmenu",
+                event: function (e) {
+                  e.preventDefault();
+                  const index = Number(this.getAttribute("index"));
+                  if (typeof cards[index].contextmenu === "function") {
+                    cards[index].contextmenu.call(this, e);
+                  } else {
+                    cards[index].event.call(this, e);
+                  }
+                }
               },
             ],
             style: {

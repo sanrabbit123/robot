@@ -1138,7 +1138,7 @@ DesignerJs.prototype.calendarContentsTime = async function (search = null, loadi
         designerNameBox_clone.classList.add("hoverDefault");
         designerNameBox_clone.addEventListener("click", function (e) {
           const desid = this.getAttribute("desid");
-          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=general&desid=" + desid;
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=possible&desid=" + desid;
         });
         mother.appendChild(designerNameBox_clone);
 
