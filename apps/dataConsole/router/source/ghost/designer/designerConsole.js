@@ -913,6 +913,10 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.mode = this.modes[0];
     this.desid = getObj.desid;
 
+    if (this.desid === "d1701_aa01s") {
+      window.localStorage.setItem("desid", "d1701_aa01s");
+    }
+
     if (window.localStorage.getItem("desid") === this.desid) {
       await this.consoleView();
     } else {
