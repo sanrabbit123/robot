@@ -1881,10 +1881,10 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Headers": '*',
       });
       try {
-        if (req.body.data === undefined) {
+        if (req.body.json === undefined) {
           throw new Error("invalid post");
         }
-        const { data } = equalJson(req.body);
+        const data = equalJson(req.body.json);
         const { entire, detail, link } = data;
 
         console.log(entire, detail, link);
