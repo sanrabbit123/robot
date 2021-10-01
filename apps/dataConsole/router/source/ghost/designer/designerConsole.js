@@ -237,7 +237,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
     marginBottom = 23;
     indent = 16;
     menuMargin = <%% 15, 13, 13, 13, 15 %%>;
-    secondBold = 400;
+    secondBold = 500;
     titleSize = 21;
 
     menu = [];
@@ -270,7 +270,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
               top: String(0),
               left: String(0),
               fontSize: "inherit",
-              fontWeight: String(300),
+              fontWeight: String(500),
               color: colorChip.green,
             }
           },

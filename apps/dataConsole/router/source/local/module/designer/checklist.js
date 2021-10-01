@@ -4220,18 +4220,49 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
       }
     });
 
-  } else if (desktop) {
+  } else {
 
-    listIcon.addEventListener("click", function (e) {
-      let num = designer.information.did.replace(/[^0-9]/g, '');
-      let id;
-      id = '';
-      for (let i = 0; i < 3 - num.length; i++) {
-        id += '0';
-      }
-      id += num;
-      blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
-    });
+    if (desktop) {
+
+      listIcon.addEventListener("click", function (e) {
+        const totalContents = document.getElementById("totalcontents");
+        const totalMother = document.querySelector(".totalMother");
+        const grayBack = totalContents.children[0];
+        const listPannel = totalMother.children[0].children[0];
+        const iconSetPannel = totalMother.lastChild;
+
+        if (grayBack.getAttribute("toggle") !== "off") {
+
+          grayBack.style.width = String(0) + ea;
+          listPannel.style.transform = "translateX(" + String(instance.grayBarWidth * -1) + ea + ")";
+          iconSetPannel.style.background = colorChip.white;
+          grayBack.setAttribute("toggle", "off");
+
+        } else {
+
+          grayBack.style.width = String(instance.grayBarWidth) + ea;
+          listPannel.style.transform = "translateX(" + String(0) + ea + ")";
+          iconSetPannel.style.background = colorChip.gray0;
+          grayBack.setAttribute("toggle", "on");
+
+        }
+
+      });
+
+    } else {
+
+      listIcon.addEventListener("click", function (e) {
+        let num = designer.information.did.replace(/[^0-9]/g, '');
+        let id;
+        id = '';
+        for (let i = 0; i < 3 - num.length; i++) {
+          id += '0';
+        }
+        id += num;
+        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+      });
+
+    }
 
     previousIcon.addEventListener("click", function (e) {
       const targets = document.querySelectorAll(".leftMenus");

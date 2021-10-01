@@ -2828,6 +2828,28 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       let ghost;
       let leftArea, rightArea;
       let notYetContents;
+      let cliidArr;
+      let clients, client;
+
+      for (let obj of contents) {
+        obj.name = "개인";
+      }
+
+      cliidArr = [ ...(new Set(contents.map((obj) => { return obj.cliid }).filter((c) => { return c !== ''; }))) ].map((cliid) => {
+        return { cliid };
+      });
+      if (cliidArr.length !== 0) {
+        clients = await GeneralJs.ajaxJson({
+          noFlat: true,
+          whereQuery: { $or: cliidArr }
+        }, "/getClients", { equal: true });
+        for (let obj of contents) {
+          client = clients.find((o) => { return o.cliid === obj.cliid });
+          if (client !== undefined) {
+            obj.name = client.name;
+          }
+        }
+      }
 
       totalTong = GeneralJs.nodes.div.cloneNode(true);
       style = {
@@ -2929,7 +2951,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         div_clone2 = GeneralJs.nodes.div.cloneNode(true);
         div_clone2.classList.add("hoverDefault");
         if (i < contents.length) {
-          div_clone2.textContent = contents[i].contents.portfolio.pid + " : " + contents[i].contents.portfolio.title.main;
+          div_clone2.textContent = contents[i].name + "(" + contents[i].contents.portfolio.pid + ") : " + contents[i].contents.portfolio.title.main;
         } else {
           div_clone2.textContent = "기타 미등록 포트폴리오";
         }
@@ -2949,7 +2971,9 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         }
         if (i < contents.length) {
           div_clone2.addEventListener("click", function (e) {
-            window.open(window.location.protocol + "//" + window.location.host + "/contents?pid=" + contents[i].contents.portfolio.pid, "_blank");
+            if (contents[i].cliid !== '') {
+              window.open(window.location.protocol + "//" + window.location.host + "/client?cliid=" + contents[i].cliid, "_blank");
+            }
           });
         }
         div_clone.appendChild(div_clone2);

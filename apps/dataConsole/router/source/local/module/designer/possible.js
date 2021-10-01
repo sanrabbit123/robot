@@ -1970,18 +1970,35 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
       instance.possibleDetailLaunching(nextDesid);
     });
 
-  } else if (desktop) {
+  } else {
 
-    listIcon.addEventListener("click", function (e) {
-      let num = designer.information.did.replace(/[^0-9]/g, '');
-      let id;
-      id = '';
-      for (let i = 0; i < 3 - num.length; i++) {
-        id += '0';
-      }
-      id += num;
-      blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
-    });
+    if (desktop) {
+
+      listIcon.addEventListener("click", function (e) {
+        let num = designer.information.did.replace(/[^0-9]/g, '');
+        let id;
+        id = '';
+        for (let i = 0; i < 3 - num.length; i++) {
+          id += '0';
+        }
+        id += num;
+        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+      });
+
+    } else {
+
+      listIcon.addEventListener("click", function (e) {
+        let num = designer.information.did.replace(/[^0-9]/g, '');
+        let id;
+        id = '';
+        for (let i = 0; i < 3 - num.length; i++) {
+          id += '0';
+        }
+        id += num;
+        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+      });
+
+    }
 
     previousIcon.addEventListener("click", function (e) {
       const targets = document.querySelectorAll(".leftMenus");
