@@ -1873,6 +1873,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_apartmentInfo = {
     link: [ "/apartmentInfo" ],
     func: async function (req, res) {
+      console.log(req);
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
