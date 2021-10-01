@@ -44,6 +44,10 @@ const GraphicBot = function () {
     left: 56,
     right: 1548,
     cursor: 25,
+    urlPosition: {
+      x: 0,
+      y: 0
+    }
   };
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/graphicBot";
@@ -356,7 +360,7 @@ GraphicBot.prototype.chromeHistoryClean = async function () {
   }
 }
 
-GraphicBot.prototype.moveAndClick = async function (x, y, ms, dblclick = false) {
+GraphicBot.prototype.moveAndClick = async function (x, y, ms = 500, dblclick = false) {
   const instance = this;
   const { bot } = this;
   const { sleep } = this.mother;
@@ -492,6 +496,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const AJAXCONST = \"" + this.localhost + "/ajax\";\n\n";
     frontFirst += "const ENDCONST = \"" + this.localhost + "/frontEnd\";\n\n";
     frontFirst += "const HOSTCONST = \"" + this.localhost + "\";\n\n";
+    frontFirst += "const ACCUMULATIONCONST = \"" + this.localhost + "/accumulation\";\n\n";
 
     frontFirst += "const equalJson = " + this.frontGeneral.equalJson.toString() + ";\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
@@ -545,14 +550,12 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         } else if (i === "close") {
           await this.chromeClose();
         } else if (/^toss\: /.test(i)) {
-
-          //DEV
-
-          throw new Error("this is dev area");
-
-          //DEV
-
-
+          await this.moveAndClick(chromeSize.urlPosition.x, chromeSize.urlPosition.y);
+          await this.pressKey("delete");
+          await this.clipBoard(i.replace(/^toss\: /gi, ''));
+          await this.pasteText();
+          await this.pressKey("enter");
+          await sleep(1000);
         } else if (i === "copy") {
           await this.copyText();
         } else if (i === "paste") {
@@ -581,7 +584,11 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         }
       } else if (typeof i === "function") {
         tempString = i.toString().trim().replace(/\}$/, '').replace(/^async function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, '');
-        tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
+        if (typeof instance.accumulation === "object" && instance.accumulation !== null) {
+          tempString = "(async function () {\n\n" + frontFirst + "\n\n" + "const ACCUMULATIONDATA = " + JSON.stringify(instance.accumulation, null, 2) + ";\n\n" + tempString + frontEnd + "\n\n})();";
+        } else {
+          tempString = "(async function () {\n\n" + frontFirst + tempString + frontEnd + "\n\n})();";
+        }
         if (frontFirstLaunching === 0) {
           await this.pressKey("f12");
           await sleep(500);
@@ -1019,11 +1026,11 @@ GraphicBot.prototype.botRouter = function () {
         y = y + chromeHeight;
 
         robot.moveMouse(x, y);
-        robot.mouseClick("right");
-        robot.moveMouse(x + 22, y + 275);
-        await sleep(200);
+        await sleep(500);
+        robot.keyTap("c", [ "shift", "command" ]);
+        robot.moveMouse(x, y);
         robot.mouseClick("left");
-        await sleep(200);
+        await sleep(500);
 
         res.set({
           "Content-Type": "application/json",
@@ -1146,6 +1153,30 @@ GraphicBot.prototype.botRouter = function () {
         robot.moveMouse(positionX, positionY);
         robot.scrollMouse(0, amount);
 
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send({ message: "OK" });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  funcObj.post_accumulation = {
+    link: [ "/accumulation" ],
+    func: async function (req, res) {
+      try {
+        const data = equalJson(req.body);
+        if (typeof instance.accumulation !== "object" || instance.accumulation === null) {
+          instance.accumulation = {};
+        }
+        for (let i in data) {
+          instance.accumulation[i] = data[i];
+        }
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -1287,6 +1318,7 @@ GraphicBot.prototype.getChromeSize = async function () {
   const instance = this;
   const { sleep, colorParsing } = this.mother;
   const { bot: robot } = this;
+  const urlRatio = (4 / 5);
   try {
     await this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint");
     await this.pressKey("f12");
@@ -1353,6 +1385,10 @@ GraphicBot.prototype.getChromeSize = async function () {
     if (this.chromeSize.right === 0) {
       this.chromeSize.right = this.screenSize.width;
     }
+
+    this.chromeSize.urlPosition = {};
+    this.chromeSize.urlPosition.x = screenSize.width * (2 / 3);
+    this.chromeSize.urlPosition.y = this.chromeSize.top * urlRatio;
 
     console.log(xArr, yArr);
     console.log(this.screenSize);
