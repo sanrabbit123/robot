@@ -92,7 +92,7 @@ module.exports = function (arg, info) {
 
           final = {
             raw, apart, cliid,
-            id: window.location.pathname.split("/")[1],
+            id: window.location.pathname.split("/")[2],
             entire: result,
             detail: pyeongArr,
             link: (window.location.protocol + "//" + window.location.host + window.location.pathname)
@@ -229,7 +229,7 @@ module.exports = function (arg, info) {
 
           final = {
             raw, apart, cliid,
-            id: window.location.pathname.split("/")[1],
+            id: window.location.pathname.split("/")[2],
             entire: result,
             detail: pyeongArr,
             link: (window.location.protocol + "//" + window.location.host + window.location.pathname)
