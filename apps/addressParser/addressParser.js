@@ -119,7 +119,7 @@ AddressParser.prototype.updateApartment = async function (queryArr, option = { s
     }
 
     if (updateQuery !== null && Object.keys(updateQuery).length > 0) {
-      await MONGOC.db(`miro81`).collection(`generalBill`).updateOne(whereQuery, { $set: updateQuery });
+      await MONGOC.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
     }
 
     if (!selfBoo) {
