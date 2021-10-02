@@ -36,6 +36,348 @@ const AddressParser = function () {
       key: "U01TX0FVVEgyMDIxMDYyMTEzNDE1MzExMTMwNTI=",
     }
   };
+  this.mapDir = this.dir + "/map";
+}
+
+AddressParser.prototype.createApartment = async function (updateQuery, option = { selfMongo: null }) {
+  if (typeof updateQuery !== "object") {
+    throw new Error("invalid input");
+  }
+  const instance = this;
+  const { mongo, mongobridgeinfo } = this.mother;
+  const collection = "apartInfo";
+  const map = require(`${this.mapDir}/${collection}.js`);
+  let MONGOC;
+  let selfBoo;
+  let rows;
+  let dummy;
+  let pastId;
+  let newId;
+  try {
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongobridgeinfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    dummy = map.main();
+    rows = await MONGOC.db(`miro81`).collection(collection).find({}).sort({ "date": -1 }).limit(1).toArray();
+    if (rows.length === 0) {
+      pastId = "l2111_aa01s";
+    } else {
+      pastId = rows[0].apaid;
+    }
+    dummy.apaid = this.back.idMaker(pastId, false);
+    newId = dummy.apaid;
+
+    await MONGOC.db(`miro81`).collection(collection).insertOne(dummy);
+    if (updateQuery !== null && Object.keys(updateQuery).length > 0) {
+      await MONGOC.db(`miro81`).collection(collection).updateOne({ apaid: newId }, { $set: updateQuery });
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+    return newId;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+AddressParser.prototype.updateApartment = async function (queryArr, option = { selfMongo: null }) {
+  if (queryArr.length !== 2) {
+    throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
+  }
+  const instance = this;
+  const { mongo, mongobridgeinfo } = this.mother;
+  const collection = "apartInfo";
+  const map = require(`${this.mapDir}/${collection}.js`);
+  const [ whereQuery, updateQuery ] = queryArr;
+  if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
+    throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
+  }
+  let MONGOC;
+  let selfBoo;
+  try {
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongobridgeinfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (updateQuery !== null && Object.keys(updateQuery).length > 0) {
+      await MONGOC.db(`miro81`).collection(`generalBill`).updateOne(whereQuery, { $set: updateQuery });
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+AddressParser.prototype.readApartment = async function (whereQuery, option = { selfMongo: null }) {
+  if (typeof whereQuery !== "object" || typeof option !== "object") {
+    throw new Error("input must be Object: whereQuery, Object: option");
+  }
+  const instance = this;
+  const { mongo, mongobridgeinfo } = this.mother;
+  const collection = "apartInfo";
+  const map = require(`${this.mapDir}/${collection}.js`);
+  const { alive, wrap } = map;
+  let MONGOC;
+  let selfBoo;
+  let rows;
+  let sortQuery;
+  try {
+    if (option.sort === undefined) {
+      sortQuery = { "date": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongobridgeinfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (option.limit !== undefined) {
+      rows = await MONGOC.db(`miro81`).collection(collection).find(whereQuery).sort(sortQuery).limit(Number(option.limit)).toArray();
+    } else {
+      rows = await MONGOC.db(`miro81`).collection(collection).find(whereQuery).sort(sortQuery).toArray();
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+    return map.wrap(alive, rows, this.mother);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+AddressParser.prototype.rawToApartment = async function (data, option = { selfMongo: null }) {
+  if (typeof data !== "object") {
+    throw new Error("invalid input");
+  }
+  const instance = this;
+  const { mongo, mongobridgeinfo } = this.mother;
+  const collection = "apartInfo";
+  const map = require(`${this.mapDir}/${collection}.js`);
+  let MONGOC;
+  let selfBoo;
+  let result;
+  let tempStr, tempStr2, tempArr, tempArr2, tempDate, tempReg, tempReg2, tempNum, tempObj;
+  let detailArr;
+  let findTarget;
+  let returnNumber;
+  let rows;
+  let pastRows;
+  let pastId;
+  let newId;
+  let thisApaid;
+  let cliidArr;
+  try {
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongobridgeinfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    result = map.main();
+
+    result.name = data.apart;
+    result.link = data.link;
+    result.cliid = [ data.cliid ];
+
+    findTarget = (arr, reg) => {
+      const f = arr.find((obj) => { return reg.test(obj.name); });
+      if (f === undefined) {
+        return null;
+      } else {
+        return f.value;
+      }
+    }
+
+    returnNumber = (str) => {
+      let num = Number(str);
+      if (Number.isNaN(num)) {
+        return null;
+      } else {
+        return num;
+      }
+    }
+
+    tempStr = findTarget(data.entire, /일$/);
+    if (tempStr !== null) {
+      if (tempStr.trim() === '-' || tempStr.trim() === '') {
+        tempDate = new Date(1800, 0, 1);
+      } else {
+        tempArr = tempStr.split(/[년 \.]/g).map((i) => { return i.trim(); }).filter((i) => { return i !== ''; }).map((i) => { return Number(i.replace(/[^0-9]/gi, '')); });
+        if (tempArr.every((i) => { return typeof i === "number"; })) {
+          if (!tempArr.some((i) => { return Number.isNaN(i); })) {
+            if (tempArr.length === 2) {
+              tempDate = new Date(tempArr[0], tempArr[1] - 1, 15);
+            } else if (tempArr.length === 3) {
+              tempDate = new Date(tempArr[0], tempArr[1] - 1, tempArr[2]);
+            } else {
+              tempDate = new Date(1800, 0, 1);
+            }
+          }
+        }
+      }
+      result.created = new Date(JSON.stringify(tempDate).slice(1, -1));
+    }
+    tempStr = findTarget(data.entire, /주소/gi);
+    if (tempStr !== null) {
+      tempReg = new RegExp(tempStr.split(' ')[0].slice(0, 2), "gi");
+      tempReg2 = new RegExp('^' + tempStr.split(' ')[0].slice(0, 2));
+      tempArr = tempStr.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' });
+      tempNum = tempArr.findIndex((i) => {
+        return tempReg.test(i) && !tempReg2.test(i);
+      });
+      tempArr[tempNum] = tempArr[tempNum].split(tempReg)[0].trim();
+      tempArr = tempArr.slice(0, tempNum + 1);
+      result.address = tempArr.join(' ');
+    }
+    tempStr = findTarget(data.entire, /세대수/gi);
+    if (tempStr !== null) {
+      result.numbers.households = returnNumber(tempStr.split(/세대/)[0].replace(/[^0-9]/gi, ''));
+      if (/동/.test(tempStr)) {
+        result.numbers.buildings = returnNumber(tempStr.split(/세대/)[1].replace(/[^0-9]/gi, ''));
+      }
+    }
+    tempStr = findTarget(data.entire, /층$/);
+    if (tempStr !== null) {
+      if (/\//gi.test(tempStr)) {
+        result.floor.min = returnNumber(tempStr.split(/\//)[0].replace(/[^0-9]/gi, ''));
+        result.floor.max = returnNumber(tempStr.split(/\//)[1].replace(/[^0-9]/gi, ''));
+      }
+    }
+    tempStr = findTarget(data.entire, /용적/gi);
+    if (tempStr !== null) {
+      if (tempStr.replace(/[^0-9\.]/gi, '') !== '') {
+        result.ratio.floorArea = returnNumber(tempStr.replace(/[^0-9\.]/gi, '')) / 100;
+      }
+    }
+    tempStr = findTarget(data.entire, /건폐/gi);
+    if (tempStr !== null) {
+      if (tempStr.replace(/[^0-9\.]/gi, '') !== '') {
+        result.ratio.buildingCover = returnNumber(tempStr.replace(/[^0-9\.]/gi, '')) / 100;
+      }
+    }
+    tempStr = findTarget(data.entire, /면적/gi);
+    if (tempStr !== null) {
+      if (/\,/gi.test(tempStr)) {
+        tempArr = tempStr.split(',').map((i) => { return i.trim(); }).filter((i) => { return i !== ''; }).map((i) => { return i.replace(/㎡/gi, ''); });
+      } else {
+        tempArr = [ tempStr.trim().replace(/㎡/gi, '') ];
+      }
+
+      detailArr = [];
+      for (let i = 0; i < tempArr.length; i++) {
+        tempObj = {};
+        tempObj.name = tempArr[i];
+
+        tempStr2 = findTarget(data.detail[i], /세대수/gi);
+        if (tempStr2 === null) {
+          tempObj.count = null;
+        } else {
+          tempObj.count = returnNumber(tempStr2.replace(/[^0-9]/gi, ''));
+        }
+
+        tempObj.area = {};
+        tempStr2 = findTarget(data.detail[i], /공급/gi);
+        if (tempStr2 === null) {
+          tempObj.area.supply = null;
+          tempObj.area.dedicated = null;
+          tempObj.area.ratio = null;
+        } else {
+          tempObj.area.supply = returnNumber(tempStr2.split(/[\/\(]/gi)[0].replace(/[^0-9\.]/gi, ''));
+          tempObj.area.dedicated = returnNumber(tempStr2.split(/[\/\(]/gi)[1].replace(/[^0-9\.]/gi, ''));
+          tempObj.area.ratio = returnNumber(tempStr2.split(/[\/\(]/gi)[2].replace(/[^0-9\.]/gi, '')) / 100;
+        }
+
+        tempObj.composition = {};
+        tempStr2 = findTarget(data.detail[i], /방수/gi);
+        if (tempStr2 === null) {
+          tempObj.composition.rooms = null;
+          tempObj.composition.bathrooms = null;
+        } else {
+          tempObj.composition.rooms = returnNumber(tempStr2.split(/[\/]/gi)[0].replace(/[^0-9]/gi, ''));
+          tempObj.composition.bathrooms = returnNumber(tempStr2.split(/[\/]/gi)[1].replace(/[^0-9]/gi, ''));
+        }
+
+        detailArr.push(tempObj);
+      }
+
+      result.kinds = detailArr;
+    }
+
+    rows = await this.readApartment({ name: result.name }, option);
+    if (rows.length > 0) {
+
+      thisApaid = rows[0].apaid;
+      cliidArr = rows[0].cliid;
+      if (!cliidArr.includes(data.cliid)) {
+        cliidArr.push(data.cliid);
+      }
+      newId = thisApaid;
+      await this.updateApartment([ { apaid: thisApaid }, { cliid: cliidArr } ], option);
+
+    } else {
+
+      pastRows = await MONGOC.db(`miro81`).collection(collection).find({}).sort({ "date": -1 }).limit(1).toArray();
+      if (pastRows.length === 0) {
+        pastId = "l2111_aa01s";
+      } else {
+        pastId = pastRows[0].apaid;
+      }
+      result.apaid = this.back.idMaker(pastId, false);
+      newId = result.apaid;
+      await MONGOC.db(`miro81`).collection(collection).insertOne(result);
+
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+    return newId;
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 AddressParser.prototype.convertXY = function (x, y, reverse = false) {

@@ -308,9 +308,9 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, ghostRequest, headRequest, sleep, statusReading } = this.mother;
+  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, ghostRequest, headRequest, sleep, statusReading, equalJson } = this.mother;
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
-  const [ MONGOC, KAKAO, HUMAN ] = needs;
+  const [ MONGOC, MONGOLOCALC, KAKAO, HUMAN, ADDRESS ] = needs;
   const ignorePhone = this.ignorePhone;
   let funcObj = {};
 
@@ -1190,6 +1190,26 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     }
   }
 
+  //POST - apartment
+  funcObj.post_apartment = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      const { data } = equalJson(req.body);
+      ADDRESS.rawToApartment(data, { selfMongo: MONGOLOCALC }).catch((err) => {
+        slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 (post_apartment) : " + err.message, channel: "#error_log" });
+      });
+      res.send({ message: "done" });
+    } catch (e) {
+      slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 (post_apartment) : " + e.message, channel: "#error_log" });
+      res.send({ message: "error : " + e.message });
+    }
+  }
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
@@ -1201,12 +1221,13 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   const instance = this;
   const https = require("https");
-  const { shell, shellLink, fileSystem, mongo, bridgeinfo, mongoinfo } = this.mother;
+  const { shell, shellLink, fileSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   const { parse } = require("url");
   const express = require("express");
   const useragent = require("express-useragent");
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+  const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
 
   //express
   const app = express();
@@ -1216,13 +1237,16 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
 
   //set needs
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   const kakaoInstance = new KakaoTalk();
   const humanInstance = new HumanPacket();
+  const addressInstance = new AddressParser();
 
   try {
     await this.back.setInfoObj({ getMode: false });
 
     await MONGOC.connect();
+    await MONGOLOCALC.connect();
     await kakaoInstance.ready();
 
     //set binary folder
@@ -1266,7 +1290,7 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
     pems.allowHTTP1 = true;
 
     //set router
-    const { get, post } = this.bridgeServer([ MONGOC, kakaoInstance, humanInstance ]);
+    const { get, post } = this.bridgeServer([ MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, addressInstance ]);
     for (let obj of get) { app.get(obj.link, obj.func); }
     for (let obj of post) { app.post(obj.link, obj.func); }
 
