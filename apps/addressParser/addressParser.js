@@ -216,7 +216,7 @@ AddressParser.prototype.rawToApartment = async function (data, option = { selfMo
 
     result = map.main();
 
-    result.name = data.apart;
+    result.name = data.name;
     result.link = data.link;
     result.cliid = [ data.cliid ];
 

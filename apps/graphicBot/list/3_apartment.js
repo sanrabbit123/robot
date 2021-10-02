@@ -41,6 +41,7 @@ module.exports = function (arg, info) {
 
           const infoTable = document.querySelector('.info_table_wrap');
           const items = infoTable.querySelectorAll('.info_table_item');
+          const thisName = document.querySelector('.detail_contents_inner').querySelector('.heading').textContent.trim();
           let length;
           let keyArr, valueArr;
           let result;
@@ -114,6 +115,7 @@ module.exports = function (arg, info) {
           final = {
             raw, apart, cliid,
             id: window.location.pathname.split("/")[2],
+            name: thisName,
             entire: result,
             detail: pyeongArr,
             link: (window.location.protocol + "//" + window.location.host + window.location.pathname)
@@ -236,6 +238,7 @@ module.exports = function (arg, info) {
 
           const infoTable = document.querySelector('.info_table_wrap');
           const items = infoTable.querySelectorAll('.info_table_item');
+          const thisName = document.querySelector('.detail_contents_inner').querySelector('.heading').textContent.trim();
           let length;
           let keyArr, valueArr;
           let result;
@@ -309,6 +312,7 @@ module.exports = function (arg, info) {
           final = {
             raw, apart, cliid,
             id: window.location.pathname.split("/")[2],
+            name: thisName,
             entire: result,
             detail: pyeongArr,
             link: (window.location.protocol + "//" + window.location.host + window.location.pathname)
