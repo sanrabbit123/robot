@@ -14,6 +14,21 @@ module.exports = function (arg, info) {
       try {
         const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
         await sleep(1000);
+        if (document.querySelector('.complex_detail_link') === null) {
+          if (document.querySelector('.no_data_area') === null) {
+            if (document.querySelector('.item_list').children.length <= 3) {
+              document.querySelector('.item_list').firstChild.querySelector('a').click();
+            }
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async function () {
+      try {
+        const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
+        await sleep(1000);
         if (document.querySelector('.complex_detail_link') !== null) {
           document.querySelector('.complex_detail_link').firstChild.click();
           await sleep(1000);

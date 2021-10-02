@@ -50,6 +50,22 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
+DevContext.prototype.passiveAddressSync = async function (cliid) {
+  const instance = this;
+  const back = this.back;
+  const { ghostRequest } = this.mother;
+  try {
+    const addr = new AddressParser();
+    const client = await back.getClientById(cliid);
+    const data = await addr.apartNameSearch(client.requests[0].request.space.address.value);
+    data.cliid = client.cliid;
+    console.log(data);
+    await ghostRequest("/apartment", { data });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
@@ -68,18 +84,7 @@ DevContext.prototype.launching = async function () {
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
 
-
-
-
-    const index = 10;
-    const addr = new AddressParser();
-    const clients = await back.getClientsByQuery({});
-    const data = await addr.apartNameSearch(clients[index].requests[0].request.space.address.value);
-    data.cliid = clients[index].cliid;
-    console.log(data);
-    await ghostRequest("/apartment", { data });
-
-
+    await this.passiveAddressSync("c2110_aa01s");
 
 
 
