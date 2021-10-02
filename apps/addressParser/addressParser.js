@@ -1174,7 +1174,7 @@ AddressParser.prototype.apartNameSearch = async function (words) {
         break;
       }
     }
-    fromClient = addressArr.slice(targetIndex + 2).map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).join(' ');
+    fromClient = addressArr.slice(targetIndex + 2).map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).filter((str) => { return str.replace(/[0-9\-\.동호]/gi, '') !== ''; }).join(' ');
 
     if (addressArr[targetIndex + 2] !== undefined && !/^[0-9]/.test(addressArr[targetIndex + 2]) && !/동$/.test(addressArr[targetIndex + 2]) && !/^\(/.test(addressArr[targetIndex + 2])) {
       return { raw: words, apart: fromClient };
@@ -1204,7 +1204,7 @@ AddressParser.prototype.apartNameSearch = async function (words) {
         if (final.replace(/[0-9 \-]/gi, '') === '') {
           realFinal = fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
         } else {
-          final = final.split(' ').map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).filter((str) => { return str.replace(/[0-9\-동호]/gi, '') !== ''; }).join(' ').trim();
+          final = final.split(' ').map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).filter((str) => { return str.replace(/[0-9\-\.동호]/gi, '') !== ''; }).join(' ').trim();
           realFinal = final;
         }
       }
