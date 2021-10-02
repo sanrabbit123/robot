@@ -69,25 +69,14 @@ DevContext.prototype.launching = async function () {
     // console.log(await this.findCode("* 1.1)"));
 
 
-    // await ghostRequest("print", { cliid: "c2109_aa98s" });
 
 
-    const index = 11;
-    const addr = new AddressParser();
-    const clients = await back.getClientsByQuery({});
-    const data = await addr.apartNameSearch(clients[index].requests[0].request.space.address.value);
-    data.cliid = clients[index].cliid;
-    await ghostRequest("/apartment", { data });
-
-
-
-
-
-
-
-
-
-
+    // const index = 9;
+    // const addr = new AddressParser();
+    // const clients = await back.getClientsByQuery({});
+    // const data = await addr.apartNameSearch(clients[index].requests[0].request.space.address.value);
+    // data.cliid = clients[index].cliid;
+    // await ghostRequest("/apartment", { data });
 
 
 
