@@ -1230,7 +1230,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         space += "\n\n";
         space += "링크 : " + apartData.link;
         space += "\n\n";
-        space += "사용승인일 : " + apartData.date;
+        space += "사용 승인일 : " + Strubg(apartData.date.getFullYear()) + "년 " + Strubg(apartData.date.getMonth() + 1) + "월";
         space += "\n\n";
         for (let { name, area: { supply, dedicated, ratio }, composition: { rooms, bathrooms } } of apartData.kinds) {
           if (supply === null) {
@@ -1249,11 +1249,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
             bathrooms = 0;
           }
           space += name + "형";
-          space += "공급 " + String(Math.round(supply * pyeongConvertingConst * 100) / 100) + "평";
-          space += "전용 " + String(Math.round(dedicated * pyeongConvertingConst * 100) / 100) + "평";
-          space += "전용률 " + String(Math.round(ratio * 100 * 100) / 100) + "%";
-          space += "방 " + String(rooms) + "개";
-          space += "화장실 " + String(bathrooms) + "개";
+          space += "공급 " + String(Math.round(supply * pyeongConvertingConst * 100) / 100) + "평" + "\n";
+          space += "전용 " + String(Math.round(dedicated * pyeongConvertingConst * 100) / 100) + "평" + "\n";
+          space += "전용률 " + String(Math.round(ratio * 100 * 100) / 100) + "%" + "\n";
+          space += "방 " + String(rooms) + "개" + "\n";
+          space += "화장실 " + String(bathrooms) + "개" + "\n";
           space += "\n\n";
         }
         if (rows.length > 0) {
