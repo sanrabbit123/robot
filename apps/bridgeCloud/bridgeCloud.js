@@ -502,7 +502,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }).then((message) => {
             console.log(cliid, "case update " + message);
           }).catch((err) => {
-            console.log(err);
+            slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 (submit, case 연산) : " + err.message, channel: "#error_log" });
           });
         } else {
           cliid = "c1801_aa01s";
@@ -516,18 +516,30 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!\n";
           message += thisClient.toMessage();
           slack_bot.chat.postMessage({ text: message, channel: "#401_consulting" });
+
+          //send alimtalk and print
+          KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).then(() => {
+            return ghostRequest("/print", { cliid });
+          }).then(() => {
+            return ADDRESS.apartNameSearch(requestObj["requests.0.request.space.address"]);
+          }).then((data) => {
+            data.cliid = cliid;
+            return ghostRequest("/apartment", { data });
+          }).catch((err) => {
+            slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 (submit, ghost 전달) : " + err.message, channel: "#error_log" });
+          });
+
         } else {
           message = '';
           message += JSON.stringify(requestObj, null, 2);
           slack_bot.chat.postMessage({ text: message, channel: "#error_log" });
-        }
 
-        //send alimtalk and print
-        KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).then(() => {
-          return ghostRequest("/print", { cliid });
-        }).catch((err) => {
-          console.log(err);
-        });
+          //send alimtalk and print
+          KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).catch((err) => {
+            slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 (submit, kakao) : " + err.message, channel: "#error_log" });
+          });
+
+        }
 
       }
 
@@ -541,7 +553,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       res.send("success");
 
     } catch (e) {
-      slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 : " + e, channel: "#error_log" });
+      slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 (submit) : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }

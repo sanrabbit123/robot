@@ -72,22 +72,19 @@ DevContext.prototype.launching = async function () {
     // await ghostRequest("print", { cliid: "c2109_aa98s" });
 
 
-    // const index = 11;
-    // const addr = new AddressParser();
-    // const clients = await back.getClientsByQuery({});
-    // const data = await addr.apartNameSearch(clients[index].requests[0].request.space.address.value);
-    // data.cliid = clients[index].cliid;
-    // await requestSystem("https://home-liaison.serveftp.com:55556/apartment", data, {
-    //   headers: { "Content-Type": "application/json" }
-    // });
+    const index = 11;
+    const addr = new AddressParser();
+    const clients = await back.getClientsByQuery({});
+    const data = await addr.apartNameSearch(clients[index].requests[0].request.space.address.value);
+    data.cliid = clients[index].cliid;
+
+
+    await ghostRequest("/apartment", { data });
 
 
 
 
-    const data = await fileSystem(`readJson`, [ `${process.cwd()}/temp/data.json` ]);
-    await requestSystem("https://" + this.address.bridgeinfo.host + ":3000/apartment", { data }, { headers: { "Content-Type": "application/json" } });
 
-    
 
 
 

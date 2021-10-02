@@ -1870,6 +1870,30 @@ Ghost.prototype.ghostRouter = function (needs) {
   };
 
   //POST - apartment info
+  funcObj.post_apartment = {
+    link: [ "/apartment" ],
+    func: async function (req, res) {
+      console.log(req);
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.data === undefined) {
+          throw new Error("invalid post");
+        }
+        const { data } = equalJson(req.body);
+        await requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.graphic.port[0]) + "/apartment", data, { headers: { "Content-Type": "application/json" } });
+        res.send(JSON.stringify({ message: "done" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
+  //POST - apartment info
   funcObj.post_apartmentInfo = {
     link: [ "/apartmentInfo" ],
     func: async function (req, res) {
@@ -1885,12 +1909,8 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invalid post");
         }
         const data = equalJson(req.body.json);
-
-        await fileSystem(`writeJson`, [ `${process.cwd()}/temp/data.json`, data ]);
-
-        console.log(data);
-
-        res.send(JSON.stringify({ message: "will do" }));
+        await requestSystem("https://" + instance.address.bridgeinfo.host + ":3000/apartment", { data }, { headers: { "Content-Type": "application/json" } });
+        res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
