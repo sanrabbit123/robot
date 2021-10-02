@@ -139,15 +139,13 @@ module.exports = function (arg, info) {
       try {
         const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
-        console.log(apartName);
-        console.log(apartName === "");
+        let index, tempArr, placeList, newName;
         if (apartName === "") {
-          let index, tempArr, placeList, newName;
           tempArr = raw.split(' ');
           index = tempArr.findIndex((i) => { return /[동로가리길]$/i.test(i); });
-          await injectionInput(document.getElementById('search.keyword.query'), tempArr.slice(0, index + 2).join(' '));
-          await pressKey("enter");
-          await sleep(1000);
+          document.getElementById('search.keyword.query').value = tempArr.slice(0, index + 2).join(' ');
+          document.getElementById('search.keyword.submit').click();
+          await sleep(500);
           placeList = document.getElementById('info.search.place.list');
           if (placeList !== null && placeList.children.length > 0) {
             newName = document.getElementById('info.search.place.list').children[0].querySelector('.head_item').querySelector('.tit_name').querySelector('.link_name').textContent;
