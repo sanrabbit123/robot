@@ -4,7 +4,7 @@ module.exports = function (arg, info) {
     async function () {
       try {
         const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
-        document.querySelector(".search_input").value = apart;
+        await injectionInput(document.querySelector(".search_input"), apart);
         document.querySelector(".button_search--icon").click();
       } catch (e) {
         console.log(e);
@@ -19,7 +19,7 @@ module.exports = function (arg, info) {
             if (document.querySelector('.item_list').children.length <= 3) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
-              document.querySelector(".search_input").value = raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apart;
+              await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apart);
               document.querySelector(".button_search--icon").click();
             }
           }
@@ -194,7 +194,7 @@ module.exports = function (arg, info) {
     async function () {
       try {
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
-        document.querySelector(".search_input").value = apart;
+        await injectionInput(document.querySelector(".search_input"), apartName);
         document.querySelector(".button_search--icon").click();
       } catch (e) {
         console.log(e);
@@ -203,13 +203,14 @@ module.exports = function (arg, info) {
     async function () {
       try {
         const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
+        const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
           if (document.querySelector('.no_data_area') === null) {
             if (document.querySelector('.item_list').children.length <= 3) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
-              document.querySelector(".search_input").value = raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apart;
+              await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apartName);
               document.querySelector(".button_search--icon").click();
             }
           }
