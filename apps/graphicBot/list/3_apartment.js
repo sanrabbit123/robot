@@ -128,7 +128,7 @@ module.exports = function (arg, info) {
           const words = document.getElementById('_pcmap_list_scroll_container').querySelectorAll('li')[0].querySelector('a').querySelectorAll("span");
           await ajaxPromise({ apartName: words[0].textContent }, ACCUMULATIONCONST);
         } else {
-          await ajaxPromise({ apartName: "noting" }, ACCUMULATIONCONST);
+          await ajaxPromise({ apartName: "" }, ACCUMULATIONCONST);
         }
       } catch (e) {
         console.log(e);
@@ -139,7 +139,9 @@ module.exports = function (arg, info) {
       try {
         const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
-        if (apartName === "nothing") {
+        console.log(apartName);
+        console.log(apartName === "");
+        if (apartName === "") {
           let index, tempArr, placeList, newName;
           tempArr = raw.split(' ');
           index = tempArr.findIndex((i) => { return /[동로가리길]$/i.test(i); });
