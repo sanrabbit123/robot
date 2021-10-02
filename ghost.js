@@ -1885,6 +1885,9 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invalid post");
         }
         const data = equalJson(req.body.json);
+
+        await fileSystem(`writeJson`, [ `${process.cwd()}/temp/data.json`, data ]);
+
         console.log(data);
 
         res.send(JSON.stringify({ message: "will do" }));
