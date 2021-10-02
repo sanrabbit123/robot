@@ -157,7 +157,13 @@ module.exports = function (arg, info) {
             newName = document.getElementById('info.search.place.list').children[0].querySelector('.head_item').querySelector('.tit_name').querySelector('.link_name').textContent;
             await ajaxPromise({ apartName: newName }, ACCUMULATIONCONST);
           } else {
-            // null
+
+            await ajaxPromise({
+              to: "office",
+              path: "/apartmentInfo",
+              data: { raw, apart, cliid, error: "error" },
+            }, HOSTCONST + "/receive");
+
             await ajaxPromise({ to: 0, data: 2 }, ENDCONST);
             return true;
           }
@@ -274,7 +280,13 @@ module.exports = function (arg, info) {
           await ajaxPromise({ to: 0, data: 2 }, ENDCONST);
           return true;
         } else {
-          // null
+
+          await ajaxPromise({
+            to: "office",
+            path: "/apartmentInfo",
+            data: { raw, apart, cliid, error: "error" },
+          }, HOSTCONST + "/receive");
+
           await ajaxPromise({ to: 0, data: 2 }, ENDCONST);
           return true;
         }

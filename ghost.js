@@ -1910,12 +1910,22 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
         const data = equalJson(req.body.json);
         let address;
-        address = data.entire.find((obj) => { return /주소/gi.test(obj.name) });
-        if (address !== undefined) {
-          if (address.value.trim().slice(0, 1) === data.raw.trim().slice(0, 1)) {
-            await requestSystem("https://" + instance.address.bridgeinfo.host + ":3000/apartment", { data }, { headers: { "Content-Type": "application/json" } });
+
+        if (data.error === "error") {
+          instance.mother.slack_bot.chat.postMessage({ text: "주소 찾을 수 없음 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid, channel: "#error_log" });
+        } else {
+          address = data.entire.find((obj) => { return /주소/gi.test(obj.name) });
+          if (address !== undefined) {
+            if (address.value.trim().slice(0, 1) === data.raw.trim().slice(0, 1)) {
+              await requestSystem("https://" + instance.address.bridgeinfo.host + ":3000/apartment", { data }, { headers: { "Content-Type": "application/json" } });
+            } else {
+              instance.mother.slack_bot.chat.postMessage({ text: "주소 찾을 수 없음 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid, channel: "#error_log" });
+            }
+          } else {
+            instance.mother.slack_bot.chat.postMessage({ text: "주소 찾을 수 없음 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid, channel: "#error_log" });
           }
         }
+
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
