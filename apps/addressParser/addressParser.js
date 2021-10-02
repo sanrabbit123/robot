@@ -1164,9 +1164,23 @@ AddressParser.prototype.apartNameSearch = async function (words) {
   let num, resultArr, addressArr, targetIndex, fromClient, final, realFinal;
   try {
 
-    words = words.trim();
-    num = 0;
+    words = words.trim().replace(/\([^\)]+\)/gi, '').replace(/  /gi, ' ').replace(/  /gi, ' ').replace(/  /gi, ' ');
 
+    addressArr = words.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
+    targetIndex = null;
+    for (let i = 0; i < addressArr.length; i++) {
+      if (/[동로가리길]$/i.test(addressArr[i])) {
+        targetIndex = i;
+        break;
+      }
+    }
+    fromClient = addressArr.slice(targetIndex + 2).map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).join(' ');
+
+    if (addressArr[targetIndex + 2] !== undefined && !/^[0-9]/.test(addressArr[targetIndex + 2]) && !/동$/.test(addressArr[targetIndex + 2]) && !/^\(/.test(addressArr[targetIndex + 2])) {
+      return { raw: words, apart: fromClient };
+    }
+
+    num = 0;
     do {
       resultArr = await naverSearch(words);
       num++;
@@ -1175,15 +1189,6 @@ AddressParser.prototype.apartNameSearch = async function (words) {
     if (resultArr === null) {
       realFinal = '';
     } else {
-      addressArr = words.split(' ').map((i) => { return i.trim(); });
-      targetIndex = null;
-      for (let i = 0; i < addressArr.length; i++) {
-        if (/[동로가리길]$/i.test(addressArr[i])) {
-          targetIndex = i;
-          break;
-        }
-      }
-      fromClient = addressArr.slice(targetIndex + 2).map((str) => { return str.trim(); }).filter((str) => { return !/^[0-9\-]+[동호]$/gi.test(str); }).join(' ');
       if (resultArr.slice(0, 2).every((s) => { return (new RegExp("^" + words.slice(0, 2), 'i')).test(s); })) {
         final = fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
       } else {
