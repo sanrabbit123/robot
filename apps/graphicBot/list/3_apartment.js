@@ -19,9 +19,12 @@ module.exports = function (arg, info) {
             if (document.querySelector('.item_list').children.length <= 3) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
-              await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apart);
+              await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apart.replace(/아파트/gi, ''));
               document.querySelector(".button_search--icon").click();
             }
+          } else {
+            await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apart.replace(/아파트/gi, ''));
+            document.querySelector(".button_search--icon").click();
           }
         }
       } catch (e) {
@@ -210,9 +213,12 @@ module.exports = function (arg, info) {
             if (document.querySelector('.item_list').children.length <= 3) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
-              await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apartName);
+              await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
               document.querySelector(".button_search--icon").click();
             }
+          } else {
+            await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
+            document.querySelector(".button_search--icon").click();
           }
         }
       } catch (e) {
