@@ -2964,12 +2964,10 @@ Mother.prototype.statusReading = function (sendLog = true) {
             }
           }).then((res) => {
             if (res.status === 200) {
-              return axios.post(jandi.url, jandi.message(res.data.name + " statusReading success"), { headers: jandi.headers });
+              resolve(result);
             } else {
               reject("axios request error");
             }
-          }).then(() => {
-            resolve(result);
           }).catch((err) => {
             reject(err);
           });

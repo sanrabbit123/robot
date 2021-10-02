@@ -317,7 +317,7 @@ AddressParser.prototype.rawToApartment = async function (data, option = { selfMo
         }
 
         tempObj.area = {};
-        tempStr2 = findTarget(data.detail[i], /공급/gi);
+        tempStr2 = findTarget(data.detail[i], /전용/gi);
         if (tempStr2 === null) {
           tempObj.area.supply = null;
           tempObj.area.dedicated = null;
@@ -352,6 +352,7 @@ AddressParser.prototype.rawToApartment = async function (data, option = { selfMo
       if (!cliidArr.includes(data.cliid)) {
         cliidArr.push(data.cliid);
       }
+      result.apaid = thisApaid;
       newId = thisApaid;
       await this.updateApartment([ { apaid: thisApaid }, { cliid: cliidArr } ], option);
 
@@ -373,7 +374,7 @@ AddressParser.prototype.rawToApartment = async function (data, option = { selfMo
       await MONGOC.close();
     }
 
-    return newId;
+    return result;
 
   } catch (e) {
     console.log(e);

@@ -1212,7 +1212,56 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     });
     try {
       const { data } = equalJson(req.body);
-      ADDRESS.rawToApartment(data, { selfMongo: MONGOLOCALC }).catch((err) => {
+      const cliid = data.cliid;
+      const pyeongConvertingConst = 0.3025;
+      let apartData, space;
+
+      ADDRESS.rawToApartment(data, { selfMongo: MONGOLOCALC }).then((data) => {
+        apartData = data;
+        return instance.back.getHistoriesByQuery("client", { cliid }, { fromConsole: true });
+      }).then((rows) => {
+        if (rows.length > 0) {
+          space = rows[0].space + "\n\n";
+        } else {
+          space = "최초 고객이 적은 주소 : " + apartData.address + " " + apartData.name;
+        }
+        space += "\n\n";
+        space += "아파트 : " + apartData.name;
+        space += "\n\n";
+        space += "링크 : " + apartData.link;
+        space += "\n\n";
+        space += "사용승인일 : " + apartData.date;
+        space += "\n\n";
+        for (let { name, area: { supply, dedicated, ratio }, composition: { rooms, bathrooms } } of apartData.kinds) {
+          if (supply === null) {
+            supply = 0;
+          }
+          if (dedicated === null) {
+            dedicated = 0;
+          }
+          if (ratio === null) {
+            ratio = 0;
+          }
+          if (rooms === null) {
+            rooms = 0;
+          }
+          if (bathrooms === null) {
+            bathrooms = 0;
+          }
+          space += name + "형";
+          space += "공급 " + String(Math.round(supply * pyeongConvertingConst * 100) / 100) + "평";
+          space += "전용 " + String(Math.round(dedicated * pyeongConvertingConst * 100) / 100) + "평";
+          space += "전용률 " + String(Math.round(ratio * 100 * 100) / 100) + "%";
+          space += "방 " + String(rooms) + "개";
+          space += "화장실 " + String(bathrooms) + "개";
+          space += "\n\n";
+        }
+        if (rows.length > 0) {
+          return instance.back.updateHistory("client", [ { cliid }, { space } ], { fromConsole: true });
+        } else {
+          return instance.back.createHistory("client", { cliid, space }, { fromConsole: true });
+        }
+      }).catch((err) => {
         slack_bot.chat.postMessage({ text: "Bridge 서버 문제 생김 (post_apartment) : " + err.message, channel: "#error_log" });
       });
       res.send({ message: "done" });
