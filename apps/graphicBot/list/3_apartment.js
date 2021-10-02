@@ -128,9 +128,33 @@ module.exports = function (arg, info) {
           const words = document.getElementById('_pcmap_list_scroll_container').querySelectorAll('li')[0].querySelector('a').querySelectorAll("span");
           await ajaxPromise({ apartName: words[0].textContent }, ACCUMULATIONCONST);
         } else {
-          // null
-          await ajaxPromise({ to: 0, data: 2 }, ENDCONST);
-          return true;
+          await ajaxPromise({ apartName: "noting" }, ACCUMULATIONCONST);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    "toss: https://map.kakao.com",
+    async function () {
+      try {
+        const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
+        const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
+        if (apartName === "nothing") {
+          let index, tempArr, placeList, newName;
+          tempArr = raw.split(' ');
+          index = tempArr.findIndex((i) => { return /[동로가리길]$/i.test(i); });
+          await injectionInput(document.getElementById('search.keyword.query'), tempArr.slice(0, index + 2).join(' '));
+          await pressKey("enter");
+          await sleep(1000);
+          placeList = document.getElementById('info.search.place.list');
+          if (placeList !== null && placeList.children.length > 0) {
+            newName = document.getElementById('info.search.place.list').children[0].querySelector('.head_item').querySelector('.tit_name').querySelector('.link_name').textContent;
+            await ajaxPromise({ apartName: newName }, ACCUMULATIONCONST);
+          } else {
+            // null
+            await ajaxPromise({ to: 0, data: 2 }, ENDCONST);
+            return true;
+          }
         }
       } catch (e) {
         console.log(e);
