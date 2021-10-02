@@ -1221,7 +1221,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         return instance.back.getHistoriesByQuery("client", { cliid }, { fromConsole: true });
       }).then((rows) => {
         if (rows.length > 0) {
-          space = rows[0].space + "\n\n";
+          space = rows[0].space;
         } else {
           space = "최초 고객이 적은 주소 : " + apartData.address + " " + apartData.name;
         }
@@ -1248,13 +1248,13 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           if (bathrooms === null) {
             bathrooms = 0;
           }
-          space += name + "형";
+          space += name + "\n";
           space += "공급 " + String(Math.round(supply * pyeongConvertingConst * 100) / 100) + "평" + "\n";
           space += "전용 " + String(Math.round(dedicated * pyeongConvertingConst * 100) / 100) + "평" + "\n";
           space += "전용률 " + String(Math.round(ratio * 100 * 100) / 100) + "%" + "\n";
           space += "방 " + String(rooms) + "개" + "\n";
           space += "화장실 " + String(bathrooms) + "개" + "\n";
-          space += "\n\n";
+          space += "\n";
         }
         if (rows.length > 0) {
           return instance.back.updateHistory("client", [ { cliid }, { space } ], { fromConsole: true });
