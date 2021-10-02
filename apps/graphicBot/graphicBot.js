@@ -593,11 +593,10 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           await this.pressKey("f12");
           await sleep(500);
         } else {
-          await sleep(2000);
+          await sleep(1000);
         }
-        await this.moveAndClick(chromeSize.right + ((screenSize.width - chromeSize.right) / 2), chromeSize.bottom - chromeSize.cursor, 500);
+        await this.moveAndClick(chromeSize.right + ((screenSize.width - chromeSize.right) / 2), chromeSize.bottom - chromeSize.cursor, 200);
         await this.clipBoard(tempString);
-        await sleep(500);
         await this.pasteText();
         instance.front = 1;
         instance.frontProblem = false;
