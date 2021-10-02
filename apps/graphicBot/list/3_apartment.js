@@ -4,7 +4,7 @@ module.exports = function (arg, info) {
     async function () {
       try {
         const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
-        await injectionInput(document.querySelector(".search_input"), apart);
+        await injectionInput(document.querySelector(".search_input"), apart.replace(/아파트/gi, '').trim());
         document.querySelector(".button_search--icon").click();
       } catch (e) {
         console.log(e);
@@ -199,7 +199,7 @@ module.exports = function (arg, info) {
     async function () {
       try {
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
-        await injectionInput(document.querySelector(".search_input"), apartName);
+        await injectionInput(document.querySelector(".search_input"), apartName.replace(/아파트/gi, '').trim());
         document.querySelector(".button_search--icon").click();
       } catch (e) {
         console.log(e);
