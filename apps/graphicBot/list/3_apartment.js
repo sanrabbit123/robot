@@ -41,7 +41,7 @@ module.exports = function (arg, info) {
 
           const infoTable = document.querySelector('.info_table_wrap');
           const items = infoTable.querySelectorAll('.info_table_item');
-          const thisName = document.querySelector('.detail_contents_inner').querySelector('.heading').textContent.trim();
+          const thisName = document.getElementById('complexTitle').textContent.trim();
           let length;
           let keyArr, valueArr;
           let result;
@@ -238,7 +238,7 @@ module.exports = function (arg, info) {
 
           const infoTable = document.querySelector('.info_table_wrap');
           const items = infoTable.querySelectorAll('.info_table_item');
-          const thisName = document.querySelector('.detail_contents_inner').querySelector('.heading').textContent.trim();
+          const thisName = document.getElementById('complexTitle').textContent.trim();
           let length;
           let keyArr, valueArr;
           let result;
