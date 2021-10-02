@@ -124,11 +124,17 @@ module.exports = function (arg, info) {
     },
     async function () {
       try {
+        let words;
         if (document.getElementById('_pcmap_list_scroll_container') !== null) {
-          const words = document.getElementById('_pcmap_list_scroll_container').querySelectorAll('li')[0].querySelector('a').querySelectorAll("span");
+          words = document.getElementById('_pcmap_list_scroll_container').querySelectorAll('li')[0].querySelector('a').querySelectorAll("span");
           await ajaxPromise({ apartName: words[0].textContent }, ACCUMULATIONCONST);
         } else {
-          await ajaxPromise({ apartName: "" }, ACCUMULATIONCONST);
+          if (document.querySelectorAll('.place_section_content').length > 0) {
+            words = document.querySelector('.place_section_content').querySelector('span').children;
+            await ajaxPromise({ apartName: words[0].textContent }, ACCUMULATIONCONST);
+          } else {
+            await ajaxPromise({ apartName: "" }, ACCUMULATIONCONST);
+          }
         }
       } catch (e) {
         console.log(e);
