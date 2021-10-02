@@ -1230,7 +1230,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         space += "\n\n";
         space += "링크 : " + apartData.link;
         space += "\n\n";
-        space += "사용 승인일 : " + Strubg(apartData.date.getFullYear()) + "년 " + Strubg(apartData.date.getMonth() + 1) + "월";
+        space += "사용 승인일 : " + String(apartData.date.getFullYear()) + "년 " + String(apartData.date.getMonth() + 1) + "월";
         space += "\n\n";
         for (let { name, area: { supply, dedicated, ratio }, composition: { rooms, bathrooms } } of apartData.kinds) {
           if (supply === null) {
