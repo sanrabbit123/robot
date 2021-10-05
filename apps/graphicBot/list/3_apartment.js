@@ -15,7 +15,7 @@ module.exports = function (arg, info) {
         const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
-          if (document.querySelector('.no_data_area') === null) {
+          if (document.querySelector('.no_data_area') === null && document.querySelector('.item_list') !== null) {
             if (document.querySelector('.item_list').children.length <= 3) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
@@ -36,7 +36,7 @@ module.exports = function (arg, info) {
         const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
-          if (document.querySelector('.no_data_area') === null) {
+          if (document.querySelector('.no_data_area') === null && document.querySelector('.item_list') !== null) {
             if (document.querySelector('.item_list').children.length <= 3) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
@@ -171,11 +171,11 @@ module.exports = function (arg, info) {
         let words;
         if (document.getElementById('_pcmap_list_scroll_container') !== null) {
           words = document.getElementById('_pcmap_list_scroll_container').querySelectorAll('li')[0].querySelector('a').querySelectorAll("span");
-          await ajaxPromise({ apartName: words[0].textContent }, ACCUMULATIONCONST);
+          await ajaxPromise({ apartName: words[0].textContent.replace(/\([^\)]+\)/gi, '').trim() }, ACCUMULATIONCONST);
         } else {
           if (document.querySelectorAll('.place_section_content').length > 0) {
             words = document.querySelector('.place_section_content').querySelector('span').children;
-            await ajaxPromise({ apartName: words[0].textContent }, ACCUMULATIONCONST);
+            await ajaxPromise({ apartName: words[0].textContent.replace(/\([^\)]+\)/gi, '').trim() }, ACCUMULATIONCONST);
           } else {
             await ajaxPromise({ apartName: "" }, ACCUMULATIONCONST);
           }
@@ -199,7 +199,7 @@ module.exports = function (arg, info) {
           placeList = document.getElementById('info.search.place.list');
           if (placeList !== null && placeList.children.length > 0) {
             newName = document.getElementById('info.search.place.list').children[0].querySelector('.head_item').querySelector('.tit_name').querySelector('.link_name').textContent;
-            await ajaxPromise({ apartName: newName }, ACCUMULATIONCONST);
+            await ajaxPromise({ apartName: newName.replace(/\([^\)]+\)/gi, '').trim() }, ACCUMULATIONCONST);
           } else {
 
             await ajaxPromise({
@@ -220,7 +220,7 @@ module.exports = function (arg, info) {
     async function () {
       try {
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
-        await injectionInput(document.querySelector(".search_input"), apartName.replace(/아파트/gi, '').trim());
+        await injectionInput(document.querySelector(".search_input"), apartName.trim().replace(/\([^\)]+\)/gi, '').replace(/아파트/gi, '').trim());
         document.querySelector(".button_search--icon").click();
       } catch (e) {
         console.log(e);
@@ -232,7 +232,7 @@ module.exports = function (arg, info) {
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
-          if (document.querySelector('.no_data_area') === null) {
+          if (document.querySelector('.no_data_area') === null && document.querySelector('.item_list') !== null) {
             if (document.querySelector('.item_list').children.length <= 3) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
@@ -254,7 +254,7 @@ module.exports = function (arg, info) {
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
-          if (document.querySelector('.no_data_area') === null) {
+          if (document.querySelector('.no_data_area') === null && document.querySelector('.item_list') !== null) {
             if (document.querySelector('.item_list').children.length <= 3) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
