@@ -256,7 +256,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 page: "checklist",
                                                 mode: "update",
                                                 who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                                                update: { whereQuery, updateQuery },
+                                                update: JSON.stringify({ whereQuery, updateQuery }),
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
                                               instance.designers.update([ whereQuery, updateQuery ]);
@@ -413,7 +413,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 page: "checklist",
                                                 mode: "update",
                                                 who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                                                update: { whereQuery, updateQuery },
+                                                update: JSON.stringify({ whereQuery, updateQuery }),
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
                                               instance.designers.update([ whereQuery, updateQuery ]);
@@ -3329,7 +3329,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                       page: "checklist",
                                       mode: "update",
                                       who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                                      update: { whereQuery, updateQuery },
+                                      update: JSON.stringify({ whereQuery, updateQuery }),
                                       desid,
                                     }, "/ghostDesigner_updateAnalytics");
                                     instance.designers.update([ whereQuery, updateQuery ]);
@@ -3465,7 +3465,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         page: "checklist",
                         mode: "update",
                         who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                        update: { whereQuery, updateQuery },
+                        update: JSON.stringify({ whereQuery, updateQuery }),
                         desid,
                       }, "/ghostDesigner_updateAnalytics");
                       instance.designers.update([ whereQuery, updateQuery ]);
@@ -3597,7 +3597,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           page: "checklist",
                           mode: "update",
                           who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                          update: { whereQuery, updateQuery },
+                          update: JSON.stringify({ whereQuery, updateQuery }),
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
                         instance.designers.update([ whereQuery, updateQuery ]);
@@ -3705,7 +3705,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           page: "checklist",
                           mode: "update",
                           who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                          update: { whereQuery, updateQuery },
+                          update: JSON.stringify({ whereQuery, updateQuery }),
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
                         instance.designers.update([ whereQuery, updateQuery ]);

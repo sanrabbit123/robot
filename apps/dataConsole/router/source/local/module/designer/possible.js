@@ -658,7 +658,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             page: "possible",
             mode: "update",
             who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-            update: { whereQuery, updateQuery },
+            update: JSON.stringify({ whereQuery, updateQuery }),
             desid,
           }, "/ghostDesigner_updateAnalytics")
         }).catch((err) => {
@@ -910,7 +910,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                         page: "possible",
                         mode: "update",
                         who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                        update: { whereQuery, updateQuery },
+                        update: JSON.stringify({ whereQuery, updateQuery }),
                         desid,
                       }, "/ghostDesigner_updateAnalytics")
                     }).catch((err) => {
@@ -966,7 +966,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                         page: "possible",
                         mode: "update",
                         who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                        update: { whereQuery, updateQuery },
+                        update: JSON.stringify({ whereQuery, updateQuery }),
                         desid,
                       }, "/ghostDesigner_updateAnalytics")
                     }).catch((err) => {

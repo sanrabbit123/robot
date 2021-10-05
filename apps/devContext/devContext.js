@@ -86,10 +86,19 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const rows = await back.mongoRead("realtimeDesigner", {}, { selfMongo: this.MONGOLOCALC });
+    console.log(rows);
+
+
+
+
+
+
+
     // await this.passiveAddressSync("c2110_aa09s");
 
 
-    
+
 
 
 
