@@ -1530,11 +1530,462 @@ ClientJs.prototype.spreadData = async function (search = null) {
   }
 }
 
+ClientJs.prototype.makeBoard = function (cases) {
+  const instance = this;
+  const { createNode, colorChip, withOut, equalJson, isMac } = GeneralJs;
+  const ea = "px";
+  const divisionName = [ ...new Set(cases.map((obj) => { return obj.action.trim(); }).filter((i) => { return typeof i === "string" && i.trim() !== ''; })) ];
+  let temp;
+  let totalFather;
+  let nameStyle, cliidStyle, barStyle;
+  let style, styles;
+  let tong;
+  let areaNumberStyle;
+  let div_clone, div_clone2, div_clone3;
+  let size, margin;
+  let num;
+  let cardWidthConstant;
+  let intend, totalWidth;
+  let lineHeight, titleTop, startTop;
+  let divideNumber;
+  let fontSize, nameFontSize;
+  let fixedHeightSize;
+  let exceptionMargin;
+  let division;
+  let numbers;
+  let updateState;
+  let dragstart_event, dragend_event, dragenter_event, dragleave_event, dragover_event, drop_event;
+  let outerMargin;
+  let whiteCard;
+  let nameWord, idWord;
+  let between;
+
+  margin = 12;
+  outerMargin = margin * 0.75;
+  cardWidthConstant = 170;
+  divideNumber = Math.floor((window.innerWidth - (margin * 15.8)) / (margin + cardWidthConstant));
+  size = (window.innerWidth - (margin * (divideNumber + 15.8))) / divideNumber;
+  fixedHeightSize = 107;
+  intend = 22;
+  titleTop = 13;
+  startTop = titleTop + 16;
+  exceptionMargin = 12;
+  fontSize = 13;
+  nameFontSize = fontSize + 4;
+  totalWidth = size - (intend * 2) - 1;
+  between = 8;
+
+  totalFather = createNode({
+    mother: document.getElementById("totalcontents"),
+    class: [ "totalFather", "fadein" ],
+    style: {
+      paddingLeft: String(outerMargin) + ea,
+      paddingRight: String(outerMargin) + ea,
+      height: "calc(100vh - " + String(this.belowHeight) + ea + ")",
+      width: "calc(100vw - " + String(outerMargin) + ea + " - " + String(outerMargin) + ea + ")",
+      zIndex: String(1),
+    }
+  });
+
+  //update value
+  updateState = async function (from, to) {
+    try {
+      let toValue;
+      let cliid, originalStatus, index;
+      let motherDiv, originalDiv;
+      let requests, requestIndex;
+      let column;
+      let finalValue;
+
+      cliid = from.getAttribute("cliid");
+      index = from.getAttribute("index");
+      originalStatus = from.getAttribute("thisStatus");
+
+      numbers.get(originalStatus).setAttribute("number", String(Number(numbers.get(originalStatus).getAttribute("number")) - 1));
+      numbers.get(originalStatus).textContent = numbers.get(originalStatus).getAttribute("number") + "명";
+      numbers.get(to).setAttribute("number", String(Number(numbers.get(to).getAttribute("number")) + 1));
+      numbers.get(to).textContent = numbers.get(to).getAttribute("number") + "명";
+
+      from.setAttribute("thisStatus", to);
+      if (to === "드랍") {
+        from.setAttribute("dropDetail", originalStatus);
+      } else if (from.hasAttribute("dropDetail")) {
+        from.setAttribute("dropDetail", "");
+      }
+
+      requests = [];
+      for (let i = 1; i < instance.cases.length; i++) {
+        if (instance.cases[i].cliid === cliid) {
+          requests.push(instance.cases[i]);
+        }
+      }
+      for (let i = 0; i < requests.length; i++) {
+        if (requests[i] === instance.cases[Number(index)]) {
+          requestIndex = i;
+        }
+      }
+
+      column = "status";
+
+      motherDiv = document.querySelectorAll('.' + cliid)[requestIndex];
+      for (let i = 0; i < motherDiv.children.length; i++) {
+        if (motherDiv.children[i].getAttribute("column") === column) {
+          originalDiv = motherDiv.children[i];
+        }
+      }
+
+      if (to === "통화 전") {
+        toValue = "응대중";
+      } else if (to === "제안 전") {
+        toValue = "응대중";
+      } else if (to === "제안 후") {
+        toValue = "응대중";
+      } else if (to === "진행") {
+        toValue = "진행";
+      } else if (to === "드랍") {
+        toValue = "드랍";
+      }
+
+      finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
+
+      instance.cases[Number(index)][column] = finalValue;
+      await GeneralJs.updateValue({
+        thisId: cliid,
+        requestIndex: requestIndex,
+        column: column,
+        pastValue: originalStatus,
+        value: finalValue,
+        index: Number(index),
+        thisCase: instance.cases[Number(index)]
+      });
+
+      originalDiv.textContent = finalValue;
+
+    } catch (e) {
+      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+      console.log(e);
+    }
+  }
+
+  //drag and drop events
+  dragstart_event = function (e) {
+    e.dataTransfer.setData("dragData", e.target.getAttribute("index"));
+  }
+
+  dragend_event = function (e) {
+    e.preventDefault();
+  }
+
+  dragenter_event = function (e) {
+    e.preventDefault();
+  }
+
+  dragleave_event = function (e) {
+    e.preventDefault();
+  }
+
+  dragover_event = function (e) {
+    e.preventDefault();
+  }
+
+  drop_event = async function (e) {
+    try {
+      e.preventDefault();
+      const index = e.dataTransfer.getData("dragData");
+      const targetDom = instance.totalFatherChildren[Number(index) - 1];
+      const status = targetDom.getAttribute("thisStatus");
+      let area, dropDetail;
+      if (e.target.hasAttribute("kinds")) {
+        if (e.target.getAttribute("kinds") === "area") {
+          area = e.target;
+        } else {
+          area = e.target.parentElement;
+        }
+      } else {
+        area = e.target.parentElement.parentElement;
+      }
+
+      if (area.getAttribute("name") === "통화 전") {
+        if (status === "통화 전") {
+          //pass
+        } else if (status === "제안 전") {
+          alert("통화 기록은 되돌릴 수 없습니다!");
+        } else if (status === "제안 후") {
+          alert("통화 기록은 되돌릴 수 없습니다!");
+        } else if (status === "진행") {
+          alert("통화 기록은 되돌릴 수 없습니다!");
+        } else if (status === "드랍") {
+          dropDetail = targetDom.getAttribute("dropDetail");
+          if (dropDetail !== "통화 전") {
+            alert("통화 기록은 되돌릴 수 없습니다!");
+          } else {
+            area.appendChild(targetDom);
+            await updateState(targetDom, "통화 전");
+          }
+        }
+
+      } else if (area.getAttribute("name") === "제안 전") {
+        if (status === "통화 전") {
+          alert("통화 기록을 기입해주세요!");
+        } else if (status === "제안 전") {
+          //pass
+        } else if (status === "제안 후") {
+          alert("제안 기록은 되돌릴 수 없습니다!");
+        } else if (status === "진행") {
+          alert("제안 기록은 되돌릴 수 없습니다!");
+        } else if (status === "드랍") {
+          dropDetail = targetDom.getAttribute("dropDetail");
+          if (dropDetail === "통화 전") {
+            alert("통화 기록을 기입해주세요!");
+          } else if (dropDetail === "제안 전") {
+            area.appendChild(targetDom);
+            await updateState(targetDom, "제안 전");
+          } else if (dropDetail === "제안 후") {
+            alert("제안 기록은 되돌릴 수 없습니다!");
+          } else if (dropDetail === "진행") {
+            alert("제안 기록은 되돌릴 수 없습니다!");
+          }
+        }
+
+      } else if (area.getAttribute("name") === "제안 후") {
+        if (status === "통화 전") {
+          alert("통화 기록을 기입해주세요!");
+        } else if (status === "제안 전") {
+          alert("제안서를 작성해주세요!");
+        } else if (status === "제안 후") {
+          //pass
+        } else if (status === "진행") {
+          area.appendChild(targetDom);
+          await updateState(targetDom, "제안 후");
+        } else if (status === "드랍") {
+          dropDetail = targetDom.getAttribute("dropDetail");
+          if (dropDetail === "통화 전") {
+            alert("통화 기록을 기입해주세요!");
+          } else if (dropDetail === "제안 전") {
+            alert("제안서를 작성해주세요!");
+          } else if (dropDetail === "제안 후") {
+            area.appendChild(targetDom);
+            await updateState(targetDom, "제안 후");
+          } else if (dropDetail === "진행") {
+            area.appendChild(targetDom);
+            await updateState(targetDom, "제안 후");
+          }
+        }
+
+      } else if (area.getAttribute("name") === "진행") {
+        if (status === "통화 전") {
+          alert("통화 기록을 기입해주세요!");
+        } else if (status === "제안 전") {
+          alert("제안서를 작성해주세요!");
+        } else if (status === "제안 후") {
+          area.appendChild(targetDom);
+          await updateState(targetDom, "진행");
+        } else if (status === "진행") {
+          //pass
+        } else if (status === "드랍") {
+          dropDetail = targetDom.getAttribute("dropDetail");
+          if (dropDetail === "통화 전") {
+            alert("통화 기록을 기입해주세요!");
+          } else if (dropDetail === "제안 전") {
+            alert("제안서를 작성해주세요!");
+          } else if (dropDetail === "제안 후") {
+            area.appendChild(targetDom);
+            await updateState(targetDom, "진행");
+          } else if (dropDetail === "진행") {
+            area.appendChild(targetDom);
+            await updateState(targetDom, "진행");
+          }
+        }
+
+      } else if (area.getAttribute("name") === "드랍") {
+        if (status === "통화 전") {
+          area.appendChild(targetDom);
+          await updateState(targetDom, "드랍");
+        } else if (status === "제안 전") {
+          area.appendChild(targetDom);
+          await updateState(targetDom, "드랍");
+        } else if (status === "제안 후") {
+          area.appendChild(targetDom);
+          await updateState(targetDom, "드랍");
+        } else if (status === "진행") {
+          area.appendChild(targetDom);
+          await updateState(targetDom, "드랍");
+        } else if (status === "드랍") {
+          //pass
+        }
+      }
+
+      e.stopPropagation();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  //make division
+  division = new Map();
+  numbers = new Map();
+  for (let i = 0; i < divisionName.length; i++) {
+    tong = createNode({
+      mother: totalFather,
+      style: {
+        position: "relative",
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        marginTop: String(margin * 1.75) + ea,
+        paddingTop: String(margin * 1.2) + ea,
+        paddingBottom: String(margin * 1.2) + ea,
+        paddingRight: String(margin * 1.2) + ea,
+        paddingLeft: String(margin * 10) + ea,
+        border: "1px dashed " + GeneralJs.colorChip.gray4,
+        borderRadius: String(5) + "px",
+      },
+      children: [
+        {
+          text: divisionName[i],
+          style: {
+            position: "absolute",
+            top: String(margin * (GeneralJs.isMac() ? 1 : 1.07)) + ea,
+            left: String(margin * 1.7) + ea,
+            fontSize: String(fontSize + 6) + ea,
+            fontWeight: String(600),
+            color: GeneralJs.colorChip.black,
+          }
+        },
+        {
+          text: String(0) + "명",
+          attribute: {
+            kinds: "number",
+          },
+          style: {
+            position: "absolute",
+            top: String((margin * (GeneralJs.isMac() ? 1 : 1.07)) + ((fontSize + 6) * 1.368421052631579)) + ea,
+            left: String(margin * 1.7) + ea,
+            fontSize: String(fontSize + 4) + ea,
+            fontWeight: String(200),
+            color: GeneralJs.colorChip.gray5,
+          }
+        },
+        {
+          attribute: {
+            kinds: "area",
+            name: divisionName[i]
+          },
+          events: {
+            dragenter: dragenter_event,
+            dragleave: dragleave_event,
+            dragover: dragover_event,
+            drop: drop_event
+          },
+          style: {
+            position: "relative",
+            paddingBottom: String(margin) + ea,
+            minHeight: String(fixedHeightSize + margin) + ea,
+            background: GeneralJs.colorChip.gray1,
+            borderRadius: String(5) + ea,
+          }
+        }
+      ]
+    });
+    numbers.set(divisionName[i], tong.children[1]);
+    division.set(divisionName[i], tong.children[2]);
+  }
+
+  //make card
+  instance.totalFatherChildren = [];
+  num = 0;
+  for (let obj of cases) {
+
+    whiteCard = createNode({
+      mother: division.get(obj.action),
+      attribute: {
+        kinds: "card",
+        cliid: obj.cliid,
+        draggable: "true"
+      },
+      event: {
+        dragstart: dragstart_event,
+        dragend: dragend_event,
+        dragenter: dragenter_event,
+        dragleave: dragleave_event,
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(size) + ea,
+        height: String(fixedHeightSize) + ea,
+        marginLeft: String(margin) + ea,
+        marginTop: String(margin) + ea,
+        background: GeneralJs.colorChip.white,
+        borderRadius: String(5) + ea,
+        cursor: "pointer",
+      }
+    });
+
+    nameWord = createNode({
+      mother: whiteCard,
+      text: obj.name,
+      event: {
+        click: instance.whiteViewMaker(num),
+        contextmenu: instance.makeClipBoardEvent(obj.cliid),
+      },
+      style: {
+        position: "absolute",
+        fontSize: String(nameFontSize) + ea,
+        fontWeight: String(500),
+        top: String(GeneralJs.isMac() ? titleTop : titleTop + 4) + ea,
+        left: String(intend) + ea,
+        color: GeneralJs.colorChip.black,
+        cursor: "pointer",
+      }
+    });
+
+    idWord = createNode({
+      mother: whiteCard,
+      text: obj.cliid,
+      event: {
+        click: instance.whiteViewMaker(num),
+        contextmenu: instance.makeClipBoardEvent(obj.cliid),
+      },
+      style: {
+        position: "absolute",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(200),
+        top: String(titleTop + (nameFontSize - fontSize + 2) + (GeneralJs.isMac() ? 0 : 2)) + ea,
+        left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
+        color: GeneralJs.colorChip.green,
+        cursor: "pointer",
+      }
+    });
+
+    instance.totalFatherChildren.push(whiteCard);
+
+    num++;
+  }
+
+  numbers.forEach((value, key, map) => {
+    numbers.get(key).textContent = String(division.get(key).children.length) + "명";
+    numbers.get(key).setAttribute("number", String(division.get(key).children.length));
+  });
+
+  createNode({
+    mother: totalFather,
+    style: {
+      height: String(margin * 2) + ea
+    }
+  });
+
+  return totalFather;
+}
+
 ClientJs.prototype.cardViewMaker = function () {
   const instance = this;
+  const { equalJson } = GeneralJs;
 
   return async function (e) {
     const { cases, totalContents, totalMother } = instance;
+    const thisCases = equalJson(JSON.stringify(cases));
+
+    thisCases.shift();
 
     if (instance.whiteBox !== null) {
       if (GeneralJs.stacks.whiteBox !== 1) {
@@ -1554,562 +2005,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
       totalMother.classList.add("justfadeoutoriginal");
 
-      let temp;
-      let totalFather;
-      let nameStyle, cliidStyle, barStyle;
-      let style, styles;
-      let areaStyle, areaNameStyle, areaTongStyle;
-      let areaNumberStyle;
-      let div_clone, div_clone2, div_clone3;
-      let size, margin;
-      let ea = "px";
-      let num;
-      let cardWidthConstant;
-      let intend, totalWidth;
-      let lineHeight, titleTop, startTop;
-      let divideNumber;
-      let fontSize, nameFontSize;
-      let fixedHeightSize;
-      let exceptionMargin;
-      let whereQuery;
-      let tempResult, tempBoo;
-      let division, divisionName;
-      let numbers;
-      let updateState;
-      let dragstart_event, dragend_event, dragenter_event, dragleave_event, dragover_event, drop_event;
-
-      //total father div
-      totalFather = GeneralJs.nodes.div.cloneNode(true);
-      totalFather.classList.add("totalFather");
-
-      margin = 12;
-      lineHeight = 20;
-      cardWidthConstant = 170;
-      divideNumber = Math.floor((window.innerWidth - (margin * 15.8)) / (margin + cardWidthConstant));
-      size = (window.innerWidth - (margin * (divideNumber + 15.8))) / divideNumber;
-      fixedHeightSize = 107;
-      intend = 22;
-      titleTop = 13;
-      startTop = titleTop + 16;
-      exceptionMargin = 12;
-      fontSize = 13;
-      nameFontSize = fontSize + 4;
-      totalWidth = size - (intend * 2) - 1;
-
-      //style maker
-      style = {
-        display: "inline-block",
-        position: "relative",
-        width: String(size) + ea,
-        height: String(fixedHeightSize) + ea,
-        marginLeft: String(margin) + ea,
-        marginTop: String(margin) + ea,
-        background: GeneralJs.colorChip.white,
-        borderRadius: String(5) + ea,
-        cursor: "pointer",
-      };
-
-      nameStyle = {
-        position: "absolute",
-        fontSize: String(nameFontSize) + ea,
-        fontWeight: String(500),
-        top: String(GeneralJs.isMac() ? titleTop : titleTop + 4) + ea,
-        left: String(intend) + ea,
-        color: GeneralJs.colorChip.black,
-        cursor: "pointer",
-      };
-
-      cliidStyle = {
-        position: "absolute",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(200),
-        top: String(titleTop + (nameFontSize - fontSize + 2) + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        color: GeneralJs.colorChip.green,
-        cursor: "pointer",
-      };
-
-      barStyle = {
-        position: "absolute",
-        background: GeneralJs.colorChip.gray2,
-        top: String(startTop + 13 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String(intend) + ea,
-        width: String(totalWidth) + ea,
-        height: String(1) + ea,
-      };
-
-      //info style
-      styles = [];
-      for (let i = 0; i < DataPatch.clientCardViewStandard().info.length; i++) {
-        temp = {
-          position: "absolute",
-          fontSize: String(fontSize) + ea,
-          fontWeight: String(500),
-          top: String(startTop + (lineHeight * (i + 1)) + (DataPatch.clientCardViewStandard().exceptionHeight[i] ? exceptionMargin : 0) + (GeneralJs.isMac() ? 0 : 3)) + ea,
-          left: String(intend) + ea,
-          width: String(totalWidth) + ea,
-          color: GeneralJs.colorChip.black,
-          lineHeight: String(1.5),
-        };
-        styles.push(temp);
-      }
-
-      //area style
-      areaStyle = {
-        position: "relative",
-        marginLeft: String(margin) + ea,
-        marginRight: String(margin) + ea,
-        marginTop: String(margin * 1.75) + ea,
-        paddingTop: String(margin * 1.2) + ea,
-        paddingBottom: String(margin * 1.2) + ea,
-        paddingRight: String(margin * 1.2) + ea,
-        paddingLeft: String(margin * 10) + ea,
-        border: "1px dashed " + GeneralJs.colorChip.gray4,
-        borderRadius: String(5) + ea,
-      };
-
-      areaNameStyle = {
-        position: "absolute",
-        top: String(margin * (GeneralJs.isMac() ? 1 : 1.07)) + ea,
-        left: String(margin * 1.7) + ea,
-        fontSize: String(fontSize + 6) + ea,
-        fontWeight: String(600),
-        color: GeneralJs.colorChip.black,
-      };
-
-      areaNumberStyle = {
-        position: "absolute",
-        top: String((margin * (GeneralJs.isMac() ? 1 : 1.07)) + ((fontSize + 6) * 1.368421052631579)) + ea,
-        left: String(margin * 1.7) + ea,
-        fontSize: String(fontSize + 4) + ea,
-        fontWeight: String(200),
-        color: GeneralJs.colorChip.gray5,
-      };
-
-      areaTongStyle = {
-        position: "relative",
-        paddingBottom: String(margin) + ea,
-        minHeight: String(fixedHeightSize + margin) + ea,
-        background: GeneralJs.colorChip.gray1,
-        borderRadius: String(5) + ea,
-      };
-
-      //set map
-      division = new Map();
-      numbers = new Map();
-
-      //update value
-      updateState = async function (from, to) {
-        try {
-          let toValue;
-          let cliid, originalStatus, index;
-          let motherDiv, originalDiv;
-          let requests, requestIndex;
-          let column;
-          let finalValue;
-
-          cliid = from.getAttribute("cliid");
-          index = from.getAttribute("index");
-          originalStatus = from.getAttribute("thisStatus");
-
-          numbers.get(originalStatus).setAttribute("number", String(Number(numbers.get(originalStatus).getAttribute("number")) - 1));
-          numbers.get(originalStatus).textContent = numbers.get(originalStatus).getAttribute("number") + "명";
-          numbers.get(to).setAttribute("number", String(Number(numbers.get(to).getAttribute("number")) + 1));
-          numbers.get(to).textContent = numbers.get(to).getAttribute("number") + "명";
-
-          from.setAttribute("thisStatus", to);
-          if (to === "드랍") {
-            from.setAttribute("dropDetail", originalStatus);
-          } else if (from.hasAttribute("dropDetail")) {
-            from.setAttribute("dropDetail", "");
-          }
-
-          requests = [];
-          for (let i = 1; i < instance.cases.length; i++) {
-            if (instance.cases[i].cliid === cliid) {
-              requests.push(instance.cases[i]);
-            }
-          }
-          for (let i = 0; i < requests.length; i++) {
-            if (requests[i] === instance.cases[Number(index)]) {
-              requestIndex = i;
-            }
-          }
-
-          column = "status";
-
-          motherDiv = document.querySelectorAll('.' + cliid)[requestIndex];
-          for (let i = 0; i < motherDiv.children.length; i++) {
-            if (motherDiv.children[i].getAttribute("column") === column) {
-              originalDiv = motherDiv.children[i];
-            }
-          }
-
-          if (to === "통화 전") {
-            toValue = "응대중";
-          } else if (to === "제안 전") {
-            toValue = "응대중";
-          } else if (to === "제안 후") {
-            toValue = "응대중";
-          } else if (to === "진행") {
-            toValue = "진행";
-          } else if (to === "드랍") {
-            toValue = "드랍";
-          }
-
-          finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
-
-          instance.cases[Number(index)][column] = finalValue;
-          await GeneralJs.updateValue({
-            thisId: cliid,
-            requestIndex: requestIndex,
-            column: column,
-            pastValue: originalStatus,
-            value: finalValue,
-            index: Number(index),
-            thisCase: instance.cases[Number(index)]
-          });
-
-          originalDiv.textContent = finalValue;
-
-        } catch (e) {
-          GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-          console.log(e);
-        }
-      }
-
-      //drag and drop events
-      dragstart_event = function (e) {
-        e.dataTransfer.setData("dragData", e.target.getAttribute("index"));
-      }
-
-      dragend_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragenter_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragleave_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragover_event = function (e) {
-        e.preventDefault();
-      }
-
-      drop_event = async function (e) {
-        try {
-          e.preventDefault();
-          const index = e.dataTransfer.getData("dragData");
-          const targetDom = instance.totalFatherChildren[Number(index) - 1];
-          const status = targetDom.getAttribute("thisStatus");
-          let area, dropDetail;
-          if (e.target.hasAttribute("kinds")) {
-            if (e.target.getAttribute("kinds") === "area") {
-              area = e.target;
-            } else {
-              area = e.target.parentElement;
-            }
-          } else {
-            area = e.target.parentElement.parentElement;
-          }
-
-          if (area.getAttribute("name") === "통화 전") {
-            if (status === "통화 전") {
-              //pass
-            } else if (status === "제안 전") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "제안 후") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "진행") {
-              alert("통화 기록은 되돌릴 수 없습니다!");
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail !== "통화 전") {
-                alert("통화 기록은 되돌릴 수 없습니다!");
-              } else {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "통화 전");
-              }
-            }
-
-          } else if (area.getAttribute("name") === "제안 전") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              //pass
-            } else if (status === "제안 후") {
-              alert("제안 기록은 되돌릴 수 없습니다!");
-            } else if (status === "진행") {
-              alert("제안 기록은 되돌릴 수 없습니다!");
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "제안 전");
-              } else if (dropDetail === "제안 후") {
-                alert("제안 기록은 되돌릴 수 없습니다!");
-              } else if (dropDetail === "진행") {
-                alert("제안 기록은 되돌릴 수 없습니다!");
-              }
-            }
-
-          } else if (area.getAttribute("name") === "제안 후") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              alert("제안서를 작성해주세요!");
-            } else if (status === "제안 후") {
-              //pass
-            } else if (status === "진행") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "제안 후");
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
-                alert("제안서를 작성해주세요!");
-              } else if (dropDetail === "제안 후") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "제안 후");
-              } else if (dropDetail === "진행") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "제안 후");
-              }
-            }
-
-          } else if (area.getAttribute("name") === "진행") {
-            if (status === "통화 전") {
-              alert("통화 기록을 기입해주세요!");
-            } else if (status === "제안 전") {
-              alert("제안서를 작성해주세요!");
-            } else if (status === "제안 후") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "진행");
-            } else if (status === "진행") {
-              //pass
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "통화 전") {
-                alert("통화 기록을 기입해주세요!");
-              } else if (dropDetail === "제안 전") {
-                alert("제안서를 작성해주세요!");
-              } else if (dropDetail === "제안 후") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "진행");
-              } else if (dropDetail === "진행") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "진행");
-              }
-            }
-
-          } else if (area.getAttribute("name") === "드랍") {
-            if (status === "통화 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "제안 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "제안 후") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "진행") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "드랍") {
-              //pass
-            }
-          }
-
-          e.stopPropagation();
-        } catch (err) {
-          console.log(err);
-        }
-      }
-
-      //make division
-      divisionName = [
-        "통화 전",
-        "제안 전",
-        "제안 후",
-        "진행",
-        "드랍",
-      ];
-      for (let i = 0; i < divisionName.length; i++) {
-        div_clone = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in areaStyle) {
-          div_clone.style[i] = areaStyle[i];
-        }
-
-        //title
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = divisionName[i];
-        for (let i in areaNameStyle) {
-          div_clone2.style[i] = areaNameStyle[i];
-        }
-        div_clone.appendChild(div_clone2);
-
-        //number
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = String(0) + "명";
-        for (let i in areaNumberStyle) {
-          div_clone2.style[i] = areaNumberStyle[i];
-        }
-        div_clone2.setAttribute("kinds", "number");
-        numbers.set(divisionName[i], div_clone2);
-        div_clone.appendChild(div_clone2);
-
-        //tong
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in areaTongStyle) {
-          div_clone2.style[i] = areaTongStyle[i];
-        }
-        div_clone2.setAttribute("kinds", "area");
-        div_clone2.setAttribute("name", divisionName[i]);
-        division.set(divisionName[i], div_clone2);
-        div_clone.appendChild(div_clone2);
-
-        totalFather.appendChild(div_clone);
-
-        div_clone2.addEventListener("dragenter", dragenter_event);
-        div_clone2.addEventListener("dragleave", dragleave_event);
-        div_clone2.addEventListener("dragover", dragover_event);
-        div_clone2.addEventListener("drop", drop_event);
-      }
-
-      //make card
-      instance.totalFatherChildren = [];
-
-      whereQuery = {};
-      whereQuery["$or"] = [];
-      for (let i = 1; i < cases.length; i++) {
-        whereQuery["$or"].push({ cliid: cases[i].cliid });
-      }
-      tempResult = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify(whereQuery), "/getProjects"));
-
-      num = 0;
-      for (let obj of cases) {
-        if (num !== 0) {
-
-          div_clone = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in style) {
-            div_clone.style[i] = style[i];
-          }
-
-          //name
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          div_clone2.textContent = obj.name;
-          for (let i in nameStyle) {
-            div_clone2.style[i] = nameStyle[i];
-          }
-          div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.cliid));
-          div_clone.appendChild(div_clone2);
-
-          //cliid
-          cliidStyle.left = String(intend + GeneralJs.calculationWordWidth(nameFontSize, obj.name, true)) + ea;
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          div_clone2.textContent = obj.cliid;
-          for (let i in cliidStyle) {
-            div_clone2.style[i] = cliidStyle[i];
-          }
-          div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.cliid));
-          div_clone.appendChild(div_clone2);
-
-          //bar
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in barStyle) {
-            div_clone2.style[i] = barStyle[i];
-          }
-          div_clone.appendChild(div_clone2);
-
-          //sub info
-          for (let j = 0; j < DataPatch.clientCardViewStandard().info.length; j++) {
-            div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-            div_clone2.classList.add("father_" + DataPatch.clientCardViewStandard().info[j]);
-            div_clone2.textContent = obj[DataPatch.clientCardViewStandard().info[j]];
-            for (let i in styles[j]) {
-              div_clone2.style[i] = styles[j][i];
-            }
-            div_clone.appendChild(div_clone2);
-          }
-
-          div_clone.setAttribute("index", String(num));
-          div_clone.setAttribute("kinds", "card");
-          div_clone.setAttribute("cliid", obj.cliid);
-
-          tempBoo = false;
-          for (let { cliid } of tempResult) {
-            if (obj.cliid === cliid) {
-              tempBoo = true;
-            }
-          }
-
-          if (obj.status === "응대중" && obj.callHistory === "") {
-            div_clone.setAttribute("thisStatus", "통화 전");
-            division.get("통화 전").appendChild(div_clone);
-          } else if (obj.status === "응대중" && !tempBoo) {
-            div_clone.setAttribute("thisStatus", "제안 전");
-            division.get("제안 전").appendChild(div_clone);
-          } else if (obj.status === "응대중" && tempBoo) {
-            div_clone.setAttribute("thisStatus", "제안 후");
-            division.get("제안 후").appendChild(div_clone);
-          } else if (obj.status === "진행") {
-            div_clone.setAttribute("thisStatus", "진행");
-            division.get("진행").appendChild(div_clone);
-          } else if (obj.status === "드랍") {
-            div_clone.setAttribute("thisStatus", "드랍");
-            if (obj.callHistory === "") {
-              div_clone.setAttribute("dropDetail", "통화 전");
-            } else if (!tempBoo) {
-              div_clone.setAttribute("dropDetail", "제안 전");
-            } else {
-              div_clone.setAttribute("dropDetail", "제안 후");
-            }
-            division.get("드랍").appendChild(div_clone);
-          } else if (obj.status === "완료") {
-            div_clone.setAttribute("thisStatus", "드랍");
-            div_clone.setAttribute("dropDetail", "제안 후");
-            division.get("드랍").appendChild(div_clone);
-          } else {
-            throw new Error("invaild status");
-          }
-
-          div_clone.setAttribute("draggable", "true");
-          div_clone.addEventListener("dragstart", dragstart_event);
-          div_clone.addEventListener("dragend", dragend_event);
-          div_clone.addEventListener("dragenter", dragenter_event);
-          div_clone.addEventListener("dragleave", dragleave_event);
-
-          instance.totalFatherChildren.push(div_clone);
-        }
-        num++;
-      }
-
-      numbers.forEach((value, key, map) => {
-        numbers.get(key).textContent = String(division.get(key).children.length) + "명";
-        numbers.get(key).setAttribute("number", String(division.get(key).children.length));
-      });
-
-      totalFather.style.paddingLeft = String(margin * 0.75) + ea;
-      totalFather.style.paddingRight = String(margin * 0.75) + ea;
-      totalFather.style.height = "calc(100vh - " + String(instance.belowHeight) + "px)";
-      totalFather.style.width = "calc(100vw - " + String(margin * 0.75) + ea + " - " + String(margin * 0.75) + ea + ")";
-      totalFather.style.zIndex = String(1);
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.style.height = String(margin * 2) + ea;
-      totalFather.appendChild(div_clone);
-
-      totalFather.classList.add("fadein");
-
-      totalContents.appendChild(totalFather);
-      instance.totalFather = totalFather;
+      instance.totalFather = instance.makeBoard(thisCases);
     }
     instance.onView = "father";
   }

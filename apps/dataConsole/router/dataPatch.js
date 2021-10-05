@@ -434,20 +434,41 @@ DataPatch.prototype.toolsDashboard = function (button) {
       resultObj.buttons = [
         "1차 응대 예정",
         "1차 응대 후 대기",
-        "선호 사진 대기",
+        "스타일 체크 대기",
         "제안 발송 예정",
         "제안 피드백 예정",
+        "피드백 부재중",
         "제안 피드백 완료",
+        "부재중 알림 발송",
+        "상세 설문 대기",
+        "부재중 제안 발송",
+        "피드백과 응대 예정",
+        "자동 피드백 부재중",
+        "피드백과 응대 완료",
+        "디자이너 선택",
         "계약금 안내",
-        "연결 안 됨",
-        "응대 종료",
-        "해당 없음"
+        "해당 없음",
       ];
       break;
     case "project":
       resultObj.standardColumn = [ "status", "action" ];
       resultObj.titleStandard = "진행중";
-      resultObj.buttons = [ "응대 대기", "현장 미팅", "1차 제안", "수정 제안", "시공 진행", "제품 구매", "배송중", "촬영 컨택", "촬영 대기", "사진 대기", "사진 공유", "컨텐츠 공유", "응대 종료", "해당 없음" ];
+      resultObj.buttons = [
+        "응대 대기",
+        "현장 미팅",
+        "1차 제안",
+        "수정 제안",
+        "시공 진행",
+        "제품 구매",
+        "배송중",
+        "촬영 컨택",
+        "촬영 대기",
+        "사진 대기",
+        "사진 공유",
+        "컨텐츠 공유",
+        "응대 종료",
+        "해당 없음"
+      ];
       break;
   }
 
@@ -761,13 +782,13 @@ DataPatch.prototype.clientMap = function () {
       width: String(width) + ea,
       paddingTop: String(height * (GeneralJs.isMac() ? 0.4 : 0.5)) + ea,
       height: String(height * (GeneralJs.isMac() ? 1.4 : 1.3)) + ea,
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       marginBottom: String(height / 4) + ea,
     };
 
@@ -775,7 +796,7 @@ DataPatch.prototype.clientMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -808,6 +829,184 @@ DataPatch.prototype.clientMap = function () {
     }
 
     mother.appendChild(div_clone);
+  };
+
+  const actionToObject = function (value, pastValue, vaildMode) {
+    if (vaildMode) {
+      return { boo: true, value: null };
+    }
+    return String(value).trim();
+  };
+  const actionInputFunction = function (mother, input, callback) {
+    const grandMother = mother.parentElement;
+    const items = [
+      "1차 응대 예정",
+      "1차 응대 후 대기",
+      "스타일 체크 대기",
+      "제안 발송 예정",
+      "제안 피드백 예정",
+      "피드백 부재중",
+      "제안 피드백 완료",
+      "부재중 알림 발송",
+      "상세 설문 대기",
+      "부재중 제안 발송",
+      "피드백과 응대 예정",
+      "자동 피드백 부재중",
+      "피드백과 응대 완료",
+      "디자이너 선택",
+      "계약금 안내",
+      "해당 없음",
+    ];
+    const doubleLength = 6;
+    const doubleStartIndex = 1;
+    const ea = "px";
+    let inputArr;
+    let height, fontSize, top, width;
+    let div_clone;
+    let iconWidth;
+    let length;
+    let endEvent;
+    let originalValue;
+    let widthVisual;
+    let motherWidth;
+    let margin;
+    let blockMother;
+    let paddingTop;
+    let greenGrayIndex;
+    let tempIndex;
+
+    originalValue = input.value;
+
+    inputArr = items.map((i) => { return [ i ] });
+    for (let i = doubleStartIndex; i < doubleStartIndex + doubleLength; i++) {
+      inputArr[i] = [ inputArr[i][0], inputArr[i + doubleLength][0] ];
+    }
+    for (let i = 0; i < doubleLength; i++) {
+      inputArr[doubleStartIndex + doubleLength + i] = null;
+    }
+    inputArr = inputArr.filter((i) => { return Array.isArray(i); });
+    length = inputArr.length;
+    greenGrayIndex = 2;
+    for (let i = 0; i < inputArr.length; i++) {
+      if (inputArr[i].length > 1) {
+        tempIndex = inputArr[i].findIndex((s) => { return s === originalValue.trim(); });
+        if (tempIndex !== -1) {
+          greenGrayIndex = tempIndex;
+        }
+      }
+    }
+
+    endEvent = function (e) {
+      const rawValue = this.getAttribute("target");
+      let finalValue;
+      if (items.includes(rawValue)) {
+        finalValue = rawValue;
+      } else {
+        finalValue = originalValue;
+      }
+      input.style.transition = "0s all ease";
+      input.style.color = "transparent";
+      input.value = finalValue;
+      input.parentElement.style.transition = "";
+      input.parentElement.style.color = "inherit";
+      mother.removeChild(document.querySelector(".divTong"));
+      callback();
+    };
+
+    input.value = "입력중";
+    if (input.parentElement.childNodes[0].nodeType === 3) {
+      input.parentElement.style.transition = "0s all ease";
+      input.parentElement.style.color = "transparent";
+    }
+
+    mother.style.overflow = "";
+    height = Number(mother.style.height.replace((new RegExp(ea, "gi")), ''));
+    fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
+    width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
+    if (width === '' || Number.isNaN(width)) {
+      width = 120;
+    }
+    top = height * 0.5;
+    paddingTop = height * (GeneralJs.isMac() ? 0.4 : 0.5);
+    height = height * 1.8;
+    iconWidth = 18;
+    widthVisual = 0.1;
+    margin = height / 4;
+    motherWidth = (width * 2) + margin;
+
+    div_clone = GeneralJs.createNode({
+      mother,
+      class: [ "removeTarget", "divTong" ],
+      style: {
+        position: "absolute",
+        top: String((height * 2) - top) + ea,
+        left: GeneralJs.withOut(50, ((motherWidth / 2) + 0.1), ea),
+        width: String(motherWidth) + ea,
+        textAlign: "center",
+        fontSize: "inherit",
+        zIndex: String(3),
+        paddingBottom: String(iconWidth + 3) + ea,
+      }
+    });
+
+    for (let i = 0; i < length; i++) {
+      blockMother = GeneralJs.createNode({
+        mother: div_clone,
+        class: [ "removeTarget" ],
+        style: {
+          display: "block",
+          position: "relative",
+          left: GeneralJs.withOut(50, ((motherWidth / 2) + 0.1), ea),
+          width: String(motherWidth) + ea,
+          height: String(height) + ea,
+          fontSize: "inherit",
+          zIndex: String(3),
+          animation: "fadeuplite 0.3s ease forwards",
+          marginBottom: String(margin) + ea,
+          textAlign: "center",
+        }
+      });
+      for (let j = 0; j < inputArr[i].length; j++) {
+        GeneralJs.createNode({
+          mother: blockMother,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: String(width) + ea,
+            paddingTop: String(paddingTop) + ea,
+            height: String(height - paddingTop) + ea,
+            background: GeneralJs.colorChip[greenGrayIndex === 2 ? "green" : (greenGrayIndex === 0 ? (j === 0 ? "green" : "deactive") : (j === 0 ? (inputArr[i].length === 1 ? "green" : "deactive") : "green"))],
+            fontSize: "inherit",
+            borderRadius: String(3) + ea,
+            boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.shadow,
+            marginRight: String(j === inputArr[i].length - 1 ? 0 : margin) + ea,
+            textAlign: "center",
+            verticalAlign: "top",
+          },
+          children: [
+            {
+              class: [ "inputTarget", "hoverDefault" ],
+              text: inputArr[i][j],
+              attribute: {
+                target: inputArr[i][j]
+              },
+              event: {
+                click: endEvent
+              },
+              style: {
+                position: "relative",
+                fontSize: "inherit",
+                fontWeight: String(400),
+                color: GeneralJs.colorChip.whiteBlack,
+                textAlign: "center",
+                width: String(100) + '%',
+                left: String(0) + ea,
+              }
+            }
+          ]
+        });
+      }
+    }
   };
 
   const callHistoryToObject = function (value, pastValue, vaildMode) {
@@ -1109,13 +1308,13 @@ DataPatch.prototype.clientMap = function () {
       width: String(width) + ea,
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       marginBottom: String(height / 4) + ea,
     };
 
@@ -1123,10 +1322,10 @@ DataPatch.prototype.clientMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       width: String(width) + ea,
       height: (GeneralJs.isMac() ? "95%" : "98%"),
       left: String(0) + ea,
@@ -1161,7 +1360,7 @@ DataPatch.prototype.clientMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -1175,7 +1374,7 @@ DataPatch.prototype.clientMap = function () {
     svg_clone.addEventListener("click", endEvent);
     div_clone.appendChild(svg_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -1356,7 +1555,7 @@ DataPatch.prototype.clientMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -1370,11 +1569,11 @@ DataPatch.prototype.clientMap = function () {
         top: String(0) + ea,
         width: "28%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -1382,11 +1581,11 @@ DataPatch.prototype.clientMap = function () {
         top: String(0) + ea,
         width: "40%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -1394,11 +1593,11 @@ DataPatch.prototype.clientMap = function () {
         top: String(0) + ea,
         width: "calc(32% - " + String(Math.round((height) / 4) * 2) + ea + ")",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
     ];
 
@@ -1406,7 +1605,7 @@ DataPatch.prototype.clientMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -1447,7 +1646,7 @@ DataPatch.prototype.clientMap = function () {
           if ((new RegExp(valuesTong[i][z], "gi")).test(originalValue)) {
             input_clone.setAttribute("switch", "on");
             button_clone2.style.background = "#ececec";
-            input_clone.style.color = "#2fa678";
+            input_clone.style.color = GeneralJs.colorChip.green;
           } else {
             input_clone.setAttribute("switch", "off");
           }
@@ -1461,31 +1660,31 @@ DataPatch.prototype.clientMap = function () {
             const zeroInputTargets = document.querySelectorAll("." + zeroClass);
 
             for (let dom of divTargets) {
-              dom.style.background = "#2fa678";
+              dom.style.background = GeneralJs.colorChip.green;
             }
 
             for (let dom of inputTargets) {
-              dom.style.color = "#ffffff";
+              dom.style.color = GeneralJs.colorChip.whiteBlack;
               dom.setAttribute("switch", "off");
             }
 
             if (zIndex === 1) {
               for (let dom of zeroDivTargets) {
-                dom.style.background = "#2fa678";
+                dom.style.background = GeneralJs.colorChip.green;
               }
 
               for (let dom of zeroInputTargets) {
-                dom.style.color = "#ffffff";
+                dom.style.color = GeneralJs.colorChip.whiteBlack;
                 dom.setAttribute("switch", "off");
               }
             }
 
             this.parentElement.style.background = "#ececec";
-            this.style.color = "#2fa678";
+            this.style.color = GeneralJs.colorChip.green;
 
             if (zIndex === 1) {
               this.parentElement.previousElementSibling.style.background = "#ececec";
-              this.parentElement.previousElementSibling.children[0].style.color = "#2fa678";
+              this.parentElement.previousElementSibling.children[0].style.color = GeneralJs.colorChip.green;
             }
 
             this.setAttribute("switch", "on");
@@ -1494,7 +1693,7 @@ DataPatch.prototype.clientMap = function () {
           if ((new RegExp(valuesTong[i][1], "gi")).test(originalValue)) {
             input_clone.setAttribute("switch", "on");
             button_clone2.style.background = "#ececec";
-            input_clone.style.color = "#2fa678";
+            input_clone.style.color = GeneralJs.colorChip.green;
           } else {
             input_clone.setAttribute("switch", "off");
           }
@@ -1518,7 +1717,7 @@ DataPatch.prototype.clientMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -1553,35 +1752,24 @@ DataPatch.prototype.clientMap = function () {
     comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
     status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "드랍", "진행", "응대중", "장기" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    action: { name: "응대", position: "requests.0.analytics.response.action", type: "string", items: [
-      "1차 응대 예정",
-      "1차 응대 후 대기",
-      "선호 사진 대기",
-      "제안 발송 예정",
-      "제안 피드백 예정",
-      "제안 피드백 완료",
-      "계약금 안내",
-      "연결 안 됨",
-      "응대 종료",
-      "해당 없음",
-    ], searchBoo: true, },
+    action: { name: "응대", position: "requests.0.analytics.response.action", type: "object", inputFunction: actionInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: actionToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [
-      '연결 안 됨',
-      '가벼운 문의',
-      '타사 계약',
-      '의견 조정 안 됨',
-      '직접 진행',
-      '고객 상황 변동',
-      '기간 부적합',
-      '디자인비 문제',
-      '총 예산 문제',
-      '서비스 불일치',
-      '프로세스 문제',
-      '시공 문제',
-      '지역 이슈',
-      '제안서 매력도',
-      '디자이너 부족',
-      '기타 문제'
+      "연결 안 됨",
+      "가벼운 문의",
+      "타사 계약",
+      "가족 의견 불일치",
+      "직접 진행",
+      "고객 상황 변동",
+      "기간 임박",
+      "디자인비 문제",
+      "총 예산 문제",
+      "서비스 불일치",
+      "프로세스 문제",
+      "시공 문제",
+      "지역 이슈",
+      "제안서 매력도",
+      "디자이너 부족",
+      "고객 미션 미응답"
     ], multiple: true, searchBoo: true, },
     kakao: { name: "채널 등록", position: "requests.0.analytics.response.kakao", type: "boolean", items: [ "등록", "미등록" ], searchBoo: false, },
     service: { name: "예상 서비스", position: "requests.0.analytics.response.service", type: "object", inputFunction: serviceInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: serviceToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
@@ -1886,7 +2074,7 @@ DataPatch.prototype.designerMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -1899,11 +2087,11 @@ DataPatch.prototype.designerMap = function () {
       top: String(0) + ea,
       width: "16%",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     buttonDetailStyle1 = {
@@ -1912,18 +2100,18 @@ DataPatch.prototype.designerMap = function () {
       top: String(0) + ea,
       width: "calc(84% - " + String(Math.floor(height / 4)) + ea + ")",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -2002,7 +2190,7 @@ DataPatch.prototype.designerMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -2016,7 +2204,7 @@ DataPatch.prototype.designerMap = function () {
     svg_clone.addEventListener("click", endEvent);
     div_clone.appendChild(svg_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -2202,7 +2390,7 @@ DataPatch.prototype.designerMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -2215,11 +2403,11 @@ DataPatch.prototype.designerMap = function () {
       top: String(0) + ea,
       width: "60%",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     buttonDetailStyle1 = {
@@ -2228,18 +2416,18 @@ DataPatch.prototype.designerMap = function () {
       top: String(0) + ea,
       width: "calc(40% - " + String(Math.floor(height / 4)) + ea + ")",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -2303,7 +2491,7 @@ DataPatch.prototype.designerMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -2453,7 +2641,7 @@ DataPatch.prototype.designerMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -2467,11 +2655,11 @@ DataPatch.prototype.designerMap = function () {
         top: String(0) + ea,
         width: "22%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -2479,11 +2667,11 @@ DataPatch.prototype.designerMap = function () {
         top: String(0) + ea,
         width: "calc(54% - " + String(Math.round((height * 2) / 4) + 1) + ea + ")",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -2491,11 +2679,11 @@ DataPatch.prototype.designerMap = function () {
         top: String(0) + ea,
         width: "24%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
     ];
 
@@ -2503,7 +2691,7 @@ DataPatch.prototype.designerMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -2557,7 +2745,7 @@ DataPatch.prototype.designerMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -2571,7 +2759,7 @@ DataPatch.prototype.designerMap = function () {
     svg_clone.addEventListener("click", endEvent);
     div_clone.appendChild(svg_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -2744,7 +2932,7 @@ DataPatch.prototype.designerMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -2758,11 +2946,11 @@ DataPatch.prototype.designerMap = function () {
         top: String(0) + ea,
         width: "80%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -2770,11 +2958,11 @@ DataPatch.prototype.designerMap = function () {
         top: String(0) + ea,
         width: "calc(20% - " + String(Math.round(height / 4)) + ea + ")",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
     ];
 
@@ -2782,7 +2970,7 @@ DataPatch.prototype.designerMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -2833,7 +3021,7 @@ DataPatch.prototype.designerMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -2952,13 +3140,13 @@ DataPatch.prototype.designerMap = function () {
       width: String(width) + ea,
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       marginBottom: String(height / 4) + ea,
     };
 
@@ -2966,7 +3154,7 @@ DataPatch.prototype.designerMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -3864,7 +4052,7 @@ DataPatch.prototype.projectMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -3878,11 +4066,11 @@ DataPatch.prototype.projectMap = function () {
         top: String(0) + ea,
         width: "28%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -3890,11 +4078,11 @@ DataPatch.prototype.projectMap = function () {
         top: String(0) + ea,
         width: "calc(72% - " + String(Math.round((height) / 4)) + ea + ")",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
     ];
 
@@ -3902,7 +4090,7 @@ DataPatch.prototype.projectMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -3953,7 +4141,7 @@ DataPatch.prototype.projectMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -4088,7 +4276,7 @@ DataPatch.prototype.projectMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -4102,11 +4290,11 @@ DataPatch.prototype.projectMap = function () {
         top: String(0) + ea,
         width: "28%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -4114,11 +4302,11 @@ DataPatch.prototype.projectMap = function () {
         top: String(0) + ea,
         width: "calc(72% - " + String(Math.round((height) / 4)) + ea + ")",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
     ];
 
@@ -4126,7 +4314,7 @@ DataPatch.prototype.projectMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -4177,7 +4365,7 @@ DataPatch.prototype.projectMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -4422,7 +4610,7 @@ DataPatch.prototype.projectMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -4436,11 +4624,11 @@ DataPatch.prototype.projectMap = function () {
         top: String(0) + ea,
         width: "28%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -4448,11 +4636,11 @@ DataPatch.prototype.projectMap = function () {
         top: String(0) + ea,
         width: "40%",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
       {
         position: "absolute",
@@ -4460,11 +4648,11 @@ DataPatch.prototype.projectMap = function () {
         top: String(0) + ea,
         width: "calc(32% - " + String(Math.round((height) / 4) * 2) + ea + ")",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       },
     ];
 
@@ -4472,7 +4660,7 @@ DataPatch.prototype.projectMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -4513,7 +4701,7 @@ DataPatch.prototype.projectMap = function () {
           if ((new RegExp(valuesTong[i][z], "gi")).test(originalValue)) {
             input_clone.setAttribute("switch", "on");
             button_clone2.style.background = "#ececec";
-            input_clone.style.color = "#2fa678";
+            input_clone.style.color = GeneralJs.colorChip.green;
           } else {
             input_clone.setAttribute("switch", "off");
           }
@@ -4527,31 +4715,31 @@ DataPatch.prototype.projectMap = function () {
             const zeroInputTargets = document.querySelectorAll("." + zeroClass);
 
             for (let dom of divTargets) {
-              dom.style.background = "#2fa678";
+              dom.style.background = GeneralJs.colorChip.green;
             }
 
             for (let dom of inputTargets) {
-              dom.style.color = "#ffffff";
+              dom.style.color = GeneralJs.colorChip.whiteBlack;
               dom.setAttribute("switch", "off");
             }
 
             if (zIndex === 1) {
               for (let dom of zeroDivTargets) {
-                dom.style.background = "#2fa678";
+                dom.style.background = GeneralJs.colorChip.green;
               }
 
               for (let dom of zeroInputTargets) {
-                dom.style.color = "#ffffff";
+                dom.style.color = GeneralJs.colorChip.whiteBlack;
                 dom.setAttribute("switch", "off");
               }
             }
 
             this.parentElement.style.background = "#ececec";
-            this.style.color = "#2fa678";
+            this.style.color = GeneralJs.colorChip.green;
 
             if (zIndex === 1) {
               this.parentElement.previousElementSibling.style.background = "#ececec";
-              this.parentElement.previousElementSibling.children[0].style.color = "#2fa678";
+              this.parentElement.previousElementSibling.children[0].style.color = GeneralJs.colorChip.green;
             }
 
             this.setAttribute("switch", "on");
@@ -4560,7 +4748,7 @@ DataPatch.prototype.projectMap = function () {
           if ((new RegExp(valuesTong[i][1], "gi")).test(originalValue)) {
             input_clone.setAttribute("switch", "on");
             button_clone2.style.background = "#ececec";
-            input_clone.style.color = "#2fa678";
+            input_clone.style.color = GeneralJs.colorChip.green;
           } else {
             input_clone.setAttribute("switch", "off");
           }
@@ -4584,7 +4772,7 @@ DataPatch.prototype.projectMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -4784,7 +4972,7 @@ DataPatch.prototype.projectMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -4799,11 +4987,11 @@ DataPatch.prototype.projectMap = function () {
         top: String(0) + ea,
         width: "calc(" + String(20) + '%' + " - " + String(Math.round((height) / 4)) + ea + ")",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       });
     }
 
@@ -4811,7 +4999,7 @@ DataPatch.prototype.projectMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -4969,13 +5157,13 @@ DataPatch.prototype.projectMap = function () {
       width: String(width) + ea,
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       marginBottom: String(height / 4) + ea,
     };
 
@@ -4983,7 +5171,7 @@ DataPatch.prototype.projectMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -5351,13 +5539,13 @@ DataPatch.prototype.projectMap = function () {
       width: String(width) + ea,
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       marginBottom: String(height / 4) + ea,
     };
 
@@ -5365,10 +5553,10 @@ DataPatch.prototype.projectMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       width: String(width) + ea,
       height: (GeneralJs.isMac() ? "95%" : "98%"),
       left: String(0) + ea,
@@ -5403,7 +5591,7 @@ DataPatch.prototype.projectMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -5417,7 +5605,7 @@ DataPatch.prototype.projectMap = function () {
     svg_clone.addEventListener("click", endEvent);
     div_clone.appendChild(svg_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -5790,7 +5978,7 @@ DataPatch.prototype.contentsMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -5805,11 +5993,11 @@ DataPatch.prototype.contentsMap = function () {
         top: String(0) + ea,
         width: "calc(" + String(20) + '%' + " - " + String(Math.round((height) / 4)) + ea + ")",
         height: "100%",
-        background: "#2fa678",
+        background: GeneralJs.colorChip.green,
         zIndex: String(3),
         borderRadius: String(3) + ea,
         fontSize: "inherit",
-        boxShadow: "0px 2px 11px -6px #2fa678",
+        boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       });
     }
 
@@ -5817,7 +6005,7 @@ DataPatch.prototype.contentsMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -5999,7 +6187,7 @@ DataPatch.prototype.contentsMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -6012,11 +6200,11 @@ DataPatch.prototype.contentsMap = function () {
       top: String(0) + ea,
       width: "30%",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     buttonDetailStyle1 = {
@@ -6025,18 +6213,18 @@ DataPatch.prototype.contentsMap = function () {
       top: String(0) + ea,
       width: "calc(70% - " + String(Math.floor(height / 4)) + ea + ")",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -6097,7 +6285,7 @@ DataPatch.prototype.contentsMap = function () {
       div_clone.appendChild(button_clone);
     }
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -6245,7 +6433,7 @@ DataPatch.prototype.contentsMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -6258,11 +6446,11 @@ DataPatch.prototype.contentsMap = function () {
       top: String(0) + ea,
       width: "calc(50% - " + String(Math.floor(height / 8)) + ea + ")",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     buttonDetailStyle1 = {
@@ -6271,18 +6459,18 @@ DataPatch.prototype.contentsMap = function () {
       top: String(0) + ea,
       width: "calc(50% - " + String(Math.floor(height / 8)) + ea + ")",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -6341,7 +6529,7 @@ DataPatch.prototype.contentsMap = function () {
 
     div_clone.appendChild(button_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -6493,7 +6681,7 @@ DataPatch.prototype.contentsMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -6506,11 +6694,11 @@ DataPatch.prototype.contentsMap = function () {
       top: String(0) + ea,
       width: "calc(50% - " + String(Math.floor(height / 8)) + ea + ")",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     buttonDetailStyle1 = {
@@ -6519,18 +6707,18 @@ DataPatch.prototype.contentsMap = function () {
       top: String(0) + ea,
       width: "calc(50% - " + String(Math.floor(height / 8)) + ea + ")",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -6589,7 +6777,7 @@ DataPatch.prototype.contentsMap = function () {
 
     div_clone.appendChild(button_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -6724,7 +6912,7 @@ DataPatch.prototype.contentsMap = function () {
       paddingTop: String(height * 0.3) + ea,
       height: String(height * 1.5) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -6737,18 +6925,18 @@ DataPatch.prototype.contentsMap = function () {
       top: String(0) + ea,
       width: "calc(calc(100% / 9) - " + String(Math.floor(height / 8)) + ea + ")",
       height: "100%",
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
     };
 
     inputStyle = {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -6790,7 +6978,7 @@ DataPatch.prototype.contentsMap = function () {
     }
     div_clone.appendChild(button_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -6910,7 +7098,7 @@ DataPatch.prototype.contentsMap = function () {
       width: String(width) + ea,
       paddingTop: String(height * 0.3) + ea,
       fontSize: "inherit",
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
@@ -6921,11 +7109,11 @@ DataPatch.prototype.contentsMap = function () {
       position: "relative",
       width: "100%",
       height: String(height * 1.5) + ea,
-      background: "#2fa678",
+      background: GeneralJs.colorChip.green,
       zIndex: String(3),
       borderRadius: String(3) + ea,
       fontSize: "inherit",
-      boxShadow: "0px 2px 11px -6px #2fa678",
+      boxShadow: "0px 2px 11px -6px " + GeneralJs.colorChip.green,
       marginBottom: String(Math.floor(height / 4)) + ea,
     };
 
@@ -6933,7 +7121,7 @@ DataPatch.prototype.contentsMap = function () {
       position: "absolute",
       fontSize: "inherit",
       fontWeight: String(400),
-      color: "#ffffff",
+      color: GeneralJs.colorChip.whiteBlack,
       zIndex: String(3),
       textAlign: "center",
       background: "transparent",
@@ -6979,7 +7167,7 @@ DataPatch.prototype.contentsMap = function () {
 
     div_clone.appendChild(button_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnOk(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
@@ -6993,7 +7181,7 @@ DataPatch.prototype.contentsMap = function () {
     svg_clone.addEventListener("click", endEvent);
     div_clone.appendChild(svg_clone);
 
-    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus("#2fa678"));
+    svg_clone = SvgTong.stringParsing(GeneralJs.prototype.returnPlus(GeneralJs.colorChip.green));
     svg_clone.classList.add("removeTarget");
     style = {
       position: "absolute",
