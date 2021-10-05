@@ -1530,6 +1530,11 @@ ClientJs.prototype.spreadData = async function (search = null) {
   }
 }
 
+ClientJs.prototype.boardGrayBar = function (mother, divisionMap, cases) {
+  const instance = this;
+
+}
+
 ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
     throw new Error("invaild input");
@@ -1586,34 +1591,34 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   totalFatherPaddingTop = margin * 1.5;
 
   cardWidthConstant = 140;
-  fixedHeightSize = 41;
+  fixedHeightSize = 40;
   intend = 16;
   titleTop = 9;
-  idWordTop = 11;
+  idWordTop = 13;
   startTop = titleTop + 16;
   exceptionMargin = 12;
-  fontSize = 12;
-  nameFontSize = fontSize + 2;
+  fontSize = 11;
+  nameFontSize = fontSize + 3;
 
   between = 8;
   tongMarginTop = margin * 1.75;
-  tongPaddingTop = (margin * 1.5) + 36;
+  tongPaddingTop = (margin * 1.5) + 35;
   tongPaddingBottom = margin * 1.5;
   tongPaddingRight = margin * 1.5;
   tongMargin = margin * 1.5;
 
-  totalTitleSize = 18;
-  totalTitleTop = 15;
+  totalTitleSize = 17;
+  totalTitleTop = 14;
   totalTitleLeft = 20;
 
-  numberTitleSize = 15;
-  numberTitleTop = 19;
-  numberTitleBetween = 8;
+  numberTitleSize = 14;
+  numberTitleTop = 18;
+  numberTitleBetween = 9;
 
   divideArr = [];
   sizeArr = [];
   for (let i = 0; i < 5; i++) {
-    totalStandard = (window.innerWidth - (outerMargin * 2) - (margin * 2) - 2 - (tongPaddingRight * 2) - (((tongPaddingRight * 2) + tongMargin + 2) * i)) / (i + 1);
+    totalStandard = (window.innerWidth - this.grayBarWidth - (outerMargin * 2) - (margin * 2) - 2 - (tongPaddingRight * 2) - (((tongPaddingRight * 2) + tongMargin + 2) * i)) / (i + 1);
     divideNumber = Math.floor(totalStandard / (margin + cardWidthConstant));
     size = (totalStandard - (margin * (divideNumber + 1))) / divideNumber;
     divideArr.push(divideNumber);
@@ -1625,13 +1630,27 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     class: [ "totalFather", "fadein" ],
     style: {
       paddingTop: String(totalFatherPaddingTop) + ea,
-      paddingLeft: String(outerMargin) + ea,
+      paddingLeft: String(outerMargin + this.grayBarWidth) + ea,
       paddingRight: String(outerMargin) + ea,
-      height: "calc(100vh - " + String(this.belowHeight + totalFatherPaddingTop) + ea + ")",
-      width: "calc(100vw - " + String(outerMargin * 2) + ea + ")",
+      height: "auto",
+      width: "calc(100vw - " + String((outerMargin * 2) + this.grayBarWidth) + ea + ")",
       zIndex: String(1),
-    }
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          left: String(0),
+          top: String(0),
+          height: String(100) + '%',
+          width: String(this.grayBarWidth) + ea,
+          background: colorChip.gray1,
+        }
+      }
+    ]
   });
+
+  this.boardGrayBar(totalFather.firstChild, divisionMap, cases);
 
   //update value
   updateState = async function (from, to) {
@@ -1951,7 +1970,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
           paddingBottom: String(margin) + ea,
           minHeight: String(fixedHeightSize + margin) + ea,
           background: GeneralJs.colorChip.gray1,
-          height: withOut(tongPaddingBottom, ea),
+          height: withOut(margin, ea),
           borderRadius: String(5) + ea,
         }
       });
@@ -2080,9 +2099,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
   return async function (e) {
     const { cases, totalContents, totalMother } = instance;
-    const thisCases = equalJson(JSON.stringify(cases));
-
-    thisCases.shift();
+    const thisCases = equalJson(JSON.stringify(cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status); });
 
     if (instance.whiteBox !== null) {
       if (GeneralJs.stacks.whiteBox !== 1) {
@@ -2101,8 +2118,8 @@ ClientJs.prototype.cardViewMaker = function () {
     } else {
 
       totalMother.classList.add("justfadeoutoriginal");
-
       instance.totalFather = instance.makeBoard(itemMap, thisCases);
+
     }
     instance.onView = "father";
   }

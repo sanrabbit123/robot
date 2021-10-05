@@ -303,9 +303,11 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     let titleMobileIndent, titleMobileMarginBottom;
     let sizeVisual;
     let blockPaddingTop, blockBarBottom;
-    let mobileTotalPaddingTop;
     let daydayFieldTop;
     let dateNumberWidth;
+    let motherPaddingTop;
+    let daydayBlockHeight;
+    let monthSize;
 
     this.designer = designer;
 
@@ -379,28 +381,31 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
     dateBoxOpacity = 0.08;
 
+    motherPaddingTop = <%% 80, 72, 64, 56, 14 %%>;
+
+    monthSize = <%% 25, 25, 23, 22, 3.6 %%>;
     size = <%% 15, 15, 14, 13, 3.6 %%>;
-    sizeVisual = <%% 1, 1, 1, 1, 0.6 %%>;
+    sizeVisual = <%% 9, 9, 8, 7, 0.6 %%>;
     titleWidth = <%% 130, 120, 120, 80, 0 %%>;
     titlePaddingLeft = <%% 5, 5, 3, 1, 0.1 %%>;
     titlePaddingRight = <%% 50, 50, 30, 18, 5 %%>;
     titleLineHeight = 1.55;
-    titleMobileIndent = 0.5;
-    titleMobileMarginBottom = 2;
+    titleMobileIndent = <%% 3, 3, 2, 2, 0.5 %%>;
+    titleMobileMarginBottom = <%% 14, 13, 12, 11, 2 %%>;
 
-    weekBlockHeight = <%% 60, 57, 50, 42, 8.6 %%>;
+    weekBlockHeight = <%% 80, 76, 64, 56, 8.6 %%>;
+    daydayBlockHeight = <%% 60, 57, 50, 42, 8.6 %%>;
 
-    mobileTotalPaddingTop = 14;
     blockPaddingTop = 5;
-    blockMarginBottom = <%% 48, 48, 48, 48, 12 %%>;
+    blockMarginBottom = <%% 36, 36, 32, 24, 12 %%>;
     blockBarBottom = 2.7;
 
     dateNumberSize = <%% 17, 15, 14, 12, 2.9 %%>;
-    dateNumberTop = <%% 15, 14, 13, 10, 1.5 %%>;
+    dateNumberTop = <%% 23, 22, 18, 16, 1.5 %%>;
     dateNumberLeft = <%% 23, 18, 15, 12, 0 %%>;
     dateNumberWidth = <%% 60, 56, 50, 42, 0 %%>;
 
-    dateIconTop = <%% 18, 17.5, 15, 13, 4 %%>;
+    dateIconTop = <%% 26, 25.5, 20, 19, 4 %%>;
     dateIconWidth = <%% 20, 17, 16, 13, 5 %%>;
     dateIconRight = <%% 24, 18, 15, 12, 4 %%>;
 
@@ -578,93 +583,6 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
           }
         }
-      },
-      {
-        name: "달력 띄우기",
-        attribute: [
-          { toggle: "off" }
-        ],
-        event: function (e) {
-          const toggle = this.getAttribute("toggle");
-          const dateDoms = instance.dateDoms;
-          const dummyWeekLength = 2;
-          const titleTargets = document.querySelectorAll('.' + titleGeneralName);
-          let targets, parent, style, index, dummyIndex, tempArr, firstWeek;
-          let dummyDoms, dummyDom;
-
-          if (toggle === "off") {
-            targets = [];
-            for (let dom of dateDoms) {
-              if (Number(dom.getAttribute("date")) === 1) {
-                targets.push(dom);
-              }
-            }
-            targets.shift();
-            for (let dom of targets) {
-              parent = dom.parentNode;
-              index = Number(dom.getAttribute("index"));
-              for (let j = 0; j < (daydayLength * dummyWeekLength); j++) {
-                dummyIndex = (j + index >= daydayLength ? j + index - daydayLength : j + index);
-                dummyDom = GeneralJs.nodes.div.cloneNode(true);
-                dummyDom.setAttribute("toggle", "off");
-                dummyDom.setAttribute("year", "null");
-                dummyDom.setAttribute("month", "null");
-                dummyDom.setAttribute("date", "0");
-                dummyDom.setAttribute("value", "null");
-                dummyDom.setAttribute("past", "true");
-                dummyDom.setAttribute("index", String(dummyIndex));
-                dummyDom.classList.add(dummyDatesClassName);
-                style = {
-                  position: "relative",
-                  display: "inline-block",
-                  width: "calc(100% / 7)",
-                  height: String(weekBlockHeight) + ea,
-                  boxSizing: "border-box",
-                  borderTop: "1px solid " + colorChip.gray3,
-                  borderLeft: "1px solid " + colorChip.gray3,
-                  borderRight: (dummyIndex !== daydayLength - 1 ? "" : "1px solid " + colorChip.gray3),
-                  borderRadius: String(5) + "px",
-                  background: colorChip.gray0,
-                  transition: "all 0.1s ease",
-                };
-                for (let i in style) {
-                  dummyDom.style[i] = style[i];
-                }
-                parent.insertBefore(dummyDom, dom);
-              }
-
-            }
-            for (let i = 1; i < titleTargets.length; i++) {
-              firstWeek = findByAttribute('.' + [ weekClassName, titleTargets[i].getAttribute("year"), titleTargets[i].getAttribute("month") ].join(joinToken), "first", "true");
-              if (firstWeek !== null) {
-                titleTargets[i].style.top = String(findByAttribute(firstWeek, "date", "1").getBoundingClientRect().top - firstBlock.getBoundingClientRect().top + weekBlockHeight + daydayMargin) + ea;
-              }
-            }
-            this.lastChild.textContent = "on";
-            this.firstChild.style.color = colorChip.green;
-            this.lastChild.style.color = colorChip.green;
-            this.setAttribute("toggle", "on");
-            instance.possiblePannelStatus.calendar = true;
-          } else {
-
-            dummyDoms = document.querySelectorAll('.' + dummyDatesClassName);
-            for (let dom of dummyDoms) {
-              dom.parentElement.removeChild(dom);
-            }
-            for (let i = 1; i < titleTargets.length; i++) {
-              firstWeek = findByAttribute('.' + [ weekClassName, titleTargets[i].getAttribute("year"), titleTargets[i].getAttribute("month") ].join(joinToken), "first", "true");
-              if (firstWeek !== null) {
-                titleTargets[i].style.top = String(findByAttribute(firstWeek, "date", "1").getBoundingClientRect().top - firstBlock.getBoundingClientRect().top + weekBlockHeight + daydayMargin) + ea;
-              }
-            }
-            this.lastChild.textContent = "off";
-            this.firstChild.style.color = colorChip.black;
-            this.lastChild.style.color = colorChip.red;
-            this.setAttribute("toggle", "off");
-            instance.possiblePannelStatus.calendar = false;
-          }
-
-        }
       }
     ];
 
@@ -782,9 +700,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       dateMatrix = dateMatrix.nextMatrix();
     }
 
-    if (mobile) {
-      mother.style.paddingTop = String(mobileTotalPaddingTop) + ea;
-    }
+    mother.style.paddingTop = String(motherPaddingTop) + ea;
 
     this.dateDoms = [];
     this.titleFields = [];
@@ -798,7 +714,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           display: "block",
           verticalAlign: "top",
           paddingBottom: String(blockMarginBottom) + ea,
-          paddingTop: String(desktop ? weekBlockHeight + daydayMargin : blockPaddingTop) + ea,
+          paddingTop: String(desktop ? daydayMargin : blockPaddingTop) + ea,
         }
       });
       if (num === 0) {
@@ -807,11 +723,11 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           mother: block,
           style: {
             position: "fixed",
-            width: withOut(grayBarWidth + (outerMargin * 4) + titleWidth + (daydayIndent * 2), ea),
-            height: String(weekBlockHeight) + ea,
+            width: withOut(grayBarWidth + (outerMargin * 4) + (daydayIndent * 2), ea),
+            height: String(daydayBlockHeight) + ea,
             background: colorChip.white,
             top: String(daydayFieldTop) + ea,
-            left: String(grayBarWidth + (outerMargin * 2) + titleWidth + daydayVisualLeft + daydayIndent) + ea,
+            left: String(grayBarWidth + (outerMargin * 2) + daydayVisualLeft + daydayIndent) + ea,
             boxSizing: "border-box",
             zIndex: String(1),
             borderRadius: String(50) + ea,
@@ -932,12 +848,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         ],
         style: {
           position: "relative",
-          display: desktop ? "inline-block" : "block",
-          width: desktop ? String(titleWidth - titlePaddingLeft - titlePaddingRight) + ea : withOut(outerMargin * 4, ea),
-          paddingLeft: desktop ? String(titlePaddingLeft) + ea : "",
-          paddingRight: desktop ? String(titlePaddingRight) + ea : "",
+          display: "block",
+          width: desktop ? String(100) + '%' : withOut(outerMargin * 4, ea),
           marginLeft: desktop ? "" : String(outerMargin * 2) + ea,
-          marginBottom: desktop ? "" : String(titleMobileMarginBottom) + ea,
+          marginBottom: String(titleMobileMarginBottom) + ea,
           height: String(100) + '%',
           verticalAlign: "top"
         },
@@ -947,10 +861,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               { year: year.replace(/[^0-9]/g, '') },
               { month: month.replace(/[^0-9]/g, '') },
             ],
-            text: (desktop ?
-              `${year}\n${month}\n<b%========%b>\n<u%가능 : <b class="${countKeyClass}" style="color:${colorChip.green}">${String(instance.realtimeDesigner.count[countKeyMake(new Date(Number(year.replace(/[^0-9]/g, '')), Number(month.replace(/[^0-9]/g, '')) - 1, 1))])}</b>\n진행중 : ${doing}\n대기 : ${standing}%u>`
-              :
-              `${year} ${month}<u%가능 <b class="${countKeyClass}" style="color:${colorChip.green}">${String(instance.realtimeDesigner.count[countKeyMake(new Date(Number(year.replace(/[^0-9]/g, '')), Number(month.replace(/[^0-9]/g, '')) - 1, 1))])}</b>${between}진행중 ${doing}${between}대기 ${standing}%u>`),
+            text: `${year} ${month}<u%가능 <b class="${countKeyClass}" style="color:${colorChip.green}">${String(instance.realtimeDesigner.count[countKeyMake(new Date(Number(year.replace(/[^0-9]/g, '')), Number(month.replace(/[^0-9]/g, '')) - 1, 1))])}</b>${between}진행중 ${doing}${between}대기 ${standing}%u>`,
             events: [
               {
                 type: "selectstart",
@@ -1070,24 +981,24 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             ],
             style: {
               position: "relative",
-              left: desktop ? "" : String(titleMobileIndent) + ea,
-              fontSize: String(size) + ea,
-              fontWeight: String(600),
+              left: String(titleMobileIndent) + ea,
+              fontSize: String(monthSize) + ea,
+              fontWeight: String(500),
               color: colorChip.black,
               lineHeight: String(titleLineHeight),
               cursor: "pointer",
             },
             bold: {
-              fontSize: String(size - sizeVisual) + ea,
+              fontSize: String(monthSize - sizeVisual) + ea,
               fontWeight: String(200),
               color: colorChip.deactive,
               lineHeight: String(titleLineHeight),
             },
             under: {
-              position: desktop ? "" : "absolute",
-              top: desktop ? "" : String(sizeVisual) + ea,
-              right: desktop ? "" : String(titleMobileIndent) + ea,
-              fontSize: String(size - sizeVisual) + ea,
+              position: "absolute",
+              top: String(sizeVisual + (desktop ? 3 : 0)) + ea,
+              right: String(titleMobileIndent) + ea,
+              fontSize: String(monthSize - sizeVisual) + ea,
               fontWeight: String(400),
               color: colorChip.black,
               lineHeight: String(titleLineHeight),
@@ -1099,9 +1010,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         mother: block,
         style: {
           position: "relative",
-          display: desktop ? "inline-block" : "block",
+          display: "block",
           verticalAlign: "top",
-          width: desktop ? withOut(titleWidth, ea) : withOut(outerMargin * 4, ea),
+          width: desktop ? withOut(0, ea) : withOut(outerMargin * 4, ea),
           marginLeft: desktop ? "" : String(outerMargin * 2) + ea,
           height: String(100) + '%',
         }
@@ -1432,7 +1343,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               borderTop: "1px solid " + colorChip.gray3,
               borderLeft: "1px solid " + colorChip.gray3,
               borderRight: (j !== daydayLength - 1 ? "" : "1px solid " + colorChip.gray3),
-              borderBottom: desktop ? "" : (i !== matrix.length - 1 ? "" : "1px solid " + colorChip.gray3),
+              borderBottom: (i !== matrix.length - 1 ? "" : "1px solid " + colorChip.gray3),
               borderRadius: String(5) + "px",
               background: (matrix[i][j] === null ? colorChip.gray0 : (pastBoo ? colorChip.gray0 : colorChip.white)),
               transition: "all 0.1s ease",
@@ -1559,7 +1470,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           left: String(titleWidth) + ea,
           width: withOut(titleWidth, ea),
           height: String(0),
-          borderBottom: "1px dashed " + colorChip.gray3,
+          borderBottom: (mobile ? "1px dashed " + colorChip.gray3 : ""),
         }
       });
 
@@ -1567,140 +1478,21 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       num++;
     }
 
-    if (desktop) {
-      weekTotalLength = weekBlocks.length;
-      for (let i = 0; i < weekTotalLength; i++) {
-        if (i !== 0) {
-          if (weekBlocks[i + 1] !== undefined && weekBlocks[i].querySelector('.' + nullClassName) !== null && weekBlocks[i + 1].querySelector('.' + nullClassName) !== null) {
-            removeTargets = weekBlocks[i].querySelectorAll('.' + nullClassName);
-            for (let dom of removeTargets) {
-              weekBlocks[i].removeChild(dom);
-            }
-            removeTargets = weekBlocks[i + 1].querySelectorAll('.' + nullClassName);
-            for (let dom of removeTargets) {
-              weekBlocks[i + 1].removeChild(dom);
-            }
-            children = weekBlocks[i + 1].querySelectorAll('.' + generalDateClassName);
-            length = children.length;
-            for (let j = 0; j < length; j++) {
-              weekBlocks[i].appendChild(children[j]);
-            }
-          }
-        }
-      }
-      for (let i = 0; i < weekTotalLength; i++) {
-        if (weekBlocks[i].children.length !== 0) {
-          firstBlock.appendChild(weekBlocks[i]);
-        }
-      }
-      weekBlocks[weekTotalLength - 1].style.borderBottom = "1px solid " + colorChip.gray3;
-
-      weekBlocks = [];
-      for (let dom of firstBlock.children) {
-        tempArr = ([ ...dom.children ]).map((d) => { return (Number(d.getAttribute("year")) * 100) + Number(d.getAttribute("month")); });
-        tempArr.sort((a, b) => { return b - a; });
-        if (tempArr.reduce((accumulator, currentValue) => { return accumulator + currentValue; }) !== (tempArr[0] * (tempArr.length)) || dom.firstChild.getAttribute("date") === String(1)) {
-          dom.setAttribute("first", "true");
-        } else {
-          dom.setAttribute("first", "false");
-        }
-        dom.setAttribute("year", String(Math.floor(tempArr[0] / 100)));
-        dom.setAttribute("month", String(tempArr[0] % 100));
-        dom.classList.add([ weekClassName, String(Math.floor(tempArr[0] / 100)), String(tempArr[0] % 100) ].join(joinToken));
-        dom.classList.add(weekGeneralClassName);
-        weekBlocks.push(dom);
-      }
-
-      titleTargets = document.querySelectorAll('.' + titleGeneralName);
-      topMap = (new Array(titleTargets.length - 1)).fill(null, 0);
-      for (let i = 1; i < titleTargets.length; i++) {
-        tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[i].getAttribute("year"), titleTargets[i].getAttribute("month") ].join(joinToken)) ];
-        if (tempArr.find((d) => { return d.getAttribute("first") === "true"; }) !== undefined) {
-          firstMother.appendChild(titleTargets[i]);
-          titleTargets[i].style.position = "absolute";
-          titleTargets[i].style.left = String(0) + ea;
-          tempObj = {};
-          tempObj.year = Number(titleTargets[i].getAttribute("year"));
-          tempObj.month = Number(titleTargets[i].getAttribute("month"));
-          tempObj.top = tempArr.find((d) => { return d.getAttribute("first") === "true"; }).getBoundingClientRect().top;
-          tempObj.targetDoms = [];
-          tempObj.targetDoms = tempObj.targetDoms.concat(tempArr.filter((d) => { return d.getAttribute("first") !== "true"; }));
-          tempObj.targetDoms = tempObj.targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[i].getAttribute("year") && d.getAttribute("month") === titleTargets[i].getAttribute("month")) }));
-          if (topMap[i - 2] !== undefined) {
-            topMap[i - 2].targetDoms = topMap[i - 2].targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[i - 1].getAttribute("year") && d.getAttribute("month") === titleTargets[i - 1].getAttribute("month")) }));
-          }
-          titleTargets[i].style.top = String(tempArr.find((d) => { return d.getAttribute("first") === "true"; }).getBoundingClientRect().top - firstBlock.getBoundingClientRect().top + weekBlockHeight + daydayMargin) + ea;
-          titleTargets[i].style.height = String(weekBlockHeight * tempArr.length) + ea;
-          topMap[i - 1] = tempObj;
-        }
-      }
-      topMap.unshift({
-        year: Number(titleTargets[0].getAttribute("year")),
-        month: Number(titleTargets[0].getAttribute("month")),
-        top: weekBlockHeight * 2,
-        targetDoms: []
-      });
-      tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[0].getAttribute("year"), titleTargets[0].getAttribute("month") ].join(joinToken)) ];
-      topMap[0].targetDoms = topMap[0].targetDoms.concat(tempArr);
-      tempArr = [ ...document.querySelectorAll('.' + [ weekClassName, titleTargets[1].getAttribute("year"), titleTargets[1].getAttribute("month") ].join(joinToken)) ];
-      topMap[0].targetDoms = topMap[0].targetDoms.concat([ ...tempArr.find((d) => { return d.getAttribute("first") === "true"; }).children ].filter((d) => { return (d.getAttribute("year") === titleTargets[0].getAttribute("year") && d.getAttribute("month") === titleTargets[0].getAttribute("month")) }));
-
-      while (mother.children.length !== 1) {
-        mother.removeChild(mother.lastChild);
-      }
-
-      this.possibleReload("possible");
-
-      [ projectPannel, calendarPannel ] = pannelDoms;
-      if (this.possiblePannelStatus.project) {
-        projectPannel.click();
-      }
-      if (this.possiblePannelStatus.calendar) {
-        calendarPannel.click();
-      }
-      if (typeof GeneralJs.stacks.motherScrollEvent === "function") {
-        totalMother.removeEventListener("scroll", GeneralJs.stacks.motherScrollEvent);
-      }
-      GeneralJs.stacks.motherScrollEvent = (e) => {
-        let scrollValueFrom, scrollValueTo;
-        let topMap, targetDomsIndex;
-
-        setDebounce(() => {
-          scrollValueFrom = (outerMargin * 2);
-          scrollValueTo = (window.innerHeight - belowHeight) - (instance.titleFields[0].getBoundingClientRect().height * 1.5);
-          topMap = instance.titleFields.map((dom, index) => { return [ dom.getBoundingClientRect().top, index ]; });
-          targetDomsIndex = topMap.filter((arr) => { return (scrollValueFrom <= arr[0] && arr[0] <= scrollValueTo); }).map((arr) => { return arr[1]; });
-
-          for (let i = 0; i < instance.titleFields.length; i++) {
-            if (targetDomsIndex.includes(i)) {
-              instance.titleFields[i].firstChild.style.color = colorChip.green;
-            } else {
-              instance.titleFields[i].firstChild.style.color = colorChip.black;
-            }
-          }
-
-        }, "baseScroll");
-      }
-      totalMother.addEventListener("scroll", GeneralJs.stacks.motherScrollEvent);
-
-    } else {
-
-      projectPannel = createNode({
-        mother,
-        attribute: { toggle: "off" },
-        style: { display: "none" },
-        children: [ { style: { display: "none" } } ],
-      });
-      swipePatch({
-        left: (e) => {
-          functionPannelContents.find((obj) => { return /프로젝트 보기/gi.test(obj.name); }).event.call(projectPannel, {});
-        },
-        right: (e) => {
-          functionPannelContents.find((obj) => { return /프로젝트 보기/gi.test(obj.name); }).event.call(projectPannel, {});
-        },
-      });
-      this.possibleReload("possible");
-    }
+    projectPannel = createNode({
+      mother,
+      attribute: { toggle: "off" },
+      style: { display: "none" },
+      children: [ { style: { display: "none" } } ],
+    });
+    swipePatch({
+      left: (e) => {
+        functionPannelContents.find((obj) => { return /프로젝트 보기/gi.test(obj.name); }).event.call(projectPannel, {});
+      },
+      right: (e) => {
+        functionPannelContents.find((obj) => { return /프로젝트 보기/gi.test(obj.name); }).event.call(projectPannel, {});
+      },
+    });
+    this.possibleReload("possible");
 
   } catch (e) {
     console.log(e);
