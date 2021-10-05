@@ -83,15 +83,114 @@ DevContext.prototype.launching = async function () {
     const agent = new Agent({ rejectUnauthorized: false });
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
+    // const count = (await this.findCode("count")).scripts
+    // const realtimeDesigner = (await this.findCode("realtimeDesigner")).scripts
+    // console.log(count.filter((p) => { return realtimeDesigner.includes(p); }));
 
 
 
-    const rows = await back.mongoRead("realtimeDesigner", {}, { selfMongo: this.MONGOLOCALC });
-    console.log(rows);
-
-
-
-
+    // await this.MONGOCONSOLEC.connect();
+    //
+    // const selfMongo = this.MONGOCONSOLEC;
+    // const collection = "realtimeDesigner";
+    // const rows = await back.mongoRead(collection, {}, { selfMongo });
+    // const keyMaker = (date) => { return `y${String(date.getFullYear())}m${String(date.getMonth() + 1)}`; }
+    // let designer, matrix, newMatrix;
+    // let whereQuery, updateQuery;
+    // let tempDate;
+    // let arrTong;
+    // let temp;
+    // let final;
+    // let newPossible;
+    //
+    // for (let r of rows) {
+    //   designer = await back.getDesignerById(r.desid, { selfMongo: this.MONGOC });
+    //   matrix = designer.analytics.project.matrix.toNormal().map((arr) => { return arr.some((i) => { return i === 1; }) ? 1 : 0 });
+    //   for (let i in r.count) {
+    //     newMatrix = [];
+    //     for (let j of matrix) {
+    //       newMatrix.push(j * r.count[i]);
+    //     }
+    //     r.count[i] = newMatrix.map((i, index) => { return index !== 3 ? i : (i === 0 ? 0 : 1); }).map((i, index) => {
+    //       if (index === 2) {
+    //         if (i >= 3) {
+    //           return 3;
+    //         } else {
+    //           return i;
+    //         }
+    //       } else {
+    //         return i;
+    //       }
+    //     }).map((i) => {
+    //       if (i < 0) {
+    //         return 0;
+    //       } else {
+    //         return i;
+    //       }
+    //     }).map((i, index, array) => {
+    //       if (index === 1) {
+    //         if (array[0] !== 0) {
+    //           return Math.floor(i * 0.8);
+    //         } else {
+    //           return i;
+    //         }
+    //       } else {
+    //         return i;
+    //       }
+    //     });
+    //   }
+    //
+    //   newPossible = [];
+    //   for (let obj of r.possible) {
+    //
+    //     tempDate = new Date(obj.start.getFullYear(), obj.start.getMonth(), 1);
+    //
+    //     arrTong = [];
+    //     do {
+    //       arrTong.push(r.count[keyMaker(tempDate)]);
+    //       tempDate.setMonth(tempDate.getMonth() + 1);
+    //     } while (tempDate.valueOf() <= obj.end.valueOf());
+    //     arrTong.push(r.count[keyMaker(obj.end)]);
+    //
+    //     arrTong = arrTong.filter((arr) => { return Array.isArray(arr); }).filter((arr) => { return !arr.every((i) => { return i === 0; }) });
+    //
+    //     if (arrTong.length > 2) {
+    //       temp = arrTong.filter((arr) => { return arr.reduce((accumulator, currentValue) => { return accumulator + currentValue; }) === 1 }).length;
+    //       if (temp === 1) {
+    //         temp = arrTong.filter((arr) => { return arr.reduce((accumulator, currentValue) => { return accumulator + currentValue; }) !== 1 });
+    //         if (!temp.every((arr) => { return arr.reduce((accumulator, currentValue) => { return accumulator + currentValue }) === 9 })) {
+    //           arrTong = arrTong.filter((arr) => { return arr.reduce((accumulator, currentValue) => { return accumulator + currentValue; }) !== 1 });
+    //         }
+    //       }
+    //     }
+    //
+    //     arrTong.sort((a, b) => { return a.reduce((accumulator, currentValue) => { return accumulator + currentValue }) - b.reduce((accumulator, currentValue) => { return accumulator + currentValue }) })
+    //
+    //     if (arrTong.length > 0) {
+    //       final = arrTong[0];
+    //     } else {
+    //       final = [ 1, 1, 0, 0 ];
+    //     }
+    //
+    //     obj.matrix = final;
+    //
+    //     newPossible.push(equalJson(JSON.stringify(obj)));
+    //   }
+    //
+    //   if (newPossible.length > 0) {
+    //
+    //     whereQuery = { desid: r.desid };
+    //     updateQuery = { possible: newPossible };
+    //
+    //     await selfMongo.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+    //     await selfMongo.db(`miro81`).collection(collection).updateOne(whereQuery, { $unset: { count: "" } });
+    //     console.log(whereQuery, updateQuery);
+    //   }
+    //
+    // }
+    //
+    //
+    // await this.MONGOCONSOLEC.close();
 
 
 

@@ -854,6 +854,8 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     this.checkListDetailLaunching(desid);
     this.navigatorLaunching();
 
+    
+
     if (this.menuMap !== undefined && getObj.mode !== undefined && getObj.cliid !== undefined) {
       targetIndex = null;
       for (let i = 0; i < this.menuMap.length; i++) {

@@ -10,17 +10,30 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   this.dateDoms = [];
   this.selection = [];
 
+  if (middleMode) {
+    if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
+      GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+      GeneralJs.stacks["designerConsoleSseSource"] = null;
+      GeneralJs.stacks["designerConsoleSseEvent"] = null;
+    }
+    GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/possibleDesigner");
+    GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
+      instance.possibleSseParsing(GeneralJs.equalJson(e.data));
+    }
+    GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+  }
+
   if (typeof this.possiblePannelStatus !== "object" || this.possiblePannelStatus === null) {
     this.possiblePannelStatus = {
       project: false,
-      calendar: false,
+      numbers: false,
     };
   }
   if (typeof this.possiblePannelStatus.project !== "boolean") {
     this.possiblePannelStatus.project = false;
   }
-  if (typeof this.possiblePannelStatus.calendar !== "boolean") {
-    this.possiblePannelStatus.calendar = false;
+  if (typeof this.possiblePannelStatus.numbers !== "boolean") {
+    this.possiblePannelStatus.numbers = false;
   }
   if (typeof this.possibleConst !== "object" || this.possibleConst === null) {
     this.possibleConst = {
@@ -41,8 +54,7 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
       dummyDatesClassName: "dummyDummyDate",
       daydayWords: [ "일", "월", "화", "수", "목", "금", "토" ],
       daydayLength: 7,
-      countKeyClass: "countKeyClass",
-      countKeyMake: (dateObj) => { return `y${String(dateObj.getFullYear())}m${String(dateObj.getMonth() + 1)}`; },
+      serviceMatrix: [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ],
     };
   }
 
@@ -237,7 +249,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
   const now = new Date();
   const nowValue = now.valueOf();
   const between = "&nbsp;&nbsp;&nbsp;&nbsp;";
-  const { futureLength, okClassName, cancelClassName, numberClassName, backClassName, nullClassName, generalDateClassName, weekClassName, weekGeneralClassName, titleClassName, titleGeneralName, joinToken, scrollEventName, scrollEventTimeout, dummyDatesClassName, daydayWords, daydayLength, countKeyClass, countKeyMake } = possibleConst;
+  const { futureLength, okClassName, cancelClassName, numberClassName, backClassName, nullClassName, generalDateClassName, weekClassName, weekGeneralClassName, titleClassName, titleGeneralName, joinToken, scrollEventName, scrollEventTimeout, dummyDatesClassName, daydayWords, daydayLength, serviceMatrix } = possibleConst;
   try {
     let magin, outerMargin;
     let dateMatrix;
@@ -314,14 +326,6 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     if (realtimeDesigner.length === 0) {
 
       updateQuery = { desid };
-      updateQuery.count = {};
-      tempDate = new Date();
-      tempDate.setDate(1);
-      for (let i = 0; i < futureLength; i++) {
-        keyName = countKeyMake(tempDate);
-        updateQuery.count[keyName] = 5;
-        tempDate.setMonth(tempDate.getMonth() + 1);
-      }
       updateQuery.possible = [];
       updateQuery.projects = [];
       for (let project of projects) {
@@ -339,35 +343,19 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     } else {
 
       [ realtimeDesigner ] = realtimeDesigner;
-
       delete realtimeDesigner._id;
-
-      tempDate = new Date();
-      tempDate.setDate(1);
-      updateBoo = false;
-      for (let i = 0; i < futureLength; i++) {
-        keyName = countKeyMake(tempDate);
-        if (realtimeDesigner.count[keyName] === undefined) {
-          updateBoo = true;
-          realtimeDesigner.count[keyName] = 5;
-        }
-        tempDate.setMonth(tempDate.getMonth() + 1);
-      }
       realtimeDesigner.projects = [];
       for (let project of projects) {
         realtimeDesigner.projects.push({ proid: project.proid, meeting: [ project.process.contract.meeting.date ], project: [ { start: project.process.contract.form.date.from, end: project.process.contract.form.date.to } ] });
       }
-
-      if (updateBoo) {
-        updateQuery = equalJson(JSON.stringify(realtimeDesigner));
-        ajaxJson({
-          mode: "update",
-          db: "console",
-          collection: "realtimeDesigner",
-          whereQuery: { desid },
-          updateQuery,
-        }, "/generalMongo", { equal: true }).catch((err) => { console.log(err); });
-      }
+      updateQuery = equalJson(JSON.stringify(realtimeDesigner));
+      ajaxJson({
+        mode: "update",
+        db: "console",
+        collection: "realtimeDesigner",
+        whereQuery: { desid },
+        updateQuery,
+      }, "/generalMongo", { equal: true }).catch((err) => { console.log(err); });
 
     }
 
@@ -583,6 +571,117 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
           }
         }
+      },
+      {
+        name: "가능수 보기",
+        attribute: [
+          { toggle: "off" }
+        ],
+        event: function (e) {
+          const toggle = this.getAttribute("toggle");
+          const dateDoms = instance.dateDoms;
+          let target, targets, targets2;
+          let tempStr, dom;
+
+          if (toggle === "off") {
+
+            targets2 = [];
+            for (let svg of allSvgs) {
+              svg.style.opacity = String(0);
+              svg.parentElement.children[0].style.background = colorChip.white;
+              svg.parentElement.children[1].style.color = colorChip.black;
+              svg.parentElement.children[1].querySelector('b').style.color = colorChip.black;
+              svg.setAttribute("mode", "numbers");
+              if ([ 0, 6 ].includes(Number(svg.parentElement.getAttribute("index")))) {
+                targets2.push(svg.parentElement.children[1]);
+              }
+            }
+
+            setQueue(() => {
+              targets = [];
+              for (let dom of dateDoms) {
+                if (equalJson(dom.getAttribute("matrix")).length > 0) {
+                  targets.push(dom);
+                }
+              }
+
+              for (let dom of targets) {
+                if (dom.getAttribute("past") !== "true") {
+                  dom.firstChild.style.background = colorChip.green;
+                  dom.querySelector("aside").style.opacity = String(1);
+                  if (mobile) {
+                    dom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
+                  }
+                  dom.querySelector("aside").textContent = equalJson(dom.getAttribute("matrix")).map((i) => { return String(i); }).join(",");
+                }
+              }
+              setQueue(() => {
+                for (let dom of targets2) {
+                  dom.style.color = colorChip.darkGreen;
+                  dom.querySelector('b').style.color = colorChip.darkGreen;
+                }
+              }, 900);
+            }, 301);
+
+            this.lastChild.textContent = "on";
+            this.firstChild.style.color = colorChip.green;
+            this.lastChild.style.color = colorChip.green;
+            this.setAttribute("toggle", "on");
+            instance.possiblePannelStatus.numbers = true;
+
+          } else {
+
+            setQueue(() => {
+              let targets2, dom;
+              targets2 = [];
+              for (let svg of allSvgs) {
+                dom = svg.parentElement;
+                dom.querySelector("aside").textContent = String(0);
+                dom.firstChild.style.opacity = String(dateBoxOpacity);
+                dom.children[1].style.opacity = String(1);
+                if (dom.getAttribute("toggle") === "on") {
+                  dom.firstChild.style.background = colorChip.green;
+                  if (svg.getAttribute("kind") === "ok") {
+                    svg.style.opacity = String(1);
+                  } else {
+                    svg.style.opacity = String(0);
+                  }
+                  dom.children[1].style.color = colorChip.green;
+                  dom.children[1].querySelector('b').style.color = colorChip.green;
+                } else {
+                  dom.firstChild.style.background = colorChip.white;
+                  if (svg.getAttribute("kind") === "ok") {
+                    svg.style.opacity = String(0);
+                  } else {
+                    svg.style.opacity = String(1);
+                  }
+                }
+                if ([ 0, 6 ].includes(Number(dom.getAttribute("index")))) {
+                  targets2.push(dom.children[1]);
+                }
+              }
+              setQueue(() => {
+                for (let dom of targets2) {
+                  dom.style.color = colorChip.red;
+                  dom.querySelector('b').style.color = colorChip.red;
+                }
+              }, 900);
+            }, 301);
+
+            for (let svg of allSvgs) {
+              svg.setAttribute("mode", "possible");
+              dom = svg.parentElement;
+              dom.querySelector("aside").style.opacity = String(0);
+            }
+
+            this.lastChild.textContent = "off";
+            this.firstChild.style.color = colorChip.black;
+            this.lastChild.style.color = colorChip.red;
+            this.setAttribute("toggle", "off");
+            instance.possiblePannelStatus.numbers = false;
+
+          }
+        }
       }
     ];
 
@@ -597,6 +696,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         let tempObj;
         let num;
         let whereQuery, updateQuery;
+        let date;
+        let finalPossible;
+        let noneIndex;
+        let length;
 
         removeDates = [];
         for (let i = 1; i < rawDates.length - 1; i++) {
@@ -609,12 +712,13 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           }
         }
 
-        filteredDates = rawDates.filter((d) => { return !removeDates.includes(dateToString(d)); });
-        filteredDates.sort((a, b) => { return a.valueOf() - b.valueOf(); });
+        filteredDates = onDoms.filter((d) => { return !removeDates.includes(dateToString(new Date(d.getAttribute("value")))); });
+        filteredDates.sort((a, b) => { return (new Date(a.getAttribute("value"))).valueOf() - (new Date(b.getAttribute("value"))).valueOf(); });
 
         possible = [];
         tempObj = {};
-        for (let date of filteredDates) {
+        for (let dom of filteredDates) {
+          date = new Date(dom.getAttribute("value"));
           tempDate = new Date(JSON.stringify(date).slice(1, -1));
           tempDate.setDate(tempDate.getDate() + 1);
           if (removeDates.includes(dateToString(tempDate))) {
@@ -624,13 +728,38 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               tempObj.start = date;
             }
             tempObj.end = date;
+            tempObj.matrix = equalJson(dom.getAttribute("matrix"));
             possible.push(tempObj);
             tempObj = {};
           }
         }
 
+        noneIndex = [];
+        for (let i = 0; i < possible.length - 1; i++) {
+          if (dateToString(possible[i].start) === dateToString(possible[i].end)) {
+            if (dateToString(possible[i + 1].start) === dateToString(possible[i + 1].end)) {
+              tempDate = new Date(JSON.stringify(possible[i].start).slice(1, -1));
+              tempDate.setDate(tempDate.getDate() + 1);
+              if (dateToString(tempDate) === dateToString(possible[i + 1].start)) {
+                possible[i].end = new Date(JSON.stringify(possible[i + 1].end).slice(1, -1));
+                noneIndex.push(i + 1);
+              }
+            }
+          }
+        }
+
+        finalPossible = [];
+        length = possible.length;
+        for (let i = 0; i < length; i++) {
+          if (!noneIndex.includes(i)) {
+            finalPossible.push(possible[i]);
+          }
+        }
+
+        finalPossible = finalPossible.filter((obj) => { return obj.matrix.length > 0; });
+
         whereQuery = { desid };
-        updateQuery = { possible };
+        updateQuery = { possible: finalPossible };
 
         await ajaxJson({
           mode: "update",
@@ -640,7 +769,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           updateQuery,
         }, "/generalMongo", { equal: true });
 
-        instance.realtimeDesigner.possible = possible;
+        instance.realtimeDesigner.possible = finalPossible;
 
         ajaxJson({
           mode: "sse",
@@ -651,7 +780,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           updateQuery: {
             desid,
             type: "possible",
-            possible
+            possible: finalPossible
           }
         }, "/generalMongo").then(() => {
           return ajaxJson({
@@ -861,123 +990,12 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               { year: year.replace(/[^0-9]/g, '') },
               { month: month.replace(/[^0-9]/g, '') },
             ],
-            text: `${year} ${month}<u%가능 <b class="${countKeyClass}" style="color:${colorChip.green}">${String(instance.realtimeDesigner.count[countKeyMake(new Date(Number(year.replace(/[^0-9]/g, '')), Number(month.replace(/[^0-9]/g, '')) - 1, 1))])}</b>${between}진행중 ${doing}${between}대기 ${standing}%u>`,
+            text: `${year} ${month}<u%진행중 ${doing}${between}대기 ${standing}%u>`,
             events: [
               {
                 type: "selectstart",
                 event: (e) => { e.preventDefault(); }
               },
-              {
-                type: "click",
-                event: async function (e) {
-                  e.stopPropagation();
-                  try {
-                    const year = Number(this.getAttribute("year"));
-                    const month = Number(this.getAttribute("month"));
-                    const thisKey = countKeyMake(new Date(year, month - 1, 1));
-                    const target = this.querySelector('.' + countKeyClass);
-                    let whereQuery, updateQuery;
-                    instance.realtimeDesigner.count[thisKey] = instance.realtimeDesigner.count[thisKey] + 1;
-                    if (instance.realtimeDesigner.count[thisKey] < 0 || instance.realtimeDesigner.count[thisKey] > 10) {
-                      instance.realtimeDesigner.count[thisKey] = 0;
-                    }
-                    target.textContent = String(instance.realtimeDesigner.count[thisKey]);
-
-                    whereQuery = { desid };
-                    updateQuery = { count: instance.realtimeDesigner.count };
-
-                    await ajaxJson({
-                      mode: "update",
-                      db: "console",
-                      collection: "realtimeDesigner",
-                      whereQuery,
-                      updateQuery,
-                    }, "/generalMongo", { equal: true });
-
-                    ajaxJson({
-                      mode: "sse",
-                      db: "console",
-                      collection: "sse_possibleDesigner",
-                      log: true,
-                      who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                      updateQuery: {
-                        desid,
-                        type: "count",
-                        count: instance.realtimeDesigner.count
-                      }
-                    }, "/generalMongo").then(() => {
-                      return ajaxJson({
-                        page: "possible",
-                        mode: "update",
-                        who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                        update: JSON.stringify({ whereQuery, updateQuery }),
-                        desid,
-                      }, "/ghostDesigner_updateAnalytics")
-                    }).catch((err) => {
-                      console.log(err);
-                    });
-
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              },
-              {
-                type: "contextmenu",
-                event: async function (e) {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  try {
-                    const year = Number(this.getAttribute("year"));
-                    const month = Number(this.getAttribute("month"));
-                    const thisKey = countKeyMake(new Date(year, month - 1, 1));
-                    const target = this.querySelector('.' + countKeyClass);
-                    let whereQuery, updateQuery;
-                    instance.realtimeDesigner.count[thisKey] = instance.realtimeDesigner.count[thisKey] - 1;
-                    if (instance.realtimeDesigner.count[thisKey] < 0 || instance.realtimeDesigner.count[thisKey] > 10) {
-                      instance.realtimeDesigner.count[thisKey] = 0;
-                    }
-                    target.textContent = String(instance.realtimeDesigner.count[thisKey]);
-
-                    whereQuery = { desid };
-                    updateQuery = { count: instance.realtimeDesigner.count };
-
-                    await ajaxJson({
-                      mode: "update",
-                      db: "console",
-                      collection: "realtimeDesigner",
-                      whereQuery,
-                      updateQuery,
-                    }, "/generalMongo", { equal: true });
-
-                    ajaxJson({
-                      mode: "sse",
-                      db: "console",
-                      collection: "sse_possibleDesigner",
-                      log: true,
-                      who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                      updateQuery: {
-                        desid,
-                        type: "count",
-                        count: instance.realtimeDesigner.count
-                      }
-                    }, "/generalMongo").then(() => {
-                      return ajaxJson({
-                        page: "possible",
-                        mode: "update",
-                        who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                        update: JSON.stringify({ whereQuery, updateQuery }),
-                        desid,
-                      }, "/ghostDesigner_updateAnalytics")
-                    }).catch((err) => {
-                      console.log(err);
-                    });
-
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-              }
             ],
             style: {
               position: "relative",
@@ -1048,7 +1066,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               { date: (matrix[i][j] !== null ? String(matrix[i][j].date) : "0") },
               { value: (matrix[i][j] !== null ? JSON.stringify(new Date(Number(year.replace(/[^0-9]/gi, '')), Number(month.replace(/[^0-9]/gi, '')) - 1, matrix[i][j].date)).slice(1, -1) : "null") },
               { past: pastBoo ? "true" : "false" },
-              { index: String(j) }
+              { index: String(j) },
+              { matrix: JSON.stringify([]) },
             ],
             events: [
               {
@@ -1073,17 +1092,56 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                       const mode = thisOk.getAttribute("mode");
                       let index, first, last;
                       let clients, clientTong, clientDom, widthArr;
-                      if (mode !== "projects") {
+                      let matrix, countMatrix;
+                      if (mode === "possible" || mode === "numbers") {
                         if (toggle === "off") {
                           index = instance.dateDoms.findIndex((d) => { return d === self; });
-                          thisWords.style.color = colorChip.green;
-                          thisMonth.style.color = colorChip.green;
                           thisBack.style.background = colorChip.green;
-                          thisOk.style.opacity = String(1);
-                          thisCancel.style.opacity = String(0);
+                          if (mode === "possible") {
+                            thisWords.style.color = colorChip.green;
+                            thisMonth.style.color = colorChip.green;
+                            thisOk.style.opacity = String(1);
+                            thisCancel.style.opacity = String(0);
+                          } else {
+                            this.querySelector("aside").style.opacity = String(1);
+                            if (mobile) {
+                              this.querySelector("aside").parentElement.children[1].style.opacity = String(0);
+                            }
+                            this.querySelector("aside").textContent = equalJson(this.getAttribute("matrix")).map((i) => { return String(i); }).join(",");
+                          }
+
                           if (instance.selection.length === 0) {
                             instance.selection.push(index);
+                            this.setAttribute("toggle", "on");
                           } else {
+                            matrix = designer.analytics.project.matrix.map((arr) => { return arr.some((i) => { return i === 1; }) ? 1 : 0 });
+                            countMatrix = new Array(matrix.length);
+                            if (matrix[1] === 1) {
+                              for (let i = 1; i < matrix.length - 1; i++) {
+                                if (matrix[i] === 0) {
+                                  countMatrix[i] = 0;
+                                } else {
+                                  countMatrix[i] = Number(window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!").trim().replace(/[^0-9]/gi, ''));
+                                }
+                              }
+                              if (matrix[0] === 0) {
+                                countMatrix[0] = 0;
+                              } else {
+                                countMatrix[0] = countMatrix[1];
+                              }
+                            } else {
+                              for (let i = 0; i < matrix.length - 1; i++) {
+                                if (matrix[i] === 0) {
+                                  countMatrix[i] = 0;
+                                } else {
+                                  countMatrix[i] = Number(window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!").trim().replace(/[^0-9]/gi, ''));
+                                }
+                              }
+                            }
+                            if (countMatrix[2] >= 1 && matrix[3] === 1) {
+                              countMatrix[3] = 1;
+                            }
+
                             if (index < instance.selection[0]) {
                               first = index;
                               last = instance.selection[0];
@@ -1091,27 +1149,44 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                               last = index;
                               first = instance.selection[0];
                             }
-                            for (let i = first; i < last; i++) {
-                              instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(1);
-                              instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(0);
-                              instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.green;
-                              instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
+                            for (let i = first; i < last + 1; i++) {
+                              if (mode === "possible") {
+                                instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(1);
+                                instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(0);
+                                instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.green;
+                                instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
+                              } else {
+                                instance.dateDoms[i].querySelector("aside").style.opacity = String(1);
+                                if (mobile) {
+                                  instance.dateDoms[i].querySelector("aside").parentElement.children[1].style.opacity = String(0);
+                                }
+                                instance.dateDoms[i].querySelector("aside").textContent = countMatrix.map((i) => { return String(i); }).join(",");
+                              }
                               instance.dateDoms[i].querySelector('.' + backClassName).style.background = colorChip.green;
                               instance.dateDoms[i].setAttribute("toggle", "on");
+                              instance.dateDoms[i].setAttribute("matrix", JSON.stringify(countMatrix));
                             }
                             instance.selection = [];
                           }
-                          this.setAttribute("toggle", "on");
                         } else {
                           thisWords.style.color = colorChip.black;
                           thisMonth.style.color = colorChip.black;
                           thisBack.style.background = "transparent";
-                          thisOk.style.opacity = String(0);
-                          thisCancel.style.opacity = String(1);
+                          if (mode === "possible") {
+                            thisOk.style.opacity = String(0);
+                            thisCancel.style.opacity = String(1);
+                          } else {
+                            this.querySelector("aside").style.opacity = String(0);
+                            if (mobile) {
+                              this.querySelector("aside").parentElement.children[1].style.opacity = String(1);
+                            }
+                            this.querySelector("aside").textContent = String(0);
+                          }
                           this.setAttribute("toggle", "off");
+                          this.setAttribute("matrix", JSON.stringify([]));
                         }
                         await possibleUpdate();
-                      } else {
+                      } else if (mode === "projects") {
                         if (this.firstChild.getAttribute("clients") !== null) {
                           clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
                           if (clients.length > 0) {
@@ -1175,7 +1250,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                                   position: "relative",
                                   fontSize: String(clientPopupWordSize) + ea,
                                   fontWeight: String(500),
-                                  color: colorChip.white,
+                                  color: colorChip.whiteBlack,
                                   paddingLeft: String(clientPopupWordPadding) + ea,
                                   paddingRight: String(clientPopupWordPadding) + ea,
                                   paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
@@ -1218,7 +1293,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                       let index, first, last;
                       let num;
                       let clients, clientTong, clientDom, widthArr;
-                      if (mode !== "projects") {
+                      if (mode === "possible" || mode === "numbers") {
                         index = instance.dateDoms.findIndex((d) => { return d === self; });
                         if (toggle === "on") {
                           num = 1;
@@ -1238,15 +1313,24 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                           last = index;
                         }
                         for (let i = first; i < last + 1; i++) {
-                          instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
-                          instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
+                          if (mode === "possible") {
+                            instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
+                            instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
+                          } else {
+                            instance.dateDoms[i].querySelector("aside").style.opacity = String(0);
+                            if (mobile) {
+                              instance.dateDoms[i].querySelector("aside").parentElement.children[1].style.opacity = String(1);
+                            }
+                            instance.dateDoms[i].querySelector("aside").textContent = String(0);
+                          }
                           instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.black;
                           instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
                           instance.dateDoms[i].querySelector('.' + backClassName).style.background = "transparent";
                           instance.dateDoms[i].setAttribute("toggle", "off");
+                          instance.dateDoms[i].setAttribute("matrix", JSON.stringify([]));
                         }
                         await possibleUpdate();
-                      } else {
+                      } else if (mode === "projects") {
                         if (this.firstChild.getAttribute("clients") !== null) {
                           clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
                           if (clients.length > 0) {
@@ -1310,7 +1394,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                                   position: "relative",
                                   fontSize: String(clientPopupWordSize) + ea,
                                   fontWeight: String(500),
-                                  color: colorChip.white,
+                                  color: colorChip.whiteBlack,
                                   paddingLeft: String(clientPopupWordPadding) + ea,
                                   paddingRight: String(clientPopupWordPadding) + ea,
                                   paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
@@ -1400,7 +1484,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             tempSvg = createNode({
               mother: dateBox,
               attribute: [
-                { kind: "ok" }
+                { kind: "ok" },
+                { mode: "possible" }
               ],
               class: [ okClassName ],
               mode: "svg",
@@ -1420,7 +1505,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             tempSvg = createNode({
               mother: dateBox,
               attribute: [
-                { kind: "cancel" }
+                { kind: "cancel" },
               ],
               class: [ cancelClassName ],
               mode: "svg",
@@ -1486,7 +1571,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     });
     swipePatch({
       left: (e) => {
-        functionPannelContents.find((obj) => { return /프로젝트 보기/gi.test(obj.name); }).event.call(projectPannel, {});
+        functionPannelContents.find((obj) => { return /가능수 보기/gi.test(obj.name); }).event.call(projectPannel, {});
       },
       right: (e) => {
         functionPannelContents.find((obj) => { return /프로젝트 보기/gi.test(obj.name); }).event.call(projectPannel, {});
@@ -1918,10 +2003,12 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
 
 DesignerJs.prototype.possibleReload = function (type = "possible") {
   const instance = this;
-  const { ea, possibleConst } = this;
+  const { ea, possibleConst, possiblePannelStatus } = this;
   const { colorChip, dateToString, findByAttribute } = GeneralJs;
-  const { futureLength, okClassName, cancelClassName, numberClassName, backClassName, nullClassName, generalDateClassName, weekClassName, weekGeneralClassName, titleClassName, titleGeneralName, joinToken, scrollEventName, scrollEventTimeout, dummyDatesClassName, daydayWords, daydayLength, countKeyClass, countKeyMake } = possibleConst;
+  const { futureLength, okClassName, cancelClassName, numberClassName, backClassName, nullClassName, generalDateClassName, weekClassName, weekGeneralClassName, titleClassName, titleGeneralName, joinToken, scrollEventName, scrollEventTimeout, dummyDatesClassName, daydayWords, daydayLength } = possibleConst;
   const redIndexTargets = [ 0, 6 ];
+  const mobile = this.media[4];
+  const desktop = !mobile;
   let targetDom;
   let dateLength;
   let tempDate;
@@ -1929,10 +2016,20 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
   let year, month;
   let thisKey;
   let target;
+  let mode;
+  let pastBoo;
+
+  if (!possiblePannelStatus.project && !possiblePannelStatus.numbers) {
+    mode = "possible";
+  } else if (possiblePannelStatus.project) {
+    mode = "project";
+  } else if (possiblePannelStatus.numbers) {
+    mode = "numbers";
+  }
 
   if (type === "possible") {
     onTargets = [];
-    for (let { start, end } of this.realtimeDesigner.possible) {
+    for (let { start, end, matrix } of this.realtimeDesigner.possible) {
       tempDate = new Date(JSON.stringify(start).slice(1, -1));
       dateLength = 1;
       while (dateToString(tempDate) !== dateToString(end)) {
@@ -1943,34 +2040,54 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
       for (let i = 0; i < dateLength; i++) {
         targetDom = findByAttribute(this.dateDoms, [ "year", "month", "date" ], [ tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate() ]);
         if (targetDom !== null) {
-          targetDom.querySelector('.' + numberClassName).style.color = colorChip.green;
-          targetDom.querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
-          targetDom.querySelector('.' + backClassName).style.background = colorChip.green;
-          targetDom.querySelector('.' + okClassName).style.opacity = String(1);
-          targetDom.querySelector('.' + cancelClassName).style.opacity = String(0);
-          targetDom.setAttribute("toggle", "on");
-          onTargets.push(targetDom);
+          pastBoo = (targetDom.getAttribute("past") === "true" || targetDom.getAttribute("value") === "null");
+          if (!pastBoo) {
+            if (mode === "possible" || mode === "numbers") {
+              if (mode === "possible") {
+                targetDom.querySelector('.' + numberClassName).style.color = colorChip.green;
+                targetDom.querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
+                targetDom.querySelector('.' + okClassName).style.opacity = String(1);
+                targetDom.querySelector('.' + cancelClassName).style.opacity = String(0);
+              } else {
+                targetDom.querySelector("aside").style.opacity = String(1);
+                if (mobile) {
+                  targetDom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
+                }
+                targetDom.querySelector("aside").textContent = matrix.map((i) => { return String(i); }).join(",");
+              }
+              targetDom.querySelector('.' + backClassName).style.background = colorChip.green;
+            }
+            targetDom.setAttribute("toggle", "on");
+            targetDom.setAttribute("matrix", JSON.stringify(matrix));
+            onTargets.push(targetDom);
+          }
         }
         tempDate.setDate(tempDate.getDate() + 1);
       }
     }
     for (let dom of this.dateDoms) {
       if (!onTargets.includes(dom)) {
-        dom.querySelector('.' + numberClassName).style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
-        dom.querySelector('.' + numberClassName).querySelector('b').style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
-        dom.querySelector('.' + backClassName).style.background = "transparent";
-        dom.querySelector('.' + okClassName).style.opacity = String(0);
-        dom.querySelector('.' + cancelClassName).style.opacity = String(1);
-        dom.setAttribute("toggle", "off");
+        pastBoo = (dom.getAttribute("past") === "true" || dom.getAttribute("value") === "null");
+        if (!pastBoo) {
+          if (mode === "possible" || mode === "numbers") {
+            if (mode === "possible") {
+              dom.querySelector('.' + numberClassName).style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
+              dom.querySelector('.' + numberClassName).querySelector('b').style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
+              dom.querySelector('.' + okClassName).style.opacity = String(0);
+              dom.querySelector('.' + cancelClassName).style.opacity = String(1);
+            } else {
+              dom.querySelector("aside").style.opacity = String(0);
+              if (mobile) {
+                dom.querySelector("aside").parentElement.children[1].style.opacity = String(1);
+              }
+              dom.querySelector("aside").textContent = String(0);
+            }
+            dom.querySelector('.' + backClassName).style.background = "transparent";
+          }
+          dom.setAttribute("toggle", "off");
+          dom.setAttribute("matrix", JSON.stringify([]));
+        }
       }
-    }
-  } else {
-    for (let dom of this.titleFields) {
-      year = Number(dom.firstChild.getAttribute("year"));
-      month = Number(dom.firstChild.getAttribute("month"));
-      thisKey = countKeyMake(new Date(year, month - 1, 1));
-      target = dom.firstChild.querySelector('.' + countKeyClass);
-      target.textContent = String(this.realtimeDesigner.count[thisKey]);
     }
   }
 
@@ -1997,14 +2114,6 @@ DesignerJs.prototype.possibleSseParsing = function (orders) {
               instance.possibleReload("possible");
             }
           }, sseDebounceConstPossible);
-        } else if (type === "count") {
-          const { count } = obj;
-          setDebounce(() => {
-            if (JSON.stringify(count) !== JSON.stringify(instance.realtimeDesigner.count)) {
-              instance.realtimeDesigner.count = count;
-              instance.possibleReload("count");
-            }
-          }, sseDebounceConstCount);
         }
       }
     }

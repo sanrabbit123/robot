@@ -2323,265 +2323,6 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
       name: "일정",
       children: [
         {
-          name: "가능 일정",
-          value: async function (nodeArr, designer) {
-            try {
-              const [ abc, title, mother ] = nodeArr;
-              const { ajaxJson, colorChip, createNode, cleanChildren } = GeneralJs;
-              const today = new Date();
-              const futureMonth = 7;
-              const calendarData = await ajaxJson({
-                mode: "read",
-                db: "console",
-                collection: "realtimeDesigner",
-                whereQuery: {},
-              }, "/generalMongo", { equal: true });
-              let target = { possible: [] };
-              for (let obj of calendarData) {
-                if (designer.desid === obj.desid) {
-                  target = obj;
-                }
-              }
-              let { possible } = target;
-              let h;
-              let future, map;
-              let margin;
-              let num;
-              let boo, boos;
-
-              margin = 15;
-
-              map = [ { value: today, text: `${String(today.getFullYear()).slice(2)}년 ${String(today.getMonth() + 1)}월`, toggle: "off" } ];
-              future = new Date();
-              for (let i = 0; i < futureMonth; i++) {
-                future.setMonth(future.getMonth() + 1);
-                map.push({ value: new Date(future.getFullYear(), future.getMonth(), future.getDate()), text: `${String(future.getFullYear()).slice(2)}년 ${String(future.getMonth() + 1)}월`, toggle: "off" });
-              }
-
-              h = document.createDocumentFragment();
-              num = 0;
-              for (let obj of map) {
-                boo = false;
-                boos = [];
-                for (let { start, end } of possible) {
-                  boos.push(((start.getMonth() + (start.getFullYear() * 12)) <= (obj.value.getMonth() + (obj.value.getFullYear() * 12))) && ((end.getMonth() + (end.getFullYear() * 12)) >= (obj.value.getMonth() + (obj.value.getFullYear() * 12))));
-                }
-                boos = boos.filter((b) => { return b; });
-                boo = (boos.length > 0);
-                if (boo) {
-                  obj.toggle = "on";
-                }
-
-                createNode({
-                  mother: h,
-                  text: obj.text,
-                  attribute: [
-                    { year: String(obj.value.getFullYear()) },
-                    { month: String(obj.value.getMonth() + 1) },
-                    { toggle: obj.toggle },
-                  ],
-                  class: [ "hoverDefault" ],
-                  events: [
-                    {
-                      type: "click",
-                      event: function (e) {
-                        const possible = GeneralJs.stacks["designer_possible"];
-                        const year = Number(this.getAttribute("year"));
-                        const month = Number(this.getAttribute("month"));
-                        const toggle = this.getAttribute("toggle");
-                        let endTarget, startTarget, targetObj, firstDate, previousMonth, nextMonth, lastDate, index, targetIndex;
-                        let boo, boos;
-
-                        firstDate = new Date(year, month - 1, 1);
-                        previousMonth = new Date(year, month - 1, 1);
-                        previousMonth.setDate(previousMonth.getDate() - 1);
-
-                        lastDate = new Date(year, month, 1);
-                        lastDate.setDate(lastDate.getDate() - 1);
-                        nextMonth = new Date(year, month, 1);
-
-                        if (toggle === "off") {
-
-                          endTarget = null;
-                          startTarget = null;
-                          targetIndex = null;
-                          index = 0;
-
-                          for (let obj of possible) {
-                            if ((obj.end.getMonth() === previousMonth.getMonth()) && (obj.end.getFullYear() === previousMonth.getFullYear()) && (obj.end.getDate() === previousMonth.getDate())) {
-                              endTarget = obj;
-                              targetIndex = index;
-                            }
-                            if ((obj.start.getMonth() === nextMonth.getMonth()) && (obj.start.getFullYear() === nextMonth.getFullYear()) && (obj.start.getDate() === nextMonth.getDate())) {
-                              startTarget = obj;
-                            }
-                            index++;
-                          }
-
-                          if (endTarget === null && startTarget === null) {
-                            possible.push({ start: firstDate, end: lastDate });
-                          } else if (endTarget === null && startTarget !== null) {
-                            startTarget.start = firstDate;
-                          } else if (endTarget !== null && startTarget === null) {
-                            endTarget.end = lastDate;
-                          } else {
-                            startTarget.start = endTarget.start;
-                            possible.splice(targetIndex, 1);
-                          }
-
-                          this.style.color = colorChip.green;
-                          this.setAttribute("toggle", "on");
-                        } else {
-                          targetObj = null;
-                          targetIndex = null;
-                          index = 0;
-                          for (let obj of possible) {
-                            if (((obj.start.getMonth() + 1 + (obj.start.getFullYear() * 12)) <= (month + (year * 12))) && ((obj.end.getMonth() + 1 + (obj.end.getFullYear() * 12)) >= (month + (year * 12)))) {
-                              targetObj = obj;
-                              targetIndex = index;
-                              break;
-                            }
-                            index++;
-                          }
-
-                          if (targetObj.end.valueOf() > lastDate.valueOf()) {
-                            if (targetObj.start.valueOf() < firstDate.valueOf()) {
-                              possible.push({ start: nextMonth, end: new Date(targetObj.end.getFullYear(), targetObj.end.getMonth(), targetObj.end.getDate()) });
-                              targetObj.end = previousMonth;
-                            } else {
-                              targetObj.start = nextMonth;
-                            }
-                          } else {
-                            if (targetObj.start.valueOf() < firstDate.valueOf()) {
-                              targetObj.end = previousMonth;
-                            } else {
-                              possible.splice(targetIndex, 1);
-                            }
-                          }
-
-                          this.style.color = colorChip.gray4;
-                          this.setAttribute("toggle", "off");
-                        }
-
-                        possible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf(); });
-                        GeneralJs.stacks["designer_possible"] = possible;
-
-                        const sseFunc = function () {
-                          const today = new Date();
-                          let filtered = value.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
-                          let tempFunc = new Function("const obj = " + filtered + "; return obj;");
-                          possible = tempFunc();
-                          let boo, boos;
-                          let map = [ { value: today, toggle: "off" } ];
-                          let future = new Date();
-                          for (let i = 0; i < 7; i++) {
-                            future.setMonth(future.getMonth() + 1);
-                            map.push({ value: new Date(future.getFullYear(), future.getMonth(), future.getDate()), toggle: "off" });
-                          }
-                          for (let o of map) {
-                            boo = false;
-                            boos = [];
-                            for (let { start, end } of possible) {
-                              boos.push(((start.getMonth() + (start.getFullYear() * 12)) <= (o.value.getMonth() + (o.value.getFullYear() * 12))) && ((end.getMonth() + (end.getFullYear() * 12)) >= (o.value.getMonth() + (o.value.getFullYear() * 12))));
-                            }
-                            boos = boos.filter((b) => { return b; });
-                            boo = (boos.length > 0);
-                            if (boo) {
-                              o.toggle = "on";
-                            }
-                          }
-                          let targets = mother.querySelectorAll(".hoverDefault");
-                          for (let i = 0; i < targets.length; i++) {
-                            targets[i].style.color = (map[i].toggle === "on" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray4);
-                            targets[i].setAttribute("toggle", map[i].toggle);
-                          }
-                          GeneralJs.stacks["designer_possible"] = possible;
-                        }
-
-                        GeneralJs.ajaxJson({
-                          mode: "read",
-                          db: "console",
-                          collection: "realtimeDesigner",
-                          whereQuery: { desid: instance.desid },
-                        }, "/generalMongo").then((rawRows) => {
-                          if (rawRows.length === 0) {
-                            window.alert("디자이너 일정 관리 콘솔에서 관리해주세요!");
-                            window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=calendar";
-                          } else {
-                            return GeneralJs.ajaxJson({
-                              mode: "update",
-                              db: "console",
-                              collection: "realtimeDesigner",
-                              whereQuery: { desid: instance.desid },
-                              updateQuery: { possible }
-                            }, "/generalMongo");
-                          }
-                        }).then(() => {
-                          return GeneralJs.ajaxJson({
-                            mode: "sse",
-                            db: "console",
-                            collection: "sse_checklistDesigner",
-                            log: true,
-                            who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                            updateQuery: {
-                              desid: instance.desid,
-                              type: ("async__function__{ " + sseFunc.toString().replace(/\n/g, '').trim().replace(/=/gi, "__equal__").replace(/&/gi, "__ampersand__").replace(/\+/gi, "__plus__").replace(/\}$/, '').replace(/^function \(\) \{/gi, '') + " }"),
-                              value: JSON.stringify(possible),
-                              position: { x: 8, y: 0, class: "dom_" + String(8) + "_" + String(0) },
-                              update: { whereQuery: { desid: instance.desid }, updateQuery: {} }
-                            }
-                          }, "/generalMongo");
-                        }).catch((err) => {
-                          console.log(err);
-                        });
-
-                      }
-                    }
-                  ],
-                  style: {
-                    display: "inline-block",
-                    fontSize: "inherit",
-                    fontWeight: "inherit",
-                    color: boo ? colorChip.green : colorChip.gray4,
-                    marginRight: String(desktop ? margin : 0) + ea,
-                    marginBottom: String(desktop ? 0 : 2.5) + ea,
-                    width: desktop ? "auto" : String(45) + '%',
-                  }
-                });
-
-                if (num !== map.length - 1) {
-                  createNode({
-                    mother: h,
-                    text: '|',
-                    style: {
-                      display: desktop ? "inline-block" : "none",
-                      fontSize: "inherit",
-                      fontWeight: String(200),
-                      color: colorChip.gray4,
-                      marginRight: String(margin) + ea,
-                    }
-                  });
-                }
-
-                num++;
-              }
-
-              GeneralJs.stacks["designer_possible"] = possible;
-              cleanChildren(mother);
-              mother.appendChild(h);
-              mother.style.fontWeight = String(300);
-              mother.style.color = colorChip.black;
-              mother.style.overflow = "hidden";
-              mother.style.width = desktop ? String((80 + (margin * 2)) * (futureMonth + 1)) + ea : String(100) + '%';
-
-            } catch (e) {
-              console.log(e);
-            }
-          },
-          height: desktop ? factorHeight : factorHeight * 3.8,
-          type: "async",
-        },
-        {
           name: "대기중",
           value: async function (nodeArr, designer) {
             try {
@@ -2966,6 +2707,19 @@ DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null
   const standardBar = this.standardDoms[0].parentElement;
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target, pastScrollTop;
+
+  if (middleMode) {
+    if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
+      GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+      GeneralJs.stacks["designerConsoleSseSource"] = null;
+      GeneralJs.stacks["designerConsoleSseEvent"] = null;
+    }
+    GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+    GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
+      instance.checkListSseParsing(GeneralJs.equalJson(e.data));
+    }
+    GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+  }
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
@@ -5131,10 +4885,12 @@ DesignerJs.prototype.checkListView = async function () {
     this.motherHeight = motherHeight;
 
     //sse
-    const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-    es.addEventListener("updateTong", (e) => {
-      instance.checkListSseParsing(equalJson(e.data));
-    });
+    if (!this.middleMode) {
+      const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+      es.addEventListener("updateTong", (e) => {
+        instance.checkListSseParsing(equalJson(e.data));
+      });
+    }
 
     loading.parentNode.removeChild(loading);
 
