@@ -383,9 +383,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
 
     motherPaddingTop = <%% 80, 72, 64, 56, 14 %%>;
 
-    monthSize = <%% 25, 25, 23, 22, 3.6 %%>;
+    monthSize = <%% 23, 23, 21, 20, 3.6 %%>;
     size = <%% 15, 15, 14, 13, 3.6 %%>;
-    sizeVisual = <%% 9, 9, 8, 7, 0.6 %%>;
+    sizeVisual = <%% 7, 7, 6, 5, 0.6 %%>;
     titleWidth = <%% 130, 120, 120, 80, 0 %%>;
     titlePaddingLeft = <%% 5, 5, 3, 1, 0.1 %%>;
     titlePaddingRight = <%% 50, 50, 30, 18, 5 %%>;
