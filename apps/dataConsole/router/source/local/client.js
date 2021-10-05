@@ -1530,11 +1530,16 @@ ClientJs.prototype.spreadData = async function (search = null) {
   }
 }
 
-ClientJs.prototype.makeBoard = function (cases) {
+ClientJs.prototype.makeBoard = function (divisionMap, cases) {
+  if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
+    throw new Error("invaild input");
+  }
+  if (divisionMap.flat().length !== (([ ...new Set(divisionMap.flat()) ]).length)) {
+    throw new Error("invaild input");
+  }
   const instance = this;
   const { createNode, colorChip, withOut, equalJson, isMac } = GeneralJs;
   const ea = "px";
-  const divisionName = [ ...new Set(cases.map((obj) => { return obj.action.trim(); }).filter((i) => { return typeof i === "string" && i.trim() !== ''; })) ];
   let temp;
   let totalFather;
   let nameStyle, cliidStyle, barStyle;
@@ -1545,7 +1550,7 @@ ClientJs.prototype.makeBoard = function (cases) {
   let size, margin;
   let num;
   let cardWidthConstant;
-  let intend, totalWidth;
+  let intend;
   let lineHeight, titleTop, startTop;
   let divideNumber;
   let fontSize, nameFontSize;
@@ -1559,30 +1564,71 @@ ClientJs.prototype.makeBoard = function (cases) {
   let whiteCard;
   let nameWord, idWord;
   let between;
+  let tongMother;
+  let pastHeight;
+  let domMatrix, tempArr;
+  let tongMarginTop;
+  let tongPaddingTop;
+  let tongPaddingBottom;
+  let tongPaddingRight;
+  let tongPaddingLeft;
+  let tongMargin;
+  let totalTitleSize, totalTitleTop, totalTitleLeft;
+  let divideArr, sizeArr;
+  let totalStandard;
+  let numberTitleSize, numberTitleTop, numberTitleBetween;
+  let tongTitle, tongNumber, tongArea;
+  let idWordTop;
+  let totalFatherPaddingTop;
 
-  margin = 12;
-  outerMargin = margin * 0.75;
-  cardWidthConstant = 170;
-  divideNumber = Math.floor((window.innerWidth - (margin * 15.8)) / (margin + cardWidthConstant));
-  size = (window.innerWidth - (margin * (divideNumber + 15.8))) / divideNumber;
-  fixedHeightSize = 107;
-  intend = 22;
-  titleTop = 13;
+  margin = 10;
+  outerMargin = margin * 2;
+  totalFatherPaddingTop = margin * 1.5;
+
+  cardWidthConstant = 140;
+  fixedHeightSize = 41;
+  intend = 16;
+  titleTop = 9;
+  idWordTop = 11;
   startTop = titleTop + 16;
   exceptionMargin = 12;
-  fontSize = 13;
-  nameFontSize = fontSize + 4;
-  totalWidth = size - (intend * 2) - 1;
+  fontSize = 12;
+  nameFontSize = fontSize + 2;
+
   between = 8;
+  tongMarginTop = margin * 1.75;
+  tongPaddingTop = (margin * 1.5) + 36;
+  tongPaddingBottom = margin * 1.5;
+  tongPaddingRight = margin * 1.5;
+  tongMargin = margin * 1.5;
+
+  totalTitleSize = 18;
+  totalTitleTop = 15;
+  totalTitleLeft = 20;
+
+  numberTitleSize = 15;
+  numberTitleTop = 19;
+  numberTitleBetween = 8;
+
+  divideArr = [];
+  sizeArr = [];
+  for (let i = 0; i < 5; i++) {
+    totalStandard = (window.innerWidth - (outerMargin * 2) - (margin * 2) - 2 - (tongPaddingRight * 2) - (((tongPaddingRight * 2) + tongMargin + 2) * i)) / (i + 1);
+    divideNumber = Math.floor(totalStandard / (margin + cardWidthConstant));
+    size = (totalStandard - (margin * (divideNumber + 1))) / divideNumber;
+    divideArr.push(divideNumber);
+    sizeArr.push(size);
+  }
 
   totalFather = createNode({
     mother: document.getElementById("totalcontents"),
     class: [ "totalFather", "fadein" ],
     style: {
+      paddingTop: String(totalFatherPaddingTop) + ea,
       paddingLeft: String(outerMargin) + ea,
       paddingRight: String(outerMargin) + ea,
-      height: "calc(100vh - " + String(this.belowHeight) + ea + ")",
-      width: "calc(100vw - " + String(outerMargin) + ea + " - " + String(outerMargin) + ea + ")",
+      height: "calc(100vh - " + String(this.belowHeight + totalFatherPaddingTop) + ea + ")",
+      width: "calc(100vw - " + String(outerMargin * 2) + ea + ")",
       zIndex: String(1),
     }
   });
@@ -1824,70 +1870,98 @@ ClientJs.prototype.makeBoard = function (cases) {
   //make division
   division = new Map();
   numbers = new Map();
-  for (let i = 0; i < divisionName.length; i++) {
-    tong = createNode({
+  domMatrix = [];
+  for (let i = 0; i < divisionMap.length; i++) {
+    tempArr = [];
+
+    tongMother = createNode({
       mother: totalFather,
       style: {
+        display: "block",
         position: "relative",
         marginLeft: String(margin) + ea,
         marginRight: String(margin) + ea,
-        marginTop: String(margin * 1.75) + ea,
-        paddingTop: String(margin * 1.2) + ea,
-        paddingBottom: String(margin * 1.2) + ea,
-        paddingRight: String(margin * 1.2) + ea,
-        paddingLeft: String(margin * 10) + ea,
-        border: "1px dashed " + GeneralJs.colorChip.gray4,
-        borderRadius: String(5) + "px",
-      },
-      children: [
-        {
-          text: divisionName[i],
-          style: {
-            position: "absolute",
-            top: String(margin * (GeneralJs.isMac() ? 1 : 1.07)) + ea,
-            left: String(margin * 1.7) + ea,
-            fontSize: String(fontSize + 6) + ea,
-            fontWeight: String(600),
-            color: GeneralJs.colorChip.black,
-          }
-        },
-        {
-          text: String(0) + "명",
-          attribute: {
-            kinds: "number",
-          },
-          style: {
-            position: "absolute",
-            top: String((margin * (GeneralJs.isMac() ? 1 : 1.07)) + ((fontSize + 6) * 1.368421052631579)) + ea,
-            left: String(margin * 1.7) + ea,
-            fontSize: String(fontSize + 4) + ea,
-            fontWeight: String(200),
-            color: GeneralJs.colorChip.gray5,
-          }
-        },
-        {
-          attribute: {
-            kinds: "area",
-            name: divisionName[i]
-          },
-          events: {
-            dragenter: dragenter_event,
-            dragleave: dragleave_event,
-            dragover: dragover_event,
-            drop: drop_event
-          },
-          style: {
-            position: "relative",
-            paddingBottom: String(margin) + ea,
-            minHeight: String(fixedHeightSize + margin) + ea,
-            background: GeneralJs.colorChip.gray1,
-            borderRadius: String(5) + ea,
-          }
-        }
-      ]
+        marginTop: String(tongMarginTop) + ea,
+        verticalAlign: "top",
+      }
     });
-    numbers.set(divisionName[i], tong.children[1]);
-    division.set(divisionName[i], tong.children[2]);
+
+    for (let j = 0; j < divisionMap[i].length; j++) {
+      tong = createNode({
+        mother: tongMother,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(tongMargin * (divisionMap[i].length - 1)) + ea + ") / " + String(divisionMap[i].length) + ")",
+          marginRight: (j === divisionMap[i].length - 1 ? String(0) + ea : String(tongMargin) + ea),
+          paddingTop: String(tongPaddingTop) + ea,
+          paddingBottom: String(tongPaddingBottom) + ea,
+          paddingRight: String(tongPaddingRight) + ea,
+          paddingLeft: String(tongPaddingRight) + ea,
+          border: "1px dashed " + GeneralJs.colorChip.gray4,
+          boxSizing: "border-box",
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+        }
+      });
+
+      tongTitle = createNode({
+        mother: tong,
+        text: divisionMap[i][j],
+        style: {
+          position: "absolute",
+          top: String(totalTitleTop) + ea,
+          left: String(totalTitleLeft) + ea,
+          fontSize: String(totalTitleSize) + ea,
+          fontWeight: String(600),
+          color: GeneralJs.colorChip.black,
+        }
+      });
+
+      tongNumber = createNode({
+        mother: tong,
+        text: String(0) + "명",
+        attribute: {
+          kinds: "number",
+        },
+        style: {
+          position: "absolute",
+          top: String(numberTitleTop) + ea,
+          left: String(totalTitleLeft + tongTitle.getBoundingClientRect().width + numberTitleBetween) + ea,
+          fontSize: String(numberTitleSize) + ea,
+          fontWeight: String(500),
+          color: GeneralJs.colorChip.gray5,
+        }
+      });
+
+      tongArea = createNode({
+        mother: tong,
+        attribute: {
+          kinds: "area",
+          name: divisionMap[i][j]
+        },
+        events: {
+          dragenter: dragenter_event,
+          dragleave: dragleave_event,
+          dragover: dragover_event,
+          drop: drop_event
+        },
+        style: {
+          position: "relative",
+          paddingBottom: String(margin) + ea,
+          minHeight: String(fixedHeightSize + margin) + ea,
+          background: GeneralJs.colorChip.gray1,
+          height: withOut(tongPaddingBottom, ea),
+          borderRadius: String(5) + ea,
+        }
+      });
+
+      numbers.set(divisionMap[i][j], tong.children[1]);
+      division.set(divisionMap[i][j], tong.children[2]);
+      tempArr.push(tong);
+    }
+
+    domMatrix.push(tempArr);
   }
 
   //make card
@@ -1911,7 +1985,7 @@ ClientJs.prototype.makeBoard = function (cases) {
       style: {
         display: "inline-block",
         position: "relative",
-        width: String(size) + ea,
+        width: String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.action); })].length - 1]) + ea,
         height: String(fixedHeightSize) + ea,
         marginLeft: String(margin) + ea,
         marginTop: String(margin) + ea,
@@ -1949,8 +2023,8 @@ ClientJs.prototype.makeBoard = function (cases) {
       style: {
         position: "absolute",
         fontSize: String(fontSize) + ea,
-        fontWeight: String(200),
-        top: String(titleTop + (nameFontSize - fontSize + 2) + (GeneralJs.isMac() ? 0 : 2)) + ea,
+        fontWeight: String(400),
+        top: String(idWordTop) + ea,
         left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
         color: GeneralJs.colorChip.green,
         cursor: "pointer",
@@ -1962,6 +2036,18 @@ ClientJs.prototype.makeBoard = function (cases) {
     num++;
   }
 
+  for (let i = 0; i < divisionMap.length; i++) {
+    for (let j = 0; j < divisionMap[i].length; j++) {
+      if (divisionMap[i].length > 1) {
+        if (j === 0) {
+          pastHeight = domMatrix[i][j].getBoundingClientRect().height;
+        } else {
+          domMatrix[i][j].style.height = String(pastHeight) + ea;
+        }
+      }
+    }
+  }
+
   numbers.forEach((value, key, map) => {
     numbers.get(key).textContent = String(division.get(key).children.length) + "명";
     numbers.get(key).setAttribute("number", String(division.get(key).children.length));
@@ -1970,7 +2056,7 @@ ClientJs.prototype.makeBoard = function (cases) {
   createNode({
     mother: totalFather,
     style: {
-      height: String(margin * 2) + ea
+      height: String(margin * 50) + ea
     }
   });
 
@@ -1980,6 +2066,17 @@ ClientJs.prototype.makeBoard = function (cases) {
 ClientJs.prototype.cardViewMaker = function () {
   const instance = this;
   const { equalJson } = GeneralJs;
+  const map = DataPatch.clientMap();
+  let itemMap;
+
+  itemMap = map.action.items.map((i) => { return [ i ]; });
+  for (let i = map.action.divisionStart; i < map.action.divisionStart + map.action.divisionLength; i++) {
+    itemMap[i] = [ itemMap[i][0], itemMap[i + map.action.divisionLength][0] ];
+  }
+  for (let i = map.action.divisionStart + map.action.divisionLength; i < map.action.divisionStart + map.action.divisionLength + map.action.divisionLength; i++) {
+    itemMap[i] = null;
+  }
+  itemMap = itemMap.filter((arr) => { return Array.isArray(arr); });
 
   return async function (e) {
     const { cases, totalContents, totalMother } = instance;
@@ -2005,7 +2102,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
       totalMother.classList.add("justfadeoutoriginal");
 
-      instance.totalFather = instance.makeBoard(thisCases);
+      instance.totalFather = instance.makeBoard(itemMap, thisCases);
     }
     instance.onView = "father";
   }

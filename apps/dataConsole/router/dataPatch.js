@@ -855,7 +855,7 @@ DataPatch.prototype.clientMap = function () {
       "피드백과 응대 완료",
       "디자이너 선택",
       "계약금 안내",
-      "해당 없음",
+      "해당 없음"
     ];
     const doubleLength = 6;
     const doubleStartIndex = 1;
@@ -1752,7 +1752,24 @@ DataPatch.prototype.clientMap = function () {
     comment: { name: "요청 사항", position: "requests.0.request.etc.comment", type: "string", searchBoo: false, },
     channel: { name: "유입 채널", position: "requests.0.request.etc.channel", type: "string", searchBoo: true, },
     status: { name: "상태", position: "requests.0.analytics.response.status", type: "object", items: [ "드랍", "진행", "응대중", "장기" ], inputFunction: statusInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: statusToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
-    action: { name: "응대", position: "requests.0.analytics.response.action", type: "object", inputFunction: actionInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: actionToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
+    action: { name: "응대", position: "requests.0.analytics.response.action", type: "object", items: [
+      "1차 응대 예정",
+      "1차 응대 후 대기",
+      "스타일 체크 대기",
+      "제안 발송 예정",
+      "제안 피드백 예정",
+      "피드백 부재중",
+      "제안 피드백 완료",
+      "부재중 알림 발송",
+      "상세 설문 대기",
+      "부재중 제안 발송",
+      "피드백과 응대 예정",
+      "자동 피드백 부재중",
+      "피드백과 응대 완료",
+      "디자이너 선택",
+      "계약금 안내",
+      "해당 없음"
+    ], divisionStart: 1, divisionLength: 6, inputFunction: actionInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: actionToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [
       "연결 안 됨",
       "가벼운 문의",

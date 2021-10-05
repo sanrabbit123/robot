@@ -35,6 +35,27 @@ module.exports = function (arg, info) {
       try {
         const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
         await sleep(1000);
+        if (document.querySelector('.complex_detail_link') === null) {
+          if (document.querySelector('.no_data_area') === null) {
+            if (document.querySelector('.item_list').children.length <= 3) {
+              document.querySelector('.item_list').firstChild.querySelector('a').click();
+            } else {
+              await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[2].replace(/[동로가리길]$/i, '') + " " + apart.replace(/아파트/gi, ''));
+              document.querySelector(".button_search--icon").click();
+            }
+          } else {
+            await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[2].replace(/[동로가리길]$/i, '') + " " + apart.replace(/아파트/gi, ''));
+            document.querySelector(".button_search--icon").click();
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async function () {
+      try {
+        const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
+        await sleep(1000);
         if (document.querySelector('.complex_detail_link') !== null) {
           document.querySelector('.complex_detail_link').firstChild.click();
           await sleep(1000);
@@ -220,6 +241,28 @@ module.exports = function (arg, info) {
             }
           } else {
             await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
+            document.querySelector(".button_search--icon").click();
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async function () {
+      try {
+        const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
+        const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
+        await sleep(1000);
+        if (document.querySelector('.complex_detail_link') === null) {
+          if (document.querySelector('.no_data_area') === null) {
+            if (document.querySelector('.item_list').children.length <= 3) {
+              document.querySelector('.item_list').firstChild.querySelector('a').click();
+            } else {
+              await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[2].replace(/[동로가리길]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
+              document.querySelector(".button_search--icon").click();
+            }
+          } else {
+            await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[2].replace(/[동로가리길]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
             document.querySelector(".button_search--icon").click();
           }
         }
