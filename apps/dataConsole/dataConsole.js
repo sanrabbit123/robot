@@ -848,7 +848,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     });
 
     //set binary
-    // await this.setBinary();
+    await this.setBinary();
 
     //server on
     if (process.argv.length > 3) {
