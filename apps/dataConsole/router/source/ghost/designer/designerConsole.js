@@ -868,7 +868,17 @@ DesignerConsoleJs.prototype.consoleView = async function () {
         }
       }
       if (targetIndex !== null) {
-        this.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex]);
+
+        if (document.querySelectorAll(".leftMenus").length > 0) {
+          this.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex]);
+        } else {
+          this.menuMap[targetIndex].event.call({
+            getAttribute: (index) => {
+              return targetIndex;
+            }
+          });
+        }
+
         for (let box of this.requestBoxes) {
           if (box.getAttribute("cliid") === getObj.cliid.trim()) {
             box.click();
@@ -884,7 +894,15 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     }
 
     //DEV --------------------------------------------------------
-    this.menuMap[6].event.call(document.querySelectorAll(".leftMenus")[6]);
+    if (document.querySelectorAll(".leftMenus").length > 0) {
+      this.menuMap[6].event.call(document.querySelectorAll(".leftMenus")[6]);
+    } else {
+      this.menuMap[6].event.call({
+        getAttribute: (index) => {
+          return 6;
+        }
+      });
+    }
     //DEV --------------------------------------------------------
 
   } catch (e) {
