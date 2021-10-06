@@ -723,8 +723,8 @@ Ghost.prototype.ghostRouter = function (needs) {
   let funcObj = {};
 
   //GET - redirect
-  funcObj.get_ssl = {
-    link: [ "/ssl" ],
+  funcObj.get_root = {
+    link: [ "/" ],
     func: async function (req, res) {
       try {
         res.set({
