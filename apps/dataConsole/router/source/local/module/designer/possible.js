@@ -133,7 +133,9 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
       }, "/getClients", { equal: true });
     }
   }).then((clients) => {
-    instance.designers.setClients(clients);
+    if (clients.length > 0) {
+      instance.designers.setClients(clients);
+    }
     return ajaxJson({
       mode: "read",
       db: "console",
@@ -244,7 +246,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
   const mobile = this.media[4];
   const desktop = !mobile;
   const designer = this.designers.pick(desid);
-  const projects = designer.projects;
+  const projects = designer.projects === undefined ? [] : designer.projects;
   const cookies = getCookiesAll();
   const now = new Date();
   const nowValue = now.valueOf();
@@ -2766,9 +2768,11 @@ DesignerJs.prototype.possibleDetailSearchParsing = async function () {
 DesignerJs.prototype.possibleEntireContents = function (mother, data) {
   const instance = this;
   const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
-  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson, setQueue, isMac } = GeneralJs;
   const { futureLength } = possibleConst;
   const today = new Date();
+  const future = new Date();
+  future.setMonth(future.getMonth() + futureLength);
   let baseTong;
   let outerMargin;
   let designerTong;
@@ -2777,12 +2781,50 @@ DesignerJs.prototype.possibleEntireContents = function (mother, data) {
   let designerBlockMarginLeft;
   let designerBlockMarginBottom;
   let dateTong;
+  let grayBoxWidth;
+  let grayBoxHeight;
+  let tong;
+  let dateLength, dateArr;
+  let tempDate;
+  let totalWidth;
+  let tongArr;
+  let barTop;
+  let designerNameTong;
+  let dateTongHeight;
+  let xScrollTong;
+  let rowHeight;
+  let dateBarTop, dateBarHeight;
+  let tongPaddingBottom;
+  let lineTop, lineVisual;
+  let dateSize;
+  let pastLeft;
 
+  totalWidth = 5000;
   outerMargin = 24;
   fontSize = 15;
-  designerBoxWidth = 80;
+  designerBoxWidth = 54;
   designerBlockMarginBottom = 12;
-  designerBlockMarginLeft = 16;
+  designerBlockMarginLeft = 28;
+  grayBoxHeight = 19;
+  grayBoxWidth = 5;
+  barTop = isMac() ? 2 : 1;
+  dateTongHeight = 80;
+  rowHeight = 20;
+  dateBarTop = 56;
+  dateBarHeight = 3;
+  tongPaddingBottom = 200;
+  lineTop = 48;
+  lineVisual = 36;
+  dateSize = 13;
+
+  dateLength = 0;
+  dateArr = [];
+  tempDate = new Date();
+  while (tempDate.valueOf() <= future.valueOf()) {
+    dateArr.push(new Date(JSON.stringify(tempDate).slice(1, -1)));
+    tempDate.setDate(tempDate.getDate() + 1);
+    dateLength++;
+  }
 
   baseTong = createNode({
     mother,
@@ -2799,28 +2841,85 @@ DesignerJs.prototype.possibleEntireContents = function (mother, data) {
     }
   });
 
-  dateTong = createNode({
+  xScrollTong = createNode({
     mother: baseTong,
     style: {
       position: "relative",
-      height: String(100) + ea,
+      left: String(designerBlockMarginLeft + designerBoxWidth) + ea,
+      width: withOut(designerBlockMarginLeft + designerBoxWidth, ea),
+      overflow: "scroll",
     }
+  })
+
+  dateTong = createNode({
+    mother: xScrollTong,
+    class: [ "moveTarget" ],
+    style: {
+      position: "relative",
+      height: String(dateTongHeight) + ea,
+      width: String(totalWidth) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          top: String(dateBarTop) + ea,
+          height: String(dateBarHeight) + ea,
+          overflow: "hidden",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              verticalAlign: "top",
+            }
+          }
+        ]
+      },
+    ]
   });
 
   designerTong = createNode({
-    mother: baseTong,
+    mother: xScrollTong,
+    class: [ "moveTarget" ],
     style: {
       position: "relative",
+      width: String(totalWidth) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
     }
   });
 
+  designerNameTong = createNode({
+    mother: baseTong,
+    style: {
+      position: "absolute",
+      background: colorChip.white,
+      left: String(designerBlockMarginLeft) + ea,
+      top: String(dateTongHeight) + ea,
+      width: String(designerBoxWidth) + ea,
+      zIndex: String(1),
+    }
+  })
+
+  tongArr = [];
   for (let obj of data) {
     createNode({
-      mother: designerTong,
+      mother: designerNameTong,
+      attribute: {
+        desid: obj.desid,
+      },
+      class: [ "hoverDefault_lite" ],
+      event: {
+        click: function (e) {
+          const desid = this.getAttribute("desid");
+          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + "?mode=possible&desid=" + desid;
+        }
+      },
       style: {
         position: "relative",
-        marginLeft: String(designerBlockMarginLeft) + ea,
-        marginBottom: String(designerBlockMarginBottom) + ea
+        marginBottom: String(designerBlockMarginBottom) + ea,
+        height: String(rowHeight) + ea,
       },
       children: [
         {
@@ -2833,23 +2932,102 @@ DesignerJs.prototype.possibleEntireContents = function (mother, data) {
             width: String(designerBoxWidth) + ea,
             verticalAlign: "top",
           }
-        },
+        }
+      ]
+    });
+    tong = createNode({
+      mother: designerTong,
+      style: {
+        position: "relative",
+        marginBottom: String(designerBlockMarginBottom + (rowHeight - grayBoxHeight)) + ea
+      },
+      children: [
         {
           style: {
             display: "inline-block",
             position: "relative",
             width: withOut(designerBoxWidth, ea),
             verticalAlign: "top",
-            height: String(100) + '%',
-            background: colorChip.green,
+            opacity: String(0.9),
+            top: String(barTop) + ea,
           }
         }
       ]
     });
+    tongArr.push({ tong, possible: obj.possible });
   }
 
+  setQueue(() => {
+    const lineHeight = designerNameTong.getBoundingClientRect().height + lineVisual;
+    pastLeft = 0;
+    for (let i = 0; i < dateLength - 1; i++) {
+      if (dateArr[i].getMonth() !== dateArr[i + 1].getMonth()) {
+        createNode({
+          mother: dateTong,
+          text: String(dateArr[i].getFullYear()).slice(2) + " / " + String(dateArr[i].getMonth() + 1),
+          style: {
+            fontSize: String(dateSize) + ea,
+            fontWeight: String(300),
+            fontFamily: "graphik",
+            position: "absolute",
+            top: String(lineTop - 16) + ea,
+            left: String(pastLeft + 9) + ea,
+          }
+        });
+        createNode({
+          mother: dateTong,
+          style: {
+            position: "absolute",
+            top: String(lineTop) + ea,
+            left: String((i + 1) * grayBoxWidth) + ea,
+            borderRight: "1px solid " + colorChip.darkGreen,
+            height: String(lineHeight) + ea,
+            width: String(0),
+          }
+        });
+        pastLeft = (i + 1) * grayBoxWidth;
+      }
+    }
+  });
 
+  setQueue(() => {
+    const tongLength = tongArr.length;
+    let divClone, styleGray, styleGreen;
+    styleGray = {
+      display: "inline-block",
+      position: "relative",
+      width: String(grayBoxWidth) + ea,
+      height: String(grayBoxHeight) + ea,
+      background: colorChip.gray1,
+    };
+    styleGreen = JSON.parse(JSON.stringify(styleGray));
+    styleGreen.background = colorChip.green;
 
+    for (let z = 0; z < tongLength; z++) {
+      for (let i = 0; i < dateLength; i++) {
+        divClone = GeneralJs.nodes.div.cloneNode(true);
+        if (tongArr[z].possible.some((obj) => { return (obj.start.valueOf() <= dateArr[i].valueOf() && dateArr[i].valueOf() <= obj.end.valueOf()); })) {
+          for (let s in styleGreen) {
+            divClone.style[s] = styleGreen[s];
+          }
+        } else {
+          for (let s in styleGray) {
+            divClone.style[s] = styleGray[s];
+          }
+        }
+        tongArr[z].tong.children[0].appendChild(divClone);
+      }
+    }
+
+    for (let i = 0; i < dateLength; i++) {
+      divClone = GeneralJs.nodes.div.cloneNode(true);
+      for (let s in styleGray) {
+        divClone.style[s] = styleGray[s];
+      }
+      dateTong.children[0].children[0].appendChild(divClone);
+    }
+
+  });
 
 }
 
