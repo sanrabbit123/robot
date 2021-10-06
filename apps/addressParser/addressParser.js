@@ -1192,8 +1192,12 @@ AddressParser.prototype.apartNameSearch = async function (words) {
       if (resultArr.slice(0, 2).every((s) => { return (new RegExp("^" + words.slice(0, 2), 'i')).test(s); })) {
         final = fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
       } else {
-        if (/^[a-zA-Z가-힣0-9]/.test(resultArr[1].trim())) {
-          final = resultArr[1].replace(/\([^\)]+\)/gi, '').trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
+        if (resultArr[1] !== undefined) {
+          if (/^[a-zA-Z가-힣0-9]/.test(resultArr[1].trim())) {
+            final = resultArr[1].replace(/\([^\)]+\)/gi, '').trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
+          } else {
+            final = fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
+          }
         } else {
           final = fromClient.trim().replace(/  /gi, ' ').replace(/  /gi, ' ');
         }
@@ -1221,6 +1225,7 @@ AddressParser.prototype.apartNameSearch = async function (words) {
 
   } catch (e) {
     console.log(e);
+    return { raw: words, apart: words };
   }
 }
 

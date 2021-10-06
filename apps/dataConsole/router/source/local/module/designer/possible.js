@@ -2763,6 +2763,174 @@ DesignerJs.prototype.possibleDetailSearchParsing = async function () {
   }
 }
 
+DesignerJs.prototype.possibleEntireContents = function (mother, data) {
+  const instance = this;
+  const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { futureLength } = possibleConst;
+  const today = new Date();
+  let baseTong;
+  let outerMargin;
+  let designerTong;
+  let fontSize;
+  let designerBoxWidth;
+  let designerBlockMarginLeft;
+  let designerBlockMarginBottom;
+  let dateTong;
+
+  outerMargin = 24;
+  fontSize = 15;
+  designerBoxWidth = 80;
+  designerBlockMarginBottom = 12;
+  designerBlockMarginLeft = 16;
+
+  baseTong = createNode({
+    mother,
+    style: {
+      position: "relative",
+      top: String(outerMargin) + ea,
+      marginLeft: String(outerMargin) + ea,
+      width: withOut(outerMargin * 2, ea),
+      height: withOut(outerMargin * 2, ea),
+      borderRadius: String(5) + "px",
+      border: "1px solid " + colorChip.gray3,
+      overflow: "scroll",
+      boxSizing: "border-box",
+    }
+  });
+
+  dateTong = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      height: String(100) + ea,
+    }
+  });
+
+  designerTong = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+    }
+  });
+
+  for (let obj of data) {
+    createNode({
+      mother: designerTong,
+      style: {
+        position: "relative",
+        marginLeft: String(designerBlockMarginLeft) + ea,
+        marginBottom: String(designerBlockMarginBottom) + ea
+      },
+      children: [
+        {
+          text: obj.designer,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(500),
+            width: String(designerBoxWidth) + ea,
+            verticalAlign: "top",
+          }
+        },
+        {
+          style: {
+            display: "inline-block",
+            position: "relative",
+            width: withOut(designerBoxWidth, ea),
+            verticalAlign: "top",
+            height: String(100) + '%',
+            background: colorChip.green,
+          }
+        }
+      ]
+    });
+  }
+
+
+
+
+}
+
+DesignerJs.prototype.possibleEntire = function () {
+  const instance = this;
+  const { totalMother, ea, grayBarWidth, belowHeight } = this;
+  const { createNode, createNodes, colorChip, withOut, ajaxJson } = GeneralJs;
+  this.possibleEntire = {};
+  return async function (e) {
+    try {
+      const zIndex = 4;
+      let cancelBox, whiteBox;
+      let outerMargin;
+      let data;
+
+      outerMargin = 36;
+
+      instance.possibleEntire.cancelBox = {};
+      instance.possibleEntire.whiteBox = {};
+
+      cancelBox = createNode({
+        mother: totalMother,
+        event: {
+          click: function (e) {
+            totalMother.removeChild(instance.possibleEntire.whiteBox);
+            totalMother.removeChild(instance.possibleEntire.cancelBox);
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(grayBarWidth) + ea,
+          width: withOut(grayBarWidth, ea),
+          height: withOut(belowHeight, ea),
+          background: colorChip.cancelBlack,
+          zIndex: String(zIndex),
+          animation: "justfadein 0.3s ease forwards",
+        }
+      });
+
+      whiteBox = createNode({
+        mother: totalMother,
+        style: {
+          position: "fixed",
+          top: String(outerMargin) + ea,
+          left: String(grayBarWidth + outerMargin) + ea,
+          width: withOut(grayBarWidth + (outerMargin * 2), ea),
+          height: withOut(belowHeight + (outerMargin * 2), ea),
+          background: colorChip.white,
+          zIndex: String(zIndex),
+          animation: "fadeuplite 0.3s ease forwards",
+          borderRadius: String(3) + "px",
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        }
+      });
+
+      data = await ajaxJson({
+        mode: "read",
+        db: "console",
+        collection: "realtimeDesigner",
+        whereQuery: {},
+      }, "/generalMongo", { equal: true });
+
+      for (let obj of data) {
+        for (let designer of instance.designers) {
+          if (obj.desid === designer.desid) {
+            obj.designer = designer.designer;
+          }
+        }
+      }
+
+      data = data.filter((obj) => { return obj.designer !== undefined; });
+      data.sort((a, b) => { return a.desid > b.desid ? -1 : 1 });
+      instance.possibleEntireContents(whiteBox, data);
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 DesignerJs.prototype.possibleView = async function () {
   const instance = this;
   try {
@@ -2833,14 +3001,7 @@ DesignerJs.prototype.possibleView = async function () {
 
     //entire event
     reportIcon = this.mother.belowButtons.square.reportIcon;
-    
-
-
-
-
-
-
-
+    reportIcon.addEventListener("click", this.possibleEntire());
 
     //standard doms event
     standardBar_mother = standardBar.cloneNode(false);
