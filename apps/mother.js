@@ -2476,8 +2476,10 @@ Mother.prototype.autoComma = function (str) {
   return (minus + tempArr.join(','));
 }
 
-Mother.prototype.dateToString = function (date, detail = false) {
+Mother.prototype.dateToString = function (date, detail = false, dayOption = false) {
+  const dayday = [ '일', '월', '화', '수', '목', '금', '토' ];
   if (!(date instanceof Date)) {
+    console.log(date);
     throw new Error("invaild input");
   }
   if (detail === undefined || detail === null) {
@@ -2490,14 +2492,18 @@ Mother.prototype.dateToString = function (date, detail = false) {
   const emptyDateValue = (new Date(1901, 0, 1)).valueOf();
   const futureDateValue = (new Date(3000, 0, 1)).valueOf();
   if (date.valueOf() <= emptyDateValue) {
-    return "-";
+    return "해당 없음";
   } else if (date.valueOf() >= futureDateValue) {
     return "예정";
   } else {
     if (!detail) {
       return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`;
     } else {
-      return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+      if (dayOption) {
+        return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())} ${dayday[date.getDay()]}요일`;
+      } else {
+        return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+      }
     }
   }
 }

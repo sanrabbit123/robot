@@ -416,7 +416,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
             styling: "전체 구매 또는 재배치"
           },
           about: {
-            when: [ dateToString(project.process.contract.meeting.date, true) ],
+            when: [ dateToString(project.process.contract.meeting.date, true, true) ],
             where: [ thisRequest.request.space.address ],
             site: site,
             construct: construct,
@@ -424,6 +424,9 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
             budget: budget
           }
         };
+
+        project.process.contract.meeting.date
+
         await ajaxJson({
           id: proid,
           column: "request",
@@ -1036,7 +1039,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           updateEvent = async function (value) {
             try {
               let tempArr, doms;
-              tempArr = value.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
+              tempArr = value.split("\n").map((i) => { return i.trim(); });
               await ajaxJson({
                 id: proid,
                 column: position,
@@ -1044,7 +1047,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
                 email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
               }, "/updateProjectHistory");
               mainContents[index].contents = tempArr;
-              value = tempArr.map((i) => { return `<b style="${colorChip.gray4}">-</b> ${i}`; }).join("<br>");
+              value = tempArr.map((i) => { return (i === '' ? "" : `<b style="${colorChip.gray4}">-</b> ${i}`); }).join("<br>");
               GeneralJs.cleanChildren(contentsDom);
               contentsDom.insertAdjacentHTML("beforeend", value);
               doms = document.querySelectorAll('.' + whiteCardClassName);

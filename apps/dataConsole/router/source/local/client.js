@@ -2106,8 +2106,12 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             const size = Number(this.getAttribute("size"));
             const divide = Number(this.getAttribute("divide"));
             const oppositeDivide = Number(opposite.getAttribute("divide"));
-            const cliid = e.dataTransfer.getData("cliid");
+            const cliid = e.dataTransfer.getData("cliid").split("__split__")[0];
+            const fromAction = e.dataTransfer.getData("cliid").split("__split__")[1];
             const card = findByAttribute(instance.totalFatherChildren, "cliid", cliid);
+            const from = division.get(fromAction);
+            const fromLength = Number(from.getAttribute("length"));
+            const fromOpposite = division.get(from.getAttribute("opposite"));
             let thisChildren, oppositeChildren;
             let thisChildrenLength, oppositeChildrenLength;
             let thisHeightNumber, oppositeHeightNumber;
@@ -2145,6 +2149,18 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             this.parentElement.style.height = "auto";
             opposite.parentElement.style.height = "auto";
 
+
+
+
+            
+
+
+
+
+
+
+
+
           }
         },
         style: {
@@ -2180,7 +2196,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
       },
       event: {
         dragstart: function (e) {
-          e.dataTransfer.setData("cliid", this.getAttribute("cliid"));
+          e.dataTransfer.setData("cliid", this.getAttribute("cliid") + "__split__" + this.getAttribute("action"));
         },
         dragend: function (e) {
           e.preventDefault();

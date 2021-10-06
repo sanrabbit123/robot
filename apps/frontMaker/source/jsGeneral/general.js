@@ -1868,7 +1868,8 @@ GeneralJs.autoComma = function (str) {
   return (minus + tempArr.join(','));
 }
 
-GeneralJs.dateToString = function (date, detail = false) {
+GeneralJs.dateToString = function (date, detail = false, dayOption = false) {
+  const dayday = [ '일', '월', '화', '수', '목', '금', '토' ];
   if (!(date instanceof Date)) {
     console.log(date);
     throw new Error("invaild input");
@@ -1890,7 +1891,11 @@ GeneralJs.dateToString = function (date, detail = false) {
     if (!detail) {
       return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())}`;
     } else {
-      return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+      if (dayOption) {
+        return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())} ${dayday[date.getDay()]}요일`;
+      } else {
+        return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+      }
     }
   }
 }
