@@ -1973,7 +1973,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   totalTitleLeft = 20;
 
   numberTitleSize = 14;
-  numberTitleTop = isMace() ? 18 : 20;
+  numberTitleTop = isMac() ? 18 : 20;
   numberTitleBetween = 9;
 
   scrollTongPaddingBottom = 400;
