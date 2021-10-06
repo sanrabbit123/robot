@@ -1922,7 +1922,6 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   let division;
   let numbers;
   let updateState;
-  let dragstart_event, dragend_event, dragenter_event, dragleave_event, dragover_event, drop_event;
   let outerMargin;
   let whiteCard;
   let nameWord, idWord;
@@ -1955,8 +1954,8 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   cardWidthConstant = 140;
   fixedHeightSize = 40;
   intend = 16;
-  titleTop = 9;
-  idWordTop = 13;
+  titleTop = isMac() ? 9 : 11;
+  idWordTop = isMac() ? 13 : 14;
   startTop = titleTop + 16;
   exceptionMargin = 12;
   fontSize = 11;
@@ -1970,11 +1969,11 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   tongMargin = margin * 1.5;
 
   totalTitleSize = 17;
-  totalTitleTop = 14;
+  totalTitleTop = isMac() ? 14 : 17;
   totalTitleLeft = 20;
 
   numberTitleSize = 14;
-  numberTitleTop = 18;
+  numberTitleTop = isMace() ? 18 : 20;
   numberTitleBetween = 9;
 
   scrollTongPaddingBottom = 400;
@@ -2340,7 +2339,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
         position: "absolute",
         fontSize: String(nameFontSize) + ea,
         fontWeight: String(500),
-        top: String(GeneralJs.isMac() ? titleTop : titleTop + 4) + ea,
+        top: String(titleTop) + ea,
         left: String(intend) + ea,
         color: GeneralJs.colorChip.black,
         cursor: "pointer",
