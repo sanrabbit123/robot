@@ -498,14 +498,20 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
             const naviHeight = Number(this.getAttribute("naviHeight"));
             let blocks;
 
-            blocks = document.querySelector(".mainBaseTong").firstChild.children;
-            menuMap[index].event.call(this, e);
-            if (position !== 0 && blocks[position] !== undefined) {
-              scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
-            }
+            //DEV
+            if (index <= 3) {
+              window.alert("아직 서비스 오픈 전입니다!");
+            } else {
+              blocks = document.querySelector(".mainBaseTong").firstChild.children;
+              menuMap[index].event.call(this, e);
+              if (position !== 0 && blocks[position] !== undefined) {
+                scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
+              }
 
-            self.removeChild(document.getElementById(id1));
-            self.removeChild(document.getElementById(id0));
+              self.removeChild(document.getElementById(id1));
+              self.removeChild(document.getElementById(id0));
+            }
+            //DEV
           });
         }
 
