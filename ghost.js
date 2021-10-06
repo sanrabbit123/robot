@@ -722,6 +722,24 @@ Ghost.prototype.ghostRouter = function (needs) {
   const hangul = new ParsingHangul();
   let funcObj = {};
 
+  //GET - redirect
+  funcObj.get_ssl = {
+    link: [ "/ssl" ],
+    func: async function (req, res) {
+      try {
+        res.set({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        res.send(`<script>window.location.href = "https://naver.com";</script>`);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
   //GET - ssl test
   funcObj.get_ssl = {
     link: [ "/ssl" ],

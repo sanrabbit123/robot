@@ -1869,8 +1869,9 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll } = GeneralJs;
   const ea = "px";
+  const cookies = getCookiesAll();
   let temp;
   let totalFather;
   let nameStyle, cliidStyle, barStyle;
@@ -1913,6 +1914,8 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   let totalFatherPaddingTop;
   let scrollTong;
   let scrollTongPaddingBottom;
+  let requestTong;
+  let thisRequestNumber;
 
   margin = 10;
   outerMargin = margin * 2;
@@ -2096,7 +2099,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             this.style.background = colorChip.whiteGreen;
             this.parentElement.firstChild.style.color = colorChip.green;
           },
-          drop: function (e) {
+          drop: async function (e) {
             e.preventDefault();
             e.stopPropagation();
             const name = this.getAttribute("name");
@@ -2106,61 +2109,118 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             const size = Number(this.getAttribute("size"));
             const divide = Number(this.getAttribute("divide"));
             const oppositeDivide = Number(opposite.getAttribute("divide"));
+            const oppositeLength = Number(opposite.getAttribute("number"));
             const cliid = e.dataTransfer.getData("cliid").split("__split__")[0];
             const fromAction = e.dataTransfer.getData("cliid").split("__split__")[1];
-            const card = findByAttribute(instance.totalFatherChildren, "cliid", cliid);
+            const requestNumber = Number(e.dataTransfer.getData("cliid").split("__split__")[2]);
+            const card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
             const from = division.get(fromAction);
             const fromLength = Number(from.getAttribute("length"));
             const fromOpposite = division.get(from.getAttribute("opposite"));
-            let thisChildren, oppositeChildren;
-            let thisChildrenLength, oppositeChildrenLength;
-            let thisHeightNumber, oppositeHeightNumber;
-            let thisHeight, oppositeHeight;
-            let finalHeight;
+            const fromDivide = Number(from.getAttribute("divide"));
+            const fromOppositeDivide = Number(fromOpposite.getAttribute("divide"));
+            const fromOppositeLength = Number(fromOpposite.getAttribute("length"));
+            try {
+              let thisChildren, oppositeChildren;
+              let thisChildrenLength, oppositeChildrenLength;
+              let thisHeightNumber, oppositeHeightNumber;
+              let thisHeight, oppositeHeight;
+              let finalHeight;
+              let index, thisCase;
+              let indexTong;
+              let rowDom;
 
-            this.style.background = colorChip.gray1;
-            this.parentElement.firstChild.style.color = colorChip.black;
-            this.appendChild(card);
+              this.style.background = colorChip.gray1;
+              this.parentElement.firstChild.style.color = colorChip.black;
+              this.appendChild(card);
 
-            thisChildren = this.children;
-            oppositeChildren = opposite.children;
-            thisChildrenLength = thisChildren.length;
-            oppositeChildrenLength = oppositeChildren.length;
+              thisChildren = this.children;
+              oppositeChildren = opposite.children;
+              thisChildrenLength = thisChildren.length;
+              oppositeChildrenLength = oppositeChildren.length;
+              thisHeightNumber = Math.ceil(thisChildrenLength / divide);
+              oppositeHeightNumber = Math.ceil(oppositeChildrenLength / oppositeDivide);
+              thisHeightNumber = thisHeightNumber === 0 ? 1 : thisHeightNumber;
+              oppositeHeightNumber = oppositeHeightNumber === 0 ? 1 : oppositeHeightNumber;
+              thisHeight = (thisHeightNumber * fixedHeightSize) + ((thisHeightNumber + 1) * margin);
+              oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + ((oppositeHeightNumber + 1) * margin);
+              if (thisHeight <= oppositeHeight) {
+                finalHeight = oppositeHeight;
+              } else {
+                finalHeight = thisHeight;
+              }
+              finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
+              for (let c of thisChildren) {
+                c.style.width = String(size) + ea;
+              }
+              this.parentElement.style.height = String(finalHeight) + ea;
+              opposite.parentElement.style.height = String(finalHeight) + ea;
 
-            thisHeightNumber = Math.ceil(thisChildrenLength / divide);
-            oppositeHeightNumber = Math.ceil(oppositeChildrenLength / oppositeDivide);
+              this.parentElement.children[1].setAttribute("number", String(thisChildren.length));
+              this.parentElement.children[1].textContent = String(thisChildren.length) + "명";
+              opposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
+              opposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
 
-            thisHeight = (thisHeightNumber * fixedHeightSize) + (thisHeightNumber * margin);
-            oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + (oppositeHeightNumber * margin);
+              thisChildren = from.children;
+              oppositeChildren = fromOpposite.children;
+              thisChildrenLength = thisChildren.length;
+              oppositeChildrenLength = oppositeChildren.length;
+              thisHeightNumber = Math.ceil(thisChildrenLength / fromDivide);
+              oppositeHeightNumber = Math.ceil(oppositeChildrenLength / fromOppositeDivide);
+              thisHeightNumber = thisHeightNumber === 0 ? 1 : thisHeightNumber;
+              oppositeHeightNumber = oppositeHeightNumber === 0 ? 1 : oppositeHeightNumber;
+              thisHeight = (thisHeightNumber * fixedHeightSize) + ((thisHeightNumber + 1) * margin);
+              oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + ((oppositeHeightNumber + 1) * margin);
+              if (thisHeight <= oppositeHeight) {
+                finalHeight = oppositeHeight;
+              } else {
+                finalHeight = thisHeight;
+              }
+              finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
+              for (let c of thisChildren) {
+                c.style.width = String(size) + ea;
+              }
+              from.parentElement.style.height = String(finalHeight) + ea;
+              fromOpposite.parentElement.style.height = String(finalHeight) + ea;
 
-            if (thisHeight <= oppositeHeight) {
-              finalHeight = oppositeHeight;
-            } else {
-              finalHeight = thisHeight;
+              from.parentElement.children[1].setAttribute("number", String(thisChildren.length));
+              from.parentElement.children[1].textContent = String(thisChildren.length) + "명";
+              fromOpposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
+              fromOpposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
+
+              indexTong = [];
+              for (let i = 0; i < instance.cases.length; i++) {
+                if (instance.cases[i] !== null) {
+                  if (instance.cases[i].cliid === cliid) {
+                    indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                  }
+                }
+              }
+
+              index = indexTong[requestNumber].index;
+              thisCase = indexTong[requestNumber].thisCase;
+
+              instance.cases[index].action = name;
+              rowDom = findByAttribute([ ...document.querySelector("." + cliid).children ], "column", "action");
+              if (rowDom !== null) {
+                rowDom.textContent = name;
+              }
+              card.setAttribute("action", name);
+
+              await ajaxJson({
+                thisId: cliid,
+                requestIndex: String(requestNumber),
+                column: "action",
+                pastValue: name,
+                value: name,
+                index,
+                thisCase,
+                user: cookies.homeliaisonConsoleLoginedName + "__split__" + cookies.homeliaisonConsoleLoginedEmail
+              }, "/updateClient");
+
+            } catch (e) {
+              console.log(e);
             }
-
-            for (let c of thisChildren) {
-              c.style.width = String(size) + ea;
-            }
-
-            this.style.height = String(finalHeight) + ea;
-            opposite.style.height = String(finalHeight) + ea;
-
-            this.parentElement.style.height = "auto";
-            opposite.parentElement.style.height = "auto";
-
-
-
-
-            
-
-
-
-
-
-
-
-
           }
         },
         style: {
@@ -2183,8 +2243,17 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
 
   //make card
   instance.totalFatherChildren = [];
+  requestTong = {};
   num = 0;
   for (let obj of cases) {
+
+    if (requestTong[obj.cliid] === undefined) {
+      requestTong[obj.cliid] = 0;
+      thisRequestNumber = 0;
+    } else {
+      requestTong[obj.cliid] = requestTong[obj.cliid] + 1;
+      thisRequestNumber = requestTong[obj.cliid];
+    }
 
     whiteCard = createNode({
       mother: division.get(obj.action),
@@ -2193,10 +2262,12 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
         cliid: obj.cliid,
         draggable: "true",
         action: obj.action,
+        request: String(thisRequestNumber),
       },
       event: {
         dragstart: function (e) {
-          e.dataTransfer.setData("cliid", this.getAttribute("cliid") + "__split__" + this.getAttribute("action"));
+          const token = "__split__";
+          e.dataTransfer.setData("cliid", this.getAttribute("cliid") + token + this.getAttribute("action") + token + this.getAttribute("request"));
         },
         dragend: function (e) {
           e.preventDefault();
@@ -2263,13 +2334,12 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   }
 
   for (let i = 0; i < divisionMap.length; i++) {
-    for (let j = 0; j < divisionMap[i].length; j++) {
-      if (divisionMap[i].length > 1) {
-        if (j === 0) {
-          pastHeight = domMatrix[i][j].getBoundingClientRect().height;
-        } else {
-          domMatrix[i][j].style.height = String(pastHeight) + ea;
-        }
+    if (divisionMap[i].length > 1) {
+      pastHeight = domMatrix[i].map((dom) => { return dom.getBoundingClientRect().height; });
+      pastHeight.sort((a, b) => { return b - a; });
+      pastHeight = pastHeight[0];
+      for (let j = 0; j < divisionMap[i].length; j++) {
+        domMatrix[i][j].style.height = String(pastHeight) + ea;
       }
     }
   }
