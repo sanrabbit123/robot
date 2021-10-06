@@ -345,6 +345,13 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   this.client = null;
   return async function (e) {
     try {
+      if (instance.middleMode) {
+        const designerHistory = await ajaxJson({ method: "designer", idArr: [ desid ], rawMode: true }, "/getHistoryTotal", { equal: true });
+        if (!designerHistory[desid].request.analytics.send.some((obj) => { return obj.cliid === cliid })) {
+          window.alert("의뢰서가 발송된 기록이 없습니다! 홈리에종에 문의해주세요!");
+          return;
+        }
+      }
       const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
       let clientHistory, projectHistory;
       let thisBlock, motherTop;
@@ -2619,6 +2626,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
             mode: "send",
             who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
             desid: designer.desid,
+            cliid: instance.client.cliid,
           }, "/ghostDesigner_updateAnalytics");
         }).then(() => {
           instance.mother.greenAlert("알림톡이 전송되었습니다!");

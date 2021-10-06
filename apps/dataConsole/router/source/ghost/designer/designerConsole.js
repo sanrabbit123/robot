@@ -253,7 +253,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           click: function (e) {
             const index = Number(this.getAttribute("index"));
             // DEV
-            if (index <= 3) {
+            if (index <= 5) {
               window.alert("아직 서비스 오픈 전입니다!");
             } else {
               menuMap[index].event.call(this, e);
@@ -499,7 +499,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
             let blocks;
 
             //DEV
-            if (index <= 3) {
+            if (index <= 5) {
               window.alert("아직 서비스 오픈 전입니다!");
             } else {
               blocks = document.querySelector(".mainBaseTong").firstChild.children;
@@ -512,6 +512,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
               self.removeChild(document.getElementById(id0));
             }
             //DEV
+
           });
         }
 

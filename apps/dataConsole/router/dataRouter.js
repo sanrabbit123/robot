@@ -4084,6 +4084,7 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
       let update;
       let image;
       let ipObj;
+      let updateObj;
 
       whereQuery = { desid };
       history = await back.getHistoryById("designer", desid, { selfMongo: instance.mongolocal });
@@ -4117,7 +4118,11 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
         if (ipObj === null) {
           ipObj = { ip };
         }
-        history[page].analytics.send.push({ page, date: new Date(), who, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj });
+        updateObj = { page, date: new Date(), who, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj };
+        if (typeof req.body.cliid === "string") {
+          updateObj.cliid = req.body.cliid.trim();
+        }
+        history[page].analytics.send.push(updateObj);
         updateQuery = {};
         updateQuery[page + ".analytics.send"] = history[page].analytics.send;
         await back.updateHistory("designer", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });

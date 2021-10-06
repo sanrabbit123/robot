@@ -2787,6 +2787,7 @@ DesignerJs.prototype.possibleView = async function () {
     let childrenLength, children;
     let motherHeight;
     let searchResult;
+    let reportIcon;
 
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
@@ -2831,9 +2832,13 @@ DesignerJs.prototype.possibleView = async function () {
     }
 
     //entire event
-    console.log(this.mother.belowButtons.square.reportIcon)
-
+    reportIcon = this.mother.belowButtons.square.reportIcon;
     
+
+
+
+
+
 
 
 
