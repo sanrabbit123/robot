@@ -1604,14 +1604,17 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
       }
     }
 
+    dashboardData.status.name.push("드랍");
+    dashboardData.status.value.push("-");
+
     topMargin = 32.5;
     leftMargin = 30;
     statusSize = 16;
-    fontSize = 14;
+    fontSize = 13;
     marginBottom = 7;
     statusPaddingBottom = 18;
     actionPaddingTop = 31;
-    middleBetween = 21;
+    middleBetween = 18;
     flowBetween = 6;
     flowHeight = 45;
     memberMargin = 15;
@@ -1660,12 +1663,36 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
       }
     });
 
-    dashboardData.status.name.push("드랍");
-    dashboardData.status.value.push("-");
-
     for (let i = 0; i < dashboardData.status.name.length; i++) {
       createNode({
         mother: statusBlock,
+        attribute: {
+          name: dashboardData.status.name[i],
+          column: "status",
+        },
+        event: {
+          dragenter: (e) => { e.preventDefault(); },
+          dragleave: function (e) {
+            e.preventDefault();
+            this.firstChild.style.color = colorChip.black;
+          },
+          dragover: function (e) {
+            e.preventDefault();
+            this.firstChild.style.color = colorChip.green;
+          },
+          drop: function (e) {
+            e.preventDefault();
+            const name = this.getAttribute("name");
+            const column = this.getAttribute("column");
+            const cliid = e.dataTransfer.getData("cliid").split("__split__")[0];
+            const fromAction = e.dataTransfer.getData("cliid").split("__split__")[1];
+            const requestNumber = Number(e.dataTransfer.getData("cliid").split("__split__")[2]);
+
+            console.log(name, column, cliid, fromAction, requestNumber)
+
+            this.firstChild.style.color = colorChip.black;
+          }
+        },
         style: {
           position: "relative",
           textAlign: "left",
@@ -1702,7 +1729,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
         style: {
           position: "relative",
           textAlign: "left",
-          marginBottom: String(i % dashboardData.action.divisionLength === dashboardData.action.divisionStart ? middleBetween : marginBottom) + ea,
+          marginBottom: String(i % dashboardData.action.divisionLength === dashboardData.action.divisionStart - 1 ? middleBetween : marginBottom) + ea,
         },
         children: [
           {
@@ -1715,6 +1742,10 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
             }
           },
           {
+            class: [ "boardGray_actionBlock" ],
+            attribute: {
+              action: dashboardData.action.name[i],
+            },
             text: String(dashboardData.action.value[i]),
             style: {
               position: "absolute",
@@ -1814,7 +1845,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
         style: {
           position: "relative",
           display: "block",
-          marginBottom: String(Math.ceil(cxMembers.length / 2) - 1 !== i ? memberBetween : memberVisual) + ea,
+          marginBottom: String(Math.ceil(cxMembers.length / 2) - 1 !== i ? memberBetween : (isMac() ? memberVisual : 0)) + ea,
         },
         children: [
           {
@@ -2104,6 +2135,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             e.stopPropagation();
             const name = this.getAttribute("name");
             const opposite = division.get(this.getAttribute("opposite"));
+            const oppositeName = opposite.getAttribute("name");
             const family = equalJson(this.getAttribute("family"));
             const length = Number(this.getAttribute("length"));
             const size = Number(this.getAttribute("size"));
@@ -2115,11 +2147,12 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             const requestNumber = Number(e.dataTransfer.getData("cliid").split("__split__")[2]);
             const card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
             const from = division.get(fromAction);
-            const fromLength = Number(from.getAttribute("length"));
+            const fromName = from.getAttribute("name");
             const fromOpposite = division.get(from.getAttribute("opposite"));
+            const fromOppositeName = fromOpposite.getAttribute("name");
             const fromDivide = Number(from.getAttribute("divide"));
             const fromOppositeDivide = Number(fromOpposite.getAttribute("divide"));
-            const fromOppositeLength = Number(fromOpposite.getAttribute("length"));
+            const boardDoms = [ ...document.querySelectorAll(".boardGray_actionBlock") ];
             try {
               let thisChildren, oppositeChildren;
               let thisChildrenLength, oppositeChildrenLength;
@@ -2158,8 +2191,10 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
 
               this.parentElement.children[1].setAttribute("number", String(thisChildren.length));
               this.parentElement.children[1].textContent = String(thisChildren.length) + "명";
+              findByAttribute(boardDoms, "action", name).textContent = String(thisChildren.length);
               opposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
               opposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
+              findByAttribute(boardDoms, "action", oppositeName).textContent = String(oppositeChildren.length);
 
               thisChildren = from.children;
               oppositeChildren = fromOpposite.children;
@@ -2185,8 +2220,10 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
 
               from.parentElement.children[1].setAttribute("number", String(thisChildren.length));
               from.parentElement.children[1].textContent = String(thisChildren.length) + "명";
+              findByAttribute(boardDoms, "action", fromName).textContent = String(thisChildren.length);
               fromOpposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
               fromOpposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
+              findByAttribute(boardDoms, "action", fromOppositeName).textContent = String(oppositeChildren.length);
 
               indexTong = [];
               for (let i = 0; i < instance.cases.length; i++) {
