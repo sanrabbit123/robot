@@ -2412,7 +2412,6 @@ DesignerJs.prototype.requestIconSet = function (desid) {
           }
         }
       } while (boo);
-      scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
       instance.requestDetailLaunching(previousDesid);
     });
 
@@ -2428,7 +2427,6 @@ DesignerJs.prototype.requestIconSet = function (desid) {
           }
         }
       } while (boo);
-      scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
       instance.requestDetailLaunching(nextDesid);
     });
 

@@ -3930,7 +3930,6 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
           }
         }
       } while (boo);
-      scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
       if (instance.modes.indexOf(instance.mode) === 0) {
         instance.checkListDetailLaunching(previousDesid);
       } else {
@@ -3950,7 +3949,6 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
           }
         }
       } while (boo);
-      scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
       if (instance.modes.indexOf(instance.mode) === 0) {
         instance.checkListDetailLaunching(nextDesid);
       } else {

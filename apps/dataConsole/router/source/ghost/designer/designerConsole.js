@@ -252,12 +252,18 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         event: {
           click: function (e) {
             const index = Number(this.getAttribute("index"));
-            menuMap[index].event.call(this, e);
-            if (tabletWidth !== 0) {
-              setQueue(() => {
-                instance.listIcon.click();
-              }, 500);
+            // DEV
+            if (index <= 3) {
+              window.alert("아직 서비스 오픈 전입니다!");
+            } else {
+              menuMap[index].event.call(this, e);
+              if (tabletWidth !== 0) {
+                setQueue(() => {
+                  instance.listIcon.click();
+                }, 500);
+              }
             }
+            // DEV
           }
         },
         style: {
@@ -854,8 +860,6 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     this.checkListDetailLaunching(desid);
     this.navigatorLaunching();
 
-    
-
     if (this.menuMap !== undefined && getObj.mode !== undefined && getObj.cliid !== undefined) {
       targetIndex = null;
       for (let i = 0; i < this.menuMap.length; i++) {
@@ -864,11 +868,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
         }
       }
       if (targetIndex !== null) {
-        this.menuMap[targetIndex].event.call(({
-          getAttribute: (index) => {
-            return targetIndex;
-          }
-        }));
+        this.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex]);
         for (let box of this.requestBoxes) {
           if (box.getAttribute("cliid") === getObj.cliid.trim()) {
             box.click();
@@ -882,6 +882,10 @@ DesignerConsoleJs.prototype.consoleView = async function () {
         instance.listIcon.click();
       }, 500);
     }
+
+    //DEV --------------------------------------------------------
+    this.menuMap[6].event.call(document.querySelectorAll(".leftMenus")[6]);
+    //DEV --------------------------------------------------------
 
   } catch (e) {
     console.log(e);

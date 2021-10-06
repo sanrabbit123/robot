@@ -429,9 +429,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     functionPannelContents = [
       {
         name: "프로젝트 보기",
-        attribute: [
-          { toggle: "off" }
-        ],
+        attribute: {
+          toggle: "off",
+        },
         event: function (e) {
           const toggle = this.getAttribute("toggle");
           const dateDoms = instance.dateDoms;
@@ -574,9 +574,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
       },
       {
         name: "가능수 보기",
-        attribute: [
-          { toggle: "off" }
-        ],
+        attribute: {
+          toggle: this.possiblePannelStatus.numbers ? "on" : "off"
+        },
         event: function (e) {
           const toggle = this.getAttribute("toggle");
           const dateDoms = instance.dateDoms;
@@ -700,6 +700,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         let finalPossible;
         let noneIndex;
         let length;
+        let onIndex;
+        let boo, tempStr, tempIndex;
+        let additionalPossible;
 
         removeDates = [];
         for (let i = 1; i < rawDates.length - 1; i++) {
@@ -712,22 +715,30 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           }
         }
 
-        filteredDates = onDoms.filter((d) => { return !removeDates.includes(dateToString(new Date(d.getAttribute("value")))); });
-        filteredDates.sort((a, b) => { return (new Date(a.getAttribute("value"))).valueOf() - (new Date(b.getAttribute("value"))).valueOf(); });
+        onDoms.sort((a, b) => { return (new Date(a.getAttribute("value"))).valueOf() - (new Date(b.getAttribute("value"))).valueOf(); });
+        filteredDates = onDoms.filter((d, index) => { const boo = !removeDates.includes(dateToString(new Date(d.getAttribute("value")))); if (boo) { d.setAttribute("onindex", String(index)); } return boo; });
 
         possible = [];
         tempObj = {};
         for (let dom of filteredDates) {
+          onIndex = Number(dom.getAttribute("onindex"));
           date = new Date(dom.getAttribute("value"));
           tempDate = new Date(JSON.stringify(date).slice(1, -1));
           tempDate.setDate(tempDate.getDate() + 1);
           if (removeDates.includes(dateToString(tempDate))) {
             tempObj.start = date;
+            tempObj.startIndex = onIndex;
           } else {
             if (tempObj.start === undefined) {
               tempObj.start = date;
+              tempObj.startIndex = onIndex;
             }
             tempObj.end = date;
+            tempObj.endIndex = onIndex;
+            tempObj.totalMatrix = [];
+            for (let i = tempObj.startIndex; i < tempObj.endIndex + 1; i++) {
+              tempObj.totalMatrix.push(equalJson(onDoms[i].getAttribute("matrix")));
+            }
             tempObj.matrix = equalJson(dom.getAttribute("matrix"));
             possible.push(tempObj);
             tempObj = {};
@@ -757,6 +768,33 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         }
 
         finalPossible = finalPossible.filter((obj) => { return obj.matrix.length > 0; });
+        additionalPossible = [];
+        for (let obj of finalPossible) {
+          tempStr = JSON.stringify(obj.matrix);
+          boo = false;
+          for (let i = 0; i < obj.totalMatrix.length; i++) {
+            if (tempStr !== JSON.stringify(obj.totalMatrix[i])) {
+              boo = true;
+              tempIndex = i;
+            }
+          }
+          if (boo) {
+            additionalPossible.push({
+              start: new Date(onDoms[obj.startIndex].getAttribute("value")),
+              end: new Date(onDoms[obj.startIndex + tempIndex].getAttribute("value")),
+              matrix: equalJson(onDoms[obj.startIndex + tempIndex].getAttribute("matrix"))
+            });
+            additionalPossible.push({
+              start: new Date(onDoms[obj.startIndex + tempIndex + 1].getAttribute("value")),
+              end: new Date(onDoms[obj.endIndex].getAttribute("value")),
+              matrix: equalJson(onDoms[obj.endIndex].getAttribute("matrix"))
+            });
+          }
+          obj.removeTarget = boo;
+        }
+
+        finalPossible = finalPossible.filter((obj) => { return !obj.removeTarget; }).map((obj) => { return { start: obj.start, end: obj.end, matrix: obj.matrix }; }).concat(additionalPossible);
+        finalPossible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf(); });
 
         whereQuery = { desid };
         updateQuery = { possible: finalPossible };
@@ -942,19 +980,19 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                     position: "absolute",
                     fontSize: String(functionPannelSize) + ea,
                     fontWeight: String(600),
-                    color: colorChip.black,
+                    color: attribute.toggle === "off" ? colorChip.black : colorChip.green,
                     left: String(functionPannelLeft) + ea,
                     top: String(functionPannelTextTop0) + ea,
                   }
                 },
                 {
-                  text: "off",
+                  text: attribute.toggle,
                   style: {
                     position: "absolute",
                     fontSize: String(functionPannelSize) + ea,
                     fontWeight: String(300),
                     fontFamily: "graphik",
-                    color: colorChip.red,
+                    color: attribute.toggle === "off" ? colorChip.red : colorChip.green,
                     right: String(functionPannelLeft) + ea,
                     top: String(functionPannelTextTop1) + ea,
                   }
@@ -1115,7 +1153,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                             this.setAttribute("toggle", "on");
                           } else {
                             matrix = designer.analytics.project.matrix.map((arr) => { return arr.some((i) => { return i === 1; }) ? 1 : 0 });
-                            countMatrix = new Array(matrix.length);
+
+                            countMatrix = (new Array(matrix.length)).fill(0, 0);
                             if (matrix[1] === 1) {
                               for (let i = 1; i < matrix.length - 1; i++) {
                                 if (matrix[i] === 0) {
@@ -1813,7 +1852,6 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
           }
         }
       } while (boo);
-      scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
       instance.possibleDetailLaunching(previousDesid);
     });
 
@@ -1829,7 +1867,6 @@ DesignerJs.prototype.possibleIconSet = function (desid) {
           }
         }
       } while (boo);
-      scrollTo(document.querySelector(".totalMother").firstChild, thisStandard);
       instance.possibleDetailLaunching(nextDesid);
     });
 
@@ -2021,10 +2058,10 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
 
   if (!possiblePannelStatus.project && !possiblePannelStatus.numbers) {
     mode = "possible";
-  } else if (possiblePannelStatus.project) {
-    mode = "project";
   } else if (possiblePannelStatus.numbers) {
     mode = "numbers";
+  } else if (possiblePannelStatus.project) {
+    mode = "project";
   }
 
   if (type === "possible") {
@@ -2042,21 +2079,22 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
         if (targetDom !== null) {
           pastBoo = (targetDom.getAttribute("past") === "true" || targetDom.getAttribute("value") === "null");
           if (!pastBoo) {
-            if (mode === "possible" || mode === "numbers") {
-              if (mode === "possible") {
-                targetDom.querySelector('.' + numberClassName).style.color = colorChip.green;
-                targetDom.querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
-                targetDom.querySelector('.' + okClassName).style.opacity = String(1);
-                targetDom.querySelector('.' + cancelClassName).style.opacity = String(0);
-              } else {
-                targetDom.querySelector("aside").style.opacity = String(1);
-                if (mobile) {
-                  targetDom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
-                }
-                targetDom.querySelector("aside").textContent = matrix.map((i) => { return String(i); }).join(",");
+            if (mode === "numbers") {
+              targetDom.querySelector('.' + okClassName).style.opacity = String(0);
+              targetDom.querySelector('.' + cancelClassName).style.opacity = String(0);
+              targetDom.querySelector("aside").style.opacity = String(1);
+              if (mobile) {
+                targetDom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
               }
-              targetDom.querySelector('.' + backClassName).style.background = colorChip.green;
+              targetDom.querySelector("aside").textContent = matrix.map((i) => { return String(i); }).join(",");
+            } else {
+              targetDom.querySelector('.' + numberClassName).style.color = colorChip.green;
+              targetDom.querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
+              targetDom.querySelector('.' + okClassName).style.opacity = String(1);
+              targetDom.querySelector('.' + cancelClassName).style.opacity = String(0);
+              targetDom.querySelector("aside").style.opacity = String(0);
             }
+            targetDom.querySelector('.' + backClassName).style.background = colorChip.green;
             targetDom.setAttribute("toggle", "on");
             targetDom.setAttribute("matrix", JSON.stringify(matrix));
             onTargets.push(targetDom);
@@ -2069,26 +2107,32 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
       if (!onTargets.includes(dom)) {
         pastBoo = (dom.getAttribute("past") === "true" || dom.getAttribute("value") === "null");
         if (!pastBoo) {
-          if (mode === "possible" || mode === "numbers") {
-            if (mode === "possible") {
-              dom.querySelector('.' + numberClassName).style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
-              dom.querySelector('.' + numberClassName).querySelector('b').style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
-              dom.querySelector('.' + okClassName).style.opacity = String(0);
-              dom.querySelector('.' + cancelClassName).style.opacity = String(1);
-            } else {
-              dom.querySelector("aside").style.opacity = String(0);
-              if (mobile) {
-                dom.querySelector("aside").parentElement.children[1].style.opacity = String(1);
-              }
-              dom.querySelector("aside").textContent = String(0);
+          if (mode === "numbers") {
+
+            dom.querySelector('.' + okClassName).style.opacity = String(0);
+            dom.querySelector('.' + cancelClassName).style.opacity = String(0);
+            dom.querySelector("aside").style.opacity = String(0);
+            if (mobile) {
+              dom.querySelector("aside").parentElement.children[1].style.opacity = String(1);
             }
-            dom.querySelector('.' + backClassName).style.background = "transparent";
+            dom.querySelector("aside").textContent = String(0);
+
+          } else {
+
+            dom.querySelector('.' + numberClassName).style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
+            dom.querySelector('.' + numberClassName).querySelector('b').style.color = redIndexTargets.includes(Number(dom.getAttribute("index"))) ? colorChip.red : colorChip.black;
+            dom.querySelector('.' + okClassName).style.opacity = String(0);
+            dom.querySelector('.' + cancelClassName).style.opacity = String(1);
+            dom.querySelector("aside").style.opacity = String(0);
+
           }
+          dom.querySelector('.' + backClassName).style.background = "transparent";
           dom.setAttribute("toggle", "off");
           dom.setAttribute("matrix", JSON.stringify([]));
         }
       }
     }
+    this.possiblePannelStatus.project = false;
   }
 
 }
@@ -2785,6 +2829,13 @@ DesignerJs.prototype.possibleView = async function () {
       });
       searchInput.addEventListener("contextmenu", this.possibleDetailSearchBox());
     }
+
+    //entire event
+    console.log(this.mother.belowButtons.square.reportIcon)
+
+    
+
+
 
     //standard doms event
     standardBar_mother = standardBar.cloneNode(false);

@@ -1531,7 +1531,162 @@ ClientJs.prototype.spreadData = async function (search = null) {
 }
 
 ClientJs.prototype.boardGrayBar = function (mother, divisionMap, cases) {
+  if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
+    throw new Error("invaild input");
+  }
+  if (divisionMap.flat().length !== (([ ...new Set(divisionMap.flat()) ]).length)) {
+    throw new Error("invaild input");
+  }
   const instance = this;
+  const { createNode, colorChip, withOut, equalJson, isMac } = GeneralJs;
+  const ea = "px";
+  const clientMap = DataPatch.clientMap();
+  const dashboardTarget = {
+    status: {
+      items: clientMap.status.items,
+      zero: false,
+      divisionStart: null,
+      divisionLength: null,
+    },
+    action: {
+      items: clientMap.action.items,
+      zero: true,
+      divisionStart: clientMap.action.divisionStart,
+      divisionLength: clientMap.action.divisionLength,
+    },
+  };
+  let dashboardData;
+  let boardBox;
+  let topMargin, leftMargin;
+  let statusBlock, actionBlock;
+  let fontSize;
+  let marginBottom;
+  let statusPaddingBottom;
+
+  dashboardData = {};
+  for (let i in dashboardTarget) {
+    dashboardData[i] = {
+      name: dashboardTarget[i].items,
+      value: [],
+      length: dashboardTarget[i].items.length,
+      divisionStart: dashboardTarget[i].divisionStart,
+      divisionLength: dashboardTarget[i].divisionLength,
+    };
+    dashboardData[i].value = (new Array(dashboardData[i].length)).fill(0);
+    for (let j = 0; j < dashboardTarget[i].items.length; j++) {
+      for (let c of cases) {
+        if (c[i].trim() === dashboardTarget[i].items[j]) {
+          dashboardData[i].value[j] = dashboardData[i].value[j] + 1;
+        }
+      }
+    }
+    if (!dashboardTarget[i].zero) {
+      dashboardData[i].name = dashboardData[i].name.filter((z, index) => { return dashboardData[i].value[index] !== 0 });
+      dashboardData[i].value = dashboardData[i].value.filter((z) => { return z !== 0 });
+    }
+  }
+
+  topMargin = 32.5;
+  leftMargin = 30;
+  fontSize = 15;
+  marginBottom = 8;
+  statusPaddingBottom = 12;
+
+  boardBox = createNode({
+    mother,
+    style: {
+      marginTop: String(topMargin) + ea,
+      marginLeft: String(leftMargin) + ea,
+      width: withOut(leftMargin * 2, ea),
+      position: "relative",
+      height: String(100) + '%',
+    }
+  });
+
+  statusBlock = createNode({
+    mother: boardBox,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingBottom: String(statusPaddingBottom) + ea,
+      borderBottom: "1px solid " + colorChip.gray4,
+    }
+  });
+
+  actionBlock = createNode({
+    mother: boardBox,
+    style: {
+      display: "block",
+      position: "relative",
+    }
+  });
+
+  for (let i = 0; i < dashboardData.status.name.length; i++) {
+    createNode({
+      mother: statusBlock,
+      style: {
+        position: "relative",
+        textAlign: "left",
+        marginBottom: String(marginBottom) + ea,
+      },
+      children: [
+        {
+          text: dashboardData.status.name[i],
+          style: {
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: String(dashboardData.status.value[i]),
+          style: {
+            position: "absolute",
+            right: String(0),
+            top: String(0),
+            fontSize: String(fontSize) + ea,
+            color: colorChip.green,
+            fontWeight: String(400),
+          }
+        },
+      ]
+    });
+  }
+
+  for (let i = 0; i < dashboardData.action.name.length; i++) {
+    createNode({
+      mother: actionBlock,
+      style: {
+        position: "relative",
+        textAlign: "left",
+        marginBottom: String(marginBottom) + ea,
+      },
+      children: [
+        {
+          text: dashboardData.action.name[i],
+          style: {
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: String(dashboardData.action.value[i]),
+          style: {
+            position: "absolute",
+            right: String(0),
+            top: String(0),
+            fontSize: String(fontSize) + ea,
+            color: colorChip.green,
+            fontWeight: String(400),
+          }
+        },
+      ]
+    });
+  }
+
 
 }
 
@@ -2067,7 +2222,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     }
   }
 
-  numbers.forEach((value, key, map) => {
+  numbers.forEach((value, key) => {
     numbers.get(key).textContent = String(division.get(key).children.length) + "명";
     numbers.get(key).setAttribute("number", String(division.get(key).children.length));
   });
@@ -2099,7 +2254,7 @@ ClientJs.prototype.cardViewMaker = function () {
 
   return async function (e) {
     const { cases, totalContents, totalMother } = instance;
-    const thisCases = equalJson(JSON.stringify(cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status); });
+    const thisCases = equalJson(JSON.stringify(cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status) && !/진행/gi.test(obj.status); });
 
     if (instance.whiteBox !== null) {
       if (GeneralJs.stacks.whiteBox !== 1) {

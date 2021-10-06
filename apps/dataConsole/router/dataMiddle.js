@@ -93,6 +93,7 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     let titleString, metaTitle;
     let descriptionString, metaDescription;
     let imageString, metaImage;
+    let designerOnly;
 
     const name = this.name[target.trim().replace(/\.js/gi, '')];
     const meta = this.meta[target.trim().replace(/\.js/gi, '')];
@@ -130,11 +131,17 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
     descriptionString = metaDescription(thisPerson);
     imageString = metaImage(thisPerson);
 
+    if (/디자이너님/gi.test(titleString)) {
+      designerOnly = "width=device-width,initial-scale=1,shrink-to-fit=no";
+    } else {
+      designerOnly = "width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no";
+    }
+
     html = `<!DOCTYPE html>
     <html lang="ko" dir="ltr">
       <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no">
+        <meta name="viewport" content="${designerOnly}">
         <meta content="${titleString}" property="og:title">
         <meta content="${descriptionString}" property="og:description">
         <meta content="${imageString.replace(/__thisHost__/g, req.get("host"))}" property="og:image">
