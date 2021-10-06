@@ -1530,7 +1530,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
   }
 }
 
-ClientJs.prototype.boardGrayBar = function (mother, divisionMap, cases) {
+ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
   if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
     throw new Error("invaild input");
   }
@@ -1538,7 +1538,7 @@ ClientJs.prototype.boardGrayBar = function (mother, divisionMap, cases) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson } = GeneralJs;
   const ea = "px";
   const clientMap = DataPatch.clientMap();
   const dashboardTarget = {
@@ -1562,132 +1562,303 @@ ClientJs.prototype.boardGrayBar = function (mother, divisionMap, cases) {
   let fontSize;
   let marginBottom;
   let statusPaddingBottom;
+  let actionPaddingTop;
+  let middleBetween;
+  let memberBlock;
+  let flowBlock;
+  let flowHeight;
+  let flowBetween;
+  let members;
+  let cxMembers;
+  let memberMargin;
+  let memberMarginLeft;
+  let memberBetween;
+  let memberSize;
+  let memberVisual;
+  let statusSize;
+  let statusPaddingTop;
+  let grayBarTop;
+  let flowPaddingTop;
+  try {
 
-  dashboardData = {};
-  for (let i in dashboardTarget) {
-    dashboardData[i] = {
-      name: dashboardTarget[i].items,
-      value: [],
-      length: dashboardTarget[i].items.length,
-      divisionStart: dashboardTarget[i].divisionStart,
-      divisionLength: dashboardTarget[i].divisionLength,
-    };
-    dashboardData[i].value = (new Array(dashboardData[i].length)).fill(0);
-    for (let j = 0; j < dashboardTarget[i].items.length; j++) {
-      for (let c of cases) {
-        if (c[i].trim() === dashboardTarget[i].items[j]) {
-          dashboardData[i].value[j] = dashboardData[i].value[j] + 1;
+    dashboardData = {};
+    for (let i in dashboardTarget) {
+      dashboardData[i] = {
+        name: dashboardTarget[i].items,
+        value: [],
+        length: dashboardTarget[i].items.length,
+        divisionStart: dashboardTarget[i].divisionStart,
+        divisionLength: dashboardTarget[i].divisionLength,
+      };
+      dashboardData[i].value = (new Array(dashboardData[i].length)).fill(0);
+      for (let j = 0; j < dashboardTarget[i].items.length; j++) {
+        for (let c of cases) {
+          if (c[i].trim() === dashboardTarget[i].items[j]) {
+            dashboardData[i].value[j] = dashboardData[i].value[j] + 1;
+          }
         }
       }
+      if (!dashboardTarget[i].zero) {
+        dashboardData[i].name = dashboardData[i].name.filter((z, index) => { return dashboardData[i].value[index] !== 0 });
+        dashboardData[i].value = dashboardData[i].value.filter((z) => { return z !== 0 });
+      }
     }
-    if (!dashboardTarget[i].zero) {
-      dashboardData[i].name = dashboardData[i].name.filter((z, index) => { return dashboardData[i].value[index] !== 0 });
-      dashboardData[i].value = dashboardData[i].value.filter((z) => { return z !== 0 });
+
+    topMargin = 32.5;
+    leftMargin = 30;
+    statusSize = 16;
+    fontSize = 14;
+    marginBottom = 7;
+    statusPaddingBottom = 18;
+    actionPaddingTop = 31;
+    middleBetween = 21;
+    flowBetween = 6;
+    flowHeight = 45;
+    memberMargin = 15;
+    memberMarginLeft = 8;
+    memberBetween = 8;
+    memberSize = 13;
+    memberVisual = 1;
+    statusPaddingTop = 2;
+    grayBarTop = 4;
+    flowPaddingTop = 11;
+
+    members = await ajaxJson({ type: "get" }, "/getMembers");
+    cxMembers = members.filter((obj) => { return obj.roles.includes("CX") || obj.roles.includes("CEO"); });
+    cxMembers = cxMembers.map((obj) => { return obj.name; });
+    cxMembers.push("전체");
+    cxMembers.push("미정");
+
+    boardBox = createNode({
+      mother,
+      style: {
+        marginTop: String(topMargin) + ea,
+        marginLeft: String(leftMargin) + ea,
+        width: withOut(leftMargin * 2, ea),
+        position: "relative",
+        height: withOut(topMargin, ea),
+      }
+    });
+
+    statusBlock = createNode({
+      mother: boardBox,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingBottom: String(statusPaddingBottom) + ea,
+        borderBottom: "1px solid " + colorChip.gray4,
+        paddingTop: String(statusPaddingTop) + ea,
+      }
+    });
+
+    actionBlock = createNode({
+      mother: boardBox,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingTop: String(actionPaddingTop) + ea,
+      }
+    });
+
+    dashboardData.status.name.push("드랍");
+    dashboardData.status.value.push("-");
+
+    for (let i = 0; i < dashboardData.status.name.length; i++) {
+      createNode({
+        mother: statusBlock,
+        style: {
+          position: "relative",
+          textAlign: "left",
+          marginBottom: String(marginBottom) + ea,
+        },
+        children: [
+          {
+            text: dashboardData.status.name[i],
+            style: {
+              position: "relative",
+              fontSize: String(statusSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: String(dashboardData.status.value[i]),
+            style: {
+              position: "absolute",
+              right: String(0),
+              top: String(0),
+              fontSize: String(statusSize) + ea,
+              color: colorChip.green,
+              fontWeight: String(400),
+            }
+          },
+        ]
+      });
     }
-  }
 
-  topMargin = 32.5;
-  leftMargin = 30;
-  fontSize = 15;
-  marginBottom = 8;
-  statusPaddingBottom = 12;
-
-  boardBox = createNode({
-    mother,
-    style: {
-      marginTop: String(topMargin) + ea,
-      marginLeft: String(leftMargin) + ea,
-      width: withOut(leftMargin * 2, ea),
-      position: "relative",
-      height: String(100) + '%',
+    for (let i = 0; i < dashboardData.action.name.length; i++) {
+      createNode({
+        mother: actionBlock,
+        style: {
+          position: "relative",
+          textAlign: "left",
+          marginBottom: String(i % dashboardData.action.divisionLength === dashboardData.action.divisionStart ? middleBetween : marginBottom) + ea,
+        },
+        children: [
+          {
+            text: dashboardData.action.name[i],
+            style: {
+              position: "relative",
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: String(dashboardData.action.value[i]),
+            style: {
+              position: "absolute",
+              right: String(0),
+              top: String(0),
+              fontSize: String(fontSize) + ea,
+              color: colorChip.green,
+              fontWeight: String(400),
+            }
+          },
+        ]
+      });
     }
-  });
 
-  statusBlock = createNode({
-    mother: boardBox,
-    style: {
-      display: "block",
-      position: "relative",
-      paddingBottom: String(statusPaddingBottom) + ea,
-      borderBottom: "1px solid " + colorChip.gray4,
-    }
-  });
-
-  actionBlock = createNode({
-    mother: boardBox,
-    style: {
-      display: "block",
-      position: "relative",
-    }
-  });
-
-  for (let i = 0; i < dashboardData.status.name.length; i++) {
+    flowBlock = createNode({
+      mother: boardBox,
+      style: {
+        position: "absolute",
+        left: String(0) + ea,
+        bottom: String(topMargin) + ea,
+        width: withOut(memberMarginLeft * 2, ea),
+        paddingTop: String(flowPaddingTop) + ea,
+        paddingBottom: String(memberMargin) + ea,
+        paddingLeft: String(memberMarginLeft) + ea,
+        paddingRight: String(memberMarginLeft) + ea,
+        borderRadius: String(3) + "px",
+        background: colorChip.white,
+      }
+    });
     createNode({
-      mother: statusBlock,
+      mother: flowBlock,
       style: {
         position: "relative",
-        textAlign: "left",
-        marginBottom: String(marginBottom) + ea,
+        display: "block",
+        marginBottom: String(memberVisual) + ea,
       },
       children: [
         {
-          text: dashboardData.status.name[i],
+          text: "Flow 1",
+          class: [ "hoverDefault_lite" ],
           style: {
             position: "relative",
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(500),
-            color: colorChip.black,
-          }
+            display: "inline-block",
+            width: withOut(50, 1, ea),
+            fontSize: String(memberSize) + ea,
+            fontWeight: String(400),
+            fontFamily: "graphik",
+            textAlign: "center",
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                height: withOut(grayBarTop, ea),
+                top: String(grayBarTop - 1) + ea,
+                right: String(0) + ea,
+                borderRight: "1px solid " + colorChip.gray3,
+              }
+            }
+          ]
         },
         {
-          text: String(dashboardData.status.value[i]),
+          text: "Flow 2",
+          class: [ "hoverDefault_lite" ],
           style: {
-            position: "absolute",
-            right: String(0),
-            top: String(0),
-            fontSize: String(fontSize) + ea,
-            color: colorChip.green,
+            position: "relative",
+            display: "inline-block",
+            width: withOut(50, 0, ea),
+            fontSize: String(memberSize) + ea,
             fontWeight: String(400),
+            fontFamily: "graphik",
+            textAlign: "center",
           }
-        },
+        }
       ]
     });
-  }
 
-  for (let i = 0; i < dashboardData.action.name.length; i++) {
-    createNode({
-      mother: actionBlock,
+    memberBlock = createNode({
+      mother: boardBox,
       style: {
-        position: "relative",
-        textAlign: "left",
-        marginBottom: String(marginBottom) + ea,
-      },
-      children: [
-        {
-          text: dashboardData.action.name[i],
-          style: {
-            position: "relative",
-            fontSize: String(fontSize) + ea,
-            fontWeight: String(500),
-            color: colorChip.black,
-          }
-        },
-        {
-          text: String(dashboardData.action.value[i]),
-          style: {
-            position: "absolute",
-            right: String(0),
-            top: String(0),
-            fontSize: String(fontSize) + ea,
-            color: colorChip.green,
-            fontWeight: String(400),
-          }
-        },
-      ]
+        position: "absolute",
+        left: String(0) + ea,
+        bottom: String(topMargin + flowHeight + flowBetween) + ea,
+        width: withOut(memberMarginLeft * 2, ea),
+        paddingTop: String(memberMargin) + ea,
+        paddingBottom: String(memberMargin) + ea,
+        paddingLeft: String(memberMarginLeft) + ea,
+        paddingRight: String(memberMarginLeft) + ea,
+        borderRadius: String(3) + "px",
+        background: colorChip.white,
+      }
     });
+
+    for (let i = 0; i < Math.ceil(cxMembers.length / 2); i++) {
+      createNode({
+        mother: memberBlock,
+        style: {
+          position: "relative",
+          display: "block",
+          marginBottom: String(Math.ceil(cxMembers.length / 2) - 1 !== i ? memberBetween : memberVisual) + ea,
+        },
+        children: [
+          {
+            text: cxMembers[(i * 2)],
+            class: [ "hoverDefault_lite" ],
+            style: {
+              position: "relative",
+              display: "inline-block",
+              width: withOut(50, 1, ea),
+              fontSize: String(memberSize) + ea,
+              fontWeight: String(500),
+              textAlign: "center",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  height: withOut(grayBarTop, ea),
+                  top: String(grayBarTop) + ea,
+                  right: String(0) + ea,
+                  borderRight: "1px solid " + colorChip.gray3,
+                }
+              }
+            ]
+          },
+          {
+            text: cxMembers[(i * 2) + 1],
+            class: [ "hoverDefault_lite" ],
+            style: {
+              position: "relative",
+              display: "inline-block",
+              width: withOut(50, 0, ea),
+              fontSize: String(memberSize) + ea,
+              fontWeight: String(500),
+              textAlign: "center",
+            }
+          }
+        ]
+      });
+    }
+
+  } catch (e) {
+    console.log(e);
   }
-
-
 }
 
 ClientJs.prototype.makeBoard = function (divisionMap, cases) {
@@ -1698,7 +1869,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute } = GeneralJs;
   const ea = "px";
   let temp;
   let totalFather;
@@ -1740,6 +1911,8 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   let tongTitle, tongNumber, tongArea;
   let idWordTop;
   let totalFatherPaddingTop;
+  let scrollTong;
+  let scrollTongPaddingBottom;
 
   margin = 10;
   outerMargin = margin * 2;
@@ -1770,6 +1943,8 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   numberTitleTop = 18;
   numberTitleBetween = 9;
 
+  scrollTongPaddingBottom = 400;
+
   divideArr = [];
   sizeArr = [];
   for (let i = 0; i < 5; i++) {
@@ -1784,264 +1959,54 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     mother: document.getElementById("totalcontents"),
     class: [ "totalFather", "fadein" ],
     style: {
-      paddingTop: String(totalFatherPaddingTop) + ea,
-      paddingLeft: String(outerMargin + this.grayBarWidth) + ea,
-      paddingRight: String(outerMargin) + ea,
-      height: "auto",
-      width: "calc(100vw - " + String((outerMargin * 2) + this.grayBarWidth) + ea + ")",
+      height: "calc(100vh - " + String(this.belowHeight) + ea + ")",
+      width: String(100) + '%',
       zIndex: String(1),
+      overflow: "hidden",
     },
     children: [
       {
         style: {
-          position: "absolute",
+          display: "inline-block",
+          position: "relative",
           left: String(0),
           top: String(0),
-          height: String(100) + '%',
           width: String(this.grayBarWidth) + ea,
           background: colorChip.gray1,
+          verticalAlign: "top",
+          height: String(100) + '%',
         }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          paddingTop: String(totalFatherPaddingTop) + ea,
+          paddingLeft: String(outerMargin) + ea,
+          paddingRight: String(outerMargin) + ea,
+          width: withOut((outerMargin * 2) + this.grayBarWidth, ea),
+          height: String(100) + '%',
+          verticalAlign: "top",
+          overflow: "scroll",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              verticalAlign: "top",
+              width: String(100) + '%',
+              paddingBottom: String(scrollTongPaddingBottom) + ea,
+            }
+          }
+        ]
       }
     ]
   });
+  scrollTong = totalFather.children[1].children[0];
 
-  this.boardGrayBar(totalFather.firstChild, divisionMap, cases);
+  this.boardGrayBar(totalFather.firstChild, divisionMap, cases).catch((err) => { return console.log(err); });
 
-  //update value
-  updateState = async function (from, to) {
-    try {
-      let toValue;
-      let cliid, originalStatus, index;
-      let motherDiv, originalDiv;
-      let requests, requestIndex;
-      let column;
-      let finalValue;
-
-      cliid = from.getAttribute("cliid");
-      index = from.getAttribute("index");
-      originalStatus = from.getAttribute("thisStatus");
-
-      numbers.get(originalStatus).setAttribute("number", String(Number(numbers.get(originalStatus).getAttribute("number")) - 1));
-      numbers.get(originalStatus).textContent = numbers.get(originalStatus).getAttribute("number") + "명";
-      numbers.get(to).setAttribute("number", String(Number(numbers.get(to).getAttribute("number")) + 1));
-      numbers.get(to).textContent = numbers.get(to).getAttribute("number") + "명";
-
-      from.setAttribute("thisStatus", to);
-      if (to === "드랍") {
-        from.setAttribute("dropDetail", originalStatus);
-      } else if (from.hasAttribute("dropDetail")) {
-        from.setAttribute("dropDetail", "");
-      }
-
-      requests = [];
-      for (let i = 1; i < instance.cases.length; i++) {
-        if (instance.cases[i].cliid === cliid) {
-          requests.push(instance.cases[i]);
-        }
-      }
-      for (let i = 0; i < requests.length; i++) {
-        if (requests[i] === instance.cases[Number(index)]) {
-          requestIndex = i;
-        }
-      }
-
-      column = "status";
-
-      motherDiv = document.querySelectorAll('.' + cliid)[requestIndex];
-      for (let i = 0; i < motherDiv.children.length; i++) {
-        if (motherDiv.children[i].getAttribute("column") === column) {
-          originalDiv = motherDiv.children[i];
-        }
-      }
-
-      if (to === "통화 전") {
-        toValue = "응대중";
-      } else if (to === "제안 전") {
-        toValue = "응대중";
-      } else if (to === "제안 후") {
-        toValue = "응대중";
-      } else if (to === "진행") {
-        toValue = "진행";
-      } else if (to === "드랍") {
-        toValue = "드랍";
-      }
-
-      finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
-
-      instance.cases[Number(index)][column] = finalValue;
-      await GeneralJs.updateValue({
-        thisId: cliid,
-        requestIndex: requestIndex,
-        column: column,
-        pastValue: originalStatus,
-        value: finalValue,
-        index: Number(index),
-        thisCase: instance.cases[Number(index)]
-      });
-
-      originalDiv.textContent = finalValue;
-
-    } catch (e) {
-      GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-      console.log(e);
-    }
-  }
-
-  //drag and drop events
-  dragstart_event = function (e) {
-    e.dataTransfer.setData("dragData", e.target.getAttribute("index"));
-  }
-
-  dragend_event = function (e) {
-    e.preventDefault();
-  }
-
-  dragenter_event = function (e) {
-    e.preventDefault();
-  }
-
-  dragleave_event = function (e) {
-    e.preventDefault();
-  }
-
-  dragover_event = function (e) {
-    e.preventDefault();
-  }
-
-  drop_event = async function (e) {
-    try {
-      e.preventDefault();
-      const index = e.dataTransfer.getData("dragData");
-      const targetDom = instance.totalFatherChildren[Number(index) - 1];
-      const status = targetDom.getAttribute("thisStatus");
-      let area, dropDetail;
-      if (e.target.hasAttribute("kinds")) {
-        if (e.target.getAttribute("kinds") === "area") {
-          area = e.target;
-        } else {
-          area = e.target.parentElement;
-        }
-      } else {
-        area = e.target.parentElement.parentElement;
-      }
-
-      if (area.getAttribute("name") === "통화 전") {
-        if (status === "통화 전") {
-          //pass
-        } else if (status === "제안 전") {
-          alert("통화 기록은 되돌릴 수 없습니다!");
-        } else if (status === "제안 후") {
-          alert("통화 기록은 되돌릴 수 없습니다!");
-        } else if (status === "진행") {
-          alert("통화 기록은 되돌릴 수 없습니다!");
-        } else if (status === "드랍") {
-          dropDetail = targetDom.getAttribute("dropDetail");
-          if (dropDetail !== "통화 전") {
-            alert("통화 기록은 되돌릴 수 없습니다!");
-          } else {
-            area.appendChild(targetDom);
-            await updateState(targetDom, "통화 전");
-          }
-        }
-
-      } else if (area.getAttribute("name") === "제안 전") {
-        if (status === "통화 전") {
-          alert("통화 기록을 기입해주세요!");
-        } else if (status === "제안 전") {
-          //pass
-        } else if (status === "제안 후") {
-          alert("제안 기록은 되돌릴 수 없습니다!");
-        } else if (status === "진행") {
-          alert("제안 기록은 되돌릴 수 없습니다!");
-        } else if (status === "드랍") {
-          dropDetail = targetDom.getAttribute("dropDetail");
-          if (dropDetail === "통화 전") {
-            alert("통화 기록을 기입해주세요!");
-          } else if (dropDetail === "제안 전") {
-            area.appendChild(targetDom);
-            await updateState(targetDom, "제안 전");
-          } else if (dropDetail === "제안 후") {
-            alert("제안 기록은 되돌릴 수 없습니다!");
-          } else if (dropDetail === "진행") {
-            alert("제안 기록은 되돌릴 수 없습니다!");
-          }
-        }
-
-      } else if (area.getAttribute("name") === "제안 후") {
-        if (status === "통화 전") {
-          alert("통화 기록을 기입해주세요!");
-        } else if (status === "제안 전") {
-          alert("제안서를 작성해주세요!");
-        } else if (status === "제안 후") {
-          //pass
-        } else if (status === "진행") {
-          area.appendChild(targetDom);
-          await updateState(targetDom, "제안 후");
-        } else if (status === "드랍") {
-          dropDetail = targetDom.getAttribute("dropDetail");
-          if (dropDetail === "통화 전") {
-            alert("통화 기록을 기입해주세요!");
-          } else if (dropDetail === "제안 전") {
-            alert("제안서를 작성해주세요!");
-          } else if (dropDetail === "제안 후") {
-            area.appendChild(targetDom);
-            await updateState(targetDom, "제안 후");
-          } else if (dropDetail === "진행") {
-            area.appendChild(targetDom);
-            await updateState(targetDom, "제안 후");
-          }
-        }
-
-      } else if (area.getAttribute("name") === "진행") {
-        if (status === "통화 전") {
-          alert("통화 기록을 기입해주세요!");
-        } else if (status === "제안 전") {
-          alert("제안서를 작성해주세요!");
-        } else if (status === "제안 후") {
-          area.appendChild(targetDom);
-          await updateState(targetDom, "진행");
-        } else if (status === "진행") {
-          //pass
-        } else if (status === "드랍") {
-          dropDetail = targetDom.getAttribute("dropDetail");
-          if (dropDetail === "통화 전") {
-            alert("통화 기록을 기입해주세요!");
-          } else if (dropDetail === "제안 전") {
-            alert("제안서를 작성해주세요!");
-          } else if (dropDetail === "제안 후") {
-            area.appendChild(targetDom);
-            await updateState(targetDom, "진행");
-          } else if (dropDetail === "진행") {
-            area.appendChild(targetDom);
-            await updateState(targetDom, "진행");
-          }
-        }
-
-      } else if (area.getAttribute("name") === "드랍") {
-        if (status === "통화 전") {
-          area.appendChild(targetDom);
-          await updateState(targetDom, "드랍");
-        } else if (status === "제안 전") {
-          area.appendChild(targetDom);
-          await updateState(targetDom, "드랍");
-        } else if (status === "제안 후") {
-          area.appendChild(targetDom);
-          await updateState(targetDom, "드랍");
-        } else if (status === "진행") {
-          area.appendChild(targetDom);
-          await updateState(targetDom, "드랍");
-        } else if (status === "드랍") {
-          //pass
-        }
-      }
-
-      e.stopPropagation();
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  //make division
   division = new Map();
   numbers = new Map();
   domMatrix = [];
@@ -2049,7 +2014,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     tempArr = [];
 
     tongMother = createNode({
-      mother: totalFather,
+      mother: scrollTong,
       style: {
         display: "block",
         position: "relative",
@@ -2112,13 +2077,75 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
         mother: tong,
         attribute: {
           kinds: "area",
-          name: divisionMap[i][j]
+          name: divisionMap[i][j],
+          opposite: divisionMap[i][divisionMap[i].length - 1 - j],
+          family: JSON.stringify(divisionMap[i]),
+          length: String(divisionMap[i].length),
+          size: String(sizeArr[divisionMap[i].length - 1]),
+          divide: String(divideArr[divisionMap[i].length - 1]),
         },
         events: {
-          dragenter: dragenter_event,
-          dragleave: dragleave_event,
-          dragover: dragover_event,
-          drop: drop_event
+          dragenter: (e) => { e.preventDefault(); },
+          dragleave: function (e) {
+            e.preventDefault();
+            this.style.background = colorChip.gray1;
+            this.parentElement.firstChild.style.color = colorChip.black;
+          },
+          dragover: function (e) {
+            e.preventDefault();
+            this.style.background = colorChip.whiteGreen;
+            this.parentElement.firstChild.style.color = colorChip.green;
+          },
+          drop: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const name = this.getAttribute("name");
+            const opposite = division.get(this.getAttribute("opposite"));
+            const family = equalJson(this.getAttribute("family"));
+            const length = Number(this.getAttribute("length"));
+            const size = Number(this.getAttribute("size"));
+            const divide = Number(this.getAttribute("divide"));
+            const oppositeDivide = Number(opposite.getAttribute("divide"));
+            const cliid = e.dataTransfer.getData("cliid");
+            const card = findByAttribute(instance.totalFatherChildren, "cliid", cliid);
+            let thisChildren, oppositeChildren;
+            let thisChildrenLength, oppositeChildrenLength;
+            let thisHeightNumber, oppositeHeightNumber;
+            let thisHeight, oppositeHeight;
+            let finalHeight;
+
+            this.style.background = colorChip.gray1;
+            this.parentElement.firstChild.style.color = colorChip.black;
+            this.appendChild(card);
+
+            thisChildren = this.children;
+            oppositeChildren = opposite.children;
+            thisChildrenLength = thisChildren.length;
+            oppositeChildrenLength = oppositeChildren.length;
+
+            thisHeightNumber = Math.ceil(thisChildrenLength / divide);
+            oppositeHeightNumber = Math.ceil(oppositeChildrenLength / oppositeDivide);
+
+            thisHeight = (thisHeightNumber * fixedHeightSize) + (thisHeightNumber * margin);
+            oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + (oppositeHeightNumber * margin);
+
+            if (thisHeight <= oppositeHeight) {
+              finalHeight = oppositeHeight;
+            } else {
+              finalHeight = thisHeight;
+            }
+
+            for (let c of thisChildren) {
+              c.style.width = String(size) + ea;
+            }
+
+            this.style.height = String(finalHeight) + ea;
+            opposite.style.height = String(finalHeight) + ea;
+
+            this.parentElement.style.height = "auto";
+            opposite.parentElement.style.height = "auto";
+
+          }
         },
         style: {
           position: "relative",
@@ -2126,7 +2153,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
           minHeight: String(fixedHeightSize + margin) + ea,
           background: GeneralJs.colorChip.gray1,
           height: withOut(margin, ea),
-          borderRadius: String(5) + ea,
+          borderRadius: String(5) + "px",
         }
       });
 
@@ -2148,13 +2175,22 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
       attribute: {
         kinds: "card",
         cliid: obj.cliid,
-        draggable: "true"
+        draggable: "true",
+        action: obj.action,
       },
       event: {
-        dragstart: dragstart_event,
-        dragend: dragend_event,
-        dragenter: dragenter_event,
-        dragleave: dragleave_event,
+        dragstart: function (e) {
+          e.dataTransfer.setData("cliid", this.getAttribute("cliid"));
+        },
+        dragend: function (e) {
+          e.preventDefault();
+        },
+        dragenter: function (e) {
+          e.preventDefault();
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+        },
       },
       style: {
         display: "inline-block",
@@ -2271,6 +2307,14 @@ ClientJs.prototype.cardViewMaker = function () {
       instance.totalFather.classList.add("fadein");
 
     } else {
+
+      if (typeof GeneralJs.stacks["dashboardBox"].parentElement === "object") {
+        if (GeneralJs.stacks["dashboardBox"].parentElement !== null) {
+          if (typeof GeneralJs.stacks["dashboardBox"].parentElement.remove === "function") {
+            GeneralJs.stacks["dashboardBox"].parentElement.remove();
+          }
+        }
+      }
 
       totalMother.classList.add("justfadeoutoriginal");
       instance.totalFather = instance.makeBoard(itemMap, thisCases);

@@ -548,7 +548,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       contents: projectHistory.request.about.when,
     },
     {
-      title: "주소",
+      title: "현장 주소",
       className: "mainContents_where",
       position: "request.about.where",
       contents: projectHistory.request.about.where,
