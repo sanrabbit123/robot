@@ -1538,10 +1538,11 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll } = GeneralJs;
   const ea = "px";
   const token = "__split__";
   const clientMap = DataPatch.clientMap();
+  const cookies = getCookiesAll();
   const dashboardTarget = {
     status: {
       items: clientMap.status.items,
@@ -1688,13 +1689,37 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
             const cliid = e.dataTransfer.getData("dragData").split(token)[0];
             const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
             const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
+            let indexTong;
+            let index, thisCase;
+            let rowDom;
 
-            console.log(name, column, cliid, fromAction, requestNumber)
+            indexTong = [];
+            for (let i = 0; i < instance.cases.length; i++) {
+              if (instance.cases[i] !== null) {
+                if (instance.cases[i].cliid === cliid) {
+                  indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                }
+              }
+            }
 
-            
+            index = indexTong[requestNumber].index;
+            thisCase = indexTong[requestNumber].thisCase;
+            instance.cases[index].action = name;
+            rowDom = findByAttribute([ ...document.querySelector("." + cliid).children ], "column", "status");
+            if (rowDom !== null) {
+              rowDom.textContent = name;
+            }
 
-
-
+            await ajaxJson({
+              thisId: cliid,
+              requestIndex: String(requestNumber),
+              column: "status",
+              pastValue: name,
+              value: name,
+              index,
+              thisCase,
+              user: cookies.homeliaisonConsoleLoginedName + "__split__" + cookies.homeliaisonConsoleLoginedEmail
+            }, "/updateClient");
 
             this.firstChild.style.color = colorChip.black;
           }
@@ -1715,6 +1740,10 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
             }
           },
           {
+            class: [ "boardGray_statusBlock" ],
+            attribute: {
+              status: dashboardData.status.name[i],
+            },
             text: String(dashboardData.status.value[i]),
             style: {
               position: "absolute",

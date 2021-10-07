@@ -2701,6 +2701,10 @@ DesignerJs.prototype.possibleDetailSearchParsing = async function () {
         whereQuery: {},
       }, "/generalMongo", { equal: true });
 
+      realtimes = realtimes.filter((obj) => {
+        return Array.from(instance.designers).map((designer) => { return designer.desid }).includes(obj.desid);
+      });
+
       conditions = [];
       num = 0;
       tempObj = {};

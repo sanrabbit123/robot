@@ -1204,17 +1204,16 @@ DevContext.prototype.launching = async function () {
     //   needs: "style,d2104_aa07s,p2107_aa46s,online",
     // });
 
-    const photoRequest = ghostRequest().bind("photo");
 
-    console.log(await photoRequest("zip", { pid: "p156", pay: 1 }));
+
 
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김진영",
-    //     designer: "김다래",
-    //     link: "https://drive.google.com/drive/folders/1e_owWnAVW_ZoJm92QUrE24b2H_8YZz6E",
+    //     client: "강순영",
+    //     designer: "박정훈",
+    //     link: "https://drive.google.com/drive/folders/1K6UXahCEARz8ASICpmVrLZpcfrdGXNBm",
     //     pay: true
     //   },
     // ]);
