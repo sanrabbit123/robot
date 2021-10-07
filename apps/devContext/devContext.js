@@ -1204,6 +1204,8 @@ DevContext.prototype.launching = async function () {
     //   needs: "style,d2104_aa07s,p2107_aa46s,online",
     // });
 
+    const photoRequest = ghostRequest().bind("photo");
+
     console.log(await photoRequest("zip", { pid: "p156", pay: 1 }));
 
     // raw photo to raw portfolio

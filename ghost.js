@@ -2252,6 +2252,7 @@ Ghost.prototype.photoRouter = function (needs) {
           const list = await fileSystem(`readDir`, [ sambaDir ]);
           const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
           const tempFolderName = "temp";
+          const tempTempFolderName = "tempTemp" + String((new Date()).valueOf()) + "__" + String(Math.round(Math.random() * 100000));
           let list_refined = [];
           let folderName;
           let shareClientName, shareDesignerName;
@@ -2263,6 +2264,11 @@ Ghost.prototype.photoRouter = function (needs) {
           if (!homeFolder.includes(tempFolderName)) {
             shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
           }
+
+          if (homeFolder.includes(tempTempFolderName)) {
+            shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempTempFolderName)}`);
+          }
+          shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + tempTempFolderName)}`);
 
           for (let i of list) {
             if (!/^\./.test(i) && !/DS_Store/gi.test(i)) {
@@ -2286,10 +2292,22 @@ Ghost.prototype.photoRouter = function (needs) {
           shareClientName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
           shareDesignerName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
-          command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + (pay ? c3508 : c780))};
-          zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)} ./*;
-          cd ${shellLink(sambaDir + "/" + folderName + "/" + c1500)};
-          zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)} ./*;`;
+          if (!pay) {
+            command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};
+            zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)} ./*;
+            cd ${shellLink(sambaDir + "/" + folderName + "/" + c1500)};
+            zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)} ./*;`;
+          } else {
+            command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c3508)};
+            cp ./* ${shellLink(process.env.HOME + "/" + tempTempFolderName)};
+            cp -r ${shellLink(sambaDir + "/" + folderName + "/" + c780)} ${shellLink(process.env.HOME + "/" + tempTempFolderName)};
+            cd ${shellLink(process.env.HOME + "/" + tempTempFolderName)};
+            zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)} ./*;
+            cd ${shellLink(sambaDir + "/" + folderName + "/" + c1500)};
+            zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)} ./*;
+            rm -rf ${shellLink(process.env.HOME + "/" + tempTempFolderName)};`;
+          }
+
           shell.exec(command);
 
           zipIdDesigner = await googleDrive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);
