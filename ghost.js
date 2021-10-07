@@ -2239,14 +2239,16 @@ Ghost.prototype.photoRouter = function (needs) {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": '*',
         });
-        if (req.body.pid === undefined) {
-          res.send(JSON.stringify({ message: "invaild body : must be 'pid'" }));
+        if (req.body.pid === undefined || req.body.pay === undefined) {
+          res.send(JSON.stringify({ message: "invaild body : must be 'pid' and 'pay'" }));
         } else {
           const targetFolderId = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
           const googleDrive = instance.mother.googleSystem("drive");
           const { pid } = req.body;
+          const pay = (Number(req.body.pay) === 1);
           const c780 = "780";
           const c1500 = "1500";
+          const c3508 = pid;
           const list = await fileSystem(`readDir`, [ sambaDir ]);
           const homeFolder = await fileSystem(`readDir`, [ process.env.HOME ]);
           const tempFolderName = "temp";
@@ -2284,7 +2286,7 @@ Ghost.prototype.photoRouter = function (needs) {
           shareClientName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
           shareDesignerName += '_' + dateToString(new Date()).slice(2).replace(/\-/gi, '') + ".zip";
 
-          command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};
+          command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + (pay ? c3508 : c780))};
           zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)} ./*;
           cd ${shellLink(sambaDir + "/" + folderName + "/" + c1500)};
           zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareClientName)} ./*;`;

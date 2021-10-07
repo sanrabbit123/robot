@@ -710,7 +710,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     garoseroParser = new GaroseroParser();
     await this.static_setting();
 
-    for (let { client, designer, link } of arr) {
+    for (let { client, designer, link, pay } of arr) {
 
       designers = await back.getDesignersByQuery({ designer: designer });
       if (designers.length > 1) {
@@ -785,7 +785,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         await sleep(1000);
       }
 
-      zipLinks = await photoRequest("zip", { pid: nextPid });
+      zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
       shareLinkClient = zipLinks.client;
       shareLinkDeginer = zipLinks.designer;
       if (shareLinkClient !== null) {

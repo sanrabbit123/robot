@@ -1540,6 +1540,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
   const instance = this;
   const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson } = GeneralJs;
   const ea = "px";
+  const token = "__split__";
   const clientMap = DataPatch.clientMap();
   const dashboardTarget = {
     status: {
@@ -1684,11 +1685,16 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
             e.preventDefault();
             const name = this.getAttribute("name");
             const column = this.getAttribute("column");
-            const cliid = e.dataTransfer.getData("cliid").split("__split__")[0];
-            const fromAction = e.dataTransfer.getData("cliid").split("__split__")[1];
-            const requestNumber = Number(e.dataTransfer.getData("cliid").split("__split__")[2]);
+            const cliid = e.dataTransfer.getData("dragData").split(token)[0];
+            const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
+            const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
 
             console.log(name, column, cliid, fromAction, requestNumber)
+
+            
+
+
+
 
             this.firstChild.style.color = colorChip.black;
           }
@@ -1902,6 +1908,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   const instance = this;
   const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll } = GeneralJs;
   const ea = "px";
+  const token = "__split__";
   const cookies = getCookiesAll();
   let temp;
   let totalFather;
@@ -2141,11 +2148,12 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             const divide = Number(this.getAttribute("divide"));
             const oppositeDivide = Number(opposite.getAttribute("divide"));
             const oppositeLength = Number(opposite.getAttribute("number"));
-            const cliid = e.dataTransfer.getData("cliid").split("__split__")[0];
-            const fromAction = e.dataTransfer.getData("cliid").split("__split__")[1];
-            const requestNumber = Number(e.dataTransfer.getData("cliid").split("__split__")[2]);
+            const cliid = e.dataTransfer.getData("dragData").split(token)[0];
+            const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
+            const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
             const card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
             const from = division.get(fromAction);
+            const fromSize = Number(from.getAttribute("size"));
             const fromName = from.getAttribute("name");
             const fromOpposite = division.get(from.getAttribute("opposite"));
             const fromOppositeName = fromOpposite.getAttribute("name");
@@ -2165,6 +2173,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
               this.style.background = colorChip.gray1;
               this.parentElement.firstChild.style.color = colorChip.black;
               this.appendChild(card);
+
 
               thisChildren = this.children;
               oppositeChildren = opposite.children;
@@ -2187,13 +2196,13 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
               }
               this.parentElement.style.height = String(finalHeight) + ea;
               opposite.parentElement.style.height = String(finalHeight) + ea;
-
               this.parentElement.children[1].setAttribute("number", String(thisChildren.length));
               this.parentElement.children[1].textContent = String(thisChildren.length) + "명";
               findByAttribute(boardDoms, "action", name).textContent = String(thisChildren.length);
               opposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
               opposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
               findByAttribute(boardDoms, "action", oppositeName).textContent = String(oppositeChildren.length);
+
 
               thisChildren = from.children;
               oppositeChildren = fromOpposite.children;
@@ -2212,11 +2221,10 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
               }
               finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
               for (let c of thisChildren) {
-                c.style.width = String(size) + ea;
+                c.style.width = String(fromSize) + ea;
               }
               from.parentElement.style.height = String(finalHeight) + ea;
               fromOpposite.parentElement.style.height = String(finalHeight) + ea;
-
               from.parentElement.children[1].setAttribute("number", String(thisChildren.length));
               from.parentElement.children[1].textContent = String(thisChildren.length) + "명";
               findByAttribute(boardDoms, "action", fromName).textContent = String(thisChildren.length);
@@ -2302,8 +2310,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
       },
       event: {
         dragstart: function (e) {
-          const token = "__split__";
-          e.dataTransfer.setData("cliid", this.getAttribute("cliid") + token + this.getAttribute("action") + token + this.getAttribute("request"));
+          e.dataTransfer.setData("dragData", this.getAttribute("cliid") + token + this.getAttribute("action") + token + this.getAttribute("request"));
         },
         dragend: function (e) {
           e.preventDefault();
