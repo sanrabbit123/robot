@@ -2584,7 +2584,7 @@ ClientJs.prototype.cardViewMaker = function () {
       }
 
       totalMother.classList.add("justfadeoutoriginal");
-      instance.makeBoard(itemMap, thisCases);
+      instance.totalFather = instance.makeBoard(itemMap, thisCases);
 
     }
     instance.onView = "father";
