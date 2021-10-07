@@ -1781,6 +1781,21 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
                 user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
               }, "/updateClient");
 
+              await ajaxJson({
+                mode: "sse",
+                db: "console",
+                collection: "sse_clientCard",
+                log: true,
+                who: cookies.homeliaisonConsoleLoginedEmail,
+                updateQuery: {
+                  cliid,
+                  requestNumber,
+                  mode: "status",
+                  from: fromStatus,
+                  to: name
+                }
+              }, "/generalMongo");
+
               this.firstChild.style.color = colorChip.black;
 
             } catch (e) {
@@ -2362,6 +2377,20 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
                 user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
               }, "/updateClient");
 
+              await ajaxJson({
+                mode: "sse",
+                db: "console",
+                collection: "sse_clientCard",
+                log: true,
+                who: cookies.homeliaisonConsoleLoginedEmail,
+                updateQuery: {
+                  cliid,
+                  requestNumber,
+                  mode: "action",
+                  from: fromName,
+                  to: name
+                }
+              }, "/generalMongo");
 
             } catch (e) {
               console.log(e);
@@ -6347,6 +6376,18 @@ ClientJs.prototype.communicationRender = function () {
 
 }
 
+ClientJs.prototype.sseCardParsing = function (raw) {
+  const instance = this;
+  const { equalJson } = GeneralJs;
+  const order = equalJson(raw);
+
+  console.log(order);
+
+
+
+
+}
+
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -6367,10 +6408,25 @@ ClientJs.prototype.launching = async function () {
     let getTarget;
     let tempFunction;
 
-    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/possibleDesigner");
-    // es.addEventListener("updateTong", (e) => {
-    //   instance.possibleSseParsing(equalJson(e.data));
-    // });
+    const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/clientCard");
+    es.addEventListener("updateTong", (e) => {
+      instance.sseCardParsing(e.data);
+    });
+
+    /*
+
+    GeneralJs.ajaxJson({
+      mode: "sse",
+      db: "console",
+      collection: "sse_clientCard",
+      log: true,
+      who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+      updateQuery: {
+        test: "yes"
+      }
+    }, "/generalMongo").catch((err) => { console.log(err); })
+
+    */
 
     getTarget = null;
     if (getObj.cliid !== undefined) {

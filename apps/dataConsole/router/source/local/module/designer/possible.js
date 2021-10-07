@@ -37,7 +37,7 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   }
   if (typeof this.possibleConst !== "object" || this.possibleConst === null) {
     this.possibleConst = {
-      futureLength: 30,
+      futureLength: 25,
       okClassName: "okSvg",
       cancelClassName: "cancelSvg",
       numberClassName: "numberWord",
@@ -1163,6 +1163,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                                   countMatrix[i] = 0;
                                 } else {
                                   countMatrix[i] = Number(window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!").trim().replace(/[^0-9]/gi, ''));
+                                  if (typeof countMatrix[i] !== "number" || Number.isNaN(countMatrix[i])) {
+                                    countMatrix[i] = 1;
+                                  }
                                 }
                               }
                               if (matrix[0] === 0) {
@@ -1176,6 +1179,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                                   countMatrix[i] = 0;
                                 } else {
                                   countMatrix[i] = Number(window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!").trim().replace(/[^0-9]/gi, ''));
+                                  if (typeof countMatrix[i] !== "number" || Number.isNaN(countMatrix[i])) {
+                                    countMatrix[i] = 1;
+                                  }
                                 }
                               }
                             }
