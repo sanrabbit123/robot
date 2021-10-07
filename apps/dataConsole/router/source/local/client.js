@@ -19,6 +19,7 @@ const ClientJs = function () {
   this.divisionMap = null;
   this.totalFatherChildren = [];
   this.onView = "mother";
+  this.ea = "px";
 }
 
 ClientJs.prototype.standardBar = function (standard) {
@@ -1531,15 +1532,12 @@ ClientJs.prototype.spreadData = async function (search = null) {
   }
 }
 
-ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, staticList = {}) {
+ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
   if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
     throw new Error("invaild input");
   }
-  if (divisionMap.flat().length !== (([ ...new Set(divisionMap.flat()) ]).length)) {
-    throw new Error("invaild input");
-  }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute, uniqueValue } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute, uniqueValue, cleanChildren } = GeneralJs;
   const { ea, token, actionClass, statusClass, actionArea } = staticList;
   const clientMap = DataPatch.clientMap();
   const cookies = getCookiesAll();
@@ -1557,6 +1555,8 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
       divisionLength: clientMap.action.divisionLength,
     },
   };
+  const totalFather = this.totalFather;
+  const mother = totalFather.children[0];
   this.statusColorSync = (status, standardDom, caseDoms) => {
     const colorMap = [
       { status: "응대중", color: colorChip.black },
@@ -1608,9 +1608,6 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
   let actionPaddingTop;
   let middleBetween;
   let memberBlock;
-  let flowBlock;
-  let flowHeight;
-  let flowBetween;
   let members;
   let cxMembers;
   let memberMargin;
@@ -1621,295 +1618,313 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
   let statusSize;
   let statusPaddingTop;
   let grayBarTop;
-  let flowPaddingTop;
-  try {
+  let reloadEvent;
+  cleanChildren(mother);
 
-    dashboardData = {};
-    for (let i in dashboardTarget) {
-      dashboardData[i] = {
-        name: dashboardTarget[i].items,
-        value: [],
-        length: dashboardTarget[i].items.length,
-        divisionStart: dashboardTarget[i].divisionStart,
-        divisionLength: dashboardTarget[i].divisionLength,
-      };
-      dashboardData[i].value = (new Array(dashboardData[i].length)).fill(0);
-      for (let j = 0; j < dashboardTarget[i].items.length; j++) {
-        for (let c of cases) {
-          if (c[i].trim() === dashboardTarget[i].items[j]) {
-            dashboardData[i].value[j] = dashboardData[i].value[j] + 1;
-          }
+  dashboardData = {};
+  for (let i in dashboardTarget) {
+    dashboardData[i] = {
+      name: dashboardTarget[i].items,
+      value: [],
+      length: dashboardTarget[i].items.length,
+      divisionStart: dashboardTarget[i].divisionStart,
+      divisionLength: dashboardTarget[i].divisionLength,
+    };
+    dashboardData[i].value = (new Array(dashboardData[i].length)).fill(0);
+    for (let j = 0; j < dashboardTarget[i].items.length; j++) {
+      for (let c of cases) {
+        if (c[i].trim() === dashboardTarget[i].items[j]) {
+          dashboardData[i].value[j] = dashboardData[i].value[j] + 1;
         }
       }
-      if (!dashboardTarget[i].zero) {
-        dashboardData[i].name = dashboardData[i].name.filter((z, index) => { return dashboardData[i].value[index] !== 0 });
-        dashboardData[i].value = dashboardData[i].value.filter((z) => { return z !== 0 });
-      }
     }
-
-    dashboardData.status.name.push("드랍");
-    dashboardData.status.value.push("-");
-
-    topMargin = 32.5;
-    leftMargin = 30;
-    statusSize = 16;
-    fontSize = 13;
-    marginBottom = 7;
-    statusPaddingBottom = 18;
-    actionPaddingTop = 31;
-    middleBetween = 18;
-    flowBetween = 6;
-    flowHeight = 45;
-    memberMargin = 15;
-    memberMarginLeft = 8;
-    memberBetween = 8;
-    memberSize = 13;
-    memberVisual = 1;
-    statusPaddingTop = 2;
-    grayBarTop = 4;
-    flowPaddingTop = 11;
-
-    members = await ajaxJson({ type: "get" }, "/getMembers");
-    cxMembers = members.filter((obj) => { return obj.roles.includes("CX") || obj.roles.includes("CEO"); });
-    cxMembers = cxMembers.map((obj) => { return obj.name; });
-    cxMembers.push("전체");
-    cxMembers.push("미정");
-
-    boardBox = createNode({
-      mother,
-      style: {
-        marginTop: String(topMargin) + ea,
-        marginLeft: String(leftMargin) + ea,
-        width: withOut(leftMargin * 2, ea),
-        position: "relative",
-        height: withOut(topMargin, ea),
-      }
-    });
-
-    statusBlock = createNode({
-      mother: boardBox,
-      style: {
-        display: "block",
-        position: "relative",
-        paddingBottom: String(statusPaddingBottom) + ea,
-        borderBottom: "1px solid " + colorChip.gray4,
-        paddingTop: String(statusPaddingTop) + ea,
-      }
-    });
-
-    actionBlock = createNode({
-      mother: boardBox,
-      style: {
-        display: "block",
-        position: "relative",
-        paddingTop: String(actionPaddingTop) + ea,
-      }
-    });
-
-    for (let i = 0; i < dashboardData.status.name.length; i++) {
-      createNode({
-        mother: statusBlock,
-        attribute: {
-          name: dashboardData.status.name[i],
-          column: "status",
-        },
-        event: {
-          dragenter: (e) => { e.preventDefault(); },
-          dragleave: function (e) {
-            e.preventDefault();
-            this.firstChild.style.color = colorChip.black;
-          },
-          dragover: function (e) {
-            e.preventDefault();
-            this.firstChild.style.color = colorChip.green;
-          },
-          drop: async function (e) {
-            e.preventDefault();
-            const name = this.getAttribute("name");
-            const column = this.getAttribute("column");
-            const cliid = e.dataTransfer.getData("dragData").split(token)[0];
-            const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
-            const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
-            const fromStatus = e.dataTransfer.getData("dragData").split(token)[3];
-            const card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
-            const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
-            const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
-            instance.randomToken = uniqueValue();
-            try {
-              let indexTong;
-              let index, thisCase;
-              let rowDom;
-              let thisStandardDom;
-              let thisCaseDom;
-              let length;
-
-              indexTong = [];
-              for (let i = 0; i < instance.cases.length; i++) {
-                if (instance.cases[i] !== null) {
-                  if (instance.cases[i].cliid === cliid) {
-                    indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
-                  }
-                }
-              }
-
-              index = indexTong[requestNumber].index;
-              thisCase = indexTong[requestNumber].thisCase;
-              instance.cases[index].status = name;
-              thisStandardDom = Array.from(instance.standardDoms).find((dom) => { return dom.firstChild.textContent.trim() === cliid; });
-              thisCaseDom = [ ...document.querySelector("." + cliid).children ];
-              rowDom = findByAttribute(thisCaseDom, "column", "status");
-              if (rowDom !== null) {
-                rowDom.textContent = name;
-              }
-              card.setAttribute("status", name);
-
-              instance.statusColorSync(name, thisStandardDom, thisCaseDom);
-              if (!instance.statusNumberSync(fromStatus, name)) {
-                length = card.parentElement.children.length;
-                card.remove();
-                length = length - 1;
-                findByAttribute(boardDoms, "action", fromAction).textContent = String(length);
-                findByAttribute(areaDoms, "action", fromAction).parentElement.children[1].textContent = String(length) + "명";
-              }
-
-              await ajaxJson({
-                thisId: cliid,
-                requestIndex: String(requestNumber),
-                column: "status",
-                pastValue: name,
-                value: name,
-                index,
-                thisCase,
-                user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
-              }, "/updateClient");
-
-              await ajaxJson({
-                mode: "sse",
-                db: "console",
-                collection: "sse_clientCard",
-                log: true,
-                who: cookies.homeliaisonConsoleLoginedEmail,
-                updateQuery: {
-                  cliid,
-                  requestNumber,
-                  mode: "status",
-                  from: fromStatus,
-                  to: name,
-                  randomToken: instance.randomToken,
-                }
-              }, "/generalMongo");
-
-              this.firstChild.style.color = colorChip.black;
-
-            } catch (e) {
-              console.log(e);
-            }
-          }
-        },
-        style: {
-          position: "relative",
-          textAlign: "left",
-          marginBottom: String(marginBottom) + ea,
-        },
-        children: [
-          {
-            text: dashboardData.status.name[i],
-            style: {
-              position: "relative",
-              fontSize: String(statusSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-            }
-          },
-          {
-            class: [ statusClass ],
-            attribute: {
-              status: dashboardData.status.name[i],
-            },
-            text: String(dashboardData.status.value[i]),
-            style: {
-              position: "absolute",
-              right: String(0),
-              top: String(0),
-              fontSize: String(statusSize) + ea,
-              color: colorChip.green,
-              fontWeight: String(400),
-            }
-          },
-        ]
-      });
+    if (!dashboardTarget[i].zero) {
+      dashboardData[i].name = dashboardData[i].name.filter((z, index) => { return dashboardData[i].value[index] !== 0 });
+      dashboardData[i].value = dashboardData[i].value.filter((z) => { return z !== 0 });
     }
+  }
 
-    for (let i = 0; i < dashboardData.action.name.length; i++) {
-      createNode({
-        mother: actionBlock,
-        style: {
-          position: "relative",
-          textAlign: "left",
-          marginBottom: String(i % dashboardData.action.divisionLength === dashboardData.action.divisionStart - 1 ? middleBetween : marginBottom) + ea,
-        },
-        children: [
-          {
-            text: dashboardData.action.name[i],
-            style: {
-              position: "relative",
-              fontSize: String(fontSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-            }
-          },
-          {
-            class: [ actionClass ],
-            attribute: {
-              action: dashboardData.action.name[i],
-            },
-            text: String(dashboardData.action.value[i]),
-            style: {
-              position: "absolute",
-              right: String(0),
-              top: String(0),
-              fontSize: String(fontSize) + ea,
-              color: colorChip.green,
-              fontWeight: String(400),
-            }
-          },
-        ]
-      });
+  dashboardData.status.name.push("드랍");
+  dashboardData.status.value.push("-");
+
+  topMargin = 32.5;
+  leftMargin = 30;
+  statusSize = 16;
+  fontSize = 13;
+  marginBottom = 7;
+  statusPaddingBottom = 18;
+  actionPaddingTop = 31;
+  middleBetween = 18;
+  memberMargin = 16;
+  memberMarginLeft = 8;
+  memberBetween = 8;
+  memberSize = 13;
+  memberVisual = 1;
+  statusPaddingTop = 2;
+  grayBarTop = 4;
+
+  members = this.allMembers;
+  cxMembers = members.filter((obj) => { return obj.roles.includes("CX") || obj.roles.includes("CEO"); });
+  cxMembers = cxMembers.map((obj) => { return obj.name; });
+  cxMembers.push("전체");
+  cxMembers.push("미정");
+
+  boardBox = createNode({
+    mother,
+    style: {
+      marginTop: String(topMargin) + ea,
+      marginLeft: String(leftMargin) + ea,
+      width: withOut(leftMargin * 2, ea),
+      position: "relative",
+      height: withOut(topMargin, ea),
     }
+  });
 
-    flowBlock = createNode({
-      mother: boardBox,
-      style: {
-        position: "absolute",
-        left: String(0) + ea,
-        bottom: String(topMargin) + ea,
-        width: withOut(memberMarginLeft * 2, ea),
-        paddingTop: String(flowPaddingTop) + ea,
-        paddingBottom: String(memberMargin) + ea,
-        paddingLeft: String(memberMarginLeft) + ea,
-        paddingRight: String(memberMarginLeft) + ea,
-        borderRadius: String(3) + "px",
-        background: colorChip.white,
-      }
-    });
+  statusBlock = createNode({
+    mother: boardBox,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingBottom: String(statusPaddingBottom) + ea,
+      borderBottom: "1px solid " + colorChip.gray4,
+      paddingTop: String(statusPaddingTop) + ea,
+    }
+  });
+
+  actionBlock = createNode({
+    mother: boardBox,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(actionPaddingTop) + ea,
+    }
+  });
+
+  for (let i = 0; i < dashboardData.status.name.length; i++) {
     createNode({
-      mother: flowBlock,
+      mother: statusBlock,
+      attribute: {
+        name: dashboardData.status.name[i],
+        column: "status",
+      },
+      event: {
+        dragenter: (e) => { e.preventDefault(); },
+        dragleave: function (e) {
+          e.preventDefault();
+          this.firstChild.style.color = colorChip.black;
+        },
+        dragover: function (e) {
+          e.preventDefault();
+          this.firstChild.style.color = colorChip.green;
+        },
+        drop: async function (e) {
+          e.preventDefault();
+          const name = this.getAttribute("name");
+          const column = this.getAttribute("column");
+          const cliid = e.dataTransfer.getData("dragData").split(token)[0];
+          const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
+          const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
+          const fromStatus = e.dataTransfer.getData("dragData").split(token)[3];
+          const card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
+          const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+          const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
+          instance.randomToken = uniqueValue();
+          try {
+            let indexTong;
+            let index, thisCase;
+            let rowDom;
+            let thisStandardDom;
+            let thisCaseDom;
+            let length;
+
+            indexTong = [];
+            for (let i = 0; i < instance.cases.length; i++) {
+              if (instance.cases[i] !== null) {
+                if (instance.cases[i].cliid === cliid) {
+                  indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                }
+              }
+            }
+
+            index = indexTong[requestNumber].index;
+            thisCase = indexTong[requestNumber].thisCase;
+            instance.cases[index].status = name;
+            thisStandardDom = Array.from(instance.standardDoms).find((dom) => { return dom.firstChild.textContent.trim() === cliid; });
+            thisCaseDom = [ ...document.querySelector("." + cliid).children ];
+            rowDom = findByAttribute(thisCaseDom, "column", "status");
+            if (rowDom !== null) {
+              rowDom.textContent = name;
+            }
+            card.setAttribute("status", name);
+
+            instance.statusColorSync(name, thisStandardDom, thisCaseDom);
+            if (!instance.statusNumberSync(fromStatus, name)) {
+              length = card.parentElement.children.length;
+              card.remove();
+              length = length - 1;
+              findByAttribute(boardDoms, "action", fromAction).textContent = String(length);
+              findByAttribute(areaDoms, "action", fromAction).parentElement.children[1].textContent = String(length) + "명";
+            }
+
+            await ajaxJson({
+              thisId: cliid,
+              requestIndex: String(requestNumber),
+              column: "status",
+              pastValue: name,
+              value: name,
+              index,
+              thisCase,
+              user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
+            }, "/updateClient");
+
+            await ajaxJson({
+              mode: "sse",
+              db: "console",
+              collection: "sse_clientCard",
+              log: true,
+              who: cookies.homeliaisonConsoleLoginedEmail,
+              updateQuery: {
+                cliid,
+                requestNumber,
+                mode: "status",
+                from: fromStatus,
+                to: name,
+                randomToken: instance.randomToken,
+              }
+            }, "/generalMongo");
+
+            this.firstChild.style.color = colorChip.black;
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
       style: {
         position: "relative",
-        display: "block",
-        marginBottom: String(memberVisual) + ea,
+        textAlign: "left",
+        marginBottom: String(marginBottom) + ea,
       },
       children: [
         {
-          text: "Flow 1",
+          text: dashboardData.status.name[i],
+          style: {
+            position: "relative",
+            fontSize: String(statusSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        },
+        {
+          class: [ statusClass ],
+          attribute: {
+            status: dashboardData.status.name[i],
+          },
+          text: String(dashboardData.status.value[i]),
+          style: {
+            position: "absolute",
+            right: String(0),
+            top: String(0),
+            fontSize: String(statusSize) + ea,
+            color: colorChip.green,
+            fontWeight: String(400),
+          }
+        },
+      ]
+    });
+  }
+
+  for (let i = 0; i < dashboardData.action.name.length; i++) {
+    createNode({
+      mother: actionBlock,
+      style: {
+        position: "relative",
+        textAlign: "left",
+        marginBottom: String(i % dashboardData.action.divisionLength === dashboardData.action.divisionStart - 1 ? middleBetween : marginBottom) + ea,
+      },
+      children: [
+        {
+          text: dashboardData.action.name[i],
+          style: {
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+          }
+        },
+        {
+          class: [ actionClass ],
+          attribute: {
+            action: dashboardData.action.name[i],
+          },
+          text: String(dashboardData.action.value[i]),
+          style: {
+            position: "absolute",
+            right: String(0),
+            top: String(0),
+            fontSize: String(fontSize) + ea,
+            color: colorChip.green,
+            fontWeight: String(400),
+          }
+        },
+      ]
+    });
+  }
+
+  memberBlock = createNode({
+    mother: boardBox,
+    style: {
+      position: "absolute",
+      left: String(0) + ea,
+      bottom: String(topMargin) + ea,
+      width: withOut(memberMarginLeft * 2, ea),
+      paddingTop: String(memberMargin) + ea,
+      paddingBottom: String(memberMargin) + ea,
+      paddingLeft: String(memberMarginLeft) + ea,
+      paddingRight: String(memberMarginLeft) + ea,
+      borderRadius: String(3) + "px",
+      background: colorChip.white,
+    }
+  });
+  reloadEvent = function (e) {
+    const member = this.getAttribute("member");
+    if (member === "전체") {
+      instance.makeBoard(instance.cardCases);
+      instance.selectedMember = null;
+    } else if (member === "미정") {
+      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === '-' || obj.manager.trim() === '' || obj.manager.trim() === "미지정" || obj.manager.trim() === "미정" || obj.manager.trim() === "홀딩"; }));
+      instance.selectedMember = "미정";
+    } else {
+      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === member.trim() }));
+      instance.selectedMember = member;
+    }
+  }
+  for (let i = 0; i < Math.ceil(cxMembers.length / 2); i++) {
+    createNode({
+      mother: memberBlock,
+      style: {
+        position: "relative",
+        display: "block",
+        marginBottom: String(Math.ceil(cxMembers.length / 2) - 1 !== i ? memberBetween : (isMac() ? memberVisual : 0)) + ea,
+      },
+      children: [
+        {
+          text: cxMembers[(i * 2)],
           class: [ "hoverDefault_lite" ],
+          attribute: {
+            member: cxMembers[(i * 2)],
+          },
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+            click: reloadEvent
+          },
           style: {
             position: "relative",
             display: "inline-block",
             width: withOut(50, 1, ea),
             fontSize: String(memberSize) + ea,
-            fontWeight: String(400),
-            fontFamily: "graphik",
+            fontWeight: String(500),
+            color: instance.selectedMember === cxMembers[(i * 2)] ? colorChip.green : colorChip.black,
             textAlign: "center",
           },
           children: [
@@ -1917,7 +1932,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
               style: {
                 position: "absolute",
                 height: withOut(grayBarTop, ea),
-                top: String(grayBarTop - 1) + ea,
+                top: String(grayBarTop) + ea,
                 right: String(0) + ea,
                 borderRight: "1px solid " + colorChip.gray3,
               }
@@ -1925,99 +1940,36 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
           ]
         },
         {
-          text: "Flow 2",
+          text: cxMembers[(i * 2) + 1],
           class: [ "hoverDefault_lite" ],
+          attribute: {
+            member: cxMembers[(i * 2) + 1],
+          },
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+            click: reloadEvent
+          },
           style: {
             position: "relative",
             display: "inline-block",
             width: withOut(50, 0, ea),
             fontSize: String(memberSize) + ea,
-            fontWeight: String(400),
-            fontFamily: "graphik",
+            fontWeight: String(500),
+            color: instance.selectedMember === cxMembers[(i * 2) + 1] ? colorChip.green : colorChip.black,
             textAlign: "center",
           }
         }
       ]
     });
-
-    memberBlock = createNode({
-      mother: boardBox,
-      style: {
-        position: "absolute",
-        left: String(0) + ea,
-        bottom: String(topMargin + flowHeight + flowBetween) + ea,
-        width: withOut(memberMarginLeft * 2, ea),
-        paddingTop: String(memberMargin) + ea,
-        paddingBottom: String(memberMargin) + ea,
-        paddingLeft: String(memberMarginLeft) + ea,
-        paddingRight: String(memberMarginLeft) + ea,
-        borderRadius: String(3) + "px",
-        background: colorChip.white,
-      }
-    });
-
-    for (let i = 0; i < Math.ceil(cxMembers.length / 2); i++) {
-      createNode({
-        mother: memberBlock,
-        style: {
-          position: "relative",
-          display: "block",
-          marginBottom: String(Math.ceil(cxMembers.length / 2) - 1 !== i ? memberBetween : (isMac() ? memberVisual : 0)) + ea,
-        },
-        children: [
-          {
-            text: cxMembers[(i * 2)],
-            class: [ "hoverDefault_lite" ],
-            style: {
-              position: "relative",
-              display: "inline-block",
-              width: withOut(50, 1, ea),
-              fontSize: String(memberSize) + ea,
-              fontWeight: String(500),
-              textAlign: "center",
-            },
-            children: [
-              {
-                style: {
-                  position: "absolute",
-                  height: withOut(grayBarTop, ea),
-                  top: String(grayBarTop) + ea,
-                  right: String(0) + ea,
-                  borderRight: "1px solid " + colorChip.gray3,
-                }
-              }
-            ]
-          },
-          {
-            text: cxMembers[(i * 2) + 1],
-            class: [ "hoverDefault_lite" ],
-            style: {
-              position: "relative",
-              display: "inline-block",
-              width: withOut(50, 0, ea),
-              fontSize: String(memberSize) + ea,
-              fontWeight: String(500),
-              textAlign: "center",
-            }
-          }
-        ]
-      });
-    }
-
-  } catch (e) {
-    console.log(e);
   }
 }
 
-ClientJs.prototype.makeBoard = function (divisionMap, cases) {
-  if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
-    throw new Error("invaild input");
-  }
-  if (divisionMap.flat().length !== (([ ...new Set(divisionMap.flat()) ]).length)) {
+ClientJs.prototype.makeBoard = function (cases) {
+  if (!Array.isArray(cases)) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll, uniqueValue } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll, uniqueValue, cleanChildren, setQueue } = GeneralJs;
   const staticList = {
     ea: "px",
     token: "__split__",
@@ -2027,13 +1979,11 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   };
   const { ea, token, actionClass, statusClass, actionArea } = staticList;
   const cookies = getCookiesAll();
+  const map = DataPatch.clientMap();
+  const totalFather = this.totalFather;
+  const scrollTong = totalFather.children[1].children[0];
   let temp;
-  let totalFather;
-  let nameStyle, cliidStyle, barStyle;
-  let style, styles;
   let tong;
-  let areaNumberStyle;
-  let div_clone, div_clone2, div_clone3;
   let size, margin;
   let num;
   let cardWidthConstant;
@@ -2042,10 +1992,8 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   let divideNumber;
   let fontSize, nameFontSize;
   let fixedHeightSize;
-  let exceptionMargin;
   let division;
   let numbers;
-  let updateState;
   let outerMargin;
   let whiteCard;
   let nameWord, idWord;
@@ -2065,15 +2013,15 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   let numberTitleSize, numberTitleTop, numberTitleBetween;
   let tongTitle, tongNumber, tongArea;
   let idWordTop;
-  let totalFatherPaddingTop;
-  let scrollTong;
-  let scrollTongPaddingBottom;
   let requestTong;
   let thisRequestNumber;
+  let divisionMap;
+  let index;
+
+  cleanChildren(scrollTong);
 
   margin = 10;
   outerMargin = margin * 2;
-  totalFatherPaddingTop = margin * 1.5;
 
   cardWidthConstant = 140;
   fixedHeightSize = 40;
@@ -2081,7 +2029,6 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   titleTop = isMac() ? 9 : 11;
   idWordTop = isMac() ? 13 : 14;
   startTop = titleTop + 16;
-  exceptionMargin = 12;
   fontSize = 11;
   nameFontSize = fontSize + 3;
 
@@ -2100,7 +2047,14 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   numberTitleTop = isMac() ? 18 : 20;
   numberTitleBetween = 9;
 
-  scrollTongPaddingBottom = 400;
+  divisionMap = map.action.items.map((i) => { return [ i ]; });
+  for (let i = map.action.divisionStart; i < map.action.divisionStart + map.action.divisionLength; i++) {
+    divisionMap[i] = [ divisionMap[i][0], divisionMap[i + map.action.divisionLength][0] ];
+  }
+  for (let i = map.action.divisionStart + map.action.divisionLength; i < map.action.divisionStart + map.action.divisionLength + map.action.divisionLength; i++) {
+    divisionMap[i] = null;
+  }
+  divisionMap = divisionMap.filter((arr) => { return Array.isArray(arr); });
 
   divideArr = [];
   sizeArr = [];
@@ -2112,57 +2066,9 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     sizeArr.push(size);
   }
 
-  totalFather = createNode({
-    mother: document.getElementById("totalcontents"),
-    class: [ "totalFather", "fadein" ],
-    style: {
-      height: "calc(100vh - " + String(this.belowHeight) + ea + ")",
-      width: String(100) + '%',
-      zIndex: String(1),
-      overflow: "hidden",
-    },
-    children: [
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          left: String(0),
-          top: String(0),
-          width: String(this.grayBarWidth) + ea,
-          background: colorChip.gray1,
-          verticalAlign: "top",
-          height: String(100) + '%',
-        }
-      },
-      {
-        style: {
-          display: "inline-block",
-          position: "relative",
-          paddingTop: String(totalFatherPaddingTop) + ea,
-          paddingLeft: String(outerMargin) + ea,
-          paddingRight: String(outerMargin) + ea,
-          width: withOut((outerMargin * 2) + this.grayBarWidth, ea),
-          height: String(100) + '%',
-          verticalAlign: "top",
-          overflow: "scroll",
-        },
-        children: [
-          {
-            style: {
-              display: "block",
-              position: "relative",
-              verticalAlign: "top",
-              width: String(100) + '%',
-              paddingBottom: String(scrollTongPaddingBottom) + ea,
-            }
-          }
-        ]
-      }
-    ]
+  setQueue(() => {
+    instance.boardGrayBar(divisionMap, cases, staticList);
   });
-  scrollTong = totalFather.children[1].children[0];
-
-  this.boardGrayBar(totalFather.firstChild, divisionMap, cases, staticList).catch((err) => { return console.log(err); });
 
   division = new Map();
   numbers = new Map();
@@ -2434,6 +2340,8 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
       thisRequestNumber = requestTong[obj.cliid];
     }
 
+    index = instance.cases.findIndex((c) => { return (c !== null && c.cliid === obj.cliid); });
+
     whiteCard = createNode({
       mother: division.get(obj.action),
       attribute: {
@@ -2443,6 +2351,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
         action: obj.action,
         status: obj.status,
         request: String(thisRequestNumber),
+        index: String(index),
       },
       event: {
         dragstart: function (e) {
@@ -2457,6 +2366,8 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
         dragleave: function (e) {
           e.preventDefault();
         },
+        click: instance.whiteViewMaker(index),
+        contextmenu: instance.makeClipBoardEvent(obj.cliid),
       },
       style: {
         display: "inline-block",
@@ -2474,10 +2385,6 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     nameWord = createNode({
       mother: whiteCard,
       text: obj.name,
-      event: {
-        click: instance.whiteViewMaker(num),
-        contextmenu: instance.makeClipBoardEvent(obj.cliid),
-      },
       style: {
         position: "absolute",
         fontSize: String(nameFontSize) + ea,
@@ -2492,10 +2399,6 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     idWord = createNode({
       mother: whiteCard,
       text: obj.cliid,
-      event: {
-        click: instance.whiteViewMaker(num),
-        contextmenu: instance.makeClipBoardEvent(obj.cliid),
-      },
       style: {
         position: "absolute",
         fontSize: String(fontSize) + ea,
@@ -2528,36 +2431,76 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     numbers.get(key).setAttribute("number", String(division.get(key).children.length));
   });
 
-  createNode({
-    mother: totalFather,
-    style: {
-      height: String(margin * 50) + ea
-    }
-  });
-
   this.divisionMap = division;
 
-  return totalFather;
 }
 
 ClientJs.prototype.cardViewMaker = function () {
   const instance = this;
-  const { equalJson } = GeneralJs;
-  const map = DataPatch.clientMap();
-  let itemMap;
-
-  itemMap = map.action.items.map((i) => { return [ i ]; });
-  for (let i = map.action.divisionStart; i < map.action.divisionStart + map.action.divisionLength; i++) {
-    itemMap[i] = [ itemMap[i][0], itemMap[i + map.action.divisionLength][0] ];
-  }
-  for (let i = map.action.divisionStart + map.action.divisionLength; i < map.action.divisionStart + map.action.divisionLength + map.action.divisionLength; i++) {
-    itemMap[i] = null;
-  }
-  itemMap = itemMap.filter((arr) => { return Array.isArray(arr); });
-
+  const { equalJson, createNode, withOut, colorChip, ajaxJson, scrollTo } = GeneralJs;
+  const { ea, belowHeight, grayBarWidth } = this;
   return async function (e) {
-    const { cases, totalContents, totalMother } = instance;
-    const thisCases = equalJson(JSON.stringify(cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status) && !/진행/gi.test(obj.status); });
+    const { totalContents, totalMother } = instance;
+    let thisCases;
+    let totalFather;
+    let totalFatherPaddingTop;
+    let outerMargin;
+    let scrollTongPaddingBottom;
+    let managerObj;
+    let newSearchInput, newSearchInputMother;
+
+    totalFatherPaddingTop = 15;
+    outerMargin = 20;
+    scrollTongPaddingBottom = 500;
+
+    newSearchInputMother = instance.searchInput.parentElement.cloneNode(true)
+    newSearchInput = newSearchInputMother.firstChild;
+    instance.searchInput.parentElement.parentElement.appendChild(newSearchInputMother);
+    instance.searchInput.parentElement.style.display = "none";
+
+    newSearchInput.addEventListener("keypress", function (e) {
+      if (GeneralJs.confirmKey.includes(e.key)) {
+        this.value = this.value.trim();
+        if (this.value.trim() === '' || this.value.trim() === '-') {
+          for (let dom of instance.totalFatherChildren) {
+            dom.style.background = GeneralJs.colorChip.white;
+            dom.children[0].style.color = GeneralJs.colorChip.black;
+            dom.children[1].style.color = GeneralJs.colorChip.green;
+            dom.children[1].style.opacity = String(1);
+          }
+          scrollTo(instance.totalFather.children[1], 0);
+        } else {
+          for (let dom of instance.totalFatherChildren) {
+            if ((new RegExp(this.value, "gi")).test(dom.textContent)) {
+              scrollTo(instance.totalFather.children[1], dom, ((window.innerHeight - belowHeight) / 2) - (40 * 2));
+              dom.style.background = GeneralJs.colorChip.green;
+              dom.children[0].style.color = GeneralJs.colorChip.whiteBlack;
+              dom.children[1].style.color = GeneralJs.colorChip.whiteBlack;
+              dom.children[1].style.opacity = String(0.6);
+            } else {
+              dom.style.background = GeneralJs.colorChip.white;
+              dom.children[0].style.color = GeneralJs.colorChip.black;
+              dom.children[1].style.color = GeneralJs.colorChip.green;
+              dom.children[1].style.opacity = String(1);
+            }
+          }
+        }
+      }
+    });
+
+    thisCases = equalJson(JSON.stringify(instance.cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status) && !/진행/gi.test(obj.status); });
+    managerObj = await ajaxJson({
+      method: "client",
+      property: "manager",
+      idArr: thisCases.map((obj) => { return obj.cliid; }),
+    }, "/getHistoryProperty");
+    for (let obj of thisCases) {
+      if (managerObj[obj.cliid] !== undefined) {
+        obj.manager = managerObj[obj.cliid];
+      }
+    }
+    instance.cardCases = thisCases;
+    instance.allMembers = await ajaxJson({ type: "get" }, "/getMembers");
 
     if (instance.whiteBox !== null) {
       if (GeneralJs.stacks.whiteBox !== 1) {
@@ -2568,8 +2511,6 @@ ClientJs.prototype.cardViewMaker = function () {
     if (instance.totalFather !== null) {
 
       instance.totalFather.style.zIndex = String(1);
-      instance.totalMother.classList.remove("justfadeinoriginal");
-      instance.totalMother.classList.add("justfadeoutoriginal");
       instance.totalFather.classList.remove("fadeout");
       instance.totalFather.classList.add("fadein");
 
@@ -2583,8 +2524,58 @@ ClientJs.prototype.cardViewMaker = function () {
         }
       }
 
-      totalMother.classList.add("justfadeoutoriginal");
-      instance.totalFather = instance.makeBoard(itemMap, thisCases);
+      totalFather = createNode({
+        mother: document.getElementById("totalcontents"),
+        class: [ "totalFather", "fadein" ],
+        style: {
+          height: "calc(100vh - " + String(belowHeight) + ea + ")",
+          width: String(100) + '%',
+          zIndex: String(1),
+          overflow: "hidden",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              left: String(0),
+              top: String(0),
+              width: String(grayBarWidth) + ea,
+              background: colorChip.gray1,
+              verticalAlign: "top",
+              height: String(100) + '%',
+            }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              paddingTop: String(totalFatherPaddingTop) + ea,
+              paddingLeft: String(outerMargin) + ea,
+              paddingRight: String(outerMargin) + ea,
+              width: withOut((outerMargin * 2) + grayBarWidth, ea),
+              height: String(100) + '%',
+              verticalAlign: "top",
+              overflow: "scroll",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  verticalAlign: "top",
+                  width: String(100) + '%',
+                  paddingBottom: String(scrollTongPaddingBottom) + ea,
+                }
+              }
+            ]
+          }
+        ]
+      });
+
+      instance.totalMother.style.display = "none";
+      instance.totalFather = totalFather;
+      instance.makeBoard(thisCases);
 
     }
     instance.onView = "father";
@@ -4631,10 +4622,10 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       position: "fixed",
       background: GeneralJs.colorChip.white,
       top: String(margin) + ea,
-      left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+      left: String(instance.grayBarWidth + margin) + ea,
       borderRadius: String(5) + ea,
       boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
-      width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+      width: String(window.innerWidth - instance.grayBarWidth - (margin * 2)) + ea,
       height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
       zIndex: String(2),
     };
@@ -4675,14 +4666,15 @@ ClientJs.prototype.rowViewMaker = function () {
       instance.totalFather.classList.remove("fadein");
       instance.totalFather.classList.add("fadeout");
     }
-    instance.totalMother.classList.remove("justfadeoutoriginal");
-    instance.totalMother.classList.add("justfadeinoriginal");
+    instance.totalMother.style.display = "block";
     instance.onView = "mother";
     GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
       if (instance.totalFather !== null) {
         instance.totalFatherChildren = [];
         instance.totalFather.remove();
       }
+      instance.searchInput.parentElement.parentElement.removeChild(instance.searchInput.parentElement.parentElement.lastChild);
+      instance.searchInput.parentElement.style.display = "block";
       instance.totalFather = null;
       instance.divisionMap = null;
       instance.totalMother.classList.remove("justfadeinoriginal");

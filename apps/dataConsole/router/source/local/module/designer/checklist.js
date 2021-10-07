@@ -2193,6 +2193,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "마감 기한",
@@ -2248,6 +2249,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
           totalWidth: factorWidth * 4,
           factorHeight: factorHeight,
           type: "matrix",
+          middle: false,
         },
         {
           name: "문제 해결력",
@@ -2829,6 +2831,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   let mobileTendencyVisualMargin;
   let mobileTendencyIntend;
   let baseTongPaddingTop;
+  let allHideIndex, safeNum;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -2862,6 +2865,17 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   baseTongPaddingTop = 2;
 
   checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin);
+  if (this.middleMode) {
+    allHideIndex = null;
+    safeNum = 0;
+    while (allHideIndex !== -1 && safeNum <= 10) {
+      if (allHideIndex !== null) {
+        checkListData.splice(allHideIndex, 1);
+      }
+      allHideIndex = checkListData.findIndex((obj) => { return obj.children.every((c) => { return c.middle === false }); });
+      safeNum++;
+    }
+  }
 
   baseTong0 = createNode({
     mother: totalMother,
@@ -3444,7 +3458,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       const designer = instance.designers.pick(desid);
                       const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
                       const whereQuery = { desid };
-                      const confirm = instance.middleMode ? false : window.confirm("수정이 확실합니까?");
+                      const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
                       if (updateQuery === "error" || !confirm) {
                         this.value = this.getAttribute("past");
                       } else {
