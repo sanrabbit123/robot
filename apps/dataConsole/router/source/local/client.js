@@ -1530,7 +1530,7 @@ ClientJs.prototype.spreadData = async function (search = null) {
   }
 }
 
-ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
+ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, staticList = {}) {
   if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
     throw new Error("invaild input");
   }
@@ -1538,9 +1538,8 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll } = GeneralJs;
-  const ea = "px";
-  const token = "__split__";
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute } = GeneralJs;
+  const { ea, token, actionClass, statusClass, actionArea } = staticList;
   const clientMap = DataPatch.clientMap();
   const cookies = getCookiesAll();
   const dashboardTarget = {
@@ -1557,6 +1556,47 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
       divisionLength: clientMap.action.divisionLength,
     },
   };
+  const statusColorSync = (status, standardDom, caseDoms) => {
+    const colorMap = [
+      { status: "응대중", color: colorChip.black },
+      { status: "장기", color: colorChip.darkRed },
+      { status: "드랍", color: colorChip.gray4 },
+    ]
+    let finalColor, targets;
+    finalColor = colorMap.find((obj) => { return obj.status === status }).color;
+    targets = [ ...standardDom.children ];
+    targets = targets.concat(caseDoms);
+    for (let dom of targets) {
+      dom.style.color = finalColor;
+    }
+  }
+  const statusNumberSync = (from, to) => {
+    const numberTargets = [ ...document.querySelectorAll('.' + statusClass) ];
+    const fromDom = findByAttribute(numberTargets, "status", from);
+    const toDom = findByAttribute(numberTargets, "status", to);
+    const fromNumber = Number(fromDom.textContent.replace(/[^0-9]/gi, ''));
+    const toNumber = Number(toDom.textContent.replace(/[^0-9]/gi, ''));
+    if (from === "응대중") {
+      if (to === "응대중") {
+        //pass
+      } else if (to === "장기") {
+        fromDom.textContent = String(fromNumber - 1);
+        toDom.textContent = String(toNumber + 1);
+      } else {
+        fromDom.textContent = String(fromNumber - 1);
+      }
+    } else {
+      if (to === "응대중") {
+        fromDom.textContent = String(fromNumber - 1);
+        toDom.textContent = String(toNumber + 1);
+      } else if (to === "장기") {
+        //pass
+      } else {
+        fromDom.textContent = String(fromNumber - 1);
+      }
+    }
+    return to !== "드랍";
+  }
   let dashboardData;
   let boardBox;
   let topMargin, leftMargin;
@@ -1682,46 +1722,70 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
             e.preventDefault();
             this.firstChild.style.color = colorChip.green;
           },
-          drop: function (e) {
+          drop: async function (e) {
             e.preventDefault();
             const name = this.getAttribute("name");
             const column = this.getAttribute("column");
             const cliid = e.dataTransfer.getData("dragData").split(token)[0];
             const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
             const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
-            let indexTong;
-            let index, thisCase;
-            let rowDom;
+            const fromStatus = e.dataTransfer.getData("dragData").split(token)[3];
+            const card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
+            const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+            const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
+            try {
+              let indexTong;
+              let index, thisCase;
+              let rowDom;
+              let thisStandardDom;
+              let thisCaseDom;
+              let length;
 
-            indexTong = [];
-            for (let i = 0; i < instance.cases.length; i++) {
-              if (instance.cases[i] !== null) {
-                if (instance.cases[i].cliid === cliid) {
-                  indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+              indexTong = [];
+              for (let i = 0; i < instance.cases.length; i++) {
+                if (instance.cases[i] !== null) {
+                  if (instance.cases[i].cliid === cliid) {
+                    indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                  }
                 }
               }
+
+              index = indexTong[requestNumber].index;
+              thisCase = indexTong[requestNumber].thisCase;
+              instance.cases[index].status = name;
+              thisStandardDom = Array.from(instance.standardDoms).find((dom) => { return dom.firstChild.textContent.trim() === cliid; });
+              thisCaseDom = [ ...document.querySelector("." + cliid).children ];
+              rowDom = findByAttribute(thisCaseDom, "column", "status");
+              if (rowDom !== null) {
+                rowDom.textContent = name;
+              }
+              card.setAttribute("status", name);
+
+              statusColorSync(name, thisStandardDom, thisCaseDom);
+              if (!statusNumberSync(fromStatus, name)) {
+                length = card.parentElement.children.length;
+                card.remove();
+                length = length - 1;
+                findByAttribute(boardDoms, "action", fromAction).textContent = String(length);
+                findByAttribute(areaDoms, "action", fromAction).parentElement.children[1].textContent = String(length) + "명";
+              }
+
+              await ajaxJson({
+                thisId: cliid,
+                requestIndex: String(requestNumber),
+                column: "status",
+                pastValue: name,
+                value: name,
+                index,
+                thisCase,
+                user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
+              }, "/updateClient");
+
+              this.firstChild.style.color = colorChip.black;
+
+            } catch (e) {
+              console.log(e);
             }
-
-            index = indexTong[requestNumber].index;
-            thisCase = indexTong[requestNumber].thisCase;
-            instance.cases[index].action = name;
-            rowDom = findByAttribute([ ...document.querySelector("." + cliid).children ], "column", "status");
-            if (rowDom !== null) {
-              rowDom.textContent = name;
-            }
-
-            await ajaxJson({
-              thisId: cliid,
-              requestIndex: String(requestNumber),
-              column: "status",
-              pastValue: name,
-              value: name,
-              index,
-              thisCase,
-              user: cookies.homeliaisonConsoleLoginedName + "__split__" + cookies.homeliaisonConsoleLoginedEmail
-            }, "/updateClient");
-
-            this.firstChild.style.color = colorChip.black;
           }
         },
         style: {
@@ -1740,7 +1804,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
             }
           },
           {
-            class: [ "boardGray_statusBlock" ],
+            class: [ statusClass ],
             attribute: {
               status: dashboardData.status.name[i],
             },
@@ -1777,7 +1841,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases) {
             }
           },
           {
-            class: [ "boardGray_actionBlock" ],
+            class: [ actionClass ],
             attribute: {
               action: dashboardData.action.name[i],
             },
@@ -1936,8 +2000,14 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   }
   const instance = this;
   const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll } = GeneralJs;
-  const ea = "px";
-  const token = "__split__";
+  const staticList = {
+    ea: "px",
+    token: "__split__",
+    actionClass: "boardGray_actionBlock",
+    statusClass: "boardGray_statusBlock",
+    actionArea: "mainArea_actionArea",
+  };
+  const { ea, token, actionClass, statusClass, actionArea } = staticList;
   const cookies = getCookiesAll();
   let temp;
   let totalFather;
@@ -2074,7 +2144,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
   });
   scrollTong = totalFather.children[1].children[0];
 
-  this.boardGrayBar(totalFather.firstChild, divisionMap, cases).catch((err) => { return console.log(err); });
+  this.boardGrayBar(totalFather.firstChild, divisionMap, cases, staticList).catch((err) => { return console.log(err); });
 
   division = new Map();
   numbers = new Map();
@@ -2144,9 +2214,11 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
 
       tongArea = createNode({
         mother: tong,
+        class: [ actionArea ],
         attribute: {
           kinds: "area",
           name: divisionMap[i][j],
+          action: divisionMap[i][j],
           opposite: divisionMap[i][divisionMap[i].length - 1 - j],
           family: JSON.stringify(divisionMap[i]),
           length: String(divisionMap[i].length),
@@ -2171,12 +2243,10 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             const name = this.getAttribute("name");
             const opposite = division.get(this.getAttribute("opposite"));
             const oppositeName = opposite.getAttribute("name");
-            const family = equalJson(this.getAttribute("family"));
             const length = Number(this.getAttribute("length"));
             const size = Number(this.getAttribute("size"));
             const divide = Number(this.getAttribute("divide"));
             const oppositeDivide = Number(opposite.getAttribute("divide"));
-            const oppositeLength = Number(opposite.getAttribute("number"));
             const cliid = e.dataTransfer.getData("dragData").split(token)[0];
             const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
             const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
@@ -2188,7 +2258,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             const fromOppositeName = fromOpposite.getAttribute("name");
             const fromDivide = Number(from.getAttribute("divide"));
             const fromOppositeDivide = Number(fromOpposite.getAttribute("divide"));
-            const boardDoms = [ ...document.querySelectorAll(".boardGray_actionBlock") ];
+            const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
             try {
               let thisChildren, oppositeChildren;
               let thisChildrenLength, oppositeChildrenLength;
@@ -2202,7 +2272,6 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
               this.style.background = colorChip.gray1;
               this.parentElement.firstChild.style.color = colorChip.black;
               this.appendChild(card);
-
 
               thisChildren = this.children;
               oppositeChildren = opposite.children;
@@ -2261,6 +2330,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
               fromOpposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
               findByAttribute(boardDoms, "action", fromOppositeName).textContent = String(oppositeChildren.length);
 
+
               indexTong = [];
               for (let i = 0; i < instance.cases.length; i++) {
                 if (instance.cases[i] !== null) {
@@ -2269,9 +2339,9 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
                   }
                 }
               }
-
               index = indexTong[requestNumber].index;
               thisCase = indexTong[requestNumber].thisCase;
+
 
               instance.cases[index].action = name;
               rowDom = findByAttribute([ ...document.querySelector("." + cliid).children ], "column", "action");
@@ -2279,6 +2349,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
                 rowDom.textContent = name;
               }
               card.setAttribute("action", name);
+
 
               await ajaxJson({
                 thisId: cliid,
@@ -2288,8 +2359,9 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
                 value: name,
                 index,
                 thisCase,
-                user: cookies.homeliaisonConsoleLoginedName + "__split__" + cookies.homeliaisonConsoleLoginedEmail
+                user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
               }, "/updateClient");
+
 
             } catch (e) {
               console.log(e);
@@ -2335,11 +2407,12 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
         cliid: obj.cliid,
         draggable: "true",
         action: obj.action,
+        status: obj.status,
         request: String(thisRequestNumber),
       },
       event: {
         dragstart: function (e) {
-          e.dataTransfer.setData("dragData", this.getAttribute("cliid") + token + this.getAttribute("action") + token + this.getAttribute("request"));
+          e.dataTransfer.setData("dragData", this.getAttribute("cliid") + token + this.getAttribute("action") + token + this.getAttribute("request") + token + this.getAttribute("status"));
         },
         dragend: function (e) {
           e.preventDefault();
@@ -6294,6 +6367,11 @@ ClientJs.prototype.launching = async function () {
     let getTarget;
     let tempFunction;
 
+    // const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/possibleDesigner");
+    // es.addEventListener("updateTong", (e) => {
+    //   instance.possibleSseParsing(equalJson(e.data));
+    // });
+
     getTarget = null;
     if (getObj.cliid !== undefined) {
       for (let dom of this.standardDoms) {
@@ -6317,666 +6395,6 @@ ClientJs.prototype.launching = async function () {
 
   } catch (e) {
     GeneralJs.ajax({ message: e.message, channel: "#error_log" }, "/sendSlack", function () {});
-    console.log(e);
-  }
-}
-
-ClientJs.prototype.lateLaunching = async function () {
-  const instance = this;
-  try {
-    const { dateToString, returnGet } = GeneralJs;
-
-    GeneralJs.stacks["realtimeClient"] = {
-      from: null,
-      to: null,
-    };
-
-    const timelineMake = async function (mother, size, ea) {
-      try {
-        const path = "/realtimeClient";
-        const { createNode, createNodes, colorChip, cleanChildren, ajaxJson, dateToString } = GeneralJs;
-        let tong;
-        let from, to;
-        let tempArr;
-        let tempArr2, tempArr3;
-        let color;
-        let tongMake;
-        let arrowWidth;
-        let arrowTop;
-        let arrowRight;
-        let arrowBoxWidth;
-        let hamburgerWidth;
-        let hamburgerTop;
-        let hamburgerRight;
-
-        cleanChildren(mother);
-        GeneralJs.stacks.thisDate = new Date();
-
-        arrowWidth = 10;
-        arrowTop = 10;
-        arrowRight = 17;
-        arrowBoxWidth = 15;
-
-        hamburgerWidth = 11;
-        hamburgerTop = 11;
-        hamburgerRight = 16;
-
-        mother.style.overflow = "scroll";
-        tong = createNode({
-          mother,
-          id: "toTong",
-          style: {
-            position: "relative",
-            width: String(100) + '%',
-          }
-        });
-
-        tongMake = async (tong, now) => {
-          try {
-            const { standard, matrix, caution } = await ajaxJson({ method: "get", date: now, member: instance.mother.member.id }, path);
-            cleanChildren(tong);
-            for (let i = 0; i < standard.length; i++) {
-              tempArr = standard[i].split('~').map((z) => { return z.trim(); });
-              tempArr2 = tempArr[0].split(':');
-              tempArr3 = tempArr[1].split(':');
-              from = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(tempArr2[0]), Number(tempArr2[1]));
-              to = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(tempArr3[0]), Number(tempArr3[1]));
-              if (from.valueOf() <= now.valueOf() && to.valueOf() > now.valueOf()) {
-                color = "green";
-              } else if (to.valueOf() <= now.valueOf()) {
-                color = "gray4";
-              } else {
-                color = "black";
-              }
-              blockMake(standard[i], tong, size, color, matrix[i].name, matrix[i].cliid, instance.mother.member.name, "to", i, caution[i], caution);
-            }
-          } catch (e) {
-            console.log(e);
-          }
-        }
-
-        createNode({
-          mother: mother.parentElement.firstChild,
-          mode: "svg",
-          source: instance.mother.returnHamburger(colorChip.green),
-          style: {
-            position: "absolute",
-            width: String(hamburgerWidth) + ea,
-            top: String(hamburgerTop) + ea,
-            right: String(arrowRight + hamburgerRight) + ea,
-          }
-        });
-        createNode({
-          mother: mother.parentElement.firstChild,
-          events: [
-            {
-              type: "click",
-              event: function (e) {
-                const toggle = GeneralJs.stacks.notyetBox.getAttribute("toggle");
-                if (toggle === "off") {
-                  GeneralJs.stacks.notyetBox.style.display = "block";
-                  GeneralJs.stacks.notyetBox.setAttribute("toggle", "on");
-                } else if (toggle === "on") {
-                  GeneralJs.stacks.notyetBox.style.display = "none";
-                  GeneralJs.stacks.notyetBox.setAttribute("toggle", "off");
-                }
-              }
-            }
-          ],
-          style: {
-            position: "absolute",
-            width: String(arrowBoxWidth) + ea,
-            height: String(arrowBoxWidth) + ea,
-            top: String(hamburgerTop - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
-            right: String(arrowRight + hamburgerRight - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
-            cursor: "pointer",
-          }
-        });
-        createNode({
-          mother: mother.parentElement.firstChild,
-          mode: "svg",
-          source: instance.mother.returnArrow("left", colorChip.green),
-          style: {
-            position: "absolute",
-            width: String(arrowWidth) + ea,
-            top: String(arrowTop) + ea,
-            right: String(arrowRight) + ea,
-          }
-        });
-        createNode({
-          mother: mother.parentElement.firstChild,
-          events: [
-            {
-              type: "click",
-              event: function (e) {
-                GeneralJs.stacks.thisDate.setDate(GeneralJs.stacks.thisDate.getDate() - 1);
-                mother.parentElement.firstChild.children[1].firstChild.textContent = dateToString(GeneralJs.stacks.thisDate);
-                tongMake(tong, GeneralJs.stacks.thisDate);
-              }
-            }
-          ],
-          style: {
-            position: "absolute",
-            width: String(arrowBoxWidth) + ea,
-            height: String(arrowBoxWidth) + ea,
-            top: String(arrowTop - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
-            right: String(arrowRight - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
-            cursor: "pointer",
-          }
-        });
-        createNode({
-          mother: mother.parentElement.firstChild,
-          mode: "svg",
-          source: instance.mother.returnArrow("right", colorChip.green),
-          style: {
-            position: "absolute",
-            width: String(arrowWidth) + ea,
-            top: String(arrowTop) + ea,
-            right: String(0) + ea,
-          }
-        });
-        createNode({
-          mother: mother.parentElement.firstChild,
-          events: [
-            {
-              type: "click",
-              event: function (e) {
-                GeneralJs.stacks.thisDate.setDate(GeneralJs.stacks.thisDate.getDate() + 1);
-                mother.parentElement.firstChild.children[1].firstChild.textContent = dateToString(GeneralJs.stacks.thisDate);
-                tongMake(tong, GeneralJs.stacks.thisDate);
-              }
-            }
-          ],
-          style: {
-            position: "absolute",
-            width: String(arrowBoxWidth) + ea,
-            height: String(arrowBoxWidth) + ea,
-            top: String(arrowTop - ((arrowBoxWidth - arrowWidth) / 2)) + ea,
-            right: String(0) + ea,
-            cursor: "pointer",
-          }
-        });
-
-        await tongMake(tong, GeneralJs.stacks.thisDate);
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    const wssSocket = new WebSocket(OFFICEHOST.replace(/^https/, "wss") + "/client");
-    wssSocket.onopen = () => {
-      const { dateToString } = GeneralJs;
-      instance.wssSocket = wssSocket;
-      wssSocket.onmessage = (event) => {
-        const update = JSON.parse(event.data);
-        const { member, from, to, date, caution } = update;
-        if (caution === null) {
-          let fromChildren, toChildren;
-          let fromTarget, toTarget;
-          let idFixMargin, ea;
-          ea = "px";
-          idFixMargin = 4;
-          fromChildren = document.getElementById("fromTong").children;
-          toChildren = document.getElementById("toTong").children;
-          fromTarget = fromChildren[from.index];
-          toTarget = toChildren[to.index];
-          fromTarget.setAttribute("manager", to.manager);
-          fromTarget.querySelector(".manager").firstChild.textContent = to.manager;
-          if (member === instance.mother.member.id && date === dateToString(GeneralJs.stacks.thisDate)) {
-            toTarget.setAttribute("client", from.client);
-            toTarget.setAttribute("cliid", from.cliid);
-            toTarget.querySelector(".client").firstChild.textContent = from.client;
-            toTarget.querySelector(".client").querySelector('b').textContent = from.cliid;
-            toTarget.querySelector(".client").querySelector('b').style.marginLeft = String(idFixMargin) + ea;
-          }
-        } else {
-          GeneralJs.stacks.realtimeSpec[0].parentElement.firstChild.children[1].textContent = GeneralJs.dateToString(new Date());
-          timelineMake(...GeneralJs.stacks.realtimeSpec);
-        }
-      }
-    }
-
-    const blockMake = function (wording, tong, size, color, client, cliid, manager, fromTo, index, caution = null, cautionTotal = []) {
-      const { createNode, createNodes, colorChip, withOut, ajaxJson, dateToString } = GeneralJs;
-      const textTargets = "textTargets";
-      const fromClass = "from";
-      const toClass = "to";
-      let marginBottom;
-      let height;
-      let padding;
-      let idMargin, idFixMargin;
-      let ea;
-      let from;
-      let cautionBoo;
-      let cautionRed;
-
-      cautionBoo = (caution !== null);
-      cautionRed = false;
-      if (cautionBoo) {
-        if (cautionTotal.length === 0) {
-          throw new Error("must be caution total");
-        }
-        cautionRed = cautionTotal.every((i) => { return i === caution });
-      }
-      from = (fromTo === "from");
-      ea = "px";
-      marginBottom = 10;
-      height = 17;
-      padding = 11;
-      idMargin = 2;
-      idFixMargin = 4;
-
-      createNode({
-        mother: tong,
-        class: [ "hoverDefault_lite", (from ? fromClass : toClass) ],
-        attribute: [
-          { client },
-          { cliid },
-          { manager },
-          { index: String(index) },
-          { toggle: "off" },
-          { caution: cautionBoo ? caution : "null" },
-          { red: cautionRed ? "true" : "false" }
-        ],
-        events: [
-          {
-            type: "click",
-            event: async function (e) {
-              try {
-                const toggle = this.getAttribute("toggle");
-                const client = this.getAttribute("client");
-                const cliid = this.getAttribute("cliid");
-                const manager = this.getAttribute("manager");
-                const index = Number(this.getAttribute("index"));
-                const caution = this.getAttribute("caution") === "null" ? null : this.getAttribute("caution");
-                const tong = GeneralJs.stacks["realtimeClient"];
-                let cautionRed = this.getAttribute("red") === "true";
-                let doms, bolds, siblings, opposite;
-                let oClient, oCliid, oManager, oIndex;
-                let updateContinue;
-                let cautionReject;
-                let cautionSide;
-                siblings = document.querySelectorAll('.' + (from ? fromClass : toClass));
-                for (let s of siblings) {
-                  if (s !== this) {
-                    if (s.getAttribute("toggle") === "on") {
-                      doms = s.querySelectorAll('.' + textTargets);
-                      bolds = s.querySelectorAll('b');
-                      for (let dom of doms) {
-                        dom.style.color = dom.getAttribute("color");
-                      }
-                      for (let bold of bolds) {
-                        bold.style.color = bold.parentElement.getAttribute("bold");
-                      }
-                      s.setAttribute("toggle", "off");
-                    }
-                  }
-                }
-                doms = this.querySelectorAll('.' + textTargets);
-                bolds = this.querySelectorAll('b');
-                if (toggle === "off") {
-                  for (let dom of doms) {
-                    dom.style.color = colorChip.purple;
-                  }
-                  for (let bold of bolds) {
-                    bold.style.color = colorChip.purple;
-                  }
-                  tong[(from ? fromClass : toClass)] = this;
-                  if (tong[(!from ? fromClass : toClass)] !== null) {
-                    opposite = tong[(!from ? fromClass : toClass)];
-                    oClient = opposite.getAttribute("client");
-                    oCliid = opposite.getAttribute("cliid");
-                    oManager = opposite.getAttribute("manager");
-                    oIndex = Number(opposite.getAttribute("index"));
-                    oCaution = opposite.getAttribute("caution") === "null" ? null : opposite.getAttribute("caution");
-                    if (!cautionRed) {
-                      cautionRed = opposite.getAttribute("red") === "true";
-                    }
-
-                    updateContinue = false;
-                    cautionReject = false;
-                    cautionSide = null;
-                    if (caution === null && oCaution === null) {
-                      updateContinue = true;
-                    } else {
-                      if (!cautionRed) {
-                        if (cliid === caution || oCliid === caution || cliid === oCaution || oCliid === oCaution) {
-                          cautionRed = true;
-                        }
-                      }
-                      if (cautionRed) {
-                        if (caution === null) {
-                          if (oCaution === cliid) {
-                            updateContinue = true;
-                          } else {
-                            cautionReject = "opposite";
-                          }
-                        } else {
-                          if (caution === oCliid) {
-                            updateContinue = true;
-                          } else {
-                            cautionReject = "this";
-                          }
-                        }
-                        cautionSide = cautionReject === "opposite" ? "from" : "to";
-                      } else {
-                        updateContinue = true;
-                        cautionReject = false;
-                        cautionSide = null;
-                      }
-                    }
-
-                    if (updateContinue) {
-                      if (from) {
-                        opposite.setAttribute("client", client);
-                        opposite.setAttribute("cliid", cliid);
-                        this.setAttribute("manager", oManager);
-                        opposite.querySelector(".client").firstChild.textContent = client;
-                        opposite.querySelector(".client").querySelector('b').textContent = cliid;
-                        opposite.querySelector(".client").querySelector('b').style.marginLeft = String(idFixMargin) + ea;
-                        this.querySelector(".manager").firstChild.textContent = oManager;
-                        opposite.querySelector(".manager").firstChild.textContent = oManager;
-                        await ajaxJson({ method: "client", id: cliid, column: "manager", value: oManager, email: instance.mother.member.email[0] }, "/updateHistory");
-                        await ajaxJson({ method: "update", date: GeneralJs.stacks.thisDate, update: {
-                          member: instance.mother.member.id,
-                          cliid: cliid,
-                          index: oIndex,
-                        } }, "/realtimeClient");
-                      } else {
-                        this.setAttribute("client", oClient);
-                        this.setAttribute("cliid", oCliid);
-                        opposite.setAttribute("manager", manager);
-                        this.querySelector(".client").firstChild.textContent = oClient;
-                        this.querySelector(".client").querySelector('b').textContent = oCliid;
-                        this.querySelector(".client").querySelector('b').style.marginLeft = String(idFixMargin) + ea;
-                        opposite.querySelector(".manager").firstChild.textContent = manager;
-                        this.querySelector(".manager").firstChild.textContent = manager;
-                        await ajaxJson({ method: "client", id: oCliid, column: "manager", value: manager, email: instance.mother.member.email[0] }, "/updateHistory");
-                        await ajaxJson({ method: "update", date: GeneralJs.stacks.thisDate, update: {
-                          member: instance.mother.member.id,
-                          cliid: oCliid,
-                          index: index,
-                        } }, "/realtimeClient");
-                      }
-                      instance.wssSocket.send(JSON.stringify({
-                        member: instance.mother.member.id,
-                        date: dateToString(GeneralJs.stacks.thisDate),
-                        from: { client: from ? client : oClient, cliid: from ? cliid : oCliid, manager: from ? oManager : manager, index: from ? index : oIndex },
-                        to: { client: from ? client : oClient, cliid: from ? cliid : oCliid, manager: from ? oManager : manager, index: from ? oIndex : index },
-                        caution: cautionSide === null ? null : cautionSide,
-                      }));
-                    }
-
-                    if (cautionReject === false) {
-
-                      for (let dom of doms) {
-                        dom.style.color = dom.getAttribute("color");
-                      }
-                      for (let bold of bolds) {
-                        bold.style.color = bold.parentElement.getAttribute("bold");
-                      }
-                      tong[(from ? fromClass : toClass)] = null;
-                      this.setAttribute("toggle", "off");
-
-                      doms = opposite.querySelectorAll('.' + textTargets);
-                      bolds = opposite.querySelectorAll('b');
-                      for (let dom of doms) {
-                        dom.style.color = dom.getAttribute("color");
-                      }
-                      for (let bold of bolds) {
-                        bold.style.color = bold.parentElement.getAttribute("bold");
-                      }
-                      tong[(!from ? fromClass : toClass)] = null;
-                      opposite.setAttribute("toggle", "off");
-
-                    } else if (cautionReject === "opposite") {
-
-                      for (let dom of doms) {
-                        dom.style.color = dom.getAttribute("color");
-                      }
-                      for (let bold of bolds) {
-                        bold.style.color = bold.parentElement.getAttribute("bold");
-                      }
-                      tong[(from ? fromClass : toClass)] = null;
-                      this.setAttribute("toggle", "off");
-
-                      doms = opposite.querySelectorAll('.' + textTargets);
-                      bolds = opposite.querySelectorAll('b');
-                      for (let dom of doms) {
-                        dom.style.color = colorChip.red;
-                      }
-                      for (let bold of bolds) {
-                        bold.style.color = colorChip.red;
-                      }
-                      tong[(!from ? fromClass : toClass)] = null;
-                      opposite.setAttribute("toggle", "off");
-
-                    } else {
-
-                      for (let dom of doms) {
-                        dom.style.color = colorChip.red;
-                      }
-                      for (let bold of bolds) {
-                        bold.style.color = colorChip.red;
-                      }
-                      tong[(from ? fromClass : toClass)] = null;
-                      this.setAttribute("toggle", "off");
-
-                      doms = opposite.querySelectorAll('.' + textTargets);
-                      bolds = opposite.querySelectorAll('b');
-                      for (let dom of doms) {
-                        dom.style.color = dom.getAttribute("color");
-                      }
-                      for (let bold of bolds) {
-                        bold.style.color = bold.parentElement.getAttribute("bold");
-                      }
-                      tong[(!from ? fromClass : toClass)] = null;
-                      opposite.setAttribute("toggle", "off");
-
-                    }
-
-                  } else {
-                    this.setAttribute("toggle", "on");
-                  }
-                } else {
-                  for (let dom of doms) {
-                    dom.style.color = dom.getAttribute("color");
-                  }
-                  for (let bold of bolds) {
-                    bold.style.color = bold.parentElement.getAttribute("bold");
-                  }
-                  tong[(from ? fromClass : toClass)] = null;
-                  this.setAttribute("toggle", "off");
-                }
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          }
-        ],
-        style: {
-          display: "block",
-          position: "relative",
-          width: String(100) + '%',
-          marginBottom: String(marginBottom) + ea,
-          height: String(height) + ea,
-          textAlign: "right",
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              width: String(98) + '%',
-              left: String(1) + '%',
-              top: String(height * 0.48) + ea,
-              borderBottom: "1px solid " + colorChip.gray2,
-            }
-          },
-          {
-            text: wording,
-            class: [ textTargets ],
-            attribute: [
-              { color: colorChip[color] }
-            ],
-            style: {
-              position: "absolute",
-              left: String(0),
-              top: String(0),
-              fontSize: String(size) + ea,
-              fontWeight: String(300),
-              color: cautionRed ? colorChip.red : colorChip[color],
-              paddingRight: String(padding) + ea,
-              background: colorChip.white,
-            }
-          },
-          {
-            text: `${client} <b%${cliid}%b>`,
-            class: [ textTargets, "client" ],
-            attribute: [
-              { color: colorChip[color] },
-              { bold: colorChip.gray5 },
-            ],
-            style: {
-              display: "inline-block",
-              position: "relative",
-              right: String(0),
-              top: String(0),
-              fontSize: String(size) + ea,
-              fontWeight: String(500),
-              color: cautionRed ? colorChip.red : colorChip[color],
-              paddingLeft: String(padding) + ea,
-              background: colorChip.white,
-            },
-            bold: {
-              fontWeight: String(300),
-              color: cautionRed ? colorChip.red : colorChip["gray5"],
-              marginLeft: String(idMargin) + ea,
-              fontSize: String(size - 3) + ea,
-            }
-          },
-          {
-            text: "|",
-            class: [ textTargets ],
-            attribute: [
-              { color: colorChip.gray4 }
-            ],
-            style: {
-              display: "inline-block",
-              position: "relative",
-              right: String(0),
-              top: String(0),
-              fontSize: String(size) + ea,
-              fontWeight: String(200),
-              color: cautionRed ? colorChip.red : colorChip.gray4,
-              paddingLeft: String(padding) + ea,
-              background: colorChip.white,
-            },
-          },
-          {
-            text: cautionRed ? "미정" : manager,
-            class: [ textTargets, "manager" ],
-            attribute: [
-              { color: colorChip[color] }
-            ],
-            style: {
-              display: "inline-block",
-              position: "relative",
-              right: String(0),
-              top: String(0),
-              fontSize: String(size) + ea,
-              fontWeight: String(500),
-              color: cautionRed ? colorChip.red : colorChip[color],
-              paddingLeft: String(padding) + ea,
-              background: colorChip.white,
-            },
-          },
-        ]
-      });
-    }
-
-    /*
-
-    instance.dashboardBox({
-      name: "realtime",
-      style: { height: window.innerHeight - 388 - 83, right: 20, bottom: 388 },
-      title: {
-        main: "응대 예정",
-        sub: dateToString(new Date()),
-      },
-      callback: async (mother, size, ea) => {
-        try {
-          if (!((await GeneralJs.ajaxJson({ method: "manager" }, "/realtimeClient")).includes(instance.mother.member.id))) {
-            mother.parentElement.parentElement.style.display = "none";
-          }
-          GeneralJs.stacks.realtimeSpec = [ mother, size, ea ];
-          await timelineMake(mother, size, ea);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-    });
-
-    instance.dashboardBox({
-      name: "notyet",
-      style: { height: window.innerHeight - 158 - 83, right: 372, bottom: 158 },
-      title: {
-        main: "응대 필요",
-        sub: "5"
-      },
-      callback: async (mother, size, ea) => {
-        try {
-          const path = "/realtimeClient";
-          const { createNode, colorChip, cleanChildren, ajaxJson, stringToDate } = GeneralJs;
-          let tong, cases;
-          let cliidArr, historyObj;
-          let num;
-
-          GeneralJs.stacks.notyetBox = mother.parentElement.parentElement;
-          GeneralJs.stacks.notyetBox.setAttribute("toggle", "off");
-          GeneralJs.stacks.notyetBox.style.display = "none";
-          mother.style.overflow = "scroll";
-          tong = createNode({
-            mother,
-            id: "fromTong",
-            style: {
-              position: "relative",
-              width: String(100) + '%',
-            }
-          });
-
-          cases = JSON.parse(JSON.stringify(instance.cases));
-          cases = cases.filter((i) => { return i !== null });
-          cases = cases.filter((i) => { return i.status === "응대중" });
-
-          cliidArr = cases.map((i) => { return i.cliid });
-          historyObj = await ajaxJson({ method: "client", idArr: cliidArr }, "/getHistoryTotal");
-          cases = cases.map((obj) => {
-            obj.manager = ((historyObj[obj.cliid].manager === '' || historyObj[obj.cliid].manager === '-') ? "미정" : historyObj[obj.cliid].manager);
-            obj.timelineValue = stringToDate(obj.timeline).valueOf();
-            obj.timeline = obj.timeline.split(' ')[0];
-            return obj;
-          });
-
-          cases.sort((a, b) => { return b.timelineValue - a.timelineValue; });
-
-          num = 0;
-          for (let { name, cliid, timeline, manager } of cases) {
-            blockMake(timeline, tong, size, "black", name, cliid, manager, "from", num);
-            num++;
-          }
-
-          mother.parentElement.firstChild.lastChild.textContent = String(cases.length);
-
-        } catch (e) {
-          console.log(e);
-        }
-      },
-    });
-
-    */
-
-  } catch (e) {
     console.log(e);
   }
 }

@@ -37,7 +37,7 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   }
   if (typeof this.possibleConst !== "object" || this.possibleConst === null) {
     this.possibleConst = {
-      futureLength: 18,
+      futureLength: 30,
       okClassName: "okSvg",
       cancelClassName: "cancelSvg",
       numberClassName: "numberWord",
