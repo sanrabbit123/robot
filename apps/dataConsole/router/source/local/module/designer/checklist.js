@@ -220,6 +220,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                       let text;
                                       let relatedY, relatedM;
                                       let tempArr;
+                                      let confirm;
                                       if (/년/g.test(this.value)) {
                                         tempArr = this.value.split('년');
                                         if (tempArr.length !== 2) {
@@ -236,7 +237,8 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             updateQuery["information.business.career.relatedY"] = relatedY;
                                             updateQuery["information.business.career.relatedM"] = relatedM;
                                             text = `유관 경력 : ${String(relatedY)}년 ${String(relatedM)}개월`;
-                                            if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
+
+                                            if (instance.middleMode ? false : window.confirm("수정이 확실합니까?")) {
                                               await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                               await ajaxJson({
                                                 mode: "sse",
@@ -256,7 +258,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 page: "checklist",
                                                 mode: "update",
                                                 who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                                                update: JSON.stringify({ whereQuery, updateQuery }),
+                                                update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
                                               instance.designers.update([ whereQuery, updateQuery ]);
@@ -393,7 +395,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                             updateQuery["information.business.career.startY"] = startY;
                                             updateQuery["information.business.career.startM"] = startM;
                                             text = `스타일링 시작일 : ${String(startY)}년 ${String(startM)}월`;
-                                            if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
+                                            if (instance.middleMode ? false : window.confirm("수정이 확실합니까?")) {
                                               await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
                                               await ajaxJson({
                                                 mode: "sse",
@@ -413,7 +415,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 page: "checklist",
                                                 mode: "update",
                                                 who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                                                update: JSON.stringify({ whereQuery, updateQuery }),
+                                                update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                                 desid,
                                               }, "/ghostDesigner_updateAnalytics");
                                               instance.designers.update([ whereQuery, updateQuery ]);
@@ -3064,7 +3066,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                   const designer = instance.designers.pick(desid);
                                   const whereQuery = { desid };
                                   const { updateQuery, text } = checkListData[x].children[y].update(this.value, designer);
-                                  const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
+                                  const confirm = instance.middleMode ? false : window.confirm("수정이 확실합니까?");
                                   if (updateQuery === "error" || !confirm) {
                                     this.value = this.getAttribute("past");
                                   } else {
@@ -3083,7 +3085,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                                       page: "checklist",
                                       mode: "update",
                                       who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                                      update: JSON.stringify({ whereQuery, updateQuery }),
+                                      update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                                       desid,
                                     }, "/ghostDesigner_updateAnalytics");
                                     instance.designers.update([ whereQuery, updateQuery ]);
@@ -3178,7 +3180,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                     let anothers, resultArr;
                     let whereQuery, updateQuery;
 
-                    if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
+                    if (instance.middleMode ? false : window.confirm("수정이 확실합니까?")) {
                       anothers = [];
                       for (let dom of thisButtons) {
                         if (this !== dom) {
@@ -3219,7 +3221,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                         page: "checklist",
                         mode: "update",
                         who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                        update: JSON.stringify({ whereQuery, updateQuery }),
+                        update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                         desid,
                       }, "/ghostDesigner_updateAnalytics");
                       instance.designers.update([ whereQuery, updateQuery ]);
@@ -3351,7 +3353,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           page: "checklist",
                           mode: "update",
                           who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                          update: JSON.stringify({ whereQuery, updateQuery }),
+                          update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
                         instance.designers.update([ whereQuery, updateQuery ]);
@@ -3442,7 +3444,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                       const designer = instance.designers.pick(desid);
                       const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
                       const whereQuery = { desid };
-                      const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
+                      const confirm = instance.middleMode ? false : window.confirm("수정이 확실합니까?");
                       if (updateQuery === "error" || !confirm) {
                         this.value = this.getAttribute("past");
                       } else {
@@ -3459,7 +3461,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
                           page: "checklist",
                           mode: "update",
                           who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                          update: JSON.stringify({ whereQuery, updateQuery }),
+                          update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
                           desid,
                         }, "/ghostDesigner_updateAnalytics");
                         instance.designers.update([ whereQuery, updateQuery ]);

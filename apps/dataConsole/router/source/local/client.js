@@ -16,6 +16,7 @@ const ClientJs = function () {
   this.cases = [];
   this.totalMother = null;
   this.totalFather = null;
+  this.divisionMap = null;
   this.totalFatherChildren = [];
   this.onView = "mother";
 }
@@ -1538,7 +1539,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute, uniqueValue } = GeneralJs;
   const { ea, token, actionClass, statusClass, actionArea } = staticList;
   const clientMap = DataPatch.clientMap();
   const cookies = getCookiesAll();
@@ -1556,7 +1557,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
       divisionLength: clientMap.action.divisionLength,
     },
   };
-  const statusColorSync = (status, standardDom, caseDoms) => {
+  this.statusColorSync = (status, standardDom, caseDoms) => {
     const colorMap = [
       { status: "응대중", color: colorChip.black },
       { status: "장기", color: colorChip.darkRed },
@@ -1570,7 +1571,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
       dom.style.color = finalColor;
     }
   }
-  const statusNumberSync = (from, to) => {
+  this.statusNumberSync = (from, to) => {
     const numberTargets = [ ...document.querySelectorAll('.' + statusClass) ];
     const fromDom = findByAttribute(numberTargets, "status", from);
     const toDom = findByAttribute(numberTargets, "status", to);
@@ -1733,6 +1734,7 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
             const card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
             const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
             const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
+            instance.randomToken = uniqueValue();
             try {
               let indexTong;
               let index, thisCase;
@@ -1761,8 +1763,8 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
               }
               card.setAttribute("status", name);
 
-              statusColorSync(name, thisStandardDom, thisCaseDom);
-              if (!statusNumberSync(fromStatus, name)) {
+              instance.statusColorSync(name, thisStandardDom, thisCaseDom);
+              if (!instance.statusNumberSync(fromStatus, name)) {
                 length = card.parentElement.children.length;
                 card.remove();
                 length = length - 1;
@@ -1792,7 +1794,8 @@ ClientJs.prototype.boardGrayBar = async function (mother, divisionMap, cases, st
                   requestNumber,
                   mode: "status",
                   from: fromStatus,
-                  to: name
+                  to: name,
+                  randomToken: instance.randomToken,
                 }
               }, "/generalMongo");
 
@@ -2014,7 +2017,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll, uniqueValue } = GeneralJs;
   const staticList = {
     ea: "px",
     token: "__split__",
@@ -2274,6 +2277,7 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
             const fromDivide = Number(from.getAttribute("divide"));
             const fromOppositeDivide = Number(fromOpposite.getAttribute("divide"));
             const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+            instance.randomToken = uniqueValue();
             try {
               let thisChildren, oppositeChildren;
               let thisChildrenLength, oppositeChildrenLength;
@@ -2388,7 +2392,8 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
                   requestNumber,
                   mode: "action",
                   from: fromName,
-                  to: name
+                  to: name,
+                  randomToken: instance.randomToken,
                 }
               }, "/generalMongo");
 
@@ -2530,6 +2535,551 @@ ClientJs.prototype.makeBoard = function (divisionMap, cases) {
     }
   });
 
+  this.divisionMap = division;
+
+  return totalFather;
+}
+
+ClientJs.prototype.makeBoard = function (divisionMap, cases) {
+  if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
+    throw new Error("invaild input");
+  }
+  if (divisionMap.flat().length !== (([ ...new Set(divisionMap.flat()) ]).length)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll, uniqueValue } = GeneralJs;
+  const staticList = {
+    ea: "px",
+    token: "__split__",
+    actionClass: "boardGray_actionBlock",
+    statusClass: "boardGray_statusBlock",
+    actionArea: "mainArea_actionArea",
+  };
+  const { ea, token, actionClass, statusClass, actionArea } = staticList;
+  const cookies = getCookiesAll();
+  let temp;
+  let totalFather;
+  let nameStyle, cliidStyle, barStyle;
+  let style, styles;
+  let tong;
+  let areaNumberStyle;
+  let div_clone, div_clone2, div_clone3;
+  let size, margin;
+  let num;
+  let cardWidthConstant;
+  let intend;
+  let lineHeight, titleTop, startTop;
+  let divideNumber;
+  let fontSize, nameFontSize;
+  let fixedHeightSize;
+  let exceptionMargin;
+  let division;
+  let numbers;
+  let updateState;
+  let outerMargin;
+  let whiteCard;
+  let nameWord, idWord;
+  let between;
+  let tongMother;
+  let pastHeight;
+  let domMatrix, tempArr;
+  let tongMarginTop;
+  let tongPaddingTop;
+  let tongPaddingBottom;
+  let tongPaddingRight;
+  let tongPaddingLeft;
+  let tongMargin;
+  let totalTitleSize, totalTitleTop, totalTitleLeft;
+  let divideArr, sizeArr;
+  let totalStandard;
+  let numberTitleSize, numberTitleTop, numberTitleBetween;
+  let tongTitle, tongNumber, tongArea;
+  let idWordTop;
+  let totalFatherPaddingTop;
+  let scrollTong;
+  let scrollTongPaddingBottom;
+  let requestTong;
+  let thisRequestNumber;
+
+  margin = 10;
+  outerMargin = margin * 2;
+  totalFatherPaddingTop = margin * 1.5;
+
+  cardWidthConstant = 140;
+  fixedHeightSize = 40;
+  intend = 16;
+  titleTop = isMac() ? 9 : 11;
+  idWordTop = isMac() ? 13 : 14;
+  startTop = titleTop + 16;
+  exceptionMargin = 12;
+  fontSize = 11;
+  nameFontSize = fontSize + 3;
+
+  between = 8;
+  tongMarginTop = margin * 1.75;
+  tongPaddingTop = (margin * 1.5) + 35;
+  tongPaddingBottom = margin * 1.5;
+  tongPaddingRight = margin * 1.5;
+  tongMargin = margin * 1.5;
+
+  totalTitleSize = 17;
+  totalTitleTop = isMac() ? 14 : 17;
+  totalTitleLeft = 20;
+
+  numberTitleSize = 14;
+  numberTitleTop = isMac() ? 18 : 20;
+  numberTitleBetween = 9;
+
+  scrollTongPaddingBottom = 400;
+
+
+  totalFather = createNode({
+    mother: document.getElementById("totalcontents"),
+    class: [ "totalFather", "fadein" ],
+    style: {
+      height: "calc(100vh - " + String(this.belowHeight) + ea + ")",
+      width: String(100) + '%',
+      zIndex: String(1),
+      overflow: "hidden",
+    },
+    children: [
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          left: String(0),
+          top: String(0),
+          width: String(this.grayBarWidth) + ea,
+          background: colorChip.gray1,
+          verticalAlign: "top",
+          height: String(100) + '%',
+        }
+      },
+      {
+        style: {
+          display: "inline-block",
+          position: "relative",
+          paddingTop: String(totalFatherPaddingTop) + ea,
+          paddingLeft: String(outerMargin) + ea,
+          paddingRight: String(outerMargin) + ea,
+          width: withOut((outerMargin * 2) + this.grayBarWidth, ea),
+          height: String(100) + '%',
+          verticalAlign: "top",
+          overflow: "scroll",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              verticalAlign: "top",
+              width: String(100) + '%',
+              paddingBottom: String(scrollTongPaddingBottom) + ea,
+            }
+          }
+        ]
+      }
+    ]
+  });
+  scrollTong = totalFather.children[1].children[0];
+
+  this.totalFather = totalFather;
+
+
+
+
+
+
+
+  totalFather = this.totalFather;
+  scrollTong = totalFather.children[1].children[0];
+
+  divideArr = [];
+  sizeArr = [];
+  for (let i = 0; i < 5; i++) {
+    totalStandard = (window.innerWidth - this.grayBarWidth - (outerMargin * 2) - (margin * 2) - 2 - (tongPaddingRight * 2) - (((tongPaddingRight * 2) + tongMargin + 2) * i)) / (i + 1);
+    divideNumber = Math.floor(totalStandard / (margin + cardWidthConstant));
+    size = (totalStandard - (margin * (divideNumber + 1))) / divideNumber;
+    divideArr.push(divideNumber);
+    sizeArr.push(size);
+  }
+
+  this.boardGrayBar(totalFather.firstChild, divisionMap, cases, staticList).catch((err) => { return console.log(err); });
+
+  division = new Map();
+  numbers = new Map();
+  domMatrix = [];
+  for (let i = 0; i < divisionMap.length; i++) {
+    tempArr = [];
+
+    tongMother = createNode({
+      mother: scrollTong,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        marginTop: String(tongMarginTop) + ea,
+        verticalAlign: "top",
+      }
+    });
+
+    for (let j = 0; j < divisionMap[i].length; j++) {
+      tong = createNode({
+        mother: tongMother,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(tongMargin * (divisionMap[i].length - 1)) + ea + ") / " + String(divisionMap[i].length) + ")",
+          marginRight: (j === divisionMap[i].length - 1 ? String(0) + ea : String(tongMargin) + ea),
+          paddingTop: String(tongPaddingTop) + ea,
+          paddingBottom: String(tongPaddingBottom) + ea,
+          paddingRight: String(tongPaddingRight) + ea,
+          paddingLeft: String(tongPaddingRight) + ea,
+          border: "1px dashed " + GeneralJs.colorChip.gray4,
+          boxSizing: "border-box",
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+        }
+      });
+
+      tongTitle = createNode({
+        mother: tong,
+        text: divisionMap[i][j],
+        style: {
+          position: "absolute",
+          top: String(totalTitleTop) + ea,
+          left: String(totalTitleLeft) + ea,
+          fontSize: String(totalTitleSize) + ea,
+          fontWeight: String(600),
+          color: GeneralJs.colorChip.black,
+        }
+      });
+
+      tongNumber = createNode({
+        mother: tong,
+        text: String(0) + "명",
+        attribute: {
+          kinds: "number",
+        },
+        style: {
+          position: "absolute",
+          top: String(numberTitleTop) + ea,
+          left: String(totalTitleLeft + tongTitle.getBoundingClientRect().width + numberTitleBetween) + ea,
+          fontSize: String(numberTitleSize) + ea,
+          fontWeight: String(500),
+          color: GeneralJs.colorChip.gray5,
+        }
+      });
+
+      tongArea = createNode({
+        mother: tong,
+        class: [ actionArea ],
+        attribute: {
+          kinds: "area",
+          name: divisionMap[i][j],
+          action: divisionMap[i][j],
+          opposite: divisionMap[i][divisionMap[i].length - 1 - j],
+          family: JSON.stringify(divisionMap[i]),
+          length: String(divisionMap[i].length),
+          size: String(sizeArr[divisionMap[i].length - 1]),
+          divide: String(divideArr[divisionMap[i].length - 1]),
+        },
+        events: {
+          dragenter: (e) => { e.preventDefault(); },
+          dragleave: function (e) {
+            e.preventDefault();
+            this.style.background = colorChip.gray1;
+            this.parentElement.firstChild.style.color = colorChip.black;
+          },
+          dragover: function (e) {
+            e.preventDefault();
+            this.style.background = colorChip.whiteGreen;
+            this.parentElement.firstChild.style.color = colorChip.green;
+          },
+          drop: async function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const name = this.getAttribute("name");
+            const opposite = division.get(this.getAttribute("opposite"));
+            const oppositeName = opposite.getAttribute("name");
+            const length = Number(this.getAttribute("length"));
+            const size = Number(this.getAttribute("size"));
+            const divide = Number(this.getAttribute("divide"));
+            const oppositeDivide = Number(opposite.getAttribute("divide"));
+            const cliid = e.dataTransfer.getData("dragData").split(token)[0];
+            const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
+            const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
+            const card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
+            const from = division.get(fromAction);
+            const fromSize = Number(from.getAttribute("size"));
+            const fromName = from.getAttribute("name");
+            const fromOpposite = division.get(from.getAttribute("opposite"));
+            const fromOppositeName = fromOpposite.getAttribute("name");
+            const fromDivide = Number(from.getAttribute("divide"));
+            const fromOppositeDivide = Number(fromOpposite.getAttribute("divide"));
+            const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+            instance.randomToken = uniqueValue();
+            try {
+              let thisChildren, oppositeChildren;
+              let thisChildrenLength, oppositeChildrenLength;
+              let thisHeightNumber, oppositeHeightNumber;
+              let thisHeight, oppositeHeight;
+              let finalHeight;
+              let index, thisCase;
+              let indexTong;
+              let rowDom;
+
+              this.style.background = colorChip.gray1;
+              this.parentElement.firstChild.style.color = colorChip.black;
+              this.appendChild(card);
+
+              thisChildren = this.children;
+              oppositeChildren = opposite.children;
+              thisChildrenLength = thisChildren.length;
+              oppositeChildrenLength = oppositeChildren.length;
+              thisHeightNumber = Math.ceil(thisChildrenLength / divide);
+              oppositeHeightNumber = Math.ceil(oppositeChildrenLength / oppositeDivide);
+              thisHeightNumber = thisHeightNumber === 0 ? 1 : thisHeightNumber;
+              oppositeHeightNumber = oppositeHeightNumber === 0 ? 1 : oppositeHeightNumber;
+              thisHeight = (thisHeightNumber * fixedHeightSize) + ((thisHeightNumber + 1) * margin);
+              oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + ((oppositeHeightNumber + 1) * margin);
+              if (thisHeight <= oppositeHeight) {
+                finalHeight = oppositeHeight;
+              } else {
+                finalHeight = thisHeight;
+              }
+              finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
+              for (let c of thisChildren) {
+                c.style.width = String(size) + ea;
+              }
+              this.parentElement.style.height = String(finalHeight) + ea;
+              opposite.parentElement.style.height = String(finalHeight) + ea;
+              this.parentElement.children[1].setAttribute("number", String(thisChildren.length));
+              this.parentElement.children[1].textContent = String(thisChildren.length) + "명";
+              findByAttribute(boardDoms, "action", name).textContent = String(thisChildren.length);
+              opposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
+              opposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
+              findByAttribute(boardDoms, "action", oppositeName).textContent = String(oppositeChildren.length);
+
+
+              thisChildren = from.children;
+              oppositeChildren = fromOpposite.children;
+              thisChildrenLength = thisChildren.length;
+              oppositeChildrenLength = oppositeChildren.length;
+              thisHeightNumber = Math.ceil(thisChildrenLength / fromDivide);
+              oppositeHeightNumber = Math.ceil(oppositeChildrenLength / fromOppositeDivide);
+              thisHeightNumber = thisHeightNumber === 0 ? 1 : thisHeightNumber;
+              oppositeHeightNumber = oppositeHeightNumber === 0 ? 1 : oppositeHeightNumber;
+              thisHeight = (thisHeightNumber * fixedHeightSize) + ((thisHeightNumber + 1) * margin);
+              oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + ((oppositeHeightNumber + 1) * margin);
+              if (thisHeight <= oppositeHeight) {
+                finalHeight = oppositeHeight;
+              } else {
+                finalHeight = thisHeight;
+              }
+              finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
+              for (let c of thisChildren) {
+                c.style.width = String(fromSize) + ea;
+              }
+              from.parentElement.style.height = String(finalHeight) + ea;
+              fromOpposite.parentElement.style.height = String(finalHeight) + ea;
+              from.parentElement.children[1].setAttribute("number", String(thisChildren.length));
+              from.parentElement.children[1].textContent = String(thisChildren.length) + "명";
+              findByAttribute(boardDoms, "action", fromName).textContent = String(thisChildren.length);
+              fromOpposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
+              fromOpposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
+              findByAttribute(boardDoms, "action", fromOppositeName).textContent = String(oppositeChildren.length);
+
+
+              indexTong = [];
+              for (let i = 0; i < instance.cases.length; i++) {
+                if (instance.cases[i] !== null) {
+                  if (instance.cases[i].cliid === cliid) {
+                    indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                  }
+                }
+              }
+              index = indexTong[requestNumber].index;
+              thisCase = indexTong[requestNumber].thisCase;
+
+
+              instance.cases[index].action = name;
+              rowDom = findByAttribute([ ...document.querySelector("." + cliid).children ], "column", "action");
+              if (rowDom !== null) {
+                rowDom.textContent = name;
+              }
+              card.setAttribute("action", name);
+
+
+              await ajaxJson({
+                thisId: cliid,
+                requestIndex: String(requestNumber),
+                column: "action",
+                pastValue: name,
+                value: name,
+                index,
+                thisCase,
+                user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
+              }, "/updateClient");
+
+              await ajaxJson({
+                mode: "sse",
+                db: "console",
+                collection: "sse_clientCard",
+                log: true,
+                who: cookies.homeliaisonConsoleLoginedEmail,
+                updateQuery: {
+                  cliid,
+                  requestNumber,
+                  mode: "action",
+                  from: fromName,
+                  to: name,
+                  randomToken: instance.randomToken,
+                }
+              }, "/generalMongo");
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          position: "relative",
+          paddingBottom: String(margin) + ea,
+          minHeight: String(fixedHeightSize + margin) + ea,
+          background: GeneralJs.colorChip.gray1,
+          height: withOut(margin, ea),
+          borderRadius: String(5) + "px",
+        }
+      });
+
+      numbers.set(divisionMap[i][j], tong.children[1]);
+      division.set(divisionMap[i][j], tong.children[2]);
+      tempArr.push(tong);
+    }
+
+    domMatrix.push(tempArr);
+  }
+
+  //make card
+  instance.totalFatherChildren = [];
+  requestTong = {};
+  num = 0;
+  for (let obj of cases) {
+
+    if (requestTong[obj.cliid] === undefined) {
+      requestTong[obj.cliid] = 0;
+      thisRequestNumber = 0;
+    } else {
+      requestTong[obj.cliid] = requestTong[obj.cliid] + 1;
+      thisRequestNumber = requestTong[obj.cliid];
+    }
+
+    whiteCard = createNode({
+      mother: division.get(obj.action),
+      attribute: {
+        kinds: "card",
+        cliid: obj.cliid,
+        draggable: "true",
+        action: obj.action,
+        status: obj.status,
+        request: String(thisRequestNumber),
+      },
+      event: {
+        dragstart: function (e) {
+          e.dataTransfer.setData("dragData", this.getAttribute("cliid") + token + this.getAttribute("action") + token + this.getAttribute("request") + token + this.getAttribute("status"));
+        },
+        dragend: function (e) {
+          e.preventDefault();
+        },
+        dragenter: function (e) {
+          e.preventDefault();
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+        },
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.action); })].length - 1]) + ea,
+        height: String(fixedHeightSize) + ea,
+        marginLeft: String(margin) + ea,
+        marginTop: String(margin) + ea,
+        background: GeneralJs.colorChip.white,
+        borderRadius: String(5) + ea,
+        cursor: "pointer",
+      }
+    });
+
+    nameWord = createNode({
+      mother: whiteCard,
+      text: obj.name,
+      event: {
+        click: instance.whiteViewMaker(num),
+        contextmenu: instance.makeClipBoardEvent(obj.cliid),
+      },
+      style: {
+        position: "absolute",
+        fontSize: String(nameFontSize) + ea,
+        fontWeight: String(500),
+        top: String(titleTop) + ea,
+        left: String(intend) + ea,
+        color: GeneralJs.colorChip.black,
+        cursor: "pointer",
+      }
+    });
+
+    idWord = createNode({
+      mother: whiteCard,
+      text: obj.cliid,
+      event: {
+        click: instance.whiteViewMaker(num),
+        contextmenu: instance.makeClipBoardEvent(obj.cliid),
+      },
+      style: {
+        position: "absolute",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(400),
+        top: String(idWordTop) + ea,
+        left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
+        color: GeneralJs.colorChip.green,
+        cursor: "pointer",
+      }
+    });
+
+    instance.totalFatherChildren.push(whiteCard);
+
+    num++;
+  }
+
+  for (let i = 0; i < divisionMap.length; i++) {
+    if (divisionMap[i].length > 1) {
+      pastHeight = domMatrix[i].map((dom) => { return dom.getBoundingClientRect().height; });
+      pastHeight.sort((a, b) => { return b - a; });
+      pastHeight = pastHeight[0];
+      for (let j = 0; j < divisionMap[i].length; j++) {
+        domMatrix[i][j].style.height = String(pastHeight) + ea;
+      }
+    }
+  }
+
+  numbers.forEach((value, key) => {
+    numbers.get(key).textContent = String(division.get(key).children.length) + "명";
+    numbers.get(key).setAttribute("number", String(division.get(key).children.length));
+  });
+
+  createNode({
+    mother: totalFather,
+    style: {
+      height: String(margin * 50) + ea
+    }
+  });
+
+  this.divisionMap = division;
+
   return totalFather;
 }
 
@@ -2577,7 +3127,7 @@ ClientJs.prototype.cardViewMaker = function () {
       }
 
       totalMother.classList.add("justfadeoutoriginal");
-      instance.totalFather = instance.makeBoard(itemMap, thisCases);
+      instance.makeBoard(itemMap, thisCases);
 
     }
     instance.onView = "father";
@@ -4677,6 +5227,7 @@ ClientJs.prototype.rowViewMaker = function () {
         instance.totalFather.remove();
       }
       instance.totalFather = null;
+      instance.divisionMap = null;
       instance.totalMother.classList.remove("justfadeinoriginal");
       clearTimeout(GeneralJs.timeouts.fadeinTimeout);
       GeneralJs.timeouts.fadeinTimeout = null;
@@ -6378,14 +6929,153 @@ ClientJs.prototype.communicationRender = function () {
 
 ClientJs.prototype.sseCardParsing = function (raw) {
   const instance = this;
-  const { equalJson } = GeneralJs;
+  const { equalJson, setDebounce, findByAttribute } = GeneralJs;
   const order = equalJson(raw);
+  const debounceNameConst = "sseCardAction_";
+  const debounceNameConst2 = "sseCardStatus_";
+  const actionClass = "boardGray_actionBlock";
+  const actionArea = "mainArea_actionArea";
+  const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+  const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
+  const ea = "px";
+  let division, num;
+  let fromArea, toArea;
+  let divide, oppositeDivide;
+  let self, opposite;
+  let thisHeightNumber, oppositeHeightNumber;
+  let thisHeight, oppositeHeight;
+  let finalHeight;
+  let fixedHeightSize, margin;
+  let tongPaddingTop, tongPaddingBottom;
+  let size;
+  let name, oppositeName;
+  let loop;
+  let index, indexTong;
+  let rowDom;
+  let thisStandardDom, thisCaseDom;
+  let length;
+  let fromAction;
 
-  console.log(order);
+  margin = 10;
+  fixedHeightSize = 40;
+  tongPaddingTop = (margin * 1.5) + 35;
+  tongPaddingBottom = margin * 1.5;
 
+  if (document.querySelector(".totalFather") !== null) {
+    if (this.divisionMap !== null) {
+      division = this.divisionMap;
+      num = 0;
+      if (Array.isArray(order) && order.length > 0 && order[0].randomToken !== instance.randomToken) {
+        for (let { cliid, requestNumber, mode, from, to, randomToken } of order) {
+          if (mode === "action") {
+            setDebounce(() => {
+              card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
+              fromArea = division.get(from);
+              toArea = division.get(to);
+              loop = [ fromArea, toArea ];
+              if (card.parentElement !== toArea) {
 
+                toArea.appendChild(card);
 
+                for (let self of loop) {
 
+                  name = self.getAttribute("name");
+                  opposite = division.get(self.getAttribute("opposite"));
+                  oppositeName = opposite.getAttribute("name");
+                  divide = Number(self.getAttribute("divide"));
+                  oppositeDivide = Number(opposite.getAttribute("divide"));
+                  size = Number(self.getAttribute("size"));
+
+                  thisHeightNumber = Math.ceil(self.children.length / divide);
+                  oppositeHeightNumber = Math.ceil(opposite.children.length / oppositeDivide);
+                  thisHeightNumber = thisHeightNumber === 0 ? 1 : thisHeightNumber;
+                  oppositeHeightNumber = oppositeHeightNumber === 0 ? 1 : oppositeHeightNumber;
+                  thisHeight = (thisHeightNumber * fixedHeightSize) + ((thisHeightNumber + 1) * margin);
+                  oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + ((oppositeHeightNumber + 1) * margin);
+                  if (thisHeight <= oppositeHeight) {
+                    finalHeight = oppositeHeight;
+                  } else {
+                    finalHeight = thisHeight;
+                  }
+                  finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
+                  for (let c of self.children) {
+                    c.style.width = String(size) + ea;
+                  }
+
+                  self.parentElement.style.height = String(finalHeight) + ea;
+                  opposite.parentElement.style.height = String(finalHeight) + ea;
+
+                  self.parentElement.children[1].setAttribute("number", String(self.children.length));
+                  self.parentElement.children[1].textContent = String(self.children.length) + "명";
+                  findByAttribute(boardDoms, "action", name).textContent = String(self.children.length);
+
+                  opposite.parentElement.children[1].setAttribute("number", String(opposite.children.length));
+                  opposite.parentElement.children[1].textContent = String(opposite.children.length) + "명";
+                  findByAttribute(boardDoms, "action", oppositeName).textContent = String(opposite.children.length);
+
+                }
+
+                name = toArea.getAttribute("name");
+
+                indexTong = [];
+                for (let i = 0; i < instance.cases.length; i++) {
+                  if (instance.cases[i] !== null) {
+                    if (instance.cases[i].cliid === cliid) {
+                      indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                    }
+                  }
+                }
+                index = indexTong[requestNumber].index;
+
+                instance.cases[index].action = name;
+                rowDom = findByAttribute([ ...document.querySelector("." + cliid).children ], "column", "action");
+                if (rowDom !== null) {
+                  rowDom.textContent = name;
+                }
+                card.setAttribute("action", name);
+
+              }
+            }, debounceNameConst + String(num));
+          } else if (mode === "status") {
+            setDebounce(() => {
+              card = findByAttribute(instance.totalFatherChildren, [ "cliid", "request" ], [ cliid, String(requestNumber) ]);
+              name = to;
+              indexTong = [];
+              for (let i = 0; i < instance.cases.length; i++) {
+                if (instance.cases[i] !== null) {
+                  if (instance.cases[i].cliid === cliid) {
+                    indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                  }
+                }
+              }
+              index = indexTong[requestNumber].index;
+              instance.cases[index].status = name;
+
+              thisStandardDom = Array.from(instance.standardDoms).find((dom) => { return dom.firstChild.textContent.trim() === cliid; });
+              thisCaseDom = [ ...document.querySelector("." + cliid).children ];
+
+              rowDom = findByAttribute(thisCaseDom, "column", "status");
+              if (rowDom !== null) {
+                rowDom.textContent = name;
+              }
+              card.setAttribute("status", name);
+
+              instance.statusColorSync(name, thisStandardDom, thisCaseDom);
+              if (!instance.statusNumberSync(from, name)) {
+                length = card.parentElement.children.length;
+                fromAction = card.getAttribute("action");
+                card.remove();
+                length = length - 1;
+                findByAttribute(boardDoms, "action", fromAction).textContent = String(length);
+                findByAttribute(areaDoms, "action", fromAction).parentElement.children[1].textContent = String(length) + "명";
+              }
+            }, debounceNameConst2 + String(num));
+          }
+          num++;
+        }
+      }
+    }
+  }
 }
 
 ClientJs.prototype.launching = async function () {
@@ -6413,21 +7103,6 @@ ClientJs.prototype.launching = async function () {
       instance.sseCardParsing(e.data);
     });
 
-    /*
-
-    GeneralJs.ajaxJson({
-      mode: "sse",
-      db: "console",
-      collection: "sse_clientCard",
-      log: true,
-      who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
-      updateQuery: {
-        test: "yes"
-      }
-    }, "/generalMongo").catch((err) => { console.log(err); })
-
-    */
-
     getTarget = null;
     if (getObj.cliid !== undefined) {
       for (let dom of this.standardDoms) {
@@ -6450,7 +7125,7 @@ ClientJs.prototype.launching = async function () {
     }
 
   } catch (e) {
-    GeneralJs.ajax({ message: e.message, channel: "#error_log" }, "/sendSlack", function () {});
+    GeneralJs.ajax({ message: "ClientJs 프론트 스크립트 문제 생김 " + e.message, channel: "#error_log" }, "/sendSlack", function () {});
     console.log(e);
   }
 }

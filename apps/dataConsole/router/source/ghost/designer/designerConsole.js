@@ -253,7 +253,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           click: function (e) {
             const index = Number(this.getAttribute("index"));
             // DEV
-            if (index <= 5) {
+            if (index === 1 || index === 4 || index === 5) {
               window.alert("아직 서비스 오픈 전입니다!");
             } else {
               menuMap[index].event.call(this, e);
@@ -498,8 +498,8 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
             const naviHeight = Number(this.getAttribute("naviHeight"));
             let blocks;
 
-            //DEV
-            if (index <= 5) {
+            // DEV
+            if (index === 1 || index === 4 || index === 5) {
               window.alert("아직 서비스 오픈 전입니다!");
             } else {
               blocks = document.querySelector(".mainBaseTong").firstChild.children;
@@ -511,7 +511,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
               self.removeChild(document.getElementById(id1));
               self.removeChild(document.getElementById(id0));
             }
-            //DEV
+            // DEV
 
           });
         }
@@ -899,18 +899,6 @@ DesignerConsoleJs.prototype.consoleView = async function () {
         instance.listIcon.click();
       }, 500);
     }
-
-    //DEV --------------------------------------------------------
-    if (document.querySelectorAll(".leftMenus").length > 0) {
-      this.menuMap[6].event.call(document.querySelectorAll(".leftMenus")[6]);
-    } else {
-      this.menuMap[6].event.call({
-        getAttribute: (index) => {
-          return 6;
-        }
-      });
-    }
-    //DEV --------------------------------------------------------
 
   } catch (e) {
     console.log(e);

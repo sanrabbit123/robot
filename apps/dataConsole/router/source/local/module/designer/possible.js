@@ -827,9 +827,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
             page: "possible",
             mode: "update",
             who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-            update: JSON.stringify({ whereQuery, updateQuery }),
+            update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
             desid,
-          }, "/ghostDesigner_updateAnalytics")
+          }, "/ghostDesigner_updateAnalytics");
         }).catch((err) => {
           console.log(err);
         });
