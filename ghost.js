@@ -261,11 +261,11 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
 
     }
 
+    await messageLog("styling form sync success : " + JSON.stringify(new Date()));
   } catch (e) {
-    await errorLog(e.message);
+    await errorLog("ghost stylingFormSync 에러남 : " + e.message);
   } finally {
     await MONGOC.close();
-    await messageLog("styling form sync success : " + JSON.stringify(new Date()));
   }
 }
 

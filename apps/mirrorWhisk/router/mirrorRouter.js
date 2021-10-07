@@ -797,7 +797,7 @@ MirrorRouter.prototype.rou_post_errorLog = function () {
         from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
       });
       await requestSystem(webHook.url, webHook.message(req.body.message), { headers: webHook.headers });
-      instance.mother.slack_bot.chat.postMessage({ text: req.body.message, channel: webHook.channel });
+      instance.mother.slack_bot.chat.postMessage({ text: req.body.message + "\nfrom:\n" + JSON.stringify(from, null, 2), channel: webHook.channel });
 
       res.send(JSON.stringify({ name: thisName, message: "done" }));
 

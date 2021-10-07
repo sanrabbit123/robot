@@ -1619,6 +1619,8 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
   let statusPaddingTop;
   let grayBarTop;
   let reloadEvent;
+  let dropEvent;
+
   cleanChildren(mother);
 
   dashboardData = {};
@@ -1899,6 +1901,30 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
       instance.selectedMember = member;
     }
   }
+  dropEvent = async function (e) {
+    try {
+      e.preventDefault();
+      const member = this.getAttribute("member");
+      const cliid = e.dataTransfer.getData("dragData").split(token)[0];
+      if (member !== "전체") {
+        for (let obj of instance.cardCases) {
+          if (obj.cliid === cliid) {
+            obj.manager = (member === "미정" ? '-' : member);
+          }
+        }
+        await ajaxJson({
+          id: cliid,
+          column: "manager",
+          value: (member === "미정" ? '-' : member),
+          email: cookies.homeliaisonConsoleLoginedEmail
+        }, "/updateClientHistory");
+        await instance.mother.greenAlert("담당자가 " + member + "(으)로 설정되었습니다!");
+      }
+      this.parentElement.parentElement.style.background = colorChip.white;
+    } catch (e) {
+      console.log(e);
+    }
+  }
   for (let i = 0; i < Math.ceil(cxMembers.length / 2); i++) {
     createNode({
       mother: memberBlock,
@@ -1916,7 +1942,17 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
           },
           event: {
             selectstart: (e) => { e.preventDefault(); },
-            click: reloadEvent
+            dragenter: (e) => { e.preventDefault(); },
+            dragleave: function (e) {
+              e.preventDefault();
+              this.parentElement.parentElement.style.background = colorChip.white;
+            },
+            dragover: function (e) {
+              e.preventDefault();
+              this.parentElement.parentElement.style.background = colorChip.whiteGreen;
+            },
+            click: reloadEvent,
+            drop: dropEvent,
           },
           style: {
             position: "relative",
@@ -1947,7 +1983,18 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
           },
           event: {
             selectstart: (e) => { e.preventDefault(); },
-            click: reloadEvent
+            dragenter: (e) => { e.preventDefault(); },
+            dragleave: function (e) {
+              e.preventDefault();
+              this.parentElement.parentElement.style.background = colorChip.white;
+            },
+            dragover: function (e) {
+              e.preventDefault();
+              this.parentElement.parentElement.style.background = colorChip.whiteGreen;
+            },
+            selectstart: (e) => { e.preventDefault(); },
+            click: reloadEvent,
+            drop: dropEvent,
           },
           style: {
             position: "relative",
@@ -6530,7 +6577,7 @@ ClientJs.prototype.sseCardParsing = function (raw) {
 ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
-    const { dateToString, returnGet } = GeneralJs;
+    const { dateToString, returnGet, setQueue } = GeneralJs;
 
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
@@ -6572,6 +6619,10 @@ ClientJs.prototype.launching = async function () {
         getTarget.click();
       }
     }
+
+    setQueue(() => {
+      instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {});
+    }, 300);
 
   } catch (e) {
     GeneralJs.ajax({ message: "ClientJs 프론트 스크립트 문제 생김 " + e.message, channel: "#error_log" }, "/sendSlack", function () {});
