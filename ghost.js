@@ -2300,7 +2300,8 @@ Ghost.prototype.photoRouter = function (needs) {
           } else {
             command = `cd ${shellLink(sambaDir + "/" + folderName + "/" + c3508)};
             cp ./* ${shellLink(process.env.HOME + "/" + tempTempFolderName)};
-            cp -r ${shellLink(sambaDir + "/" + folderName + "/" + c780)} ${shellLink(process.env.HOME + "/" + tempTempFolderName)};
+            cd ${shellLink(sambaDir + "/" + folderName + "/" + c780)};
+            cp ./* ${shellLink(process.env.HOME + "/" + tempTempFolderName)};
             cd ${shellLink(process.env.HOME + "/" + tempTempFolderName)};
             zip ${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)} ./*;
             cd ${shellLink(sambaDir + "/" + folderName + "/" + c1500)};
