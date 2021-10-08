@@ -110,14 +110,12 @@ module.exports = function (proid, info) {
           while (document.querySelector(popupQuery) === null) {
             await sleep(500);
           }
-          await sleep(500);
           document.querySelector(popupQuery).querySelector("button").click();
 
           await sleep(3000);
 
           if (dateBoo) {
             scrollTo(document.getElementById("canvasBox"), document.getElementById(firstDateId), document.getElementById("header").getBoundingClientRect().height * 3);
-            await sleep(1000);
             await clickElement(document.getElementById(firstDateId));
             await sleep(200);
             while (document.querySelector('.MuiPickersCalendar-week') === null) {
@@ -157,13 +155,13 @@ module.exports = function (proid, info) {
           await injectionInput(tempArr[1], client.email, true);
           await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
 
-          document.querySelectorAll(".Select-arrow-zone")[1].click();
+          await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
           await sleep(1000);
 
           while (document.querySelector(".Select-menu-outer") === null) {
             await sleep(500);
           }
-          document.getElementById("react-select-11--option-4").click();
+          await clickElement(document.getElementById("react-select-11--option-4"));
 
           await sleep(500);
           document.querySelector('.send').click();
