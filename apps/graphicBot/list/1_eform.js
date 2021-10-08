@@ -104,7 +104,7 @@ module.exports = function (proid, info) {
             await sleep(500);
             buttons = document.querySelectorAll(buttonQuery);
           }
-          buttons[2].click();
+          await clickElement(buttons[2]);
 
           while (document.querySelector(popupQuery) === null) {
             await sleep(500);
