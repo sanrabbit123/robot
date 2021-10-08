@@ -1597,4 +1597,281 @@ BackWorker.prototype.proposalReset = async function (cliid, option = { selfMongo
   }
 }
 
+BackWorker.prototype.realtimeDesignerSync = async function (proid, option = { selfMongo: null, selfConsoleMongo: null }) {
+  if (typeof proid !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!/^[p]/.test(proid)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongoconsoleinfo, equalJson, dateToString, ajaxJson } = this.mother;
+  const collection = "realtimeDesigner";
+  const deepCopy = (obj) => { return equalJson(JSON.stringify(obj)); }
+  const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
+  let selfMongo, selfConsoleMongo;
+  let selfBoo, selfConsoleBoo;
+
+  if (option.selfMongo === null || option.selfMongo === undefined) {
+    selfBoo = false;
+  } else {
+    selfBoo = true;
+  }
+  if (option.selfConsoleMongo === null || option.selfConsoleMongo === undefined) {
+    selfConsoleBoo = false;
+  } else {
+    selfConsoleBoo = true;
+  }
+
+  try {
+    let project, realTimes, realTime, possible;
+    let result0, result1, result2;
+    let from, to;
+    let copied0, copied1, copied2;
+    let tempDate, tempObj;
+    let finalBoo;
+    let desid;
+    let updatedProids;
+    let final;
+
+    if (!selfBoo) {
+      selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await selfMongo.connect();
+    } else {
+      selfMongo = option.selfMongo;
+    }
+    if (!selfConsoleBoo) {
+      selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      await selfConsoleMongo.connect();
+    } else {
+      selfConsoleMongo = option.selfConsoleMongo;
+    }
+
+    project = await back.getProjectById(proid, { selfMongo });
+    if (project === null) {
+      throw new Error("invaild proid");
+    }
+    desid = project.desid;
+    if (desid === "") {
+      throw new Error("invaild project");
+    }
+    designer = await back.getDesignerById(desid, { selfMongo });
+    if (designer === null) {
+      throw new Error("invaild desid");
+    }
+    realTimes = await back.mongoRead(collection, { desid }, { selfMongo: selfConsoleMongo });
+    if (realTimes.length === 0) {
+      throw new Error("there is no realtime in this designer");
+    }
+    [ realTime ] = realTimes;
+    [ { possible } ] = realTimes;
+    updatedProids = (realTime.updatedProids === undefined ? [] : deepCopy(realTime.updatedProids));
+    from = project.process.contract.form.date.from;
+    to = project.process.contract.form.date.to;
+
+    from.setHours(0);
+    from.setMinutes(0);
+    from.setSeconds(0);
+    from.setMilliseconds(0);
+
+    to.setHours(0);
+    to.setMinutes(0);
+    to.setSeconds(0);
+    to.setMilliseconds(0);
+
+    result0 = [];
+    for (let obj of possible) {
+
+      obj.start.setHours(0);
+      obj.start.setMinutes(0);
+      obj.start.setSeconds(0);
+      obj.start.setMilliseconds(0);
+
+      obj.end.setHours(0);
+      obj.end.setMinutes(0);
+      obj.end.setSeconds(0);
+      obj.end.setMilliseconds(0);
+
+      if (to.valueOf() < obj.start.valueOf()) {
+        result0.push(deepCopy(obj));
+      } else if (to.valueOf() <= obj.end.valueOf()) {
+        if (from.valueOf() < obj.start.valueOf()) {
+
+          // case 1
+          copied0 = deepCopy(obj);
+          copied0.end = dateCopy(to);
+          copied0.matrix = copied0.matrix.map((number) => { return ((number - 1 < 0) ? 0 : number - 1) });
+          result0.push(copied0);
+
+          if (dateToString(to) !== dateToString(obj.end)) {
+            copied1 = deepCopy(obj);
+            tempDate = dateCopy(to);
+            tempDate.setDate(tempDate.getDate() + 1);
+            copied1.start = tempDate;
+            result0.push(copied1);
+          }
+
+        } else {
+
+          // case 2
+          if (dateToString(from) === dateToString(obj.start) && dateToString(to) === dateToString(obj.end)) {
+
+            copied0 = deepCopy(obj);
+            copied0.matrix = copied0.matrix.map((number) => { return ((number - 1 < 0) ? 0 : number - 1) });
+            result0.push(copied0);
+
+          } else if (dateToString(from) === dateToString(obj.start) && dateToString(to) !== dateToString(obj.end)) {
+
+            copied0 = deepCopy(obj);
+            copied0.end = dateCopy(to);
+            copied0.matrix = copied0.matrix.map((number) => { return ((number - 1 < 0) ? 0 : number - 1) });
+            result0.push(copied0);
+
+            copied1 = deepCopy(obj);
+            tempDate = dateCopy(to);
+            tempDate.setDate(tempDate.getDate() + 1);
+            copied1.start = tempDate;
+            result0.push(copied1);
+
+          } else if (dateToString(from) !== dateToString(obj.start) && dateToString(to) === dateToString(obj.end)) {
+
+            copied0 = deepCopy(obj);
+            tempDate = dateCopy(from);
+            tempDate.setDate(tempDate.getDate() - 1);
+            copied0.end = tempDate;
+            result0.push(copied0);
+
+            copied1 = deepCopy(obj);
+            copied1.start = dateCopy(from);
+            copied1.matrix = copied1.matrix.map((number) => { return ((number - 1 < 0) ? 0 : number - 1) });
+            result0.push(copied1);
+
+          } else {
+
+            copied0 = deepCopy(obj);
+            tempDate = dateCopy(from);
+            tempDate.setDate(tempDate.getDate() - 1);
+            copied0.end = dateCopy(tempDate);
+            result0.push(copied0);
+
+            copied1 = deepCopy(obj);
+            copied1.start = dateCopy(from);
+            copied1.end = dateCopy(to);
+            copied1.matrix = copied1.matrix.map((number) => { return ((number - 1 < 0) ? 0 : number - 1) });
+            result0.push(copied1);
+
+            copied2 = deepCopy(obj);
+            tempDate = dateCopy(to);
+            tempDate.setDate(tempDate.getDate() + 1);
+            copied2.start = dateCopy(tempDate);
+            result0.push(copied2);
+
+          }
+
+        }
+      } else {
+        if (from.valueOf() < obj.start.valueOf()) {
+
+          // case 3
+          copied0 = deepCopy(obj);
+          copied0.matrix = copied0.matrix.map((number) => { return ((number - 1 < 0) ? 0 : number - 1) });
+          result0.push(copied0);
+
+        } else if (from.valueOf() < obj.end.valueOf()) {
+
+          // case 4
+
+          copied0 = deepCopy(obj);
+          tempDate = dateCopy(from);
+          tempDate.setDate(tempDate.getDate() - 1);
+          copied0.end = dateCopy(tempDate);
+          result0.push(copied0);
+
+          copied1 = deepCopy(obj);
+          copied1.start = dateCopy(from);
+          copied1.matrix = copied1.matrix.map((number) => { return ((number - 1 < 0) ? 0 : number - 1) });
+          result0.push(copied1);
+
+        } else {
+          result0.push(deepCopy(obj));
+        }
+      }
+    }
+
+    result1 = [];
+    for (let obj of result0) {
+      obj.start.setHours(0);
+      obj.start.setMinutes(0);
+      obj.start.setSeconds(0);
+      obj.start.setMilliseconds(0);
+      obj.end.setHours(0);
+      obj.end.setMinutes(0);
+      obj.end.setSeconds(0);
+      obj.end.setMilliseconds(0);
+      if (obj.start.valueOf() <= obj.end.valueOf()) {
+        if (!obj.matrix.every((n) => { return n === 0; })) {
+          result1.push(deepCopy(obj));
+        }
+      }
+    }
+
+    result2 = [];
+    finalBoo = true;
+    for (let i = 0; i < result1.length - 1; i++) {
+      tempDate = dateCopy(result1[i].end);
+      tempDate.setDate(tempDate.getDate() + 1);
+      if (result1[i + 1].start.valueOf() <= tempDate.valueOf() && JSON.stringify(result1[i].matrix) === JSON.stringify(result1[i + 1].matrix)) {
+        tempObj = deepCopy(result1[i]);
+        tempObj.end = dateCopy(result1[i + 1].end);
+        result2.push(deepCopy(tempObj));
+        finalBoo = false;
+      } else {
+        if (finalBoo) {
+          result2.push(deepCopy(result1[i]));
+        }
+        finalBoo = true;
+      }
+    }
+
+    if (finalBoo) {
+      result2.push(deepCopy(result1[result1.length - 1]));
+    }
+
+    if (!updatedProids.includes(proid)) {
+      updatedProids.push(proid);
+      await back.mongoUpdate(collection, [ { desid }, { possible: result2, updatedProids } ], { selfMongo: selfConsoleMongo });
+      realTime.possible = result2;
+      realTime.updatedProids = updatedProids;
+    }
+
+    final = deepCopy(realTime);
+    delete final._id;
+
+    if (!selfBoo) {
+      await selfMongo.close();
+      selfBoo = true;
+    }
+    if (!selfConsoleBoo) {
+      await selfConsoleMongo.close();
+      selfConsoleBoo = true;
+    }
+
+    return {
+      message: "success",
+      result: final,
+    };
+
+  } catch (e) {
+    return { message: "error : " + e.message };
+  } finally {
+    if (!selfBoo) {
+      await selfMongo.close();
+    }
+    if (!selfConsoleBoo) {
+      await selfConsoleMongo.close();
+    }
+  }
+}
+
 module.exports = BackWorker;

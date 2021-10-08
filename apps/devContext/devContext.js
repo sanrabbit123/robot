@@ -94,6 +94,33 @@ DevContext.prototype.launching = async function () {
     // await this.passiveAddressSync("c2110_aa14s");
 
 
+    // "p2110_aa02s";
+
+
+    console.log(await requestSystem("https://homeliaison-console.xyz/realtimeDesigner", { mode: "sync", proid: "p2109_aa50s" }, {
+      headers: {
+        "Content-Type": "application/json",
+        "origin": "https://home-liaison.xyz"
+      }
+    }));
+
+    console.log(await requestSystem("https://homeliaison-console.xyz/realtimeDesigner", { mode: "sync", proid: "p2110_aa02s" }, {
+      headers: {
+        "Content-Type": "application/json",
+        "origin": "https://home-liaison.xyz"
+      }
+    }));
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -2766,7 +2766,7 @@ ClientJs.prototype.makeBoard = function (cases) {
 
 ClientJs.prototype.cardViewMaker = function () {
   const instance = this;
-  const { equalJson, createNode, withOut, colorChip, ajaxJson, scrollTo } = GeneralJs;
+  const { equalJson, createNode, withOut, colorChip, ajaxJson, scrollTo, setQueue } = GeneralJs;
   const { ea, belowHeight, grayBarWidth } = this;
   return async function (e) {
     const { totalContents, totalMother } = instance;
@@ -2788,9 +2788,13 @@ ClientJs.prototype.cardViewMaker = function () {
     instance.searchInput.parentElement.style.display = "none";
 
     newSearchInput.addEventListener("keypress", function (e) {
+      const thisValue = this.value.trim();
+      let target;
+      let tempFunction;
+      let getTarget;
       if (GeneralJs.confirmKey.includes(e.key)) {
-        this.value = this.value.trim();
-        if (this.value.trim() === '' || this.value.trim() === '-') {
+        this.value = thisValue;
+        if (thisValue === '' || thisValue === '-') {
           for (let dom of instance.totalFatherChildren) {
             dom.style.background = GeneralJs.colorChip.white;
             dom.children[0].style.color = GeneralJs.colorChip.black;
@@ -2799,6 +2803,7 @@ ClientJs.prototype.cardViewMaker = function () {
           }
           scrollTo(instance.totalFather.children[1], 0);
         } else {
+          target = null;
           for (let dom of instance.totalFatherChildren) {
             if ((new RegExp(this.value, "gi")).test(dom.textContent)) {
               scrollTo(instance.totalFather.children[1], dom, ((window.innerHeight - belowHeight) / 2) - (40 * 2));
@@ -2806,12 +2811,24 @@ ClientJs.prototype.cardViewMaker = function () {
               dom.children[0].style.color = GeneralJs.colorChip.whiteBlack;
               dom.children[1].style.color = GeneralJs.colorChip.whiteBlack;
               dom.children[1].style.opacity = String(0.6);
+              target = dom;
             } else {
               dom.style.background = GeneralJs.colorChip.white;
               dom.children[0].style.color = GeneralJs.colorChip.black;
               dom.children[1].style.color = GeneralJs.colorChip.green;
               dom.children[1].style.opacity = String(1);
             }
+          }
+          if (target === null) {
+            instance.rowViewMaker().call({}, {});
+            setQueue(() => {
+              tempFunction = instance.makeSearchEvent(thisValue);
+              tempFunction({ key: "Enter" }).catch((err) => { console.log(err); });
+            }, 401);
+          } else {
+            setQueue(() => {
+              target.click();
+            }, 300);
           }
         }
       }

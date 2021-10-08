@@ -3036,8 +3036,73 @@ DataRouter.prototype.rou_post_realtimeClient = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 (rou_post_realtimeClient) : " + e.message, channel: "#error_log" });
       console.log(e);
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_realtimeDesigner = function () {
+  const instance = this;
+  const back = this.back;
+  const work = this.work;
+  const { equalJson, fileSystem } = this.mother;
+  let obj = {};
+  obj.link = [ "/realtimeDesigner" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (typeof req.body.mode === "string") {
+        throw new Error("invaild post");
+      }
+      if (![ "get", "sync" ].includes(req.body.mode)) {
+        throw new Error("invaild post");
+      }
+      const { mode } = req.body;
+      const collection = "realtimeDesigner";
+      let rows;
+      let desid, proid;
+      let result;
+      let response;
+
+      if (mode === "get") {
+
+        if (req.body.desid === undefined) {
+          throw new Error("invaild post");
+        }
+        desid = req.body.desid;
+        rows = await back.mongoRead(collection, { desid }, { selfMongo: instance.mongolocal });
+        if (rows.length > 0) {
+          result = rows[0];
+        } else {
+          result = {};
+        }
+
+      } else if (mode === "sync") {
+
+        if (req.body.proid === undefined) {
+          throw new Error("invaild post");
+        }
+        proid = req.body.proid;
+        response = await work.realtimeDesignerSync(proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
+        if (response.message === "success") {
+          result = { message: "success" };
+        } else {
+          throw new Error(JSON.stringify(response));
+        }
+
+      }
+
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 (rou_post_realtimeDesigner) : " + e.message, channel: "#error_log" });
+      res.send(JSON.stringify({ message: "error" }));
     }
   }
   return obj;
