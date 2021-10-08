@@ -104,7 +104,7 @@ module.exports = function (proid, info) {
             await sleep(500);
             buttons = document.querySelectorAll(buttonQuery);
           }
-          await sleep(500);
+          await sleep(1000);
           await clickElement(buttons[2]);
 
           while (document.querySelector(popupQuery) === null) {
@@ -113,11 +113,11 @@ module.exports = function (proid, info) {
           await sleep(500);
           await clickElement(document.querySelector(popupQuery).querySelector("button"));
 
-          await sleep(1000);
+          await sleep(3000);
 
           if (dateBoo) {
             scrollTo(document.getElementById("canvasBox"), document.getElementById(firstDateId), document.getElementById("header").getBoundingClientRect().height * 3);
-            await sleep(500);
+            await sleep(1000);
             await clickElement(document.getElementById(firstDateId));
             await sleep(200);
             while (document.querySelector('.MuiPickersCalendar-week') === null) {
@@ -157,7 +157,7 @@ module.exports = function (proid, info) {
           await injectionInput(tempArr[1], client.email, true);
           await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
 
-          await sleep(500);
+          await sleep(1000);
           await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
           await sleep(1000);
 
@@ -167,7 +167,7 @@ module.exports = function (proid, info) {
           await sleep(500);
           await clickElement(document.getElementById("react-select-11--option-4"));
 
-          await sleep(500);
+          await sleep(1000);
           await clickElement(document.querySelector('.send'));
           await sleep(500);
 
@@ -175,7 +175,7 @@ module.exports = function (proid, info) {
             await sleep(500);
           }
 
-          await sleep(500);
+          await sleep(1000);
           await clickElement(document.querySelector(".sc-jWUzTF").querySelectorAll("button")[1]);
 
           await sleep(2000);
