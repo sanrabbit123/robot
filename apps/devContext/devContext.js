@@ -96,7 +96,7 @@ DevContext.prototype.launching = async function () {
 
     // calendar sync
 
-    
+
 
 
 
@@ -1239,7 +1239,7 @@ DevContext.prototype.launching = async function () {
 
     // get photo folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/1f7TO4P5SoSPoI9v6ZgVNEohwhTsNEquf", "p96");
+    // await drive.get_folder("https://drive.google.com/drive/folders/1K6UXahCEARz8ASICpmVrLZpcfrdGXNBm", "test");
 
 
     // spell check
