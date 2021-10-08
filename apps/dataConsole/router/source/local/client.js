@@ -2834,7 +2834,7 @@ ClientJs.prototype.cardViewMaker = function () {
       }
     });
 
-    thisCases = equalJson(JSON.stringify(instance.cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status); });
+    thisCases = equalJson(JSON.stringify(instance.cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status) && !/진행/gi.test(obj.status); });
     managerObj = await ajaxJson({
       method: "client",
       property: "manager",
