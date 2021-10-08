@@ -420,7 +420,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, autoComma, ghostRequest } = this.mother;
+  const { equalJson, autoComma, ghostRequest, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/ghostClientBill";
   obj.func = async function (req, res) {
@@ -630,6 +630,19 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
                 client: client.name,
                 designer: designer.designer,
+              });
+
+              requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
+                headers: {
+                  "Content-Type": "application/json",
+                  "origin": "https://" + instance.address.pythoninfo.host
+                }
+              }).then((obj) => {
+                if (obj.message !== "success") {
+                  instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+                }
+              }).catch((err) => {
+                instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
               });
 
             } else if (/잔금/gi.test(data.goodName.trim())) {
@@ -903,6 +916,19 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
             instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
               client: client.name,
               designer: designer.designer,
+            });
+
+            requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
+              headers: {
+                "Content-Type": "application/json",
+                "origin": "https://" + instance.address.pythoninfo.host
+              }
+            }).then((obj) => {
+              if (obj.message !== "success") {
+                instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+              }
+            }).catch((err) => {
+              instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
             });
 
           } else if (/잔금/gi.test(data.goodName.trim())) {
