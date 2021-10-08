@@ -3058,7 +3058,7 @@ DataRouter.prototype.rou_post_realtimeDesigner = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (typeof req.body.mode === "string") {
+      if (typeof req.body.mode !== "string") {
         throw new Error("invaild post");
       }
       if (![ "get", "sync" ].includes(req.body.mode)) {
