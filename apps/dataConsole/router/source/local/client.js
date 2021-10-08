@@ -24,6 +24,8 @@ const ClientJs = function () {
 
 ClientJs.prototype.standardBar = function (standard) {
   const instance = this;
+  const { returnGet } = GeneralJs;
+  const getObj = returnGet();
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
   let ea = "px";
@@ -230,7 +232,7 @@ ClientJs.prototype.standardBar = function (standard) {
     this.totalMother.appendChild(div_clone);
   }
 
-  if (this.standardDoms.length === 2) {
+  if (this.standardDoms.length === 2 && getObj.view !== "row") {
     GeneralJs.timeouts["oneWhiteCardOnSelection"] = setTimeout(function () {
       instance.standardDoms[1].click();
       clearTimeout(GeneralJs.timeouts["oneWhiteCardOnSelection"]);
@@ -1537,7 +1539,7 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute, uniqueValue, cleanChildren } = GeneralJs;
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute, uniqueValue, cleanChildren, setQueue } = GeneralJs;
   const { ea, token, actionClass, statusClass, actionArea } = staticList;
   const clientMap = DataPatch.clientMap();
   const cookies = getCookiesAll();
@@ -1562,6 +1564,7 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
       { status: "응대중", color: colorChip.black },
       { status: "장기", color: colorChip.darkRed },
       { status: "드랍", color: colorChip.gray4 },
+      { status: "진행", color: colorChip.green },
     ]
     let finalColor, targets;
     finalColor = colorMap.find((obj) => { return obj.status === status }).color;
@@ -1583,16 +1586,32 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
       } else if (to === "장기") {
         fromDom.textContent = String(fromNumber - 1);
         toDom.textContent = String(toNumber + 1);
-      } else {
+      } else if (to === "드랍") {
         fromDom.textContent = String(fromNumber - 1);
+      } else if (to === "진행") {
+        window.alert("진행일 경우 proposal 콘솔을 이용해주세요!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/proposal";
       }
-    } else {
+    } else if (from === "장기") {
       if (to === "응대중") {
         fromDom.textContent = String(fromNumber - 1);
         toDom.textContent = String(toNumber + 1);
       } else if (to === "장기") {
         //pass
+      } else if (to === "드랍") {
+        fromDom.textContent = String(fromNumber - 1);
       } else {
+        window.alert("진행일 경우 proposal 콘솔을 이용해주세요!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/proposal";
+      }
+    } else if (from === "진행") {
+      if (to === "응대중" || to === "장기") {
+        fromDom.textContent = String(fromNumber - 1);
+        toDom.textContent = String(toNumber + 1);
+      } else if (to === "진행") {
+        window.alert("진행일 경우 proposal 콘솔을 이용해주세요!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/proposal";
+      } else if (to === "드랍") {
         fromDom.textContent = String(fromNumber - 1);
       }
     }
@@ -1766,6 +1785,9 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
               length = length - 1;
               findByAttribute(boardDoms, "action", fromAction).textContent = String(length);
               findByAttribute(areaDoms, "action", fromAction).parentElement.children[1].textContent = String(length) + "명";
+              setQueue(() => {
+                GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?cliid=" + cliid + "&view=row");
+              });
             }
 
             await ajaxJson({
@@ -1910,6 +1932,13 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
         for (let obj of instance.cardCases) {
           if (obj.cliid === cliid) {
             obj.manager = (member === "미정" ? '-' : member);
+          }
+        }
+        for (let obj of instance.cases) {
+          if (obj !== null) {
+            if (obj.cliid === cliid) {
+              obj.manager = (member === "미정" ? '-' : member);
+            }
           }
         }
         await ajaxJson({
@@ -2064,6 +2093,8 @@ ClientJs.prototype.makeBoard = function (cases) {
   let thisRequestNumber;
   let divisionMap;
   let index;
+  let contextMenuBlockWidth, contextMenuBlockHeight, contextMenuBlockMargin, contextMenuBlockBetween, contextMenuBlockSize, contextMenuBlockTextTop;
+  let contextMenuEvent;
 
   cleanChildren(scrollTong);
 
@@ -2093,6 +2124,13 @@ ClientJs.prototype.makeBoard = function (cases) {
   numberTitleSize = 14;
   numberTitleTop = isMac() ? 18 : 20;
   numberTitleBetween = 9;
+
+  contextMenuBlockWidth = 100;
+  contextMenuBlockHeight = 34;
+  contextMenuBlockBetween = 8;
+  contextMenuBlockMargin = 5;
+  contextMenuBlockSize = 14;
+  contextMenuBlockTextTop = isMac() ? 6 : 5;
 
   divisionMap = map.action.items.map((i) => { return [ i ]; });
   for (let i = map.action.divisionStart; i < map.action.divisionStart + map.action.divisionLength; i++) {
@@ -2374,6 +2412,99 @@ ClientJs.prototype.makeBoard = function (cases) {
   }
 
   //make card
+  contextMenuEvent = function (cliid, index, requestNumber, from, fromAction) {
+    const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+    const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
+    return async function (e) {
+
+      e.stopPropagation();
+      instance.randomToken = uniqueValue();
+
+      const value = this.getAttribute("value");
+      const mode = this.getAttribute("mode");
+      const card = this.parentElement.parentElement;
+      try {
+        let thisCase;
+        let thisStandardDom, thisCaseDom;
+        let rowDom;
+        let length;
+
+        thisCase = equalJson(JSON.stringify(instance.cases[index]));
+        thisStandardDom = Array.from(instance.standardDoms).find((dom) => { return dom.firstChild.textContent.trim() === cliid; });
+        thisCaseDom = [ ...document.querySelector("." + cliid).children ];
+
+        if (mode === "status") {
+
+          instance.cases[index].status = value;
+          rowDom = findByAttribute(thisCaseDom, "column", "status");
+          if (rowDom !== null) {
+            rowDom.textContent = value;
+          }
+          card.setAttribute("status", value);
+          instance.statusColorSync(value, thisStandardDom, thisCaseDom);
+          if (!instance.statusNumberSync(from, value)) {
+            length = card.parentElement.children.length;
+            card.remove();
+            length = length - 1;
+            findByAttribute(boardDoms, "action", fromAction).textContent = String(length);
+            findByAttribute(areaDoms, "action", fromAction).parentElement.children[1].textContent = String(length) + "명";
+            setQueue(() => {
+              GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?cliid=" + cliid + "&view=row");
+            });
+          }
+
+          await ajaxJson({
+            thisId: cliid,
+            requestIndex: String(requestNumber),
+            column: "status",
+            pastValue: value,
+            value: value,
+            index,
+            thisCase,
+            user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
+          }, "/updateClient");
+
+          await ajaxJson({
+            mode: "sse",
+            db: "console",
+            collection: "sse_clientCard",
+            log: true,
+            who: cookies.homeliaisonConsoleLoginedEmail,
+            updateQuery: {
+              cliid,
+              requestNumber,
+              mode: "status",
+              from: from,
+              to: value,
+              randomToken: instance.randomToken,
+            }
+          }, "/generalMongo");
+
+        } else {
+
+          for (let obj of instance.cardCases) {
+            if (obj.cliid === cliid) {
+              obj.manager = (value === "미정" ? '-' : value);
+            }
+          }
+          instance.cases[index].manager = value;
+          await ajaxJson({
+            id: cliid,
+            column: "manager",
+            value: value,
+            email: cookies.homeliaisonConsoleLoginedEmail
+          }, "/updateClientHistory");
+          await instance.mother.greenAlert("담당자가 " + value + "(으)로 설정되었습니다!");
+
+        }
+        card.removeChild(card.children[card.children.length - 2]);
+        card.removeChild(card.lastChild);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  }
+
   instance.totalFatherChildren = [];
   requestTong = {};
   num = 0;
@@ -2414,7 +2545,158 @@ ClientJs.prototype.makeBoard = function (cases) {
           e.preventDefault();
         },
         click: instance.whiteViewMaker(index),
-        contextmenu: instance.makeClipBoardEvent(obj.cliid),
+        contextmenu: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const self = this;
+          const cliid = this.getAttribute("cliid");
+          const status = this.getAttribute("status");
+          const action = this.getAttribute("action");
+          const requestNumber = Number(this.getAttribute("request"));
+          const index = Number(this.getAttribute("index"));
+          let menu;
+          let cancelBox, menuBox;
+          let cxMembers;
+
+          cancelBox = null;
+          menuBox = null;
+
+          map.status.items
+          cxMembers = instance.allMembers.filter((obj) => { return obj.roles.includes("CX") || obj.roles.includes("CEO"); }).map((obj) => { return obj.name; });
+
+          if (cxMembers.length > map.status.items.length) {
+            menu = new Array(cxMembers.length);
+          } else {
+            menu = new Array(map.status.items.length);
+          }
+
+          for (let i = 0; i < menu.length; i++) {
+            menu[i] = (new Array(2)).fill('-');
+            if (map.status.items[i] !== undefined) {
+              menu[i][0] = map.status.items[i];
+            }
+            if (cxMembers[i] !== undefined) {
+              menu[i][1] = cxMembers[i];
+            }
+          }
+
+          cancelBox = createNode({
+            mother: this,
+            event: {
+              click: (e) => {
+                e.stopPropagation();
+                self.removeChild(menuBox);
+                self.removeChild(cancelBox);
+              }
+            },
+            style: {
+              position: "fixed",
+              zIndex: String(2),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: "transparent",
+              top: String(0),
+              left: String(0),
+            }
+          });
+
+          menuBox = createNode({
+            mother: this,
+            event: {
+              click: (e) => { e.stopPropagation(); },
+              contextmenu: (e) => { e.preventDefault(); e.stopPropagation(); },
+            },
+            style: {
+              position: "absolute",
+              zIndex: String(2),
+              width: String((contextMenuBlockWidth * 2) + contextMenuBlockMargin) + ea,
+              top: String(fixedHeightSize + contextMenuBlockBetween) + ea,
+              left: withOut(50, ((contextMenuBlockWidth * 2) + contextMenuBlockMargin) / 2, ea),
+              animation: "fadeuplite 0.2s ease forwards",
+            }
+          });
+
+          for (let [ left, right ] of menu) {
+
+            createNode({
+              mother: menuBox,
+              attribute: {
+                mode: "status",
+                value: left,
+              },
+              event: {
+                click: contextMenuEvent(cliid, index, String(requestNumber), status, action),
+                contextmenu: (e) => { e.preventDefault(); e.stopPropagation(); }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                background: left !== '-' ? colorChip.green : colorChip.deactive,
+                borderRadius: String(3) + "px",
+                width: String(contextMenuBlockWidth) + ea,
+                height: String(contextMenuBlockHeight) + ea,
+                marginRight: String(contextMenuBlockMargin) + ea,
+                marginBottom: String(contextMenuBlockMargin) + ea,
+                boxShadow: "0px 2px 15px -9px " + colorChip.shadow,
+              },
+              children: [
+                {
+                  text: left,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(contextMenuBlockSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.whiteBlack,
+                    width: String(100) + '%',
+                    top: String(contextMenuBlockTextTop) + ea,
+                    left: String(0),
+                    textAlign: "center",
+                  }
+                }
+              ]
+            });
+
+            createNode({
+              mother: menuBox,
+              attribute: {
+                mode: "manager",
+                value: right,
+              },
+              event: {
+                click: contextMenuEvent(cliid, index, String(requestNumber), status, action),
+                contextmenu: (e) => { e.preventDefault(); e.stopPropagation(); }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                background: right !== '-' ? colorChip.green : colorChip.deactive,
+                borderRadius: String(3) + "px",
+                width: String(contextMenuBlockWidth) + ea,
+                height: String(contextMenuBlockHeight) + ea,
+                marginBottom: String(contextMenuBlockMargin) + ea,
+                boxShadow: "0px 2px 15px -9px " + colorChip.shadow,
+              },
+              children: [
+                {
+                  text: right,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(contextMenuBlockSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.whiteBlack,
+                    width: String(100) + '%',
+                    top: String(contextMenuBlockTextTop) + ea,
+                    left: String(0),
+                    textAlign: "center",
+                  }
+                }
+              ]
+            });
+
+          }
+
+        },
       },
       style: {
         display: "inline-block",
@@ -2535,7 +2817,7 @@ ClientJs.prototype.cardViewMaker = function () {
       }
     });
 
-    thisCases = equalJson(JSON.stringify(instance.cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status) && !/진행/gi.test(obj.status); });
+    thisCases = equalJson(JSON.stringify(instance.cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status); });
     managerObj = await ajaxJson({
       method: "client",
       property: "manager",
@@ -6606,7 +6888,7 @@ ClientJs.prototype.launching = async function () {
           getTarget = dom;
         }
       }
-      if (getTarget === null) {
+      if (getTarget === null || getObj.view === "row") {
         tempFunction = this.makeSearchEvent(getObj.cliid);
         await tempFunction({ key: "Enter" });
         for (let dom of this.standardDoms) {
@@ -6616,13 +6898,19 @@ ClientJs.prototype.launching = async function () {
         }
       }
       if (getTarget !== null) {
-        getTarget.click();
+        if (getObj.view !== "row") {
+          getTarget.click();
+        }
       }
+    } else {
+      setQueue(() => {
+        instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {});
+      }, 300);
     }
 
-    setQueue(() => {
-      instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {});
-    }, 300);
+    window.addEventListener("resize", (e) => {
+      window.location.reload();
+    });
 
   } catch (e) {
     GeneralJs.ajax({ message: "ClientJs 프론트 스크립트 문제 생김 " + e.message, channel: "#error_log" }, "/sendSlack", function () {});
