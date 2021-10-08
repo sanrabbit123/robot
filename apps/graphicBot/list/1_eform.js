@@ -87,13 +87,13 @@ module.exports = function (proid, info) {
             await injectionInput(document.getElementById(idId), "info.eform.id");
             await clickElement(document.querySelector("footer"));
             await injectionInput(document.getElementById(passwordId), "info.eform.pwd");
-            document.querySelector(loginReturn).click();
+            await clickElement(document.querySelector(loginReturn));
           }
 
           while (document.getElementById(menuId) === null) {
             await sleep(500);
           }
-          document.getElementById(menuId).click();
+          await clickElement(document.getElementById(menuId));
 
           while (document.querySelector(buttonQuery) === null) {
             await sleep(500);
@@ -109,7 +109,7 @@ module.exports = function (proid, info) {
           while (document.querySelector(popupQuery) === null) {
             await sleep(500);
           }
-          document.querySelector(popupQuery).querySelector("button").click();
+          await clickElement(document.querySelector(popupQuery).querySelector("button"));
 
           await sleep(1000);
 
@@ -163,14 +163,14 @@ module.exports = function (proid, info) {
           await clickElement(document.getElementById("react-select-11--option-4"));
 
           await sleep(500);
-          document.querySelector('.send').click();
+          await clickElement(document.querySelector('.send'));
           await sleep(500);
 
           while (document.querySelector(".sc-jWUzTF") === null) {
             await sleep(500);
           }
 
-          document.querySelector(".sc-jWUzTF").querySelectorAll("button")[1].click();
+          await clickElement(document.querySelector(".sc-jWUzTF").querySelectorAll("button")[1]);
 
           await sleep(2000);
 
