@@ -544,7 +544,11 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
         proofs = bill.returnBillDummies("proofs");
-        proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
+        if (typeof data.P_FN_NM === "string") {
+          proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
+        } else {
+          proofs.method = "카드(알 수 없음)";
+        }
         proofs.proof = inisis;
         proofs.to = data.buyerName;
         thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
@@ -812,7 +816,11 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
       proofs = bill.returnBillDummies("proofs");
-      proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
+      if (typeof bankFrom === "string") {
+        proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
+      } else {
+        proofs.method = "무통장 입금(알 수 없음)";
+      }
       proofs.proof = inisis;
       proofs.to = nameFrom;
       thisBill.requests[requestNumber].proofs.unshift(proofs);
