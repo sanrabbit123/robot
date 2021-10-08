@@ -111,7 +111,7 @@ module.exports = function (proid, info) {
             await sleep(500);
           }
           await sleep(500);
-          await clickElement(document.querySelector(popupQuery).querySelector("button"));
+          document.querySelector(popupQuery).querySelector("button").click();
 
           await sleep(3000);
 
