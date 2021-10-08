@@ -581,12 +581,17 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
             }
           }
           if (name.trim() === "알 수 없는") {
-            outerResponse = await requestSystem(outerUrl, { SCH_TEL_NO: String(phoneNumber).replace(/[^0-9]/gi, '') }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
-            entireDom = new JSDOM(outerResponse.data);
-            resultDom = entireDom.window.document.getElementById("result_phone_text");
-            if (resultDom !== null) {
-              findName = resultDom.textContent.trim();
-              text = `${findName}에서 ${method}가 왔습니다!`;
+            rows = await back.getAspirantsByQuery({ phone: phoneNumber }, { selfMongo: instance.mongo });
+            if (rows.length === 0) {
+              outerResponse = await requestSystem(outerUrl, { SCH_TEL_NO: String(phoneNumber).replace(/[^0-9]/gi, '') }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+              entireDom = new JSDOM(outerResponse.data);
+              resultDom = entireDom.window.document.getElementById("result_phone_text");
+              if (resultDom !== null) {
+                findName = resultDom.textContent.trim();
+                text = `${findName}에서 ${method}가 왔습니다!`;
+              }
+            } else {
+              text = `${rows[0].designer} 디자이너 신청자로부터 ${method}가 왔습니다!`;
             }
           }
           await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
