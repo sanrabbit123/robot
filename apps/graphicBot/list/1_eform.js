@@ -157,18 +157,16 @@ module.exports = function (proid, info) {
           await injectionInput(tempArr[1], client.email, true);
           await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
 
-          await sleep(1000);
-          await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
+          document.querySelectorAll(".Select-arrow-zone")[1].click();
           await sleep(1000);
 
           while (document.querySelector(".Select-menu-outer") === null) {
             await sleep(500);
           }
-          await sleep(500);
-          await clickElement(document.getElementById("react-select-11--option-4"));
+          document.getElementById("react-select-11--option-4").click();
 
-          await sleep(1000);
-          await clickElement(document.querySelector('.send'));
+          await sleep(500);
+          document.querySelector('.send').click();
           await sleep(500);
 
           while (document.querySelector(".sc-jWUzTF") === null) {
