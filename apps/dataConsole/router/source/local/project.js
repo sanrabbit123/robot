@@ -6685,7 +6685,6 @@ ProjectJs.prototype.communicationRender = function () {
               noFlat: true,
               whereQuery: { cliid }
             }, "/getClients"))[0];
-
             onoff = /온라인/gi.test(thisCase.service) ? "online" : "offline";
             await GeneralJs.ajaxJson({
               method: "firstPayment",

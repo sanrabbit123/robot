@@ -27,6 +27,7 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
     this.possiblePannelStatus = {
       project: false,
       numbers: false,
+      doms: [],
     };
   }
   if (typeof this.possiblePannelStatus.project !== "boolean") {
@@ -34,6 +35,9 @@ DesignerJs.prototype.possibleDetailLaunching = function (desid, callback = null)
   }
   if (typeof this.possiblePannelStatus.numbers !== "boolean") {
     this.possiblePannelStatus.numbers = false;
+  }
+  if (!Array.isArray(this.possiblePannelStatus.doms)) {
+    this.possiblePannelStatus.doms = [];
   }
   if (typeof this.possibleConst !== "object" || this.possibleConst === null) {
     this.possibleConst = {
@@ -241,7 +245,7 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
 
 DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDesigner) {
   const instance = this;
-  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate, isMac, swipePatch } = GeneralJs;
+  const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate, isMac, swipePatch, sleep } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -311,7 +315,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     let updateBoo;
     let possibleUpdate;
     let targetDom;
-    let pannelDoms;
+    let pannelDom, pannelDoms;
     let projectPannel, calendarPannel;
     let daydayVisualLeft;
     let titleMobileIndent, titleMobileMarginBottom;
@@ -434,143 +438,153 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         attribute: {
           toggle: "off",
         },
-        event: function (e) {
+        event: async function (e) {
           const toggle = this.getAttribute("toggle");
           const dateDoms = instance.dateDoms;
           const projects = designer.projects.filter((p) => { return /^[대진]/.test(p.process.status); });
-          let start, end;
-          let target, targets, targets2;
-          let tempStr, dom;
-          let clientsArr;
+          try {
+            let start, end;
+            let target, targets, targets2;
+            let tempStr, dom;
+            let clientsArr;
+            if (toggle === "off") {
 
-          if (toggle === "off") {
-
-            targets2 = [];
-            for (let svg of allSvgs) {
-              svg.style.opacity = String(0);
-              svg.parentElement.children[0].style.background = colorChip.white;
-              svg.parentElement.children[1].style.color = colorChip.black;
-              svg.parentElement.children[1].querySelector('b').style.color = colorChip.black;
-              svg.setAttribute("mode", "projects");
-              if ([ 0, 6 ].includes(Number(svg.parentElement.getAttribute("index")))) {
-                targets2.push(svg.parentElement.children[1]);
-              }
-            }
-
-            setQueue(() => {
-              for (let { name, process: { status, contract: { form: { date: { from, to } } } } } of projects) {
-                if (from.valueOf() <= to.valueOf()) {
-
-                  tempStr = String(JSON.stringify(from));
-
-                  start = new Date(JSON.stringify(from).slice(1, -1));
-                  end = new Date(JSON.stringify(to).slice(1, -1));
-                  end.setDate(end.getDate() + 1);
-                  targets = [];
-                  while (start.valueOf() < end.valueOf()) {
-                    target = findByAttribute(dateDoms, [ "year", "month", "date" ], [ start.getFullYear(), start.getMonth() + 1, start.getDate() ]);
-                    if (target !== null) {
-                      targets.push(target);
-                    }
-                    start.setDate(start.getDate() + 1);
-                  }
-
-                  for (let dom of targets) {
-                    if (dom.getAttribute("past") !== "true") {
-                      dom.firstChild.style.background = colorChip.green;
-                      if (dom.firstChild.hasAttribute("projects")) {
-                        dom.firstChild.setAttribute("projects", String(Number(dom.firstChild.getAttribute("projects")) + 1));
-                      } else {
-                        dom.firstChild.setAttribute("projects", String(1));
-                      }
-                      if (dom.firstChild.hasAttribute("clients")) {
-                        clientsArr = GeneralJs.equalJson(dom.firstChild.getAttribute("clients"));
-                        clientsArr.push(`${name} (${status})`);
-                        dom.firstChild.setAttribute("clients", JSON.stringify(clientsArr));
-                      } else {
-                        dom.firstChild.setAttribute("clients", JSON.stringify([ `${name} (${status})` ]));
-                      }
-                      dom.firstChild.style.background = colorChip.green;
-                      dom.querySelector("aside").style.opacity = String(1);
-                      if (desktop) {
-                        dom.querySelector("aside").textContent = dom.firstChild.getAttribute("projects");
-                      } else {
-                        dom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
-                        dom.querySelector("aside").textContent = dom.firstChild.getAttribute("projects") + " Prj";
-                      }
-                      dom.firstChild.style.opacity = String(dateBoxOpacity * Number(dom.firstChild.getAttribute("projects")));
-                    }
-                  }
-
+              if (instance.possiblePannelStatus.numbers) {
+                if (instance.possiblePannelStatus.doms.length === 2) {
+                  instance.possiblePannelStatus.doms[1].click();
+                  await sleep(1500);
                 }
               }
-              setQueue(() => {
-                for (let dom of targets2) {
-                  dom.style.color = colorChip.darkGreen;
-                  dom.querySelector('b').style.color = colorChip.darkGreen;
-                }
-              }, 900);
-            }, 301);
 
-            this.lastChild.textContent = "on";
-            this.firstChild.style.color = colorChip.green;
-            this.lastChild.style.color = colorChip.green;
-            this.setAttribute("toggle", "on");
-            instance.possiblePannelStatus.project = true;
-
-          } else {
-
-            setQueue(() => {
-              let targets2, dom;
               targets2 = [];
               for (let svg of allSvgs) {
-                dom = svg.parentElement;
-                dom.querySelector("aside").textContent = String(0);
-                dom.firstChild.style.opacity = String(dateBoxOpacity);
-                dom.firstChild.setAttribute("projects", String(0));
-                dom.firstChild.setAttribute("clients", JSON.stringify([]));
-                dom.children[1].style.opacity = String(1);
-                if (dom.getAttribute("toggle") === "on") {
-                  dom.firstChild.style.background = colorChip.green;
-                  if (svg.getAttribute("kind") === "ok") {
-                    svg.style.opacity = String(1);
-                  } else {
-                    svg.style.opacity = String(0);
-                  }
-                  dom.children[1].style.color = colorChip.green;
-                  dom.children[1].querySelector('b').style.color = colorChip.green;
-                } else {
-                  dom.firstChild.style.background = colorChip.white;
-                  if (svg.getAttribute("kind") === "ok") {
-                    svg.style.opacity = String(0);
-                  } else {
-                    svg.style.opacity = String(1);
-                  }
-                }
-                if ([ 0, 6 ].includes(Number(dom.getAttribute("index")))) {
-                  targets2.push(dom.children[1]);
+                svg.style.opacity = String(0);
+                svg.parentElement.children[0].style.background = colorChip.white;
+                svg.parentElement.children[1].style.color = colorChip.black;
+                svg.parentElement.children[1].querySelector('b').style.color = colorChip.black;
+                svg.setAttribute("mode", "projects");
+                if ([ 0, 6 ].includes(Number(svg.parentElement.getAttribute("index")))) {
+                  targets2.push(svg.parentElement.children[1]);
                 }
               }
+
               setQueue(() => {
-                for (let dom of targets2) {
-                  dom.style.color = colorChip.red;
-                  dom.querySelector('b').style.color = colorChip.red;
+                for (let { name, process: { status, contract: { form: { date: { from, to } } } } } of projects) {
+                  if (from.valueOf() <= to.valueOf()) {
+
+                    tempStr = String(JSON.stringify(from));
+
+                    start = new Date(JSON.stringify(from).slice(1, -1));
+                    end = new Date(JSON.stringify(to).slice(1, -1));
+                    end.setDate(end.getDate() + 1);
+                    targets = [];
+                    while (start.valueOf() < end.valueOf()) {
+                      target = findByAttribute(dateDoms, [ "year", "month", "date" ], [ start.getFullYear(), start.getMonth() + 1, start.getDate() ]);
+                      if (target !== null) {
+                        targets.push(target);
+                      }
+                      start.setDate(start.getDate() + 1);
+                    }
+
+                    for (let dom of targets) {
+                      if (dom.getAttribute("past") !== "true") {
+                        dom.firstChild.style.background = colorChip.green;
+                        if (dom.firstChild.hasAttribute("projects")) {
+                          dom.firstChild.setAttribute("projects", String(Number(dom.firstChild.getAttribute("projects")) + 1));
+                        } else {
+                          dom.firstChild.setAttribute("projects", String(1));
+                        }
+                        if (dom.firstChild.hasAttribute("clients")) {
+                          clientsArr = GeneralJs.equalJson(dom.firstChild.getAttribute("clients"));
+                          clientsArr.push(`${name} (${status})`);
+                          dom.firstChild.setAttribute("clients", JSON.stringify(clientsArr));
+                        } else {
+                          dom.firstChild.setAttribute("clients", JSON.stringify([ `${name} (${status})` ]));
+                        }
+                        dom.firstChild.style.background = colorChip.green;
+                        dom.querySelector("aside").style.opacity = String(1);
+                        if (desktop) {
+                          dom.querySelector("aside").textContent = dom.firstChild.getAttribute("projects");
+                        } else {
+                          dom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
+                          dom.querySelector("aside").textContent = dom.firstChild.getAttribute("projects") + " Prj";
+                        }
+                        dom.firstChild.style.opacity = String(dateBoxOpacity * Number(dom.firstChild.getAttribute("projects")));
+                      }
+                    }
+
+                  }
                 }
-              }, 900);
-            }, 301);
+                setQueue(() => {
+                  for (let dom of targets2) {
+                    dom.style.color = colorChip.darkGreen;
+                    dom.querySelector('b').style.color = colorChip.darkGreen;
+                  }
+                }, 900);
+              }, 301);
 
-            for (let svg of allSvgs) {
-              svg.setAttribute("mode", "possible");
-              dom = svg.parentElement;
-              dom.querySelector("aside").style.opacity = String(0);
+              this.lastChild.textContent = "on";
+              this.firstChild.style.color = colorChip.green;
+              this.lastChild.style.color = colorChip.green;
+              this.setAttribute("toggle", "on");
+              instance.possiblePannelStatus.project = true;
+
+            } else {
+
+              setQueue(() => {
+                let targets2, dom;
+                targets2 = [];
+                for (let svg of allSvgs) {
+                  dom = svg.parentElement;
+                  dom.querySelector("aside").textContent = String(0);
+                  dom.firstChild.style.opacity = String(dateBoxOpacity);
+                  dom.firstChild.setAttribute("projects", String(0));
+                  dom.firstChild.setAttribute("clients", JSON.stringify([]));
+                  dom.children[1].style.opacity = String(1);
+                  if (dom.getAttribute("toggle") === "on") {
+                    dom.firstChild.style.background = colorChip.green;
+                    if (svg.getAttribute("kind") === "ok") {
+                      svg.style.opacity = String(1);
+                    } else {
+                      svg.style.opacity = String(0);
+                    }
+                    dom.children[1].style.color = colorChip.green;
+                    dom.children[1].querySelector('b').style.color = colorChip.green;
+                  } else {
+                    dom.firstChild.style.background = colorChip.white;
+                    if (svg.getAttribute("kind") === "ok") {
+                      svg.style.opacity = String(0);
+                    } else {
+                      svg.style.opacity = String(1);
+                    }
+                  }
+                  if ([ 0, 6 ].includes(Number(dom.getAttribute("index")))) {
+                    targets2.push(dom.children[1]);
+                  }
+                }
+                setQueue(() => {
+                  for (let dom of targets2) {
+                    dom.style.color = colorChip.red;
+                    dom.querySelector('b').style.color = colorChip.red;
+                  }
+                }, 900);
+              }, 301);
+
+              for (let svg of allSvgs) {
+                svg.setAttribute("mode", "possible");
+                dom = svg.parentElement;
+                dom.querySelector("aside").style.opacity = String(0);
+              }
+
+              this.lastChild.textContent = "off";
+              this.firstChild.style.color = colorChip.black;
+              this.lastChild.style.color = colorChip.red;
+              this.setAttribute("toggle", "off");
+              instance.possiblePannelStatus.project = false;
+
             }
-
-            this.lastChild.textContent = "off";
-            this.firstChild.style.color = colorChip.black;
-            this.lastChild.style.color = colorChip.red;
-            this.setAttribute("toggle", "off");
-            instance.possiblePannelStatus.project = false;
-
+          } catch (e) {
+            console.log(e);
           }
         }
       },
@@ -579,109 +593,119 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         attribute: {
           toggle: this.possiblePannelStatus.numbers ? "on" : "off"
         },
-        event: function (e) {
+        event: async function (e) {
           const toggle = this.getAttribute("toggle");
           const dateDoms = instance.dateDoms;
-          let target, targets, targets2;
-          let tempStr, dom;
+          try {
+            let target, targets, targets2;
+            let tempStr, dom;
+            if (toggle === "off") {
 
-          if (toggle === "off") {
-
-            targets2 = [];
-            for (let svg of allSvgs) {
-              svg.style.opacity = String(0);
-              svg.parentElement.children[0].style.background = colorChip.white;
-              svg.parentElement.children[1].style.color = colorChip.black;
-              svg.parentElement.children[1].querySelector('b').style.color = colorChip.black;
-              svg.setAttribute("mode", "numbers");
-              if ([ 0, 6 ].includes(Number(svg.parentElement.getAttribute("index")))) {
-                targets2.push(svg.parentElement.children[1]);
-              }
-            }
-
-            setQueue(() => {
-              targets = [];
-              for (let dom of dateDoms) {
-                if (equalJson(dom.getAttribute("matrix")).length > 0) {
-                  targets.push(dom);
+              if (instance.possiblePannelStatus.project) {
+                if (instance.possiblePannelStatus.doms.length === 2) {
+                  instance.possiblePannelStatus.doms[0].click();
+                  await sleep(1500);
                 }
               }
 
-              for (let dom of targets) {
-                if (dom.getAttribute("past") !== "true") {
-                  dom.firstChild.style.background = colorChip.green;
-                  dom.querySelector("aside").style.opacity = String(1);
-                  if (mobile) {
-                    dom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
-                  }
-                  dom.querySelector("aside").textContent = equalJson(dom.getAttribute("matrix")).map((i) => { return String(i); }).join(",");
-                }
-              }
-              setQueue(() => {
-                for (let dom of targets2) {
-                  dom.style.color = colorChip.darkGreen;
-                  dom.querySelector('b').style.color = colorChip.darkGreen;
-                }
-              }, 900);
-            }, 301);
-
-            this.lastChild.textContent = "on";
-            this.firstChild.style.color = colorChip.green;
-            this.lastChild.style.color = colorChip.green;
-            this.setAttribute("toggle", "on");
-            instance.possiblePannelStatus.numbers = true;
-
-          } else {
-
-            setQueue(() => {
-              let targets2, dom;
               targets2 = [];
               for (let svg of allSvgs) {
-                dom = svg.parentElement;
-                dom.querySelector("aside").textContent = String(0);
-                dom.firstChild.style.opacity = String(dateBoxOpacity);
-                dom.children[1].style.opacity = String(1);
-                if (dom.getAttribute("toggle") === "on") {
-                  dom.firstChild.style.background = colorChip.green;
-                  if (svg.getAttribute("kind") === "ok") {
-                    svg.style.opacity = String(1);
-                  } else {
-                    svg.style.opacity = String(0);
-                  }
-                  dom.children[1].style.color = colorChip.green;
-                  dom.children[1].querySelector('b').style.color = colorChip.green;
-                } else {
-                  dom.firstChild.style.background = colorChip.white;
-                  if (svg.getAttribute("kind") === "ok") {
-                    svg.style.opacity = String(0);
-                  } else {
-                    svg.style.opacity = String(1);
-                  }
-                }
-                if ([ 0, 6 ].includes(Number(dom.getAttribute("index")))) {
-                  targets2.push(dom.children[1]);
+                svg.style.opacity = String(0);
+                svg.parentElement.children[0].style.background = colorChip.white;
+                svg.parentElement.children[1].style.color = colorChip.black;
+                svg.parentElement.children[1].querySelector('b').style.color = colorChip.black;
+                svg.setAttribute("mode", "numbers");
+                if ([ 0, 6 ].includes(Number(svg.parentElement.getAttribute("index")))) {
+                  targets2.push(svg.parentElement.children[1]);
                 }
               }
+
               setQueue(() => {
-                for (let dom of targets2) {
-                  dom.style.color = colorChip.red;
-                  dom.querySelector('b').style.color = colorChip.red;
+                targets = [];
+                for (let dom of dateDoms) {
+                  if (equalJson(dom.getAttribute("matrix")).length > 0) {
+                    targets.push(dom);
+                  }
                 }
-              }, 900);
-            }, 301);
 
-            for (let svg of allSvgs) {
-              svg.setAttribute("mode", "possible");
-              dom = svg.parentElement;
-              dom.querySelector("aside").style.opacity = String(0);
+                for (let dom of targets) {
+                  if (dom.getAttribute("past") !== "true") {
+                    dom.firstChild.style.background = colorChip.green;
+                    dom.querySelector("aside").style.opacity = String(1);
+                    if (mobile) {
+                      dom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
+                    }
+                    dom.querySelector("aside").textContent = equalJson(dom.getAttribute("matrix")).map((i) => { return String(i); }).join(",");
+                  }
+                }
+                setQueue(() => {
+                  for (let dom of targets2) {
+                    dom.style.color = colorChip.darkGreen;
+                    dom.querySelector('b').style.color = colorChip.darkGreen;
+                  }
+                }, 900);
+              }, 301);
+
+              this.lastChild.textContent = "on";
+              this.firstChild.style.color = colorChip.green;
+              this.lastChild.style.color = colorChip.green;
+              this.setAttribute("toggle", "on");
+              instance.possiblePannelStatus.numbers = true;
+
+            } else {
+
+              setQueue(() => {
+                let targets2, dom;
+                targets2 = [];
+                for (let svg of allSvgs) {
+                  dom = svg.parentElement;
+                  dom.querySelector("aside").textContent = String(0);
+                  dom.firstChild.style.opacity = String(dateBoxOpacity);
+                  dom.children[1].style.opacity = String(1);
+                  if (dom.getAttribute("toggle") === "on") {
+                    dom.firstChild.style.background = colorChip.green;
+                    if (svg.getAttribute("kind") === "ok") {
+                      svg.style.opacity = String(1);
+                    } else {
+                      svg.style.opacity = String(0);
+                    }
+                    dom.children[1].style.color = colorChip.green;
+                    dom.children[1].querySelector('b').style.color = colorChip.green;
+                  } else {
+                    dom.firstChild.style.background = colorChip.white;
+                    if (svg.getAttribute("kind") === "ok") {
+                      svg.style.opacity = String(0);
+                    } else {
+                      svg.style.opacity = String(1);
+                    }
+                  }
+                  if ([ 0, 6 ].includes(Number(dom.getAttribute("index")))) {
+                    targets2.push(dom.children[1]);
+                  }
+                }
+                setQueue(() => {
+                  for (let dom of targets2) {
+                    dom.style.color = colorChip.red;
+                    dom.querySelector('b').style.color = colorChip.red;
+                  }
+                }, 900);
+              }, 301);
+
+              for (let svg of allSvgs) {
+                svg.setAttribute("mode", "possible");
+                dom = svg.parentElement;
+                dom.querySelector("aside").style.opacity = String(0);
+              }
+
+              this.lastChild.textContent = "off";
+              this.firstChild.style.color = colorChip.black;
+              this.lastChild.style.color = colorChip.red;
+              this.setAttribute("toggle", "off");
+              instance.possiblePannelStatus.numbers = false;
+
             }
-
-            this.lastChild.textContent = "off";
-            this.firstChild.style.color = colorChip.black;
-            this.lastChild.style.color = colorChip.red;
-            this.setAttribute("toggle", "off");
-            instance.possiblePannelStatus.numbers = false;
-
+          } catch (e) {
+            console.log(e);
           }
         }
       }
@@ -958,8 +982,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
               paddingBottom: String(functionPannelPaddingBottom) + ea,
             }
           });
+          this.possiblePannelStatus.doms = [];
           for (let { name, attribute, event } of functionPannelContents) {
-            pannelDoms.push(createNode({
+            pannelDom = createNode({
               mother: functionPannel,
               class: [ "hoverDefault_lite" ],
               attribute,
@@ -1000,7 +1025,9 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                   }
                 }
               ]
-            }));
+            });
+            pannelDoms.push(pannelDom);
+            this.possiblePannelStatus.doms.push(pannelDom);
           }
         }
       }
