@@ -468,17 +468,20 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem } = this.mother;
+  const { requestSystem, ghostRequest } = this.mother;
+  const jsdom = require("jsdom");
+  const { JSDOM } = jsdom;
+  const outerUrl = "http://www.moyaweb.com/search_result.do";
   let obj = {};
   obj.link = "/parsingCall";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": '*',
+    });
     try {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
       if (req.body.phoneNumber === undefined) {
         console.log(req.body);
         res.send(JSON.stringify({ error: "error" }));
@@ -491,6 +494,8 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
         let cliid, desid, proid;
         let projects;
         let boo;
+        let outerResponse;
+        let entireDom, resultDom, findName;
 
         if (!/^2/.test(phoneNumber)) {
           manager = null;
@@ -575,14 +580,23 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
               text += method + " 확인해주세요!";
             }
           }
+          if (name.trim() === "알 수 없는") {
+            outerResponse = await requestSystem(outerUrl, { SCH_TEL_NO: String(phoneNumber).replace(/[^0-9]/gi, '') }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+            entireDom = new JSDOM(outerResponse.data);
+            resultDom = entireDom.window.document.getElementById("result_phone_text");
+            if (resultDom !== null) {
+              findName = resultDom.textContent.trim();
+              text = `${findName}에서 ${method}가 왔습니다!`;
+            }
+          }
           await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
-          requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+          ghostRequest("voice", { text }).catch((err) => { throw new Error(err); });
         }
-
         res.send(JSON.stringify({ message: "success" }));
       }
     } catch (e) {
-      console.log(e);
+      instance.mother.slack_bot.chat.postMessage({ test: "MirrorRouter 문제 생김 (rou_post_parsingCall) : " + e.message, channel: "#cx" });
+      res.send(JSON.stringify({ message: "error" }));
     }
   }
   return obj;

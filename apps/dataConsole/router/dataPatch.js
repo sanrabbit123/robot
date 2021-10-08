@@ -724,7 +724,11 @@ DataPatch.prototype.clientMap = function () {
       }
 
       if (finalValue === "진행") {
-        window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.className;
+        if (/^c[0-9][0-9][0-9][0-9]/.test(input.parentElement.parentElement.className)) {
+          window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.className;
+        } else {
+          window.location.href = window.location.protocol + "//" + window.location.host + "/" + "proposal" + "?cliid=" + input.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("index");
+        }
       } else {
         if (finalValue === "드랍") {
           grandMother.setAttribute("drop", "true");
