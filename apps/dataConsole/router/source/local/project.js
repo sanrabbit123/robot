@@ -3703,9 +3703,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               tempObj.text = "";
               tempObj.text += dateToString(date, true).slice(2, -3);
               tempObj.text += " | ";
-              tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                return (p1 + " <b%" + p2 + "%b>");
-              });
+              if (typeof name === "string") {
+                tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                  return (p1 + " <b%" + p2 + "%b>");
+                });
+              }
               tempObj.id = id;
               tempObj.deactive = (removal.valueOf() > (new Date(2000, 0, 1)).valueOf());
               requestArr.push(tempObj);
@@ -3735,9 +3737,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 tempObj.text = "";
                 tempObj.text += dateToString(date, true).slice(2, -3);
                 tempObj.text += " | ";
-                tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
-                  return (p1 + " <b%" + p2 + "%b>");
-                });
+                if (typeof name === "string") {
+                  tempObj.text += name.replace(/([^ ]*) ([^ ]*)/g, (match, p1, p2) => {
+                    return (p1 + " <b%" + p2 + "%b>");
+                  });
+                }
                 tempObj.text += " | ";
                 tempObj.text += "정산 금액 : ";
                 tempObj.text += GeneralJs.autoComma(pure) + '원';
@@ -4109,7 +4113,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   let total, amount;
                                   obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : "무통장";
                                   obj.detail = obj.payMethod === "카드" ? infoCopied[index].data.P_FN_NM : infoCopied[index].data.vactBankName;
-                                  obj.detail = obj.detail.replace(/카드/gi, '').replace(/은행/gi, '');
+                                  if (typeof obj.detail === "string") {
+                                    obj.detail = obj.detail.replace(/카드/gi, '').replace(/은행/gi, '');
+                                  } else {
+                                    obj.detail = "알 수 없음";
+                                  }
                                   obj.method = obj.payMethod;
                                   obj.payMethod = obj.payMethod + "(" + obj.detail + ") : " + GeneralJs.autoComma(obj.amount) + "원";
                                   obj.cancel = false;
