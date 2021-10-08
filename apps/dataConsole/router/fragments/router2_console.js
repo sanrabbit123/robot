@@ -3284,6 +3284,9 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         });
         const today = new Date();
         const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+
+        instance.mother.fileSystem(`writeJson`, [ `${process.cwd()}/temp/mobileCard.js`, paymentData ]);
+
         const convertingData = {
           goodName: paymentData.name,
           goodsName: paymentData.name,
