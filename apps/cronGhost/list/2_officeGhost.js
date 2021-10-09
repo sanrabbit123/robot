@@ -14,13 +14,5 @@ module.exports = [
       minute: 40,
       second: 30,
     }
-  },
-  {
-    name: "mysqlReflect",
-    time: {
-      hour: 7,
-      minute: 40,
-      second: 30,
-    }
-  },
+  }
 ];
