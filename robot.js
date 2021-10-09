@@ -959,7 +959,7 @@ const MENU = {
     try {
       const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
       const dev = new DevContext();
-      dev.launching();
+      await dev.launching();
     } catch (e) {
       console.log(e);
     }
@@ -973,11 +973,11 @@ const MENU = {
       console.log(e);
     }
   },
-  canvascheck: async function () {
+  calendarSync: async function () {
     try {
       const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
       const dev = new DevContext();
-      dev.devCanvas(process.argv[2] !== "canvas");
+      await dev.calendarSync();
     } catch (e) {
       console.log(e);
     }
@@ -999,13 +999,6 @@ const MENU = {
   staticInSync: async function () {
     try {
       await robot.staticInSync();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  sayHello: async function () {
-    try {
-      await robot.sayHello(process.argv[3] !== undefined ? process.argv[3] : null);
     } catch (e) {
       console.log(e);
     }

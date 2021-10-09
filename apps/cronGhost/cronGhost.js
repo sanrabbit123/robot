@@ -119,11 +119,6 @@ CronGhost.prototype.endPython = function (listNum) {
   return script;
 }
 
-CronGhost.prototype.observerPython = function () {
-  const instance = this;
-
-}
-
 CronGhost.prototype.scriptReady = async function (listNum = 0) {
   const instance = this;
   const { fileSystem } = this.mother;
