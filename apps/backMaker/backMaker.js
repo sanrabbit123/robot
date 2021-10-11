@@ -23,6 +23,25 @@ BackMaker.allDatabaseNames = [
   "bridgeinfo"
 ];
 
+BackMaker.coreDatabaseNames = [
+  [
+    "mongoinfo",
+    [
+      "client",
+      "project",
+      "designer"
+    ]
+  ],
+  [
+    "backinfo",
+    [
+      "clientHistory",
+      "projectHistory",
+      "designerHistory"
+    ]
+  ],
+];
+
 BackMaker.flatDeathCollections = [
   "aspirant",
   "client",

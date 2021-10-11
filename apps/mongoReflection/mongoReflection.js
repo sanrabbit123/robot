@@ -165,7 +165,7 @@ MongoReflection.prototype.mongoToJson = async function (dir = "default", target 
 
 MongoReflection.prototype.mongoMigration = async function (to = "local", from = "mongoinfo", option = { drop: true }) {
   const instance = this;
-  const { mongo, shell, shellLink } = this.mother;
+  const { mongo } = this.mother;
   try {
     const dbName = "miro81";
     let MONGOC_FROM, MONGOC_TO;
@@ -219,8 +219,8 @@ MongoReflection.prototype.mongoMigration = async function (to = "local", from = 
       console.log(`migration ${i.name} success`);
     }
 
-    MONGOC_FROM.close();
-    MONGOC_TO.close();
+    await MONGOC_FROM.close();
+    await MONGOC_TO.close();
 
   } catch (e) {
     console.log(e);
@@ -398,13 +398,79 @@ MongoReflection.prototype.frontReflection = async function (to = "local") {
 
 MongoReflection.prototype.ultimateReflection = async function (to = "local") {
   const instance = this;
-  const os = require("os");
   try {
     await this.mongoReflection(to);
-    // if (os.type() !== 'Darwin') {
-    //   await this.mysqlReflection(to);
-    //   await this.frontReflection(to);
-    // }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+MongoReflection.prototype.coreReflection = async function (to = "local") {
+  const instance = this;
+  const { mongo } = this.mother;
+  const BackMaker = require(`${process.cwd()}/apps/backMaker/backMaker.js`);
+  try {
+    const targets = BackMaker.coreDatabaseNames;
+    const dbName = "miro81";
+    let MONGOC_FROM, MONGOC_TO;
+    let fromString, toString;
+    let fromDB, toDB;
+    let rows;
+    let consoleWording;
+    let equalNum;
+
+    for (let [ from, collection ] of targets) {
+
+      consoleWording = `${from} reflection start `;
+      equalNum = 78 - consoleWording.length;
+      for (let j = 0; j < equalNum; j++) {
+        consoleWording += '=';
+      }
+      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, consoleWording);
+
+      fromDB = from;
+      if (/home/gi.test(from)) {
+        fromHost = this.address["homeinfo"]["ghost"].host;
+      } else {
+        fromHost = this.address[fromDB].host;
+      }
+      toDB = to;
+      fromString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + fromHost + ':' + String(this.address[fromDB].port) + "/admin";
+      if (toDB === "local") {
+        toString = "mongodb://" + this.address[fromDB].user + ':' + this.address[fromDB].password + '@' + "127.0.0.1" + ':' + String(this.address[fromDB].port) + "/admin";
+      } else {
+        toString = "mongodb://" + this.address[toDB].user + ':' + this.address[toDB].password + '@' + this.address[toDB].host + ':' + String(this.address[toDB].port) + "/admin";
+      }
+
+      console.log(`from DB : ${JSON.stringify(this.address[fromDB], null, 2)}`);
+
+      MONGOC_FROM = new mongo(fromString, { useUnifiedTopology: true });
+      MONGOC_TO = new mongo(toString, { useUnifiedTopology: true });
+
+      await MONGOC_FROM.connect();
+      await MONGOC_TO.connect();
+
+      console.log("connection success");
+
+      for (let i of collection) {
+        await MONGOC_TO.db(dbName).collection(i).drop();
+
+        rows = await MONGOC_FROM.db(dbName).collection(i).find({}).toArray();
+        for (let j of rows) {
+          await MONGOC_TO.db(dbName).collection(i).insertOne(j);
+        }
+        console.log(`migration ${i} success`);
+
+      }
+
+      await MONGOC_FROM.close();
+      await MONGOC_TO.close();
+
+      console.log(`\x1b[33m%s\x1b[0m`, `from: ${from} => to: ${to} reflection success`);
+      console.log(``);
+
+    }
+
   } catch (e) {
     console.log(e);
   }

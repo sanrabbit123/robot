@@ -487,6 +487,16 @@ Robot.prototype.ultimateReflection = async function () {
   }
 }
 
+Robot.prototype.coreReflection = async function () {
+  try {
+    const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
+    const reflection = new MongoReflection();
+    await reflection.coreReflection();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.mysqlReflection = async function () {
   try {
     const MongoReflection = require(`${process.cwd()}/apps/mongoReflection/mongoReflection.js`);
@@ -679,6 +689,27 @@ Robot.prototype.passiveSync = async function () {
     const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
     const bill = new BillMaker();
     bill.passiveSyncAll();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.devAliveSync = async function () {
+  try {
+    const path = `${process.cwd()}/apps/backMaker`;
+    const { shell, shellLink } = this.mother;
+    const list = [
+      [ "alive", "devAlive" ],
+      [ "map", "devMap" ]
+    ];
+    let command;
+    for (let [ from, to ] of list) {
+      command = "";
+      command += `rm -rf ${shellLink(path)}/${shellLink(to)};`;
+      command += `cp -r ${shellLink(path)}/${shellLink(from)} ${shellLink(path)}/${shellLink(to)};`;
+      shell.exec(command);
+      console.log(`sync ${from} => ${to} done`);
+    }
   } catch (e) {
     console.log(e);
   }
@@ -900,6 +931,13 @@ const MENU = {
       console.log(e);
     }
   },
+  coreReflect: async function () {
+    try {
+      await robot.coreReflection();
+    } catch (e) {
+      console.log(e);
+    }
+  },
   mysqlReflect: async function () {
     try {
       await robot.mysqlReflection();
@@ -978,6 +1016,13 @@ const MENU = {
       const DevContext = require(`${process.cwd()}/apps/devContext/devContext.js`);
       const dev = new DevContext();
       await dev.calendarSync();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  devAliveSync: async function () {
+    try {
+      await robot.devAliveSync();
     } catch (e) {
       console.log(e);
     }

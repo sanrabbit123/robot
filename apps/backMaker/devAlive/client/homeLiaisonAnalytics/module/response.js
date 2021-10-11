@@ -1,5 +1,5 @@
 const GENERAL_DIR = process.cwd() + "/apps/backMaker/alive/general";
-const { Menu } = require(GENERAL_DIR + "/generator.js");
+const { Menu, Flow } = require(GENERAL_DIR + "/generator.js");
 
 const ProjectService = function (json) {
   this.serid = json.serid;
@@ -60,6 +60,35 @@ const Response = function (response) {
   ], true);
   this.kakao = response.kakao;
   this.service = new ProjectService(response.service);
+}
+
+Response.prototype.actionInfo = function () {
+  const actionItems = [
+    [ "1차 응대 예정" ],
+    [ "1차 응대 후 대기", "부재중 알림 발송" ],
+    [ "스타일 체크 대기", "상세 설문 대기" ],
+    [ "제안 발송 예정", "부재중 제안 발송" ],
+    [ "제안 피드백 예정", "피드백과 응대 예정" ],
+    [ "피드백 부재중", "자동 피드백 부재중" ],
+    [ "제안 피드백 완료", "피드백과 응대 완료" ],
+    [ "디자이너 선택" ],
+    [ "계약금 안내" ],
+    [ "해당 없음" ],
+  ];
+
+  const position = [
+    {
+      value: actionItems[1][0],
+      used: [
+        {
+          file: "/apps/devContext/devContext.js",
+          method: "calendarSync"
+        }
+      ]
+    }
+  ];
+
+  return new Flow(actionItems, position);
 }
 
 Response.prototype.toNormal = function () {
