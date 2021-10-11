@@ -109,11 +109,12 @@ DevContext.prototype.launching = async function () {
     let whereQuery, updateQuery;
     let thisClient;
     let tempObj;
+    let updateQueries;
 
     clients = await back.getClientsByQuery({ requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } }, { selfMongo, withTools: true });
     if (clients.length > 0) {
       clientHistories = await back.getHistoriesByQuery("client", { $or: clients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfConsoleMongo });
-
+      updateQueries = [];
 
       // 1 - 1차 응대 예정
       filteredObject = actionFilter("1차 응대 예정", clients, clientHistories);
@@ -216,21 +217,14 @@ DevContext.prototype.launching = async function () {
             break;
           }
         }
-        await requestSystem("https://" + instance.address.backinfo.host + "/generalMongo", {
-          mode: "sse",
-          db: "console",
-          collection: "sse_clientCard",
-          log: true,
-          who: "autoBot",
-          updateQuery: {
-            cliid,
-            requestNumber,
-            mode: "action",
-            from: to,
-            to: to,
-            randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-          }
-        }, { headers: { "Content-Type": "application/json", "origin": "https://" + instance.address.backinfo.host } });
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "1차 응대 예정",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
         console.log(whereQuery, updateQuery);
       }
 
@@ -268,6 +262,14 @@ DevContext.prototype.launching = async function () {
             break;
           }
         }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "1차 응대 후 대기",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
         console.log(whereQuery, updateQuery);
       }
 
@@ -302,6 +304,14 @@ DevContext.prototype.launching = async function () {
             break;
           }
         }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "스타일 체크 대기",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
         console.log(whereQuery, updateQuery);
       }
 
@@ -332,6 +342,14 @@ DevContext.prototype.launching = async function () {
             break;
           }
         }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "제안 발송 예정",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
         console.log(whereQuery, updateQuery);
       }
 
@@ -372,6 +390,14 @@ DevContext.prototype.launching = async function () {
             break;
           }
         }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "부재중 알림 발송",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
         console.log(whereQuery, updateQuery);
       }
 
@@ -408,6 +434,14 @@ DevContext.prototype.launching = async function () {
             break;
           }
         }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "상세 설문 대기",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
         console.log(whereQuery, updateQuery);
       }
 
@@ -438,13 +472,33 @@ DevContext.prototype.launching = async function () {
             break;
           }
         }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "부재중 제안 발송",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
         console.log(whereQuery, updateQuery);
       }
 
+      await requestSystem("https://" + instance.address.backinfo.host + "/generalMongo", {
+        mode: "sse",
+        db: "console",
+        collection: "sse_clientCard",
+        log: true,
+        who: "autoBot",
+        updateQueries
+      }, { headers: { "Content-Type": "application/json", "origin": "https://" + instance.address.backinfo.host } });
 
     }
 
 
+
+
+
+    
 
 
     // 현금영수증 발급
