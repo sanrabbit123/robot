@@ -98,8 +98,16 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         const detail = await work.designerCuration(cliid, 6, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
         let detailUpdate, updateQuery;
         let newProid;
+        let requestNumber;
+        let action;
 
         client = clientCase.client;
+        requestNumber = 0;
+        if ([ "부재중 알림 발송", "상세 설문 대기" ].includes(client.requests[requestNumber].analytics.response.action.value)) {
+          action = "부재중 제안 발송";
+        } else {
+          action = "제안 발송 예정";
+        }
 
         if (detail.length !== 0) {
 
@@ -143,24 +151,49 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               if (newProid === null) {
                 newProid = proid;
               }
-              if (req.body.slient === undefined) {
+              if (req.body.silent === undefined) {
                 return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
               } else {
                 return passPromise();
               }
             }).then(() => {
+
               if (newProid === null) {
                 throw new Error("promise error");
               }
               return requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
                 id: cliid,
                 column: "action",
-                position: "requests.0.analytics.response.action",
-                pastValue: client.requests[0].analytics.response.action.value,
-                finalValue: "제안 발송 예정"
+                position: "requests." + String(requestNumber) + ".analytics.response.action",
+                pastValue: client.requests[requestNumber].analytics.response.action.value,
+                finalValue: action
               }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+
             }).then(() => {
-              return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ], { selfMongo: instance.mongo });
+
+              return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
+                mode: "sse",
+                db: "console",
+                collection: "sse_clientCard",
+                log: true,
+                who: "autoBot",
+                updateQuery: {
+                  cliid,
+                  requestNumber,
+                  mode: "action",
+                  from: client.requests[requestNumber].analytics.response.action.value,
+                  to: action,
+                  randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+                }
+              }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+
+            }).then(() => {
+              
+              let updateObj;
+              updateObj = {};
+              updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+              return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
+
             }).then(() => {
               return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
             }).then(() => {

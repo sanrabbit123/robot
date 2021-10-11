@@ -6473,6 +6473,12 @@ ClientJs.prototype.communicationRender = function () {
     async function (e) {
       try {
         let cliid, thisCase, serid, thisHistory, callBoo, liteBoo, inspectionArr;
+        let requestNumber;
+        let caseTong;
+        let answer;
+        let updateQuery;
+        let name;
+
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
             cliid = window.prompt("고객 아이디를 입력하세요!").trim();
@@ -6481,15 +6487,39 @@ ClientJs.prototype.communicationRender = function () {
           cliid = instance.whiteBox.id;
         }
         thisCase = null;
+        caseTong = [];
         for (let c of instance.cases) {
           if (c !== null) {
             if (c.cliid === cliid) {
               thisCase = c;
+              caseTong.push(c);
             }
           }
         }
         if (thisCase !== null) {
           if (window.confirm(thisCase.name + " 고객님께 부재중 알림 알림톡을 전송합니다. 확실합니까?")) {
+
+            requestNumber = 0;
+            if (caseTong.length > 1) {
+              if (caseTong.filter((obj) => { return obj.status === "응대중" || obj.status === "장기" }).length > 1) {
+                answer = window.prompt("응대중인 건이 2건 이상 발견됩니다! 전송하고자 하는 건의 순번을 숫자로만 적어주세요! (최근순, 예: 1번째, 2번째 등등)").trim().replace(/[^0-9]/gi, '');
+                if (Number.isNaN(answer)) {
+                  requestNumber = 0;
+                } else {
+                  requestNumber = Number(answer) - 1;
+                }
+                thisCase = caseTong[requestNumber];
+              } else {
+                requestNumber = caseTong.findIndex((obj) => { return obj.status === "응대중" || obj.status === "장기" });
+                if (requestNumber !== -1) {
+                  thisCase = caseTong[requestNumber];
+                } else {
+                  window.alert("응대중인 고객에게만 전송할 수 있습니다!");
+                  return false;
+                }
+              }
+            }
+
             inspectionArr = await ajaxJson({
               mode: "inspection",
               addressArr: [ { id: thisCase.cliid, address: thisCase.address } ],
@@ -6536,6 +6566,30 @@ ClientJs.prototype.communicationRender = function () {
                   email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
                   send: "styleCuration_general",
                 }, "/updateClientHistory");
+
+                updateQuery = {};
+                name = "부재중 알림 발송";
+                updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = name;
+                await ajaxJson({
+                  whereQuery: { cliid },
+                  updateQuery
+                }, "/rawUpdateClient");
+
+                await ajaxJson({
+                  mode: "sse",
+                  db: "console",
+                  collection: "sse_clientCard",
+                  log: true,
+                  who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                  updateQuery: {
+                    cliid,
+                    requestNumber,
+                    mode: "action",
+                    from: name,
+                    to: name,
+                    randomToken: GeneralJs.uniqueValue(),
+                  }
+                }, "/generalMongo");
 
                 await ajaxJson({
                   method: "outOfClient",
@@ -6594,6 +6648,12 @@ ClientJs.prototype.communicationRender = function () {
     async function (e) {
       try {
         let cliid, thisCase, serid, inspectionArr;
+        let requestNumber;
+        let caseTong;
+        let answer;
+        let updateQuery;
+        let name;
+
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
             cliid = window.prompt("고객 아이디를 입력하세요!").trim();
@@ -6602,15 +6662,38 @@ ClientJs.prototype.communicationRender = function () {
           cliid = instance.whiteBox.id;
         }
         thisCase = null;
+        caseTong = [];
         for (let c of instance.cases) {
           if (c !== null) {
             if (c.cliid === cliid) {
               thisCase = c;
+              caseTong.push(c);
             }
           }
         }
         if (thisCase !== null) {
           if (window.confirm(thisCase.name + " 고객님께 스타일 체크 알림톡을 전송합니다. 확실합니까?")) {
+
+            requestNumber = 0;
+            if (caseTong.length > 1) {
+              if (caseTong.filter((obj) => { return obj.status === "응대중" || obj.status === "장기" }).length > 1) {
+                answer = window.prompt("응대중인 건이 2건 이상 발견됩니다! 전송하고자 하는 건의 순번을 숫자로만 적어주세요! (최근순, 예: 1번째, 2번째 등등)").trim().replace(/[^0-9]/gi, '');
+                if (Number.isNaN(answer)) {
+                  requestNumber = 0;
+                } else {
+                  requestNumber = Number(answer) - 1;
+                }
+                thisCase = caseTong[requestNumber];
+              } else {
+                requestNumber = caseTong.findIndex((obj) => { return obj.status === "응대중" || obj.status === "장기" });
+                if (requestNumber !== -1) {
+                  thisCase = caseTong[requestNumber];
+                } else {
+                  window.alert("응대중인 고객에게만 전송할 수 있습니다!");
+                  return false;
+                }
+              }
+            }
 
             inspectionArr = await ajaxJson({
               mode: "inspection",
@@ -6631,6 +6714,7 @@ ClientJs.prototype.communicationRender = function () {
               } else {
                 serid = "s2011_aa04s";
               }
+
               await ajaxJson({
                 id: cliid,
                 column: "curation.service.serid",
@@ -6638,6 +6722,30 @@ ClientJs.prototype.communicationRender = function () {
                 email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
                 send: "styleCuration_lite",
               }, "/updateClientHistory");
+
+              updateQuery = {};
+              name = "스타일 체크 대기";
+              updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = name;
+              await ajaxJson({
+                whereQuery: { cliid },
+                updateQuery
+              }, "/rawUpdateClient");
+
+              await ajaxJson({
+                mode: "sse",
+                db: "console",
+                collection: "sse_clientCard",
+                log: true,
+                who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                updateQuery: {
+                  cliid,
+                  requestNumber,
+                  mode: "action",
+                  from: name,
+                  to: name,
+                  randomToken: GeneralJs.uniqueValue(),
+                }
+              }, "/generalMongo");
 
               await ajaxJson({
                 method: "clientCuration",
@@ -6653,6 +6761,7 @@ ClientJs.prototype.communicationRender = function () {
                   mode: "lite"
                 }
               }, "/alimTalk");
+
               await sleep(1000);
               window.alert("알림톡 전송이 완료되었습니다!");
 
@@ -6708,7 +6817,7 @@ ClientJs.prototype.communicationRender = function () {
               send: "styleCuration_lite",
             }, "/updateClientHistory");
 
-            await ajaxJson({ cliid, serid, slient: true }, "/proposalCreate");
+            await ajaxJson({ cliid, serid, silent: true }, "/proposalCreate");
 
             await sleep(1000);
             window.alert("제안서 제작 요청이 완료되었습니다!");

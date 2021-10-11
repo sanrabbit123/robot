@@ -212,41 +212,87 @@ Robot.prototype.proposalMaker = function (button, arg) {
     const { requestSystem, ghostRequest, messageLog, errorLog } = this.mother;
     const proid = arg;
     let kakaoInstance, cliid, name, phone, client;
-    return new Promise(function (resolve, reject) {
-      back.getProjectById(proid).then(function (project) {
+    let requestNumber, action;
+    let now;
+    return new Promise((resolve, reject) => {
+
+      now = new Date();
+
+      back.getProjectById(proid).then((project) => {
         if (project === null) {
           reject("There is no project");
         }
         cliid = project.cliid;
         return back.getClientById(cliid);
-      }).then(function (data) {
+      }).then((data) => {
         client = data;
         name = client.name;
         phone = client.phone;
+
+        requestNumber = 0;
+        for (let i = 0; i < client.requests.length; i++) {
+          if (client.requests[i].request.timeline.valueOf() <= now.valueOf()) {
+            requestNumber = i;
+            break;
+          }
+        }
+
+        if (client.requests[requestNumber].analytics.response.action.value === "부재중 제안 발송") {
+          action = "피드백과 응대 예정";
+        } else {
+          action = "제안 피드백 예정";
+        }
+
         kakaoInstance = new KakaoTalk();
         return kakaoInstance.ready();
-      }).then(function () {
-        return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
-      }).then(function () {
-        return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": (new Date()) } ]);
       }).then(() => {
+        return kakaoInstance.sendTalk("designerProposal", name, phone, { client: name, host, path, proid });
+      }).then(() => {
+        return back.updateProject([ { proid }, { "proposal.status": "완료", "proposal.date": now } ]);
+      }).then(() => {
+
         return requestSystem("https://" + instance.address.backinfo.host + ":3000/updateLog", {
           id: cliid,
           column: "action",
-          position: "requests.0.analytics.response.action",
-          pastValue: client.requests[0].analytics.response.action.value,
-          finalValue: "제안 피드백 예정"
+          position: "requests." + String(requestNumber) + ".analytics.response.action",
+          pastValue: client.requests[requestNumber].analytics.response.action.value,
+          finalValue: action
         }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-      }).then(function () {
+
+      }).then(() => {
         return requestSystem("https://" + instance.address.mirrorinfo.host + ":3000/proposalSend", { proid }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
-      }).then(function () {
-        return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 피드백 예정" } ]);
-      }).then(function () {
-        return ghostRequest("voice", { text: name + " 고객님의 제안서 알림톡을 전송하였습니다!" });
-      }).then(function () {
-        instance.mother.slack_bot.chat.postMessage({ text: name + " 고객님께 제안서 알림톡을 전송하였습니다!\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
+
+      }).then(() => {
+
+        return requestSystem("https://" + instance.address.backinfo.host + ":3000/generalMongo", {
+          mode: "sse",
+          db: "console",
+          collection: "sse_clientCard",
+          log: true,
+          who: "autoBot",
+          updateQuery: {
+            cliid,
+            requestNumber,
+            mode: "action",
+            from: client.requests[requestNumber].analytics.response.action.value,
+            to: action,
+            randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+          }
+        }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+
+      }).then(() => {
+
+        let updateObj;
+        updateObj = {};
+        updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+        return back.updateClient([ { cliid }, updateObj ]);
+
+      }).then(() => {
+        return ghostRequest("voice", { text: name + " 고객님에게 제안서 알림톡을 전송하였어요." });
+      }).then(() => {
+        instance.mother.slack_bot.chat.postMessage({ text: name + " 고객님에게 제안서 알림톡을 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
         return messageLog("web proposal send : " + name + " " + phone + " " + proid);
-      }).catch(function (err) {
+      }).catch((err) => {
         errorLog("제안서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
         reject(err);
       });
@@ -1023,6 +1069,24 @@ const MENU = {
   devAliveSync: async function () {
     try {
       await robot.devAliveSync();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  clientActionSyncLocal: async function () {
+    try {
+      const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+      const work = new BackWorker();
+      await work.clientActionSync({ fromLocal: true });
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  clientActionSync: async function () {
+    try {
+      const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+      const work = new BackWorker();
+      await work.clientActionSync();
     } catch (e) {
       console.log(e);
     }

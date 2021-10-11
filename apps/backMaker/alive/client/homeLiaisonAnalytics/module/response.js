@@ -81,11 +81,65 @@ Response.prototype.actionInfo = function () {
       value: actionItems[1][0],
       used: [
         {
-          file: "/apps/devContext/devContext.js",
-          method: "calendarSync"
+          file: "/apps/backMaker/backWorker.js",
+          method: "clientActionSync"
         }
       ]
-    }
+    },
+    {
+      value: actionItems[1][1],
+      used: [
+        {
+          file: "/apps/dataConsole/router/source/local/client.js",
+          method: "communicationRender"
+        }
+      ]
+    },
+    {
+      value: actionItems[2][0],
+      used: [
+        {
+          file: "/apps/dataConsole/router/source/local/client.js",
+          method: "communicationRender"
+        }
+      ]
+    },
+    {
+      value: actionItems[3][0],
+      used: [
+        {
+          file: "/apps/dataConsole/router/fragments/router7_ghost_styleCuration.js",
+          method: "rou_post_styleCuration_updateCalculation"
+        }
+      ]
+    },
+    {
+      value: actionItems[3][1],
+      used: [
+        {
+          file: "/apps/dataConsole/router/fragments/router7_ghost_styleCuration.js",
+          method: "rou_post_styleCuration_updateCalculation"
+        }
+      ]
+    },
+    {
+      value: actionItems[4][0],
+      used: [
+        {
+          file: "/robot.js",
+          method: "proposalMaker",
+        }
+      ]
+    },
+    {
+      value: actionItems[4][1],
+      used: [
+        {
+          file: "/robot.js",
+          method: "proposalMaker",
+        }
+      ]
+    },
   ];
 
   return new Flow(actionItems, position);

@@ -2,6 +2,7 @@ const BackWorker = function () {
   this.dir = process.cwd() + "/apps/backMaker";
   const Mother = require(process.cwd() + "/apps/mother.js");
   const BackMaker = require(this.dir + "/backMaker.js");
+  this.address = require(process.cwd() + "/apps/infoObj.js");
   this.mother = new Mother();
   this.back = new BackMaker();
   this.mapDir = this.dir + "/map";
@@ -1901,10 +1902,12 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
   }
   let selfMongo, selfConsoleMongo, updateMongo;
   let selfBoo, selfConsoleBoo, updateBoo;
+  let fromLocalMode;
 
   selfBoo = (option.selfMongo !== null && option.selfMongo !== undefined);
   selfConsoleBoo = (option.selfConsoleMongo !== null && option.selfConsoleMongo !== undefined);
   updateBoo = (option.updateMongo !== null && option.updateMongo !== undefined);
+  fromLocalMode = (option.fromLocal === true);
 
   try {
     let clients, clientHistories;
@@ -1917,13 +1920,21 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
     let updateQueries;
 
     if (!selfBoo) {
-      selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      if (!fromLocalMode) {
+        selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      } else {
+        selfMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
       await selfMongo.connect();
     } else {
       selfMongo = option.selfMongo;
     }
     if (!selfConsoleBoo) {
-      selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      if (!fromLocalMode) {
+        selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        selfConsoleMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
       await selfConsoleMongo.connect();
     } else {
       selfConsoleMongo = option.selfConsoleMongo;
@@ -2307,14 +2318,14 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
         console.log(whereQuery, updateQuery);
       }
 
-      await requestSystem("https://" + instance.address.backinfo.host + "/generalMongo", {
+      await requestSystem("https://" + this.address.backinfo.host + "/generalMongo", {
         mode: "sse",
         db: "console",
         collection: "sse_clientCard",
         log: true,
         who: "autoBot",
         updateQueries
-      }, { headers: { "Content-Type": "application/json", "origin": "https://" + instance.address.backinfo.host } });
+      }, { headers: { "Content-Type": "application/json", "origin": "https://" + this.address.backinfo.host } });
 
     }
 

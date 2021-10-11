@@ -1838,7 +1838,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
                   mode: "create"
                 };
                 if (req.body.silent !== undefined) {
-                  requestObj.slient = true;
+                  requestObj.silent = true;
                 }
 
                 requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
