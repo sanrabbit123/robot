@@ -1141,6 +1141,10 @@ const withToolsArr = function (Clients) {
     return this.search(cliid);
   }
 
+  Clients.prototype.pick = function (cliid) {
+    return this.search(cliid);
+  }
+
   return Clients;
 }
 

@@ -2451,6 +2451,12 @@ DataRouter.prototype.rou_post_generalMongo = function () {
   let obj = {};
   obj.link = "/generalMongo";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.mode === undefined) {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");
@@ -2465,6 +2471,8 @@ DataRouter.prototype.rou_post_generalMongo = function () {
       let selfMongo, result;
       let whereQuery, updateQuery;
       let ip, device, logObject;
+      let updateQueries;
+      let order;
 
       if (db === "core" || db === "back" || db === "mongo") {
         selfMongo = instance.mongo;
@@ -2506,17 +2514,46 @@ DataRouter.prototype.rou_post_generalMongo = function () {
         await back.mongoDelete(collection, whereQuery, { selfMongo });
         result = { message: "done" };
       } else if (mode === "sse") {
-        if (req.body.updateQuery === undefined) {
-          throw new Error("must be updateQuery");
-        }
-        updateQuery = equalJson(req.body.updateQuery);
-        result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
-        if (result.length === 0) {
-          await back.mongoCreate(collection, { id: "sse", order: [ JSON.stringify(updateQuery) ] }, { selfMongo });
+        if (req.body.updateQueries === undefined) {
+
+          if (req.body.updateQuery === undefined) {
+            throw new Error("must be updateQuery");
+          }
+          updateQuery = equalJson(req.body.updateQuery);
+          result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
+          if (result.length === 0) {
+            await back.mongoCreate(collection, { id: "sse", order: [ JSON.stringify(updateQuery) ] }, { selfMongo });
+          } else {
+            result[0].order.push(JSON.stringify(updateQuery));
+            await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
+          }
+
         } else {
-          result[0].order.push(JSON.stringify(updateQuery));
-          await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
+
+          updateQueries = equalJson(req.body.updateQueries);
+          if (!Array.isArray(updateQueries)) {
+            throw new Error("updateQueries must be updateQuery array");
+          }
+          if (!updateQueries.every((obj) => { return typeof obj === "object" })) {
+            throw new Error("updateQueries must be updateQuery array");
+          }
+          result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
+          if (result.length === 0) {
+            order = [];
+            for (let updateQuery of updateQueries) {
+              order.push(JSON.stringify(updateQuery));
+            }
+            await back.mongoCreate(collection, { id: "sse", order }, { selfMongo });
+          } else {
+            for (let updateQuery of updateQueries) {
+              result[0].order.push(JSON.stringify(updateQuery));
+            }
+            await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
+          }
+          updateQuery = updateQueries;
+
         }
+
         await fileSystem(`write`, [ instance.dir + "/log/" + collection + "_latest.json", JSON.stringify([ 0 ]) ]);
         if (req.body.log !== undefined) {
           if (req.body.who === undefined) {
@@ -2533,15 +2570,15 @@ DataRouter.prototype.rou_post_generalMongo = function () {
           await back.mongoCreate(collection.replace(/^sse\_/, "log_"), logObject, { selfMongo });
         }
         result = { message: "done" };
+
       } else {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");
       }
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 (rou_post_generalMongo): " + e.message, channel: "#error_log" });
+      res.send({ message: "error" });
     }
   }
   return obj;

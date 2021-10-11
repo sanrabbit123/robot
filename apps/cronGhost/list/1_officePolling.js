@@ -47,31 +47,13 @@ module.exports = [
     name: "reflect2",
     order: "coreReflect",
     time: {
-      hour: 16,
-      minute: 10,
-      second: 10
-    }
-  },
-  {
-    name: "calendarSync2",
-    order: "calendarSync",
-    time: {
-      hour: 16,
-      minute: 50,
-      second: 10
-    }
-  },
-  {
-    name: "reflect3",
-    order: "coreReflect",
-    time: {
       hour: 21,
       minute: 10,
       second: 10
     }
   },
   {
-    name: "calendarSync3",
+    name: "calendarSync2",
     order: "calendarSync",
     time: {
       hour: 21,
