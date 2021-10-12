@@ -5025,7 +5025,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       const { cliid, name, image } = equalJson(req.body);
       let text, channel;
 
-      text = name + " 고객님이 스타일 찾기의 사진 선택을 완료하였습니다!";
+      text = name + " 고객님이 스타일 찾기를 완료하였어요.";
       channel = "#404_curation";
 
       instance.mother.slack_bot.chat.postMessage({ text, channel });
