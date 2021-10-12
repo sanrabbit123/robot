@@ -924,8 +924,8 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
                 "origin": "https://" + instance.address.pythoninfo.host
               }
             }).then((obj) => {
-              if (obj.message !== "success") {
-                instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+              if (obj.status >= 300) {
+                instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
               }
             }).catch((err) => {
               instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
