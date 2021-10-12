@@ -365,6 +365,15 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
       let reloadBoo;
       let progress;
 
+      requestNumber = 0;
+      for (let i = 0; i < client.requests.length; i++) {
+        if (project.proposal.date.valueOf() >= client.requests[i].request.timeline.valueOf()) {
+          requestNumber = i;
+          break;
+        }
+      }
+      thisRequest = client.requests[requestNumber];
+
       clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
       projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory");
 
@@ -374,15 +383,6 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
       }
 
       if (reloadBoo) {
-        requestNumber = 0;
-        for (let i = 0; i < client.requests.length; i++) {
-          if (project.proposal.date.valueOf() >= client.requests[i].request.timeline.valueOf()) {
-            requestNumber = i;
-            break;
-          }
-        }
-        thisRequest = client.requests[requestNumber];
-
         site = clientHistory.space.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
         construct = clientHistory.construct.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
         styling = clientHistory.styling.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
@@ -522,7 +522,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
                 marginBottom: String(motherTop) + ea,
               }
             });
-            await instance.requestContents(board, designer, project, client, clientHistory, projectHistory);
+            await instance.requestContents(board, designer, project, client, clientHistory, projectHistory, requestNumber);
             if (mobile) {
               mother.style.marginBottom = "";
             }
@@ -543,7 +543,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   }
 }
 
-DesignerJs.prototype.requestContents = async function (board, designer, project, client, clientHistory, projectHistory) {
+DesignerJs.prototype.requestContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
@@ -555,48 +555,55 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const cliid = project.cliid;
   const title = "홈스타일링 의뢰서";
   const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" +   GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
+  const emptyReload = (originalArr, reloadArr) => {
+    if (originalArr.map((a) => { return a.trim(); }).filter((a) => { return a !== ""; }).length > 0) {
+      return originalArr;
+    } else {
+      return reloadArr;
+    }
+  }
   const mainContents = [
     {
       title: "현장 미팅",
       className: "mainContents_when",
       position: "request.about.when",
-      contents: projectHistory.request.about.when,
+      contents: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
     },
     {
       title: "현장 주소",
       className: "mainContents_where",
       position: "request.about.where",
-      contents: projectHistory.request.about.where,
+      contents: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
     },
     {
       title: "현장 관련",
       className: "mainContents_site",
       position: "request.about.site",
-      contents: projectHistory.request.about.site,
+      contents: emptyReload(projectHistory.request.about.site, [ "현장 관련 상세 사항 없음" ]),
     },
     {
       title: "시공 관련",
       className: "mainContents_construct",
       position: "request.about.construct",
-      contents: projectHistory.request.about.construct,
+      contents: emptyReload(projectHistory.request.about.construct, [ "시공 관련 상세 사항 없음" ]),
     },
     {
       title: "스타일링 관련",
       className: "mainContents_styling",
       position: "request.about.styling",
-      contents: projectHistory.request.about.styling,
+      contents: emptyReload(projectHistory.request.about.styling, [ "스타일링 관련 상세 사항 없음" ]),
     },
     {
       title: "예산 관련",
       className: "mainContents_budget",
       position: "request.about.budget",
-      contents: projectHistory.request.about.budget,
+      contents: emptyReload(projectHistory.request.about.budget, [ "예산 관련 상세 사항 없음" ]),
     },
     {
       title: "기타 사항",
       className: "mainContents_progress",
       position: "request.about.progress",
-      contents: projectHistory.request.about.progress,
+      contents: emptyReload(projectHistory.request.about.progress, [ "기타 관련 상세 사항 없음" ]),
     }
   ];
   const pictureContents = "고객님이 선택한 사진";
