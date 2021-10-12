@@ -568,42 +568,49 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       className: "mainContents_when",
       position: "request.about.when",
       contents: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
+      spread: true,
     },
     {
       title: "현장 주소",
       className: "mainContents_where",
       position: "request.about.where",
       contents: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
+      spread: true,
     },
     {
       title: "현장 관련",
       className: "mainContents_site",
       position: "request.about.site",
       contents: emptyReload(projectHistory.request.about.site, [ "현장 관련 상세 사항 없음" ]),
+      spread: true,
     },
     {
       title: "시공 관련",
       className: "mainContents_construct",
       position: "request.about.construct",
       contents: emptyReload(projectHistory.request.about.construct, [ "시공 관련 상세 사항 없음" ]),
+      spread: false,
     },
     {
       title: "스타일링 관련",
       className: "mainContents_styling",
       position: "request.about.styling",
       contents: emptyReload(projectHistory.request.about.styling, [ "스타일링 관련 상세 사항 없음" ]),
+      spread: true,
     },
     {
       title: "예산 관련",
       className: "mainContents_budget",
       position: "request.about.budget",
       contents: emptyReload(projectHistory.request.about.budget, [ "예산 관련 상세 사항 없음" ]),
+      spread: true,
     },
     {
       title: "기타 사항",
       className: "mainContents_progress",
       position: "request.about.progress",
       contents: emptyReload(projectHistory.request.about.progress, [ "기타 관련 상세 사항 없음" ]),
+      spread: false,
     }
   ];
   const pictureContents = "고객님이 선택한 사진";
@@ -908,18 +915,18 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     clientInfoBottom = <%% 42, 42, 42, 42, 7 %%>;
     clientInfoLeftWidth = <%% 380, 260, 215, 130, 20 %%>;
 
-    wordsBetween0 = <%% 6, 6, 6, 6, 0.5 %%>;
-    wordsBetween1 = <%% 22, 22, 22, 22, 2.5 %%>;
+    wordsBetween0 = <%% 6, 6, 6, 6, 1 %%>;
+    wordsBetween1 = <%% 22, 22, 22, 22, 4 %%>;
     wordsBetween2 = <%% 10, 10, 10, 10, 1 %%>;
 
     tableVisual = <%% 18, 18, 16, 10, 2 %%>;
-    leftIndent = <%% 15, 14, 13, 12, 2.5 %%>;
+    leftIndent = <%% 15, 14, 13, 12, 2.8 %%>;
 
-    arrowTop = <%% (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 5 : 4), (isMac() ? 5 : 4), 1.6 %%>;
+    arrowTop = <%% (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), (isMac() ? 5.5 : 4), 1.6 %%>;
     arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
     arrowLeft = <%% 1, 1, 1, 1, 0 %%>;
 
-    lineHeight = <%% 1.7, 1.7, 1.7, 1.7, 1.65 %%>;
+    lineHeight = 1.8;
     photoWidth = <%% 260, 260, 260, 260, 20 %%>;
     photoMargin = <%% 10, 10, 10, 10, 1.5 %%>;
     finalBottom = <%% 240, 240, 240, 240, 10 %%>;
@@ -1034,6 +1041,8 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     }
 
     whitePopupEvent = async function (e) {
+      e.preventDefault();
+      e.stopPropagation();
       try {
         if (!middleMode) {
           const self = this;
@@ -1201,19 +1210,35 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       }
     }
     num = 0;
-    for (let { title, className, contents, position } of mainContents) {
+    for (let { title, className, contents, position, spread } of mainContents) {
       words = createNode({
         mother: contentsClientInfo.children[desktop ? 0 : 1],
         attribute: [
           { index: String(num) },
           { position },
           { proid },
-          { className }
+          { className },
+          { toggle: spread ? "off" : "on" }
         ],
         events: [
           {
-            type: "click",
+            type: "contextmenu",
             event: whitePopupEvent
+          },
+          {
+            type: "click",
+            event: function (e) {
+              const toggle = this.getAttribute("toggle");
+              if (toggle === "off") {
+                this.nextElementSibling.style.height = String(0);
+                this.querySelector("svg").style.transform = "rotate(0deg)";
+                this.setAttribute("toggle", "on");
+              } else {
+                this.nextElementSibling.style.height = "auto";
+                this.querySelector("svg").style.transform = "rotate(90deg)";
+                this.setAttribute("toggle", "off");
+              }
+            }
           }
         ],
         class: [ className ],
@@ -1237,6 +1262,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           width: String(arrowWidth) + ea,
           left: String(desktop ? (-1 * leftIndent) + arrowLeft : 0) + ea,
           top: String(arrowTop) + ea,
+          transform: spread ? "rotate(90deg)" : "rotate(0deg)",
         }
       });
       createNode({
@@ -1254,7 +1280,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             event: whitePopupEvent
           }
         ],
-        text: contents.map((z) => { return "<b%-%b> " + z.replace(/^\-/, '').replace(/^\- /, ''); }).join("\n"),
+        text: contents.map((z) => { return "<b%-%b> " + z.replace(/^\-/, '').replace(/^\- /, ''); }).map((z) => { if (z.trim() === "<b%-%b>") { return ""; } else { return z; } }).join("\n"),
         style: {
           position: "relative",
           fontSize: String(fontSize) + ea,
@@ -1262,6 +1288,9 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           color: colorChip.black,
           lineHeight: String(lineHeight),
           marginBottom: String(wordsBetween1) + ea,
+          overflow: "hidden",
+          transition: "all 0s ease",
+          height: spread ? "auto" : String(0),
         },
         bold: {
           color: colorChip.gray4,
