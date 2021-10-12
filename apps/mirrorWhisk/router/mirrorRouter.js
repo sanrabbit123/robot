@@ -496,6 +496,7 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
         let boo;
         let outerResponse;
         let entireDom, resultDom, findName;
+        let addressBookRows;
 
         if (!/^2/.test(phoneNumber)) {
           manager = null;
@@ -592,6 +593,16 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
               }
             } else {
               text = `${rows[0].designer} 디자이너 신청자로부터 ${method}가 왔습니다!`;
+            }
+            if (/^알 수 없는/gi.test(text)) {
+
+              addressBookRows = await back.mongoRead("addressBook", { phone: phoneNumber }, { selfMongo: instance.mongolocal });
+              if (addressBookRows.length > 0) {
+                text = `${addressBookRows[0].name}에서 ${method}가 왔습니다!`;
+              } else {
+                text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
+              }
+
             }
           }
           await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
