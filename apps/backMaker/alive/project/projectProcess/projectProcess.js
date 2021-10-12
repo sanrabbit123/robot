@@ -606,25 +606,39 @@ ProcessCall.prototype.toNormal = function () {
 // main ----------------------------------------------------------------------------------
 
 const ProjectProcess = function (json) {
-  const actionList = [
-    "응대 대기",
-    "현장 미팅",
+  this.status = new Menu(json.status, [
+    "대기",
+    "진행중",
+    "완료",
+    "홀딩",
+    "드랍"
+  ], false);
+  this.action = new Menu(json.action, [
+    "계약금 안내",
+    "현장미팅 조율",
+    "의뢰서 작성중",
+    "의뢰서 공유",
+    "현장미팅 피드백",
+    "계약서 안내",
+    "잔금 안내",
+    "시작 대기",
     "1차 제안",
     "수정 제안",
     "시공 진행",
     "제품 구매",
     "배송중",
+    "세팅 마무리",
     "촬영 컨택",
-    "촬영 대기",
-    "사진 대기",
-    "사진 공유",
-    "컨텐츠 공유",
-    "응대 종료",
     "해당 없음"
-  ];
-  this.status = new Menu(json.status, [ '대기', '진행중', '완료', '홀딩', '드랍' ], false);
-  this.action = new Menu(json.action, actionList, false);
-  this.outreason = new Menu(json.outreason, [ '연결 안 됨', '가벼운 문의', '타사 계약', '비용 문제', '의견 조정 안 됨', '직접 진행' ], true);
+  ], false);
+  this.outreason = new Menu(json.outreason, [
+    "연결 안 됨",
+    "가벼운 문의",
+    "타사 계약",
+    "비용 문제",
+    "의견 조정 안 됨",
+    "직접 진행",
+  ], true);
   this.detail = new ProcessDetails(json.detail);
   this.call = new ProcessCall(json.call);
   this.contract = new Contract(json.contract);

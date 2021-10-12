@@ -75,7 +75,7 @@ DevContext.prototype.launching = async function () {
     // await this.passiveAddressSync("c2110_aa14s");
 
 
-
+    console.log(await this.findCode("수정 제안"));
 
 
     // new project action
@@ -163,47 +163,46 @@ DevContext.prototype.launching = async function () {
     //   "해당 없음"
     // ];
 
-    const selfMongo = this.MONGOLOCALC;
-    const projects = await back.getProjectsByQuery({}, { selfMongo });
-    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    const todayValue = (new Date()).valueOf();
-    let whereQuery, updateQuery;
-    let thisMeetingDateValue;
-
-    for (let project of projects) {
-
-      whereQuery = { proid: project.proid };
-      updateQuery = {};
-
-      if (project.process.action.value.trim() === "응대 대기") {
-        updateQuery["process.action"] = "계약금 안내";
-      } else if (project.process.action.value.trim() === "현장 미팅") {
-        thisMeetingDateValue = project.process.contract.meeting.date.toNormal().valueOf()
-        if (thisMeetingDateValue < emptyDateValue) {
-          updateQuery["process.action"] = "현장미팅 조율";
-        } else if (thisMeetingDateValue < todayValue) {
-          updateQuery["process.action"] = "의뢰서 공유";
-        } else {
-          updateQuery["process.action"] = "현장미팅 피드백";
-        }
-      } else if (project.process.action.value.trim() === "촬영 대기") {
-        updateQuery["process.action"] = "촬영 컨택";
-      } else if (project.process.action.value.trim() === "사진 대기") {
-        updateQuery["process.action"] = "촬영 컨택";
-      } else if (project.process.action.value.trim() === "사진 공유") {
-        updateQuery["process.action"] = "촬영 컨택";
-      } else if (project.process.action.value.trim() === "컨텐츠 공유") {
-        updateQuery["process.action"] = "촬영 컨택";
-      } else if (project.process.action.value.trim() === "응대 종료") {
-        updateQuery["process.action"] = "해당 없음";
-      }
-
-      if (Object.keys(updateQuery).length > 0) {
-        console.log(whereQuery, updateQuery);
-        // await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
-        // console.log(whereQuery);
-      }
-    }
+    // const selfMongo = this.MONGOC;
+    // const projects = await back.getProjectsByQuery({}, { selfMongo });
+    // const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    // const todayValue = (new Date()).valueOf();
+    // let whereQuery, updateQuery;
+    // let thisMeetingDateValue;
+    //
+    // for (let project of projects) {
+    //
+    //   whereQuery = { proid: project.proid };
+    //   updateQuery = {};
+    //
+    //   if (project.process.action.value.trim() === "응대 대기") {
+    //     updateQuery["process.action"] = "계약금 안내";
+    //   } else if (project.process.action.value.trim() === "현장 미팅") {
+    //     thisMeetingDateValue = project.process.contract.meeting.date.toNormal().valueOf()
+    //     if (thisMeetingDateValue < emptyDateValue) {
+    //       updateQuery["process.action"] = "현장미팅 조율";
+    //     } else if (thisMeetingDateValue < todayValue) {
+    //       updateQuery["process.action"] = "의뢰서 공유";
+    //     } else {
+    //       updateQuery["process.action"] = "현장미팅 피드백";
+    //     }
+    //   } else if (project.process.action.value.trim() === "촬영 대기") {
+    //     updateQuery["process.action"] = "촬영 컨택";
+    //   } else if (project.process.action.value.trim() === "사진 대기") {
+    //     updateQuery["process.action"] = "촬영 컨택";
+    //   } else if (project.process.action.value.trim() === "사진 공유") {
+    //     updateQuery["process.action"] = "촬영 컨택";
+    //   } else if (project.process.action.value.trim() === "컨텐츠 공유") {
+    //     updateQuery["process.action"] = "촬영 컨택";
+    //   } else if (project.process.action.value.trim() === "응대 종료") {
+    //     updateQuery["process.action"] = "해당 없음";
+    //   }
+    //
+    //   if (Object.keys(updateQuery).length > 0) {
+    //     await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+    //     console.log(whereQuery);
+    //   }
+    // }
 
 
 

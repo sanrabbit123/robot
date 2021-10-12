@@ -3481,13 +3481,20 @@ DesignerJs.prototype.contentsView = async function () {
     this.contentsSearchIndex = [];
     this.contentsBlocks = null;
     this.actionList = [
-      "응대 대기",
-      "현장 미팅",
+      "계약금 안내",
+      "현장미팅 조율",
+      "의뢰서 작성중",
+      "의뢰서 공유",
+      "현장미팅 피드백",
+      "계약서 안내",
+      "잔금 안내",
+      "시작 대기",
       "1차 제안",
       "수정 제안",
       "시공 진행",
       "제품 구매",
       "배송중",
+      "세팅 마무리",
     ];
     this.photoActionList = [
       '촬영 대기',
