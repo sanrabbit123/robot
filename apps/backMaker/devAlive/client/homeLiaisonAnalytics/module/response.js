@@ -138,6 +138,15 @@ Response.prototype.actionInfo = function () {
         }
       ]
     },
+    {
+      value: actionItems[7][0],
+      used: [
+        {
+          file: "/apps/dataConsole/router/source/local/proposal.js",
+          method: "list_menuEvents",
+        }
+      ]
+    },
   ];
 
   return new Flow(actionItems, position);

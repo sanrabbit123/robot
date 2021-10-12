@@ -1529,8 +1529,9 @@ ClientJs.prototype.spreadData = async function (search = null) {
     this.infoArea({ standard: standard.info, data: infoDataTong, search: search });
 
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-    console.log(e);
+    GeneralJs.ajax({ message: "Client front 문제 생김 (spreadData) : " + JSON.stringify(e.message), channel: "#error_log" }, "/sendSlack", () => {
+      console.log(e);
+    });
   }
 }
 
@@ -2530,6 +2531,7 @@ ClientJs.prototype.makeBoard = function (cases) {
         status: obj.status,
         request: String(thisRequestNumber),
         index: String(index),
+        important: (obj.important ? 1 : 0),
       },
       event: {
         dragstart: function (e) {
@@ -2544,7 +2546,31 @@ ClientJs.prototype.makeBoard = function (cases) {
         dragleave: function (e) {
           e.preventDefault();
         },
-        click: instance.whiteViewMaker(index),
+        click: function (e) {
+          const self = this;
+          const index = Number(this.getAttribute("index"));
+          const cliid = this.getAttribute("cliid");
+          const important = Number(this.getAttribute("important"));
+          if (e.altKey) {
+            ajaxJson({
+              id: cliid,
+              column: "important",
+              value: 1 - important,
+              email: cookies.homeliaisonConsoleLoginedEmail
+            }, "/updateClientHistory").then(() => {
+              const target = self.children[1];
+              if (important === 0) {
+                target.style.color = colorChip.red;
+              } else {
+                target.style.color = colorChip.green;
+              }
+            }).catch((err) => {
+              console.log(err);
+            });
+          } else {
+            instance.whiteViewMaker(index).call(this, e);
+          }
+        },
         contextmenu: function (e) {
           e.preventDefault();
           e.stopPropagation();
@@ -2734,7 +2760,7 @@ ClientJs.prototype.makeBoard = function (cases) {
         fontWeight: String(400),
         top: String(idWordTop) + ea,
         left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
-        color: GeneralJs.colorChip.green,
+        color: obj.important ? colorChip.red : colorChip.green,
         cursor: "pointer",
       }
     });
@@ -2766,7 +2792,7 @@ ClientJs.prototype.makeBoard = function (cases) {
 
 ClientJs.prototype.cardViewMaker = function () {
   const instance = this;
-  const { equalJson, createNode, withOut, colorChip, ajaxJson, scrollTo, setQueue } = GeneralJs;
+  const { equalJson, createNode, withOut, colorChip, ajaxJson, scrollTo, setQueue, stringToDate } = GeneralJs;
   const { ea, belowHeight, grayBarWidth } = this;
   return async function (e) {
     const { totalContents, totalMother } = instance;
@@ -2837,14 +2863,19 @@ ClientJs.prototype.cardViewMaker = function () {
     thisCases = equalJson(JSON.stringify(instance.cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status) && !/진행/gi.test(obj.status); });
     managerObj = await ajaxJson({
       method: "client",
-      property: "manager",
+      property: [ "manager", "important" ],
       idArr: thisCases.map((obj) => { return obj.cliid; }),
     }, "/getHistoryProperty");
     for (let obj of thisCases) {
       if (managerObj[obj.cliid] !== undefined) {
-        obj.manager = managerObj[obj.cliid];
+        obj.manager = managerObj[obj.cliid].manager;
+        obj.important = managerObj[obj.cliid].important;
       }
     }
+    thisCases.sort((a, b) => {
+      return stringToDate(a.timeline).valueOf() - stringToDate(b.timeline).valueOf();
+    });
+
     instance.cardCases = thisCases;
     instance.allMembers = await ajaxJson({ type: "get" }, "/getMembers");
 

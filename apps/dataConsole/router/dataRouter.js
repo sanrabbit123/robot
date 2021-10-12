@@ -1876,7 +1876,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
       res.send(JSON.stringify({ projects, clients, contentsArr, price }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1962,13 +1962,15 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
       } else if (req.url === "/getHistoryProperty") {
         if (equalJson(req.body.idArr).length > 0) {
-          responseArr = await back.getHistoryProperty(req.body.method, req.body.property, equalJson(req.body.idArr), { selfMongo: instance.mongolocal });
+          const { method, property, idArr } = equalJson(req.body);
+          responseArr = await back.getHistoryProperty(method, property, idArr, { selfMongo: instance.mongolocal });
         } else {
           responseArr = [];
         }
       } else if (req.url === "/getHistoryTotal") {
         if (equalJson(req.body.idArr).length > 0) {
-          responseArr = await back.getHistoryProperty(req.body.method, "$all", equalJson(req.body.idArr), { selfMongo: instance.mongolocal });
+          const { method, idArr } = equalJson(req.body);
+          responseArr = await back.getHistoryProperty(method, "$all", idArr, { selfMongo: instance.mongolocal });
         } else {
           responseArr = [];
         }
@@ -1980,7 +1982,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseArr));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 (rou_post_getHistory): " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -4646,12 +4648,48 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
     try {
       res.set({ "Content-Type": "application/json" });
       let { cliid, proid, desid, name, phone, designer, method } = req.body;
-      
+      let thisProject, thisClient, requestNumber;
+      let action;
+
+      thisProject = await back.getProjectById(proid, { selfMongo: instance.mongo });
+      thisClient = await back.getClientById(cliid, { selfMongo: instance.mongo });
+      requestNumber = 0;
+      for (let i = 0; i < thisClient.requests.length; i++) {
+        if (thisClient.requests[i].timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+          requestNumber = i;
+          break;
+        }
+      }
+      action = "디자이너 선택";
+
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
 
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}&mode=test\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#400_customer" });
-      ghostRequest("voice", { text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.` });
+      ghostRequest("voice", { text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.` }).then(() => {
+        return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
+          mode: "sse",
+          db: "console",
+          collection: "sse_clientCard",
+          log: true,
+          who: "autoBot",
+          updateQuery: {
+            cliid,
+            requestNumber,
+            mode: "action",
+            from: thisClient.requests[requestNumber].analytics.response.action.value,
+            to: action,
+            randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+          }
+        }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+      }).then(() => {
+        let updateObj;
+        updateObj = {};
+        updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+        return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
+      }).catch((err) => {
+        instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + err.message, channel: "#error_log" });
+      });
 
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,

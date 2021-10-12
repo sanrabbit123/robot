@@ -138,6 +138,24 @@ Response.prototype.actionInfo = function () {
         }
       ]
     },
+    {
+      value: actionItems[7][0],
+      used: [
+        {
+          file: "/apps/dataConsole/router/fragments/router6_ghost_designerProposal.js",
+          method: "rou_post_designerProposal_submit"
+        }
+      ]
+    },
+    {
+      value: actionItems[7][0],
+      used: [
+        {
+          file: "/apps/dataConsole/router/source/local/proposal.js",
+          method: "list_menuEvents",
+        }
+      ]
+    },
   ];
 
   return new Flow(actionItems, position);

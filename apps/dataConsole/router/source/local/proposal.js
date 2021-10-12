@@ -4463,19 +4463,34 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
               moneyParsingTarget = moneyParsingTarget.replace(/\(부분 공간\)/gi, '');
               moneyParsingTargetArr = moneyParsingTarget.split(" ");
 
+              const { ajaxJson } = GeneralJs;
+              const [ thisProject ] = await ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true });
+              const [ thisClient ] = await ajaxJson({ noFlat: true, whereQuery: { cliid: thisProject.cliid } }, "/getClients", { equal: true });
+              const cliid = thisProject.cliid;
               const desid = /d[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]/.exec(this.textContent)[0];
               const onoffLine = /온/gi.test(this.textContent);
               const thisMoney = Number((moneyParsingTargetArr[moneyParsingTargetArr.length - 1]).replace(/[^0-9\.]/g, '')) * 10000;
               let contractFirst, supply, vat, consumer, classification, percentage, bankName, bankTo, calculate, ratio;
               let method;
               let updateQuery;
-              let thisProject_raw;
               let selectedDesigner;
               let designerHistory;
               let designerCalculationData;
+              let requestNumber;
+              let clientUpdateQuery;
+              let action;
               try {
                 selectedDesigner = instance.designers.pick(desid);
-                thisProject_raw = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&where=" + JSON.stringify({ proid: proid }), "/getProjects"));
+
+                requestNumber = 0;
+                for (let i = 0; i < thisClient.requests.length; i++) {
+                  if (thisClient.requests[i].timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+                    requestNumber = i;
+                    break;
+                  }
+                }
+
+                action = "디자이너 선택";
 
                 updateQuery = { desid: desid, "service.serid": serid, "service.xValue": xValue, "service.online": onoffLine, "process.status": "대기" };
 
@@ -4512,7 +4527,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                   updateQuery["process.calculation.info.to"] = bankTo;
                 }
 
-                designerCalculationData = await GeneralJs.ajaxJson({ supply, classification, percentage, cliid: thisProject_raw[0].cliid }, PYTHONHOST + "/designerCalculation", { equal: true });
+                designerCalculationData = await ajaxJson({ supply, classification, percentage, cliid }, PYTHONHOST + "/designerCalculation", { equal: true });
                 if (designerCalculationData.calculate === undefined) {
                   throw new Error("ajax error");
                 }
@@ -4522,22 +4537,41 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                 updateQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
                 updateQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
-                await GeneralJs.ajaxPromise("where=" + JSON.stringify({ proid: proid }) + "&updateQuery=" + JSON.stringify(updateQuery), "/rawUpdateProject");
-                await GeneralJs.ajaxPromise("where=" + JSON.stringify({ cliid: thisProject_raw[0].cliid }) + "&updateQuery=" + JSON.stringify({ "requests.0.analytics.response.status": "진행" }), "/rawUpdateClient");
+
+                await ajaxJson({ whereQuery: { proid }, updateQuery }, "/rawUpdateProject");
+
+                clientUpdateQuery = {};
+                clientUpdateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+                await ajaxJson({ whereQuery: { cliid }, updateQuery: clientUpdateQuery }, "/rawUpdateClient");
+                await ajaxJson({
+                  mode: "sse",
+                  db: "console",
+                  collection: "sse_clientCard",
+                  log: true,
+                  who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+                  updateQuery: {
+                    cliid,
+                    requestNumber,
+                    mode: "action",
+                    from: thisClient.requests[requestNumber].analytics.response.action,
+                    to: action,
+                    randomToken: GeneralJs.uniqueValue(),
+                  }
+                }, "/generalMongo");
 
                 designerHistory = await GeneralJs.ajaxJson({ idArr: [ desid ], method: "designer", property: "manager" }, "/getHistoryProperty");
-                await GeneralJs.ajaxJson({ method: "project", id: proid, column: "manager", value: designerHistory[desid], email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail }, "/updateHistory");
+                await ajaxJson({ method: "project", id: proid, column: "manager", value: designerHistory[desid], email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail }, "/updateHistory");
 
-                await GeneralJs.ajaxJson({ proid, desid }, PYTHONHOST + "/createStylingBill");
-                await GeneralJs.ajaxJson({ proid, desid }, PYTHONHOST + "/designerSelect");
+                await ajaxJson({ proid, desid }, PYTHONHOST + "/createStylingBill");
+                await ajaxJson({ proid, desid }, PYTHONHOST + "/designerSelect");
 
                 window.location.href = window.location.protocol + "//" + window.location.host + "/project" + "?proid=" + proid;
 
               } catch (e) {
                 window.alert("오류가 발생하였습니다! 다시 시도해주세요!");
-                GeneralJs.ajax("message=proposal고객선택에러&channel=#error_log", "/sendSlack", function () {});
-                window.location.reload();
-                console.log(e);
+                GeneralJs.ajax({ message: "proposal.js 고객 선택 에러 " + e.message, channel: "#error_log" }, "/sendSlack", () => {
+                  window.location.reload();
+                });
               }
             });
             div_clone2.appendChild(div_clone3);

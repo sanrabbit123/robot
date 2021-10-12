@@ -1288,7 +1288,7 @@ DataRouter.prototype.rou_post_getDesignerReport = function () {
 
       res.send(JSON.stringify({ projects, clients, contentsArr, price }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }
@@ -1374,13 +1374,15 @@ DataRouter.prototype.rou_post_getHistory = function () {
 
       } else if (req.url === "/getHistoryProperty") {
         if (equalJson(req.body.idArr).length > 0) {
-          responseArr = await back.getHistoryProperty(req.body.method, req.body.property, equalJson(req.body.idArr), { selfMongo: instance.mongolocal });
+          const { method, property, idArr } = equalJson(req.body);
+          responseArr = await back.getHistoryProperty(method, property, idArr, { selfMongo: instance.mongolocal });
         } else {
           responseArr = [];
         }
       } else if (req.url === "/getHistoryTotal") {
         if (equalJson(req.body.idArr).length > 0) {
-          responseArr = await back.getHistoryProperty(req.body.method, "$all", equalJson(req.body.idArr), { selfMongo: instance.mongolocal });
+          const { method, idArr } = equalJson(req.body);
+          responseArr = await back.getHistoryProperty(method, "$all", idArr, { selfMongo: instance.mongolocal });
         } else {
           responseArr = [];
         }
@@ -1392,7 +1394,7 @@ DataRouter.prototype.rou_post_getHistory = function () {
       res.set("Content-Type", "application/json");
       res.send(JSON.stringify(responseArr));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 (rou_post_getHistory): " + e.message, channel: "#error_log" });
       console.log(e);
     }
   }

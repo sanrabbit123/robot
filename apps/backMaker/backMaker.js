@@ -2818,7 +2818,13 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
     projectQuery = {};
     if (property !== "$all") {
       projectQuery[sortStandard] = 1;
-      projectQuery[property] = 1;
+      if (typeof property === "string") {
+        projectQuery[property] = 1;
+      } else if (Array.isArray(property)) {
+        for (let p of property) {
+          projectQuery[p] = 1;
+        }
+      }
     }
 
     findQuery = { "$or": [] };
@@ -2873,8 +2879,14 @@ BackMaker.prototype.getHistoryProperty = async function (method, property, idArr
       finalTong = {};
       for (let obj of tong) {
         if (property !== "$all") {
-          finalTong[obj[sortStandard]] = obj[property];
+          if (typeof property === "string") {
+            finalTong[obj[sortStandard]] = obj[property];
+          } else {
+            delete obj._id;
+            finalTong[obj[sortStandard]] = obj;
+          }
         } else {
+          delete obj._id;
           finalTong[obj[sortStandard]] = obj;
         }
       }

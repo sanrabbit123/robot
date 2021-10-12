@@ -75,23 +75,16 @@ DevContext.prototype.launching = async function () {
     // await this.passiveAddressSync("c2110_aa14s");
 
 
-    const selfMongo = this.MONGOC;
-    const clients = await back.getClientsByQuery({ requests: { $elemMatch: { "analytics.response.action": { $regex: "^계약" } } } }, { selfMongo, withTools: true });
-    let whereQuery, updateQuery;
-    let requestNumber;
 
-    for (let client of clients) {
-      for (let i = 0; i < client.requests.length; i++) {
-        if (/^계약/gi.test(client.requests[i].analytics.response.action.value)) {
-          whereQuery = { cliid: client.cliid };
-          requestNumber = i;
-          updateQuery = {};
-          updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = "디자이너 선택";
-          await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
-          console.log(whereQuery, updateQuery);
-        }
-      }
-    }
+
+    console.log(equalJson(55))
+    console.log(55);
+
+
+
+
+
+
 
 
 
@@ -1212,9 +1205,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "강순영",
-    //     designer: "박정훈",
-    //     link: "https://drive.google.com/drive/folders/1K6UXahCEARz8ASICpmVrLZpcfrdGXNBm",
+    //     client: "박성진",
+    //     designer: "김경임",
+    //     link: "https://drive.google.com/drive/folders/1GjDNWmr-5RJymhOgx9ARGlcghEU0aiid",
     //     pay: true
     //   },
     // ]);
