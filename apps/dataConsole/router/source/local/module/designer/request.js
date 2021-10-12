@@ -332,7 +332,7 @@ DesignerJs.prototype.requestList = function (desid) {
 
 DesignerJs.prototype.requestDocument = function (mother, index, designer, project) {
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, serviceParsing } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, serviceParsing, setQueue } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -352,6 +352,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
           return;
         }
       }
+
       const [ client ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
       let clientHistory, projectHistory;
       let thisBlock, motherTop;
@@ -361,15 +362,23 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
       let construct;
       let styling;
       let budget;
+      let reloadBoo;
+      let progress;
 
       clientHistory = await ajaxJson({ id: client.cliid, rawMode: true }, "/getClientHistory");
       projectHistory = await ajaxJson({ id: project.proid, rawMode: true }, "/getProjectHistory");
 
-      if (JSON.stringify(projectHistory.request).replace(/[\{\}\[\]\"\' ]/gi, '').trim().replace(/[a-z]/gi, '').trim().replace(/[\:\,]/gi, '').trim().length === 0) {
+      reloadBoo = (JSON.stringify(projectHistory.request).replace(/[\{\}\[\]\"\' ]/gi, '').trim().replace(/[a-z]/gi, '').trim().replace(/[\:\,]/gi, '').trim().length === 0);
+      if (e.altKey) {
+        reloadBoo = window.confirm("정보를 다시 로드할 경우, 기존에 의뢰서 콘솔에서 적었던 내용이 없어질 수 있습니다! 초기화가 확실한가요?");
+      }
+
+      if (reloadBoo) {
         requestNumber = 0;
         for (let i = 0; i < client.requests.length; i++) {
           if (project.proposal.date.valueOf() >= client.requests[i].request.timeline.valueOf()) {
             requestNumber = i;
+            break;
           }
         }
         thisRequest = client.requests[requestNumber];
@@ -378,6 +387,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         construct = clientHistory.construct.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
         styling = clientHistory.styling.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
         budget = clientHistory.budget.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
+        progress = clientHistory.progress.split("\n").map((i) => { return i.trim(); }).filter((i) => { return i !== ''; });
 
         if (site.length === 0) {
           site = [ "현장 관련 상세 사항 없음" ];
@@ -390,6 +400,9 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         }
         if (budget.length === 0) {
           budget = [ "예산 관련 상세 사항 없음" ];
+        }
+        if (progress.length === 0) {
+          progress = [ "기타 관련 상세 사항 없음" ];
         }
 
         projectHistory.request = {
@@ -405,7 +418,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
             contract: thisRequest.request.space.contract,
             precheck: dateToString(thisRequest.analytics.date.space.precheck),
             empty: dateToString(thisRequest.analytics.date.space.empty),
-            movein: dateToString(thisRequest.analytics.date.space.movein),
+            movein: (thisRequest.request.space.resident.expected.valueOf() <= (new Date()).valueOf() ? "거주중" : dateToString(thisRequest.request.space.resident.expected)),
             special: "",
             composition: "방 " + String(thisRequest.request.space.spec.room) + "개, 화장실 " + String(thisRequest.request.space.spec.bathroom) + "개, 발코니 확장" + (thisRequest.request.space.spec.valcony ? "" : " 없음"),
           },
@@ -421,11 +434,10 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
             site: site,
             construct: construct,
             styling: styling,
-            budget: budget
+            budget: budget,
+            progress: progress
           }
         };
-
-        project.process.contract.meeting.date
 
         await ajaxJson({
           id: proid,
@@ -473,7 +485,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         }
       }
 
-      GeneralJs.setTimeout(function () {
+      setQueue(() => {
         if (desktop) {
           thisBlock.style.transition = "all 0.4s ease";
           thisBlock.style.position = "absolute";
@@ -492,7 +504,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         mother.style.height = withOut(motherTop, ea);
         mother.style.overflow = "scroll";
 
-        GeneralJs.setTimeout(async () => {
+        setQueue(async () => {
           try {
             mother.style.background = colorChip.gray1;
             const board = createNode({
@@ -579,6 +591,12 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       className: "mainContents_budget",
       position: "request.about.budget",
       contents: projectHistory.request.about.budget,
+    },
+    {
+      title: "기타 사항",
+      className: "mainContents_progress",
+      position: "request.about.progress",
+      contents: projectHistory.request.about.progress,
     }
   ];
   const pictureContents = "고객님이 선택한 사진";

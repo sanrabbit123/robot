@@ -3194,6 +3194,7 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
             construct: [],
             styling: [],
             budget: [],
+            progress: [],
           }
         },
         manager: projectManager

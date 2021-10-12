@@ -77,11 +77,28 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(equalJson(55))
-    console.log(55);
-
-
-
+    // const selfMongo = this.MONGOCONSOLEC;
+    //
+    // await selfMongo.connect();
+    //
+    // const db = "miro81";
+    // const collection = "projectHistory";
+    // let rows;
+    // let whereQuery, updateQuery;
+    //
+    //
+    // rows = await selfMongo.db(db).collection(collection).find({}).toArray();
+    //
+    // for (let r of rows) {
+    //   whereQuery = { proid: r.proid };
+    //   updateQuery = {};
+    //   updateQuery["request.about.progress"] = [];
+    //   await selfMongo.db(db).collection(collection).updateMany(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery);
+    // }
+    //
+    //
+    // await selfMongo.close();
 
 
 
