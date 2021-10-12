@@ -6,8 +6,8 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
   let obj = {};
   obj.link = "/designerProposal_submit";
   obj.func = async function (req, res) {
+    res.set({ "Content-Type": "application/json" });
     try {
-      res.set({ "Content-Type": "application/json" });
       let { cliid, proid, desid, name, phone, designer, method } = req.body;
       let thisProject, thisClient, requestNumber;
       let action;
@@ -16,7 +16,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       thisClient = await back.getClientById(cliid, { selfMongo: instance.mongo });
       requestNumber = 0;
       for (let i = 0; i < thisClient.requests.length; i++) {
-        if (thisClient.requests[i].timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+        if (thisClient.requests[i].request.timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
           requestNumber = i;
           break;
         }
@@ -64,7 +64,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + e.message, channel: "#error_log" });
-      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
     }
   }
   return obj;
