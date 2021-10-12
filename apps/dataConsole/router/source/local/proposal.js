@@ -4484,7 +4484,7 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
 
                 requestNumber = 0;
                 for (let i = 0; i < thisClient.requests.length; i++) {
-                  if (thisClient.requests[i].timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
+                  if (thisClient.requests[i].request.timeline.valueOf() <= thisProject.proposal.date.valueOf()) {
                     requestNumber = i;
                     break;
                   }

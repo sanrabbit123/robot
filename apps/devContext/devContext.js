@@ -74,7 +74,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-
+    console.log(await this.findCode("requests[i].timeline"));
 
 
     // const selfMongo = this.MONGOCONSOLEC;
