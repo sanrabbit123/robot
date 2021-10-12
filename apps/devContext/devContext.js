@@ -74,13 +74,8 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-    const proid = "p2110_aa09s";
-    console.log(await requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
-      headers: {
-        "Content-Type": "application/json",
-        "origin": "https://" + instance.address.pythoninfo.host
-      }
-    }));
+
+
 
 
 
@@ -1226,9 +1221,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "박성진",
-    //     designer: "김경임",
-    //     link: "https://drive.google.com/drive/folders/1GjDNWmr-5RJymhOgx9ARGlcghEU0aiid",
+    //     client: null,
+    //     designer: "이미영",
+    //     link: "https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9",
     //     pay: true
     //   },
     // ]);
@@ -1237,7 +1232,7 @@ DevContext.prototype.launching = async function () {
 
     // get photo folder
     // const drive = new GoogleDrive();
-    // await drive.get_folder("https://drive.google.com/drive/folders/1K6UXahCEARz8ASICpmVrLZpcfrdGXNBm", "test");
+    // await drive.get_folder("https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9", "test");
 
 
     // spell check

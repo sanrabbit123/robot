@@ -677,6 +677,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let zipLinks;
     let consoleQInput;
     let photoshopScript;
+    let contentsRows;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -725,121 +726,171 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         targetDesigner = designers[0].toNormal();
       }
 
-
-
-
-
-
-
-
       if (client !== null) {
 
+        nextPid = null;
+        foreRows = await back.mongoRead("foreContents", finalObj, { console: true });
+        foreRows.sort((a, b) => {
+          return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, ''));
+        });
+        if (foreRows.length === 0) {
+          throw new Error("invaild foreRows");
+        }
+        nextPid = 'p' + String(Number(foreRows[0].pid.replace(/[^0-9]/gi, '')) + 1);
+        if (nextPid === null) {
+          throw new Error("invaild pid");
+        }
+        note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
+        await note.createNote(`${designer} 실장님 ${client} 고객님`);
 
-      }
+        folderPath = await drive.get_folder(link, nextPid, true);
+        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
+        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
 
+        console.log(folderPath);
 
+        shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
+        shell.exec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
 
+        this.clientName = client;
+        this.designer = designer;
+        this.pid = nextPid;
+        this.apartName = "";
+        totalMakeResult = await this.total_make(true);
+        googleFolderName = totalMakeResult.folderName;
 
+        ghostPhotos = await photoRequest("ls");
+        while (!ghostPhotos.includes(googleFolderName)) {
+          for (let z = 0; z < 5; z++) {
+            console.log(`file server waiting... ${String(5 - z)}s`);
+            await sleep(1000);
+          }
+          ghostPhotos = await photoRequest("ls");
+        }
 
+        shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
+        console.log(`original copy done`);
 
+        for (let item of folderPathList) {
+          await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);
+        }
+        forecast = await garoseroParser.queryDirectory(folderPath, true);
+        for (let obj of forecast) {
+          obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
+        }
 
-      nextPid = null;
-      foreRows = await back.mongoRead("foreContents", finalObj, { console: true });
-      foreRows.sort((a, b) => {
-        return Number(b.pid.replace(/[^0-9]/gi, '')) - Number(a.pid.replace(/[^0-9]/gi, ''));
-      });
-      if (foreRows.length === 0) {
-        throw new Error("invaild foreRows");
-      }
-      nextPid = 'p' + String(Number(foreRows[0].pid.replace(/[^0-9]/gi, '')) + 1);
-      if (nextPid === null) {
-        throw new Error("invaild pid");
-      }
-      note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
-      await note.createNote(`${designer} 실장님 ${client} 고객님`);
+        finalObj = { pid: nextPid, desid: targetDesigner.desid, forecast };
+        await back.mongoCreate("foreContents", finalObj, { console: true });
 
-      folderPath = await drive.get_folder(link, nextPid, true);
-      folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
-      folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+        shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
 
-      console.log(folderPath);
-
-      shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
-      shell.exec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
-
-      this.clientName = client;
-      this.designer = designer;
-      this.pid = nextPid;
-      this.apartName = "";
-      totalMakeResult = await this.total_make(true);
-      googleFolderName = totalMakeResult.folderName;
-
-      ghostPhotos = await photoRequest("ls");
-      while (!ghostPhotos.includes(googleFolderName)) {
         for (let z = 0; z < 5; z++) {
-          console.log(`insync waiting... ${String(5 - z)}s`);
+          console.log(`scp waiting... ${String(5 - z)}s`);
           await sleep(1000);
         }
+
+        zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
+        shareLinkClient = zipLinks.client;
+        shareLinkDeginer = zipLinks.designer;
+        if (shareLinkClient !== null) {
+          shareGoogleIdClient = drive.general.parsingId(shareLinkClient);
+        }
+        shareGoogleIdDesigner = drive.general.parsingId(shareLinkDeginer);
+
+        shell.exec(`rm -rf ${shellLink(folderPath)};`);
+
+        projects = await back.getProjectsByNames([ client.trim(), designer.trim() ]);
+        if (projects.length > 0) {
+          project = projects[0];
+          await back.updateProject([
+            { proid: project.proid },
+            {
+              "contents.raw.photo.status": "원본 보정 완료",
+              "contents.share.client.photo": new Date(),
+              "contents.share.designer.photo": new Date(),
+            }
+          ]);
+          clientObj = await back.getClientById(project.cliid);
+          designerObj = await back.getDesignerById(project.desid);
+
+          if (clientObj !== null && designerObj !== null) {
+            consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
+            if (/OK/gi.test(consoleQInput.trim())) {
+              await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
+              await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });
+              await this.mother.slack_bot.chat.postMessage({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+            }
+          }
+
+        }
+
+        console.log(`${client}C ${designer}D raw to raw done`);
+
+      } else {
+
+        nextPid = null;
+
+        contentsRows = await back.getContentsArrByQuery({});
+        contentsRows = contentsRows.toNormal().filter((obj) => { return /^a/i.test(obj.contents.portfolio.pid); });
+        contentsRows.sort((a, b) => {
+          return Number(b.contents.portfolio.pid.replace(/[^0-9]/gi, '')) - Number(a.contents.portfolio.pid.replace(/[^0-9]/gi, ''));
+        });
+        if (contentsRows.length === 0) {
+          throw new Error("invaild contentsRows");
+        }
+        nextPid = 'a' + String(Number(contentsRows[0].contents.portfolio.pid.replace(/[^0-9]/gi, '')) + 1);
+        if (nextPid === null) {
+          throw new Error("invaild pid");
+        }
+        note = new AppleNotes({ folder: "portfolio", subject: nextPid + "(발행대기)" });
+        await note.createNote(`${designer} 실장님`);
+
+        folderPath = await drive.get_folder(link, nextPid, true);
+        folderPathList_raw = await fileSystem(`readDir`, [ folderPath ]);
+        folderPathList = folderPathList_raw.filter((name) => { return (name !== ".DS_Store"); });
+
+        console.log(folderPath);
+
+        shell.exec(`rm -rf ${shellLink(this.options.photo_dir)};`);
+        shell.exec(`cp -r ${shellLink(folderPath)} ${shellLink(this.options.photo_dir)};`);
+
+        this.clientName = "없음";
+        this.designer = designer;
+        this.pid = nextPid;
+        this.apartName = "";
+        totalMakeResult = await this.total_make(true);
+        googleFolderName = totalMakeResult.folderName;
+
         ghostPhotos = await photoRequest("ls");
-      }
-
-      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
-      console.log(`original copy done`);
-
-      for (let item of folderPathList) {
-        await appleScript(`compress_${item.replace(/\./g, '')}`, photoshopScript(shellLink(`${folderPath}/${item}`), adobe), null, false);
-      }
-      forecast = await garoseroParser.queryDirectory(folderPath, true);
-      for (let obj of forecast) {
-        obj.file = foreCastContant + "/" + obj.file.split("/").slice(-2).join("/");
-      }
-
-      finalObj = { pid: nextPid, desid: targetDesigner.desid, forecast };
-      await back.mongoCreate("foreContents", finalObj, { console: true });
-
-      shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.homeinfo.ghost.user}@${this.address.homeinfo.ghost.host}:${shellLink(forecastPath)}/`);
-
-      for (let z = 0; z < 5; z++) {
-        console.log(`scp waiting... ${String(5 - z)}s`);
-        await sleep(1000);
-      }
-
-      zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
-      shareLinkClient = zipLinks.client;
-      shareLinkDeginer = zipLinks.designer;
-      if (shareLinkClient !== null) {
-        shareGoogleIdClient = drive.general.parsingId(shareLinkClient);
-      }
-      shareGoogleIdDesigner = drive.general.parsingId(shareLinkDeginer);
-
-      shell.exec(`rm -rf ${shellLink(folderPath)};`);
-
-      projects = await back.getProjectsByNames([ client.trim(), designer.trim() ]);
-      if (projects.length > 0) {
-        project = projects[0];
-        await back.updateProject([
-          { proid: project.proid },
-          {
-            "contents.raw.photo.status": "원본 보정 완료",
-            "contents.share.client.photo": new Date(),
-            "contents.share.designer.photo": new Date(),
+        while (!ghostPhotos.includes(googleFolderName)) {
+          for (let z = 0; z < 5; z++) {
+            console.log(`file server waiting... ${String(5 - z)}s`);
+            await sleep(1000);
           }
-        ]);
-        clientObj = await back.getClientById(project.cliid);
-        designerObj = await back.getDesignerById(project.desid);
+          ghostPhotos = await photoRequest("ls");
+        }
 
-        if (clientObj !== null && designerObj !== null) {
-          consoleQInput = await consoleQ(`Is it OK? (press "OK")\nclient : https://drive.google.com/file/d/${shareGoogleIdClient}/view?usp=sharing\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
-          if (/OK/gi.test(consoleQInput.trim())) {
-            await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
-            await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });
-            await this.mother.slack_bot.chat.postMessage({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
-          }
+        shell.exec(`scp -r ${shellLink(folderPath)} ${this.address.officeinfo.ghost.user}@${this.address.officeinfo.ghost.host}:${shellLink(sambaPhotoPath + "/" + googleFolderName)}/`);
+        console.log(`original copy done`);
+
+        for (let z = 0; z < 5; z++) {
+          console.log(`scp waiting... ${String(5 - z)}s`);
+          await sleep(1000);
+        }
+
+        zipLinks = await photoRequest("zip", { pid: nextPid, pay: (pay ? 1 : 0) });
+        shareLinkDeginer = zipLinks.designer;
+        shareGoogleIdDesigner = drive.general.parsingId(shareLinkDeginer);
+        shell.exec(`rm -rf ${shellLink(folderPath)};`);
+
+        consoleQInput = await consoleQ(`Is it OK? (press "OK")\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
+        if (/OK/gi.test(consoleQInput.trim())) {
+          await kakaoInstance.sendTalk("photoShareAKeywordDesigner", targetDesigner.designer, targetDesigner.information.phone, { designer: designerObj.designer, file: shareGoogleIdDesigner });
+          await this.mother.slack_bot.chat.postMessage({ text: `${designerObj.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
         }
 
       }
 
-      console.log(`${client}C ${designer}D raw to raw done`);
     }
 
   } catch (e) {

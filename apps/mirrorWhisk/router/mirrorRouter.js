@@ -582,24 +582,25 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
             }
           }
           if (name.trim() === "알 수 없는") {
-            rows = await back.getAspirantsByQuery({ phone: phoneNumber }, { selfMongo: instance.mongo });
-            if (rows.length === 0) {
-              outerResponse = await requestSystem(outerUrl, { SCH_TEL_NO: String(phoneNumber).replace(/[^0-9]/gi, '') }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
-              entireDom = new JSDOM(outerResponse.data);
-              resultDom = entireDom.window.document.getElementById("result_phone_text");
-              if (resultDom !== null) {
-                findName = resultDom.textContent.trim();
-                text = `${findName}에서 ${method}가 왔습니다!`;
-              }
+
+            addressBookRows = await back.mongoRead("addressBook", { phone: phoneNumber }, { selfMongo: instance.mongolocal });
+            if (addressBookRows.length > 0) {
+              text = `${addressBookRows[0].name}에서 ${method}가 왔습니다!`;
             } else {
-              text = `${rows[0].designer} 디자이너 신청자로부터 ${method}가 왔습니다!`;
+              text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
             }
             if (/^알 수 없는/gi.test(text)) {
-              addressBookRows = await back.mongoRead("addressBook", { phone: phoneNumber }, { selfMongo: instance.mongolocal });
-              if (addressBookRows.length > 0) {
-                text = `${addressBookRows[0].name}에서 ${method}가 왔습니다!`;
+              rows = await back.getAspirantsByQuery({ phone: phoneNumber }, { selfMongo: instance.mongo });
+              if (rows.length === 0) {
+                outerResponse = await requestSystem(outerUrl, { SCH_TEL_NO: String(phoneNumber).replace(/[^0-9]/gi, '') }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+                entireDom = new JSDOM(outerResponse.data);
+                resultDom = entireDom.window.document.getElementById("result_phone_text");
+                if (resultDom !== null) {
+                  findName = resultDom.textContent.trim();
+                  text = `${findName}에서 ${method}가 왔습니다!`;
+                }
               } else {
-                text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
+                text = `${rows[0].designer} 디자이너 신청자로부터 ${method}가 왔습니다!`;
               }
             }
           }

@@ -633,6 +633,20 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    photoShareAKeywordDesigner: {
+      name: "디자이너 개인 포트폴리오 공유",
+      id: "TG_0998",
+      needs: [
+        "designer",
+        "file"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "designer", to: obj.designer },
+          { from: "file", to: obj.file }
+        ];
+      },
+    },
   };
   return tong[target];
 }
