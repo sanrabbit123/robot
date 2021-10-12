@@ -3551,7 +3551,7 @@ DataPatch.prototype.projectStandard = function () {
     },
     action: {
       name: "응대",
-      width: 80,
+      width: 100,
     },
     meetingDate: {
       name: "1차 미팅",
