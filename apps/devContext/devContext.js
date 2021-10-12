@@ -74,6 +74,14 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
+    const proid = "p2110_aa09s";
+    console.log(await requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
+      headers: {
+        "Content-Type": "application/json",
+        "origin": "https://" + instance.address.pythoninfo.host
+      }
+    }));
+
 
 
 
@@ -1246,7 +1254,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "김원희", "2021-09-09" ],
+    //   [ "이미영", "2021-10-12" ],
     // ]);
 
 

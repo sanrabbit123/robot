@@ -676,6 +676,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     let clientObj, designerObj;
     let zipLinks;
     let consoleQInput;
+    let photoshopScript;
 
     tempAppList = await fileSystem(`readDir`, [ `/Applications` ]);
     adobe = null;
@@ -687,7 +688,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
     if (adobe === null) {
       throw new Error("There is no photoshop");
     }
-    const photoshopScript = function (argv, app) {
+    photoshopScript = function (argv, app) {
       let text = '';
       text += 'tell application "' + app + '"\n';
       text += '\tactivate\n';
@@ -706,8 +707,8 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       text += 'end tell';
       return text;
     }
-
     garoseroParser = new GaroseroParser();
+
     await this.static_setting();
 
     for (let { client, designer, link, pay } of arr) {
@@ -723,6 +724,24 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
       } else {
         targetDesigner = designers[0].toNormal();
       }
+
+
+
+
+
+
+
+
+      if (client !== null) {
+
+
+      }
+
+
+
+
+
+
 
       nextPid = null;
       foreRows = await back.mongoRead("foreContents", finalObj, { console: true });

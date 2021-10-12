@@ -638,7 +638,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
                   "origin": "https://" + instance.address.pythoninfo.host
                 }
               }).then((obj) => {
-                if (obj.message !== "success") {
+                if (obj.status >= 300) {
                   instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
                 }
               }).catch((err) => {
