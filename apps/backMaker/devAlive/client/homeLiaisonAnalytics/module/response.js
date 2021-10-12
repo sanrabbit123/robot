@@ -37,7 +37,6 @@ const Response = function (response) {
     "자동 피드백 부재중",
     "피드백과 응대 완료",
     "디자이너 선택",
-    "계약금 안내",
     "해당 없음",
   ], false);
   this.outreason = new Menu(response.outreason, [
@@ -72,7 +71,6 @@ Response.prototype.actionInfo = function () {
     [ "피드백 부재중", "자동 피드백 부재중" ],
     [ "제안 피드백 완료", "피드백과 응대 완료" ],
     [ "디자이너 선택" ],
-    [ "계약금 안내" ],
     [ "해당 없음" ],
   ];
 

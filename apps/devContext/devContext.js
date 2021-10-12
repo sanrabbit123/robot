@@ -75,6 +75,23 @@ DevContext.prototype.launching = async function () {
     // await this.passiveAddressSync("c2110_aa14s");
 
 
+    const selfMongo = this.MONGOC;
+    const clients = await back.getClientsByQuery({ requests: { $elemMatch: { "analytics.response.action": { $regex: "^계약" } } } }, { selfMongo, withTools: true });
+    let whereQuery, updateQuery;
+    let requestNumber;
+
+    for (let client of clients) {
+      for (let i = 0; i < client.requests.length; i++) {
+        if (/^계약/gi.test(client.requests[i].analytics.response.action.value)) {
+          whereQuery = { cliid: client.cliid };
+          requestNumber = i;
+          updateQuery = {};
+          updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = "디자이너 선택";
+          await back.updateClient([ whereQuery, updateQuery ], { selfMongo });
+          console.log(whereQuery, updateQuery);
+        }
+      }
+    }
 
 
 

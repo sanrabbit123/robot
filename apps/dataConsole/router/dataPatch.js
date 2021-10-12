@@ -446,8 +446,7 @@ DataPatch.prototype.toolsDashboard = function (button) {
         "자동 피드백 부재중",
         "피드백과 응대 완료",
         "디자이너 선택",
-        "계약금 안내",
-        "해당 없음",
+        "해당 없음"
       ];
       break;
     case "project":
@@ -858,7 +857,6 @@ DataPatch.prototype.clientMap = function () {
       "자동 피드백 부재중",
       "피드백과 응대 완료",
       "디자이너 선택",
-      "계약금 안내",
       "해당 없음"
     ];
     const doubleLength = 6;
@@ -1771,7 +1769,6 @@ DataPatch.prototype.clientMap = function () {
       "자동 피드백 부재중",
       "피드백과 응대 완료",
       "디자이너 선택",
-      "계약금 안내",
       "해당 없음"
     ], divisionStart: 1, divisionLength: 6, inputFunction: actionInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: actionToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [

@@ -2426,7 +2426,7 @@ DataRouter.prototype.rou_post_proposalReset = function () {
                   mode: "create"
                 };
                 if (req.body.silent !== undefined) {
-                  requestObj.slient = true;
+                  requestObj.silent = true;
                 }
 
                 requestSystem("https://" + address.homeinfo.ghost.host + "/styleCuration_updateCalculation", requestObj, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } }).then(() => {
@@ -3039,6 +3039,12 @@ DataRouter.prototype.rou_post_generalMongo = function () {
   let obj = {};
   obj.link = "/generalMongo";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.mode === undefined) {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");
@@ -3053,6 +3059,8 @@ DataRouter.prototype.rou_post_generalMongo = function () {
       let selfMongo, result;
       let whereQuery, updateQuery;
       let ip, device, logObject;
+      let updateQueries;
+      let order;
 
       if (db === "core" || db === "back" || db === "mongo") {
         selfMongo = instance.mongo;
@@ -3094,17 +3102,46 @@ DataRouter.prototype.rou_post_generalMongo = function () {
         await back.mongoDelete(collection, whereQuery, { selfMongo });
         result = { message: "done" };
       } else if (mode === "sse") {
-        if (req.body.updateQuery === undefined) {
-          throw new Error("must be updateQuery");
-        }
-        updateQuery = equalJson(req.body.updateQuery);
-        result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
-        if (result.length === 0) {
-          await back.mongoCreate(collection, { id: "sse", order: [ JSON.stringify(updateQuery) ] }, { selfMongo });
+        if (req.body.updateQueries === undefined) {
+
+          if (req.body.updateQuery === undefined) {
+            throw new Error("must be updateQuery");
+          }
+          updateQuery = equalJson(req.body.updateQuery);
+          result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
+          if (result.length === 0) {
+            await back.mongoCreate(collection, { id: "sse", order: [ JSON.stringify(updateQuery) ] }, { selfMongo });
+          } else {
+            result[0].order.push(JSON.stringify(updateQuery));
+            await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
+          }
+
         } else {
-          result[0].order.push(JSON.stringify(updateQuery));
-          await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
+
+          updateQueries = equalJson(req.body.updateQueries);
+          if (!Array.isArray(updateQueries)) {
+            throw new Error("updateQueries must be updateQuery array");
+          }
+          if (!updateQueries.every((obj) => { return typeof obj === "object" })) {
+            throw new Error("updateQueries must be updateQuery array");
+          }
+          result = await back.mongoRead(collection, { id: "sse" }, { selfMongo });
+          if (result.length === 0) {
+            order = [];
+            for (let updateQuery of updateQueries) {
+              order.push(JSON.stringify(updateQuery));
+            }
+            await back.mongoCreate(collection, { id: "sse", order }, { selfMongo });
+          } else {
+            for (let updateQuery of updateQueries) {
+              result[0].order.push(JSON.stringify(updateQuery));
+            }
+            await back.mongoUpdate(collection, [ { id: "sse" }, { order: result[0].order } ], { selfMongo });
+          }
+          updateQuery = updateQueries;
+
         }
+
         await fileSystem(`write`, [ instance.dir + "/log/" + collection + "_latest.json", JSON.stringify([ 0 ]) ]);
         if (req.body.log !== undefined) {
           if (req.body.who === undefined) {
@@ -3121,15 +3158,15 @@ DataRouter.prototype.rou_post_generalMongo = function () {
           await back.mongoCreate(collection.replace(/^sse\_/, "log_"), logObject, { selfMongo });
         }
         result = { message: "done" };
+
       } else {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");
       }
 
-      res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
-      console.log(e);
+      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 (rou_post_generalMongo): " + e.message, channel: "#error_log" });
+      res.send({ message: "error" });
     }
   }
   return obj;
@@ -4609,10 +4646,13 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
     try {
       res.set({ "Content-Type": "application/json" });
       let { cliid, proid, desid, name, phone, designer, method } = req.body;
+      
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
+
       slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}&mode=test\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#400_customer" });
-      ghostRequest("voice", { text: `${name} 고객님이 ${designer} 디자이너를 선택하셨습니다!` });
+      ghostRequest("voice", { text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.` });
+
       await instance.kakao.sendTalk("designerSelect", name, phone, {
         client: name,
         designer: designer,
@@ -4621,6 +4661,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
         cliid: cliid,
         needs: ("style," + desid + "," + proid + "," + method),
       });
+
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + e.message, channel: "#error_log" });
@@ -4806,8 +4847,16 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
         const detail = await work.designerCuration(cliid, 6, history.curation.service.serid, { selfMongo: instance.mongo, selfLocalMongo: instance.mongolocal });
         let detailUpdate, updateQuery;
         let newProid;
+        let requestNumber;
+        let action;
 
         client = clientCase.client;
+        requestNumber = 0;
+        if ([ "부재중 알림 발송", "상세 설문 대기" ].includes(client.requests[requestNumber].analytics.response.action.value)) {
+          action = "부재중 제안 발송";
+        } else {
+          action = "제안 발송 예정";
+        }
 
         if (detail.length !== 0) {
 
@@ -4851,24 +4900,49 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               if (newProid === null) {
                 newProid = proid;
               }
-              if (req.body.slient === undefined) {
+              if (req.body.silent === undefined) {
                 return instance.kakao.sendTalk("curationComplete", client.name, client.phone, { client: client.name });
               } else {
                 return passPromise();
               }
             }).then(() => {
+
               if (newProid === null) {
                 throw new Error("promise error");
               }
               return requestSystem("https://" + address.backinfo.host + ":3000/updateLog", {
                 id: cliid,
                 column: "action",
-                position: "requests.0.analytics.response.action",
-                pastValue: client.requests[0].analytics.response.action.value,
-                finalValue: "제안 발송 예정"
+                position: "requests." + String(requestNumber) + ".analytics.response.action",
+                pastValue: client.requests[requestNumber].analytics.response.action.value,
+                finalValue: action
               }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+
             }).then(() => {
-              return back.updateClient([ { cliid }, { "requests.0.analytics.response.action": "제안 발송 예정" } ], { selfMongo: instance.mongo });
+
+              return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
+                mode: "sse",
+                db: "console",
+                collection: "sse_clientCard",
+                log: true,
+                who: "autoBot",
+                updateQuery: {
+                  cliid,
+                  requestNumber,
+                  mode: "action",
+                  from: client.requests[requestNumber].analytics.response.action.value,
+                  to: action,
+                  randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+                }
+              }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+
+            }).then(() => {
+              
+              let updateObj;
+              updateObj = {};
+              updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
+              return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
+
             }).then(() => {
               return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
             }).then(() => {
