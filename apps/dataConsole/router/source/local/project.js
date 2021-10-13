@@ -6616,6 +6616,8 @@ ProjectJs.prototype.communicationRender = function () {
           contractAddress = contractAddress.replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '');
 
           await GeneralJs.ajaxJson({ proid, contractName, contractAddress }, PYTHONHOST + "/createStylingContract");
+
+          window.alert(`계약서 알림톡 요청을 완료하였습니다!`);
         }
       } catch (e) {
         console.log(e);
@@ -6677,6 +6679,7 @@ ProjectJs.prototype.communicationRender = function () {
               }
             }, "/alimTalk");
 
+            window.alert(`계약금 안내 알림톡 요청을 완료하였습니다!`);
           }
         }
       } catch (e) {
@@ -6739,6 +6742,7 @@ ProjectJs.prototype.communicationRender = function () {
               }
             }, "/alimTalk");
 
+            window.alert(`잔금 안내 알림톡 요청을 완료하였습니다!`);
           }
         }
       } catch (e) {

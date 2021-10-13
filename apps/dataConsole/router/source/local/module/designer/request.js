@@ -416,11 +416,11 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
           },
           space: {
             contract: thisRequest.request.space.contract,
-            precheck: dateToString(thisRequest.analytics.date.space.precheck),
-            empty: dateToString(thisRequest.analytics.date.space.empty),
+            precheck: dateToString(thisRequest.analytics.date.space.precheck) === "해당 없음" ? '-' : dateToString(thisRequest.analytics.date.space.precheck),
+            empty: dateToString(thisRequest.analytics.date.space.empty) === "해당 없음" ? '-' : dateToString(thisRequest.analytics.date.space.empty),
             movein: (thisRequest.request.space.resident.expected.valueOf() <= (new Date()).valueOf() ? "거주중" : dateToString(thisRequest.request.space.resident.expected)),
             special: "",
-            composition: String(thisRequest.request.space.pyeong) + "평, " + "방 " + String(thisRequest.request.space.spec.room) + "개, 화장실 " + String(thisRequest.request.space.spec.bathroom) + "개, 발코니 확장" + (thisRequest.request.space.spec.valcony ? "" : " 없음"),
+            composition: "<" + String(thisRequest.request.space.pyeong) + "평> " + "방 " + String(thisRequest.request.space.spec.room) + "개, 화장실 " + String(thisRequest.request.space.spec.bathroom) + "개, 발코니 확장" + (thisRequest.request.space.spec.valcony ? "" : " 없음"),
           },
           service: {
             service: serviceParsing(project.service),

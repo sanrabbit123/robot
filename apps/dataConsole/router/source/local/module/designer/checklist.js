@@ -4791,7 +4791,9 @@ DesignerJs.prototype.checkListView = async function () {
     this.backGrayBar();
     await this.spreadData(null, true, middleMode ? "middle" : null);
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson } = GeneralJs;
-    const { totalMother, ea, grayBarWidth, belowHeight } = this;
+    const { totalMother, ea, grayBarWidth, belowHeight, media } = this;
+    const mobile = media[4];
+    const desktop = !mobile;
     const standardBar = totalMother.firstChild;
     const getObj = returnGet();
     let designers, length;
@@ -4909,9 +4911,11 @@ DesignerJs.prototype.checkListView = async function () {
     loading.parentNode.removeChild(loading);
 
     this.pageHistory = [];
-    window.addEventListener("resize", (e) => {
-      window.location.reload();
-    });
+    if (desktop) {
+      window.addEventListener("resize", (e) => {
+        window.location.reload();
+      });
+    }
     window.addEventListener("popstate", (e) => {
       let targets, targetIndex;
       e.preventDefault();

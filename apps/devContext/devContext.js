@@ -74,7 +74,10 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-    
+
+    console.log(await this.findCode("Growl"));
+
+
     // new project action
 
     // console.log(await this.findCode("사진 공유"));
