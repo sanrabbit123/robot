@@ -1188,8 +1188,11 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         oid: getObj.oid,
         impId: getObj.imp_uid,
       }, "/inicisPayment");
-      
-      await this.payComplete(convertingData);
+      if (convertingData.error === "error") {
+        window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
+      } else {
+        await this.payComplete(convertingData);
+      }
     }
 
     if (getObj.hash !== undefined) {
