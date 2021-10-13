@@ -23,28 +23,38 @@ const NativeNotifier = function () {
   }
 }
 
-NativeNotifier.prototype.sendAlarm = function () {
+NativeNotifier.prototype.sendAlarm = function (message, callback = function () {}) {
+  if (typeof message !== "string") {
+    throw new Error("invaild input");
+  }
   const instance = this;
   const { notifier } = this;
+  const path = require('path');
 
-  notifier.notify(
-    {
-      title: 'My awesome title',
-      message: 'Hello from node, Mr. User!',
-      icon: path.join(__dirname, 'coulson.jpg'), // Absolute path (doesn't work on balloons)
-      sound: true, // Only Notification Center or Windows Toasters
-      wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
-    },
-    function (err, response, metadata) {
-      console.log(response);
-      // Response is response from notification
-      // Metadata contains activationType, activationAt, deliveredAt
-    }
-  );
+  console.log(path.join(process.env.HOME + "/static", 'logo.jpg'));
 
+  return new Promise((resolve, reject) => {
+    notifier.notify({
+        title: '',
+        message,
+        icon: path.join(process.env.HOME + "/static", 'logo.icns'),
+        sound: true,
+        wait: true
+      }, (err, response, metadata) => {
+      if (err) {
+        reject(err);
+      } else {
+        metadata.type = metadata.activationType;
+        delete metadata.activationType;
+        metadata.activationAt = new Date(metadata.activationAt.split(' ').slice(0, 2).join(' '));
+        metadata.deliveredAt = new Date(metadata.deliveredAt.split(' ').slice(0, 2).join(' '));
+        if (/click/gi.test(metadata.type)) {
+          callback.call(instance, metadata);
+        }
+        resolve(metadata);
+      }
+    });
+  });
 }
-
-
-
 
 module.exports = NativeNotifier;

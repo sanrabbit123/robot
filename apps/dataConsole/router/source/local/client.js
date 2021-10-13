@@ -5038,6 +5038,7 @@ ClientJs.prototype.whiteViewMaker = function (index) {
 
 ClientJs.prototype.rowViewMaker = function () {
   const instance = this;
+  const { setQueue } = this.mother;
   return function (e) {
     if (instance.totalFather !== null) {
       instance.totalFather.style.zIndex = String(-1);
@@ -5046,7 +5047,7 @@ ClientJs.prototype.rowViewMaker = function () {
     }
     instance.totalMother.style.display = "block";
     instance.onView = "mother";
-    GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
+    setQueue(() => {
       if (instance.totalFather !== null) {
         instance.totalFatherChildren = [];
         instance.totalFather.remove();
@@ -5056,8 +5057,6 @@ ClientJs.prototype.rowViewMaker = function () {
       instance.totalFather = null;
       instance.divisionMap = null;
       instance.totalMother.classList.remove("justfadeinoriginal");
-      clearTimeout(GeneralJs.timeouts.fadeinTimeout);
-      GeneralJs.timeouts.fadeinTimeout = null;
     }, 401);
   }
 }

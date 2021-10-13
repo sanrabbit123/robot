@@ -18,6 +18,7 @@ const ProjectJs = function () {
   this.totalFather = null;
   this.totalFatherChildren = [];
   this.onView = "mother";
+  this.ea = "px";
 }
 
 ProjectJs.prototype.standardBar = function (standard) {
@@ -1635,11 +1636,1342 @@ ProjectJs.prototype.spreadData = async function (search = null) {
   }
 }
 
+ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
+  if (!Array.isArray(divisionMap) || !Array.isArray(cases)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { createNode, colorChip, withOut, equalJson, isMac, ajaxJson, getCookiesAll, findByAttribute, uniqueValue, cleanChildren, setQueue } = GeneralJs;
+  const { ea, token, actionClass, statusClass, actionArea } = staticList;
+  const projectMap = DataPatch.projectMap();
+  const cookies = getCookiesAll();
+  const dashboardTarget = {
+    status: {
+      items: projectMap.status.items,
+      zero: false,
+      divisionStart: null,
+      divisionLength: null,
+    },
+    action: {
+      items: projectMap.action.items,
+      zero: true,
+      divisionStart: projectMap.action.divisionStart,
+      divisionLength: projectMap.action.divisionLength,
+    },
+  };
+  const totalFather = this.totalFather;
+  const mother = totalFather.children[0];
+  this.statusColorSync = (status, standardDom, caseDoms) => {
+    const colorMap = [
+      { status: "완료중", color: colorChip.black },
+      { status: "대기", color: colorChip.darkRed },
+      { status: "드랍", color: colorChip.gray4 },
+      { status: "완료", color: colorChip.darkRed },
+    ]
+    let finalColor, targets;
+    finalColor = colorMap.find((obj) => { return obj.status === status }).color;
+    targets = [ ...standardDom.children ];
+    targets = targets.concat(caseDoms);
+    for (let dom of targets) {
+      dom.style.color = finalColor;
+    }
+  }
+  this.statusNumberSync = (from, to) => {
+    const numberTargets = [ ...document.querySelectorAll('.' + statusClass) ];
+    const fromDom = findByAttribute(numberTargets, "status", from);
+    const toDom = findByAttribute(numberTargets, "status", to);
+    const fromNumber = Number(fromDom.textContent.replace(/[^0-9]/gi, ''));
+    const toNumber = Number(toDom.textContent.replace(/[^0-9]/gi, ''));
+    if (from === "완료중") {
+      if (to === "완료중") {
+        //pass
+      } else if (to === "대기") {
+        fromDom.textContent = String(fromNumber - 1);
+        toDom.textContent = String(toNumber + 1);
+      } else if (to === "드랍") {
+        fromDom.textContent = String(fromNumber - 1);
+      } else if (to === "완료") {
+        window.alert("완료일 경우 proposal 콘솔을 이용해주세요!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/proposal";
+      }
+    } else if (from === "대기") {
+      if (to === "완료중") {
+        fromDom.textContent = String(fromNumber - 1);
+        toDom.textContent = String(toNumber + 1);
+      } else if (to === "대기") {
+        //pass
+      } else if (to === "드랍") {
+        fromDom.textContent = String(fromNumber - 1);
+      } else {
+        window.alert("완료일 경우 proposal 콘솔을 이용해주세요!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/proposal";
+      }
+    } else if (from === "완료") {
+      if (to === "완료중" || to === "대기") {
+        fromDom.textContent = String(fromNumber - 1);
+        toDom.textContent = String(toNumber + 1);
+      } else if (to === "완료") {
+        window.alert("완료일 경우 proposal 콘솔을 이용해주세요!");
+        window.location.href = window.location.protocol + "//" + window.location.host + "/proposal";
+      } else if (to === "드랍") {
+        fromDom.textContent = String(fromNumber - 1);
+      }
+    }
+    return to !== "드랍";
+  }
+  let dashboardData;
+  let boardBox;
+  let topMargin, leftMargin;
+  let statusBlock, actionBlock;
+  let fontSize;
+  let marginBottom;
+  let statusPaddingBottom;
+  let actionPaddingTop;
+  let middleBetween;
+  let memberBlock;
+  let members;
+  let cxMembers;
+  let memberMargin;
+  let memberMarginLeft;
+  let memberBetween;
+  let memberSize;
+  let memberVisual;
+  let statusSize;
+  let statusPaddingTop;
+  let grayBarTop;
+  let reloadEvent;
+  let dropEvent;
+
+  cleanChildren(mother);
+
+  dashboardData = {};
+  for (let i in dashboardTarget) {
+    dashboardData[i] = {
+      name: dashboardTarget[i].items,
+      value: [],
+      length: dashboardTarget[i].items.length,
+      divisionStart: dashboardTarget[i].divisionStart,
+      divisionLength: dashboardTarget[i].divisionLength,
+    };
+    dashboardData[i].value = (new Array(dashboardData[i].length)).fill(0);
+    for (let j = 0; j < dashboardTarget[i].items.length; j++) {
+      for (let c of cases) {
+        if (c[i].trim() === dashboardTarget[i].items[j]) {
+          dashboardData[i].value[j] = dashboardData[i].value[j] + 1;
+        }
+      }
+    }
+    if (!dashboardTarget[i].zero) {
+      dashboardData[i].name = dashboardData[i].name.filter((z, index) => { return dashboardData[i].value[index] !== 0 });
+      dashboardData[i].value = dashboardData[i].value.filter((z) => { return z !== 0 });
+    }
+  }
+
+  dashboardData.status.name.push("드랍");
+  dashboardData.status.value.push("-");
+
+  topMargin = 32.5;
+  leftMargin = 30;
+  statusSize = 16;
+  fontSize = 13;
+  marginBottom = 7;
+  statusPaddingBottom = 18;
+  actionPaddingTop = 31;
+  middleBetween = 18;
+  memberMargin = 16;
+  memberMarginLeft = 8;
+  memberBetween = 8;
+  memberSize = 13;
+  memberVisual = 1;
+  statusPaddingTop = 2;
+  grayBarTop = 4;
+
+  members = this.allMembers;
+  cxMembers = members.filter((obj) => { return obj.roles.includes("CX") || obj.roles.includes("CEO"); });
+  cxMembers = cxMembers.map((obj) => { return obj.name; });
+  cxMembers.push("전체");
+  cxMembers.push("미정");
+
+  boardBox = createNode({
+    mother,
+    style: {
+      marginTop: String(topMargin) + ea,
+      marginLeft: String(leftMargin) + ea,
+      width: withOut(leftMargin * 2, ea),
+      position: "relative",
+      height: withOut(topMargin, ea),
+    }
+  });
+
+  statusBlock = createNode({
+    mother: boardBox,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingBottom: String(statusPaddingBottom) + ea,
+      borderBottom: "1px solid " + colorChip.gray4,
+      paddingTop: String(statusPaddingTop) + ea,
+    }
+  });
+
+  actionBlock = createNode({
+    mother: boardBox,
+    style: {
+      display: "block",
+      position: "relative",
+      paddingTop: String(actionPaddingTop) + ea,
+    }
+  });
+
+  for (let i = 0; i < dashboardData.status.name.length; i++) {
+    createNode({
+      mother: statusBlock,
+      attribute: {
+        name: dashboardData.status.name[i],
+        column: "status",
+      },
+      event: {
+        dragenter: (e) => { e.preventDefault(); },
+        dragleave: function (e) {
+          e.preventDefault();
+          this.firstChild.style.color = colorChip.black;
+        },
+        dragover: function (e) {
+          e.preventDefault();
+          this.firstChild.style.color = colorChip.green;
+        },
+        drop: async function (e) {
+          e.preventDefault();
+          const name = this.getAttribute("name");
+          const column = this.getAttribute("column");
+          const proid = e.dataTransfer.getData("dragData").split(token)[0];
+          const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
+          const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
+          const fromStatus = e.dataTransfer.getData("dragData").split(token)[3];
+          const card = findByAttribute(instance.totalFatherChildren, [ "proid", "request" ], [ proid, String(requestNumber) ]);
+          const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+          const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
+          instance.randomToken = uniqueValue();
+          try {
+            let indexTong;
+            let index, thisCase;
+            let rowDom;
+            let thisStandardDom;
+            let thisCaseDom;
+            let length;
+
+            indexTong = [];
+            for (let i = 0; i < instance.cases.length; i++) {
+              if (instance.cases[i] !== null) {
+                if (instance.cases[i].proid === proid) {
+                  indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                }
+              }
+            }
+
+            index = indexTong[requestNumber].index;
+            thisCase = indexTong[requestNumber].thisCase;
+            instance.cases[index].status = name;
+            thisStandardDom = Array.from(instance.standardDoms).find((dom) => { return dom.firstChild.textContent.trim() === proid; });
+            thisCaseDom = [ ...document.querySelector("." + proid).children ];
+            rowDom = findByAttribute(thisCaseDom, "column", "status");
+            if (rowDom !== null) {
+              rowDom.textContent = name;
+            }
+            card.setAttribute("status", name);
+
+            instance.statusColorSync(name, thisStandardDom, thisCaseDom);
+            if (!instance.statusNumberSync(fromStatus, name)) {
+              length = card.parentElement.children.length;
+              card.remove();
+              length = length - 1;
+              findByAttribute(boardDoms, "action", fromAction).textContent = String(length);
+              findByAttribute(areaDoms, "action", fromAction).parentElement.children[1].textContent = String(length) + "명";
+              setQueue(() => {
+                GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid + "&view=row");
+              });
+            }
+
+            await ajaxJson({
+              thisId: proid,
+              requestIndex: String(requestNumber),
+              column: "status",
+              pastValue: name,
+              value: name,
+              index,
+              thisCase,
+              user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
+            }, "/updateClient");
+
+            await ajaxJson({
+              mode: "sse",
+              db: "console",
+              collection: "sse_clientCard",
+              log: true,
+              who: cookies.homeliaisonConsoleLoginedEmail,
+              updateQuery: {
+                proid,
+                requestNumber,
+                mode: "status",
+                from: fromStatus,
+                to: name,
+                randomToken: instance.randomToken,
+              }
+            }, "/generalMongo");
+
+            this.firstChild.style.color = colorChip.black;
+
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+      style: {
+        position: "relative",
+        textAlign: "left",
+        marginBottom: String(marginBottom) + ea,
+      },
+      children: [
+        {
+          text: dashboardData.status.name[i],
+          style: {
+            position: "relative",
+            fontSize: String(statusSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        },
+        {
+          class: [ statusClass ],
+          attribute: {
+            status: dashboardData.status.name[i],
+          },
+          text: String(dashboardData.status.value[i]),
+          style: {
+            position: "absolute",
+            right: String(0),
+            top: String(0),
+            fontSize: String(statusSize) + ea,
+            color: colorChip.green,
+            fontWeight: String(400),
+          }
+        },
+      ]
+    });
+  }
+
+  for (let i = 0; i < dashboardData.action.name.length; i++) {
+    createNode({
+      mother: actionBlock,
+      style: {
+        position: "relative",
+        textAlign: "left",
+        marginBottom: String(i % dashboardData.action.divisionLength === dashboardData.action.divisionStart - 1 ? middleBetween : marginBottom) + ea,
+      },
+      children: [
+        {
+          text: dashboardData.action.name[i],
+          style: {
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+          }
+        },
+        {
+          class: [ actionClass ],
+          attribute: {
+            action: dashboardData.action.name[i],
+          },
+          text: String(dashboardData.action.value[i]),
+          style: {
+            position: "absolute",
+            right: String(0),
+            top: String(0),
+            fontSize: String(fontSize) + ea,
+            color: colorChip.green,
+            fontWeight: String(400),
+          }
+        },
+      ]
+    });
+  }
+
+  memberBlock = createNode({
+    mother: boardBox,
+    style: {
+      position: "absolute",
+      left: String(0) + ea,
+      bottom: String(topMargin) + ea,
+      width: withOut(memberMarginLeft * 2, ea),
+      paddingTop: String(memberMargin) + ea,
+      paddingBottom: String(memberMargin) + ea,
+      paddingLeft: String(memberMarginLeft) + ea,
+      paddingRight: String(memberMarginLeft) + ea,
+      borderRadius: String(3) + "px",
+      background: colorChip.white,
+    }
+  });
+  reloadEvent = function (e) {
+    const member = this.getAttribute("member");
+    if (member === "전체") {
+      instance.makeBoard(instance.cardCases);
+      instance.selectedMember = null;
+    } else if (member === "미정") {
+      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === '-' || obj.manager.trim() === '' || obj.manager.trim() === "미지정" || obj.manager.trim() === "미정" || obj.manager.trim() === "홀딩"; }));
+      instance.selectedMember = "미정";
+    } else {
+      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === member.trim() }));
+      instance.selectedMember = member;
+    }
+  }
+  dropEvent = async function (e) {
+    try {
+      e.preventDefault();
+      const member = this.getAttribute("member");
+      const proid = e.dataTransfer.getData("dragData").split(token)[0];
+      if (member !== "전체") {
+        for (let obj of instance.cardCases) {
+          if (obj.proid === proid) {
+            obj.manager = (member === "미정" ? '-' : member);
+          }
+        }
+        for (let obj of instance.cases) {
+          if (obj !== null) {
+            if (obj.proid === proid) {
+              obj.manager = (member === "미정" ? '-' : member);
+            }
+          }
+        }
+        await ajaxJson({
+          id: proid,
+          column: "manager",
+          value: (member === "미정" ? '-' : member),
+          email: cookies.homeliaisonConsoleLoginedEmail
+        }, "/updateClientHistory");
+        await instance.mother.greenAlert("담당자가 " + member + "(으)로 설정되었습니다!");
+      }
+      this.parentElement.parentElement.style.background = colorChip.white;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  for (let i = 0; i < Math.ceil(cxMembers.length / 2); i++) {
+    createNode({
+      mother: memberBlock,
+      style: {
+        position: "relative",
+        display: "block",
+        marginBottom: String(Math.ceil(cxMembers.length / 2) - 1 !== i ? memberBetween : (isMac() ? memberVisual : 0)) + ea,
+      },
+      children: [
+        {
+          text: cxMembers[(i * 2)],
+          class: [ "hoverDefault_lite" ],
+          attribute: {
+            member: cxMembers[(i * 2)],
+          },
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+            dragenter: (e) => { e.preventDefault(); },
+            dragleave: function (e) {
+              e.preventDefault();
+              this.parentElement.parentElement.style.background = colorChip.white;
+            },
+            dragover: function (e) {
+              e.preventDefault();
+              this.parentElement.parentElement.style.background = colorChip.whiteGreen;
+            },
+            click: reloadEvent,
+            drop: dropEvent,
+          },
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: withOut(50, 1, ea),
+            fontSize: String(memberSize) + ea,
+            fontWeight: String(500),
+            color: instance.selectedMember === cxMembers[(i * 2)] ? colorChip.green : colorChip.black,
+            textAlign: "center",
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                height: withOut(grayBarTop, ea),
+                top: String(grayBarTop) + ea,
+                right: String(0) + ea,
+                borderRight: "1px solid " + colorChip.gray3,
+              }
+            }
+          ]
+        },
+        {
+          text: cxMembers[(i * 2) + 1],
+          class: [ "hoverDefault_lite" ],
+          attribute: {
+            member: cxMembers[(i * 2) + 1],
+          },
+          event: {
+            selectstart: (e) => { e.preventDefault(); },
+            dragenter: (e) => { e.preventDefault(); },
+            dragleave: function (e) {
+              e.preventDefault();
+              this.parentElement.parentElement.style.background = colorChip.white;
+            },
+            dragover: function (e) {
+              e.preventDefault();
+              this.parentElement.parentElement.style.background = colorChip.whiteGreen;
+            },
+            selectstart: (e) => { e.preventDefault(); },
+            click: reloadEvent,
+            drop: dropEvent,
+          },
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: withOut(50, 0, ea),
+            fontSize: String(memberSize) + ea,
+            fontWeight: String(500),
+            color: instance.selectedMember === cxMembers[(i * 2) + 1] ? colorChip.green : colorChip.black,
+            textAlign: "center",
+          }
+        }
+      ]
+    });
+  }
+}
+
+ProjectJs.prototype.makeBoard = function (cases) {
+  if (!Array.isArray(cases)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { createNode, colorChip, withOut, equalJson, isMac, findByAttribute, ajaxJson, getCookiesAll, uniqueValue, cleanChildren, setQueue } = GeneralJs;
+  const staticList = {
+    ea: "px",
+    token: "__split__",
+    actionClass: "boardGray_actionBlock",
+    statusClass: "boardGray_statusBlock",
+    actionArea: "mainArea_actionArea",
+  };
+  const { ea, token, actionClass, statusClass, actionArea } = staticList;
+  const cookies = getCookiesAll();
+  const map = DataPatch.projectMap();
+  const totalFather = this.totalFather;
+  const scrollTong = totalFather.children[1].children[0];
+  let temp;
+  let tong;
+  let size, margin;
+  let num;
+  let cardWidthConstant;
+  let intend;
+  let lineHeight, titleTop, startTop;
+  let divideNumber;
+  let fontSize, nameFontSize;
+  let fixedHeightSize;
+  let division;
+  let numbers;
+  let outerMargin;
+  let whiteCard;
+  let nameWord, idWord;
+  let between;
+  let tongMother;
+  let pastHeight;
+  let domMatrix, tempArr;
+  let tongMarginTop;
+  let tongPaddingTop;
+  let tongPaddingBottom;
+  let tongPaddingRight;
+  let tongPaddingLeft;
+  let tongMargin;
+  let totalTitleSize, totalTitleTop, totalTitleLeft;
+  let divideArr, sizeArr;
+  let totalStandard;
+  let numberTitleSize, numberTitleTop, numberTitleBetween;
+  let tongTitle, tongNumber, tongArea;
+  let idWordTop;
+  let requestTong;
+  let thisRequestNumber;
+  let divisionEntireMap, divisionMap;
+  let index;
+  let contextMenuBlockWidth, contextMenuBlockHeight, contextMenuBlockMargin, contextMenuBlockBetween, contextMenuBlockSize, contextMenuBlockTextTop;
+  let contextMenuEvent;
+
+  cleanChildren(scrollTong);
+
+  margin = 10;
+  outerMargin = margin * 2;
+
+  cardWidthConstant = 140;
+  fixedHeightSize = 40;
+  intend = 16;
+  titleTop = isMac() ? 9 : 11;
+  idWordTop = isMac() ? 13 : 14;
+  startTop = titleTop + 16;
+  fontSize = 11;
+  nameFontSize = fontSize + 3;
+
+  between = 8;
+  tongMarginTop = margin * 1.75;
+  tongPaddingTop = (margin * 1.5) + 35;
+  tongPaddingBottom = margin * 1.5;
+  tongPaddingRight = margin * 1.5;
+  tongMargin = margin * 1.5;
+
+  totalTitleSize = 17;
+  totalTitleTop = isMac() ? 14 : 17;
+  totalTitleLeft = 20;
+
+  numberTitleSize = 14;
+  numberTitleTop = isMac() ? 18 : 20;
+  numberTitleBetween = 9;
+
+  contextMenuBlockWidth = 100;
+  contextMenuBlockHeight = 34;
+  contextMenuBlockBetween = 8;
+  contextMenuBlockMargin = 5;
+  contextMenuBlockSize = 14;
+  contextMenuBlockTextTop = isMac() ? 6 : 5;
+
+  divisionEntireMap = map.action.itemMap;
+  divisionMap = [];
+  for (let arr of divisionEntireMap) {
+    divisionMap = divisionMap.concat(arr[1]);
+  }
+
+  divideArr = [];
+  sizeArr = [];
+  for (let i = 0; i < 5; i++) {
+    totalStandard = (window.innerWidth - this.grayBarWidth - (outerMargin * 2) - (margin * 2) - 2 - (tongPaddingRight * 2) - (((tongPaddingRight * 2) + tongMargin + 2) * i)) / (i + 1);
+    divideNumber = Math.floor(totalStandard / (margin + cardWidthConstant));
+    size = (totalStandard - (margin * (divideNumber + 1))) / divideNumber;
+    divideArr.push(divideNumber);
+    sizeArr.push(size);
+  }
+
+  setQueue(() => {
+    instance.boardGrayBar(divisionMap, cases, staticList);
+  });
+
+  division = new Map();
+  numbers = new Map();
+  domMatrix = [];
+  for (let i = 0; i < divisionMap.length; i++) {
+    tempArr = [];
+
+    tongMother = createNode({
+      mother: scrollTong,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        marginTop: String(tongMarginTop) + ea,
+        verticalAlign: "top",
+      }
+    });
+
+    for (let j = 0; j < divisionMap[i].length; j++) {
+      tong = createNode({
+        mother: tongMother,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          width: "calc(calc(100% - " + String(tongMargin * (divisionMap[i].length - 1)) + ea + ") / " + String(divisionMap[i].length) + ")",
+          marginRight: (j === divisionMap[i].length - 1 ? String(0) + ea : String(tongMargin) + ea),
+          paddingTop: String(tongPaddingTop) + ea,
+          paddingBottom: String(tongPaddingBottom) + ea,
+          paddingRight: String(tongPaddingRight) + ea,
+          paddingLeft: String(tongPaddingRight) + ea,
+          border: "1px dashed " + GeneralJs.colorChip.gray4,
+          boxSizing: "border-box",
+          borderRadius: String(5) + "px",
+          verticalAlign: "top",
+        }
+      });
+
+      tongTitle = createNode({
+        mother: tong,
+        text: divisionMap[i][j],
+        style: {
+          position: "absolute",
+          top: String(totalTitleTop) + ea,
+          left: String(totalTitleLeft) + ea,
+          fontSize: String(totalTitleSize) + ea,
+          fontWeight: String(600),
+          color: GeneralJs.colorChip.black,
+        }
+      });
+
+      tongNumber = createNode({
+        mother: tong,
+        text: String(0) + "명",
+        attribute: {
+          kinds: "number",
+        },
+        style: {
+          position: "absolute",
+          top: String(numberTitleTop) + ea,
+          left: String(totalTitleLeft + tongTitle.getBoundingClientRect().width + numberTitleBetween) + ea,
+          fontSize: String(numberTitleSize) + ea,
+          fontWeight: String(500),
+          color: GeneralJs.colorChip.gray5,
+        }
+      });
+
+      tongArea = createNode({
+        mother: tong,
+        class: [ actionArea ],
+        attribute: {
+          kinds: "area",
+          name: divisionMap[i][j],
+          action: divisionMap[i][j],
+          opposite: divisionMap[i][divisionMap[i].length - 1 - j],
+          family: JSON.stringify(divisionMap[i]),
+          length: String(divisionMap[i].length),
+          size: String(sizeArr[divisionMap[i].length - 1]),
+          divide: String(divideArr[divisionMap[i].length - 1]),
+        },
+        events: {
+          dragenter: (e) => { e.preventDefault(); },
+          dragleave: function (e) {
+            e.preventDefault();
+            this.style.background = colorChip.gray1;
+            this.parentElement.firstChild.style.color = colorChip.black;
+          },
+          dragover: function (e) {
+            e.preventDefault();
+            this.style.background = colorChip.whiteGreen;
+            this.parentElement.firstChild.style.color = colorChip.green;
+          },
+          drop: async function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const name = this.getAttribute("name");
+            const opposite = division.get(this.getAttribute("opposite"));
+            const oppositeName = opposite.getAttribute("name");
+            const length = Number(this.getAttribute("length"));
+            const size = Number(this.getAttribute("size"));
+            const divide = Number(this.getAttribute("divide"));
+            const oppositeDivide = Number(opposite.getAttribute("divide"));
+            const proid = e.dataTransfer.getData("dragData").split(token)[0];
+            const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
+            const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
+            const card = findByAttribute(instance.totalFatherChildren, [ "proid", "request" ], [ proid, String(requestNumber) ]);
+            const from = division.get(fromAction);
+            const fromSize = Number(from.getAttribute("size"));
+            const fromName = from.getAttribute("name");
+            const fromOpposite = division.get(from.getAttribute("opposite"));
+            const fromOppositeName = fromOpposite.getAttribute("name");
+            const fromDivide = Number(from.getAttribute("divide"));
+            const fromOppositeDivide = Number(fromOpposite.getAttribute("divide"));
+            const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+            instance.randomToken = uniqueValue();
+            try {
+              let thisChildren, oppositeChildren;
+              let thisChildrenLength, oppositeChildrenLength;
+              let thisHeightNumber, oppositeHeightNumber;
+              let thisHeight, oppositeHeight;
+              let finalHeight;
+              let index, thisCase;
+              let indexTong;
+              let rowDom;
+
+              this.style.background = colorChip.gray1;
+              this.parentElement.firstChild.style.color = colorChip.black;
+              this.appendChild(card);
+
+              thisChildren = this.children;
+              oppositeChildren = opposite.children;
+              thisChildrenLength = thisChildren.length;
+              oppositeChildrenLength = oppositeChildren.length;
+              thisHeightNumber = Math.ceil(thisChildrenLength / divide);
+              oppositeHeightNumber = Math.ceil(oppositeChildrenLength / oppositeDivide);
+              thisHeightNumber = thisHeightNumber === 0 ? 1 : thisHeightNumber;
+              oppositeHeightNumber = oppositeHeightNumber === 0 ? 1 : oppositeHeightNumber;
+              thisHeight = (thisHeightNumber * fixedHeightSize) + ((thisHeightNumber + 1) * margin);
+              oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + ((oppositeHeightNumber + 1) * margin);
+              if (thisHeight <= oppositeHeight) {
+                finalHeight = oppositeHeight;
+              } else {
+                finalHeight = thisHeight;
+              }
+              finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
+              for (let c of thisChildren) {
+                c.style.width = String(size) + ea;
+              }
+              this.parentElement.style.height = String(finalHeight) + ea;
+              opposite.parentElement.style.height = String(finalHeight) + ea;
+              this.parentElement.children[1].setAttribute("number", String(thisChildren.length));
+              this.parentElement.children[1].textContent = String(thisChildren.length) + "명";
+              findByAttribute(boardDoms, "action", name).textContent = String(thisChildren.length);
+              opposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
+              opposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
+              findByAttribute(boardDoms, "action", oppositeName).textContent = String(oppositeChildren.length);
+
+
+              thisChildren = from.children;
+              oppositeChildren = fromOpposite.children;
+              thisChildrenLength = thisChildren.length;
+              oppositeChildrenLength = oppositeChildren.length;
+              thisHeightNumber = Math.ceil(thisChildrenLength / fromDivide);
+              oppositeHeightNumber = Math.ceil(oppositeChildrenLength / fromOppositeDivide);
+              thisHeightNumber = thisHeightNumber === 0 ? 1 : thisHeightNumber;
+              oppositeHeightNumber = oppositeHeightNumber === 0 ? 1 : oppositeHeightNumber;
+              thisHeight = (thisHeightNumber * fixedHeightSize) + ((thisHeightNumber + 1) * margin);
+              oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + ((oppositeHeightNumber + 1) * margin);
+              if (thisHeight <= oppositeHeight) {
+                finalHeight = oppositeHeight;
+              } else {
+                finalHeight = thisHeight;
+              }
+              finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
+              for (let c of thisChildren) {
+                c.style.width = String(fromSize) + ea;
+              }
+              from.parentElement.style.height = String(finalHeight) + ea;
+              fromOpposite.parentElement.style.height = String(finalHeight) + ea;
+              from.parentElement.children[1].setAttribute("number", String(thisChildren.length));
+              from.parentElement.children[1].textContent = String(thisChildren.length) + "명";
+              findByAttribute(boardDoms, "action", fromName).textContent = String(thisChildren.length);
+              fromOpposite.parentElement.children[1].setAttribute("number", String(oppositeChildren.length));
+              fromOpposite.parentElement.children[1].textContent = String(oppositeChildren.length) + "명";
+              findByAttribute(boardDoms, "action", fromOppositeName).textContent = String(oppositeChildren.length);
+
+
+              indexTong = [];
+              for (let i = 0; i < instance.cases.length; i++) {
+                if (instance.cases[i] !== null) {
+                  if (instance.cases[i].proid === proid) {
+                    indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                  }
+                }
+              }
+              index = indexTong[requestNumber].index;
+              thisCase = indexTong[requestNumber].thisCase;
+
+
+              instance.cases[index].action = name;
+              rowDom = findByAttribute([ ...document.querySelector("." + proid).children ], "column", "action");
+              if (rowDom !== null) {
+                rowDom.textContent = name;
+              }
+              card.setAttribute("action", name);
+
+
+              await ajaxJson({
+                thisId: proid,
+                requestIndex: String(requestNumber),
+                column: "action",
+                pastValue: name,
+                value: name,
+                index,
+                thisCase,
+                user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
+              }, "/updateClient");
+
+              await ajaxJson({
+                mode: "sse",
+                db: "console",
+                collection: "sse_clientCard",
+                log: true,
+                who: cookies.homeliaisonConsoleLoginedEmail,
+                updateQuery: {
+                  proid,
+                  requestNumber,
+                  mode: "action",
+                  from: fromName,
+                  to: name,
+                  randomToken: instance.randomToken,
+                }
+              }, "/generalMongo");
+
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        },
+        style: {
+          position: "relative",
+          paddingBottom: String(margin) + ea,
+          minHeight: String(fixedHeightSize + margin) + ea,
+          background: GeneralJs.colorChip.gray1,
+          height: withOut(margin, ea),
+          borderRadius: String(5) + "px",
+        }
+      });
+
+      numbers.set(divisionMap[i][j], tong.children[1]);
+      division.set(divisionMap[i][j], tong.children[2]);
+      tempArr.push(tong);
+    }
+
+    domMatrix.push(tempArr);
+  }
+
+  //make card
+  contextMenuEvent = function (proid, index, requestNumber, from, fromAction) {
+    const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+    const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
+    return async function (e) {
+
+      e.stopPropagation();
+      instance.randomToken = uniqueValue();
+
+      const value = this.getAttribute("value");
+      const mode = this.getAttribute("mode");
+      const card = this.parentElement.parentElement;
+      try {
+        let thisCase;
+        let thisStandardDom, thisCaseDom;
+        let rowDom;
+        let length;
+
+        thisCase = equalJson(JSON.stringify(instance.cases[index]));
+        thisStandardDom = Array.from(instance.standardDoms).find((dom) => { return dom.firstChild.textContent.trim() === proid; });
+        thisCaseDom = [ ...document.querySelector("." + proid).children ];
+
+        if (mode === "status") {
+
+          instance.cases[index].status = value;
+          rowDom = findByAttribute(thisCaseDom, "column", "status");
+          if (rowDom !== null) {
+            rowDom.textContent = value;
+          }
+          card.setAttribute("status", value);
+          instance.statusColorSync(value, thisStandardDom, thisCaseDom);
+          if (!instance.statusNumberSync(from, value)) {
+            length = card.parentElement.children.length;
+            card.remove();
+            length = length - 1;
+            findByAttribute(boardDoms, "action", fromAction).textContent = String(length);
+            findByAttribute(areaDoms, "action", fromAction).parentElement.children[1].textContent = String(length) + "명";
+            setQueue(() => {
+              GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + window.location.pathname + "?proid=" + proid + "&view=row");
+            });
+          }
+
+          await ajaxJson({
+            thisId: proid,
+            requestIndex: String(requestNumber),
+            column: "status",
+            pastValue: value,
+            value: value,
+            index,
+            thisCase,
+            user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
+          }, "/updateClient");
+
+          await ajaxJson({
+            mode: "sse",
+            db: "console",
+            collection: "sse_clientCard",
+            log: true,
+            who: cookies.homeliaisonConsoleLoginedEmail,
+            updateQuery: {
+              proid,
+              requestNumber,
+              mode: "status",
+              from: from,
+              to: value,
+              randomToken: instance.randomToken,
+            }
+          }, "/generalMongo");
+
+        } else {
+
+          for (let obj of instance.cardCases) {
+            if (obj.proid === proid) {
+              obj.manager = (value === "미정" ? '-' : value);
+            }
+          }
+          instance.cases[index].manager = value;
+          await ajaxJson({
+            id: proid,
+            column: "manager",
+            value: value,
+            email: cookies.homeliaisonConsoleLoginedEmail
+          }, "/updateClientHistory");
+          await instance.mother.greenAlert("담당자가 " + value + "(으)로 설정되었습니다!");
+
+        }
+        card.removeChild(card.children[card.children.length - 2]);
+        card.removeChild(card.lastChild);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  }
+
+  instance.totalFatherChildren = [];
+  requestTong = {};
+  num = 0;
+  for (let obj of cases) {
+
+    if (requestTong[obj.proid] === undefined) {
+      requestTong[obj.proid] = 0;
+      thisRequestNumber = 0;
+    } else {
+      requestTong[obj.proid] = requestTong[obj.proid] + 1;
+      thisRequestNumber = requestTong[obj.proid];
+    }
+
+    index = instance.cases.findIndex((c) => { return (c !== null && c.proid === obj.proid); });
+
+    whiteCard = createNode({
+      mother: division.get(obj.action),
+      attribute: {
+        kinds: "card",
+        proid: obj.proid,
+        draggable: "true",
+        action: obj.action,
+        status: obj.status,
+        request: String(thisRequestNumber),
+        index: String(index),
+        important: String(0),
+      },
+      event: {
+        dragstart: function (e) {
+          e.dataTransfer.setData("dragData", this.getAttribute("proid") + token + this.getAttribute("action") + token + this.getAttribute("request") + token + this.getAttribute("status"));
+        },
+        dragend: function (e) {
+          e.preventDefault();
+        },
+        dragenter: function (e) {
+          e.preventDefault();
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+        },
+        click: function (e) {
+          const self = this;
+          const index = Number(this.getAttribute("index"));
+          const proid = this.getAttribute("proid");
+          const important = Number(this.getAttribute("important"));
+          if (e.altKey) {
+            ajaxJson({
+              id: proid,
+              column: "important",
+              value: 1 - important,
+              email: cookies.homeliaisonConsoleLoginedEmail
+            }, "/updateClientHistory").then(() => {
+              const target = self.children[1];
+              if (important === 0) {
+                target.style.color = colorChip.red;
+              } else {
+                target.style.color = colorChip.green;
+              }
+            }).catch((err) => {
+              console.log(err);
+            });
+          } else {
+            instance.whiteViewMaker(index).call(this, e);
+          }
+        },
+        contextmenu: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const self = this;
+          const proid = this.getAttribute("proid");
+          const status = this.getAttribute("status");
+          const action = this.getAttribute("action");
+          const requestNumber = Number(this.getAttribute("request"));
+          const index = Number(this.getAttribute("index"));
+          let menu;
+          let cancelBox, menuBox;
+          let cxMembers;
+
+          cancelBox = null;
+          menuBox = null;
+
+          map.status.items
+          cxMembers = instance.allMembers.filter((obj) => { return obj.roles.includes("CX") || obj.roles.includes("CEO"); }).map((obj) => { return obj.name; });
+
+          if (cxMembers.length > map.status.items.length) {
+            menu = new Array(cxMembers.length);
+          } else {
+            menu = new Array(map.status.items.length);
+          }
+
+          for (let i = 0; i < menu.length; i++) {
+            menu[i] = (new Array(2)).fill('-');
+            if (map.status.items[i] !== undefined) {
+              menu[i][0] = map.status.items[i];
+            }
+            if (cxMembers[i] !== undefined) {
+              menu[i][1] = cxMembers[i];
+            }
+          }
+
+          cancelBox = createNode({
+            mother: this,
+            event: {
+              click: (e) => {
+                e.stopPropagation();
+                self.removeChild(menuBox);
+                self.removeChild(cancelBox);
+              }
+            },
+            style: {
+              position: "fixed",
+              zIndex: String(2),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: "transparent",
+              top: String(0),
+              left: String(0),
+            }
+          });
+
+          menuBox = createNode({
+            mother: this,
+            event: {
+              click: (e) => { e.stopPropagation(); },
+              contextmenu: (e) => { e.preventDefault(); e.stopPropagation(); },
+            },
+            style: {
+              position: "absolute",
+              zIndex: String(2),
+              width: String((contextMenuBlockWidth * 2) + contextMenuBlockMargin) + ea,
+              top: String(fixedHeightSize + contextMenuBlockBetween) + ea,
+              left: withOut(50, ((contextMenuBlockWidth * 2) + contextMenuBlockMargin) / 2, ea),
+              animation: "fadeuplite 0.2s ease forwards",
+            }
+          });
+
+          for (let [ left, right ] of menu) {
+
+            createNode({
+              mother: menuBox,
+              attribute: {
+                mode: "status",
+                value: left,
+              },
+              event: {
+                click: contextMenuEvent(proid, index, String(requestNumber), status, action),
+                contextmenu: (e) => { e.preventDefault(); e.stopPropagation(); }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                background: left !== '-' ? colorChip.green : colorChip.deactive,
+                borderRadius: String(3) + "px",
+                width: String(contextMenuBlockWidth) + ea,
+                height: String(contextMenuBlockHeight) + ea,
+                marginRight: String(contextMenuBlockMargin) + ea,
+                marginBottom: String(contextMenuBlockMargin) + ea,
+                boxShadow: "0px 2px 15px -9px " + colorChip.shadow,
+              },
+              children: [
+                {
+                  text: left,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(contextMenuBlockSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.whiteBlack,
+                    width: String(100) + '%',
+                    top: String(contextMenuBlockTextTop) + ea,
+                    left: String(0),
+                    textAlign: "center",
+                  }
+                }
+              ]
+            });
+
+            createNode({
+              mother: menuBox,
+              attribute: {
+                mode: "manager",
+                value: right,
+              },
+              event: {
+                click: contextMenuEvent(proid, index, String(requestNumber), status, action),
+                contextmenu: (e) => { e.preventDefault(); e.stopPropagation(); }
+              },
+              style: {
+                display: "inline-block",
+                position: "relative",
+                background: right !== '-' ? colorChip.green : colorChip.deactive,
+                borderRadius: String(3) + "px",
+                width: String(contextMenuBlockWidth) + ea,
+                height: String(contextMenuBlockHeight) + ea,
+                marginBottom: String(contextMenuBlockMargin) + ea,
+                boxShadow: "0px 2px 15px -9px " + colorChip.shadow,
+              },
+              children: [
+                {
+                  text: right,
+                  style: {
+                    position: "absolute",
+                    fontSize: String(contextMenuBlockSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.whiteBlack,
+                    width: String(100) + '%',
+                    top: String(contextMenuBlockTextTop) + ea,
+                    left: String(0),
+                    textAlign: "center",
+                  }
+                }
+              ]
+            });
+
+          }
+
+        },
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.action); })].length - 1]) + ea,
+        height: String(fixedHeightSize) + ea,
+        marginLeft: String(margin) + ea,
+        marginTop: String(margin) + ea,
+        background: GeneralJs.colorChip.white,
+        borderRadius: String(5) + ea,
+        cursor: "pointer",
+      }
+    });
+
+    nameWord = createNode({
+      mother: whiteCard,
+      text: obj.name,
+      style: {
+        position: "absolute",
+        fontSize: String(nameFontSize) + ea,
+        fontWeight: String(500),
+        top: String(titleTop) + ea,
+        left: String(intend) + ea,
+        color: GeneralJs.colorChip.black,
+        cursor: "pointer",
+      }
+    });
+
+    idWord = createNode({
+      mother: whiteCard,
+      text: obj.proid,
+      style: {
+        position: "absolute",
+        fontSize: String(fontSize) + ea,
+        fontWeight: String(400),
+        top: String(idWordTop) + ea,
+        left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
+        color: colorChip.green,
+        cursor: "pointer",
+      }
+    });
+
+    instance.totalFatherChildren.push(whiteCard);
+
+    num++;
+  }
+
+  for (let i = 0; i < divisionMap.length; i++) {
+    if (divisionMap[i].length > 1) {
+      pastHeight = domMatrix[i].map((dom) => { return dom.getBoundingClientRect().height; });
+      pastHeight.sort((a, b) => { return b - a; });
+      pastHeight = pastHeight[0];
+      for (let j = 0; j < divisionMap[i].length; j++) {
+        domMatrix[i][j].style.height = String(pastHeight) + ea;
+      }
+    }
+  }
+
+  numbers.forEach((value, key) => {
+    numbers.get(key).textContent = String(division.get(key).children.length) + "명";
+    numbers.get(key).setAttribute("number", String(division.get(key).children.length));
+  });
+
+  this.divisionMap = division;
+
+}
+
 ProjectJs.prototype.cardViewMaker = function () {
   const instance = this;
-
+  const { equalJson, createNode, withOut, colorChip, ajaxJson, scrollTo, setQueue, stringToDate } = GeneralJs;
+  const { ea, belowHeight, grayBarWidth } = this;
   return async function (e) {
-    const { cases, totalContents, totalMother } = instance;
+    const { totalContents, totalMother } = instance;
+    let thisCases;
+    let totalFather;
+    let totalFatherPaddingTop;
+    let outerMargin;
+    let scrollTongPaddingBottom;
+    let managerObj;
+    let newSearchInput, newSearchInputMother;
+
+    totalFatherPaddingTop = 15;
+    outerMargin = 20;
+    scrollTongPaddingBottom = 500;
+
+    newSearchInputMother = instance.searchInput.parentElement.cloneNode(true)
+    newSearchInput = newSearchInputMother.firstChild;
+    instance.searchInput.parentElement.parentElement.appendChild(newSearchInputMother);
+    instance.searchInput.parentElement.style.display = "none";
+
+    newSearchInput.addEventListener("keypress", function (e) {
+      const thisValue = this.value.trim();
+      let target;
+      let tempFunction;
+      let getTarget;
+      if (GeneralJs.confirmKey.includes(e.key)) {
+        this.value = thisValue;
+        if (thisValue === '' || thisValue === '-') {
+          for (let dom of instance.totalFatherChildren) {
+            dom.style.background = GeneralJs.colorChip.white;
+            dom.children[0].style.color = GeneralJs.colorChip.black;
+            dom.children[1].style.color = GeneralJs.colorChip.green;
+            dom.children[1].style.opacity = String(1);
+          }
+          scrollTo(instance.totalFather.children[1], 0);
+        } else {
+          target = null;
+          for (let dom of instance.totalFatherChildren) {
+            if ((new RegExp(this.value, "gi")).test(dom.textContent)) {
+              scrollTo(instance.totalFather.children[1], dom, ((window.innerHeight - belowHeight) / 2) - (40 * 2));
+              dom.style.background = GeneralJs.colorChip.green;
+              dom.children[0].style.color = GeneralJs.colorChip.whiteBlack;
+              dom.children[1].style.color = GeneralJs.colorChip.whiteBlack;
+              dom.children[1].style.opacity = String(0.6);
+              target = dom;
+            } else {
+              dom.style.background = GeneralJs.colorChip.white;
+              dom.children[0].style.color = GeneralJs.colorChip.black;
+              dom.children[1].style.color = GeneralJs.colorChip.green;
+              dom.children[1].style.opacity = String(1);
+            }
+          }
+          if (target === null) {
+            instance.rowViewMaker().call({}, {});
+            setQueue(() => {
+              tempFunction = instance.makeSearchEvent(thisValue);
+              tempFunction({ key: "Enter" }).catch((err) => { console.log(err); });
+            }, 401);
+          } else {
+            setQueue(() => {
+              target.click();
+            }, 300);
+          }
+        }
+      }
+    });
+
+    thisCases = equalJson(JSON.stringify(instance.cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status) && !/완료/gi.test(obj.status); });
+    managerObj = await ajaxJson({
+      method: "project",
+      property: [ "manager" ],
+      idArr: thisCases.map((obj) => { return obj.proid; }),
+    }, "/getHistoryProperty");
+    for (let obj of thisCases) {
+      if (managerObj[obj.proid] !== undefined) {
+        obj.manager = managerObj[obj.proid].manager;
+      }
+    }
+
+    instance.cardCases = thisCases;
+    instance.allMembers = await ajaxJson({ type: "get" }, "/getMembers");
 
     if (instance.whiteBox !== null) {
       if (GeneralJs.stacks.whiteBox !== 1) {
@@ -1650,702 +2982,72 @@ ProjectJs.prototype.cardViewMaker = function () {
     if (instance.totalFather !== null) {
 
       instance.totalFather.style.zIndex = String(1);
-      instance.totalMother.classList.remove("justfadeinoriginal");
-      instance.totalMother.classList.add("justfadeoutoriginal");
       instance.totalFather.classList.remove("fadeout");
       instance.totalFather.classList.add("fadein");
 
     } else {
 
-      totalMother.classList.add("justfadeoutoriginal");
-
-      let temp;
-      let totalFather;
-      let nameStyle, proidStyle, barStyle;
-      let style, styles;
-      let areaStyle, areaNameStyle, areaTongStyle;
-      let areaNumberStyle;
-      let div_clone, div_clone2, div_clone3;
-      let size, margin;
-      let ea = "px";
-      let num;
-      let cardWidthConstant;
-      let intend, totalWidth;
-      let lineHeight, titleTop, startTop;
-      let divideNumber;
-      let fontSize, nameFontSize;
-      let fixedHeightSize;
-      let exceptionMargin;
-      let whereQuery;
-      let tempResult, tempBoo;
-      let division, divisionName;
-      let numbers;
-      let updateState;
-      let dragstart_event, dragend_event, dragenter_event, dragleave_event, dragover_event, drop_event;
-
-      //total father div
-      totalFather = GeneralJs.nodes.div.cloneNode(true);
-      totalFather.classList.add("totalFather");
-
-      margin = 12;
-      lineHeight = 20;
-      cardWidthConstant = 170;
-      divideNumber = Math.floor((window.innerWidth - (margin * 15.8)) / (margin + cardWidthConstant));
-      size = (window.innerWidth - (margin * (divideNumber + 15.8))) / divideNumber;
-      fixedHeightSize = 107;
-      intend = 22;
-      titleTop = 13;
-      startTop = titleTop + 16;
-      exceptionMargin = 12;
-      fontSize = 13;
-      nameFontSize = fontSize + 4;
-      totalWidth = size - (intend * 2) - 1;
-
-      //style maker
-      style = {
-        display: "inline-block",
-        position: "relative",
-        width: String(size) + ea,
-        height: String(fixedHeightSize) + ea,
-        marginLeft: String(margin) + ea,
-        marginTop: String(margin) + ea,
-        background: GeneralJs.colorChip.white,
-        borderRadius: String(5) + ea,
-        cursor: "pointer",
-      };
-
-      nameStyle = {
-        position: "absolute",
-        fontSize: String(nameFontSize) + ea,
-        fontWeight: String(500),
-        top: String(GeneralJs.isMac() ? titleTop : titleTop + 4) + ea,
-        left: String(intend) + ea,
-        color: GeneralJs.colorChip.black,
-        cursor: "pointer",
-      };
-
-      proidStyle = {
-        position: "absolute",
-        fontSize: String(fontSize) + ea,
-        fontWeight: String(200),
-        top: String(titleTop + (nameFontSize - fontSize + 2) + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        color: GeneralJs.colorChip.green,
-        cursor: "pointer",
-      };
-
-      barStyle = {
-        position: "absolute",
-        background: GeneralJs.colorChip.gray2,
-        top: String(startTop + 13 + (GeneralJs.isMac() ? 0 : 2)) + ea,
-        left: String(intend) + ea,
-        width: String(totalWidth) + ea,
-        height: String(1) + ea,
-      };
-
-      //info style
-      styles = [];
-      for (let i = 0; i < DataPatch.projectCardViewStandard().info.length; i++) {
-        temp = {
-          position: "absolute",
-          fontSize: String(fontSize) + ea,
-          fontWeight: String(500),
-          top: String(startTop + (lineHeight * (i + 1)) + (DataPatch.projectCardViewStandard().exceptionHeight[i] ? exceptionMargin : 0) + (GeneralJs.isMac() ? 0 : 3)) + ea,
-          left: String(intend) + ea,
-          width: String(totalWidth) + ea,
-          color: GeneralJs.colorChip.black,
-          lineHeight: String(1.5),
-        };
-        styles.push(temp);
-      }
-
-      //area style
-      areaStyle = {
-        position: "relative",
-        marginLeft: String(margin) + ea,
-        marginRight: String(margin) + ea,
-        marginTop: String(margin * 1.75) + ea,
-        paddingTop: String(margin * 1.2) + ea,
-        paddingBottom: String(margin * 1.2) + ea,
-        paddingRight: String(margin * 1.2) + ea,
-        paddingLeft: String(margin * 10) + ea,
-        border: "1px dashed " + GeneralJs.colorChip.gray4,
-        borderRadius: String(5) + ea,
-      };
-
-      areaNameStyle = {
-        position: "absolute",
-        top: String(margin * (GeneralJs.isMac() ? 1 : 1.07)) + ea,
-        left: String(margin * 1.7) + ea,
-        fontSize: String(fontSize + 6) + ea,
-        fontWeight: String(600),
-        color: GeneralJs.colorChip.black,
-      };
-
-      areaNumberStyle = {
-        position: "absolute",
-        top: String((margin * (GeneralJs.isMac() ? 1 : 1.07)) + ((fontSize + 6) * 1.368421052631579)) + ea,
-        left: String(margin * 1.7) + ea,
-        fontSize: String(fontSize + 4) + ea,
-        fontWeight: String(200),
-        color: GeneralJs.colorChip.gray5,
-      };
-
-      areaTongStyle = {
-        position: "relative",
-        paddingBottom: String(margin) + ea,
-        minHeight: String(fixedHeightSize + margin) + ea,
-        background: GeneralJs.colorChip.gray1,
-        borderRadius: String(5) + ea,
-      };
-
-      //set map
-      division = new Map();
-      numbers = new Map();
-
-      //update value
-      updateState = async function (from, to) {
-        try {
-          let toValue;
-          let proid, originalStatus, index;
-          let motherDiv, originalDiv;
-          let column;
-          let finalValue;
-
-          proid = from.getAttribute("proid");
-          index = from.getAttribute("index");
-          originalStatus = from.getAttribute("thisStatus");
-
-          numbers.get(originalStatus).setAttribute("number", String(Number(numbers.get(originalStatus).getAttribute("number")) - 1));
-          numbers.get(originalStatus).textContent = numbers.get(originalStatus).getAttribute("number") + "명";
-          numbers.get(to).setAttribute("number", String(Number(numbers.get(to).getAttribute("number")) + 1));
-          numbers.get(to).textContent = numbers.get(to).getAttribute("number") + "명";
-
-          from.setAttribute("thisStatus", to);
-          if (to === "드랍" || to === "홀딩") {
-            from.setAttribute("dropDetail", originalStatus);
-          } else if (from.hasAttribute("dropDetail")) {
-            from.setAttribute("dropDetail", "");
+      if (typeof GeneralJs.stacks["dashboardBox"].parentElement === "object") {
+        if (GeneralJs.stacks["dashboardBox"].parentElement !== null) {
+          if (typeof GeneralJs.stacks["dashboardBox"].parentElement.remove === "function") {
+            GeneralJs.stacks["dashboardBox"].parentElement.remove();
           }
-
-          column = "status";
-
-          motherDiv = document.querySelectorAll('.' + proid)[0];
-          for (let i = 0; i < motherDiv.children.length; i++) {
-            if (motherDiv.children[i].getAttribute("column") === column) {
-              originalDiv = motherDiv.children[i];
-            }
-          }
-
-          if (to === "계약 전") {
-            toValue = "대기";
-          } else if (to === "미팅 전") {
-            toValue = "진행중";
-          } else if (to === "잔금 전") {
-            toValue = "진행중";
-          } else if (to === "촬영 전") {
-            toValue = "진행중";
-          } else if (to === "공유 전") {
-            toValue = "진행중";
-          } else if (to === "완료") {
-            toValue = "완료";
-          } else if (to === "홀딩") {
-            toValue = "홀딩";
-          } else if (to === "드랍") {
-            toValue = "드랍";
-          }
-
-          finalValue = GeneralJs.vaildValue(column, toValue, originalStatus);
-
-          instance.cases[Number(index)][column] = finalValue;
-          await GeneralJs.updateValue({
-            thisId: proid,
-            requestIndex: 0,
-            column: column,
-            pastValue: originalStatus,
-            value: finalValue,
-            index: Number(index),
-            thisCase: instance.cases[Number(index)]
-          });
-
-          originalDiv.textContent = finalValue;
-
-        } catch (e) {
-          GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
-          console.log(e);
         }
       }
 
-      //drag and drop events
-      dragstart_event = function (e) {
-        e.dataTransfer.setData("dragData", e.target.getAttribute("index"));
-      }
-
-      dragend_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragenter_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragleave_event = function (e) {
-        e.preventDefault();
-      }
-
-      dragover_event = function (e) {
-        e.preventDefault();
-      }
-
-      drop_event = async function (e) {
-        try {
-          e.preventDefault();
-          const index = e.dataTransfer.getData("dragData");
-          const targetDom = instance.totalFatherChildren[Number(index) - 1];
-          const status = targetDom.getAttribute("thisStatus");
-          let area, dropDetail;
-          if (e.target.hasAttribute("kinds")) {
-            if (e.target.getAttribute("kinds") === "area") {
-              area = e.target;
-            } else {
-              area = e.target.parentElement;
+      totalFather = createNode({
+        mother: document.getElementById("totalcontents"),
+        class: [ "totalFather", "fadein" ],
+        style: {
+          height: "calc(100vh - " + String(belowHeight) + ea + ")",
+          width: String(100) + '%',
+          zIndex: String(1),
+          overflow: "hidden",
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              left: String(0),
+              top: String(0),
+              width: String(grayBarWidth) + ea,
+              background: colorChip.gray1,
+              verticalAlign: "top",
+              height: String(100) + '%',
             }
-          } else {
-            area = e.target.parentElement.parentElement;
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              paddingTop: String(totalFatherPaddingTop) + ea,
+              paddingLeft: String(outerMargin) + ea,
+              paddingRight: String(outerMargin) + ea,
+              width: withOut((outerMargin * 2) + grayBarWidth, ea),
+              height: String(100) + '%',
+              verticalAlign: "top",
+              overflow: "scroll",
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  verticalAlign: "top",
+                  width: String(100) + '%',
+                  paddingBottom: String(scrollTongPaddingBottom) + ea,
+                }
+              }
+            ]
           }
-
-          if (area.getAttribute("name") === "계약 전") {
-            if (status === "계약 전") {
-              //pass
-            } else if (status === "미팅 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "잔금 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "촬영 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "공유 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "완료") {
-              alert("완료는 되돌릴 수 없습니다!");
-            } else if (status === "홀딩") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "계약 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "계약 전");
-              } else {
-                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "계약 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "계약 전");
-              } else {
-                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            }
-          } else if (area.getAttribute("name") === "미팅 전") {
-            if (status === "계약 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "미팅 전") {
-              //pass
-            } else if (status === "잔금 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "촬영 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "공유 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "완료") {
-              alert("완료는 되돌릴 수 없습니다!");
-            } else if (status === "홀딩") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "미팅 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "미팅 전");
-              } else {
-                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "미팅 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "미팅 전");
-              } else {
-                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            }
-          } else if (area.getAttribute("name") === "잔금 전") {
-            if (status === "계약 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "미팅 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "잔금 전") {
-              //pass
-            } else if (status === "촬영 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "공유 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "완료") {
-              alert("완료는 되돌릴 수 없습니다!");
-            } else if (status === "홀딩") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "잔금 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "잔금 전");
-              } else {
-                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "잔금 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "잔금 전");
-              } else {
-                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            }
-          } else if (area.getAttribute("name") === "촬영 전") {
-            if (status === "계약 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "미팅 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "잔금 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "촬영 전") {
-              //pass
-            } else if (status === "공유 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "완료") {
-              alert("완료는 되돌릴 수 없습니다!");
-            } else if (status === "홀딩") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "촬영 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "촬영 전");
-              } else {
-                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "촬영 전") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "촬영 전");
-              } else {
-                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            }
-          } else if (area.getAttribute("name") === "공유 전") {
-            if (status === "계약 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "미팅 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "잔금 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "촬영 전") {
-              alert("날짜 체크로 상태를 제어해주세요!");
-            } else if (status === "공유 전") {
-              //pass
-            } else if (status === "완료") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "공유 전");
-            } else if (status === "홀딩") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "공유 전" || dropDetail === "완료") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "공유 전");
-              } else {
-                alert("홀딩 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              if (dropDetail === "공유 전" || dropDetail === "완료") {
-                area.appendChild(targetDom);
-                await updateState(targetDom, "공유 전");
-              } else {
-                alert("드랍 이전 상태가 '" + dropDetail + "'이었습니다!")
-              }
-            }
-          } else if (area.getAttribute("name") === "완료") {
-            if (status === "계약 전") {
-              alert("계약이 필요합니다!");
-            } else if (status === "미팅 전") {
-              alert("미팅 확인이 필요합니다!");
-            } else if (status === "잔금 전") {
-              alert("잔금 확인이 필요합니다!");
-            } else if (status === "촬영 전") {
-              alert("촬영 확인이 필요합니다!");
-            } else if (status === "공유 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "완료");
-            } else if (status === "완료") {
-              //pass
-            } else if (status === "홀딩") {
-              alert("홀딩에서 완료로 될 수 없습니다!");
-            } else if (status === "드랍") {
-              alert("드랍에서 완료로 될 수 없습니다!");
-            }
-          } else if (area.getAttribute("name") === "홀딩") {
-            if (status === "계약 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "홀딩");
-            } else if (status === "미팅 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "홀딩");
-            } else if (status === "잔금 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "홀딩");
-            } else if (status === "촬영 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "홀딩");
-            } else if (status === "공유 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "홀딩");
-            } else if (status === "완료") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "홀딩");
-            } else if (status === "홀딩") {
-              //pass
-            } else if (status === "드랍") {
-              dropDetail = targetDom.getAttribute("dropDetail");
-              area.appendChild(targetDom);
-              await updateState(targetDom, "홀딩");
-            }
-          } else if (area.getAttribute("name") === "드랍") {
-            if (status === "계약 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "미팅 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "잔금 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "촬영 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "공유 전") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "완료") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "홀딩") {
-              area.appendChild(targetDom);
-              await updateState(targetDom, "드랍");
-            } else if (status === "드랍") {
-              //pass
-            }
-          }
-
-          e.stopPropagation();
-        } catch (err) {
-          console.log(err);
-        }
-      }
-
-      //make division
-      divisionName = [
-        "계약 전",
-        "미팅 전",
-        "잔금 전",
-        "촬영 전",
-        "공유 전",
-        "완료",
-        "홀딩",
-        "드랍",
-      ];
-      for (let i = 0; i < divisionName.length; i++) {
-        div_clone = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in areaStyle) {
-          div_clone.style[i] = areaStyle[i];
-        }
-
-        //title
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = divisionName[i];
-        for (let i in areaNameStyle) {
-          div_clone2.style[i] = areaNameStyle[i];
-        }
-        div_clone.appendChild(div_clone2);
-
-        //number
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        div_clone2.textContent = String(0) + "명";
-        for (let i in areaNumberStyle) {
-          div_clone2.style[i] = areaNumberStyle[i];
-        }
-        div_clone2.setAttribute("kinds", "number");
-        numbers.set(divisionName[i], div_clone2);
-        div_clone.appendChild(div_clone2);
-
-        //tong
-        div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-        for (let i in areaTongStyle) {
-          div_clone2.style[i] = areaTongStyle[i];
-        }
-        div_clone2.setAttribute("kinds", "area");
-        div_clone2.setAttribute("name", divisionName[i]);
-        division.set(divisionName[i], div_clone2);
-        div_clone.appendChild(div_clone2);
-
-        totalFather.appendChild(div_clone);
-
-        div_clone2.addEventListener("dragenter", dragenter_event);
-        div_clone2.addEventListener("dragleave", dragleave_event);
-        div_clone2.addEventListener("dragover", dragover_event);
-        div_clone2.addEventListener("drop", drop_event);
-      }
-
-      //make card
-      instance.totalFatherChildren = [];
-
-      num = 0;
-      for (let obj of cases) {
-        if (num !== 0) {
-
-          div_clone = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in style) {
-            div_clone.style[i] = style[i];
-          }
-
-          //name
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          div_clone2.textContent = obj.name;
-          for (let i in nameStyle) {
-            div_clone2.style[i] = nameStyle[i];
-          }
-          div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.proid));
-          div_clone.appendChild(div_clone2);
-
-          //proid
-          proidStyle.left = String(intend + GeneralJs.calculationWordWidth(nameFontSize, obj.name, true)) + ea;
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          div_clone2.textContent = obj.proid;
-          for (let i in proidStyle) {
-            div_clone2.style[i] = proidStyle[i];
-          }
-          div_clone2.addEventListener("click", instance.whiteViewMaker(num));
-          div_clone2.addEventListener("contextmenu", instance.makeClipBoardEvent(obj.proid));
-          div_clone.appendChild(div_clone2);
-
-          //bar
-          div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-          for (let i in barStyle) {
-            div_clone2.style[i] = barStyle[i];
-          }
-          div_clone.appendChild(div_clone2);
-
-          //sub info
-          for (let j = 0; j < DataPatch.projectCardViewStandard().info.length; j++) {
-            div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-            div_clone2.classList.add("father_" + DataPatch.projectCardViewStandard().info[j]);
-            div_clone2.textContent = obj[DataPatch.projectCardViewStandard().info[j]];
-            for (let i in styles[j]) {
-              div_clone2.style[i] = styles[j][i];
-            }
-            div_clone.appendChild(div_clone2);
-          }
-
-          div_clone.setAttribute("index", String(num));
-          div_clone.setAttribute("kinds", "card");
-          div_clone.setAttribute("proid", obj.proid);
-
-          if (/^1[6789]/.test(obj.firstDate)) {
-
-            div_clone.setAttribute("thisStatus", "계약 전");
-            division.get("계약 전").appendChild(div_clone);
-
-          } else if (/^1[6789]/.test(obj.meetingDate) || GeneralJs.compareDate(obj.meetingDate)) {
-
-            div_clone.setAttribute("thisStatus", "미팅 전");
-            division.get("미팅 전").appendChild(div_clone);
-
-          } else if (/^1[6789]/.test(obj.remainDate)) {
-
-            div_clone.setAttribute("thisStatus", "잔금 전");
-            division.get("잔금 전").appendChild(div_clone);
-
-          } else if (/^1[6789]/.test(obj.contentsPhotoDate) || GeneralJs.compareDate(obj.contentsPhotoDate)) {
-
-            div_clone.setAttribute("thisStatus", "촬영 전");
-            division.get("촬영 전").appendChild(div_clone);
-
-          } else if (obj.status === "진행중") {
-
-            div_clone.setAttribute("thisStatus", "공유 전");
-            division.get("공유 전").appendChild(div_clone);
-
-          } else if (obj.status === "완료") {
-
-            div_clone.setAttribute("thisStatus", "완료");
-            division.get("완료").appendChild(div_clone);
-
-          } else if (obj.status === "홀딩") {
-
-            div_clone.setAttribute("thisStatus", "홀딩");
-            if (/^1[6789]/.test(obj.firstDate)) {
-              div_clone.setAttribute("dropDetail", "계약 전");
-            } else if (/^1[6789]/.test(obj.meetingDate) || !GeneralJs.compareDate(obj.meetingDate)) {
-              div_clone.setAttribute("dropDetail", "미팅 전");
-            } else if (/^1[6789]/.test(obj.remainDate)) {
-              div_clone.setAttribute("dropDetail", "잔금 전");
-            } else if (/^1[6789]/.test(obj.contentsPhotoDate) || !GeneralJs.compareDate(obj.contentsPhotoDate)) {
-              div_clone.setAttribute("dropDetail", "촬영 전");
-            } else {
-              div_clone.setAttribute("dropDetail", "공유 전");
-            }
-            division.get("홀딩").appendChild(div_clone);
-
-          } else if (obj.status === "드랍") {
-
-            div_clone.setAttribute("thisStatus", "드랍");
-            if (/^1[6789]/.test(obj.firstDate)) {
-              div_clone.setAttribute("dropDetail", "계약 전");
-            } else if (/^1[6789]/.test(obj.meetingDate) || !GeneralJs.compareDate(obj.meetingDate)) {
-              div_clone.setAttribute("dropDetail", "미팅 전");
-            } else if (/^1[6789]/.test(obj.remainDate)) {
-              div_clone.setAttribute("dropDetail", "잔금 전");
-            } else if (/^1[6789]/.test(obj.contentsPhotoDate) || !GeneralJs.compareDate(obj.contentsPhotoDate)) {
-              div_clone.setAttribute("dropDetail", "촬영 전");
-            } else {
-              div_clone.setAttribute("dropDetail", "공유 전");
-            }
-            division.get("드랍").appendChild(div_clone);
-
-          } else {
-            throw new Error("invaild status : " + obj.status);
-          }
-
-          div_clone.setAttribute("draggable", "true");
-          div_clone.addEventListener("dragstart", dragstart_event);
-          div_clone.addEventListener("dragend", dragend_event);
-          div_clone.addEventListener("dragenter", dragenter_event);
-          div_clone.addEventListener("dragleave", dragleave_event);
-
-          instance.totalFatherChildren.push(div_clone);
-        }
-        num++;
-      }
-
-      numbers.forEach((value, key, map) => {
-        numbers.get(key).textContent = String(division.get(key).children.length) + "명";
-        numbers.get(key).setAttribute("number", String(division.get(key).children.length));
+        ]
       });
 
-      totalFather.style.paddingLeft = String(margin * 0.75) + ea;
-      totalFather.style.paddingRight = String(margin * 0.75) + ea;
-      totalFather.style.height = "calc(100vh - " + String(instance.belowHeight) + "px)";
-      totalFather.style.width = "calc(100vw - " + String(margin * 0.75) + ea + " - " + String(margin * 0.75) + ea + ")";
-      totalFather.style.zIndex = String(1);
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.style.height = String(margin * 2) + ea;
-      totalFather.appendChild(div_clone);
-
-      totalFather.classList.add("fadein");
-
-      totalContents.appendChild(totalFather);
+      instance.totalMother.style.display = "none";
       instance.totalFather = totalFather;
+      instance.makeBoard(thisCases);
+
     }
     instance.onView = "father";
   }
@@ -5192,24 +5894,24 @@ ProjectJs.prototype.whiteViewMaker = function (index) {
 
 ProjectJs.prototype.rowViewMaker = function () {
   const instance = this;
+  const { setQueue } = this.mother;
   return function (e) {
     if (instance.totalFather !== null) {
       instance.totalFather.style.zIndex = String(-1);
       instance.totalFather.classList.remove("fadein");
       instance.totalFather.classList.add("fadeout");
     }
-    instance.totalMother.classList.remove("justfadeoutoriginal");
-    instance.totalMother.classList.add("justfadeinoriginal");
+    instance.totalMother.style.display = "block";
     instance.onView = "mother";
-    GeneralJs.timeouts.fadeinTimeout = setTimeout(function () {
+    setQueue(() => {
       if (instance.totalFather !== null) {
         instance.totalFatherChildren = [];
         instance.totalFather.remove();
       }
+      instance.searchInput.parentElement.parentElement.removeChild(instance.searchInput.parentElement.parentElement.lastChild);
+      instance.searchInput.parentElement.style.display = "block";
       instance.totalFather = null;
       instance.totalMother.classList.remove("justfadeinoriginal");
-      clearTimeout(GeneralJs.timeouts.fadeinTimeout);
-      GeneralJs.timeouts.fadeinTimeout = null;
     }, 401);
   }
 }

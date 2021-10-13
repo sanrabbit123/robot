@@ -5690,6 +5690,33 @@ DataPatch.prototype.projectMap = function () {
       "세팅 마무리",
       "촬영 컨택",
       "해당 없음"
+    ], itemMap: [
+      [
+        "계약 대기",
+        [
+          [ "계약금 안내" ],
+          [ "현장미팅 조율" ],
+          [ "의뢰서 작성중", "의뢰서 공유" ],
+          [ "현장미팅 피드백" ],
+          [ "계약서 안내", "잔금 안내" ]
+        ]
+      ],
+      [
+        "진행중",
+        [
+          [ "시작 대기" ],
+          [ "1차 제안", "수정 제안" ],
+          [ "시공 진행" ],
+          [ "제품 구매", "배송중" ],
+          [ "세팅 마무리", "촬영 컨택" ]
+        ]
+      ],
+      [
+        "기타",
+        [
+          [ "해당 없음" ]
+        ]
+      ]
     ], searchBoo: true, },
     next: { name: "전화 예정일", position: "process.call.next", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     callHistory: { name: "연락 기록", position: "process.call.history", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },

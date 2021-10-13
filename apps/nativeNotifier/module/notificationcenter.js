@@ -23,9 +23,8 @@ const notifyRaw = function (options, callback = function () {}) {
   activeId = id;
 
   if (typeof options === 'string') {
-    options = { title: 'node-notifier', message: options };
+    options = { title: 'homeliaison', message: options };
   }
-  callback = callback || noop;
 
   if (typeof callback !== 'function') {
     throw new TypeError(

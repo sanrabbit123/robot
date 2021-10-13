@@ -37,6 +37,7 @@ const GraphicBot = require(APP_PATH + "/graphicBot/graphicBot.js");
 const GaroseroParser = require(APP_PATH + "/garoseroParser/garoseroParser.js");
 const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
 const MirrorRouter = require(APP_PATH + "/mirrorWhisk/router/mirrorRouter.js");
+const NativeNotifier = require(APP_PATH + "/nativeNotifier/nativeNotifier.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -73,6 +74,40 @@ DevContext.prototype.launching = async function () {
 
 
     // await this.passiveAddressSync("c2110_aa14s");
+
+
+
+    // const http = require("http");
+    //
+    // const server = http.createServer();
+    //
+    // server.on("request", (req, res) => {
+    //   res.writeHead(200, { "Content-Type": "application/json" });
+    //
+    //   req.on('data', (chunk) => {
+    //     console.log(String(chunk));
+    //   })
+    //   req.on('end', (s) => {
+    //
+    //   });
+    //
+    //   console.log(req);
+    //   console.log(req.method);
+    //
+    //   res.end(JSON.stringify({ data: 'Hello World!' }));
+    // });
+    //
+    // server.listen(8000);
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1506,6 +1541,10 @@ DevContext.prototype.launching = async function () {
     // render page block
     // await this.pageRender(process.env.HOME + "/improvingContract/improvingContract.ai");
 
+
+    // send native alarm
+    // const alarm = new NativeNotifier();
+    // await alarm.sendAlarm("안녕안녕", () => {});
 
     // cook json property
     /*

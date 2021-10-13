@@ -3323,6 +3323,9 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         });
         const today = new Date();
         const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+
+        console.log(paymentData);
+
         const convertingData = {
           goodName: paymentData.name,
           goodsName: paymentData.name,
@@ -3343,8 +3346,13 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           payDevice: "MOBILE",
           P_FN_NM: paymentData.card_name,
         };
+
         res.set({ "Content-Type": "application/json" });
-        res.send(JSON.stringify({ convertingData }));
+        if (typeof convertingData.P_FN_NM === "string") {
+          res.send(JSON.stringify({ convertingData }));
+        } else {
+          res.send(JSON.stringify({ convertingData }));
+        }
 
       } else {
 
