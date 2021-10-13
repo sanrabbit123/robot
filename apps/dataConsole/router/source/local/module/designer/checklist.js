@@ -4911,7 +4911,7 @@ DesignerJs.prototype.checkListView = async function () {
     loading.parentNode.removeChild(loading);
 
     this.pageHistory = [];
-    if (desktop) {
+    if (false) {
       window.addEventListener("resize", (e) => {
         window.location.reload();
       });
