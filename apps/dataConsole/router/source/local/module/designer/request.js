@@ -1358,6 +1358,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       } else {
         photoNumber = 2;
         photoWidth = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2) - photoMargin) / photoNumber;
+        photoMargin = photoMargin - 0.1;
       }
       for (let i = 0; i < images.length; i++) {
         createNode({
