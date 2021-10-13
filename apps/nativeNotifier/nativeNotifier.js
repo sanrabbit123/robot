@@ -29,15 +29,10 @@ NativeNotifier.prototype.sendAlarm = function (message, callback = function () {
   }
   const instance = this;
   const { notifier } = this;
-  const path = require('path');
-
-  console.log(path.join(process.env.HOME + "/static", 'logo.jpg'));
-
   return new Promise((resolve, reject) => {
     notifier.notify({
         title: '',
         message,
-        icon: path.join(process.env.HOME + "/static", 'logo.icns'),
         sound: true,
         wait: true
       }, (err, response, metadata) => {

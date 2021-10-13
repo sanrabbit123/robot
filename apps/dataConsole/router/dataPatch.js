@@ -5702,7 +5702,7 @@ DataPatch.prototype.projectMap = function () {
         ]
       ],
       [
-        "진행중",
+        "프로젝트 진행중",
         [
           [ "시작 대기" ],
           [ "1차 제안", "수정 제안" ],
@@ -5712,7 +5712,7 @@ DataPatch.prototype.projectMap = function () {
         ]
       ],
       [
-        "기타",
+        "해당 없음",
         [
           [ "해당 없음" ]
         ]

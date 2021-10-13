@@ -54,7 +54,7 @@ const DevContext = function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading, errorLog, messageLog } = this.mother;
+  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading, errorLog, messageLog, pureServer } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -77,32 +77,60 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const http = require("http");
+
+
+
+
+
+    // const targets = [
+    //   "fileSystem",
+    //   "sleep",
+    //   "equalJson",
+    //   "copyJson",
+    //   "dateToString",
+    //   "stringToDate",
+    //   "pureServer",
+    // ]
+    // let script;
     //
-    // const server = http.createServer();
+    // script = "const Mother = function () {}\n\n";
+    // for (let name of targets) {
+    //   script += `Mother.prototype.${name} = ${Mother.prototype[name].toString()}\n\n`;
+    // }
+    // script += `module.exports = Mother;`;
     //
-    // server.on("request", (req, res) => {
-    //   res.writeHead(200, { "Content-Type": "application/json" });
+    // await fileSystem(`write`, [ `${process.cwd()}/temp/motherScript.js`, script ]);
+
+
+
+
+    // const PureServer = pureServer();
+    // const app = new PureServer();
     //
-    //   req.on('data', (chunk) => {
-    //     console.log(String(chunk));
-    //   })
-    //   req.on('end', (s) => {
-    //
+    // app.post("/push", async (req, res) => {
+    //   res.set({
+    //     "Content-Type": "text/plain",
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+    //     "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     //   });
+    //   try {
+    //     console.log(req.body.text);
     //
-    //   console.log(req);
-    //   console.log(req.method);
-    //
-    //   res.end(JSON.stringify({ data: 'Hello World!' }));
+    //     res.send(JSON.stringify({ data: 'Hello World!' }));
+    //   } catch (e) {
+    //     res.send(JSON.stringify({ message: "error" }));
+    //   }
     // });
     //
-    // server.listen(8000);
+    // pureServer("listen", app, 8000);
 
 
 
 
-    
+
+
+
 
 
 

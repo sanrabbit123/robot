@@ -406,8 +406,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     remainPaymentAndChannel: {
-      name: "잔금 입금 완료",
-      id: "TF_7399",
+      name: "잔금 입금 완료 수정",
+      id: "TF_9757",
       needs: [
         "client",
         "designer",

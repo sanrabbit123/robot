@@ -3911,11 +3911,12 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         });
         const today = new Date();
         const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+        instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(paymentData, null, 2), channel: "#error_log" });
         const convertingData = {
           goodName: paymentData.name,
           goodsName: paymentData.name,
-          resultCode: "0000",
-          resultMsg: "성공적으로 처리 하였습니다.",
+          resultCode: (paymentData.status.trim() === "paid" ? "0000" : "4000"),
+          resultMsg: (paymentData.status.trim() === "paid" ? "성공적으로 처리 하였습니다." : "결제 실패 : " + String(paymentData.fail_reason)),
           tid: paymentData.pg_tid,
           payMethod: "CARD",
           applDate: `${String(today.getFullYear())}${zeroAddition(today.getMonth() + 1)}${zeroAddition(today.getDate())}${zeroAddition(today.getHours())}${zeroAddition(today.getMinutes())}${zeroAddition(today.getSeconds())}`,
@@ -3931,8 +3932,13 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           payDevice: "MOBILE",
           P_FN_NM: paymentData.card_name,
         };
+
         res.set({ "Content-Type": "application/json" });
-        res.send(JSON.stringify({ convertingData }));
+        if (paymentData.status.trim() === "paid") {
+          res.send(JSON.stringify({ convertingData }));
+        } else {
+          res.send(JSON.stringify({ convertingData: { error: "error" } }));
+        }
 
       } else {
 

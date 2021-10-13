@@ -2142,6 +2142,182 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
   }
 }
 
+ProjectJs.prototype.boardSwipe = function () {
+  const instance = this;
+  const { ea } = this;
+  const firstIndex = 1;
+  let statusArr, thirdMatrixDom, index;
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      if (Array.isArray(instance.thirdMatrixDom)) {
+        if (instance.thirdMatrixDom.every((arr) => { return Array.isArray(arr); })) {
+          e.preventDefault();
+
+          thirdMatrixDom = instance.thirdMatrixDom;
+
+          statusArr = [];
+          for (let arr of thirdMatrixDom) {
+            statusArr.push(arr[0].getAttribute("toggle") === "on");
+          }
+
+          if (statusArr.every(i => i)) {
+
+            if (/Right/gi.test(e.key)) {
+
+              for (let i = 0; i < thirdMatrixDom.length; i++) {
+
+                if (i === firstIndex) {
+                  for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                    thirdMatrixDom[i][j].style.display = "block";
+                    if (j === 0) {
+                      thirdMatrixDom[i][j].setAttribute("toggle", "on");
+                      thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
+                    }
+                  }
+                } else {
+                  for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                    thirdMatrixDom[i][j].style.display = "none";
+                    if (j === 0) {
+                      thirdMatrixDom[i][j].setAttribute("toggle", "off");
+                      thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
+                    }
+                  }
+                }
+
+              }
+
+
+            } else if (/Left/gi.test(e.key)) {
+
+              for (let i = 0; i < thirdMatrixDom.length; i++) {
+
+                if (i === thirdMatrixDom.length - 1) {
+                  for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                    thirdMatrixDom[i][j].style.display = "block";
+                    if (j === 0) {
+                      thirdMatrixDom[i][j].setAttribute("toggle", "on");
+                      thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
+                    }
+                  }
+                } else {
+                  for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                    thirdMatrixDom[i][j].style.display = "none";
+                    if (j === 0) {
+                      thirdMatrixDom[i][j].setAttribute("toggle", "off");
+                      thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
+                    }
+                  }
+                }
+
+              }
+
+            }
+
+          } else {
+            index = statusArr.findIndex((i => i));
+            if (index === -1) {
+              window.location.reload();
+            }
+            if (/Right/gi.test(e.key)) {
+              if (index === thirdMatrixDom.length - 1) {
+
+                for (let i = 0; i < thirdMatrixDom.length; i++) {
+                  if (i === 0) {
+                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                      thirdMatrixDom[i][j].style.display = "block";
+                      if (j === 0) {
+                        thirdMatrixDom[i][j].setAttribute("toggle", "on");
+                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
+                      }
+                    }
+                  } else {
+                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                      thirdMatrixDom[i][j].style.display = "none";
+                      if (j === 0) {
+                        thirdMatrixDom[i][j].setAttribute("toggle", "off");
+                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
+                      }
+                    }
+                  }
+                }
+
+              } else {
+
+                for (let i = 0; i < thirdMatrixDom.length; i++) {
+                  if (i === index + 1) {
+                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                      thirdMatrixDom[i][j].style.display = "block";
+                      if (j === 0) {
+                        thirdMatrixDom[i][j].setAttribute("toggle", "on");
+                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
+                      }
+                    }
+                  } else {
+                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                      thirdMatrixDom[i][j].style.display = "none";
+                      if (j === 0) {
+                        thirdMatrixDom[i][j].setAttribute("toggle", "off");
+                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
+                      }
+                    }
+                  }
+                }
+
+              }
+            } else if (/Left/gi.test(e.key)) {
+              if (index === 0) {
+
+                for (let i = 0; i < thirdMatrixDom.length; i++) {
+                  if (i === thirdMatrixDom.length - 1) {
+                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                      thirdMatrixDom[i][j].style.display = "block";
+                      if (j === 0) {
+                        thirdMatrixDom[i][j].setAttribute("toggle", "on");
+                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
+                      }
+                    }
+                  } else {
+                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                      thirdMatrixDom[i][j].style.display = "none";
+                      if (j === 0) {
+                        thirdMatrixDom[i][j].setAttribute("toggle", "off");
+                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
+                      }
+                    }
+                  }
+                }
+
+              } else {
+
+                for (let i = 0; i < thirdMatrixDom.length; i++) {
+                  if (i === index - 1) {
+                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                      thirdMatrixDom[i][j].style.display = "block";
+                      if (j === 0) {
+                        thirdMatrixDom[i][j].setAttribute("toggle", "on");
+                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
+                      }
+                    }
+                  } else {
+                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                      thirdMatrixDom[i][j].style.display = "none";
+                      if (j === 0) {
+                        thirdMatrixDom[i][j].setAttribute("toggle", "off");
+                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
+                      }
+                    }
+                  }
+                }
+
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
 ProjectJs.prototype.makeBoard = function (cases) {
   if (!Array.isArray(cases)) {
     throw new Error("invaild input");
@@ -2163,7 +2339,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
   let temp;
   let tong;
   let size, margin;
-  let num;
+  let num, num2;
   let cardWidthConstant;
   let intend;
   let lineHeight, titleTop, startTop;
@@ -2194,9 +2370,19 @@ ProjectJs.prototype.makeBoard = function (cases) {
   let requestTong;
   let thisRequestNumber;
   let divisionEntireMap, divisionMap;
-  let index;
+  let index, pastIndex;
   let contextMenuBlockWidth, contextMenuBlockHeight, contextMenuBlockMargin, contextMenuBlockBetween, contextMenuBlockSize, contextMenuBlockTextTop;
   let contextMenuEvent;
+  let thirdClassIndexArr;
+  let thirdTitleSize;
+  let thirdTitleWeight;
+  let thirdTitleMarginTop;
+  let thirdTitleIndent;
+  let thirdTitleTextTop;
+  let thirdTitleMarginBottomVisual;
+  let thirdTitleDom;
+  let thirdTitlePastDom;
+  let thirdMatrixDom, thirdMatrixDomTemp;
 
   cleanChildren(scrollTong);
 
@@ -2234,9 +2420,18 @@ ProjectJs.prototype.makeBoard = function (cases) {
   contextMenuBlockSize = 14;
   contextMenuBlockTextTop = isMac() ? 6 : 5;
 
+  thirdTitleSize = 26;
+  thirdTitleWeight = 600;
+  thirdTitleMarginTop = 40;
+  thirdTitleIndent = 8;
+  thirdTitleTextTop = isMac() ? 6 : 8;
+  thirdTitleMarginBottomVisual = isMac() ? 2.5 : 4.5;
+
   divisionEntireMap = map.action.itemMap;
   divisionMap = [];
+  thirdClassIndexArr = [];
   for (let arr of divisionEntireMap) {
+    thirdClassIndexArr.push([ divisionMap.length, arr[0] ]);
     divisionMap = divisionMap.concat(arr[1]);
   }
 
@@ -2257,9 +2452,9 @@ ProjectJs.prototype.makeBoard = function (cases) {
   division = new Map();
   numbers = new Map();
   domMatrix = [];
+
   for (let i = 0; i < divisionMap.length; i++) {
     tempArr = [];
-
     tongMother = createNode({
       mother: scrollTong,
       style: {
@@ -2271,7 +2466,6 @@ ProjectJs.prototype.makeBoard = function (cases) {
         verticalAlign: "top",
       }
     });
-
     for (let j = 0; j < divisionMap[i].length; j++) {
       tong = createNode({
         mother: tongMother,
@@ -2506,7 +2700,6 @@ ProjectJs.prototype.makeBoard = function (cases) {
       division.set(divisionMap[i][j], tong.children[2]);
       tempArr.push(tong);
     }
-
     domMatrix.push(tempArr);
   }
 
@@ -2659,8 +2852,10 @@ ProjectJs.prototype.makeBoard = function (cases) {
               const target = self.children[1];
               if (important === 0) {
                 target.style.color = colorChip.red;
+                this.setAttribute("important", String(1));
               } else {
                 target.style.color = colorChip.green;
+                this.setAttribute("important", String(0));
               }
             }).catch((err) => {
               console.log(err);
@@ -2885,6 +3080,55 @@ ProjectJs.prototype.makeBoard = function (cases) {
   });
 
   this.divisionMap = division;
+
+  num2 = 0;
+  pastIndex = 0;
+  thirdTitlePastDom = null;
+  thirdMatrixDom = [];
+  for (let [ index, title ] of thirdClassIndexArr) {
+    thirdTitleDom = createNode({
+      mother: scrollTong,
+      before: domMatrix[index][0].parentElement,
+      text: title,
+      attribute: {
+        first: String(tongMarginTop),
+        second: String(tongMarginTop + thirdTitleMarginTop),
+        toggle: "on",
+      },
+      style: {
+        position: "relative",
+        fontSize: String(thirdTitleSize) + ea,
+        fontWeight: String(thirdTitleWeight),
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        marginTop: String(tongMarginTop + (num2 === 0 ? 0 : thirdTitleMarginTop)) + ea,
+        paddingLeft: String(thirdTitleIndent) + ea,
+        paddingTop: String(thirdTitleTextTop) + ea,
+        verticalAlign: "top",
+      },
+    });
+    domMatrix[index][0].parentElement.style.marginTop = String(tongMarginTop - thirdTitleMarginBottomVisual) + ea;
+
+    if (thirdTitlePastDom !== null) {
+      thirdMatrixDomTemp = [ thirdTitlePastDom ];
+      for (let i = pastIndex; i < index; i++) {
+        thirdMatrixDomTemp.push(domMatrix[i][0].parentElement);
+      }
+      thirdMatrixDom.push(thirdMatrixDomTemp);
+    }
+
+    num2++;
+    pastIndex = index;
+    thirdTitlePastDom = thirdTitleDom;
+  }
+
+  thirdMatrixDomTemp = [ thirdTitlePastDom ];
+  for (let i = pastIndex; i < domMatrix.length; i++) {
+    thirdMatrixDomTemp.push(domMatrix[i][0].parentElement);
+  }
+  thirdMatrixDom.push(thirdMatrixDomTemp);
+
+  this.thirdMatrixDom = thirdMatrixDom;
 
 }
 
@@ -5894,7 +6138,7 @@ ProjectJs.prototype.whiteViewMaker = function (index) {
 
 ProjectJs.prototype.rowViewMaker = function () {
   const instance = this;
-  const { setQueue } = this.mother;
+  const { setQueue } = GeneralJs;
   return function (e) {
     if (instance.totalFather !== null) {
       instance.totalFather.style.zIndex = String(-1);
@@ -7468,8 +7712,10 @@ ProjectJs.prototype.launching = async function () {
     this.addExtractEvent();
     this.whiteResize();
     this.communicationRender();
+    this.boardSwipe();
 
-    const getObj = GeneralJs.returnGet();
+    const { returnGet, setQueue } = GeneralJs;
+    const getObj = returnGet();
     let getTarget;
     let tempFunction;
 
@@ -7495,10 +7741,18 @@ ProjectJs.prototype.launching = async function () {
       if (this.standardDoms.length > 1) {
         getTarget = this.standardDoms[1];
       }
+    } else {
+      setQueue(() => {
+        instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {});
+      }, 300);
     }
     if (getTarget !== null) {
       getTarget.click();
     }
+
+    window.addEventListener("resize", (e) => {
+      window.location.reload();
+    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

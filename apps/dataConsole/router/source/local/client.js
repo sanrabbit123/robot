@@ -2561,8 +2561,10 @@ ClientJs.prototype.makeBoard = function (cases) {
               const target = self.children[1];
               if (important === 0) {
                 target.style.color = colorChip.red;
+                this.setAttribute("important", String(1));
               } else {
                 target.style.color = colorChip.green;
+                this.setAttribute("important", String(0));
               }
             }).catch((err) => {
               console.log(err);

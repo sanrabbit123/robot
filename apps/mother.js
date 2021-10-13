@@ -3027,4 +3027,132 @@ Mother.prototype.messageLog = function (message) {
   });
 }
 
+Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000) {
+  const PureServer = function () {
+    this.matrix = [];
+  }
+  PureServer.prototype.get = function (path, callback) {
+    if (typeof callback !== "function") {
+      throw new Error("invaild input");
+    }
+    if (Array.isArray(path)) {
+      for (let str of path) {
+        if (typeof str !== "string") {
+          throw new Error("invaild input");
+        }
+        if (!/^\//.test(str)) {
+          str = '/' + str;
+        }
+        this.matrix.push([
+          "GET",
+          str,
+          callback
+        ]);
+      }
+    } else if (typeof path === "string") {
+      if (!/^\//.test(path)) {
+        path = '/' + path;
+      }
+      this.matrix.push([
+        "GET",
+        path,
+        callback
+      ]);
+    } else {
+      throw new Error("invaild input");
+    }
+  }
+  PureServer.prototype.post = function (path, callback) {
+    if (typeof callback !== "function") {
+      throw new Error("invaild input");
+    }
+    if (Array.isArray(path)) {
+      for (let str of path) {
+        if (typeof str !== "string") {
+          throw new Error("invaild input");
+        }
+        if (!/^\//.test(str)) {
+          str = '/' + str;
+        }
+        this.matrix.push([
+          "POST",
+          str,
+          callback
+        ]);
+      }
+    } else if (typeof path === "string") {
+      if (!/^\//.test(path)) {
+        path = '/' + path;
+      }
+      this.matrix.push([
+        "POST",
+        path,
+        callback
+      ]);
+    } else {
+      throw new Error("invaild input");
+    }
+  }
+  PureServer.prototype.server = function () {
+    const instance = this;
+    return async function (req, res) {
+      try {
+        const buffers = [];
+        for await (const chunk of req) {
+          buffers.push(chunk);
+        }
+        const data = Buffer.concat(buffers).toString();
+        try {
+          req.body = JSON.parse(data);
+        } catch (e) {
+          req.body = {};
+          if (data !== "") {
+            req.body.raw = data;
+          }
+        }
+        let boo;
+
+        res.set = function (obj) {
+          return res.writeHead(200, obj);
+        }
+        res.send = res.end;
+
+        boo = false;
+        for (let [ method, path, callback ] of instance.matrix) {
+          if (method === req.method && path === req.url.trim()) {
+            boo = true;
+            callback(req, res);
+          }
+        }
+        if (!boo) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ data: 'error' }));
+        }
+      } catch (e) {
+        console.log(e);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ data: 'error' }));
+      }
+    }
+  }
+  if (mode === "class") {
+    return PureServer;
+  } else if (mode === "server" || mode === "listen" || mode === "run") {
+    if (typeof app.constructor === "function") {
+      if (app.constructor.name === "PureServer") {
+        const http = require("http");
+        const server = http.createServer();
+        server.on("request", app.server());
+        server.listen(port);
+      } else {
+        throw new Error("invaild input");
+      }
+    } else {
+      throw new Error("invaild input");
+    }
+  } else {
+    throw new Error("invaild mode");
+  }
+}
+
 module.exports = Mother;

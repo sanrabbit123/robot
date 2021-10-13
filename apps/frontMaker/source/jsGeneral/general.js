@@ -795,8 +795,12 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           }
         }
       }
-      if (mother !== null && mother.appendChild.constructor === Function) {
-        mother.appendChild(dom_clone);
+      if (mother !== null && typeof mother.appendChild === "function") {
+        if (style.before === undefined) {
+          mother.appendChild(dom_clone);
+        } else {
+          mother.insertBefore(dom_clone, style.before);
+        }
       }
       if (Array.isArray(children)) {
         if (children.length > 0) {
@@ -896,8 +900,12 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
           }
         }
       }
-      if (mother !== null && mother.appendChild.constructor === Function) {
-        mother.appendChild(dom_clone);
+      if (mother !== null && typeof mother.appendChild === "function") {
+        if (style.before === undefined) {
+          mother.appendChild(dom_clone);
+        } else {
+          mother.insertBefore(dom_clone, style.before);
+        }
       }
       return dom_clone;
     } else {
