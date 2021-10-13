@@ -4911,7 +4911,7 @@ DesignerJs.prototype.checkListView = async function () {
     loading.parentNode.removeChild(loading);
 
     this.pageHistory = [];
-    if (false) {
+    if (desktop) {
       window.addEventListener("resize", (e) => {
         window.location.reload();
       });
@@ -4965,7 +4965,6 @@ DesignerJs.prototype.checkListView = async function () {
         }
       }
     });
-
 
     //launching
     this.checkListDetailLaunching(this.desid);
