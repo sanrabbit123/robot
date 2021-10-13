@@ -74,10 +74,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-
-    console.log(await this.findCode("수정 제안"));
-
-
+    
     // new project action
 
     // console.log(await this.findCode("사진 공유"));
@@ -1403,7 +1400,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
@@ -1431,7 +1427,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p119");
+    await this.getCorePortfolio("p119");
 
 
     // aspirant to designer

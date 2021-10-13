@@ -27,7 +27,7 @@ const KakaoTalk = function () {
     mirror: new RegExp(this.ip.mirror + "\n", 'g'),
   };
   this.token = {
-    office: 'f05cb48bb2b2397b0a00673f9d042cb11e617e2f474adb80aa21def198e93defb9772db0decfdceb11711fe00220d7353e22750dfa4a033787d2b65baa74c0edRpWklMHb+gajmvp0DWz3EOkwdpHCjhFmkliDkyfGD20Rw/GTrgkATGf016jQH2sPQym/QCo7cxJnGmM4do74ZA==',
+    office: '19deb2d6856c0ddd2d9f8b9d584b501ad74cbf63ef82705f5997ad9c7f376fb9f6d5d6fd1b66d9cf83a3c1d8c808ce09ed1990fcc97743694c7b86ca2fb34618LbdUflW6aCQVBPW8hosvNOGiPkz7DOdi0dtvZ9iQVMrZJZDQuRxKRTkGbV+fiUueO5L4SgFz8PB60dl62p9x9w==',
     home: 'cc851a072d2ce73cd7ecf1390fe4e79fb858c0e78c038536bfca379f7b0dcb064a576a7a3048d0ef1afb1c591cda68bc1432614ae143dce4228c02de270969f7gNeHUuqtRL2jE8SWVZSeSAnqB7tqO1KtQ4o8sMn1Q1oFdwfOPVnFLTTaFvNYlSomdjZjihdtRexwdQ9vWRm6pw==',
     bridge: '2b80cde31ca60c59a782540b5aac827a49c0c4ff0358dc6f6db80d124b94426813119f550bbc303ab1dbdca305d4dcdb46029637ee615d99794261a7c4d8f92dwA7XxPABsJjAM2UytTmE3t+RcQIQ5A4K8bmRYBSGlJLlh9pL54R36gXznHdul83r+ly1oygeat/SSP49ORKmSw==',
     front: 'c14a594407ce851449e11aa060556b54faf1e4de714adc353e49f645c9720880a1149ed617ad5ef19de94fed1da6094bdeb4f1a8756bed3b3fe74c8120490fe4hX3mInjDzik6Yz05qMUnpOJkL6ix9DcJRLVAZpofdBoZA89GFnHTtZJ5BUx\/iFFVdRVHW2vD4cA0dmbL8Qkf0A==',
@@ -84,8 +84,10 @@ KakaoTalk.prototype.setAuth = async function () {
 
 KakaoTalk.prototype.setTemplate = async function () {
   const instance = this;
+  const { requestSystem } = this.mother;
   try {
-    const { data } = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/template/list/", this.authObj);
+    const response = await requestSystem("https://kakaoapi.aligo.in/akv10/template/list/", this.authObj);
+    const { data } = response;
     const { list } = data;
     for (let i of list) {
       this.templates[i.templtCode] = {};
@@ -709,11 +711,11 @@ KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) 
 
 KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj = {}) {
   const instance = this;
+  const { requestSystem } = this.mother;
   try {
     let options;
     options = await this.setTalk(method, name, phone, convertObj);
-    const { data } = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
-    console.log(data);
+    const { data } = await requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
     return data;
   } catch (e) {
     console.log(e);
