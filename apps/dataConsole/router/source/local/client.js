@@ -2531,7 +2531,7 @@ ClientJs.prototype.makeBoard = function (cases) {
         status: obj.status,
         request: String(thisRequestNumber),
         index: String(index),
-        important: (obj.important ? 1 : 0),
+        important: ((obj.important && !obj.curation.analytics.full) ? 1 : 0),
       },
       event: {
         dragstart: function (e) {
@@ -2760,7 +2760,7 @@ ClientJs.prototype.makeBoard = function (cases) {
         fontWeight: String(400),
         top: String(idWordTop) + ea,
         left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
-        color: obj.important ? colorChip.red : colorChip.green,
+        color: (obj.important && !obj.curation.analytics.full) ? colorChip.red : (obj.curation.analytics.full ? colorChip.purple : colorChip.green),
         cursor: "pointer",
       }
     });
@@ -2863,13 +2863,14 @@ ClientJs.prototype.cardViewMaker = function () {
     thisCases = equalJson(JSON.stringify(instance.cases)).slice(1).filter((obj) => { return !/드랍/gi.test(obj.status) && !/진행/gi.test(obj.status); });
     managerObj = await ajaxJson({
       method: "client",
-      property: [ "manager", "important" ],
+      property: [ "manager", "important", "curation" ],
       idArr: thisCases.map((obj) => { return obj.cliid; }),
     }, "/getHistoryProperty");
     for (let obj of thisCases) {
       if (managerObj[obj.cliid] !== undefined) {
         obj.manager = managerObj[obj.cliid].manager;
         obj.important = managerObj[obj.cliid].important;
+        obj.curation = managerObj[obj.cliid].curation;
       }
     }
     thisCases.sort((a, b) => {
