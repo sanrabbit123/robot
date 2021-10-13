@@ -3324,7 +3324,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const today = new Date();
         const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
 
-        console.log(paymentData);
+        instance.mother.slack_bot.chat.postMessage({ text: JSON.stringify(paymentData, null, 2), channel: "#error_log" });
 
         const convertingData = {
           goodName: paymentData.name,
