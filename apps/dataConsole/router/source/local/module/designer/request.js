@@ -1410,17 +1410,17 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
       board.style.height = "auto";
       board.style.paddingBottom = String(finalBottom) + ea;
 
-      html = `<!DOCTYPE html>
+      html = String(`<!DOCTYPE html>
       <html lang="ko" dir="ltr">
         <head>
           <meta charset="utf-8">
-          <style>${String(document.querySelector("style").innerHTML.replace(/\=/gi, "__equal__").replace(/\&/gi, "__ampersand__"))}</style>
+          <style>${String(document.querySelector("style").innerHTML)}</style>
           <title></title>
         </head>
         <body style="padding-top:${String(leftMargin)}${ea};padding-bottom:${String(leftMargin)}${ea};">
-          ${String(board.innerHTML.replace(/\=/gi, "__equal__").replace(/\&/gi, "__ampersand__"))}
+          ${String(board.innerHTML)}
         </body>
-      </html>`;
+      </html>`).replace(/\=/gi, "__equal__").replace(/\&/gi, "__ampersand__");
 
       document.body.removeChild(document.body.lastChild);
 
