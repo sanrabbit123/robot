@@ -1566,19 +1566,14 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invaild post : html must be string");
         }
         const static = instance.address.officeinfo.ghost.file.static;
+        const pdfServerIp = instance.address.officeinfo.map.find((obj) => { return obj.name === "pdf"; }).ip;
         const htmlName = `html_name_${uniqueValue("string")}.html`;
-        let pdfName;
-
-        if (typeof req.body.name === "string") {
-          pdfName = req.body.name.trim().replace(/[ \n]/gi, '').replace(/\.pdf/i, '') + ".pdf";
-        } else {
-          pdfName = htmlName.replace(/\.html$/i, ".pdf");
-        }
+        const pdfName = htmlName.replace(/\.html$/i, ".pdf");
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${shellLink(pdfName)};rm -rf ${shellLink(static)}/${htmlName}`);
+        await requestSystem("http://" + pdfServerIp + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
         setQueue(() => {
-          shell.exec(`rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
+          shell.exec(`rm -rf ${shellLink(static)}/${htmlName};rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
         }, 30 * 60 * 1000);
 
         res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${global.encodeURIComponent(pdfName)}` }));
