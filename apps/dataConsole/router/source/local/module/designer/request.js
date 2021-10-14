@@ -895,10 +895,6 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
   const today = new Date();
   const ea = "px";
   const pe = "%";
-
-
-
-
   return async function (e) {
     try {
       const {
@@ -1429,8 +1425,11 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
 
       document.body.removeChild(document.body.lastChild);
 
-      const { pdf } = await ajaxJson({ html, name: client.name + "_고객님_의뢰서" }, "/ghostPass_pdfPrint");
-      await downloadFile(pdf);
+      const response = await ajaxJson({ html, name: client.name + "_고객님_의뢰서" }, "/ghostPass_pdfPrint");
+      console.log(response);
+
+
+      // await downloadFile(pdf);
 
       console.log("done");
 
