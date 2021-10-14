@@ -1570,7 +1570,9 @@ Ghost.prototype.ghostRouter = function (needs) {
         const pdfName = htmlName.replace(/\.html$/i, ".pdf");
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${pdfName};rm -rf ${shellLink(static)}/${htmlName}`);
+        // shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${pdfName};rm -rf ${shellLink(static)}/${htmlName}`);
+
+        shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${pdfName}`);
         res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${pdfName}` }));
 
       } catch (e) {
