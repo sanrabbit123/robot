@@ -896,6 +896,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
               P_NOTI_URL: PYTHONHOST.replace(/\:3000/gi, '') + "/webHookVAccount.php",
               P_HPP_METHOD: String(1),
               P_CHARSET: "utf8",
+              P_RESERVED: "vbank_receipt=Y",
               P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
             };
             for (let name in mobileInisisInfo) {

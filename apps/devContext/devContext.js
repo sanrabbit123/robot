@@ -103,7 +103,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // const PureServer = pureServer();
     // const app = new PureServer();
     //
@@ -130,140 +129,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
-
-
-
-
-
-
-
-
-    // new project action
-
-    // console.log(await this.findCode("사진 공유"));
-    // console.log(await this.findCode("컨텐츠 공유"));
-
-    // past
-    const from = [
-      "응대 대기",
-      "현장 미팅",
-      "1차 제안",
-      "수정 제안",
-      "시공 진행",
-      "제품 구매",
-      "배송중",
-      "촬영 컨택",
-      "촬영 대기",
-      "사진 대기",
-      "사진 공유",
-      "컨텐츠 공유",
-      "응대 종료",
-      "해당 없음"
-    ]
-
-    // new
-    const to = [
-      "계약금 안내",
-      "현장미팅 조율",
-      "의뢰서 작성중",
-      "의뢰서 공유",
-      "현장미팅 피드백",
-      "계약서 안내",
-      "잔금 안내",
-      "시작 대기",
-      "1차 제안",
-      "수정 제안",
-      "시공 진행",
-      "제품 구매",
-      "배송중",
-      "세팅 마무리",
-      "촬영 컨택",
-      "해당 없음"
-    ]
-
-    // matrix
-    const matrix = [
-      [
-        "계약 대기",
-        [
-          [ "계약금 안내" ],
-          [ "현장미팅 조율" ],
-          [ "의뢰서 작성중", "의뢰서 공유" ],
-          [ "현장미팅 피드백" ],
-          [ "계약서 안내", "잔금 안내" ]
-        ]
-      ],
-      [
-        "진행중",
-        [
-          [ "시작 대기" ],
-          [ "1차 제안", "수정 제안" ],
-          [ "시공 진행" ],
-          [ "제품 구매", "배송중" ],
-          [ "세팅 마무리", "촬영 컨택" ]
-        ]
-      ]
-    ]
-
-    //converting
-    // const converting = [
-    //   "응대 대기" => "계약금 안내",
-    //   "현장 미팅" => "현장미팅 조율" or "의뢰서 공유" or "현장미팅 피드백",
-    //   "1차 제안",
-    //   "수정 제안",
-    //   "시공 진행",
-    //   "제품 구매",
-    //   "배송중",
-    //   "촬영 컨택",
-    //   "촬영 대기" => "촬영 컨택",
-    //   "사진 대기" => "촬영 컨택",
-    //   "사진 공유" => "촬영 컨택",
-    //   "컨텐츠 공유" => "촬영 컨택",
-    //   "응대 종료" => "해당 없음",
-    //   "해당 없음"
-    // ];
-
-    // const selfMongo = this.MONGOC;
-    // const projects = await back.getProjectsByQuery({}, { selfMongo });
-    // const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    // const todayValue = (new Date()).valueOf();
-    // let whereQuery, updateQuery;
-    // let thisMeetingDateValue;
-    //
-    // for (let project of projects) {
-    //
-    //   whereQuery = { proid: project.proid };
-    //   updateQuery = {};
-    //
-    //   if (project.process.action.value.trim() === "응대 대기") {
-    //     updateQuery["process.action"] = "계약금 안내";
-    //   } else if (project.process.action.value.trim() === "현장 미팅") {
-    //     thisMeetingDateValue = project.process.contract.meeting.date.toNormal().valueOf()
-    //     if (thisMeetingDateValue < emptyDateValue) {
-    //       updateQuery["process.action"] = "현장미팅 조율";
-    //     } else if (thisMeetingDateValue < todayValue) {
-    //       updateQuery["process.action"] = "의뢰서 공유";
-    //     } else {
-    //       updateQuery["process.action"] = "현장미팅 피드백";
-    //     }
-    //   } else if (project.process.action.value.trim() === "촬영 대기") {
-    //     updateQuery["process.action"] = "촬영 컨택";
-    //   } else if (project.process.action.value.trim() === "사진 대기") {
-    //     updateQuery["process.action"] = "촬영 컨택";
-    //   } else if (project.process.action.value.trim() === "사진 공유") {
-    //     updateQuery["process.action"] = "촬영 컨택";
-    //   } else if (project.process.action.value.trim() === "컨텐츠 공유") {
-    //     updateQuery["process.action"] = "촬영 컨택";
-    //   } else if (project.process.action.value.trim() === "응대 종료") {
-    //     updateQuery["process.action"] = "해당 없음";
-    //   }
-    //
-    //   if (Object.keys(updateQuery).length > 0) {
-    //     await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
-    //     console.log(whereQuery);
-    //   }
-    // }
 
 
 
@@ -320,9 +185,9 @@ DevContext.prototype.launching = async function () {
         buyerEmail = client.email;
         buyerTel = client.phone;
 
-        crPrice = String(Math.floor(price));
-        tax = String(Math.floor(price * (1 / (1 + vatRatio))));
-        supPrice = String(Math.floor(price - (price * (1 / (1 + vatRatio)))));
+        supPrice = String(Math.floor(price));
+        tax = String(Math.floor(price / 10));
+        crPrice = String(Math.floor(price + (price * (1 / 10))));
 
         regNum = await cryptoString(address.officeinfo.inicis.key, buyerTel.replace(/[^0-9]/gi, ''), { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest });
         hashData = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + crPrice + supPrice + srcvPrice + regNum).digest(hashType);
@@ -355,7 +220,7 @@ DevContext.prototype.launching = async function () {
     }
 
     await cashReceipt("c1801_aa01s", "홈리에종 잔금", 1400000);
-    // 140만원 => 소비자가, 봉사료는 항상 0원
+    // 140만원 => 공급가, 봉사료는 항상 0원
 
     */
 
