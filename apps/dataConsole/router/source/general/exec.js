@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     local_funcs.mother.communicationBox();
     await local_funcs.launching();
     await local_funcs.mother.loginBox();
-    local_funcs.mother.dashboardBox();
+    // local_funcs.mother.dashboardBox();
     local_funcs.mother.generalStacks();
 
     //SSE

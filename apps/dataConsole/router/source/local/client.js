@@ -1500,6 +1500,11 @@ ClientJs.prototype.spreadData = async function (search = null) {
 
     if (search === null) {
       totalMother = GeneralJs.nodes.div.cloneNode(true);
+      if (this.cardViewInitial) {
+        totalMother.style.display = "none";
+      } else {
+        totalMother.style.display = "block";
+      }
       totalMother.classList.add("totalMother");
       totalMother.style.height = "calc(100% - " + String(this.belowHeight) + "px" + ")";
       this.totalContents.appendChild(totalMother);
@@ -1914,14 +1919,14 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
   reloadEvent = function (e) {
     const member = this.getAttribute("member");
     if (member === "전체") {
-      instance.makeBoard(instance.cardCases);
       instance.selectedMember = null;
+      instance.makeBoard(instance.cardCases);
     } else if (member === "미정") {
-      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === '-' || obj.manager.trim() === '' || obj.manager.trim() === "미지정" || obj.manager.trim() === "미정" || obj.manager.trim() === "홀딩"; }));
       instance.selectedMember = "미정";
+      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === '-' || obj.manager.trim() === '' || obj.manager.trim() === "미지정" || obj.manager.trim() === "미정" || obj.manager.trim() === "홀딩"; }));
     } else {
-      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === member.trim() }));
       instance.selectedMember = member;
+      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === member.trim() }));
     }
   }
   dropEvent = async function (e) {
@@ -2041,6 +2046,15 @@ ClientJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
   }
 }
 
+ClientJs.prototype.boardSwipe = function () {
+  const instance = this;
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      window.location.href = window.location.protocol + "//" + window.location.host + "/project";
+    }
+  });
+}
+
 ClientJs.prototype.makeBoard = function (cases) {
   if (!Array.isArray(cases)) {
     throw new Error("invaild input");
@@ -2062,7 +2076,7 @@ ClientJs.prototype.makeBoard = function (cases) {
   let temp;
   let tong;
   let size, margin;
-  let num;
+  let num, num2;
   let cardWidthConstant;
   let intend;
   let lineHeight, titleTop, startTop;
@@ -2092,10 +2106,21 @@ ClientJs.prototype.makeBoard = function (cases) {
   let idWordTop;
   let requestTong;
   let thisRequestNumber;
-  let divisionMap;
+  let divisionEntireMap, divisionMap;
   let index;
   let contextMenuBlockWidth, contextMenuBlockHeight, contextMenuBlockMargin, contextMenuBlockBetween, contextMenuBlockSize, contextMenuBlockTextTop;
   let contextMenuEvent;
+  let thirdClassIndexArr;
+  let thirdTitleSize;
+  let thirdTitleWeight;
+  let thirdTitleMarginTop;
+  let thirdTitleIndent;
+  let thirdTitleTextTop;
+  let thirdTitleMarginBottomVisual;
+  let thirdTitleDom;
+  let thirdTitlePastDom;
+  let thirdMatrixDom, thirdMatrixDomTemp;
+  let swipeStatus;
 
   cleanChildren(scrollTong);
 
@@ -2133,14 +2158,20 @@ ClientJs.prototype.makeBoard = function (cases) {
   contextMenuBlockSize = 14;
   contextMenuBlockTextTop = isMac() ? 6 : 5;
 
-  divisionMap = map.action.items.map((i) => { return [ i ]; });
-  for (let i = map.action.divisionStart; i < map.action.divisionStart + map.action.divisionLength; i++) {
-    divisionMap[i] = [ divisionMap[i][0], divisionMap[i + map.action.divisionLength][0] ];
+  thirdTitleSize = 26;
+  thirdTitleWeight = 600;
+  thirdTitleMarginTop = 42;
+  thirdTitleIndent = 8;
+  thirdTitleTextTop = isMac() ? 6 : 8;
+  thirdTitleMarginBottomVisual = 0;
+
+  divisionEntireMap = map.action.itemMap;
+  divisionMap = [];
+  thirdClassIndexArr = [];
+  for (let arr of divisionEntireMap) {
+    thirdClassIndexArr.push([ divisionMap.length, arr[0] ]);
+    divisionMap = divisionMap.concat(arr[1]);
   }
-  for (let i = map.action.divisionStart + map.action.divisionLength; i < map.action.divisionStart + map.action.divisionLength + map.action.divisionLength; i++) {
-    divisionMap[i] = null;
-  }
-  divisionMap = divisionMap.filter((arr) => { return Array.isArray(arr); });
 
   divideArr = [];
   sizeArr = [];
@@ -2152,9 +2183,7 @@ ClientJs.prototype.makeBoard = function (cases) {
     sizeArr.push(size);
   }
 
-  setQueue(() => {
-    instance.boardGrayBar(divisionMap, cases, staticList);
-  });
+  instance.boardGrayBar(divisionMap, cases, staticList);
 
   division = new Map();
   numbers = new Map();
@@ -2790,6 +2819,55 @@ ClientJs.prototype.makeBoard = function (cases) {
 
   this.divisionMap = division;
 
+  num2 = 0;
+  pastIndex = 0;
+  thirdTitlePastDom = null;
+  thirdMatrixDom = [];
+  for (let [ index, title ] of thirdClassIndexArr) {
+    thirdTitleDom = createNode({
+      mother: scrollTong,
+      before: domMatrix[index][0].parentElement,
+      text: title,
+      attribute: {
+        first: String(tongMarginTop),
+        second: String(tongMarginTop + thirdTitleMarginTop),
+        toggle: "on",
+      },
+      style: {
+        position: "relative",
+        fontSize: String(thirdTitleSize) + ea,
+        fontWeight: String(thirdTitleWeight),
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        marginTop: String(tongMarginTop + (num2 === 0 ? 0 : thirdTitleMarginTop)) + ea,
+        paddingLeft: String(thirdTitleIndent) + ea,
+        paddingTop: String(thirdTitleTextTop) + ea,
+        verticalAlign: "top",
+      },
+    });
+    domMatrix[index][0].parentElement.style.marginTop = String(tongMarginTop - thirdTitleMarginBottomVisual) + ea;
+
+    if (thirdTitlePastDom !== null) {
+      thirdMatrixDomTemp = [ thirdTitlePastDom ];
+      for (let i = pastIndex; i < index; i++) {
+        thirdMatrixDomTemp.push(domMatrix[i][0].parentElement);
+      }
+      thirdMatrixDom.push(thirdMatrixDomTemp);
+    }
+
+    num2++;
+    pastIndex = index;
+    thirdTitlePastDom = thirdTitleDom;
+  }
+
+  thirdMatrixDomTemp = [ thirdTitlePastDom ];
+  for (let i = pastIndex; i < domMatrix.length; i++) {
+    thirdMatrixDomTemp.push(domMatrix[i][0].parentElement);
+  }
+  thirdMatrixDom.push(thirdMatrixDomTemp);
+
+  this.thirdMatrixDom = thirdMatrixDom;
+
 }
 
 ClientJs.prototype.cardViewMaker = function () {
@@ -2896,17 +2974,9 @@ ClientJs.prototype.cardViewMaker = function () {
 
     } else {
 
-      if (typeof GeneralJs.stacks["dashboardBox"].parentElement === "object") {
-        if (GeneralJs.stacks["dashboardBox"].parentElement !== null) {
-          if (typeof GeneralJs.stacks["dashboardBox"].parentElement.remove === "function") {
-            GeneralJs.stacks["dashboardBox"].parentElement.remove();
-          }
-        }
-      }
-
       totalFather = createNode({
         mother: document.getElementById("totalcontents"),
-        class: [ "totalFather", "fadein" ],
+        class: (e.instantMode ? [ "totalFather" ] : [ "totalFather", "fadein" ]),
         style: {
           height: "calc(100vh - " + String(belowHeight) + ea + ")",
           width: String(100) + '%',
@@ -5040,7 +5110,7 @@ ClientJs.prototype.whiteViewMaker = function (index) {
 
 ClientJs.prototype.rowViewMaker = function () {
   const instance = this;
-  const { setQueue } = this.mother;
+  const { setQueue } = GeneralJs;
   return function (e) {
     if (instance.totalFather !== null) {
       instance.totalFather.style.zIndex = String(-1);
@@ -5797,10 +5867,6 @@ ClientJs.prototype.makeSearchEvent = function (search = null) {
         }, 501);
       }
 
-      if (GeneralJs.stacks["dashboardBoxBoo"]) {
-        GeneralJs.dashboardBoxLaunching(GeneralJs.stacks["dashboardBox"], true);
-      }
-
     }
   }
 }
@@ -6163,6 +6229,9 @@ ClientJs.prototype.whiteResize = function () {
           window.location.reload();
         };
       }
+      if (instance.totalFather !== undefined && instance.totalFather !== null) {
+        window.location.reload();
+      }
       instance.resizeStack = 0;
     }
     let immediate = null;
@@ -6184,259 +6253,6 @@ ClientJs.prototype.whiteResize = function () {
     }
   }
   window.addEventListener('resize', resizeDebounceEvent());
-}
-
-ClientJs.prototype.dashboardBox = function (option) {
-  if (typeof option !== "object") {
-    throw new Error("must be style object");
-  }
-  if (typeof option.name !== "string") {
-    throw new Error("must be dashboard name");
-  }
-  if (typeof option.style !== "object") {
-    throw new Error("must be style object");
-  }
-  if (typeof option.style.right !== "number" || typeof option.style.bottom !== "number" || typeof option.style.height !== "number") {
-    throw new Error("invaild style object");
-  }
-  if (typeof option.style.width !== "number") {
-    option.style.width = 340;
-  }
-  if (typeof option.title !== "object") {
-    throw new Error("must be title object");
-  }
-  if (typeof option.title.main !== "string" || typeof option.title.sub !== "string") {
-    throw new Error("invaild title object");
-  }
-  if (typeof option.callback !== "function") {
-    throw new Error("must be callback");
-  }
-  const instance = this;
-  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
-  let { name: dashboardName, style: { width, right, bottom, height }, title: { main: mainTitle, sub: subTitle }, callback } = option;
-  let ea;
-  let dashboardBox, dashboardWindow;
-  let topBarHeight;
-  let dragRatio;
-  let paddingTop;
-  let titleSize;
-  let titleHeight;
-  let leftMargin;
-  let titleMargin;
-  let titleBetween;
-  let contentsSize;
-
-  ea = "px";
-  dashboardName = "__name__" + dashboardName;
-
-  GeneralJs.stacks["dashboardBoxBoo" + dashboardName] = false;
-  GeneralJs.stacks["dashboardBox" + dashboardName] = null;
-  GeneralJs.stacks["dashboardBoxMother" + dashboardName] = null;
-  GeneralJs.stacks["dashboardBoxHeight" + dashboardName] = 0;
-
-  titleSize = 21;
-  titleHeight = 36;
-  leftMargin = 24;
-  paddingTop = 15;
-  topBarHeight = 14;
-  dragRatio = 1;
-  titleMargin = 8;
-  titleBetween = 5;
-  contentsSize = 14;
-
-  dashboardWindow = createNode({
-    mother: this.mother.below,
-    class: [ "backblurdefault_lite" ],
-    style: {
-      position: "fixed",
-      background: colorChip.white,
-      right: String(right) + ea,
-      width: String(width) + ea,
-      height: String(height) + ea,
-      borderRadius: String(5) + "px",
-      bottom: String(bottom) + ea,
-      overflow: "hidden",
-      opacity: String(0.9),
-      boxShadow: "-1px 4px 15px -9px " + colorChip.gray5,
-      transition: "all 0s ease",
-      zIndex: String(102),
-      animation: "fadeuplite 0.3s ease forwards",
-    },
-    events: [
-      {
-        type: "dragover",
-        event: function (e) {
-          e.preventDefault();
-          const that = this;
-          that.style.bottom = String(window.innerHeight - (e.y + (height * dragRatio))) + ea;
-          that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
-        }
-      }
-    ],
-    children: [
-      {
-        attribute: [
-          { draggable: "true" }
-        ],
-        style: {
-          position: "absolute",
-          width: String(100) + "%",
-          height: String(topBarHeight) + ea,
-          top: String(0),
-          left: String(0),
-          background: colorChip.gray2,
-          cursor: "move",
-          transition: "all 0s ease",
-        },
-        events: [
-          {
-            type: "dragstart",
-            event: function (e) {
-              const that = this.parentNode;
-              let div;
-              let style, ea;
-
-              GeneralJs.stacks["windowDragStartPoint" + dashboardName] = 0;
-              GeneralJs.stacks["windowDragStartPoint" + dashboardName] = e.x - that.offsetLeft;
-              ea = "px";
-
-              div = GeneralJs.nodes.div.cloneNode(true);
-              style = {
-                position: "fixed",
-                background: "transparent",
-                width: String(100) + '%',
-                height: String(100) + '%',
-                top: String(0),
-                left: String(0)
-              };
-              for (let i in style) {
-                div.style[i] = style[i];
-              }
-              div.addEventListener("dragover", function (e) {
-                that.style.bottom = String(window.innerHeight - e.y - (height * dragRatio)) + ea;
-                that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
-                e.preventDefault();
-              });
-              GeneralJs.stacks["windowDragBack" + dashboardName] = div;
-              that.parentNode.insertBefore(div, that);
-
-              e.dataTransfer.setData("dragData", that);
-              const img = new Image();
-              e.dataTransfer.setDragImage(img, 1, 1);
-            }
-          },
-          {
-            type: "dragend",
-            event: function (e) {
-              e.preventDefault();
-              GeneralJs.stacks["windowDragBack" + dashboardName].parentElement.removeChild(GeneralJs.stacks["windowDragBack" + dashboardName]);
-              GeneralJs.stacks["windowDragBack" + dashboardName] = null;
-            }
-          },
-          {
-            type: "dragenter",
-            event: (e) => { e.preventDefault(); }
-          },
-          {
-            type: "dragleave",
-            event: (e) => { e.preventDefault(); }
-          },
-          {
-            type: "dragover",
-            event: function (e) {
-              e.preventDefault();
-              const that = this.parentNode;
-              that.style.bottom = String(window.innerHeight - (e.y + (height * dragRatio))) + ea;
-              that.style.right = String(window.innerWidth - e.x - width + GeneralJs.stacks["windowDragStartPoint" + dashboardName]) + ea;
-            }
-          },
-          {
-            type: "drop",
-            event: (e) => { e.preventDefault(); e.stopPropagation(); }
-          },
-          {
-            type: "contextmenu",
-            event: function (e) {
-              e.stopPropagation();
-              e.preventDefault();
-              if (GeneralJs.stacks["dashboardBoxMother" + dashboardName] !== null) {
-                instance.mother.below.removeChild(GeneralJs.stacks["dashboardBoxMother" + dashboardName]);
-                GeneralJs.stacks["dashboardBoxBoo" + dashboardName] = false;
-                GeneralJs.stacks["dashboardBox" + dashboardName] = null;
-                GeneralJs.stacks["dashboardBoxMother" + dashboardName] = null;
-              }
-            }
-          }
-        ]
-      }
-    ]
-  });
-
-  dashboardBox = createNode({
-    mother: dashboardWindow,
-    style: {
-      position: "relative",
-      width: String(100) + "%",
-      height: withOut(topBarHeight, ea),
-      marginTop: String(topBarHeight + ((isMac()) ? 0 : 3)) + ea,
-      background: colorChip.white,
-      transition: "all 0s ease",
-      paddingTop: String(paddingTop) + ea,
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          marginLeft: String(leftMargin) + ea,
-          width: withOut(leftMargin * 2, ea),
-          height: String(titleHeight) + ea,
-          marginBottom: String(titleBetween) + ea,
-        },
-        children: [
-          {
-            text: mainTitle,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(titleSize) + ea,
-              fontWeight: String(200),
-              color: colorChip.black,
-              marginRight: String(titleMargin) + ea,
-            }
-          },
-          {
-            text: subTitle,
-            style: {
-              display: "inline-block",
-              position: "relative",
-              fontSize: String(titleSize) + ea,
-              fontWeight: String(200),
-              color: colorChip.green,
-              marginRight: String(titleMargin) + ea,
-            }
-          },
-        ]
-      },
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          marginLeft: String(leftMargin) + ea,
-          width: withOut(leftMargin * 2, ea),
-          height: withOut(titleHeight + paddingTop + leftMargin + titleBetween, ea),
-        }
-      }
-    ]
-  });
-
-  callback(dashboardBox.lastChild, contentsSize, ea);
-
-  GeneralJs.stacks["dashboardBoxBoo" + dashboardName] = true;
-  GeneralJs.stacks["dashboardBox" + dashboardName] = dashboardBox;
-  GeneralJs.stacks["dashboardBoxMother" + dashboardName] = dashboardWindow;
-  GeneralJs.stacks["dashboardBoxHeight" + dashboardName] = height;
-
 }
 
 ClientJs.prototype.globalChaining = async function (thisCase, column, value, pastValue) {
@@ -7018,7 +6834,14 @@ ClientJs.prototype.launching = async function () {
   const instance = this;
   try {
     const { dateToString, returnGet, setQueue } = GeneralJs;
+    const getObj = returnGet();
+    let getTarget;
+    let tempFunction;
+    let cardViewInitial;
 
+    cardViewInitial = (getObj.cliid === undefined);
+
+    this.cardViewInitial = cardViewInitial;
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -7029,10 +6852,7 @@ ClientJs.prototype.launching = async function () {
     this.addExtractEvent();
     this.whiteResize();
     this.communicationRender();
-
-    const getObj = returnGet();
-    let getTarget;
-    let tempFunction;
+    this.boardSwipe();
 
     const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/clientCard");
     es.addEventListener("updateTong", (e) => {
@@ -7040,7 +6860,7 @@ ClientJs.prototype.launching = async function () {
     });
 
     getTarget = null;
-    if (getObj.cliid !== undefined) {
+    if (!cardViewInitial) {
       for (let dom of this.standardDoms) {
         if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
           getTarget = dom;
@@ -7061,14 +6881,10 @@ ClientJs.prototype.launching = async function () {
         }
       }
     } else {
-      setQueue(() => {
-        instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {});
-      }, 300);
+      instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {
+        instantMode: true
+      });
     }
-
-    window.addEventListener("resize", (e) => {
-      window.location.reload();
-    });
 
   } catch (e) {
     GeneralJs.ajax({ message: "ClientJs 프론트 스크립트 문제 생김 " + e.message, channel: "#error_log" }, "/sendSlack", function () {});

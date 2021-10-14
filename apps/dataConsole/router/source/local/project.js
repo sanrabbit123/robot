@@ -1602,6 +1602,11 @@ ProjectJs.prototype.spreadData = async function (search = null) {
 
     if (search === null) {
       totalMother = GeneralJs.nodes.div.cloneNode(true);
+      if (this.cardViewInitial) {
+        totalMother.style.display = "none";
+      } else {
+        totalMother.style.display = "block";
+      }
       totalMother.classList.add("totalMother");
       totalMother.style.height = "calc(100% - " + String(this.belowHeight) + "px" + ")";
       this.totalContents.appendChild(totalMother);
@@ -2028,14 +2033,14 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
   reloadEvent = function (e) {
     const member = this.getAttribute("member");
     if (member === "전체") {
-      instance.makeBoard(instance.cardCases);
       instance.selectedMember = null;
+      instance.makeBoard(instance.cardCases);
     } else if (member === "미정") {
-      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === '-' || obj.manager.trim() === '' || obj.manager.trim() === "미지정" || obj.manager.trim() === "미정" || obj.manager.trim() === "홀딩"; }));
       instance.selectedMember = "미정";
+      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === '-' || obj.manager.trim() === '' || obj.manager.trim() === "미지정" || obj.manager.trim() === "미정" || obj.manager.trim() === "홀딩"; }));
     } else {
-      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === member.trim() }));
       instance.selectedMember = member;
+      instance.makeBoard(instance.cardCases.filter((obj) => { return obj.manager.trim() === member.trim() }));
     }
   }
   dropEvent = async function (e) {
@@ -2180,6 +2185,7 @@ ProjectJs.prototype.boardSwipe = function () {
           if (statusArr.every(i => i)) {
 
             standardIndex = /Right/gi.test(e.key) ? firstIndex : thirdMatrixDom.length - 1;
+            instance.swipeStatus = standardIndex;
             for (let i = 0; i < thirdMatrixDom.length; i++) {
               if (i === standardIndex) {
                 for (let j = 0; j < thirdMatrixDom[i].length; j++) {
@@ -2209,30 +2215,13 @@ ProjectJs.prototype.boardSwipe = function () {
             if (/Right/gi.test(e.key)) {
               if (index === thirdMatrixDom.length - 1) {
 
-                for (let i = 0; i < thirdMatrixDom.length; i++) {
-                  if (i === 0) {
-                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
-                      thirdMatrixDom[i][j].style.display = "block";
-                      if (j === 0) {
-                        thirdMatrixDom[i][j].setAttribute("toggle", "on");
-                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
-                      }
-                    }
-                  } else {
-                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
-                      thirdMatrixDom[i][j].style.display = "none";
-                      if (j === 0) {
-                        thirdMatrixDom[i][j].setAttribute("toggle", "off");
-                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
-                      }
-                    }
-                  }
-                }
+                window.location.href = window.location.protocol + "//" + window.location.host + "/client";
 
               } else {
 
                 for (let i = 0; i < thirdMatrixDom.length; i++) {
                   if (i === index + 1) {
+                    instance.swipeStatus = i;
                     for (let j = 0; j < thirdMatrixDom[i].length; j++) {
                       thirdMatrixDom[i][j].style.display = "block";
                       if (j === 0) {
@@ -2255,30 +2244,13 @@ ProjectJs.prototype.boardSwipe = function () {
             } else if (/Left/gi.test(e.key)) {
               if (index === 0) {
 
-                for (let i = 0; i < thirdMatrixDom.length; i++) {
-                  if (i === thirdMatrixDom.length - 1) {
-                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
-                      thirdMatrixDom[i][j].style.display = "block";
-                      if (j === 0) {
-                        thirdMatrixDom[i][j].setAttribute("toggle", "on");
-                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
-                      }
-                    }
-                  } else {
-                    for (let j = 0; j < thirdMatrixDom[i].length; j++) {
-                      thirdMatrixDom[i][j].style.display = "none";
-                      if (j === 0) {
-                        thirdMatrixDom[i][j].setAttribute("toggle", "off");
-                        thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
-                      }
-                    }
-                  }
-                }
+                window.location.href = window.location.protocol + "//" + window.location.host + "/client";
 
               } else {
 
                 for (let i = 0; i < thirdMatrixDom.length; i++) {
                   if (i === index - 1) {
+                    instance.swipeStatus = i;
                     for (let j = 0; j < thirdMatrixDom[i].length; j++) {
                       thirdMatrixDom[i][j].style.display = "block";
                       if (j === 0) {
@@ -2328,7 +2300,6 @@ ProjectJs.prototype.boardSwipe = function () {
 
             }
           }
-
           if (typeof instance.dashboardData === "object" && instance.dashboardData !== null && Array.isArray(instance.dashboardData.action)) {
             const { status, action } = instance.dashboardData;
             for (let dom of action) {
@@ -2423,8 +2394,19 @@ ProjectJs.prototype.makeBoard = function (cases) {
   let thirdTitleDom;
   let thirdTitlePastDom;
   let thirdMatrixDom, thirdMatrixDomTemp;
+  let swipeStatus;
+  let onAction;
+  let onActionNumbers;
+  let statusNumbers;
+  let blocks;
 
   cleanChildren(scrollTong);
+
+  if (typeof this.swipeStatus === "number") {
+    swipeStatus = this.swipeStatus;
+  } else {
+    swipeStatus = 0;
+  }
 
   margin = 10;
   outerMargin = margin * 2;
@@ -2485,9 +2467,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
     sizeArr.push(size);
   }
 
-  setQueue(() => {
-    instance.boardGrayBar(divisionMap, cases, staticList);
-  });
+  instance.boardGrayBar(divisionMap, cases, staticList);
 
   division = new Map();
   numbers = new Map();
@@ -3170,6 +3150,75 @@ ProjectJs.prototype.makeBoard = function (cases) {
 
   this.thirdMatrixDom = thirdMatrixDom;
 
+  if (swipeStatus !== -1) {
+    for (let i = 0; i < thirdMatrixDom.length; i++) {
+      if (i === swipeStatus) {
+        for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+          thirdMatrixDom[i][j].style.display = "block";
+          if (j === 0) {
+            thirdMatrixDom[i][j].setAttribute("toggle", "on");
+            thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
+          }
+        }
+      } else {
+        for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+          thirdMatrixDom[i][j].style.display = "none";
+          if (j === 0) {
+            thirdMatrixDom[i][j].setAttribute("toggle", "off");
+            thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
+          }
+        }
+      }
+    }
+    onAction = [];
+    onActionNumbers = [];
+    statusNumbers = {};
+    for (let arr of thirdMatrixDom) {
+      if (arr[0].getAttribute("toggle") === "on") {
+
+        for (let i = 1; i < arr.length; i++) {
+          blocks = [ ...arr[i].children ];
+          onAction = onAction.concat(blocks.map((dom) => { return dom.firstChild.textContent.trim(); }));
+
+          for (let j = 0; j < blocks.length; j++) {
+            onActionNumbers.push(blocks[j].children[2].children.length);
+            tempArr = [ ...blocks[j].children[2].children ].map((dom) => { return dom.getAttribute("status"); });
+            for (let str of tempArr) {
+              if (statusNumbers[str] === undefined) {
+                statusNumbers[str] = 1;
+              } else {
+                statusNumbers[str] = statusNumbers[str] + 1;
+              }
+            }
+          }
+
+        }
+
+      }
+    }
+    if (typeof instance.dashboardData === "object" && instance.dashboardData !== null && Array.isArray(instance.dashboardData.action)) {
+      const { status, action } = instance.dashboardData;
+      for (let dom of action) {
+        if (onAction.includes(dom.getAttribute("name").trim())) {
+          dom.style.display = "block";
+          onIndex = onAction.findIndex((str) => { return dom.getAttribute("name").trim() === str });
+          if (onIndex !== -1) {
+            dom.children[1].textContent = String(onActionNumbers[onIndex]);
+          }
+        } else {
+          dom.style.display = "none";
+        }
+      }
+      for (let dom of status) {
+        if (statusNumbers[dom.getAttribute("name")] !== undefined) {
+          dom.children[1].textContent = String(statusNumbers[dom.getAttribute("name")]);
+        } else {
+          dom.children[1].textContent = String(0);
+        }
+      }
+    }
+  }
+
 }
 
 ProjectJs.prototype.cardViewMaker = function () {
@@ -3271,17 +3320,9 @@ ProjectJs.prototype.cardViewMaker = function () {
 
     } else {
 
-      if (typeof GeneralJs.stacks["dashboardBox"].parentElement === "object") {
-        if (GeneralJs.stacks["dashboardBox"].parentElement !== null) {
-          if (typeof GeneralJs.stacks["dashboardBox"].parentElement.remove === "function") {
-            GeneralJs.stacks["dashboardBox"].parentElement.remove();
-          }
-        }
-      }
-
       totalFather = createNode({
         mother: document.getElementById("totalcontents"),
-        class: [ "totalFather", "fadein" ],
+        class: (e.instantMode ? [ "totalMother" ] : [ "totalFather", "fadein" ]),
         style: {
           height: "calc(100vh - " + String(belowHeight) + ea + ")",
           width: String(100) + '%',
@@ -6140,10 +6181,10 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       position: "fixed",
       background: GeneralJs.colorChip.white,
       top: String(margin) + ea,
-      left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
+      left: String(instance.grayBarWidth + margin) + ea,
       borderRadius: String(5) + ea,
       boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
-      width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
+      width: String(window.innerWidth - instance.grayBarWidth - (margin * 2)) + ea,
       height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
       zIndex: String(2),
     };
@@ -6924,10 +6965,6 @@ ProjectJs.prototype.makeSearchEvent = function (search = null) {
           clearTimeout(GeneralJs.timeouts.grayLeftOnOffTimeout);
           GeneralJs.timeouts.grayLeftOnOffTimeout = null;
         }, 501);
-      }
-
-      if (GeneralJs.stacks["dashboardBoxBoo"]) {
-        GeneralJs.dashboardBoxLaunching(GeneralJs.stacks["dashboardBox"], true);
       }
 
     }
@@ -7742,6 +7779,15 @@ ProjectJs.prototype.communicationRender = function () {
 ProjectJs.prototype.launching = async function () {
   const instance = this;
   try {
+    const { returnGet, setQueue } = GeneralJs;
+    const getObj = returnGet();
+    let getTarget;
+    let tempFunction;
+    let cardViewInitial;
+
+    cardViewInitial = (getObj.proid === undefined && getObj.cliid === undefined);
+
+    this.cardViewInitial = cardViewInitial;
     this.grayBarWidth = this.mother.grayBarWidth;
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
@@ -7753,11 +7799,6 @@ ProjectJs.prototype.launching = async function () {
     this.whiteResize();
     this.communicationRender();
     this.boardSwipe();
-
-    const { returnGet, setQueue } = GeneralJs;
-    const getObj = returnGet();
-    let getTarget;
-    let tempFunction;
 
     getTarget = null;
     if (getObj.proid !== undefined) {
@@ -7782,9 +7823,9 @@ ProjectJs.prototype.launching = async function () {
         getTarget = this.standardDoms[1];
       }
     } else {
-      setQueue(() => {
-        instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {});
-      }, 300);
+      instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {
+        instantMode: true
+      });
     }
     if (getTarget !== null) {
       getTarget.click();

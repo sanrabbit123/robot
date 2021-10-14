@@ -1772,6 +1772,21 @@ DataPatch.prototype.clientMap = function () {
       "피드백과 응대 완료",
       "디자이너 선택",
       "해당 없음"
+    ], itemMap: [
+      [
+        "1차 응대",
+        [
+          [ "1차 응대 예정" ],
+          [ "1차 응대 후 대기", "부재중 알림 발송" ],
+          [ "스타일 체크 대기", "상세 설문 대기" ],
+          [ "제안 발송 예정", "부재중 제안 발송" ],
+          [ "제안 피드백 예정", "피드백과 응대 예정" ],
+          [ "피드백 부재중", "자동 피드백 부재중" ],
+          [ "제안 피드백 완료", "피드백과 응대 완료" ],
+          [ "디자이너 선택" ],
+          [ "해당 없음" ],
+        ]
+      ]
     ], divisionStart: 1, divisionLength: 6, inputFunction: actionInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: actionToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: true, },
     outreason: { name: "유출 이유", position: "requests.0.analytics.response.outreason", type: "array", items: [
       "연결 안 됨",
