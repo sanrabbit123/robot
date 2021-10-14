@@ -3027,6 +3027,14 @@ Mother.prototype.messageLog = function (message) {
   });
 }
 
+Mother.prototype.uniqueValue = function (type = "number") {
+  if (type === "number") {
+    return Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)));
+  } else {
+    return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
+  }
+}
+
 Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000) {
   const PureServer = function () {
     this.matrix = [];

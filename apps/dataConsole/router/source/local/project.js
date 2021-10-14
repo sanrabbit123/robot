@@ -2159,8 +2159,11 @@ ProjectJs.prototype.boardSwipe = function () {
   const instance = this;
   const { ea } = this;
   const firstIndex = 1;
-  let statusArr, thirdMatrixDom, index;
-  let onAction, offAction;
+  let statusArr, thirdMatrixDom, index, onIndex;
+  let onAction, onActionNumbers, statusNumbers;
+  let standardIndex;
+  let blocks;
+  let tempArr;
   window.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
       if (Array.isArray(instance.thirdMatrixDom)) {
@@ -2170,67 +2173,35 @@ ProjectJs.prototype.boardSwipe = function () {
           thirdMatrixDom = instance.thirdMatrixDom;
 
           statusArr = [];
-          for (let arr of thirdMatrixDom) {
-            statusArr.push(arr[0].getAttribute("toggle") === "on");
+          for (let [ dom ] of thirdMatrixDom) {
+            statusArr.push(dom.getAttribute("toggle") === "on");
           }
-
-          onAction = [];
-          offAction = [];
 
           if (statusArr.every(i => i)) {
 
-            if (/Right/gi.test(e.key)) {
-
-              for (let i = 0; i < thirdMatrixDom.length; i++) {
-
-                if (i === firstIndex) {
-                  for (let j = 0; j < thirdMatrixDom[i].length; j++) {
-                    thirdMatrixDom[i][j].style.display = "block";
-                    if (j === 0) {
-                      thirdMatrixDom[i][j].setAttribute("toggle", "on");
-                      thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
-                    }
-                  }
-                } else {
-                  for (let j = 0; j < thirdMatrixDom[i].length; j++) {
-                    thirdMatrixDom[i][j].style.display = "none";
-                    if (j === 0) {
-                      thirdMatrixDom[i][j].setAttribute("toggle", "off");
-                      thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
-                    }
+            standardIndex = /Right/gi.test(e.key) ? firstIndex : thirdMatrixDom.length - 1;
+            for (let i = 0; i < thirdMatrixDom.length; i++) {
+              if (i === standardIndex) {
+                for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                  thirdMatrixDom[i][j].style.display = "block";
+                  if (j === 0) {
+                    thirdMatrixDom[i][j].setAttribute("toggle", "on");
+                    thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
                   }
                 }
-
-              }
-
-
-            } else if (/Left/gi.test(e.key)) {
-
-              for (let i = 0; i < thirdMatrixDom.length; i++) {
-
-                if (i === thirdMatrixDom.length - 1) {
-                  for (let j = 0; j < thirdMatrixDom[i].length; j++) {
-                    thirdMatrixDom[i][j].style.display = "block";
-                    if (j === 0) {
-                      thirdMatrixDom[i][j].setAttribute("toggle", "on");
-                      thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("first")) + ea;
-                    }
-                  }
-                } else {
-                  for (let j = 0; j < thirdMatrixDom[i].length; j++) {
-                    thirdMatrixDom[i][j].style.display = "none";
-                    if (j === 0) {
-                      thirdMatrixDom[i][j].setAttribute("toggle", "off");
-                      thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
-                    }
+              } else {
+                for (let j = 0; j < thirdMatrixDom[i].length; j++) {
+                  thirdMatrixDom[i][j].style.display = "none";
+                  if (j === 0) {
+                    thirdMatrixDom[i][j].setAttribute("toggle", "off");
+                    thirdMatrixDom[i][j].style.marginTop = Number(thirdMatrixDom[i][j].getAttribute("second")) + ea;
                   }
                 }
-
               }
-
             }
 
           } else {
+
             index = statusArr.findIndex((i => i));
             if (index === -1) {
               window.location.reload();
@@ -2328,12 +2299,58 @@ ProjectJs.prototype.boardSwipe = function () {
 
               }
             }
+
           }
 
-          console.log(instance.dashboardData);
+          onAction = [];
+          onActionNumbers = [];
+          statusNumbers = {};
+          for (let arr of thirdMatrixDom) {
+            if (arr[0].getAttribute("toggle") === "on") {
 
+              for (let i = 1; i < arr.length; i++) {
+                blocks = [ ...arr[i].children ];
+                onAction = onAction.concat(blocks.map((dom) => { return dom.firstChild.textContent.trim(); }));
 
+                for (let j = 0; j < blocks.length; j++) {
+                  onActionNumbers.push(blocks[j].children[2].children.length);
+                  tempArr = [ ...blocks[j].children[2].children ].map((dom) => { return dom.getAttribute("status"); });
+                  for (let str of tempArr) {
+                    if (statusNumbers[str] === undefined) {
+                      statusNumbers[str] = 1;
+                    } else {
+                      statusNumbers[str] = statusNumbers[str] + 1;
+                    }
+                  }
+                }
 
+              }
+
+            }
+          }
+
+          if (typeof instance.dashboardData === "object" && instance.dashboardData !== null && Array.isArray(instance.dashboardData.action)) {
+            const { status, action } = instance.dashboardData;
+            for (let dom of action) {
+              if (onAction.includes(dom.getAttribute("name").trim())) {
+                dom.style.display = "block";
+                onIndex = onAction.findIndex((str) => { return dom.getAttribute("name").trim() === str });
+                if (onIndex !== -1) {
+                  dom.children[1].textContent = String(onActionNumbers[onIndex]);
+                }
+              } else {
+                dom.style.display = "none";
+              }
+            }
+            for (let dom of status) {
+              if (statusNumbers[dom.getAttribute("name")] !== undefined) {
+                dom.children[1].textContent = String(statusNumbers[dom.getAttribute("name")]);
+              } else {
+                dom.children[1].textContent = String(0);
+              }
+            }
+
+          }
 
         }
       }

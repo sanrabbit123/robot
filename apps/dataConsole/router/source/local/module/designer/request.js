@@ -96,6 +96,345 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
   });
 }
 
+DesignerJs.prototype.requestReturnStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
+  const { totalMother, ea, grayBarWidth, middleMode } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
+  const desid = designer.desid;
+  const proid = project.proid;
+  const cliid = project.cliid;
+
+  const title = "홈스타일링 의뢰서";
+  const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" + GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
+  const emptyReload = (originalArr, reloadArr) => {
+    if (originalArr.map((a) => { return a.trim(); }).filter((a) => { return a !== ""; }).length > 0) {
+      return originalArr;
+    } else {
+      return reloadArr;
+    }
+  }
+  const mainContents = [
+    {
+      title: "현장 미팅",
+      className: "mainContents_when",
+      position: "request.about.when",
+      contents: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
+      spread: true,
+    },
+    {
+      title: "현장 주소",
+      className: "mainContents_where",
+      position: "request.about.where",
+      contents: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
+      spread: true,
+    },
+    {
+      title: "현장 관련",
+      className: "mainContents_site",
+      position: "request.about.site",
+      contents: emptyReload(projectHistory.request.about.site, [ "현장 관련 상세 사항 없음" ]),
+      spread: true,
+    },
+    {
+      title: "시공 관련",
+      className: "mainContents_construct",
+      position: "request.about.construct",
+      contents: emptyReload(projectHistory.request.about.construct, [ "시공 관련 상세 사항 없음" ]),
+      spread: false,
+    },
+    {
+      title: "스타일링 관련",
+      className: "mainContents_styling",
+      position: "request.about.styling",
+      contents: emptyReload(projectHistory.request.about.styling, [ "스타일링 관련 상세 사항 없음" ]),
+      spread: true,
+    },
+    {
+      title: "예산 관련",
+      className: "mainContents_budget",
+      position: "request.about.budget",
+      contents: emptyReload(projectHistory.request.about.budget, [ "예산 관련 상세 사항 없음" ]),
+      spread: true,
+    },
+    {
+      title: "기타 사항",
+      className: "mainContents_progress",
+      position: "request.about.progress",
+      contents: emptyReload(projectHistory.request.about.progress, [ "기타 관련 상세 사항 없음" ]),
+      spread: false,
+    }
+  ];
+  const pictureContents = "고객님이 선택한 사진";
+  const pictureContentsSite = "고객님의 현장 사진";
+  const pictureContentsPrefer = "고객님의 선호 사진";
+  const pictures = clientHistory.curation.image;
+  const noticeContents = [
+    {
+      title: "서비스비 안내",
+      contents: [
+        "이번 현장의 서비스비는 " + autoComma(project.process.contract.remain.calculation.amount.supply) + "원(VAT별도)으로 책정되어 있습니다.",
+        "홈리에종의 계약금은 300,000원(VAT별도)으로 책정되어 있습니다.",
+        "현재 고객은 홈리에종에 계약금 330,000원을 입금한 상태며, 현장 미팅 후 계약금을 제외한 서비스비를 전액 입금할 경우 서비스가 계속 진행됩니다.",
+        "★ 현장 미팅 후 서비스비 지불 전에는 디자이너와 스타일링 논의를 할 수 없는 것이 원칙입니다.(고객에게도 필요시 안내해주세요)",
+        "★ 서비스 진행중 타 공간에 대한 전체적인 스타일링이 추가되는 경우 꼭! 홈리에종을 통해 디자인비 조정이 될 수 있도록 해주세요.",
+        "법인/개인사업자(일반과세), 개인사업자(간이과세), 프리랜서 정산 중에 정산 방식을 알려주시면 수수료를 제외한 정확한 정산액은 계산하여 말씀드리겠습니다.",
+      ]
+    },
+    {
+      title: "고객 안내 사항과 서비스 구성",
+      contents: [
+        "디자이너와 카톡(문자)/전화/메일 등의 채널을 통해 커뮤니케이션 하면서 전체 스타일링을 완성합니다. 커뮤니케이션에 적극적으로 참여해주시면 더 좋은 결과물을 얻으실 수 있습니다.",
+        "디자이너와 현장 미팅을 진행하며 집컨디션/취향/생활특징/예산을 고려하여 컨설팅 해드립니다.",
+        "시공팀은 추천하는 시공팀 외에 고객이 개별적으로 알아본 시공팀과 진행 가능합니다.",
+        "시공 진행시 디자이너는 시공 방향 제시 및 전체 마감재를 셀렉해드립니다.",
+        "기존에 사용하시는 가구들 중 가져갈 가구와 버릴가구 선택 및 배치/활용 제안 드립니다. 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
+        "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
+        "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4품목중에서 셀렉은 가능합니다.",
+        "디자이너 제안 후 고객 컨펌이 완료된 구매제품은 고객이 구매하실 수 있도록 안내드립니다. 연계 업체의 제품 구매시에는 할인혜택을 받으실 수 있습니다. 모든 제품이 해당되는 것은 아니며 업체마다 차이가 있습니다.",
+        "제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다. 배송된 제품의 수령, 언박싱, 조립, 1차배치는 고객님께서 진행하시게 됩니다. 구매 및 물품배치가 완료되면 디자이너의 마무리터치 후 인터뷰와 촬영을 진행합니다.",
+      ]
+    },
+    {
+      title: "시공 연계수수료 안내",
+      contents: [
+        "고객이 시공 계약을 체결한 곳에 공사진행과 A/S에 대한 책임이 있습니다. (고객에게 동일하게 안내합니다.)",
+        "고객이 데려온 시공팀과 진행할 경우 디자이너는 시공자재 셀렉과 필요시 시공관련 커뮤니케이션 업무가 있을 수 있습니다.",
+        "고객이 실장님 또는 실장님과 협업하시는 시공사와 시공 계약을 체결할 경우 전체 계약 금액의 5%가 시공 연계 수수료 입니다.",
+        "홈리에종은 적법한 방식의 시공계약을 권장하며, (세금 없는) 현금 거래로 시공을 진행했을 경우에도 시공 연계 수수료는 공급가에 VAT 10%를 더한 금액으로 전자세금계산서를 발행합니다. 입금하실 때에도 공급가에 VAT10% 더한 금액을 입금해주셔야합니다.",
+      ]
+    },
+    {
+      title: "정산 안내",
+      contents: [
+        "홈리에종에서 받은 서비스비는 수수료를 제하고 스타일링 시작 후 실장님께 선금 50%를 먼저 정산하고",
+        "스타일링이 마무리되면 나머지 50%를 정산합니다.",
+        "스타일링 마무리는",
+        "1) 스타일링 제안이 마무리되어 제품들이 배송단계에 있고",
+        "2) 촬영일이 (변동되더라도) 어느정도 정해지고",
+        "3) 실장님께서 디자이너의 디자인 의도가 담긴 글(폼을 따로 드립니다) 저희쪽에 주시면",
+        "4) 홈리에종에서 고객님께 정산 여부를 확인 후 정산을 진행합니다.",
+      ]
+    }
+  ];
+  const divToInput = function (position) {
+    return async function (e) {
+      try {
+        if (!middleMode) {
+          const { ajaxJson, createNode, withOut, colorChip, equalJson } = GeneralJs;
+          const removeClassName = "divToInputRemove";
+          const target = this.firstChild.firstChild;
+          const text = target.textContent;
+          const mother = this.firstChild;
+          const proid = project.proid;
+          let styleCopied, styleRaw, style;
+          let input, cancel;
+          let updateEvent;
+
+          if (this.querySelector("input") === null) {
+
+            styleRaw = equalJson(JSON.stringify(target.style));
+            styleCopied = {};
+            for (let i in styleRaw) {
+              if (styleRaw[i] !== '' && !/^[0-9]+$/.test(i)) {
+                styleCopied[i] = styleRaw[i];
+              }
+            }
+            style = equalJson(JSON.stringify(styleCopied));
+            styleCopied.outline = String(0);
+            styleCopied.border = String(0);
+            styleCopied.background = "transparent";
+            styleCopied.color = colorChip.green;
+            styleCopied.zIndex = String(2);
+
+            updateEvent = async function (column, value) {
+              try {
+                const targets = document.querySelectorAll('.' + removeClassName);
+                await ajaxJson({
+                  id: proid,
+                  column,
+                  value,
+                  email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
+                }, "/updateProjectHistory");
+                for (let dom of targets) {
+                  dom.parentElement.removeChild(dom);
+                }
+                createNode({ mother, text: value, style });
+              } catch (e) {
+                console.log(e);
+              }
+            }
+
+            cancel = createNode({
+              mother,
+              class: [ removeClassName ],
+              events: [
+                {
+                  type: "click",
+                  event: (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const targets = document.querySelectorAll('.' + removeClassName);
+                    for (let dom of targets) {
+                      dom.parentElement.removeChild(dom);
+                    }
+                    createNode({ mother, text, style });
+                  }
+                }
+              ],
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                background: "transparent",
+                zIndex: String(2),
+              }
+            });
+
+            input = createNode({
+              mother,
+              class: [ removeClassName ],
+              attribute: [
+                { column: position },
+                { value: text }
+              ],
+              mode: "input",
+              events: [
+                {
+                  type: "click",
+                  event: (e) => { e.preventDefault(); e.stopPropagation(); }
+                },
+                {
+                  type: "keydown",
+                  event: function (e) {
+                    if (e.key === "Tab") {
+                      e.preventDefault();
+                    }
+                  }
+                },
+                {
+                  type: "keyup",
+                  event: async function (e) {
+                    try {
+                      const column = this.getAttribute("column");
+                      if (e.key === "Tab") {
+                        await updateEvent(column, this.value);
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                },
+                {
+                  type: "keypress",
+                  event: async function (e) {
+                    try {
+                      const column = this.getAttribute("column");
+                      if (e.key === "Enter") {
+                        await updateEvent(column, this.value);
+                      }
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+                }
+              ],
+              style: styleCopied
+            });
+
+            mother.removeChild(target);
+            input.focus();
+
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  const matrix = [
+    [ "고객 정보", "", "공간 정보", "" ],
+    [ (desktop ? "고객명" : "성함"), projectHistory.request.client.name, (desktop ? "계약 형태" : "계약"), projectHistory.request.space.contract ],
+    [ "연락처", projectHistory.request.client.phone, (desktop ? "사전 점검일" : "사전점검"), projectHistory.request.space.precheck ],
+    [ (desktop ? "가족 구성원" : "가족"), projectHistory.request.client.family, (desktop ? "집 비는 날" : "비는 날"), projectHistory.request.space.empty ],
+    [ "주소", projectHistory.request.client.address, (desktop ? "입주 예정일" : "입주일"), projectHistory.request.space.movein ],
+    [ "", "", (desktop ? "특이 사항" : "기타"), projectHistory.request.space.special ],
+    [ "예산", projectHistory.request.client.budget, (desktop ? "공간구성" : "구성"), projectHistory.request.space.composition ],
+    [ "서비스 정보", "", "고객 요청", "" ],
+    [ "서비스", projectHistory.request.service.service, projectHistory.request.client.etc, "" ],
+    [ (desktop ? "선호 컨셉" : "컨셉"), projectHistory.request.service.concept, "", "" ],
+    [ "시공", projectHistory.request.service.construct, "", "" ],
+    [ "스타일링", projectHistory.request.service.styling, "", "" ],
+  ];
+  const mergeMap = [
+    [ null, [ 0, 0 ], null, [ 0, 2 ] ],
+    [ null, null, null, null ],
+    [ null, null, null, null ],
+    [ null, null, null, null ],
+    [ null, null, null, null ],
+    [ [ 4, 0 ], [ 4, 1 ], null, null ],
+    [ null, null, null, null ],
+    [ null, [ 7, 0 ], null, [ 7, 2 ] ],
+    [ null, null, null, [ 8, 2 ] ],
+    [ null, null, null, [ 9, 2 ] ],
+    [ null, null, null, [ 10, 2 ] ],
+    [ null, null, [ 8, 2 ], [ 11, 2 ] ],
+  ];
+  const callbackMap = [
+    [ null, null, null, null ],
+    [ null, divToInput("request.client.name"), null, divToInput("request.space.contract") ],
+    [ null, divToInput("request.client.phone"), null, divToInput("request.space.precheck") ],
+    [ null, divToInput("request.client.family"), null, divToInput("request.space.empty") ],
+    [ null, divToInput("request.client.address"), null, divToInput("request.space.movein") ],
+    [ null, divToInput("request.client.address"), null, divToInput("request.space.special") ],
+    [ null, divToInput("request.client.budget"), null, divToInput("request.space.composition") ],
+    [ null, null, null, null ],
+    [ null, divToInput("request.service.service"), divToInput("request.client.etc"), null ],
+    [ null, divToInput("request.service.concept"), null, null ],
+    [ null, divToInput("request.service.construct"), null, null ],
+    [ null, divToInput("request.service.styling"), null, null ],
+  ];
+  const boldMap = [
+    [ 0, 0, 0, 0 ],
+    [ 1, 0, 1, 0 ],
+    [ 1, 0, 1, 0 ],
+    [ 1, 0, 1, 0 ],
+    [ 1, 0, 1, 0 ],
+    [ 1, 0, 1, 0 ],
+    [ 1, 0, 1, 0 ],
+    [ 0, 0, 0, 0 ],
+    [ 1, 0, 0, 0 ],
+    [ 1, 0, 0, 0 ],
+    [ 1, 0, 0, 0 ],
+    [ 1, 0, 0, 0 ],
+  ];
+  const titleMap = [ 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ];
+  const widthRatio = desktop ? [ 1, 3, 1, 3 ] : [ 1, 2, 1, 2 ];
+
+  return {
+    title,
+    initialContents,
+    emptyReload,
+    mainContents,
+    pictureContents,
+    pictureContentsSite,
+    pictureContentsPrefer,
+    pictures,
+    noticeContents,
+    divToInput,
+    matrix,
+    mergeMap,
+    callbackMap,
+    boldMap,
+    titleMap,
+    widthRatio,
+  };
+}
+
 DesignerJs.prototype.requestList = function (desid) {
   if (desid === undefined) {
     throw new Error("invaild input");
@@ -543,6 +882,556 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
   }
 }
 
+DesignerJs.prototype.requestStaticHtml = function (designer, project, client, clientHistory, projectHistory, requestNumber, clientPhoto) {
+  const instance = this;
+  const mother = this.mother;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
+  const { totalMother, grayBarWidth, middleMode } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
+  const desid = designer.desid;
+  const proid = project.proid;
+  const cliid = project.cliid;
+  const today = new Date();
+  const {
+    title,
+    initialContents,
+    emptyReload,
+    mainContents,
+    pictureContents,
+    pictureContentsSite,
+    pictureContentsPrefer,
+    pictures,
+    noticeContents,
+    divToInput,
+    matrix,
+    mergeMap,
+    callbackMap,
+    boldMap,
+    titleMap,
+    widthRatio,
+  } = this.requestReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
+  for (let obj of mainContents) {
+    obj.spread = true;
+  }
+  const ea = "px";
+  const pe = "%";
+  return async function (e) {
+    try {
+      const board = createNode({
+        mother: document.body,
+        style: {
+          display: "none",
+          position: "relative",
+        }
+      });
+      let titleArea;
+      let contentsArea;
+      let topMargin;
+      let leftMargin;
+      let titleHeight;
+      let titleSize;
+      let titleBottom;
+      let titlePaddingBottom;
+      let fontSize;
+      let sum;
+      let titleDateVisualBottom;
+      let contentsBetween;
+      let contentsClientInfo;
+      let clientInfoLeftWidth;
+      let width;
+      let wordsBetween0, wordsBetween1, wordsBetween2;
+      let leftIndent;
+      let words;
+      let arrowTop, arrowWidth, arrowLeft;
+      let tempDom;
+      let tableVisual;
+      let lineHeight;
+      let contentsClientPhoto;
+      let contentsClientPhotoTong;
+      let images, siteImages, preferImages;
+      let photoWidth;
+      let photoMargin;
+      let photoNumber;
+      let clientInfoBottom;
+      let noticeDom;
+      let finalBottom;
+      let num;
+      let whitePopupEvent;
+      let html;
+
+      topMargin = 42;
+      leftMargin = 60;
+      titleSize = 35;
+      titlePaddingLeft = 1;
+      titleBottom = 35;
+      titlePaddingBottom = (isMac() ? 18 : 15);
+      titleDateVisualBottom = (isMac() ? 2 : -3);
+
+      fontSize = 15;
+      contentsBetween = 32;
+
+      clientInfoBottom = 42;
+      clientInfoLeftWidth = 380;
+
+      wordsBetween0 = 6;
+      wordsBetween1 = 22;
+      wordsBetween2 = 10;
+
+      tableVisual = 18;
+      leftIndent = 15;
+
+      arrowTop = (isMac() ? 5.5 : 4);
+      arrowWidth = 8;
+      arrowLeft = 1;
+
+      lineHeight = 1.8;
+      photoWidth = 260;
+      photoMargin = 10;
+      finalBottom = 240;
+
+      sum = 0;
+      for (let i of widthRatio) {
+        sum += i;
+      }
+
+      board.style.paddingTop = String(topMargin) + ea;
+
+      titleArea = createNode({
+        mother: board,
+        style: {
+          marginLeft: String(leftMargin) + ea,
+          paddingLeft: String(titlePaddingLeft) + ea,
+          width: withOut((leftMargin * 2) + titlePaddingLeft, ea),
+          borderBottom: "1px solid " + colorChip.gray3,
+          marginBottom: String(titleBottom) + ea,
+          paddingBottom: String(titlePaddingBottom) + ea,
+          position: "relative",
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              position: "relative",
+              fontSize: String(titleSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            text: dateToString(today),
+            style: {
+              position: "absolute",
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              right: String(titlePaddingLeft) + ea,
+              textAlign: "right",
+              bottom: String(titlePaddingBottom - titleDateVisualBottom) + ea,
+            }
+          }
+        ]
+      });
+
+      contentsArea = createNode({
+        mother: board,
+        style: {
+          marginLeft: String(leftMargin) + ea,
+          width: withOut(leftMargin * 2, ea),
+        },
+        children: [
+          {
+            text: initialContents,
+            style: {
+              position: "relative",
+              fontSize: String(fontSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              lineHeight: String(lineHeight),
+              marginBottom: String(titleBottom) + ea,
+            },
+            bold: {
+              fontWeight: String(600),
+              color: colorChip.black,
+            }
+          }
+        ]
+      });
+
+      contentsClientInfo = createNode({
+        mother: contentsArea,
+        style: {
+          position: "relative",
+          display: "block",
+          width: String(100) + '%',
+          textAlign: "right",
+          marginBottom: String(clientInfoBottom) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              top: String(0),
+              paddingLeft: String(leftIndent) + ea,
+              height: String(100) + '%',
+              verticalAlign: "top",
+              textAlign: "left",
+              borderBottom: "1px solid " + colorChip.gray3,
+              boxSizing: "border-box",
+            }
+          }
+        ]
+      });
+
+      contentsClientInfo.appendChild(mother.makeTable(matrix, { style: { width: 1000 }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
+      contentsClientInfo.children[1].style.display = "block";
+      contentsClientInfo.children[1].style.verticalAlign = "top";
+      contentsClientInfo.children[1].style.width = String(100) + pe;
+      contentsClientInfo.children[1].style.marginTop = String(35) + ea;
+
+      num = 0;
+      for (let { title, className, contents, position, spread } of mainContents) {
+        words = createNode({
+          mother: contentsClientInfo.children[0],
+          class: [ className ],
+          text: title,
+          style: {
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            marginBottom: String(wordsBetween0) + ea,
+            cursor: "pointer",
+          }
+        });
+        createNode({
+          mother: words,
+          mode: "svg",
+          source: mother.returnArrow("right", colorChip.green),
+          style: {
+            position: "absolute",
+            width: String(arrowWidth) + ea,
+            left: String((-1 * leftIndent) + arrowLeft) + ea,
+            top: String(arrowTop) + ea,
+          }
+        });
+        createNode({
+          mother: contentsClientInfo.children[0],
+          class: [ className ],
+          text: contents.map((z) => { return "<b%-%b> " + z.replace(/^\-/, '').replace(/^\- /, ''); }).map((z) => { if (z.trim() === "<b%-%b>") { return ""; } else { return z; } }).join("\n"),
+          style: {
+            position: "relative",
+            fontSize: String(fontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(lineHeight),
+            marginBottom: String(wordsBetween1) + ea,
+            overflow: "hidden",
+            transition: "all 0s ease",
+            height: spread ? "auto" : String(0),
+          },
+          bold: {
+            color: colorChip.gray4,
+          }
+        });
+        num++;
+      }
+
+      images = pictures.map((image) => {
+        const imageLink = "/corePortfolio/listImage";
+        let pid;
+        pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
+        return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
+      });
+      siteImages = clientPhoto.sitePhoto;
+      preferImages = clientPhoto.preferredPhoto;
+
+      photoNumber = 3;
+      photoWidth = "calc(calc(100% - " + String(photoMargin * (photoNumber - 1)) + ea + ") / " + String(photoNumber) + ")";
+
+      if (images.length > 0) {
+        contentsClientPhoto = createNode({
+          mother: contentsArea,
+          style: {
+            position: "relative",
+            display: "block",
+            width: String(100) + '%',
+            marginBottom: String(clientInfoBottom) + ea,
+          },
+          children: [
+            {
+              text: pictureContents,
+              style: {
+                paddingLeft: String(leftIndent) + ea,
+                position: "relative",
+                display: "block",
+                fontSize: String(fontSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                marginBottom: String(wordsBetween1) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: mother.returnArrow("right", colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(arrowWidth) + ea,
+                    left: String(arrowLeft) + ea,
+                    top: String(arrowTop) + ea,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                position: "relative",
+                display: "block",
+              },
+            }
+          ]
+        });
+        contentsClientPhotoTong = contentsClientPhoto.children[1];
+
+        for (let i = 0; i < images.length; i++) {
+          createNode({
+            mother: contentsClientPhotoTong,
+            mode: "img",
+            class: [ "hoverDefault_lite" ],
+            attribute: [
+              { src: images[i] },
+              { index: String(i) },
+              { method: /sitePhoto/g.test(images[i]) ? "site" : (/preferredPhoto/g.test(images[i]) ? "preferred" : "selected") },
+              { length: String(images.length) }
+            ],
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: photoWidth,
+              borderRadius: String(3) + "px",
+              marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
+              marginBottom: String(Math.floor(i / photoNumber) === Math.floor((images.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
+              cursor: "pointer",
+              verticalAlign: "top",
+            }
+          });
+        }
+      }
+
+      if (siteImages.length > 0) {
+        contentsClientPhoto = createNode({
+          mother: contentsArea,
+          style: {
+            position: "relative",
+            display: "block",
+            width: String(100) + '%',
+            marginBottom: String(clientInfoBottom) + ea,
+          },
+          children: [
+            {
+              text: pictureContentsSite,
+              style: {
+                paddingLeft: String(leftIndent) + ea,
+                position: "relative",
+                display: "block",
+                fontSize: String(fontSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                marginBottom: String(wordsBetween1) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: mother.returnArrow("right", colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(arrowWidth) + ea,
+                    left: String(arrowLeft) + ea,
+                    top: String(arrowTop) + ea,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                position: "relative",
+                display: "block",
+              },
+            }
+          ]
+        });
+        contentsClientPhotoTong = contentsClientPhoto.children[1];
+
+        for (let i = 0; i < siteImages.length; i++) {
+          createNode({
+            mother: contentsClientPhotoTong,
+            mode: "img",
+            class: [ "hoverDefault_lite" ],
+            attribute: [
+              { src: siteImages[i] },
+              { index: String(i) },
+              { method: /sitePhoto/g.test(siteImages[i]) ? "site" : (/preferredPhoto/g.test(siteImages[i]) ? "preferred" : "selected") },
+              { length: String(siteImages.length) }
+            ],
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: photoWidth,
+              borderRadius: String(3) + "px",
+              marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
+              marginBottom: String(Math.floor(i / photoNumber) === Math.floor((siteImages.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
+              cursor: "pointer",
+              verticalAlign: "top",
+            }
+          });
+        }
+      }
+
+      if (preferImages.length > 0) {
+        contentsClientPhoto = createNode({
+          mother: contentsArea,
+          style: {
+            position: "relative",
+            display: "block",
+            width: String(100) + '%',
+            marginBottom: String(clientInfoBottom) + ea,
+          },
+          children: [
+            {
+              text: pictureContentsPrefer,
+              style: {
+                paddingLeft: String(leftIndent) + ea,
+                position: "relative",
+                display: "block",
+                fontSize: String(fontSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                marginBottom: String(wordsBetween1) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: mother.returnArrow("right", colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(arrowWidth) + ea,
+                    left: String(arrowLeft) + ea,
+                    top: String(arrowTop) + ea,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                position: "relative",
+                display: "block",
+              },
+            }
+          ]
+        });
+        contentsClientPhotoTong = contentsClientPhoto.children[1];
+
+        for (let i = 0; i < preferImages.length; i++) {
+          createNode({
+            mother: contentsClientPhotoTong,
+            mode: "img",
+            class: [ "hoverDefault_lite" ],
+            attribute: [
+              { src: preferImages[i] },
+              { index: String(i) },
+              { method: /sitePhoto/g.test(preferImages[i]) ? "site" : (/preferredPhoto/g.test(preferImages[i]) ? "preferred" : "selected") },
+              { length: String(preferImages.length) }
+            ],
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: photoWidth,
+              borderRadius: String(3) + "px",
+              marginRight: String(i % photoNumber === photoNumber - 1 ? 0 : photoMargin) + ea,
+              marginBottom: String(Math.floor(i / photoNumber) === Math.floor((preferImages.length - 1) / photoNumber) ? 0 : photoMargin) + ea,
+              cursor: "pointer",
+              verticalAlign: "top",
+            }
+          });
+        }
+      }
+
+      for (let { title, contents } of noticeContents) {
+        noticeDom = createNode({
+          mother: contentsArea,
+          style: {
+            position: "relative",
+            display: "block",
+            width: String(100) + '%',
+            marginBottom: String(contentsBetween) + ea,
+          },
+          children: [
+            {
+              text: title,
+              style: {
+                paddingLeft: String(leftIndent) + ea,
+                position: "relative",
+                display: "block",
+                fontSize: String(fontSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                marginBottom: String(wordsBetween2) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: mother.returnArrow("right", colorChip.green),
+                  style: {
+                    position: "absolute",
+                    width: String(arrowWidth) + ea,
+                    left: String(arrowLeft) + ea,
+                    top: String(arrowTop) + ea,
+                  }
+                }
+              ]
+            },
+            {
+              text: contents.map((z) => { return "<b%-%b> " + z; }).join("\n"),
+              style: {
+                position: "relative",
+                fontSize: String(fontSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                lineHeight: String(lineHeight),
+              },
+              bold: {
+                color: colorChip.gray4,
+              }
+            }
+          ]
+        });
+      }
+
+      board.style.height = "auto";
+      board.style.paddingBottom = String(finalBottom) + ea;
+
+      html = `<!DOCTYPE html>
+      <html lang="ko" dir="ltr">
+        <head>
+          <meta charset="utf-8">
+          <style>${String(document.querySelector("style").innerHTML)}</style>
+          <title></title>
+        </head>
+        <body style="padding-top:${String(leftMargin)}${ea};padding-bottom:${String(leftMargin)}${ea};">
+          ${String(board.innerHTML)}
+        </body>
+      </html>`;
+
+      document.body.removeChild(document.body.lastChild);
+
+      console.log(await ajaxJson({ html }, "/ghostPass_pdfPrint"))
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 DesignerJs.prototype.requestContents = async function (board, designer, project, client, clientHistory, projectHistory, requestNumber) {
   const instance = this;
   const mother = this.mother;
@@ -553,318 +1442,30 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
   const desid = designer.desid;
   const proid = project.proid;
   const cliid = project.cliid;
-  const title = "홈스타일링 의뢰서";
-  const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" +   GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
-  const emptyReload = (originalArr, reloadArr) => {
-    if (originalArr.map((a) => { return a.trim(); }).filter((a) => { return a !== ""; }).length > 0) {
-      return originalArr;
-    } else {
-      return reloadArr;
-    }
-  }
-  const mainContents = [
-    {
-      title: "현장 미팅",
-      className: "mainContents_when",
-      position: "request.about.when",
-      contents: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
-      spread: true,
-    },
-    {
-      title: "현장 주소",
-      className: "mainContents_where",
-      position: "request.about.where",
-      contents: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
-      spread: true,
-    },
-    {
-      title: "현장 관련",
-      className: "mainContents_site",
-      position: "request.about.site",
-      contents: emptyReload(projectHistory.request.about.site, [ "현장 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "시공 관련",
-      className: "mainContents_construct",
-      position: "request.about.construct",
-      contents: emptyReload(projectHistory.request.about.construct, [ "시공 관련 상세 사항 없음" ]),
-      spread: false,
-    },
-    {
-      title: "스타일링 관련",
-      className: "mainContents_styling",
-      position: "request.about.styling",
-      contents: emptyReload(projectHistory.request.about.styling, [ "스타일링 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "예산 관련",
-      className: "mainContents_budget",
-      position: "request.about.budget",
-      contents: emptyReload(projectHistory.request.about.budget, [ "예산 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "기타 사항",
-      className: "mainContents_progress",
-      position: "request.about.progress",
-      contents: emptyReload(projectHistory.request.about.progress, [ "기타 관련 상세 사항 없음" ]),
-      spread: false,
-    }
-  ];
-  const pictureContents = "고객님이 선택한 사진";
-  const pictureContentsSite = "고객님의 현장 사진";
-  const pictureContentsPrefer = "고객님의 선호 사진";
-  const pictures = clientHistory.curation.image;
-  const noticeContents = [
-    {
-      title: "서비스비 안내",
-      contents: [
-        "이번 현장의 서비스비는 " + autoComma(project.process.contract.remain.calculation.amount.supply) + "원(VAT별도)으로 책정되어 있습니다.",
-        "홈리에종의 계약금은 300,000원(VAT별도)으로 책정되어 있습니다.",
-        "현재 고객은 홈리에종에 계약금 330,000원을 입금한 상태며, 현장 미팅 후 계약금을 제외한 서비스비를 전액 입금할 경우 서비스가 계속 진행됩니다.",
-        "★ 현장 미팅 후 서비스비 지불 전에는 디자이너와 스타일링 논의를 할 수 없는 것이 원칙입니다.(고객에게도 필요시 안내해주세요)",
-        "★ 서비스 진행중 타 공간에 대한 전체적인 스타일링이 추가되는 경우 꼭! 홈리에종을 통해 디자인비 조정이 될 수 있도록 해주세요.",
-        "법인/개인사업자(일반과세), 개인사업자(간이과세), 프리랜서 정산 중에 정산 방식을 알려주시면 수수료를 제외한 정확한 정산액은 계산하여 말씀드리겠습니다.",
-      ]
-    },
-    {
-      title: "고객 안내 사항과 서비스 구성",
-      contents: [
-        "디자이너와 카톡(문자)/전화/메일 등의 채널을 통해 커뮤니케이션 하면서 전체 스타일링을 완성합니다. 커뮤니케이션에 적극적으로 참여해주시면 더 좋은 결과물을 얻으실 수 있습니다.",
-        "디자이너와 현장 미팅을 진행하며 집컨디션/취향/생활특징/예산을 고려하여 컨설팅 해드립니다.",
-        "시공팀은 추천하는 시공팀 외에 고객이 개별적으로 알아본 시공팀과 진행 가능합니다.",
-        "시공 진행시 디자이너는 시공 방향 제시 및 전체 마감재를 셀렉해드립니다.",
-        "기존에 사용하시는 가구들 중 가져갈 가구와 버릴가구 선택 및 배치/활용 제안 드립니다. 새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
-        "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
-        "생활용품, 식기, 가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 선택하신 후 제품 외관의 디자인 옵션(컬러 등)을 의논하실 경우 전체 디자인을 고려하여 골라드립니다. 생활용품과 식기의 경우, 고객님께서 찾으신 3~4품목중에서 셀렉은 가능합니다.",
-        "디자이너 제안 후 고객 컨펌이 완료된 구매제품은 고객이 구매하실 수 있도록 안내드립니다. 연계 업체의 제품 구매시에는 할인혜택을 받으실 수 있습니다. 모든 제품이 해당되는 것은 아니며 업체마다 차이가 있습니다.",
-        "제품 구매에 소요되는 배송비, 조립 및 설치비는 고객님께서 부담하시게 됩니다. 배송된 제품의 수령, 언박싱, 조립, 1차배치는 고객님께서 진행하시게 됩니다. 구매 및 물품배치가 완료되면 디자이너의 마무리터치 후 인터뷰와 촬영을 진행합니다.",
-      ]
-    },
-    {
-      title: "시공 연계수수료 안내",
-      contents: [
-        "고객이 시공 계약을 체결한 곳에 공사진행과 A/S에 대한 책임이 있습니다. (고객에게 동일하게 안내합니다.)",
-        "고객이 데려온 시공팀과 진행할 경우 디자이너는 시공자재 셀렉과 필요시 시공관련 커뮤니케이션 업무가 있을 수 있습니다.",
-        "고객이 실장님 또는 실장님과 협업하시는 시공사와 시공 계약을 체결할 경우 전체 계약 금액의 5%가 시공 연계 수수료 입니다.",
-        "홈리에종은 적법한 방식의 시공계약을 권장하며, (세금 없는) 현금 거래로 시공을 진행했을 경우에도 시공 연계 수수료는 공급가에 VAT 10%를 더한 금액으로 전자세금계산서를 발행합니다. 입금하실 때에도 공급가에 VAT10% 더한 금액을 입금해주셔야합니다.",
-      ]
-    },
-    {
-      title: "정산 안내",
-      contents: [
-        "홈리에종에서 받은 서비스비는 수수료를 제하고 스타일링 시작 후 실장님께 선금 50%를 먼저 정산하고",
-        "스타일링이 마무리되면 나머지 50%를 정산합니다.",
-        "스타일링 마무리는",
-        "1) 스타일링 제안이 마무리되어 제품들이 배송단계에 있고",
-        "2) 촬영일이 (변동되더라도) 어느정도 정해지고",
-        "3) 실장님께서 디자이너의 디자인 의도가 담긴 글(폼을 따로 드립니다) 저희쪽에 주시면",
-        "4) 홈리에종에서 고객님께 정산 여부를 확인 후 정산을 진행합니다.",
-      ]
-    }
-  ];
   this.proid = proid;
   this.client = client;
   this.project = project;
+  const today = new Date();
+  const totalStatic = this.requestReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
+  const {
+    title,
+    initialContents,
+    emptyReload,
+    mainContents,
+    pictureContents,
+    pictureContentsSite,
+    pictureContentsPrefer,
+    pictures,
+    noticeContents,
+    divToInput,
+    matrix,
+    mergeMap,
+    callbackMap,
+    boldMap,
+    titleMap,
+    widthRatio,
+  } = totalStatic;
   try {
-    const divToInput = function (position) {
-      return async function (e) {
-        try {
-          if (!middleMode) {
-            const { ajaxJson, createNode, withOut, colorChip, equalJson } = GeneralJs;
-            const removeClassName = "divToInputRemove";
-            const target = this.firstChild.firstChild;
-            const text = target.textContent;
-            const mother = this.firstChild;
-            const proid = project.proid;
-            let styleCopied, styleRaw, style;
-            let input, cancel;
-            let updateEvent;
-
-            if (this.querySelector("input") === null) {
-
-              styleRaw = equalJson(JSON.stringify(target.style));
-              styleCopied = {};
-              for (let i in styleRaw) {
-                if (styleRaw[i] !== '' && !/^[0-9]+$/.test(i)) {
-                  styleCopied[i] = styleRaw[i];
-                }
-              }
-              style = equalJson(JSON.stringify(styleCopied));
-              styleCopied.outline = String(0);
-              styleCopied.border = String(0);
-              styleCopied.background = "transparent";
-              styleCopied.color = colorChip.green;
-              styleCopied.zIndex = String(2);
-
-              updateEvent = async function (column, value) {
-                try {
-                  const targets = document.querySelectorAll('.' + removeClassName);
-                  await ajaxJson({
-                    id: proid,
-                    column,
-                    value,
-                    email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail
-                  }, "/updateProjectHistory");
-                  for (let dom of targets) {
-                    dom.parentElement.removeChild(dom);
-                  }
-                  createNode({ mother, text: value, style });
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-
-              cancel = createNode({
-                mother,
-                class: [ removeClassName ],
-                events: [
-                  {
-                    type: "click",
-                    event: (e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      const targets = document.querySelectorAll('.' + removeClassName);
-                      for (let dom of targets) {
-                        dom.parentElement.removeChild(dom);
-                      }
-                      createNode({ mother, text, style });
-                    }
-                  }
-                ],
-                style: {
-                  position: "fixed",
-                  top: String(0),
-                  left: String(0),
-                  width: String(100) + '%',
-                  height: String(100) + '%',
-                  background: "transparent",
-                  zIndex: String(2),
-                }
-              });
-
-              input = createNode({
-                mother,
-                class: [ removeClassName ],
-                attribute: [
-                  { column: position },
-                  { value: text }
-                ],
-                mode: "input",
-                events: [
-                  {
-                    type: "click",
-                    event: (e) => { e.preventDefault(); e.stopPropagation(); }
-                  },
-                  {
-                    type: "keydown",
-                    event: function (e) {
-                      if (e.key === "Tab") {
-                        e.preventDefault();
-                      }
-                    }
-                  },
-                  {
-                    type: "keyup",
-                    event: async function (e) {
-                      try {
-                        const column = this.getAttribute("column");
-                        if (e.key === "Tab") {
-                          await updateEvent(column, this.value);
-                        }
-                      } catch (e) {
-                        console.log(e);
-                      }
-                    }
-                  },
-                  {
-                    type: "keypress",
-                    event: async function (e) {
-                      try {
-                        const column = this.getAttribute("column");
-                        if (e.key === "Enter") {
-                          await updateEvent(column, this.value);
-                        }
-                      } catch (e) {
-                        console.log(e);
-                      }
-                    }
-                  }
-                ],
-                style: styleCopied
-              });
-
-              mother.removeChild(target);
-              input.focus();
-
-            }
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    }
-    const matrix = [
-      [ "고객 정보", "", "공간 정보", "" ],
-      [ (desktop ? "고객명" : "성함"), projectHistory.request.client.name, (desktop ? "계약 형태" : "계약"), projectHistory.request.space.contract ],
-      [ "연락처", projectHistory.request.client.phone, (desktop ? "사전 점검일" : "사전점검"), projectHistory.request.space.precheck ],
-      [ (desktop ? "가족 구성원" : "가족"), projectHistory.request.client.family, (desktop ? "집 비는 날" : "비는 날"), projectHistory.request.space.empty ],
-      [ "주소", projectHistory.request.client.address, (desktop ? "입주 예정일" : "입주일"), projectHistory.request.space.movein ],
-      [ "", "", (desktop ? "특이 사항" : "기타"), projectHistory.request.space.special ],
-      [ "예산", projectHistory.request.client.budget, (desktop ? "공간구성" : "구성"), projectHistory.request.space.composition ],
-      [ "서비스 정보", "", "고객 요청", "" ],
-      [ "서비스", projectHistory.request.service.service, projectHistory.request.client.etc, "" ],
-      [ (desktop ? "선호 컨셉" : "컨셉"), projectHistory.request.service.concept, "", "" ],
-      [ "시공", projectHistory.request.service.construct, "", "" ],
-      [ "스타일링", projectHistory.request.service.styling, "", "" ],
-    ];
-    const mergeMap = [
-      [ null, [ 0, 0 ], null, [ 0, 2 ] ],
-      [ null, null, null, null ],
-      [ null, null, null, null ],
-      [ null, null, null, null ],
-      [ null, null, null, null ],
-      [ [ 4, 0 ], [ 4, 1 ], null, null ],
-      [ null, null, null, null ],
-      [ null, [ 7, 0 ], null, [ 7, 2 ] ],
-      [ null, null, null, [ 8, 2 ] ],
-      [ null, null, null, [ 9, 2 ] ],
-      [ null, null, null, [ 10, 2 ] ],
-      [ null, null, [ 8, 2 ], [ 11, 2 ] ],
-    ];
-    const callbackMap = [
-      [ null, null, null, null ],
-      [ null, divToInput("request.client.name"), null, divToInput("request.space.contract") ],
-      [ null, divToInput("request.client.phone"), null, divToInput("request.space.precheck") ],
-      [ null, divToInput("request.client.family"), null, divToInput("request.space.empty") ],
-      [ null, divToInput("request.client.address"), null, divToInput("request.space.movein") ],
-      [ null, divToInput("request.client.address"), null, divToInput("request.space.special") ],
-      [ null, divToInput("request.client.budget"), null, divToInput("request.space.composition") ],
-      [ null, null, null, null ],
-      [ null, divToInput("request.service.service"), divToInput("request.client.etc"), null ],
-      [ null, divToInput("request.service.concept"), null, null ],
-      [ null, divToInput("request.service.construct"), null, null ],
-      [ null, divToInput("request.service.styling"), null, null ],
-    ];
-    const boldMap = [
-      [ 0, 0, 0, 0 ],
-      [ 1, 0, 1, 0 ],
-      [ 1, 0, 1, 0 ],
-      [ 1, 0, 1, 0 ],
-      [ 1, 0, 1, 0 ],
-      [ 1, 0, 1, 0 ],
-      [ 1, 0, 1, 0 ],
-      [ 0, 0, 0, 0 ],
-      [ 1, 0, 0, 0 ],
-      [ 1, 0, 0, 0 ],
-      [ 1, 0, 0, 0 ],
-      [ 1, 0, 0, 0 ],
-    ];
-    const titleMap = [ 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ];
-    const widthRatio = desktop ? [ 1, 3, 1, 3 ] : [ 1, 2, 1, 2 ];
-    const today = new Date();
     let titleArea;
     let contentsArea;
     let topMargin;
@@ -931,6 +1532,10 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     photoMargin = <%% 10, 10, 10, 10, 1.5 %%>;
     finalBottom = <%% 240, 240, 240, 240, 10 %%>;
 
+    clientPhoto = await ajaxJson({ cliid }, "/ghostPass_clientPhoto");
+    siteImages = clientPhoto.sitePhoto;
+    preferImages = clientPhoto.preferredPhoto;
+
     sum = 0;
     for (let i of widthRatio) {
       sum += i;
@@ -940,6 +1545,9 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
 
     titleArea = createNode({
       mother: board,
+      event: {
+        click: this.requestStaticHtml(designer, project, client, clientHistory, projectHistory, requestNumber, clientPhoto)
+      },
       style: {
         marginLeft: String(leftMargin) + ea,
         paddingLeft: String(titlePaddingLeft) + ea,
@@ -1305,9 +1913,6 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
       return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
     });
-    clientPhoto = await ajaxJson({ cliid }, "/ghostPass_clientPhoto");
-    siteImages = clientPhoto.sitePhoto;
-    preferImages = clientPhoto.preferredPhoto;
 
     if (images.length > 0) {
       contentsClientPhoto = createNode({

@@ -85,7 +85,7 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
   const instance = this;
   const back = this.back;
   const { fileSystem, shell, shellLink } = this.mother;
-  const fontName = `/usr/share/fonts/truetype/nanum/NanumGothicEco.ttf`;
+  const fontName = `/home/homeliaison/font/NanumGothicEco.ttf`;
   const getPrinterName = function () {
     const { spawn } = require("child_process");
     const lpstat = spawn("lpstat", [ "-p" ]);
@@ -104,7 +104,7 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
     });
   }
   const getPrintCommand = function (printer, targetFile) {
-    return `uniprint -printer ${printer} -size 9 -hsize 0 -L -font ${fontName} ${targetFile}`;
+    return `uniprint -printer ${printer} -size 9 -hsize 0 -L -media A4 -wrap -font ${fontName} ${targetFile}`;
   }
   const nowValue = (new Date()).valueOf();
   const tempFileName = (cliid) => { return `printerTemp_${cliid}_${String(nowValue)}.txt`; };
@@ -715,7 +715,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
@@ -1545,6 +1545,34 @@ Ghost.prototype.ghostRouter = function (needs) {
         } else {
           res.send(JSON.stringify(result));
         }
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
+  //POST - pdf print
+  funcObj.post_pdfPrint = {
+    link: [ "/pdfPrint" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (typeof req.body.html !== "string") {
+          throw new Error("invaild post : html must be string");
+        }
+        const static = instance.address.officeinfo.ghost.file.static;
+        const htmlName = `html_name_${uniqueValue("string")}.html`;
+        const pdfName = htmlName.replace(/\.html$/i, ".pdf");
+
+        await fileSystem("write", [ `${static}/${htmlName}`, req.body.html ]);
+        shell.exec(`wkhtmltopdf https://${instance.address.officeinfo.ghost.host}/${htmlName} ${shellLink(static)}/${pdfName}`);
+
+        res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${pdfName}` }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
