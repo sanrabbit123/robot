@@ -1741,6 +1741,7 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
   let grayBarTop;
   let reloadEvent;
   let dropEvent;
+  let tempDom;
 
   cleanChildren(mother);
 
@@ -1769,6 +1770,11 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
 
   dashboardData.status.name.push("드랍");
   dashboardData.status.value.push("-");
+
+  this.dashboardData = {
+    status: [],
+    action: []
+  };
 
   topMargin = 32.5;
   leftMargin = 30;
@@ -1824,7 +1830,7 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
   });
 
   for (let i = 0; i < dashboardData.status.name.length; i++) {
-    createNode({
+    tempDom = createNode({
       mother: statusBlock,
       attribute: {
         name: dashboardData.status.name[i],
@@ -1927,6 +1933,7 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
         }
       },
       style: {
+        display: "block",
         position: "relative",
         textAlign: "left",
         marginBottom: String(marginBottom) + ea,
@@ -1958,12 +1965,17 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
         },
       ]
     });
+    this.dashboardData.status.push(tempDom);
   }
 
   for (let i = 0; i < dashboardData.action.name.length; i++) {
-    createNode({
+    tempDom = createNode({
       mother: actionBlock,
+      attribute: {
+        name: dashboardData.action.name[i],
+      },
       style: {
+        display: "block",
         position: "relative",
         textAlign: "left",
         marginBottom: String(i % dashboardData.action.divisionLength === dashboardData.action.divisionStart - 1 ? middleBetween : marginBottom) + ea,
@@ -1995,6 +2007,7 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
         },
       ]
     });
+    this.dashboardData.action.push(tempDom);
   }
 
   memberBlock = createNode({
@@ -2147,6 +2160,7 @@ ProjectJs.prototype.boardSwipe = function () {
   const { ea } = this;
   const firstIndex = 1;
   let statusArr, thirdMatrixDom, index;
+  let onAction, offAction;
   window.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
       if (Array.isArray(instance.thirdMatrixDom)) {
@@ -2159,6 +2173,9 @@ ProjectJs.prototype.boardSwipe = function () {
           for (let arr of thirdMatrixDom) {
             statusArr.push(arr[0].getAttribute("toggle") === "on");
           }
+
+          onAction = [];
+          offAction = [];
 
           if (statusArr.every(i => i)) {
 
@@ -2312,6 +2329,12 @@ ProjectJs.prototype.boardSwipe = function () {
               }
             }
           }
+
+          console.log(instance.dashboardData);
+
+
+
+
         }
       }
     }
@@ -2422,10 +2445,10 @@ ProjectJs.prototype.makeBoard = function (cases) {
 
   thirdTitleSize = 26;
   thirdTitleWeight = 600;
-  thirdTitleMarginTop = 40;
+  thirdTitleMarginTop = 42;
   thirdTitleIndent = 8;
   thirdTitleTextTop = isMac() ? 6 : 8;
-  thirdTitleMarginBottomVisual = isMac() ? 2.5 : 4.5;
+  thirdTitleMarginBottomVisual = 0;
 
   divisionEntireMap = map.action.itemMap;
   divisionMap = [];

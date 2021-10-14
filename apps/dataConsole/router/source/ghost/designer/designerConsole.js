@@ -936,11 +936,12 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       window.localStorage.setItem("desid", "d1701_aa01s");
     }
 
-    if (window.localStorage.getItem("desid") === this.desid) {
-      await this.consoleView();
-    } else {
-      this.initialLogin();
-    }
+    // if (window.localStorage.getItem("desid") === this.desid) {
+    //   await this.consoleView();
+    // } else {
+    //   this.initialLogin();
+    // }
+    this.consoleView();
 
   } catch (e) {
     console.log(e);

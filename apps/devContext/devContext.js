@@ -51,6 +51,114 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
+DevContext.prototype.pureScript = function () {
+  const instance = this;
+  const deleteToken = "__delete__";
+  const motherTargets = [
+    "fileSystem",
+    "shellLink",
+    "sleep",
+    "equalJson",
+    "copyJson",
+    "dateToString",
+    "stringToDate",
+    "pureServer",
+  ];
+  const deleteFilter = (str) => { return str.split("\n").map((s) => { return s.replace((new RegExp("^  " + deleteToken, "gi")), ""); }).join("\n"); }
+  let script;
+  let backMakerScript, addressScript;
+  let motherScript;
+
+  script = `const PureServer = function () {
+  ${deleteToken}  const Mother = require(process.cwd() + "/apps/mother.js");
+  ${deleteToken}  this.mother = new Mother();
+  ${deleteToken}}
+
+  ${deleteToken}PureServer.prototype.launching = ${this.pureServer.toString()}
+
+  ${deleteToken}const app = new PureServer();
+  ${deleteToken}app.launching().catch((err) => { console.log(err); });`;
+
+  backMakerScript = `const BackMaker = function () {}
+  ${deleteToken}module.exports = BackMaker;`;
+
+  addressScript = `module.exports = {};`;
+
+  motherScript = "const Mother = function () {}\n\n";
+  for (let name of motherTargets) {
+    motherScript += `Mother.prototype.${name} = ${Mother.prototype[name].toString()}\n\n`;
+  }
+  motherScript += `module.exports = Mother;`;
+
+  return {
+    script: deleteFilter(script),
+    backMakerScript: deleteFilter(backMakerScript),
+    addressScript: deleteFilter(addressScript),
+    motherScript,
+  };
+}
+
+DevContext.prototype.pureServer = async function () {
+  const instance = this;
+  const { pureServer } = this.mother;
+  const NativeNotifier = require(process.cwd() + "/apps/nativeNotifier/nativeNotifier.js");
+  const notifier = new NativeNotifier();
+  try {
+
+    const PureServer = pureServer("class");
+    const app = new PureServer();
+
+    app.post("/push", async (req, res) => {
+      res.set({
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        notifier.sendAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    pureServer("listen", app, 8000);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DevContext.prototype.pureSpawn = async function () {
+  const instance = this;
+  const { shell, shellLink, fileSystem } = this.mother;
+  try {
+    const serverName = "homeliaisonPureServer";
+    const home = process.env.HOME;
+    const { script, backMakerScript, addressScript, motherScript } = this.pureScript();
+    const copiedModules = [
+      "nativeNotifier"
+    ];
+    if (await fileSystem(`exist`, [ `${home}/${serverName}` ])) {
+      shell.exec(`rm -rf ${shellLink(home)}/${serverName};`);
+    }
+    await fileSystem(`mkdir`, [ `${home}/${serverName}` ]);
+    await fileSystem(`mkdir`, [ `${home}/${serverName}/apps` ]);
+    await fileSystem(`mkdir`, [ `${home}/${serverName}/apps/backMaker` ]);
+    await fileSystem(`write`, [ `${home}/${serverName}/apps/mother.js`, motherScript ]);
+    await fileSystem(`write`, [ `${home}/${serverName}/apps/infoObj.js`, addressScript ]);
+    await fileSystem(`write`, [ `${home}/${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
+    await fileSystem(`write`, [ `${home}/${serverName}/index.js`, script ]);
+    for (let m of copiedModules) {
+      shell.exec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/${serverName}/apps;`);
+    }
+    shell.exec(`open ${shellLink(home)}/${serverName};`);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
@@ -75,75 +183,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-
-
-
-
-
-
-
-    // const targets = [
-    //   "fileSystem",
-    //   "sleep",
-    //   "equalJson",
-    //   "copyJson",
-    //   "dateToString",
-    //   "stringToDate",
-    //   "pureServer",
-    // ]
-    // let script;
-    //
-    // script = "const Mother = function () {}\n\n";
-    // for (let name of targets) {
-    //   script += `Mother.prototype.${name} = ${Mother.prototype[name].toString()}\n\n`;
-    // }
-    // script += `module.exports = Mother;`;
-    //
-    // await fileSystem(`write`, [ `${process.cwd()}/temp/motherScript.js`, script ]);
-
-
-
-    // const PureServer = pureServer();
-    // const app = new PureServer();
-    //
-    // app.post("/push", async (req, res) => {
-    //   res.set({
-    //     "Content-Type": "text/plain",
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-    //     "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    //   });
-    //   try {
-    //     console.log(req.body.text);
-    //
-    //     res.send(JSON.stringify({ data: 'Hello World!' }));
-    //   } catch (e) {
-    //     res.send(JSON.stringify({ message: "error" }));
-    //   }
-    // });
-    //
-    // pureServer("listen", app, 8000);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // await this.pureSpawn();
 
 
 
@@ -1273,7 +1313,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    await this.getCorePortfolio("p119");
+    // await this.getCorePortfolio("p119");
 
 
     // aspirant to designer

@@ -3869,7 +3869,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const returnUrl = req.body.currentPage + "/inicisPayment?cliid=" + cliid + "&needs=" + ([ kind, desid, proid, method ]).join(',');
         const closeUrl = req.body.currentPage + "/tools/trigger";
 
-        let pluginScript, formValue;
+        let pluginScript, formValue, acceptmethod;
 
         if (device === "mobile" && gopaymethod === "Card") {
           pluginScript = '';
@@ -3879,7 +3879,12 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
         } else {
           pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
-          formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
+          if (gopaymethod === "VBank") {
+            acceptmethod = "va_receipt";
+          } else {
+            acceptmethod = "below1000";
+          }
+          formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
         }
 
         res.set({ "Content-Type": "application/json" });
