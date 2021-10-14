@@ -2056,6 +2056,82 @@ BillMaker.prototype.passiveSyncAll = async function () {
   }
 }
 
+BillMaker.prototype.passiveCashReceipt = async function (cliid, goodName, supply) {
+  const instance = this;
+  const { cryptoString, requestSystem, equalJson } = this.mother;
+  const back = this.back;
+  const crypto = require("crypto");
+  const url = "https://iniapi.inicis.com/api/v1/receipt";
+  const headers = { "Content-type": "application/x-www-form-urlencoded;charset=utf-8" };
+  const dateToTimestamp = (date) => {
+    const zeroAddition = (num) => { return (num < 10 ? `0${String(num)}` : String(num)); }
+    return `${String(date.getFullYear())}${zeroAddition(date.getMonth() + 1)}${zeroAddition(date.getDate())}${zeroAddition(date.getHours())}${zeroAddition(date.getMinutes())}${zeroAddition(date.getSeconds())}`;
+  }
+  try {
+    const client = await back.getClientById(cliid);
+    const now = new Date();
+    const type = "Issue";
+    const paymethod = "Receipt";
+    const timestamp = dateToTimestamp(new Date());
+    const clientIp = address.officeinfo.ip.outer;
+    const currency = "WON";
+    const useOpt = "0";
+    const algorithm = "aes-128-cbc";
+    const digest = "base64";
+    const sha = "sha512";
+    const hashType = "hex";
+    const vatRatio = 0.1;
+    const mid = address.officeinfo.inicis.mid;
+    const srcvPrice = String(0);
+    let crPrice;
+    let supPrice;
+    let tax;
+    let buyerName;
+    let buyerEmail;
+    let buyerTel;
+    let regNum;
+    let hashData;
+    let requestObj;
+
+    buyerName = client.name;
+    buyerEmail = client.email;
+    buyerTel = client.phone;
+
+    supPrice = String(Math.floor(supply));
+    tax = String(Math.floor(supply / 10));
+    crPrice = String(Math.floor(supply + (supply * (1 / 10))));
+
+    regNum = await cryptoString(address.officeinfo.inicis.key, buyerTel.replace(/[^0-9]/gi, ''), { algorithm, makeKey: false, iv: address.officeinfo.inicis.iv, digest });
+    hashData = crypto.createHash(sha).update(address.officeinfo.inicis.key + type + paymethod + timestamp + clientIp + mid + crPrice + supPrice + srcvPrice + regNum).digest(hashType);
+
+    requestObj = {
+      type,
+      paymethod,
+      timestamp,
+      clientIp,
+      mid,
+      goodName,
+      crPrice,
+      supPrice,
+      tax,
+      srcvPrice,
+      buyerName,
+      buyerEmail,
+      buyerTel,
+      currency,
+      regNum,
+      useOpt,
+      hashData
+    };
+    console.log(requestObj);
+
+    await requestSystem(url, requestObj, { headers });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.travelInjection = async function (injectionCase, proid, method, number, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof injectionCase !== "string" || typeof proid !== "string" || typeof method !== "string" || typeof number !== "number") {
     throw new Error("invaild input");

@@ -233,7 +233,11 @@ const withTools = function (Client) {
     documentArr.push("가족 구성원 : " + request.family.value + "\n");
     documentArr.push("예산 : " + request.budget.value + "\n");
     documentArr.push("평수 : " + request.space.pyeong.toMessage() + "\n");
-    documentArr.push("입주 예정일 : " + request.space.resident.expected.toString() + "\n");
+    if (!request.space.resident.living) {
+      documentArr.push("입주 예정일 : " + request.space.resident.expected.toString() + "\n");
+    } else {
+      documentArr.push("입주 예정일 : " + "거주중" + "\n");
+    }
     documentArr.push("계약 형태 : " + request.space.contract.value + "\n");
     documentArr.push("공간 상태 : " + request.space.spec.toMessage() + "\n");
     documentArr.push("유입 경로 : " + request.etc.channel + "\n");
