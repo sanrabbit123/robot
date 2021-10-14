@@ -918,7 +918,7 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
       for (let obj of mainContents) {
         obj.spread = true;
       }
-      const loading = mother.loadingRun();
+      const loading = mother.grayLoading();
       const board = createNode({
         mother: document.body,
         style: {
@@ -1425,11 +1425,8 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
 
       document.body.removeChild(document.body.lastChild);
 
-      const response = await ajaxJson({ html, name: client.name + "_고객님_의뢰서" }, "/ghostPass_pdfPrint");
-      console.log(response);
-
-
-      // await downloadFile(pdf);
+      const { pdf } = await ajaxJson({ html, name: client.name + "_고객님_의뢰서" }, "/ghostPass_pdfPrint");
+      await downloadFile(pdf);
 
       console.log("done");
 
