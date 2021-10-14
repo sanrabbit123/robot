@@ -893,31 +893,31 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
   const proid = project.proid;
   const cliid = project.cliid;
   const today = new Date();
-  const {
-    title,
-    initialContents,
-    emptyReload,
-    mainContents,
-    pictureContents,
-    pictureContentsSite,
-    pictureContentsPrefer,
-    pictures,
-    noticeContents,
-    divToInput,
-    matrix,
-    mergeMap,
-    callbackMap,
-    boldMap,
-    titleMap,
-    widthRatio,
-  } = this.requestReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
-  for (let obj of mainContents) {
-    obj.spread = true;
-  }
   const ea = "px";
   const pe = "%";
   return async function (e) {
     try {
+      const {
+        title,
+        initialContents,
+        emptyReload,
+        mainContents,
+        pictureContents,
+        pictureContentsSite,
+        pictureContentsPrefer,
+        pictures,
+        noticeContents,
+        divToInput,
+        matrix,
+        mergeMap,
+        callbackMap,
+        boldMap,
+        titleMap,
+        widthRatio,
+      } = instance.requestReturnStatic(designer, project, client, clientHistory, projectHistory, requestNumber);
+      for (let obj of mainContents) {
+        obj.spread = true;
+      }
       const board = createNode({
         mother: document.body,
         style: {
@@ -1414,7 +1414,7 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
       <html lang="ko" dir="ltr">
         <head>
           <meta charset="utf-8">
-          <style>${String(document.querySelector("style").innerHTML)}</style>
+          <style>${String(document.querySelector("style").innerHTML.replace(/\@font-face \{[^\}]+\}/gi, ''))}</style>
           <title></title>
         </head>
         <body style="padding-top:${String(leftMargin)}${ea};padding-bottom:${String(leftMargin)}${ea};">
