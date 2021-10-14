@@ -715,7 +715,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
@@ -1570,9 +1570,10 @@ Ghost.prototype.ghostRouter = function (needs) {
         const pdfName = htmlName.replace(/\.html$/i, ".pdf");
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        // shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${pdfName};rm -rf ${shellLink(static)}/${htmlName}`);
-
-        shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${pdfName}`);
+        shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${pdfName};rm -rf ${shellLink(static)}/${htmlName}`);
+        setQueue(() => {
+          shell.exec(`rm -rf ${shellLink(static)}/${pdfName}`);
+        }, 30 * 60 * 1000);
         res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${pdfName}` }));
 
       } catch (e) {

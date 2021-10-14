@@ -3035,6 +3035,21 @@ Mother.prototype.uniqueValue = function (type = "number") {
   }
 }
 
+Mother.prototype.setQueue = function (callback, delay = 0) {
+  if (typeof callback !== "function") {
+    throw new Error("invaild input");
+  }
+  if (typeof delay !== "number") {
+    delay = 0;
+  }
+  let propertyName, timeoutId;
+  propertyName = "tempQueue_" + String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
+  timeoutId = setTimeout(() => {
+    callback();
+    clearTimeout(timeoutId);
+  }, delay);
+}
+
 Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000) {
   const PureServer = function () {
     this.matrix = [];
