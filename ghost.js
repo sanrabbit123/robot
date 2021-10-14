@@ -1552,32 +1552,32 @@ Ghost.prototype.ghostRouter = function (needs) {
   };
 
   //POST - pdf print
-  funcObj.post_pdfPrint = {
-    link: [ "/pdfPrint" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      try {
-        if (typeof req.body.html !== "string") {
-          throw new Error("invaild post : html must be string");
-        }
-        const static = instance.address.officeinfo.ghost.file.static;
-        const htmlName = `html_name_${uniqueValue("string")}.html`;
-        const pdfName = htmlName.replace(/\.html$/i, ".pdf");
-
-        await fileSystem("write", [ `${static}/${htmlName}`, req.body.html ]);
-        shell.exec(`wkhtmltopdf https://${instance.address.officeinfo.ghost.host}/${htmlName} ${shellLink(static)}/${pdfName}`);
-
-        res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${pdfName}` }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error : " + e.message }));
-      }
-    }
-  };
+  // funcObj.post_pdfPrint = {
+  //   link: [ "/pdfPrint" ],
+  //   func: async function (req, res) {
+  //     res.set({
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": '*',
+  //       "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+  //       "Access-Control-Allow-Headers": '*',
+  //     });
+  //     try {
+  //       if (typeof req.body.html !== "string") {
+  //         throw new Error("invaild post : html must be string");
+  //       }
+  //       const static = instance.address.officeinfo.ghost.file.static;
+  //       const htmlName = `html_name_${uniqueValue("string")}.html`;
+  //       const pdfName = htmlName.replace(/\.html$/i, ".pdf");
+  //
+  //       await fileSystem("write", [ `${static}/${htmlName}`, req.body.html ]);
+  //       shell.exec(`wkhtmltopdf https://${instance.address.officeinfo.ghost.host}/${htmlName} ${shellLink(static)}/${pdfName}`);
+  //
+  //       res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${pdfName}` }));
+  //     } catch (e) {
+  //       res.send(JSON.stringify({ message: "error : " + e.message }));
+  //     }
+  //   }
+  // };
 
   //POST - pwd
   funcObj.post_pwd = {
