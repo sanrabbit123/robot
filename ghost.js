@@ -1574,7 +1574,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         await requestSystem("http://" + pdfServerIp + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
         setQueue(() => {
           shell.exec(`rm -rf ${shellLink(static)}/${htmlName};rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
-        }, 30 * 60 * 1000);
+        }, 15 * 60 * 1000);
 
         res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${global.encodeURIComponent(pdfName)}` }));
 

@@ -1551,9 +1551,6 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
 
     titleArea = createNode({
       mother: board,
-      event: {
-        click: this.requestStaticHtml(designer, project, client, clientHistory, projectHistory, requestNumber, clientPhoto)
-      },
       style: {
         marginLeft: String(leftMargin) + ea,
         paddingLeft: String(titlePaddingLeft) + ea,
@@ -1574,12 +1571,16 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
           }
         },
         {
-          text: dateToString(today),
+          text: "PDF 추출",
+          class: [ "hoverDefault_lite" ],
+          event: {
+            click: this.requestStaticHtml(designer, project, client, clientHistory, projectHistory, requestNumber, clientPhoto)
+          },
           style: {
             position: "absolute",
             fontSize: String(fontSize) + ea,
             fontWeight: String(600),
-            color: colorChip.black,
+            color: colorChip.green,
             right: String(titlePaddingLeft) + ea,
             textAlign: "right",
             bottom: String(titlePaddingBottom - titleDateVisualBottom) + ea,
