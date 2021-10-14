@@ -885,7 +885,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
 DesignerJs.prototype.requestStaticHtml = function (designer, project, client, clientHistory, projectHistory, requestNumber, clientPhoto) {
   const instance = this;
   const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma, downloadFile } = GeneralJs;
   const { totalMother, grayBarWidth, middleMode } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -1424,7 +1424,11 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
 
       document.body.removeChild(document.body.lastChild);
 
-      console.log(await ajaxJson({ html }, "/ghostPass_pdfPrint"))
+      const { pdf } = await ajaxJson({ html }, "/ghostPass_pdfPrint");
+      await downloadFile(pdf);
+
+      console.log("done");
+
 
     } catch (e) {
       console.log(e);
