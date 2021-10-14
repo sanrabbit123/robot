@@ -1571,7 +1571,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         const pdfName = htmlName.replace(/\.html$/i, ".pdf");
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        await requestSystem("http://" + pdfServerIp + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
+        const res = await requestSystem("http://" + pdfServerIp + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
+        console.log(res);
         setQueue(() => {
           shell.exec(`rm -rf ${shellLink(static)}/${htmlName};rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
         }, 30 * 60 * 1000);
