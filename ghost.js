@@ -1567,14 +1567,21 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
         const static = instance.address.officeinfo.ghost.file.static;
         const htmlName = `html_name_${uniqueValue("string")}.html`;
-        const pdfName = htmlName.replace(/\.html$/i, ".pdf");
+        let pdfName;
+
+        if (typeof req.body.name === "string") {
+          pdfName = req.body.name.trim().replace(/[ \n]/gi, '').replace(/\.pdf/i, '') + ".pdf";
+        } else {
+          pdfName = htmlName.replace(/\.html$/i, ".pdf");
+        }
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${pdfName};rm -rf ${shellLink(static)}/${htmlName}`);
+        shell.exec(`cat ${shellLink(static)}/${htmlName} | wkhtmltopdf - ${shellLink(static)}/${shellLink(pdfName)};rm -rf ${shellLink(static)}/${htmlName}`);
         setQueue(() => {
-          shell.exec(`rm -rf ${shellLink(static)}/${pdfName}`);
+          shell.exec(`rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
         }, 30 * 60 * 1000);
-        res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${pdfName}` }));
+
+        res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${global.encodeURIComponent(pdfName)}` }));
 
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
