@@ -250,6 +250,15 @@ Mother.prototype.fileSystem = function (sw, arr) {
         });
       });
       break;
+    case "readFolder":
+      return new Promise(function (resolve, reject) {
+        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
+        fs.readdir(arr[0], function (err, filelist) {
+          if (err) { reject(err); }
+          else { resolve(Array.from(filelist).filter((str) => { return str !== ".DS_Store"; })); }
+        });
+      });
+      break;
     case "write":
       return new Promise(function (resolve, reject) {
         if (arr.length !== 2) { reject("second argument must be length 2 array"); }

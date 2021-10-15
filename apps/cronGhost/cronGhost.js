@@ -201,6 +201,8 @@ CronGhost.prototype.cronServer = async function () {
 
     this.source = new CronSource(this.mother, this.back, this.address);
 
+    await this.source.sourceLoad();
+
     setInterval(() => {
       const now = new Date();
       const dayNumber = now.getDay();
