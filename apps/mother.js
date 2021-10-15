@@ -54,6 +54,23 @@ Mother.prototype.consoleQ = function (question) {
   });
 }
 
+Mother.prototype.shellExec = function (command) {
+  const { exec } = require("child_process");
+  return new Promise((resolve, reject) => {
+    exec(command, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+      } else {
+        if (typeof stdout === "string") {
+          resolve(stdout.trim());
+        } else {
+          resolve(stdout);
+        }
+      }
+    });
+  });
+}
+
 Mother.prototype.shellLink = function (str) {
   let arr = str.split('/');
   let newStr = '';
@@ -74,7 +91,7 @@ Mother.prototype.shellLink = function (str) {
 
 Mother.prototype.tempDelete = function (dir = null) {
   const fs = require('fs');
-  const shell = require('shelljs');
+  const { exec } = require('child_process');
   const shellLink = function (str) {
     let arr = str.split('/');
     let newStr = '';
@@ -104,9 +121,15 @@ Mother.prototype.tempDelete = function (dir = null) {
       if (err) {
         reject(err);
       } else {
-        for (let i = 0; i < filelist.length; i++) { if (filelist[i] !== `.DS_Store`) {
-          shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
-        }}
+        for (let i = 0; i < filelist.length; i++) {
+          if (filelist[i] !== `.DS_Store`) {
+            exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+              if (error) {
+                reject(error);
+              }
+            });
+          }
+        }
         resolve("success");
       }
     });
@@ -696,7 +719,7 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
     }
     return function requestLaunchingFunction(path, data = {}) {
       let promiseObj;
-      const shell = require(`shelljs`);
+      const { exec } = require('child_process');
       const shellLink = function (str) {
         let arr = str.split('/');
         let newStr = '';
@@ -741,7 +764,7 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
                 data.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
                 url = `${protocol}://${ddns}:${String(port)}/${path.replace(/^\//gi, '')}`;
                 order = "curl -d '" + JSON.stringify(data) + "' -H \"Content-Type: application/json\" -X POST " + url;
-                shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+                exec(order, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (err, stdout, stderr) => {
                   if (err) {
                     reject(err);
                   } else {
@@ -768,7 +791,7 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
           if (path === "") {
             resolve("bind");
           } else {
-            shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+            exec(order, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (err, stdout, stderr) => {
               if (err) {
                 reject(err);
               } else {
@@ -790,7 +813,7 @@ Mother.prototype.ghostRequest = function (path = "", data = {}) {
 
 Mother.prototype.appleScript = function (name, contents, dir = null, clean = true, silent = false) {
   const fs = require('fs');
-  const shell = require('shelljs');
+  const { exec, execSync } = require('child_process');
   const shellLink = function (str) {
     let arr = str.split('/');
     let newStr = '';
@@ -822,16 +845,21 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
         } else {
           for (let i = 0; i < filelist.length; i++) {
             if (filelist[i] !== `.DS_Store`) {
-              shell.exec(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
+              execSync(`rm -rf ${shellLink(targetDir)}/${filelist[i]};`);
             }
           }
           fs.writeFile(`${targetDir}/${name}.applescript`, contents, "utf8", (err) => {
             if (err) {
               reject(err);
             } else {
-              let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
-              shell.exec(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
-              resolve(output.stdout.replace(/\n$/, ''));
+              exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (err, stdout, stderr) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  execSync(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
+                  resolve(stdout.replace(/\n$/, ''));
+                }
+              });
             }
           });
         }
@@ -843,9 +871,14 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
         if (err) {
           reject(err);
         } else {
-          let output = shell.exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { silent: silent });
-          shell.exec(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
-          resolve(output.stdout.replace(/\n$/, ''));
+          exec(`osascript ${shellLink(targetDir)}/${name}.applescript`, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (err, stdout, stderr) => {
+            if (err) {
+              reject(err);
+            } else {
+              execSync(`rm -rf ${shellLink(targetDir)}/${name}.applescript`);
+              resolve(stdout.replace(/\n$/, ''));
+            }
+          });
         }
       });
     });
@@ -854,8 +887,7 @@ Mother.prototype.appleScript = function (name, contents, dir = null, clean = tru
 
 Mother.prototype.pythonExecute = function (target, args = [], inputObj) {
   const fs = require(`fs`);
-  const shell = require(`shelljs`);
-
+  const { exec } = require("child_process");
   let targetLink, targetArr;
 
   //shellLink and make target path
@@ -880,21 +912,26 @@ Mother.prototype.pythonExecute = function (target, args = [], inputObj) {
   return new Promise(function(resolve, reject) {
     fs.writeFile(bridgeFile, JSON.stringify(inputObj, null, 2), "utf8", function (err) {
       if (err) { reject(err); }
-      let order, child;
+      let order;
       let result, jsonRaw, json;
       order = `python3 ${targetLink}`;
       if (args.length > 0) {
         order += ` ${args.join(' ')}`;
       }
-      child = shell.exec(order, { silent: true });
-      jsonRaw = child.stdout.replace(/\n$/, '');
-      try {
-        json = JSON.parse(jsonRaw);
-        result = json;
-      } catch (e) {
-        result = jsonRaw;
-      }
-      resolve(result);
+      exec(order, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+        } else {
+          jsonRaw = stdout.replace(/\n$/, '');
+          try {
+            json = JSON.parse(jsonRaw);
+            result = json;
+          } catch (e) {
+            result = jsonRaw;
+          }
+          resolve(result);
+        }
+      });
     });
   });
 }
@@ -1035,8 +1072,7 @@ Mother.prototype.orderSystem = function (type, number) {
 
 Mother.prototype.s3FileUpload = function (fromArr, toArr) {
   const fs = require(`fs`);
-  const shell = require(`shelljs`);
-
+  const { exec } = require("child_process");
   let target = process.cwd() + "/apps/mother.py";
   let targetLink, targetArr;
 
@@ -1085,19 +1121,23 @@ Mother.prototype.s3FileUpload = function (fromArr, toArr) {
       let order, child;
       let result, jsonRaw, json;
       order = `python3 ${targetLink} fileUpload`;
-      child = shell.exec(order, { silent: true });
-      jsonRaw = child.stdout.replace(/\n$/, '');
-      json = JSON.parse(jsonRaw);
-      result = json;
-      resolve(result.message);
+      exec(order, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+        } else {
+          jsonRaw = stdout.replace(/\n$/, '');
+          json = JSON.parse(jsonRaw);
+          result = json;
+          resolve(result.message);
+        }
+      });
     });
   });
 }
 
 Mother.prototype.s3FileList = function (query = "all") {
   const fs = require(`fs`);
-  const shell = require(`shelljs`);
-
+  const { exec } = require("child_process");
   let target = process.cwd() + "/apps/mother.py";
   let targetLink, targetArr;
 
@@ -1132,11 +1172,16 @@ Mother.prototype.s3FileList = function (query = "all") {
       } else {
         order = `python3 ${targetLink} listBucketAll`;
       }
-      child = shell.exec(order, { silent: true });
-      jsonRaw = child.stdout.replace(/\n$/, '');
-      json = JSON.parse(jsonRaw);
-      result = json;
-      resolve(result.message);
+      exec(order, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+        } else {
+          jsonRaw = stdout.replace(/\n$/, '');
+          json = JSON.parse(jsonRaw);
+          result = json;
+          resolve(result.message);
+        }
+      });
     });
   });
 }
@@ -1193,9 +1238,9 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
 }
 
 Mother.prototype.ghostFileList = function (dir) {
-  const shell = require('shelljs');
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const crypto = require('crypto');
+  const { exec } = require('child_process');
   const algorithm = 'aes-192-cbc';
   let url, order, data;
   let ddns, port, protocol;
@@ -1219,7 +1264,7 @@ Mother.prototype.ghostFileList = function (dir) {
           data.uragenGhostFinalRandomAccessKeyArraySubwayHomeLiaisonStyle = "a19OyoZjf9xQJXykapple3kE5ySgBW39IjxQJXyk3homeliaisonkE5uf9uuuySgBW3ULXHF1CdjxGGPCQJsubwayXyk3kE5ySgBW3f9y2Y2lotionpuk0dQF9ruhcs";
           url = `${protocol}://${ddns}:${String(port)}/list`;
           order = "curl -d '" + JSON.stringify(data) + "' -H \"Content-Type: application/json\" -X POST " + url;
-          shell.exec(order, { silent: true, async: true }, function (err, stdout, stderr) {
+          exec(order, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (err, stdout, stderr) => {
             if (err) {
               reject(err);
             } else {
@@ -1605,7 +1650,7 @@ Mother.prototype.treeParsing = async function (target, liteMode = false, liteCal
   }
   const lsAl = function (target) {
     return new Promise(function (resolve, reject) {
-      exec(`ls -al ${shellLink(target)}`, (error, stdout, stderr) => {
+      exec(`ls -al ${shellLink(target)}`, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
         if (error) {
           reject(error);
         } else {
@@ -1969,7 +2014,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
   }
   const lsAl = function (target) {
     return new Promise(function (resolve, reject) {
-      exec(`ls -al ${shellLink(target)}`, (error, stdout, stderr) => {
+      exec(`ls -al ${shellLink(target)}`, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
         if (error) {
           reject(error);
         } else {
@@ -1981,7 +2026,7 @@ Mother.prototype.leafParsing = async function (target, searchMode = false, keywo
   }
   const execPromise = function (command) {
     return new Promise((resolve, reject) => {
-      exec(command, (error, stdout, stderr) => {
+      exec(command, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
         if (error) {
           reject(error);
         } else {
@@ -2379,7 +2424,7 @@ Mother.prototype.copyToClipboard = function (data) {
 
 Mother.prototype.pasteToClipboard = function (data) {
   const os = require("os");
-  const { exec } = require('child_process');
+  const { execSync } = require('child_process');
   let stdout;
   if (os.type() === 'Darwin') {
     stdout = execSync('pbpaste');

@@ -56,6 +56,7 @@ DevContext.prototype.pureScript = function () {
   const deleteToken = "__delete__";
   const motherTargets = [
     "fileSystem",
+    "shellExec",
     "shellLink",
     "sleep",
     "equalJson",
@@ -100,7 +101,7 @@ DevContext.prototype.pureScript = function () {
 
 DevContext.prototype.pureServer = async function () {
   const instance = this;
-  const { pureServer } = this.mother;
+  const { pureServer, shellExec, shellLink, fileSystem } = this.mother;
   const NativeNotifier = require(process.cwd() + "/apps/nativeNotifier/nativeNotifier.js");
   const notifier = new NativeNotifier();
   try {
@@ -132,7 +133,7 @@ DevContext.prototype.pureServer = async function () {
 
 DevContext.prototype.pureSpawn = async function () {
   const instance = this;
-  const { shell, shellLink, fileSystem } = this.mother;
+  const { shellExec, shellLink, fileSystem } = this.mother;
   try {
     const serverName = "homeliaisonPureServer";
     const home = process.env.HOME;
@@ -141,7 +142,7 @@ DevContext.prototype.pureSpawn = async function () {
       "nativeNotifier"
     ];
     if (await fileSystem(`exist`, [ `${home}/${serverName}` ])) {
-      shell.exec(`rm -rf ${shellLink(home)}/${serverName};`);
+      await shellExec(`rm -rf ${shellLink(home)}/${serverName};`);
     }
     await fileSystem(`mkdir`, [ `${home}/${serverName}` ]);
     await fileSystem(`mkdir`, [ `${home}/${serverName}/apps` ]);
@@ -151,9 +152,9 @@ DevContext.prototype.pureSpawn = async function () {
     await fileSystem(`write`, [ `${home}/${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
     await fileSystem(`write`, [ `${home}/${serverName}/index.js`, script ]);
     for (let m of copiedModules) {
-      shell.exec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/${serverName}/apps;`);
+      await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/${serverName}/apps;`);
     }
-    shell.exec(`open ${shellLink(home)}/${serverName};`);
+    await shellExec(`open ${shellLink(home)}/${serverName};`);
   } catch (e) {
     console.log(e);
   }
@@ -162,7 +163,7 @@ DevContext.prototype.pureSpawn = async function () {
 DevContext.prototype.launching = async function () {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shell, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading, errorLog, messageLog, pureServer } = this.mother;
+  const { fileSystem, shellExec, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading, errorLog, messageLog, pureServer } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -184,6 +185,8 @@ DevContext.prototype.launching = async function () {
     // await this.passiveAddressSync("c2110_aa14s");
 
     // await this.pureSpawn();
+
+
 
 
 
@@ -1397,10 +1400,10 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: null,
-    //     designer: "이미영",
-    //     link: "https://drive.google.com/drive/folders/1RD8A65ghQe4oPruXYJ4Koieny0n3jYO9",
-    //     pay: true
+    //     client: "김태희",
+    //     designer: "전경화",
+    //     link: "https://drive.google.com/drive/folders/1UB7O2BNpgNZ9ZmmDYdHYYw2t5wjSyU29",
+    //     pay: false
     //   },
     // ]);
 
@@ -1650,7 +1653,7 @@ DevContext.prototype.findCode = async function (str, openMode = false) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { treeParsing, fileSystem, shell, shellLink } = this.mother;
+  const { treeParsing, fileSystem, shellExec, shellLink } = this.mother;
   const entryPoints = [ "robot.js", "ghost.js", "alien.js", "setup.py" ];
   const escapeReg = function (s) {
     s = s.replace(/\*/gi, "\\*");
@@ -1686,7 +1689,7 @@ DevContext.prototype.findCode = async function (str, openMode = false) {
     }
     if (openMode) {
       for (let s of report.scripts) {
-        shell.exec(`atom ${shellLink(process.cwd() + s)};`);
+        await shellExec(`atom ${shellLink(process.cwd() + s)};`);
       }
     }
     return report;
