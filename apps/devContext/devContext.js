@@ -110,12 +110,6 @@ DevContext.prototype.pureServer = async function () {
     const app = new PureServer();
 
     app.post("/push", async (req, res) => {
-      res.set({
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       try {
         notifier.sendAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ message: "will do" }));

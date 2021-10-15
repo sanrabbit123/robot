@@ -761,6 +761,16 @@ Robot.prototype.devAliveSync = async function () {
   }
 }
 
+Robot.prototype.cronServer = async function () {
+  try {
+    const CronGhost = require(`${process.cwd()}/apps/cronGhost/cronGhost.js`);
+    const cron = new CronGhost();
+    await cron.cronServer();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -1202,6 +1212,13 @@ const MENU = {
   passiveSync: async function () {
     try {
       await robot.passiveSync();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  cronServer: async function () {
+    try {
+      await robot.cronServer();
     } catch (e) {
       console.log(e);
     }

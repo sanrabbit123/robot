@@ -153,4 +153,83 @@ CronGhost.prototype.scriptReady = async function (listNum = 0) {
   }
 }
 
+CronGhost.prototype.cronRouter = async function () {
+  const instance = this;
+  const { pureServer, shellExec, shellLink, fileSystem, dateToString } = this.mother;
+  try {
+    const PureServer = pureServer("class");
+    const app = new PureServer();
+
+    app.get("/", async (req, res) => {
+      try {
+        res.send(JSON.stringify({ cronId: instance.cronId }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+
+
+
+
+
+
+
+    return app;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+CronGhost.prototype.cronServer = async function () {
+  const instance = this;
+  const { pureServer, dateToString } = this.mother;
+  const port = 3000;
+  const interval = (3000);
+  // const interval = (10 * 60 * 1000);
+  const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
+  const CronSource = require(`${this.dir}/source/cronSource.js`);
+  try {
+    const app = await this.cronRouter();
+    this.time = new Date();
+    this.cronId = {
+      unique: "",
+      week: "",
+      day: "",
+      hour: "",
+    };
+
+    this.source = new CronSource(this.mother, this.back, this.address);
+
+    setInterval(() => {
+      const now = new Date();
+      const dayNumber = now.getDay();
+      const dateString = dateToString(now, true);
+      let tempArr, tempArr2, tempArr3;
+      let date, hour, minute;
+
+      tempArr = dateString.split(' ');
+      tempArr2 = tempArr[0].split('-');
+      tempArr3 = tempArr[1].split(':');
+
+      date = tempArr2[2];
+      hour = tempArr3[0];
+      minute = tempArr3[1].slice(0, 1);
+
+      instance.time = dateCopy(now);
+
+      instance.cronId.unique = 'u' + dateString.slice(2, -4).replace(/[^0-9]/gi, '');
+      instance.cronId.week = 'w' + String(dayNumber) + hour + minute;
+      instance.cronId.day = 'd' + hour + minute;
+      instance.cronId.hour = 'h' + minute;
+
+      console.log(instance.cronId);
+    }, interval);
+
+    pureServer("listen", app, port);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = CronGhost;

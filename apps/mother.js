@@ -3189,7 +3189,13 @@ Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000)
         for (let [ method, path, callback ] of instance.matrix) {
           if (method === req.method && path === req.url.trim()) {
             boo = true;
-            callback(req, res);
+            res.writeHead(200, {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+              "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+            });
+            await callback(req, res);
           }
         }
         if (!boo) {
