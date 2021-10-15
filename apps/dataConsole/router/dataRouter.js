@@ -3789,6 +3789,8 @@ DataRouter.prototype.rou_post_designerFee = function () {
             designerRealtime = await work.realtimeDesignerMatch(desid, cliid, serid, xValue, option);
           }
 
+          console.log(designerRealtime);
+
           if (!designerRealtime.result) {
             temp.comment = "Unable schedule";
             temp.detail.online = 0;
