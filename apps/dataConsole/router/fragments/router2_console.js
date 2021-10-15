@@ -3161,15 +3161,10 @@ DataRouter.prototype.rou_post_designerFee = function () {
         throw new Error("must be matrix");
       }
       const matrix = equalJson(req.body.matrix);
-      const margin = 10;
+      const dateMargin = 10;
       let resultObj, temp;
       let project, thisProposal;
-      let client;
-      let startDate, endDate;
       let designerRealtime;
-      let boo;
-      let calculatedReatime, rawPossibleArr;
-      let tempObj, tempDate, tempDate2;
 
       if (!Array.isArray(matrix)) {
         throw new Error("invaild post");
@@ -3185,7 +3180,6 @@ DataRouter.prototype.rou_post_designerFee = function () {
         for (let [ desid, cliid, serid, xValue, proid ] of matrix) {
           temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
 
-          //discount setting
           temp.detail.discount = {
             online: 0,
             offline: 0,
@@ -3202,41 +3196,12 @@ DataRouter.prototype.rou_post_designerFee = function () {
                 }
               }
             }
+            designerRealtime = await work.realtimeDesignerMatch(desid, proid, option);
+          } else {
+            designerRealtime = await work.realtimeDesignerMatch(desid, cliid, serid, xValue, option);
           }
 
-          //realtime setting
-          client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-
-          startDate = client.requests[0].analytics.date.space.movein.toNormal();
-          endDate = client.requests[0].analytics.date.space.movein.toNormal();
-          startDate.setDate(startDate.getDate() - serviceParsing({ online: false, serid, xValue }, true));
-
-          startDate.setDate(startDate.getDate() + margin);
-          endDate.setDate(endDate.getDate() - margin);
-
-          designerRealtime = await back.mongoRead("realtimeDesigner", { desid }, { selfMongo: instance.mongolocal });
-
-          rawPossibleArr = designerRealtime[0].possible.map((obj) => { return { start: obj.start, end: obj.end }; });
-          calculatedReatime = [];
-          for (let i = 0; i < rawPossibleArr.length - 1; i++) {
-            tempDate = new Date(JSON.stringify(rawPossibleArr[i].end).slice(1, -1));
-            tempDate.setDate(tempDate.getDate() + 1);
-            tempDate2 = new Date(JSON.stringify(rawPossibleArr[i + 1].start).slice(1, -1));
-            if (dateToString(tempDate) === dateToString(tempDate2)) {
-              
-            } else {
-              calculatedReatime.push({ start: rawPossibleArr[i].start, end: rawPossibleArr[i].end });
-            }
-          }
-
-          boo = false;
-          for (let { start, end } of designerRealtime[0].possible) {
-            if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {
-              boo = true;
-              break;
-            }
-          }
-          if (!boo) {
+          if (!designerRealtime.result) {
             temp.comment = "Unable schedule";
             temp.detail.online = 0;
             temp.detail.offline = 0;
@@ -3244,7 +3209,6 @@ DataRouter.prototype.rou_post_designerFee = function () {
             temp.fee = 0;
           }
 
-          //limit setting
           temp.detail.travel.limit = 5;
 
           resultObj.push(temp);

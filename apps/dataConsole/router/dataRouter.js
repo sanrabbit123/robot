@@ -3749,15 +3749,10 @@ DataRouter.prototype.rou_post_designerFee = function () {
         throw new Error("must be matrix");
       }
       const matrix = equalJson(req.body.matrix);
-      const margin = 10;
+      const dateMargin = 10;
       let resultObj, temp;
       let project, thisProposal;
-      let client;
-      let startDate, endDate;
       let designerRealtime;
-      let boo;
-      let calculatedReatime, rawPossibleArr;
-      let tempObj, tempDate, tempDate2;
 
       if (!Array.isArray(matrix)) {
         throw new Error("invaild post");
@@ -3773,7 +3768,6 @@ DataRouter.prototype.rou_post_designerFee = function () {
         for (let [ desid, cliid, serid, xValue, proid ] of matrix) {
           temp = await work.getDesignerFee(desid, cliid, serid, xValue, option);
 
-          //discount setting
           temp.detail.discount = {
             online: 0,
             offline: 0,
@@ -3790,41 +3784,12 @@ DataRouter.prototype.rou_post_designerFee = function () {
                 }
               }
             }
+            designerRealtime = await work.realtimeDesignerMatch(desid, proid, option);
+          } else {
+            designerRealtime = await work.realtimeDesignerMatch(desid, cliid, serid, xValue, option);
           }
 
-          //realtime setting
-          client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-
-          startDate = client.requests[0].analytics.date.space.movein.toNormal();
-          endDate = client.requests[0].analytics.date.space.movein.toNormal();
-          startDate.setDate(startDate.getDate() - serviceParsing({ online: false, serid, xValue }, true));
-
-          startDate.setDate(startDate.getDate() + margin);
-          endDate.setDate(endDate.getDate() - margin);
-
-          designerRealtime = await back.mongoRead("realtimeDesigner", { desid }, { selfMongo: instance.mongolocal });
-
-          rawPossibleArr = designerRealtime[0].possible.map((obj) => { return { start: obj.start, end: obj.end }; });
-          calculatedReatime = [];
-          for (let i = 0; i < rawPossibleArr.length - 1; i++) {
-            tempDate = new Date(JSON.stringify(rawPossibleArr[i].end).slice(1, -1));
-            tempDate.setDate(tempDate.getDate() + 1);
-            tempDate2 = new Date(JSON.stringify(rawPossibleArr[i + 1].start).slice(1, -1));
-            if (dateToString(tempDate) === dateToString(tempDate2)) {
-              
-            } else {
-              calculatedReatime.push({ start: rawPossibleArr[i].start, end: rawPossibleArr[i].end });
-            }
-          }
-
-          boo = false;
-          for (let { start, end } of designerRealtime[0].possible) {
-            if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {
-              boo = true;
-              break;
-            }
-          }
-          if (!boo) {
+          if (!designerRealtime.result) {
             temp.comment = "Unable schedule";
             temp.detail.online = 0;
             temp.detail.offline = 0;
@@ -3832,7 +3797,6 @@ DataRouter.prototype.rou_post_designerFee = function () {
             temp.fee = 0;
           }
 
-          //limit setting
           temp.detail.travel.limit = 5;
 
           resultObj.push(temp);
@@ -4764,48 +4728,31 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
   const instance = this;
   const { equalJson } = this.mother;
   const back = this.back;
-  const address = this.address;
+  const work = this.work;
   let obj = {};
   obj.link = "/designerProposal_getDesigners";
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
-      if (req.body.whereQuery === undefined || req.body.startDate === undefined || req.body.endDate === undefined) {
+      if (req.body.whereQuery === undefined || req.body.proid === undefined) {
         throw new Error("invaild post");
       }
-      const { whereQuery, startDate, endDate } = equalJson(req.body);
+      const { whereQuery, proid } = equalJson(req.body);
       const designers = await back.getDesignersByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
-      const designersRealTime = await back.mongoRead("realtimeDesigner", whereQuery, { selfMongo: instance.mongolocal });
-      const margin = 10;
       let designersNormal;
-      let boo;
-
-      startDate.setDate(startDate.getDate() + margin);
-      endDate.setDate(endDate.getDate() - margin);
-
-      boo = false;
-      for (let designerRealTime of designersRealTime) {
-        boo = false;
-        for (let { start, end } of designerRealTime.possible) {
-          if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {
-            boo = true;
-          }
-          if (boo) {
-            break;
-          }
-        }
-        designers.search(designerRealTime.desid).end = !boo;
+      let designerNormal;
+      let realtime;
+      designersNormal = [];
+      for (let designer of designers) {
+        realtime = await work.realtimeDesignerMatch(designer.desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
+        designerNormal = designer.toNormal();
+        designerNormal.end = !realtime.result;
+        designersNormal.push(designerNormal);
       }
-
-      designersNormal = designers.toNormal();
-      for (let d of designersNormal) {
-        d.end = designers.search(d.desid).end;
-      }
-
-      res.set("Content-Type", "application/json");
       res.send(JSON.stringify(designersNormal));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message, channel: "#error_log" });
-      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;

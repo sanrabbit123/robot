@@ -1308,6 +1308,7 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     let possibleRange, possibleRealRange;
     let possibleTempArr;
     let possibleBoo;
+    let realPossible;
 
     serid = null;
     xValue = null;
@@ -1407,24 +1408,11 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
     standardRealEnd = new Date(standardEnd.getFullYear(), standardEnd.getMonth(), standardEnd.getDate());
     standardRealEnd.setDate(standardRealEnd.getDate() + secondDateNumber);
 
-    // possibleRange = [];
-    // while (standardStart.valueOf() < standardEnd.valueOf()) {
-    //   possibleRange.push(ytoken + String(standardStart.getFullYear()) + mtoken + String(standardStart.getMonth() + 1));
-    //   standardStart.setDate(standardStart.getDate() + 1);
-    // }
-    // possibleRange = Array.from(new Set(possibleRange));
-    //
-    // possibleRealRange = [];
-    // while (standardStart.valueOf() < standardRealEnd.valueOf()) {
-    //   possibleRealRange.push(ytoken + String(standardStart.getFullYear()) + mtoken + String(standardStart.getMonth() + 1));
-    //   standardStart.setDate(standardStart.getDate() + 1);
-    // }
-    // possibleRealRange = Array.from(new Set(possibleRealRange));
-
     realtimeMap = {};
     for (let { desid, possible } of realTimes) {
       realtimeMap[desid] = false;
-      for (let { start, end } of possible) {
+      realPossible = this.realtimePossibleConverting(possible);
+      for (let { start, end } of realPossible) {
         possibleBoo = (start.valueOf() <= standardStart.valueOf() && standardEnd.valueOf() <= end.valueOf());
         realtimeMap[desid] = possibleBoo;
         if (possibleBoo) {
@@ -1437,7 +1425,8 @@ BackWorker.prototype.designerCuration = async function (cliid, selectNumber, ser
       realtimeMap = {};
       for (let { desid, possible } of realTimes) {
         realtimeMap[desid] = false;
-        for (let { start, end } of possible) {
+        realPossible = this.realtimePossibleConverting(possible);
+        for (let { start, end } of realPossible) {
           possibleBoo = (start.valueOf() <= standardEnd.valueOf() && standardRealEnd.valueOf() <= end.valueOf());
           realtimeMap[desid] = possibleBoo;
           if (possibleBoo) {
@@ -1872,6 +1861,226 @@ BackWorker.prototype.realtimeDesignerSync = async function (proid, option = { se
     if (!selfConsoleBoo) {
       await selfConsoleMongo.close();
     }
+  }
+}
+
+BackWorker.prototype.realtimePossibleConverting = function (possibleArr, dateMargin = 10) {
+  if (!Array.isArray(possibleArr)) {
+    throw new Error("invaild input : must be possible array");
+  }
+  if (!possibleArr.every((obj) => { return typeof obj === "object" })) {
+    throw new Error("invaild input : must be possible array");
+  }
+  if (!possibleArr.every((obj) => { return (obj.start !== undefined && obj.end !== undefined) })) {
+    throw new Error("invaild input : must be possible array");
+  }
+  if (typeof dateMargin !== "number") {
+    dateMargin = 10;
+  }
+  const instance = this;
+  const { equalJson, dateToString } = this.mother;
+  let rawPossibleArr;
+  let indexArr, indexArrFlat;
+  let tempDateArr;
+  let tempDate2;
+  let tempObj;
+  let removeTargets;
+  let indexArrReverse;
+  let indexArrFinal;
+  let dateBoo;
+
+  rawPossibleArr = possibleArr.map((obj) => { return { start: obj.start, end: obj.end }; });
+
+  do {
+    indexArr = [];
+    for (let i = 0; i < rawPossibleArr.length - 1; i++) {
+      tempDateArr = new Array(dateMargin);
+      for (let j = 0; j < dateMargin; j++) {
+        tempDateArr[j] = new Date(JSON.stringify(rawPossibleArr[i].end).slice(1, -1));
+        tempDateArr[j].setDate(tempDateArr[j].getDate() + (j + 1));
+        tempDateArr[j] = dateToString(tempDateArr[j]);
+      }
+      tempDate2 = new Date(JSON.stringify(rawPossibleArr[i + 1].start).slice(1, -1));
+      if (tempDateArr.includes(dateToString(tempDate2))) {
+        indexArr.push(i);
+      }
+    }
+    if (indexArr.length > 0) {
+
+      indexArr = indexArr.map((num) => { return [ num, num + 1 ] });
+      indexArrFlat = indexArr.flat();
+      tempObj = {};
+      for (let a of indexArrFlat) {
+        if (tempObj['a' + String(a)] !== undefined) {
+          tempObj['a' + String(a)] = tempObj['a' + String(a)] + 1;
+        } else {
+          tempObj['a' + String(a)] = 1;
+        }
+      }
+      removeTargets = [];
+      for (let key in tempObj) {
+        if (tempObj[key] !== 1) {
+          removeTargets.push(Number(key.replace(/[^0-9]/gi, '')));
+        }
+      }
+
+      indexArrReverse = [];
+      for (let i = 0; i < rawPossibleArr.length; i++) {
+        indexArrReverse.push(i);
+      }
+      indexArrReverse = indexArrReverse.filter((num) => { return !indexArrFlat.includes(num); });
+      indexArrFlat = indexArrFlat.filter((num) => { return !removeTargets.includes(num); })
+
+      indexArrFinal = [];
+      for (let i = 0; i < indexArrFlat.length; i++) {
+        if (i % 2 === 0) {
+          indexArrFinal.push([ indexArrFlat[i], indexArrFlat[i + 1] ]);
+        }
+      }
+
+      indexArrFinal = indexArrFinal.map((arr) => {
+        return {
+          start: new Date(JSON.stringify(rawPossibleArr[arr[0]].start).slice(1, -1)),
+          end: new Date(JSON.stringify(rawPossibleArr[arr[1]].end).slice(1, -1))
+        };
+      });
+
+      for (let index of indexArrReverse) {
+        indexArrFinal.push(equalJson(JSON.stringify(rawPossibleArr[index])));
+      }
+      indexArrFinal.sort((a, b) => {
+        return a.start.valueOf() - b.start.valueOf();
+      });
+
+      rawPossibleArr = equalJson(JSON.stringify(indexArrFinal));
+
+      dateBoo = true;
+    } else {
+      dateBoo = false;
+    }
+  } while (dateBoo);
+
+  return rawPossibleArr;
+}
+
+BackWorker.prototype.realtimeDesignerMatch = async function (desid, proid, serid, xValue, option = { selfMongo: null, selfConsoleMongo: null }) {
+  if (typeof desid !== "string" || typeof proid !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!/^[d]/.test(desid)) {
+    throw new Error("invaild desid");
+  }
+  if (!/^[cp]/.test(proid)) {
+    throw new Error("invaild proid or cliid");
+  }
+  if (typeof serid === "object" && serid !== null) {
+    option = serid;
+  } else if (typeof serid === "string") {
+    if (typeof xValue !== "string" || typeof option !== "object") {
+      throw new Error("invaild xValue or option");
+    }
+  } else {
+    throw new Error("invaild serid position");
+  }
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongoconsoleinfo, equalJson, dateToString, serviceParsing } = this.mother;
+  const collection = "realtimeDesigner";
+  const dateMargin = 10;
+  let selfMongo, selfConsoleMongo;
+  let selfBoo, selfConsoleBoo;
+
+  if (option.selfMongo === null || option.selfMongo === undefined) {
+    selfBoo = false;
+  } else {
+    selfBoo = true;
+  }
+  if (option.selfConsoleMongo === null || option.selfConsoleMongo === undefined) {
+    selfConsoleBoo = false;
+  } else {
+    selfConsoleBoo = true;
+  }
+
+  try {
+    let project;
+    let cliid, client;
+    let requestNumber;
+    let startDate, endDate;
+    let designerRealtime;
+    let boo;
+    let rawPossibleArr;
+    let online;
+
+    if (!selfBoo) {
+      selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await selfMongo.connect();
+    } else {
+      selfMongo = option.selfMongo;
+    }
+    if (!selfConsoleBoo) {
+      selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      await selfConsoleMongo.connect();
+    } else {
+      selfConsoleMongo = option.selfConsoleMongo;
+    }
+
+    if (/^p/.test(proid)) {
+      project = await back.getProjectById(proid, { selfMongo });
+      cliid = project.cliid;
+      client = await back.getClientById(cliid, { selfMongo });
+      requestNumber = 0;
+      for (let i = 0; i < client.requests.length; i++) {
+        if (client.requests[i].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+          requestNumber = i;
+          break;
+        }
+      }
+      online = project.service.online;
+      serid = project.service.serid;
+      xValue = project.service.xValue;
+    } else {
+      cliid = proid;
+      client = await back.getClientById(cliid, { selfMongo });
+      requestNumber = 0;
+      online = false;
+    }
+
+    startDate = client.requests[requestNumber].analytics.date.space.movein.toNormal();
+    endDate = client.requests[requestNumber].analytics.date.space.movein.toNormal();
+    startDate.setDate(startDate.getDate() - serviceParsing({ online, serid, xValue }, true));
+
+    startDate.setDate(startDate.getDate() + dateMargin);
+    endDate.setDate(endDate.getDate() - dateMargin);
+
+    designerRealtime = await back.mongoRead(collection, { desid }, { selfMongo: selfConsoleMongo });
+    rawPossibleArr = this.realtimePossibleConverting(designerRealtime[0].possible, dateMargin);
+
+    boo = false;
+    for (let { start, end } of rawPossibleArr) {
+      if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {
+        boo = true;
+        break;
+      }
+    }
+
+    if (!selfBoo) {
+      await selfMongo.close();
+    }
+    if (!selfConsoleBoo) {
+      await selfConsoleMongo.close();
+    }
+
+    return {
+      result: boo,
+      possible: rawPossibleArr,
+      project: {
+        start: startDate,
+        end: endDate
+      },
+    };
+
+  } catch (e) {
+    return { message: "error : " + e.message };
   }
 }
 

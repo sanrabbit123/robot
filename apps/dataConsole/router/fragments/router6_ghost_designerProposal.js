@@ -98,48 +98,31 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
   const instance = this;
   const { equalJson } = this.mother;
   const back = this.back;
-  const address = this.address;
+  const work = this.work;
   let obj = {};
   obj.link = "/designerProposal_getDesigners";
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
-      if (req.body.whereQuery === undefined || req.body.startDate === undefined || req.body.endDate === undefined) {
+      if (req.body.whereQuery === undefined || req.body.proid === undefined) {
         throw new Error("invaild post");
       }
-      const { whereQuery, startDate, endDate } = equalJson(req.body);
+      const { whereQuery, proid } = equalJson(req.body);
       const designers = await back.getDesignersByQuery(whereQuery, { withTools: true, selfMongo: instance.mongo });
-      const designersRealTime = await back.mongoRead("realtimeDesigner", whereQuery, { selfMongo: instance.mongolocal });
-      const margin = 10;
       let designersNormal;
-      let boo;
-
-      startDate.setDate(startDate.getDate() + margin);
-      endDate.setDate(endDate.getDate() - margin);
-
-      boo = false;
-      for (let designerRealTime of designersRealTime) {
-        boo = false;
-        for (let { start, end } of designerRealTime.possible) {
-          if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {
-            boo = true;
-          }
-          if (boo) {
-            break;
-          }
-        }
-        designers.search(designerRealTime.desid).end = !boo;
+      let designerNormal;
+      let realtime;
+      designersNormal = [];
+      for (let designer of designers) {
+        realtime = await work.realtimeDesignerMatch(designer.desid, proid, { selfMongo: instance.mongo, selfConsoleMongo: instance.mongolocal });
+        designerNormal = designer.toNormal();
+        designerNormal.end = !realtime.result;
+        designersNormal.push(designerNormal);
       }
-
-      designersNormal = designers.toNormal();
-      for (let d of designersNormal) {
-        d.end = designers.search(d.desid).end;
-      }
-
-      res.set("Content-Type", "application/json");
       res.send(JSON.stringify(designersNormal));
     } catch (e) {
       instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message, channel: "#error_log" });
-      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;

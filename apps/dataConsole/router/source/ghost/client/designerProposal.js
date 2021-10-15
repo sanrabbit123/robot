@@ -1441,7 +1441,6 @@ DesignerProposalJs.prototype.insertDesignerBox = function (mother, info, index) 
 
   //title
   designerTitle = GeneralJs.nodes.div.cloneNode(true);
-  // designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너 " + this.abc[this.abcStatic] + "&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.gray3 + "\">></b>&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip.green + "\">" + designer + "</b>");
   designerTitle.insertAdjacentHTML("beforeend", "추천 디자이너&nbsp;&nbsp;<b style=\"color:" + GeneralJs.colorChip[instance.designers.pick(desid).end ? "gray5" : "green"] + "\">" + this.abc[this.abcStatic] + "</b>" + (instance.designers.pick(desid).end ? "&nbsp;&nbsp;: 해당 디자이너는 마감되었습니다." : ""));
   style = {
     position: "relative",
@@ -4233,8 +4232,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     let designers, designer;
     let whereQuery;
     let belowTarget, removeTargets;
-    let designersRealTime;
-    let startDate, endDate;
 
     if (getObj.cliid !== undefined) {
       cliid = getObj.cliid;
@@ -4276,16 +4273,13 @@ DesignerProposalJs.prototype.launching = async function (loading) {
         }
       }
 
-      startDate = new Date(clients[0].requests[0].analytics.date.space.movein);
-      startDate.setDate(startDate.getDate() - GeneralJs.serviceParsing(projects[0].service, true));
-      endDate = new Date(clients[0].requests[0].analytics.date.space.movein);
-      designers = await ajaxJson({ whereQuery, startDate, endDate }, "/designerProposal_getDesigners");
-
       projects.sort((a, b) => {
         return (new Date(b.proposal.date)).valueOf() - (new Date(a.proposal.date)).valueOf();
       });
       project = projects[0];
       proid = project.proid;
+
+      designers = await ajaxJson({ whereQuery, proid }, "/designerProposal_getDesigners");
 
     }
 
