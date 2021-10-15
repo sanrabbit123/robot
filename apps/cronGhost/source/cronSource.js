@@ -50,13 +50,46 @@ CronSource.prototype.sourceLoad = async function () {
 
     this.sourceMap = sourceMap;
 
-    console.log(sourceMap.date);
-
     return sourceMap;
 
   } catch (e) {
     console.log(e);
   }
 }
+
+CronSource.prototype.targetLauching = async function (cronId) {
+  const instance = this;
+  const { sourceMap } = this;
+  const { day: dayId, hour: hourId } = cronId;
+  try {
+    const { date, hour } = sourceMap;
+    let targetList;
+    let index;
+
+    index = sourceMap.date.findIndex((arr) => { return arr[0] === dayId; });
+    if (index !== -1) {
+      targetList = sourceMap.date[index][1].map((path) => {
+        return require(path);
+      });
+      for (let asyncFunction of targetList) {
+        await asyncFunction();
+      }
+    }
+
+    index = sourceMap.hour.findIndex((arr) => { return arr[0] === hourId; });
+    if (index !== -1) {
+      targetList = sourceMap.hour[index][1].map((path) => {
+        return require(path);
+      });
+      for (let asyncFunction of targetList) {
+        await asyncFunction();
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
 module.exports = CronSource;

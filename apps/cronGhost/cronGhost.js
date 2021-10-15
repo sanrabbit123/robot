@@ -160,20 +160,13 @@ CronGhost.prototype.cronRouter = async function () {
     const PureServer = pureServer("class");
     const app = new PureServer();
 
-    app.get("/", async (req, res) => {
+    app.get("/id", async (req, res) => {
       try {
         res.send(JSON.stringify({ cronId: instance.cronId }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error" }));
       }
     });
-
-
-
-
-
-
-
 
     return app;
   } catch (e) {
@@ -185,8 +178,7 @@ CronGhost.prototype.cronServer = async function () {
   const instance = this;
   const { pureServer, dateToString } = this.mother;
   const port = 3000;
-  const interval = (3000);
-  // const interval = (10 * 60 * 1000);
+  const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const CronSource = require(`${this.dir}/source/cronSource.js`);
   try {
@@ -203,29 +195,40 @@ CronGhost.prototype.cronServer = async function () {
 
     await this.source.sourceLoad();
 
-    setInterval(() => {
-      const now = new Date();
-      const dayNumber = now.getDay();
-      const dateString = dateToString(now, true);
-      let tempArr, tempArr2, tempArr3;
-      let date, hour, minute;
+    setInterval(async () => {
+      try {
+        const now = new Date();
+        const dayNumber = now.getDay();
+        const dateString = dateToString(now, true);
+        let tempArr, tempArr2, tempArr3;
+        let date, hour, minute;
+        let uniqueId, weekId, dayId, hourId;
 
-      tempArr = dateString.split(' ');
-      tempArr2 = tempArr[0].split('-');
-      tempArr3 = tempArr[1].split(':');
+        tempArr = dateString.split(' ');
+        tempArr2 = tempArr[0].split('-');
+        tempArr3 = tempArr[1].split(':');
 
-      date = tempArr2[2];
-      hour = tempArr3[0];
-      minute = tempArr3[1].slice(0, 1);
+        date = tempArr2[2];
+        hour = tempArr3[0];
+        minute = tempArr3[1].slice(0, 1);
 
-      instance.time = dateCopy(now);
+        instance.time = dateCopy(now);
 
-      instance.cronId.unique = 'u' + dateString.slice(2, -4).replace(/[^0-9]/gi, '');
-      instance.cronId.week = 'w' + String(dayNumber) + hour + minute;
-      instance.cronId.day = 'd' + hour + minute;
-      instance.cronId.hour = 'h' + minute;
+        uniqueId = 'u' + dateString.slice(2, -4).replace(/[^0-9]/gi, '');
+        weekId = 'w' + String(dayNumber) + hour + minute;
+        dayId = 'd' + hour + minute;
+        hourId = 'h' + minute;
 
-      console.log(instance.cronId);
+        instance.cronId.unique = uniqueId;
+        instance.cronId.week = weekId;
+        instance.cronId.day = dayId;
+        instance.cronId.hour = hourId;
+
+        await instance.source.targetLauching(instance.cronId);
+
+      } catch (e) {
+        console.log(e);
+      }
     }, interval);
 
     pureServer("listen", app, port);
