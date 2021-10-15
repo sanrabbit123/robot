@@ -3739,7 +3739,7 @@ DataRouter.prototype.rou_post_designerFee = function () {
   const instance = this;
   const work = this.work;
   const back = this.back;
-  const { equalJson, serviceParsing } = this.mother;
+  const { equalJson, serviceParsing, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/designerFee" ];
   obj.func = async function (req, res) {
@@ -3756,6 +3756,8 @@ DataRouter.prototype.rou_post_designerFee = function () {
       let startDate, endDate;
       let designerRealtime;
       let boo;
+      let calculatedReatime, rawPossibleArr;
+      let tempObj, tempDate, tempDate2;
 
       if (!Array.isArray(matrix)) {
         throw new Error("invaild post");
@@ -3801,6 +3803,20 @@ DataRouter.prototype.rou_post_designerFee = function () {
           endDate.setDate(endDate.getDate() - margin);
 
           designerRealtime = await back.mongoRead("realtimeDesigner", { desid }, { selfMongo: instance.mongolocal });
+
+          rawPossibleArr = designerRealtime[0].possible.map((obj) => { return { start: obj.start, end: obj.end }; });
+          calculatedReatime = [];
+          for (let i = 0; i < rawPossibleArr.length - 1; i++) {
+            tempDate = new Date(JSON.stringify(rawPossibleArr[i].end).slice(1, -1));
+            tempDate.setDate(tempDate.getDate() + 1);
+            tempDate2 = new Date(JSON.stringify(rawPossibleArr[i + 1].start).slice(1, -1));
+            if (dateToString(tempDate) === dateToString(tempDate2)) {
+              
+            } else {
+              calculatedReatime.push({ start: rawPossibleArr[i].start, end: rawPossibleArr[i].end });
+            }
+          }
+
           boo = false;
           for (let { start, end } of designerRealtime[0].possible) {
             if (start.valueOf() <= startDate.valueOf() && endDate.valueOf() <= end.valueOf()) {

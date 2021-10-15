@@ -18,7 +18,7 @@ module.exports = {
         },
         process: {
           status: "대기",
-          action: "응대 대기",
+          action: "계약금 안내",
           detail: [],
           outreason: [],
           call: {

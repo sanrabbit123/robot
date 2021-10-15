@@ -188,6 +188,126 @@ DevContext.prototype.launching = async function () {
 
 
 
+    
+
+
+
+
+
+    /*
+
+    // past
+    const from = [
+      "응대 대기",
+      "현장 미팅",
+      "1차 제안",
+      "수정 제안",
+      "시공 진행",
+      "제품 구매",
+      "배송중",
+      "촬영 컨택",
+      "촬영 대기",
+      "사진 대기",
+      "사진 공유",
+      "컨텐츠 공유",
+      "응대 종료",
+      "해당 없음"
+    ]
+
+    // new
+    const to = [
+      "계약금 안내",
+      "현장미팅 조율",
+      "의뢰서 작성중",
+      "의뢰서 공유",
+      "현장미팅 피드백",
+      "계약서 안내",
+      "잔금 안내",
+      "시작 대기",
+      "1차 제안",
+      "수정 제안",
+      "시공 진행",
+      "제품 구매",
+      "배송중",
+      "세팅 마무리",
+      "촬영 컨택",
+      "해당 없음"
+    ]
+
+    // matrix
+    const matrix = [
+      [
+        "계약 대기",
+        [
+          [ "계약금 안내" ],
+          [ "현장미팅 조율" ],
+          [ "의뢰서 작성중", "의뢰서 공유" ],
+          [ "현장미팅 피드백" ],
+          [ "계약서 안내", "잔금 안내" ]
+        ]
+      ],
+      [
+        "진행중",
+        [
+          [ "시작 대기" ],
+          [ "1차 제안", "수정 제안" ],
+          [ "시공 진행" ],
+          [ "제품 구매", "배송중" ],
+          [ "세팅 마무리", "촬영 컨택" ]
+        ]
+      ]
+    ]
+
+    const selfMongo = this.MONGOC;
+    const projects = await selfMongo.db(`miro81`).collection(`project`).find({}).toArray();
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    const todayValue = (new Date()).valueOf();
+    let whereQuery, updateQuery;
+    let thisMeetingDateValue;
+
+    for (let project of projects) {
+
+      whereQuery = { proid: project.proid };
+      updateQuery = {};
+
+      if (project.process.action.trim() === "응대 대기") {
+        updateQuery["process.action"] = "계약금 안내";
+      } else if (project.process.action.trim() === "현장 미팅") {
+        thisMeetingDateValue = project.process.contract.meeting.date.toNormal().valueOf()
+        if (thisMeetingDateValue < emptyDateValue) {
+          updateQuery["process.action"] = "현장미팅 조율";
+        } else if (thisMeetingDateValue < todayValue) {
+          updateQuery["process.action"] = "의뢰서 공유";
+        } else {
+          updateQuery["process.action"] = "현장미팅 피드백";
+        }
+      } else if (project.process.action.trim() === "촬영 대기") {
+        updateQuery["process.action"] = "촬영 컨택";
+      } else if (project.process.action.trim() === "사진 대기") {
+        updateQuery["process.action"] = "촬영 컨택";
+      } else if (project.process.action.trim() === "사진 공유") {
+        updateQuery["process.action"] = "촬영 컨택";
+      } else if (project.process.action.trim() === "컨텐츠 공유") {
+        updateQuery["process.action"] = "촬영 컨택";
+      } else if (project.process.action.trim() === "응대 종료") {
+        updateQuery["process.action"] = "해당 없음";
+      }
+
+      if (Object.keys(updateQuery).length > 0) {
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+        console.log(whereQuery);
+      }
+    }
+
+
+    */
+
+
+
+
+
+
+
 
 
 
@@ -196,11 +316,6 @@ DevContext.prototype.launching = async function () {
     //   return "rm -rf " + shellLink(str) + ';';
     // }).join("\n"));
     // await fileSystem(`write`, [ `${process.cwd()}/temp/remove.sh`, bashScript ]);
-
-
-
-
-
 
 
 

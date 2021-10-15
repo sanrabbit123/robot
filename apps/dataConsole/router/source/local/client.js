@@ -2050,7 +2050,12 @@ ClientJs.prototype.boardSwipe = function () {
   const instance = this;
   window.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-      window.location.href = window.location.protocol + "//" + window.location.host + "/project";
+      if (instance.whiteBox === null || instance.whiteBox === undefined) {
+        if (instance.totalFather !== null && instance.totalFather !== undefined) {
+          e.preventDefault();
+          window.location.href = window.location.protocol + "//" + window.location.host + "/project";
+        }
+      }
     }
   });
 }
