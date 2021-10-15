@@ -191,7 +191,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     /*
 
     // past
@@ -1433,20 +1432,20 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2104_aa07s" ]);
+    // await work.newDesignerToFront([ "d2110_aa02s" ]);
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2109_aa01s", [
-    //   { porlid: "ghost", index: 1 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 8 },
+    // await this.setProposalSettingForDesigner("d2110_aa02s", [
+    //   { porlid: "a84", index: 1 },
+    //   { porlid: "a84", index: 3 },
+    //   { porlid: "a84", index: 6 },
+    //   { porlid: "a84", index: 9 },
+    //   { porlid: "a84", index: 13 },
     // ], [
-    //   "다양한 재질과 컬러, 패턴을 사용하여 풍성한 프렌치 스타일링을 합니다.",
-    //   "적극적으로 아이디어 제안을 하며 작업하는 편입니다.",
-    //   "작업을 진행한 고객평 : \"생활패턴에 맞춘 뻔하지 않은 공간구성이 좋았습니다.\""
+    //   "고객님의 선호 스타일에 최대한 맞추어 조정하는 편입니다.",
+    //   "고객의 라이프스타일을 조금은 꼼꼼하게 체크하는 편입니다.",
+    //   "주어진 시간에 최대한 충실하려고 계획하는 편입니다."
     // ]);
 
 

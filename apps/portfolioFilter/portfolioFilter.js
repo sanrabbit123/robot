@@ -372,7 +372,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     const { fileList_780, fileList_1500, fileList_original, fileList_png } = await this.parsing_fileList(resultFolder, liteMode);
     console.log(fileList_780, fileList_1500, fileList_original, fileList_png);
 
-    if (liteMode || this.clientNullATarget.includes(this.clientName)) {
+    if (liteMode) {
       console.log(await photoRequest("mkdir", { name: this.folderName }));
     } else {
       ghostPhotos = await photoRequest("ls");
