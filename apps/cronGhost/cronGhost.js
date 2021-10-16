@@ -181,10 +181,14 @@ CronGhost.prototype.cronServer = async function () {
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const CronSource = require(`${this.dir}/source/cronSource.js`);
+  const RethinkAccess = require(`${process.cwd()}/apps/rethinkAccess/rethinkAccess.js`);
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const RETHINKC = new RethinkAccess();
   try {
     const app = await this.cronRouter();
     await MONGOLOCALC.connect();
+    await RETHINKC.connect();
+    await RETHINKC.bindCollection("cronLog");
     this.time = new Date();
     this.cronId = {
       unique: "",
@@ -193,7 +197,7 @@ CronGhost.prototype.cronServer = async function () {
       hour: "",
     };
 
-    this.source = new CronSource(this.mother, this.back, this.address, MONGOLOCALC);
+    this.source = new CronSource(this.mother, this.back, this.address, MONGOLOCALC, RETHINKC);
     await this.source.sourceLoad();
 
     setInterval(async () => {
