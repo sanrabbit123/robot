@@ -4,19 +4,21 @@ const RethinkAccess = function () {
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
   this.back = new BackMaker();
+  this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/rethinkAccess";
   this.moduleDir = this.dir + "/module";
   this.module = this.moduleDir + "/rethinkdb.js";
   this.connectionInfo = {
-    host: "home-liaison.serveftp.com",
-    port: 28015,
-    db: "miro81",
+    host: ADDRESS.officeinfo.ghost.host,
+    port: ADDRESS.officeinfo.rethink.port,
+    db: ADDRESS.officeinfo.rethink.db,
   };
   this.rethink = require(this.module);
   this.connection = null;
+  this.collection = null;
 }
 
-RethinkAccess.prototype.connect = async function () {
+RethinkAccess.prototype.connect = async function (collection = null) {
   const instance = this;
   const { rethink, connectionInfo } = this;
   try {
@@ -25,6 +27,9 @@ RethinkAccess.prototype.connect = async function () {
     }
     const RETHINKC = await rethink.connect(connectionInfo);
     this.connection = RETHINKC;
+    if (collection !== null) {
+      await this.bindCollection(collection);
+    }
     return RETHINKC;
   } catch (e) {
     console.log(e);
@@ -42,12 +47,45 @@ RethinkAccess.prototype.close = async function () {
   }
 }
 
-RethinkAccess.prototype.bindCollection = function (collection) {
-  if (typeof collection !== "string") {
-    throw new Error("collection must be string");
-  }
+RethinkAccess.prototype.bindCollection = async function (collection, option = { selfRethink: null }) {
   const instance = this;
-  this.collection = collection;
+  const { rethink, connectionInfo } = this;
+  let RETHINKC;
+  let selfBoo, result;
+  try {
+
+    if (typeof collection !== "string") {
+      throw new Error("collection must be string");
+    }
+
+    selfBoo = true;
+    if (this.connection === null && (option.selfRethink === undefined || option.selfRethink === null)) {
+      selfBoo = false;
+    }
+    if (!selfBoo) {
+      RETHINKC = await rethink.connect(connectionInfo);
+    } else {
+      if (this.connection === null) {
+        RETHINKC = option.selfRethink;
+      } else {
+        RETHINKC = this.connection;
+      }
+    }
+
+    result = await rethink.tableList().run(RETHINKC);
+    if (!result.includes(collection)) {
+      await rethink.tableCreate(collection).run(RETHINKC);
+    }
+
+    if (!selfBoo) {
+      await RETHINKC.close();
+    }
+
+    this.collection = collection;
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 RethinkAccess.prototype.rethinkRead = async function (collection, query, option = { selfRethink: null }) {
@@ -108,6 +146,10 @@ RethinkAccess.prototype.rethinkRead = async function (collection, query, option 
   }
 }
 
+RethinkAccess.prototype.read = async function (collection, query, option = { selfRethink: null }) {
+  return await this.rethinkRead(collection, query, option);
+}
+
 RethinkAccess.prototype.rethinkCreate = async function (collection, json, option = { selfRethink: null }) {
   const instance = this;
   const { rethink, connectionInfo } = this;
@@ -147,6 +189,8 @@ RethinkAccess.prototype.rethinkCreate = async function (collection, json, option
       }
     }
 
+    await this.bindCollection(collection, { selfRethink: RETHINKC });
+
     await rethink.table(collection).insert(json).run(RETHINKC);
 
     if (!selfBoo) {
@@ -156,6 +200,10 @@ RethinkAccess.prototype.rethinkCreate = async function (collection, json, option
   } catch (e) {
     console.log(e);
   }
+}
+
+RethinkAccess.prototype.create = async function (collection, json, option = { selfRethink: null }) {
+  return await this.rethinkCreate(collection, json, option);
 }
 
 RethinkAccess.prototype.rethinkUpdate = async function (collection, queryArr, option = { selfRethink: null }) {
@@ -221,6 +269,10 @@ RethinkAccess.prototype.rethinkUpdate = async function (collection, queryArr, op
   }
 }
 
+RethinkAccess.prototype.update = async function (collection, queryArr, option = { selfRethink: null }) {
+  return await this.rethinkUpdate(collection, queryArr, option);
+}
+
 RethinkAccess.prototype.rethinkDelete = async function (collection, query, option = { selfRethink: null }) {
   const instance = this;
   const { rethink, connectionInfo } = this;
@@ -279,6 +331,10 @@ RethinkAccess.prototype.rethinkDelete = async function (collection, query, optio
   }
 }
 
+RethinkAccess.prototype.delete = async function (collection, query, option = { selfRethink: null }) {
+  return await this.rethinkDelete(collection, query, option);
+}
+
 RethinkAccess.prototype.rethinkListCollections = async function (option = { selfRethink: null }) {
   const instance = this;
   const { rethink, connectionInfo } = this;
@@ -308,6 +364,10 @@ RethinkAccess.prototype.rethinkListCollections = async function (option = { self
   } catch (e) {
     console.log(e);
   }
+}
+
+RethinkAccess.prototype.list = async function (option = { selfRethink: null }) {
+  return await this.rethinkListCollections(option);
 }
 
 module.exports = RethinkAccess;

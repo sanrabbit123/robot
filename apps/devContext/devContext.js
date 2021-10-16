@@ -38,6 +38,7 @@ const GaroseroParser = require(APP_PATH + "/garoseroParser/garoseroParser.js");
 const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
 const MirrorRouter = require(APP_PATH + "/mirrorWhisk/router/mirrorRouter.js");
 const NativeNotifier = require(APP_PATH + "/nativeNotifier/nativeNotifier.js");
+const RethinkAccess = require(APP_PATH + "/rethinkAccess/rethinkAccess.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -179,6 +180,8 @@ DevContext.prototype.launching = async function () {
     // await this.passiveAddressSync("c2110_aa14s");
 
     // await this.pureSpawn();
+
+
 
 
 
