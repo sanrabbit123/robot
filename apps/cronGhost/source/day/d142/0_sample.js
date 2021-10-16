@@ -1,6 +1,6 @@
-const worker = async function (mother, back) {
+const worker = async function (mother, back, address, selfMongo) {
   try {
-    console.log("this");
+    console.log("test");
   } catch (e) {
     console.log(e);
   }

@@ -1,7 +1,8 @@
-const CronSource = function (mother, back, address) {
+const CronSource = function (mother, back, address, MONGOLOCALC) {
   this.mother = mother;
   this.back = back;
   this.address = address;
+  this.mongo = MONGOLOCALC;
   this.dir = process.cwd() + "/apps/cronGhost/source";
   this.sourceMap = null;
 }
@@ -72,7 +73,7 @@ CronSource.prototype.targetLauching = async function (cronId) {
         return require(path);
       });
       for (let asyncFunction of targetList) {
-        await asyncFunction();
+        await asyncFunction(this.mother, this.back, this.address, this.mongo);
       }
     }
 
@@ -82,7 +83,7 @@ CronSource.prototype.targetLauching = async function (cronId) {
         return require(path);
       });
       for (let asyncFunction of targetList) {
-        await asyncFunction();
+        await asyncFunction(this.mother, this.back, this.address, this.mongo);
       }
     }
 

@@ -176,13 +176,15 @@ CronGhost.prototype.cronRouter = async function () {
 
 CronGhost.prototype.cronServer = async function () {
   const instance = this;
-  const { pureServer, dateToString } = this.mother;
+  const { pureServer, dateToString, mongo, mongolocalinfo } = this.mother;
   const port = 3000;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const CronSource = require(`${this.dir}/source/cronSource.js`);
+  const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
     const app = await this.cronRouter();
+    await MONGOLOCALC.connect();
     this.time = new Date();
     this.cronId = {
       unique: "",
@@ -191,8 +193,7 @@ CronGhost.prototype.cronServer = async function () {
       hour: "",
     };
 
-    this.source = new CronSource(this.mother, this.back, this.address);
-
+    this.source = new CronSource(this.mother, this.back, this.address, MONGOLOCALC);
     await this.source.sourceLoad();
 
     setInterval(async () => {
