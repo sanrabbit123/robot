@@ -191,11 +191,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await instance.mother.statusReading());
+    const res = (await instance.mother.statusReading());
+
+    console.log(res);
 
 
+    const res2 = await requestSystem("https://home-liaison.serveftp.com/statusLog", res, { headers: { "Content-Type": "application/json" } })
 
-
+    console.log(res2);
 
 
 
