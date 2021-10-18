@@ -17,6 +17,21 @@ const Ghost = function () {
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
   this.formidable = require('formidable');
+  this.webHook = {
+    url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Accept": "application/vnd.tosslab.jandi-v2+json"
+    },
+    message: (message) => {
+      return {
+        body: message,
+        connectColor: "#FAC11B",
+        connectInfo: []
+      }
+    },
+    channel: "#error_log"
+  };
 }
 
 Ghost.timeouts = {};
@@ -1995,9 +2010,11 @@ Ghost.prototype.ghostRouter = function (needs) {
       });
       try {
         const collection = "statusLog";
-
-
-
+        const ip = String(req.headers['x-forwarded-for'] === undefined ? req.connection.remoteAddress : req.headers['x-forwarded-for']).trim().replace(/[^0-9\.]/gi, '');
+        const rawUserAgent = req.useragent;
+        const { source: userAgent, browser, os, platform } = rawUserAgent;
+        const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
+        const status = equalJson(req.body);
         let ipObj, thisName;
 
         ipObj = await ipParsing(ip);
@@ -2005,22 +2022,19 @@ Ghost.prototype.ghostRouter = function (needs) {
           ipObj = { ip };
         }
 
-
-
-
-
+        thisName = "unknown";
+        for (let info in instance.address) {
+          if (ip === instance.address[info].ip.outer) {
+            thisName = info.replace(/info$/, '');
+            break;
+          }
+        }
 
         await rethink.rethinkCreate(collection, {
           date: new Date(),
-          name: sourceMap.hour[index][1][num].split("/").slice(-1)[0],
-          result: res
+          status: equalJson(JSON.stringify(status)),
+          from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
-
-
-
-
-
-
 
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
