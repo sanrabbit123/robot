@@ -656,7 +656,7 @@ DataConsole.prototype.setBinary = async function () {
 
 DataConsole.prototype.connect = async function (noStatic = false) {
   const instance = this;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo } = this.mother;
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, mongolocalinfo, mongoconsoleinfo, errorLog } = this.mother;
   const PORT = 3000;
   const TESTINBOUND = 55555;
   const TESTOUTBOUND = 55556;
@@ -820,7 +820,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
               __slackMessage += "\n\n";
               __slackMessage += JSON.stringify(req.body, null, 2);
             }
-            instance.mother.slack_bot.chat.postMessage({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + JSON.stringify(__headers, null, 2), channel: "#error_log" });
+            errorLog({ text: "잘못된 보안 접근 감지 : (dataConsole) \n" + JSON.stringify(__headers, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
           } else {
             obj.func(req, res);
           }

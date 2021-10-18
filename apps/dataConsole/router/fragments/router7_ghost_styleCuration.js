@@ -1,6 +1,7 @@
 DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
   const instance = this;
   const back = this.back;
+  const { errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_getPhotos";
   obj.func = async function (req, res) {
@@ -49,7 +50,7 @@ DataRouter.prototype.rou_post_styleCuration_getPhotos = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ photos, contentsArr, designers: sendingDesigners }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 : " + e.message, channel: "#error_log" });
+      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_getPhotos): " + e.message);
       console.log(e);
     }
   }
@@ -61,7 +62,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
   const back = this.back;
   const work = this.work;
   const address = this.address;
-  const { equalJson, ghostRequest, requestSystem } = this.mother;
+  const { equalJson, ghostRequest, requestSystem, errorLog, messageSend } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_updateCalculation";
   obj.func = async function (req, res) {
@@ -188,7 +189,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               }, { headers: { "origin": "https://" + address.homeinfo.ghost.host, "Content-Type": "application/json" } });
 
             }).then(() => {
-              
+
               let updateObj;
               updateObj = {};
               updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
@@ -197,10 +198,10 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
             }).then(() => {
               return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
             }).then(() => {
-              return instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
+              return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
             }).catch((err) => {
               console.log(err);
-              instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" });
+              messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
             });
           }
 
@@ -209,7 +210,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         } else {
 
-          instance.mother.slack_bot.chat.postMessage({ text: client.name + " 제안서를 제작하려고 했으나 매칭되는 경우가 없어요!", channel: "#404_curation" });
+          await messageSend({ text: client.name + " 제안서를 제작하려고 했으나 매칭되는 경우가 없어요!", channel: "#404_curation" });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ service: [], client, history }));
 
@@ -217,7 +218,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message, channel: "#error_log" });
+      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_updateCalculation) : " + e.message);
       console.log(e);
     }
   }
@@ -227,7 +228,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, ghostRequest, requestSystem } = this.mother;
+  const { equalJson, ghostRequest, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/styleCuration_styleCheckComplete";
   obj.func = async function (req, res) {
@@ -241,14 +242,17 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       text = name + " 고객님이 스타일 찾기를 완료하였어요.";
       channel = "#404_curation";
 
-      instance.mother.slack_bot.chat.postMessage({ text, channel });
-      ghostRequest("voice", { text });
+      messageSend({ text, channel }).then(() => {
+        return ghostRequest("voice", { text });
+      }).catch((e) => {
+        console.log(e);
+      })
 
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message, channel: "#error_log" });
+      await errorLog("GhostClient 서버 문제 생김 (rou_post_styleCuration_styleCheckComplete) : " + e.message);
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "error" }));
     }

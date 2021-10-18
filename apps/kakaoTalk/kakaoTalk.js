@@ -739,7 +739,6 @@ KakaoTalk.prototype.getTemplate = function (target) {
 KakaoTalk.prototype.sendAspirantPresentation = async function () {
   const instance = this;
   const back = this.back;
-  const slack = this.mother.slack_bot;
   try {
     await this.ready();
     const targetId = "TD_6666";
@@ -768,7 +767,7 @@ KakaoTalk.prototype.sendAspirantPresentation = async function () {
           fmessage_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, name).replace(/#\{날짜\}/g, dateString)
         };
         response = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
-        await slack.chat.postMessage({ text: name + " 디자이너님에게 설명회 안내 알림톡을 전송하였습니다!", channel: "#300_designer" });
+        await instance.mother.messageSend({ text: name + " 디자이너님에게 설명회 안내 알림톡을 전송하였습니다!", channel: "#300_designer" });
         console.log(response.data);
       }
     }

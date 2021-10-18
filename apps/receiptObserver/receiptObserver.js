@@ -10,7 +10,7 @@ const ReceiptObserver = function () {
 
 ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, messageSend } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const back = this.back;
   const address = this.address;
@@ -80,7 +80,7 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
             let boo;
             let num;
             let message;
-            await instance.mother.slack_bot.chat.postMessage({ text: "문자 변동 감지", channel: "#error_log" });
+            await messageSend({ text: "문자 변동 감지", channel: "#error_log" });
             for (let { body } of notifications) {
               if (/\[Web/.test(body.trim()) && /입금/gi.test(body) && /원/gi.test(body) && /\]/gi.test(body) && /\//gi.test(body) && /\:/gi.test(body)) {
                 tempArr = body.split("원");
@@ -125,7 +125,7 @@ ReceiptObserver.prototype.wssClientLaunching = async function (url = "") {
                 message += "\n";
                 message += body;
 
-                await instance.mother.slack_bot.chat.postMessage({ text: message, channel });
+                await messageSend({ text: message, channel });
                 await MONGOC.close();
                 process.exit();
 

@@ -38,6 +38,7 @@ ReceiptRouter.prototype.rou_get_Root = function () {
       });
       res.send(String(ip).replace(/[^0-9\.]/gi, ''));
     } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -62,6 +63,7 @@ ReceiptRouter.prototype.rou_get_Ssl = function () {
       });
       res.send("hi");
     } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_Ssl): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -83,6 +85,7 @@ ReceiptRouter.prototype.rou_get_bluePrint = function () {
       });
       res.send(html);
     } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_get_bluePrint): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -175,7 +178,7 @@ ReceiptRouter.prototype.rou_post_generalMongo = function () {
       });
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_generalMongo): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -228,7 +231,7 @@ ReceiptRouter.prototype.rou_post_cashReceipt = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_cashReceipt): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -239,7 +242,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem } = this.mother;
+  const { requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/createStylingContract";
   obj.func = async function (req, res) {
@@ -273,7 +276,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
         await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName, contractAddress }, { headers: { "Content-type": "application/json" } });
       } else {
         console.log("styling form cancel : " + proid);
-        instance.mother.slack_bot.chat.postMessage({ text: "프로젝트 " + proid + "의 스타일링 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer" });
+        await messageSend({ text: "프로젝트 " + proid + "의 스타일링 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer" });
       }
 
       res.set({
@@ -284,7 +287,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_createStylingContract): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -296,7 +299,7 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
   const back = this.back;
   const bill = this.bill;
   const kakao = this.kakao;
-  const { equalJson, fileSystem, slack_bot, dateToString, autoComma, ghostRequest } = this.mother;
+  const { equalJson, fileSystem, dateToString, autoComma, ghostRequest, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/receiveStylingContract";
   obj.func = async function (req, res) {
@@ -313,8 +316,9 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
       if (client !== null) {
         await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
-        instance.mother.slack_bot.chat.postMessage({ text: "계약서 작성 및 알림톡 전송 완료 : " + client.name, channel: "#400_customer" });
-        ghostRequest("voice", { text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!" }).catch((err) => {
+        messageSend({ text: "계약서 작성 및 알림톡 전송 완료 : " + client.name, channel: "#400_customer" }).then(() => {
+          return ghostRequest("voice", { text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!" });
+        }).catch((err) => {
           console.log(err);
         });
       }
@@ -327,7 +331,7 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 : " + e.message, channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_receiveStylingContract): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -360,7 +364,7 @@ ReceiptRouter.prototype.rou_post_createStylingBill = function () {
       });
       res.send(JSON.stringify(bilidArr));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_createStylingBill) : " + e.message, channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_createStylingBill): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -409,7 +413,7 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
       });
       res.send(JSON.stringify(result));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_generalBill): " + e.message, channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_generalBill): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -420,7 +424,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, autoComma, ghostRequest, requestSystem } = this.mother;
+  const { equalJson, autoComma, ghostRequest, requestSystem, messageSend, errorLog } = this.mother;
   let obj = {};
   obj.link = "/ghostClientBill";
   obj.func = async function (req, res) {
@@ -555,8 +559,11 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
         message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
-        instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#700_operation" });
-        ghostRequest("/voice", { text: message });
+        messageSend({ text: message, channel: "#700_operation" }).then(() => {
+          return ghostRequest("/voice", { text: message });
+        }).catch((err) => {
+          console.log(err);
+        })
         await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
         if (paymentComplete) {
@@ -639,10 +646,10 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
                 }
               }).then((obj) => {
                 if (obj.status >= 300) {
-                  instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+                  return errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
                 }
               }).catch((err) => {
-                instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+                errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); })
               });
 
             } else if (/잔금/gi.test(data.goodName.trim())) {
@@ -679,8 +686,11 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         });
 
         message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
-        instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#700_operation" });
-        ghostRequest("/voice", { text: message });
+        messageSend({ text: message, channel: "#700_operation" }).then(() => {
+          return ghostRequest("/voice", { text: message });
+        }).catch((err) => {
+          console.log(err);
+        })
         await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
       }
@@ -693,7 +703,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -711,7 +721,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, requestSystem, ghostRequest } = this.mother;
+  const { equalJson, requestSystem, ghostRequest, messageSend, errorLog } = this.mother;
   const ParsingHangul = require(`${process.cwd()}/apps/parsingHangul/parsingHangul.js`);
   let obj = {};
   obj.link = "/webHookVAccount";
@@ -840,8 +850,11 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
 
       message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
-      instance.mother.slack_bot.chat.postMessage({ text: message, channel: "#700_operation" });
-      ghostRequest("/voice", { text: message });
+      messageSend({ text: message, channel: "#700_operation" }).then(() => {
+        return ghostRequest("/voice", { text: message });
+      }).catch((err) => {
+        console.log(err);
+      });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       if (paymentComplete) {
@@ -925,10 +938,10 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
               }
             }).then((obj) => {
               if (obj.status >= 300) {
-                instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+                errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" }).catch((err) => { console.log(err); });
               }
             }).catch((err) => {
-              instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+              errorLog({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" }).catch((err) => { console.log(err); });
             });
 
           } else if (/잔금/gi.test(data.goodName.trim())) {
@@ -955,7 +968,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount) : " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_webHookVAccount): " + e.message).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "text/plain" });
       res.send("FAIL");
       console.log(e);
@@ -986,7 +999,7 @@ ReceiptRouter.prototype.rou_post_designerSelect = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerSelect): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_designerSelect): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1023,7 +1036,7 @@ ReceiptRouter.prototype.rou_post_travelInjection = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelInjection): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelInjection): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1060,7 +1073,7 @@ ReceiptRouter.prototype.rou_post_travelEjection = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelEjection): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelEjection): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1098,7 +1111,7 @@ ReceiptRouter.prototype.rou_post_travelReconfig = function () {
       });
       res.send(JSON.stringify(thisBill.toNormal()));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_travelEjection): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_travelReconfig): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1118,7 +1131,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing } = this.mother;
+  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing, messageSend } = this.mother;
   let obj = {};
   obj.link = "/serviceConverting";
   obj.func = async function (req, res) {
@@ -1233,8 +1246,9 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
             cliid: client.cliid,
             needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
           });
-          instance.mother.slack_bot.chat.postMessage({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" });
-          ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" }).catch((err) => {
+          messageSend({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" }).then(() => {
+            return ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" });
+          }).catch((err) => {
             console.log(err);
           });
         }
@@ -1249,7 +1263,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
 
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_serviceConverting): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1269,7 +1283,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing } = this.mother;
+  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing, messageSend } = this.mother;
   let obj = {};
   obj.link = "/designerConverting";
   obj.func = async function (req, res) {
@@ -1371,8 +1385,9 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
           cliid: client.cliid,
           needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
         });
-        instance.mother.slack_bot.chat.postMessage({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" });
-        ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" }).catch((err) => {
+        messageSend({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" }).then(() => {
+          return ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" });
+        }).catch((err) => {
           console.log(err);
         });
       }
@@ -1385,7 +1400,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerConverting): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_designerConverting): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1425,7 +1440,7 @@ ReceiptRouter.prototype.rou_post_amountConverting = function () {
       });
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_amountConverting): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_amountConverting): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1445,7 +1460,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, sleep, requestSystem } = this.mother;
+  const { equalJson, sleep, requestSystem, messageSend } = this.mother;
   let obj = {};
   obj.link = "/requestRefund";
   obj.func = async function (req, res) {
@@ -1527,8 +1542,11 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
         designer: designer.designer,
         percentage: (!Number.isNaN(Number(req.body.percentage)) ? Number(req.body.percentage) : 100),
         amount: report.price.refund
+      }).then(() => {
+        return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation" });
+      }).catch((err) => {
+        console.log(err);
       });
-      instance.mother.slack_bot.chat.postMessage({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation" });
 
       res.set({
         "Content-Type": "application/json",
@@ -1538,7 +1556,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       });
       res.send(JSON.stringify(report));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_requestRefund): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1617,7 +1635,7 @@ ReceiptRouter.prototype.rou_post_contractCancel = function () {
       });
       res.send(JSON.stringify(report));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_contractCancel): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_contractCancel): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1647,7 +1665,7 @@ ReceiptRouter.prototype.rou_post_returnBankCode = function () {
       });
       res.send(JSON.stringify(bankCode));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_requestRefund): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_returnBankCode): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -1713,7 +1731,7 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
         res.send(JSON.stringify({ calculate }));
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Python 서버 문제 생김 (rou_post_designerCalculation): " + e.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_designerCalculation): " + e.message).catch((e) => { console.log(e); });
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",

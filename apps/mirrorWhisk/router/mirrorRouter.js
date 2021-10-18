@@ -279,7 +279,7 @@ MirrorRouter.prototype.callHistory = async function () {
 
 MirrorRouter.prototype.callObserver = async function (client, id, pass) {
   const instance = this;
-  const { requestSystem, sleep, sendJandi } = this.mother;
+  const { requestSystem, sleep, messageLog } = this.mother;
   const querystring = require("querystring");
   const url = "https://centrex.uplus.co.kr/RestApi/channelstatus";
   const back = this.back;
@@ -296,7 +296,7 @@ MirrorRouter.prototype.callObserver = async function (client, id, pass) {
 
     if (client !== null) {
 
-      sendJandi(client.name + " Observer");
+      await messageLog(client.name + " Observer");
 
       // if (id !== null) {
       //
@@ -328,16 +328,16 @@ MirrorRouter.prototype.callObserver = async function (client, id, pass) {
       //   }
       //
       //   if (status === 0) {
-      //     sendJandi(client.name + " 부재중");
+      //     await messageLog(client.name + " 부재중");
       //     //fail => "부재중"
       //   } else if (status === 2) {
-      //     sendJandi(client.name + " 스타일 찾기");
+      //     await messageLog(client.name + " 스타일 찾기");
       //     //success => "스타일 찾기"
       //   } else if (status === 3) {
-      //     sendJandi(client.name + " 부재중");
+      //     await messageLog(client.name + " 부재중");
       //     //fail => "부재중"
       //   }
-      //   sendJandi(client.name + String(status));
+      //   await messageLog(client.name + String(status));
       //
       // }
 
@@ -468,7 +468,7 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, ghostRequest } = this.mother;
+  const { requestSystem, ghostRequest, messageSend, errorLog } = this.mother;
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
   const outerUrl = "http://www.moyaweb.com/search_result.do";
@@ -604,13 +604,13 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
               }
             }
           }
-          await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
+          await messageSend({ text, channel: "#cx" });
           ghostRequest("voice", { text }).catch((err) => { throw new Error(err); });
         }
         res.send(JSON.stringify({ message: "success" }));
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ test: "MirrorRouter 문제 생김 (rou_post_parsingCall) : " + e.message, channel: "#cx" });
+      await errorLog("MirrorRouter 문제 생김 (rou_post_parsingCall) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -770,7 +770,7 @@ MirrorRouter.prototype.rou_post_errorLog = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, ipParsing } = this.mother;
+  const { requestSystem, ipParsing, messageSend } = this.mother;
   const webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
     headers: {
@@ -826,7 +826,7 @@ MirrorRouter.prototype.rou_post_errorLog = function () {
         from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
       });
       await requestSystem(webHook.url, webHook.message(req.body.message), { headers: webHook.headers });
-      instance.mother.slack_bot.chat.postMessage({ text: req.body.message + "\nfrom:\n" + JSON.stringify(from, null, 2), channel: webHook.channel });
+      await messageSend({ text: req.body.message + "\nfrom:\n" + JSON.stringify(from, null, 2), channel: webHook.channel });
 
       res.send(JSON.stringify({ name: thisName, message: "done" }));
 

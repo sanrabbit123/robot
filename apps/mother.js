@@ -35,10 +35,6 @@ const Mother = function () {
   //shell
   this.shell = require("shelljs");
 
-  //slack
-  const { WebClient } = require('@slack/web-api');
-  this.slack_bot = new WebClient(`xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv`);
-
   //temp
   this.tempDir = `${process.cwd()}/temp`;
 }
@@ -2769,30 +2765,6 @@ Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
   }
 }
 
-Mother.prototype.sendJandi = function (message) {
-  if (typeof message !== "string") {
-    throw new Error("message must be string");
-  }
-  const axios = require("axios");
-  const webhookUrl = "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844";
-  return new Promise((resolve, reject) => {
-    axios.post(webhookUrl, {
-      body: message,
-      connectColor: "#FAC11B",
-      connectInfo: []
-    }, {
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "Accept": "application/vnd.tosslab.jandi-v2+json"
-      }
-    }).then(function (response) {
-      resolve(response);
-    }).catch(function (error) {
-      reject(error);
-    });
-  });
-}
-
 Mother.prototype.statusReading = function (sendLog = true) {
   const os = require("os");
   const mac = /darwin/gi.test(os.platform());
@@ -3028,8 +3000,16 @@ Mother.prototype.statusReading = function (sendLog = true) {
 }
 
 Mother.prototype.errorLog = function (text) {
-  if (typeof text !== "string") {
-    throw new Error("invaild input");
+  if (typeof text === "object" && text !== null) {
+    if (typeof text.text === "string") {
+      text = text.text;
+    } else {
+      throw new Error("invaild input");
+    }
+  } else {
+    if (typeof text !== "string") {
+      throw new Error("invaild input");
+    }
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
@@ -3080,14 +3060,26 @@ Mother.prototype.messageSend = function (text, channel) {
 }
 
 Mother.prototype.messageLog = function (text) {
-  if (typeof text !== "string") {
-    throw new Error("invaild input");
+  let channel;
+  if (typeof text === "object" && text !== null) {
+    if (typeof text.text === "string") {
+      channel = text.channel;
+      text = text.text;
+    } else {
+      throw new Error("invaild input");
+    }
+  } else {
+    if (typeof text !== "string") {
+      throw new Error("invaild input");
+    }
+  }
+  if (typeof channel !== "string") {
+    channel = "silent";
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
   const axios = require("axios");
   const collection = "messageLog";
-  const channel = "silent";
   return new Promise((resolve, reject) => {
     axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
       if (res.status !== 200) {

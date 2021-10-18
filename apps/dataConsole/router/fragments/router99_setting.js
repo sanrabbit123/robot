@@ -3,11 +3,11 @@
 DataRouter.prototype.setMembers = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem } = this.mother;
+  const { fileSystem, errorLog } = this.mother;
   try {
     this.members = await back.setMemberObj({ getMode: true, selfMongo: instance.mongo });
   } catch (e) {
-    instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+    await errorLog("Console 서버 문제 생김 (setMembers): " + e.message);
     console.log(e);
   }
 }

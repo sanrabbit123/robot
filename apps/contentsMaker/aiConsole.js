@@ -17,7 +17,7 @@ const AiConsole = function () {
 
 AiConsole.prototype.cardToRequest = async function (cliid) {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, messageSend } = this.mother;
   const { home_dir } = this.options;
   try {
     const gDrive = this.mother.googleSystem("drive");
@@ -81,7 +81,7 @@ AiConsole.prototype.cardToRequest = async function (cliid) {
       resultLink = await gDrive.upload_andView(folderId, this.options.home_dir + "/result/" + sw + "/" + i);
     }}
 
-    await this.mother.slack_bot.chat.postMessage({ text: `${client.designer.designer} 실장님께 보낼, ${client.name} 고객님 홈스타일링 의뢰서가 완료되었습니다! 확인부탁드립니다! : ${resultLink}`, channel: `#300_designer` });
+    await messageSend({ text: `${client.designer.designer} 실장님께 보낼, ${client.name} 고객님 홈스타일링 의뢰서가 완료되었습니다! 확인부탁드립니다! : ${resultLink}`, channel: `#300_designer` });
 
     shell.exec(`rm -rf ${shellLink(this.options.home_dir)}/result/${sw}`);
 

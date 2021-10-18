@@ -88,7 +88,7 @@ module.exports = {
         findQuery = map.find.in(fresh);
         insertEvent = async function (fresh) {
           try {
-            await mother.slack_bot.chat.postMessage(fresh.toMessage());
+            await mother.messageSend(fresh.toMessage());
           } catch (e) {
             console.log(e);
           }

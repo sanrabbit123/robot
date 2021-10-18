@@ -4,10 +4,12 @@ const Ghost = function () {
   const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
   const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
   const ADDRESS = require(process.cwd() + "/apps/infoObj.js");
+  const { WebClient } = require('@slack/web-api');
   this.mother = new Mother();
   this.back = new BackMaker();
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
+  this.slack_bot = new WebClient(`xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv`);
   this.address = ADDRESS;
   this.homeliaisonServer = this.address.officeinfo.ghost.file.static + this.address.officeinfo.ghost.file.office;
   this.photoServer = this.address.officeinfo.ghost.file.static + "/photo";
@@ -158,7 +160,7 @@ Ghost.prototype.consoleQ = function (question) {
 
 Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
   const instance = this;
-  const { requestSystem, equalJson, stringToDate, sendJandi, messageLog, errorLog } = this.mother;
+  const { requestSystem, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
   const { mongo, mongopythoninfo } = this.mother;
   const { officeinfo: { widsign: { id, key, endPoint } } } = this.address;
   const collection = "stylingForm";
@@ -262,7 +264,7 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
                     if (f.confirm !== true && target.confirm === true) {
                       thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOCOREC });
                       text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
-                      instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
+                      await messageSend({ text, channel: "#cx" });
                       requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
                     }
                     await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
@@ -731,7 +733,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const back = this.back;
   const { webHook } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
@@ -867,7 +869,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     func: async function (req, res) {
       try {
         instance.callHistory(MONGOC, MONGOCONSOLEC).catch((err) => {
-          instance.mother.slack_bot.chat.postMessage({ text: "callHistory error : " + err.message, channel: "#error_log" });
+          errorLog("callHistory error : " + err.message).catch((e) => { console.log(e); });
           console.log(err);
         });
         res.set({
@@ -987,7 +989,7 @@ Ghost.prototype.ghostRouter = function (needs) {
                 text += method + " 확인해주세요!";
               }
             }
-            await instance.mother.slack_bot.chat.postMessage({ text, channel: "#cx" });
+            await messageSend({ text, channel: "#cx" });
             requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
           }
 
@@ -1511,7 +1513,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             zipLink = await googleDrive.read_webView_inPython(zipId);
             shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + tempFolderName)}`);
             text = who + "님! 요청하셨던 파일 배달이 완료되었습니다.\n유효 시간은 " + dateToString(future, true) + " 까지, 총 3시간입니다.\n다운로드 : " + zipLink;
-            instance.mother.slack_bot.chat.postMessage({ text, channel: "#file" });
+            await messageSend({ text, channel: "#file" });
             instance.setTimer(async function () {
               try {
                 const googleDrive = instance.mother.googleSystem("drive");
@@ -1844,7 +1846,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           }).then(() => {
             return drive.read_webView_inPython(sheetsId);
           }).then((link) => {
-            return instance.mother.slack_bot.chat.postMessage({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+            return messageLog({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
           }).catch((err) => {
             console.log(err);
           });
@@ -1888,7 +1890,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           }).then(() => {
             return drive.read_webView_inPython(sheetsId);
           }).then((link) => {
-            return instance.mother.slack_bot.chat.postMessage({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
+            return messageLog({ text: req.body.sheetName + " => " + link, channel: (req.body.channel === undefined) ? "#general" : req.body.channel });
           }).catch((err) => {
             console.log(err);
           });
@@ -1978,17 +1980,17 @@ Ghost.prototype.ghostRouter = function (needs) {
         let address;
 
         if (data.error === "error") {
-          instance.mother.slack_bot.chat.postMessage({ text: "주소 찾을 수 없음 1 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid, channel: "#error_log" });
+          await errorLog("주소 찾을 수 없음 1 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid);
         } else {
           address = data.entire.find((obj) => { return /주소/gi.test(obj.name) });
           if (address !== undefined) {
             if (address.value.trim().slice(0, 1) === data.raw.trim().slice(0, 1)) {
               await requestSystem("https://" + instance.address.bridgeinfo.host + ":3000/apartment", { data }, { headers: { "Content-Type": "application/json" } });
             } else {
-              instance.mother.slack_bot.chat.postMessage({ text: "주소 찾을 수 없음 2 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid, channel: "#error_log" });
+              await errorLog("주소 찾을 수 없음 2 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid);
             }
           } else {
-            instance.mother.slack_bot.chat.postMessage({ text: "주소 찾을 수 없음 3 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid, channel: "#error_log" });
+            await errorLog("주소 찾을 수 없음 3 : \n" + "https://" + instance.address.backinfo.host + "/client?cliid=" + data.cliid);
           }
         }
 
@@ -2116,7 +2118,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         });
         await requestSystem(webHook.url, webHook.message(text), { headers: webHook.headers });
         if (channel !== "silent") {
-          await instance.mother.slack_bot.chat.postMessage({ text, channel });
+          await instance.slack_bot.chat.postMessage({ text, channel });
         }
 
         res.send(JSON.stringify({ message: "done" }));
@@ -2207,7 +2209,7 @@ Ghost.prototype.clientRouter = function (needs) {
   const folderName = "고객";
   const pathNameConst = "/client_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -2251,7 +2253,7 @@ Ghost.prototype.designerRouter = function (needs) {
   const pathNameConst = "/designer_";
   const standardId = "desid";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -2418,7 +2420,7 @@ Ghost.prototype.photoRouter = function (needs) {
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, dateToString, sleep } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, dateToString, sleep } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -2683,7 +2685,7 @@ Ghost.prototype.fileRouter = function (static) {
   const back = this.back;
   const address = this.address;
   const staticDir = static;
-  const { fileSystem, requestSystem, shell, slack_bot, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash, treeParsing } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash, treeParsing } = this.mother;
   let funcObj = {};
   const ghostWall = function (callback, binary = false) {
     const banCode = "<html><head><title>error</title></head><body><script>window.close();</script></body></html>"

@@ -11,7 +11,7 @@ const PythonCloud = function () {
 
 PythonCloud.prototype.routingCloud = function () {
   const instance = this;
-  const { fileSystem, shell, slack_bot, shellLink, todayMaker, requestSystem, sleep, pythonExecute } = this.mother;
+  const { fileSystem, shell, shellLink, todayMaker, requestSystem, sleep, pythonExecute } = this.mother;
   let funcObj = {};
 
   //GET test

@@ -209,7 +209,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
     const path = "designerProposal";
     const { host } = this.address.homeinfo.ghost;
-    const { requestSystem, ghostRequest, messageLog, errorLog } = this.mother;
+    const { requestSystem, ghostRequest, messageLog, errorLog, messageSend } = this.mother;
     const proid = arg;
     let kakaoInstance, cliid, name, phone, client;
     let requestNumber, action;
@@ -290,8 +290,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
       }).then(() => {
         return ghostRequest("voice", { text: name + " 고객님에게 제안서 알림톡을 전송하였어요." });
       }).then(() => {
-        instance.mother.slack_bot.chat.postMessage({ text: name + " 고객님에게 제안서 알림톡을 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
-        return messageLog("web proposal send : " + name + " " + phone + " " + proid);
+        return messageSend({ text: name + " 고객님에게 제안서 알림톡을 전송하였어요.\nlink : https://" + host + "/middle/" + path + "?proid=" + proid + "&mode=test", channel: "#403_proposal" });
       }).catch((err) => {
         errorLog("제안서 보내는 도중 오류남 : " + err.message).catch((e) => { console.log(e); });
         reject(err);
@@ -359,17 +358,6 @@ Robot.prototype.consoleSource = function () {
   const AiConsole = require(process.cwd() + "/apps/contentsMaker/aiConsole.js");
   let cobot = new AiConsole();
   cobot.console_maker();
-}
-
-Robot.prototype.getConsulting = async function (sw = "1", cliid = "latest") {
-  try {
-    const GetConsulting = require(`${process.cwd()}/apps/getConsulting/getConsulting.js`);
-    let app;
-    app = new GetConsulting();
-    await app.launching(false);
-  } catch (e) {
-    console.log(e);
-  }
 }
 
 Robot.prototype.recordCloud = async function (sw, boo = true) {
@@ -684,7 +672,7 @@ Robot.prototype.sayHello = async function (message = null) {
     } else {
       text = message;
     }
-    await this.mother.slack_bot.chat.postMessage({ text, channel });
+    await this.mother.messageSend({ text, channel });
   } catch (e) {
     console.log(e);
   }
@@ -909,17 +897,6 @@ const MENU = {
   consolesource: async function () {
     try {
       robot.consoleSource();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  consulting: async function () {
-    try {
-      if (process.argv[3] !== "pack" && process.argv[3] !== "webpack") {
-        await robot.getConsulting(false);
-      } else {
-        await robot.getConsulting(true);
-      }
     } catch (e) {
       console.log(e);
     }

@@ -16,7 +16,7 @@ const BackWorker = function () {
 BackWorker.prototype.setProposalToClient = async function (dateArray = [], option = { selfMongo: null }) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, slack_bot, ghostRequest } = this.mother;
+  const { mongo, mongoinfo, ghostRequest } = this.mother;
   try {
     if (!Array.isArray(dateArray)) {
       if (dateArray === null || dateArray === undefined) {
@@ -137,8 +137,8 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
   }
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, mongo, mongoinfo, slack_bot, ghostRequest } = this.mother;
-  const toUpdateQuery = function (aspirant, contractDay) {
+  const { fileSystem, shell, shellLink, mongo, mongoinfo, ghostRequest, messageSend } = this.mother;
+  const toUpdateQuery = async function (aspirant, contractDay) {
     const today = new Date();
     const thisDesigner = aspirant.designer + " (" + aspirant.aspid + ")";
     let updateQuery = {};
@@ -149,21 +149,21 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     //phone
     if (aspirant.phone === "" || aspirant.phone === undefined || aspirant.phone === null) {
-      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 핸드폰 번호가 없습니다!", channel: "#300_designer" });
+      await messageSend({ text: thisDesigner + " 디자이너의 핸드폰 번호가 없습니다!", channel: "#300_designer" });
       return null;
     }
     updateQuery["information.phone"] = aspirant.phone;
 
     //email
     if (aspirant.email === "" || aspirant.email === undefined || aspirant.email === null) {
-      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 이메일이 없습니다!", channel: "#300_designer" });
+      await messageSend({ text: thisDesigner + " 디자이너의 이메일이 없습니다!", channel: "#300_designer" });
       return null;
     }
     updateQuery["information.email"] = aspirant.email;
 
     //address
     if (aspirant.address === "" || aspirant.address === undefined || aspirant.address === null) {
-      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 주소가 없습니다!", channel: "#300_designer" });
+      await messageSend({ text: thisDesigner + " 디자이너의 주소가 없습니다!", channel: "#300_designer" });
       return null;
     }
     updateQuery["information.address"] = [ aspirant.address ];
@@ -185,7 +185,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     //career
     if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0 && aspirant.information.career.interior.year === 0 && aspirant.information.career.interior.month === 0) {
-      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 경력 사항이 없습니다!", channel: "#300_designer" });
+      await messageSend({ text: thisDesigner + " 디자이너의 경력 사항이 없습니다!", channel: "#300_designer" });
       return null;
     }
     if (aspirant.information.career.styling.year === 0 && aspirant.information.career.styling.month === 0) {
@@ -200,7 +200,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     //account
     if (aspirant.information.account.number === "" || aspirant.information.account.number === null || aspirant.information.account.number === undefined) {
-      slack_bot.chat.postMessage({ text: thisDesigner + " 디자이너의 계좌 번호가 없습니다!", channel: "#300_designer" });
+      await messageSend({ text: thisDesigner + " 디자이너의 계좌 번호가 없습니다!", channel: "#300_designer" });
       return null;
     }
     updateQuery["information.business.account"] = [
@@ -213,7 +213,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
 
     //classification and businessNumber
     if (aspirant.information.company.classification === "" || aspirant.information.company.classification === null || aspirant.information.company.classification === undefined) {
-      slack_bot.chat.postMessage({ text: thisDesigner + " 사업자 정보가 없습니다!", channel: "#300_designer" });
+      await messageSend({ text: thisDesigner + " 사업자 정보가 없습니다!", channel: "#300_designer" });
       return null;
     }
     if (/개인/gi.test(aspirant.information.company.classification)) {
@@ -266,7 +266,7 @@ BackWorker.prototype.aspirantToDesigner = async function (aspidArr, option = { s
     for (let aspirant of targetAspirants) {
       contractDay = aspidArr.search(aspirant.aspid);
       aspirantJson = aspirant.toNormal();
-      updateQuery = toUpdateQuery(aspirantJson, contractDay);
+      updateQuery = await toUpdateQuery(aspirantJson, contractDay);
       if (updateQuery !== null) {
         newDesid = await back.createDesigner(updateQuery, { selfMongo: MONGOC });
         console.log("create designer success");
@@ -634,7 +634,7 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
 
 BackWorker.prototype.designerCalculation = async function () {
   const instance = this;
-  const { mongo, mongoinfo, mongolocalinfo, dateToString, autoComma } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, dateToString, autoComma, messageSend } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const PYTHONMONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
@@ -845,7 +845,7 @@ BackWorker.prototype.designerCalculation = async function () {
     }
     tong.push(bar1);
 
-    await this.mother.slack_bot.chat.postMessage({ text: tong.join("\n"), channel: "#700_operation" });
+    await messageSend({ text: tong.join("\n"), channel: "#700_operation" });
 
     return infoTong;
   } catch (e) {

@@ -117,7 +117,7 @@ DataRouter.prototype.rou_get_Root = function () {
     try {
       res.redirect("/client");
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Root): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -204,7 +204,7 @@ DataRouter.prototype.rou_get_First = function () {
       }
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_First): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -224,7 +224,7 @@ DataRouter.prototype.rou_get_Middle = function () {
         throw new Error(err);
       });
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Middle): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -255,7 +255,7 @@ DataRouter.prototype.rou_get_Address = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Address): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -274,7 +274,7 @@ DataRouter.prototype.rou_get_Trigger = function () {
       res.set("Content-Type", "text/html");
       res.send(html);
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_Trigger): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -320,7 +320,7 @@ DataRouter.prototype.rou_get_ServerSent = function () {
       });
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_ServerSent): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -409,7 +409,7 @@ DataRouter.prototype.rou_get_SpecificServerSent = function () {
       });
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog("Console 서버 문제 생김 (rou_get_SpecificServerSent): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }

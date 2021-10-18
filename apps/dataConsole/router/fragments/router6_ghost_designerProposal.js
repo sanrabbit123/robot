@@ -1,6 +1,6 @@
 DataRouter.prototype.rou_post_designerProposal_submit = function () {
   const instance = this;
-  const { slack_bot, requestSystem, ghostRequest } = this.mother;
+  const { requestSystem, ghostRequest, messageSend, errorLog } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
@@ -26,7 +26,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
 
-      slack_bot.chat.postMessage({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}&mode=test\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#400_customer" });
+      await messageSend({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}&mode=test\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#400_customer" });
       ghostRequest("voice", { text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.` }).then(() => {
         return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
           mode: "sse",
@@ -49,7 +49,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
         updateObj["requests." + String(requestNumber) + ".analytics.response.action"] = action;
         return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
       }).catch((err) => {
-        instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + err.message, channel: "#error_log" });
+        errorLog({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); });
       });
 
       await instance.kakao.sendTalk("designerSelect", name, phone, {
@@ -63,7 +63,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
 
       res.send(JSON.stringify({ index: 0 }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Ghost Client 서버 문제 생김 (designerProposal_submit) : " + e.message, channel: "#error_log" });
+      await errorLog("Ghost Client 서버 문제 생김 (designerProposal_submit) : " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }
@@ -72,7 +72,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
 
 DataRouter.prototype.rou_post_designerProposal_policy = function () {
   const instance = this;
-  const { slack_bot } = this.mother;
+  const { errorLog } = this.mother;
   const back = this.back;
   const address = this.address;
   let obj = {};
@@ -87,7 +87,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
       };
       res.send(JSON.stringify(resultObj));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      await errorLog("Console 서버 문제 생김 (rou_post_designerProposal_policy): " + e.message);
       console.log(e);
     }
   }
@@ -96,7 +96,7 @@ DataRouter.prototype.rou_post_designerProposal_policy = function () {
 
 DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
   const instance = this;
-  const { equalJson } = this.mother;
+  const { equalJson, errorLog } = this.mother;
   const back = this.back;
   const work = this.work;
   let obj = {};
@@ -121,7 +121,7 @@ DataRouter.prototype.rou_post_designerProposal_getDesigners = function () {
       }
       res.send(JSON.stringify(designersNormal));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message, channel: "#error_log" });
+      await errorLog("Console 서버 문제 생김(designerProposal_getDesigners) : " + e.message);
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }

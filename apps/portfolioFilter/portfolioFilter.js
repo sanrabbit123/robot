@@ -342,7 +342,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
 PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const instance = this;
-  const { fileSystem, shell, shellLink, slack_bot, s3FileUpload, ghostFileUpload, ghostRequest, sleep } = this.mother;
+  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, ghostRequest, sleep, messageSend } = this.mother;
   const photoRequest = ghostRequest().bind("photo");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const drive = new GoogleDrive();
@@ -402,7 +402,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
     }
 
     //slack
-    await slack_bot.chat.postMessage({ text: `${this.folderName} 사진을 공유하였습니다!`, channel: `#502_sns_contents` });
+    await messageSend({ text: `${this.folderName} 사진을 공유하였습니다!`, channel: `#502_sns_contents` });
 
     //s3 upload
     if (!liteMode) {
@@ -439,7 +439,7 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
 PortfolioFilter.prototype.image_ready = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, slack_bot } = this.mother;
+  const { fileSystem, shell, shellLink } = this.mother;
   try {
     await this.static_setting();
 
@@ -624,7 +624,7 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
 PortfolioFilter.prototype.rawToRaw = async function (arr) {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, consoleQ, appleScript, sleep, ghostRequest } = this.mother;
+  const { fileSystem, shell, shellLink, consoleQ, appleScript, sleep, ghostRequest, messageSend } = this.mother;
   const photoRequest = ghostRequest().bind("photo");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const GaroseroParser = require(`${process.cwd()}/apps/garoseroParser/garoseroParser.js`);
@@ -818,7 +818,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
             if (/OK/gi.test(consoleQInput.trim())) {
               await kakaoInstance.sendTalk("photoShareClient", clientObj.name, clientObj.phone, { client: clientObj.name, file: shareGoogleIdClient });
               await kakaoInstance.sendTalk("photoShareDesigner", designerObj.designer, designerObj.information.phone, { client: clientObj.name, designer: designerObj.designer, file: shareGoogleIdDesigner });
-              await this.mother.slack_bot.chat.postMessage({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+              await messageSend({ text: `${designerObj.designer} 디자이너, ${clientObj.name} 고객님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
             }
           }
 
@@ -886,7 +886,7 @@ PortfolioFilter.prototype.rawToRaw = async function (arr) {
         consoleQInput = await consoleQ(`Is it OK? (press "OK")\ndesigner : https://drive.google.com/file/d/${shareGoogleIdDesigner}/view?usp=sharing\n`);
         if (/OK/gi.test(consoleQInput.trim())) {
           await kakaoInstance.sendTalk("photoShareAKeywordDesigner", targetDesigner.designer, targetDesigner.information.phone, { designer: targetDesigner.designer, file: shareGoogleIdDesigner });
-          await this.mother.slack_bot.chat.postMessage({ text: `${targetDesigner.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
+          await messageSend({ text: `${targetDesigner.designer} 디자이너님께 사진 공유 알림톡을 전송하였습니다!`, channel: `#502_sns_contents` });
         }
 
       }

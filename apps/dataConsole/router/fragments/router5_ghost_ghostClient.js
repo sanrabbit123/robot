@@ -1,7 +1,7 @@
 DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
   const instance = this;
   const back = this.back;
-  const { equalJson, ipParsing } = this.mother;
+  const { equalJson, ipParsing, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/ghostClient_updateAnalytics" ];
   obj.func = async function (req, res) {
@@ -86,7 +86,7 @@ DataRouter.prototype.rou_post_ghostClient_updateAnalytics = function () {
       res.send(JSON.stringify({ message: "done" }));
 
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "GhostClient general 서버 문제 생김 (rou_post_ghostClient_updateAnalytics) : " + e.message, channel: "#error_log" });
+      await errorLog("GhostClient general 서버 문제 생김 (rou_post_ghostClient_updateAnalytics) : " + e.message);
       console.log(e);
     }
   }

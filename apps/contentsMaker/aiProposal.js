@@ -57,7 +57,7 @@ AiProposal.prototype.saveStatic = async function (path) {
 AiProposal.prototype.proposalLaunching = async function () {
   const instance = this;
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const { shell, shellLink, fileSystem, binaryRequest } = this.mother;
+  const { shell, shellLink, fileSystem, binaryRequest, messageSend } = this.mother;
   try {
     await this.general.static_setting();
     let result_dir;
@@ -128,7 +128,7 @@ AiProposal.prototype.proposalLaunching = async function () {
     }
     await this.mother.ghostFileUpload(fromArr, toArr);
 
-    // await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님의 제안서가 완료되었습니다! 확인부탁드립니다! : ${gres}`, channel: `#403_proposal` });
+    // await messageSend({ text: `${client.name} 고객님의 제안서가 완료되었습니다! 확인부탁드립니다! : ${gres}`, channel: `#403_proposal` });
     // await this.back.updateProject([ { proid: this.text.proid }, { "proposal.status": "발송 대기", "proposal.date": new Date() } ]);
 
     if (await fileSystem(`exist`, [ process.env.HOME + "/safe.mp4" ])) {

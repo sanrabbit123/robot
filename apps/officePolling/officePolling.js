@@ -128,7 +128,7 @@ OfficePolling.prototype.requestPolling = function () {
 
 OfficePolling.prototype.routingCloud = function () {
   const instance = this;
-  const { fileSystem, shell, slack_bot, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink } = this.mother;
   let funcObj = {};
 
   //GET - receive polling request
@@ -288,7 +288,7 @@ OfficePolling.timeout = {
 
 OfficePolling.prototype.routingOffice = function () {
   const instance = this;
-  const { fileSystem, shell, slack_bot, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink } = this.mother;
   let funcObj = {};
 
   //POST - execute proposal make

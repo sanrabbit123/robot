@@ -12,7 +12,7 @@ DataRouter.prototype.rou_post_styleEstimation_getImageList = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify(imagePath));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" }).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -42,7 +42,7 @@ DataRouter.prototype.rou_post_styleEstimation_getContentsByPid = function () {
         res.send(JSON.stringify(contentsArr[0]));
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" }).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -140,7 +140,7 @@ DataRouter.prototype.rou_post_styleEstimation_getQuestions = function () {
         },
       ]));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" }).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -177,7 +177,7 @@ DataRouter.prototype.rou_post_styleEstimation_setData = function () {
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" }).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
@@ -224,7 +224,7 @@ DataRouter.prototype.rou_post_styleEstimation_getData = function () {
         res.send(JSON.stringify({ index: row[0].index }));
       }
     } catch (e) {
-      instance.mother.slack_bot.chat.postMessage({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" });
+      instance.mother.errorLog({ text: "Console 서버 문제 생김 : " + e, channel: "#error_log" }).catch((e) => { console.log(e); });
       console.log(e);
     }
   }

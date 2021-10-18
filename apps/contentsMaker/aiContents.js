@@ -599,7 +599,7 @@ AiContents.prototype.to_poo = async function () {
 
 AiContents.prototype.to_google = async function (pid) {
   const instance = this;
-  const { mongo, mongoinfo, dateToString } = this.mother;
+  const { mongo, mongoinfo, dateToString, errorLog, messageSend } = this.mother;
   const back = this.back;
   try {
     if (typeof pid !== "string") {
@@ -684,13 +684,13 @@ AiContents.prototype.to_google = async function (pid) {
     if (reviewId !== null && client !== null) {
 
       channel = "#502_sns_contents";
-      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
-      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(reviewId)}`, channel });
-      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 세팅 사진 원본 link : ${photoLink}`, channel });
+      await messageSend({ text: `${client.name} 고객님, ${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
+      await messageSend({ text: `${client.name} 고객님의 고객 인터뷰 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(reviewId)}`, channel });
+      await messageSend({ text: `${client.name} 고객님 세팅 사진 원본 link : ${photoLink}`, channel });
 
       channel = "#200_web";
-      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
-      await this.mother.slack_bot.chat.postMessage({ text: `${client.name} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${reviewLink + rid}`, channel });
+      await messageSend({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+      await messageSend({ text: `${client.name} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${reviewLink + rid}`, channel });
 
       // await kakaoInstance.sendTalk("contentsShareClient", client.name, client.phone, { client: client.name, rid });
       await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, { client: client.name, designer: designer.designer, pid });
@@ -703,11 +703,11 @@ AiContents.prototype.to_google = async function (pid) {
     } else {
 
       channel = "#502_sns_contents";
-      await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
-      await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 사진 원본 link : ${photoLink}`, channel });
+      await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 글의 세팅을 완료하였습니다! 확인부탁드립니다. link : ${makeLink(portfolioId)}`, channel });
+      await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 사진 원본 link : ${photoLink}`, channel });
 
       channel = "#200_web";
-      await this.mother.slack_bot.chat.postMessage({ text: `${designer.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
+      await messageSend({ text: `${designer.designer} 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
 
       await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, { client: client.name, designer: designer.designer, pid });
 

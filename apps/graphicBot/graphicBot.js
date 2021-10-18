@@ -459,7 +459,7 @@ GraphicBot.prototype.clipBoard = async function (text) {
 GraphicBot.prototype.botOrders = async function (num, arg) {
   const instance = this;
   const { bot, screenSize, chromeSize, os } = this;
-  const { sleep, fileSystem, copyToClipboard } = this.mother;
+  const { sleep, fileSystem, copyToClipboard, errorLog } = this.mother;
   try {
     if (typeof num !== "number") {
       throw new Error("input must be number");
@@ -609,7 +609,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
           await sleep(500);
           frontWaitingNumber = frontWaitingNumber + 1;
           if (instance.frontProblem) {
-            await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
+            await errorLog("Graphic server front js 문제 일어남 => front problem");
             if (instance.frontProcess !== null) {
               clearTimeout(instance.frontProcess);
               instance.frontProcess = null;
@@ -620,7 +620,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
             return false;
           }
           if (frontWaitingNumber >= (30 * 30)) {
-            await instance.mother.slack_bot.chat.postMessage({ text: "Graphic server front js 문제 일어남", channel: "#error_log" });
+            await errorLog("Graphic server front js 문제 일어남 => timeout");
             if (instance.frontProcess !== null) {
               clearTimeout(instance.frontProcess);
               instance.frontProcess = null;
