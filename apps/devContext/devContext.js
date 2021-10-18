@@ -185,10 +185,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await this.findCode("slack_bot.chat"));
+    // console.log(await this.findCode("slack_bot.chat"));
 
 
-
+    console.log(await ghostRequest("messageLog", {
+      text: "test2",
+      channel: "#error_log",
+      collection: "messageLog"
+    }));
 
 
 

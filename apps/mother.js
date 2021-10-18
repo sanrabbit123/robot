@@ -3027,15 +3027,17 @@ Mother.prototype.statusReading = function (sendLog = true) {
   });
 }
 
-Mother.prototype.errorLog = function (message) {
-  if (typeof message !== "string") {
+Mother.prototype.errorLog = function (text) {
+  if (typeof text !== "string") {
     throw new Error("invaild input");
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.mirrorinfo.host + ":3000/error";
+  const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
   const axios = require("axios");
+  const collection = "errorLog";
+  const channel = "#error_log";
   return new Promise((resolve, reject) => {
-    axios.post(recordUrl, { message }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
       if (res.status !== 200) {
         reject(res);
       } else {
@@ -3047,15 +3049,47 @@ Mother.prototype.errorLog = function (message) {
   });
 }
 
-Mother.prototype.messageLog = function (message) {
-  if (typeof message !== "string") {
+Mother.prototype.messageSend = function (text, channel) {
+  if (typeof text === "object" && text !== null) {
+    if (typeof text.text === "string" && typeof text.channel === "string") {
+      channel = text.channel;
+      text = text.text;
+    } else {
+      throw new Error("invaild input");
+    }
+  } else {
+    if (typeof text !== "string" || typeof channel !== "string") {
+      throw new Error("invaild input");
+    }
+  }
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
+  const axios = require("axios");
+  const collection = "messageLog";
+  return new Promise((resolve, reject) => {
+    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
+Mother.prototype.messageLog = function (text) {
+  if (typeof text !== "string") {
     throw new Error("invaild input");
   }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.mirrorinfo.host + ":3000/message";
+  const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
   const axios = require("axios");
+  const collection = "messageLog";
+  const channel = "silent";
   return new Promise((resolve, reject) => {
-    axios.post(recordUrl, { message }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+    axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
       if (res.status !== 200) {
         reject(res);
       } else {
