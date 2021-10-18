@@ -260,7 +260,7 @@ Robot.prototype.proposalMaker = function (button, arg) {
         }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
 
       }).then(() => {
-        return requestSystem("https://" + instance.address.mirrorinfo.host + ":3000/proposalSend", { proid }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
+        return requestSystem("https://" + instance.address.officeinfo.ghost.host + "/proposalLog", { proid }, { headers: { "origin": "https://" + instance.address.homeinfo.ghost.host, "Content-Type": "application/json" } });
 
       }).then(() => {
 

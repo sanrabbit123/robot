@@ -918,7 +918,7 @@ MirrorRouter.prototype.rou_post_proposalLog = function () {
       "Access-Control-Allow-Headers": '*',
     });
     try {
-      if (req.body.proid) {
+      if (req.body.proid === undefined) {
         throw new Error("invaild post, must be proid");
       }
       const db = "miro81";

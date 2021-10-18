@@ -157,11 +157,13 @@ DevContext.prototype.pureSpawn = async function () {
 
 DevContext.prototype.launching = async function () {
   const instance = this;
+  const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
   const { fileSystem, shellExec, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, sendJandi, ipCheck, leafParsing, statusReading, errorLog, messageLog, pureServer } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
+    await rethink.connect();
     const address = this.address;
     const back = this.back;
     const report = new BackReport();
@@ -183,22 +185,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // console.log(await ghostRequest("rethink", {
-    //   mode: "read",
-    //   collection: "statusLog",
-    //   whereQuery: {}
-    // }))
 
 
 
-    const res = (await instance.mother.statusReading());
 
-    console.log(res);
-
-
-    const res2 = await requestSystem("https://home-liaison.serveftp.com/statusLog", res, { headers: { "Content-Type": "application/json" } })
-
-    console.log(res2);
 
 
 
@@ -1441,6 +1431,7 @@ DevContext.prototype.launching = async function () {
   } finally {
     await this.MONGOC.close();
     await this.MONGOLOCALC.close();
+    await rethink.close();
     console.log(`done`);
   }
 }

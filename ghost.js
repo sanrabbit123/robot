@@ -2043,6 +2043,40 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - set proposal log
+  funcObj.post_proposalLog = {
+    link: [ "/proposalLog" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.proid === undefined) {
+          throw new Error("invaild post, must be proid");
+        }
+        const collection = "proposalLog";
+        const { proid } = equalJson(req.body);
+        const project = await back.getProjectById(proid, { selfMongo: MONGOC });
+        if (project === null) {
+          throw new Error("invaild project");
+        }
+
+        await rethink.rethinkCreate(collection, {
+          method: "send",
+          date: new Date(),
+          project: project.toNormal().proposal,
+        });
+
+        res.send(JSON.stringify({ message: "done" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //POST - rethink api
   funcObj.post_rethink = {
     link: [ "/rethink" ],
