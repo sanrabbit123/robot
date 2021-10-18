@@ -176,19 +176,29 @@ CronGhost.prototype.cronRouter = async function () {
 
 CronGhost.prototype.cronServer = async function () {
   const instance = this;
-  const { pureServer, dateToString, mongo, mongolocalinfo } = this.mother;
+  const { pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo } = this.mother;
   const port = 3000;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
   const CronSource = require(`${this.dir}/source/cronSource.js`);
   const RethinkAccess = require(`${process.cwd()}/apps/rethinkAccess/rethinkAccess.js`);
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
   const RETHINKC = new RethinkAccess();
+  const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
+  const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
+  const BackWorker = require(`${process.cwd()}/apps/backMaker/backWorker.js`);
+  const BackReport = require(`${process.cwd()}/apps/backMaker/backReport.js`);
+  const GoogleAnalytics = require(`${process.cwd()}/apps/googleAPIs/googleAnalytics.js`);
+  const GoogleSheet = require(`${process.cwd()}/apps/googleAPIs/googleSheet.js`);
+  const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
+  const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
+  const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
+  const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
   try {
     const app = await this.cronRouter();
-    await MONGOLOCALC.connect();
-    await RETHINKC.connect();
-    await RETHINKC.bindCollection("cronLog");
+
     this.time = new Date();
     this.cronId = {
       unique: "",
@@ -197,7 +207,46 @@ CronGhost.prototype.cronServer = async function () {
       hour: "",
     };
 
-    this.source = new CronSource(this.mother, this.back, this.address, MONGOLOCALC, RETHINKC);
+    await MONGOC.connect();
+    await MONGOLOCALC.connect();
+    await MONGOCONSOLEC.connect();
+
+    await RETHINKC.connect();
+    await RETHINKC.bindCollection("cronLog");
+
+    const worker = new BackWorker();
+    const report = new BackReport();
+    const bill = new BillMaker();
+
+    const analytics = new GoogleAnalytics();
+    const sheets = new GoogleSheet();
+    const drive = new GoogleDrive();
+    const calendar = new GoogleCalendar();
+    const docs = new GoogleDocs();
+
+    const humanInstance = new HumanPacket();
+    const kakaoInstance = new KakaoTalk();
+    await kakaoInstance.ready();
+
+    this.source = new CronSource(
+      this.mother,
+      this.back,
+      this.address,
+      kakaoInstance,
+      humanInstance,
+      worker,
+      report,
+      bill,
+      analytics,
+      sheets,
+      drive,
+      calendar,
+      docs,
+      MONGOC,
+      MONGOCONSOLEC,
+      MONGOLOCALC,
+      RETHINKC
+    );
     await this.source.sourceLoad();
 
     setInterval(async () => {

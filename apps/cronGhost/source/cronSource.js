@@ -1,8 +1,20 @@
-const CronSource = function (mother, back, address, MONGOLOCALC, RETHINKC) {
+const CronSource = function (mother, back, address, kakaoInstance, humanInstance, worker, report, bill, analytics, sheets, drive, calendar, docs, MONGOC, MONGOCONSOLEC, MONGOLOCALC, RETHINKC) {
   this.mother = mother;
   this.back = back;
   this.address = address;
-  this.mongo = MONGOLOCALC;
+  this.kakao = kakaoInstance;
+  this.human = humanInstance;
+  this.worker = worker;
+  this.report = report;
+  this.bill = bill;
+  this.analytics = analytics;
+  this.sheets = sheets;
+  this.drive = drive;
+  this.calendar = calendar;
+  this.docs = docs;
+  this.mongo = MONGOC;
+  this.mongoconsole = MONGOCONSOLEC;
+  this.mongolocal = MONGOLOCALC;
   this.rethink = RETHINKC;
   this.dir = process.cwd() + "/apps/cronGhost/source";
   this.sourceMap = null;
@@ -13,36 +25,36 @@ CronSource.prototype.sourceLoad = async function () {
   const { fileSystem } = this.mother;
   const { dir } = this;
   try {
-    const dateList = await fileSystem(`readFolder`, [ dir + "/day" ]);
-    const hourList = await fileSystem(`readFolder`, [ dir + "/hour" ]);
-    let dateDetailList, dateFinalList, dateNum;
-    let hourDetailList, hourFinalList, hourNum;
+    const workerList = await fileSystem(`readFolder`, [ dir + "/worker" ]);
+    let dateFinalList, hourFinalList;
     let sourceMap;
+    let pathList;
+    let tempObj;
+    let index;
 
-    dateDetailList = dateList.map((name) => { return fileSystem(`readFolder`, [ `${dir}/day/${name}` ]); });
     dateFinalList = [];
-    dateNum = 0;
-    for await (let list of dateDetailList) {
-      dateFinalList.push([
-        dateList[dateNum],
-        list.filter((script) => { return script !== "0_sample.js"; }).map((file) => {
-          return `${dir}/day/${dateList[dateNum]}/${file}`;
-        }),
-      ]);
-      dateNum++;
-    }
-
-    hourDetailList = hourList.map((name) => { return fileSystem(`readFolder`, [ `${dir}/hour/${name}` ]); });
     hourFinalList = [];
-    hourNum = 0;
-    for await (let list of hourDetailList) {
-      hourFinalList.push([
-        hourList[hourNum],
-        list.filter((script) => { return script !== "0_sample.js"; }).map((file) => {
-          return `${dir}/day/${dateList[dateNum]}/${file}`;
-        }),
-      ]);
-      hourNum++;
+    pathList = workerList.map((name) => { return `${dir}/worker/${name}` });
+    for (let path of pathList) {
+      tempObj = require(path);
+
+      for (let id of tempObj.dayId) {
+        index = dateFinalList.findIndex((arr) => { return arr[0] === id });
+        if (index === -1) {
+          dateFinalList.push([ id, [ path ] ]);
+        } else {
+          dateFinalList[index][1].push(path);
+        }
+      }
+
+      for (let id of tempObj.hourId) {
+        index = hourFinalList.findIndex((arr) => { return arr[0] === id });
+        if (index === -1) {
+          hourFinalList.push([ id, [ path ] ]);
+        } else {
+          hourFinalList[index][1].push(path);
+        }
+      }
     }
 
     sourceMap = {
@@ -63,6 +75,25 @@ CronSource.prototype.targetLauching = async function (cronId) {
   const instance = this;
   const { sourceMap, rethink } = this;
   const { day: dayId, hour: hourId } = cronId;
+  const package = {
+    mother: this.mother,
+    back: this.back,
+    address: this.address,
+    kakao: this.kakao,
+    human: this.human,
+    worker: this.worker,
+    report: this.report,
+    bill: this.bill,
+    analytics: this.analytics,
+    sheets: this.sheets,
+    drive: this.drive,
+    calendar: this.calendar,
+    docs: this.docs,
+    mongo: this.mongo,
+    mongoconsole: this.mongoconsole,
+    mongolocal: this.mongolocal,
+    rethink: this.rethink,
+  };
   try {
     const { date, hour } = sourceMap;
     let targetList;
@@ -76,8 +107,8 @@ CronSource.prototype.targetLauching = async function (cronId) {
         return require(path);
       });
       num = 0;
-      for (let asyncFunction of targetList) {
-        res = await asyncFunction(this.mother, this.back, this.address, this.mongo);
+      for (let obj of targetList) {
+        res = await obj.worker(package);
         await rethink.create({ date: new Date(), name: sourceMap.date[index][1][num].split("/").slice(-1)[0], result: res });
         num++;
       }
@@ -89,8 +120,8 @@ CronSource.prototype.targetLauching = async function (cronId) {
         return require(path);
       });
       num = 0;
-      for (let asyncFunction of targetList) {
-        res = await asyncFunction(this.mother, this.back, this.address, this.mongo);
+      for (let obj of targetList) {
+        res = await obj.worker(package);
         await rethink.create({ date: new Date(), name: sourceMap.hour[index][1][num].split("/").slice(-1)[0], result: res });
         num++;
       }
