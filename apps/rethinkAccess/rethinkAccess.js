@@ -140,6 +140,8 @@ RethinkAccess.prototype.rethinkRead = async function (collection, query, option 
       }
     }
 
+    await this.bindCollection(collection, { selfRethink: RETHINKC });
+
     if (Object.keys(query).length === 0) {
       cursor = await rethink.table(collection).filter((obj) => {
         return obj.hasFields("id");

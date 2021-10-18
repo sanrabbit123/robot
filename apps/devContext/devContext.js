@@ -183,7 +183,11 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+    console.log(await ghostRequest("rethink", {
+      mode: "read",
+      collection: "statusLog",
+      whereQuery: {}
+    }))
 
 
 
