@@ -3239,6 +3239,7 @@ Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000)
         const server = http.createServer();
         server.on("request", app.server());
         server.listen(port);
+        console.log(`\x1b[33m%s\x1b[0m`, `Pure server launching in ${String(port)}`);
       } else {
         throw new Error("invaild input");
       }

@@ -112,6 +112,9 @@ DevContext.prototype.pureServer = async function () {
 
     app.post("/push", async (req, res) => {
       try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
         notifier.sendAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
         res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
@@ -178,14 +181,22 @@ DevContext.prototype.launching = async function () {
     // const realtimeDesigner = (await this.findCode("realtimeDesigner")).scripts
     // console.log(count.filter((p) => { return realtimeDesigner.includes(p); }));
 
-
     // await this.passiveAddressSync("c2110_aa14s");
 
     // await this.pureSpawn();
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
 
 
 
