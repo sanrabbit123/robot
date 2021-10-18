@@ -16,6 +16,7 @@ const RethinkAccess = function () {
   this.rethink = require(this.module);
   this.connection = null;
   this.collection = null;
+  this.collections = [];
 }
 
 RethinkAccess.prototype.connect = async function (collection = null) {
@@ -40,6 +41,8 @@ RethinkAccess.prototype.connect = async function (collection = null) {
     RETHINKC = await rethink.connect(connectionInfo);
 
     this.connection = RETHINKC;
+    this.collections = await rethink.tableList().run(RETHINKC);
+
     if (collection !== null) {
       await this.bindCollection(collection);
     }
@@ -88,6 +91,7 @@ RethinkAccess.prototype.bindCollection = async function (collection, option = { 
     result = await rethink.tableList().run(RETHINKC);
     if (!result.includes(collection)) {
       await rethink.tableCreate(collection).run(RETHINKC);
+      result.push(collection);
     }
 
     if (!selfBoo) {
@@ -95,6 +99,7 @@ RethinkAccess.prototype.bindCollection = async function (collection, option = { 
     }
 
     this.collection = collection;
+    this.collections = result;
 
   } catch (e) {
     console.log(e);
@@ -140,7 +145,9 @@ RethinkAccess.prototype.rethinkRead = async function (collection, query, option 
       }
     }
 
-    await this.bindCollection(collection, { selfRethink: RETHINKC });
+    if (!this.collections.includes(collection)) {
+      await this.bindCollection(collection, { selfRethink: RETHINKC });
+    }
 
     if (Object.keys(query).length === 0) {
       cursor = await rethink.table(collection).filter((obj) => {
@@ -204,7 +211,9 @@ RethinkAccess.prototype.rethinkCreate = async function (collection, json, option
       }
     }
 
-    await this.bindCollection(collection, { selfRethink: RETHINKC });
+    if (!this.collections.includes(collection)) {
+      await this.bindCollection(collection, { selfRethink: RETHINKC });
+    }
 
     await rethink.table(collection).insert(json).run(RETHINKC);
 
