@@ -2098,12 +2098,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         const { source: userAgent, browser, os, platform } = rawUserAgent;
         const referrer = (req.headers.referer === undefined ? "" : req.headers.referer);
         const status = equalJson(req.body);
-        let ipObj, thisName;
-
-        ipObj = await ipParsing(ip);
-        if (ipObj === null) {
-          ipObj = { ip };
-        }
+        let thisName;
 
         thisName = "unknown";
         for (let info in instance.address) {
@@ -2117,7 +2112,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           date: new Date(),
           text,
           channel,
-          from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
+          from: { name: thisName, ip, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile }
         });
         await requestSystem(webHook.url, webHook.message(text), { headers: webHook.headers });
         if (channel !== "silent") {
