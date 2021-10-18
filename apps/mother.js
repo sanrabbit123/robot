@@ -2798,23 +2798,9 @@ Mother.prototype.statusReading = function (sendLog = true) {
   const mac = /darwin/gi.test(os.platform());
   const { spawn } = require("child_process");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const recordUrl = "https://" + ADDRESS.mirrorinfo.host + ":3000/status";
+  const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/statusLog";
   const axios = require("axios");
   const now = new Date();
-  const jandi = {
-    url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Accept": "application/vnd.tosslab.jandi-v2+json"
-    },
-    message: (message) => {
-      return {
-        body: message,
-        connectColor: "#FAC11B",
-        connectInfo: []
-      }
-    }
-  };
   const pm2Promise = () => {
     const pm2 = spawn("pm2", [ "list" ]);
     let result;

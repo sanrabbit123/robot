@@ -25,7 +25,20 @@ RethinkAccess.prototype.connect = async function (collection = null) {
     if (this.connection !== null) {
       await this.connection.close();
     }
-    const RETHINKC = await rethink.connect(connectionInfo);
+    let RETHINKC, dbList;
+
+    RETHINKC = await rethink.connect({
+      host: connectionInfo.host,
+      port: connectionInfo.port
+    });
+    dbList = await rethink.dbList().run(RETHINKC);
+    if (!dbList.includes(connectionInfo.db)) {
+      await rethink.dbCreate(connectionInfo.db).run(RETHINKC);
+    }
+
+    await RETHINKC.close();
+    RETHINKC = await rethink.connect(connectionInfo);
+
     this.connection = RETHINKC;
     if (collection !== null) {
       await this.bindCollection(collection);

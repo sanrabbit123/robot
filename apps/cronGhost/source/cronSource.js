@@ -64,6 +64,8 @@ CronSource.prototype.sourceLoad = async function () {
 
     this.sourceMap = sourceMap;
 
+    console.log(sourceMap);
+
     return sourceMap;
 
   } catch (e) {

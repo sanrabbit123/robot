@@ -714,7 +714,7 @@ Ghost.prototype.dirParsing = function (dir) {
 Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
-  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
+  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
   const { fileSystem, headRequest, requestSystem, shell, slack_bot, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
@@ -1924,7 +1924,6 @@ Ghost.prototype.ghostRouter = function (needs) {
   funcObj.post_apartment = {
     link: [ "/apartment" ],
     func: async function (req, res) {
-      console.log(req);
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
@@ -1984,6 +1983,52 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - set status log
+  funcObj.post_statusLog = {
+    link: [ "/statusLog" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        const collection = "statusLog";
+
+
+
+        let ipObj, thisName;
+
+        ipObj = await ipParsing(ip);
+        if (ipObj === null) {
+          ipObj = { ip };
+        }
+
+
+
+
+
+
+        await rethink.rethinkCreate(collection, {
+          date: new Date(),
+          name: sourceMap.hour[index][1][num].split("/").slice(-1)[0],
+          result: res
+        });
+
+
+
+
+
+
+
+        res.send(JSON.stringify({ message: "done" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
@@ -1995,7 +2040,7 @@ Ghost.prototype.ghostRouter = function (needs) {
 Ghost.prototype.clientRouter = function (needs) {
   const instance = this;
   const back = this.back;
-  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
+  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
   const folderName = "고객";
   const pathNameConst = "/client_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -2038,7 +2083,7 @@ Ghost.prototype.clientRouter = function (needs) {
 Ghost.prototype.designerRouter = function (needs) {
   const instance = this;
   const back = this.back;
-  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
+  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
   const folderName = "디자이너";
   const pathNameConst = "/designer_";
   const standardId = "desid";
@@ -2206,7 +2251,7 @@ Ghost.prototype.photoRouter = function (needs) {
   const instance = this;
   const back = this.back;
   const drive = this.drive;
-  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC ] = needs;
+  const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
@@ -2776,6 +2821,7 @@ Ghost.prototype.serverLaunching = async function () {
   const useragent = require("express-useragent");
   const staticFolder = process.env.HOME + '/static';
   const WebSocket = require("ws");
+  const RethinkAccess = require(`${process.cwd()}/apps/rethinkAccess/rethinkAccess.js`);
   const url = require("url");
 
   app.use(useragent.express());
@@ -2807,6 +2853,10 @@ Ghost.prototype.serverLaunching = async function () {
     await MONGOC.connect();
     await MONGOLOCALC.connect();
     await MONGOCONSOLEC.connect();
+
+    //set rethink connection
+    const RETHINKC = new RethinkAccess();
+    await RETHINKC.connect();
 
     //set pem key
     let pems = {};
@@ -2847,7 +2897,7 @@ Ghost.prototype.serverLaunching = async function () {
     pems.allowHTTP1 = true;
 
     //set router
-    const { get, post } = this.ghostRouter([ MONGOC, MONGOLOCALC, MONGOCONSOLEC ]);
+    const { get, post } = this.ghostRouter([ MONGOC, MONGOLOCALC, MONGOCONSOLEC, RETHINKC ]);
     for (let obj of get) {
       app.get(obj.link, obj.func);
     }
@@ -2857,7 +2907,7 @@ Ghost.prototype.serverLaunching = async function () {
 
     //set sub routers
     for (let r of routerTargets) {
-      routerObj = (this[r + "Router"])([ MONGOC, MONGOLOCALC, MONGOCONSOLEC ]);
+      routerObj = (this[r + "Router"])([ MONGOC, MONGOLOCALC, MONGOCONSOLEC, RETHINKC ]);
       for (let obj of routerObj.get) {
         app.get(obj.link, obj.func);
       }
