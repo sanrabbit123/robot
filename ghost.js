@@ -2030,6 +2030,8 @@ Ghost.prototype.ghostRouter = function (needs) {
           }
         }
 
+        console.log(req);
+
         await rethink.rethinkCreate(collection, {
           date: new Date(),
           status: equalJson(JSON.stringify(status)),
