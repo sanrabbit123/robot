@@ -2044,7 +2044,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   };
 
   //POST - rethink api
-  funcObj.post_statusLog = {
+  funcObj.post_rethink = {
     link: [ "/rethink" ],
     func: async function (req, res) {
       res.set({
