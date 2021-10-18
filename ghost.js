@@ -2043,6 +2043,72 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - rethink api
+  funcObj.post_statusLog = {
+    link: [ "/rethink" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.mode === undefined) {
+          throw new Error("mode must be : [ create, read, update, delete ]");
+        }
+        if (req.body.collection === undefined) {
+          throw new Error("must be collection");
+        }
+        const { mode, collection } = req.body;
+        let result;
+
+        if (mode === "create") {
+
+          if (req.body.json === undefined) {
+            throw new Error("create mode require json");
+          }
+          const { json } = equalJson(req.body);
+          await rethink.rethinkCreate(collection, json);
+          result = { message: "success" };
+
+        } else if (mode === "read") {
+
+          if (req.body.whereQuery === undefined) {
+            throw new Error("create mode require whereQuery");
+          }
+          const { whereQuery } = equalJson(req.body);
+          result = await rethink.rethinkRead(collection, whereQuery);
+
+        } else if (mode === "update") {
+
+          if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+            throw new Error("create mode require whereQuery");
+          }
+          const { whereQuery, updateQuery } = equalJson(req.body);
+          await rethink.rethinkUpdate(collection, [ whereQuery, updateQuery ]);
+          result = { message: "success" };
+
+        } else if (mode === "delete") {
+
+          if (req.body.whereQuery === undefined) {
+            throw new Error("create mode require whereQuery");
+          }
+          const { whereQuery } = equalJson(req.body);
+          await rethink.rethinkDelete(collection, whereQuery);
+          result = { message: "success" };
+
+        } else {
+          throw new Error("mode must be : [ create, read, update, delete ]");
+        }
+
+        res.send(JSON.stringify(result));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
