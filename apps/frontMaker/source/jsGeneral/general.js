@@ -763,7 +763,9 @@ GeneralJs.createNode = function (mode, source, style, mother = null) {
       } else {
         targetStyle = style;
       }
-      targetStyle.wordSpacing = String(-1) + "px";
+      if (targetStyle.wordSpacing === undefined) {
+        targetStyle.wordSpacing = String(-1) + "px";
+      }
       for (let i in targetStyle) {
         dom_clone.style[i] = targetStyle[i];
       }

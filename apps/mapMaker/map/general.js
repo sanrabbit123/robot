@@ -660,6 +660,9 @@ module.exports = {
       },
       "universalEstimation": {
         "behaviors": []
+      },
+      "firstMeeting": {
+        "behaviors": []
       }
     },
     "login": {
