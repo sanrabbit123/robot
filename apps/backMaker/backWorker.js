@@ -509,7 +509,7 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
 
       async renderDesigner(designerObj, query = false) {
         const instance = this;
-        const { fileSystem, shell, shellLink, mysqlQuery } = this.mother;
+        const { fileSystem, shellExec, shellLink, mysqlQuery } = this.mother;
         try {
           const getFolder = function (link) {
             let tempArr;
@@ -576,21 +576,21 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
           await fileSystem(`write`, [ newMobile, svgResultList[getName(mobile)] ]);
           await fileSystem(`write`, [ newName, svgResultList[getName(name)] ]);
 
-          shell.exec(`rm -rf ${shellLink(desktop)}`);
-          shell.exec(`rm -rf ${shellLink(mobile)}`);
-          shell.exec(`rm -rf ${shellLink(name)}`);
+          await shellExec(`rm -rf ${shellLink(desktop)}`);
+          await shellExec(`rm -rf ${shellLink(mobile)}`);
+          await shellExec(`rm -rf ${shellLink(name)}`);
 
           scpOrder = '';
           scpOrder += `scp ${shellLink(newDesktop)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
           scpOrder += `scp ${shellLink(newMobile)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/dedetail/wording;`;
           scpOrder += `scp ${shellLink(newName)} ${ADDRESS.frontinfo.user}@${ADDRESS.frontinfo.host}:/${ADDRESS.frontinfo.user}/www/list_svg/delist/name;`;
 
-          shell.exec(scpOrder);
+          await shellExec(scpOrder);
           console.log(`scp done`);
 
-          shell.exec(`rm -rf ${shellLink(newDesktop)}`);
-          shell.exec(`rm -rf ${shellLink(newMobile)}`);
-          shell.exec(`rm -rf ${shellLink(newName)}`);
+          await shellExec(`rm -rf ${shellLink(newDesktop)}`);
+          await shellExec(`rm -rf ${shellLink(newMobile)}`);
+          await shellExec(`rm -rf ${shellLink(newName)}`);
 
           if (query) {
             if (frontSetting.methods.length !== 2) {
@@ -740,10 +740,14 @@ BackWorker.prototype.designerCalculation = async function () {
             condition1 = true;
           } else {
             if (designer.projects[i].contents.photo.boo) {
-              if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+              if (/완료/gi.test(designer.projects[i].contents.photo.status) && (/디자이너/gi.test(designer.projects[i].contents.photo.info.photographer) || /고객/gi.test(designer.projects[i].contents.photo.info.photographer))) {
                 condition1 = false;
               } else {
-                condition1 = true;
+                if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+                  condition1 = false;
+                } else {
+                  condition1 = true;
+                }
               }
             } else {
               condition1 = false;

@@ -827,7 +827,7 @@ AddressParser.prototype.getTravelExpenses = async function (from, to, option = {
 
 AddressParser.prototype.getAllImmovables = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellLink, shellExec } = this.mother;
   try {
 
     //static setting
@@ -836,13 +836,12 @@ AddressParser.prototype.getAllImmovables = async function () {
     const tempFolderName = "immovablesServerTempFolder";
     const targetPath = home + "/" + tempFolderName;
     if (homeDir.includes(tempFolderName)) {
-      shell.exec(`rm -rf ${shellLink(targetPath)}`);
+      await shellExec("rm", [ "-rf", targetPath ]);
     }
     if (!homeDir.includes(this.serveFolderName)) {
-      shell.exec(`mkdir ${shellLink(home)}/${this.serveFolderName}`);
+      await shellExec("mkdir", [ home + "/" + this.serveFolderName ]);
     }
-    shell.exec(`mkdir ${shellLink(targetPath)}`);
-
+    await shellExec("mkdir", [ targetPath ]);
 
     //date matrix setting
     const dateMatrix = [
@@ -855,12 +854,15 @@ AddressParser.prototype.getAllImmovables = async function () {
       }
     }
     const serveFolderDir = await fileSystem(`readDir`, [ home + "/" + this.serveFolderName ]);
+    let commandArr;
+    commandArr = [];
     for (let i of dateMatrix_flat) {
-      shell.exec(`mkdir ${shellLink(targetPath)}/d${i}`);
+      commandArr.push([ "mkdir", [ `${targetPath}/d${i}` ] ]);
       if (!serveFolderDir.includes(`d${i}`)) {
-        shell.exec(`mkdir ${shellLink(home)}/${this.serveFolderName}/d${i}`);
+        commandArr.push([ "mkdir", [ `${home}/${this.serveFolderName}/d${i}` ] ]);
       }
     }
+    await shellExec(commandArr);
 
     await this.mother.pythonExecute(this.pythonApp, [ "getAll" ], { dateMatrix, targetPath });
 
@@ -909,7 +911,7 @@ AddressParser.prototype.getAllImmovables = async function () {
 
       }
     }
-    shell.exec(`rm -rf ${shellLink(targetPath)}`);
+    await shellExec("rm", [ "-rf", targetPath ]);
 
     return "done";
 

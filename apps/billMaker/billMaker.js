@@ -4550,7 +4550,7 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
 BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
   const instance = this;
   const back = this.back;
-  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shell, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog } = this.mother;
+  const { mongo, mongoinfo, mongolocalinfo, fileSystem, shellExec, shellLink, pythonExecute, requestSystem, decryptoHash, autoComma, messageLog, messageSend, errorLog } = this.mother;
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {
     const collection = "taxBill";
@@ -4658,7 +4658,7 @@ BillMaker.prototype.taxBill = async function (pastDateNumber = 2) {
     pythonScript += `imap.logout()`;
 
     if (await fileSystem(`exist`, [ pythonFile ])) {
-      shell.exec(`rm -rf ${shellLink(pythonFile)}`);
+      await shellExec(`rm`, [ `-rf`, pythonFile ]);
     }
     await fileSystem(`write`, [ pythonFile, pythonScript ]);
 

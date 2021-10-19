@@ -187,14 +187,16 @@ DevContext.prototype.launching = async function () {
 
 
 
+    // console.log(await this.findCode("shell."));
 
-
-
-
-
-
-
-
+    // console.log(await shellExec(`ls -al ${process.cwd()}/temp/'test test'`));
+    // console.log(await shellExec([ "ls", "-al", process.cwd() + "/temp/test test" ]));
+    // console.log(await shellExec("ls", [ "-al", process.cwd() + "/temp" ]));
+    // console.log(await shellExec([
+    //   [ "ls", [ "-al", process.cwd() + "/temp" ] ],
+    //   [ "ls", [ "-al", process.cwd() + "/temp/test test" ] ],
+    //   [ "ls", [ "-al", process.cwd() + "/apps" ] ],
+    // ]));
 
 
 

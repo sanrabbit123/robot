@@ -1282,7 +1282,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 BridgeCloud.prototype.serverLaunching = async function (toss = false) {
   const instance = this;
   const https = require("https");
-  const { shell, shellLink, fileSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { shellExec, fileSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
   const { parse } = require("url");
   const express = require("express");
   const useragent = require("express-useragent");
@@ -1320,7 +1320,7 @@ BridgeCloud.prototype.serverLaunching = async function (toss = false) {
       }
     }
     if (thisDirBoo) {
-      shell.exec(`mkdir ${shellLink(this.dir)}/binary`);
+      await shellExec(`mkdir`, [ `${this.dir}/binary` ]);
     }
 
     //set pem key

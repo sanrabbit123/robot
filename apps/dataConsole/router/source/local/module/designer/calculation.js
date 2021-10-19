@@ -371,10 +371,14 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         condition = true;
       } else {
         if (designer.projects[i].contents.photo.boo) {
-          if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+          if (/완료/gi.test(designer.projects[i].contents.photo.status) && (/디자이너/gi.test(designer.projects[i].contents.photo.info.photographer) || /고객/gi.test(designer.projects[i].contents.photo.info.photographer))) {
             condition = false;
           } else {
-            condition = true;
+            if (designer.projects[i].contents.photo.date.valueOf() < (new Date(3000, 0, 1)).valueOf() && designer.projects[i].contents.photo.date.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+              condition = false;
+            } else {
+              condition = true;
+            }
           }
         } else {
           condition = false;

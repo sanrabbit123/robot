@@ -868,7 +868,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
 
 DataConsole.prototype.staticUpload = async function (to = "ghost") {
   const instance = this;
-  const { fileSystem, shell, shellLink, ghostFileUpload, sleep } = this.mother;
+  const { fileSystem, shellExec, ghostFileUpload, sleep } = this.mother;
   const staticName = "static";
   const staticFolder = process.env.HOME + "/" + staticName;
   const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
@@ -894,9 +894,9 @@ DataConsole.prototype.staticUpload = async function (to = "ghost") {
     homeDir = await fileSystem(`readDir`, [ process.env.HOME ]);
     tempValue = String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
     if (homeDir.includes(staticName)) {
-      shell.exec(`mv ${shellLink(process.env.HOME + "/" + staticName)} ${shellLink(process.env.HOME + "/" + staticName + "_" + tempValue)};`);
+      await shellExec(`mv`, [ `${process.env.HOME}/${staticName}`, `${process.env.HOME}/${staticName}_${tempValue}` ]);
     }
-    shell.exec(`mkdir ${shellLink(process.env.HOME + "/" + staticName)}`);
+    await shellExec(`mkdir`, [ `${process.env.HOME}/${staticName}` ]);
 
     fromArr = [];
 
@@ -923,9 +923,8 @@ DataConsole.prototype.staticUpload = async function (to = "ghost") {
       await sleep(1000);
     }
 
-    shell.exec(`rm -rf ${shellLink(process.env.HOME + "/" + staticName)};`);
-    shell.exec(`mv ${shellLink(process.env.HOME + "/" + staticName + "_" + tempValue)} ${shellLink(process.env.HOME + "/" + staticName)};`);
-
+    await shellExec(`rm`, [ `-rf`, `${process.env.HOME}/${staticName}` ]);
+    await shellExec(`mv`, [ `${process.env.HOME}/${staticName}_${tempValue}`, `${process.env.HOME}/${staticName}` ]);
     console.log(`static to ghost done`);
 
   } catch (e) {

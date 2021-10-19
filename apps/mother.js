@@ -50,21 +50,81 @@ Mother.prototype.consoleQ = function (question) {
   });
 }
 
-Mother.prototype.shellExec = function (command) {
-  const { exec } = require("child_process");
-  return new Promise((resolve, reject) => {
-    exec(command, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
+Mother.prototype.shellExec = function (command, args = null) {
+  if (typeof command === "string") {
+    if (!Array.isArray(args)) {
+      const { exec } = require("child_process");
+      return new Promise((resolve, reject) => {
+        exec(command, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+          if (error) {
+            reject(error);
+          } else {
+            if (typeof stdout === "string") {
+              resolve(stdout.trim());
+            } else {
+              resolve(stdout);
+            }
+          }
+        });
+      });
+    } else {
+      const { spawn } = require("child_process");
+      if (args.every((s) => { return typeof s === "string"; })) {
+        return new Promise((resolve, reject) => {
+          const name = command;
+          const program = spawn(name, args);
+          let out;
+          out = "";
+          program.stdout.on("data", (data) => { out += String(data); });
+          program.stderr.on("data", (data) => { reject(String(data)); });
+          program.on("close", (code) => { resolve(out.trim()); });
+        });
       } else {
-        if (typeof stdout === "string") {
-          resolve(stdout.trim());
-        } else {
-          resolve(stdout);
-        }
+        throw new Error("invaild input");
       }
-    });
-  });
+    }
+  } else if (Array.isArray(command)) {
+    if (command.length > 0) {
+      const { spawn } = require("child_process");
+      if (command.every((s) => { return typeof s === "string"; })) {
+        return new Promise((resolve, reject) => {
+          const name = command[0];
+          const program = spawn(name, command.slice(1));
+          let out;
+          out = "";
+          program.stdout.on("data", (data) => { out += String(data); });
+          program.stderr.on("data", (data) => { reject(String(data)); });
+          program.on("close", (code) => { resolve(out.trim()); });
+        });
+      } else if (command.every((s) => { return Array.isArray(s); })) {
+        if (command.every((arr) => { return arr.length > 0 })) {
+          return Promise.all(command.map((arr) => {
+            arr = arr.flat();
+            if (!arr.every((s) => { return typeof s === "string"; })) {
+              throw new Error("invaild input");
+            }
+            return new Promise((resolve, reject) => {
+              const name = arr[0];
+              const program = spawn(name, arr.slice(1));
+              let out;
+              out = "";
+              program.stdout.on("data", (data) => { out += String(data); });
+              program.stderr.on("data", (data) => { reject(String(data)); });
+              program.on("close", (code) => { resolve(out.trim()); });
+            });
+          }));
+        } else {
+          throw new Error("invaild input");
+        }
+      } else {
+        throw new Error("invaild input");
+      }
+    } else {
+      throw new Error("invaild input");
+    }
+  } else {
+    throw new Error("invaild input");
+  }
 }
 
 Mother.prototype.shellLink = function (str) {
