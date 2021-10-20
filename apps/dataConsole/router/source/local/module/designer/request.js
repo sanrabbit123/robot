@@ -1506,6 +1506,9 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     let num;
     let whitePopupEvent;
     let clientPhoto;
+    let positionArr;
+    let imageTong;
+    let tempImage;
 
     topMargin = <%% 42, 38, 32, 30, 5.5 %%>;
     leftMargin = <%% 50, 46, 38, 32, 5.5 %%>;
@@ -1972,8 +1975,26 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
         photoWidth = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2) - photoMargin) / photoNumber;
         photoMargin = photoMargin - 0.1;
       }
+
+      positionArr = [];
+      for (let i = 0; i < photoNumber; i++) {
+        positionArr.push(createNode({
+          mother: contentsClientPhotoTong,
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(100% - " + String(photoMargin * (photoNumber - 1)) + ea + ") / " + String(photoNumber) + ")",
+            height: "auto",
+            marginRight: String(i === photoNumber - 1 ? 0 : photoMargin) + ea,
+            verticalAlign: "top",
+          }
+        }));
+      }
+
+      num = 0;
+      imageTong = [];
       for (let i = 0; i < images.length; i++) {
-        createNode({
+        tempImage = createNode({
           mother: contentsClientPhotoTong,
           mode: "img",
           class: [ "hoverDefault_lite" ],
@@ -2212,7 +2233,27 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             verticalAlign: "top",
           }
         });
+
+        imageTong.push(tempImage);
+        if (imageTong.length === photoNumber) {
+          positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+          imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+          for (let i = 0; i < imageTong.length; i++) {
+            positionArr[i].appendChild(imageTong[i]);
+          }
+          imageTong = [];
+          num = -1;
+        }
+
+        num++;
       }
+
+      positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+      imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+      for (let i = 0; i < imageTong.length; i++) {
+        positionArr[i].appendChild(imageTong[i]);
+      }
+
     }
 
     if (siteImages.length > 0) {
@@ -2265,8 +2306,26 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
         photoNumber = 2;
         photoWidth = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2) - photoMargin) / photoNumber;
       }
+
+      positionArr = [];
+      for (let i = 0; i < photoNumber; i++) {
+        positionArr.push(createNode({
+          mother: contentsClientPhotoTong,
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(100% - " + String(photoMargin * (photoNumber - 1)) + ea + ") / " + String(photoNumber) + ")",
+            height: "auto",
+            marginRight: String(i === photoNumber - 1 ? 0 : photoMargin) + ea,
+            verticalAlign: "top",
+          }
+        }));
+      }
+
+      num = 0;
+      imageTong = [];
       for (let i = 0; i < siteImages.length; i++) {
-        createNode({
+        tempImage = createNode({
           mother: contentsClientPhotoTong,
           mode: "img",
           class: [ "hoverDefault_lite" ],
@@ -2505,7 +2564,27 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             verticalAlign: "top",
           }
         });
+
+        imageTong.push(tempImage);
+        if (imageTong.length === photoNumber) {
+          positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+          imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+          for (let i = 0; i < imageTong.length; i++) {
+            positionArr[i].appendChild(imageTong[i]);
+          }
+          imageTong = [];
+          num = -1;
+        }
+
+        num++;
       }
+
+      positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+      imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+      for (let i = 0; i < imageTong.length; i++) {
+        positionArr[i].appendChild(imageTong[i]);
+      }
+
     }
 
     if (preferImages.length > 0) {
@@ -2558,8 +2637,26 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
         photoNumber = 2;
         photoWidth = (100 - (Number(board.style.left.replace(/[^0-9\-\.]/gi, '')) * 2) - (leftMargin * 2) - photoMargin) / photoNumber;
       }
+
+      positionArr = [];
+      for (let i = 0; i < photoNumber; i++) {
+        positionArr.push(createNode({
+          mother: contentsClientPhotoTong,
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(100% - " + String(photoMargin * (photoNumber - 1)) + ea + ") / " + String(photoNumber) + ")",
+            height: "auto",
+            marginRight: String(i === photoNumber - 1 ? 0 : photoMargin) + ea,
+            verticalAlign: "top",
+          }
+        }));
+      }
+
+      num = 0;
+      imageTong = [];
       for (let i = 0; i < preferImages.length; i++) {
-        createNode({
+        tempImage = createNode({
           mother: contentsClientPhotoTong,
           mode: "img",
           class: [ "hoverDefault_lite" ],
@@ -2798,7 +2895,27 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             verticalAlign: "top",
           }
         });
+
+        imageTong.push(tempImage);
+        if (imageTong.length === photoNumber) {
+          positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+          imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+          for (let i = 0; i < imageTong.length; i++) {
+            positionArr[i].appendChild(imageTong[i]);
+          }
+          imageTong = [];
+          num = -1;
+        }
+
+        num++;
       }
+
+      positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+      imageTong.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+      for (let i = 0; i < imageTong.length; i++) {
+        positionArr[i].appendChild(imageTong[i]);
+      }
+      
     }
 
     for (let { title, contents } of noticeContents) {

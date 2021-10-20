@@ -1108,6 +1108,9 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   let matrix;
   let firstWidth, secondWidth, secondMarginRight;
   let contentsAreaPaddingTop;
+  let zeroWidth, zeroMarginRight;
+  let checkBoxWidth, checkBoxTop;
+  let contentsMarginBottom0, contentsMarginBottom1;
 
   wordsTitle = "체크리스트";
   matrix = this.cautionStatic();
@@ -1148,9 +1151,17 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
   bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
 
-  firstWidth = <%% 195, 195, 195, 195, 10 %%>;
+  zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
+  zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  firstWidth = <%% 240, 240, 240, 240, 10 %%>;
   secondWidth = <%% 25, 25, 25, 25, 10 %%>;
-  secondMarginRight = <%% 18, 18, 18, 18, 10 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+
+  checkBoxWidth = <%% 10, 10, 10, 10, 1 %%>;
+  checkBoxTop = <%% 0, 0, 0, 0, 0 %%>;
+
+  contentsMarginBottom0 = <%% 4, 4, 4, 4, 1 %%>;
+  contentsMarginBottom1 = <%% 18, 18, 18, 18, 1 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1252,9 +1263,23 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
         style: {
           display: "block",
           position: "relative",
-          marginBottom: String(num2 === contents.length - 1 ? 18 : 3) + ea,
+          marginBottom: String(num2 === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
         },
         children: [
+          {
+            text: (num2 === 0 ? String(num + 1) : ""),
+            style: {
+              display: "inline-block",
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(600),
+              verticalAlign: "top",
+              lineHeight: String(1.6),
+              width: String(zeroWidth) + ea,
+              marginRight: String(zeroMarginRight) + ea,
+              textAlign: "right",
+              color: colorChip.green,
+            }
+          },
           {
             text: (num2 === 0 ? title : ""),
             style: {
@@ -1269,9 +1294,9 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             }
           },
           {
-            text: String(num + 1),
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(600),
               verticalAlign: "top",
@@ -1280,7 +1305,18 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
               marginRight: String(secondMarginRight) + ea,
               textAlign: "right",
               color: colorChip.green,
-            }
+            },
+            children: [
+              {
+                mode: "svg",
+                source: this.mother.returnCheckBox(colorChip.green),
+                style: {
+                  position: "relative",
+                  top: String(checkBoxTop) + ea,
+                  width: String(checkBoxWidth) + ea,
+                }
+              }
+            ]
           },
           {
             text: str,
@@ -1290,7 +1326,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
               fontWeight: String(300),
               verticalAlign: "top",
               lineHeight: String(1.6),
-              width: withOut(firstWidth + secondWidth + secondMarginRight, ea),
+              width: withOut(zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight, ea),
               textAlign: "left",
               color: colorChip.black,
             }
@@ -1298,9 +1334,9 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
         ]
       });
 
-      num++;
       num2++;
     }
+    num++;
   }
 
 
@@ -1315,12 +1351,13 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const cliid = this.client.cliid;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
   let bottomMargin;
   let titleFontSize;
-  let num;
+  let num, num2;
   let numberRight;
   let titleTop, titleTopNumber;
   let titleBottom;
@@ -1340,14 +1377,22 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   let bigNumberBetween;
   let bigNumberMargin;
   let bigNumberBetweenMargin;
+  let images;
+  let obj;
+  let curation;
+  let columnsLength;
+  let positionArr;
+  let imageMargin;
+  let tempArr, tempArr2;
+  let tempImage;
 
   wordsTitle = "전송된 사진";
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  bottomMargin = <%% 160, 160, 160, 120, 30 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
 
-  whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
+  whiteBottomMargin = <%% 68, 68, 68, 68, 0 %%>;
 
   titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
@@ -1355,8 +1400,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% 21, 21, 21, 21, 0 %%>;
-
+  titleBottom = <%% 26, 26, 26, 26, 6 %%>;
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
 
@@ -1377,6 +1421,9 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
   bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
   bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+
+  columnsLength = <%% 4, 4, 3, 3, 2 %%>;
+  imageMargin = <%% 8, 8, 8, 6, 1 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1466,6 +1513,314 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
     ]
   });
   tong = block.lastChild;
+
+  images = [];
+  ajaxJson({
+    cliid
+  }, "/ghostPass_clientPhoto").then((obj) => {
+    images = images.concat(obj.sitePhoto);
+    images = images.concat(obj.preferredPhoto);
+    return ajaxJson({
+      idArr: [ cliid ],
+      method: "client",
+      property: "curation",
+    }, "/getHistoryProperty");
+  }).then((raw) => {
+    if (typeof raw !== "object" || Array.isArray(raw)) {
+      throw new Error("결과 없음");
+    }
+    obj = raw;
+    return ajaxJson({
+      images: obj[cliid].image
+    }, "/ghostPass_photoParsing");
+  }).then((raw) => {
+    curation = obj[cliid];
+    images = curation.image.map((image) => {
+      const imageLink = "/corePortfolio/listImage";
+      const pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
+      return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
+    }).concat(images);
+
+    positionArr = [];
+    for (let i = 0; i < columnsLength; i++) {
+      positionArr.push(createNode({
+        mother: tong,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(100% - " + String(imageMargin * (columnsLength - 1)) + ea + ") / " + String(columnsLength) + ")",
+          height: "auto",
+          marginRight: String(i === columnsLength - 1 ? 0 : imageMargin) + ea,
+          verticalAlign: "top",
+        }
+      }));
+    }
+
+    num = 0;
+    num2 = 0;
+    tempArr = [];
+    for (let image of images) {
+      tempImage = createNode({
+        mother: tong,
+        mode: "img",
+        attribute: [
+          { src: image },
+          { index: String(num) },
+          { method: /sitePhoto/g.test(image) ? "site" : (/preferredPhoto/g.test(image) ? "preferred" : "selected") },
+          { length: String(images.length) }
+        ],
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: String(100) + '%',
+          height: "auto",
+          marginBottom: String(imageMargin) + ea,
+          borderRadius: String(3) + "px",
+          verticalAlign: "top",
+          cursor: "pointer",
+        },
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              e.stopPropagation();
+              const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
+              const totalImages = equalJson(JSON.stringify(images));
+              const mother = document.getElementById("totalcontents");
+              const className = "photoSelectedTarget";
+              const length = Number(this.getAttribute("length"));
+              const zIndex = 2;
+              const wordDictionary = {
+                selected: "고객님이 선택한 사진",
+                site: "고객님이 보낸 현장",
+                preferred: "고객님의 선호 사진"
+              };
+              let img, height, imgBox;
+              let title, titleSize, bottom;
+              let titleBox;
+              let leftArrow, rightArrow;
+              let leftArrowBox, rightArrowBox;
+              let arrowHeight;
+              let arrowMargin;
+              let index, method, src;
+              let convertEvent;
+
+              index = Number(this.getAttribute("index"));
+              method = this.getAttribute("method");
+              src = this.getAttribute("src");
+
+              convertEvent = () => {};
+
+              height = 78;
+              titleSize = 2;
+              bottom = 6.6;
+              arrowHeight = 1.7;
+              arrowMargin = 78;
+
+              createNode({
+                mother,
+                class: [ className ],
+                events: [
+                  {
+                    type: "click",
+                    event: function (e) {
+                      const removeTargets = document.querySelectorAll('.' + className);
+                      for (let dom of removeTargets) {
+                        mother.removeChild(dom);
+                      }
+                    }
+                  }
+                ],
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  background: colorChip.darkDarkShadow,
+                  zIndex: String(zIndex),
+                  animation: "justfadeineight 0.2s ease forwards",
+                }
+              });
+
+              img = createNode({
+                mother,
+                class: [ className ],
+                mode: "img",
+                attribute: [
+                  { src },
+                  { direction: "right" }
+                ],
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  height: String(height) + '%',
+                  width: "auto",
+                  zIndex: String(zIndex),
+                  transition: "all 0s ease",
+                  animation: "fadeuplite 0.2s ease forwards",
+                  borderRadius: String(3) + "px",
+                }
+              });
+              imgBox = img.getBoundingClientRect();
+              img.style.top = withOut(50, imgBox.height / 2, ea);
+              img.style.left = withOut(50, imgBox.width / 2, ea);
+
+              title = createNode({
+                mother,
+                events: [
+                  {
+                    type: [ "click", "dblclick", "selectstart" ],
+                    event: (e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                  }
+                ],
+                class: [ className ],
+                text: wordDictionary[method],
+                style: {
+                  position: "fixed",
+                  bottom: String(bottom) + '%',
+                  fontSize: String(titleSize) + "vh",
+                  fontWeight: String(600),
+                  color: colorChip.whiteBlack,
+                  left: String(50) + '%',
+                  zIndex: String(zIndex),
+                  transition: "all 0s ease",
+                  animation: "fadeuplite 0.2s ease forwards",
+                }
+              });
+              titleBox = title.getBoundingClientRect();
+              title.style.left = withOut(50, titleBox.width / 2, ea);
+
+              leftArrow = createNode({
+                mother,
+                events: [
+                  {
+                    type: [ "dblclick", "selectstart" ],
+                    event: (e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                  }
+                ],
+                attribute: [
+                  { direction: "left" }
+                ],
+                class: [ className ],
+                mode: "svg",
+                source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  height: String(arrowHeight) + "vh",
+                  zIndex: String(zIndex),
+                  transition: "all 0s ease",
+                  animation: "fadeuplite 0.2s ease forwards",
+                  cursor: "pointer"
+                }
+              });
+              leftArrowBox = leftArrow.getBoundingClientRect();
+              leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+              leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+
+              rightArrow = createNode({
+                mother,
+                events: [
+                  {
+                    type: [ "dblclick", "selectstart" ],
+                    event: (e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                  }
+                ],
+                attribute: [
+                  { direction: "right" }
+                ],
+                class: [ className ],
+                mode: "svg",
+                source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+                style: {
+                  position: "fixed",
+                  top: String(0),
+                  left: String(0),
+                  height: String(arrowHeight) + "vh",
+                  zIndex: String(zIndex),
+                  transition: "all 0s ease",
+                  animation: "fadeuplite 0.2s ease forwards",
+                  cursor: "pointer"
+                }
+              });
+              rightArrowBox = rightArrow.getBoundingClientRect();
+              rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+              rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+              convertEvent = function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                const direction = this.getAttribute("direction");
+                let targetIndex, targetImage;
+                if (direction === "left") {
+                  targetIndex = index - 1;
+                  if (totalImages[targetIndex] === undefined) {
+                    targetIndex = length - 1;
+                  }
+                } else {
+                  targetIndex = index + 1;
+                  if (totalImages[targetIndex] === undefined) {
+                    targetIndex = 0;
+                  }
+                }
+                targetImage = totalImages[targetIndex];
+                img.setAttribute("src", targetImage);
+                imgBox = img.getBoundingClientRect();
+                img.style.left = withOut(50, imgBox.width / 2, ea);
+                leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+                rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                index = targetIndex;
+                src = targetImage;
+                method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
+
+                title.textContent = wordDictionary[method];
+                titleBox = title.getBoundingClientRect();
+                title.style.left = withOut(50, titleBox.width / 2, ea);
+              }
+              leftArrow.addEventListener("click", convertEvent);
+              rightArrow.addEventListener("click", convertEvent);
+              img.addEventListener("click", convertEvent);
+            }
+          }
+        ]
+      });
+      tong.style.height = "auto";
+      tempArr.push(tempImage);
+      if (tempArr.length === columnsLength) {
+        positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+        tempArr.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+        for (let i = 0; i < tempArr.length; i++) {
+          positionArr[i].appendChild(tempArr[i]);
+        }
+        tempArr = [];
+        num2 = -1;
+      }
+      num++;
+      num2++;
+    }
+
+    positionArr.sort((a, b) => { return a.getBoundingClientRect().height - b.getBoundingClientRect().height; });
+    tempArr.sort((a, b) => { return b.getBoundingClientRect().height - a.getBoundingClientRect().height; });
+    for (let i = 0; i < tempArr.length; i++) {
+      positionArr[i].appendChild(tempArr[i]);
+    }
+
+  }).catch((err) => {
+    console.log(err);
+  });
 
 }
 
