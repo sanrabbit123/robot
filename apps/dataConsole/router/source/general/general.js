@@ -3775,6 +3775,9 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   let boldMap;
   let boldWeight, generalWeight;
   let boldBackground;
+  let whiteMode;
+  let whiteModePaddingTop, whiteModePaddingBottom;
+  let whiteModeDoubleLineMargin;
 
   [ columns ] = matrix;
   columnsLength = columns.length;
@@ -3975,6 +3978,11 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     throw new Error("invaild bold map");
   }
 
+  whiteMode = false;
+  if (option.whiteMode === true) {
+    whiteMode = true;
+  }
+
   ea = <%% "px", "px", "px", "px", "vw" %%>;
 
   blockWidth = <%% 120, 120, 120, 120, 14 %%>;
@@ -4019,7 +4027,11 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     innerMargin = option.style.innerMargin;
   }
 
-  innerMarginLeft = <%% 15, 10, 10, 6, 3 %%>;
+  if (whiteMode) {
+    innerMarginLeft = <%% 35, 18, 14, 6, 2 %%>;
+  } else {
+    innerMarginLeft = <%% 15, 10, 10, 6, 3 %%>;
+  }
   if (typeof option.style.innerMarginLeft === "number") {
     innerMarginLeft = option.style.innerMarginLeft;
   }
@@ -4054,7 +4066,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     titleBackground = option.style.generalColor;
   }
 
-  borderColor = "gray3";
+  borderColor = whiteMode ? "gray2" : "gray3";
   if (typeof option.style.borderColor === "string") {
     titleBackground = option.style.borderColor;
   }
@@ -4074,19 +4086,41 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     boldBackground = option.style.boldBackground;
   }
 
+  whiteModePaddingTop = 2;
+  whiteModePaddingBottom = 7;
+  whiteModeDoubleLineMargin = 2;
+
   mother = document.createDocumentFragment();
-  table = createNode({
-    mother,
-    style: {
-      position: "relative",
-      display: "block",
-      width: String(blockWidth * columnsLength) + ea,
-      overflow: "hidden",
-      border: String(borderWeight) + "px solid " + colorChip[borderColor],
-      boxSizing: "border-box",
-      borderRadius: String(3) + "px",
-    }
-  });
+  if (!whiteMode) {
+    table = createNode({
+      mother,
+      style: {
+        position: "relative",
+        display: "block",
+        width: String(blockWidth * columnsLength) + ea,
+        overflow: "hidden",
+        border: String(borderWeight) + "px solid " + colorChip[borderColor],
+        boxSizing: "border-box",
+        borderRadius: String(3) + "px",
+      }
+    });
+  } else {
+    table = createNode({
+      mother,
+      style: {
+        position: "relative",
+        display: "block",
+        width: String(blockWidth * columnsLength) + ea,
+        overflow: "hidden",
+        borderTop: String(borderWeight) + "px solid " + colorChip.shadow,
+        borderBottom: String(borderWeight) + "px solid " + colorChip.shadow,
+        boxSizing: "border-box",
+        borderRadius: String(0) + "px",
+        paddingTop: String(whiteModePaddingTop) + ea,
+        paddingBottom: String(whiteModePaddingBottom) + ea,
+      }
+    });
+  }
 
   rows = [];
   all = [];
@@ -4123,10 +4157,10 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
           display: "inline-block",
           width: "calc(100% / " + String(columnsLength) + ")",
           height: String(blockHeight) + ea,
-          borderRight: String(borderWeight) + "px solid " + colorChip[borderColor],
+          borderRight: !whiteMode ? String(borderWeight) + "px solid " + colorChip[borderColor] : "",
           boxSizing: "border-box",
           overflow: "hidden",
-          background: colorChip[titleMap[i] === 1 ? titleBackground : (boldMap[i][j] === 1 ? boldBackground : generalBackground)],
+          background: !whiteMode ? colorChip[titleMap[i] === 1 ? titleBackground : (boldMap[i][j] === 1 ? boldBackground : generalBackground)] : colorChip.white,
           verticalAlign: "top",
         },
         children: [
@@ -4151,8 +4185,8 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
                   width: String(100) + '%',
                   textAlign: "center",
                   fontSize: String(titleMap[i] === 1 ? titleSize : size) + ea,
-                  fontWeight: String(titleMap[i] === 1 ? boldWeight : (boldMap[i][j] === 1 ? boldWeight : generalWeight)),
-                  color: colorChip[titleMap[i] === 1 ? titleColor : generalColor],
+                  fontWeight: String(titleMap[i] === 1 ? (whiteMode ? 700 : boldWeight) : (boldMap[i][j] === 1 ? boldWeight : generalWeight)),
+                  color: !whiteMode ? colorChip[titleMap[i] === 1 ? titleColor : generalColor] : colorChip.black,
                   top: String(textTop) + ea,
                 }
               }
@@ -4168,6 +4202,23 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     }
     domMatrix.push(tempArr);
     rows.push(rowBlock);
+  }
+
+  if (whiteMode) {
+    createNode({
+      mother: table,
+      style: {
+        position: "absolute",
+        top: String(whiteModeDoubleLineMargin) + ea,
+        left: String(0),
+        width: String(100) + '%',
+        height: withOut(whiteModeDoubleLineMargin * 2, ea),
+        borderTop: String(borderWeight) + "px solid " + colorChip.shadow,
+        borderBottom: String(borderWeight) + "px solid " + colorChip.shadow,
+        boxSizing: "border-box",
+        borderRadius: String(0) + "px",
+      }
+    });
   }
 
   for (let i = 0; i < totalLength; i++) {
