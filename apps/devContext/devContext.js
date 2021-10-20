@@ -39,6 +39,7 @@ const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
 const MirrorRouter = require(APP_PATH + "/mirrorWhisk/router/mirrorRouter.js");
 const NativeNotifier = require(APP_PATH + "/nativeNotifier/nativeNotifier.js");
 const RethinkAccess = require(APP_PATH + "/rethinkAccess/rethinkAccess.js");
+const AppleCalendar = require(APP_PATH + "/appleAPIs/appleCalendar.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -186,7 +187,6 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-
     // console.log(await this.findCode("shell."));
 
     // console.log(await shellExec(`ls -al ${process.cwd()}/temp/'test test'`));
@@ -199,7 +199,26 @@ DevContext.prototype.launching = async function () {
     // ]));
 
 
-    console.log(await this.findCode("rethink"));
+
+
+    const calendar = new AppleCalendar();
+    const tong = await calendar.calendarRead("webcal://p40-caldav.icloud.com/published/2/MTc0MTIxNTc1MDQxNzQxMlCGIy6piuVYXgvFtevtyprenavwaF3js3IUybHJ1bVBqyBRIMucI2_Y9VGE4lNXKUZjsrRhd2I12Z86VrVBGNk");
+    const sheetsId = "11hhpDXwGDnb2F3xJAXjG3gQY0tZKvhLHdHDL5psfzxw";
+    const startIndex = 2;
+    const rawMartrix = await sheets.get_value_inPython(sheetsId, "D" + String(startIndex) + ":H81");
+    const ids = rawMartrix.map((arr, index) => { return (arr.length > 4 ? [ arr[4].trim(), index ] : null) }).filter((s) => { return s !== null });
+    let index;
+    for (let [ id, i ] of ids) {
+      index = tong.findIndex((obj) => { return (new RegExp(id, "gi")).test(obj.name); });
+      if (index !== -1) {
+        tong[index].end.setDate(tong[index].end.getDate() - 1);
+        await sheets.update_value_inPython(sheetsId, "", [ [ dateToString(tong[index].start), dateToString(tong[index].end) ] ], [ 5, startIndex + i - 1 ]);
+      }
+    }
+
+
+
+
 
 
 

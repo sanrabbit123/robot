@@ -3778,6 +3778,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   let whiteMode;
   let whiteModePaddingTop, whiteModePaddingBottom;
   let whiteModeDoubleLineMargin;
+  let doubleLineMode;
 
   [ columns ] = matrix;
   columnsLength = columns.length;
@@ -3982,6 +3983,10 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   if (option.whiteMode === true) {
     whiteMode = true;
   }
+  doubleLineMode = false;
+  if (option.doubleLineMode === true) {
+    doubleLineMode = true;
+  }
 
   ea = <%% "px", "px", "px", "px", "vw" %%>;
 
@@ -4086,8 +4091,8 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     boldBackground = option.style.boldBackground;
   }
 
-  whiteModePaddingTop = 2;
-  whiteModePaddingBottom = 7;
+  whiteModePaddingTop = doubleLineMode ? 1 : 2;
+  whiteModePaddingBottom = doubleLineMode ? 6 : 7;
   whiteModeDoubleLineMargin = 2;
 
   mother = document.createDocumentFragment();
@@ -4204,7 +4209,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     rows.push(rowBlock);
   }
 
-  if (whiteMode) {
+  if (doubleLineMode) {
     createNode({
       mother: table,
       style: {
