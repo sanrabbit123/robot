@@ -4091,8 +4091,8 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     boldBackground = option.style.boldBackground;
   }
 
-  whiteModePaddingTop = doubleLineMode ? 1 : 2;
-  whiteModePaddingBottom = doubleLineMode ? 6 : 7;
+  whiteModePaddingTop = <%% 2, 2, 2, 1, 0 %%>;
+  whiteModePaddingBottom =  <%% 7, 7, 6, 4, 1 %%>;
   whiteModeDoubleLineMargin = 2;
 
   mother = document.createDocumentFragment();

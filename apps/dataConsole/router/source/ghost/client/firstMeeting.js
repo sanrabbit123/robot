@@ -493,29 +493,30 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   let initContentsBottom;
   let initContentsPaddingLeft;
   let arrowTop, arrowWidth, arrorLeft;
+  let mobilePhotoHeight;
 
-  blockHeight = <%% 400, 380, 367, 270, 424 %%>;
+  blockHeight = <%% 400, 380, 367, 260, 424 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
   titleFontSize = <%% 29, 28.5, 27.5, 23, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titlePadding = <%% 6, 2, 1, 0, 0.6 %%>;
+  titlePadding = <%% 6, 2, 1, 0, 1 %%>;
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
-  titleMargin = <%% 32, 26, 24, 12, 0.6 %%>;
+  titleMargin = <%% 32, 26, 24, 12, 2 %%>;
 
   lineTop = <%% 18, 18, 17, 14, 0.6 %%>;
   linetMargin = <%% 20, 20, 20, 20, 0.6 %%>;
 
   secondBlockWidth = <%% 300, 250, 220, 200, 33 %%>;
-  secondBlockMargin = <%% 36, 35, 34, 34, 33 %%>;
+  secondBlockMargin = <%% 36, 35, 34, 34, 2.5 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
 
   zeroWordingSize = <%% 21, 21, 21, 21, 21 %%>;
   zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
 
-  initTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
+  initTitleMarginTop = <%% 14, 14, 14, 14, 2.5 %%>;
   initContentsMarginTop = <%% 4, 4, 4, 4, 1 %%>;
   initContentsBottom = <%% -3, -3, -3, -3, 0 %%>;
   initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
@@ -526,6 +527,8 @@ FirstMeetingJs.prototype.insertInitBox = function () {
 
   wordings = this.wordings.initWordings;
   initPhoto = <%% this.wordings.initWordings.image[0], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[2] %%>;
+
+  mobilePhotoHeight = 26;
 
   lineHeight = 1.6;
 
@@ -568,7 +571,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
       children: [
         {
           style: {
-            display: "block",
+            display: desktop ? "block" : "none",
             width: String(100) + '%',
             position: "absolute",
             top: String(0),
@@ -580,13 +583,13 @@ FirstMeetingJs.prototype.insertInitBox = function () {
         {
           text: "현장 미팅 안내",
           style: {
-            display: "inline-block",
+            display: desktop ? "inline-block" : "block",
             fontSize: String(titleFontSize) + ea,
             fontWeight: String(titleFontWeight),
             position: "relative",
             fontFamily: "sandoll",
-            paddingLeft: String(titlePadding) + ea,
-            paddingRight: String(linetMargin) + ea,
+            paddingLeft: desktop ? String(titlePadding) + ea : "",
+            paddingRight: desktop ? String(linetMargin) + ea : "",
             height: String(titleHeight) + ea,
             background: colorChip.white,
             wordSpacing: String(-2) + "px",
@@ -597,14 +600,14 @@ FirstMeetingJs.prototype.insertInitBox = function () {
           style: {
             display: "block",
             position: "relative",
-            height: withOut(titleHeight + titleMargin, ea),
+            height: desktop ? withOut(titleHeight + titleMargin, ea) : String(mobilePhotoHeight) + ea,
             marginTop: String(titleMargin) + ea,
             marginLeft: String(titlePadding) + ea,
+            width: desktop ? String(100) + '%' : withOut(titlePadding * 2, ea),
             borderRadius: String(5) + "px",
             backgroundImage: "url('" + FirstMeetingJs.binaryPath + initPhoto + "')",
             backgroundSize: "100% auto",
             backgroundPosition: "50% 50%",
-            background: colorChip.gray3
           }
         },
       ]
@@ -612,11 +615,11 @@ FirstMeetingJs.prototype.insertInitBox = function () {
     {
       mother: whiteTong,
       style: {
-        display: desktop ? "inline-flex" : "block",
+        display: desktop ? "inline-flex" : "flex",
         position: "relative",
-        width: desktop ? String(secondBlockWidth) + ea : String(100) + '%',
-        paddingTop: String(titleHeight + titleMargin) + ea,
-        height: withOut(titleHeight + titleMargin, ea),
+        width: desktop ? String(secondBlockWidth) + ea : withOut(secondBlockMargin * 2, ea),
+        paddingTop: desktop ? String(titleHeight + titleMargin) + ea : String(5.5) + ea,
+        height: desktop ? withOut(titleHeight + titleMargin, ea) : "",
         verticalAlign: "top",
         textAlign: desktop ? "" : "center",
         marginLeft: String(secondBlockMargin) + ea,
@@ -633,7 +636,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
             color: colorChip.black,
             lineHeight: String(1.6),
             bottom: String(initContentsBottom) + ea,
-            marginTop: String(initTitleMarginTop) + ea,
+            marginTop: desktop ? String(initTitleMarginTop) + ea : String(5) + ea,
           },
           bold: {
             fontSize: String(initWordingSize) + ea,
@@ -658,7 +661,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
             display: "block",
             fontSize: String(initWordingSize) + ea,
             fontWeight: String(600),
-            color: colorChip.black,
+            color: desktop ? colorChip.black : colorChip.green,
             marginTop: String(initTitleMarginTop) + ea,
             paddingLeft: String(initContentsPaddingLeft) + ea,
             lineHeight: String(1.4),
@@ -669,6 +672,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
               mode: "svg",
               source: mother.returnArrow("right", colorChip.green),
               style: {
+                display: desktop ? "block" : "none",
                 position: "absolute",
                 width: String(arrowWidth) + ea,
                 left: String(arrorLeft) + ea,
@@ -695,7 +699,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
             position: "relative",
             fontSize: String(initWordingSize) + ea,
             fontWeight: String(600),
-            color: colorChip.black,
+            color: desktop ? colorChip.black : colorChip.green,
             paddingLeft: String(initContentsPaddingLeft) + ea,
             lineHeight: String(1.4),
           },
@@ -704,6 +708,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
               mode: "svg",
               source: mother.returnArrow("right", colorChip.green),
               style: {
+                display: desktop ? "block" : "none",
                 position: "absolute",
                 width: String(arrowWidth) + ea,
                 left: String(arrorLeft) + ea,
@@ -715,6 +720,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
         {
           text: String(0),
           style: {
+            display: desktop ? "block" : "none",
             position: "absolute",
             right: String(0),
             top: String(zeroWordingTop) + ea,
@@ -780,6 +786,11 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   let bigNumberBetweenMargin;
   let periodLineTop;
   let bigDesktop;
+  let calendar;
+  let mobileCalendarMargin, mobileCalendarMarginTop;
+  let mobilePaddingTop, mobilePaddingBottom;
+  let periodPaddingLeft;
+  let periodLineWidth;
 
   bigDesktop = (media[0] || media[1]);
 
@@ -818,9 +829,16 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   bigNumberSize = <%% 37, 37, 34, 30, 5 %%>;
   bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
   bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
-  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
+  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 2 %%>;
 
-  periodLineTop = <%% 27, 27, 27, 27, 0 %%>;
+  periodLineTop = <%% 27, 27, 27, 27, 3.8 %%>;
+  periodPaddingLeft = <%% 16, 16, 16, 16, 7 %%>;
+  periodLineWidth = <%% 4, 4, 4, 4, 4 %%>;
+
+  mobileCalendarMargin = 6;
+  mobileCalendarMarginTop = 6.5;
+  mobilePaddingTop = 5;
+  mobilePaddingBottom = 10.5;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -877,7 +895,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
               fontWeight: String(600),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingRight: String(numberRight) + ea,
-              color: desktop ? colorChip.black : colorChip.green,
+              color: colorChip.black,
             }
           },
           {
@@ -890,7 +908,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
               fontWeight: String(200),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingLeft: String(numberRight) + ea,
-              color: colorChip.black,
+              color: desktop ? colorChip.black : colorChip.green,
             }
           },
         ]
@@ -911,21 +929,32 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   });
   tong = block.lastChild;
   tong.appendChild(mother.makeTable(matrix, { whiteMode: true, style: { width: 100 }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
-  tong.firstChild.style.width = bigDesktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%';
-  tong.firstChild.style.display = bigDesktop ? "inline-block" : "block";
+  calendar = tong.firstChild;
 
-  if (bigDesktop) {
+  if (desktop) {
+    calendar.style.width = bigDesktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%';
+    calendar.style.display = bigDesktop ? "inline-block" : "block";
+  } else {
+    calendar.style.width = withOut(mobileCalendarMargin * 2, ea);
+    calendar.style.marginLeft = String(mobileCalendarMargin) + ea;
+    tong.style.paddingTop = String(mobileCalendarMarginTop) + ea;
+    calendar.style.display = "block";
+  }
+
+  if (bigDesktop || mobile) {
     createNode({
       mother: tong,
       style: {
-        display: desktop ? "inline-flex" : "block",
+        display: desktop ? "inline-flex" : "flex",
         position: "relative",
-        width: desktop ? String(secondBlockWidth) + ea : String(100) + '%',
-        height: String(tong.getBoundingClientRect().height) + ea,
+        width: desktop ? String(secondBlockWidth) + ea : withOut(mobileCalendarMargin * 2, ea),
+        height: desktop ? String(tong.getBoundingClientRect().height) + ea : "",
         verticalAlign: "top",
         textAlign: desktop ? "" : "center",
-        marginLeft: String(secondBlockMargin) + ea,
-        flexDirection: "column-reverse"
+        marginLeft: desktop ? String(secondBlockMargin) + ea : String(mobileCalendarMargin) + ea,
+        flexDirection: "column-reverse",
+        paddingTop: desktop ? "" : String(mobilePaddingTop) + ea,
+        paddingBottom: desktop ? "" : String(mobilePaddingBottom) + ea,
       },
       children: [
         {
@@ -938,7 +967,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
             color: colorChip.black,
             lineHeight: String(1.6),
             bottom: String(contentsBottom) + ea,
-            marginTop: String(contentsMarginTop) + ea,
+            marginTop: String(desktop ? contentsMarginTop : mobilePaddingTop) + ea,
           },
           bold: {
             fontSize: String(contentsWordingSize) + ea,
@@ -948,7 +977,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
         },
         {
           style: {
-            display: "block",
+            display: desktop ? "block" : "none",
             marginTop: String(bigNumberBetween) + ea,
             position: "relative",
             textAlign: "right",
@@ -984,7 +1013,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
           style: {
             display: "block",
             position: "relative",
-            textAlign: "left",
+            textAlign: desktop ? "left" : "center",
             marginTop: String(bigNumberMargin) + ea,
           },
           children: [
@@ -999,7 +1028,32 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
                 lineHeight: String(1.4),
                 position: "relative",
               }
-            }
+            },
+            {
+              text: "2021. 09. 21",
+              style: {
+                display: mobile ? "inline-block" : "none",
+                fontSize: String(bigNumberSize) + ea,
+                fontWeight: String(200),
+                fontFamily: "graphik",
+                color: colorChip.green,
+                lineHeight: String(1.4),
+                background: colorChip.white,
+                paddingLeft: String(periodPaddingLeft) + ea,
+                position: "relative",
+              }
+            },
+            {
+              style: {
+                display: mobile ? "block" : "none",
+                position: "absolute",
+                width: desktop ? String(100) + '%' : String(periodLineWidth) + ea,
+                height: String(periodLineTop) + ea,
+                top: String(0),
+                left: desktop ? String(0) : withOut(50, periodLineWidth / 2, ea),
+                borderBottom: "1px solid " + colorChip.whiteGreen,
+              }
+            },
           ]
         },
         {
@@ -1019,6 +1073,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
               mode: "svg",
               source: mother.returnArrow("right", colorChip.green),
               style: {
+                display: desktop ? "block" : "none",
                 position: "absolute",
                 width: String(arrowWidth) + ea,
                 left: String(arrorLeft) + ea,
@@ -1065,6 +1120,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
               mode: "svg",
               source: mother.returnArrow("right", colorChip.green),
               style: {
+                display: desktop ? "block" : "none",
                 position: "absolute",
                 width: String(arrowWidth) + ea,
                 left: String(arrorLeft) + ea,
@@ -1086,6 +1142,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const blank = "&nbsp;&nbsp;&nbsp;";
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -1117,6 +1174,8 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   let zeroWidth, zeroMarginRight;
   let checkBoxWidth, checkBoxTop;
   let contentsMarginBottom0, contentsMarginBottom1;
+  let mobilePaddingLeft;
+  let mobileContentsWordingSize;
 
   wordsTitle = "체크리스트";
   matrix = this.cautionStatic();
@@ -1134,7 +1193,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
   titleBottom = <%% 21, 21, 21, 21, 0 %%>;
-  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 0 %%>;
+  contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -1160,14 +1219,18 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
   firstWidth = <%% 240, 240, 190, 170, 10 %%>;
-  secondWidth = <%% 25, 25, 25, 25, 10 %%>;
-  secondMarginRight = <%% 10, 10, 10, 10, 10 %%>;
+  secondWidth = <%% 25, 25, 25, 25, 2 %%>;
+  secondMarginRight = <%% 10, 10, 10, 10, 1.5 %%>;
 
-  checkBoxWidth = <%% 10, 10, 10, 10, 1 %%>;
-  checkBoxTop = <%% 0, 0, 0, 0, 0 %%>;
+  checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
+  checkBoxTop = <%% 8, 8, 8, 8, 1.6 %%>;
 
   contentsMarginBottom0 = <%% 4, 4, 4, 4, 1 %%>;
   contentsMarginBottom1 = <%% 18, 18, 18, 18, 1 %%>;
+
+  mobilePaddingLeft = 6;
+
+  mobileContentsWordingSize = 3;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -1224,7 +1287,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
               fontWeight: String(600),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingRight: String(numberRight) + ea,
-              color: desktop ? colorChip.black : colorChip.green,
+              color: colorChip.black,
             }
           },
           {
@@ -1237,7 +1300,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
               fontWeight: String(200),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingLeft: String(numberRight) + ea,
-              color: colorChip.black,
+              color: desktop ? colorChip.black : colorChip.green,
             }
           },
         ]
@@ -1246,14 +1309,17 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
         style: {
           display: "block",
           position: "relative",
-          width: String(100) + '%',
+          width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
           background: desktop ? "" : colorChip.white,
           boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,
           paddingTop: String(contentsAreaPaddingTop) + ea,
-          borderTop: "1px solid " + colorChip.shadow,
+          borderTop: desktop ? "1px solid " + colorChip.shadow : "",
+          paddingLeft: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingRight: desktop ? "" : String(mobilePaddingLeft) + ea,
+          paddingBottom: desktop ? "" : String(10.5) + ea,
         }
       },
     ]
@@ -1270,12 +1336,13 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
           display: "block",
           position: "relative",
           marginBottom: String(num2 === contents.length - 1 ? contentsMarginBottom1 : contentsMarginBottom0) + ea,
+          marginTop: desktop ? "" : ((num === 0 || num2 !== 0) ? "" : String(6) + ea)
         },
         children: [
           {
             text: (num2 === 0 ? String(num + 1) : ""),
             style: {
-              display: "inline-block",
+              display: desktop ? "inline-block" : "none",
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(600),
               verticalAlign: "top",
@@ -1287,16 +1354,22 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             }
           },
           {
-            text: (num2 === 0 ? title : ""),
+            text: (num2 === 0 ? (desktop ? title : "<b%" + String(num + 1) + "%b>" + blank + title) : ""),
             style: {
-              display: "inline-block",
+              display: desktop ? "inline-block" : "block",
               fontSize: String(contentsWordingSize) + ea,
               fontWeight: String(600),
               verticalAlign: "top",
               lineHeight: String(1.6),
-              width: String(firstWidth) + ea,
+              width: desktop ? String(firstWidth) + ea : String(100) + '%',
               textAlign: "left",
               color: colorChip.black,
+              marginBottom: desktop ? "" : String(1.5) + ea,
+            },
+            bold: {
+              fontSize: String(contentsWordingSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.green,
             }
           },
           {
@@ -1309,7 +1382,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
               lineHeight: String(1.6),
               width: String(secondWidth) + ea,
               marginRight: String(secondMarginRight) + ea,
-              textAlign: "right",
+              textAlign: desktop ? "right" : "left",
               color: colorChip.green,
             },
             children: [
@@ -1320,6 +1393,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
                   position: "relative",
                   top: String(checkBoxTop) + ea,
                   width: String(checkBoxWidth) + ea,
+                  verticalAlign: "top",
                 }
               }
             ]
@@ -1328,11 +1402,11 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             text: str,
             style: {
               display: "inline-block",
-              fontSize: String(contentsWordingSize) + ea,
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
               fontWeight: String(300),
               verticalAlign: "top",
               lineHeight: String(1.6),
-              width: withOut(zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight, ea),
+              width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
               textAlign: "left",
               color: colorChip.black,
             }
@@ -1344,9 +1418,6 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
     }
     num++;
   }
-
-
-
 
 }
 
@@ -1486,7 +1557,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
               fontWeight: String(600),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingRight: String(numberRight) + ea,
-              color: desktop ? colorChip.black : colorChip.green,
+              color: colorChip.black,
             }
           },
           {
@@ -1499,7 +1570,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
               fontWeight: String(200),
               background: desktop ? colorChip.white : colorChip.gray1,
               paddingLeft: String(numberRight) + ea,
-              color: colorChip.black,
+              color: desktop ? colorChip.black : colorChip.green,
             }
           },
         ]
@@ -1509,11 +1580,10 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
           display: "block",
           position: "relative",
           width: String(100) + '%',
-          background: desktop ? "" : colorChip.white,
-          boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,
+          paddingTop: desktop ? "" : String(1) + ea,
         }
       },
     ]
@@ -1584,225 +1654,222 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
           borderRadius: String(3) + "px",
           verticalAlign: "top",
           cursor: "pointer",
-        },
-        events: [
-          {
-            type: "click",
-            event: function (e) {
-              e.stopPropagation();
-              const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-              const totalImages = equalJson(JSON.stringify(images));
-              const mother = document.getElementById("totalcontents");
-              const className = "photoSelectedTarget";
-              const length = Number(this.getAttribute("length"));
-              const zIndex = 2;
-              const wordDictionary = {
-                selected: "고객님이 선택한 사진",
-                site: "고객님이 보낸 현장",
-                preferred: "고객님의 선호 사진"
-              };
-              let img, height, imgBox;
-              let title, titleSize, bottom;
-              let titleBox;
-              let leftArrow, rightArrow;
-              let leftArrowBox, rightArrowBox;
-              let arrowHeight;
-              let arrowMargin;
-              let index, method, src;
-              let convertEvent;
-
-              index = Number(this.getAttribute("index"));
-              method = this.getAttribute("method");
-              src = this.getAttribute("src");
-
-              convertEvent = () => {};
-
-              height = 78;
-              titleSize = 2;
-              bottom = 6.6;
-              arrowHeight = 1.7;
-              arrowMargin = 78;
-
-              createNode({
-                mother,
-                class: [ className ],
-                events: [
-                  {
-                    type: "click",
-                    event: function (e) {
-                      const removeTargets = document.querySelectorAll('.' + className);
-                      for (let dom of removeTargets) {
-                        mother.removeChild(dom);
-                      }
-                    }
-                  }
-                ],
-                style: {
-                  position: "fixed",
-                  top: String(0),
-                  left: String(0),
-                  width: String(100) + '%',
-                  height: String(100) + '%',
-                  background: colorChip.darkDarkShadow,
-                  zIndex: String(zIndex),
-                  animation: "justfadeineight 0.2s ease forwards",
-                }
-              });
-
-              img = createNode({
-                mother,
-                class: [ className ],
-                mode: "img",
-                attribute: [
-                  { src },
-                  { direction: "right" }
-                ],
-                style: {
-                  position: "fixed",
-                  top: String(0),
-                  left: String(0),
-                  height: String(height) + '%',
-                  width: "auto",
-                  zIndex: String(zIndex),
-                  transition: "all 0s ease",
-                  animation: "fadeuplite 0.2s ease forwards",
-                  borderRadius: String(3) + "px",
-                }
-              });
-              imgBox = img.getBoundingClientRect();
-              img.style.top = withOut(50, imgBox.height / 2, ea);
-              img.style.left = withOut(50, imgBox.width / 2, ea);
-
-              title = createNode({
-                mother,
-                events: [
-                  {
-                    type: [ "click", "dblclick", "selectstart" ],
-                    event: (e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }
-                  }
-                ],
-                class: [ className ],
-                text: wordDictionary[method],
-                style: {
-                  position: "fixed",
-                  bottom: String(bottom) + '%',
-                  fontSize: String(titleSize) + "vh",
-                  fontWeight: String(600),
-                  color: colorChip.whiteBlack,
-                  left: String(50) + '%',
-                  zIndex: String(zIndex),
-                  transition: "all 0s ease",
-                  animation: "fadeuplite 0.2s ease forwards",
-                }
-              });
-              titleBox = title.getBoundingClientRect();
-              title.style.left = withOut(50, titleBox.width / 2, ea);
-
-              leftArrow = createNode({
-                mother,
-                events: [
-                  {
-                    type: [ "dblclick", "selectstart" ],
-                    event: (e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }
-                  }
-                ],
-                attribute: [
-                  { direction: "left" }
-                ],
-                class: [ className ],
-                mode: "svg",
-                source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                style: {
-                  position: "fixed",
-                  top: String(0),
-                  left: String(0),
-                  height: String(arrowHeight) + "vh",
-                  zIndex: String(zIndex),
-                  transition: "all 0s ease",
-                  animation: "fadeuplite 0.2s ease forwards",
-                  cursor: "pointer"
-                }
-              });
-              leftArrowBox = leftArrow.getBoundingClientRect();
-              leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-              leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-              rightArrow = createNode({
-                mother,
-                events: [
-                  {
-                    type: [ "dblclick", "selectstart" ],
-                    event: (e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }
-                  }
-                ],
-                attribute: [
-                  { direction: "right" }
-                ],
-                class: [ className ],
-                mode: "svg",
-                source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                style: {
-                  position: "fixed",
-                  top: String(0),
-                  left: String(0),
-                  height: String(arrowHeight) + "vh",
-                  zIndex: String(zIndex),
-                  transition: "all 0s ease",
-                  animation: "fadeuplite 0.2s ease forwards",
-                  cursor: "pointer"
-                }
-              });
-              rightArrowBox = rightArrow.getBoundingClientRect();
-              rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-              rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-              convertEvent = function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                const direction = this.getAttribute("direction");
-                let targetIndex, targetImage;
-                if (direction === "left") {
-                  targetIndex = index - 1;
-                  if (totalImages[targetIndex] === undefined) {
-                    targetIndex = length - 1;
-                  }
-                } else {
-                  targetIndex = index + 1;
-                  if (totalImages[targetIndex] === undefined) {
-                    targetIndex = 0;
-                  }
-                }
-                targetImage = totalImages[targetIndex];
-                img.setAttribute("src", targetImage);
-                imgBox = img.getBoundingClientRect();
-                img.style.left = withOut(50, imgBox.width / 2, ea);
-                leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                index = targetIndex;
-                src = targetImage;
-                method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
-
-                title.textContent = wordDictionary[method];
-                titleBox = title.getBoundingClientRect();
-                title.style.left = withOut(50, titleBox.width / 2, ea);
-              }
-              leftArrow.addEventListener("click", convertEvent);
-              rightArrow.addEventListener("click", convertEvent);
-              img.addEventListener("click", convertEvent);
-            }
-          }
-        ]
+        }
       });
+      if (desktop) {
+        tempImage.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
+          const totalImages = equalJson(JSON.stringify(images));
+          const mother = document.getElementById("totalcontents");
+          const className = "photoSelectedTarget";
+          const length = Number(this.getAttribute("length"));
+          const zIndex = 2;
+          const wordDictionary = {
+            selected: "고객님이 선택한 사진",
+            site: "고객님이 보낸 현장",
+            preferred: "고객님의 선호 사진"
+          };
+          let img, height, imgBox;
+          let title, titleSize, bottom;
+          let titleBox;
+          let leftArrow, rightArrow;
+          let leftArrowBox, rightArrowBox;
+          let arrowHeight;
+          let arrowMargin;
+          let index, method, src;
+          let convertEvent;
+
+          index = Number(this.getAttribute("index"));
+          method = this.getAttribute("method");
+          src = this.getAttribute("src");
+
+          convertEvent = () => {};
+
+          height = 78;
+          titleSize = 2;
+          bottom = 6.6;
+          arrowHeight = 1.7;
+          arrowMargin = 78;
+
+          createNode({
+            mother,
+            class: [ className ],
+            events: [
+              {
+                type: "click",
+                event: function (e) {
+                  const removeTargets = document.querySelectorAll('.' + className);
+                  for (let dom of removeTargets) {
+                    mother.removeChild(dom);
+                  }
+                }
+              }
+            ],
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: colorChip.darkDarkShadow,
+              zIndex: String(zIndex),
+              animation: "justfadeineight 0.2s ease forwards",
+            }
+          });
+
+          img = createNode({
+            mother,
+            class: [ className ],
+            mode: "img",
+            attribute: [
+              { src },
+              { direction: "right" }
+            ],
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              height: String(height) + '%',
+              width: "auto",
+              zIndex: String(zIndex),
+              transition: "all 0s ease",
+              animation: "fadeuplite 0.2s ease forwards",
+              borderRadius: String(3) + "px",
+            }
+          });
+          imgBox = img.getBoundingClientRect();
+          img.style.top = withOut(50, imgBox.height / 2, ea);
+          img.style.left = withOut(50, imgBox.width / 2, ea);
+
+          title = createNode({
+            mother,
+            events: [
+              {
+                type: [ "click", "dblclick", "selectstart" ],
+                event: (e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+              }
+            ],
+            class: [ className ],
+            text: wordDictionary[method],
+            style: {
+              position: "fixed",
+              bottom: String(bottom) + '%',
+              fontSize: String(titleSize) + "vh",
+              fontWeight: String(600),
+              color: colorChip.whiteBlack,
+              left: String(50) + '%',
+              zIndex: String(zIndex),
+              transition: "all 0s ease",
+              animation: "fadeuplite 0.2s ease forwards",
+            }
+          });
+          titleBox = title.getBoundingClientRect();
+          title.style.left = withOut(50, titleBox.width / 2, ea);
+
+          leftArrow = createNode({
+            mother,
+            events: [
+              {
+                type: [ "dblclick", "selectstart" ],
+                event: (e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+              }
+            ],
+            attribute: [
+              { direction: "left" }
+            ],
+            class: [ className ],
+            mode: "svg",
+            source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              height: String(arrowHeight) + "vh",
+              zIndex: String(zIndex),
+              transition: "all 0s ease",
+              animation: "fadeuplite 0.2s ease forwards",
+              cursor: "pointer"
+            }
+          });
+          leftArrowBox = leftArrow.getBoundingClientRect();
+          leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+          leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+
+          rightArrow = createNode({
+            mother,
+            events: [
+              {
+                type: [ "dblclick", "selectstart" ],
+                event: (e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+              }
+            ],
+            attribute: [
+              { direction: "right" }
+            ],
+            class: [ className ],
+            mode: "svg",
+            source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              height: String(arrowHeight) + "vh",
+              zIndex: String(zIndex),
+              transition: "all 0s ease",
+              animation: "fadeuplite 0.2s ease forwards",
+              cursor: "pointer"
+            }
+          });
+          rightArrowBox = rightArrow.getBoundingClientRect();
+          rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+          rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+          convertEvent = function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            const direction = this.getAttribute("direction");
+            let targetIndex, targetImage;
+            if (direction === "left") {
+              targetIndex = index - 1;
+              if (totalImages[targetIndex] === undefined) {
+                targetIndex = length - 1;
+              }
+            } else {
+              targetIndex = index + 1;
+              if (totalImages[targetIndex] === undefined) {
+                targetIndex = 0;
+              }
+            }
+            targetImage = totalImages[targetIndex];
+            img.setAttribute("src", targetImage);
+            imgBox = img.getBoundingClientRect();
+            img.style.left = withOut(50, imgBox.width / 2, ea);
+            leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+            rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+            index = targetIndex;
+            src = targetImage;
+            method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
+
+            title.textContent = wordDictionary[method];
+            titleBox = title.getBoundingClientRect();
+            title.style.left = withOut(50, titleBox.width / 2, ea);
+          }
+          leftArrow.addEventListener("click", convertEvent);
+          rightArrow.addEventListener("click", convertEvent);
+          img.addEventListener("click", convertEvent);
+        });
+      }
       tong.style.height = "auto";
       tempArr.push(tempImage);
       if (tempArr.length === columnsLength) {
