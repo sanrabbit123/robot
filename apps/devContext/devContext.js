@@ -1333,7 +1333,6 @@ DevContext.prototype.launching = async function () {
     //     pay: true
     //   },
     // ]);
-    console.log(await ghostRequest("photo_zip", { pid: "p161", pay: 1 }));
 
 
 
