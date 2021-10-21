@@ -218,7 +218,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
+
 
 
 
@@ -1327,12 +1327,14 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "안선미",
-    //     designer: "우다미",
-    //     link: "https://drive.google.com/drive/folders/1es9XHmy9DExKgFLu9CKFMLhqvf69jLJ4",
-    //     pay: false
+    //     client: "차은상",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/1V4NNiAQdvvCbYpU1H896Njx_1yQ1x_TA",
+    //     pay: true
     //   },
     // ]);
+    // console.log(await ghostRequest("photo_zip", { pid: "p161", pay: 1 }));
+
 
 
 

@@ -2553,6 +2553,8 @@ Ghost.prototype.photoRouter = function (needs) {
             commands.push([ "zip", [ `${process.env.HOME}/${tempFolderName}/${shareClientName} ./*` ] ]);
           }
 
+          console.log(commands);
+
           await shellExec(commands);
 
           zipIdDesigner = await googleDrive.upload_inPython(targetFolderId, `${shellLink(process.env.HOME + "/" + tempFolderName + "/" + shareDesignerName)}`);

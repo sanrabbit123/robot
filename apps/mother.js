@@ -103,6 +103,7 @@ Mother.prototype.shellExec = function (command, args = null) {
             if (!arr.every((s) => { return typeof s === "string"; })) {
               throw new Error("invaild input");
             }
+            console.log(arr);
             return new Promise((resolve, reject) => {
               const name = arr[0];
               const program = spawn(name, arr.slice(1));
