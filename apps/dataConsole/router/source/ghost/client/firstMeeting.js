@@ -498,7 +498,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  titleFontSize = <%% 29, 28.5, 28, 27, 5.7 %%>;
+  titleFontSize = <%% 29, 28.5, 27.5, 23, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   titlePadding = <%% 6, 2, 1, 0, 0.6 %%>;
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
@@ -507,7 +507,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   lineTop = <%% 18, 18, 18, 18, 0.6 %%>;
   linetMargin = <%% 20, 20, 20, 20, 0.6 %%>;
 
-  secondBlockWidth = <%% 300, 250, 240, 200, 33 %%>;
+  secondBlockWidth = <%% 300, 250, 220, 200, 33 %%>;
   secondBlockMargin = <%% 36, 35, 34, 34, 33 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
@@ -779,6 +779,9 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   let bigNumberMargin;
   let bigNumberBetweenMargin;
   let periodLineTop;
+  let bigDesktop;
+
+  bigDesktop = (media[0] || media[1]);
 
   wordsTitle = "기본 정보";
 
@@ -799,8 +802,8 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
 
-  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
-  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+  secondBlockWidth = <%% 300, 250, 220, 200, 33 %%>;
+  secondBlockMargin = <%% 36, 35, 34, 34, 33 %%>;
 
   contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
   contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
@@ -812,7 +815,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
   arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
 
-  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
+  bigNumberSize = <%% 37, 37, 34, 30, 5 %%>;
   bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
   bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
   bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
@@ -908,169 +911,171 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   });
   tong = block.lastChild;
   tong.appendChild(mother.makeTable(matrix, { whiteMode: true, style: { width: 100 }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
-  tong.firstChild.style.width = withOut(secondBlockWidth + secondBlockMargin, ea);
-  tong.firstChild.style.display = "inline-block";
+  tong.firstChild.style.width = bigDesktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%';
+  tong.firstChild.style.display = bigDesktop ? "inline-block" : "block";
 
-  createNode({
-    mother: tong,
-    style: {
-      display: desktop ? "inline-flex" : "block",
-      position: "relative",
-      width: desktop ? String(secondBlockWidth) + ea : String(100) + '%',
-      height: String(tong.getBoundingClientRect().height) + ea,
-      verticalAlign: "top",
-      textAlign: desktop ? "" : "center",
-      marginLeft: String(secondBlockMargin) + ea,
-      flexDirection: "column-reverse"
-    },
-    children: [
-      {
-        text: "홈리에종은 체계화된 정보과 취향 분석 기능을 활용해서 <b%고객님의 스타일과 조건에 딱 맞는 서비스를 제안%b>하고, 디자이너를 추천해드립니다. 체계화된 정보과 취향 분석 기능을 활용해서",
-        style: {
-          display: "block",
-          position: "relative",
-          fontSize: String(contentsWordingSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.black,
-          lineHeight: String(1.6),
-          bottom: String(contentsBottom) + ea,
-          marginTop: String(contentsMarginTop) + ea,
-        },
-        bold: {
-          fontSize: String(contentsWordingSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black
-        }
+  if (bigDesktop) {
+    createNode({
+      mother: tong,
+      style: {
+        display: desktop ? "inline-flex" : "block",
+        position: "relative",
+        width: desktop ? String(secondBlockWidth) + ea : String(100) + '%',
+        height: String(tong.getBoundingClientRect().height) + ea,
+        verticalAlign: "top",
+        textAlign: desktop ? "" : "center",
+        marginLeft: String(secondBlockMargin) + ea,
+        flexDirection: "column-reverse"
       },
-      {
-        style: {
-          display: "block",
-          marginTop: String(bigNumberBetween) + ea,
-          position: "relative",
-          textAlign: "right",
-        },
-        children: [
-          {
-            style: {
-              position: "absolute",
-              width: String(100) + '%',
-              height: String(periodLineTop) + ea,
-              top: String(0),
-              left: String(0),
-              borderBottom: "1px solid " + colorChip.whiteGreen,
-            }
+      children: [
+        {
+          text: "홈리에종은 체계화된 정보과 취향 분석 기능을 활용해서 <b%고객님의 스타일과 조건에 딱 맞는 서비스를 제안%b>하고, 디자이너를 추천해드립니다. 체계화된 정보과 취향 분석 기능을 활용해서",
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+            bottom: String(contentsBottom) + ea,
+            marginTop: String(contentsMarginTop) + ea,
           },
-          {
-            text: "2021. 09. 21",
-            style: {
-              display: "inline-block",
-              fontSize: String(bigNumberSize) + ea,
-              fontWeight: String(200),
-              fontFamily: "graphik",
-              color: colorChip.green,
-              lineHeight: String(1.4),
-              background: colorChip.white,
-              paddingLeft: String(16) + ea,
-              position: "relative",
-            }
+          bold: {
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black
           }
-        ]
-      },
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          textAlign: "left",
-          marginTop: String(bigNumberMargin) + ea,
         },
-        children: [
-          {
-            text: "2021. 08. 21",
-            style: {
-              display: "inline-block",
-              fontSize: String(bigNumberSize) + ea,
-              fontWeight: String(200),
-              fontFamily: "graphik",
-              color: colorChip.green,
-              lineHeight: String(1.4),
-              position: "relative",
-            }
-          }
-        ]
-      },
-      {
-        text: "진행 기간",
-        style: {
-          display: "block",
-          fontSize: String(contentsWordingSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
-          marginTop: String(bigNumberBetweenMargin) + ea,
-          paddingLeft: String(contentsPaddingLeft) + ea,
-          lineHeight: String(1.4),
-          position: "relative",
-        },
-        children: [
-          {
-            mode: "svg",
-            source: mother.returnArrow("right", colorChip.green),
-            style: {
-              position: "absolute",
-              width: String(arrowWidth) + ea,
-              left: String(arrorLeft) + ea,
-              top: String(arrowTop) + ea,
-            }
+        {
+          style: {
+            display: "block",
+            marginTop: String(bigNumberBetween) + ea,
+            position: "relative",
+            textAlign: "right",
           },
-        ]
-      },
-      {
-        style: {
-          display: "block",
-          marginTop: String(bigNumberBetween) + ea,
-          position: "relative",
-        },
-        children: [
-          {
-            text: "2021. 09. 21",
-            style: {
-              display: "inline-block",
-              fontSize: String(bigNumberSize) + ea,
-              fontWeight: String(200),
-              fontFamily: "graphik",
-              color: colorChip.green,
-              lineHeight: String(1.4),
-              position: "relative",
+          children: [
+            {
+              style: {
+                position: "absolute",
+                width: String(100) + '%',
+                height: String(periodLineTop) + ea,
+                top: String(0),
+                left: String(0),
+                borderBottom: "1px solid " + colorChip.whiteGreen,
+              }
+            },
+            {
+              text: "2021. 09. 21",
+              style: {
+                display: "inline-block",
+                fontSize: String(bigNumberSize) + ea,
+                fontWeight: String(200),
+                fontFamily: "graphik",
+                color: colorChip.green,
+                lineHeight: String(1.4),
+                background: colorChip.white,
+                paddingLeft: String(16) + ea,
+                position: "relative",
+              }
             }
-          }
-        ]
-      },
-      {
-        text: "현장 미팅",
-        style: {
-          display: "block",
-          fontSize: String(contentsWordingSize) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
-          marginTop: String(contentsMarginTop) + ea,
-          paddingLeft: String(contentsPaddingLeft) + ea,
-          lineHeight: String(1.4),
-          position: "relative",
+          ]
         },
-        children: [
-          {
-            mode: "svg",
-            source: mother.returnArrow("right", colorChip.green),
-            style: {
-              position: "absolute",
-              width: String(arrowWidth) + ea,
-              left: String(arrorLeft) + ea,
-              top: String(arrowTop) + ea,
-            }
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            textAlign: "left",
+            marginTop: String(bigNumberMargin) + ea,
           },
-        ]
-      },
-    ]
-  });
+          children: [
+            {
+              text: "2021. 08. 21",
+              style: {
+                display: "inline-block",
+                fontSize: String(bigNumberSize) + ea,
+                fontWeight: String(200),
+                fontFamily: "graphik",
+                color: colorChip.green,
+                lineHeight: String(1.4),
+                position: "relative",
+              }
+            }
+          ]
+        },
+        {
+          text: "진행 기간",
+          style: {
+            display: "block",
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            marginTop: String(bigNumberBetweenMargin) + ea,
+            paddingLeft: String(contentsPaddingLeft) + ea,
+            lineHeight: String(1.4),
+            position: "relative",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: mother.returnArrow("right", colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(arrowWidth) + ea,
+                left: String(arrorLeft) + ea,
+                top: String(arrowTop) + ea,
+              }
+            },
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            marginTop: String(bigNumberBetween) + ea,
+            position: "relative",
+          },
+          children: [
+            {
+              text: "2021. 09. 21",
+              style: {
+                display: "inline-block",
+                fontSize: String(bigNumberSize) + ea,
+                fontWeight: String(200),
+                fontFamily: "graphik",
+                color: colorChip.green,
+                lineHeight: String(1.4),
+                position: "relative",
+              }
+            }
+          ]
+        },
+        {
+          text: "현장 미팅",
+          style: {
+            display: "block",
+            fontSize: String(contentsWordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            marginTop: String(contentsMarginTop) + ea,
+            paddingLeft: String(contentsPaddingLeft) + ea,
+            lineHeight: String(1.4),
+            position: "relative",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: mother.returnArrow("right", colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(arrowWidth) + ea,
+                left: String(arrorLeft) + ea,
+                top: String(arrowTop) + ea,
+              }
+            },
+          ]
+        },
+      ]
+    });
+  }
 
 }
 
@@ -1154,7 +1159,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
 
   zeroWidth = <%% 8, 8, 8, 8, 10 %%>;
   zeroMarginRight = <%% 10, 10, 10, 10, 10 %%>;
-  firstWidth = <%% 240, 240, 240, 240, 10 %%>;
+  firstWidth = <%% 240, 240, 190, 170, 10 %%>;
   secondWidth = <%% 25, 25, 25, 25, 10 %%>;
   secondMarginRight = <%% 10, 10, 10, 10, 10 %%>;
 
