@@ -1227,7 +1227,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   secondMarginRight = <%% 10, 10, 10, 10, 1.5 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
-  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7.5 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7.5 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.9 %%>;
 
   contentsMarginBottom0 = <%% 4, 4, 4, 4, 1 %%>;
   contentsMarginBottom1 = <%% 18, 18, 18, 18, 1 %%>;
