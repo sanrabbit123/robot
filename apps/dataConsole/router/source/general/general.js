@@ -4029,7 +4029,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   }
 
   innerMargin = <%% 8, 8, 7, 6, 2 %%>;
-  innerMarginVisual = <%% (isMace() ? 0 : 1), (isMace() ? 0 : 1), (isMace() ? 0 : 1), (isMace() ? 0 : 1), 0 %%>;
+  innerMarginVisual = <%% (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), (isMac() ? 0 : 1), 0 %%>;
   if (typeof option.style.innerMargin === "number") {
     innerMargin = option.style.innerMargin;
   }
