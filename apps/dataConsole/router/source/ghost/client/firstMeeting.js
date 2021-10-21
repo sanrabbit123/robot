@@ -498,17 +498,17 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
-  titleFontSize = <%% 29, 29, 29, 29, 5.7 %%>;
+  titleFontSize = <%% 29, 28.5, 28, 27, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titlePadding = <%% 6, 6, 6, 6, 0.6 %%>;
+  titlePadding = <%% 6, 2, 1, 0, 0.6 %%>;
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
-  titleMargin = <%% 32, 32, 32, 32, 0.6 %%>;
+  titleMargin = <%% 32, 26, 24, 22, 0.6 %%>;
 
   lineTop = <%% 18, 18, 18, 18, 0.6 %%>;
   linetMargin = <%% 20, 20, 20, 20, 0.6 %%>;
 
-  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
-  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
+  secondBlockWidth = <%% 300, 250, 240, 200, 33 %%>;
+  secondBlockMargin = <%% 36, 35, 34, 34, 33 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
 
@@ -604,6 +604,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
             backgroundImage: "url('" + FirstMeetingJs.binaryPath + initPhoto + "')",
             backgroundSize: "100% auto",
             backgroundPosition: "50% 50%",
+            background: colorChip.gray3
           }
         },
       ]
