@@ -2538,19 +2538,19 @@ Ghost.prototype.photoRouter = function (needs) {
 
           commands = [];
           if (!pay) {
-            await shellExec([ "cd", [ `${sambaDir}/${folderName}/${c780}` ] ]);
-            await shellExec([ "zip", [ `${process.env.HOME}/${tempFolderName}/${shareDesignerName} ./*` ] ]);
-            await shellExec([ "cd", [ `${sambaDir}/${folderName}/${c1500}` ] ]);
-            await shellExec([ "zip", [ `${process.env.HOME}/${tempFolderName}/${shareClientName} ./*` ] ]);
+            await shellExec("cd", [ `${sambaDir}/${folderName}/${c780}` ]);
+            await shellExec("zip", [ `${process.env.HOME}/${tempFolderName}/${shareDesignerName} ./*` ]);
+            await shellExec("cd", [ `${sambaDir}/${folderName}/${c1500}` ]);
+            await shellExec("zip", [ `${process.env.HOME}/${tempFolderName}/${shareClientName} ./*` ]);
           } else {
-            await shellExec([ "cd", [ `${sambaDir}/${folderName}/${c3508}` ] ]);
-            await shellExec([ "cp", [ `./*`, `${process.env.HOME}/${tempTempFolderName}` ] ]);
-            await shellExec([ "cd", [ `${sambaDir}/${folderName}/${c780}` ] ]);
-            await shellExec([ "cp", [ `./*`, `${process.env.HOME}/${tempTempFolderName}` ] ]);
-            await shellExec([ "cd", [ `${process.env.HOME}/${tempTempFolderName}` ] ]);
-            await shellExec([ "zip", [ `${process.env.HOME}/${tempTempFolderName}/${shareDesignerName} ./*` ] ]);
-            await shellExec([ "cd", [ `${sambaDir}/${folderName}/${c1500}` ] ]);
-            await shellExec([ "zip", [ `${process.env.HOME}/${tempFolderName}/${shareClientName} ./*` ] ]);
+            await shellExec("cd", [ `${sambaDir}/${folderName}/${c3508}` ]);
+            await shellExec("cp", [ `./*`, `${process.env.HOME}/${tempTempFolderName}` ]);
+            await shellExec("cd", [ `${sambaDir}/${folderName}/${c780}` ]);
+            await shellExec("cp", [ `./*`, `${process.env.HOME}/${tempTempFolderName}` ]);
+            await shellExec("cd", [ `${process.env.HOME}/${tempTempFolderName}` ]);
+            await shellExec("zip", [ `${process.env.HOME}/${tempTempFolderName}/${shareDesignerName} ./*` ]);
+            await shellExec("cd", [ `${sambaDir}/${folderName}/${c1500}` ]);
+            await shellExec("zip", [ `${process.env.HOME}/${tempFolderName}/${shareClientName} ./*` ]);
           }
 
           // console.log(commands);
