@@ -529,7 +529,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   wordings = this.wordings.initWordings;
   initPhoto = <%% this.wordings.initWordings.image[0], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[2] %%>;
 
-  titleTextTop = isMac() ? 0 : 3;
+  titleTextTop = isMac() ? 0 : 4;
 
   mobilePhotoHeight = 26;
 
@@ -1234,7 +1234,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
 
   mobilePaddingLeft = 6;
 
-  mobileContentsWordingSize = 3;
+  mobileContentsWordingSize = 3.2;
 
   this.whiteMargin = (desktop ? margin : 0);
 
