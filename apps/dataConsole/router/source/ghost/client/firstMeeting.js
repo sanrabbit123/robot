@@ -494,7 +494,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   let initContentsPaddingLeft;
   let arrowTop, arrowWidth, arrorLeft;
 
-  blockHeight = <%% 400, 400, 400, 400, 424 %%>;
+  blockHeight = <%% 400, 380, 367, 270, 424 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
 
@@ -502,9 +502,9 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
   titlePadding = <%% 6, 2, 1, 0, 0.6 %%>;
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
-  titleMargin = <%% 32, 26, 24, 22, 0.6 %%>;
+  titleMargin = <%% 32, 26, 24, 12, 0.6 %%>;
 
-  lineTop = <%% 18, 18, 18, 18, 0.6 %%>;
+  lineTop = <%% 18, 18, 17, 14, 0.6 %%>;
   linetMargin = <%% 20, 20, 20, 20, 0.6 %%>;
 
   secondBlockWidth = <%% 300, 250, 220, 200, 33 %%>;
@@ -626,7 +626,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
         {
           text: "홈리에종은 체계화된 정보과 취향 분석 기능을 활용해서 <b%고객님의 스타일과 조건에 딱 맞는 서비스를 제안%b>하고, 디자이너를 추천해드립니다.",
           style: {
-            display: "block",
+            display: (!media[3] ? "block" : "none"),
             position: "relative",
             fontSize: String(initWordingSize) + ea,
             fontWeight: String(400),
