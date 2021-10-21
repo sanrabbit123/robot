@@ -3759,6 +3759,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   let domMatrix;
   let tempArr;
   let innerMargin, innerMarginLeft, innerMarginTitleLeft;
+  let innerMarginVisual;
   let borderWeight;
   let textTop;
   let mergeMap;
@@ -4028,6 +4029,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
   }
 
   innerMargin = <%% 8, 8, 7, 6, 2 %%>;
+  innerMarginVisual = <%% (isMace() ? 0 : 1), (isMace() ? 0 : 1), (isMace() ? 0 : 1), (isMace() ? 0 : 1), 0 %%>;
   if (typeof option.style.innerMargin === "number") {
     innerMargin = option.style.innerMargin;
   }
@@ -4091,8 +4093,8 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
     boldBackground = option.style.boldBackground;
   }
 
-  whiteModePaddingTop = <%% 2, 2, 2, 1, 0 %%>;
-  whiteModePaddingBottom =  <%% 7, 7, 6, 4, 1 %%>;
+  whiteModePaddingTop = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 1 : 0), 0 %%>;
+  whiteModePaddingBottom =  <%% (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 6 : 4), (isMac() ? 4 : 2), 1 %%>;
   whiteModeDoubleLineMargin = 2;
 
   mother = document.createDocumentFragment();
@@ -4175,7 +4177,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              marginTop: String(innerMargin) + ea,
+              marginTop: String(innerMargin - innerMarginVisual) + ea,
               marginLeft: String(titleMap[i] === 1 ? innerMarginTitleLeft : (boldMap[i][j] === 1 ? innerMarginTitleLeft : innerMarginLeft)) + ea,
               width: (titleMap[i] === 1 ? withOut(innerMarginTitleLeft * 2, ea) : (boldMap[i][j] === 1 ? withOut(innerMarginTitleLeft * 2, ea) : withOut(innerMarginLeft * 2, ea))),
               height: withOut(innerMargin * 2, ea),

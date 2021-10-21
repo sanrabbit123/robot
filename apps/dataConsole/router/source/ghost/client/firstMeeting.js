@@ -472,7 +472,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   const { client, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
   let whiteBlock, whiteTong;
   let blockHeight, bottomMargin;
   let margin;
@@ -494,6 +494,7 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   let initContentsPaddingLeft;
   let arrowTop, arrowWidth, arrorLeft;
   let mobilePhotoHeight;
+  let titleTextTop;
 
   blockHeight = <%% 400, 380, 367, 260, 424 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -522,11 +523,13 @@ FirstMeetingJs.prototype.insertInitBox = function () {
   initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
 
   arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrowTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 0.3 %%>;
   arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
 
   wordings = this.wordings.initWordings;
   initPhoto = <%% this.wordings.initWordings.image[0], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[2] %%>;
+
+  titleTextTop = isMac() ? 0 : 3;
 
   mobilePhotoHeight = 26;
 
@@ -593,7 +596,8 @@ FirstMeetingJs.prototype.insertInitBox = function () {
             height: String(titleHeight) + ea,
             background: colorChip.white,
             wordSpacing: String(-2) + "px",
-            color: colorChip.black
+            color: colorChip.black,
+            top: desktop ? String(titleTextTop) + ea : "",
           }
         },
         {
@@ -808,7 +812,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% 21, 21, 21, 21, 0 %%>;
+  titleBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), 0 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -823,7 +827,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
   contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
   contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
   arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
+  arrowTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 0.3 %%>;
   arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
 
   bigNumberSize = <%% 37, 37, 34, 30, 5 %%>;
@@ -1192,7 +1196,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% 21, 21, 21, 21, 0 %%>;
+  titleBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), 0 %%>;
   contentsAreaPaddingTop = <%% 34, 34, 34, 34, 6 %%>;
 
   mobileTitleLeft = 1.5;
@@ -1223,7 +1227,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   secondMarginRight = <%% 10, 10, 10, 10, 1.5 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
-  checkBoxTop = <%% 8, 8, 8, 8, 1.6 %%>;
+  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 8 : 5.5), (isMac() ? 8 : 5.5), (isMac() ? 8 : 5.5), 1.6 %%>;
 
   contentsMarginBottom0 = <%% 4, 4, 4, 4, 1 %%>;
   contentsMarginBottom1 = <%% 18, 18, 18, 18, 1 %%>;
