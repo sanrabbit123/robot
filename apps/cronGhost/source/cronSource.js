@@ -1,10 +1,10 @@
-const CronSource = function (mother, back, address, kakaoInstance, humanInstance, worker, report, bill, analytics, sheets, drive, calendar, docs, MONGOC, MONGOCONSOLEC, MONGOLOCALC, RETHINKC) {
+const CronSource = function (mother, back, address, kakaoInstance, humanInstance, work, report, bill, analytics, sheets, drive, calendar, docs, MONGOC, MONGOCONSOLEC, MONGOLOCALC, RETHINKC) {
   this.mother = mother;
   this.back = back;
   this.address = address;
   this.kakao = kakaoInstance;
   this.human = humanInstance;
-  this.worker = worker;
+  this.work = work;
   this.report = report;
   this.bill = bill;
   this.analytics = analytics;
@@ -57,6 +57,13 @@ CronSource.prototype.sourceLoad = async function () {
       }
     }
 
+    dateFinalList.sort((a, b) => {
+      return Number(a[0].replace(/[^0-9]/gi, '')) - Number(b[0].replace(/[^0-9]/gi, ''));
+    });
+    hourFinalList.sort((a, b) => {
+      return Number(a[0].replace(/[^0-9]/gi, '')) - Number(b[0].replace(/[^0-9]/gi, ''));
+    });
+
     sourceMap = {
       date: dateFinalList,
       hour: hourFinalList
@@ -83,7 +90,7 @@ CronSource.prototype.targetLauching = async function (cronId) {
     address: this.address,
     kakao: this.kakao,
     human: this.human,
-    worker: this.worker,
+    work: this.work,
     report: this.report,
     bill: this.bill,
     analytics: this.analytics,

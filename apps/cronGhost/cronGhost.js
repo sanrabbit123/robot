@@ -176,7 +176,7 @@ CronGhost.prototype.cronRouter = async function () {
 
 CronGhost.prototype.cronServer = async function () {
   const instance = this;
-  const { pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo } = this.mother;
+  const { pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, errorLog } = this.mother;
   const port = 3000;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
@@ -214,7 +214,7 @@ CronGhost.prototype.cronServer = async function () {
     await RETHINKC.connect();
     await RETHINKC.bindCollection("cronLog");
 
-    const worker = new BackWorker();
+    const work = new BackWorker();
     const report = new BackReport();
     const bill = new BillMaker();
 
@@ -234,7 +234,7 @@ CronGhost.prototype.cronServer = async function () {
       this.address,
       kakaoInstance,
       humanInstance,
-      worker,
+      work,
       report,
       bill,
       analytics,
@@ -281,7 +281,8 @@ CronGhost.prototype.cronServer = async function () {
         await instance.source.targetLauching(instance.cronId);
 
       } catch (e) {
-        console.log(e);
+        await errorLog("cron ghost 문제 일어남 : " + e.message);
+        process.exit();
       }
     }, interval);
 
