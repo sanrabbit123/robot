@@ -201,6 +201,7 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
   const { ea, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
+  const colon = "&nbsp;" + ":" + "&nbsp;&nbsp;&nbsp;";
   class StyleCurationWordings {
     constructor() {
       this.wordings = {};
@@ -241,53 +242,41 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
       this.wordings.check.title = "체크리스트";
       this.wordings.check.matrix = [
         {
-          title: "커뮤니케이션 & 컨설팅",
+          title: "디자이너가 진행할 3가지",
           contents: [
-            "디자이너와 카톡(문자) / 전화 / 메일 등의 채널을 통해 커뮤니케이션합니다. 적극적으로 참여해주실 때 더 좋은 결과물을 얻으실 수 있습니다.",
-            "집 상태, 기간, 예산, 취향, 생활 방식 등을 고려하여 진행해드립니다.",
+            "<u%현장 조사%u>" + colon + "현장에 대한 <b%파악과 실측이 가장 중요%b>합니다. 디자이너가 현장에 대해서 구체적으로 파악하는지 확인해주세요!",
+            "<u%니즈 조사%u>" + colon + "디자이너는 고객님께서 전송해주신 정보와 사진을 바탕으로 미팅 준비를 하게 됩니다. 그리고 고객님의 <b%이야기를 최대한 들어 니즈를 파악%b>합니다.",
+            "<u%컨셉 잡기%u>" + colon + "디자이너는 고객님의 이야기를 듣고만 있는 것이 아니라 현장과 정보를 바탕으로 <b%디자이너가 해줄 수 있는 말과 컨셉%b>을 잡게 됩니다.",
           ],
         },
         {
-          title: "스타일링 범주",
+          title: "현장 조사 관련",
           contents: [
-            "기존에 사용하시는 가구들 중 가져갈 가구와 버릴 가구 선택 및 활용 방안을 제안드립니다.",
-            "새로 구매하실 가구, 조명, 패브릭(커튼, 베딩, 러그, 쿠션), 소품(식물, 액자, 시계 등)을 제안해드립니다.",
-            "디자이너의 제안에 따라 패브릭 및 가구의 맞춤 제작이 가능합니다.",
-            "가전은 스타일링 제안 범위에 포함되지 않습니다. 다만 디자인 옵션(컬러 등) 등에 대해서 의논할 수 있습니다.",
-            "생활 용품과 식기의 경우는 제안하지 않습니다.",
-            "거주 중인 경우 가구 이동, 수리, 폐기 등은 디자이너가 하지 않습니다.",
-          ]
+            "<u%도면 확인%u>" + colon + "현장의 <b%정확한 도면이 최대한 많을 수록%b> 좋습니다. 적절한 도면이 없을 경우, 실측을 통해 디자이너는 직접 도면을 작성합니다.",
+            "<u%실측%u>" + colon + "도면이 있다고 해도 실제 상황과 다를 수 있습니다. <b%도면보다 실측이 더 중요하므로 디자이너는 반드시 실측을 진행%b>하게 됩니다.",
+          ],
         },
         {
-          title: "시공 범주",
+          title: "니즈 조사 관련",
           contents: [
-            "시공의 경우 공정별 계약은 진행하지 않습니다. 시공에 대해서는 계약한 업체에게 책임이 있고, 의사 소통과 AS, 업무 지시는 해당 업체의 담당자가 책임지고 진행합니다.",
-            "시공 진행시, 홈리에종 시공팀, 고객님이 알아보신 시공팀, 또는 디자이너 시공팀 중 하나를 선택하여 진행이 가능합니다.",
-          ]
+            "<u%예산 확인%u>" + colon + "니즈와 항상 함께 알아야 할 것은 사용할 수 있는 예산입니다. 디자이너는 <b%예산에 대한 전체적인 범위 조사와 어떻게 나누어 쓸 지를 파악%b>하게 됩니다.",
+            "<u%시공 조정%u>" + colon + "디자이너는 니즈와 예산의 균형, 전체적인 예산의 분배, 기존 현장의 상태와 기존 가구들을 <b%종합적으로 판단하여 시공의 범위를 조정%b>하게 됩니다.",
+          ],
         },
         {
-          title: "구매 안내",
+          title: "컨셉 잡기 관련",
           contents: [
-            "제품 구매는 고객님이 직접 진행합니다.",
-            "중고가 이상의 브랜드 제품 중 일부는 구매 할인 혜택을 받을 수 있습니다. (모든 제품이 해당되진 않으며 업체마다 차이가 있습니다.)",
-            "최종 구매는 고객님이 직접 내용 확인 후 결정하셔야 합니다. 리뷰 확인이 정말 중요합니다!",
-          ]
+            "<u%이미지 기반%u>" + colon + "추상적인 단어와 문장들로만 컨셉을 잡는 것이 아닌, <b%사진이나 이미지 등을 활용하여 구체적인 디자인 컨셉%b>을 잡게 됩니다.",
+            "<u%용도 확인%u>" + colon + "디자인 컨셉과 더불어 디자이너는 고객님의 <b%라이프 스타일을 기반으로 공간 용도의 구성과 동선 계획 등을 함께 진행%b>하게 됩니다.",
+          ],
         },
         {
-          title: "촬영 및 인터뷰 안내",
+          title: "기타 주의 사항",
           contents: [
-            "서비스가 완료되면 촬영과 인터뷰를 진행합니다.(필수)",
-            "홈리에종과 디자이너는 공간의 사진과 인터뷰를 활용할 수 있습니다.",
+            "<u%디자이너 변경%u>" + colon + "현장 미팅 후, 디자이너가 적합하지 않다고 판단될 시에 <b%최대 1회까지 홈리에종에 디자이너 변경을 요청%b>하실 수 있습니다.",
+            "<u%진행 취소시%u>" + colon + "현장 미팅 이후 진행 자체를 취소하실 시 <b%계약금은 돌려드리지 않으며, 디자이너에게 출장비 100,000원(VAT별도)을 지급%b>합니다.",
           ]
-        },
-        {
-          title: "구매 안내",
-          contents: [
-            "제품 구매는 고객님이 직접 진행합니다.",
-            "중고가 이상의 브랜드 제품 중 일부는 구매 할인 혜택을 받을 수 있습니다. (모든 제품이 해당되진 않으며 업체마다 차이가 있습니다.)",
-            "최종 구매는 고객님이 직접 내용 확인 후 결정하셔야 합니다. 리뷰 확인이 정말 중요합니다!",
-          ]
-        },
+        }
       ];
 
       this.wordings.photo = {};
@@ -1289,13 +1278,23 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             style: {
               display: "inline-block",
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(300),
+              fontWeight: String(400),
               verticalAlign: "top",
               lineHeight: String(1.6),
               width: withOut(desktop ? zeroWidth + zeroMarginRight + firstWidth + secondWidth + secondMarginRight : secondWidth + secondMarginRight, ea),
               textAlign: "left",
               color: colorChip.black,
-            }
+            },
+            bold: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+            },
+            under: {
+              fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.green,
+            },
           },
         ]
       });
