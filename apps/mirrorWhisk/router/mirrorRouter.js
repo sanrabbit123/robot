@@ -621,7 +621,7 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, messageLog } = this.mother;
+  const { requestSystem, messageLog, errorLog } = this.mother;
   let obj = {};
   obj.link = "/receiveCall";
   obj.func = async function (req, res) {
@@ -681,7 +681,7 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
         MirrorRouter.timeouts[timeoutConst] = setTimeout(async () => {
           try {
             await requestSystem("https://" + instance.address.mirrorinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
-            await messageLog("mirror get ip : " + ip);
+            await errorLog("mirror get ip : " + ip);
             clearTimeout(MirrorRouter.timeouts[timeoutConst]);
             MirrorRouter.timeouts[timeoutConst] = null;
           } catch (e) {
