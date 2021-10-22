@@ -119,7 +119,7 @@ Robot.prototype.contentsMaker = function (button, arg) {
   }
 }
 
-Robot.prototype.aliveTest = function () {
+Robot.prototype.aliveTest = async function () {
   const instance = this;
   const address = this.address;
   const { requestSystem, messageLog, errorLog } = this.mother;
@@ -127,27 +127,33 @@ Robot.prototype.aliveTest = function () {
   const ghostPort = 8080;
   const controlPath = "/ssl";
   let res, targets, targetNumber, successNum, failNum, message;
+  try {
 
-  targets = [
-    { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
-    { name: "console", protocol: "https:", host: address.backinfo.host, port: generalPort, },
-    { name: "bridge", protocol: "https:", host: address.bridgeinfo.host, port: generalPort, },
-    { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
-    { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
-    { name: "homeGraphic", protocol: "https:", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
-    { name: "mirror", protocol: "https:", host: address.mirrorinfo.host, port: generalPort, }
-  ];
+    targets = [
+      { name: "python", protocol: "https:", host: address.pythoninfo.host, port: generalPort, },
+      { name: "console", protocol: "https:", host: address.backinfo.host, port: generalPort, },
+      { name: "bridge", protocol: "https:", host: address.bridgeinfo.host, port: generalPort, },
+      { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
+      { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
+      { name: "homeGraphic", protocol: "https:", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
+      { name: "mirror", protocol: "https:", host: address.mirrorinfo.host, port: generalPort, }
+    ];
 
-  targetNumber = targets.length;
-  successNum = 0;
-  failNum = 0;
-  message = '';
+    targetNumber = targets.length;
+    successNum = 0;
+    failNum = 0;
+    message = '';
 
-  for (let { name, protocol, host, port } of targets) {
-    requestSystem(protocol + "//" + host + ':' + String(port) + controlPath).then((res) => {
-      let boo = false;
-      let timeoutTime = 1000 * 20;
-      if (typeof res === "object") {
+    for (let { name, protocol, host, port } of targets) {
+
+      boo = false;
+      try {
+        res = await requestSystem(protocol + "//" + host + ':' + String(port) + controlPath);
+      } catch {
+        res = null;
+      }
+
+      if (typeof res === "object" && res !== null) {
         if (res.status !== undefined && typeof res.status === "number") {
           if (res.status === 200) {
             console.log("\x1b[32m%s\x1b[0m", name + " server alive");
@@ -157,16 +163,17 @@ Robot.prototype.aliveTest = function () {
             if (successNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "all alive");
               message = "server all alive";
-              messageLog(message).catch((e) => { console.log(e); });
+              await messageLog(message);
             } else if (successNum + failNum === targetNumber) {
               console.log("\x1b[33m%s\x1b[0m", "something death");
               message += "\n======================================";
               message += "\nsomething death";
-              errorLog(message).catch((e) => { console.log(e); });
+              await errorLog(message);
             }
           }
         }
       }
+
       if (!boo) {
         failNum = failNum + 1;
         console.log("\x1b[32m%s\x1b[0m", name + " server death");
@@ -175,22 +182,15 @@ Robot.prototype.aliveTest = function () {
           console.log("\x1b[33m%s\x1b[0m", "something death");
           message += "\n======================================";
           message += "\nsomething death";
-          errorLog(message).catch((e) => { console.log(e); });
+          await errorLog(message);
         }
       }
-    }).catch((e) => {
-      failNum = failNum + 1;
-      console.log("\x1b[32m%s\x1b[0m", name + " server death");
-      message += "\n" +  name + " server death";
-      if (successNum + failNum === targetNumber) {
-        console.log("\x1b[33m%s\x1b[0m", "something death");
-        message += "\n======================================";
-        message += "\nsomething death";
-        errorLog(message).catch((e) => { console.log(e); });
-      }
-    });
-  }
 
+    }
+
+  } catch (e) {
+    await errorLog("alive test error : " + e.message);
+  }
 }
 
 Robot.prototype.proposalMaker = function (button, arg) {
@@ -414,7 +414,7 @@ Robot.prototype.taxBill = async function () {
     const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
     const app = new BillMaker();
     await app.taxBill();
-    this.aliveTest();
+    await this.aliveTest();
   } catch (e) {
     console.log(e);
   }
@@ -1169,8 +1169,12 @@ const MENU = {
       console.log(e);
     }
   },
-  aliveTest: function () {
-    robot.aliveTest();
+  aliveTest: async function () {
+    try {
+      await robot.aliveTest();
+    } catch (e) {
+      console.log(e);
+    }
   },
   mirrorWhisk: async function () {
     try {

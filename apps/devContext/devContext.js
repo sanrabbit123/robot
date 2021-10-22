@@ -163,7 +163,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shellExec, shellLink, orderSystem, s3FileUpload, s3FileList, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer } = this.mother;
+  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -187,7 +187,7 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    // console.log(await this.findCode("shell."));
+
 
     // console.log(await shellExec(`ls -al ${process.cwd()}/temp/'test test'`));
     // console.log(await shellExec([ "ls", "-al", process.cwd() + "/temp/test test" ]));
@@ -2169,7 +2169,7 @@ DevContext.prototype.aspirantToDesigner = async function (nameList) {
   const back = new BackMaker();
   const report = new BackReport();
   const work = new BackWorker();
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
+  const { fileSystem, shell, shellLink, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const stringToDate = function (str) {
       let temp = str.split('-');
@@ -2197,7 +2197,7 @@ DevContext.prototype.sendChecklist = async function () {
   const back = new BackMaker();
   const report = new BackReport();
   const work = new BackWorker();
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
+  const { fileSystem, shell, shellLink, ghostFileUpload, requestSystem, ghostRequest, mysqlQuery, binaryRequest, cryptoString, decryptoHash } = this.mother;
   try {
     const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
     const kakao = new KakaoTalk();

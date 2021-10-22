@@ -20,67 +20,6 @@ MiddleCommunication.prototype.setNamedata = function (property, value) {
   this.name[property] = value;
 }
 
-MiddleCommunication.prototype.middleBinary = async function () {
-  const instance = this;
-  const { fileSystem, shell, shellLink, s3FileList, binaryRequest } = this.mother;
-  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const S3HOST = ADDRESS["s3info"]["host"];
-  const binaryPathConst = "middle";
-  const staticFolder = process.env.HOME + "/static";
-  try {
-    const middleBinaries = await s3FileList(binaryPathConst);
-    const staticDir = await fileSystem(`readDir`, [ staticFolder ]);
-    let staticMiddleDir;
-    let tempArr, refined, targets;
-    let binaryTarget;
-    let tempObject;
-    let resultFromArr;
-
-    //set middle targets
-    refined = [];
-    for (let i of middleBinaries) {
-      tempArr = i.split('/');
-      if (tempArr.length > 3) {
-        refined.push(tempArr[2]);
-      }
-    }
-    targets = Array.from(new Set(refined));
-
-    //static setting and download binary
-    if (!staticDir.includes("middle")) {
-      shell.exec(`mkdir ${shellLink(staticFolder)}/middle`);
-    }
-    staticMiddleDir = await fileSystem(`readDir`, [ staticFolder + "/middle" ]);
-    resultFromArr = [];
-    for (let i of targets) {
-      binaryTarget = [];
-      if (!staticMiddleDir.includes(i)) {
-        shell.exec(`mkdir ${shellLink(staticFolder + "/middle/" + i)}`);
-      }
-      for (let b of middleBinaries) {
-        tempArr = b.split('/');
-        if (tempArr.length > 3) {
-          if (tempArr[2] === i && tempArr[3] !== '') {
-            binaryTarget.push(tempArr.join('/'));
-          }
-        }
-      }
-      console.log(`\x1b[33m%s\x1b[0m`, `binary target :`, binaryTarget);
-      for (let b of binaryTarget) {
-        tempObject = await binaryRequest(S3HOST + "/" + b);
-        await fileSystem(`writeBinary`, [ staticFolder + "/middle/" + i + "/" + (b.split('/'))[b.split('/').length - 1], tempObject ]);
-        resultFromArr.push(staticFolder + "/middle/" + i + "/" + (b.split('/'))[b.split('/').length - 1]);
-        console.log(`binary "${b}" download done`);
-      }
-    }
-
-    return resultFromArr;
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo, selfLocalMongo) {
   const instance = this;
   const back = this.back;

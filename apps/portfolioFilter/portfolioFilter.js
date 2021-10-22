@@ -342,7 +342,7 @@ PortfolioFilter.prototype.ghost_filter = async function (start_num) {
 
 PortfolioFilter.prototype.total_make = async function (liteMode = false) {
   const instance = this;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, ghostRequest, sleep, messageSend } = this.mother;
+  const { fileSystem, shell, shellLink, ghostFileUpload, ghostRequest, sleep, messageSend } = this.mother;
   const photoRequest = ghostRequest().bind("photo");
   const GoogleDrive = require(`${process.cwd()}/apps/googleAPIs/googleDrive.js`);
   const drive = new GoogleDrive();
@@ -423,9 +423,6 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
       console.log(fromArr);
       console.log(toArr);
-      await s3FileUpload(fromArr, toArr);
-      console.log(`s3 upload done`);
-
       await ghostFileUpload(fromArr, toArr);
       console.log(`ghost upload done`);
     }
@@ -496,7 +493,7 @@ PortfolioFilter.prototype.image_ready = async function () {
 PortfolioFilter.prototype.ghost_make = async function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, consoleQ, s3FileUpload, ghostFileUpload } = this.mother;
+  const { fileSystem, shell, shellLink, consoleQ, ghostFileUpload } = this.mother;
   const getNumber = function (obj) {
     let link = obj.link;
     let tempArr;
@@ -561,7 +558,6 @@ PortfolioFilter.prototype.ghost_make = async function () {
     console.log(toArr);
 
     await back.updateDesigner([ { desid: targetDesigner.desid }, { "setting.ghost": ghostArray } ]);
-    await s3FileUpload(fromArr, toArr);
     await ghostFileUpload(fromArr, toArr);
 
   } catch (e) {
@@ -571,7 +567,7 @@ PortfolioFilter.prototype.ghost_make = async function () {
 
 PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
   const instance = this;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, todayMaker } = this.mother;
+  const { fileSystem, shell, shellLink, ghostFileUpload, todayMaker } = this.mother;
   const home = process.env.HOME;
   const tempFolderName = "__PortfolioFilteraddtionalRepairTemp__" + todayMaker("year");
   try {
@@ -611,7 +607,6 @@ PortfolioFilter.prototype.additionalRepair = async function (pid, tNumber) {
     fromArr.push(shellLink(home + '/' + tempFolderName + '/' + targetFile));
     toArr.push(`corePortfolio/original/${pid}/${targetFile}`);
 
-    await s3FileUpload(fromArr, toArr);
     await ghostFileUpload(fromArr, toArr);
 
     shell.exec(`rm -rf ${shellLink(home)}/${tempFolderName}`);

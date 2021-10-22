@@ -479,7 +479,7 @@ AiContents.prototype.to_mysql = async function () {
 
 AiContents.prototype.to_poo = async function () {
   const instance = this;
-  const { fileSystem, shell, shellLink, s3FileUpload, ghostFileUpload, copyToClipboard } = this.mother;
+  const { fileSystem, shellExec, shellLink, ghostFileUpload, copyToClipboard } = this.mother;
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   try {
 
@@ -495,6 +495,8 @@ AiContents.prototype.to_poo = async function () {
     let svgAis, revAis;
     let delete_arr = [];
     let revdelete_arr = [];
+    let ghostTargetDir, ghostTargetDirList;
+    let fromArr, toArr;
 
     //set p_id and r_id
     arr = await fileSystem(`readDir`, [ `${this.options.home_dir}/result` ]);
@@ -556,28 +558,26 @@ AiContents.prototype.to_poo = async function () {
 
     order += `scp -r ${shellLink(p_path)}/portp${p_id} ${front_www}/${image}/;`;
 
-    //to S3
-    let s3TargetDir, s3TargetDirList;
-    let fromArr, toArr;
+    await shellExec(order);
 
-    s3TargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}`;
-    s3TargetDirList = await fileSystem(`readDir`, [ s3TargetDir ]);
+    ghostTargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}`;
+    ghostTargetDirList = await fileSystem(`readDir`, [ ghostTargetDir ]);
 
     fromArr = [];
     toArr = [];
-    for (let i of s3TargetDirList) {
+    for (let i of ghostTargetDirList) {
       if (i !== `.DS_Store` && /^[bt]/.test(i)) {
-        fromArr.push(s3TargetDir + "/" + i);
+        fromArr.push(ghostTargetDir + "/" + i);
         toArr.push(`corePortfolio/listImage/${p_id}/${i}`);
       }
     }
 
-    s3TargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}/mobile`;
-    s3TargetDirList = await fileSystem(`readDir`, [ s3TargetDir ]);
+    ghostTargetDir = `${this.options.home_dir}/result/${p_id}code/portp${p_id}/mobile`;
+    ghostTargetDirList = await fileSystem(`readDir`, [ ghostTargetDir ]);
 
-    for (let i of s3TargetDirList) {
+    for (let i of ghostTargetDirList) {
       if (i !== `.DS_Store`) {
-        fromArr.push(s3TargetDir + "/" + i);
+        fromArr.push(ghostTargetDir + "/" + i);
         toArr.push(`corePortfolio/listImage/${p_id}/mobile/${i}`);
       }
     }
@@ -585,10 +585,7 @@ AiContents.prototype.to_poo = async function () {
     console.log(fromArr);
     console.log(toArr);
 
-    await s3FileUpload(fromArr, toArr);
     await ghostFileUpload(fromArr, toArr);
-
-    shell.exec(order);
 
   } catch (e) {
     console.log(e.message);
