@@ -677,7 +677,7 @@ KakaoTalk.prototype.templateTong = function (target) {
     },
     firstMeetingDayAgo: {
       name: "현장 미팅 안내 하루전",
-      id: "TG_2316",
+      id: "TG_2318",
       needs: [
         "client",
         "date",
