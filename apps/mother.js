@@ -2630,7 +2630,7 @@ Mother.prototype.ipParsing = function (ip) {
 Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
   const onoffString = [ "온라인", "오프라인" ];
   const serviceString = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];
-  const startDateNumbers = [ 30, 45, 60, 75 ];
+  const startDateNumbers = [ 30, 45, 60, 60 ];
   const xValueString = [ "mini", "basic", "premium" ];
 
   if (typeof serviceObj === "object") {

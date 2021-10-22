@@ -213,9 +213,9 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
           "현장 미팅 주소"
         ],
         contents: [
-          "홈리에종은 체계화된 정보과 취향 분석 기능을",
-          "활용해서 <b%고객님의 스타일과 조건에 딱 맞는%b>",
-          "<b%서비스를 제안하고, 디자이너를 추천%b>해드립니다.",
+          "디자이너를 직접 만나 <b%함께 현장 상태를 체크%b>하고,",
+          "고객님의 <b%취향과 니즈를 전달%b>하여, 앞으로 진행하게 될",
+          "홈스타일링에 대한 <b%전체적인 방향%b>을 이야기하게 됩니다.",
         ],
         image: [
           "/designerMeeting.jpg",
@@ -231,9 +231,9 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
         "진행 기간"
       ];
       this.wordings.table.contents = [
-        "홈리에종은 체계화된 정보과 취향 분석 기능을",
-        "활용해서 <b%고객님의 스타일과 조건에 딱 맞는%b>",
-        "<b%서비스를 제안하고, 디자이너를 추천%b>해드립니다.",
+        "현장 미팅 전, <b%디자이너에게 공유%b>할 고객님의 기본 정보입니다.",
+        "디자이너가 <b%고객님을 뵙기 전, 미팅 준비를 하기 위해%b> 공유드리는 것이며,",
+        "틀린 정보가 있을 시 홈리에종에 문의해주시길 바랍니다.",
       ];
       this.wordings.table.table = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
 
