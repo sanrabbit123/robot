@@ -299,7 +299,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
                       window.location.reload();
                     }
                   }).catch((err) => {
-                    console.log(err);
+                    GeneralJs.ajaxJson({ message: "ResponseReservationJs.realtimeClient.0 : " + err.message }, "/errorLog").catch((e) => {});
                   });
 
                 }
@@ -374,7 +374,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
           }
         }
       }).catch((err) => {
-        console.log(err);
+        GeneralJs.ajaxJson({ message: "ResponseReservationJs.realtimeClient.1 : " + err.message }, "/errorLog").catch((e) => {});
       });
 
     }
@@ -416,7 +416,7 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
         const { standard, matrix, clientSide } = obj;
         buttonMaker(thisDate, standard, matrix, clientSide);
       }).catch((err) => {
-        console.log(err);
+        GeneralJs.ajaxJson({ message: "ResponseReservationJs.realtimeClient.2 : " + err.message }, "/errorLog").catch((e) => {});
       });
 
     }, {
@@ -430,14 +430,14 @@ ResponseReservationJs.prototype.insertInitBox = async function () {
           const boos = await GeneralJs.ajaxJson({ method: "range", year, month }, "/realtimeClient");
           return boos;
         } catch (e) {
-          console.log(e);
+          await GeneralJs.ajaxJson({ message: "ResponseReservationJs.insertInitBox.grayMode : " + e.message }, "/errorLog");
         }
       }
     });
     calendarBox.firstChild.appendChild(calendar.calendarBase);
 
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "ResponseReservationJs.insertInitBox : " + e.message }, "/errorLog");
   }
 }
 
@@ -700,7 +700,7 @@ ResponseReservationJs.prototype.launching = async function (loading) {
           await instance.insertInitBox();
           instance.insertPannelBox();
         } catch (e) {
-          console.log(e);
+          await GeneralJs.ajaxJson({ message: "ResponseReservationJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
@@ -710,6 +710,6 @@ ResponseReservationJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "ResponseReservationJs.launching : " + e.message }, "/errorLog");
   }
 }

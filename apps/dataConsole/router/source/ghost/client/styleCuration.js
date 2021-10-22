@@ -1259,7 +1259,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           image: image,
         }, "/styleCuration_styleCheckComplete");
       }).catch((err) => {
-        console.log(err);
+        GeneralJs.ajaxJson({ message: "StyleCurationJs.styleCheck.pickupDesigners : " + err.message }, "/errorLog").catch((e) => {});
       });
 
     }
@@ -1345,7 +1345,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           }
 
         } catch (e) {
-          console.log(e);
+          await GeneralJs.ajaxJson({ message: "StyleCurationJs.resetEvent.sleep.true : " + e.message }, "/errorLog");
         }
       });
     } else {
@@ -1366,7 +1366,7 @@ StyleCurationJs.prototype.styleCheck = function (mother, wordings, name) {
           }
           GeneralJs.stacks[loadingName] = false;
         } catch (e) {
-          console.log(e);
+          await GeneralJs.ajaxJson({ message: "StyleCurationJs.resetEvent.sleep.false : " + e.message }, "/errorLog");
         }
       });
     }
@@ -2033,7 +2033,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       window.removeEventListener("message", GeneralJs.stacks["addressEvent"]);
                       GeneralJs.stacks["addressEvent"] = null;
                     } catch (e) {
-                      console.log(e);
+                      await GeneralJs.ajaxJson({ message: "StyleCurationJs.addressEvent : " + e.message }, "/errorLog");
                     }
                   }
                   window.addEventListener("message", GeneralJs.stacks["addressEvent"]);
@@ -2087,7 +2087,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
 
                   }
                 } catch (e) {
-                  console.log(e);
+                  await GeneralJs.ajaxJson({ message: "StyleCurationJs.addressEvent.blur : " + e.message }, "/errorLog");
                 }
               }
             },
@@ -2198,7 +2198,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                       updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
                     }, "/ghostClient_updateAnalytics");
                   }).catch((err) => {
-                    console.log(err);
+                    GeneralJs.ajaxJson({ message: "StyleCurationJs.valuesConvert : " + err.message }, "/errorLog").catch((e) => {});
                   });
 
                 }
@@ -2389,7 +2389,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
           update: { x, y, value: instance.values[x][y].value },
           updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
         }, "/ghostClient_updateAnalytics").catch((err) => {
-          console.log(err);
+          GeneralJs.ajaxJson({ message: "StyleCurationJs.ghostClient_updateAnalytics : " + err.message }, "/errorLog").catch((e) => {});
         });
       }
 
@@ -2586,7 +2586,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                     updateQuery: obj.update(valuesCopied[x][y].value, valuesCopied, instance.client)
                   }, "/ghostClient_updateAnalytics");
                 }).catch((err) => {
-                  console.log(err);
+                  GeneralJs.ajaxJson({ message: "StyleCurationJs.ghostClient_updateAnalytics.update : " + err.message }, "/errorLog").catch((e) => {});
                 });
               }
             }
@@ -2738,7 +2738,7 @@ StyleCurationJs.prototype.blockCheck = function (mother, wordings, name) {
                   update: { x, y, value: instance.values[x][y].value },
                   updateQuery: obj.update(instance.values[x][y].value, instance.values, instance.client)
                 }, "/ghostClient_updateAnalytics").catch((err) => {
-                  console.log(err);
+                  GeneralJs.ajaxJson({ message: "StyleCurationJs.ghostClient_updateAnalytics.update.matrix : " + err.message }, "/errorLog").catch((e) => {});
                 });
                 for (let c of children) {
                   c.style.color = colorChip.green;
@@ -3100,7 +3100,7 @@ StyleCurationJs.prototype.valuesConvert = async function (deepCopy = false) {
     return deepCopy ? valuesCopied : this.values;
 
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.valuesConvert : " + e.message }, "/errorLog");
   }
 }
 
@@ -4186,7 +4186,7 @@ StyleCurationJs.prototype.insertPannelBox = function () {
                     document.body.removeChild(back);
                     instance.parsingValues();
                   } catch (e) {
-                    console.log(e);
+                    await GeneralJs.ajaxJson({ message: "StyleCurationJs.certificationBox : " + e.message }, "/errorLog");
                   }
                 });
               }
@@ -5369,7 +5369,7 @@ StyleCurationJs.prototype.serviceConverting = async function (seridObj) {
     }, 500);
     return "done";
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.serviceConverting : " + e.message }, "/errorLog");
   }
 }
 
@@ -5415,7 +5415,7 @@ StyleCurationJs.prototype.forceConverting = async function () {
       }
     }
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.forceConverting : " + e.message }, "/errorLog");
   }
 }
 
@@ -5464,7 +5464,6 @@ StyleCurationJs.prototype.launching = async function (loading) {
     if (!liteMode) {
       liteForce = false;
 
-
       if (Array.isArray(this.clientHistory.curation.analytics.send)) {
         if (this.clientHistory.curation.analytics.send.length > 0) {
           for (let obj of this.clientHistory.curation.analytics.send) {
@@ -5475,11 +5474,6 @@ StyleCurationJs.prototype.launching = async function (loading) {
           }
         }
       }
-
-
-
-
-
 
       if (liteForce) {
         if (getObj.mode === undefined) {
@@ -5540,7 +5534,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
           instance.insertPannelBox();
           await instance.forceConverting();
         } catch (e) {
-          console.log(e);
+          await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
@@ -5548,6 +5542,6 @@ StyleCurationJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching : " + e.message }, "/errorLog");
   }
 }

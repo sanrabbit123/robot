@@ -295,7 +295,6 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     }
 
   } catch (e) {
-    // window.location.reload(true);
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "GeneralJs.ghostClientLaunching : " + e.message }, "/errorLog");
   }
 }

@@ -928,7 +928,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           }
         }
       } catch (e) {
-        console.log(e);
+        await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.insertInitBox.paymentEvent : " + e.message }, "/errorLog");
       }
     };
   }
@@ -1074,6 +1074,7 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
     this.completeMode = true;
 
   } catch (e) {
+    await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.payComplete : " + e.message }, "/errorLog");
     window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
     window.location.reload();
   }
@@ -1221,7 +1222,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
         } catch (e) {
-          console.log(e);
+          await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
@@ -1236,6 +1237,6 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.launching : " + e.message }, "/errorLog");
   }
 }

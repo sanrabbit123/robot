@@ -4197,7 +4197,7 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
               document.body.removeChild(back);
               window.location.href = window.location.protocol + "//" + window.location.host + "/middle/estimation?cliid=" + instance.client.cliid + "&needs=style," + desid + "," + instance.project.proid + "," + method;
             } catch (e) {
-              console.log(e);
+              await GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent.certificationBox : " + e.message }, "/errorLog");
             }
           });
         } else {
@@ -4207,8 +4207,10 @@ DesignerProposalJs.prototype.submitEvent = function (desid, designer, method) {
         window.alert("자동 큐레이션을 진행하신 고객님은 유선 확인 후 결제를 진행하실 수 있습니다! 영업일 기준 12시간 내로 홈리에종 CX팀이 전화드릴 예정입니다!");
       }
     }).catch((err) => {
-      window.alert("오류가 발생하였습니다! 홈리에종에 문의해주세요!");
-      window.location.reload();
+      GeneralJs.ajaxJson({ message: "DesignerProposalJs.submitEvent : " + err.message }, "/errorLog").then(() => {
+        window.alert("오류가 발생하였습니다! 홈리에종에 문의해주세요!");
+        window.location.reload();
+      }).catch((e) => {});
     });
 
   }
@@ -4323,7 +4325,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
           instance.insertWordBox();
           instance.insertPannelBox();
         } catch (e) {
-          console.log(e);
+          await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
@@ -4333,6 +4335,6 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "DesignerProposalJs.launching : " + e.message }, "/errorLog");
   }
 }

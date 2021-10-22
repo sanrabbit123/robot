@@ -1779,7 +1779,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
     }
 
   }).catch((err) => {
-    console.log(err);
+    GeneralJs.ajaxJson({ message: "FirstMeetingJs.insertPhotoBox : " + err.message }, "/errorLog").catch((e) => {});
   });
 
 }
@@ -1862,7 +1862,7 @@ FirstMeetingJs.prototype.launching = async function (loading) {
           instance.insertChecklistBox(2);
           instance.insertPhotoBox(3);
         } catch (e) {
-          console.log(e);
+          await GeneralJs.ajaxJson({ message: "FirstMeetingJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
@@ -1870,6 +1870,6 @@ FirstMeetingJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
-    console.log(e);
+    await GeneralJs.ajaxJson({ message: "FirstMeetingJs.launching : " + e.message }, "/errorLog");
   }
 }
