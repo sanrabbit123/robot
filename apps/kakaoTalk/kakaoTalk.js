@@ -649,6 +649,58 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    firstMeetingWeekAgo: {
+      name: "현장 미팅 안내 일주일",
+      id: "TG_2313",
+      needs: [
+        "client",
+        "date",
+        "day",
+        "hour",
+        "minute",
+        "host",
+        "path",
+        "proid"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "date", to: obj.date },
+          { from: "day", to: obj.day },
+          { from: "hour", to: obj.hour },
+          { from: "minute", to: obj.minute },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+        ];
+      },
+    },
+    firstMeetingDayAgo: {
+      name: "현장 미팅 안내 하루전",
+      id: "TG_2316",
+      needs: [
+        "client",
+        "date",
+        "day",
+        "hour",
+        "minute",
+        "host",
+        "path",
+        "proid"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "date", to: obj.date },
+          { from: "day", to: obj.day },
+          { from: "hour", to: obj.hour },
+          { from: "minute", to: obj.minute },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+        ];
+      },
+    },
   };
   return tong[target];
 }

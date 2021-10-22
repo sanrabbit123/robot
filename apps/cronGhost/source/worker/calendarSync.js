@@ -27,7 +27,7 @@ const worker = async function (package) {
     let projects, from;
     let clients, designers;
     let client, designer;
-    let list;
+    let title, list;
 
     from = "photographing";
     projects = await back.getProjectsByQuery({
