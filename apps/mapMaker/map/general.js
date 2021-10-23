@@ -663,6 +663,9 @@ module.exports = {
       },
       "firstMeeting": {
         "behaviors": []
+      },
+      "wholeSchedule": {
+        "behaviors": []
       }
     },
     "login": {
