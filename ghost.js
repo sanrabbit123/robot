@@ -532,6 +532,36 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
   }
 }
 
+Ghost.prototype.insyncCheck = async function () {
+  const instance = this;
+  const { shellExec, errorLog, messageLog } = this.mother;
+  const successCode = 200;
+  const failCode = 500;
+  try {
+    const statusRaw = await shellExec(`insync-headless status`);
+    const statusRawArr = statusRaw.split("\n").map((s) => { return s.trim(); }).filter((s) => { return s !== '' });
+    let index, result;
+
+    index = statusRawArr.findIndex((s) => { return /^Sync status\:/i.test(s); });
+    result = {};
+    if (index !== -1) {
+      result.status = /SYNC/gi.test(statusRawArr[index].split(':').map((s) => { return s.trim(); })[1]) ? successCode : failCode;
+      index = statusRawArr.findIndex((s) => { return /^Syncing files\:/i.test(s); });
+      if (index !== -1) {
+        result.doing = statusRawArr.slice(index + 1);
+      }
+    }
+
+    if (result.status !== successCode) {
+      await errorLog("insync 문제 발생함 : \n" + statusRaw);
+    }
+
+    return result;
+  } catch (e) {
+    await errorLog("Ghost.insyncCheck error : " + e.message);
+  }
+}
+
 Ghost.prototype.mongoToJson = async function () {
   const instance = this;
   const back = this.back;
@@ -765,6 +795,8 @@ Ghost.prototype.ghostRouter = function (needs) {
       try {
         instance.stylingFormSync(MONGOC).then(() => {
           return statusReading();
+        }).then(() => {
+          return instance.insyncCheck();
         }).catch((err) => {
           console.log(err);
         });
@@ -1596,6 +1628,27 @@ Ghost.prototype.ghostRouter = function (needs) {
 
         res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${global.encodeURIComponent(pdfName)}` }));
 
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
+  //POST - insync check
+  funcObj.post_insyncCheck = {
+    link: [ "/insyncCheck" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        instance.insyncCheck().catch((err) => {
+          errorLog("Ghost.router.post_pdfPrint : " + err.message).catch((e) => { console.log(e); });
+        })
+        res.send(JSON.stringify({ message: "will do" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
