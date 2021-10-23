@@ -403,8 +403,14 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
 
     console.log(await ghostRequest("/fixDir", { target: sambaPhotoPath + "/" + this.folderName }));
 
+    do {
+      console.log("search id...");
+      await sleep(3000);
+      thisFolderId = await drive.searchId_inPython(this.folderName);
+    } while (thisFolderId === null);
+
     //slack
-    await messageSend({ text: `${this.folderName} 사진을 공유하였습니다!`, channel: `#502_sns_contents` });
+    await messageSend({ text: `${this.folderName} 사진을 공유하였습니다!\n${("https://drive.google.com/drive/folders/" + thisFolderId + "?usp=sharing")}`, channel: `#502_sns_contents` });
 
     //ghost upload
     if (!liteMode) {

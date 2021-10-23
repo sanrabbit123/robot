@@ -187,6 +187,9 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    // setInterval(async () => {
+    //   console.log(await ghostRequest("insyncCheck", {}))
+    // }, 5000);
 
 
 
