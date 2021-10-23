@@ -614,24 +614,8 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   const { client, project, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, getDateMatrix } = GeneralJs;
   const wordings = this.wordings.tableWordings;
-  const {
-    title,
-    initialContents,
-    emptyReload,
-    mainContents,
-    pictureContents,
-    pictureContentsSite,
-    pictureContentsPrefer,
-    pictures,
-    matrix,
-    mergeMap,
-    callbackMap,
-    boldMap,
-    titleMap,
-    widthRatio,
-  } = wordings.table;
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -664,6 +648,10 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   let mobilePaddingTop, mobilePaddingBottom;
   let periodPaddingLeft;
   let periodLineWidth;
+  let dateMatrix;
+  let dateMatrixArr;
+  let dateRange;
+  let dateTong;
 
   bigDesktop = (media[0] || media[1]);
 
@@ -712,6 +700,8 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   mobileCalendarMarginTop = 6.5;
   mobilePaddingTop = 5;
   mobilePaddingBottom = 10.5;
+
+  dateRange = 3;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -801,210 +791,37 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
     ]
   });
   tong = block.lastChild;
-  tong.appendChild(mother.makeTable(matrix, { whiteMode: true, style: { width: 100 }, mergeMap, callbackMap, boldMap, titleMap, widthRatio }));
-  calendar = tong.firstChild;
 
-  if (desktop) {
-    calendar.style.width = bigDesktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%';
-    calendar.style.display = bigDesktop ? "inline-block" : "block";
-  } else {
-    calendar.style.width = withOut(mobileCalendarMargin * 2, ea);
-    calendar.style.marginLeft = String(mobileCalendarMargin) + ea;
-    tong.style.paddingTop = String(mobileCalendarMarginTop) + ea;
-    calendar.style.display = "block";
+  dateMatrix = getDateMatrix(new Date());
+  dateMatrixArr = [];
+  for (let i = 0; i < dateRange; i++) {
+    dateMatrixArr.push(dateMatrix);
+    dateMatrix = dateMatrix.nextMatrix();
   }
 
-  if (bigDesktop || mobile) {
-    createNode({
-      mother: tong,
-      style: {
-        display: desktop ? "inline-flex" : "flex",
-        position: "relative",
-        width: desktop ? String(secondBlockWidth) + ea : withOut(mobileCalendarMargin * 2, ea),
-        height: desktop ? String(tong.getBoundingClientRect().height) + ea : "",
-        verticalAlign: "top",
-        textAlign: desktop ? "" : "center",
-        marginLeft: desktop ? String(secondBlockMargin) + ea : String(mobileCalendarMargin) + ea,
-        flexDirection: "column-reverse",
-        paddingTop: desktop ? "" : String(mobilePaddingTop) + ea,
-        paddingBottom: desktop ? "" : String(mobilePaddingBottom) + ea,
-      },
-      children: [
-        {
-          text: wordings.contents.join(" "),
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            lineHeight: String(1.6),
-            bottom: String(contentsBottom) + ea,
-            marginTop: String(desktop ? contentsMarginTop : mobilePaddingTop) + ea,
-          },
-          bold: {
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          }
-        },
-        {
-          style: {
-            display: desktop ? "block" : "none",
-            marginTop: String(bigNumberBetween) + ea,
-            position: "relative",
-            textAlign: "right",
-          },
-          children: [
-            {
-              style: {
-                position: "absolute",
-                width: String(100) + '%',
-                height: String(periodLineTop) + ea,
-                top: String(0),
-                left: String(0),
-                borderBottom: "1px solid " + colorChip.whiteGreen,
-              }
-            },
-            {
-              text: dateToString(project.process.contract.form.date.to).replace(/-/g, ". "),
-              style: {
-                display: "inline-block",
-                fontSize: String(bigNumberSize) + ea,
-                fontWeight: String(200),
-                fontFamily: "graphik",
-                color: colorChip.green,
-                lineHeight: String(1.4),
-                background: colorChip.white,
-                paddingLeft: String(16) + ea,
-                position: "relative",
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            display: "block",
-            position: "relative",
-            textAlign: desktop ? "left" : "center",
-            marginTop: String(bigNumberMargin) + ea,
-          },
-          children: [
-            {
-              text: dateToString(project.process.contract.form.date.from).replace(/-/g, ". "),
-              style: {
-                display: "inline-block",
-                fontSize: String(bigNumberSize) + ea,
-                fontWeight: String(200),
-                fontFamily: "graphik",
-                color: colorChip.green,
-                lineHeight: String(1.4),
-                position: "relative",
-              }
-            },
-            {
-              text: dateToString(project.process.contract.form.date.to).replace(/-/g, ". "),
-              style: {
-                display: mobile ? "inline-block" : "none",
-                fontSize: String(bigNumberSize) + ea,
-                fontWeight: String(200),
-                fontFamily: "graphik",
-                color: colorChip.green,
-                lineHeight: String(1.4),
-                background: colorChip.white,
-                paddingLeft: String(periodPaddingLeft) + ea,
-                position: "relative",
-              }
-            },
-            {
-              style: {
-                display: mobile ? "block" : "none",
-                position: "absolute",
-                width: desktop ? String(100) + '%' : String(periodLineWidth) + ea,
-                height: String(periodLineTop) + ea,
-                top: String(0),
-                left: desktop ? String(0) : withOut(50, periodLineWidth / 2, ea),
-                borderBottom: "1px solid " + colorChip.whiteGreen,
-              }
-            },
-          ]
-        },
-        {
-          text: wordings.subTitle[1],
-          style: {
-            display: "block",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
-            marginTop: String(bigNumberBetweenMargin) + ea,
-            paddingLeft: String(contentsPaddingLeft) + ea,
-            lineHeight: String(1.4),
-            position: "relative",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: mother.returnArrow("right", colorChip.green),
-              style: {
-                display: desktop ? "block" : "none",
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                left: String(arrorLeft) + ea,
-                top: String(arrowTop) + ea,
-              }
-            },
-          ]
-        },
-        {
-          style: {
-            display: "block",
-            marginTop: String(bigNumberBetween) + ea,
-            position: "relative",
-          },
-          children: [
-            {
-              text: dateToString(project.process.contract.meeting.date).replace(/-/g, ". "),
-              style: {
-                display: "inline-block",
-                fontSize: String(bigNumberSize) + ea,
-                fontWeight: String(200),
-                fontFamily: "graphik",
-                color: colorChip.green,
-                lineHeight: String(1.4),
-                position: "relative",
-              }
-            }
-          ]
-        },
-        {
-          text: wordings.subTitle[0],
-          style: {
-            display: "block",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
-            marginTop: String(contentsMarginTop) + ea,
-            paddingLeft: String(contentsPaddingLeft) + ea,
-            lineHeight: String(1.4),
-            position: "relative",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: mother.returnArrow("right", colorChip.green),
-              style: {
-                display: desktop ? "block" : "none",
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                left: String(arrorLeft) + ea,
-                top: String(arrowTop) + ea,
-              }
-            },
-          ]
-        },
-      ]
-    });
-  }
+  
+
+
+
+
+  dateTong = createNode({
+    mother: tong,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(600) + ea,
+      border: "1px solid " + colorChip.gray3,
+      borderRadius: String(3) + "px",
+      boxSizing: "border-box",
+    }
+  })
+
+
+
+
+
+
 
 }
 

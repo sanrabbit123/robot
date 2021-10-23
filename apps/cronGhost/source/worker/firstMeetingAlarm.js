@@ -1,6 +1,4 @@
-const dayId = [
-  "d140",
-];
+const dayId = [];
 
 const hourId = [];
 
