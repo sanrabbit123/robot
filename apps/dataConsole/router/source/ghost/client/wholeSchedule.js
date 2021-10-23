@@ -652,6 +652,9 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   let dateMatrixArr;
   let dateRange;
   let dateTong;
+  let dateMatrixMarginLeft, dateTextMatrixMarginLeft;
+  let dateTextMatrixMarginBottom;
+  let dateBlockHeight;
 
   bigDesktop = (media[0] || media[1]);
 
@@ -792,6 +795,19 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   });
   tong = block.lastChild;
 
+
+
+
+
+
+
+
+
+  dateMatrixMarginLeft = 30;
+  dateTextMatrixMarginLeft = 32;
+  dateTextMatrixMarginBottom = 18;
+  dateBlockHeight = 47;
+
   dateMatrix = getDateMatrix(new Date());
   dateMatrix = dateMatrix.previousMatrix();
 
@@ -800,8 +816,6 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
     dateMatrixArr.push(dateMatrix.sundayConvert());
     dateMatrix = dateMatrix.nextMatrix();
   }
-
-  console.log(dateMatrixArr);
 
   dateTong = createNode({
     mother: tong,
@@ -812,8 +826,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       border: "1px solid " + colorChip.gray3,
       borderRadius: String(3) + "px",
       boxSizing: "border-box",
-      paddingTop: String(15) + ea,
-      paddingBottom: String(20) + ea,
+      paddingBottom: String(40) + ea,
     }
   });
 
@@ -824,9 +837,9 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       style: {
         display: "block",
         position: "relative",
-        paddingLeft: String(28) + ea,
-        paddingTop: String(10) + ea,
-        paddingBottom: String(12) + ea,
+        paddingLeft: String(dateTextMatrixMarginLeft) + ea,
+        paddingTop: String(40) + ea,
+        paddingBottom: String(dateTextMatrixMarginBottom) + ea,
       },
       children: [
         {
@@ -840,18 +853,50 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       ]
     });
 
-    
-
-    for (let arr of matrix) {
+    for (let i = 0; i < matrix.length + 1; i++) {
       createNode({
         mother: dateTong,
         style: {
           display: "block",
           position: "relative",
-          height: String(40) + ea,
-          background: "aqua",
-          marginBottom: String(10) + ea
-        }
+          borderBottom: "1px solid " + colorChip.gray3,
+          borderTopLeftRadius: String(i === 0 ? 5 : 0) + "px",
+          borderTopRightRadius: String(i === 0 ? 5 : 0) + "px",
+          borderBottomLeftRadius: String(i === matrix.length ? 5 : 0) + "px",
+          borderBottomRightRadius: String(i === matrix.length ? 5 : 0) + "px",
+          borderTop: i === 0 ? "1px solid " + colorChip.gray3 : "",
+          borderRight: "1px solid " + colorChip.gray3,
+          borderLeft: "1px solid " + colorChip.gray3,
+          marginLeft: String(dateMatrixMarginLeft) + ea,
+          marginRight: String(dateMatrixMarginLeft) + ea,
+          width: withOut(dateMatrixMarginLeft * 2, ea),
+          height: String(dateBlockHeight) + ea,
+        },
+        children: [
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(120) + ea,
+              borderRight: "1px solid " + colorChip.gray3,
+              height: String(100) + '%',
+            },
+            children: [
+              {
+                text: i !== 0 ? `${String(month + 1)}월 ${String(i)}주차` : ``,
+                style: {
+                  position: "absolute",
+                  fontSize: String(15) + ea,
+                  fontWeight: String(400),
+                  width: String(100) + '%',
+                  textAlign: "center",
+                  top: String(12) + ea,
+                  color: colorChip.black,
+                }
+              }
+            ]
+          }
+        ]
       });
     }
 
