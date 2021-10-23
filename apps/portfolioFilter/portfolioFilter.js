@@ -401,10 +401,12 @@ PortfolioFilter.prototype.total_make = async function (liteMode = false) {
       shell.exec(`scp -r ${shellLink(fileList_1500[0].split("/").slice(0, -1).join("/"))} ${scpTarget}`);
     }
 
+    console.log(await ghostRequest("/fixDir", { target: sambaPhotoPath + "/" + this.folderName }));
+
     //slack
     await messageSend({ text: `${this.folderName} 사진을 공유하였습니다!`, channel: `#502_sns_contents` });
 
-    //s3 upload
+    //ghost upload
     if (!liteMode) {
       shell.exec(`mv ${shellLink(this.resultFolder)}/3508 ${shellLink(this.resultFolder)}/${this.pid}`);
       pidFolder = await fileSystem(`readDir`, [ this.resultFolder + "/" + this.pid ]);
