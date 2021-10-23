@@ -1645,10 +1645,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         "Access-Control-Allow-Headers": '*',
       });
       try {
-        instance.insyncCheck().catch((err) => {
-          errorLog("Ghost.router.post_pdfPrint : " + err.message).catch((e) => { console.log(e); });
-        })
-        res.send(JSON.stringify({ message: "will do" }));
+        const result = await instance.insyncCheck();
+        res.send(JSON.stringify(result));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
