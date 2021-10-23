@@ -840,6 +840,8 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       ]
     });
 
+    
+
     for (let arr of matrix) {
       createNode({
         mother: dateTong,
