@@ -793,16 +793,15 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   tong = block.lastChild;
 
   dateMatrix = getDateMatrix(new Date());
+  dateMatrix = dateMatrix.previousMatrix();
+
   dateMatrixArr = [];
-  for (let i = 0; i < dateRange; i++) {
-    dateMatrixArr.push(dateMatrix);
+  for (let i = 0; i < dateRange + 1; i++) {
+    dateMatrixArr.push(dateMatrix.sundayConvert());
     dateMatrix = dateMatrix.nextMatrix();
   }
 
-  
-
-
-
+  console.log(dateMatrixArr);
 
   dateTong = createNode({
     mother: tong,
@@ -810,18 +809,51 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      height: String(600) + ea,
       border: "1px solid " + colorChip.gray3,
       borderRadius: String(3) + "px",
       boxSizing: "border-box",
+      paddingTop: String(15) + ea,
+      paddingBottom: String(20) + ea,
     }
-  })
+  });
 
+  for (let { year, month, matrix } of dateMatrixArr) {
 
+    createNode({
+      mother: dateTong,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingLeft: String(28) + ea,
+        paddingTop: String(10) + ea,
+        paddingBottom: String(12) + ea,
+      },
+      children: [
+        {
+          text: String(year) + "년 " + String(month + 1) + "월",
+          style: {
+            fontSize: String(20) + ea,
+            fontWeight: String(500),
+            color: colorChip.black
+          }
+        }
+      ]
+    });
 
+    for (let arr of matrix) {
+      createNode({
+        mother: dateTong,
+        style: {
+          display: "block",
+          position: "relative",
+          height: String(40) + ea,
+          background: "aqua",
+          marginBottom: String(10) + ea
+        }
+      });
+    }
 
-
-
+  }
 
 }
 

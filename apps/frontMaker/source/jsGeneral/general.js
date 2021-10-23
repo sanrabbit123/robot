@@ -1583,6 +1583,12 @@ GeneralJs.getDateMatrix = function (year, month) {
     return tong;
   }
 
+  DateMatrix.prototype.sundayConvert = function () {
+    const newObj = new DateMatrix(this.year, this.month);
+    newObj.matrix = this.returnSundayMatrix();
+    return newObj;
+  }
+
   const DateFactor = function (year, month, date, index) {
     this.year = year;
     this.month = month;
