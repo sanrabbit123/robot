@@ -329,6 +329,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   let wordings, initPhoto;
   let zeroWordingSize, zeroWordingTop;
   let titlePadding;
+  let contentsPadding;
   let titleHeight;
   let titleMargin;
   let lineTop, linetMargin;
@@ -340,6 +341,11 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   let arrowTop, arrowWidth, arrorLeft;
   let mobilePhotoHeight;
   let titleTextTop;
+  let pictureBetweenMargin;
+  let pictureNumber;
+  let picturePaddingTop;
+
+  pictureNumber = 3;
 
   blockHeight = <%% 400, 380, 367, 260, 424 %%>;
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -347,15 +353,19 @@ WholeScheduleJs.prototype.insertInitBox = function () {
 
   titleFontSize = <%% 29, 28.5, 27.5, 23, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titlePadding = <%% 6, 2, 1, 0, 1 %%>;
+  titlePadding = <%% 5, 2, 1, 0, 1 %%>;
+  contentsPadding = titlePadding + 1;
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
   titleMargin = <%% 32, 26, 24, 12, 2 %%>;
+
+  picturePaddingTop = <%% 4, 3, 3, 2, 0 %%>;
+  pictureBetweenMargin = <%% 10, 10, 8, 6, 1 %%>;
 
   lineTop = <%% 18, 18, 17, 14, 0.6 %%>;
   linetMargin = <%% 20, 20, 20, 20, 0.6 %%>;
 
-  secondBlockWidth = <%% 300, 250, 220, 200, 33 %%>;
-  secondBlockMargin = <%% 36, 35, 34, 34, 2.5 %%>;
+  secondBlockWidth = <%% 340, 290, 270, 250, 33 %%>;
+  secondBlockMargin = <%% 42, 40, 38, 36, 2.5 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
 
@@ -409,25 +419,14 @@ WholeScheduleJs.prototype.insertInitBox = function () {
     {
       mother: whiteTong,
       style: {
-        display: desktop ? "inline-block" : "block",
+        display: desktop ? "inline-block" : "flex",
         position: "relative",
-        width: desktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%',
+        width: desktop ? String(secondBlockWidth) + ea : withOut(secondBlockMargin * 2, ea),
         height: desktop ? String(100) + '%' : '',
         verticalAlign: "top",
         textAlign: desktop ? "" : "center",
       },
       children: [
-        {
-          style: {
-            display: desktop ? "block" : "none",
-            width: String(100) + '%',
-            position: "absolute",
-            top: String(0),
-            left: String(0),
-            borderBottom: "1px dashed " + colorChip.gray3,
-            height: String(lineTop) + ea,
-          }
-        },
         {
           text: wordings.title.join(" "),
           style: {
@@ -450,36 +449,6 @@ WholeScheduleJs.prototype.insertInitBox = function () {
           }
         },
         {
-          style: {
-            display: "block",
-            position: "relative",
-            height: desktop ? withOut(titleHeight + titleMargin, ea) : String(mobilePhotoHeight) + ea,
-            marginTop: String(titleMargin) + ea,
-            marginLeft: String(titlePadding) + ea,
-            width: desktop ? String(100) + '%' : withOut(titlePadding * 2, ea),
-            borderRadius: String(5) + "px",
-            background: colorChip.gray3,
-            backgroundSize: "100% auto",
-            backgroundPosition: "50% 50%",
-          }
-        },
-      ]
-    },
-    {
-      mother: whiteTong,
-      style: {
-        display: desktop ? "inline-flex" : "flex",
-        position: "relative",
-        width: desktop ? String(secondBlockWidth) + ea : withOut(secondBlockMargin * 2, ea),
-        paddingTop: desktop ? String(titleHeight + titleMargin) + ea : String(5.5) + ea,
-        height: desktop ? withOut(titleHeight + titleMargin, ea) : "",
-        verticalAlign: "top",
-        textAlign: desktop ? "" : "center",
-        marginLeft: String(secondBlockMargin) + ea,
-        flexDirection: "column-reverse"
-      },
-      children: [
-        {
           text: wordings.contents.join(" "),
           style: {
             display: (!media[3] ? "block" : "none"),
@@ -490,6 +459,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
             lineHeight: String(1.6),
             bottom: String(initContentsBottom) + ea,
             marginTop: desktop ? String(initTitleMarginTop) + ea : String(5) + ea,
+            paddingLeft: desktop ? String(contentsPadding) + ea : "",
           },
           bold: {
             fontSize: String(initWordingSize) + ea,
@@ -497,114 +467,41 @@ WholeScheduleJs.prototype.insertInitBox = function () {
             color: colorChip.black
           }
         },
-        {
-          text: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
-          style: {
-            display: "block",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            marginTop: String(initContentsMarginTop) + ea,
-            lineHeight: String(1.4),
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          }
-        },
-        {
-          text: wordings.subTitle[1],
-          style: {
-            display: "block",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: desktop ? colorChip.black : colorChip.green,
-            marginTop: String(initTitleMarginTop) + ea,
-            paddingLeft: String(initContentsPaddingLeft) + ea,
-            lineHeight: String(1.4),
-            position: "relative",
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          },
-          children: [
-            {
-              mode: "svg",
-              source: mother.returnArrow("right", colorChip.green),
-              style: {
-                display: desktop ? "block" : "none",
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                left: String(arrorLeft) + ea,
-                top: String(arrowTop) + ea,
-              }
-            },
-          ]
-        },
-        {
-          text: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
-          style: {
-            display: "block",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            marginTop: String(initContentsMarginTop) + ea,
-            lineHeight: String(1.4),
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          }
-        },
-        {
-          text: wordings.subTitle[0],
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: desktop ? colorChip.black : colorChip.green,
-            paddingLeft: String(initContentsPaddingLeft) + ea,
-            lineHeight: String(1.4),
-          },
-          bold: {
-            fontSize: String(initWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black
-          },
-          children: [
-            {
-              mode: "svg",
-              source: mother.returnArrow("right", colorChip.green),
-              style: {
-                display: desktop ? "block" : "none",
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                left: String(arrorLeft) + ea,
-                top: String(arrowTop) + ea,
-              }
-            },
-          ]
-        },
-        {
-          text: String(0),
-          style: {
-            display: desktop ? "block" : "none",
-            position: "absolute",
-            right: String(0),
-            top: String(zeroWordingTop) + ea,
-            fontSize: String(zeroWordingSize) + ea,
-            fontWeight: String(200),
-            color: colorChip.gray3
-          }
-        }
       ]
+    },
+    {
+      mother: whiteTong,
+      style: {
+        display: desktop ? "inline-block" : "block",
+        position: "relative",
+        width: desktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%',
+        verticalAlign: "top",
+        marginLeft: String(secondBlockMargin) + ea,
+        paddingTop: String(picturePaddingTop) + ea,
+        height: withOut(picturePaddingTop, ea),
+      }
     }
   ]);
+
+  for (let i = 0; i < pictureNumber; i++) {
+    createNode({
+      mother: secondBlock,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: "calc(calc(100% - " + String(pictureBetweenMargin * (pictureNumber - 1)) + ea + ") / " + String(pictureNumber) + ")",
+        height: String(100) + '%',
+        background: colorChip.gray3,
+        borderRadius: String(5) + "px",
+        marginRight: String(i !== pictureNumber - 1 ? pictureBetweenMargin : 0) + ea
+      }
+    });
+  }
+
+
+
+
+
 
 }
 
