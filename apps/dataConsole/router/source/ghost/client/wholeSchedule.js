@@ -207,7 +207,7 @@ WholeScheduleJs.prototype.meetingWordings = function (liteMode = false) {
       this.wordings = {};
       this.wordings.init = {
         title: [
-          "현장 미팅 안내",
+          "전체 일정 안내",
         ],
         subTitle: [
           "현장 미팅 시간",
@@ -458,7 +458,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
             marginLeft: String(titlePadding) + ea,
             width: desktop ? String(100) + '%' : withOut(titlePadding * 2, ea),
             borderRadius: String(5) + "px",
-            backgroundImage: "url('" + WholeScheduleJs.binaryPath + initPhoto + "')",
+            background: colorChip.gray3,
             backgroundSize: "100% auto",
             backgroundPosition: "50% 50%",
           }
@@ -655,6 +655,9 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   let dateMatrixMarginLeft, dateTextMatrixMarginLeft;
   let dateTextMatrixMarginBottom;
   let dateBlockHeight;
+  let dateNum;
+  let dateTitlePaddingTop;
+  let dateTotalTitlePaddingBottom;
 
   bigDesktop = (media[0] || media[1]);
 
@@ -803,10 +806,12 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
 
 
 
-  dateMatrixMarginLeft = 30;
-  dateTextMatrixMarginLeft = 32;
+  dateMatrixMarginLeft = 0;
+  dateTextMatrixMarginLeft = 2;
   dateTextMatrixMarginBottom = 18;
   dateBlockHeight = 47;
+  dateTitlePaddingTop = 40;
+  dateTotalTitlePaddingBottom = 40;
 
   dateMatrix = getDateMatrix(new Date());
   dateMatrix = dateMatrix.previousMatrix();
@@ -823,13 +828,11 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       display: "block",
       position: "relative",
       width: String(100) + '%',
-      border: "1px solid " + colorChip.gray3,
-      borderRadius: String(3) + "px",
-      boxSizing: "border-box",
-      paddingBottom: String(40) + ea,
+      paddingBottom: String(dateTotalTitlePaddingBottom) + ea,
     }
   });
 
+  dateNum = 0;
   for (let { year, month, matrix } of dateMatrixArr) {
 
     createNode({
@@ -838,7 +841,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
         display: "block",
         position: "relative",
         paddingLeft: String(dateTextMatrixMarginLeft) + ea,
-        paddingTop: String(40) + ea,
+        paddingTop: String(dateNum !== 0 ? dateTitlePaddingTop : 0) + ea,
         paddingBottom: String(dateTextMatrixMarginBottom) + ea,
       },
       children: [
@@ -871,6 +874,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
           marginRight: String(dateMatrixMarginLeft) + ea,
           width: withOut(dateMatrixMarginLeft * 2, ea),
           height: String(dateBlockHeight) + ea,
+          boxSizing: "border-box",
         },
         children: [
           {
@@ -900,6 +904,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       });
     }
 
+    dateNum++;
   }
 
 }
