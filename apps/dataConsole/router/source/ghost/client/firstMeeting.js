@@ -239,7 +239,7 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
       this.wordings.table.table = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
 
       this.wordings.check = {};
-      this.wordings.check.title = "체크리스트";
+      this.wordings.check.title = [ "체크리스트" ];
       this.wordings.check.matrix = [
         {
           title: "디자이너가 진행할 3가지",
@@ -280,7 +280,7 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
       ];
 
       this.wordings.photo = {};
-      this.wordings.photo.title = "전송된 사진";
+      this.wordings.photo.title = [ "전송된 사진" ];
 
     }
 
@@ -1052,7 +1052,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   let wordings;
 
   wordings = this.wordings.checkWordings;
-  wordsTitle = wordings.title;
+  wordsTitle = wordings.title[0];
   matrix = wordings.matrix;
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
@@ -1350,7 +1350,7 @@ FirstMeetingJs.prototype.insertPhotoBox = function (indexNumber) {
   let wordings;
 
   wordings = this.wordings.photoWordings;
-  wordsTitle = wordings.title;
+  wordsTitle = wordings.title[0];
 
   bottomMargin = <%% 160, 160, 160, 120, 30 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;

@@ -44,159 +44,7 @@ const WholeScheduleJs = function () {
 
 WholeScheduleJs.binaryPath = "/middle/schedule";
 
-WholeScheduleJs.prototype.tableStatic = function (designer, project, client, clientHistory, projectHistory, requestNumber) {
-  const instance = this;
-  const mother = this.mother;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
-  const { totalMother, ea, grayBarWidth, middleMode } = this;
-  const mobile = this.media[4];
-  const desktop = !mobile;
-  const desid = designer.desid;
-  const proid = project.proid;
-  const cliid = project.cliid;
-
-  const title = "홈스타일링 의뢰서";
-  const initialContents = "안녕하세요, <b%" + designer.designer + "%b> 실장님!\n홈리에종에 의뢰하신 " + client.name +  " 고객님 관련 정보를 보내드립니다. <b%" + GeneralJs.serviceParsing(project.service) + "%b>를 진행합니다.";
-  const emptyReload = (originalArr, reloadArr) => {
-    if (originalArr.map((a) => { return a.trim(); }).filter((a) => { return a !== ""; }).length > 0) {
-      return originalArr;
-    } else {
-      return reloadArr;
-    }
-  }
-  const mainContents = [
-    {
-      title: "현장 미팅",
-      className: "mainContents_when",
-      position: "request.about.when",
-      contents: emptyReload(projectHistory.request.about.when, [ dateToString(project.process.contract.meeting.date, true, true) ]),
-      spread: true,
-    },
-    {
-      title: "현장 주소",
-      className: "mainContents_where",
-      position: "request.about.where",
-      contents: emptyReload(projectHistory.request.about.where, [ client.requests[requestNumber].request.space.address ]),
-      spread: true,
-    },
-    {
-      title: "현장 관련",
-      className: "mainContents_site",
-      position: "request.about.site",
-      contents: emptyReload(projectHistory.request.about.site, [ "현장 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "시공 관련",
-      className: "mainContents_construct",
-      position: "request.about.construct",
-      contents: emptyReload(projectHistory.request.about.construct, [ "시공 관련 상세 사항 없음" ]),
-      spread: false,
-    },
-    {
-      title: "스타일링 관련",
-      className: "mainContents_styling",
-      position: "request.about.styling",
-      contents: emptyReload(projectHistory.request.about.styling, [ "스타일링 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "예산 관련",
-      className: "mainContents_budget",
-      position: "request.about.budget",
-      contents: emptyReload(projectHistory.request.about.budget, [ "예산 관련 상세 사항 없음" ]),
-      spread: true,
-    },
-    {
-      title: "기타 사항",
-      className: "mainContents_progress",
-      position: "request.about.progress",
-      contents: emptyReload(projectHistory.request.about.progress, [ "기타 관련 상세 사항 없음" ]),
-      spread: false,
-    }
-  ];
-  const pictureContents = "고객님이 선택한 사진";
-  const pictureContentsSite = "고객님의 현장 사진";
-  const pictureContentsPrefer = "고객님의 선호 사진";
-  const pictures = clientHistory.curation.image;
-  const matrix = [
-    [ "고객 정보", "", "공간 정보", "" ],
-    [ (desktop ? "고객명" : "성함"), projectHistory.request.client.name, (desktop ? "계약 형태" : "계약"), projectHistory.request.space.contract ],
-    [ "연락처", projectHistory.request.client.phone, (desktop ? "사전 점검일" : "사전점검"), projectHistory.request.space.precheck ],
-    [ (desktop ? "가족 구성원" : "가족"), projectHistory.request.client.family, (desktop ? "집 비는 날" : "비는 날"), projectHistory.request.space.empty ],
-    [ "주소", projectHistory.request.client.address, (desktop ? "입주 예정일" : "입주일"), projectHistory.request.space.movein ],
-    [ "", "", (desktop ? "특이 사항" : "기타"), projectHistory.request.space.special ],
-    [ "예산", projectHistory.request.client.budget, (desktop ? "공간구성" : "구성"), projectHistory.request.space.composition ],
-    [ "서비스 정보", "", "고객 요청", "" ],
-    [ "서비스", projectHistory.request.service.service, projectHistory.request.client.etc, "" ],
-    [ (desktop ? "선호 컨셉" : "컨셉"), projectHistory.request.service.concept, "", "" ],
-    [ "시공", projectHistory.request.service.construct, "", "" ],
-    [ "스타일링", projectHistory.request.service.styling, "", "" ],
-  ];
-  const mergeMap = [
-    [ null, [ 0, 0 ], null, [ 0, 2 ] ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ [ 4, 0 ], [ 4, 1 ], null, null ],
-    [ null, null, null, null ],
-    [ null, [ 7, 0 ], null, [ 7, 2 ] ],
-    [ null, null, null, [ 8, 2 ] ],
-    [ null, null, null, [ 9, 2 ] ],
-    [ null, null, null, [ 10, 2 ] ],
-    [ null, null, [ 8, 2 ], [ 11, 2 ] ],
-  ];
-  const callbackMap = [
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-    [ null, null, null, null ],
-  ];
-  const boldMap = [
-    [ 0, 0, 0, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 1, 0, 1, 0 ],
-    [ 0, 0, 0, 0 ],
-    [ 1, 0, 0, 0 ],
-    [ 1, 0, 0, 0 ],
-    [ 1, 0, 0, 0 ],
-    [ 1, 0, 0, 0 ],
-  ];
-  const titleMap = [ 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ];
-  const widthRatio = desktop ? [ 1, 3, 1, 3 ] : [ 1, 2, 1, 2 ];
-
-  return {
-    title,
-    initialContents,
-    emptyReload,
-    mainContents,
-    pictureContents,
-    pictureContentsSite,
-    pictureContentsPrefer,
-    pictures,
-    matrix,
-    mergeMap,
-    callbackMap,
-    boldMap,
-    titleMap,
-    widthRatio,
-  };
-}
-
-WholeScheduleJs.prototype.meetingWordings = function (liteMode = false) {
+WholeScheduleJs.prototype.scheduleWordings = function (liteMode = false) {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -219,27 +67,17 @@ WholeScheduleJs.prototype.meetingWordings = function (liteMode = false) {
           "홈스타일링에 대한 <b%전체적인 방향%b>을 이야기하게 됩니다.",
         ],
         image: [
-          "/designerMeeting.jpg",
-          "/designerMeetingb.jpg",
-          "/designerMeetingc.jpg",
+          "/init0.jpg",
+          "/init1.jpg",
+          "/init2.jpg",
         ]
       };
 
-      this.wordings.table = {};
-      this.wordings.table.title = [ "기본 안내" ];
-      this.wordings.table.subTitle = [
-        "현장 미팅",
-        "진행 기간"
-      ];
-      this.wordings.table.contents = [
-        "현장 미팅 전, <b%디자이너에게 공유%b>할 고객님의 기본 정보입니다.",
-        "디자이너가 <b%고객님을 뵙기 전, 미팅 준비를 하기 위해%b> 공유드리는 것이며,",
-        "틀린 정보가 있을 시 홈리에종에 문의해주시길 바랍니다.",
-      ];
-      this.wordings.table.table = instance.tableStatic(instance.designer, instance.project, instance.client, instance.clientHistory, instance.projectHistory, instance.requestNumber);
+      this.wordings.schedule = {};
+      this.wordings.schedule.title = [ "일정표" ];
 
       this.wordings.check = {};
-      this.wordings.check.title = "체크리스트";
+      this.wordings.check.title = [ "체크리스트" ];
       this.wordings.check.matrix = [
         {
           title: "디자이너가 진행할 3가지",
@@ -279,25 +117,18 @@ WholeScheduleJs.prototype.meetingWordings = function (liteMode = false) {
         }
       ];
 
-      this.wordings.photo = {};
-      this.wordings.photo.title = "전송된 사진";
-
     }
 
     get initWordings() {
       return this.wordings.init;
     }
 
-    get tableWordings() {
-      return this.wordings.table;
+    get scheduleWordings() {
+      return this.wordings.schedule;
     }
 
     get checkWordings() {
       return this.wordings.check;
-    }
-
-    get photoWordings() {
-      return this.wordings.photo;
     }
 
   }
@@ -311,13 +142,6 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
-  const emptyReload = (originalArr, reloadArr) => {
-    if (originalArr.map((a) => { return a.trim(); }).filter((a) => { return a !== ""; }).length > 0) {
-      return originalArr.join(' ');
-    } else {
-      return reloadArr.join(' ');
-    }
-  }
   let whiteBlock, whiteTong;
   let blockHeight, bottomMargin;
   let margin;
@@ -326,24 +150,23 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   let firstBlockWidth;
   let initWordingSize;
   let lineHeight;
-  let wordings, initPhoto;
-  let zeroWordingSize, zeroWordingTop;
+  let wordings, initPhotos;
   let titlePadding;
   let contentsPadding;
   let titleHeight;
-  let titleMargin;
-  let lineTop, linetMargin;
   let secondBlockWidth, secondBlockMargin;
   let initTitleMarginTop;
-  let initContentsMarginTop;
-  let initContentsBottom;
-  let initContentsPaddingLeft;
-  let arrowTop, arrowWidth, arrorLeft;
-  let mobilePhotoHeight;
   let titleTextTop;
   let pictureBetweenMargin;
   let pictureNumber;
   let picturePaddingTop;
+  let dateRangeWidth;
+  let dateRangeMarginTop;
+  let dateRangeSize;
+  let dateRangeLineTop;
+  let dateRangeIndent;
+  let initNumberBottom;
+  let initNumberSize;
 
   pictureNumber = 3;
 
@@ -356,37 +179,29 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   titlePadding = <%% 5, 2, 1, 0, 1 %%>;
   contentsPadding = titlePadding + 1;
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
-  titleMargin = <%% 32, 26, 24, 12, 2 %%>;
 
   picturePaddingTop = <%% 4, 3, 3, 2, 0 %%>;
   pictureBetweenMargin = <%% 10, 10, 8, 6, 1 %%>;
 
-  lineTop = <%% 18, 18, 17, 14, 0.6 %%>;
-  linetMargin = <%% 20, 20, 20, 20, 0.6 %%>;
-
-  secondBlockWidth = <%% 340, 290, 270, 250, 33 %%>;
-  secondBlockMargin = <%% 42, 40, 38, 36, 2.5 %%>;
+  secondBlockWidth = <%% 320, 280, 260, 240, 33 %%>;
+  secondBlockMargin = <%% 50, 50, 48, 46, 2.5 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  initTitleMarginTop = <%% 18, 18, 18, 18, 2.5 %%>;
 
-  zeroWordingSize = <%% 21, 21, 21, 21, 21 %%>;
-  zeroWordingTop = <%% -3, -3, -3, -3, -3 %%>;
+  dateRangeWidth = <%% 200, 190, 180, 160, 20 %%>;
+  dateRangeMarginTop = <%% 46, 44, 43, 40, 4 %%>;
+  dateRangeSize = <%% 28, 28, 26, 25, 5 %%>;
+  dateRangeLineTop = <%% 19, 19, 17, 15, 5 %%>;
+  dateRangeIndent = <%% 10, 10, 8, 6, 2 %%>;
 
-  initTitleMarginTop = <%% 14, 14, 14, 14, 2.5 %%>;
-  initContentsMarginTop = <%% 4, 4, 4, 4, 1 %%>;
-  initContentsBottom = <%% -3, -3, -3, -3, 0 %%>;
-  initContentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
-
-  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-  arrowTop = <%% (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), (isMac() ? 6 : 4), 0.3 %%>;
-  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
+  initNumberBottom = <%% -3, -3, -2, -1, 0 %%>;
+  initNumberSize = <%% 18, 18, 16, 15, 4 %%>;
 
   wordings = this.wordings.initWordings;
-  initPhoto = <%% this.wordings.initWordings.image[0], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[1], this.wordings.initWordings.image[2] %%>;
+  initPhotos = this.wordings.initWordings.image;
 
   titleTextTop = isMac() ? 0 : 4;
-
-  mobilePhotoHeight = 26;
 
   lineHeight = 1.6;
 
@@ -430,13 +245,12 @@ WholeScheduleJs.prototype.insertInitBox = function () {
         {
           text: wordings.title.join(" "),
           style: {
-            display: desktop ? "inline-block" : "block",
+            display: "block",
+            position: "relative",
             fontSize: String(titleFontSize) + ea,
             fontWeight: String(titleFontWeight),
-            position: "relative",
             fontFamily: "sandoll",
             paddingLeft: desktop ? String(titlePadding) + ea : "",
-            paddingRight: desktop ? String(linetMargin) + ea : "",
             height: String(titleHeight) + ea,
             background: colorChip.white,
             wordSpacing: String(-2) + "px",
@@ -449,15 +263,77 @@ WholeScheduleJs.prototype.insertInitBox = function () {
           }
         },
         {
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(dateRangeWidth) + ea,
+            marginTop: String(dateRangeMarginTop) + ea,
+            paddingLeft: String(contentsPadding) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                textAlign: "left",
+              },
+              children: [
+                {
+                  text: "2021. 08. 16",
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(dateRangeSize) + ea,
+                    fontWeight: String(200),
+                    fontFamily: "graphik",
+                    color: colorChip.green,
+                  }
+                }
+              ]
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                textAlign: "right",
+                marginTop: String(0) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    position: "absolute",
+                    width: String(100) + '%',
+                    top: String(0),
+                    left: String(0),
+                    height: String(dateRangeLineTop) + ea,
+                    borderBottom: "1px solid " + colorChip.whiteGreen,
+                  }
+                },
+                {
+                  text: "2021. 09. 16",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(dateRangeSize) + ea,
+                    fontWeight: String(200),
+                    fontFamily: "graphik",
+                    color: colorChip.green,
+                    background: colorChip.white,
+                    paddingLeft: String(dateRangeIndent) + ea,
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
           text: wordings.contents.join(" "),
           style: {
-            display: (!media[3] ? "block" : "none"),
+            display: "block",
             position: "relative",
             fontSize: String(initWordingSize) + ea,
             fontWeight: String(400),
             color: colorChip.black,
             lineHeight: String(1.6),
-            bottom: String(initContentsBottom) + ea,
             marginTop: desktop ? String(initTitleMarginTop) + ea : String(5) + ea,
             paddingLeft: desktop ? String(contentsPadding) + ea : "",
           },
@@ -467,6 +343,18 @@ WholeScheduleJs.prototype.insertInitBox = function () {
             color: colorChip.black
           }
         },
+        {
+          text: String(0),
+          style: {
+            position: "absolute",
+            bottom: String(initNumberBottom) + ea,
+            left: String(contentsPadding) + ea,
+            fontSize: String(initNumberSize) + ea,
+            fontWeight: String(200),
+            fontFamily: "graphik",
+            color: colorChip.gray4,
+          }
+        }
       ]
     },
     {
@@ -487,21 +375,32 @@ WholeScheduleJs.prototype.insertInitBox = function () {
     createNode({
       mother: secondBlock,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
         position: "relative",
         width: "calc(calc(100% - " + String(pictureBetweenMargin * (pictureNumber - 1)) + ea + ") / " + String(pictureNumber) + ")",
         height: String(100) + '%',
         background: colorChip.gray3,
-        borderRadius: String(5) + "px",
-        marginRight: String(i !== pictureNumber - 1 ? pictureBetweenMargin : 0) + ea
-      }
+        borderRadius: String(8) + "px",
+        marginRight: String(i !== pictureNumber - 1 ? pictureBetweenMargin : 0) + ea,
+        overflow: "hidden",
+        verticalAlign: "top",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      children: [
+        {
+          mode: "img",
+          attribute: {
+            src: WholeScheduleJs.binaryPath + initPhotos[i],
+          },
+          style: {
+            display: "block",
+            width: String(101) + '%',
+          }
+        }
+      ]
     });
   }
-
-
-
-
-
 
 }
 
@@ -511,8 +410,9 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   const { client, project, ea, baseTong, media } = this;
   const mobile = media[4];
   const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, getDateMatrix } = GeneralJs;
-  const wordings = this.wordings.tableWordings;
+  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, getDateMatrix, equalJson } = GeneralJs;
+  const wordings = this.wordings.scheduleWordings;
+  const blank = "&nbsp;&nbsp;";
   let paddingTop;
   let block;
   let whiteBlock, whiteTong;
@@ -555,6 +455,12 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   let dateNum;
   let dateTitlePaddingTop;
   let dateTotalTitlePaddingBottom;
+  let dateFactorWidth;
+  let dateFactorTextSize;
+  let dateFactorTextTop;
+  let dateStart, dateEnd;
+  let dateCopied;
+  let dateFactorTitleTextTop;
 
   bigDesktop = (media[0] || media[1]);
 
@@ -605,6 +511,17 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   mobilePaddingBottom = 10.5;
 
   dateRange = 3;
+
+  dateMatrixMarginLeft = <%% 0, 0, 0, 0, 0 %%>;
+  dateTextMatrixMarginLeft = <%% 2, 2, 2, 2, 0 %%>;
+  dateTextMatrixMarginBottom = <%% 18, 18, 18, 18, 1 %%>;
+  dateBlockHeight = <%% 47, 47, 47, 47, 4 %%>;
+  dateTitlePaddingTop = <%% 30, 30, 30, 30, 4 %%>;
+  dateTotalTitlePaddingBottom = <%% 40, 40, 40, 40, 4 %%>;
+  dateFactorWidth = <%% 120, 120, 100, 90 ,10 %%>;
+  dateFactorTextSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
+  dateFactorTitleTextTop = <%% 11, 11, 10, 9, 1 %%>;
+  dateFactorTextTop = <%% 12, 12, 11, 10, 1 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -695,21 +612,6 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   });
   tong = block.lastChild;
 
-
-
-
-
-
-
-
-
-  dateMatrixMarginLeft = 0;
-  dateTextMatrixMarginLeft = 2;
-  dateTextMatrixMarginBottom = 18;
-  dateBlockHeight = 47;
-  dateTitlePaddingTop = 40;
-  dateTotalTitlePaddingBottom = 40;
-
   dateMatrix = getDateMatrix(new Date());
   dateMatrix = dateMatrix.previousMatrix();
 
@@ -754,6 +656,17 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
     });
 
     for (let i = 0; i < matrix.length + 1; i++) {
+
+      if (i !== 0) {
+        dateCopied = equalJson(JSON.stringify(matrix[i - 1]));
+        dateStart = equalJson(JSON.stringify(dateCopied.find((obj) => { return obj !== null; })));
+        dateEnd = equalJson(JSON.stringify(dateCopied.reverse().find((obj) => { return obj !== null; })));
+      } else {
+        dateCopied = null;
+        dateStart = null;
+        dateEnd = null;
+      }
+
       createNode({
         mother: dateTong,
         style: {
@@ -772,31 +685,104 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
           width: withOut(dateMatrixMarginLeft * 2, ea),
           height: String(dateBlockHeight) + ea,
           boxSizing: "border-box",
+          background: i === 0 ? colorChip.gray0 : colorChip.white,
         },
         children: [
           {
             style: {
               display: "inline-block",
               position: "relative",
-              width: String(120) + ea,
+              width: String(dateFactorWidth) + ea,
               borderRight: "1px solid " + colorChip.gray3,
               height: String(100) + '%',
+              boxSizing: "border-box",
             },
             children: [
               {
                 text: i !== 0 ? `${String(month + 1)}월 ${String(i)}주차` : ``,
                 style: {
                   position: "absolute",
-                  fontSize: String(15) + ea,
+                  fontSize: String(dateFactorTextSize) + ea,
                   fontWeight: String(400),
                   width: String(100) + '%',
                   textAlign: "center",
-                  top: String(12) + ea,
+                  top: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
+                  color: colorChip.green,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(dateFactorWidth) + ea,
+              borderRight: "1px solid " + colorChip.gray3,
+              height: String(100) + '%',
+              boxSizing: "border-box",
+            },
+            children: [
+              {
+                text: i !== 0 ? `${dateToString(dateStart.dateObject).slice(2).replace(/-/gi, ". ")}${blank}(${dateStart.day})` : `시작일`,
+                style: {
+                  position: "absolute",
+                  fontSize: String(dateFactorTextSize) + ea,
+                  fontWeight: String(i === 0 ? 600 : 400),
+                  width: String(100) + '%',
+                  textAlign: "center",
+                  top: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
                   color: colorChip.black,
                 }
               }
             ]
-          }
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: String(dateFactorWidth) + ea,
+              borderRight: "1px solid " + colorChip.gray3,
+              height: String(100) + '%',
+              boxSizing: "border-box",
+            },
+            children: [
+              {
+                text: i !== 0 ? `${dateToString(dateEnd.dateObject).slice(2).replace(/-/gi, ". ")}${blank}(${dateEnd.day})` : `종료일`,
+                style: {
+                  position: "absolute",
+                  fontSize: String(dateFactorTextSize) + ea,
+                  fontWeight: String(i === 0 ? 600 : 400),
+                  width: String(100) + '%',
+                  textAlign: "center",
+                  top: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
+                  color: colorChip.black,
+                }
+              }
+            ]
+          },
+          {
+            style: {
+              display: "inline-block",
+              position: "relative",
+              width: withOut(dateFactorWidth * 3, ea),
+              height: String(100) + '%',
+              boxSizing: "border-box",
+            },
+            children: [
+              {
+                text: i !== 0 ? `` : `내용`,
+                style: {
+                  position: "absolute",
+                  fontSize: String(dateFactorTextSize) + ea,
+                  fontWeight: String(i === 0 ? 600 : 400),
+                  width: String(100) + '%',
+                  textAlign: "center",
+                  top: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
+                  color: colorChip.black,
+                }
+              }
+            ]
+          },
         ]
       });
     }
@@ -853,7 +839,7 @@ WholeScheduleJs.prototype.insertChecklistBox = function (indexNumber) {
   wordsTitle = wordings.title;
   matrix = wordings.matrix;
 
-  bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
+  bottomMargin = <%% 160, 160, 160, 120, 30 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
   paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
 
@@ -1104,181 +1090,6 @@ WholeScheduleJs.prototype.insertChecklistBox = function (indexNumber) {
 
 }
 
-WholeScheduleJs.prototype.insertPhotoBox = function (indexNumber) {
-  const instance = this;
-  const mother = this.mother;
-  const { client, ea, baseTong, media } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
-  const cliid = this.client.cliid;
-  let paddingTop;
-  let block;
-  let whiteBlock, whiteTong;
-  let bottomMargin;
-  let titleFontSize;
-  let num, num2;
-  let numberRight;
-  let titleTop, titleTopNumber;
-  let titleBottom;
-  let index;
-  let mobileTitleLeft, mobileTitleTop;
-  let secondBlockWidth, secondBlockMargin;
-  let tong;
-  let contentsWordingSize;
-  let contentsBottom;
-  let whiteBottomMargin;
-  let contentsTitleMarginTop, contentsMarginTop;
-  let contentsPaddingLeft;
-  let arrowWidth;
-  let arrowTop;
-  let arrorLeft;
-  let bigNumberSize;
-  let bigNumberBetween;
-  let bigNumberMargin;
-  let bigNumberBetweenMargin;
-  let images;
-  let obj;
-  let curation;
-  let columnsLength;
-  let positionArr;
-  let imageMargin;
-  let tempArr, tempArr2;
-  let tempImage;
-  let wordings;
-
-  wordings = this.wordings.photoWordings;
-  wordsTitle = wordings.title;
-
-  bottomMargin = <%% 160, 160, 160, 120, 30 %%>;
-  margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
-
-  whiteBottomMargin = <%% 68, 68, 68, 68, 0 %%>;
-
-  titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
-  numberRight = <%% 12, 12, 12, 12, 3 %%>;
-
-  titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
-  titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
-
-  titleBottom = <%% 26, 26, 26, 26, 6 %%>;
-  mobileTitleLeft = 1.5;
-  mobileTitleTop = -8.7;
-
-  secondBlockWidth = <%% 300, 300, 300, 300, 330 %%>;
-  secondBlockMargin = <%% 36, 36, 36, 36, 33 %%>;
-
-  contentsWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
-  contentsBottom = <%% -5, -5, -5, -5, 0 %%>;
-
-  contentsTitleMarginTop = <%% 14, 14, 14, 14, 1 %%>;
-  contentsMarginTop = <%% 36, 36, 36, 36, 1 %%>;
-  contentsPaddingLeft = <%% 14, 14, 14, 14, 0 %%>;
-  arrowWidth = <%% 8, 8, 7, 6, 1.6 %%>;
-  arrowTop = <%% 6, 6, 6, 6, 0.3 %%>;
-  arrorLeft = <%% 1, 1, 1, 1, 0 %%>;
-
-  bigNumberSize = <%% 37, 37, 37, 37, 5 %%>;
-  bigNumberBetween = <%% -3, -3, -3, -3, 0 %%>;
-  bigNumberMargin = <%% 0, 0, 0, 0, 0 %%>;
-  bigNumberBetweenMargin = <%% 28, 28, 28, 28, 0 %%>;
-
-  columnsLength = <%% 4, 4, 3, 3, 2 %%>;
-  imageMargin = <%% 8, 8, 8, 6, 1 %%>;
-
-  this.whiteMargin = (desktop ? margin : 0);
-
-  whiteBlock = createNode({
-    mother: baseTong,
-    style: {
-      position: "relative",
-      borderRadius: String(desktop ? 8 : 1) + ea,
-      width: String(100) + '%',
-      background: desktop ? colorChip.white : "",
-      paddingTop: desktop ? String(paddingTop + (desktop ? 0 : 1.7)) + ea : "",
-      paddingBottom: desktop ? String(whiteBottomMargin) + ea : "",
-      marginBottom: String(bottomMargin) + ea,
-      boxShadow: desktop ? "0px 5px 12px -10px " + colorChip.gray5 : "",
-    },
-    children: [
-      {
-        display: "block",
-        position: "relative",
-        width: desktop ? withOut(margin * 2, ea) : String(100) + '%',
-        height: String(100) + '%',
-        marginLeft: String(desktop ? margin : 0) + ea,
-      }
-    ]
-  });
-  whiteTong = whiteBlock.firstChild;
-
-  block = createNode({
-    mother: whiteTong,
-    style: {
-      display: "block",
-      position: "relative",
-      width: String(100) + '%',
-    },
-    children: [
-      {
-        style: {
-          display: "block",
-          position: mobile ? "absolute" : "relative",
-          left: desktop ? "" : String(mobileTitleLeft) + ea,
-          top: desktop ? "" : String(mobileTitleTop) + ea,
-          width: desktop ? String(100) + '%' : withOut((mobileTitleLeft * 2), ea),
-          marginBottom: String(titleBottom) + ea,
-          zIndex: mobile ? String(1) : "",
-        },
-        children: [
-          {
-            text: wordsTitle,
-            style: {
-              position: "relative",
-              display: "inline-block",
-              top: String(titleTopNumber) + ea,
-              fontSize: String(titleFontSize) + ea,
-              fontWeight: String(600),
-              background: desktop ? colorChip.white : colorChip.gray1,
-              paddingRight: String(numberRight) + ea,
-              color: colorChip.black,
-            }
-          },
-          {
-            text: String(indexNumber),
-            style: {
-              position: "absolute",
-              right: String(0),
-              top: String(titleTop) + ea,
-              fontSize: String(titleFontSize) + ea,
-              fontWeight: String(200),
-              background: desktop ? colorChip.white : colorChip.gray1,
-              paddingLeft: String(numberRight) + ea,
-              color: desktop ? colorChip.black : colorChip.green,
-            }
-          },
-        ]
-      },
-      {
-        style: {
-          display: "block",
-          position: "relative",
-          width: String(100) + '%',
-          overflow: "hidden",
-          marginBottom: String(0) + ea,
-          marginTop: desktop ? "" : String(14) + ea,
-          paddingTop: desktop ? "" : String(1) + ea,
-        }
-      },
-    ]
-  });
-  tong = block.lastChild;
-
-  images = [];
-
-}
-
 WholeScheduleJs.prototype.launching = async function (loading) {
   const instance = this;
   try {
@@ -1339,7 +1150,7 @@ WholeScheduleJs.prototype.launching = async function (loading) {
     [ designer ] = designers;
     this.designer = designer;
 
-    this.wordings = this.meetingWordings();
+    this.wordings = this.scheduleWordings();
 
     await this.mother.ghostClientLaunching({
       name: "wholeSchedule",
@@ -1354,15 +1165,12 @@ WholeScheduleJs.prototype.launching = async function (loading) {
         try {
           instance.insertInitBox();
           instance.insertScheduleBox(1);
-          instance.insertPhotoBox(2);
+          instance.insertChecklistBox(2);
         } catch (e) {
           await GeneralJs.ajaxJson({ message: "WholeScheduleJs.launching.ghostClientLaunching : " + e.message }, "/errorLog");
         }
       }
     });
-
-
-    // instance.insertChecklistBox(2);
 
     loading.parentNode.removeChild(loading);
 
