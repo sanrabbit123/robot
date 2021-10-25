@@ -190,7 +190,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   initTitleMarginTop = <%% 18, 18, 12, 28, 2.5 %%>;
 
   dateRangeWidth = <%% 200, 190, 180, 160, 20 %%>;
-  dateRangeMarginTop = <%% 46, 62, 44, 48, 4 %%>;
+  dateRangeMarginTop = <%% (isMac() ? 46 : 48), 62, 44, 48, 4 %%>;
   dateRangeSize = <%% 28, 27, 24, 22, 5 %%>;
   dateRangeLineTop = <%% 19, 18, 16, 15, 5 %%>;
   dateRangeIndent = <%% 10, 10, 8, 6, 2 %%>;
@@ -396,7 +396,8 @@ WholeScheduleJs.prototype.insertInitBox = function () {
           },
           style: {
             display: "block",
-            height: String(101) + '%',
+            height: !media[0] ? String(101) + '%' : "",
+            width: !media[0] ? "" : String(101) + '%',
           }
         }
       ]
