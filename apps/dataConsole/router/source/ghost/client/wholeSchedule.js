@@ -181,22 +181,22 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
 
   picturePaddingTop = <%% 4, 3, 3, 2, 0 %%>;
-  pictureBetweenMargin = <%% 10, 10, 8, 6, 1 %%>;
+  pictureBetweenMargin = <%% 10, 6, 5, 4, 1 %%>;
 
-  secondBlockWidth = <%% 320, 280, 260, 240, 33 %%>;
-  secondBlockMargin = <%% 50, 50, 48, 46, 2.5 %%>;
+  secondBlockWidth = <%% 320, 240, 225, 160, 33 %%>;
+  secondBlockMargin = <%% 50, 45, 40, 39, 2.5 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
-  initTitleMarginTop = <%% 18, 18, 18, 18, 2.5 %%>;
+  initTitleMarginTop = <%% 18, 18, 12, 28, 2.5 %%>;
 
   dateRangeWidth = <%% 200, 190, 180, 160, 20 %%>;
-  dateRangeMarginTop = <%% 46, 44, 43, 40, 4 %%>;
-  dateRangeSize = <%% 28, 28, 26, 25, 5 %%>;
-  dateRangeLineTop = <%% 19, 19, 17, 15, 5 %%>;
+  dateRangeMarginTop = <%% 46, 62, 44, 48, 4 %%>;
+  dateRangeSize = <%% 28, 27, 24, 22, 5 %%>;
+  dateRangeLineTop = <%% 19, 18, 16, 15, 5 %%>;
   dateRangeIndent = <%% 10, 10, 8, 6, 2 %%>;
 
   initNumberBottom = <%% -3, -3, -2, -1, 0 %%>;
-  initNumberSize = <%% 18, 18, 16, 15, 4 %%>;
+  initNumberSize = <%% 18, 16, 15, 12, 4 %%>;
 
   wordings = this.wordings.initWordings;
   initPhotos = this.wordings.initWordings.image;
@@ -264,7 +264,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
         },
         {
           style: {
-            display: "block",
+            display: !media[3] ? "block" : "none",
             position: "relative",
             width: String(dateRangeWidth) + ea,
             marginTop: String(dateRangeMarginTop) + ea,
@@ -346,6 +346,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
         {
           text: String(0),
           style: {
+            display: (media[0] || media[2] || media[3]) ? "block" : "none",
             position: "absolute",
             bottom: String(initNumberBottom) + ea,
             left: String(contentsPadding) + ea,
@@ -395,7 +396,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
           },
           style: {
             display: "block",
-            width: String(101) + '%',
+            height: String(101) + '%',
           }
         }
       ]
@@ -461,6 +462,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   let dateStart, dateEnd;
   let dateCopied;
   let dateFactorTitleTextTop;
+  let dateTitleSize;
 
   bigDesktop = (media[0] || media[1]);
 
@@ -472,13 +474,13 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
 
-  titleFontSize = <%% 21, 21, 21, 21, 4.3 %%>;
+  titleFontSize = <%% 21, 21, 21, 19, 4.3 %%>;
   numberRight = <%% 12, 12, 12, 12, 3 %%>;
 
   titleTopNumber = <%% isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, isMac() ? 0 : 2, 0 %%>;
   titleTop = <%% isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, isMac() ? 1 : 3, 0 %%>;
 
-  titleBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), 0 %%>;
+  titleBottom = <%% (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 21 : 19), (isMac() ? 18 : 16), 0 %%>;
 
   mobileTitleLeft = 1.5;
   mobileTitleTop = -8.7;
@@ -514,14 +516,15 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
 
   dateMatrixMarginLeft = <%% 0, 0, 0, 0, 0 %%>;
   dateTextMatrixMarginLeft = <%% 2, 2, 2, 2, 0 %%>;
-  dateTextMatrixMarginBottom = <%% 18, 18, 18, 18, 1 %%>;
-  dateBlockHeight = <%% 47, 47, 47, 47, 4 %%>;
-  dateTitlePaddingTop = <%% 30, 30, 30, 30, 4 %%>;
+  dateTextMatrixMarginBottom = <%% 18, 17, 16, 14, 1 %%>;
+  dateBlockHeight = <%% 47, 46, 44, 41, 4 %%>;
+  dateTitlePaddingTop = <%% 30, 29, 28, 24, 4 %%>;
   dateTotalTitlePaddingBottom = <%% 40, 40, 40, 40, 4 %%>;
   dateFactorWidth = <%% 120, 120, 100, 90 ,10 %%>;
   dateFactorTextSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
   dateFactorTitleTextTop = <%% 11, 11, 10, 9, 1 %%>;
   dateFactorTextTop = <%% 12, 12, 11, 10, 1 %%>;
+  dateTitleSize = <%% 20, 20, 20, 19, 4 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
 
@@ -647,7 +650,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
         {
           text: String(year) + "년 " + String(month + 1) + "월",
           style: {
-            fontSize: String(20) + ea,
+            fontSize: String(dateTitleSize) + ea,
             fontWeight: String(500),
             color: colorChip.black
           }
@@ -723,7 +726,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
             },
             children: [
               {
-                text: i !== 0 ? `${dateToString(dateStart.dateObject).slice(2).replace(/-/gi, ". ")}${blank}(${dateStart.day})` : `시작일`,
+                text: i !== 0 ? (bigDesktop ? `${dateToString(dateStart.dateObject).slice(2).replace(/-/gi, ". ")}${blank}(${dateStart.day})` : dateToString(dateStart.dateObject).slice(2).replace(/-/gi, ". ")) : `시작일`,
                 style: {
                   position: "absolute",
                   fontSize: String(dateFactorTextSize) + ea,
@@ -747,7 +750,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
             },
             children: [
               {
-                text: i !== 0 ? `${dateToString(dateEnd.dateObject).slice(2).replace(/-/gi, ". ")}${blank}(${dateEnd.day})` : `종료일`,
+                text: i !== 0 ? (bigDesktop ? `${dateToString(dateEnd.dateObject).slice(2).replace(/-/gi, ". ")}${blank}(${dateEnd.day})` : dateToString(dateEnd.dateObject).slice(2).replace(/-/gi, ". ")) : `종료일`,
                 style: {
                   position: "absolute",
                   fontSize: String(dateFactorTextSize) + ea,
