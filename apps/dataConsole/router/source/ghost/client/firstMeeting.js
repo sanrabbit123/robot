@@ -999,6 +999,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   let contentsAreaPaddingTop;
   let zeroWidth, zeroMarginRight;
   let checkBoxWidth, checkBoxTop;
+  let arrowBoxWidth, arrowBoxTop;
   let contentsMarginBottom0, contentsMarginBottom1;
   let mobilePaddingLeft;
   let mobileContentsWordingSize;
@@ -1051,7 +1052,9 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   secondMarginRight = <%% 10, 10, 10, 10, 1.5 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
-  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7.5 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxWidth = <%% 8, 8, 8, 8, 1.8 %%>;
+  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
+  arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.4 %%>;
 
   contentsMarginBottom0 = <%% 4, 4, 4, 4, 1 %%>;
   contentsMarginBottom1 = <%% 18, 18, 18, 18, 1 %%>;
@@ -1216,11 +1219,11 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             children: [
               {
                 mode: "svg",
-                source: num !== 0 ? this.mother.returnCheckBox(colorChip.green) : this.mother.returnArrow("right", colorChip.green),,
+                source: (num !== 0 ? this.mother.returnCheckBox(colorChip.green) : this.mother.returnArrow("right", colorChip.green)),
                 style: {
                   position: "relative",
-                  top: String(checkBoxTop) + ea,
-                  width: String(checkBoxWidth) + ea,
+                  top: String(num !== 0 ? checkBoxTop : arrowBoxTop) + ea,
+                  width: String(num !== 0 ? checkBoxWidth : arrowBoxWidth) + ea,
                   verticalAlign: "top",
                 }
               }
