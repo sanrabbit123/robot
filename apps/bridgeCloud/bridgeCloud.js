@@ -1024,17 +1024,21 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           const binaryFolder = instance.dir + "/binary";
           const binrayFolderTest = new RegExp(cilentFolderName, 'g');
           const binaryFolderDetail = await fileSystem(`readDir`, [ binaryFolder ]);
-          let binrayFolderBoo = false;
+          let binrayFolderBoo;
+          let fileTong;
 
-          let fileTong = {};
+          fileTong = {};
           for (let i of list) {
             fileTong[i] = [];
           }
 
           //client folder make
-          for (let i of binaryFolderDetail) { if (binrayFolderTest.test(i)) {
+          binrayFolderBoo = false;
+          for (let i of binaryFolderDetail) {
+            if (binrayFolderTest.test(i)) {
             binrayFolderBoo = true;
-          }}
+            }
+          }
           if (!binrayFolderBoo) {
             shell.exec(`mkdir ${shellLink(binaryFolder + '/' + cilentFolderName)}`);
             for (let i = 0; i < list.length; i++) {
@@ -1058,7 +1062,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           //parsing cliid
           let clientRows, cliid;
           if (phone !== "010-2747-3403") {
-            clientRows = await instance.back.getClientsByQuery({ phone: phone }, { withTools: false, selfMongo: MONGOC });
+            clientRows = await instance.back.getClientsByQuery({ phone }, { withTools: false, selfMongo: MONGOC });
           } else {
             clientRows = [ { cliid: "테스트" } ];
           }

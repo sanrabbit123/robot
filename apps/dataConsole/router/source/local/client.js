@@ -4106,7 +4106,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   GeneralJs.stacks["rInitialBoxButtonToggle"] = 0;
   GeneralJs.stacks["rInitialBoxButtonDom"] = null;
   rInitialBox.addEventListener("click", function (e) {
-    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, serviceParsing } = GeneralJs;
+    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, serviceParsing, uniqueValue } = GeneralJs;
     let matrixBox;
     let loadingWidth;
     let tong;
@@ -4389,6 +4389,58 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         });
         scroll = createNode({
           mother: tong,
+          event: {
+            dragenter: (e) => {
+              e.preventDefault();
+            },
+            dragover: (e) => {
+              e.preventDefault();
+            },
+            dragstart: (e) => {
+              e.preventDefault();
+            },
+            dragleave: (e) => {
+              e.preventDefault();
+            },
+            drop: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+
+              if (e.dataTransfer.files.length > 0) {
+                const { name, phone } = thisCase;
+                const cilentFolderName = ("self" + uniqueValue("string")) + '_' + name + '_' + phone.replace(/\-/g, '');
+                const path = "/photo/고객 전송 사진/" + cilentFolderName + "/sitePhoto"
+                let formData, files, fileNames, toArr;
+
+                formData = new FormData();
+                formData.enctype = "multipart/form-data";
+
+                files = [ ...e.dataTransfer.files ];
+                files.sort((a, b) => {
+                  return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
+                });
+                fileNames = files.map((obj) => { return obj.name.replace(/ /gi, "_").replace(/\n/gi, "_").replace(/\t/gi, "_").replace(/[\/\\\=\&\:\,\!\@\#\$\%\^\+\*\(\)\[\]\{\}]/gi, ''); });
+                for (let i = 0; i < files.length; i++) {
+                  formData.append("upload" + String(i), files[i]);
+                }
+
+                toArr = [];
+                for (let i = 0; i < fileNames.length; i++) {
+                  toArr.push(path + "/" + fileNames[i]);
+                }
+                formData.append("toArr", JSON.stringify(toArr));
+
+                ajaxForm(formData, OFFICEHOST + "/fileUpload").then(() => {
+                  cleanChildren(scrollTong);
+                  imageLoad();
+                }).catch((e) => {
+                  console.log(e);
+                });
+
+              }
+
+            }
+          },
           style: {
             position: "relative",
             width: String(100) + '%',
@@ -4820,7 +4872,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 }
               },
               {
-                text: serviceParsing(curation.service.serid[0]),
+                text: serviceParsing(curation.service.serid.length > 0 ? curation.service.serid[0] : "s2011_aa02s"),
                 events: [
                   {
                     type: "contextmenu",
@@ -6269,10 +6321,7 @@ ClientJs.prototype.whiteResize = function () {
           window.location.search = "cliid=" + instance.whiteBox.id;
         } else {
           window.location.reload();
-        };
-      }
-      if (instance.totalFather !== undefined && instance.totalFather !== null) {
-        window.location.reload();
+        }
       }
       instance.resizeStack = 0;
     }

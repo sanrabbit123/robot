@@ -2028,6 +2028,7 @@ GeneralJs.serviceParsing = function (serviceObj, startDateMode = false) {
     return serviceString[serviceNumber];
 
   } else {
+    console.log(serviceObj);
     throw new Error("invaild input");
   }
 }
