@@ -1181,24 +1181,21 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
   //POST - certification
   funcObj.post_certification = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
+      const { name, phone, certification } = req.body;
+      const company = "홈리에종";
       const requestObj = req.body;
-      await HUMAN.sendSms({
-        name: requestObj["name"],
-        phone: requestObj["phone"],
-        subject: "휴대폰 인증",
-        contents: "[홈리에종] 안녕하세요! " + requestObj["name"] + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + requestObj["certification"] + "\n\n인증번호를 팝업창에 입력해주세요!"
-      });
-      res.set({
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      await KAKAO.sendTalk("certification", name, phone, { company, name, certification });
       res.send("success");
     } catch (e) {
-      await errorLog("Bridge 서버 문제 생김 (post_certification): " + e.message)
-      console.log(e);
+      await errorLog("Bridge 서버 문제 생김 (post_certification): " + e.message);
+      res.send("error");
     }
   }
 
