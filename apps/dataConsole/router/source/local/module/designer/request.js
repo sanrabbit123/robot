@@ -1421,7 +1421,7 @@ DesignerJs.prototype.requestStaticHtml = function (designer, project, client, cl
         <body style="padding-top:${String(leftMargin)}${ea};padding-bottom:${String(leftMargin)}${ea};">
           ${String(board.innerHTML)}
         </body>
-      </html>`).replace(/\=/gi, "__equal__").replace(/\&/gi, "__ampersand__");
+      </html>`).replace(/\=/gi, "__equal__").replace(/\&/gi, "__ampersand__").replace(/\'/gi, '');
 
       document.body.removeChild(document.body.lastChild);
 
@@ -2915,7 +2915,7 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
       for (let i = 0; i < imageTong.length; i++) {
         positionArr[i].appendChild(imageTong[i]);
       }
-      
+
     }
 
     for (let { title, contents } of noticeContents) {

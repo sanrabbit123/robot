@@ -167,6 +167,8 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   let dateRangeIndent;
   let initNumberBottom;
   let initNumberSize;
+  let dateRangeBetween;
+  let pictureMobileHeight;
 
   pictureNumber = 3;
 
@@ -176,12 +178,13 @@ WholeScheduleJs.prototype.insertInitBox = function () {
 
   titleFontSize = <%% 29, 28.5, 27.5, 23, 5.7 %%>;
   titleFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  titlePadding = <%% 5, 2, 1, 0, 1 %%>;
+  titlePadding = <%% 5, 2, 1, 0, 0 %%>;
   contentsPadding = titlePadding + 1;
   titleHeight = <%% 38, 38, 38, 38, 10 %%>;
 
   picturePaddingTop = <%% 4, 3, 3, 2, 0 %%>;
   pictureBetweenMargin = <%% 10, 6, 5, 4, 1 %%>;
+  pictureMobileHeight = 25;
 
   secondBlockWidth = <%% 320, 240, 225, 160, 33 %%>;
   secondBlockMargin = <%% 50, 45, 40, 39, 2.5 %%>;
@@ -190,10 +193,11 @@ WholeScheduleJs.prototype.insertInitBox = function () {
   initTitleMarginTop = <%% 18, 18, 12, 28, 2.5 %%>;
 
   dateRangeWidth = <%% 200, 190, 180, 160, 20 %%>;
-  dateRangeMarginTop = <%% (isMac() ? 46 : 48), 62, 44, 48, 4 %%>;
+  dateRangeMarginTop = <%% (isMac() ? 46 : 48), 62, 44, 48, 5.5 %%>;
   dateRangeSize = <%% 28, 27, 24, 22, 5 %%>;
-  dateRangeLineTop = <%% 19, 18, 16, 15, 5 %%>;
-  dateRangeIndent = <%% 10, 10, 8, 6, 2 %%>;
+  dateRangeLineTop = <%% 19, 18, 16, 15, 3.6 %%>;
+  dateRangeIndent = <%% 10, 10, 8, 6, 1.4 %%>;
+  dateRangeBetween = <%% 3, 3, 3, 3, 3 %%>;
 
   initNumberBottom = <%% -3, -3, -2, -1, 0 %%>;
   initNumberSize = <%% 18, 16, 15, 12, 4 %%>;
@@ -234,9 +238,9 @@ WholeScheduleJs.prototype.insertInitBox = function () {
     {
       mother: whiteTong,
       style: {
-        display: desktop ? "inline-block" : "flex",
+        display: desktop ? "inline-block" : "block",
         position: "relative",
-        width: desktop ? String(secondBlockWidth) + ea : withOut(secondBlockMargin * 2, ea),
+        width: desktop ? String(secondBlockWidth) + ea : String(100) + '%',
         height: desktop ? String(100) + '%' : '',
         verticalAlign: "top",
         textAlign: desktop ? "" : "center",
@@ -256,6 +260,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
             wordSpacing: String(-2) + "px",
             color: colorChip.black,
             top: desktop ? String(titleTextTop) + ea : "",
+            textAlign: desktop ? "" : "center",
           },
           bold: {
             fontSize: String(titleFontSize) + ea,
@@ -266,14 +271,14 @@ WholeScheduleJs.prototype.insertInitBox = function () {
           style: {
             display: !media[3] ? "block" : "none",
             position: "relative",
-            width: String(dateRangeWidth) + ea,
+            width: desktop ? String(dateRangeWidth) + ea : String(100) + '%',
             marginTop: String(dateRangeMarginTop) + ea,
-            paddingLeft: String(contentsPadding) + ea,
+            paddingLeft: desktop ? String(contentsPadding) + ea : "",
           },
           children: [
             {
               style: {
-                display: "block",
+                display: desktop ? "block" : "none",
                 position: "relative",
                 textAlign: "left",
               },
@@ -292,7 +297,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
             },
             {
               style: {
-                display: "block",
+                display: desktop ? "block" : "none",
                 position: "relative",
                 textAlign: "right",
                 marginTop: String(0) + ea,
@@ -322,6 +327,53 @@ WholeScheduleJs.prototype.insertInitBox = function () {
                   }
                 }
               ]
+            },
+            {
+              style: {
+                display: mobile ? "block" : "none",
+                position: "relative",
+                textAlign: "center",
+                marginTop: String(0) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    position: "absolute",
+                    width: String(50) + '%',
+                    top: String(0),
+                    left: String(25) + '%',
+                    height: String(dateRangeLineTop) + ea,
+                    borderBottom: "1px solid " + colorChip.whiteGreen,
+                  }
+                },
+                {
+                  text: "2021. 08. 16",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(dateRangeSize) + ea,
+                    fontWeight: String(200),
+                    fontFamily: "graphik",
+                    color: colorChip.green,
+                    background: colorChip.white,
+                    paddingRight: String(dateRangeIndent) + ea,
+                    marginRight: String(dateRangeBetween) + ea,
+                  }
+                },
+                {
+                  text: "2021. 09. 16",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(dateRangeSize) + ea,
+                    fontWeight: String(200),
+                    fontFamily: "graphik",
+                    color: colorChip.green,
+                    background: colorChip.white,
+                    paddingLeft: String(dateRangeIndent) + ea,
+                  }
+                }
+              ]
             }
           ]
         },
@@ -334,8 +386,9 @@ WholeScheduleJs.prototype.insertInitBox = function () {
             fontWeight: String(400),
             color: colorChip.black,
             lineHeight: String(1.6),
-            marginTop: desktop ? String(initTitleMarginTop) + ea : String(5) + ea,
-            paddingLeft: desktop ? String(contentsPadding) + ea : "",
+            marginTop: desktop ? String(initTitleMarginTop) + ea : String(2.5) + ea,
+            paddingLeft: String(contentsPadding) + ea,
+            width: desktop ? "" : withOut(contentsPadding * 2, ea),
           },
           bold: {
             fontSize: String(initWordingSize) + ea,
@@ -365,12 +418,18 @@ WholeScheduleJs.prototype.insertInitBox = function () {
         position: "relative",
         width: desktop ? withOut(secondBlockWidth + secondBlockMargin, ea) : String(100) + '%',
         verticalAlign: "top",
-        marginLeft: String(secondBlockMargin) + ea,
+        marginLeft: desktop ? String(secondBlockMargin) + ea : "",
         paddingTop: String(picturePaddingTop) + ea,
-        height: withOut(picturePaddingTop, ea),
+        height: desktop ? withOut(picturePaddingTop, ea) : String(pictureMobileHeight) + ea,
+        marginTop: desktop ? "" : String(2) + ea,
       }
     }
   ]);
+
+  if (mobile) {
+    whiteTong.appendChild(firstBlock);
+    whiteTong.insertBefore(firstBlock.firstChild, whiteTong.firstChild);
+  }
 
   for (let i = 0; i < pictureNumber; i++) {
     createNode({
@@ -381,7 +440,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
         width: "calc(calc(100% - " + String(pictureBetweenMargin * (pictureNumber - 1)) + ea + ") / " + String(pictureNumber) + ")",
         height: String(100) + '%',
         background: colorChip.gray3,
-        borderRadius: String(8) + "px",
+        borderRadius: String(desktop ? 8 : 2) + "px",
         marginRight: String(i !== pictureNumber - 1 ? pictureBetweenMargin : 0) + ea,
         overflow: "hidden",
         verticalAlign: "top",
@@ -396,8 +455,8 @@ WholeScheduleJs.prototype.insertInitBox = function () {
           },
           style: {
             display: "block",
-            height: !media[0] ? String(101) + '%' : "",
-            width: !media[0] ? "" : String(101) + '%',
+            height: !(media[0] || mobile) ? String(101) + '%' : "",
+            width: !(media[0] || mobile) ? "" : String(101) + '%',
           }
         }
       ]

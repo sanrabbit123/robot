@@ -228,8 +228,8 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
       this.wordings.table = {};
       this.wordings.table.title = [ "기본 안내" ];
       this.wordings.table.subTitle = [
-        "현장 미팅",
-        "진행 기간"
+        "입주 예정",
+        "예상 기간"
       ];
       this.wordings.table.contents = [
         "현장 미팅 전, <b%디자이너에게 공유%b>할 고객님의 기본 정보입니다.",
@@ -274,7 +274,7 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
           title: "기타 주의 사항",
           contents: [
             "<u%디자이너 변경%u>" + colon + "현장 미팅 후, 디자이너가 적합하지 않다고 판단될 시에 <b%최대 1회까지 홈리에종에 디자이너 변경을 요청%b>하실 수 있습니다.",
-            "<u%진행 취소시%u>" + colon + "현장 미팅 이후 진행 자체를 취소하실 시 <b%계약금은 돌려드리지 않으며, 디자이너에게 출장비 100,000원(VAT별도)을 지급%b>합니다.",
+            "<u%진행 취소시%u>" + colon + "현장 미팅 이후 진행 자체를 취소하실 시, 디자이너가 한 번 이상 시간을 써서 이동하였기에 <b%계약금은 돌려드리지 않습니다.%b>",
           ]
         }
       ];
@@ -955,53 +955,6 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
             },
           ]
         },
-        {
-          style: {
-            display: "block",
-            marginTop: String(bigNumberBetween) + ea,
-            position: "relative",
-          },
-          children: [
-            {
-              text: dateToString(project.process.contract.meeting.date).replace(/-/g, ". "),
-              style: {
-                display: "inline-block",
-                fontSize: String(bigNumberSize) + ea,
-                fontWeight: String(200),
-                fontFamily: "graphik",
-                color: colorChip.green,
-                lineHeight: String(1.4),
-                position: "relative",
-              }
-            }
-          ]
-        },
-        {
-          text: wordings.subTitle[0],
-          style: {
-            display: "block",
-            fontSize: String(contentsWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
-            marginTop: String(contentsMarginTop) + ea,
-            paddingLeft: String(contentsPaddingLeft) + ea,
-            lineHeight: String(1.4),
-            position: "relative",
-          },
-          children: [
-            {
-              mode: "svg",
-              source: mother.returnArrow("right", colorChip.green),
-              style: {
-                display: desktop ? "block" : "none",
-                position: "absolute",
-                width: String(arrowWidth) + ea,
-                left: String(arrorLeft) + ea,
-                top: String(arrowTop) + ea,
-              }
-            },
-          ]
-        },
       ]
     });
   }
@@ -1215,7 +1168,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
         },
         children: [
           {
-            text: (num2 === 0 ? String(num + 1) : ""),
+            text: (num2 === 0 ? (num === 0 ? ">" : String(num)) : ""),
             style: {
               display: desktop ? "inline-block" : "none",
               fontSize: String(contentsWordingSize) + ea,
@@ -1229,7 +1182,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             }
           },
           {
-            text: (num2 === 0 ? (desktop ? title : "<b%" + String(num + 1) + "%b>" + blank + title) : ""),
+            text: (num2 === 0 ? (desktop ? title : "<b%" + (num === 0 ? ">" : String(num)) + "%b>" + blank + title) : ""),
             style: {
               display: desktop ? "inline-block" : "block",
               fontSize: String(contentsWordingSize) + ea,
@@ -1292,7 +1245,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             },
             under: {
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(600),
+              fontWeight: String(500),
               color: colorChip.green,
             },
           },
