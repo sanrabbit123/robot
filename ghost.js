@@ -1240,7 +1240,19 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invaild path");
         }
         const { path } = req.body;
-        await shellExec(`rm`, [ `-rf`, instance.address.officeinfo.ghost.file.static + path ]);
+        let realDo;
+
+        realDo = false;
+        if (/^\/photo/gi.test(path)) {
+          if (/고객 전송/gi.test(path)) {
+            realDo = true;
+          }
+        }
+
+        if (realDo) {
+          await shellExec(`rm`, [ `-rf`, instance.address.officeinfo.ghost.file.static + path ]);
+        }
+
         res.send(JSON.stringify({ message: "success" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
