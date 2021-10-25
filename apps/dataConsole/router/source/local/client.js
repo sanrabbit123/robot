@@ -4780,15 +4780,60 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       e.stopPropagation();
                       const method = this.getAttribute("method");
                       const cliid = this.getAttribute("cliid");
-                      let path;
+                      let path, obj;
                       if (!/^selected/gi.test(method)) {
 
                         path = "/" + this.getAttribute("src").replace(/^https?\:\/\//i, '').split('/').slice(1).map((str) => { return window.decodeURIComponent(str); }).join('/');
                         if (window.confirm("사진을 서버로부터 삭제하시겠습니까? 한 번 삭제된 사진은 복구할 수 없습니다!")) {
-                          
 
+                          images = [];
+                          ajaxJson({ path }, "/ghostPass_staticDelete").then(() => {
+                            return ajaxJson({ cliid }, "/ghostPass_clientPhoto");
+                          }).then((obj) => {
+                            images = images.concat(obj.sitePhoto);
+                            images = images.concat(obj.preferredPhoto);
+                            return ajaxJson({
+                              idArr: [ cliid ],
+                              method: "client",
+                              property: "curation",
+                            }, "/getHistoryProperty");
+                          }).then((raw) => {
+                            if (typeof raw !== "object" || Array.isArray(raw)) {
+                              throw new Error("결과 없음");
+                            }
+                            obj = raw;
+                            return ajaxJson({
+                              images: obj[cliid].image
+                            }, "/ghostPass_photoParsing");
+                          }).then((raw) => {
 
-                          console.log(cliid, path);
+                            imageNothing = false;
+                            if (raw === null) {
+                              imageNothing = true;
+                            }
+                            if (typeof raw !== "object") {
+                              imageNothing = true;
+                            }
+                            if (Object.keys(raw).length === 1 && typeof raw.message === "string") {
+                              imageNothing = true;
+                            }
+
+                            styleAnalytics = raw;
+                            curation = obj[cliid];
+                            analytics = curation.analytics;
+                            images = curation.image.map((image) => {
+                              const imageLink = "/corePortfolio/listImage";
+                              let pid;
+                              pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
+                              return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
+                            }).concat(images);
+                          }).then(() => {
+                            cleanChildren(scrollTong);
+                            imageLoad();
+                          }).catch((e) => {
+                            console.log(e);
+                          });
+
                         }
 
                       } else {
