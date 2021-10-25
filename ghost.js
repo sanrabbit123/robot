@@ -2433,20 +2433,20 @@ Ghost.prototype.designerRouter = function (needs) {
     link: [ "/create", "/createFolder" ],
     func: async function (req, res) {
       try {
-        const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
         const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
         const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
         const drive = new GoogleDrive();
-        const sheets = new GoogleSheet();
         const docs = new GoogleDocs();
-        let id, subid;
-        let folderName;
-        let folderId, docsId, sheetsId;
+        const designerFolderId = "1mS2U7UzV9AbwVLGXzdakaDh-Mp1eXP4b";
         let basicList = [
           "포트폴리오",
           "등록서류",
           "고객안내및제안문서"
         ];
+        let id, subid;
+        let folderName;
+        let folderId, docsId;
+        let num;
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": '*',
@@ -2455,29 +2455,31 @@ Ghost.prototype.designerRouter = function (needs) {
         });
         if (req.body.name !== undefined && req.body.subid !== undefined) {
           folderName = req.body.subid + "_" + req.body.name;
-          if (!(await fileSystem(`exist`, [ `${sambaDir}/${folderName}` ]))) {
-            await fileSystem(`mkdir`, [ `${sambaDir}/${folderName}` ]);
+
+          folderId = await drive.makeFolder_inPython(folderName);
+          await drive.moveFolder_inPython(folderId, designerFolderId);
+
+          await sleep(2000);
+          num = 0;
+          while ((!(await fileSystem(`exist`, [ `${sambaDir}/${folderName}` ]))) && (num < 10)) {
+            await sleep(2000);
+            num++;
           }
-          for (let b of basicList) {
-            if (!(await fileSystem(`exist`, [ `${sambaDir}/${folderName}/${b}` ]))) {
-              await fileSystem(`mkdir`, [ `${sambaDir}/${folderName}/${b}` ]);
+
+          if (await fileSystem(`exist`, [ `${sambaDir}/${folderName}` ])) {
+            for (let b of basicList) {
+              if (!(await fileSystem(`exist`, [ `${sambaDir}/${folderName}/${b}` ]))) {
+                await fileSystem(`mkdir`, [ `${sambaDir}/${folderName}/${b}` ]);
+              }
             }
           }
 
-          do {
-            await sleep(2000);
-            folderId = await drive.makeFolder_inPython(folderName);
-            await drive.moveFolder_inPython(folderId, "19QfiKKbRvOZwPwDmUDtJre8AUA1OEEmv");
-          } while (folderId === null || folderId === undefined);
-
           docsId = await docs.create_newDocs_inPython(folderName + '_' + "docs", folderId);
-          sheetsId = await sheets.create_newSheets_inPython(folderName + '_' + "sheets", folderId);
 
           res.send(JSON.stringify({
             folderName: folderName,
-            forder: `https://drive.google.com/drive/folders/${folderId}`,
+            drive: `https://drive.google.com/drive/folders/${folderId}`,
             docs: `https://docs.google.com/document/d/${docsId}`,
-            sheets: `https://docs.google.com/spreadsheets/d/${sheetsId}`,
           }));
 
         } else {

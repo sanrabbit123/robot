@@ -193,11 +193,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
-
-
-
-
     // console.log(await shellExec(`ls -al ${process.cwd()}/temp/'test test'`));
     // console.log(await shellExec([ "ls", "-al", process.cwd() + "/temp/test test" ]));
     // console.log(await shellExec("ls", [ "-al", process.cwd() + "/temp" ]));
