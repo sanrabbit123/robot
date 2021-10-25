@@ -1216,7 +1216,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             children: [
               {
                 mode: "svg",
-                source: this.mother.returnCheckBox(colorChip.green),
+                source: num !== 0 ? this.mother.returnCheckBox(colorChip.green) : this.mother.returnArrow("right", colorChip.green),,
                 style: {
                   position: "relative",
                   top: String(checkBoxTop) + ea,
