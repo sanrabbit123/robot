@@ -1189,9 +1189,12 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     });
     try {
       const { name, phone, certification } = req.body;
-      const company = "홈리에종";
-      const requestObj = req.body;
-      await KAKAO.sendTalk("certification", name, phone, { company, name, certification });
+      await HUMAN.sendSms({
+        name,
+        phone,
+        subject: "휴대폰 인증",
+        contents: "[홈리에종] 안녕하세요! " + name + "님,\n휴대폰 인증번호를 보내드립니다.\n\n인증번호 : " + certification + "\n\n인증번호를 팝업창에 입력해주세요!"
+      });
       res.send("success");
     } catch (e) {
       await errorLog("Bridge 서버 문제 생김 (post_certification): " + e.message);
