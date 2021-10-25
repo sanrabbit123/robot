@@ -1179,6 +1179,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       });
     } catch (e) {
       await errorLog("디자이너 파일 서버 문제 생김 (post_designerBinary): " + e.message);
+      res.send('error');
       console.log(e);
     }
   }

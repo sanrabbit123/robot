@@ -4471,7 +4471,6 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                     pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
                     return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
                   }).concat(images);
-
                 }).then(() => {
                   cleanChildren(scrollTong);
                   imageLoad();
@@ -4771,6 +4770,26 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       leftArrow.addEventListener("click", convertEvent);
                       rightArrow.addEventListener("click", convertEvent);
                       img.addEventListener("click", convertEvent);
+                    }
+                  },
+                  {
+                    type: "contextmenu",
+                    event: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const method = this.getAttribute("method");
+                      let filePath, command, folderPath;
+                      if (!/^selected/gi.test(method)) {
+
+                        filePath = "/" + this.getAttribute("src").replace(/^https?\:\/\//i, '').split('/').slice(1).map((str) => { return window.decodeURIComponent(str); }).join('/');
+                        folderPath = filePath.split('/').slice(0, -2).join('/');
+                        command = `rm -rf ${filePath}`;
+
+
+                        console.log(filePath);
+                        console.log(folderPath);
+
+                      }
                     }
                   }
                 ]

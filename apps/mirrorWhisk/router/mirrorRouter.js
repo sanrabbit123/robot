@@ -604,7 +604,7 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
               }
             }
           }
-          await messageSend({ text, channel: "#cx" });
+          await messageSend({ text, channel: "#call" });
           ghostRequest("voice", { text }).catch((err) => { throw new Error(err); });
         }
         res.send(JSON.stringify({ message: "success" }));
