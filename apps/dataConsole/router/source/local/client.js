@@ -4407,10 +4407,10 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
               e.stopPropagation();
 
               if (e.dataTransfer.files.length > 0) {
-                const { name, phone } = thisCase;
+                const { name, phone, cliid } = thisCase;
                 const cilentFolderName = ("self" + uniqueValue("string")) + '_' + name + '_' + phone.replace(/\-/g, '');
                 const path = "/photo/고객 전송 사진/" + cilentFolderName + "/sitePhoto"
-                let formData, files, fileNames, toArr;
+                let formData, files, fileNames, toArr, obj, imageNothing;
 
                 formData = new FormData();
                 formData.enctype = "multipart/form-data";
@@ -4430,7 +4430,49 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 }
                 formData.append("toArr", JSON.stringify(toArr));
 
+                images = [];
                 ajaxForm(formData, OFFICEHOST + "/fileUpload").then(() => {
+                  return ajaxJson({ cliid }, "/ghostPass_clientPhoto");
+                }).then((obj) => {
+                  images = images.concat(obj.sitePhoto);
+                  images = images.concat(obj.preferredPhoto);
+                  return ajaxJson({
+                    idArr: [ cliid ],
+                    method: "client",
+                    property: "curation",
+                  }, "/getHistoryProperty");
+                }).then((raw) => {
+                  if (typeof raw !== "object" || Array.isArray(raw)) {
+                    throw new Error("결과 없음");
+                  }
+                  obj = raw;
+                  return ajaxJson({
+                    images: obj[cliid].image
+                  }, "/ghostPass_photoParsing");
+                }).then((raw) => {
+
+                  imageNothing = false;
+                  if (raw === null) {
+                    imageNothing = true;
+                  }
+                  if (typeof raw !== "object") {
+                    imageNothing = true;
+                  }
+                  if (Object.keys(raw).length === 1 && typeof raw.message === "string") {
+                    imageNothing = true;
+                  }
+
+                  styleAnalytics = raw;
+                  curation = obj[cliid];
+                  analytics = curation.analytics;
+                  images = curation.image.map((image) => {
+                    const imageLink = "/corePortfolio/listImage";
+                    let pid;
+                    pid = image.split('.')[0].replace(/^t[0-9]+/gi, '');
+                    return "https://" + GHOSTHOST + imageLink + "/" + pid + "/" + image;
+                  }).concat(images);
+
+                }).then(() => {
                   cleanChildren(scrollTong);
                   imageLoad();
                 }).catch((e) => {
