@@ -763,7 +763,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const back = this.back;
   const { webHook } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
@@ -1218,6 +1218,32 @@ Ghost.prototype.ghostRouter = function (needs) {
 
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { cliid }" }));
+      }
+    }
+  };
+
+  //POST - static delete
+  funcObj.post_staticDelete = {
+    link: [ "/staticDelete" ],
+    func: function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (typeof req.body.path !== "string") {
+          throw new Error("must be path");
+        }
+        if (!/^\//i.test(req.body.path)) {
+          throw new Error("invaild path");
+        }
+        const { path } = req.body;
+        await shellExec(`rm`, [ `-rf`, instance.address.officeinfo.ghost.file.static + path ]);
+        res.send(JSON.stringify({ message: "success" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     }
   };

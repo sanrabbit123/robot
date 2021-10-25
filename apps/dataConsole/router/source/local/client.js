@@ -4544,7 +4544,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   { src: image },
                   { index: String(num) },
                   { method: /sitePhoto/g.test(image) ? "site" : (/preferredPhoto/g.test(image) ? "preferred" : "selected") },
-                  { length: String(images.length) }
+                  { length: String(images.length) },
+                  { cliid: thisCase[standard[1]] }
                 ],
                 style: {
                   position: "relative",
@@ -4778,17 +4779,20 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                       e.preventDefault();
                       e.stopPropagation();
                       const method = this.getAttribute("method");
-                      let filePath, command, folderPath;
+                      const cliid = this.getAttribute("cliid");
+                      let path;
                       if (!/^selected/gi.test(method)) {
 
-                        filePath = "/" + this.getAttribute("src").replace(/^https?\:\/\//i, '').split('/').slice(1).map((str) => { return window.decodeURIComponent(str); }).join('/');
-                        folderPath = filePath.split('/').slice(0, -2).join('/');
-                        command = `rm -rf ${filePath}`;
+                        path = "/" + this.getAttribute("src").replace(/^https?\:\/\//i, '').split('/').slice(1).map((str) => { return window.decodeURIComponent(str); }).join('/');
+                        if (window.confirm("사진을 서버로부터 삭제하시겠습니까? 한 번 삭제된 사진은 복구할 수 없습니다!")) {
+                          
 
 
-                        console.log(filePath);
-                        console.log(folderPath);
+                          console.log(cliid, path);
+                        }
 
+                      } else {
+                        window.alert("고객님이 선택한 사진은 삭제할 수 없습니다!");
                       }
                     }
                   }
