@@ -245,7 +245,7 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
           title: "디자이너가 진행할 3가지",
           contents: [
             "<u%현장 조사%u>" + colon + "현장에 대한 <b%파악과 실측이 가장 중요%b>합니다. 현장의 방문이 어려운 경우, 현재 거주지 또는 외부에서 만나실 수 있지만 추후 제품 구매와 시공 전의 현장 조사는 필수입니다.",
-            "<u%니즈 조사%u>" + colon + "디자이너는 고객님이 전송해주신 자료를 바탕으로 <b%미팅 사전 준비를 합니다. 그리고 현장에서 고객님의 이야기를 들어 니즈를 파악%b>합니다.",
+            "<u%니즈 조사%u>" + colon + "디자이너는 고객님이 전송해주신 자료를 바탕으로 <b%미팅 사전 준비를 합니다.%b> 그리고 <b%현장에서 고객님의 이야기를 들어 니즈를 파악%b>합니다.",
             "<u%컨셉 잡기%u>" + colon + "현장 조사와 니즈 조사를 바탕으로 <b%디자이너가 드릴 수 있는 진행 가이드를 드리고 컨셉%b>을 잡습니다.",
           ],
         },
@@ -1245,8 +1245,8 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
             },
             under: {
               fontSize: String(desktop ? contentsWordingSize : mobileContentsWordingSize) + ea,
-              fontWeight: String(500),
-              color: colorChip.green,
+              fontWeight: String(600),
+              color: num === 0 ? colorChip.black : colorChip.green,
             },
           },
         ]
