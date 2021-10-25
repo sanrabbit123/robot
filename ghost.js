@@ -1225,7 +1225,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   //POST - static delete
   funcObj.post_staticDelete = {
     link: [ "/staticDelete" ],
-    func: function (req, res) {
+    func: async function (req, res) {
       res.set({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": '*',
