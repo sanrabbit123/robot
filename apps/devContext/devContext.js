@@ -1316,13 +1316,10 @@ DevContext.prototype.launching = async function () {
     // kakao test
     // const kakao = new KakaoTalk();
     // await kakao.ready();
-    // await kakao.sendTalk("designerSelect", "배창규", "010-2747-3403", {
+    // await kakao.sendTalk("pureOutOfClient", "배창규", "010-2747-3403", {
     //   client: "배창규",
-    //   designer: "배창규",
-    //   host: "home-liaison.servehttp.com",
-    //   path: "estimation",
-    //   cliid: "c1801_aa01s",
-    //   needs: "style,d2104_aa07s,p2107_aa46s,online",
+    //   emoji0: "(미소)",
+    //   emoji1: "(콜)",
     // });
 
 

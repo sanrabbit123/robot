@@ -337,6 +337,22 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    pureOutOfClient: {
+      name: "순수 부재중 알림",
+      id: "TF_6196",
+      needs: [
+        "client",
+        "emoji0",
+        "emoji1",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "emoji0", to: obj.emoji0 },
+          { from: "emoji1", to: obj.emoji1 },
+        ];
+      },
+    },
     clientCuration: {
       name: "스타일 찾기 전송",
       id: "TF_6198",
