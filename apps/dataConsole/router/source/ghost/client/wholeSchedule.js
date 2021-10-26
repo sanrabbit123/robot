@@ -641,7 +641,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   dateFactorTitleTextBottom = <%% 12, 12, 11, 10, 2.5 %%>;
   dateFactorTextBottom =  <%% 12, 12, 11, 10, 2.7 %%>;
   dateFactorPaddingLeft = <%% 30, 30, 30, 26, 3 %%>;
-  dateFactorVisualTop = <%% 2, 2, 1, 1, 0.2 %%>;
+  dateFactorVisualTop = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 1 : 0), (isMac() ? 1 : 0), 0.2 %%>;
 
   lineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.4 %%>;
 
