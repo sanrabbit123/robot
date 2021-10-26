@@ -191,8 +191,8 @@ DevContext.prototype.launching = async function () {
     //   console.log(await ghostRequest("insyncCheck", {}))
     // }, 5000);
 
-    const noti = new NativeNotifier();
-    console.log(await noti.alertAlarm("안녕안녕?"));
+    // const noti = new NativeNotifier();
+    // console.log(await noti.alertAlarm("안녕안녕?"));
 
 
 
@@ -1356,7 +1356,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p126");
+    // await this.getCorePortfolio("p130");
 
 
     // aspirant to designer
