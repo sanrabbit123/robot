@@ -191,6 +191,13 @@ DevContext.prototype.launching = async function () {
     //   console.log(await ghostRequest("insyncCheck", {}))
     // }, 5000);
 
+    const noti = new NativeNotifier();
+
+    await noti.sendAlarm("안녕?");
+
+
+
+
 
 
     // console.log(await shellExec(`ls -al ${process.cwd()}/temp/'test test'`));
@@ -1321,7 +1328,6 @@ DevContext.prototype.launching = async function () {
     //   emoji0: "(미소)",
     //   emoji1: "(콜)",
     // });
-
 
 
     // raw photo to raw portfolio
