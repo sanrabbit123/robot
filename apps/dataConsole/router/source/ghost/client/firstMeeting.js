@@ -793,6 +793,7 @@ FirstMeetingJs.prototype.insertInformationBox = function (indexNumber) {
           width: String(100) + '%',
           background: desktop ? "" : colorChip.white,
           boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,
@@ -1052,7 +1053,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
   secondMarginRight = <%% 10, 10, 10, 10, 1.5 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
-  arrowBoxWidth = <%% 8, 8, 8, 8, 1.8 %%>;
+  arrowBoxWidth = <%% 9, 8, 8, 8, 1.8 %%>;
   checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
   arrowBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.5 %%>;
 
@@ -1143,6 +1144,7 @@ FirstMeetingJs.prototype.insertChecklistBox = function (indexNumber) {
           width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
           background: desktop ? "" : colorChip.white,
           boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,

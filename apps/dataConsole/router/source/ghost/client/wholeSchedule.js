@@ -40,6 +40,10 @@
 const WholeScheduleJs = function () {
   this.mother = new GeneralJs();
   this.client = null;
+  this.initDateClassName = {
+    start: "initDateClassStart",
+    end: "initDateClassEnd"
+  };
 }
 
 WholeScheduleJs.binaryPath = "/middle/schedule";
@@ -62,9 +66,9 @@ WholeScheduleJs.prototype.scheduleWordings = function (liteMode = false) {
           "현장 미팅 주소"
         ],
         contents: [
-          "디자이너를 직접 만나 <b%함께 현장 상태를 체크%b>하고,",
-          "고객님의 <b%취향과 니즈를 전달%b>하여, 앞으로 진행하게 될",
-          "홈스타일링에 대한 <b%전체적인 방향%b>을 이야기하게 됩니다.",
+          "앞으로 진행하게 될 <b%홈스타일링의 전체 일정%b>을 보고해드립니다.",
+          "디자이너가 전체적으로 계획을 세운 아래 일정은",
+          "향후 <b%상황과 변수에 따라 조정될 수%b> 있습니다.",
         ],
         image: [
           "/init0.jpg",
@@ -75,46 +79,75 @@ WholeScheduleJs.prototype.scheduleWordings = function (liteMode = false) {
 
       this.wordings.schedule = {};
       this.wordings.schedule.title = [ "일정표" ];
+      this.wordings.schedule.start = new Date(2021, 9, 10);
+      this.wordings.schedule.matrix = [
+        [ "현장과 니즈를 바탕으로 한 디자인 컨셉 논의", "도면 작업 기간" ],
+        [ "디자인 및 3D 작업 기간" ],
+        [ "디자인 작업 기간", "1차 제안 문서 제공 (9월 23일)" ],
+        [ "디자인 수정 기간", "수정 제안 문서 제공" ],
+        [ "디자인 수정 기간", "디자인 제안 확정" ],
+        [ "시공 리스트 정리", "견적 수집 및 비교", "시공사 선택 및 공정표 요청" ],
+        [ "철거 : 철거 및 폐기물 수거", "전기 : 작업선, 작업등 설치" ],
+        [ "설비 : 바닥 배수관 시공, 방수 작업 및 양생" ],
+        [ "전기 : 천장, 주방, 조명, 콘센트 위치에 배관 작업" ],
+        [ "목공 : 칸막이 및 가벽 공사", "금속 : 샷시 공사" ],
+        [ "목공 : 붙박이 가구 제작 및 설치", "목공 : 선반 및 수잡장 제작 및 설치", "목공 : 싱크대 및 테이블 제작" ],
+        [ "도장 : 목공사와 금속 공사할 곳에 페인트칠" ],
+        [ "타일 : 싱크대 벽 부분 타일 공사", "타일 : 주방 바닥 부분 타일 공사" ],
+        [ "전기 : 목공사를 한 곳에 콘센트와 조명 연결", "금속 : 샷시에 유리 설치 및 실리콘 공사" ],
+        [ "마감 : 전체적인 마감 공사 및 필름 설치" ],
+        [ "공간별 구매 리스트 작성", "구매 리스트 공유", "입주 청소 컨택" ],
+        [ "제품 구매", "입주 청소", "이사 준비", "패브릭 제작" ],
+        [ "제품 세팅 및 설치" ],
+        [ "제품 세팅 및 설치" ],
+        [ "제품 세팅 및 설치" ],
+        [ "마무리 점검", "촬영 및 인터뷰" ],
+      ];
 
       this.wordings.check = {};
       this.wordings.check.title = [ "체크리스트" ];
       this.wordings.check.matrix = [
         {
-          title: "디자이너가 진행할 3가지",
+          title: "기본적인 순서",
           contents: [
-            "<u%현장 조사%u>" + colon + "현장에 대한 <b%파악과 실측이 가장 중요%b>합니다. 디자이너가 현장에 대해서 구체적으로 파악하는지 확인해주세요!",
-            "<u%니즈 조사%u>" + colon + "디자이너는 고객님께서 전송해주신 정보와 사진을 바탕으로 미팅 준비를 하게 됩니다. 그리고 고객님의 <b%이야기를 최대한 들어 니즈를 파악%b>합니다.",
-            "<u%컨셉 잡기%u>" + colon + "디자이너는 고객님의 이야기를 듣고만 있는 것이 아니라 현장과 정보를 바탕으로 <b%디자이너가 해줄 수 있는 말과 컨셉%b>을 잡게 됩니다.",
+            "<u%6가지 과정%u>" + colon + "인테리어의 기본적인 순서는 1 <b%실측%b>, 2 <b%디자인(설계)%b>, 3 <b%견적%b>, 4 <b%시공(제작)%b>, 5 <b%구매%b>, 6 <b%세팅%b> 으로 이루어집니다. <b%누락되거나 순서가 뒤바뀐 경우, 문제가 발생%b>할 수 있습니다.",
           ],
         },
         {
-          title: "현장 조사 관련",
+          title: "디자인 일정",
           contents: [
-            "<u%도면 확인%u>" + colon + "현장의 <b%정확한 도면이 최대한 많을 수록%b> 좋습니다. 적절한 도면이 없을 경우, 실측을 통해 디자이너는 직접 도면을 작성합니다.",
-            "<u%실측%u>" + colon + "도면이 있다고 해도 실제 상황과 다를 수 있습니다. <b%도면보다 실측이 더 중요하므로 디자이너는 반드시 실측을 진행%b>하게 됩니다.",
+            "<u%1차 제안%u>" + colon + "디자이너는 현장 상태와 예산을 고려해서 <b%컨셉을 잡고 디자인을 진행하여 도면 또는 디자인 시안의 형태로 어떻게 집을 만들지 제안%b>하게 됩니다. 페이퍼 워크의 형태는 디자이너마다 다를 수 있습니다.",
+            "<u%수정 제안%u>" + colon + "디자인 제안은 <b%보통 2~3회 정도 수정을 거치며 고객님과 의견을 조율%b>해 완성해 나아갑니다. 일정에는 디자인 수정에 대한 시간적 고려가 반영되어 있어야 합니다.",
           ],
         },
         {
-          title: "니즈 조사 관련",
+          title: "견적 일정",
           contents: [
-            "<u%예산 확인%u>" + colon + "니즈와 항상 함께 알아야 할 것은 사용할 수 있는 예산입니다. 디자이너는 <b%예산에 대한 전체적인 범위 조사와 어떻게 나누어 쓸 지를 파악%b>하게 됩니다.",
-            "<u%시공 조정%u>" + colon + "디자이너는 니즈와 예산의 균형, 전체적인 예산의 분배, 기존 현장의 상태와 기존 가구들을 <b%종합적으로 판단하여 시공의 범위를 조정%b>하게 됩니다.",
+            "<u%시공사 선택%u>" + colon + "디자이너 시공사 또는 홈리에종 시공사로부터 <b%견적서를 받고 비교하여 시공사를 선택할 수 있는 과정%b>이 있습니다. 여러 업체에서 견적을 많이 받을수록 일정 기간이 늘어날 수 있습니다.",
+            "<u%견적 수정%u>" + colon + "시공사 선택 후, 견적을 받고 견적을 수정할 수 있는 과정입니다. 공사가 시작된 후 공사 내역이 생기거나 수정될 시 추가 비용이 발생될 수 있기 때문에, <b%누락된 공사 항목은 없는지 꼼꼼하게 확인해야 하는 단계%b>입니다.",
           ],
         },
         {
-          title: "컨셉 잡기 관련",
+          title: "시공 일정",
           contents: [
-            "<u%이미지 기반%u>" + colon + "추상적인 단어와 문장들로만 컨셉을 잡는 것이 아닌, <b%사진이나 이미지 등을 활용하여 구체적인 디자인 컨셉%b>을 잡게 됩니다.",
-            "<u%용도 확인%u>" + colon + "디자인 컨셉과 더불어 디자이너는 고객님의 <b%라이프 스타일을 기반으로 공간 용도의 구성과 동선 계획 등을 함께 진행%b>하게 됩니다.",
+            "<u%공정표 제공%u>" + colon + "시공이 <b%시작되면 시공사가 공정표를 제공%b>합니다. 공정표는 일반적으로 철거 -> 전기, 설비 -> 목공 -> 도장 -> 타일 -> 금속 -> 마감 순으로 되어 있습니다. 현장 상황에 따라 구체적인 순서는 달라질 수 있습니다.",
+            "<u%추가 공사 방지%u>" + colon + "견적대로 진행하는 것이 중요하며, <b%부득이하게 수정 또는 추가 요청이 있을 경우, 공정상 언제 요청하는지에 따라 비용과 시간이 크게 늘어날 수%b> 있습니다.",
           ],
         },
         {
-          title: "기타 주의 사항",
+          title: "구매 일정",
           contents: [
-            "<u%디자이너 변경%u>" + colon + "현장 미팅 후, 디자이너가 적합하지 않다고 판단될 시에 <b%최대 1회까지 홈리에종에 디자이너 변경을 요청%b>하실 수 있습니다.",
-            "<u%진행 취소시%u>" + colon + "현장 미팅 이후 진행 자체를 취소하실 시 <b%계약금은 돌려드리지 않으며, 디자이너에게 출장비 100,000원(VAT별도)을 지급%b>합니다.",
-          ]
-        }
+            "<u%리스트 제공%u>" + colon + "입주 청소가 끝나는 타이밍에 맞춰 제품이 올 수 있도록 디자이너는 <b%구체적인 제품과 스펙과 구매처(링크)가 적혀 있는 리스트를 제공%b>합니다. 구매 대행은 진행해드리지 않으며, 직접 구입해주시면 됩니다.",
+            "<u%배송 고려%u>" + colon + "구매 일정에서 가장 중요한 것은 배송에 대한 고려입니다. 제품마다 배송 일자가 모두 다르고 <b%변수도 많기 때문에 일정의 여유를 두고 구매를 진행%b>하시는 것이 중요합니다.",
+          ],
+        },
+        {
+          title: "세팅 일정",
+          contents: [
+            "<u%세팅 가이드%u>" + colon + "디자이너는 가구와 제품의 <b%배치도를 통해 어떤 것을 어디에 둘 지에 대한 구체적인 가이드를 제공%b>합니다. 디자이너가 직접 조립 및 설치를 도와드리지는 않습니다.",
+            "<u%촬영 조율%u>" + colon + "구매와 세팅이 모두 완료되면 홈리에종 통해 촬영 일자를 잡게 되며, 촬영 일자에 맞춰 촬영과 인터뷰를 진행하게 됩니다.",
+          ],
+        },
       ];
 
     }
@@ -138,7 +171,7 @@ WholeScheduleJs.prototype.scheduleWordings = function (liteMode = false) {
 WholeScheduleJs.prototype.insertInitBox = function () {
   const instance = this;
   const mother = this.mother;
-  const { client, project, projectHistory, requestNumber, ea, baseTong, media } = this;
+  const { client, project, projectHistory, requestNumber, ea, baseTong, media, initDateClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
@@ -285,6 +318,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
               children: [
                 {
                   text: "2021. 08. 16",
+                  class: [ initDateClassName.start ],
                   style: {
                     display: "inline-block",
                     fontSize: String(dateRangeSize) + ea,
@@ -315,6 +349,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
                 },
                 {
                   text: "2021. 09. 16",
+                  class: [ initDateClassName.end ],
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -348,6 +383,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
                 },
                 {
                   text: "2021. 08. 16",
+                  class: [ initDateClassName.start ],
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -362,6 +398,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
                 },
                 {
                   text: "2021. 09. 16",
+                  class: [ initDateClassName.end ],
                   style: {
                     display: "inline-block",
                     position: "relative",
@@ -468,7 +505,7 @@ WholeScheduleJs.prototype.insertInitBox = function () {
 WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   const instance = this;
   const mother = this.mother;
-  const { client, project, ea, baseTong, media } = this;
+  const { client, project, ea, baseTong, media, initDateClassName } = this;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, stringToDate, dateToString, cleanChildren, isMac, getDateMatrix, equalJson } = GeneralJs;
@@ -523,6 +560,22 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   let dateCopied;
   let dateFactorTitleTextTop;
   let dateTitleSize;
+  let paddingLeft;
+  let paddingBottom;
+  let toDoMatrix;
+  let startDate;
+  let toDoStartXYZ, toDoEndXYZ;
+  let dateIndex;
+  let boo0, boo1, boo2;
+  let accumulate;
+  let totalNum;
+  let dateFactorTitleTextBottom;
+  let dateFactorTextBottom;
+  let dateFactorPaddingLeft;
+  let dateFactorVisualTop;
+  let lineHeight;
+  let startTargets, endTargets;
+  let tempArr;
 
   bigDesktop = (media[0] || media[1]);
 
@@ -530,7 +583,9 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
 
   bottomMargin = <%% 16, 16, 16, 12, 3 %%>;
   margin = <%% 52, 52, 44, 36, 4.7 %%>;
-  paddingTop =  <%% 46, 46, 40, 32, 4.7 %%>;
+  paddingTop =  <%% 46, 46, 40, 32, 5.5 %%>;
+  paddingLeft =  <%% 46, 46, 40, 32, 5.6 %%>;
+  paddingBottom =  <%% 46, 46, 40, 32, 8.5 %%>;
 
   whiteBottomMargin = <%% 58, 58, 58, 58, 0 %%>;
 
@@ -572,21 +627,98 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   mobilePaddingTop = 5;
   mobilePaddingBottom = 10.5;
 
-  dateRange = 3;
-
   dateMatrixMarginLeft = <%% 0, 0, 0, 0, 0 %%>;
-  dateTextMatrixMarginLeft = <%% 2, 2, 2, 2, 0 %%>;
-  dateTextMatrixMarginBottom = <%% 18, 17, 16, 14, 1 %%>;
-  dateBlockHeight = <%% 47, 46, 44, 41, 4 %%>;
+  dateTextMatrixMarginLeft = <%% 2, 2, 2, 2, 0.3 %%>;
+  dateTextMatrixMarginBottom = <%% 18, 17, 16, 14, 2 %%>;
+  dateBlockHeight = <%% 47, 46, 44, 41, 8 %%>;
   dateTitlePaddingTop = <%% 30, 29, 28, 24, 4 %%>;
   dateTotalTitlePaddingBottom = <%% 40, 40, 40, 40, 4 %%>;
-  dateFactorWidth = <%% 120, 120, 100, 90 ,10 %%>;
-  dateFactorTextSize = <%% 14.5, 14, 14, 13, 3.5 %%>;
-  dateFactorTitleTextTop = <%% (isMac() ? 11 : 13), (isMac() ? 11 : 13), (isMac() ? 10 : 12), (isMac() ? 9 : 11), 1 %%>;
-  dateFactorTextTop = <%% (isMac() ? 12 : 13), (isMac() ? 12 : 13), (isMac() ? 11 : 12), (isMac() ? 10 : 11), 1 %%>;
-  dateTitleSize = <%% 20, 20, 20, 19, 4 %%>;
+  dateFactorWidth = <%% 120, 120, 100, 90, 20 %%>;
+  dateFactorTextSize = <%% 14.5, 14, 14, 13, 3 %%>;
+  dateFactorTitleTextTop = <%% 12, 12, 11, 10, 2.4 %%>;
+  dateFactorTextTop = <%% 12, 12, 11, 10, 2.4 %%>;
+  dateTitleSize = <%% 20, 20, 20, 19, 3.7 %%>;
+  dateFactorTitleTextBottom = <%% 12, 12, 11, 10, 2.5 %%>;
+  dateFactorTextBottom =  <%% 12, 12, 11, 10, 2.7 %%>;
+  dateFactorPaddingLeft = <%% 30, 30, 30, 26, 3 %%>;
+  dateFactorVisualTop = <%% 2, 2, 1, 1, 0.4 %%>;
+
+  lineHeight = <%% 1.6, 1.6, 1.6, 1.6, 1.4 %%>;
 
   this.whiteMargin = (desktop ? margin : 0);
+
+  dateRange = 10;
+  startDate = wordings.start;
+  toDoMatrix = wordings.matrix;
+
+  dateMatrix = getDateMatrix(new Date());
+  dateMatrix = dateMatrix.previousMatrix();
+  dateMatrix = dateMatrix.previousMatrix();
+
+  dateMatrixArr = [];
+  for (let i = 0; i < dateRange + 2; i++) {
+    dateMatrixArr.push(dateMatrix.sundayConvert());
+    dateMatrix = dateMatrix.nextMatrix();
+  }
+
+  toDoStartXYZ = [];
+  for (let i = 0; i < dateMatrixArr.length; i++) {
+    boo0 = (dateMatrixArr[i].year === startDate.getFullYear());
+    boo1 = (dateMatrixArr[i].month === startDate.getMonth());
+    dateIndex = dateMatrixArr[i].matrix.findIndex((arr) => {
+      let boo;
+      boo = false;
+      for (let j = 0; j < arr.length; j++) {
+        if (arr[j] !== null) {
+          if (arr[j].date === startDate.getDate()) {
+            boo = true;
+            break;
+          }
+        }
+      }
+      return boo;
+    });
+    boo2 = (dateIndex !== -1);
+    if (boo0 && boo1 && boo2) {
+      toDoStartXYZ = [ i, dateIndex ];
+      break;
+    }
+  }
+
+  if (toDoStartXYZ.length !== 2) {
+    throw new Error("cannot find start");
+  }
+
+  dateMatrixArr = dateMatrixArr.slice(toDoStartXYZ[0]);
+  dateMatrixArr[0].matrix = dateMatrixArr[0].matrix.slice(toDoStartXYZ[1]);
+
+  toDoEndXYZ = [];
+  accumulate = 0;
+  for (let i = 0; i < dateMatrixArr.length; i++) {
+    accumulate += dateMatrixArr[i].matrix.length;
+    if (accumulate >= toDoMatrix.length) {
+      toDoEndXYZ = [ i, dateMatrixArr[i].matrix.length - accumulate + toDoMatrix.length ];
+      break;
+    }
+  }
+
+  if (toDoEndXYZ.length !== 2) {
+    throw new Error("cannot find end");
+  }
+
+  dateMatrixArr = dateMatrixArr.slice(0, toDoEndXYZ[0] + 1);
+  dateMatrixArr[dateMatrixArr.length - 1].matrix = dateMatrixArr[dateMatrixArr.length - 1].matrix.slice(0, toDoEndXYZ[1]);
+
+  startTargets = document.querySelectorAll('.' + initDateClassName.start);
+  endTargets = document.querySelectorAll('.' + initDateClassName.end);
+
+  for (let dom of startTargets) {
+    dom.textContent = dateToString(startDate).replace(/-/gi, ". ");
+  }
+  for (let dom of endTargets) {
+    tempArr = equalJson(JSON.stringify(dateMatrixArr[dateMatrixArr.length - 1].matrix[dateMatrixArr[dateMatrixArr.length - 1].matrix.length - 1]));
+    dom.textContent = dateToString(tempArr.reverse().find((obj) => { return obj !== null }).dateObject).replace(/-/gi, ". ");
+  }
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -663,26 +795,22 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
         style: {
           display: "block",
           position: "relative",
-          width: String(100) + '%',
+          width: desktop ? String(100) + '%' : withOut(paddingLeft * 2, ea),
           background: desktop ? "" : colorChip.white,
           boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,
+          paddingLeft: desktop ? "" : String(paddingLeft) + ea,
+          paddingRight: desktop ? "" : String(paddingLeft) + ea,
+          paddingTop: desktop ? "" : String(paddingTop) + ea,
+          paddingBottom: desktop ? "" : String(paddingBottom) + ea,
         }
       },
     ]
   });
   tong = block.lastChild;
-
-  dateMatrix = getDateMatrix(new Date());
-  dateMatrix = dateMatrix.previousMatrix();
-
-  dateMatrixArr = [];
-  for (let i = 0; i < dateRange + 1; i++) {
-    dateMatrixArr.push(dateMatrix.sundayConvert());
-    dateMatrix = dateMatrix.nextMatrix();
-  }
 
   dateTong = createNode({
     mother: tong,
@@ -695,6 +823,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
   });
 
   dateNum = 0;
+  totalNum = 0;
   for (let { year, month, matrix } of dateMatrixArr) {
 
     createNode({
@@ -711,7 +840,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
           text: String(year) + "년 " + String(month + 1) + "월",
           style: {
             fontSize: String(dateTitleSize) + ea,
-            fontWeight: String(500),
+            fontWeight: String(600),
             color: colorChip.black
           }
         }
@@ -733,7 +862,7 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
       createNode({
         mother: dateTong,
         style: {
-          display: "block",
+          display: "flex",
           position: "relative",
           borderBottom: "1px solid " + colorChip.gray3,
           borderTopLeftRadius: String(i === 0 ? 5 : 0) + "px",
@@ -746,108 +875,139 @@ WholeScheduleJs.prototype.insertScheduleBox = function (indexNumber) {
           marginLeft: String(dateMatrixMarginLeft) + ea,
           marginRight: String(dateMatrixMarginLeft) + ea,
           width: withOut(dateMatrixMarginLeft * 2, ea),
-          height: String(dateBlockHeight) + ea,
           boxSizing: "border-box",
           background: i === 0 ? colorChip.gray0 : colorChip.white,
+          flexDirection: "row",
         },
         children: [
           {
             style: {
-              display: "inline-block",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              verticalAlign: "top",
               position: "relative",
               width: String(dateFactorWidth) + ea,
               borderRight: "1px solid " + colorChip.gray3,
-              height: String(100) + '%',
               boxSizing: "border-box",
+              paddingTop: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
+              paddingBottom: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
             },
             children: [
               {
-                text: i !== 0 ? `${String(month + 1)}월 ${String(i)}주차` : ``,
+                text: i !== 0 ? `${String(month + 1)}월 ${String(i + (dateNum === 0 ? toDoStartXYZ[1] : 0))}주차` : ``,
                 style: {
-                  position: "absolute",
+                  position: "relative",
                   fontSize: String(dateFactorTextSize) + ea,
                   fontWeight: String(400),
                   width: String(100) + '%',
                   textAlign: "center",
-                  top: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
                   color: colorChip.green,
+                  top: String(-1 * dateFactorVisualTop) + ea,
+                  lineHeight: String(lineHeight),
                 }
               }
             ]
           },
           {
             style: {
-              display: "inline-block",
+              display: desktop ? "flex" : "none",
+              alignItems: "center",
+              justifyContent: "center",
               position: "relative",
+              verticalAlign: "top",
               width: String(dateFactorWidth) + ea,
               borderRight: "1px solid " + colorChip.gray3,
-              height: String(100) + '%',
               boxSizing: "border-box",
+              paddingTop: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
+              paddingBottom: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
             },
             children: [
               {
                 text: i !== 0 ? (bigDesktop ? `${dateToString(dateStart.dateObject).slice(2).replace(/-/gi, ". ")}${blank}(${dateStart.day})` : dateToString(dateStart.dateObject).slice(2).replace(/-/gi, ". ")) : `시작일`,
                 style: {
-                  position: "absolute",
+                  position: "relative",
                   fontSize: String(dateFactorTextSize) + ea,
                   fontWeight: String(i === 0 ? 600 : 400),
                   width: String(100) + '%',
                   textAlign: "center",
-                  top: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
                   color: colorChip.black,
+                  top: String(-1 * dateFactorVisualTop) + ea,
+                  lineHeight: String(lineHeight),
                 }
               }
             ]
           },
           {
             style: {
-              display: "inline-block",
+              display: desktop ? "flex" : "none",
+              alignItems: "center",
+              justifyContent: "center",
               position: "relative",
+              verticalAlign: "top",
               width: String(dateFactorWidth) + ea,
               borderRight: "1px solid " + colorChip.gray3,
-              height: String(100) + '%',
               boxSizing: "border-box",
+              paddingTop: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
+              paddingBottom: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
             },
             children: [
               {
                 text: i !== 0 ? (bigDesktop ? `${dateToString(dateEnd.dateObject).slice(2).replace(/-/gi, ". ")}${blank}(${dateEnd.day})` : dateToString(dateEnd.dateObject).slice(2).replace(/-/gi, ". ")) : `종료일`,
                 style: {
-                  position: "absolute",
+                  position: "relative",
                   fontSize: String(dateFactorTextSize) + ea,
                   fontWeight: String(i === 0 ? 600 : 400),
                   width: String(100) + '%',
                   textAlign: "center",
-                  top: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
                   color: colorChip.black,
+                  top: String(-1 * dateFactorVisualTop) + ea,
+                  lineHeight: String(lineHeight),
                 }
               }
             ]
           },
           {
             style: {
-              display: "inline-block",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               position: "relative",
-              width: withOut(dateFactorWidth * 3, ea),
-              height: String(100) + '%',
+              verticalAlign: "top",
+              width: withOut(dateFactorWidth * (desktop ? 3 : 1), ea),
               boxSizing: "border-box",
+              paddingTop: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
+              paddingBottom: String(i === 0 ? dateFactorTitleTextBottom : dateFactorTextBottom) + ea,
+              paddingLeft: String(dateFactorPaddingLeft) + ea,
+              paddingRight: String(dateFactorPaddingLeft) + ea,
             },
             children: [
               {
-                text: i !== 0 ? `` : `내용`,
+                text: i !== 0 ? toDoMatrix[totalNum].join("&nbsp;&nbsp;<b%/%b>&nbsp;&nbsp;") : `내용`,
                 style: {
-                  position: "absolute",
+                  position: "relative",
                   fontSize: String(dateFactorTextSize) + ea,
                   fontWeight: String(i === 0 ? 600 : 400),
                   width: String(100) + '%',
                   textAlign: "center",
-                  top: String(i === 0 ? dateFactorTitleTextTop : dateFactorTextTop) + ea,
                   color: colorChip.black,
+                  top: String(-1 * dateFactorVisualTop) + ea,
+                  lineHeight: String(lineHeight),
+                },
+                bold: {
+                  fontSize: String(dateFactorTextSize) + ea,
+                  fontWeight: String(i === 0 ? 600 : 400),
+                  color: colorChip.gray4,
                 }
               }
             ]
           },
         ]
       });
+
+      if (i !== 0) {
+        totalNum++;
+      }
     }
 
     dateNum++;
@@ -945,7 +1105,7 @@ WholeScheduleJs.prototype.insertChecklistBox = function (indexNumber) {
   secondMarginRight = <%% 10, 10, 10, 10, 1.5 %%>;
 
   checkBoxWidth = <%% 10, 10, 10, 10, 2 %%>;
-  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7.5 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.9 %%>;
+  checkBoxTop = <%% (isMac() ? 8 : 5.5), (isMac() ? 7.5 : 5), (isMac() ? 7 : 4.5), (isMac() ? 6.5 : 4), 1.6 %%>;
 
   contentsMarginBottom0 = <%% 4, 4, 4, 4, 1 %%>;
   contentsMarginBottom1 = <%% 18, 18, 18, 18, 1 %%>;
@@ -1034,6 +1194,7 @@ WholeScheduleJs.prototype.insertChecklistBox = function (indexNumber) {
           width: desktop ? String(100) + '%' : withOut(mobilePaddingLeft * 2, ea),
           background: desktop ? "" : colorChip.white,
           boxShadow: mobile ? "0px 5px 12px -10px " + colorChip.gray5 : "",
+          borderRadius: mobile ? String(1) + ea : "",
           overflow: "hidden",
           marginBottom: String(0) + ea,
           marginTop: desktop ? "" : String(14) + ea,
