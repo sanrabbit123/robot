@@ -4301,6 +4301,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             pageName = "제안서";
           } else if (/estimation/gi.test(obj.page)) {
             pageName = "견적서";
+          } else if (/pure/gi.test(obj.page)) {
+            pageName = "순수 부재중 알림";
           } else {
             pageName = obj.page;
           }
@@ -6548,6 +6550,14 @@ ClientJs.prototype.communicationRender = function () {
         }
         if (thisCase !== null) {
           if (window.confirm(thisCase.name + " 고객님께 순수 부재중 알림 알림톡을 전송합니다. 확실합니까?")) {
+
+            await ajaxJson({
+              id: cliid,
+              column: null,
+              value: null,
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+              send: "pureOutOfClient",
+            }, "/updateClientHistory");
 
             await ajaxJson({
               method: "pureOutOfClient",

@@ -191,9 +191,8 @@ DevContext.prototype.launching = async function () {
     //   console.log(await ghostRequest("insyncCheck", {}))
     // }, 5000);
 
-    const noti = new NativeNotifier();
-
-    await noti.sendAlarm("안녕?");
+    // const noti = new NativeNotifier();
+    // console.log(await noti.alertAlarm("안녕안녕?"));
 
 
 
