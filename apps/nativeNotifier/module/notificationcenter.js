@@ -1,7 +1,7 @@
 const utils = require('./utils');
 const Growl = require('./growl');
 const path = require('path');
-const notifier = path.join(__dirname, './vendor/mac.noindex/terminal-notifier.app/Contents/MacOS/terminal-notifier');
+const notifier = path.join(__dirname, './vendor/mac.noindex/HomeLiaison.app/Contents/MacOS/terminal-notifier');
 const EventEmitter = require('events').EventEmitter;
 const util = require('util');
 let activeId = null;
@@ -23,7 +23,7 @@ const notifyRaw = function (options, callback = function () {}) {
   activeId = id;
 
   if (typeof options === 'string') {
-    options = { title: 'homeliaison', message: options };
+    options = { title: 'HomeLiaison', message: options };
   }
 
   if (typeof callback !== 'function') {
