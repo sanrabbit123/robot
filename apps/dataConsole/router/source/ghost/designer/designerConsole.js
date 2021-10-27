@@ -253,7 +253,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           click: function (e) {
             const index = Number(this.getAttribute("index"));
             // DEV
-            if (index === 1 || index === 4 || index === 5) {
+            if (index === 1) {
               window.alert("아직 서비스 오픈 전입니다!");
             } else {
               menuMap[index].event.call(this, e);
@@ -499,7 +499,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
             let blocks;
 
             // DEV
-            if (index === 1 || index === 4 || index === 5) {
+            if (index === 1) {
               window.alert("아직 서비스 오픈 전입니다!");
             } else {
               blocks = document.querySelector(".mainBaseTong").firstChild.children;
@@ -855,16 +855,131 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
 DesignerConsoleJs.prototype.consoleView = async function () {
   const instance = this;
-  const { ea, desid, media, tabletWidth } = this;
-  const mobile = media[4];
-  const desktop = !mobile;
-  const { createNode, createNodes, colorChip, withOut, scrollTo, returnGet, setQueue } = GeneralJs;
   try {
+    const loading = await this.mother.loadingRun();
+    const middleMode = /middle/gi.test(window.location.pathname);
+    this.backGrayBar();
+    await this.spreadData(null, true, middleMode ? "middle" : null);
+    const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson, scrollTo, setQueue } = GeneralJs;
+    const { totalMother, ea, grayBarWidth, belowHeight, media, desid, tabletWidth } = this;
+    const mobile = media[4];
+    const desktop = !mobile;
+    const standardBar = totalMother.firstChild;
     const getObj = returnGet();
+    let designers, length;
+    let boxTong;
+    let nodeArr;
+    let tempObj;
+    let width, height;
+    let boxNumber;
+    let status;
+    let searchInput;
+    let standardBar_mother;
+    let style;
+    let childrenLength, children;
+    let motherHeight;
+    let searchResult;
+    let projects, clients;
     let targetIndex;
 
-    await this.checkListView();
-    this.checkListDetailLaunching(desid);
+    if (!middleMode) {
+      designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
+      length = designers.length;
+      this.designers = new Designers(designers);
+    } else {
+      designers = await ajaxJson({ noFlat: true, whereQuery: { desid: getObj.desid } }, "/getDesigners", { equal: true });
+      if (designers.length === 0) {
+        throw new Error("invaild desid");
+      }
+      length = designers.length;
+      this.designers = new Designers(designers);
+      this.designer = this.designers.pick(getObj.desid);
+    }
+
+    this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
+    this.middleMode = middleMode;
+    this.modes = [ "checklist", "report", "request", "possible" ];
+    this.mode = this.modes[0];
+    this.result = null;
+    this.searchCondition = {
+      mode: "or",
+      conditions: [],
+      blocks: [],
+    };
+
+    motherHeight = <%% 154, 148, 148, 148, 148 %%>;
+
+    this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
+    this.motherHeight = motherHeight;
+
+    //sse
+    if (!this.middleMode) {
+      const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+      es.addEventListener("updateTong", (e) => {
+        instance.checkListSseParsing(equalJson(e.data));
+      });
+    }
+
+    loading.parentNode.removeChild(loading);
+
+    this.pageHistory = [];
+    if (desktop) {
+      window.addEventListener("resize", (e) => {
+        window.location.reload();
+      });
+    }
+    window.addEventListener("popstate", (e) => {
+      let targets, targetIndex;
+      e.preventDefault();
+      if (instance.pageHistory.length > 1) {
+        if (!middleMode) {
+          if (getObj.mode === instance.pageHistory[1].path) {
+            instance.checkListDetailLaunching(instance.pageHistory[1].desid);
+            instance.pageHistory.shift();
+            instance.pageHistory.shift();
+          }
+        } else {
+
+          targets = document.querySelectorAll(".leftMenus");
+          if (instance.pageHistory[1].status === "page") {
+            if (targets[instance.pageHistory[1].index] !== undefined) {
+              targets[instance.pageHistory[1].index].click();
+            } else if (instance.menuMap[instance.pageHistory[1].index] !== undefined) {
+              instance.menuMap[instance.pageHistory[1].index].event.call(({
+                getAttribute: (index) => {
+                  return instance.pageHistory[1].index;
+                }
+              }));
+            }
+            instance.pageHistory.shift();
+            instance.pageHistory.shift();
+          } else if (instance.pageHistory[1].status === "card") {
+            targetIndex = 5;
+            if (targets[targetIndex] !== undefined) {
+              targets[targetIndex].click();
+            } else if (instance.menuMap[targetIndex] !== undefined) {
+              instance.menuMap[targetIndex].event.call(({
+                getAttribute: (index) => {
+                  return targetIndex;
+                }
+              }));
+            }
+            instance.pageHistory.shift();
+            for (let box of instance.requestBoxes) {
+              if (box.getAttribute("cliid") === instance.pageHistory[1].cliid) {
+                box.click();
+              }
+            }
+            instance.pageHistory.shift();
+            instance.pageHistory.shift();
+          }
+
+        }
+      }
+    });
+
+    //launching
+    this.checkListDetailLaunching(this.desid);
     this.navigatorLaunching();
 
     if (this.menuMap !== undefined && getObj.mode !== undefined && getObj.cliid !== undefined) {

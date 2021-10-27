@@ -118,10 +118,10 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
             const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
             let matrix, tempArr, loading;
             try {
-              if (window.confirm("정산 상황을 시트로 추출할까요?")) {
-                matrix = [ [ "디자이너", "고객", "총 정산액", "선금", "정산일", "잔금", "정산일", "미정산 선금", "미정산 잔금", "프로젝트 아이디" ] ];
+              if (window.confirm(designer.designer + " 디자이너의 정산 상황을 시트로 추출할까요?")) {
+                matrix = [ [ "디자이너", "고객", "총 정산액", "선금", "정산일", "잔금", "정산일", "미정산 선금", "미정산 잔금", "프로젝트 아이디", "프로젝트 시작일", "프로젝트 종료일" ] ];
 
-                for (let { proid, name, first, remain } of projectArr) {
+                for (let { proid, start, end, name, first, remain } of projectArr) {
                   tempArr = [];
                   tempArr.push(designer.designer);
                   tempArr.push(name);
@@ -133,6 +133,8 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
                   tempArr.push(first.date.trim() === '-' ? first.amount : 0);
                   tempArr.push(remain.date.trim() === '-' ? remain.amount : 0);
                   tempArr.push(proid);
+                  tempArr.push(start);
+                  tempArr.push(end);
                   matrix.push(tempArr);
                 }
 
@@ -243,7 +245,9 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   leftAmount = 0;
   for (let i = 0; i < designer.projects.length; i++) {
     projectObj = {
-      proid: designer.projects[i].proid
+      proid: designer.projects[i].proid,
+      start: GeneralJs.dateToString(designer.projects[i].process.contract.form.date.from),
+      end: GeneralJs.dateToString(designer.projects[i].process.contract.form.date.to),
     };
 
     whiteBlock_mother = createNode({

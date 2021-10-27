@@ -4143,6 +4143,7 @@ GeneralJs.prototype.makeTable = function (matrix, option = {}) {
         borderTop: String(borderWeight) + "px solid " + colorChip[borderColor],
         boxSizing: "border-box",
         overflow: "visible",
+        background: !whiteMode ? colorChip[titleMap[i] === 1 ? titleBackground : (boldMap[i][0] === 1 ? boldBackground : generalBackground)] : colorChip.white,
       }
     });
     if (i === 0) {

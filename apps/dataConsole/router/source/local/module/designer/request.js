@@ -477,6 +477,8 @@ DesignerJs.prototype.requestList = function (desid) {
   let requestWordPaddingBottom;
   let thisChildWidth;
   let dateString;
+  let baseTongPaddingBottom;
+  let mobileOuterMargin;
 
   designer = this.designers.pick(desid);
   projects = designer.projects;
@@ -490,7 +492,7 @@ DesignerJs.prototype.requestList = function (desid) {
   topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
   leftMargin = <%% 34, 34, 34, 34, 8 %%>;
   bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
-  baseTongMarginBottom = <%% 80, 80, 80, 80, 40 %%>;
+  baseTongMarginBottom = <%% 80, 80, 80, 80, 25 %%>;
   size = <%% 16, 15, 15, 15, 4 %%>;
 
   tendencyTop = <%% 3, 3, 3, 3, 0.8 %%>;
@@ -516,14 +518,22 @@ DesignerJs.prototype.requestList = function (desid) {
   requestWordPaddingTop = <%% (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), 4 %%>;
   requestWordPaddingBottom = <%% (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), 5.5 %%>;
 
+  baseTongPaddingBottom = 20;
+  mobileOuterMargin = 4;
+
+  if (mobile) {
+    totalMother.style.background = colorChip.gray2;
+  }
+
   baseTong0 = createNode({
     mother: totalMother,
     class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
       top: desktop ? String(margin * 3) + ea : (this.middleMode ? String(60) + "px" : String(0)),
-      left: String(grayBarWidth + (desktop ? margin * 3 : 0)) + ea,
-      width: withOut(grayBarWidth + (desktop ? margin * 6 : 0), ea),
+      left: String(grayBarWidth + (desktop ? margin * 3 : mobileOuterMargin)) + ea,
+      width: withOut(grayBarWidth + (desktop ? margin * 6 : mobileOuterMargin * 2), ea),
+      paddingTop: desktop ? "" : String(mobileOuterMargin) + ea,
       height: "auto",
       animation: "",
     }
@@ -537,10 +547,12 @@ DesignerJs.prototype.requestList = function (desid) {
       width: String(100) + '%',
       borderRadius: String(5) + "px",
       border: desktop ? ("1px solid " + colorChip.gray4) : "",
+      boxShadow: desktop ? "" : "0px 3px 15px -9px " + colorChip.shadow,
       background: colorChip.white,
       height: "auto",
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
+      paddingBottom: desktop ? "" : String(baseTongPaddingBottom) + ea,
     }
   });
 
@@ -839,13 +851,20 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         }
 
         mother.parentElement.style.height = withOut(motherTop, ea);
+        if (mobile) {
+          mother.parentElement.style.left = String(0);
+          mother.parentElement.style.width = String(100) + '%';
+          mother.parentElement.style.paddingTop = "";
+        }
+        mother.style.boxShadow = "";
+        mother.style.paddingBottom = "";
         mother.style.paddingTop = String(motherTop) + ea;
         mother.style.height = withOut(motherTop, ea);
         mother.style.overflow = "scroll";
 
         setQueue(async () => {
           try {
-            mother.style.background = colorChip.gray1;
+            mother.style.background = colorChip.gray2;
             const board = createNode({
               mother,
               style: {
@@ -853,10 +872,10 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
                 left: String(motherTop) + ea,
                 width: withOut(motherTop * 2, ea),
                 height: String(8000) + ea,
-                borderRadius: String(3) + "px",
+                borderRadius: String(5) + "px",
                 background: colorChip.white,
                 animation: "fadeupdelay 0.4s ease forwards",
-                boxShadow: "0px 3px 14px -10px " + colorChip.shadow,
+                boxShadow: "0px 3px 15px -10px " + colorChip.shadow,
                 zIndex: String(1),
                 marginBottom: String(motherTop) + ea,
               }
@@ -1510,10 +1529,10 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
     let imageTong;
     let tempImage;
 
-    topMargin = <%% 42, 38, 32, 30, 5.5 %%>;
-    leftMargin = <%% 50, 46, 38, 32, 5.5 %%>;
+    topMargin = <%% 42, 38, 32, 30, 5.8 %%>;
+    leftMargin = <%% 50, 46, 38, 32, 5.8 %%>;
 
-    titleSize = <%% 35, 33, 30, 26, 5.2 %%>;
+    titleSize = <%% 35, 33, 30, 26, 5 %%>;
     titlePaddingLeft = <%% 1, 1, 1, 1, 0 %%>;
     titleBottom = <%% 35, 29, 28, 20, 5 %%>;
     titlePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.2 %%>;
@@ -3457,7 +3476,7 @@ DesignerJs.prototype.requestView = async function () {
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request" ];
+    this.modes = [ "checklist", "report", "request", "possible" ];
     this.mode = this.modes[2];
     this.result = null;
     this.searchCondition = {

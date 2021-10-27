@@ -186,6 +186,8 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
   let dateString;
   let outerMargin;
   let contentsBox;
+  let baseTongPaddingBottom;
+  let mobileOuterMargin;
 
   margin = 8;
   outerMargin = <%% (margin * 3), (margin * 3), (margin * 3), (margin * 3), 0 %%>;
@@ -195,16 +197,20 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
   baseTongMarginBottom = <%% 80, 80, 80, 80, 40 %%>;
   size = <%% 16, 15, 15, 15, 4 %%>;
 
+  baseTongPaddingBottom = 15;
+  mobileOuterMargin = 4;
+
   baseTong0 = createNode({
     mother: totalMother,
     class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
       top: desktop ? String(outerMargin) + ea : (this.middleMode ? String(60) + "px" : String(outerMargin)),
-      left: String(grayBarWidth + (outerMargin)) + ea,
-      width: withOut(grayBarWidth + (outerMargin * 2), ea),
+      left: String(grayBarWidth + (desktop ? outerMargin : mobileOuterMargin)) + ea,
+      width: withOut(grayBarWidth + (desktop ? outerMargin * 2 : mobileOuterMargin * 2), ea),
       height: "auto",
       animation: "",
+      paddingTop: desktop ? "" : String(mobileOuterMargin) + ea,
     }
   });
   baseTong = createNode({
@@ -216,10 +222,12 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
       width: String(100) + '%',
       borderRadius: String(5) + "px",
       border: desktop ? ("1px solid " + colorChip.gray4) : "",
+      boxShadow: desktop ? "" : "0px 3px 15px -9px " + colorChip.shadow,
       background: colorChip.white,
       height: "auto",
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
+      paddingBottom: desktop ? "" : String(baseTongPaddingBottom) + ea,
     }
   });
 
@@ -326,6 +334,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     let motherPaddingTop;
     let daydayBlockHeight;
     let monthSize;
+    let mobileOuterMargin;
 
     this.designer = designer;
 
@@ -431,6 +440,8 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     clientPopupWordPaddingHeightPadding = <%% 1.5, 1.5, 1.5, 1.5, 0 %%>;
     clientPopupWordSize = <%% 14, 14, 14, 14, 2.8 %%>;
     clientPopupTopMargin = <%% 7, 7, 7, 7, 1 %%>;
+
+    mobileOuterMargin = 4;
 
     functionPannelContents = [
       {
@@ -916,11 +927,11 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
           mother: block,
           style: {
             position: "fixed",
-            width: withOut(grayBarWidth + (outerMargin * 4) + (daydayIndent * 2), ea),
+            width: withOut(grayBarWidth + (outerMargin * 4) + (daydayIndent * 2) + (desktop ? 0 : mobileOuterMargin * 2), ea),
             height: String(daydayBlockHeight) + ea,
             background: colorChip.white,
-            top: String(daydayFieldTop) + ea,
-            left: String(grayBarWidth + (outerMargin * 2) + daydayVisualLeft + daydayIndent) + ea,
+            top: String(daydayFieldTop + (desktop ? 0 : mobileOuterMargin)) + ea,
+            left: String(grayBarWidth + (outerMargin * 2) + daydayVisualLeft + daydayIndent + (desktop ? 0 : mobileOuterMargin)) + ea,
             boxSizing: "border-box",
             zIndex: String(1),
             borderRadius: String(50) + ea,
@@ -1621,17 +1632,19 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         weekBlocks.push(weekBlock);
       }
 
-      createNode({
-        mother: block,
-        style: {
-          position: "absolute",
-          bottom: String(desktop ? blockMarginBottom / 2 : blockBarBottom) + ea,
-          left: String(titleWidth) + ea,
-          width: withOut(titleWidth, ea),
-          height: String(0),
-          borderBottom: (mobile ? "1px dashed " + colorChip.gray3 : ""),
-        }
-      });
+      if (num !== map.length - 1) {
+        createNode({
+          mother: block,
+          style: {
+            position: "absolute",
+            bottom: String(desktop ? blockMarginBottom / 2 : blockBarBottom) + ea,
+            left: String(titleWidth) + ea,
+            width: withOut(titleWidth, ea),
+            height: String(0),
+            borderBottom: (mobile ? "1px dashed " + colorChip.gray3 : ""),
+          }
+        });
+      }
 
       this.titleFields.push(titleField);
       num++;
@@ -3175,7 +3188,7 @@ DesignerJs.prototype.possibleView = async function () {
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request" ];
+    this.modes = [ "checklist", "report", "request", "possible" ];
     this.mode = this.modes[2];
     this.result = null;
     this.searchCondition = {

@@ -1636,7 +1636,8 @@ DesignerJs.prototype.reportDetail = function (desid) {
   let mobileTableBlockHeight;
   let mobileTableMarginBottom;
   let mobileTableInnderMargin;
-  let baseTongPaddingTop;
+  let baseTongPaddingTop, baseTongPaddingBottom;
+  let mobileOuterMargin;
 
   designer = this.designers.pick(desid);
   information = designer.information;
@@ -1656,7 +1657,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
   topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
   leftMargin = <%% 34, 34, 34, 34, 8 %%>;
   bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 12 %%>;
-  baseTongMarginBottom = <%% 80, 80, 80, 80, 40 %%>;
+  baseTongMarginBottom = <%% 80, 80, 80, 80, 25 %%>;
   size = <%% 16, 15, 15, 15, 3 %%>;
   tendencyTop = 3;
   tendencyHeight = 16;
@@ -1680,7 +1681,9 @@ DesignerJs.prototype.reportDetail = function (desid) {
 
   textAreaTop = isMac() ? -3 : -4;
 
-  baseTongPaddingTop = 2;
+  baseTongPaddingTop = 1;
+  baseTongPaddingBottom = 20;
+  mobileOuterMargin = 4;
 
   mobileBlockPaddingTop = 7;
   mobileBlockLineTop = 2.4;
@@ -1909,14 +1912,19 @@ DesignerJs.prototype.reportDetail = function (desid) {
 
   }
 
+  if (mobile) {
+    totalMother.style.background = colorChip.gray2;
+  }
+
   baseTong0 = createNode({
     mother: totalMother,
     class: [ "mainBaseTong" ],
     style: {
       position: "absolute",
       top: desktop ? String(margin * 3) + ea : (this.middleMode ? String(60) + "px" : String(0)),
-      left: String(grayBarWidth + (desktop ? margin * 3 : 0)) + ea,
-      width: withOut(grayBarWidth + (desktop ? margin * 6 : 0), ea),
+      left: String(grayBarWidth + (desktop ? margin * 3 : mobileOuterMargin)) + ea,
+      width: withOut(grayBarWidth + (desktop ? margin * 6 : mobileOuterMargin * 2), ea),
+      paddingTop: desktop ? "" : String(mobileOuterMargin) + ea,
       height: "auto",
       animation: "",
     }
@@ -1928,13 +1936,17 @@ DesignerJs.prototype.reportDetail = function (desid) {
       top: String(0) + ea,
       left: String(0) + ea,
       width: String(100) + '%',
-      borderRadius: String(5) + ea,
+      borderRadius: String(5) + "px",
       border: desktop ? ("1px solid " + colorChip.gray4) : "",
       background: colorChip.white,
       height: "auto",
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
       paddingTop: desktop ? "" : String(baseTongPaddingTop) + ea,
+      boxShadow: desktop ? "" : "0px 3px 15px -9px " + colorChip.shadow,
+      marginBottom: String(baseTongMarginBottom) + ea,
+      paddingTop: desktop ? "" : String(baseTongPaddingTop) + ea,
+      paddingBottom: desktop ? "" : String(baseTongPaddingBottom) + ea,
     }
   });
 
@@ -2300,7 +2312,7 @@ DesignerJs.prototype.reportDetail = function (desid) {
                 left: String(0),
                 height: String(mobileBlockLineTop) + ea,
                 width: String(100) + '%',
-                borderBottom: "1px dashed " + colorChip.green,
+                borderBottom: "1px dashed " + colorChip.gray3,
               }
             },
             {
@@ -2320,12 +2332,12 @@ DesignerJs.prototype.reportDetail = function (desid) {
 
         matrix.unshift(columns);
         table = mother.makeTable(matrix, { style: {
-          width: (100 - (leftMargin * 2)) / (widthRatio.reduce((accumulator, current) => { return accumulator + current; })),
+          width: (100 - (mobileOuterMargin * 2) - (leftMargin * 2)) / (widthRatio.reduce((accumulator, current) => { return accumulator + current; })),
           height: mobileTableBlockHeight,
           size: mobileTableFontSize,
           innerMargin: mobileTableInnderMargin,
           innerMarginLeft: mobileTableInnderMargin
-        }, boldMap, titleMap, callbackMap, widthRatio });
+        }, boldMap, titleMap, callbackMap, widthRatio, whiteMode: true });
         mobileBlock.appendChild(table);
         table = baseTong.lastChild;
         table.style.position = "relative";
@@ -2824,7 +2836,7 @@ DesignerJs.prototype.reportView = async function () {
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[1].getAttribute("desid");
     this.result = null;
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request" ];
+    this.modes = [ "checklist", "report", "request", "possible" ];
     this.mode = this.modes[1];
 
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
