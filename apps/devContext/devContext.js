@@ -272,6 +272,42 @@ DevContext.prototype.pureSpawn = async function () {
   }
 }
 
+DevContext.prototype.pureScan = async function () {
+  const instance = this;
+  const { requestSystem } = this.mother;
+  try {
+    const port = 8000;
+    const limitNumber = 101;
+    const protocol = "http:";
+    const innerIpConst = "172.30.1";
+    const routerConst = "check";
+    const time = 1500;
+    const arpScan = () => {
+      let results;
+      results = [];
+      for (let i = 1; i < limitNumber; i++) {
+        requestSystem(`${protocol}//${innerIpConst}.${String(i)}:${String(port)}/${routerConst}`).then((res) => {
+          if (typeof res === "object") {
+            if (res.status >= 200 && res.status < 300 && typeof res.data === "object") {
+              results.push([ res.config.url, res.data ]);
+            }
+          }
+        }).catch((err) => {});
+      }
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(results);
+        }, time);
+      });
+    }
+
+    const results = await arpScan();
+    return results;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
@@ -299,19 +335,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.pureSpawn();
 
-
-    const port = 8000;
-    let res;
-    for (let i = 1; i < 101; i++) {
-      requestSystem(`http://172.30.1.${String(i)}:${String(port)}/check`).then((res) => {
-        if (typeof res === "object") {
-          if (res.status >= 200 && res.status < 300 && typeof res.data === "object") {
-            console.log(res.config.url, res.data);
-          }
-        }
-      }).catch((err) => {});
-    }
-
+    console.log(await this.pureScan());
 
     // setInterval(async () => {
     //   console.log(await ghostRequest("insyncCheck", {}))
