@@ -689,7 +689,7 @@ AiContents.prototype.to_google = async function (pid) {
       await messageSend({ text: `${client.name} 고객님 디자이너 포트폴리오 컨텐츠를 웹에 업로드하였습니다! link : ${portfolioLink + pid}`, channel });
       await messageSend({ text: `${client.name} 고객님 고객 인터뷰 컨텐츠를 웹에 업로드하였습니다! link : ${reviewLink + rid}`, channel });
 
-      // await kakaoInstance.sendTalk("contentsShareClient", client.name, client.phone, { client: client.name, rid });
+      await kakaoInstance.sendTalk("contentsShareClient", client.name, client.phone, { client: client.name, rid });
       await kakaoInstance.sendTalk("contentsShareDesigner", designer.designer, designer.information.phone, { client: client.name, designer: designer.designer, pid });
 
       project = await back.getProjectById(proid, { selfMongo });

@@ -76,6 +76,10 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   let tempDate;
   let ago, agoValue;
   let greateStandard;
+  let projectArr;
+  let projectObj;
+
+  projectArr = [];
 
   ago = new Date();
   ago.setDate(ago.getDate() - 28);
@@ -110,8 +114,43 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       events: [
         {
           type: "click",
-          event: function (e) {
-            GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?mode=general&desid=" + designer.desid);
+          event: async function (e) {
+            const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
+            let matrix, tempArr, loading;
+            try {
+              if (window.confirm("정산 상황을 시트로 추출할까요?")) {
+                matrix = [ [ "디자이너", "고객", "총 정산액", "선금", "정산일", "잔금", "정산일", "미정산 선금", "미정산 잔금", "프로젝트 아이디" ] ];
+
+                for (let { proid, name, first, remain } of projectArr) {
+                  tempArr = [];
+                  tempArr.push(designer.designer);
+                  tempArr.push(name);
+                  tempArr.push(first.amount + remain.amount);
+                  tempArr.push(first.amount);
+                  tempArr.push(first.date);
+                  tempArr.push(remain.amount);
+                  tempArr.push(remain.date);
+                  tempArr.push(first.date.trim() === '-' ? first.amount : 0);
+                  tempArr.push(remain.date.trim() === '-' ? remain.amount : 0);
+                  tempArr.push(proid);
+                  matrix.push(tempArr);
+                }
+
+                loading = await instance.mother.grayLoading();
+
+                const { link } = await GeneralJs.ajaxJson({
+                  values: matrix,
+                  newMake: true,
+                  parentId: parentId,
+                  sheetName: "fromDB_designerCalculation_" + GeneralJs.uniqueValue("string"),
+                }, "/sendSheets");
+
+                loading.remove();
+                GeneralJs.blankHref(link);
+              }
+            } catch (e) {
+              console.log(e);
+            }
           }
         }
       ],
@@ -203,6 +242,10 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
   firstAmount = 0;
   leftAmount = 0;
   for (let i = 0; i < designer.projects.length; i++) {
+    projectObj = {
+      proid: designer.projects[i].proid
+    };
+
     whiteBlock_mother = createNode({
       mother: nodeArr[2],
       id: designer.projects[i].proid,
@@ -246,6 +289,7 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         color: colorChip.black,
       }
     });
+    projectObj.name = designer.projects[i].name;
 
     whiteBlock = createNode({
       mother: whiteBlock_mother,
@@ -340,6 +384,11 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
         }
       }
     ]);
+    projectObj.first = {
+      amount,
+      date: dateToString(designer.projects[i].process.calculation.payments.first.date) === "0/0" ? '-' : GeneralJs.dateToString(designer.projects[i].process.calculation.payments.first.date),
+      condition: condition ? 1 : 0,
+    };
 
     createNode({
       mother: whiteBlock,
@@ -449,6 +498,13 @@ DesignerJs.prototype.calculationBlock = function (mother, designer) {
       }
     ]);
 
+    projectObj.remain = {
+      amount,
+      date: dateToString(designer.projects[i].process.calculation.payments.remain.date) === "0/0" ? '-' : GeneralJs.dateToString(designer.projects[i].process.calculation.payments.remain.date),
+      condition: condition ? 1 : 0,
+    };
+
+    projectArr.push(projectObj);
   }
 
   textLeft = textLeft + 3;
@@ -1146,9 +1202,9 @@ DesignerJs.prototype.calculationView = async function () {
 
     loading.parentNode.removeChild(loading);
 
-    setTimeout(function () {
-      instance.onoffButton.will.click();
-    }, 500);
+    // setTimeout(function () {
+    //   instance.onoffButton.will.click();
+    // }, 500);
 
   } catch (e) {
     console.log(e);
