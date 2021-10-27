@@ -109,13 +109,60 @@ DevContext.prototype.pureScript = function () {
 
 DevContext.prototype.pureServer = async function () {
   const instance = this;
-  const { pureServer, shellExec, shellLink, fileSystem } = this.mother;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
   const NativeNotifier = require(process.cwd() + "/apps/nativeNotifier/nativeNotifier.js");
   const notifier = new NativeNotifier();
+  const axios = require(`axios`);
+  const os = require(`os`);
+  let osType;
+  if (/Darwin/gi.test(os.type().trim())) {
+    osType = "mac";
+  } else {
+    osType = "windows";
+  }
   try {
 
     const PureServer = pureServer("class");
     const app = new PureServer();
+
+    app.get("/", async (req, res) => {
+      try {
+        res.send(JSON.stringify({ message: "It works!" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.get("/update", async (req, res) => {
+      try {
+        shellExec(`cd ${shellLink(process.cwd())};git pull;`).then(() => {
+          setQueue(() => { process.kill(); });
+        }).catch((err) => {
+          console.log(err);
+        });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.get("/check", async (req, res) => {
+      try {
+        let inner, result, ip;
+        inner = [];
+        tempObj = os.networkInterfaces();
+        for (let i in tempObj) {
+          inner = inner.concat(tempObj[i]);
+        }
+        inner = inner.filter((i) => { return /4/gi.test(i.family) && !/127\.0\.0\.1/gi.test(i.address); });
+        const { data } = await axios.get("https://icanhazip.com");
+        ip = data.replace(/[^0-9\.]/gi, '').trim();
+        result = { os: osType, ip, inner };
+        res.send(JSON.stringify(result));
+      } catch (e) {
+        console.log(e);
+      }
+    });
 
     app.post("/push", async (req, res) => {
       try {
@@ -195,30 +242,30 @@ DevContext.prototype.pureSpawn = async function () {
     delete package.dependencies["node-schedule"];
     delete package.dependencies["shelljs"];
 
-    if (await fileSystem(`exist`, [ `${home}/${serverName}` ])) {
+    if (await fileSystem(`exist`, [ `${home}/.${serverName}` ])) {
       try {
-        await shellExec(`rm`, [ `-rf`, `${home}/${serverName}` ]);
+        await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}` ]);
       } catch (e) {
-        await shellExec(`rm`, [ `-rf`, `${home}/${serverName}` ]);
+        await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}` ]);
       }
     }
 
     await shellExec(`cd ${shellLink(home)};git clone ${gitHostName}`);
-    await shellExec(`rm`, [ `-rf`, `${home}/${serverName}/apps` ]);
-    await shellExec(`mkdir`, [ `${home}/${serverName}/apps` ]);
-    await shellExec(`mkdir`, [ `${home}/${serverName}/apps/backMaker` ]);
-    await shellExec(`mkdir`, [ `${home}/${serverName}/temp` ]);
-    await fileSystem(`write`, [ `${home}/${serverName}/apps/mother.js`, motherScript ]);
-    await fileSystem(`write`, [ `${home}/${serverName}/apps/infoObj.js`, addressScript ]);
-    await fileSystem(`write`, [ `${home}/${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
-    await fileSystem(`write`, [ `${home}/${serverName}/index.js`, script ]);
-    await fileSystem(`write`, [ `${home}/${serverName}/.gitignore`, (await fileSystem(`readString`, [ `${process.cwd()}/.gitignore` ])) ]);
-    await fileSystem(`write`, [ `${home}/${serverName}/package.json`, JSON.stringify(package, null, 2) ]);
+    await shellExec(`mv`, [ `${home}/${serverName}`, `${home}/.${serverName}` ]);
+    await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}/apps` ]);
+    await shellExec(`mkdir`, [ `${home}/.${serverName}/apps` ]);
+    await shellExec(`mkdir`, [ `${home}/.${serverName}/apps/backMaker` ]);
+    await shellExec(`mkdir`, [ `${home}/.${serverName}/temp` ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/apps/mother.js`, motherScript ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/apps/infoObj.js`, addressScript ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/index.js`, script ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/.gitignore`, (await fileSystem(`readString`, [ `${process.cwd()}/.gitignore` ])) ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/package.json`, JSON.stringify(package, null, 2) ]);
     for (let m of copiedModules) {
-      await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/${serverName}/apps;`);
+      await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/.${serverName}/apps;`);
     }
-    await shellExec(`cd ${home}/${serverName};npm install;git add -A;git commit -m "${serverName}_${uniqueValue("string")}";git push;`);
-    await shellExec(`open ${shellLink(home)}/${serverName};`);
+    await shellExec(`cd ${home}/.${serverName};npm install;git add -A;git commit -m "${serverName}_${uniqueValue("string")}";git push;pm2 kill;pm2 start ./index.js;`);
 
   } catch (e) {
     console.log(e);
@@ -251,6 +298,13 @@ DevContext.prototype.launching = async function () {
     // await this.passiveAddressSync("c2110_aa14s");
 
     await this.pureSpawn();
+
+
+
+
+
+
+
 
 
     // setInterval(async () => {
@@ -1422,7 +1476,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p130");
+    // await this.getCorePortfolio("p146");
 
 
     // aspirant to designer

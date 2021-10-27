@@ -1460,7 +1460,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, sleep, requestSystem, messageSend } = this.mother;
+  const { equalJson, sleep, requestSystem, messageSend, messageLog } = this.mother;
   let obj = {};
   obj.link = "/requestRefund";
   obj.func = async function (req, res) {
@@ -1500,6 +1500,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       }
 
       report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
+      await messageLog(report);
       report.bill = report.bill.toNormal();
       report.pastProject = report.pastProject.toNormal();
       report.project = report.project.toNormal();
