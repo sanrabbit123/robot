@@ -141,6 +141,24 @@ DevContext.prototype.pureServer = async function () {
       }
     });
 
+    app.post("/prompt", async (req, res) => {
+      try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+        let input;
+        input = await notifier.sendPrompt(String(req.body.text).trim());
+        if (typeof input !== "string") {
+          input = "";
+        } else {
+          input = input.trim();
+        }
+        res.send(JSON.stringify({ message: input }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
     pureServer("listen", app, 8000);
 
   } catch (e) {
@@ -150,30 +168,58 @@ DevContext.prototype.pureServer = async function () {
 
 DevContext.prototype.pureSpawn = async function () {
   const instance = this;
-  const { shellExec, shellLink, fileSystem } = this.mother;
+  const { shellExec, shellLink, fileSystem, equalJson, uniqueValue } = this.mother;
   try {
-    const serverName = "homeliaisonPureServer";
+    const serverName = "homeliaisonpureserver";
+    const gitHostName = "git@gitlab.com:uragen/homeliaisonpureserver.git";
     const home = process.env.HOME;
     const { script, backMakerScript, addressScript, motherScript } = this.pureScript();
     const copiedModules = [
       "nativeNotifier"
     ];
+    const package = equalJson(await fileSystem(`readString`, [ `${process.cwd()}/package.json` ]));
+
+    package.name = "pure";
+    package.main = "index.js";
+    package.scripts = {};
+    delete package.devDependencies;
+    delete package.dependencies["@babel/runtime"];
+    delete package.dependencies["@babel/runtime-corejs3"];
+    delete package.dependencies["body-parser"];
+    delete package.dependencies["connect-mongo"];
+    delete package.dependencies["csso"];
+    delete package.dependencies["express"];
+    delete package.dependencies["express-session"];
+    delete package.dependencies["express-useragent"];
+    delete package.dependencies["multer"];
+    delete package.dependencies["node-schedule"];
+    delete package.dependencies["shelljs"];
+
     if (await fileSystem(`exist`, [ `${home}/${serverName}` ])) {
-      await shellExec(`rm -rf ${shellLink(home)}/${serverName};`);
+      try {
+        await shellExec(`rm`, [ `-rf`, `${home}/${serverName}` ]);
+      } catch (e) {
+        await shellExec(`rm`, [ `-rf`, `${home}/${serverName}` ]);
+      }
     }
-    await fileSystem(`mkdir`, [ `${home}/${serverName}` ]);
-    await fileSystem(`mkdir`, [ `${home}/${serverName}/apps` ]);
-    await fileSystem(`mkdir`, [ `${home}/${serverName}/apps/backMaker` ]);
+
+    await shellExec(`cd ${shellLink(home)};git clone ${gitHostName}`);
+    await shellExec(`rm`, [ `-rf`, `${home}/${serverName}/apps` ]);
+    await shellExec(`mkdir`, [ `${home}/${serverName}/apps` ]);
+    await shellExec(`mkdir`, [ `${home}/${serverName}/apps/backMaker` ]);
+    await shellExec(`mkdir`, [ `${home}/${serverName}/temp` ]);
     await fileSystem(`write`, [ `${home}/${serverName}/apps/mother.js`, motherScript ]);
     await fileSystem(`write`, [ `${home}/${serverName}/apps/infoObj.js`, addressScript ]);
     await fileSystem(`write`, [ `${home}/${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
     await fileSystem(`write`, [ `${home}/${serverName}/index.js`, script ]);
-    await fileSystem(`write`, [ `${home}/${serverName}/package.json`, "{}" ]);
-
+    await fileSystem(`write`, [ `${home}/${serverName}/.gitignore`, (await fileSystem(`readString`, [ `${process.cwd()}/.gitignore` ])) ]);
+    await fileSystem(`write`, [ `${home}/${serverName}/package.json`, JSON.stringify(package, null, 2) ]);
     for (let m of copiedModules) {
       await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/${serverName}/apps;`);
     }
+    await shellExec(`cd ${home}/${serverName};npm install;git add -A;git commit -m "${serverName}_${uniqueValue("string")}";git push;`);
     await shellExec(`open ${shellLink(home)}/${serverName};`);
+
   } catch (e) {
     console.log(e);
   }
@@ -204,7 +250,7 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-    // await this.pureSpawn();
+    await this.pureSpawn();
 
 
     // setInterval(async () => {
