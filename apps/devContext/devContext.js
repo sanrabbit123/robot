@@ -276,7 +276,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer } = this.mother;
+  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, requestSystem, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -297,14 +297,20 @@ DevContext.prototype.launching = async function () {
 
     // await this.passiveAddressSync("c2110_aa14s");
 
-    await this.pureSpawn();
+    // await this.pureSpawn();
 
 
-
-
-
-
-
+    const port = 8000;
+    let res;
+    for (let i = 1; i < 101; i++) {
+      requestSystem(`http://172.30.1.${String(i)}:${String(port)}/check`).then((res) => {
+        if (typeof res === "object") {
+          if (res.status >= 200 && res.status < 300 && typeof res.data === "object") {
+            console.log(res.config.url, res.data);
+          }
+        }
+      }).catch((err) => {});
+    }
 
 
     // setInterval(async () => {
