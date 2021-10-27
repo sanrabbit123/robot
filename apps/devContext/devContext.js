@@ -66,6 +66,12 @@ DevContext.prototype.pureScript = function () {
     "dateToString",
     "stringToDate",
     "pureServer",
+    "requestSystem",
+    "binaryRequest",
+    "cryptoString",
+    "decryptoHash",
+    "uniqueValue",
+    "setQueue"
   ];
   const deleteFilter = (str) => { return str.split("\n").map((s) => { return s.replace((new RegExp("^  " + deleteToken, "gi")), ""); }).join("\n"); }
   let script;
@@ -123,6 +129,18 @@ DevContext.prototype.pureServer = async function () {
       }
     });
 
+    app.post("/alert", async (req, res) => {
+      try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+        notifier.alertAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
     pureServer("listen", app, 8000);
 
   } catch (e) {
@@ -150,6 +168,8 @@ DevContext.prototype.pureSpawn = async function () {
     await fileSystem(`write`, [ `${home}/${serverName}/apps/infoObj.js`, addressScript ]);
     await fileSystem(`write`, [ `${home}/${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
     await fileSystem(`write`, [ `${home}/${serverName}/index.js`, script ]);
+    await fileSystem(`write`, [ `${home}/${serverName}/package.json`, "{}" ]);
+
     for (let m of copiedModules) {
       await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/${serverName}/apps;`);
     }
@@ -1310,7 +1330,7 @@ DevContext.prototype.launching = async function () {
 
     // spawn catfish
     // const app = new SpawnBoradoli();
-    // await app.spawnPython("studyCloud");
+    // await app.spawnLaunching();
 
 
     // kakao token
