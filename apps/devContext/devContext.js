@@ -480,11 +480,7 @@ DevContext.prototype.launching = async function () {
     // console.log(await aliveMembers.aliveRequest("/"));
 
 
-
-    const mirror = new MirrorWhisk();
-
-    await mirror.recordBackup();
-
+    
 
 
 
