@@ -181,4 +181,133 @@ MirrorWhisk.prototype.mirrorServerLaunching = async function () {
   }
 }
 
+MirrorWhisk.prototype.recordBackup = async function () {
+  const instance = this;
+  const { fileSystem, shellExec, shellLink, requestSystem, dateToString, uniqueValue, binaryRequest } = this.mother;
+  const storeMother = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.office + "/통화녹취파일";
+  const jsdom = require("jsdom");
+  const { JSDOM } = jsdom;
+  try {
+    const storeMotherContents = (await fileSystem(`readDir`, [ storeMother ])).filter((str) => { return !/^\./.test(str); });
+    const folderName = "records_" + dateToString(new Date()).replace(/\-/gi, '') + "_" + uniqueValue("string");
+    let url, res, dom, token, idsave, id, pass;
+    let session;
+    let inputs;
+    let postData;
+    let trArr;
+    let aNode, aArr;
+    let pageNum;
+    let totalLinks;
+    let log;
+    let tempbinary;
+    let storeTargets;
+    let downloadedFiles;
+
+    url = "https://centrex.uplus.co.kr/premium";
+    res = await requestSystem(url);
+
+    dom = new JSDOM(res.data);
+
+    token = dom.window.document.querySelectorAll('input')[2].value;
+    session = res.headers["set-cookie"][0].split(';')[0];
+    idsave = 1;
+    id = "0220392252";
+    pass = "Vndkwp941!";
+
+    url = "https://centrex.uplus.co.kr/premium/PHP/web_login.php";
+    res = await requestSystem(url, { token, idsave, id, pass }, { headers: { Cookie: session } });
+
+    url = "https://centrex.uplus.co.kr/premium/backoffice/record_list.html";
+    res = await requestSystem(url, {}, { method: "get", headers: { Cookie: session } });
+
+    dom = new JSDOM(res.data);
+    inputs = dom.window.document.querySelector('form').children;
+    postData = {};
+    for (let input of inputs) {
+      if (/INPUT/gi.test(input.nodeName)) {
+        postData[input.getAttribute("name")] = input.getAttribute("value");
+      }
+    }
+
+    pageNum = 0;
+    totalLinks = [];
+    do {
+      pageNum++;
+      postData.page = String(pageNum);
+      res = await requestSystem(url, postData, { headers: { Cookie: session } });
+      dom = new JSDOM(res.data);
+      trArr = [ ...dom.window.document.querySelector('.contents_area').querySelector('.table_type01').querySelectorAll('tr') ];
+
+      aArr = [];
+      for (let tr of trArr) {
+        aNode = tr.querySelector('a');
+        if (aNode !== null) {
+          aArr.push(aNode.getAttribute("href"));
+        }
+      }
+      aArr = aArr.map((str) => { return str.trim(); }).filter((str) => { return str !== '#'; }).map((str) => {
+        return str + "__split__" + String(pageNum);
+      });
+      totalLinks = totalLinks.concat(aArr);
+    } while (aArr.length !== 0);
+
+    totalLinks = [ ...new Set(totalLinks) ].map((str) => {
+      return "https://centrex.uplus.co.kr/premium" + str.slice(2);
+    }).map((link) => {
+      let tempArr, tempArr1, obj, page;
+      page = Number(link.split("__split__")[1]);
+      link = link.split("__split__")[0];
+      tempArr = link.split('?');
+      tempArr1 = tempArr[1].split('&').map((s) => { return s.split('='); });
+      obj = {};
+      for (let [ key, value ] of tempArr1) {
+        obj[key] = value;
+      }
+      return { link, page, host: tempArr[0], data: obj };
+    });
+
+    log = {
+      date: new Date(),
+      length: totalLinks.length,
+      records: totalLinks
+    };
+
+    await shellExec(`rm -rf ${shellLink(process.cwd())}/temp/${folderName}`);
+    await shellExec(`mkdir ${shellLink(process.cwd())}/temp/${folderName}`);
+
+    // for (let i = 0; i < totalLinks.length; i++) {
+    for (let i = 0; i < 1; i++) {
+      tempbinary = await binaryRequest(totalLinks[i].link, null, { headers: { Cookie: session } });
+      await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${folderName}/${totalLinks[i].data.filename}`, tempbinary ]);
+      console.log(`${totalLinks[i].data.filename} download success`);
+
+      postData.page = String(totalLinks[i].page);
+      postData["chk[]"] = totalLinks[i].data.filename.split('-')[0] + "|" + totalLinks[i].data.filename;
+      res = await requestSystem("https://centrex.uplus.co.kr/premium/PHP/deleteRecordFile.php", postData, { headers: { Cookie: session } });
+      console.log(`${totalLinks[i].data.filename} server delete success`);
+    }
+
+    storeTargets = {};
+    for (let str of storeMotherContents) {
+      storeTargets['p' + str.split('_')[0]] = str;
+    }
+
+    downloadedFiles = (await fileSystem(`readDir`, [ `${process.cwd()}/temp/${folderName}` ])).filter((str) => { return !/^\./.test(str); });
+    downloadedFiles = downloadedFiles.map((str) => {
+      return { target: 'p' + str.split('-')[0].replace(/^0/gi, '').replace(/^0/gi, ''), file: `${process.cwd()}/temp/${folderName}/${str}` };
+    });
+
+    for (let { target, file } of downloadedFiles) {
+      if (typeof storeTargets[target] === "string") {
+        await shellExec(`mv ${shellLink(file)} ${shellLink(storeMother + "/" + storeTargets[target])};`);
+      }
+    }
+
+    await shellExec(`rm -rf ${shellLink(process.cwd())}/temp/${folderName};`);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = MirrorWhisk;

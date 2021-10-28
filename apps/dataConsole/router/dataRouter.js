@@ -4270,7 +4270,34 @@ DataRouter.prototype.rou_post_errorLog = function () {
       await errorLog(req.body.message);
       res.send(JSON.stringify({ message: "done" }));
     } catch (e) {
-      await errorLog("Console 서버 문제 생김 (rou_post_ghostDesigner_updateAnalytics): " + e.message);
+      await errorLog("Console 서버 문제 생김 (rou_post_errorLog): " + e.message);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_getDataPatch = function () {
+  const instance = this;
+  const { errorLog } = this.mother;
+  let obj = {};
+  obj.link = [ "/getDataPatch", "/dataPatch" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (typeof req.body.method !== "string") {
+        throw new Error("invalid post");
+      }
+      const { method } = req.body;
+      const result = (instance.patch[method])();
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_getDataPatch): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }

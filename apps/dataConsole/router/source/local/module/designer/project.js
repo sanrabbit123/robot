@@ -1,4 +1,4 @@
-DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0, tendencyIndent = 0, tendencyWidthIndent = 0, tendencyFactorHeight = 0, mobileTendencyVisualMargin = 0) {
+DesignerJs.prototype.portfolioData = function (factorHeight = 0, factorWidth = 0, tendencyIndent = 0, tendencyWidthIndent = 0, tendencyFactorHeight = 0, mobileTendencyVisualMargin = 0) {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -255,7 +255,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 }
                                               }, "/generalMongo");
                                               await ajaxJson({
-                                                page: "checklist",
+                                                page: "project",
                                                 mode: "update",
                                                 who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
                                                 update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
@@ -412,7 +412,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                                                 }
                                               }, "/generalMongo");
                                               await ajaxJson({
-                                                page: "checklist",
+                                                page: "project",
                                                 mode: "update",
                                                 who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
                                                 update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
@@ -2729,9 +2729,9 @@ DesignerJs.prototype.projectDetailLaunching = function (desid, callback = null) 
   this.fixTargets = [];
 
   if (!middleMode) {
-    this.pageHistory.unshift({ path: "checklist", status: "list", desid });
+    this.pageHistory.unshift({ path: "project", status: "list", desid });
   }
-  window.history.pushState({ path: "checklist", status: "list", desid }, '');
+  window.history.pushState({ path: "project", status: "list", desid }, '');
 
   if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
     this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
@@ -2773,7 +2773,7 @@ DesignerJs.prototype.projectDetailLaunching = function (desid, callback = null) 
 
   if (middleMode) {
     ajaxJson({
-      page: "checklist",
+      page: "project",
       mode: "page",
       who: instance.designer.information.phone,
       desid,
@@ -2799,85 +2799,152 @@ DesignerJs.prototype.projectDetail = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll } = GeneralJs;
-  const { totalMother, ea, grayBarWidth } = this;
-  const matrixButtonConst = "matrixButtons_" + desid;
-  const cookies = getCookiesAll();
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac } = GeneralJs;
+  const { totalMother, ea, grayBarWidth, projectMap } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   let designer;
-  let information, analytics;
   let margin;
   let baseTong0, baseTong;
-  let matrix;
-  let tempArr;
   let tempObj, nodeArr, subNodeArr;
-  let eachTotalTong, eachNameTong, eachValueTong;
-  let level1Width, level1Left;
   let topMargin, leftMargin, bottomMargin;
   let size;
-  let tempMatrix;
-  let alphabetWidth;
   let temp;
-  let factorHeight, factorWidth;
-  let tendencyTop, tendencyHeight;
-  let tendencyFactorHeight, tendencyIndent, tendencyWidthIndent;
-  let textAreaTop;
   let baseTongMarginBottom;
-  let checkListData;
-  let middleAdjustTong;
-  let mobileTendencyTop;
-  let mobileTendencyVisualMargin;
-  let mobileTendencyIntend;
   let baseTongPaddingTop, baseTongPaddingBottom;
-  let allHideIndex, safeNum;
   let mobileOuterMargin;
+  let divisionEntireMap;
+  let baseArea;
+  let num, num2;
+  let areaBetween;
+  let innerPaddingTop;
+  let innerPaddingLeft;
+  let titleHeight;
+  let areaPaddingTop, areaPaddingLeft, areaPaddingBottom;
+  let areaTitleTop, areaTitleLeft;
+  let fontSize0, fontSize1, fontSize2, fontSize3;
+  let mainTitleTextTop, mainTitleTextLeft;
+  let countNumberBetween;
+  let countNumberTextTop;
+  let lastMargin;
+  let cardHeight;
+  let cardMargin;
+  let areaMinHeight;
+  let cards;
 
   designer = this.designers.pick(desid);
-  information = designer.information;
-  analytics = designer.analytics;
+  divisionEntireMap = projectMap.action.itemMap.filter((arr) => { return !/없/gi.test(arr[0]); });
 
   margin = 8;
-  level1Width = <%% 210, 172, 172, 172, 34 %%>;
-  level1Left = <%% 160, 136, 136, 136, 0 %%>;
   topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
   leftMargin = <%% 34, 34, 34, 34, 8 %%>;
   bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 11 %%>;
   baseTongMarginBottom = <%% 80, 80, 80, 80, 25 %%>;
   size = <%% 16, 15, 15, 15, 3.5 %%>;
 
-  tendencyTop = <%% 3, 3, 3, 3, 0.8 %%>;
-  tendencyHeight = <%% 16, 16, 16, 16, 4 %%>;
-  alphabetWidth = <%% 30, 30, 30, 30, 7 %%>;
-
-  factorHeight = <%% 38, 36, 36, 36, 8.2 %%>;
-  factorWidth = <%% 210, 172, 172, 172, 210 %%>;
-  tendencyFactorHeight = <%% 30, 30, 30, 30, 7 %%>;
-  tendencyIndent = <%% 105, 71, 71, 71, 65 %%>;
-  tendencyWidthIndent = -135;
-
-  textAreaTop = <%% (isMac() ? -3 : -4), (isMac() ? -3 : -4), (isMac() ? -3 : -4), (isMac() ? -3 : -4), -0.7 %%>;
-
-  mobileTendencyTop = 8;
-  mobileTendencyVisualMargin = 13;
-  mobileTendencyIntend = 20;
-
   baseTongPaddingTop = 1;
-  baseTongPaddingBottom = 20;
+  baseTongPaddingBottom = 50;
   mobileOuterMargin = 4;
 
-  checkListData = this.checkListData(factorHeight, factorWidth, tendencyIndent, tendencyWidthIndent, tendencyFactorHeight, mobileTendencyVisualMargin);
-  if (this.middleMode) {
-    allHideIndex = null;
-    safeNum = 0;
-    while (allHideIndex !== -1 && safeNum <= 10) {
-      if (allHideIndex !== null) {
-        checkListData.splice(allHideIndex, 1);
-      }
-      allHideIndex = checkListData.findIndex((obj) => { return obj.children.every((c) => { return c.middle === false }); });
-      safeNum++;
-    }
-  }
+  areaBetween = <%% 13, 12, 12, 12, 12 %%>;
+  innerPaddingTop = <%% 24, 24, 24, 24, 24 %%>;
+  innerPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
+  titleHeight = <%% 62, 62, 62, 62, 62 %%>;
+
+  areaPaddingTop = <%% 50, 50, 50, 50, 50 %%>;
+  areaPaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
+  areaPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
+
+  areaTitleTop = <%% 14, 14, 14, 14, 14 %%>;
+  areaTitleLeft = <%% 20, 20, 20, 20, 20 %%>;
+
+  fontSize0 = <%% 25, 25, 25, 25, 25 %%>;
+  fontSize1 = <%% 17, 17, 17, 17, 17 %%>;
+  fontSize2 = <%% 14, 14, 14, 14, 14 %%>;
+  fontSize3 = <%% 12, 12, 12, 12, 12 %%>;
+
+  mainTitleTextTop = <%% -3, -3, -3, -3, -3 %%>;
+  mainTitleTextLeft = <%% 3, 3, 3, 3, 3 %%>;
+  countNumberBetween = <%% 9, 9, 9, 9, 9 %%>;
+  countNumberTextTop = <%% 1, 1, 1, 1, 1 %%>;
+
+  lastMargin = <%% 30, 30, 30, 30, 30 %%>;
+
+  cardHeight = <%% 40, 40, 40, 40, 40 %%>;
+  cardMargin = <%% 10, 10, 10, 10, 10 %%>;
+  areaMinHeight = cardHeight + (cardMargin * 2);
+
+  
+
+
+
+  cards = [
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+    {
+      name: "배창규",
+      cliid: "c1801_aa01s",
+      action: "의뢰서 작성중",
+    },
+  ];
+
+
+
+
+
 
   if (mobile) {
     totalMother.style.background = colorChip.gray2;
@@ -2907,655 +2974,121 @@ DesignerJs.prototype.projectDetail = function (desid) {
       border: desktop ? ("1px solid " + colorChip.gray4) : "",
       boxShadow: desktop ? "" : "0px 3px 15px -9px " + colorChip.shadow,
       background: colorChip.white,
-      height: "auto",
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
-      paddingTop: desktop ? "" : String(baseTongPaddingTop) + ea,
-      paddingBottom: desktop ? "" : String(baseTongPaddingBottom) + ea,
+      paddingTop: desktop ? String(innerPaddingTop) + ea : String(baseTongPaddingTop) + ea,
+      paddingBottom: String(baseTongPaddingBottom) + ea,
     }
   });
 
-  for (let i = 0; i < checkListData.length; i++) {
-    nodeArr = createNodes([
-      {
+  for (let [ title, subTitles ] of divisionEntireMap) {
+
+    createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        alignItems: "center",
+        height: String(titleHeight) + ea,
+        paddingLeft: String(innerPaddingLeft) + ea,
+      },
+      children: [
+        {
+          text: title,
+          style: {
+            fontSize: String(fontSize0) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            position: "relative",
+            top: String(mainTitleTextTop) + ea,
+            left: String(mainTitleTextLeft) + ea,
+          }
+        }
+      ]
+    });
+
+    num2 = 0;
+    for (let subTitle of subTitles) {
+
+      baseArea = createNode({
         mother: baseTong,
         style: {
+          display: "block",
           position: "relative",
-          width: String(100) + '%',
-          borderBottom: (desktop ? (i !== checkListData.length - 1 ? "1px solid " + colorChip.gray4 : "") : ""),
-        }
-      },
-      {
-        mother: -1,
-        text: checkListData[i].name,
-        style: {
-          position: "absolute",
-          fontSize: String(size + (mobile ? 0.5 : 0)) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
-          top: String(topMargin + 1) + ea,
-          left: String(leftMargin) + ea,
-          background: colorChip.white,
-          paddingRight: String(desktop ? 0 : 3) + ea,
-          zIndex: String(desktop ? 0 : 1),
-        }
-      },
-      {
-        mother: -2,
-        style: {
-          position: "absolute",
-          width: String(level1Width) + ea,
-          top: String(desktop ? 0 : size + 1.2 + (topMargin * 1.2)) + ea,
-          left: String(desktop ? level1Left : leftMargin) + ea,
-          paddingTop: String(topMargin) + ea,
-        }
-      },
-      {
-        mother: -3,
-        style: {
-          position: "relative",
-          width: withOut((desktop ? level1Width + level1Left : (leftMargin * 2) + level1Width), ea),
-          top: String(desktop ? 0 : size + 1.2 + (topMargin * 1.2)) + ea,
-          left: String(desktop ? level1Width + level1Left : leftMargin + level1Width) + ea,
-          height: String(100) + '%',
-          paddingTop: String(topMargin) + ea,
-          paddingBottom: String(bottomMargin) + ea,
-        }
-      },
-      {
-        mother: -4,
-        text: String.fromCharCode(65 + i),
-        style: {
-          display: desktop ? "block" : "none",
-          position: "absolute",
-          fontSize: String(size) + ea,
-          fontWeight: String(200),
-          color: colorChip.green,
-          bottom: String(desktop ? topMargin + (isMac() ? 0 : -3) : (topMargin * 1.2) - 4) + ea,
-          right: String(leftMargin) + ea,
-          zIndex: String(2),
-        }
-      },
-    ]);
-
-    eachTotalTong = nodeArr[0];
-    eachNameTong = nodeArr[2];
-    eachValueTong = nodeArr[3];
-
-    if (mobile) {
-      createNode({
-        mother: eachTotalTong,
-        style: {
-          position: "absolute",
-          top: String(topMargin + 3.5) + ea,
-          left: String(leftMargin) + ea,
-          width: withOut(leftMargin * 2, ea),
-          borderBottom: "1px dashed " + colorChip.green,
-          opacity: String(0.8),
-        }
+          paddingLeft: String(innerPaddingLeft) + ea,
+          width: withOut(innerPaddingLeft * 2, ea),
+          marginBottom: String(num2 !== subTitles.length - 1 ? areaBetween : lastMargin) + ea,
+        },
       });
-    }
 
-    if (this.middleMode) {
-      middleAdjustTong = [];
-    }
-    for (let j = 0; j < checkListData[i].children.length; j++) {
-      tempArr = [];
-      tempObj = {
-        mother: eachNameTong,
-        text: String.fromCharCode(65 + i) + String(j + 1),
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(size) + ea,
-          fontWeight: String(200),
-          color: colorChip.green,
-          height: String(checkListData[i].children[j].height) + ea,
-          width: String(alphabetWidth) + ea,
-        }
-      };
-      tempArr.push(tempObj);
-      tempObj = {
-        mother: eachNameTong,
-        text: checkListData[i].children[j].name,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          fontSize: String(size) + ea,
-          fontWeight: String(desktop ? 500 : 600),
-          color: colorChip.black,
-          height: String(checkListData[i].children[j].height) + ea,
-          width: withOut(alphabetWidth, ea),
-        }
-      };
-      tempArr.push(tempObj);
+      num = 0;
+      for (let sub of subTitle) {
 
-      if (checkListData[i].children[j].type === "string") {
-
-        tempObj = {
-          mother: eachValueTong,
-          text: (typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer) : "NULL",
-          class: [ "dom_" + String(i) + "_" + String(j) ],
-          attribute: [
-            { x: String(i) },
-            { y: String(j) },
-          ],
-          events: [
+        createNode({
+          mother: baseArea,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            borderRadius: String(5) + "px",
+            border: "1px dashed " + colorChip.gray4,
+            boxSizing: "border-box",
+            width: "calc(calc(100% - " + String(areaBetween * (subTitle.length - 1)) + ea + ") / " + String(subTitle.length) + ")",
+            marginRight: String(num !== subTitle.length - 1 ? areaBetween : 0) + ea,
+            paddingTop: String(areaPaddingTop) + ea,
+            paddingLeft: String(areaPaddingLeft) + ea,
+            paddingRight: String(areaPaddingLeft) + ea,
+            paddingBottom: String(areaPaddingBottom) + ea,
+          },
+          children: [
             {
-              type: "click",
-              event: function (e) {
-                e.stopPropagation();
-                if (/div/gi.test(e.target.nodeName)) {
-                  const x = Number(this.getAttribute('x'));
-                  const y = Number(this.getAttribute('y'));
-                  if (typeof checkListData[x].children[y].update === "function") {
-                    const [ cancelBox, inputBox ] = createNodes([
-                      {
-                        mother: this,
-                        mode: "aside",
-                        events: [
-                          {
-                            type: "click",
-                            event: function (e) {
-                              this.parentElement.removeChild(this.parentElement.querySelector("input"));
-                              this.parentElement.removeChild(this.parentElement.querySelector("aside"));
-                            }
-                          }
-                        ],
-                        style: {
-                          position: "fixed",
-                          top: String(0) + ea,
-                          left: String(0) + ea,
-                          width: String(100) + '%',
-                          height: String(100) + '%',
-                          background: "transparent",
-                          zIndex: String(1),
-                        }
-                      },
-                      {
-                        mother: this,
-                        mode: "input",
-                        attribute: [
-                          { type: "text" },
-                          { value: this.textContent },
-                          { past: this.textContent },
-                        ],
-                        events: [
-                          {
-                            type: "keypress",
-                            event: async function (e) {
-                              try {
-                                if (e.key === "Enter") {
-                                  const designer = instance.designers.pick(desid);
-                                  const whereQuery = { desid };
-                                  const { updateQuery, text } = checkListData[x].children[y].update(this.value, designer);
-                                  const confirm = instance.middleMode ? false : window.confirm("수정이 확실합니까?");
-                                  if (updateQuery === "error" || !confirm) {
-                                    this.value = this.getAttribute("past");
-                                  } else {
-                                    this.parentElement.removeChild(this.parentElement.firstChild);
-                                    this.parentElement.insertAdjacentHTML("beforeend", text);
-                                    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                                    await ajaxJson({
-                                      mode: "sse",
-                                      db: "console",
-                                      collection: "sse_checklistDesigner",
-                                      log: true,
-                                      who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
-                                      updateQuery: { desid, type: checkListData[x].children[y].type, value: text, position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
-                                      update: { whereQuery, updateQuery } } }, "/generalMongo");
-                                    await ajaxJson({
-                                      page: "checklist",
-                                      mode: "update",
-                                      who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                                      update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
-                                      desid,
-                                    }, "/ghostDesigner_updateAnalytics");
-                                    instance.designers.update([ whereQuery, updateQuery ]);
-                                  }
-                                  this.parentElement.removeChild(this.parentElement.querySelector("aside"));
-                                  this.parentElement.removeChild(this.parentElement.querySelector("input"));
-                                }
-                              } catch (err) {
-                                console.log(err);
-                              }
-                            }
-                          }
-                        ],
-                        style: {
-                          display: "block",
-                          position: "absolute",
-                          fontSize: String(size) + ea,
-                          fontWeight: String(400),
-                          top: String(0),
-                          left: String(0),
-                          color: colorChip.green,
-                          background: colorChip.white,
-                          border: String(0),
-                          outline: String(0),
-                          width: desktop ? String(this.getBoundingClientRect().width) + ea : String(100) + '%',
-                          zIndex: String(1),
-                        }
-                      }
-                    ]);
-                    inputBox.focus();
-                  }
-                  if (typeof checkListData[x].children[y].script === "function") {
-                    checkListData[x].children[y].script(this, designer);
-                  }
-                }
-              }
-            }
-          ],
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(size) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            height: String(checkListData[i].children[j].height) + ea,
-            cursor: "pointer",
-          }
-        };
-        tempArr.push(tempObj);
-
-      } else if (checkListData[i].children[j].type === "matrix") {
-
-        tempMatrix = checkListData[i].children[j].value(designer);
-
-        tempObj = {
-          mother: eachValueTong,
-          class: [ "dom_" + String(i) + "_" + String(j) ],
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(size) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            width: desktop ? String(checkListData[i].children[j].totalWidth) + ea : String(100) + '%',
-            height: String(checkListData[i].children[j].height) + ea,
-          }
-        };
-        tempArr.push(tempObj);
-
-        for (let k = 0; k < tempMatrix.contents.length; k++) {
-          tempObj = {
-            mother: -1 + (k * -1),
-            text: tempMatrix.contents[k],
-            attribute: [
-              { x: String(i) },
-              { y: String(j) },
-              { z: String(k) },
-              { toggle: String(tempMatrix.value[k]) },
-            ],
-            events: [
-              {
-                type: "click",
-                event: async function (e) {
-                  try {
-                    const x = Number(this.getAttribute('x'));
-                    const y = Number(this.getAttribute('y'));
-                    const z = Number(this.getAttribute('z'));
-                    const toggle = Number(this.getAttribute('toggle'));
-                    const multiple = checkListData[x].children[y].multiple === true;
-                    const thisButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y));
-                    const designer = instance.designers.pick(desid);
-                    let anothers, resultArr;
-                    let whereQuery, updateQuery;
-
-                    if (instance.middleMode ? false : window.confirm("수정이 확실합니까?")) {
-                      anothers = [];
-                      for (let dom of thisButtons) {
-                        if (this !== dom) {
-                          anothers.push(dom);
-                        }
-                      }
-                      if (toggle === 0) {
-                        if (!multiple) {
-                          for (let dom of anothers) {
-                            dom.style.color = colorChip.gray4;
-                            dom.setAttribute("toggle", String(0));
-                          }
-                        }
-                        this.style.color = colorChip.green;
-                        this.setAttribute("toggle", String(1));
-                      } else {
-                        this.style.color = colorChip.gray4;
-                        this.setAttribute("toggle", String(0));
-                      }
-
-                      resultArr = [];
-                      for (let dom of thisButtons) {
-                        resultArr.push(Number(dom.getAttribute("toggle")));
-                      }
-                      updateQuery = checkListData[x].children[y].update(resultArr, designer);
-                      whereQuery = { desid };
-
-                      await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                      await ajaxJson({
-                        mode: "sse",
-                        db: "console",
-                        collection: "sse_checklistDesigner",
-                        log: true,
-                        who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
-                        updateQuery: { desid, type: checkListData[x].children[y].type, value: resultArr, position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
-                        update: { whereQuery, updateQuery } } }, "/generalMongo");
-                      await ajaxJson({
-                        page: "checklist",
-                        mode: "update",
-                        who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                        update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
-                        desid,
-                      }, "/ghostDesigner_updateAnalytics");
-                      instance.designers.update([ whereQuery, updateQuery ]);
-                    }
-
-                  } catch (err) {
-                    console.log(err);
-                  }
-                }
-              }
-            ],
-            class: [ "hoverDefault_lite", matrixButtonConst + String(i) + String(j), matrixButtonConst + String(i) + String(j) + String(k) ],
-            style: {
-              display: desktop ? "inline-block" : ((tempMatrix.contents.length <= 2 || checkListData[i].children[j].half === true) ? "inline-block" : "block"),
-              position: "relative",
-              top: desktop ? "" : String(0.1) + ea,
-              fontSize: String(size) + ea,
-              fontWeight: String(300),
-              width: desktop ? String(checkListData[i].children[j].width) + ea : String((tempMatrix.contents.length <= 2 || checkListData[i].children[j].half === true) ? 45 : 100) + '%',
-              color: colorChip[tempMatrix.value[k] === 1 ? "green" : "gray4"],
-              height: String(checkListData[i].children[j].factorHeight * (desktop ? 1 : 0.9)) + ea,
-              transition: "all 0.1s ease",
-            }
-          };
-          tempArr.push(tempObj);
-        }
-
-      } else if (checkListData[i].children[j].type === "tendency") {
-
-        tempMatrix = checkListData[i].children[j].value(designer);
-        tempObj = {
-          mother: eachValueTong,
-          class: [ "dom_" + String(i) + "_" + String(j) ],
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(size) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            width: String(desktop ? checkListData[i].children[j].totalWidth : 100 - (mobileOuterMargin * 2) - (leftMargin * 2)) + ea,
-            height: String(checkListData[i].children[j].height - (desktop ? 0 : mobileTendencyTop)) + ea,
-            paddingTop: desktop ? "" : String(mobileTendencyTop) + ea,
-            left: desktop ? "" : String(0 - level1Width) + ea,
-          }
-        };
-        tempArr.push(tempObj);
-
-        for (let k = 0; k < tempMatrix.contents.length; k++) {
-          tempObj = {
-            mother: -1 + (k * -11),
-            text: tempMatrix.contents[k],
-            class: [ (desktop ? "hoverDefault_lite" : "tendencyMother") ],
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(size) + ea,
-              fontWeight: String(300),
-              width: String(desktop ? checkListData[i].children[j].totalWidth : 100 - (mobileOuterMargin * 2) - (leftMargin * 2)) + ea,
-              color: colorChip.black,
-              height: String(checkListData[i].children[j].factorHeight) + ea,
-            }
-          };
-          tempArr.push(tempObj);
-          for (let l = 0; l < 10; l++) {
-            if (desktop) {
-              temp = (checkListData[i].children[j].totalWidth - checkListData[i].children[j].width) / 10;
-            } else {
-              temp = (100 - (mobileOuterMargin * 2) - (leftMargin * 2) - mobileTendencyIntend) / 10;
-            }
-            tempObj = {
-              mother: -1 + (l * -1),
-              attribute: [
-                { x: String(i) },
-                { y: String(j) },
-                { z: String(k) },
-                { t: String(l) },
-                { toggle: String(l <= tempMatrix.value[k] ? 1 : 0) },
-              ],
-              events: [
-                {
-                  type: "click",
-                  event: async function (e) {
-                    try {
-                      const x = Number(this.getAttribute('x'));
-                      const y = Number(this.getAttribute('y'));
-                      const z = Number(this.getAttribute('z'));
-                      const t = Number(this.getAttribute('t'));
-                      const thisButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y) + String(z));
-                      const designer = instance.designers.pick(desid);
-                      let whereQuery, updateQuery;
-
-                      if (instance.middleMode ? true : window.confirm("수정이 확실합니까?")) {
-                        for (let i = 0; i < thisButtons.length; i++) {
-                          if (i <= t) {
-                            thisButtons[i].setAttribute("toggle", String(1));
-                            thisButtons[i].style.background = colorChip.green;
-                          } else {
-                            thisButtons[i].setAttribute("toggle", String(0));
-                            thisButtons[i].style.background = colorChip.gray2;
-                          }
-                        }
-
-                        if (checkListData[x].children[y].opposite === true) {
-                          const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(x) + String(y) + String(1 - z));
-                          for (let i = 0; i < oppositeButtons.length; i++) {
-                            if (i < oppositeButtons.length - t - 1) {
-                              oppositeButtons[i].setAttribute("toggle", String(1));
-                              oppositeButtons[i].style.background = colorChip.green;
-                            } else {
-                              oppositeButtons[i].setAttribute("toggle", String(0));
-                              oppositeButtons[i].style.background = colorChip.gray2;
-                            }
-                          }
-                        }
-
-                        whereQuery = { desid };
-                        updateQuery = checkListData[x].children[y].update(z, t, designer);
-
-                        await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                        await ajaxJson({
-                          mode: "sse",
-                          db: "console",
-                          collection: "sse_checklistDesigner",
-                          log: true,
-                          who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
-                          updateQuery: { desid, type: checkListData[x].children[y].type, value: [ z, t, (checkListData[x].children[y].opposite === true), matrixButtonConst ], position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
-                          update: { whereQuery, updateQuery } } }, "/generalMongo");
-                        await ajaxJson({
-                          page: "checklist",
-                          mode: "update",
-                          who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                          update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
-                          desid,
-                        }, "/ghostDesigner_updateAnalytics");
-                        instance.designers.update([ whereQuery, updateQuery ]);
-                      }
-
-                    } catch (err) {
-                      console.log(err);
-                    }
-                  }
-                }
-              ],
-              class: [ (desktop ? "hoverDefault_lite" : "tendencyDetail"), matrixButtonConst + String(i) + String(j) + String(k) ],
               style: {
+                display: "block",
                 position: "absolute",
-                width: String(temp) + ea,
-                left: String((desktop ? checkListData[i].children[j].width : mobileTendencyIntend) + (temp * l)) + ea,
-                background: colorChip[l <= tempMatrix.value[k] ? "green" : "gray2"],
-                top: String(tendencyTop) + ea,
-                height: String(tendencyHeight) + ea,
-                transition: "all 0.1s ease",
-              }
-            };
-            if (l === 0) {
-              tempObj.style.borderTopLeftRadius = tempObj.style.borderBottomLeftRadius = String(3) + "px";
-            }
-            if (l === 10 - 1) {
-              tempObj.style.borderTopRightRadius = tempObj.style.borderBottomRightRadius = String(3) + "px";
-            }
-            tempArr.push(tempObj);
-          }
-        }
-      } else if (checkListData[i].children[j].type === "longtext") {
-
-        tempObj = {
-          mother: eachValueTong,
-          class: [ "dom_" + String(i) + "_" + String(j) ],
-          attribute: [
-            { x: String(i) },
-            { y: String(j) },
-          ],
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(size) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            height: String(checkListData[i].children[j].height) + ea,
-            cursor: "pointer",
-            overflow: "scroll",
-          }
-        };
-        tempArr.push(tempObj);
-        tempObj = {
-          mother: -1,
-          mode: "textarea",
-          text: (typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer).join("\n") : "NULL",
-          attribute: [
-            { x: String(i) },
-            { y: String(j) },
-            { value: ((typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer).join("\n") : "NULL") },
-            { past: ((typeof checkListData[i].children[j].value === "function") ? checkListData[i].children[j].value(designer).join("\n") : "NULL") }
-          ],
-          events: [
-            {
-              type: "focus",
-              event: function (e) {
-                this.style.color = colorChip.green;
-              }
-            },
-            {
-              type: "keydown",
-              event: function (e) {
-                if (e.key === "Enter" || e.key === "Tab") {
-                  e.preventDefault();
-                  this.blur();
-                }
-              }
-            },
-            {
-              type: "blur",
-              event: async function (e) {
-                try {
-                  this.value = this.value.trim().replace(/^\n/g, '').replace(/\n$/g, '').trim().replace(/^\n/g, '').replace(/\n$/g, '').trim().replace(/^\n/g, '').replace(/\n$/g, '').trim().replace(/^\n/g, '').replace(/\n$/g, '');
-                  if (this.value !== this.getAttribute("past")) {
-                    const x = Number(this.getAttribute('x'));
-                    const y = Number(this.getAttribute('y'));
-                    if (typeof checkListData[x].children[y].update === "function") {
-                      const designer = instance.designers.pick(desid);
-                      const updateQuery = checkListData[x].children[y].update(this.value.trim(), designer);
-                      const whereQuery = { desid };
-                      const confirm = instance.middleMode ? true : window.confirm("수정이 확실합니까?");
-                      if (updateQuery === "error" || !confirm) {
-                        this.value = this.getAttribute("past");
-                      } else {
-                        await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateDesigner");
-                        await ajaxJson({
-                          mode: "sse",
-                          db: "console",
-                          collection: "sse_checklistDesigner",
-                          log: true,
-                          who: (instance.middleMode ? designer.information.phone : cookies.homeliaisonConsoleLoginedEmail),
-                          updateQuery: { desid, type: checkListData[x].children[y].type, value: this.value.trim(), position: { x, y, class: "dom_" + String(x) + "_" + String(y) },
-                          update: { whereQuery, updateQuery } } }, "/generalMongo");
-                        await ajaxJson({
-                          page: "checklist",
-                          mode: "update",
-                          who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-                          update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
-                          desid,
-                        }, "/ghostDesigner_updateAnalytics");
-                        instance.designers.update([ whereQuery, updateQuery ]);
-                      }
-                    }
+                width: withOut(areaTitleLeft * 2, ea),
+                top: String(areaTitleTop) + ea,
+                left: String(areaTitleLeft) + ea,
+              },
+              children: [
+                {
+                  text: sub,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(fontSize1) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
                   }
-                  this.style.color = colorChip.black;
-                } catch (e) {
-                  console.log(e);
+                },
+                {
+                  text: String(0) + "명",
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(fontSize2) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.deactive,
+                    top: String(countNumberTextTop) + ea,
+                    marginLeft: String(countNumberBetween) + ea,
+                  }
                 }
-              }
+              ]
             },
-          ],
-          style: {
-            display: "block",
-            position: "absolute",
-            width: String(100) + '%',
-            height: desktop ? withOut(checkListData[i].children[j].textHeight, ea) : String(checkListData[i].children[j].textHeight * checkListData[i].children[j].value(designer).length * 2) + ea,
-            top: String(textAreaTop) + ea,
-            left: String(0),
-            fontSize: String(size) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            border: String(0),
-            outline: String(0),
-            lineHeight: String(1.7),
-          }
-        };
-        tempArr.push(tempObj);
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                background: colorChip.gray1,
+                height: String(areaMinHeight) + ea,
+                borderRadius: String(5) + "px",
+              }
+            }
+          ]
+        });
 
-      } else if (checkListData[i].children[j].type === "async") {
-        tempObj = {
-          mother: eachValueTong,
-          text: "로드중...",
-          class: [ "dom_" + String(i) + "_" + String(j) ],
-          attribute: [
-            { x: String(i) },
-            { y: String(j) },
-          ],
-          style: {
-            display: "block",
-            position: "relative",
-            fontSize: String(size) + ea,
-            fontWeight: String(300),
-            color: colorChip.gray4,
-            height: String(checkListData[i].children[j].height) + ea,
-            cursor: "pointer",
-          }
-        };
-        tempArr.push(tempObj);
+        num++;
       }
 
-      if (!this.middleMode || checkListData[i].children[j].middle !== false) {
-        subNodeArr = createNodes(tempArr);
-        if (checkListData[i].children[j].type === "async") {
-          if (typeof checkListData[i].children[j].value === "function") {
-            checkListData[i].children[j].value(subNodeArr, designer).catch((err) => {
-              console.log(err);
-            });
-          }
-        }
-        if (this.middleMode) {
-          middleAdjustTong.push(subNodeArr[0]);
-        }
-      }
-    }
-
-    if (this.middleMode) {
-      for (let j = 0; j < middleAdjustTong.length; j++) {
-        middleAdjustTong[j].textContent = String.fromCharCode(65 + i) + String(j + 1);
-      }
+      num2++;
     }
 
   }
@@ -3962,7 +3495,7 @@ DesignerJs.prototype.projectIconSet = function (desid) {
         }
       }, "/alimTalk").then(() => {
         return GeneralJs.ajaxJson({
-          page: "checklist",
+          page: "project",
           mode: "send",
           who: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
           desid: designer.desid,
@@ -3976,573 +3509,6 @@ DesignerJs.prototype.projectIconSet = function (desid) {
       instance.mother.greenAlert("알림톡 전송을 취소하였습니다.");
     }
   });
-
-}
-
-DesignerJs.prototype.projectDetailSearchBox = function () {
-  const instance = this;
-  const { totalMother, ea, grayBarWidth, belowHeight, searchCondition } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
-  const className = "searchConditionBack";
-  return function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    if (document.querySelector('.' + className) === null) {
-      let cancelBox, whiteBox, scrollBox, scrollBase;
-      let margin, innerMargin;
-      let paddingTop, paddingBottom;
-
-      innerMargin = 48;
-      margin = 100;
-      paddingTop = 63;
-      paddingBottom = 160;
-
-      cancelBox = createNode({
-        mother: totalMother,
-        class: [ className ],
-        style: {
-          position: "fixed",
-          top: String(0),
-          left: String(grayBarWidth) + ea,
-          width: withOut(grayBarWidth, ea),
-          height: withOut(belowHeight, ea),
-          background: colorChip.black,
-          animation: "justfadein 0.3s ease forwards",
-          zIndex: String(2),
-          cursor: "pointer",
-        },
-        events: [
-          {
-            type: [ "click", "contextmenu" ],
-            event: function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              instance.projectDetailSearchParsing();
-              totalMother.removeChild(totalMother.lastChild);
-              totalMother.removeChild(totalMother.lastChild);
-            }
-          }
-        ]
-      });
-      whiteBox = createNode({
-        mother: totalMother,
-        style: {
-          position: "fixed",
-          top: String(margin) + ea,
-          left: String(grayBarWidth + margin) + ea,
-          width: withOut(grayBarWidth + (margin * 2), ea),
-          height: withOut(belowHeight + (margin * 2), ea),
-          background: colorChip.white,
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          animation: "fadeup 0.3s ease forwards",
-          zIndex: String(2),
-        }
-      });
-      scrollBox = createNode({
-        mother: whiteBox,
-        style: {
-          position: "absolute",
-          top: String(innerMargin) + ea,
-          left: String(innerMargin) + ea,
-          width: withOut(innerMargin * 2, ea),
-          height: withOut(innerMargin, ea),
-          overflow: "scroll",
-        }
-      });
-      scrollBase = createNode({
-        mother: scrollBox,
-        style: {
-          position: "relative",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          paddingTop: String(paddingTop) + ea,
-          paddingBottom: String(paddingBottom) + ea,
-        }
-      });
-      instance.projectDetailSearchContents(scrollBase);
-    }
-  }
-}
-
-DesignerJs.prototype.projectDetailSearchContents = function (mother) {
-  const instance = this;
-  const { totalMother, ea, grayBarWidth, belowHeight, searchCondition } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
-  const innerMargin = Number(mother.parentNode.style.top.replace(/[^0-9\-\.]/gi, ''));
-  const checkListData = this.checkListData();
-  const designer = this.designers[this.designers.length - 1];
-  const token = "_";
-  let domTong;
-  let titleSize, size;
-  let titleHeight;
-  let block, title, contents;
-  let titleWidth;
-  let tempResult;
-  let factorWidth, factorHeight;
-  let radius;
-  let circleMargin, circleVisual;
-  let obj;
-  let modeTop, modeRight;
-  let modeWidth, modeMargin;
-  let modeCircleTop;
-
-  titleSize = 25;
-  titleHeight = 48;
-  size = 15;
-  titleWidth = 160;
-  factorWidth = 172;
-  factorHeight = 30;
-  radius = 3;
-  circleMargin = 6;
-  circleVisual = 1.5;
-  modeTop = isMac() ? 15 : 17;
-  modeRight = 62;
-  modeWidth = 36.34;
-  modeMargin = 5;
-  modeCircleTop = isMac() ? 7 : 5;
-
-  createNode({
-    mother,
-    style: {
-      position: "fixed",
-      width: withOut(100, innerMargin * 2, ea),
-      height: String(titleHeight) + ea,
-      background: colorChip.white,
-      top: String(innerMargin * (5 / 6)) + ea,
-      left: String(innerMargin) + ea,
-      zIndex: String(1),
-      borderBottom: "1px solid " + colorChip.gray2,
-    },
-    children: [
-      {
-        text: "디자이너 조건 검색",
-        style: {
-          position: "absolute",
-          top: String(isMac() ? 0 : 3) + ea,
-          left: String(-1) + ea,
-          fontSize: String(titleSize) + ea,
-          fontWeight: String(500),
-          color: colorChip.black
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          top: String(modeTop + modeCircleTop) + ea,
-          right: String((modeRight * 2) + modeWidth + modeMargin) + ea,
-          background: colorChip.black,
-          width: String((radius - 1) * 2) + ea,
-          height: String((radius - 1) * 2) + ea,
-          borderRadius: String((radius - 1) * 2) + ea,
-        }
-      },
-      {
-        text: "초기화",
-        class: [ "hoverDefault_lite" ],
-        style: {
-          position: "absolute",
-          top: String(modeTop) + ea,
-          right: String(modeRight * 2) + ea,
-          fontSize: String(size - 1) + ea,
-          fontWeight: String(500),
-          color: colorChip.black,
-        },
-        events: [
-          {
-            type: "click",
-            event: function (e) {
-              let targetTongs;
-              let children;
-              targetTongs = [];
-              for (let b of searchCondition.blocks) {
-                children = b.querySelectorAll(".hoverDefault_lite");
-                for (let c of children) {
-                  targetTongs.push(c);
-                }
-              }
-              for (let dom of targetTongs) {
-                dom.setAttribute("toggle", "off");
-                dom.firstChild.style.background = colorChip.gray2;
-                dom.lastChild.style.color = colorChip.black;
-              }
-              searchCondition.conditions = [];
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "absolute",
-          top: String(modeTop + modeCircleTop) + ea,
-          right: String(modeRight + modeWidth + modeMargin) + ea,
-          background: searchCondition.mode === "and" ? colorChip.green : colorChip.deactive,
-          width: String((radius - 1) * 2) + ea,
-          height: String((radius - 1) * 2) + ea,
-          borderRadius: String((radius - 1) * 2) + ea,
-        }
-      },
-      {
-        text: "교집합",
-        class: [ "hoverDefault_lite" ],
-        style: {
-          position: "absolute",
-          top: String(modeTop) + ea,
-          right: String(modeRight) + ea,
-          fontSize: String(size - 1) + ea,
-          fontWeight: String(500),
-          color: searchCondition.mode === "and" ? colorChip.green : colorChip.deactive,
-        },
-        events: [
-          {
-            type: "click",
-            event: function (e) {
-              if (searchCondition.mode === "and") {
-                searchCondition.mode = "or";
-                this.style.color = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 1].style.color = colorChip.green;
-              } else {
-                searchCondition.mode = "and";
-                this.style.color = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 1].style.color = colorChip.deactive;
-              }
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "absolute",
-          top: String(modeTop + modeCircleTop) + ea,
-          right: String(0 + modeWidth + modeMargin) + ea,
-          background: searchCondition.mode === "and" ? colorChip.deactive : colorChip.green,
-          width: String((radius - 1) * 2) + ea,
-          height: String((radius - 1) * 2) + ea,
-          borderRadius: String((radius - 1) * 2) + ea,
-        }
-      },
-      {
-        text: "합집합",
-        class: [ "hoverDefault_lite" ],
-        style: {
-          position: "absolute",
-          top: String(modeTop) + ea,
-          right: String(0) + ea,
-          fontSize: String(size - 1) + ea,
-          fontWeight: String(500),
-          color: searchCondition.mode === "and" ? colorChip.deactive : colorChip.green,
-        },
-        events: [
-          {
-            type: "click",
-            event: function (e) {
-              if (searchCondition.mode === "and") {
-                searchCondition.mode = "or";
-                this.style.color = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 3].style.color = colorChip.deactive;
-              } else {
-                searchCondition.mode = "and";
-                this.style.color = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 2].style.background = colorChip.deactive;
-                this.parentNode.children[this.parentNode.children.length - 4].style.background = colorChip.green;
-                this.parentNode.children[this.parentNode.children.length - 3].style.color = colorChip.green;
-              }
-            }
-          }
-        ]
-      },
-    ]
-  });
-
-  domTong = [];
-  for (let i = 0; i < checkListData.length; i++) {
-    for (let j = 0; j < checkListData[i].children.length; j++) {
-      obj = checkListData[i].children[j];
-      if (obj.type === "matrix" || typeof obj.search === "function") {
-
-        block = createNode({
-          mother,
-          style: {
-            position: "relative",
-            display: "block",
-            width: String(100) + '%',
-            height: "auto",
-            fontSize: String(size) + ea,
-          },
-          children: [
-            {
-              style: {
-                position: "absolute",
-                width: String(titleWidth) + ea,
-                height: String(100) + '%',
-                fontSize: "inherit",
-              }
-            },
-            {
-              style: {
-                position: "relative",
-                display: "block",
-                left: String(titleWidth) + ea,
-                width: withOut(titleWidth, ea),
-                fontSize: "inherit",
-              }
-            }
-          ]
-        });
-
-        title = block.firstChild;
-        contents = block.lastChild;
-
-        createNode({
-          mother: title,
-          style: {
-            position: "relative",
-            display: "inline-block",
-            width: String(factorWidth) + ea,
-            height: String(factorHeight) + ea,
-            fontSize: "inherit",
-          },
-          children: [
-            {
-              text: obj.name,
-              style: {
-                position: "absolute",
-                top: String(isMac() ? 0 : 1) + ea,
-                left: String(0) + ea,
-                fontSize: "inherit",
-                fontWeight: String(600),
-              }
-            }
-          ]
-        });
-
-        if (obj.type === "matrix") {
-          tempResult = obj.value(designer);
-        } else {
-          tempResult = obj.search(designer);
-        }
-        for (let k = 0; k < tempResult.contents.length; k++) {
-          createNode({
-            mother: contents,
-            class: [ "hoverDefault_lite" ],
-            attribute: [
-              { toggle: (searchCondition.conditions.includes(String(i) + token + String(j) + token + String(k)) ? "on" : "off") },
-              { x: String(i) },
-              { y: String(j) },
-              { z: String(k) },
-            ],
-            events: [
-              {
-                type: [ "click", "contextmenu" ],
-                event: function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const x = Number(this.getAttribute('x'));
-                  const y = Number(this.getAttribute('y'));
-                  const z = Number(this.getAttribute('z'));
-                  const toggle = this.getAttribute("toggle");
-                  const value = ([ String(x), String(y), String(z) ]).join(token);
-                  let tempArr, targetIndex;
-                  if (toggle === "off") {
-                    searchCondition.conditions.push(value);
-                    this.lastChild.style.color = colorChip.green;
-                    this.firstChild.style.background = colorChip.green;
-                    this.setAttribute("toggle", "on");
-                  } else {
-                    for (let i = 0; i < searchCondition.conditions.length; i++) {
-                      tempArr = searchCondition.conditions[i].split(token);
-                      if (tempArr.length !== 3) {
-                        throw new Error("invaild value");
-                      }
-                      if (Number(tempArr[0]) === x && Number(tempArr[1]) === y && Number(tempArr[2]) === z) {
-                        targetIndex = i;
-                        break;
-                      }
-                    }
-                    searchCondition.conditions.splice(targetIndex, 1);
-                    this.lastChild.style.color = colorChip.black;
-                    this.firstChild.style.background = colorChip.gray2;
-                    this.setAttribute("toggle", "off");
-                  }
-                }
-              }
-            ],
-            style: {
-              position: "relative",
-              display: "inline-block",
-              width: String(factorWidth) + ea,
-              height: String(factorHeight) + ea,
-              fontSize: "inherit",
-              fontWeight: String(300),
-            },
-            children: [
-              {
-                style: {
-                  position: "absolute",
-                  fontSize: "inherit",
-                  fontWeight: "inherit",
-                  top: String((size / 2) - radius + circleVisual) + ea,
-                  left: String(0),
-                  width: String(radius * 2) + ea,
-                  height: String(radius * 2) + ea,
-                  borderRadius: String(radius * 2) + ea,
-                  background: searchCondition.conditions.includes(String(i) + token + String(j) + token + String(k)) ? colorChip.green : colorChip.gray2,
-                }
-              },
-              {
-                text: tempResult.contents[k],
-                style: {
-                  position: "absolute",
-                  fontSize: "inherit",
-                  fontWeight: "inherit",
-                  color: searchCondition.conditions.includes(String(i) + token + String(j) + token + String(k)) ? colorChip.green : colorChip.black,
-                  top: String(isMac() ? 0 : 1) + ea,
-                  left: String((radius * 2) + circleMargin) + ea,
-                  width: withOut((radius * 2) + circleMargin, ea),
-                  height: String(100) + '%',
-                },
-              },
-            ]
-          });
-        }
-
-        domTong.push(block);
-      }
-    }
-  }
-  searchCondition.blocks = domTong;
-
-  createNode({
-    mother,
-    style: {
-      position: "fixed",
-      width: withOut(100, innerMargin * 2, ea),
-      height: String(titleHeight) + ea,
-      background: colorChip.white,
-      bottom: String(0) + ea,
-      left: String(innerMargin) + ea,
-      zIndex: String(1),
-      borderTop: "1px solid " + colorChip.gray2,
-    },
-  });
-
-}
-
-DesignerJs.prototype.projectDetailSearchParsing = function () {
-  const instance = this;
-  const { searchCondition, standardDoms, designers } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
-  const checkListData = this.checkListData();
-  const token = "_";
-  let tempArr, tempObj;
-  let x, y, z;
-  let desidArr, desidArr2;
-  let blocks;
-
-  Set.prototype.union = function (setB) {
-    let union = new Set(this);
-    for (let elem of setB) {
-      union.add(elem);
-    }
-    return union;
-  }
-
-  Set.prototype.intersection = function (setB) {
-    let intersection = new Set();
-    for (let elem of setB) {
-      if (this.has(elem)) {
-        intersection.add(elem);
-      }
-    }
-    return intersection;
-  }
-
-  class SetArray extends Array {
-    union() {
-      let finalSet;
-      finalSet = new Set([]);
-      for (let set of this) {
-        finalSet = finalSet.union(set);
-      }
-      return Array.from(finalSet);
-    }
-    intersection() {
-      let finalSet;
-      if (this.length === 0) {
-        return [];
-      } else {
-        finalSet = this[0];
-        if (this.length > 1) {
-          for (let i = 1; i < this.length; i++) {
-            finalSet = finalSet.intersection(this[i]);
-          }
-          return Array.from(finalSet);
-        } else {
-          return Array.from(finalSet);
-        }
-      }
-    }
-  }
-
-  if (searchCondition.conditions.length === 0) {
-    desidArr = [];
-    for (let { desid } of designers) {
-      desidArr.push(desid);
-    }
-  } else {
-    desidArr = new SetArray();
-    for (let order of searchCondition.conditions) {
-      tempArr = order.split(token);
-      if (tempArr.length !== 3) {
-        throw new Error("invaild order");
-      }
-      x = Number(tempArr[0]);
-      y = Number(tempArr[1]);
-      z = Number(tempArr[2]);
-
-      desidArr2 = [];
-      for (let designer of designers) {
-        if (checkListData[x].children[y].type === "matrix") {
-          tempObj = checkListData[x].children[y].value(designer);
-          tempObj.result = (tempObj.value[z] === 1);
-        } else {
-          tempObj = checkListData[x].children[y].search(designer, z);
-        }
-        if (tempObj.result) {
-          desidArr2.push(designer.desid);
-        }
-      }
-      desidArr.push(new Set(desidArr2));
-    }
-    if (searchCondition.mode === "and") {
-      desidArr = desidArr.intersection();
-    } else {
-      desidArr = desidArr.union();
-    }
-  }
-
-  blocks = [];
-  for (let i = 1; i < standardDoms.length; i++) {
-    if (desidArr.includes(standardDoms[i].getAttribute("desid"))) {
-      standardDoms[i].style.display = "block";
-      blocks.push(standardDoms[i]);
-    } else {
-      standardDoms[i].style.display = "none";
-    }
-  }
-
-  if (blocks.length > 0) {
-    setTimeout(() => {
-      blocks[0].click();
-    }, 0);
-  }
 
 }
 
@@ -4599,6 +3565,16 @@ DesignerJs.prototype.projectView = async function () {
       blocks: [],
     };
 
+    if (!middleMode) {
+      this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: { $regex: "^d" } } }, "/getProjects", { equal: true });
+    } else {
+      this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: this.desid } }, "/getProjects", { equal: true });
+    }
+
+    this.clients = await ajaxJson({ noFlat: true, whereQuery: { $or: [ ...new Set(this.projects.map((obj) => { return obj.cliid; })) ].map((cliid) => { return { cliid }; }) } }, "/getClients", { equal: true })
+    this.designers.setProjects(this.projects);
+    this.designers.setClients(this.clients);
+
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
     if (!middleMode) {
@@ -4625,7 +3601,6 @@ DesignerJs.prototype.projectView = async function () {
             }
           }
         });
-        searchInput.addEventListener("contextmenu", this.projectDetailSearchBox());
       }
 
       //standard doms event
@@ -4662,6 +3637,8 @@ DesignerJs.prototype.projectView = async function () {
 
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
+
+    this.projectMap = await ajaxJson({ method: "projectMap" }, "/getDataPatch");
 
     //sse
     // if (!this.middleMode) {

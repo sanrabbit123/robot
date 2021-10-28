@@ -2424,7 +2424,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
   nameFontSize = fontSize + 3;
 
   between = 8;
-  tongMarginTop = margin * 1.75;
+  tongMarginTop = margin * 1.6;
   tongPaddingTop = (margin * 1.5) + 35;
   tongPaddingBottom = margin * 1.5;
   tongPaddingRight = margin * 1.5;

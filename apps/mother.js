@@ -710,10 +710,11 @@ Mother.prototype.headRequest = function (to, port = 80, headers = {}) {
   });
 }
 
-Mother.prototype.binaryRequest = function (to, port = null) {
+Mother.prototype.binaryRequest = function (to, port = null, headers = null) {
   let http;
   let target, tempArr;
   let targetHost, targetPath;
+  let option;
 
   if (/^https:\/\//.test(to)) {
     http = require("https");
@@ -734,13 +735,26 @@ Mother.prototype.binaryRequest = function (to, port = null) {
   targetHost = tempArr.shift();
   targetPath = '/' + tempArr.join('/');
 
-  return new Promise(function(resolve, reject) {
-    let req = http.request({
-      hostname: targetHost,
-      port: port,
-      path: targetPath,
-      method: "GET"
-    }, (res) => {
+  option = {
+    hostname: targetHost,
+    port: port,
+    path: targetPath,
+    method: "GET"
+  };
+
+  if (headers !== null) {
+    if (typeof headers !== "object") {
+      throw new Error("headers must be object");
+    }
+    if (typeof headers.headers === "object" && headers.headers !== null) {
+      option.headers = headers.headers;
+    } else {
+      option.headers = headers;
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+    let req = http.request(option, (res) => {
         res.setEncoding('binary');
         let chunks = [];
         res.on('data', (chunk) => {
