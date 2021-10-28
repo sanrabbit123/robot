@@ -475,11 +475,8 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const aliveMembers = await this.pureScan();
-    console.log(await aliveMembers.aliveRequest("/"));
-
-    
-
+    // const aliveMembers = await this.pureScan();
+    // console.log(await aliveMembers.aliveRequest("/"));
 
 
 
@@ -1618,10 +1615,10 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "차은상",
-    //     designer: "이정아",
-    //     link: "https://drive.google.com/drive/folders/1V4NNiAQdvvCbYpU1H896Njx_1yQ1x_TA",
-    //     pay: true
+    //     client: "김미",
+    //     designer: "김경수",
+    //     link: "https://drive.google.com/drive/folders/1AJfbvQg87Fuhq-vg2Eo3VEQfZi7zgAoP",
+    //     pay: false
     //   },
     // ]);
 

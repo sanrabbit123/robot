@@ -2704,7 +2704,7 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
   return checkListData;
 }
 
-DesignerJs.prototype.checkListDetailLaunching = function (desid, callback = null) {
+DesignerJs.prototype.projectDetailLaunching = function (desid, callback = null) {
   const instance = this;
   const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
   const totalMother = document.querySelector(".totalMother");
@@ -3957,7 +3957,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
         }
       } while (boo);
       if (instance.modes.indexOf(instance.mode) === 0) {
-        instance.checkListDetailLaunching(previousDesid);
+        instance.projectDetailLaunching(previousDesid);
       } else {
         instance.reportDetailLaunching(previousDesid);
       }
@@ -3976,7 +3976,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
         }
       } while (boo);
       if (instance.modes.indexOf(instance.mode) === 0) {
-        instance.checkListDetailLaunching(nextDesid);
+        instance.projectDetailLaunching(nextDesid);
       } else {
         instance.reportDetailLaunching(nextDesid);
       }
@@ -4793,7 +4793,7 @@ DesignerJs.prototype.checkListDetailSearchParsing = function () {
 
 }
 
-DesignerJs.prototype.checkListView = async function () {
+DesignerJs.prototype.projectView = async function () {
   const instance = this;
   try {
     const loading = await this.mother.loadingRun();
@@ -4863,11 +4863,11 @@ DesignerJs.prototype.checkListView = async function () {
             const value = this.value.trim().replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '').replace(/[\~\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\<\>\/\\ \n\t]/gi, '');
             let target;
             if (value === "") {
-              instance.checkListDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
+              instance.projectDetailLaunching(instance.standardDoms[1].getAttribute("desid"));
             } else {
               searchResult = instance.designers.search(value);
               if (searchResult.length > 0) {
-                instance.checkListDetailLaunching(searchResult[0].desid);
+                instance.projectDetailLaunching(searchResult[0].desid);
               }
             }
           }
@@ -4893,7 +4893,7 @@ DesignerJs.prototype.checkListView = async function () {
           this.standardDoms[i].setAttribute("color", this.standardDoms[i].style.color);
           this.standardDoms[i].style.transition = "all 0s ease";
           this.standardDoms[i].addEventListener("click", (e) => {
-            instance.checkListDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
+            instance.projectDetailLaunching(instance.standardDoms[i].getAttribute("desid"));
           });
           children = this.standardDoms[i].children;
           childrenLength = children.length;
@@ -4932,7 +4932,7 @@ DesignerJs.prototype.checkListView = async function () {
       if (instance.pageHistory.length > 1) {
         if (!middleMode) {
           if (getObj.mode === instance.pageHistory[1].path) {
-            instance.checkListDetailLaunching(instance.pageHistory[1].desid);
+            instance.projectDetailLaunching(instance.pageHistory[1].desid);
             instance.pageHistory.shift();
             instance.pageHistory.shift();
           }
@@ -4977,10 +4977,7 @@ DesignerJs.prototype.checkListView = async function () {
     });
 
     //launching
-    this.checkListDetailLaunching(this.desid);
-
-    //add extract event
-    this.reportAddExtractEvent();
+    this.projectDetailLaunching(this.desid);
 
   } catch (e) {
     console.log(e);
