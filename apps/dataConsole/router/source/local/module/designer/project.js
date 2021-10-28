@@ -525,7 +525,6 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
             } else {
               mother.textContent = "팝업 보기";
             }
-            instance.checkListDesignerMemo(designer.desid).call(instance.totalMother, { preventDefault: () => {}, stopPropagation: () => {} });
           },
           height: factorHeight,
           type: "string",
@@ -2712,18 +2711,18 @@ DesignerJs.prototype.projectDetailLaunching = function (desid, callback = null) 
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target, pastScrollTop;
 
-  if (middleMode) {
-    if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
-      GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-      GeneralJs.stacks["designerConsoleSseSource"] = null;
-      GeneralJs.stacks["designerConsoleSseEvent"] = null;
-    }
-    GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-    GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
-      instance.checkListSseParsing(GeneralJs.equalJson(e.data));
-    }
-    GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-  }
+  // if (middleMode) {
+  //   if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
+  //     GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+  //     GeneralJs.stacks["designerConsoleSseSource"] = null;
+  //     GeneralJs.stacks["designerConsoleSseEvent"] = null;
+  //   }
+  //   GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+  //   GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
+  //     instance.checkListSseParsing(GeneralJs.equalJson(e.data));
+  //   }
+  //   GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+  // }
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
@@ -2785,8 +2784,8 @@ DesignerJs.prototype.projectDetailLaunching = function (desid, callback = null) 
     });
   }
 
-  this.checkListDetail(desid);
-  this.checkListIconSet(desid);
+  this.projectDetail(desid);
+  this.projectIconSet(desid);
   scrollTo(totalMother, pastScrollTop);
   if (callback !== null) {
     if (typeof callback === "function") {
@@ -2795,7 +2794,7 @@ DesignerJs.prototype.projectDetailLaunching = function (desid, callback = null) 
   }
 }
 
-DesignerJs.prototype.checkListDetail = function (desid) {
+DesignerJs.prototype.projectDetail = function (desid) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
@@ -3564,170 +3563,7 @@ DesignerJs.prototype.checkListDetail = function (desid) {
   this.mainBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.checkListDesignerMemo = function (desid) {
-  const instance = this;
-  const { totalMother, ea, grayBarWidth, belowHeight, media } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut } = GeneralJs;
-  const baseTong = this.mainBaseTong;
-  const designer = this.designers.pick(desid);
-  const mobile = media[4];
-  const desktop = !mobile;
-  return async function (e) {
-    try {
-      if (document.getElementById("memoTong") === null) {
-
-        let memoTong;
-        let margin;
-        let innerMargin;
-        let titleHeight;
-        let size;
-        let resObj, history, career;
-        let nodeArr;
-        let mobileBottom, mobileHeight;
-
-        margin = <%% 40, 40, 40, 40, 7 %%>;
-        innerMargin = <%% 15, 15, 15, 15, 4 %%>;
-        titleHeight = <%% 28, 28, 28, 28, 6.4 %%>;
-        size = <%% 16, 16, 16, 16, 4 %%>;
-
-        mobileBottom = 16;
-        mobileHeight = 56;
-
-        resObj = await ajaxJson({ method: "designer", property: "history", idArr: [ desid ] }, "/getHistoryTotal");
-        if (resObj[desid] === undefined) {
-          throw new Error("history error");
-        }
-        career = resObj[desid].career;
-
-        memoTong = createNode({
-          mother: totalMother,
-          id: "memoTong",
-          events: [
-            {
-              type: "dblclick",
-              event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                totalMother.removeChild(document.getElementById("memoTong"));
-              }
-            },
-            {
-              type: "contextmenu",
-              event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                totalMother.removeChild(document.getElementById("memoTong"));
-              }
-            }
-          ],
-          style: {
-            position: "fixed",
-            width: desktop ? "calc(calc(calc(100% - " + String(grayBarWidth) + ea + ") / 3) - " + String(margin) + ea + ")" : "calc(100% - " + String(margin * 2) + ea + ")",
-            height: desktop ? "calc(calc(calc(calc(100% - " + String(belowHeight) + ea + ") / 3) * 1.5) - " + String(margin) + ea + ")" : String(mobileHeight) + ea,
-            bottom: String(desktop ? belowHeight + margin : mobileBottom + margin) + ea,
-            right: String(margin) + ea,
-            borderRadius: String(3) + "px",
-            boxShadow: "0px 5px 18px -9px " + colorChip.shadow,
-            animation: "fadeup 0.3s ease forwards",
-            background: colorChip.gradientGreen2,
-            zIndex: String(3),
-          }
-        });
-
-        nodeArr = createNodes([
-          {
-            mother: memoTong,
-            text: designer.designer + " 디자이너 상세 경력",
-            style: {
-              position: "absolute",
-              top: String(innerMargin - (desktop ? 1 : 1.2)) + ea,
-              left: String(innerMargin + (desktop ? 1 : 0.1)) + ea,
-              fontSize: String(size) + ea,
-              fontWeight: String(600),
-              color: colorChip.white,
-            }
-          },
-          {
-            mother: memoTong,
-            style: {
-              position: "absolute",
-              bottom: String(innerMargin) + ea,
-              left: String(innerMargin) + ea,
-              width: "calc(100% - " + String(innerMargin * 2) + ea + ")",
-              height: withOut((innerMargin * 2) + titleHeight, ea),
-              background: colorChip.white,
-              borderRadius: String(3) + "px",
-              opacity: String(0.95),
-            }
-          },
-          {
-            mother: -1,
-            style: {
-              position: "absolute",
-              top: String(innerMargin - 2) + ea,
-              left: String(innerMargin) + ea,
-              width: withOut((innerMargin - 2) * 2, ea),
-              height: withOut(innerMargin * 2, ea),
-            }
-          },
-          {
-            mother: -1,
-            mode: "textarea",
-            events: [
-              {
-                type: "blur",
-                event: function (e) {
-                  const cookies = GeneralJs.getCookiesAll();
-                  const ajaxData = "method=designer&id=" + desid + "&column=career&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
-                  GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
-                }
-              },
-              {
-                type: "keypress",
-                event: function (e) {
-                  if (e.key === "Enter") {
-                    const cookies = GeneralJs.getCookiesAll();
-                    const ajaxData = "method=designer&id=" + desid + "&column=career&value=" + this.value + "&email=" + cookies.homeliaisonConsoleLoginedEmail;
-                    GeneralJs.ajax(ajaxData, "/updateHistory", function () {});
-                  }
-                }
-              },
-              {
-                type: "contextmenu",
-                event: function (e) {
-                  e.stopPropagation();
-                }
-              }
-            ],
-            style: {
-              position: "relative",
-              top: String(0),
-              left: String(0),
-              width: String(100) + '%',
-              fontSize: String(size - (desktop ? 1 : 0.2)) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              border: String(0),
-              outline: String(0),
-              overflow: "scroll",
-              height: String(100) + '%',
-              lineHeight: String(1.7),
-            }
-          },
-        ]);
-        nodeArr[3].value = career;
-
-      } else {
-        totalMother.removeChild(document.getElementById("memoTong"));
-      }
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
-}
-
-DesignerJs.prototype.checkListIconSet = function (desid) {
+DesignerJs.prototype.projectIconSet = function (desid) {
   if (desid === undefined) {
     throw new Error("invaild input");
   }
@@ -4143,90 +3979,7 @@ DesignerJs.prototype.checkListIconSet = function (desid) {
 
 }
 
-DesignerJs.prototype.checkListSseParsing = function (orders) {
-  const instance = this;
-  const { ea } = this;
-  const { colorChip } = GeneralJs;
-  if (!Array.isArray(orders)) {
-    throw new Error("invaild input");
-  }
-  if (orders.length > 0) {
-    for (let obj of orders) {
-      if (obj.desid === undefined || obj.position === undefined || obj.type === undefined || obj.update === undefined || obj.value === undefined) {
-        throw new Error("invaild input");
-      }
-      const { desid, position, type, update, value } = obj;
-      if (instance.desid === desid) {
-        if (update.whereQuery === undefined || update.updateQuery === undefined) {
-          throw new Error("invaild input");
-        }
-        const { whereQuery, updateQuery } = update;
-        const targetDom = document.querySelector('.' + position.class);
-        let tempFunction, tempArr, tempString;
-
-        instance.designers.update([ whereQuery, updateQuery ]);
-
-        if (targetDom !== null && targetDom !== undefined) {
-          if (type === "string") {
-            targetDom.removeChild(targetDom.firstChild);
-            targetDom.textContent = "";
-            targetDom.insertAdjacentHTML("beforeend", value);
-          } else if (type === "matrix") {
-            const children = targetDom.children;
-            const length = children.length;
-            for (let z = 0; z < length; z++) {
-              if (value[z] === 1) {
-                children[z].style.color = colorChip.green;
-                children[z].setAttribute("toggle", String(1));
-              } else {
-                children[z].style.color = colorChip.gray4;
-                children[z].setAttribute("toggle", String(0));
-              }
-            }
-          } else if (type === "tendency") {
-            const children = targetDom.children;
-            const [ z, t, opposite, matrixButtonConst ] = value;
-            const factors = children[z].querySelectorAll("div");
-            const length = factors.length;
-            for (let i = 0; i < length; i++) {
-              if (i <= t) {
-                factors[i].setAttribute("toggle", String(1));
-                factors[i].style.background = colorChip.green;
-              } else {
-                factors[i].setAttribute("toggle", String(0));
-                factors[i].style.background = colorChip.gray2;
-              }
-            }
-            if (opposite) {
-              const oppositeButtons = document.querySelectorAll('.' + matrixButtonConst + String(position.x) + String(position.y) + String(1 - z));
-              for (let i = 0; i < oppositeButtons.length; i++) {
-                if (i < oppositeButtons.length - t - 1) {
-                  oppositeButtons[i].setAttribute("toggle", String(1));
-                  oppositeButtons[i].style.background = colorChip.green;
-                } else {
-                  oppositeButtons[i].setAttribute("toggle", String(0));
-                  oppositeButtons[i].style.background = colorChip.gray2;
-                }
-              }
-            }
-          } else if (type === "longtext") {
-            targetDom.querySelector("textarea").value = value;
-          } else if (/^async/.test(type) && /__function__/g.test(type)) {
-            tempArr = type.split("__function__");
-            if (tempArr.length === 2) {
-              tempString = tempArr[1].trim().replace(/^\{/, '').replace(/\}$/, '').trim().replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&').replace(/__plus__/gi, '+');
-              tempFunction = new Function("mother", "value", tempString);
-              tempFunction(targetDom, value);
-            }
-          }
-        }
-
-      }
-    }
-  }
-}
-
-DesignerJs.prototype.checkListDetailSearchBox = function () {
+DesignerJs.prototype.projectDetailSearchBox = function () {
   const instance = this;
   const { totalMother, ea, grayBarWidth, belowHeight, searchCondition } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
@@ -4264,7 +4017,7 @@ DesignerJs.prototype.checkListDetailSearchBox = function () {
             event: function (e) {
               e.preventDefault();
               e.stopPropagation();
-              instance.checkListDetailSearchParsing();
+              instance.projectDetailSearchParsing();
               totalMother.removeChild(totalMother.lastChild);
               totalMother.removeChild(totalMother.lastChild);
             }
@@ -4308,12 +4061,12 @@ DesignerJs.prototype.checkListDetailSearchBox = function () {
           paddingBottom: String(paddingBottom) + ea,
         }
       });
-      instance.checkListDetailSearchContents(scrollBase);
+      instance.projectDetailSearchContents(scrollBase);
     }
   }
 }
 
-DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
+DesignerJs.prototype.projectDetailSearchContents = function (mother) {
   const instance = this;
   const { totalMother, ea, grayBarWidth, belowHeight, searchCondition } = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
@@ -4682,7 +4435,7 @@ DesignerJs.prototype.checkListDetailSearchContents = function (mother) {
 
 }
 
-DesignerJs.prototype.checkListDetailSearchParsing = function () {
+DesignerJs.prototype.projectDetailSearchParsing = function () {
   const instance = this;
   const { searchCondition, standardDoms, designers } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
@@ -4872,7 +4625,7 @@ DesignerJs.prototype.projectView = async function () {
             }
           }
         });
-        searchInput.addEventListener("contextmenu", this.checkListDetailSearchBox());
+        searchInput.addEventListener("contextmenu", this.projectDetailSearchBox());
       }
 
       //standard doms event
@@ -4911,12 +4664,12 @@ DesignerJs.prototype.projectView = async function () {
     this.motherHeight = motherHeight;
 
     //sse
-    if (!this.middleMode) {
-      const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-      es.addEventListener("updateTong", (e) => {
-        instance.checkListSseParsing(equalJson(e.data));
-      });
-    }
+    // if (!this.middleMode) {
+    //   const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+    //   es.addEventListener("updateTong", (e) => {
+    //     instance.checkListSseParsing(equalJson(e.data));
+    //   });
+    // }
 
     loading.parentNode.removeChild(loading);
 
