@@ -480,10 +480,9 @@ DevContext.prototype.launching = async function () {
     // console.log(await aliveMembers.aliveRequest("/"));
 
 
-
+    /*
     let clientPageMap;
     let noticeModules;
-
     clientPageMap = [
       {
         pagid: "g2110_aa01s",
@@ -756,9 +755,8 @@ DevContext.prototype.launching = async function () {
         },
       },
     ];
-
     console.log(clientPageMap);
-
+    */
 
 
 

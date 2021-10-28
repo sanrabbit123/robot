@@ -187,6 +187,14 @@ MirrorWhisk.prototype.recordBackup = async function () {
   const storeMother = instance.address.officeinfo.ghost.file.static + instance.address.officeinfo.ghost.file.office + "/통화녹취파일";
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
+  const urls = {
+    init: "https://centrex.uplus.co.kr/premium",
+    login: "https://centrex.uplus.co.kr/premium/PHP/web_login.php",
+    list: "https://centrex.uplus.co.kr/premium/backoffice/record_list.html",
+    delete: "https://centrex.uplus.co.kr/premium/PHP/deleteRecordFile.php"
+  };
+  const splitToken = "__split__";
+  const tempFolder = process.cwd() + "/temp";
   try {
     const storeMotherContents = (await fileSystem(`readDir`, [ storeMother ])).filter((str) => { return !/^\./.test(str); });
     const folderName = "records_" + dateToString(new Date()).replace(/\-/gi, '') + "_" + uniqueValue("string");
@@ -203,21 +211,21 @@ MirrorWhisk.prototype.recordBackup = async function () {
     let storeTargets;
     let downloadedFiles;
 
-    url = "https://centrex.uplus.co.kr/premium";
+    url = urls.init;
     res = await requestSystem(url);
 
     dom = new JSDOM(res.data);
 
-    token = dom.window.document.querySelectorAll('input')[2].value;
+    token = dom.window.document.querySelectorAll("input")[2].value;
     session = res.headers["set-cookie"][0].split(';')[0];
     idsave = 1;
-    id = "0220392252";
-    pass = "Vndkwp941!";
+    id = instance.address.officeinfo.phone.total.number;
+    pass = instance.address.officeinfo.phone.total.password;
 
-    url = "https://centrex.uplus.co.kr/premium/PHP/web_login.php";
+    url = urls.login;
     res = await requestSystem(url, { token, idsave, id, pass }, { headers: { Cookie: session } });
 
-    url = "https://centrex.uplus.co.kr/premium/backoffice/record_list.html";
+    url = urls.list;
     res = await requestSystem(url, {}, { method: "get", headers: { Cookie: session } });
 
     dom = new JSDOM(res.data);
@@ -246,17 +254,17 @@ MirrorWhisk.prototype.recordBackup = async function () {
         }
       }
       aArr = aArr.map((str) => { return str.trim(); }).filter((str) => { return str !== '#'; }).map((str) => {
-        return str + "__split__" + String(pageNum);
+        return str + splitToken + String(pageNum);
       });
       totalLinks = totalLinks.concat(aArr);
     } while (aArr.length !== 0);
 
     totalLinks = [ ...new Set(totalLinks) ].map((str) => {
-      return "https://centrex.uplus.co.kr/premium" + str.slice(2);
+      return urls.init + str.slice(2);
     }).map((link) => {
       let tempArr, tempArr1, obj, page;
-      page = Number(link.split("__split__")[1]);
-      link = link.split("__split__")[0];
+      page = Number(link.split(splitToken)[1]);
+      link = link.split(splitToken)[0];
       tempArr = link.split('?');
       tempArr1 = tempArr[1].split('&').map((s) => { return s.split('='); });
       obj = {};
@@ -272,8 +280,8 @@ MirrorWhisk.prototype.recordBackup = async function () {
       records: totalLinks
     };
 
-    await shellExec(`rm -rf ${shellLink(process.cwd())}/temp/${folderName}`);
-    await shellExec(`mkdir ${shellLink(process.cwd())}/temp/${folderName}`);
+    await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName}`);
+    await shellExec(`mkdir ${shellLink(tempFolder)}/${folderName}`);
 
     for (let i = 0; i < totalLinks.length; i++) {
       tempbinary = await binaryRequest(totalLinks[i].link, null, { headers: { Cookie: session } });
@@ -282,7 +290,7 @@ MirrorWhisk.prototype.recordBackup = async function () {
 
       postData.page = String(totalLinks[i].page);
       postData["chk[]"] = totalLinks[i].data.filename.split('-')[0] + "|" + totalLinks[i].data.filename;
-      res = await requestSystem("https://centrex.uplus.co.kr/premium/PHP/deleteRecordFile.php", postData, { headers: { Cookie: session } });
+      res = await requestSystem(urls.delete, postData, { headers: { Cookie: session } });
       console.log(`${totalLinks[i].data.filename} server delete success`);
     }
 
@@ -291,9 +299,9 @@ MirrorWhisk.prototype.recordBackup = async function () {
       storeTargets['p' + str.split('_')[0]] = str;
     }
 
-    downloadedFiles = (await fileSystem(`readDir`, [ `${process.cwd()}/temp/${folderName}` ])).filter((str) => { return !/^\./.test(str); });
+    downloadedFiles = (await fileSystem(`readDir`, [ `${tempFolder}/${folderName}` ])).filter((str) => { return !/^\./.test(str); });
     downloadedFiles = downloadedFiles.map((str) => {
-      return { target: 'p' + str.split('-')[0].replace(/^0/gi, '').replace(/^0/gi, ''), file: `${process.cwd()}/temp/${folderName}/${str}` };
+      return { target: 'p' + str.split('-')[0].replace(/^0/gi, '').replace(/^0/gi, ''), file: `${tempFolder}/${folderName}/${str}` };
     });
 
     for (let { target, file } of downloadedFiles) {
@@ -302,7 +310,7 @@ MirrorWhisk.prototype.recordBackup = async function () {
       }
     }
 
-    await shellExec(`rm -rf ${shellLink(process.cwd())}/temp/${folderName};`);
+    await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName};`);
 
     return log;
 
