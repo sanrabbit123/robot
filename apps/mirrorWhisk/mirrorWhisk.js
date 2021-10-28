@@ -275,8 +275,7 @@ MirrorWhisk.prototype.recordBackup = async function () {
     await shellExec(`rm -rf ${shellLink(process.cwd())}/temp/${folderName}`);
     await shellExec(`mkdir ${shellLink(process.cwd())}/temp/${folderName}`);
 
-    // for (let i = 0; i < totalLinks.length; i++) {
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < totalLinks.length; i++) {
       tempbinary = await binaryRequest(totalLinks[i].link, null, { headers: { Cookie: session } });
       await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${folderName}/${totalLinks[i].data.filename}`, tempbinary ]);
       console.log(`${totalLinks[i].data.filename} download success`);
@@ -304,6 +303,8 @@ MirrorWhisk.prototype.recordBackup = async function () {
     }
 
     await shellExec(`rm -rf ${shellLink(process.cwd())}/temp/${folderName};`);
+
+    return log;
 
   } catch (e) {
     console.log(e);
