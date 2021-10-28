@@ -301,7 +301,6 @@ class WordsDictionary {
         ],
       ]
     };
-
     return obj;
   }
 

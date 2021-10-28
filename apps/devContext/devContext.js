@@ -481,10 +481,305 @@ DevContext.prototype.launching = async function () {
 
 
 
+    let clientPageMap;
+    let noticeModules;
+
+    clientPageMap = [
+      {
+        pagid: "g2110_aa01s",
+        order: 0,
+        name: "directAbout",
+        title: "신청 직후 안내",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        }
+      },
+      {
+        pagid: "g2110_aa02s",
+        order: 1,
+        name: "styleCuration",
+        title: "스타일 체크",
+        about: [
+          {
+            title: "홈리에종 큐레이션",
+            contents: "홈리에종은 체계화된 정보과 취향 분석 기능을 활용해서 고객님의 스타일과 조건에 딱 맞는 서비스를 제안하고, 디자이너를 추천해드립니다. 아래 간단한 상세 큐레이팅 설문에 응답해주시면 예상 서비스 및 서비스 금액을 알려드릴 수 있으니, 작성 부탁드립니다. 감사합니다!",
+          },
+          {
+            title: "홈리에종 서비스 소개",
+            contents: "일단 시공부터 하는 방식이 아닌, 생활을 고려해 디자인 및 기획을 먼저 하고 시공 범위를 함께 고민해 정한 후 인테리어를 진행합니다. 늘 앉아 있는 소파, 식사마다 머무는 식탁, 햇빛을 가려주는 커튼, 살이 맞닿는 베딩까지. 새로운 방식으로 나에게 맞는 집을 만들어 보세요!",
+          }
+        ],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [
+            "methods",
+            "process",
+            "diagram_designer",
+            "diagram_flatform"
+          ],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa03s",
+        order: 2,
+        name: "designerProposal",
+        title: "디자이너 제안",
+        about: [
+          {
+            title: "당신에게 딱 맞는 디자이너, 이 곳 홈리에종에서",
+            contents: "박고운 고객님께 고객 맞춤 커스터마이징 : 오프라인 홈스타일링 basic 서비스를 제안드립니다. 담당 디자이너가 고객님의 전체 가용 예산을 시공 / 제작가구 / 구매가구 / 패브릭 소품 등을 위해 적절히 분배하여 제안합니다.",
+          }
+        ],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [
+            "total_notice",
+            "items",
+            "methods",
+            "process",
+            "definition"
+          ],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa04s",
+        order: 3,
+        name: "firstMeeting",
+        title: "현장 미팅 안내",
+        about: [
+          {
+            title: "현장 미팅 안내",
+            contents: "디자이너를 직접 만나 함께 현장 상태를 확인하고, 고객님의 취향과 니즈를 전달하여, 앞으로 진행하게 될 홈스타일링에 대한 전체적인 방향을 이야기하게 됩니다.",
+          },
+          {
+            title: "기본 안내",
+            contents: "현장 미팅 전, 디자이너에게 공유할 고객님의 기본 정보입니다. 디자이너가 고객님을 뵙기 전에 미팅을 준비하면서 확인하는 사전 정보이며, 잘못된 정보가 있을 시 홈리에종에 말씀해주시길 바랍니다.",
+          },
+        ],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [
+            "site",
+            "needs",
+            "concept",
+            "convert",
+            "cancel",
+          ],
+          totalStyling: [
+            "site",
+            "needs",
+            "concept",
+            "construct",
+            "convert",
+            "cancel",
+          ],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa05s",
+        order: 4,
+        name: "contractNotice",
+        title: "계약전 서비스 안내",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa06s",
+        order: 5,
+        name: "universalEstimation",
+        title: "홈스타일링 결제",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [
+            "payment_notice",
+            "payment_complete_card",
+            "payment_complete_vaccount",
+          ],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa07s",
+        order: 6,
+        name: "wholeSchedule",
+        title: "전체 일정 안내",
+        about: [
+          {
+            title: "전체 일정 안내",
+            contents: "앞으로 진행하게 될 홈스타일링의 전체 일정을 보고해드립니다. 디자이너가 전체적으로 계획을 세운 아래 일정은 향후 상황과 변수에 따라 조정될 수 있습니다.",
+          },
+          {
+            title: "전체 일정 안내",
+            contents: "앞으로 진행하게 될 홈스타일링의 전체 일정을 보고해드립니다. 디자이너가 전체적으로 계획을 세운 아래 일정은 향후 상황과 변수에 따라 조정될 수 있습니다.",
+          },
+        ],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [
+            "total_process",
+          ],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa08s",
+        order: 7,
+        name: "stylingProposal",
+        title: "디자인 제안",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa09s",
+        order: 8,
+        name: "contructSelect",
+        title: "시공사 선택 안내",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa10s",
+        order: 9,
+        name: "contructEstimation",
+        title: "시공 견적서",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa11s",
+        order: 10,
+        name: "contructSchedule",
+        title: "시공 공정표",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa12s",
+        order: 11,
+        name: "craftedProduct",
+        title: "제작 제품 안내",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa13s",
+        order: 12,
+        name: "craftedEstimation",
+        title: "제작 제품 견적",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa14s",
+        order: 13,
+        name: "purchaseList",
+        title: "구매 리스트",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa15s",
+        order: 14,
+        name: "photoSetting",
+        title: "촬영 및 세팅 안내",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+      {
+        pagid: "g2110_aa16s",
+        order: 15,
+        name: "designerRating",
+        title: "디자이너 평가",
+        about: [],
+        notice: {
+          homeFurnishing: [],
+          homeStyling: [],
+          totalStyling: [],
+          extraStyleing: [],
+        },
+      },
+    ];
+
+    console.log(clientPageMap);
 
 
 
-    //165
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
