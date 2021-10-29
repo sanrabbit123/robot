@@ -1062,7 +1062,9 @@ DevContext.prototype.launching = async function () {
     };
 
 
-
+    const MirrorWhisk = require(`${process.cwd()}/apps/mirrorWhisk/mirrorWhisk.js`);
+    const mirror = new MirrorWhisk();
+    await mirror.recordBackup();
 
 
 

@@ -18,8 +18,15 @@ const worker = async function (package) {
   try {
     const MirrorWhisk = require(`${process.cwd()}/apps/mirrorWhisk/mirrorWhisk.js`);
     const mirror = new MirrorWhisk();
-    const log = await mirror.recordBackup();
     const logCollection = "recordBackupLog";
+    let log, safeNum;
+
+    safeNum = 0;
+    do {
+      log = await mirror.recordBackup();
+      safeNum++;
+    } while (log === false || safeNum > 10);
+
     await rethink.rethinkCreate(logCollection, log);
     await messageLog("record backup and delete done");
     return true;

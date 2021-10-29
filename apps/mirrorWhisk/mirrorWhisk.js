@@ -210,6 +210,8 @@ MirrorWhisk.prototype.recordBackup = async function () {
     let tempbinary;
     let storeTargets;
     let downloadedFiles;
+    let errorBoo;
+    let safeNum;
 
     url = urls.init;
     res = await requestSystem(url);
@@ -284,14 +286,25 @@ MirrorWhisk.prototype.recordBackup = async function () {
     await shellExec(`mkdir ${shellLink(tempFolder)}/${folderName}`);
 
     for (let i = 0; i < totalLinks.length; i++) {
-      tempbinary = await binaryRequest(totalLinks[i].link, null, { headers: { Cookie: session } });
-      await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${folderName}/${totalLinks[i].data.filename}`, tempbinary ]);
-      console.log(`${totalLinks[i].data.filename} download success`);
+      safeNum = 0;
+      do {
+        errorBoo = true;
+        try {
+          tempbinary = await binaryRequest(totalLinks[i].link, null, { headers: { Cookie: session } });
+          await fileSystem(`writeBinary`, [ `${process.cwd()}/temp/${folderName}/${totalLinks[i].data.filename}`, tempbinary ]);
+          console.log(`${totalLinks[i].data.filename} download success`);
 
-      postData.page = String(totalLinks[i].page);
-      postData["chk[]"] = totalLinks[i].data.filename.split('-')[0] + "|" + totalLinks[i].data.filename;
-      res = await requestSystem(urls.delete, postData, { headers: { Cookie: session } });
-      console.log(`${totalLinks[i].data.filename} server delete success`);
+          postData.page = String(totalLinks[i].page);
+          postData["chk[]"] = totalLinks[i].data.filename.split('-')[0] + "|" + totalLinks[i].data.filename;
+          res = await requestSystem(urls.delete, postData, { headers: { Cookie: session } });
+          console.log(`${totalLinks[i].data.filename} server delete success`);
+
+          errorBoo = false;
+        } catch (e) {
+          errorBoo = true;
+        }
+        safeNum++;
+      } while (errorBoo || safeNum > 10);
     }
 
     storeTargets = {};
@@ -316,6 +329,7 @@ MirrorWhisk.prototype.recordBackup = async function () {
 
   } catch (e) {
     console.log(e);
+    return false;
   }
 }
 
