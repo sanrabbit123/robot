@@ -89,6 +89,7 @@ class Designers extends Array {
     if (!Array.isArray(clients)) {
       throw new Error("invaild arguments");
     }
+    let tempDate, tempDate2, requestNumber;
     for (let designer of this) {
       if (designer.projects === undefined) {
         throw new Error("set Project first");
@@ -97,6 +98,26 @@ class Designers extends Array {
         for (let client of clients) {
           if (project.cliid === client.cliid) {
             project.name = client.name;
+            project.phone = client.phone;
+            project.email = client.email;
+            requestNumber = 0;
+            if (typeof project.proposal.date === "string") {
+              tempDate2 = new Date(project.proposal.date);
+            } else {
+              tempDate2 = new Date(JSON.stringify(project.proposal.date).slice(1, -1));
+            }
+            for (let i = 0; i < client.requests.length; i++) {
+              if (typeof client.requests[i].request.timeline === "string") {
+                tempDate = new Date(client.requests[i].request.timeline);
+              } else {
+                tempDate = new Date(JSON.stringify(client.requests[i].request.timeline).slice(1, -1));
+              }
+              if (tempDate.valueOf() <= tempDate2.valueOf()) {
+                requestNumber = i;
+                break;
+              }
+            }
+            project.requestNumber = requestNumber;
           }
         }
       }

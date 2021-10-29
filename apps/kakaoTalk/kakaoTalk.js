@@ -718,7 +718,15 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
   };
-  return tong[target];
+  if (target === "$all") {
+    return tong;
+  } else {
+    if (tong[target] !== undefined) {
+      return tong[target];
+    } else {
+      throw new Error("invaild target");
+    }
+  }
 }
 
 KakaoTalk.prototype.setTalk = async function (method, name, phone, option = {}) {

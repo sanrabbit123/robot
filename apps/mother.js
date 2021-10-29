@@ -773,6 +773,54 @@ Mother.prototype.binaryRequest = function (to, port = null, headers = null) {
   });
 }
 
+Mother.prototype.curlRequest = function (to, data = {}, config = {}) {
+  if (typeof to !== "string" || typeof data !== "object" || typeof config !== "object") {
+    throw new Error("invaild input");
+  }
+  const { exec } = require("child_process");
+  let command, method;
+
+  command = "curl ";
+  if (Object.keys(data).length === 0) {
+    method = "GET";
+  } else {
+    method = "POST";
+  }
+  if (config.method === "get") {
+    method = "GET";
+    delete config.method;
+  }
+
+  if (method === "POST") {
+    command += "-X " + method + " ";
+    command += "-d '" + JSON.stringify(data) + "' ";
+  }
+
+  if (typeof config.headers === "object" && config.headers !== null) {
+    for (let key in config.headers) {
+      command += "-H \"" + key + ": " + config.headers[key].replace(/\"/gi, '') + "\" ";
+    }
+  } else {
+    command += "-H \"Content-Type: application/json\" ";
+  }
+
+  command += to;
+
+  return new Promise((resolve, reject) => {
+    exec(command, { cwd: process.cwd(), maxBuffer: 20 * 1024 * 1024 }, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+      } else {
+        if (typeof stdout === "string") {
+          resolve(stdout.trim());
+        } else {
+          resolve(stdout);
+        }
+      }
+    });
+  });
+}
+
 Mother.prototype.ghostRequest = function (path = "", data = {}) {
   /*
   // bind usage example
