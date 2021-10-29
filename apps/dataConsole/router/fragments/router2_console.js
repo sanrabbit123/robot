@@ -2357,6 +2357,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
           const { buyer_tel, paid_at } = paymentData;
           const today = new Date();
           const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+          messageSend({ text: JSON.stringify(paymentData, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
           const convertingData = {
             goodName: paymentData.name,
             goodsName: paymentData.name,
@@ -3376,6 +3377,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           vactBankName: paymentData.card_name,
           payDevice: "MOBILE",
           P_FN_NM: paymentData.card_name,
+          "__ignorethis__": 1,
         };
 
         res.set({ "Content-Type": "application/json" });

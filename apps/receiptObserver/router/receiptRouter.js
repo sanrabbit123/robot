@@ -434,6 +434,9 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       }
       const selfMongo = instance.mongolocal;
       const { bilid, requestNumber, data } = equalJson(req.body);
+      if (typeof data !== "object") {
+        throw new Error("invaild post : data must be object");
+      }
       if (typeof data.MOID !== "string") {
         throw new Error("invaild post");
       }
@@ -466,242 +469,257 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       let paymentComplete;
       let message;
 
-      thisBill = await bill.getBillById(bilid, { selfMongo });
-      if (thisBill === null) {
-        throw new Error("there is no bill");
-      }
-      if (thisBill.links.cliid === undefined || thisBill.links.desid === undefined || thisBill.links.proid === undefined) {
-        throw new Error("invaild bill");
-      }
-      thisBill = thisBill.toNormal();
-      cliid = thisBill.links.cliid;
-      desid = thisBill.links.desid;
-      proid = thisBill.links.proid;
-      client = await back.getClientById(cliid, { selfMongo: instance.mongo });
-      designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
-      project = await back.getProjectById(proid, { selfMongo: instance.mongo });
-      proposal = project.selectProposal(desid);
+      if (data.__ignorethis__ !== 1) {
 
-      if (client === null || designer === null || project === null || proposal === null) {
-        throw new Error("invaild id");
-      }
+        thisBill = await bill.getBillById(bilid, { selfMongo });
+        if (thisBill === null) {
+          throw new Error("there is no bill");
+        }
+        if (thisBill.links.cliid === undefined || thisBill.links.desid === undefined || thisBill.links.proid === undefined) {
+          throw new Error("invaild bill");
+        }
+        thisBill = thisBill.toNormal();
+        cliid = thisBill.links.cliid;
+        desid = thisBill.links.desid;
+        proid = thisBill.links.proid;
+        client = await back.getClientById(cliid, { selfMongo: instance.mongo });
+        designer = await back.getDesignerById(desid, { selfMongo: instance.mongo });
+        project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+        proposal = project.selectProposal(desid);
 
-      if (Array.isArray(thisBill.links.oid)) {
-        oidArr = equalJson(JSON.stringify(thisBill.links.oid));
-        boo = false;
-        for (let o of oidArr) {
-          if (o === oid) {
-            boo = true;
+        if (client === null || designer === null || project === null || proposal === null) {
+          throw new Error("invaild id");
+        }
+
+        if (Array.isArray(thisBill.links.oid)) {
+          oidArr = equalJson(JSON.stringify(thisBill.links.oid));
+          boo = false;
+          for (let o of oidArr) {
+            if (o === oid) {
+              boo = true;
+            }
           }
-        }
-        if (!boo) {
-          oidArr.unshift(oid);
-        }
-      } else {
-        oidArr = [ oid ];
-      }
-
-      infoArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].info));
-      infoArr.unshift({ data });
-      infoArr.unshift({ oid });
-
-      whereQuery = { bilid };
-      updateQuery = {};
-      updateQuery["links.oid"] = oidArr;
-      updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
-
-      amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
-
-      if (data.CARD_BankCode !== undefined) {
-
-        itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
-        payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
-        cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
-        payObject = bill.returnBillDummies("pay");
-        payObject.amount = amount;
-        payObject.oid = oid;
-        payArr.unshift(payObject);
-
-        // itemNum = 0;
-        // for (let { amount: { consumer } } of itemArr) {
-        //   itemNum += consumer;
-        // }
-        // payNum = 0;
-        // for (let { amount: payAmount } of payArr) {
-        //   payNum += payAmount;
-        // }
-        // cancelNum = 0;
-        // for (let { amount: cancelAmount } of cancelArr) {
-        //   cancelNum += cancelAmount;
-        // }
-        //
-        // if (itemNum <= payNum - cancelNum) {
-        //   updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-        //   paymentComplete = true;
-        // } else {
-        //   paymentComplete = false;
-        // }
-
-        updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-        paymentComplete = true;
-
-        updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
-
-        proofs = bill.returnBillDummies("proofs");
-        if (typeof data.P_FN_NM === "string") {
-          proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
+          if (!boo) {
+            oidArr.unshift(oid);
+          }
         } else {
-          proofs.method = "카드(알 수 없음)";
+          oidArr = [ oid ];
         }
-        proofs.proof = inisis;
-        proofs.to = data.buyerName;
-        thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
-        updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
-        message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
-        messageSend({ text: message, channel: "#700_operation" }).then(() => {
-          return ghostRequest("/voice", { text: message });
-        }).catch((err) => {
-          console.log(err);
-        })
-        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+        infoArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].info));
+        infoArr.unshift({ data });
+        infoArr.unshift({ oid });
 
-        if (paymentComplete) {
-          if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
-            projectQuery = {};
-            if (proposal.fee.length === 1) {
-              pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
-            } else {
-              for (let obj of proposal.fee) {
-                if (obj.method === thisBill.links.method) {
-                  pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
-                }
-              }
-            }
+        whereQuery = { bilid };
+        updateQuery = {};
+        updateQuery["links.oid"] = oidArr;
+        updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
 
-            if (/계약금/gi.test(data.goodName.trim())) {
-              projectQuery["process.contract.first.date"] = new Date();
-              projectQuery["process.contract.first.calculation.amount"] = amount;
-              projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
-              projectQuery["process.contract.first.calculation.info.proof"] = inisis;
-              projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
+        amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
 
-              projectQuery["desid"] = desid;
-              projectQuery["service.online"] = !/off/gi.test(thisBill.links.method);
-              projectQuery["process.status"] = "대기";
-              projectQuery["proposal.status"] = "고객 선택";
+        if (data.CARD_BankCode !== undefined) {
 
-              vat = Math.round(pureDesignFee * 0.1);
-              consumer = Math.round(pureDesignFee * 1.1);
+          itemArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].items));
+          payArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].pay));
+          cancelArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].cancel));
+          payObject = bill.returnBillDummies("pay");
+          payObject.amount = amount;
+          payObject.oid = oid;
+          payArr.unshift(payObject);
 
-              projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
-              projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
-              projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+          // itemNum = 0;
+          // for (let { amount: { consumer } } of itemArr) {
+          //   itemNum += consumer;
+          // }
+          // payNum = 0;
+          // for (let { amount: payAmount } of payArr) {
+          //   payNum += payAmount;
+          // }
+          // cancelNum = 0;
+          // for (let { amount: cancelAmount } of cancelArr) {
+          //   cancelNum += cancelAmount;
+          // }
+          //
+          // if (itemNum <= payNum - cancelNum) {
+          //   updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+          //   paymentComplete = true;
+          // } else {
+          //   paymentComplete = false;
+          // }
 
-              classification = designer.information.business.businessInfo.classification;
-              percentage = Number(designer.information.business.service.cost.percentage);
-              businessMethod = "사업자(일반)";
-              if (/사업자/g.test(classification)) {
-                if (/일반/g.test(classification)) {
-                  businessMethod = "사업자(일반)";
-                } else {
-                  businessMethod = "사업자(간이)";
-                }
-              } else {
-                businessMethod = "프리랜서";
-              }
-              projectQuery["process.calculation.method"] = businessMethod;
-              projectQuery["process.calculation.percentage"] = percentage;
+          updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
+          paymentComplete = true;
 
-              if (designer.information.business.account.length > 0) {
-                bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
-                bankTo = designer.information.business.account[0].to;
-                projectQuery["process.calculation.info.account"] = bankName;
-                projectQuery["process.calculation.info.proof"] = bankTo;
-                projectQuery["process.calculation.info.to"] = bankTo;
-              }
+          updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
-              [ calculate ] = bill.designerCalculation(pureDesignFee, businessMethod, percentage, client, { toArray: true });
-              projectQuery["process.calculation.payments.totalAmount"] = calculate;
-              projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
-              projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
-
-              await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-              designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-              await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
-              await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
-
-              await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-              await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
-
-              instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
-                client: client.name,
-                designer: designer.designer,
-              });
-
-              requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "origin": "https://" + instance.address.pythoninfo.host
-                }
-              }).then((obj) => {
-                if (obj.status >= 300) {
-                  return errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
-                }
-              }).catch((err) => {
-                errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); })
-              });
-
-            } else if (/잔금/gi.test(data.goodName.trim())) {
-
-              projectQuery["process.status"] = "진행중";
-              projectQuery["process.contract.remain.date"] = new Date();
-              projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
-              projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
-              projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
-
-              await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-
-              instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
-                client: client.name,
-                designer: designer.designer,
-                emoji: "(방긋)",
-              });
-
-            }
-
+          proofs = bill.returnBillDummies("proofs");
+          if (typeof data.P_FN_NM === "string") {
+            proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
+          } else {
+            proofs.method = "카드(알 수 없음)";
           }
+          proofs.proof = inisis;
+          proofs.to = data.buyerName;
+          thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
+          updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
+
+          message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
+          messageSend({ text: message, channel: "#700_operation" }).then(() => {
+            return ghostRequest("/voice", { text: message });
+          }).catch((err) => {
+            console.log(err);
+          })
+          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+
+          if (paymentComplete) {
+            if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
+              projectQuery = {};
+              if (proposal.fee.length === 1) {
+                pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
+              } else {
+                for (let obj of proposal.fee) {
+                  if (obj.method === thisBill.links.method) {
+                    pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
+                  }
+                }
+              }
+
+              if (/계약금/gi.test(data.goodName.trim())) {
+                projectQuery["process.contract.first.date"] = new Date();
+                projectQuery["process.contract.first.calculation.amount"] = amount;
+                projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
+                projectQuery["process.contract.first.calculation.info.proof"] = inisis;
+                projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
+
+                projectQuery["desid"] = desid;
+                projectQuery["service.online"] = !/off/gi.test(thisBill.links.method);
+                projectQuery["process.status"] = "대기";
+                projectQuery["proposal.status"] = "고객 선택";
+
+                vat = Math.round(pureDesignFee * 0.1);
+                consumer = Math.round(pureDesignFee * 1.1);
+
+                projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
+                projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
+                projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+
+                classification = designer.information.business.businessInfo.classification;
+                percentage = Number(designer.information.business.service.cost.percentage);
+                businessMethod = "사업자(일반)";
+                if (/사업자/g.test(classification)) {
+                  if (/일반/g.test(classification)) {
+                    businessMethod = "사업자(일반)";
+                  } else {
+                    businessMethod = "사업자(간이)";
+                  }
+                } else {
+                  businessMethod = "프리랜서";
+                }
+                projectQuery["process.calculation.method"] = businessMethod;
+                projectQuery["process.calculation.percentage"] = percentage;
+
+                if (designer.information.business.account.length > 0) {
+                  bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
+                  bankTo = designer.information.business.account[0].to;
+                  projectQuery["process.calculation.info.account"] = bankName;
+                  projectQuery["process.calculation.info.proof"] = bankTo;
+                  projectQuery["process.calculation.info.to"] = bankTo;
+                }
+
+                [ calculate ] = bill.designerCalculation(pureDesignFee, businessMethod, percentage, client, { toArray: true });
+                projectQuery["process.calculation.payments.totalAmount"] = calculate;
+                projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
+                projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
+
+                await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+                designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
+                await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+                await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
+
+                await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+                await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
+
+                instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+                  client: client.name,
+                  designer: designer.designer,
+                });
+
+                requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "origin": "https://" + instance.address.pythoninfo.host
+                  }
+                }).then((obj) => {
+                  if (obj.status >= 300) {
+                    return errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
+                  }
+                }).catch((err) => {
+                  errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); })
+                });
+
+              } else if (/잔금/gi.test(data.goodName.trim())) {
+
+                projectQuery["process.status"] = "진행중";
+                projectQuery["process.contract.remain.date"] = new Date();
+                projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
+                projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
+                projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
+
+                await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+                instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
+                  client: client.name,
+                  designer: designer.designer,
+                  emoji: "(방긋)",
+                });
+
+              }
+
+            }
+          }
+
+        } else {
+
+          instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
+            client: client.name,
+            goodName: data.goodName,
+            bankName: data.vactBankName,
+            account: data.VACT_Num,
+            to: data.VACT_Name,
+            amount: autoComma(amount),
+            date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+          });
+
+          message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
+          messageSend({ text: message, channel: "#700_operation" }).then(() => {
+            return ghostRequest("/voice", { text: message });
+          }).catch((err) => {
+            console.log(err);
+          })
+          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+
         }
+
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+        });
+        res.send(JSON.stringify({ message: "success" }));
 
       } else {
 
-        instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
-          client: client.name,
-          goodName: data.goodName,
-          bankName: data.vactBankName,
-          account: data.VACT_Num,
-          to: data.VACT_Name,
-          amount: autoComma(amount),
-          date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+          "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
         });
-
-        message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
-        messageSend({ text: message, channel: "#700_operation" }).then(() => {
-          return ghostRequest("/voice", { text: message });
-        }).catch((err) => {
-          console.log(err);
-        })
-        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+        res.send(JSON.stringify({ message: "success" }));
 
       }
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_ghostClientBill): " + e.message).catch((e) => { console.log(e); });
       res.set({
