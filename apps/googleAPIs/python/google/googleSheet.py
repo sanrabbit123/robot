@@ -65,9 +65,7 @@ class GoogleSheet:
                 "requests": [
                     {
                         "addSheet": {
-                            "properties": {
-                                "title": name,
-                            }
+                            "properties": { "title": name }
                         }
                     }
                 ]
