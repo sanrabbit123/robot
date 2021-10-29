@@ -3357,7 +3357,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         });
         const today = new Date();
         const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
-        messageSend({ text: JSON.stringify(paymentData, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); });
         const convertingData = {
           goodName: paymentData.name,
           goodsName: paymentData.name,
