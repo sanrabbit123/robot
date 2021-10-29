@@ -1009,7 +1009,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   whiteBlock.style.height = "auto";
 }
 
-UniversalEstimationJs.prototype.payComplete = async function (data) {
+UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend = true) {
   const instance = this;
   const { ajaxJson, returnGet } = GeneralJs;
   const { bill, requestNumber, completeInfo } = this;
@@ -1047,7 +1047,9 @@ UniversalEstimationJs.prototype.payComplete = async function (data) {
     }
 
     if (!refresh) {
-      await ajaxJson({ bilid, requestNumber, data }, "/pythonPass_ghostClientBill");
+      if (pythonSend) {
+        await ajaxJson({ bilid, requestNumber, data }, "/pythonPass_ghostClientBill");
+      }
     }
 
     completeInfo.raw = data;
@@ -1193,7 +1195,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       if (convertingData.error === "error") {
         window.alert("결제에 실패하였습니다! 다시 시도해주세요!");
       } else {
-        await this.payComplete(convertingData);
+        await this.payComplete(convertingData, false);
       }
     }
 
@@ -1203,7 +1205,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         mode: "decrypto",
       }, "/inicisPayment", { equal: true });
       if (getObj.mode === "complete") {
-        await this.payComplete(data);
+        await this.payComplete(data, true);
       }
     }
     if (getObj.mode === "fail") {
