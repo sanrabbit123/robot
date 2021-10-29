@@ -95,7 +95,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   }
   const instance = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, findByAttribute, uniqueValue } = GeneralJs;
-  const { totalMother, ea, grayBarWidth, projectMap } = this;
+  const { totalMother, ea, grayBarWidth, belowHeight, projectMap } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   const token = "__split__";
@@ -777,13 +777,60 @@ DesignerJs.prototype.projectDetail = function (desid) {
           const action = this.getAttribute("action");
           const requestNumber = Number(this.getAttribute("request"));
           const cliid = this.getAttribute("cliid");
+          const totalMother = document.querySelector(".totalMother");
+          const zIndex = 2;
+          let cancelBack, whiteBox;
+          let whiteMargin;
 
-          
+          whiteMargin = 40;
+
+          cancelBack = createNode({
+            mother: totalMother,
+            event: {
+              click: function (e) {
+                document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(instance.grayBarWidth) + ea,
+              width: withOut(instance.grayBarWidth, ea),
+              height: withOut(belowHeight, ea),
+              background: colorChip.shadow,
+              zIndex: String(zIndex),
+              animation: "justfadeinmiddle 0.3s ease forwards",
+            }
+          });
+
+          whiteBox = createNode({
+            mother: totalMother,
+            style: {
+              position: "fixed",
+              top: String(whiteMargin) + ea,
+              left: String(instance.grayBarWidth + whiteMargin) + ea,
+              width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
+              height: withOut(belowHeight + (whiteMargin * 2), ea),
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              zIndex: String(zIndex),
+              boxShadow: "0px 3px 15px -9px " + colorChip.darkDarkShadow,
+              animation: "fadeup 0.3s ease forwards",
+            }
+          });
 
 
 
 
-          console.log("this");
+
+
+
+
+
+
+
+
 
 
 
