@@ -488,7 +488,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
             }
           });
 
-          instance.projectWhiteDetail(whiteBox, proid, cliid, requestNumber, desid);
+          instance.projectWhiteDetail(whiteBox, proid, cliid, requestNumber, desid, divisionEntireMap);
         }
       },
       style: {
@@ -538,7 +538,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   this.mainBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, requestNumber, desid) {
+DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, requestNumber, desid, divisionEntireMap) {
   const instance = this;
   const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
   const { ea, projects, clients, designers } = this;
@@ -550,6 +550,20 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
   let titleSize;
   let titleTextBetween;
   let titlePaddingBottom;
+  let areaMother, area;
+  let areaTitleSize;
+  let maxLength;
+  let lengthArr;
+  let areaTitleBottom;
+  let rowMarginTop;
+  let barHeight;
+  let factorSize;
+  let rowFirstMarginTop;
+  let num;
+  let titleHeight;
+  let subTitleHeight;
+  let accumulate;
+  let detailBoxMarginTop;
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -561,9 +575,24 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
 
     baseTop = 40;
     baseLeft = 45;
+    baseBottom = 48;
     titleSize = 21;
+    titleHeight = 30;
+    subTitleHeight = 20;
     titleTextBetween = 10;
-    titlePaddingBottom = 12;
+    titlePaddingBottom = 13;
+    areaTitleSize = 15;
+    rowMarginTop = 25;
+    rowFirstMarginTop = 30;
+    areaTitleBottom = 13;
+    barHeight = 34;
+    factorSize = 13;
+    detailBoxMarginTop = 40;
+    accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
+
+    lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
+    lengthArr.sort((a, b) => { return b - a; });
+    maxLength = lengthArr[0];
 
     base = createNode({
       mother,
@@ -573,16 +602,17 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
         top: String(baseTop) + ea,
         left: String(baseLeft) + ea,
         width: withOut(baseLeft * 2, ea),
-        height: withOut(baseTop * 2, ea),
+        height: withOut(baseTop + baseBottom, ea),
         overflow: "scroll",
       }
-    })
+    });
 
     createNode({
       mother: base,
       style: {
         display: "block",
         position: "relative",
+        height: String(titleHeight) + ea,
         paddingBottom: String(titlePaddingBottom) + ea,
         borderBottom: "1px solid " + colorChip.gray3
       },
@@ -607,19 +637,114 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
           }
         }
       ]
-    })
+    });
+
+    num = 0;
+    for (let [ title, arr ] of divisionEntireMap) {
+
+      arr = arr.flat();
+      areaMother = createNode({
+        mother: base,
+        style: {
+          display: "block",
+          position: "relative",
+          marginTop: String(num !== 0 ? rowMarginTop : rowFirstMarginTop) + ea,
+          width: withOut(0, ea),
+        },
+        children: [
+          {
+            text: title,
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(areaTitleSize) + ea,
+              fontWeight: String(600),
+              height: String(subTitleHeight) + ea,
+              color: colorChip.black,
+            }
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              marginTop: String(areaTitleBottom) + ea,
+              width: String(100) + '%',
+              height: String(barHeight) + ea,
+            }
+          }
+        ]
+      });
+      area = areaMother.children[1];
+
+      for (let i = 0; i < arr.length; i++) {
+        createNode({
+          mother: area,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            height: String(100) + '%',
+            width: "calc(100% / " + String(maxLength) + ")",
+          },
+          children: [
+            {
+              style: {
+                position: "relative",
+                left: String(0),
+                width: String(100) + '%',
+                height: String(75) + '%',
+                borderBottom: "1px solid " + colorChip.gray4,
+                boxSizing: "border-box",
+              }
+            },
+            {
+              style: {
+                top: String(50) + '%',
+                left: String(0),
+                width: String(100) + '%',
+                position: "absolute",
+                height: String(50) + '%',
+                borderLeft: "1px solid " + colorChip.gray4,
+                borderRight: (i === arr.length - 1 ? "1px solid " + colorChip.gray4 : ""),
+                boxSizing: "border-box",
+              }
+            },
+            {
+              text: arr[i],
+              style: {
+                top: String(0),
+                position: "absolute",
+                left: String(0),
+                width: String(100) + '%',
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                textAlign: "center",
+              }
+            }
+          ]
+        });
 
 
+      }
 
+      num++;
+    }
 
-
-
-
-
+    createNode({
+      mother: base,
+      style: {
+        display: "block",
+        position: "relative",
+        marginTop: String(detailBoxMarginTop) + ea,
+        width: String(100) + '%',
+        height: withOut(accumulate, ea),
+        background: colorChip.gray1,
+        borderRadius: String(5) + "px",
+      }
+    });
 
   }
 }
-
 
 DesignerJs.prototype.projectIconSet = function (desid) {
   if (desid === undefined) {
