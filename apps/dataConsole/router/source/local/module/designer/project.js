@@ -488,7 +488,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
             }
           });
 
-          instance.projectWhiteDetail(whiteBox, proid, cliid, requestNumber, desid, divisionEntireMap);
+          instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
         }
       },
       style: {
@@ -538,7 +538,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   this.mainBaseTong = baseTong0;
 }
 
-DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, requestNumber, desid, divisionEntireMap) {
+DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, divisionEntireMap) {
   const instance = this;
   const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
   const { ea, projects, clients, designers } = this;
@@ -564,6 +564,10 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
   let subTitleHeight;
   let accumulate;
   let detailBoxMarginTop;
+  let whiteBoxTop, whiteBoxLeft;
+  let noticeTextSize;
+  let noticeTextTop, noticeTextLeft;
+  let arrowTop, arrowWidth;
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -573,21 +577,31 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
     designer = designers.pick(desid);
     const { request, analytics } = client.requests[requestNumber];
 
-    baseTop = 40;
-    baseLeft = 45;
-    baseBottom = 48;
-    titleSize = 21;
-    titleHeight = 30;
-    subTitleHeight = 20;
-    titleTextBetween = 10;
-    titlePaddingBottom = 13;
-    areaTitleSize = 15;
-    rowMarginTop = 25;
-    rowFirstMarginTop = 30;
-    areaTitleBottom = 13;
-    barHeight = 34;
-    factorSize = 13;
-    detailBoxMarginTop = 40;
+    baseTop = <%% 40, 40, 40, 40, 40 %%>;
+    baseLeft = <%% 45, 45, 45, 45, 45 %%>;
+    baseBottom = <%% 48, 48, 48, 48, 48 %%>;
+    titleSize = <%% 21, 21, 21, 21, 21 %%>;
+    titleHeight = <%% 30, 30, 30, 30, 30 %%>;
+    subTitleHeight = <%% 20, 20, 20, 20, 20 %%>;
+    titleTextBetween = <%% 10, 10, 10, 10, 10 %%>;
+    titlePaddingBottom = <%% 13, 13, 13, 13, 13 %%>;
+    areaTitleSize = <%% 15, 15, 15, 15, 15 %%>;
+    rowMarginTop = <%% 25, 25, 25, 25, 25 %%>;
+    rowFirstMarginTop = <%% 32, 32, 32, 32, 32 %%>;
+    areaTitleBottom = <%% 13, 13, 13, 13, 13 %%>;
+    barHeight = <%% 34, 34, 34, 34, 34 %%>;
+    factorSize = <%% 13, 13, 13, 13, 13 %%>;
+    detailBoxMarginTop = <%% 40, 40, 40, 40, 40 %%>;
+
+    arrowTop = <%% 8, 8, 8, 8, 8 %%>;
+    arrowWidth = <%% 9, 8, 8, 8, 8 %%>;
+
+    whiteBoxTop = <%% 48, 48, 48, 48, 48 %%>;
+    whiteBoxLeft = <%% 20, 20, 20, 20, 20 %%>;
+    noticeTextSize = <%% 14, 14, 14, 14, 14 %%>;
+    noticeTextTop = <%% 18, 18, 18, 18, 18 %%>;
+    noticeTextLeft = <%% 24, 24, 24, 24, 24 %%>;
+
     accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
 
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
@@ -650,6 +664,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
           position: "relative",
           marginTop: String(num !== 0 ? rowMarginTop : rowFirstMarginTop) + ea,
           width: withOut(0, ea),
+          opacity: arr.includes(action) ? String(1) : String(0.4),
         },
         children: [
           {
@@ -711,19 +726,43 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
             {
               text: arr[i],
               style: {
-                top: String(0),
                 position: "absolute",
+                top: String(0),
                 left: String(0),
                 width: String(100) + '%',
                 fontSize: String(factorSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
+                fontWeight: String(arr[i] === action ? 600 : 400),
+                color: (arr[i] === action ? colorChip.green : colorChip.black),
                 textAlign: "center",
               }
-            }
+            },
+            {
+              style: {
+                display: "flex",
+                top: String(75) + '%',
+                left: String(0),
+                width: String(100) + '%',
+                position: "absolute",
+                height: String(50) + '%',
+                justifyContent: "center",
+                textAlign: "center",
+                paddingTop: String(arrowTop) + ea,
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnArrow("right", colorChip.green),
+                  style: {
+                    display: "inline-block",
+                    width: String(arrowWidth),
+                    transform: "rotate(270deg)",
+                    opacity: String(arr[i] === action ? 1 : 0),
+                  }
+                }
+              ]
+            },
           ]
         });
-
 
       }
 
@@ -738,9 +777,39 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
         marginTop: String(detailBoxMarginTop) + ea,
         width: String(100) + '%',
         height: withOut(accumulate, ea),
-        background: colorChip.gray1,
+        background: colorChip.gray0,
         borderRadius: String(5) + "px",
-      }
+      },
+      children: [
+        {
+          text: "<b%" + action + "%b>&nbsp;&nbsp;check list",
+          style: {
+            position: "absolute",
+            top: String(noticeTextTop) + ea,
+            left: String(noticeTextLeft) + ea,
+            fontSize: String(noticeTextSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.green
+          },
+          bold: {
+            fontSize: String(noticeTextSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black
+          }
+        },
+        {
+          style: {
+            position: "absolute",
+            top: String(whiteBoxTop) + ea,
+            left: String(whiteBoxLeft) + ea,
+            width: withOut(whiteBoxLeft * 2, ea),
+            height: withOut(whiteBoxTop + whiteBoxLeft, ea),
+            background: colorChip.white,
+            borderRadius: String(5) + "px",
+            boxShadow: "0px 2px 11px -9px " + colorChip.shadow
+          }
+        }
+      ]
     });
 
   }
