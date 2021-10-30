@@ -145,7 +145,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   let requestNumber;
 
   designer = this.designers.pick(desid);
-  divisionEntireMap = projectMap.action.itemMap.filter((arr) => { return !/없/gi.test(arr[0]); });
+  divisionEntireMap = projectMap.action.itemMap;
   divisionMap = [];
   for (let arr of divisionEntireMap) {
     divisionMap = divisionMap.concat(arr[1]);
@@ -203,337 +203,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   intend = <%% 16, 16, 16, 16, 4 %%>;
   between = <%% 8, 8, 8, 8, 1 %%>;
 
-  cards = [
-    {
-      name: "배창규",
-      proid: "p1801_aa01s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 작성중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa02s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 작성중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa03s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 작성중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa04s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 작성중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa05s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 작성중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa06s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 공유",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa07s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 공유",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa08s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 공유",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa09s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 공유",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa10s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 작성중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa11s",
-      cliid: "c1801_aa01s",
-      action: "의뢰서 작성중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa12s",
-      cliid: "c1801_aa01s",
-      action: "현장미팅 피드백",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa13s",
-      cliid: "c1801_aa01s",
-      action: "현장미팅 피드백",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa14s",
-      cliid: "c1801_aa01s",
-      action: "현장미팅 피드백",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa15s",
-      cliid: "c1801_aa01s",
-      action: "현장미팅 피드백",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa16s",
-      cliid: "c1801_aa01s",
-      action: "현장미팅 피드백",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa17s",
-      cliid: "c1801_aa01s",
-      action: "계약서 안내",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa018s",
-      cliid: "c1801_aa01s",
-      action: "계약서 안내",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa19s",
-      cliid: "c1801_aa01s",
-      action: "계약서 안내",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa20s",
-      cliid: "c1801_aa01s",
-      action: "잔금 안내",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa21s",
-      cliid: "c1801_aa01s",
-      action: "시작 대기",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa22s",
-      cliid: "c1801_aa01s",
-      action: "시작 대기",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa23s",
-      cliid: "c1801_aa01s",
-      action: "시작 대기",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa24s",
-      cliid: "c1801_aa01s",
-      action: "1차 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa25s",
-      cliid: "c1801_aa01s",
-      action: "1차 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa26s",
-      cliid: "c1801_aa01s",
-      action: "1차 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa27s",
-      cliid: "c1801_aa01s",
-      action: "1차 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa28s",
-      cliid: "c1801_aa01s",
-      action: "1차 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa29s",
-      cliid: "c1801_aa01s",
-      action: "1차 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa30s",
-      cliid: "c1801_aa01s",
-      action: "1차 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa31s",
-      cliid: "c1801_aa01s",
-      action: "1차 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa32s",
-      cliid: "c1801_aa01s",
-      action: "수정 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa33s",
-      cliid: "c1801_aa01s",
-      action: "수정 제안",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa34s",
-      cliid: "c1801_aa01s",
-      action: "시공 진행",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa35s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa36s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa37s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa38s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa39s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa40s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa41s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa42s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa43s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa44s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa45s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa46s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-    {
-      name: "배창규",
-      proid: "p1801_aa47s",
-      cliid: "c1801_aa01s",
-      action: "배송중",
-      requestNumber: 0,
-    },
-  ];
+  cards = designer.projects;
 
   divideArr = [];
   sizeArr = [];
@@ -750,10 +420,10 @@ DesignerJs.prototype.projectDetail = function (desid) {
   this.whiteCards = [];
   for (let obj of cards) {
     whiteCard = createNode({
-      mother: division.get(obj.action),
+      mother: division.get(obj.process.action),
       attribute: {
         kinds: "card",
-        action: obj.action,
+        action: obj.process.action,
         proid: obj.proid,
         cliid: obj.cliid,
         draggable: "true",
@@ -783,7 +453,6 @@ DesignerJs.prototype.projectDetail = function (desid) {
           let whiteMargin;
 
           whiteMargin = 40;
-
           cancelBack = createNode({
             mother: totalMother,
             event: {
@@ -803,7 +472,6 @@ DesignerJs.prototype.projectDetail = function (desid) {
               animation: "justfadeinmiddle 0.3s ease forwards",
             }
           });
-
           whiteBox = createNode({
             mother: totalMother,
             style: {
@@ -820,28 +488,13 @@ DesignerJs.prototype.projectDetail = function (desid) {
             }
           });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          instance.projectWhiteDetail(whiteBox, proid, cliid, requestNumber, desid);
         }
       },
       style: {
         display: "inline-block",
         position: "relative",
-        width: String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.action); })].length - 1]) + ea,
+        width: String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea,
         height: String(fixedHeightSize) + ea,
         marginLeft: String(cardMagin) + ea,
         marginTop: String(cardMagin) + ea,
@@ -884,6 +537,35 @@ DesignerJs.prototype.projectDetail = function (desid) {
 
   this.mainBaseTong = baseTong0;
 }
+
+DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, requestNumber, desid) {
+  const instance = this;
+  const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { ea, projects, clients, designers } = this;
+  let pIndex, cIndex;
+  let project, client, designer;
+  pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
+  cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
+  if (pIndex !== -1 && cIndex !== -1) {
+    project = projects[pIndex];
+    client = clients[cIndex];
+    designer = designers.pick(desid);
+    const { request, analytics } = client.requests[requestNumber];
+
+    console.log(project, client, designer);
+    console.log(request, analytics)
+
+
+
+    
+
+
+
+
+
+  }
+}
+
 
 DesignerJs.prototype.projectIconSet = function (desid) {
   if (desid === undefined) {

@@ -191,6 +191,9 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.requestDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
+          if (typeof e.__asyncCallBack__ === "function") {
+            e.__asyncCallBack__();
+          }
         });
         instance.mode = modes[2];
         colorFunc.call(this);
@@ -881,6 +884,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     let searchResult;
     let projects, clients;
     let targetIndex;
+    let eventObject;
 
     if (!middleMode) {
       designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
@@ -991,21 +995,26 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       }
       if (targetIndex !== null) {
 
+        eventObject = {
+          __asyncCallBack__: () => {
+            for (let box of instance.requestBoxes) {
+              if (box.getAttribute("cliid") === getObj.cliid.trim()) {
+                box.click();
+              }
+            }
+          }
+        };
+
         if (document.querySelectorAll(".leftMenus").length > 0) {
-          this.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex]);
+          this.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex], eventObject);
         } else {
           this.menuMap[targetIndex].event.call({
             getAttribute: (index) => {
               return targetIndex;
             }
-          });
+          }, eventObject);
         }
 
-        for (let box of this.requestBoxes) {
-          if (box.getAttribute("cliid") === getObj.cliid.trim()) {
-            box.click();
-          }
-        }
       }
     }
 
