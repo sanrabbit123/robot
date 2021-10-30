@@ -544,6 +544,13 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
   const { ea, projects, clients, designers } = this;
   let pIndex, cIndex;
   let project, client, designer;
+  let base;
+  let baseTop;
+  let baseLeft;
+  let titleSize;
+  let titleTextBetween;
+  let titlePaddingBottom;
+
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
   if (pIndex !== -1 && cIndex !== -1) {
@@ -552,12 +559,59 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, proid, cliid, reques
     designer = designers.pick(desid);
     const { request, analytics } = client.requests[requestNumber];
 
-    console.log(project, client, designer);
-    console.log(request, analytics)
+    baseTop = 40;
+    baseLeft = 45;
+    titleSize = 21;
+    titleTextBetween = 10;
+    titlePaddingBottom = 12;
+
+    base = createNode({
+      mother,
+      style: {
+        display: "block",
+        position: "relative",
+        top: String(baseTop) + ea,
+        left: String(baseLeft) + ea,
+        width: withOut(baseLeft * 2, ea),
+        height: withOut(baseTop * 2, ea),
+        overflow: "scroll",
+      }
+    })
+
+    createNode({
+      mother: base,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingBottom: String(titlePaddingBottom) + ea,
+        borderBottom: "1px solid " + colorChip.gray3
+      },
+      children: [
+        {
+          text: "프로젝트 관리 :",
+          style: {
+            display: "inline-block",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+          }
+        },
+        {
+          text: client.name,
+          style: {
+            display: "inline-block",
+            fontSize: String(titleSize) + ea,
+            fontWeight: String(300),
+            color: colorChip.green,
+            marginLeft: String(titleTextBetween) + ea,
+          }
+        }
+      ]
+    })
 
 
 
-    
+
 
 
 
