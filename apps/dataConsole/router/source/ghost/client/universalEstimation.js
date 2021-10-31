@@ -1093,6 +1093,10 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       window.location.href = this.frontPage;
     }
     const { needs, cliid } = getObj;
+    if (typeof needs !== "string") {
+      alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
     if (needs.split(',').length !== 4) {
       alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
