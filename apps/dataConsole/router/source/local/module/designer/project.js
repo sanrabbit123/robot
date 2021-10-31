@@ -789,12 +789,12 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
             left: String(noticeTextLeft) + ea,
             fontSize: String(noticeTextSize) + ea,
             fontWeight: String(400),
-            color: colorChip.green
+            color: colorChip.green,
           },
           bold: {
             fontSize: String(noticeTextSize) + ea,
             fontWeight: String(600),
-            color: colorChip.black
+            color: colorChip.black,
           }
         },
         {
