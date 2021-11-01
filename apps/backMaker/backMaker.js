@@ -1600,6 +1600,77 @@ BackMaker.prototype.getServiceByKey = async function (key, option = { withTools:
   }
 }
 
+BackMaker.prototype.getServicesByKind = async function (kind, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let MONGOC;
+  if (option.fromLocal === true) {
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  } else {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  }
+  const button = "service";
+  let { Service, Services, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
+  try {
+    let tong, servicesArr;
+    let sortQuery;
+    let kindArr;
+    let newTong;
+
+    if (option.sort === undefined) {
+      sortQuery = { "date": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      if (option.limit !== undefined) {
+        tong = await MONGOC.db(`miro81`).collection(button).find({ kind }).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await MONGOC.db(`miro81`).collection(button).find({ kind }).sort(sortQuery).toArray();
+      }
+      await MONGOC.close();
+    } else {
+      if (option.limit !== undefined) {
+        tong = await option.selfMongo.db(`miro81`).collection(button).find({ kind }).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await option.selfMongo.db(`miro81`).collection(button).find({ kind }).sort(sortQuery).toArray();
+      }
+    }
+
+    tong.sort((a, b) => {
+      return b.date.valueOf() - a.date.valueOf();
+    });
+    newTong = [];
+    kindArr = [];
+    for (let obj of tong) {
+      if (!kindArr.includes(obj.kind)) {
+        newTong.push(obj);
+      }
+      kindArr.push(obj.kind);
+    }
+
+    if (!option.withTools) {
+      servicesArr = new Services();
+      for (let i of newTong) {
+        servicesArr.push(new Service(i));
+      }
+    } else {
+      Service = Tools.withTools(Service);
+      Services = Tools.withToolsArr(Services);
+      servicesArr = new Services();
+      for (let i of newTong) {
+        servicesArr.push(new Service(i));
+      }
+    }
+
+    return servicesArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BackMaker.prototype.getServicesByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
   const instance = this;
   const { mongo, mongoinfo, mongolocalinfo } = this.mother;

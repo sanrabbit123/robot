@@ -8,7 +8,7 @@ const ChecklistChildrenFactor = function (json) {
 
 ChecklistChildrenFactor.prototype.toNormal = function () {
   let obj = {};
-  obj.title = this.json;
+  obj.title = this.title;
   obj.contents = this.contents;
   return obj;
 }

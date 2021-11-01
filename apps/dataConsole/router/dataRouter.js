@@ -1358,6 +1358,50 @@ DataRouter.prototype.rou_post_createDocument = function () {
   return obj;
 }
 
+DataRouter.prototype.rou_post_getServices = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/getServices", "/getServiceByKey", "/getServicesByKind" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.url === "/getServices") {
+        if (req.body.whereQuery === undefined) {
+          throw new Error("invalid post");
+        }
+        const { whereQuery } = equalJson(req.body);
+        const services = await back.getServicesByQuery(whereQuery, { selfMongo: instance.mongo, sort: { date: -1 } });
+        res.send(JSON.stringify(services.toNormal()));
+      } else if (req.url === "/getServiceByKey") {
+        if (req.body.key === undefined) {
+          throw new Error("invaild post");
+        }
+        const { key } = equalJson(req.body);
+        const service = await back.getServiceByKey(key, { selfMongo: instance.mongo });
+        res.send(JSON.stringify(service.toNormal()));
+      } else if (req.url === "/getServicesByKind") {
+        if (req.body.kind === undefined) {
+          throw new Error("invaild post");
+        }
+        const { kind } = equalJson(req.body);
+        const services = await back.getServicesByKind(kind, { selfMongo: instance.mongo });
+        res.send(JSON.stringify(services.toNormal()));
+      }
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_getServices): " + e.message);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 DataRouter.prototype.rou_post_getClientReport = function () {
   const instance = this;
   const back = this.back;
@@ -2739,64 +2783,6 @@ DataRouter.prototype.rou_post_parsingProposal = function () {
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_parsingProposal): " + e.message).catch((e) => { console.log(e); });
-      console.log(e);
-    }
-  }
-  return obj;
-}
-
-DataRouter.prototype.rou_post_manageDeadline = function () {
-  const instance = this;
-  const back = this.back;
-  const { equalJson } = this.mother;
-  let obj = {};
-  obj.link = "/manageDeadline";
-  obj.func = async function (req, res) {
-    try {
-      if (req.body.json === undefined) {
-        throw new Error("must be json");
-      }
-      const { json } = req.body;
-      const obj = equalJson(json);
-      const now = new Date();
-      let rows, resultObj;
-
-      if (obj.mode === "set") {
-
-        rows = await back.mongoRead("deadline", { name: obj.name }, { console: true });
-        if (rows.length > 0) {
-          await back.mongoUpdate("deadline", [ { name: obj.name }, { deadline: new Date(obj.deadline), middleline: new Date(obj.middleline) } ], { console: true });
-        } else {
-          await back.mongoCreate("deadline", { deadline: new Date(obj.deadline), middleline: new Date(obj.middleline), name: obj.name }, { console: true });
-        }
-
-        resultObj = { message: "done" };
-
-      } else if (obj.mode === "get") {
-
-        rows = await back.mongoRead("deadline", { name: obj.name }, { console: true });
-        if (rows.length > 0) {
-          resultObj = {};
-          if (now.valueOf() > rows[0].middleline.valueOf()) {
-            resultObj.expired = true;
-          } else {
-            resultObj.expired = false;
-          }
-          if (now.valueOf() > rows[0].deadline.valueOf()) {
-            resultObj.dead = true;
-          } else {
-            resultObj.dead = false;
-          }
-        } else {
-          resultObj = { expired: true, dead: true };
-        }
-
-      }
-
-      res.set("Content-Type", "application/json");
-      res.send(JSON.stringify(resultObj));
-    } catch (e) {
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_manageDeadline): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }

@@ -196,7 +196,7 @@ FirstMeetingJs.prototype.tableStatic = function (designer, project, client, clie
   };
 }
 
-FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
+FirstMeetingJs.prototype.meetingWordings = function (service) {
   const instance = this;
   const { ea, media } = this;
   const mobile = media[4];
@@ -204,6 +204,8 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
   const colon = "&nbsp;" + ":" + "&nbsp;&nbsp;&nbsp;";
   class StyleCurationWordings {
     constructor() {
+      let tempObj;
+
       this.wordings = {};
       this.wordings.init = {
         title: [
@@ -240,45 +242,16 @@ FirstMeetingJs.prototype.meetingWordings = function (liteMode = false) {
 
       this.wordings.check = {};
       this.wordings.check.title = [ "체크리스트" ];
-      this.wordings.check.matrix = [
-        {
-          title: "디자이너가 진행할 3가지",
-          contents: [
-            "<u%현장 조사%u>" + colon + "현장에 대한 <b%특이사항 파악과 실측이 중요%b>합니다. 현장 방문이 어려운 경우, 현 거주지 또는 외부에서 만나실 수 있지만 제품 구매 및 시공 계약 전의 현장 방문은 필수입니다.",
-            "<u%니즈 조사%u>" + colon + "디자이너는 고객님이 전송해주신 자료를 바탕으로 <b%미팅 사전 준비를 합니다.%b> 그리고 <b%현장에서 고객님의 이야기를 들어 니즈를 파악%b>합니다.",
-            "<u%컨셉 잡기%u>" + colon + "컨셉은 <b%모든 디자인의 기준이 되므로 매우 중요%b>합니다. 이미지 기반의 제안 및 고객님의 동의 과정을 통해서 이후 디자인 작업이 진행되고, 컨셉은 계속 변경할 수 없습니다.",
-          ],
-        },
-        {
-          title: "현장 조사 관련",
-          contents: [
-            "<u%도면 확인%u>" + colon + "<b%현장의 도면을 준비해주세요.%b> 적절한 도면이 없는 경우 실측을 통해 디자이너가 기록하지만 시간이 지체될 수 있습니다.",
-            "<u%실측%u>" + colon + "도면이 있다고 해도 실제와 다를 수 있습니다. <b%도면보다 실측이 더 중요하므로 디자이너는 반드시 실측을 진행%b>합니다.",
-          ],
-        },
-        {
-          title: "니즈 조사 관련",
-          contents: [
-            "<u%예산 확인%u>" + colon + "니즈와 항상 더불어 고려해야 하는 것은 예산입니다. 디자이너는 <b%예산에 대한 범위 확인과 어떻게 나누어 쓸 지를 파악%b>하게 됩니다.",
-            "<u%시공 조정%u>" + colon + "디자이너는 고객님의 니즈와 예산의 균형적인 분배, 기존 현장의 상태를 <b%종합적으로 판단하여 시공의 범위를 조정%b>하게 됩니다.",
-          ],
-        },
-        {
-          title: "컨셉 잡기 관련",
-          contents: [
-            "<u%이미지 기반%u>" + colon + "추상적인 단어와 문장들로만 컨셉을 잡는 것이 아니라, <b%사진이나 이미지 등을 활용하여 디자인 컨셉%b>을 잡습니다. 컨셉 의논이 길게 소요되는 경우 <b%프로젝트 시작 후의 1차 시안에 해당 작업이 포함될 수 있습니다.%b>",
-            "<u%용도 확인%u>" + colon + "고객님의 라이프 스타일과 가족 구성원을 기반으로 <b%공간 용도와 동선을 기획%b>합니다.",
-          ],
-        },
-        {
-          title: "기타 주의 사항",
-          contents: [
-            "<u%디자이너 변경%u>" + colon + "현장 미팅 후 디자이너와 잘 맞지 않는다고 판단될 시, <b%최대 1회까지 디자이너 변경을 요청%b>하실 수 있습니다. (거리로 인해 출장비가 발생한 경우, 변경 디자이너에 대한 출장비는 재발생됩니다.)",
-            "<u%다음 단계 안내%u>" + colon + "미팅 완료 후 계약서 작성과 잔금 결제가 완료되면 디자이너의 디자인 작업이 시작됩니다.",
-            "<u%진행 취소시%u>" + colon + "현장 미팅 이후 진행 자체를 취소하실 시 <b%계약금은 환급되지 않습니다.%b>",
-          ]
+      this.wordings.check.matrix = [];
+      for (let { title, children } of service.setting.contents.checklist) {
+        tempObj = {};
+        tempObj.title = title;
+        tempObj.contents = [];
+        for (let obj of children) {
+          tempObj.contents.push(`<u%${obj.title}%u>${colon}${obj.contents}`);
         }
-      ];
+        this.wordings.check.matrix.push(tempObj);
+      }
 
       this.wordings.photo = {};
       this.wordings.photo.title = [ "전송된 사진" ];
@@ -1755,6 +1728,7 @@ FirstMeetingJs.prototype.launching = async function (loading) {
     let whereQuery;
     let designers, designer;
     let requestNumber;
+    let service;
 
     if (getObj.proid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -1803,7 +1777,8 @@ FirstMeetingJs.prototype.launching = async function (loading) {
     [ designer ] = designers;
     this.designer = designer;
 
-    this.wordings = this.meetingWordings();
+    service = await ajaxJson({ key: "firstMeeting" }, "/getServiceByKey", { equal: true });
+    this.wordings = this.meetingWordings(service);
 
     await this.mother.ghostClientLaunching({
       name: "firstMeeting",
