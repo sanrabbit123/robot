@@ -251,6 +251,181 @@ DesignerJs.prototype.possibleContents = function (desid, realtimeDesigner) {
   this.mainBaseTong = baseTong0;
 }
 
+DesignerJs.prototype.possibleUpdate = async function (desid) {
+  const instance = this;
+  const { ajaxJson, createNode, withOut, colorChip, setQueue, equalJson, dateToString, stringToDate, sleep, getCookiesAll } = GeneralJs;
+  const { totalMother, ea, grayBarWidth, belowHeight, possibleConst } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
+  const designer = this.designers.pick(desid);
+  const projects = designer.projects === undefined ? [] : designer.projects;
+  const cookies = getCookiesAll();
+  try {
+    const dateDoms = instance.dateDoms;
+    const onDoms = dateDoms.filter((d) => { return d.getAttribute("toggle") === "on"; });
+    const rawDates = onDoms.map((d) => { return new Date(d.getAttribute("value")); });
+    let removeDates, tempDate, tempDate2;
+    let filteredDates;
+    let possible;
+    let tempObj;
+    let num;
+    let whereQuery, updateQuery;
+    let date;
+    let finalPossible;
+    let noneIndex;
+    let length;
+    let onIndex;
+    let boo, tempStr, tempIndex;
+    let additionalPossible;
+    let additionalPossibleMatrix, additionalPossibleMatrixTemp, additionalPossibleMatrixRaw, additionalPossibleMatrixPast;
+
+    removeDates = [];
+    for (let i = 1; i < rawDates.length - 1; i++) {
+      tempDate = new Date(JSON.stringify(rawDates[i - 1]).slice(1, -1));
+      tempDate2 = new Date(JSON.stringify(rawDates[i + 1]).slice(1, -1));
+      tempDate.setDate(tempDate.getDate() + 1);
+      tempDate2.setDate(tempDate2.getDate() - 1);
+      if (dateToString(tempDate) === dateToString(rawDates[i]) && dateToString(tempDate2) === dateToString(rawDates[i])) {
+        removeDates.push(dateToString(rawDates[i]));
+      }
+    }
+
+    onDoms.sort((a, b) => { return (new Date(a.getAttribute("value"))).valueOf() - (new Date(b.getAttribute("value"))).valueOf(); });
+    filteredDates = onDoms.filter((d, index) => { const boo = !removeDates.includes(dateToString(new Date(d.getAttribute("value")))); if (boo) { d.setAttribute("onindex", String(index)); } return boo; });
+
+    possible = [];
+    tempObj = {};
+    for (let dom of filteredDates) {
+      onIndex = Number(dom.getAttribute("onindex"));
+      date = new Date(dom.getAttribute("value"));
+      tempDate = new Date(JSON.stringify(date).slice(1, -1));
+      tempDate.setDate(tempDate.getDate() + 1);
+      if (removeDates.includes(dateToString(tempDate))) {
+        tempObj.start = date;
+        tempObj.startIndex = onIndex;
+      } else {
+        if (tempObj.start === undefined) {
+          tempObj.start = date;
+          tempObj.startIndex = onIndex;
+        }
+        tempObj.end = date;
+        tempObj.endIndex = onIndex;
+        tempObj.totalMatrix = [];
+        for (let i = tempObj.startIndex; i < tempObj.endIndex + 1; i++) {
+          tempObj.totalMatrix.push(equalJson(onDoms[i].getAttribute("matrix")));
+        }
+        tempObj.matrix = equalJson(dom.getAttribute("matrix"));
+        possible.push(tempObj);
+        tempObj = {};
+      }
+    }
+
+    noneIndex = [];
+    for (let i = 0; i < possible.length - 1; i++) {
+      if (dateToString(possible[i].start) === dateToString(possible[i].end)) {
+        if (dateToString(possible[i + 1].start) === dateToString(possible[i + 1].end)) {
+          tempDate = new Date(JSON.stringify(possible[i].start).slice(1, -1));
+          tempDate.setDate(tempDate.getDate() + 1);
+          if (dateToString(tempDate) === dateToString(possible[i + 1].start)) {
+            possible[i].end = new Date(JSON.stringify(possible[i + 1].end).slice(1, -1));
+            noneIndex.push(i + 1);
+          }
+        }
+      }
+    }
+
+    finalPossible = [];
+    length = possible.length;
+    for (let i = 0; i < length; i++) {
+      if (!noneIndex.includes(i)) {
+        finalPossible.push(possible[i]);
+      }
+    }
+
+    finalPossible = finalPossible.filter((obj) => { return obj.matrix.length > 0; });
+    finalPossible = finalPossible.filter((obj) => { return obj.matrix.reduce((acc, current) => { return acc + current }) !== 0; });
+
+    additionalPossible = [];
+    for (let obj of finalPossible) {
+      tempStr = JSON.stringify(obj.matrix);
+      boo = !obj.totalMatrix.every((arr) => { return JSON.stringify(arr) === tempStr });
+      if (boo) {
+        additionalPossibleMatrixRaw = obj.totalMatrix.map((arr) => { return JSON.stringify(arr); });
+        additionalPossibleMatrix = [];
+        additionalPossibleMatrixPast = null;
+        additionalPossibleMatrixTemp = null;
+        for (let i = 0; i < additionalPossibleMatrixRaw.length; i++) {
+          if (additionalPossibleMatrixRaw[i] !== additionalPossibleMatrixPast) {
+            if (Array.isArray(additionalPossibleMatrixTemp)) {
+              additionalPossibleMatrixTemp.push(i - 1);
+              additionalPossibleMatrix.push(additionalPossibleMatrixTemp);
+            }
+            additionalPossibleMatrixTemp = [];
+            additionalPossibleMatrixTemp.push(i);
+          }
+          additionalPossibleMatrixPast = additionalPossibleMatrixRaw[i];
+        }
+        if (Array.isArray(additionalPossibleMatrixTemp)) {
+          additionalPossibleMatrixTemp.push(additionalPossibleMatrixRaw.length - 1);
+          additionalPossibleMatrix.push(additionalPossibleMatrixTemp);
+        }
+        for (let [ start, end ] of additionalPossibleMatrix) {
+          if (equalJson(onDoms[obj.startIndex + start].getAttribute("matrix")).reduce((acc, current) => { return acc + current }) !== 0) {
+            additionalPossible.push({
+              start: new Date(onDoms[obj.startIndex + start].getAttribute("value")),
+              end: new Date(onDoms[obj.startIndex + end].getAttribute("value")),
+              matrix: equalJson(onDoms[obj.startIndex + start].getAttribute("matrix"))
+            });
+          }
+        }
+      }
+      obj.removeTarget = boo;
+    }
+
+    finalPossible = finalPossible.filter((obj) => { return !obj.removeTarget; }).map((obj) => { return { start: obj.start, end: obj.end, matrix: obj.matrix }; }).concat(additionalPossible);
+    finalPossible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf(); });
+
+    whereQuery = { desid };
+    updateQuery = { possible: finalPossible };
+
+    await ajaxJson({
+      mode: "update",
+      db: "console",
+      collection: "realtimeDesigner",
+      whereQuery,
+      updateQuery,
+    }, "/generalMongo", { equal: true });
+
+    instance.realtimeDesigner.possible = finalPossible;
+
+    ajaxJson({
+      mode: "sse",
+      db: "console",
+      collection: "sse_possibleDesigner",
+      log: true,
+      who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+      updateQuery: {
+        desid,
+        type: "possible",
+        possible: finalPossible
+      }
+    }, "/generalMongo").then(() => {
+      return ajaxJson({
+        page: "possible",
+        mode: "update",
+        who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
+        update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
+        desid,
+      }, "/ghostDesigner_updateAnalytics");
+    }).catch((err) => {
+      console.log(err);
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDesigner) {
   const instance = this;
   const { ajaxJson, createNode, withOut, colorChip, getCookiesAll, getDateMatrix, findByAttribute, setQueue, setDebounce, equalJson, dateToString, stringToDate, isMac, swipePatch, sleep } = GeneralJs;
@@ -321,7 +496,6 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     let updateQuery;
     let tempDate, keyName;
     let updateBoo;
-    let possibleUpdate;
     let targetDom;
     let pannelDom, pannelDoms;
     let projectPannel, calendarPannel;
@@ -336,6 +510,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
     let monthSize;
     let mobileOuterMargin;
 
+    this.desid = desid;
     this.designer = designer;
 
     if (realtimeDesigner.length === 0) {
@@ -646,7 +821,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                     if (mobile) {
                       dom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
                     }
-                    dom.querySelector("aside").textContent = equalJson(dom.getAttribute("matrix")).map((i) => { return String(i); }).join(",");
+                    dom.querySelector("aside").textContent = equalJson(dom.getAttribute("matrix")).reduce((acc, current) => { return (acc >= current ? acc : current); });
                   }
                 }
                 setQueue(() => {
@@ -721,158 +896,6 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
         }
       }
     ];
-
-    possibleUpdate = async function () {
-      try {
-        const dateDoms = instance.dateDoms;
-        const onDoms = dateDoms.filter((d) => { return d.getAttribute("toggle") === "on"; });
-        const rawDates = onDoms.map((d) => { return new Date(d.getAttribute("value")); });
-        let removeDates, tempDate, tempDate2;
-        let filteredDates;
-        let possible;
-        let tempObj;
-        let num;
-        let whereQuery, updateQuery;
-        let date;
-        let finalPossible;
-        let noneIndex;
-        let length;
-        let onIndex;
-        let boo, tempStr, tempIndex;
-        let additionalPossible;
-
-        removeDates = [];
-        for (let i = 1; i < rawDates.length - 1; i++) {
-          tempDate = new Date(JSON.stringify(rawDates[i - 1]).slice(1, -1));
-          tempDate2 = new Date(JSON.stringify(rawDates[i + 1]).slice(1, -1));
-          tempDate.setDate(tempDate.getDate() + 1);
-          tempDate2.setDate(tempDate2.getDate() - 1);
-          if (dateToString(tempDate) === dateToString(rawDates[i]) && dateToString(tempDate2) === dateToString(rawDates[i])) {
-            removeDates.push(dateToString(rawDates[i]));
-          }
-        }
-
-        onDoms.sort((a, b) => { return (new Date(a.getAttribute("value"))).valueOf() - (new Date(b.getAttribute("value"))).valueOf(); });
-        filteredDates = onDoms.filter((d, index) => { const boo = !removeDates.includes(dateToString(new Date(d.getAttribute("value")))); if (boo) { d.setAttribute("onindex", String(index)); } return boo; });
-
-        possible = [];
-        tempObj = {};
-        for (let dom of filteredDates) {
-          onIndex = Number(dom.getAttribute("onindex"));
-          date = new Date(dom.getAttribute("value"));
-          tempDate = new Date(JSON.stringify(date).slice(1, -1));
-          tempDate.setDate(tempDate.getDate() + 1);
-          if (removeDates.includes(dateToString(tempDate))) {
-            tempObj.start = date;
-            tempObj.startIndex = onIndex;
-          } else {
-            if (tempObj.start === undefined) {
-              tempObj.start = date;
-              tempObj.startIndex = onIndex;
-            }
-            tempObj.end = date;
-            tempObj.endIndex = onIndex;
-            tempObj.totalMatrix = [];
-            for (let i = tempObj.startIndex; i < tempObj.endIndex + 1; i++) {
-              tempObj.totalMatrix.push(equalJson(onDoms[i].getAttribute("matrix")));
-            }
-            tempObj.matrix = equalJson(dom.getAttribute("matrix"));
-            possible.push(tempObj);
-            tempObj = {};
-          }
-        }
-
-        noneIndex = [];
-        for (let i = 0; i < possible.length - 1; i++) {
-          if (dateToString(possible[i].start) === dateToString(possible[i].end)) {
-            if (dateToString(possible[i + 1].start) === dateToString(possible[i + 1].end)) {
-              tempDate = new Date(JSON.stringify(possible[i].start).slice(1, -1));
-              tempDate.setDate(tempDate.getDate() + 1);
-              if (dateToString(tempDate) === dateToString(possible[i + 1].start)) {
-                possible[i].end = new Date(JSON.stringify(possible[i + 1].end).slice(1, -1));
-                noneIndex.push(i + 1);
-              }
-            }
-          }
-        }
-
-        finalPossible = [];
-        length = possible.length;
-        for (let i = 0; i < length; i++) {
-          if (!noneIndex.includes(i)) {
-            finalPossible.push(possible[i]);
-          }
-        }
-
-        finalPossible = finalPossible.filter((obj) => { return obj.matrix.length > 0; });
-        additionalPossible = [];
-        for (let obj of finalPossible) {
-          tempStr = JSON.stringify(obj.matrix);
-          boo = false;
-          for (let i = 0; i < obj.totalMatrix.length; i++) {
-            if (tempStr !== JSON.stringify(obj.totalMatrix[i])) {
-              boo = true;
-              tempIndex = i;
-            }
-          }
-          if (boo) {
-            additionalPossible.push({
-              start: new Date(onDoms[obj.startIndex].getAttribute("value")),
-              end: new Date(onDoms[obj.startIndex + tempIndex].getAttribute("value")),
-              matrix: equalJson(onDoms[obj.startIndex + tempIndex].getAttribute("matrix"))
-            });
-            additionalPossible.push({
-              start: new Date(onDoms[obj.startIndex + tempIndex + 1].getAttribute("value")),
-              end: new Date(onDoms[obj.endIndex].getAttribute("value")),
-              matrix: equalJson(onDoms[obj.endIndex].getAttribute("matrix"))
-            });
-          }
-          obj.removeTarget = boo;
-        }
-
-        finalPossible = finalPossible.filter((obj) => { return !obj.removeTarget; }).map((obj) => { return { start: obj.start, end: obj.end, matrix: obj.matrix }; }).concat(additionalPossible);
-        finalPossible.sort((a, b) => { return a.start.valueOf() - b.start.valueOf(); });
-
-        whereQuery = { desid };
-        updateQuery = { possible: finalPossible };
-
-        await ajaxJson({
-          mode: "update",
-          db: "console",
-          collection: "realtimeDesigner",
-          whereQuery,
-          updateQuery,
-        }, "/generalMongo", { equal: true });
-
-        instance.realtimeDesigner.possible = finalPossible;
-
-        ajaxJson({
-          mode: "sse",
-          db: "console",
-          collection: "sse_possibleDesigner",
-          log: true,
-          who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-          updateQuery: {
-            desid,
-            type: "possible",
-            possible: finalPossible
-          }
-        }, "/generalMongo").then(() => {
-          return ajaxJson({
-            page: "possible",
-            mode: "update",
-            who: (instance.middleMode ? instance.designer.information.phone : GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail),
-            update: [ Object.keys(updateQuery), Object.values(updateQuery) ],
-            desid,
-          }, "/ghostDesigner_updateAnalytics");
-        }).catch((err) => {
-          console.log(err);
-        });
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
 
     dateMatrix = getDateMatrix(now.getFullYear(), now.getMonth());
 
@@ -1168,10 +1191,10 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                       const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
                       const thisBack = this.querySelector('.' + backClassName);
                       const mode = thisOk.getAttribute("mode");
+                      const defaultCount = 10;
                       let index, first, last;
                       let clients, clientTong, clientDom, widthArr;
                       let matrix, countMatrix;
-                      let answer;
                       if (mode === "possible" || mode === "numbers") {
                         if (toggle === "off") {
                           index = instance.dateDoms.findIndex((d) => { return d === self; });
@@ -1186,7 +1209,11 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                             if (mobile) {
                               this.querySelector("aside").parentElement.children[1].style.opacity = String(0);
                             }
-                            this.querySelector("aside").textContent = equalJson(this.getAttribute("matrix")).map((i) => { return String(i); }).join(",");
+                            if (equalJson(this.getAttribute("matrix")).length === 0) {
+                              this.querySelector("aside").textContent = String(0);
+                            } else {
+                              this.querySelector("aside").textContent = equalJson(this.getAttribute("matrix")).reduce((acc, current) => { return (acc >= current ? acc : current); });
+                            }
                           }
 
                           if (instance.selection.length === 0) {
@@ -1201,14 +1228,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                                   if (matrix[i] === 0) {
                                     countMatrix[i] = 0;
                                   } else {
-                                    answer = window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!");
-                                    if (answer === null) {
-                                      throw new Error("cancel");
-                                    }
-                                    countMatrix[i] = Number(answer.trim().replace(/[^0-9]/gi, ''));
-                                    if (typeof countMatrix[i] !== "number" || Number.isNaN(countMatrix[i])) {
-                                      countMatrix[i] = 1;
-                                    }
+                                    countMatrix[i] = defaultCount;
                                   }
                                 }
                                 if (matrix[0] === 0) {
@@ -1221,14 +1241,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                                   if (matrix[i] === 0) {
                                     countMatrix[i] = 0;
                                   } else {
-                                    answer = window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!");
-                                    if (answer === null) {
-                                      throw new Error("cancel");
-                                    }
-                                    countMatrix[i] = Number(answer.trim().replace(/[^0-9]/gi, ''));
-                                    if (typeof countMatrix[i] !== "number" || Number.isNaN(countMatrix[i])) {
-                                      countMatrix[i] = 1;
-                                    }
+                                    countMatrix[i] = defaultCount;
                                   }
                                 }
                               }
@@ -1254,7 +1267,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                                   if (mobile) {
                                     instance.dateDoms[i].querySelector("aside").parentElement.children[1].style.opacity = String(0);
                                   }
-                                  instance.dateDoms[i].querySelector("aside").textContent = countMatrix.map((i) => { return String(i); }).join(",");
+                                  instance.dateDoms[i].querySelector("aside").textContent = countMatrix.reduce((acc, current) => { return (acc >= current ? acc : current); });
                                 }
                                 instance.dateDoms[i].querySelector('.' + backClassName).style.background = colorChip.green;
                                 instance.dateDoms[i].setAttribute("toggle", "on");
@@ -1283,23 +1296,77 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                             instance.selection = [];
                           }
                         } else {
-                          thisWords.style.color = colorChip.black;
-                          thisMonth.style.color = colorChip.black;
-                          thisBack.style.background = "transparent";
                           if (mode === "possible") {
+                            thisWords.style.color = colorChip.black;
+                            thisMonth.style.color = colorChip.black;
+                            thisBack.style.background = "transparent";
                             thisOk.style.opacity = String(0);
                             thisCancel.style.opacity = String(1);
-                          } else {
                             this.querySelector("aside").style.opacity = String(0);
                             if (mobile) {
                               this.querySelector("aside").parentElement.children[1].style.opacity = String(1);
                             }
                             this.querySelector("aside").textContent = String(0);
+                            this.setAttribute("toggle", "off");
+                            this.setAttribute("matrix", JSON.stringify([]));
+                          } else {
+
+                            index = instance.dateDoms.findIndex((d) => { return d === self; });
+                            first = index;
+                            last = index;
+
+                            while (instance.dateDoms[last].getAttribute("toggle") === "on" && instance.dateDoms[index].getAttribute("month") === instance.dateDoms[last].getAttribute("month")) {
+                              last = last + 1;
+                            }
+                            last = last - 1;
+
+                            while (instance.dateDoms[first].getAttribute("toggle") === "on" && instance.dateDoms[index].getAttribute("month") === instance.dateDoms[first].getAttribute("month")) {
+                              first = first - 1;
+                            }
+                            first = first + 1;
+
+                            instance.arrowDomTargets = [];
+                            for (let i = first; i < last + 1; i++) {
+                              instance.dateDoms[i].firstChild.style.background = colorChip.yellow;
+                              instance.dateDoms[i].firstChild.style.opacity = String(0.16);
+                              instance.arrowDomTargets.push(instance.dateDoms[i]);
+                            }
+
+                            instance.arrowDomMode = true;
+                            createNode({
+                              mother: document.getElementById("totalcontents"),
+                              event: {
+                                click: (e) => {
+                                  document.getElementById("totalcontents").removeChild(document.getElementById("totalcontents").lastChild);
+                                  for (let dom of instance.arrowDomTargets) {
+                                    if (equalJson(dom.getAttribute("matrix")).reduce((acc, current) => { return acc + current }) === 0) {
+                                      dom.firstChild.style.background = "transparent";
+                                      dom.querySelector("aside").style.opacity = String(0);
+                                      dom.setAttribute("toggle", "off");
+                                      dom.setAttribute("matrix", "[]");
+                                    } else {
+                                      dom.firstChild.style.background = colorChip.green;
+                                    }
+                                    dom.firstChild.style.opacity = String(0.08);
+                                  }
+                                  instance.arrowDomMode = false;
+                                  instance.arrowDomTargets = [];
+                                }
+                              },
+                              style: {
+                                position: "fixed",
+                                top: String(0),
+                                left: String(0),
+                                width: String(100) + '%',
+                                height: String(100) + '%',
+                                background: "transparent",
+                                zIndex: String(4),
+                              }
+                            });
+
                           }
-                          this.setAttribute("toggle", "off");
-                          this.setAttribute("matrix", JSON.stringify([]));
                         }
-                        await possibleUpdate();
+                        await instance.possibleUpdate(desid);
                       } else if (mode === "projects") {
                         if (this.firstChild.getAttribute("clients") !== null) {
                           clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
@@ -1444,7 +1511,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                             instance.dateDoms[i].setAttribute("toggle", "off");
                             instance.dateDoms[i].setAttribute("matrix", JSON.stringify([]));
                           }
-                          await possibleUpdate();
+                          await instance.possibleUpdate(desid);
                         } else if (mode === "projects") {
                           if (this.firstChild.getAttribute("clients") !== null) {
                             clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
@@ -2165,7 +2232,7 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
               if (mobile) {
                 targetDom.querySelector("aside").parentElement.children[1].style.opacity = String(0);
               }
-              targetDom.querySelector("aside").textContent = matrix.map((i) => { return String(i); }).join(",");
+              targetDom.querySelector("aside").textContent = matrix.reduce((acc, current) => { return (acc >= current ? acc : current); });
             } else {
               targetDom.querySelector('.' + numberClassName).style.color = colorChip.green;
               targetDom.querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
@@ -2173,7 +2240,11 @@ DesignerJs.prototype.possibleReload = function (type = "possible") {
               targetDom.querySelector('.' + cancelClassName).style.opacity = String(0);
               targetDom.querySelector("aside").style.opacity = String(0);
             }
-            targetDom.querySelector('.' + backClassName).style.background = colorChip.green;
+            if (instance.arrowDomTargets.includes(targetDom)) {
+              targetDom.querySelector('.' + backClassName).style.background = colorChip.yellow;
+            } else {
+              targetDom.querySelector('.' + backClassName).style.background = colorChip.green;
+            }
             targetDom.setAttribute("toggle", "on");
             targetDom.setAttribute("matrix", JSON.stringify(matrix));
             onTargets.push(targetDom);
@@ -3316,6 +3387,38 @@ DesignerJs.prototype.possibleView = async function () {
           instance.pageHistory.shift();
           instance.pageHistory.shift();
         }
+      }
+    });
+
+    instance.arrowDomMode = false;
+    instance.arrowDomTargets = [];
+    window.addEventListener("keydown", async (e) => {
+      try {
+        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+          if (instance.arrowDomMode) {
+            e.preventDefault();
+            let tempMatrix;
+            if (e.key === "ArrowUp") {
+              for (let dom of instance.arrowDomTargets) {
+                tempMatrix = equalJson(dom.getAttribute("matrix"));
+                tempMatrix = tempMatrix.map((num) => { return num + 1 });
+                dom.setAttribute("matrix", JSON.stringify(tempMatrix));
+                dom.querySelector("aside").textContent = String(tempMatrix.reduce((acc, current) => { return acc >= current ? acc : current }));
+              }
+            } else {
+              for (let dom of instance.arrowDomTargets) {
+                tempMatrix = equalJson(dom.getAttribute("matrix"));
+                tempMatrix = tempMatrix.map((num) => { return num - 1 });
+                tempMatrix = tempMatrix.map((num) => { return (num < 0 ? 0 : num); });
+                dom.setAttribute("matrix", JSON.stringify(tempMatrix));
+                dom.querySelector("aside").textContent = String(tempMatrix.reduce((acc, current) => { return acc >= current ? acc : current }));
+              }
+            }
+            await instance.possibleUpdate(instance.desid);
+          }
+        }
+      } catch (e) {
+        console.log(e);
       }
     });
 
