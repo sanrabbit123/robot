@@ -1171,6 +1171,7 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                       let index, first, last;
                       let clients, clientTong, clientDom, widthArr;
                       let matrix, countMatrix;
+                      let answer;
                       if (mode === "possible" || mode === "numbers") {
                         if (toggle === "off") {
                           index = instance.dateDoms.findIndex((d) => { return d === self; });
@@ -1193,63 +1194,91 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                             this.setAttribute("toggle", "on");
                           } else {
                             matrix = designer.analytics.project.matrix.map((arr) => { return arr.some((i) => { return i === 1; }) ? 1 : 0 });
-
-                            countMatrix = (new Array(matrix.length)).fill(0, 0);
-                            if (matrix[1] === 1) {
-                              for (let i = 1; i < matrix.length - 1; i++) {
-                                if (matrix[i] === 0) {
-                                  countMatrix[i] = 0;
+                            try {
+                              countMatrix = (new Array(matrix.length)).fill(0, 0);
+                              if (matrix[1] === 1) {
+                                for (let i = 1; i < matrix.length - 1; i++) {
+                                  if (matrix[i] === 0) {
+                                    countMatrix[i] = 0;
+                                  } else {
+                                    answer = window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!");
+                                    if (answer === null) {
+                                      throw new Error("cancel");
+                                    }
+                                    countMatrix[i] = Number(answer.trim().replace(/[^0-9]/gi, ''));
+                                    if (typeof countMatrix[i] !== "number" || Number.isNaN(countMatrix[i])) {
+                                      countMatrix[i] = 1;
+                                    }
+                                  }
+                                }
+                                if (matrix[0] === 0) {
+                                  countMatrix[0] = 0;
                                 } else {
-                                  countMatrix[i] = Number(window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!").trim().replace(/[^0-9]/gi, ''));
-                                  if (typeof countMatrix[i] !== "number" || Number.isNaN(countMatrix[i])) {
-                                    countMatrix[i] = 1;
+                                  countMatrix[0] = countMatrix[1];
+                                }
+                              } else {
+                                for (let i = 0; i < matrix.length - 1; i++) {
+                                  if (matrix[i] === 0) {
+                                    countMatrix[i] = 0;
+                                  } else {
+                                    answer = window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!");
+                                    if (answer === null) {
+                                      throw new Error("cancel");
+                                    }
+                                    countMatrix[i] = Number(answer.trim().replace(/[^0-9]/gi, ''));
+                                    if (typeof countMatrix[i] !== "number" || Number.isNaN(countMatrix[i])) {
+                                      countMatrix[i] = 1;
+                                    }
                                   }
                                 }
                               }
-                              if (matrix[0] === 0) {
-                                countMatrix[0] = 0;
-                              } else {
-                                countMatrix[0] = countMatrix[1];
+                              if (countMatrix[2] >= 1 && matrix[3] === 1) {
+                                countMatrix[3] = 1;
                               }
-                            } else {
-                              for (let i = 0; i < matrix.length - 1; i++) {
-                                if (matrix[i] === 0) {
-                                  countMatrix[i] = 0;
-                                } else {
-                                  countMatrix[i] = Number(window.prompt("해당 기간에 가능한 " + serviceMatrix[i] + " 건수를 알려주세요!").trim().replace(/[^0-9]/gi, ''));
-                                  if (typeof countMatrix[i] !== "number" || Number.isNaN(countMatrix[i])) {
-                                    countMatrix[i] = 1;
-                                  }
-                                }
-                              }
-                            }
-                            if (countMatrix[2] >= 1 && matrix[3] === 1) {
-                              countMatrix[3] = 1;
-                            }
 
-                            if (index < instance.selection[0]) {
-                              first = index;
-                              last = instance.selection[0];
-                            } else {
-                              last = index;
-                              first = instance.selection[0];
-                            }
-                            for (let i = first; i < last + 1; i++) {
-                              if (mode === "possible") {
-                                instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(1);
-                                instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(0);
-                                instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.green;
-                                instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
+                              if (index < instance.selection[0]) {
+                                first = index;
+                                last = instance.selection[0];
                               } else {
-                                instance.dateDoms[i].querySelector("aside").style.opacity = String(1);
-                                if (mobile) {
-                                  instance.dateDoms[i].querySelector("aside").parentElement.children[1].style.opacity = String(0);
-                                }
-                                instance.dateDoms[i].querySelector("aside").textContent = countMatrix.map((i) => { return String(i); }).join(",");
+                                last = index;
+                                first = instance.selection[0];
                               }
-                              instance.dateDoms[i].querySelector('.' + backClassName).style.background = colorChip.green;
-                              instance.dateDoms[i].setAttribute("toggle", "on");
-                              instance.dateDoms[i].setAttribute("matrix", JSON.stringify(countMatrix));
+                              for (let i = first; i < last + 1; i++) {
+                                if (mode === "possible") {
+                                  instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(1);
+                                  instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(0);
+                                  instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.green;
+                                  instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.green;
+                                } else {
+                                  instance.dateDoms[i].querySelector("aside").style.opacity = String(1);
+                                  if (mobile) {
+                                    instance.dateDoms[i].querySelector("aside").parentElement.children[1].style.opacity = String(0);
+                                  }
+                                  instance.dateDoms[i].querySelector("aside").textContent = countMatrix.map((i) => { return String(i); }).join(",");
+                                }
+                                instance.dateDoms[i].querySelector('.' + backClassName).style.background = colorChip.green;
+                                instance.dateDoms[i].setAttribute("toggle", "on");
+                                instance.dateDoms[i].setAttribute("matrix", JSON.stringify(countMatrix));
+                              }
+                            } catch (e) {
+                              for (let i of [ instance.selection[0], index ]) {
+                                if (mode === "possible") {
+                                  instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
+                                  instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
+                                  instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.black;
+                                  instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
+                                } else {
+                                  instance.dateDoms[i].querySelector("aside").style.opacity = String(0);
+                                  if (mobile) {
+                                    instance.dateDoms[i].querySelector("aside").parentElement.children[1].style.opacity = String(1);
+                                  }
+                                  instance.dateDoms[i].querySelector("aside").textContent = String(0);
+                                }
+                                instance.dateDoms[i].querySelector('.' + backClassName).style.background = "transparent";
+                                instance.dateDoms[i].setAttribute("toggle", "off");
+                                instance.dateDoms[i].setAttribute("matrix", JSON.stringify([]));
+                              }
+                              instance.selection = [];
                             }
                             instance.selection = [];
                           }
@@ -1367,132 +1396,134 @@ DesignerJs.prototype.possibleMatrix = async function (mother, desid, realtimeDes
                   try {
                     const pastBoo = (this.getAttribute("past") === "true" || this.getAttribute("value") === "null");
                     if (!pastBoo) {
-                      const toggle = this.getAttribute("toggle");
-                      const thisDate = new Date(this.getAttribute("value"));
-                      const thisOk = this.querySelector('.' + okClassName);
-                      const thisCancel = this.querySelector('.' + cancelClassName);
-                      const thisWords = this.querySelector('.' + numberClassName);
-                      const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
-                      const thisBack = this.querySelector('.' + backClassName);
-                      const mode = thisOk.getAttribute("mode");
-                      let index, first, last;
-                      let num;
-                      let clients, clientTong, clientDom, widthArr;
-                      if (mode === "possible" || mode === "numbers") {
-                        index = instance.dateDoms.findIndex((d) => { return d === self; });
-                        if (toggle === "on") {
-                          num = 1;
-                          last = index;
-                          while (instance.dateDoms[index + num].getAttribute("toggle") === "on") {
-                            last = index + num;
-                            num++;
-                          }
-                          num = 1;
-                          first = index;
-                          while (instance.dateDoms[index - num].getAttribute("toggle") === "on") {
-                            first = index - num;
-                            num++;
-                          }
-                        } else {
-                          first = index;
-                          last = index;
-                        }
-                        for (let i = first; i < last + 1; i++) {
-                          if (mode === "possible") {
-                            instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
-                            instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
-                          } else {
-                            instance.dateDoms[i].querySelector("aside").style.opacity = String(0);
-                            if (mobile) {
-                              instance.dateDoms[i].querySelector("aside").parentElement.children[1].style.opacity = String(1);
+                      if (window.confirm("전체 일정이 삭제됩니다. 확실한가요?")) {
+                        const toggle = this.getAttribute("toggle");
+                        const thisDate = new Date(this.getAttribute("value"));
+                        const thisOk = this.querySelector('.' + okClassName);
+                        const thisCancel = this.querySelector('.' + cancelClassName);
+                        const thisWords = this.querySelector('.' + numberClassName);
+                        const thisMonth = this.querySelector('.' + numberClassName).querySelector('b');
+                        const thisBack = this.querySelector('.' + backClassName);
+                        const mode = thisOk.getAttribute("mode");
+                        let index, first, last;
+                        let num;
+                        let clients, clientTong, clientDom, widthArr;
+                        if (mode === "possible" || mode === "numbers") {
+                          index = instance.dateDoms.findIndex((d) => { return d === self; });
+                          if (toggle === "on") {
+                            num = 1;
+                            last = index;
+                            while (instance.dateDoms[index + num].getAttribute("toggle") === "on") {
+                              last = index + num;
+                              num++;
                             }
-                            instance.dateDoms[i].querySelector("aside").textContent = String(0);
+                            num = 1;
+                            first = index;
+                            while (instance.dateDoms[index - num].getAttribute("toggle") === "on") {
+                              first = index - num;
+                              num++;
+                            }
+                          } else {
+                            first = index;
+                            last = index;
                           }
-                          instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.black;
-                          instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
-                          instance.dateDoms[i].querySelector('.' + backClassName).style.background = "transparent";
-                          instance.dateDoms[i].setAttribute("toggle", "off");
-                          instance.dateDoms[i].setAttribute("matrix", JSON.stringify([]));
-                        }
-                        await possibleUpdate();
-                      } else if (mode === "projects") {
-                        if (this.firstChild.getAttribute("clients") !== null) {
-                          clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
-                          if (clients.length > 0) {
-                            createNode({
-                              mother: this,
-                              events: [
-                                {
-                                  type: [ "click", "contextmenu" ],
-                                  event: function (e) {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    self.removeChild(self.lastChild);
-                                    self.removeChild(self.lastChild);
-                                  }
-                                }
-                              ],
-                              style: {
-                                position: "fixed",
-                                top: String(0),
-                                left: String(0),
-                                width: String(100) + '%',
-                                height: String(100) + '%',
-                                background: "transparent",
-                                zIndex: String(2),
+                          for (let i = first; i < last + 1; i++) {
+                            if (mode === "possible") {
+                              instance.dateDoms[i].querySelector('.' + okClassName).style.opacity = String(0);
+                              instance.dateDoms[i].querySelector('.' + cancelClassName).style.opacity = String(1);
+                            } else {
+                              instance.dateDoms[i].querySelector("aside").style.opacity = String(0);
+                              if (mobile) {
+                                instance.dateDoms[i].querySelector("aside").parentElement.children[1].style.opacity = String(1);
                               }
-                            });
-
-                            clientTong = createNode({
-                              mother: this,
-                              events: [
-                                {
-                                  type: [ "click", "contextmenu" ],
-                                  event: function (e) {
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                              instance.dateDoms[i].querySelector("aside").textContent = String(0);
+                            }
+                            instance.dateDoms[i].querySelector('.' + numberClassName).style.color = colorChip.black;
+                            instance.dateDoms[i].querySelector('.' + numberClassName).querySelector('b').style.color = colorChip.black;
+                            instance.dateDoms[i].querySelector('.' + backClassName).style.background = "transparent";
+                            instance.dateDoms[i].setAttribute("toggle", "off");
+                            instance.dateDoms[i].setAttribute("matrix", JSON.stringify([]));
+                          }
+                          await possibleUpdate();
+                        } else if (mode === "projects") {
+                          if (this.firstChild.getAttribute("clients") !== null) {
+                            clients = GeneralJs.equalJson(this.firstChild.getAttribute("clients"));
+                            if (clients.length > 0) {
+                              createNode({
+                                mother: this,
+                                events: [
+                                  {
+                                    type: [ "click", "contextmenu" ],
+                                    event: function (e) {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      self.removeChild(self.lastChild);
+                                      self.removeChild(self.lastChild);
+                                    }
                                   }
-                                }
-                              ],
-                              style: {
-                                position: "absolute",
-                                bottom: String(weekBlockHeight + clientPopupTopMargin) + ea,
-                                left: String(0) + ea,
-                                width: String(600) + ea,
-                                borderRadius: String(5) + "px",
-                                background: colorChip.gradientGreen,
-                                zIndex: String(2),
-                                paddingTop: String(clientPopupWordPaddingTop) + ea,
-                                paddingBottom: String(clientPopupWordPaddingBottom) + ea,
-                                animation: "fadeuplite 0.2s ease forwards",
-                                transition: "all 0s ease",
-                              }
-                            });
-
-                            widthArr = [];
-                            for (let client of clients) {
-                              clientDom = createNode({
-                                mother: clientTong,
-                                text: client,
+                                ],
                                 style: {
-                                  display: "inline-block",
-                                  position: "relative",
-                                  fontSize: String(clientPopupWordSize) + ea,
-                                  fontWeight: String(500),
-                                  color: colorChip.whiteBlack,
-                                  paddingLeft: String(clientPopupWordPadding) + ea,
-                                  paddingRight: String(clientPopupWordPadding) + ea,
-                                  paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
-                                  paddingBottom: String(clientPopupWordPaddingHeightPadding) + ea,
+                                  position: "fixed",
+                                  top: String(0),
+                                  left: String(0),
+                                  width: String(100) + '%',
+                                  height: String(100) + '%',
+                                  background: "transparent",
+                                  zIndex: String(2),
                                 }
                               });
-                              widthArr.push(clientDom.getBoundingClientRect().width);
+
+                              clientTong = createNode({
+                                mother: this,
+                                events: [
+                                  {
+                                    type: [ "click", "contextmenu" ],
+                                    event: function (e) {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                    }
+                                  }
+                                ],
+                                style: {
+                                  position: "absolute",
+                                  bottom: String(weekBlockHeight + clientPopupTopMargin) + ea,
+                                  left: String(0) + ea,
+                                  width: String(600) + ea,
+                                  borderRadius: String(5) + "px",
+                                  background: colorChip.gradientGreen,
+                                  zIndex: String(2),
+                                  paddingTop: String(clientPopupWordPaddingTop) + ea,
+                                  paddingBottom: String(clientPopupWordPaddingBottom) + ea,
+                                  animation: "fadeuplite 0.2s ease forwards",
+                                  transition: "all 0s ease",
+                                }
+                              });
+
+                              widthArr = [];
+                              for (let client of clients) {
+                                clientDom = createNode({
+                                  mother: clientTong,
+                                  text: client,
+                                  style: {
+                                    display: "inline-block",
+                                    position: "relative",
+                                    fontSize: String(clientPopupWordSize) + ea,
+                                    fontWeight: String(500),
+                                    color: colorChip.whiteBlack,
+                                    paddingLeft: String(clientPopupWordPadding) + ea,
+                                    paddingRight: String(clientPopupWordPadding) + ea,
+                                    paddingTop: String(clientPopupWordPaddingHeightPadding) + ea,
+                                    paddingBottom: String(clientPopupWordPaddingHeightPadding) + ea,
+                                  }
+                                });
+                                widthArr.push(clientDom.getBoundingClientRect().width);
+                              }
+
+                              widthArr.sort((a, b) => { return b - a; });
+
+                              clientTong.style.width = String(widthArr[0]) + ea;
+                              clientTong.style.left = withOut(50, widthArr[0] / 2, ea);
                             }
-
-                            widthArr.sort((a, b) => { return b - a; });
-
-                            clientTong.style.width = String(widthArr[0]) + ea;
-                            clientTong.style.left = withOut(50, widthArr[0] / 2, ea);
                           }
                         }
                       }

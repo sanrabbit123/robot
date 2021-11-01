@@ -1614,7 +1614,7 @@ BackMaker.prototype.getServicesByKind = async function (kind, option = { withToo
   try {
     let tong, servicesArr;
     let sortQuery;
-    let kindArr;
+    let keyArr;
     let newTong;
 
     if (option.sort === undefined) {
@@ -1643,12 +1643,12 @@ BackMaker.prototype.getServicesByKind = async function (kind, option = { withToo
       return b.date.valueOf() - a.date.valueOf();
     });
     newTong = [];
-    kindArr = [];
+    keyArr = [];
     for (let obj of tong) {
-      if (!kindArr.includes(obj.kind)) {
+      if (!keyArr.includes(obj.key)) {
         newTong.push(obj);
       }
-      kindArr.push(obj.kind);
+      keyArr.push(obj.key);
     }
 
     if (!option.withTools) {

@@ -10,6 +10,13 @@ class Services extends Array {
     }
     return tong;
   }
+  get setting() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.setting);
+    }
+    return arr;
+  }
 }
 
 const withTools = function (Service) {
