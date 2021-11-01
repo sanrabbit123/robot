@@ -1539,7 +1539,7 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
   const { mongo, mongoinfo } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const button = "service";
-  const { Service } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
+  let { Service, Services, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
   try {
     let arr, target;
 
@@ -1551,6 +1551,10 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
       arr = await option.selfMongo.db(`miro81`).collection(button).find({ serid }).toArray();
     }
 
+    if (option.withTools) {
+      Service = Tools.withTools(Service);
+    }
+
     if (arr.length > 0) {
       target = new Service(arr[0]);
     } else {
@@ -1558,6 +1562,220 @@ BackMaker.prototype.getServiceById = async function (serid, option = { withTools
     }
 
     return target;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.getServiceByKey = async function (key, option = { withTools: false, selfMongo: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "service";
+  let { Service, Services, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
+  try {
+    let arr, target;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      arr = await MONGOC.db(`miro81`).collection(button).find({ key }).sort({ date: -1 }).toArray();
+      await MONGOC.close();
+    } else {
+      arr = await option.selfMongo.db(`miro81`).collection(button).find({ key }).sort({ date: -1 }).toArray();
+    }
+
+    if (option.withTools) {
+      Service = Tools.withTools(Service);
+    }
+
+    if (arr.length > 0) {
+      target = new Service(arr[0]);
+    } else {
+      target = null;
+    }
+
+    return target;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.getServicesByQuery = async function (query, option = { withTools: false, selfMongo: null, fromLocal: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo, mongolocalinfo } = this.mother;
+  let MONGOC;
+  if (option.fromLocal === true) {
+    MONGOC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+  } else {
+    MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  }
+  const button = "service";
+  let { Service, Services, Tools } = require(`${option.devAlive === true ? this.devAliveDir : this.aliveDir}/${button}/addOn/generator.js`);
+  try {
+    let tong, servicesArr;
+    let sortQuery;
+
+    if (option.sort === undefined) {
+      sortQuery = { "date": -1 };
+    } else {
+      sortQuery = option.sort;
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      if (option.limit !== undefined) {
+        tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await MONGOC.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
+      }
+      await MONGOC.close();
+    } else {
+      if (option.limit !== undefined) {
+        tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).limit(Number(option.limit)).toArray();
+      } else {
+        tong = await option.selfMongo.db(`miro81`).collection(button).find(query).sort(sortQuery).toArray();
+      }
+    }
+
+    if (!option.withTools) {
+      servicesArr = new Services();
+      for (let i of tong) {
+        servicesArr.push(new Service(i));
+      }
+    } else {
+      Service = Tools.withTools(Service);
+      Services = Tools.withToolsArr(Services);
+      servicesArr = new Services();
+      for (let i of tong) {
+        servicesArr.push(new Service(i));
+      }
+    }
+
+    return servicesArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.updateService = async function (queryArr, option = { selfMongo: null, devAlive: false }) {
+  if (queryArr.length !== 2) {
+    throw new Error("invaild arguments : query object must be Array: [ Object: whereQuery, Object: updateQuery ]");
+  }
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "service";
+  try {
+    const [ whereQuery, updateQuery ] = queryArr;
+    let latestServiceArr, latestService;
+    let newOption, newId;
+    let targetDummyArr, targetDummy;
+
+    newOption = {};
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      newOption.selfMongo = option.selfMongo;
+    }
+    newOption.withTools = false;
+    newOption.sort = { "serid": -1 };
+    newOption.limit = 1;
+
+    latestServiceArr = await this.getServicesByQuery({}, newOption);
+    latestService = latestServiceArr[0];
+
+    newId = this.idMaker(latestService.serid);
+
+    targetDummyArr = await this.getServicesByQuery(whereQuery, { selfMongo: option.selfMongo, sort: { date: -1 }, limit: 1 });
+    if (targetDummyArr.length > 0) {
+      [ targetDummy ] = targetDummyArr;
+      targetDummy = targetDummy.toNormal();
+      targetDummy.serid = newId;
+      updateQuery.date = new Date();
+
+      if (option.selfMongo === undefined || option.selfMongo === null) {
+        await MONGOC.connect();
+        await MONGOC.db(`miro81`).collection(button).insertOne(targetDummy);
+        await MONGOC.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
+        await MONGOC.close();
+      } else {
+        await option.selfMongo.db(`miro81`).collection(button).insertOne(targetDummy);
+        await option.selfMongo.db(`miro81`).collection(button).updateOne(whereQuery, { $set: updateQuery });
+      }
+
+    }
+    return "success";
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.createService = async function (updateQuery, option = { selfMongo: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "service";
+  const map = require(`${option.devAlive === true ? this.devMapDir : this.mapDir}/service.js`);
+  try {
+    let dummy, dummySetting, latestService, latestServiceArr;
+    let newOption = {};
+    let tempArr;
+    let target;
+
+    if (typeof updateQuery.kind !== "string") {
+      throw new Error("must be kind");
+    }
+
+    if (option.selfMongo !== undefined && option.selfMongo !== null) {
+      newOption.selfMongo = option.selfMongo;
+    }
+    newOption.withTools = false;
+    newOption.sort = { "serid": -1 };
+    newOption.limit = 1;
+
+    latestServiceArr = await this.getServicesByQuery({}, newOption);
+    latestService = latestServiceArr[0];
+
+    dummy = map.main(updateQuery.kind);
+    dummy.structure.serid = this.idMaker(latestService.serid);
+
+    for (let i in updateQuery) {
+      if (i !== "serid") {
+        tempArr = i.split('.');
+        target = dummy.structure;
+        for (let j = 0; j < tempArr.length - 1; j++) {
+          target = target[tempArr[j]]
+        }
+        target[tempArr[tempArr.length - 1]] = updateQuery[i];
+      }
+    }
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(button).insertOne(dummy.structure);
+      await MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(button).insertOne(dummy.structure);
+    }
+
+    return dummy.structure.serid;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BackMaker.prototype.deleteService = async function (serid, option = { selfMongo: null, devAlive: false }) {
+  const instance = this;
+  const { mongo, mongoinfo } = this.mother;
+  const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
+  const button = "service";
+  try {
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      await MONGOC.connect();
+      await MONGOC.db(`miro81`).collection(button).deleteOne({ serid });
+      await MONGOC.close();
+    } else {
+      await option.selfMongo.db(`miro81`).collection(button).deleteOne({ serid });
+    }
+    return "success";
   } catch (e) {
     console.log(e);
   }
@@ -1827,7 +2045,6 @@ BackMaker.prototype.createDesigner = async function (updateQuery, option = { sel
     let newOption = {};
     let temp0, temp1;
     let matrixStandard0, matrixStandard1, matrixStandard2;
-
 
     if (option.selfMongo !== undefined && option.selfMongo !== null) {
       newOption.selfMongo = option.selfMongo;

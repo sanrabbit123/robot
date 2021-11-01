@@ -504,7 +504,7 @@ Mother.prototype.webpackSystem = function (from, to, customOpt = null) {
   }
 
   return new Promise(function (resolve, reject) {
-    webpack(options, function(err, stats) {
+    webpack(options, (err, stats) => {
       if (err) { reject(err); }
       console.log(stats.toString({ chunks: false, colors: true }));
       resolve(to + " pack success");
