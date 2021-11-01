@@ -3421,6 +3421,27 @@ DesignerJs.prototype.possibleView = async function () {
         console.log(e);
       }
     });
+    window.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        if (instance.arrowDomMode) {
+          e.preventDefault();
+          document.getElementById("totalcontents").removeChild(document.getElementById("totalcontents").lastChild);
+          for (let dom of instance.arrowDomTargets) {
+            if (GeneralJs.equalJson(dom.getAttribute("matrix")).reduce((acc, current) => { return acc + current }) === 0) {
+              dom.firstChild.style.background = "transparent";
+              dom.querySelector("aside").style.opacity = String(0);
+              dom.setAttribute("toggle", "off");
+              dom.setAttribute("matrix", "[]");
+            } else {
+              dom.firstChild.style.background = colorChip.green;
+            }
+            dom.firstChild.style.opacity = String(0.08);
+          }
+          instance.arrowDomMode = false;
+          instance.arrowDomTargets = [];
+        }
+      }
+    });
 
     //launching
     this.possibleDetailLaunching(this.desid);
