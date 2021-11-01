@@ -70,7 +70,7 @@ AppleNotes.prototype.readNote = async function (dir = null, clean = true) {
     let arr = temp_string.split("__split__");
     let resultArr = [];
     for (let i of arr) {
-      if (i !== '' && i !== ' ' && i !== '  ' && i !== '   ' && i !== '    ' && i !== '     ') {
+      if (i.trim() !== '') {
         resultArr.push(this.text_filter_lite(i));
       }
     }

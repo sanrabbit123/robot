@@ -69,15 +69,31 @@ ChecklistContents.prototype.toNormal = function () {
   return obj;
 }
 
+class Action extends Array {
+  constructor(arr) {
+    super();
+    for (let i of arr) {
+      this.push(i);
+    }
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i);
+    }
+    return arr;
+  }
+}
+
 const ChecklistTarget = function (json) {
   this.collection = json.collection;
-  this.action = json.action;
+  this.action = new Action(json.action);
 }
 
 ChecklistTarget.prototype.toNormal = function () {
   let obj = {};
   obj.collection = this.collection;
-  obj.action = this.action;
+  obj.action = this.action.toNormal();
   return obj;
 }
 

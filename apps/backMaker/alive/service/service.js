@@ -44,6 +44,11 @@ Service.prototype.uploadAppleNote = async function () {
     body += title;
     body += br;
 
+    body += this.setting.target.collection;
+    body += br;
+    body += this.setting.target.action;
+    body += br;
+
     num = 0;
     for (let { title, children } of checklist) {
       body += "_" + String(num + 1) + " " + title;

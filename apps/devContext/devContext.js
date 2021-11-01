@@ -477,16 +477,80 @@ DevContext.prototype.launching = async function () {
 
 
     // const aliveMembers = await this.pureScan();
-    // console.log(await aliveMembers.aliveRequest("/"));
+    // console.log(await aliveMembers.aliveRequest("/push", { text: "이제 다시 사용하셔도 됩니다!" }));
+
+
+
+    let note, targetArr;
+    let level1Index;
+    let tempArr, tempObj;
+    let checklist;
+    let final;
+    let updateQuery;
+
+    note = new AppleNotes({ folder: "checklist", subject: "purchaseList" });
+    targetArr = await note.readNote();
+
+    targetArr = targetArr.map((str) => {
+      return str.replace(/\[/gi, "<b%").replace(/\]/gi, "%b>");
+    });
+
+    level1Index = [];
+    for (let i = 0; i < targetArr.length; i++) {
+      if (/^_/.test(targetArr[i].trim())) {
+        level1Index.push(i);
+      }
+    }
+
+    level1Index.push(targetArr.length);
+    checklist = [];
+    for (let i = 0; i < level1Index.length - 1; i++) {
+      tempArr = [];
+      for (let j = level1Index[i] + 1; j < level1Index[i + 1]; j++) {
+        if (j % 2 !== level1Index[i] % 2) {
+          tempObj = {};
+          tempObj.title = targetArr[j].replace(/^T\. /i, '').trim();
+        } else {
+          tempObj.contents = targetArr[j].replace(/^C\. /i, '').trim();
+          tempArr.push(tempObj);
+        }
+      }
+      checklist.push({
+        title: targetArr[level1Index[i]].replace(/^_[0-9][0-9]? /i, ''),
+        children: tempArr
+      });
+    }
+
+    final = {
+      key: targetArr[0],
+      date: new Date(),
+      kind: "checklist",
+      setting: {
+        target: {
+          collection: targetArr[2],
+          action: targetArr[3].trim().split(',').map((str) => { return str.trim(); }).filter((str) => { return str !== ''; }),
+        },
+        contents: {
+          title: targetArr[1],
+          checklist
+        }
+      }
+    };
+
+    updateQuery = {};
+    updateQuery.key = final.key;
+    updateQuery.kind = final.kind;
+    updateQuery.setting = final.setting;
+
+    await back.createService(updateQuery, { selfMongo: this.MONGOLOCALC })
+
+
+
+    console.log(updateQuery);
 
 
 
 
-
-
-
-
-    
 
 
 
