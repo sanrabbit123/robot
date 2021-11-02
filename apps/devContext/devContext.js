@@ -443,6 +443,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
+  const { chromeRequest } = require(`${process.cwd()}/apps/googleAPIs/googleChrome.js`);
   const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, requestSystem, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer } = this.mother;
   try {
     await this.MONGOC.connect();
@@ -480,6 +481,8 @@ DevContext.prototype.launching = async function () {
     // console.log(await aliveMembers.aliveRequest("/push", { text: "이제 다시 사용하셔도 됩니다!" }));
 
 
+
+    // console.log(await chromeRequest("https://www.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/pp/index.xml"));
 
 
 
