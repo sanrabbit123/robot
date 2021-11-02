@@ -540,7 +540,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
 
 DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, divisionEntireMap) {
   const instance = this;
-  const { createNode, colorChip, withOut, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, setQueue } = GeneralJs;
   const { ea, projects, clients, designers } = this;
   let pIndex, cIndex;
   let project, client, designer;
@@ -568,6 +568,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let noticeTextSize;
   let noticeTextTop, noticeTextLeft;
   let arrowTop, arrowWidth;
+  let barChildren;
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -653,12 +654,18 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       ]
     });
 
+    barChildren = [];
     num = 0;
     for (let [ title, arr ] of divisionEntireMap) {
 
       arr = arr.flat();
       areaMother = createNode({
         mother: base,
+        attribute: {
+          toggle: arr.includes(action) ? "on" : "off",
+          focus: "off",
+          index: String(num),
+        },
         style: {
           display: "block",
           position: "relative",
@@ -690,15 +697,77 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         ]
       });
       area = areaMother.children[1];
+      barChildren.push(areaMother);
 
       for (let i = 0; i < arr.length; i++) {
         createNode({
           mother: area,
+          event: {
+            click: function (e) {
+              const grandMother = this.parentElement.parentElement;
+              const arrow = this.querySelector("svg").parentElement;
+              const arrows = [ ...this.parentElement.querySelectorAll("svg") ].map((dom) => { return dom.parentElement; });
+              const toggle = grandMother.getAttribute("toggle");
+              const focus = grandMother.getAttribute("focus");
+              const thisIndex = Number(grandMother.getAttribute("index"));
+              let focusArr, otherArrows;
+
+              if (focus === "on") {
+
+                if (arrow.getAttribute("focus") === "on") {
+                  grandMother.setAttribute("focus", "off");
+                  for (let a of arrows) {
+                    if (a.getAttribute("toggle") === "off") {
+                      a.style.opacity = String(0);
+                      a.setAttribute("focus", "off");
+                    }
+                  }
+                } else {
+                  grandMother.setAttribute("focus", "off");
+                  for (let a of arrows) {
+                    if (a.getAttribute("toggle") === "off") {
+                      a.style.opacity = String(0);
+                      a.setAttribute("focus", "off");
+                    }
+                  }
+                  setQueue(() => {
+                    grandMother.style.opacity = String(1);
+                    grandMother.setAttribute("focus", "on");
+                    arrow.style.opacity = String(1);
+                    arrow.setAttribute("focus", "on");
+                  }, 300);
+                }
+
+              } else {
+
+                for (let barChild of barChildren) {
+                  if (grandMother !== barChild) {
+                    barChild.style.opacity = String(0.4);
+                    barChild.setAttribute("focus", "off");
+                    otherArrows = [ ...barChild.querySelectorAll("svg") ].map((dom) => { return dom.parentElement; });
+                    for (let a of otherArrows) {
+                      if (a.getAttribute("toggle") === "off") {
+                        a.style.opacity = String(0);
+                        a.setAttribute("focus", "off");
+                      }
+                    }
+                  }
+                }
+
+                grandMother.style.opacity = String(1);
+                grandMother.setAttribute("focus", "on");
+                arrow.style.opacity = String(1);
+                arrow.setAttribute("focus", "on");
+              }
+
+            }
+          },
           style: {
             display: "inline-block",
             position: "relative",
             height: String(100) + '%',
             width: "calc(100% / " + String(maxLength) + ")",
+            cursor: "pointer",
           },
           children: [
             {
@@ -737,6 +806,10 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
               }
             },
             {
+              attribute: {
+                toggle: arr[i] === action ? "on" : "off",
+                focus: "off",
+              },
               style: {
                 display: "flex",
                 top: String(75) + '%',
@@ -747,16 +820,16 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 justifyContent: "center",
                 textAlign: "center",
                 paddingTop: String(arrowTop) + ea,
+                opacity: String(arr[i] === action ? 1 : 0),
               },
               children: [
                 {
                   mode: "svg",
-                  source: instance.mother.returnArrow("right", colorChip.green),
+                  source: instance.mother.returnArrow("right", arr[i] === action ? colorChip.green : colorChip.deactive),
                   style: {
                     display: "inline-block",
                     width: String(arrowWidth),
                     transform: "rotate(270deg)",
-                    opacity: String(arr[i] === action ? 1 : 0),
                   }
                 }
               ]
