@@ -660,6 +660,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               } else if (/잔금/gi.test(data.goodName.trim())) {
 
                 projectQuery["process.status"] = "진행중";
+                projectQuery["process.action"] = "시작 대기";
                 projectQuery["process.contract.remain.date"] = new Date();
                 projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
                 projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
@@ -965,6 +966,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
           } else if (/잔금/gi.test(data.goodName.trim())) {
 
             projectQuery["process.status"] = "진행중";
+            projectQuery["process.action"] = "시작 대기";
             projectQuery["process.contract.remain.date"] = new Date();
             projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
             projectQuery["process.contract.remain.calculation.info.proof"] = inisis;

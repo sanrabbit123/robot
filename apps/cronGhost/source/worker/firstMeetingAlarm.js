@@ -1,5 +1,5 @@
 const dayId = [
-  "d134",
+  "d142",
 ];
 
 const hourId = [];
@@ -36,9 +36,11 @@ const worker = async function (package) {
     for (let [ futureConst0, futureConst1, talkKey ] of dayTargets) {
 
       standardDay0 = new Date();
+      standardDay0.setHours(1);
       standardDay0.setDate(standardDay0.getDate() + futureConst0);
 
       standardDay1 = new Date();
+      standardDay1.setHours(22);
       standardDay1.setDate(standardDay1.getDate() + futureConst1);
 
       projects = await back.getProjectsByQuery({

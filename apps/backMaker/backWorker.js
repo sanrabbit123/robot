@@ -2570,10 +2570,20 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
     let targetProjectHistories;
 
     targets = [];
-    for (let project of projects) {
-      if (project.process.action.value.trim() === action.trim()) {
-        targets.push(project.proid);
+    if (typeof action === "string") {
+      for (let project of projects) {
+        if (project.process.action.value.trim() === action.trim()) {
+          targets.push(project.proid);
+        }
       }
+    } else if (Array.isArray(action)) {
+      for (let project of projects) {
+        if (action.includes(project.process.action.value.trim())) {
+          targets.push(project.proid);
+        }
+      }
+    } else {
+      throw new Error("invaild input");
     }
     targets = [ ...new Set(targets) ];
 
@@ -2638,14 +2648,37 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
 
 
 
-      // to : 현장미팅 확정
-
-
-
-      filteredObject = actionFilter("계약금 안내", clients, clientHistories);
+      // to: 현장미팅 확정
+      filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율" ], clients, clientHistories);
       targets = [];
 
-      
+
+
+
+
+      // to: 의뢰서 공유
+      filteredObject = actionFilter([ "현장미팅 확정" ], clients, clientHistories);
+      targets = [];
+
+
+
+
+      // to: 현장미팅 피드백
+      filteredObject = actionFilter([ "현장미팅 확정", "의뢰서 공유" ], clients, clientHistories);
+      targets = [];
+
+
+
+      // to: 잔금 안내
+      filteredObject = actionFilter([ "현장미팅 확정", "의뢰서 공유" ], clients, clientHistories);
+      targets = [];
+
+
+
+
+      // to: 시작 대기
+      filteredObject = actionFilter([ "현장미팅 확정", "의뢰서 공유" ], clients, clientHistories);
+      targets = [];
 
 
 
