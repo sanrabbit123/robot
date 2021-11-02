@@ -458,7 +458,6 @@ DataPatch.prototype.toolsDashboard = function (button) {
         "현장미팅 확정",
         "의뢰서 공유",
         "현장미팅 피드백",
-        "계약서 안내",
         "잔금 안내",
         "시작 대기",
         "1차 제안",
@@ -5694,7 +5693,6 @@ DataPatch.prototype.projectMap = function () {
       "현장미팅 확정",
       "의뢰서 공유",
       "현장미팅 피드백",
-      "계약서 안내",
       "잔금 안내",
       "시작 대기",
       "1차 제안",
@@ -5713,7 +5711,7 @@ DataPatch.prototype.projectMap = function () {
           [ "현장미팅 조율", "현장미팅 확정" ],
           [ "의뢰서 공유" ],
           [ "현장미팅 피드백" ],
-          [ "계약서 안내", "잔금 안내" ]
+          [ "잔금 안내" ]
         ]
       ],
       [

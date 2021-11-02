@@ -5794,6 +5794,12 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                           needs: "style," + desid + "," + proid + "," + method,
                                         }
                                       }, "/alimTalk");
+                                      if (thisName === "잔금") {
+                                        await ajaxJson({
+                                          whereQuery: { proid },
+                                          updateQuery: { "process.action": "잔금 안내" }
+                                        }, "/rawUpdateProject");
+                                      }
                                       window.alert("안내 발송을 완료하였습니다!");
                                     }
                                   } catch (e) {
@@ -7758,6 +7764,11 @@ ProjectJs.prototype.communicationRender = function () {
               noFlat: true,
               whereQuery: { cliid }
             }, "/getClients"))[0];
+
+            await GeneralJs.ajaxJson({
+              whereQuery: { proid },
+              updateQuery: { "process.action": "잔금 안내" }
+            }, "/rawUpdateProject");
 
             onoff = /온라인/gi.test(thisCase.service) ? "online" : "offline";
             await GeneralJs.ajaxJson({
