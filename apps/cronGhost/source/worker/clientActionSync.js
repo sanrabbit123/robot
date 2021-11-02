@@ -22,7 +22,7 @@ const worker = async function (package) {
   } = package;
   const { messageLog, errorLog } = mother;
   try {
-    await work.clientActionSync({ selfMongo: mongolocal, selfConsoleMongo: mongolocal, updateMongo: mongo });
+    await work.clientActionSync({ selfMongo: mongo, selfConsoleMongo: mongoconsole, updateMongo: mongo });
     await messageLog("client action sync done");
     return true;
   } catch (e) {

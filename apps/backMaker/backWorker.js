@@ -2649,35 +2649,68 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
 
 
       // to: 현장미팅 확정
-      filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율" ], clients, clientHistories);
+      filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율" ], projects, projectHistories);
       targets = [];
+      for (let { proid, process: { action, contract: { meeting: { date } } } } of filteredObject.projects) {
+        if (date.valueOf() > (new Date(2000, 0, 1)).valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf()) {
+          targets.push({ proid, to: "현장미팅 확정", from: action });
+        }
+      }
+
+      for (let { proid, to } of targets) {
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.action"] = to;
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let project of projects) {
+          if (projects.proid === proid) {
+            project.process.action = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          proid,
+          mode: "form",
+          from: from,
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
+
+
+
+
+
+
+
+
 
 
 
 
 
       // to: 의뢰서 공유
-      filteredObject = actionFilter([ "현장미팅 확정" ], clients, clientHistories);
+      filteredObject = actionFilter([ "현장미팅 확정" ], projects, projectHistories);
       targets = [];
 
 
 
-
       // to: 현장미팅 피드백
-      filteredObject = actionFilter([ "현장미팅 확정", "의뢰서 공유" ], clients, clientHistories);
+      filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율", "현장미팅 확정", "의뢰서 공유" ], projects, projectHistories);
       targets = [];
 
 
 
       // to: 잔금 안내
-      filteredObject = actionFilter([ "현장미팅 확정", "의뢰서 공유" ], clients, clientHistories);
+      filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율", "현장미팅 확정", "의뢰서 공유", "현장미팅 피드백" ], projects, projectHistories);
       targets = [];
 
 
 
 
       // to: 시작 대기
-      filteredObject = actionFilter([ "현장미팅 확정", "의뢰서 공유" ], clients, clientHistories);
+      filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율", "현장미팅 확정", "의뢰서 공유", "현장미팅 피드백", "잔금 안내" ], projects, projectHistories);
       targets = [];
 
 

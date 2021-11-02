@@ -1,5 +1,5 @@
 const dayId = [
-  "d142",
+  "d151",
 ];
 
 const hourId = [];
@@ -16,7 +16,7 @@ const worker = async function (package) {
   } = package;
   const { messageLog, messageSend, errorLog, equalJson } = mother;
   try {
-    const selfMongo = mongolocal;
+    const selfMongo = mongo;
     const today = new Date();
     const dayConst = [ '일', '월', '화', '수', '목', '금', '토' ];
     const logCollection = "firstMeetingLog";
@@ -51,11 +51,7 @@ const worker = async function (package) {
         ]
       }, { selfMongo });
 
-      await errorLog("working 1");
-
       if (projects.length > 0) {
-
-        await errorLog("working 2");
 
         clients = await back.getClientsByQuery({
           $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
@@ -64,8 +60,6 @@ const worker = async function (package) {
         for (let project of projects) {
           clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
           if (clientIndex !== -1) {
-
-            await errorLog("working 3");
 
             meetingDate = project.process.contract.meeting.date;
             client = clients.toNormal()[clientIndex];
@@ -84,36 +78,18 @@ const worker = async function (package) {
               }
             }
 
-
             if (boo) {
-
-              await errorLog("working 4");
-
-              if (client.phone === "010-2747-3403") {
-                await kakao.sendTalk(talkKey, client.name, client.phone, {
-                  client: client.name,
-                  date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
-                  day: dayConst[meetingDate.getDay()],
-                  hour: String(meetingDate.getHours()),
-                  minute: String(meetingDate.getMinutes()),
-                  host: address.homeinfo.ghost.host,
-                  path: "meeting",
-                  proid: project.proid,
-                });
-                await messageSend(client.name + " 고객님께 현장 미팅 알림을 전송하였어요.", "#400_customer", true);
-              } else {
-                await messageSend(JSON.stringify({
-                  client: client.name,
-                  date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
-                  day: dayConst[meetingDate.getDay()],
-                  hour: String(meetingDate.getHours()),
-                  minute: String(meetingDate.getMinutes()),
-                  host: address.homeinfo.ghost.host,
-                  path: "meeting",
-                  proid: project.proid,
-                }, null, 2), "#error_log", false);
-              }
-
+              await kakao.sendTalk(talkKey, client.name, client.phone, {
+                client: client.name,
+                date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
+                day: dayConst[meetingDate.getDay()],
+                hour: String(meetingDate.getHours()),
+                minute: String(meetingDate.getMinutes()),
+                host: address.homeinfo.ghost.host,
+                path: "meeting",
+                proid: project.proid,
+              });
+              await messageSend(client.name + " 고객님께 현장 미팅 알림을 전송하였어요.", "#400_customer", true);
             }
           }
         }
