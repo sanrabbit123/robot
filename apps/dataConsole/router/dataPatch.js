@@ -455,7 +455,7 @@ DataPatch.prototype.toolsDashboard = function (button) {
       resultObj.buttons = [
         "계약금 안내",
         "현장미팅 조율",
-        "의뢰서 작성중",
+        "현장미팅 확정",
         "의뢰서 공유",
         "현장미팅 피드백",
         "계약서 안내",
@@ -5691,7 +5691,7 @@ DataPatch.prototype.projectMap = function () {
     action: { name: "응대", position: "process.action", type: "string", items: [
       "계약금 안내",
       "현장미팅 조율",
-      "의뢰서 작성중",
+      "현장미팅 확정",
       "의뢰서 공유",
       "현장미팅 피드백",
       "계약서 안내",
@@ -5710,8 +5710,8 @@ DataPatch.prototype.projectMap = function () {
         "계약 대기",
         [
           [ "계약금 안내" ],
-          [ "현장미팅 조율" ],
-          [ "의뢰서 작성중", "의뢰서 공유" ],
+          [ "현장미팅 조율", "현장미팅 확정" ],
+          [ "의뢰서 공유" ],
           [ "현장미팅 피드백" ],
           [ "계약서 안내", "잔금 안내" ]
         ]

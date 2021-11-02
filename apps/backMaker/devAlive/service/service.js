@@ -28,6 +28,24 @@ Service.prototype.toNormal = function () {
   return obj;
 }
 
+Service.prototype.toMatrix = function () {
+  const { title, checklist } = this.setting.contents;
+  let matrix;
+  let num;
+
+  matrix = [ [ title, "" ] ];
+  num = 0;
+  for (let { title, children } of checklist) {
+    matrix.push([ String(num + 1), title ]);
+    for (let obj of children) {
+      matrix.push([ obj.title, obj.contents.replace(/\<[ub]\%/gi, '').replace(/\%[ub]\>/gi, '') ]);
+    }
+    num++;
+  }
+
+  return matrix;
+}
+
 Service.prototype.uploadAppleNote = async function () {
   if (this.kind !== "checklist") {
     throw new Error("only available in checklist");
