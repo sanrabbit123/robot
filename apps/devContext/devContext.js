@@ -480,11 +480,11 @@ DevContext.prototype.launching = async function () {
     // console.log(await aliveMembers.aliveRequest("/push", { text: "이제 다시 사용하셔도 됩니다!" }));
 
 
+    await this.MONGOCONSOLEC.connect();
 
+    await work.projectActionSync({ selfMongo: this.MONGOC, selfConsoleMongo: this.MONGOCONSOLEC, updateMongo: this.MONGOC });
 
-    await work.projectActionSync({ selfMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC, updateMongo: this.MONGOLOCALC });
-    
-
+    await this.MONGOCONSOLEC.close();
 
 
 

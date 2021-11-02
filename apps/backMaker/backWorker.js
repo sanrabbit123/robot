@@ -2715,7 +2715,7 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
       filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율", "현장미팅 확정", "의뢰서 공유" ], projects, projectHistories);
       targets = [];
       for (let { proid, process: { action, contract: { meeting: { date } } } } of filteredObject.projects) {
-        if (date.valueOf() >= (new Date()).valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf()) {
+        if (date.valueOf() <= (new Date()).valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf()) {
           targets.push({ proid, from: action, to: "현장미팅 피드백" });
         }
       }

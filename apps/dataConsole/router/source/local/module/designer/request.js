@@ -3580,27 +3580,28 @@ DesignerJs.prototype.requestView = async function () {
     this.project = null;
     this.client = null;
     this.requestBoxes = [];
-    this.requestDetailLaunching(this.desid);
-
-    if (getObj.cliid !== undefined) {
-      if (getObj.desid === undefined) {
-        projects = await ajaxJson({ noFlat: true, whereQuery: { $and: [ { cliid: getObj.cliid }, { desid: { $regex: "^d" } } ] } }, "/getProjects");
-        if (projects.length > 0) {
-          this.requestDetailLaunching(projects[0].desid);
-          for (let box of this.requestBoxes) {
+    this.requestDetailLaunching(this.desid, async () => {
+      if (getObj.cliid !== undefined) {
+        if (getObj.desid === undefined) {
+          projects = await ajaxJson({ noFlat: true, whereQuery: { $and: [ { cliid: getObj.cliid }, { desid: { $regex: "^d" } } ] } }, "/getProjects");
+          if (projects.length > 0) {
+            instance.requestDetailLaunching(projects[0].desid, () => {
+              for (let box of instance.requestBoxes) {
+                if (box.getAttribute("cliid") === getObj.cliid) {
+                  box.click();
+                }
+              }
+            });
+          }
+        } else {
+          for (let box of instance.requestBoxes) {
             if (box.getAttribute("cliid") === getObj.cliid) {
               box.click();
             }
           }
         }
-      } else {
-        for (let box of this.requestBoxes) {
-          if (box.getAttribute("cliid") === getObj.cliid) {
-            box.click();
-          }
-        }
       }
-    }
+    });
 
   } catch (e) {
     console.log(e);
