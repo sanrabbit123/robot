@@ -1,4 +1,6 @@
-const dayId = [];
+const dayId = [
+  "d122",
+];
 
 const hourId = [];
 
@@ -12,7 +14,7 @@ const worker = async function (package) {
     mongo, mongoconsole, mongolocal,
     rethink,
   } = package;
-  const { messageLog, errorLog, equalJson } = mother;
+  const { messageLog, messageSend, errorLog, equalJson } = mother;
   try {
     const selfMongo = mongolocal;
     const today = new Date();
@@ -72,16 +74,30 @@ const worker = async function (package) {
               }
             }
             if (boo) {
-              await kakao.sendTalk(talkKey, client.name, client.phone, {
-                client: client.name,
-                date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
-                day: dayConst[meetingDate.getDay()],
-                hour: String(meetingDate.getHours()),
-                minute: String(meetingDate.getMinutes()),
-                host: address.homeinfo.ghost.host,
-                path: "meeting",
-                proid: project.proid,
-              });
+              if (client.phone === "010-2747-3403") {
+                await kakao.sendTalk(talkKey, client.name, client.phone, {
+                  client: client.name,
+                  date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
+                  day: dayConst[meetingDate.getDay()],
+                  hour: String(meetingDate.getHours()),
+                  minute: String(meetingDate.getMinutes()),
+                  host: address.homeinfo.ghost.host,
+                  path: "meeting",
+                  proid: project.proid,
+                });
+                await messageSend(client.name + " 고객님께 현장 미팅 알림을 전송하였어요.", "#400_customer", true);
+              } else {
+                await messageSend(JSON.stringify({
+                  client: client.name,
+                  date: String(meetingDate.getMonth() + 1) + "월 " + String(meetingDate.getDate()) + "일",
+                  day: dayConst[meetingDate.getDay()],
+                  hour: String(meetingDate.getHours()),
+                  minute: String(meetingDate.getMinutes()),
+                  host: address.homeinfo.ghost.host,
+                  path: "meeting",
+                  proid: project.proid,
+                }, null, 2), "#error_log", false);
+              }
             }
           }
         }

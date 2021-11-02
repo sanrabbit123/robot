@@ -552,24 +552,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const sheetsId = "11hhpDXwGDnb2F3xJAXjG3gQY0tZKvhLHdHDL5psfzxw";
-    const selfMongo = this.MONGOLOCALC;
-    const services = await back.getServicesByKind("checklist", { selfMongo });
-    const sheetsNames = [
-      "체크리스트_촬영세팅",
-      "체크리스트_시공진행",
-      "체크리스트_제품구매",
-      "체크리스트_디자인제안",
-      "체크리스트_현장미팅",
-      "체크리스트_전체일정"
-    ];
-    const targetMatrix = services.toMatrix();
-
-    for (let i = 0; i < targetMatrix.length; i++) {
-      await sheets.update_value_inPython(sheetsId, sheetsNames[i], targetMatrix[i]);
-    }
-
-
 
 
 

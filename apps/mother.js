@@ -3041,11 +3041,16 @@ Mother.prototype.errorLog = function (text) {
   });
 }
 
-Mother.prototype.messageSend = function (text, channel) {
+Mother.prototype.messageSend = function (text, channel = "silent", voice = false) {
   if (typeof text === "object" && text !== null) {
     if (typeof text.text === "string" && typeof text.channel === "string") {
       channel = text.channel;
       text = text.text;
+      if (text.voice === true) {
+        voice = true;
+      } else {
+        voice = false;
+      }
     } else {
       throw new Error("invaild input");
     }
@@ -3054,12 +3059,31 @@ Mother.prototype.messageSend = function (text, channel) {
       throw new Error("invaild input");
     }
   }
+  if (voice !== true) {
+    voice = false;
+  }
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const recordUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/messageLog";
+  const voiceUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/voice";
   const axios = require("axios");
   const collection = "messageLog";
+  const emptyPromise = () => {
+    return new Promise((resolve, reject) => {
+      resolve({ status: 200, message: "done" });
+    });
+  }
   return new Promise((resolve, reject) => {
     axios.post(recordUrl, { text, channel, collection }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        if (voice) {
+          return axios.post(voiceUrl, { text }, { headers: { "Content-Type": "application/json" } });
+        } else {
+          return emptyPromise();
+        }
+      }
+    }).then((res) => {
       if (res.status !== 200) {
         reject(res);
       } else {
