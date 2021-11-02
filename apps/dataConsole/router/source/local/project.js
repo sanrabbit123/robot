@@ -1917,7 +1917,7 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
             await ajaxJson({
               mode: "sse",
               db: "console",
-              collection: "sse_clientCard",
+              collection: "sse_projectCard",
               log: true,
               who: cookies.homeliaisonConsoleLoginedEmail,
               updateQuery: {
@@ -2691,7 +2691,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
               await ajaxJson({
                 mode: "sse",
                 db: "console",
-                collection: "sse_clientCard",
+                collection: "sse_projectCard",
                 log: true,
                 who: cookies.homeliaisonConsoleLoginedEmail,
                 updateQuery: {
@@ -2782,7 +2782,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
           await ajaxJson({
             mode: "sse",
             db: "console",
-            collection: "sse_clientCard",
+            collection: "sse_projectCard",
             log: true,
             who: cookies.homeliaisonConsoleLoginedEmail,
             updateQuery: {

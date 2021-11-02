@@ -2641,7 +2641,8 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
       updateMongo = option.updateMongo;
     }
 
-    projects = await back.getProjectsByQuery({ $and: [ { designer: { $regex: "^d" } }, { "process.status": { $regex: "^[대진홀]" } } ] }, { selfMongo, withTools: true });
+    projects = await back.getProjectsByQuery({ $and: [ { desid: { $regex: "^d" } }, { "process.status": { $regex: "^[대진홀]" } } ] }, { selfMongo, withTools: true });
+
     if (projects.length > 0) {
       projectHistories = await back.getHistoriesByQuery("project", { $or: projects.toNormal().map((p) => { return { proid: p.proid } }) }, { selfMongo: selfConsoleMongo });
       clients = await back.getClientsByQuery({ $or: projects.toNormal().map((p) => { return { cliid: p.cliid }; }) }, { selfMongo });
@@ -2798,6 +2799,15 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
         });
         console.log(whereQuery, updateQuery);
       }
+
+      await requestSystem("https://" + this.address.backinfo.host + "/generalMongo", {
+        mode: "sse",
+        db: "console",
+        collection: "sse_projectCard",
+        log: true,
+        who: "autoBot",
+        updateQueries
+      }, { headers: { "Content-Type": "application/json", "origin": "https://" + this.address.backinfo.host } });
 
     }
 
