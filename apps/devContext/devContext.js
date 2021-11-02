@@ -482,6 +482,10 @@ DevContext.prototype.launching = async function () {
 
 
 
+    await work.projectActionSync({ selfMongo: this.MONGOLOCALC, selfConsoleMongo: this.MONGOLOCALC, updateMongo: this.MONGOLOCALC });
+    
+
+
 
 
     // let note, targetArr;

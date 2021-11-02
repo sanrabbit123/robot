@@ -1912,7 +1912,7 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
               index,
               thisCase,
               user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
-            }, "/updateClient");
+            }, "/updateProject");
 
             await ajaxJson({
               mode: "sse",
@@ -2066,7 +2066,7 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
           column: "manager",
           value: (member === "미정" ? '-' : member),
           email: cookies.homeliaisonConsoleLoginedEmail
-        }, "/updateClientHistory");
+        }, "/updateProjectHistory");
         await instance.mother.greenAlert("담당자가 " + member + "(으)로 설정되었습니다!");
       }
       this.parentElement.parentElement.style.background = colorChip.white;
@@ -2686,7 +2686,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
                 index,
                 thisCase,
                 user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
-              }, "/updateClient");
+              }, "/updateProject");
 
               await ajaxJson({
                 mode: "sse",
@@ -2777,7 +2777,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
             index,
             thisCase,
             user: cookies.homeliaisonConsoleLoginedName + token + cookies.homeliaisonConsoleLoginedEmail
-          }, "/updateClient");
+          }, "/updateProject");
 
           await ajaxJson({
             mode: "sse",
@@ -2808,7 +2808,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
             column: "manager",
             value: value,
             email: cookies.homeliaisonConsoleLoginedEmail
-          }, "/updateClientHistory");
+          }, "/updateProjectHistory");
           await instance.mother.greenAlert("담당자가 " + value + "(으)로 설정되었습니다!");
 
         }
@@ -2876,7 +2876,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
               column: "important",
               value: 1 - important,
               email: cookies.homeliaisonConsoleLoginedEmail
-            }, "/updateClientHistory").then(() => {
+            }, "/updateProjectHistory").then(() => {
               const target = self.children[1];
               if (important === 0) {
                 target.style.color = colorChip.red;

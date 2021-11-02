@@ -2593,7 +2593,6 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
 
     return { projects: targetProjects, histories: targetProjectHistories };
   }
-
   let selfMongo, selfConsoleMongo, updateMongo;
   let selfBoo, selfConsoleBoo, updateBoo;
   let fromLocalMode;
@@ -2606,12 +2605,13 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
   try {
     let projects, projectHistories;
     let clients, clientHistories;
+    let designers, designerHistories;
     let filteredObject;
     let targets;
     let tempArr, tempArr2;
     let whereQuery, updateQuery;
     let thisClient;
-    let tempObj;
+    let tempObj, tempIndex;
     let updateQueries;
 
     if (!selfBoo) {
@@ -2644,20 +2644,21 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
     projects = await back.getProjectsByQuery({ $and: [ { designer: { $regex: "^d" } }, { "process.status": { $regex: "^[대진홀]" } } ] }, { selfMongo, withTools: true });
     if (projects.length > 0) {
       projectHistories = await back.getHistoriesByQuery("project", { $or: projects.toNormal().map((p) => { return { proid: p.proid } }) }, { selfMongo: selfConsoleMongo });
+      clients = await back.getClientsByQuery({ $or: projects.toNormal().map((p) => { return { cliid: p.cliid }; }) }, { selfMongo });
+      clientHistories = await back.getHistoriesByQuery("client", { $or: projects.toNormal().map((p) => { return { cliid: p.cliid }; }) }, { selfMongo: selfConsoleMongo });
+      designers = await back.getDesignersByQuery({ $or: projects.toNormal().map((p) => { return { desid: p.desid }; }) }, { selfMongo });
+      designerHistories = await back.getHistoriesByQuery("designer", { $or: projects.toNormal().map((p) => { return { desid: p.desid }; }) }, { selfMongo: selfConsoleMongo });
       updateQueries = [];
-
-
 
       // to: 현장미팅 확정
       filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율" ], projects, projectHistories);
       targets = [];
       for (let { proid, process: { action, contract: { meeting: { date } } } } of filteredObject.projects) {
         if (date.valueOf() > (new Date(2000, 0, 1)).valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf()) {
-          targets.push({ proid, to: "현장미팅 확정", from: action });
+          targets.push({ proid, from: action, to: "현장미팅 확정" });
         }
       }
-
-      for (let { proid, to } of targets) {
+      for (let { proid, from, to } of targets) {
         whereQuery = { proid };
         updateQuery = {};
         updateQuery["process.action"] = to;
@@ -2671,448 +2672,132 @@ BackWorker.prototype.projectActionSync = async function (option = { selfMongo: n
         updateQueries.push({
           proid,
           mode: "form",
-          from: from,
-          to: to,
+          from,
+          to,
           randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
         });
         console.log(whereQuery, updateQuery);
       }
-
-
-
-
-
-
-
-
-
-
-
-
 
       // to: 의뢰서 공유
       filteredObject = actionFilter([ "현장미팅 확정" ], projects, projectHistories);
       targets = [];
-
-
+      for (let { proid, desid, cliid, process: { action } } of filteredObject.projects) {
+        tempObj = designerHistories.find((d) => { return d.desid === desid });
+        tempIndex = tempObj.request.analytics.send.findIndex((obj) => { return obj.cliid === cliid });
+        if (tempIndex !== -1) {
+          targets.push({ proid, from: action, to: "의뢰서 공유" });
+        }
+      }
+      for (let { proid, from, to } of targets) {
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.action"] = to;
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let project of projects) {
+          if (projects.proid === proid) {
+            project.process.action = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          proid,
+          mode: "form",
+          from,
+          to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
 
       // to: 현장미팅 피드백
       filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율", "현장미팅 확정", "의뢰서 공유" ], projects, projectHistories);
       targets = [];
-
-
+      for (let { proid, process: { action, contract: { meeting: { date } } } } of filteredObject.projects) {
+        if (date.valueOf() >= (new Date()).valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf()) {
+          targets.push({ proid, from: action, to: "현장미팅 피드백" });
+        }
+      }
+      for (let { proid, from, to } of targets) {
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.action"] = to;
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let project of projects) {
+          if (projects.proid === proid) {
+            project.process.action = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          proid,
+          mode: "form",
+          from,
+          to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
 
       // to: 잔금 안내
       filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율", "현장미팅 확정", "의뢰서 공유", "현장미팅 피드백" ], projects, projectHistories);
       targets = [];
-
-
-
+      for (let { proid, desid, cliid, process: { action, contract: { first: { date } } } } of filteredObject.projects) {
+        tempObj = clientHistories.find((c) => { return c.cliid === cliid });
+        tempIndex = tempObj.curation.analytics.send.findIndex((obj) => { return obj.page === "universalEstimation" && obj.date.valueOf() > date.valueOf() });
+        if (tempIndex !== -1) {
+          targets.push({ proid, from: action, to: "잔금 안내" });
+        }
+      }
+      for (let { proid, from, to } of targets) {
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.action"] = to;
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let project of projects) {
+          if (projects.proid === proid) {
+            project.process.action = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          proid,
+          mode: "form",
+          from,
+          to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
 
       // to: 시작 대기
       filteredObject = actionFilter([ "계약금 안내", "현장미팅 조율", "현장미팅 확정", "의뢰서 공유", "현장미팅 피드백", "잔금 안내" ], projects, projectHistories);
       targets = [];
-
-
-
-    }
-
-
-
-
-    clients = await back.getClientsByQuery({ requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } }, { selfMongo, withTools: true });
-    if (clients.length > 0) {
-      clientHistories = await back.getHistoriesByQuery("client", { $or: clients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfConsoleMongo });
-      updateQueries = [];
-
-      // 1 - 1차 응대 예정
-      filteredObject = actionFilter("1차 응대 예정", clients, clientHistories);
-      targets = [];
-      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
-        thisClient = clients.pick(cliid);
-        for (let i = 0; i < thisClient.requests.length; i++) {
-          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "1차 응대 예정") {
-            tempObj = { cliid, requestNumber: i };
-            tempArr = call.out.concat(call.in).filter((obj) => { return obj.success; });
-            tempArr = tempArr.filter((obj) => { return obj.date.valueOf() >= thisClient.requests[i].request.timeline.valueOf(); });
-            if (i !== 0) {
-              tempArr = tempArr.filter((obj) => { return obj.date.valueOf() < thisClient.requests[i - 1].request.timeline.valueOf(); });
-            }
-            tempArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
-
-            tempArr2 = send.filter((obj) => { return obj.page === "styleCuration" && obj.mode === "general" });
-            tempArr2 = tempArr2.filter((obj) => { return obj.date.valueOf() >= thisClient.requests[i].request.timeline.valueOf(); });
-            if (i !== 0) {
-              tempArr2 = tempArr2.filter((obj) => { return obj.date.valueOf() < thisClient.requests[i - 1].request.timeline.valueOf(); });
-            }
-            tempArr2.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
-
-            if (tempArr.length === 0) {
-              if (tempArr2.length > 0) {
-                if (page.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-                  if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-                    if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-                      tempObj.to = "피드백과 응대 예정";
-                    } else {
-                      tempObj.to = "부재중 제안 발송";
-                    }
-                  } else {
-                    tempObj.to = "상세 설문 대기";
-                  }
-                } else {
-                  tempObj.to = "부재중 알림 발송";
-                }
-                targets.push(tempObj);
-              }
-            } else {
-              if (tempArr2.length > 0) {
-                if (tempArr2[0].date.valueOf() < tempArr[0].date.valueOf()) {
-                  if (page.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-                    if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-                      if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-                        tempObj.to = "피드백과 응대 예정";
-                      } else {
-                        tempObj.to = "부재중 제안 발송";
-                      }
-                    } else {
-                      tempObj.to = "상세 설문 대기";
-                    }
-                  } else {
-                    tempObj.to = "부재중 알림 발송";
-                  }
-                } else {
-                  if (send.filter((obj) => { return obj.page === "styleCuration" && obj.mode === "lite" }).length > 0) {
-                    if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-                      if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-                        tempObj.to = "제안 피드백 예정";
-                      } else {
-                        tempObj.to = "제안 발송 예정";
-                      }
-                    } else {
-                      tempObj.to = "스타일 체크 대기";
-                    }
-                  } else {
-                    tempObj.to = "1차 응대 후 대기";
-                  }
-                }
-              } else {
-                if (send.filter((obj) => { return obj.page === "styleCuration" && obj.mode === "lite" }).length > 0) {
-                  if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-                    if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-                      tempObj.to = "제안 피드백 예정";
-                    } else {
-                      tempObj.to = "제안 발송 예정";
-                    }
-                  } else {
-                    tempObj.to = "스타일 체크 대기";
-                  }
-                } else {
-                  tempObj.to = "1차 응대 후 대기";
-                }
-              }
-              targets.push(tempObj);
-            }
-          }
+      for (let { proid, process: { action, contract: { remain: { date } } } } of filteredObject.projects) {
+        if (date.valueOf() > (new Date(2000, 0, 1)).valueOf() && (new Date(3000, 0, 1)).valueOf() > date.valueOf()) {
+          targets.push({ proid, from: action, to: "시작 대기" });
         }
       }
-      for (let { cliid, to, requestNumber } of targets) {
-        whereQuery = { cliid };
+      for (let { proid, from, to } of targets) {
+        whereQuery = { proid };
         updateQuery = {};
-        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
-        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
-        for (let client of clients) {
-          if (client.cliid === cliid) {
-            client.requests[requestNumber].analytics.response.action.value = to;
+        updateQuery["process.action"] = to;
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let project of projects) {
+          if (projects.proid === proid) {
+            project.process.action = to;
             break;
           }
         }
         updateQueries.push({
-          cliid,
-          requestNumber,
-          mode: "action",
-          from: "1차 응대 예정",
-          to: to,
+          proid,
+          mode: "form",
+          from,
+          to,
           randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
         });
         console.log(whereQuery, updateQuery);
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-      // 1.2 - 1차 응대 후 대기
-      filteredObject = actionFilter("1차 응대 후 대기", clients, clientHistories);
-      targets = [];
-      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
-        thisClient = clients.pick(cliid);
-        for (let i = 0; i < thisClient.requests.length; i++) {
-          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "1차 응대 후 대기") {
-            tempObj = { cliid, requestNumber: i };
-            if (send.filter((obj) => { return obj.page === "styleCuration" && obj.mode === "lite" }).length > 0) {
-              if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-                if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-                  tempObj.to = "제안 피드백 예정";
-                } else {
-                  tempObj.to = "제안 발송 예정";
-                }
-              } else {
-                tempObj.to = "스타일 체크 대기";
-              }
-              targets.push(tempObj);
-            }
-          }
-        }
-      }
-      for (let { cliid, to, requestNumber } of targets) {
-        whereQuery = { cliid };
-        updateQuery = {};
-        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
-        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
-        for (let client of clients) {
-          if (client.cliid === cliid) {
-            client.requests[requestNumber].analytics.response.action.value = to;
-            break;
-          }
-        }
-        updateQueries.push({
-          cliid,
-          requestNumber,
-          mode: "action",
-          from: "1차 응대 후 대기",
-          to: to,
-          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-        });
-        console.log(whereQuery, updateQuery);
-      }
-
-
-      // 1.3 - 스타일 체크 대기
-      filteredObject = actionFilter("스타일 체크 대기", clients, clientHistories);
-      targets = [];
-      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
-        thisClient = clients.pick(cliid);
-        for (let i = 0; i < thisClient.requests.length; i++) {
-          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "스타일 체크 대기") {
-            tempObj = { cliid, requestNumber: i };
-            if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-              if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-                tempObj.to = "제안 피드백 예정";
-              } else {
-                tempObj.to = "제안 발송 예정";
-              }
-              targets.push(tempObj);
-            }
-          }
-        }
-      }
-      for (let { cliid, to, requestNumber } of targets) {
-        whereQuery = { cliid };
-        updateQuery = {};
-        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
-        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
-        for (let client of clients) {
-          if (client.cliid === cliid) {
-            client.requests[requestNumber].analytics.response.action.value = to;
-            break;
-          }
-        }
-        updateQueries.push({
-          cliid,
-          requestNumber,
-          mode: "action",
-          from: "스타일 체크 대기",
-          to: to,
-          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-        });
-        console.log(whereQuery, updateQuery);
-      }
-
-
-      // 1.4 - 제안 발송 예정
-      filteredObject = actionFilter("제안 발송 예정", clients, clientHistories);
-      targets = [];
-      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
-        thisClient = clients.pick(cliid);
-        for (let i = 0; i < thisClient.requests.length; i++) {
-          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "제안 발송 예정") {
-            tempObj = { cliid, requestNumber: i };
-            if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-              tempObj.to = "제안 피드백 예정";
-              targets.push(tempObj);
-            }
-          }
-        }
-      }
-      for (let { cliid, to, requestNumber } of targets) {
-        whereQuery = { cliid };
-        updateQuery = {};
-        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
-        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
-        for (let client of clients) {
-          if (client.cliid === cliid) {
-            client.requests[requestNumber].analytics.response.action.value = to;
-            break;
-          }
-        }
-        updateQueries.push({
-          cliid,
-          requestNumber,
-          mode: "action",
-          from: "제안 발송 예정",
-          to: to,
-          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-        });
-        console.log(whereQuery, updateQuery);
-      }
-
-
-      // 2.2 - 부재중 알림 발송
-      filteredObject = actionFilter("부재중 알림 발송", clients, clientHistories);
-      targets = [];
-      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
-        thisClient = clients.pick(cliid);
-        for (let i = 0; i < thisClient.requests.length; i++) {
-          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "부재중 알림 발송") {
-            tempObj = { cliid, requestNumber: i };
-
-            if (page.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-              if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-                if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-                  tempObj.to = "피드백과 응대 예정";
-                } else {
-                  tempObj.to = "부재중 제안 발송";
-                }
-              } else {
-                tempObj.to = "상세 설문 대기";
-              }
-              targets.push(tempObj);
-            }
-
-          }
-        }
-      }
-      for (let { cliid, to, requestNumber } of targets) {
-        whereQuery = { cliid };
-        updateQuery = {};
-        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
-        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
-        for (let client of clients) {
-          if (client.cliid === cliid) {
-            client.requests[requestNumber].analytics.response.action.value = to;
-            break;
-          }
-        }
-        updateQueries.push({
-          cliid,
-          requestNumber,
-          mode: "action",
-          from: "부재중 알림 발송",
-          to: to,
-          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-        });
-        console.log(whereQuery, updateQuery);
-      }
-
-
-      // 2.3 - 상세 설문 대기
-      filteredObject = actionFilter("상세 설문 대기", clients, clientHistories);
-      targets = [];
-      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
-        thisClient = clients.pick(cliid);
-        for (let i = 0; i < thisClient.requests.length; i++) {
-          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "상세 설문 대기") {
-            tempObj = { cliid, requestNumber: i };
-
-            if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
-              if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-                tempObj.to = "피드백과 응대 예정";
-              } else {
-                tempObj.to = "부재중 제안 발송";
-              }
-              targets.push(tempObj);
-            }
-
-          }
-        }
-      }
-      for (let { cliid, to, requestNumber } of targets) {
-        whereQuery = { cliid };
-        updateQuery = {};
-        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
-        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
-        for (let client of clients) {
-          if (client.cliid === cliid) {
-            client.requests[requestNumber].analytics.response.action.value = to;
-            break;
-          }
-        }
-        updateQueries.push({
-          cliid,
-          requestNumber,
-          mode: "action",
-          from: "상세 설문 대기",
-          to: to,
-          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-        });
-        console.log(whereQuery, updateQuery);
-      }
-
-
-      // 2.4 - 부재중 제안 발송
-      filteredObject = actionFilter("부재중 제안 발송", clients, clientHistories);
-      targets = [];
-      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
-        thisClient = clients.pick(cliid);
-        for (let i = 0; i < thisClient.requests.length; i++) {
-          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "부재중 제안 발송") {
-            tempObj = { cliid, requestNumber: i };
-            if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
-              tempObj.to = "피드백과 응대 예정";
-              targets.push(tempObj);
-            }
-          }
-        }
-      }
-      for (let { cliid, to, requestNumber } of targets) {
-        whereQuery = { cliid };
-        updateQuery = {};
-        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
-        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
-        for (let client of clients) {
-          if (client.cliid === cliid) {
-            client.requests[requestNumber].analytics.response.action.value = to;
-            break;
-          }
-        }
-        updateQueries.push({
-          cliid,
-          requestNumber,
-          mode: "action",
-          from: "부재중 제안 발송",
-          to: to,
-          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
-        });
-        console.log(whereQuery, updateQuery);
-      }
-
-
-      await requestSystem("https://" + this.address.backinfo.host + "/generalMongo", {
-        mode: "sse",
-        db: "console",
-        collection: "sse_clientCard",
-        log: true,
-        who: "autoBot",
-        updateQueries
-      }, { headers: { "Content-Type": "application/json", "origin": "https://" + this.address.backinfo.host } });
 
     }
 
