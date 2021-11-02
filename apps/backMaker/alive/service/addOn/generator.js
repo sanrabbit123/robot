@@ -17,6 +17,14 @@ class Services extends Array {
     }
     return arr;
   }
+  toMatrix() {
+    let arr;
+    arr = [];
+    for (let i of this) {
+      arr.push(i.toMatrix());
+    }
+    return arr;
+  }
 }
 
 const withTools = function (Service) {
