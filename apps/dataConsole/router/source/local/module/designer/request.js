@@ -3291,6 +3291,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     } else {
 
       listIcon.addEventListener("click", function (e) {
+        instance.mode = "request";
         instance.requestDetailLaunching(designer.desid);
       });
 

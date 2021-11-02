@@ -2622,14 +2622,8 @@ DesignerJs.prototype.reportIconSet = function (desid) {
     } else {
 
       listIcon.addEventListener("click", function (e) {
-        let num = designer.information.did.replace(/[^0-9]/g, '');
-        let id;
-        id = '';
-        for (let i = 0; i < 3 - num.length; i++) {
-          id += '0';
-        }
-        id += num;
-        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+        instance.mode = "request";
+        instance.requestDetailLaunching(designer.desid);
       });
 
     }
