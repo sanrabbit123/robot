@@ -958,21 +958,14 @@ DesignerConsoleJs.prototype.consoleView = async function () {
             instance.pageHistory.shift();
             instance.pageHistory.shift();
           } else if (instance.pageHistory[1].status === "card") {
-            targetIndex = 5;
-            if (targets[targetIndex] !== undefined) {
-              targets[targetIndex].click();
-            } else if (instance.menuMap[targetIndex] !== undefined) {
-              instance.menuMap[targetIndex].event.call(({
+            if (targets[instance.pageHistory[1].index] !== undefined) {
+              targets[instance.pageHistory[1].index].click();
+            } else if (instance.menuMap[instance.pageHistory[1].index] !== undefined) {
+              instance.menuMap[instance.pageHistory[1].index].event.call(({
                 getAttribute: (index) => {
-                  return targetIndex;
+                  return instance.pageHistory[1].index;
                 }
               }));
-            }
-            instance.pageHistory.shift();
-            for (let box of instance.requestBoxes) {
-              if (box.getAttribute("cliid") === instance.pageHistory[1].cliid) {
-                box.click();
-              }
             }
             instance.pageHistory.shift();
             instance.pageHistory.shift();

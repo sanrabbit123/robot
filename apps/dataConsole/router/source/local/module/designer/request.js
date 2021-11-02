@@ -2027,217 +2027,219 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             {
               type: "click",
               event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                const totalImages = equalJson(JSON.stringify(images));
-                const mother = document.getElementById("totalcontents");
-                const className = "photoSelectedTarget";
-                const length = Number(this.getAttribute("length"));
-                const zIndex = 3;
-                const wordDictionary = {
-                  selected: "고객님이 선택한 사진",
-                  site: "고객님이 보낸 현장",
-                  preferred: "고객님의 선호 사진"
-                };
-                let img, height, imgBox;
-                let title, titleSize, bottom;
-                let titleBox;
-                let leftArrow, rightArrow;
-                let leftArrowBox, rightArrowBox;
-                let arrowHeight;
-                let arrowMargin;
-                let index, method, src;
-                let convertEvent;
+                if (desktop) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
+                  const totalImages = equalJson(JSON.stringify(images));
+                  const mother = document.getElementById("totalcontents");
+                  const className = "photoSelectedTarget";
+                  const length = Number(this.getAttribute("length"));
+                  const zIndex = 3;
+                  const wordDictionary = {
+                    selected: "고객님이 선택한 사진",
+                    site: "고객님이 보낸 현장",
+                    preferred: "고객님의 선호 사진"
+                  };
+                  let img, height, imgBox;
+                  let title, titleSize, bottom;
+                  let titleBox;
+                  let leftArrow, rightArrow;
+                  let leftArrowBox, rightArrowBox;
+                  let arrowHeight;
+                  let arrowMargin;
+                  let index, method, src;
+                  let convertEvent;
 
-                index = Number(this.getAttribute("index"));
-                method = this.getAttribute("method");
-                src = this.getAttribute("src");
+                  index = Number(this.getAttribute("index"));
+                  method = this.getAttribute("method");
+                  src = this.getAttribute("src");
 
-                convertEvent = () => {};
+                  convertEvent = () => {};
 
-                height = 78;
-                titleSize = 2;
-                bottom = 6.6;
-                arrowHeight = 1.7;
-                arrowMargin = 78;
+                  height = 78;
+                  titleSize = 2;
+                  bottom = 6.6;
+                  arrowHeight = 1.7;
+                  arrowMargin = 78;
 
-                createNode({
-                  mother,
-                  class: [ className ],
-                  events: [
-                    {
-                      type: "click",
-                      event: function (e) {
-                        const removeTargets = document.querySelectorAll('.' + className);
-                        for (let dom of removeTargets) {
-                          mother.removeChild(dom);
+                  createNode({
+                    mother,
+                    class: [ className ],
+                    events: [
+                      {
+                        type: "click",
+                        event: function (e) {
+                          const removeTargets = document.querySelectorAll('.' + className);
+                          for (let dom of removeTargets) {
+                            mother.removeChild(dom);
+                          }
                         }
                       }
+                    ],
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      width: String(100) + '%',
+                      height: String(100) + '%',
+                      background: colorChip.darkDarkShadow,
+                      zIndex: String(zIndex),
+                      animation: "justfadeineight 0.2s ease forwards",
                     }
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    width: String(100) + '%',
-                    height: String(100) + '%',
-                    background: colorChip.darkDarkShadow,
-                    zIndex: String(zIndex),
-                    animation: "justfadeineight 0.2s ease forwards",
-                  }
-                });
+                  });
 
-                img = createNode({
-                  mother,
-                  class: [ className ],
-                  mode: "img",
-                  attribute: [
-                    { src },
-                    { direction: "right" }
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(height) + '%',
-                    width: "auto",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    borderRadius: String(3) + "px",
-                  }
-                });
-                imgBox = img.getBoundingClientRect();
-                img.style.top = withOut(50, imgBox.height / 2, ea);
-                img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                title = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "click", "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
+                  img = createNode({
+                    mother,
+                    class: [ className ],
+                    mode: "img",
+                    attribute: [
+                      { src },
+                      { direction: "right" }
+                    ],
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(height) + '%',
+                      width: "auto",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      borderRadius: String(3) + "px",
                     }
-                  ],
-                  class: [ className ],
-                  text: wordDictionary[method],
-                  style: {
-                    position: "fixed",
-                    bottom: String(bottom) + '%',
-                    fontSize: String(titleSize) + "vh",
-                    fontWeight: String(600),
-                    color: colorChip.whiteBlack,
-                    left: String(50) + '%',
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                  }
-                });
-                titleBox = title.getBoundingClientRect();
-                title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                leftArrow = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
-                    }
-                  ],
-                  attribute: [
-                    { direction: "left" }
-                  ],
-                  class: [ className ],
-                  mode: "svg",
-                  source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(arrowHeight) + "vh",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    cursor: "pointer"
-                  }
-                });
-                leftArrowBox = leftArrow.getBoundingClientRect();
-                leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                rightArrow = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
-                    }
-                  ],
-                  attribute: [
-                    { direction: "right" }
-                  ],
-                  class: [ className ],
-                  mode: "svg",
-                  source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(arrowHeight) + "vh",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    cursor: "pointer"
-                  }
-                });
-                rightArrowBox = rightArrow.getBoundingClientRect();
-                rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                convertEvent = function (e) {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  const direction = this.getAttribute("direction");
-                  let targetIndex, targetImage;
-                  if (direction === "left") {
-                    targetIndex = index - 1;
-                    if (totalImages[targetIndex] === undefined) {
-                      targetIndex = length - 1;
-                    }
-                  } else {
-                    targetIndex = index + 1;
-                    if (totalImages[targetIndex] === undefined) {
-                      targetIndex = 0;
-                    }
-                  }
-                  targetImage = totalImages[targetIndex];
-                  img.setAttribute("src", targetImage);
+                  });
                   imgBox = img.getBoundingClientRect();
+                  img.style.top = withOut(50, imgBox.height / 2, ea);
                   img.style.left = withOut(50, imgBox.width / 2, ea);
-                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
 
-                  index = targetIndex;
-                  src = targetImage;
-                  method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
-
-                  title.textContent = wordDictionary[method];
+                  title = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "click", "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    class: [ className ],
+                    text: wordDictionary[method],
+                    style: {
+                      position: "fixed",
+                      bottom: String(bottom) + '%',
+                      fontSize: String(titleSize) + "vh",
+                      fontWeight: String(600),
+                      color: colorChip.whiteBlack,
+                      left: String(50) + '%',
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                    }
+                  });
                   titleBox = title.getBoundingClientRect();
                   title.style.left = withOut(50, titleBox.width / 2, ea);
+
+                  leftArrow = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    attribute: [
+                      { direction: "left" }
+                    ],
+                    class: [ className ],
+                    mode: "svg",
+                    source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(arrowHeight) + "vh",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      cursor: "pointer"
+                    }
+                  });
+                  leftArrowBox = leftArrow.getBoundingClientRect();
+                  leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+
+                  rightArrow = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    attribute: [
+                      { direction: "right" }
+                    ],
+                    class: [ className ],
+                    mode: "svg",
+                    source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(arrowHeight) + "vh",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      cursor: "pointer"
+                    }
+                  });
+                  rightArrowBox = rightArrow.getBoundingClientRect();
+                  rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                  convertEvent = function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const direction = this.getAttribute("direction");
+                    let targetIndex, targetImage;
+                    if (direction === "left") {
+                      targetIndex = index - 1;
+                      if (totalImages[targetIndex] === undefined) {
+                        targetIndex = length - 1;
+                      }
+                    } else {
+                      targetIndex = index + 1;
+                      if (totalImages[targetIndex] === undefined) {
+                        targetIndex = 0;
+                      }
+                    }
+                    targetImage = totalImages[targetIndex];
+                    img.setAttribute("src", targetImage);
+                    imgBox = img.getBoundingClientRect();
+                    img.style.left = withOut(50, imgBox.width / 2, ea);
+                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                    index = targetIndex;
+                    src = targetImage;
+                    method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
+
+                    title.textContent = wordDictionary[method];
+                    titleBox = title.getBoundingClientRect();
+                    title.style.left = withOut(50, titleBox.width / 2, ea);
+                  }
+                  leftArrow.addEventListener("click", convertEvent);
+                  rightArrow.addEventListener("click", convertEvent);
+                  img.addEventListener("click", convertEvent);
                 }
-                leftArrow.addEventListener("click", convertEvent);
-                rightArrow.addEventListener("click", convertEvent);
-                img.addEventListener("click", convertEvent);
               }
             }
           ],
@@ -2358,217 +2360,219 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             {
               type: "click",
               event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                const totalImages = equalJson(JSON.stringify(siteImages));
-                const mother = document.getElementById("totalcontents");
-                const className = "photoSelectedTarget";
-                const length = Number(this.getAttribute("length"));
-                const zIndex = 3;
-                const wordDictionary = {
-                  selected: "고객님이 선택한 사진",
-                  site: "고객님이 보낸 현장",
-                  preferred: "고객님의 선호 사진"
-                };
-                let img, height, imgBox;
-                let title, titleSize, bottom;
-                let titleBox;
-                let leftArrow, rightArrow;
-                let leftArrowBox, rightArrowBox;
-                let arrowHeight;
-                let arrowMargin;
-                let index, method, src;
-                let convertEvent;
+                if (desktop) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
+                  const totalImages = equalJson(JSON.stringify(siteImages));
+                  const mother = document.getElementById("totalcontents");
+                  const className = "photoSelectedTarget";
+                  const length = Number(this.getAttribute("length"));
+                  const zIndex = 3;
+                  const wordDictionary = {
+                    selected: "고객님이 선택한 사진",
+                    site: "고객님이 보낸 현장",
+                    preferred: "고객님의 선호 사진"
+                  };
+                  let img, height, imgBox;
+                  let title, titleSize, bottom;
+                  let titleBox;
+                  let leftArrow, rightArrow;
+                  let leftArrowBox, rightArrowBox;
+                  let arrowHeight;
+                  let arrowMargin;
+                  let index, method, src;
+                  let convertEvent;
 
-                index = Number(this.getAttribute("index"));
-                method = this.getAttribute("method");
-                src = this.getAttribute("src");
+                  index = Number(this.getAttribute("index"));
+                  method = this.getAttribute("method");
+                  src = this.getAttribute("src");
 
-                convertEvent = () => {};
+                  convertEvent = () => {};
 
-                height = 78;
-                titleSize = 2;
-                bottom = 6.6;
-                arrowHeight = 1.7;
-                arrowMargin = 78;
+                  height = 78;
+                  titleSize = 2;
+                  bottom = 6.6;
+                  arrowHeight = 1.7;
+                  arrowMargin = 78;
 
-                createNode({
-                  mother,
-                  class: [ className ],
-                  events: [
-                    {
-                      type: "click",
-                      event: function (e) {
-                        const removeTargets = document.querySelectorAll('.' + className);
-                        for (let dom of removeTargets) {
-                          mother.removeChild(dom);
+                  createNode({
+                    mother,
+                    class: [ className ],
+                    events: [
+                      {
+                        type: "click",
+                        event: function (e) {
+                          const removeTargets = document.querySelectorAll('.' + className);
+                          for (let dom of removeTargets) {
+                            mother.removeChild(dom);
+                          }
                         }
                       }
+                    ],
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      width: String(100) + '%',
+                      height: String(100) + '%',
+                      background: colorChip.darkDarkShadow,
+                      zIndex: String(zIndex),
+                      animation: "justfadeineight 0.2s ease forwards",
                     }
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    width: String(100) + '%',
-                    height: String(100) + '%',
-                    background: colorChip.darkDarkShadow,
-                    zIndex: String(zIndex),
-                    animation: "justfadeineight 0.2s ease forwards",
-                  }
-                });
+                  });
 
-                img = createNode({
-                  mother,
-                  class: [ className ],
-                  mode: "img",
-                  attribute: [
-                    { src },
-                    { direction: "right" }
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(height) + '%',
-                    width: "auto",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    borderRadius: String(3) + "px",
-                  }
-                });
-                imgBox = img.getBoundingClientRect();
-                img.style.top = withOut(50, imgBox.height / 2, ea);
-                img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                title = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "click", "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
+                  img = createNode({
+                    mother,
+                    class: [ className ],
+                    mode: "img",
+                    attribute: [
+                      { src },
+                      { direction: "right" }
+                    ],
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(height) + '%',
+                      width: "auto",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      borderRadius: String(3) + "px",
                     }
-                  ],
-                  class: [ className ],
-                  text: wordDictionary[method],
-                  style: {
-                    position: "fixed",
-                    bottom: String(bottom) + '%',
-                    fontSize: String(titleSize) + "vh",
-                    fontWeight: String(600),
-                    color: colorChip.whiteBlack,
-                    left: String(50) + '%',
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                  }
-                });
-                titleBox = title.getBoundingClientRect();
-                title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                leftArrow = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
-                    }
-                  ],
-                  attribute: [
-                    { direction: "left" }
-                  ],
-                  class: [ className ],
-                  mode: "svg",
-                  source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(arrowHeight) + "vh",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    cursor: "pointer"
-                  }
-                });
-                leftArrowBox = leftArrow.getBoundingClientRect();
-                leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                rightArrow = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
-                    }
-                  ],
-                  attribute: [
-                    { direction: "right" }
-                  ],
-                  class: [ className ],
-                  mode: "svg",
-                  source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(arrowHeight) + "vh",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    cursor: "pointer"
-                  }
-                });
-                rightArrowBox = rightArrow.getBoundingClientRect();
-                rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                convertEvent = function (e) {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  const direction = this.getAttribute("direction");
-                  let targetIndex, targetImage;
-                  if (direction === "left") {
-                    targetIndex = index - 1;
-                    if (totalImages[targetIndex] === undefined) {
-                      targetIndex = length - 1;
-                    }
-                  } else {
-                    targetIndex = index + 1;
-                    if (totalImages[targetIndex] === undefined) {
-                      targetIndex = 0;
-                    }
-                  }
-                  targetImage = totalImages[targetIndex];
-                  img.setAttribute("src", targetImage);
+                  });
                   imgBox = img.getBoundingClientRect();
+                  img.style.top = withOut(50, imgBox.height / 2, ea);
                   img.style.left = withOut(50, imgBox.width / 2, ea);
-                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
 
-                  index = targetIndex;
-                  src = targetImage;
-                  method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
-
-                  title.textContent = wordDictionary[method];
+                  title = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "click", "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    class: [ className ],
+                    text: wordDictionary[method],
+                    style: {
+                      position: "fixed",
+                      bottom: String(bottom) + '%',
+                      fontSize: String(titleSize) + "vh",
+                      fontWeight: String(600),
+                      color: colorChip.whiteBlack,
+                      left: String(50) + '%',
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                    }
+                  });
                   titleBox = title.getBoundingClientRect();
                   title.style.left = withOut(50, titleBox.width / 2, ea);
+
+                  leftArrow = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    attribute: [
+                      { direction: "left" }
+                    ],
+                    class: [ className ],
+                    mode: "svg",
+                    source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(arrowHeight) + "vh",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      cursor: "pointer"
+                    }
+                  });
+                  leftArrowBox = leftArrow.getBoundingClientRect();
+                  leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+
+                  rightArrow = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    attribute: [
+                      { direction: "right" }
+                    ],
+                    class: [ className ],
+                    mode: "svg",
+                    source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(arrowHeight) + "vh",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      cursor: "pointer"
+                    }
+                  });
+                  rightArrowBox = rightArrow.getBoundingClientRect();
+                  rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                  convertEvent = function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const direction = this.getAttribute("direction");
+                    let targetIndex, targetImage;
+                    if (direction === "left") {
+                      targetIndex = index - 1;
+                      if (totalImages[targetIndex] === undefined) {
+                        targetIndex = length - 1;
+                      }
+                    } else {
+                      targetIndex = index + 1;
+                      if (totalImages[targetIndex] === undefined) {
+                        targetIndex = 0;
+                      }
+                    }
+                    targetImage = totalImages[targetIndex];
+                    img.setAttribute("src", targetImage);
+                    imgBox = img.getBoundingClientRect();
+                    img.style.left = withOut(50, imgBox.width / 2, ea);
+                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                    index = targetIndex;
+                    src = targetImage;
+                    method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
+
+                    title.textContent = wordDictionary[method];
+                    titleBox = title.getBoundingClientRect();
+                    title.style.left = withOut(50, titleBox.width / 2, ea);
+                  }
+                  leftArrow.addEventListener("click", convertEvent);
+                  rightArrow.addEventListener("click", convertEvent);
+                  img.addEventListener("click", convertEvent);
                 }
-                leftArrow.addEventListener("click", convertEvent);
-                rightArrow.addEventListener("click", convertEvent);
-                img.addEventListener("click", convertEvent);
               }
             }
           ],
@@ -2689,217 +2693,219 @@ DesignerJs.prototype.requestContents = async function (board, designer, project,
             {
               type: "click",
               event: function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
-                const totalImages = equalJson(JSON.stringify(preferImages));
-                const mother = document.getElementById("totalcontents");
-                const className = "photoSelectedTarget";
-                const length = Number(this.getAttribute("length"));
-                const zIndex = 3;
-                const wordDictionary = {
-                  selected: "고객님이 선택한 사진",
-                  site: "고객님이 보낸 현장",
-                  preferred: "고객님의 선호 사진"
-                };
-                let img, height, imgBox;
-                let title, titleSize, bottom;
-                let titleBox;
-                let leftArrow, rightArrow;
-                let leftArrowBox, rightArrowBox;
-                let arrowHeight;
-                let arrowMargin;
-                let index, method, src;
-                let convertEvent;
+                if (desktop) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const { createNode, withOut, colorChip, equalJson, downloadFile } = GeneralJs;
+                  const totalImages = equalJson(JSON.stringify(preferImages));
+                  const mother = document.getElementById("totalcontents");
+                  const className = "photoSelectedTarget";
+                  const length = Number(this.getAttribute("length"));
+                  const zIndex = 3;
+                  const wordDictionary = {
+                    selected: "고객님이 선택한 사진",
+                    site: "고객님이 보낸 현장",
+                    preferred: "고객님의 선호 사진"
+                  };
+                  let img, height, imgBox;
+                  let title, titleSize, bottom;
+                  let titleBox;
+                  let leftArrow, rightArrow;
+                  let leftArrowBox, rightArrowBox;
+                  let arrowHeight;
+                  let arrowMargin;
+                  let index, method, src;
+                  let convertEvent;
 
-                index = Number(this.getAttribute("index"));
-                method = this.getAttribute("method");
-                src = this.getAttribute("src");
+                  index = Number(this.getAttribute("index"));
+                  method = this.getAttribute("method");
+                  src = this.getAttribute("src");
 
-                convertEvent = () => {};
+                  convertEvent = () => {};
 
-                height = 78;
-                titleSize = 2;
-                bottom = 6.6;
-                arrowHeight = 1.7;
-                arrowMargin = 78;
+                  height = 78;
+                  titleSize = 2;
+                  bottom = 6.6;
+                  arrowHeight = 1.7;
+                  arrowMargin = 78;
 
-                createNode({
-                  mother,
-                  class: [ className ],
-                  events: [
-                    {
-                      type: "click",
-                      event: function (e) {
-                        const removeTargets = document.querySelectorAll('.' + className);
-                        for (let dom of removeTargets) {
-                          mother.removeChild(dom);
+                  createNode({
+                    mother,
+                    class: [ className ],
+                    events: [
+                      {
+                        type: "click",
+                        event: function (e) {
+                          const removeTargets = document.querySelectorAll('.' + className);
+                          for (let dom of removeTargets) {
+                            mother.removeChild(dom);
+                          }
                         }
                       }
+                    ],
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      width: String(100) + '%',
+                      height: String(100) + '%',
+                      background: colorChip.darkDarkShadow,
+                      zIndex: String(zIndex),
+                      animation: "justfadeineight 0.2s ease forwards",
                     }
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    width: String(100) + '%',
-                    height: String(100) + '%',
-                    background: colorChip.darkDarkShadow,
-                    zIndex: String(zIndex),
-                    animation: "justfadeineight 0.2s ease forwards",
-                  }
-                });
+                  });
 
-                img = createNode({
-                  mother,
-                  class: [ className ],
-                  mode: "img",
-                  attribute: [
-                    { src },
-                    { direction: "right" }
-                  ],
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(height) + '%',
-                    width: "auto",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    borderRadius: String(3) + "px",
-                  }
-                });
-                imgBox = img.getBoundingClientRect();
-                img.style.top = withOut(50, imgBox.height / 2, ea);
-                img.style.left = withOut(50, imgBox.width / 2, ea);
-
-                title = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "click", "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
+                  img = createNode({
+                    mother,
+                    class: [ className ],
+                    mode: "img",
+                    attribute: [
+                      { src },
+                      { direction: "right" }
+                    ],
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(height) + '%',
+                      width: "auto",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      borderRadius: String(3) + "px",
                     }
-                  ],
-                  class: [ className ],
-                  text: wordDictionary[method],
-                  style: {
-                    position: "fixed",
-                    bottom: String(bottom) + '%',
-                    fontSize: String(titleSize) + "vh",
-                    fontWeight: String(600),
-                    color: colorChip.whiteBlack,
-                    left: String(50) + '%',
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                  }
-                });
-                titleBox = title.getBoundingClientRect();
-                title.style.left = withOut(50, titleBox.width / 2, ea);
-
-                leftArrow = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
-                    }
-                  ],
-                  attribute: [
-                    { direction: "left" }
-                  ],
-                  class: [ className ],
-                  mode: "svg",
-                  source: instance.mother.returnArrow("left", colorChip.whiteBlack),
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(arrowHeight) + "vh",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    cursor: "pointer"
-                  }
-                });
-                leftArrowBox = leftArrow.getBoundingClientRect();
-                leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
-                leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-
-                rightArrow = createNode({
-                  mother,
-                  events: [
-                    {
-                      type: [ "dblclick", "selectstart" ],
-                      event: (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }
-                    }
-                  ],
-                  attribute: [
-                    { direction: "right" }
-                  ],
-                  class: [ className ],
-                  mode: "svg",
-                  source: instance.mother.returnArrow("right", colorChip.whiteBlack),
-                  style: {
-                    position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    height: String(arrowHeight) + "vh",
-                    zIndex: String(zIndex),
-                    transition: "all 0s ease",
-                    animation: "fadeuplite 0.2s ease forwards",
-                    cursor: "pointer"
-                  }
-                });
-                rightArrowBox = rightArrow.getBoundingClientRect();
-                rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
-                rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
-
-                convertEvent = function (e) {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  const direction = this.getAttribute("direction");
-                  let targetIndex, targetImage;
-                  if (direction === "left") {
-                    targetIndex = index - 1;
-                    if (totalImages[targetIndex] === undefined) {
-                      targetIndex = length - 1;
-                    }
-                  } else {
-                    targetIndex = index + 1;
-                    if (totalImages[targetIndex] === undefined) {
-                      targetIndex = 0;
-                    }
-                  }
-                  targetImage = totalImages[targetIndex];
-                  img.setAttribute("src", targetImage);
+                  });
                   imgBox = img.getBoundingClientRect();
+                  img.style.top = withOut(50, imgBox.height / 2, ea);
                   img.style.left = withOut(50, imgBox.width / 2, ea);
-                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
-                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
 
-                  index = targetIndex;
-                  src = targetImage;
-                  method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
-
-                  title.textContent = wordDictionary[method];
+                  title = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "click", "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    class: [ className ],
+                    text: wordDictionary[method],
+                    style: {
+                      position: "fixed",
+                      bottom: String(bottom) + '%',
+                      fontSize: String(titleSize) + "vh",
+                      fontWeight: String(600),
+                      color: colorChip.whiteBlack,
+                      left: String(50) + '%',
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                    }
+                  });
                   titleBox = title.getBoundingClientRect();
                   title.style.left = withOut(50, titleBox.width / 2, ea);
+
+                  leftArrow = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    attribute: [
+                      { direction: "left" }
+                    ],
+                    class: [ className ],
+                    mode: "svg",
+                    source: instance.mother.returnArrow("left", colorChip.whiteBlack),
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(arrowHeight) + "vh",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      cursor: "pointer"
+                    }
+                  });
+                  leftArrowBox = leftArrow.getBoundingClientRect();
+                  leftArrow.style.top = withOut(50, leftArrowBox.height / 2, ea);
+                  leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+
+                  rightArrow = createNode({
+                    mother,
+                    events: [
+                      {
+                        type: [ "dblclick", "selectstart" ],
+                        event: (e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                        }
+                      }
+                    ],
+                    attribute: [
+                      { direction: "right" }
+                    ],
+                    class: [ className ],
+                    mode: "svg",
+                    source: instance.mother.returnArrow("right", colorChip.whiteBlack),
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      height: String(arrowHeight) + "vh",
+                      zIndex: String(zIndex),
+                      transition: "all 0s ease",
+                      animation: "fadeuplite 0.2s ease forwards",
+                      cursor: "pointer"
+                    }
+                  });
+                  rightArrowBox = rightArrow.getBoundingClientRect();
+                  rightArrow.style.top = withOut(50, rightArrowBox.height / 2, ea);
+                  rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                  convertEvent = function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const direction = this.getAttribute("direction");
+                    let targetIndex, targetImage;
+                    if (direction === "left") {
+                      targetIndex = index - 1;
+                      if (totalImages[targetIndex] === undefined) {
+                        targetIndex = length - 1;
+                      }
+                    } else {
+                      targetIndex = index + 1;
+                      if (totalImages[targetIndex] === undefined) {
+                        targetIndex = 0;
+                      }
+                    }
+                    targetImage = totalImages[targetIndex];
+                    img.setAttribute("src", targetImage);
+                    imgBox = img.getBoundingClientRect();
+                    img.style.left = withOut(50, imgBox.width / 2, ea);
+                    leftArrow.style.left = withOut(50, (imgBox.width / 2) + arrowMargin, ea);
+                    rightArrow.style.left = withOut(50, ((imgBox.width / 2) + arrowMargin - rightArrowBox.width) * -1, ea);
+
+                    index = targetIndex;
+                    src = targetImage;
+                    method = /sitePhoto/g.test(targetImage) ? "site" : (/preferredPhoto/g.test(targetImage) ? "preferred" : "selected");
+
+                    title.textContent = wordDictionary[method];
+                    titleBox = title.getBoundingClientRect();
+                    title.style.left = withOut(50, titleBox.width / 2, ea);
+                  }
+                  leftArrow.addEventListener("click", convertEvent);
+                  rightArrow.addEventListener("click", convertEvent);
+                  img.addEventListener("click", convertEvent);
                 }
-                leftArrow.addEventListener("click", convertEvent);
-                rightArrow.addEventListener("click", convertEvent);
-                img.addEventListener("click", convertEvent);
               }
             }
           ],
@@ -3285,14 +3291,7 @@ DesignerJs.prototype.requestIconSet = function (desid) {
     } else {
 
       listIcon.addEventListener("click", function (e) {
-        let num = designer.information.did.replace(/[^0-9]/g, '');
-        let id;
-        id = '';
-        for (let i = 0; i < 3 - num.length; i++) {
-          id += '0';
-        }
-        id += num;
-        blankHref(FRONTHOST + "/desdetail.php?qqq=de" + id);
+        instance.requestDetailLaunching(designer.desid);
       });
 
     }
@@ -3562,12 +3561,6 @@ DesignerJs.prototype.requestView = async function () {
             instance.pageHistory.shift();
           } else {
             instance.requestDetailLaunching(instance.pageHistory[1].desid);
-            instance.pageHistory.shift();
-            for (let box of instance.requestBoxes) {
-              if (box.getAttribute("cliid") === instance.pageHistory[1].cliid) {
-                box.click();
-              }
-            }
             instance.pageHistory.shift();
             instance.pageHistory.shift();
           }
