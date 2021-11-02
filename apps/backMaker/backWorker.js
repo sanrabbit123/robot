@@ -2560,4 +2560,512 @@ BackWorker.prototype.clientActionSync = async function (option = { selfMongo: nu
   }
 }
 
+BackWorker.prototype.projectActionSync = async function (option = { selfMongo: null, selfConsoleMongo: null, updateMongo: null }) {
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongoconsoleinfo, mongolocalinfo, equalJson, requestSystem } = this.mother;
+  const actionFilter = (action, projects, projectHistories) => {
+    let targets, proidArr;
+    let targetProjects;
+    let targetProjectHistories;
+
+    targets = [];
+    for (let project of projects) {
+      if (project.process.action.value.trim() === action.trim()) {
+        targets.push(project.proid);
+      }
+    }
+    targets = [ ...new Set(targets) ];
+
+    proidArr = targets.map((proid) => { return { proid } });
+    targetProjects = projects.toNormal().filter((p) => { return targets.includes(p.proid); });
+    targetProjectHistories = projectHistories.filter((p) => { return targets.includes(p.proid); });
+
+    return { projects: targetProjects, histories: targetProjectHistories };
+  }
+
+  let selfMongo, selfConsoleMongo, updateMongo;
+  let selfBoo, selfConsoleBoo, updateBoo;
+  let fromLocalMode;
+
+  selfBoo = (option.selfMongo !== null && option.selfMongo !== undefined);
+  selfConsoleBoo = (option.selfConsoleMongo !== null && option.selfConsoleMongo !== undefined);
+  updateBoo = (option.updateMongo !== null && option.updateMongo !== undefined);
+  fromLocalMode = (option.fromLocal === true);
+
+  try {
+    let projects, projectHistories;
+    let clients, clientHistories;
+    let filteredObject;
+    let targets;
+    let tempArr, tempArr2;
+    let whereQuery, updateQuery;
+    let thisClient;
+    let tempObj;
+    let updateQueries;
+
+    if (!selfBoo) {
+      if (!fromLocalMode) {
+        selfMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      } else {
+        selfMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
+      await selfMongo.connect();
+    } else {
+      selfMongo = option.selfMongo;
+    }
+    if (!selfConsoleBoo) {
+      if (!fromLocalMode) {
+        selfConsoleMongo = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+      } else {
+        selfConsoleMongo = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+      }
+      await selfConsoleMongo.connect();
+    } else {
+      selfConsoleMongo = option.selfConsoleMongo;
+    }
+    if (!updateBoo) {
+      updateMongo = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await updateMongo.connect();
+    } else {
+      updateMongo = option.updateMongo;
+    }
+
+    projects = await back.getProjectsByQuery({ $and: [ { designer: { $regex: "^d" } }, { "process.status": { $regex: "^[대진홀]" } } ] }, { selfMongo, withTools: true });
+    if (projects.length > 0) {
+      projectHistories = await back.getHistoriesByQuery("project", { $or: projects.toNormal().map((p) => { return { proid: p.proid } }) }, { selfMongo: selfConsoleMongo });
+      updateQueries = [];
+
+
+
+      // to : 현장미팅 확정
+
+
+
+      filteredObject = actionFilter("계약금 안내", clients, clientHistories);
+      targets = [];
+
+      
+
+
+
+    }
+
+
+
+
+    clients = await back.getClientsByQuery({ requests: { $elemMatch: { "analytics.response.status": { $regex: "^[응장]" } } } }, { selfMongo, withTools: true });
+    if (clients.length > 0) {
+      clientHistories = await back.getHistoriesByQuery("client", { $or: clients.toNormal().map((c) => { return { cliid: c.cliid } }) }, { selfMongo: selfConsoleMongo });
+      updateQueries = [];
+
+      // 1 - 1차 응대 예정
+      filteredObject = actionFilter("1차 응대 예정", clients, clientHistories);
+      targets = [];
+      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
+        thisClient = clients.pick(cliid);
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "1차 응대 예정") {
+            tempObj = { cliid, requestNumber: i };
+            tempArr = call.out.concat(call.in).filter((obj) => { return obj.success; });
+            tempArr = tempArr.filter((obj) => { return obj.date.valueOf() >= thisClient.requests[i].request.timeline.valueOf(); });
+            if (i !== 0) {
+              tempArr = tempArr.filter((obj) => { return obj.date.valueOf() < thisClient.requests[i - 1].request.timeline.valueOf(); });
+            }
+            tempArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+
+            tempArr2 = send.filter((obj) => { return obj.page === "styleCuration" && obj.mode === "general" });
+            tempArr2 = tempArr2.filter((obj) => { return obj.date.valueOf() >= thisClient.requests[i].request.timeline.valueOf(); });
+            if (i !== 0) {
+              tempArr2 = tempArr2.filter((obj) => { return obj.date.valueOf() < thisClient.requests[i - 1].request.timeline.valueOf(); });
+            }
+            tempArr2.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+
+            if (tempArr.length === 0) {
+              if (tempArr2.length > 0) {
+                if (page.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+                  if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+                    if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+                      tempObj.to = "피드백과 응대 예정";
+                    } else {
+                      tempObj.to = "부재중 제안 발송";
+                    }
+                  } else {
+                    tempObj.to = "상세 설문 대기";
+                  }
+                } else {
+                  tempObj.to = "부재중 알림 발송";
+                }
+                targets.push(tempObj);
+              }
+            } else {
+              if (tempArr2.length > 0) {
+                if (tempArr2[0].date.valueOf() < tempArr[0].date.valueOf()) {
+                  if (page.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+                    if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+                      if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+                        tempObj.to = "피드백과 응대 예정";
+                      } else {
+                        tempObj.to = "부재중 제안 발송";
+                      }
+                    } else {
+                      tempObj.to = "상세 설문 대기";
+                    }
+                  } else {
+                    tempObj.to = "부재중 알림 발송";
+                  }
+                } else {
+                  if (send.filter((obj) => { return obj.page === "styleCuration" && obj.mode === "lite" }).length > 0) {
+                    if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+                      if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+                        tempObj.to = "제안 피드백 예정";
+                      } else {
+                        tempObj.to = "제안 발송 예정";
+                      }
+                    } else {
+                      tempObj.to = "스타일 체크 대기";
+                    }
+                  } else {
+                    tempObj.to = "1차 응대 후 대기";
+                  }
+                }
+              } else {
+                if (send.filter((obj) => { return obj.page === "styleCuration" && obj.mode === "lite" }).length > 0) {
+                  if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+                    if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+                      tempObj.to = "제안 피드백 예정";
+                    } else {
+                      tempObj.to = "제안 발송 예정";
+                    }
+                  } else {
+                    tempObj.to = "스타일 체크 대기";
+                  }
+                } else {
+                  tempObj.to = "1차 응대 후 대기";
+                }
+              }
+              targets.push(tempObj);
+            }
+          }
+        }
+      }
+      for (let { cliid, to, requestNumber } of targets) {
+        whereQuery = { cliid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
+        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let client of clients) {
+          if (client.cliid === cliid) {
+            client.requests[requestNumber].analytics.response.action.value = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "1차 응대 예정",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // 1.2 - 1차 응대 후 대기
+      filteredObject = actionFilter("1차 응대 후 대기", clients, clientHistories);
+      targets = [];
+      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
+        thisClient = clients.pick(cliid);
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "1차 응대 후 대기") {
+            tempObj = { cliid, requestNumber: i };
+            if (send.filter((obj) => { return obj.page === "styleCuration" && obj.mode === "lite" }).length > 0) {
+              if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+                if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+                  tempObj.to = "제안 피드백 예정";
+                } else {
+                  tempObj.to = "제안 발송 예정";
+                }
+              } else {
+                tempObj.to = "스타일 체크 대기";
+              }
+              targets.push(tempObj);
+            }
+          }
+        }
+      }
+      for (let { cliid, to, requestNumber } of targets) {
+        whereQuery = { cliid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
+        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let client of clients) {
+          if (client.cliid === cliid) {
+            client.requests[requestNumber].analytics.response.action.value = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "1차 응대 후 대기",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
+
+
+      // 1.3 - 스타일 체크 대기
+      filteredObject = actionFilter("스타일 체크 대기", clients, clientHistories);
+      targets = [];
+      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
+        thisClient = clients.pick(cliid);
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "스타일 체크 대기") {
+            tempObj = { cliid, requestNumber: i };
+            if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+              if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+                tempObj.to = "제안 피드백 예정";
+              } else {
+                tempObj.to = "제안 발송 예정";
+              }
+              targets.push(tempObj);
+            }
+          }
+        }
+      }
+      for (let { cliid, to, requestNumber } of targets) {
+        whereQuery = { cliid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
+        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let client of clients) {
+          if (client.cliid === cliid) {
+            client.requests[requestNumber].analytics.response.action.value = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "스타일 체크 대기",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
+
+
+      // 1.4 - 제안 발송 예정
+      filteredObject = actionFilter("제안 발송 예정", clients, clientHistories);
+      targets = [];
+      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
+        thisClient = clients.pick(cliid);
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "제안 발송 예정") {
+            tempObj = { cliid, requestNumber: i };
+            if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+              tempObj.to = "제안 피드백 예정";
+              targets.push(tempObj);
+            }
+          }
+        }
+      }
+      for (let { cliid, to, requestNumber } of targets) {
+        whereQuery = { cliid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
+        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let client of clients) {
+          if (client.cliid === cliid) {
+            client.requests[requestNumber].analytics.response.action.value = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "제안 발송 예정",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
+
+
+      // 2.2 - 부재중 알림 발송
+      filteredObject = actionFilter("부재중 알림 발송", clients, clientHistories);
+      targets = [];
+      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
+        thisClient = clients.pick(cliid);
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "부재중 알림 발송") {
+            tempObj = { cliid, requestNumber: i };
+
+            if (page.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+              if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+                if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+                  tempObj.to = "피드백과 응대 예정";
+                } else {
+                  tempObj.to = "부재중 제안 발송";
+                }
+              } else {
+                tempObj.to = "상세 설문 대기";
+              }
+              targets.push(tempObj);
+            }
+
+          }
+        }
+      }
+      for (let { cliid, to, requestNumber } of targets) {
+        whereQuery = { cliid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
+        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let client of clients) {
+          if (client.cliid === cliid) {
+            client.requests[requestNumber].analytics.response.action.value = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "부재중 알림 발송",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
+
+
+      // 2.3 - 상세 설문 대기
+      filteredObject = actionFilter("상세 설문 대기", clients, clientHistories);
+      targets = [];
+      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
+        thisClient = clients.pick(cliid);
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "상세 설문 대기") {
+            tempObj = { cliid, requestNumber: i };
+
+            if (submit.filter((obj) => { return obj.page === "styleCuration" }).length > 0) {
+              if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+                tempObj.to = "피드백과 응대 예정";
+              } else {
+                tempObj.to = "부재중 제안 발송";
+              }
+              targets.push(tempObj);
+            }
+
+          }
+        }
+      }
+      for (let { cliid, to, requestNumber } of targets) {
+        whereQuery = { cliid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
+        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let client of clients) {
+          if (client.cliid === cliid) {
+            client.requests[requestNumber].analytics.response.action.value = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "상세 설문 대기",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
+
+
+      // 2.4 - 부재중 제안 발송
+      filteredObject = actionFilter("부재중 제안 발송", clients, clientHistories);
+      targets = [];
+      for (let { cliid, curation: { analytics: { page, call, send, submit } } } of filteredObject.histories) {
+        thisClient = clients.pick(cliid);
+        for (let i = 0; i < thisClient.requests.length; i++) {
+          if ([ "응대중", "장기" ].includes(thisClient.requests[i].analytics.response.status.value) && thisClient.requests[i].analytics.response.action.value === "부재중 제안 발송") {
+            tempObj = { cliid, requestNumber: i };
+            if (send.filter((obj) => { return obj.page === "designerProposal" }).length > 0) {
+              tempObj.to = "피드백과 응대 예정";
+              targets.push(tempObj);
+            }
+          }
+        }
+      }
+      for (let { cliid, to, requestNumber } of targets) {
+        whereQuery = { cliid };
+        updateQuery = {};
+        updateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = to;
+        await back.updateClient([ whereQuery, updateQuery ], { selfMongo: updateMongo });
+        for (let client of clients) {
+          if (client.cliid === cliid) {
+            client.requests[requestNumber].analytics.response.action.value = to;
+            break;
+          }
+        }
+        updateQueries.push({
+          cliid,
+          requestNumber,
+          mode: "action",
+          from: "부재중 제안 발송",
+          to: to,
+          randomToken: Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 1000000))),
+        });
+        console.log(whereQuery, updateQuery);
+      }
+
+
+      await requestSystem("https://" + this.address.backinfo.host + "/generalMongo", {
+        mode: "sse",
+        db: "console",
+        collection: "sse_clientCard",
+        log: true,
+        who: "autoBot",
+        updateQueries
+      }, { headers: { "Content-Type": "application/json", "origin": "https://" + this.address.backinfo.host } });
+
+    }
+
+    if (!selfBoo) {
+      await selfMongo.close();
+      selfBoo = true;
+    }
+    if (!selfConsoleBoo) {
+      await selfConsoleMongo.close();
+      selfConsoleBoo = true;
+    }
+    if (!updateBoo) {
+      await updateMongo.close();
+      updateMongo = true;
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = BackWorker;

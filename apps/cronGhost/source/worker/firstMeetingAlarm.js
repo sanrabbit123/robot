@@ -1,5 +1,5 @@
 const dayId = [
-  "d125",
+  "d134",
 ];
 
 const hourId = [];
@@ -49,14 +49,22 @@ const worker = async function (package) {
         ]
       }, { selfMongo });
 
+      await errorLog("working 1");
+
       if (projects.length > 0) {
+
+        await errorLog("working 2");
+
         clients = await back.getClientsByQuery({
-          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((c) => { return { cliid: c } }),
+          $or: [ ...new Set(projects.toNormal().map((pr) => { return pr.cliid; })) ].map((cliid) => { return { cliid } }),
         }, { selfMongo });
 
         for (let project of projects) {
           clientIndex = clients.toNormal().findIndex((obj) => { return obj.cliid === project.cliid });
           if (clientIndex !== -1) {
+
+            await errorLog("working 3");
+
             meetingDate = project.process.contract.meeting.date;
             client = clients.toNormal()[clientIndex];
             log = await rethink.rethinkRead(logCollection, { proid: project.proid });
@@ -73,7 +81,12 @@ const worker = async function (package) {
                 boo = true;
               }
             }
+
+
             if (boo) {
+
+              await errorLog("working 4");
+
               if (client.phone === "010-2747-3403") {
                 await kakao.sendTalk(talkKey, client.name, client.phone, {
                   client: client.name,
@@ -98,6 +111,7 @@ const worker = async function (package) {
                   proid: project.proid,
                 }, null, 2), "#error_log", false);
               }
+
             }
           }
         }
