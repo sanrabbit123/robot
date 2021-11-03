@@ -5541,6 +5541,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
     loading.parentNode.removeChild(loading);
 
   } catch (e) {
+    console.log(e);
     await GeneralJs.ajaxJson({ message: "StyleCurationJs.launching : " + e.message }, "/errorLog");
   }
 }

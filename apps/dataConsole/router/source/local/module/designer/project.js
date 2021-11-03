@@ -616,7 +616,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
 
     textAreaPaddingTop = 23;
     textAreaPaddingLeft = 28;
-    lineHeightMargin = 6;
+    lineHeightMargin = 8;
     contentsPaddingLeft = 14;
     arrowTop2 = 7;
     arrowWidth2 = 8;
@@ -967,7 +967,19 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                         fontSize: String(noticeTextSize) + ea,
                         fontWeight: String(400),
                         color: colorChip.green
-                      }
+                      },
+                      children: [
+                        {
+                          mode: "svg",
+                          source: instance.mother.returnArrow("right", colorChip.green),
+                          style: {
+                            position: "absolute",
+                            width: String(arrowWidth2) + ea,
+                            top: String(arrowTop2) + ea,
+                            left: String(0),
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -988,22 +1000,43 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
           lineHeight: String(1.6),
           fontWeight: String(600),
           marginBottom: String(lineHeightMargin) + ea,
-          color: colorChip.black
+          color: colorChip.black,
+          paddingLeft: String(contentsPaddingLeft) + ea,
+          position: "relative",
         },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnArrow("right", colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(arrowWidth2) + ea,
+              top: String(arrowTop2) + ea,
+              left: String(0),
+            }
+          }
+        ]
       });
 
       num = 1;
       for (let { title, children } of descriptionMap.get(action).checklist.checklist) {
         createNode({
           mother: textArea,
-          text: String(num) + " " + title,
+          text: "<b%" + String(num) + ".&nbsp;&nbsp;%b>" + title,
           style: {
             fontSize: String(noticeTextSize) + ea,
             lineHeight: String(1.6),
             fontWeight: String(600),
             marginBottom: String(lineHeightMargin) + ea,
-            color: colorChip.black
+            color: colorChip.black,
+            paddingLeft: String(contentsPaddingLeft) + ea,
+            position: "relative",
           },
+          bold: {
+            lineHeight: String(1.6),
+            fontWeight: String(600),
+            color: colorChip.green
+          }
         });
         for (let { title, contents } of children) {
           createNode({
@@ -1014,7 +1047,9 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
               lineHeight: String(1.6),
               fontWeight: String(400),
               marginBottom: String(lineHeightMargin) + ea,
-              color: colorChip.black
+              color: colorChip.black,
+              paddingLeft: String(contentsPaddingLeft * 2) + ea,
+              position: "relative",
             },
             bold: {
               fontSize: String(noticeTextSize) + ea,

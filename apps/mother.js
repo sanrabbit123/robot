@@ -3045,12 +3045,12 @@ Mother.prototype.messageSend = function (text, channel = "silent", voice = false
   if (typeof text === "object" && text !== null) {
     if (typeof text.text === "string" && typeof text.channel === "string") {
       channel = text.channel;
-      text = text.text;
       if (text.voice === true) {
         voice = true;
       } else {
         voice = false;
       }
+      text = text.text;
     } else {
       throw new Error("invaild input");
     }
