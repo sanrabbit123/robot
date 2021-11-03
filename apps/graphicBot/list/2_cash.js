@@ -13,7 +13,7 @@ module.exports = function (arg, info) {
       document.getElementById(inputs.pwd).value = INFO.hometax.pwd;
       document.getElementById(returnButtonId).click();
     },
-    "toss: https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml"
+    "toss: https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml",
     async function () {
       let buttons;
       let pageNumber, pageButtons;
@@ -85,7 +85,7 @@ module.exports = function (arg, info) {
       await ajaxPromise({ to: "python", path: "/cashReceipt", data: { cashOut: total } }, RECEIVECONST);
 
     },
-    "toss: https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml"
+    "toss: https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml",
     async function () {
       let buttons;
       let pageNumber, pageButtons;
