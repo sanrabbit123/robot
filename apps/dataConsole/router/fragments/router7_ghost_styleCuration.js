@@ -196,9 +196,8 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
               return back.updateClient([ { cliid }, updateObj ], { selfMongo: instance.mongo });
 
             }).then(() => {
-              return ghostRequest("voice", { text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!" });
-            }).then(() => {
-              return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다! 확인부탁드립니다!\nlink: " + "https://" + instance.address.backinfo.host + "/proposal?proid=" + newProid, channel: "#404_curation" });
+              return messageSend({ text: client.name + " 고객님의 제안서가 자동으로 제작되었습니다!", channel: "#404_curation", voice: true });
+
             }).catch((err) => {
               console.log(err);
               messageSend({ text: client.name + " 제안서 제작 문제 생김" + err.message, channel: "#404_curation" }).catch((e) => { console.log(e) });
@@ -210,7 +209,7 @@ DataRouter.prototype.rou_post_styleCuration_updateCalculation = function () {
 
         } else {
 
-          await messageSend({ text: client.name + " 제안서를 제작하려고 했으나 매칭되는 경우가 없어요!", channel: "#404_curation" });
+          await messageSend({ text: client.name + " 제안서를 제작하려고 했으나 매칭되는 경우가 없어요!", channel: "#404_curation", voice: true });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ service: [], client, history }));
 
@@ -242,9 +241,7 @@ DataRouter.prototype.rou_post_styleCuration_styleCheckComplete = function () {
       text = name + " 고객님이 스타일 찾기를 완료하였어요.";
       channel = "#404_curation";
 
-      messageSend({ text, channel }).then(() => {
-        return ghostRequest("voice", { text });
-      }).catch((e) => {
+      messageSend({ text, channel, voice: true }).catch((e) => {
         console.log(e);
       })
 

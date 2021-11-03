@@ -54,391 +54,6 @@ const DevContext = function () {
   this.dir = `${process.cwd()}/apps/devContext`;
 }
 
-DevContext.prototype.pureScript = function () {
-  const instance = this;
-  const deleteToken = "__delete__";
-  const motherTargets = [
-    "fileSystem",
-    "shellExec",
-    "shellLink",
-    "sleep",
-    "equalJson",
-    "copyJson",
-    "dateToString",
-    "stringToDate",
-    "pureServer",
-    "requestSystem",
-    "binaryRequest",
-    "cryptoString",
-    "decryptoHash",
-    "uniqueValue",
-    "setQueue"
-  ];
-  const deleteFilter = (str) => { return str.split("\n").map((s) => { return s.replace((new RegExp("^  " + deleteToken, "gi")), ""); }).join("\n"); }
-  let script;
-  let backMakerScript, addressScript;
-  let motherScript;
-
-  script = `const PureServer = function () {
-  ${deleteToken}  const Mother = require(process.cwd() + "/apps/mother.js");
-  ${deleteToken}  this.mother = new Mother();
-  ${deleteToken}}
-
-  ${deleteToken}PureServer.prototype.launching = ${this.pureServer.toString()}
-
-  ${deleteToken}const app = new PureServer();
-  ${deleteToken}app.launching().catch((err) => { console.log(err); });`;
-
-  backMakerScript = `const BackMaker = function () {}
-  ${deleteToken}module.exports = BackMaker;`;
-
-  addressScript = `module.exports = {};`;
-
-  motherScript = "const Mother = function () {}\n\n";
-  for (let name of motherTargets) {
-    motherScript += `Mother.prototype.${name} = ${Mother.prototype[name].toString()}\n\n`;
-  }
-  motherScript += `module.exports = Mother;`;
-
-  return {
-    script: deleteFilter(script),
-    backMakerScript: deleteFilter(backMakerScript),
-    addressScript: deleteFilter(addressScript),
-    motherScript,
-  };
-}
-
-DevContext.prototype.pureServer = async function () {
-  const instance = this;
-  const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
-  const NativeNotifier = require(process.cwd() + "/apps/nativeNotifier/nativeNotifier.js");
-  const notifier = new NativeNotifier();
-  const axios = require(`axios`);
-  const os = require(`os`);
-  let osType;
-  if (/Darwin/gi.test(os.type().trim())) {
-    osType = "mac";
-  } else {
-    osType = "windows";
-  }
-  try {
-
-    const PureServer = pureServer("class");
-    const app = new PureServer();
-
-    app.get("/", async (req, res) => {
-      try {
-        res.send(JSON.stringify({ message: "It works!" }));
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    app.get("/update", async (req, res) => {
-      try {
-        shellExec(`cd ${shellLink(process.cwd())};git pull;`).then(() => {
-          setQueue(() => { process.kill(); });
-        }).catch((err) => {
-          console.log(err);
-        });
-        res.send(JSON.stringify({ message: "will do" }));
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    app.get("/check", async (req, res) => {
-      try {
-        let inner, result, ip;
-        inner = [];
-        tempObj = os.networkInterfaces();
-        for (let i in tempObj) {
-          inner = inner.concat(tempObj[i]);
-        }
-        inner = inner.filter((i) => { return /4/gi.test(i.family) && !/127\.0\.0\.1/gi.test(i.address); });
-        const { data } = await axios.get("https://icanhazip.com");
-        ip = data.replace(/[^0-9\.]/gi, '').trim();
-        result = { os: osType, ip, inner };
-        res.send(JSON.stringify(result));
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    app.post("/push", async (req, res) => {
-      try {
-        if (typeof req.body.text !== "string") {
-          throw new Error("invaild post, must be text");
-        }
-        notifier.sendAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
-        res.send(JSON.stringify({ message: "will do" }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error" }));
-      }
-    });
-
-    app.post("/alert", async (req, res) => {
-      try {
-        if (typeof req.body.text !== "string") {
-          throw new Error("invaild post, must be text");
-        }
-        notifier.alertAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
-        res.send(JSON.stringify({ message: "will do" }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error" }));
-      }
-    });
-
-    app.post("/prompt", async (req, res) => {
-      try {
-        if (typeof req.body.text !== "string") {
-          throw new Error("invaild post, must be text");
-        }
-        let input;
-        input = await notifier.sendPrompt(String(req.body.text).trim());
-        if (typeof input !== "string") {
-          input = "";
-        } else {
-          input = input.trim();
-        }
-        res.send(JSON.stringify({ message: input }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error" }));
-      }
-    });
-
-    pureServer("listen", app, 8000);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DevContext.prototype.pureSpawn = async function () {
-  const instance = this;
-  const { shellExec, shellLink, fileSystem, equalJson, uniqueValue } = this.mother;
-  try {
-    const serverName = "homeliaisonpureserver";
-    const gitHostName = "git@gitlab.com:uragen/homeliaisonpureserver.git";
-    const home = process.env.HOME;
-    const { script, backMakerScript, addressScript, motherScript } = this.pureScript();
-    const copiedModules = [
-      "nativeNotifier"
-    ];
-    const package = equalJson(await fileSystem(`readString`, [ `${process.cwd()}/package.json` ]));
-
-    package.name = "pure";
-    package.main = "index.js";
-    package.scripts = {};
-    delete package.devDependencies;
-    delete package.dependencies["@babel/runtime"];
-    delete package.dependencies["@babel/runtime-corejs3"];
-    delete package.dependencies["body-parser"];
-    delete package.dependencies["connect-mongo"];
-    delete package.dependencies["csso"];
-    delete package.dependencies["express"];
-    delete package.dependencies["express-session"];
-    delete package.dependencies["express-useragent"];
-    delete package.dependencies["multer"];
-    delete package.dependencies["node-schedule"];
-    delete package.dependencies["shelljs"];
-
-    if (await fileSystem(`exist`, [ `${home}/.${serverName}` ])) {
-      try {
-        await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}` ]);
-      } catch (e) {
-        await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}` ]);
-      }
-    }
-
-    await shellExec(`cd ${shellLink(home)};git clone ${gitHostName}`);
-    await shellExec(`mv`, [ `${home}/${serverName}`, `${home}/.${serverName}` ]);
-    await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}/apps` ]);
-    await shellExec(`mkdir`, [ `${home}/.${serverName}/apps` ]);
-    await shellExec(`mkdir`, [ `${home}/.${serverName}/apps/backMaker` ]);
-    await shellExec(`mkdir`, [ `${home}/.${serverName}/temp` ]);
-    await fileSystem(`write`, [ `${home}/.${serverName}/apps/mother.js`, motherScript ]);
-    await fileSystem(`write`, [ `${home}/.${serverName}/apps/infoObj.js`, addressScript ]);
-    await fileSystem(`write`, [ `${home}/.${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
-    await fileSystem(`write`, [ `${home}/.${serverName}/index.js`, script ]);
-    await fileSystem(`write`, [ `${home}/.${serverName}/.gitignore`, (await fileSystem(`readString`, [ `${process.cwd()}/.gitignore` ])) ]);
-    await fileSystem(`write`, [ `${home}/.${serverName}/package.json`, JSON.stringify(package, null, 2) ]);
-    for (let m of copiedModules) {
-      await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/.${serverName}/apps;`);
-    }
-    await shellExec(`cd ${home}/.${serverName};npm install;git add -A;git commit -m "${serverName}_${uniqueValue("string")}";git push;pm2 kill;pm2 start ./index.js;`);
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DevContext.prototype.pureScan = async function () {
-  const instance = this;
-  const back = this.back;
-  const { requestSystem, equalJson, copyJson, ipCheck } = this.mother;
-  const { address } = this;
-  const port = 8000;
-  const limitNumber = 101;
-  const protocol = "http:";
-  const innerIpConst = "172.30.1";
-  const routerConst = "check";
-  const time = 1500;
-  class AliveMembers extends Array {
-    constructor(arr) {
-      super();
-      for (let obj of arr) {
-        this.push(obj);
-      }
-      Object.defineProperty(this, "port", {
-        value: port,
-        writable: false,
-        configurable: false,
-        enumerable: false
-      });
-      Object.defineProperty(this, "protocol", {
-        value: protocol,
-        writable: false,
-        configurable: false,
-        enumerable: false
-      });
-    }
-    setUrl(router) {
-      if (typeof router !== "string") {
-        throw new Error("invaild input");
-      }
-      if (!/^\//.test(router)) {
-        router = '/' + router;
-      }
-      const { protocol, port } = this;
-      let arr;
-      arr = [];
-      for (let obj of this) {
-        if (obj.online !== null) {
-          arr.push({ url: protocol + "//" + obj.online.ip + ":" + String(port) + router, who: obj });
-        }
-      }
-      return arr;
-    }
-    async aliveRequest(router, data = {}, roles = null) {
-      if (typeof router !== "string" || typeof data !== "object") {
-        throw new Error("invaild input");
-      }
-      if (!/^\//.test(router)) {
-        router = '/' + router;
-      }
-      const axios = require('axios');
-      const { protocol } = this;
-      try {
-        let method, dataKeys, urls, result, response;
-
-        dataKeys = Object.keys(data);
-        if (dataKeys.length === 0) {
-          method = "get";
-        } else {
-          method = "post";
-        }
-
-        urls = this.setUrl(router);
-        result = [];
-
-        if (method === "get") {
-          for (let { url, who } of urls) {
-            response = await axios.get(url);
-            if (response.status >= 200 && response.status < 300 && response.data !== undefined) {
-              result.push({ data: response.data, who });
-            }
-          }
-        } else {
-          for (let { url, who } of urls) {
-            response = await axios.post(url, data, { headers: { "Content-Type": "application/json" } });
-            if (response.status >= 200 && response.status < 300 && response.data !== undefined) {
-              result.push({ data: response.data, who });
-            }
-          }
-        }
-
-        return result;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
-  try {
-    const { rawObj: { map } } = await ipCheck();
-    const macArr = map.map((obj) => { return obj.mac; });
-    const members = await back.setMemberObj({ getMode: true });
-    const arpScan = () => {
-      let results;
-      results = [];
-      for (let i = 1; i < limitNumber; i++) {
-        requestSystem(`${protocol}//${innerIpConst}.${String(i)}:${String(port)}/${routerConst}`).then((res) => {
-          if (typeof res === "object") {
-            if (res.status >= 200 && res.status < 300 && typeof res.data === "object") {
-              results.push(res.data);
-            }
-          }
-        }).catch((err) => {});
-      }
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(results);
-        }, time);
-      });
-    }
-    const results = await arpScan();
-    let total, index, onoff;
-
-    total = [];
-    for (let { os, ip, inner } of results) {
-      for (let { address, mac } of inner) {
-        total.push({
-          os,
-          ip: {
-            outer: ip,
-            inner: address
-          },
-          mac
-        });
-      }
-    }
-
-    total = total.map((obj) => { return JSON.stringify(obj); });
-    total = [ ...new Set(total) ].map((json) => { return equalJson(json); });
-    total = total.filter((obj) => { return macArr.includes(obj.mac); });
-
-    for (let obj of total) {
-      index = map.findIndex((m) => { return m.mac === obj.mac; });
-      if (index === -1) {
-        throw new Error("invaild map");
-      }
-      obj.memid = map[index].memid;
-    }
-
-    onoff = new AliveMembers(members.filter((obj) => { return obj.alive; }).map((obj) => {
-      delete obj.death;
-      delete obj.photo;
-      obj.online = null;
-      return obj;
-    }));
-    for (let obj of total) {
-      for (let member of onoff) {
-        if (member.id === obj.memid) {
-          member.online = {
-            os: obj.os,
-            ip: obj.ip.inner,
-            mac: obj.mac
-          };
-        }
-      }
-    }
-
-    return onoff;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
@@ -1842,6 +1457,391 @@ DevContext.prototype.launching = async function () {
     await this.MONGOLOCALC.close();
     await rethink.close();
     console.log(`done`);
+  }
+}
+
+DevContext.prototype.pureScript = function () {
+  const instance = this;
+  const deleteToken = "__delete__";
+  const motherTargets = [
+    "fileSystem",
+    "shellExec",
+    "shellLink",
+    "sleep",
+    "equalJson",
+    "copyJson",
+    "dateToString",
+    "stringToDate",
+    "pureServer",
+    "requestSystem",
+    "binaryRequest",
+    "cryptoString",
+    "decryptoHash",
+    "uniqueValue",
+    "setQueue"
+  ];
+  const deleteFilter = (str) => { return str.split("\n").map((s) => { return s.replace((new RegExp("^  " + deleteToken, "gi")), ""); }).join("\n"); }
+  let script;
+  let backMakerScript, addressScript;
+  let motherScript;
+
+  script = `const PureServer = function () {
+  ${deleteToken}  const Mother = require(process.cwd() + "/apps/mother.js");
+  ${deleteToken}  this.mother = new Mother();
+  ${deleteToken}}
+
+  ${deleteToken}PureServer.prototype.launching = ${this.pureServer.toString()}
+
+  ${deleteToken}const app = new PureServer();
+  ${deleteToken}app.launching().catch((err) => { console.log(err); });`;
+
+  backMakerScript = `const BackMaker = function () {}
+  ${deleteToken}module.exports = BackMaker;`;
+
+  addressScript = `module.exports = {};`;
+
+  motherScript = "const Mother = function () {}\n\n";
+  for (let name of motherTargets) {
+    motherScript += `Mother.prototype.${name} = ${Mother.prototype[name].toString()}\n\n`;
+  }
+  motherScript += `module.exports = Mother;`;
+
+  return {
+    script: deleteFilter(script),
+    backMakerScript: deleteFilter(backMakerScript),
+    addressScript: deleteFilter(addressScript),
+    motherScript,
+  };
+}
+
+DevContext.prototype.pureServer = async function () {
+  const instance = this;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
+  const NativeNotifier = require(process.cwd() + "/apps/nativeNotifier/nativeNotifier.js");
+  const notifier = new NativeNotifier();
+  const axios = require(`axios`);
+  const os = require(`os`);
+  let osType;
+  if (/Darwin/gi.test(os.type().trim())) {
+    osType = "mac";
+  } else {
+    osType = "windows";
+  }
+  try {
+
+    const PureServer = pureServer("class");
+    const app = new PureServer();
+
+    app.get("/", async (req, res) => {
+      try {
+        res.send(JSON.stringify({ message: "It works!" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.get("/update", async (req, res) => {
+      try {
+        shellExec(`cd ${shellLink(process.cwd())};git pull;`).then(() => {
+          setQueue(() => { process.kill(); });
+        }).catch((err) => {
+          console.log(err);
+        });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.get("/check", async (req, res) => {
+      try {
+        let inner, result, ip;
+        inner = [];
+        tempObj = os.networkInterfaces();
+        for (let i in tempObj) {
+          inner = inner.concat(tempObj[i]);
+        }
+        inner = inner.filter((i) => { return /4/gi.test(i.family) && !/127\.0\.0\.1/gi.test(i.address); });
+        const { data } = await axios.get("https://icanhazip.com");
+        ip = data.replace(/[^0-9\.]/gi, '').trim();
+        result = { os: osType, ip, inner };
+        res.send(JSON.stringify(result));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.post("/push", async (req, res) => {
+      try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+        notifier.sendAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    app.post("/alert", async (req, res) => {
+      try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+        notifier.alertAlarm(String(req.body.text).trim()).catch((err) => { console.log(err); });
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    app.post("/prompt", async (req, res) => {
+      try {
+        if (typeof req.body.text !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+        let input;
+        input = await notifier.sendPrompt(String(req.body.text).trim());
+        if (typeof input !== "string") {
+          input = "";
+        } else {
+          input = input.trim();
+        }
+        res.send(JSON.stringify({ message: input }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    pureServer("listen", app, 8000);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DevContext.prototype.pureSpawn = async function () {
+  const instance = this;
+  const { shellExec, shellLink, fileSystem, equalJson, uniqueValue } = this.mother;
+  try {
+    const serverName = "homeliaisonpureserver";
+    const gitHostName = "git@gitlab.com:uragen/homeliaisonpureserver.git";
+    const home = process.env.HOME;
+    const { script, backMakerScript, addressScript, motherScript } = this.pureScript();
+    const copiedModules = [
+      "nativeNotifier"
+    ];
+    const package = equalJson(await fileSystem(`readString`, [ `${process.cwd()}/package.json` ]));
+
+    package.name = "pure";
+    package.main = "index.js";
+    package.scripts = {};
+    delete package.devDependencies;
+    delete package.dependencies["@babel/runtime"];
+    delete package.dependencies["@babel/runtime-corejs3"];
+    delete package.dependencies["body-parser"];
+    delete package.dependencies["connect-mongo"];
+    delete package.dependencies["csso"];
+    delete package.dependencies["express"];
+    delete package.dependencies["express-session"];
+    delete package.dependencies["express-useragent"];
+    delete package.dependencies["multer"];
+    delete package.dependencies["node-schedule"];
+    delete package.dependencies["shelljs"];
+
+    if (await fileSystem(`exist`, [ `${home}/.${serverName}` ])) {
+      try {
+        await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}` ]);
+      } catch (e) {
+        await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}` ]);
+      }
+    }
+
+    await shellExec(`cd ${shellLink(home)};git clone ${gitHostName}`);
+    await shellExec(`mv`, [ `${home}/${serverName}`, `${home}/.${serverName}` ]);
+    await shellExec(`rm`, [ `-rf`, `${home}/.${serverName}/apps` ]);
+    await shellExec(`mkdir`, [ `${home}/.${serverName}/apps` ]);
+    await shellExec(`mkdir`, [ `${home}/.${serverName}/apps/backMaker` ]);
+    await shellExec(`mkdir`, [ `${home}/.${serverName}/temp` ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/apps/mother.js`, motherScript ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/apps/infoObj.js`, addressScript ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/apps/backMaker/backMaker.js`, backMakerScript ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/index.js`, script ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/.gitignore`, (await fileSystem(`readString`, [ `${process.cwd()}/.gitignore` ])) ]);
+    await fileSystem(`write`, [ `${home}/.${serverName}/package.json`, JSON.stringify(package, null, 2) ]);
+    for (let m of copiedModules) {
+      await shellExec(`cp -r ${shellLink(process.cwd())}/apps/${m} ${shellLink(home)}/.${serverName}/apps;`);
+    }
+    await shellExec(`cd ${home}/.${serverName};npm install;git add -A;git commit -m "${serverName}_${uniqueValue("string")}";git push;pm2 kill;pm2 start ./index.js;`);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DevContext.prototype.pureScan = async function () {
+  const instance = this;
+  const back = this.back;
+  const { requestSystem, equalJson, copyJson, ipCheck } = this.mother;
+  const { address } = this;
+  const port = 8000;
+  const limitNumber = 101;
+  const protocol = "http:";
+  const innerIpConst = "172.30.1";
+  const routerConst = "check";
+  const time = 1500;
+  class AliveMembers extends Array {
+    constructor(arr) {
+      super();
+      for (let obj of arr) {
+        this.push(obj);
+      }
+      Object.defineProperty(this, "port", {
+        value: port,
+        writable: false,
+        configurable: false,
+        enumerable: false
+      });
+      Object.defineProperty(this, "protocol", {
+        value: protocol,
+        writable: false,
+        configurable: false,
+        enumerable: false
+      });
+    }
+    setUrl(router) {
+      if (typeof router !== "string") {
+        throw new Error("invaild input");
+      }
+      if (!/^\//.test(router)) {
+        router = '/' + router;
+      }
+      const { protocol, port } = this;
+      let arr;
+      arr = [];
+      for (let obj of this) {
+        if (obj.online !== null) {
+          arr.push({ url: protocol + "//" + obj.online.ip + ":" + String(port) + router, who: obj });
+        }
+      }
+      return arr;
+    }
+    async aliveRequest(router, data = {}, roles = null) {
+      if (typeof router !== "string" || typeof data !== "object") {
+        throw new Error("invaild input");
+      }
+      if (!/^\//.test(router)) {
+        router = '/' + router;
+      }
+      const axios = require('axios');
+      const { protocol } = this;
+      try {
+        let method, dataKeys, urls, result, response;
+
+        dataKeys = Object.keys(data);
+        if (dataKeys.length === 0) {
+          method = "get";
+        } else {
+          method = "post";
+        }
+
+        urls = this.setUrl(router);
+        result = [];
+
+        if (method === "get") {
+          for (let { url, who } of urls) {
+            response = await axios.get(url);
+            if (response.status >= 200 && response.status < 300 && response.data !== undefined) {
+              result.push({ data: response.data, who });
+            }
+          }
+        } else {
+          for (let { url, who } of urls) {
+            response = await axios.post(url, data, { headers: { "Content-Type": "application/json" } });
+            if (response.status >= 200 && response.status < 300 && response.data !== undefined) {
+              result.push({ data: response.data, who });
+            }
+          }
+        }
+
+        return result;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  try {
+    const { rawObj: { map } } = await ipCheck();
+    const macArr = map.map((obj) => { return obj.mac; });
+    const members = await back.setMemberObj({ getMode: true });
+    const arpScan = () => {
+      let results;
+      results = [];
+      for (let i = 1; i < limitNumber; i++) {
+        requestSystem(`${protocol}//${innerIpConst}.${String(i)}:${String(port)}/${routerConst}`).then((res) => {
+          if (typeof res === "object") {
+            if (res.status >= 200 && res.status < 300 && typeof res.data === "object") {
+              results.push(res.data);
+            }
+          }
+        }).catch((err) => {});
+      }
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(results);
+        }, time);
+      });
+    }
+    const results = await arpScan();
+    let total, index, onoff;
+
+    total = [];
+    for (let { os, ip, inner } of results) {
+      for (let { address, mac } of inner) {
+        total.push({
+          os,
+          ip: {
+            outer: ip,
+            inner: address
+          },
+          mac
+        });
+      }
+    }
+
+    total = total.map((obj) => { return JSON.stringify(obj); });
+    total = [ ...new Set(total) ].map((json) => { return equalJson(json); });
+    total = total.filter((obj) => { return macArr.includes(obj.mac); });
+
+    for (let obj of total) {
+      index = map.findIndex((m) => { return m.mac === obj.mac; });
+      if (index === -1) {
+        throw new Error("invaild map");
+      }
+      obj.memid = map[index].memid;
+    }
+
+    onoff = new AliveMembers(members.filter((obj) => { return obj.alive; }).map((obj) => {
+      delete obj.death;
+      delete obj.photo;
+      obj.online = null;
+      return obj;
+    }));
+    for (let obj of total) {
+      for (let member of onoff) {
+        if (member.id === obj.memid) {
+          member.online = {
+            os: obj.os,
+            ip: obj.ip.inner,
+            mac: obj.mac
+          };
+        }
+      }
+    }
+
+    return onoff;
+  } catch (e) {
+    console.log(e);
   }
 }
 

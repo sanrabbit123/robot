@@ -541,7 +541,8 @@ DesignerJs.prototype.projectDetail = function (desid) {
 DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, divisionEntireMap) {
   const instance = this;
   const { createNode, colorChip, withOut, ajaxJson, setQueue } = GeneralJs;
-  const { ea, projects, clients, designers } = this;
+  const { ea, projects, clients, designers, projectMap, checklist } = this;
+  const { action: { itemDescription } } = projectMap;
   let pIndex, cIndex;
   let project, client, designer;
   let base;
@@ -569,6 +570,14 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let noticeTextTop, noticeTextLeft;
   let arrowTop, arrowWidth;
   let barChildren;
+  let descriptionMap;
+  let textArea;
+  let textAreaPaddingTop;
+  let textAreaPaddingLeft;
+  let checklistFactor;
+  let lineHeightMargin;
+  let contentsPaddingLeft;
+  let arrowTop2, arrowWidth2;
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -605,9 +614,28 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
 
     accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
 
+    textAreaPaddingTop = 23;
+    textAreaPaddingLeft = 28;
+    lineHeightMargin = 6;
+    contentsPaddingLeft = 14;
+    arrowTop2 = 7;
+    arrowWidth2 = 8;
+
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
     lengthArr.sort((a, b) => { return b - a; });
     maxLength = lengthArr[0];
+
+    descriptionMap = new Map();
+    for (let { name, description } of itemDescription) {
+      checklistFactor = null;
+      for (let check of checklist) {
+        if (check.setting.target.action.includes(name)) {
+          checklistFactor = check.setting.contents;
+          break;
+        }
+      }
+      descriptionMap.set(name, { description, checklist: checklistFactor });
+    }
 
     base = createNode({
       mother,
@@ -842,7 +870,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       num++;
     }
 
-    createNode({
+    textArea = createNode({
       mother: base,
       style: {
         display: "block",
@@ -880,10 +908,130 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
             background: colorChip.white,
             borderRadius: String(5) + "px",
             boxShadow: "0px 2px 11px -9px " + colorChip.shadow
-          }
+          },
+          children: [
+            {
+              style: {
+                position: "relative",
+                paddingTop: String(textAreaPaddingTop) + ea,
+                paddingLeft: String(textAreaPaddingLeft) + ea,
+                paddingBottom: String(textAreaPaddingTop) + ea,
+                paddingRight: String(textAreaPaddingLeft) + ea,
+                width: withOut(textAreaPaddingLeft * 2, ea),
+                height: withOut(textAreaPaddingTop * 2, ea),
+                overflow: "scroll",
+              },
+              children: [
+                {
+                  style: {
+                    position: "relative",
+                    width: String(100) + '%',
+                  },
+                  children: [
+                    {
+                      text: descriptionMap.get(action).description,
+                      style: {
+                        fontSize: String(noticeTextSize) + ea,
+                        lineHeight: String(1.6),
+                        fontWeight: String(400),
+                        marginBottom: String(lineHeightMargin) + ea,
+                        color: colorChip.black,
+                        position: "relative",
+                        paddingLeft: String(contentsPaddingLeft) + ea,
+                      },
+                      children: [
+                        {
+                          mode: "svg",
+                          source: instance.mother.returnArrow("right", colorChip.green),
+                          style: {
+                            position: "absolute",
+                            width: String(arrowWidth2) + ea,
+                            top: String(arrowTop2) + ea,
+                            left: String(0),
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      text: "체크리스트 여부 : <b%" + (descriptionMap.get(action).checklist === null ? "없음" : "있음") + "%b>",
+                      style: {
+                        fontSize: String(noticeTextSize) + ea,
+                        lineHeight: String(1.6),
+                        fontWeight: String(600),
+                        marginBottom: String(lineHeightMargin) + ea,
+                        color: colorChip.black,
+                        position: "relative",
+                        paddingLeft: String(contentsPaddingLeft) + ea,
+                      },
+                      bold: {
+                        fontSize: String(noticeTextSize) + ea,
+                        fontWeight: String(400),
+                        color: colorChip.green
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
-    });
+    }).children[1].children[0].children[0];
+
+    if (descriptionMap.get(action).checklist !== null) {
+
+      createNode({
+        mother: textArea,
+        text: descriptionMap.get(action).checklist.title,
+        style: {
+          fontSize: String(noticeTextSize) + ea,
+          lineHeight: String(1.6),
+          fontWeight: String(600),
+          marginBottom: String(lineHeightMargin) + ea,
+          color: colorChip.black
+        },
+      });
+
+      num = 1;
+      for (let { title, children } of descriptionMap.get(action).checklist.checklist) {
+        createNode({
+          mother: textArea,
+          text: String(num) + " " + title,
+          style: {
+            fontSize: String(noticeTextSize) + ea,
+            lineHeight: String(1.6),
+            fontWeight: String(600),
+            marginBottom: String(lineHeightMargin) + ea,
+            color: colorChip.black
+          },
+        });
+        for (let { title, contents } of children) {
+          createNode({
+            mother: textArea,
+            text: title + " : " + contents,
+            style: {
+              fontSize: String(noticeTextSize) + ea,
+              lineHeight: String(1.6),
+              fontWeight: String(400),
+              marginBottom: String(lineHeightMargin) + ea,
+              color: colorChip.black
+            },
+            bold: {
+              fontSize: String(noticeTextSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.green
+            }
+          });
+        }
+        num++;
+      }
+
+      console.log(descriptionMap.get(action).checklist);
+
+    }
+
+
+
 
   }
 }
@@ -1431,6 +1579,7 @@ DesignerJs.prototype.projectView = async function () {
     this.motherHeight = motherHeight;
 
     this.projectMap = await ajaxJson({ method: "projectMap" }, "/getDataPatch");
+    this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
 
     //sse
     // if (!this.middleMode) {
