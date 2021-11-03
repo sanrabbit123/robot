@@ -540,7 +540,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
 
 DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, divisionEntireMap) {
   const instance = this;
-  const { createNode, colorChip, withOut, ajaxJson, setQueue } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren } = GeneralJs;
   const { ea, projects, clients, designers, projectMap, checklist } = this;
   const { action: { itemDescription } } = projectMap;
   let pIndex, cIndex;
@@ -578,6 +578,11 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let lineHeightMargin;
   let contentsPaddingLeft;
   let arrowTop2, arrowWidth2;
+  let checkCircleTop;
+  let checkCircleWidth;
+  let checkCircleVisual;
+  let textAreaMother;
+  let descriptionMaker;
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -614,16 +619,21 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
 
     accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
 
-    textAreaPaddingTop = 23;
-    textAreaPaddingLeft = 28;
+    textAreaPaddingTop = 22;
+    textAreaPaddingLeft = 26;
     lineHeightMargin = 8;
     contentsPaddingLeft = 14;
     arrowTop2 = 7;
     arrowWidth2 = 8;
+    checkCircleTop = 7;
+    checkCircleWidth = 10;
+    checkCircleVisual = 1;
 
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
     lengthArr.sort((a, b) => { return b - a; });
     maxLength = lengthArr[0];
+
+    textAreaMother = {};
 
     descriptionMap = new Map();
     for (let { name, description } of itemDescription) {
@@ -635,6 +645,203 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         }
       }
       descriptionMap.set(name, { description, checklist: checklistFactor });
+    }
+
+    descriptionMaker = (action) => {
+      cleanChildren(textAreaMother);
+      createNode({
+        mother: textAreaMother,
+        text: "<b%" + action + "%b>&nbsp;&nbsp;check list",
+        style: {
+          position: "absolute",
+          top: String(noticeTextTop) + ea,
+          left: String(noticeTextLeft) + ea,
+          fontSize: String(noticeTextSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.green,
+        },
+        bold: {
+          fontSize: String(noticeTextSize) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+        }
+      });
+      textArea = createNode({
+        mother: textAreaMother,
+        style: {
+          position: "absolute",
+          top: String(whiteBoxTop) + ea,
+          left: String(whiteBoxLeft) + ea,
+          width: withOut(whiteBoxLeft * 2, ea),
+          height: withOut(whiteBoxTop + whiteBoxLeft, ea),
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 2px 11px -9px " + colorChip.shadow
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              paddingTop: String(textAreaPaddingTop) + ea,
+              paddingLeft: String(textAreaPaddingLeft) + ea,
+              paddingBottom: String(textAreaPaddingTop) + ea,
+              paddingRight: String(textAreaPaddingLeft) + ea,
+              width: withOut(textAreaPaddingLeft * 2, ea),
+              height: withOut(textAreaPaddingTop * 2, ea),
+              overflow: "scroll",
+            },
+            children: [
+              {
+                style: {
+                  position: "relative",
+                  width: String(100) + '%',
+                },
+                children: [
+                  {
+                    text: descriptionMap.get(action).description,
+                    style: {
+                      fontSize: String(noticeTextSize) + ea,
+                      lineHeight: String(1.6),
+                      fontWeight: String(400),
+                      marginBottom: String(lineHeightMargin) + ea,
+                      color: colorChip.black,
+                      position: "relative",
+                      paddingLeft: String(contentsPaddingLeft) + ea,
+                    },
+                    children: [
+                      {
+                        mode: "svg",
+                        source: instance.mother.returnArrow("right", colorChip.green),
+                        style: {
+                          position: "absolute",
+                          width: String(arrowWidth2) + ea,
+                          top: String(arrowTop2) + ea,
+                          left: String(0),
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    text: "체크리스트 여부 : <b%" + (descriptionMap.get(action).checklist === null ? "없음" : "있음") + "%b>",
+                    style: {
+                      fontSize: String(noticeTextSize) + ea,
+                      lineHeight: String(1.6),
+                      fontWeight: String(400),
+                      marginBottom: String(lineHeightMargin) + ea,
+                      color: colorChip.black,
+                      position: "relative",
+                      paddingLeft: String(contentsPaddingLeft) + ea,
+                    },
+                    bold: {
+                      fontSize: String(noticeTextSize) + ea,
+                      fontWeight: String(400),
+                      color: colorChip.green
+                    },
+                    children: [
+                      {
+                        mode: "svg",
+                        source: instance.mother.returnArrow("right", colorChip.green),
+                        style: {
+                          position: "absolute",
+                          width: String(arrowWidth2) + ea,
+                          top: String(arrowTop2) + ea,
+                          left: String(0),
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }).children[0].children[0];
+      if (descriptionMap.get(action).checklist !== null) {
+        createNode({
+          mother: textArea,
+          text: descriptionMap.get(action).checklist.title,
+          style: {
+            fontSize: String(noticeTextSize) + ea,
+            lineHeight: String(1.6),
+            fontWeight: String(400),
+            marginBottom: String(lineHeightMargin) + ea,
+            color: colorChip.black,
+            paddingLeft: String(contentsPaddingLeft) + ea,
+            position: "relative",
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnArrow("right", colorChip.green),
+              style: {
+                position: "absolute",
+                width: String(arrowWidth2) + ea,
+                top: String(arrowTop2) + ea,
+                left: String(0),
+              }
+            }
+          ]
+        });
+        num = 1;
+        for (let { title, children } of descriptionMap.get(action).checklist.checklist) {
+          createNode({
+            mother: textArea,
+            text: "<b%" + String(num) + ".&nbsp;&nbsp;%b>" + title,
+            style: {
+              fontSize: String(noticeTextSize) + ea,
+              lineHeight: String(1.6),
+              fontWeight: String(600),
+              marginBottom: String(lineHeightMargin) + ea,
+              color: colorChip.black,
+              paddingLeft: String(contentsPaddingLeft) + ea,
+              position: "relative",
+            },
+            bold: {
+              lineHeight: String(1.6),
+              fontWeight: String(600),
+              color: colorChip.green
+            }
+          });
+          for (let { title, contents } of children) {
+            createNode({
+              mother: textArea,
+              text: "<u%" + title + " :&nbsp;&nbsp;%u>" + contents,
+              style: {
+                fontSize: String(noticeTextSize) + ea,
+                lineHeight: String(1.6),
+                fontWeight: String(400),
+                marginBottom: String(lineHeightMargin) + ea,
+                color: colorChip.black,
+                paddingLeft: String(contentsPaddingLeft * 3) + ea,
+                position: "relative",
+              },
+              bold: {
+                fontSize: String(noticeTextSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.green
+              },
+              under: {
+                fontSize: String(noticeTextSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black
+              },
+              children: [
+                {
+                  mode: "svg",
+                  source: instance.mother.returnCheckCircle(colorChip.green),
+                  style: {
+                    position: "absolute",
+                    top: String(checkCircleTop) + ea,
+                    left: String((contentsPaddingLeft * 2) - checkCircleVisual) + ea,
+                    width: String(checkCircleWidth) + ea,
+                  }
+                }
+              ]
+            });
+          }
+          num++;
+        }
+      }
     }
 
     base = createNode({
@@ -730,6 +937,9 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       for (let i = 0; i < arr.length; i++) {
         createNode({
           mother: area,
+          attribute: {
+            action: arr[i]
+          },
           event: {
             click: function (e) {
               const grandMother = this.parentElement.parentElement;
@@ -738,6 +948,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
               const toggle = grandMother.getAttribute("toggle");
               const focus = grandMother.getAttribute("focus");
               const thisIndex = Number(grandMother.getAttribute("index"));
+              const action = this.getAttribute("action");
               let focusArr, otherArrows;
 
               if (focus === "on") {
@@ -763,6 +974,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                     grandMother.setAttribute("focus", "on");
                     arrow.style.opacity = String(1);
                     arrow.setAttribute("focus", "on");
+                    descriptionMaker(action);
                   }, 300);
                 }
 
@@ -786,6 +998,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 grandMother.setAttribute("focus", "on");
                 arrow.style.opacity = String(1);
                 arrow.setAttribute("focus", "on");
+                descriptionMaker(action);
               }
 
             }
@@ -870,7 +1083,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       num++;
     }
 
-    textArea = createNode({
+    textAreaMother = createNode({
       mother: base,
       style: {
         display: "block",
@@ -880,194 +1093,10 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         height: withOut(accumulate, ea),
         background: colorChip.gray0,
         borderRadius: String(5) + "px",
-      },
-      children: [
-        {
-          text: "<b%" + action + "%b>&nbsp;&nbsp;check list",
-          style: {
-            position: "absolute",
-            top: String(noticeTextTop) + ea,
-            left: String(noticeTextLeft) + ea,
-            fontSize: String(noticeTextSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.green,
-          },
-          bold: {
-            fontSize: String(noticeTextSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
-          }
-        },
-        {
-          style: {
-            position: "absolute",
-            top: String(whiteBoxTop) + ea,
-            left: String(whiteBoxLeft) + ea,
-            width: withOut(whiteBoxLeft * 2, ea),
-            height: withOut(whiteBoxTop + whiteBoxLeft, ea),
-            background: colorChip.white,
-            borderRadius: String(5) + "px",
-            boxShadow: "0px 2px 11px -9px " + colorChip.shadow
-          },
-          children: [
-            {
-              style: {
-                position: "relative",
-                paddingTop: String(textAreaPaddingTop) + ea,
-                paddingLeft: String(textAreaPaddingLeft) + ea,
-                paddingBottom: String(textAreaPaddingTop) + ea,
-                paddingRight: String(textAreaPaddingLeft) + ea,
-                width: withOut(textAreaPaddingLeft * 2, ea),
-                height: withOut(textAreaPaddingTop * 2, ea),
-                overflow: "scroll",
-              },
-              children: [
-                {
-                  style: {
-                    position: "relative",
-                    width: String(100) + '%',
-                  },
-                  children: [
-                    {
-                      text: descriptionMap.get(action).description,
-                      style: {
-                        fontSize: String(noticeTextSize) + ea,
-                        lineHeight: String(1.6),
-                        fontWeight: String(400),
-                        marginBottom: String(lineHeightMargin) + ea,
-                        color: colorChip.black,
-                        position: "relative",
-                        paddingLeft: String(contentsPaddingLeft) + ea,
-                      },
-                      children: [
-                        {
-                          mode: "svg",
-                          source: instance.mother.returnArrow("right", colorChip.green),
-                          style: {
-                            position: "absolute",
-                            width: String(arrowWidth2) + ea,
-                            top: String(arrowTop2) + ea,
-                            left: String(0),
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      text: "체크리스트 여부 : <b%" + (descriptionMap.get(action).checklist === null ? "없음" : "있음") + "%b>",
-                      style: {
-                        fontSize: String(noticeTextSize) + ea,
-                        lineHeight: String(1.6),
-                        fontWeight: String(600),
-                        marginBottom: String(lineHeightMargin) + ea,
-                        color: colorChip.black,
-                        position: "relative",
-                        paddingLeft: String(contentsPaddingLeft) + ea,
-                      },
-                      bold: {
-                        fontSize: String(noticeTextSize) + ea,
-                        fontWeight: String(400),
-                        color: colorChip.green
-                      },
-                      children: [
-                        {
-                          mode: "svg",
-                          source: instance.mother.returnArrow("right", colorChip.green),
-                          style: {
-                            position: "absolute",
-                            width: String(arrowWidth2) + ea,
-                            top: String(arrowTop2) + ea,
-                            left: String(0),
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }).children[1].children[0].children[0];
-
-    if (descriptionMap.get(action).checklist !== null) {
-
-      createNode({
-        mother: textArea,
-        text: descriptionMap.get(action).checklist.title,
-        style: {
-          fontSize: String(noticeTextSize) + ea,
-          lineHeight: String(1.6),
-          fontWeight: String(600),
-          marginBottom: String(lineHeightMargin) + ea,
-          color: colorChip.black,
-          paddingLeft: String(contentsPaddingLeft) + ea,
-          position: "relative",
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnArrow("right", colorChip.green),
-            style: {
-              position: "absolute",
-              width: String(arrowWidth2) + ea,
-              top: String(arrowTop2) + ea,
-              left: String(0),
-            }
-          }
-        ]
-      });
-
-      num = 1;
-      for (let { title, children } of descriptionMap.get(action).checklist.checklist) {
-        createNode({
-          mother: textArea,
-          text: "<b%" + String(num) + ".&nbsp;&nbsp;%b>" + title,
-          style: {
-            fontSize: String(noticeTextSize) + ea,
-            lineHeight: String(1.6),
-            fontWeight: String(600),
-            marginBottom: String(lineHeightMargin) + ea,
-            color: colorChip.black,
-            paddingLeft: String(contentsPaddingLeft) + ea,
-            position: "relative",
-          },
-          bold: {
-            lineHeight: String(1.6),
-            fontWeight: String(600),
-            color: colorChip.green
-          }
-        });
-        for (let { title, contents } of children) {
-          createNode({
-            mother: textArea,
-            text: title + " : " + contents,
-            style: {
-              fontSize: String(noticeTextSize) + ea,
-              lineHeight: String(1.6),
-              fontWeight: String(400),
-              marginBottom: String(lineHeightMargin) + ea,
-              color: colorChip.black,
-              paddingLeft: String(contentsPaddingLeft * 2) + ea,
-              position: "relative",
-            },
-            bold: {
-              fontSize: String(noticeTextSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.green
-            }
-          });
-        }
-        num++;
       }
+    });
 
-      console.log(descriptionMap.get(action).checklist);
-
-    }
-
-
-
-
+    descriptionMaker(action);
   }
 }
 
