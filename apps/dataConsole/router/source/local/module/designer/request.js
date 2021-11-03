@@ -31,25 +31,27 @@ DesignerJs.prototype.requestDetailLaunching = function (desid, callback = null) 
     }
   }
 
-  target = null;
-  for (let i = 0; i < this.standardDoms.length; i++) {
-    if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
-      if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
-        target = i;
+  if (!middleMode) {
+    target = null;
+    for (let i = 0; i < this.standardDoms.length; i++) {
+      if (this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g) !== null) {
+        if (desid === this.standardDoms[i].firstChild.textContent.match(/d[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]/g)[0]) {
+          target = i;
+        }
       }
     }
-  }
-  for (let i = 1; i < this.standardDoms.length; i++) {
-    if (i !== target) {
-      this.standardDoms[i].style.color = this.standardDoms[i].getAttribute("color");
-    } else {
-      this.standardDoms[i].style.color = colorChip.green;
-      if (i !== 1) {
-        if (this.standardDoms[i].getBoundingClientRect().top > window.innerHeight - belowHeight - motherHeight - this.standardDoms[i].getBoundingClientRect().height + 10 || this.standardDoms[i].getBoundingClientRect().top < firstTop) {
-          standardBar.parentElement.scrollTo({ top: ((i - 1) * (this.standardDoms[i].getBoundingClientRect().height)) });
-        }
+    for (let i = 1; i < this.standardDoms.length; i++) {
+      if (i !== target) {
+        this.standardDoms[i].style.color = this.standardDoms[i].getAttribute("color");
       } else {
-        standardBar.parentElement.scrollTo({ top: 0 });
+        this.standardDoms[i].style.color = colorChip.green;
+        if (i !== 1) {
+          if (this.standardDoms[i].getBoundingClientRect().top > window.innerHeight - belowHeight - motherHeight - this.standardDoms[i].getBoundingClientRect().height + 10 || this.standardDoms[i].getBoundingClientRect().top < firstTop) {
+            standardBar.parentElement.scrollTo({ top: ((i - 1) * (this.standardDoms[i].getBoundingClientRect().height)) });
+          }
+        } else {
+          standardBar.parentElement.scrollTo({ top: 0 });
+        }
       }
     }
   }
