@@ -29,6 +29,8 @@ GoogleChrome.prototype.frontRender = async function (func) {
     finalFunc += "\n\n";
     finalFunc += "const main = async function () {\n";
     finalFunc += "\n\n";
+    finalFunc += "await GeneralJs.sleep(1500);\n";
+    finalFunc += "\n\n";
     finalFunc += func.toString().trim().replace(/^(async)? *(function[^\(]*\([^\)]*\)|\([^\)]*\)[^\=]+\=\>)[^\{]*\{/i, '').replace(/\}$/i, '');
     finalFunc += "\n\n";
     finalFunc += "}\n"
@@ -40,42 +42,53 @@ GoogleChrome.prototype.frontRender = async function (func) {
   }
 }
 
-GoogleChrome.prototype.scriptRequest = async function (url, frontCode = () => { printHtml(); }) {
-  if (typeof url !== "string" || typeof frontCode !== "function") {
+GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
+  if (typeof url !== "string" || !Array.isArray(frontCodeArr)) {
     throw new Error("invaild input");
   }
+  if (!frontCodeArr.every((obj) => { return typeof obj === "function" })) {
+    throw new Error("invaild input 2");
+  }
+
   const instance = this;
+  const { sleep } = this.general;
   const { chromeLauncher, chromeRemote } = require(this.module + "/index.js");
   try {
-    const chrome = await chromeLauncher.launch({ chromeFlags: [ "--no-sandbox", "--headless", "--disable-gpu" ] });
+    const chrome = await chromeLauncher.launch({ chromeFlags: [] });
+    // const chrome = await chromeLauncher.launch({ chromeFlags: [ "--no-sandbox", "--headless", "--disable-gpu" ] });
     const protocol = await chromeRemote({ port: chrome.port });
     const { Network, Page, DOM, Emulation, Runtime, Console } = protocol;
+    let result;
+
     await Network.enable();
     await Page.enable();
     await DOM.enable();
     await Runtime.enable();
     await Console.enable();
-    const pageRun = function (code) {
-      let consoleResult = '';
-      return new Promise(function (resolve, reject) {
-        Page.navigate({ url }).then(() => {
-          Console.messageAdded((result) => {
-            consoleResult += String(result.message.text);
-          });
-          Page.loadEventFired(() => {
-            Runtime.evaluate({ expression: code }).then(() => {
-              resolve(consoleResult);
-            }).catch((e) => {
-              reject(e);
-            });
-          });
-        }).catch((e) => { reject(e); });
-      });
+    await Page.navigate({ url });
+    await Page.loadEventFired();
+
+    result = '';
+    Console.messageAdded((obj) => {
+      result += String(obj.message.text);
+    });
+
+    for (let frontCode of frontCodeArr) {
+      await Runtime.evaluate({ expression: (await instance.frontRender(frontCode)) });
+      await sleep(2000);
     }
-    const result = (await pageRun(await instance.frontRender(frontCode))).trim();
+
+
+
+    await sleep(20000);
+
+
+    console.log(result);
+    await sleep(500);
+
     await protocol.close();
     await chrome.kill();
-    console.log(result);
+
     return result;
   } catch (e) {
     console.log(e);
