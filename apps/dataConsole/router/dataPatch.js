@@ -5730,21 +5730,100 @@ DataPatch.prototype.projectMap = function () {
         ]
       ]
     ], itemDescription: [
-      { name: "계약금 안내", description: "아직 계약금을 내지 않는 고객님께 계약금 결제 안내를 진행하는 단계입니다." },
-      { name: "현장미팅 조율", description: "고객님이 계약금을 지불하시면, 현장 미팅을 위해 디자이너와 시간과 장소를 맞추는 단계입니다." },
-      { name: "현장미팅 확정", description: "현장 미팅의 시간과 공간이 조율되고 확정되어 현장 미팅을 대기하고 있는 단계입니다." },
-      { name: "의뢰서 공유", description: "홈리에종에서 홈스타일링 의뢰서를 작성하여 해당 디자이너님께 의뢰서를 전송해드리는 단계입니다." },
-      { name: "현장미팅 피드백", description: "현장 미팅이 끝나고 고객님과 디자이너님의 피드백과 진행 여부를 홈리에종이 받는 단계입니다." },
-      { name: "잔금 안내", description: "현장 미팅 후 진행을 결정하신 고객님께 디자인비 잔금을 요청드리는 단계입니다." },
-      { name: "시작 대기", description: "고객님의 잔금 결제가 모두 완료되고 프로젝트 시작 전까지 대기하고 있는 단계입니다." },
-      { name: "1차 제안", description: "프로젝트가 시작되고 디자이너가 본격적인 디자인 작업을 하는 기간과 제안을 드리는 단계입니다." },
-      { name: "수정 제안", description: "디자인 제안에 대해서 고객님과 디자이너가 소통을 통해 수정 작업을 거치는 단계입니다." },
-      { name: "시공 진행", description: "디자인에 의해 정해진 시공 리스트에 맞춰 고객님이 시공사를 선택하고 계약을 진행하는 단계입니다." },
-      { name: "제품 구매", description: "디자이너가 제품 리스트를 고객님께 드리고, 그 리스트에 맞춰 제품 구매를 진행하는 단계입니다." },
-      { name: "배송중", description: "제품의 배송을 기다리고, 제작 제품의 완성을 기다리고 세팅을 대기하고 있는 단계입니다." },
-      { name: "세팅 마무리", description: "제품 배송과 제작이 모두 끝나고 디자인안대로 모든 제품의 세팅을 완료하는 단계입니다." },
-      { name: "촬영 컨택", description: "세팅의 완료 후 촬영을 위해 디자이너와 작가, 고객님의 일정을 조율하는 단계입니다." },
-      { name: "해당 없음", description: "해당 없음" },
+      {
+        name: "계약금 안내",
+        description: "아직 계약금을 내지 않는 고객님께 계약금 결제 안내를 진행하는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "현장미팅 조율",
+        description: "고객님이 계약금을 지불하시면, 현장 미팅을 위해 디자이너와 시간과 장소를 맞추는 단계입니다.",
+        pannel: [
+          {
+            name: "가능 일자 전송"
+          }
+        ]
+      },
+      {
+        name: "현장미팅 확정",
+        description: "현장 미팅의 시간과 공간이 조율되고 확정되어 현장 미팅을 대기하고 있는 단계입니다.",
+        pannel: [
+          {
+            name: "미팅 일자 확인"
+          }
+        ]
+      },
+      {
+        name: "의뢰서 공유",
+        description: "홈리에종에서 홈스타일링 의뢰서를 작성하여 해당 디자이너님께 의뢰서를 전송해드리는 단계입니다.",
+        pannel: [
+          {
+            name: "의뢰서 확인"
+          }
+        ]
+      },
+      {
+        name: "현장미팅 피드백",
+        description: "현장 미팅이 끝나고 고객님과 디자이너님의 피드백과 진행 여부를 홈리에종이 받는 단계입니다.",
+        pannel: [
+          {
+            name: "현장미팅 피드백"
+          }
+        ]
+      },
+      {
+        name: "잔금 안내",
+        description: "현장 미팅 후 진행을 결정하신 고객님께 디자인비 잔금을 요청드리는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "시작 대기",
+        description: "고객님의 잔금 결제가 모두 완료되고 프로젝트 시작 전까지 대기하고 있는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "1차 제안",
+        description: "프로젝트가 시작되고 디자이너가 본격적인 디자인 작업을 하는 기간과 제안을 드리는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "수정 제안",
+        description: "디자인 제안에 대해서 고객님과 디자이너가 소통을 통해 수정 작업을 거치는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "시공 진행",
+        description: "디자인에 의해 정해진 시공 리스트에 맞춰 고객님이 시공사를 선택하고 계약을 진행하는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "제품 구매",
+        description: "디자이너가 제품 리스트를 고객님께 드리고, 그 리스트에 맞춰 제품 구매를 진행하는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "배송중",
+        description: "제품의 배송을 기다리고, 제작 제품의 완성을 기다리고 세팅을 대기하고 있는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "세팅 마무리",
+        description: "제품 배송과 제작이 모두 끝나고 디자인안대로 모든 제품의 세팅을 완료하는 단계입니다.",
+        pannel: []
+      },
+      {
+        name: "촬영 컨택",
+        description: "세팅의 완료 후 촬영을 위해 디자이너와 작가, 고객님의 일정을 조율하는 단계입니다.",
+        pannel: [
+          {
+            name: "가능 일자 전송"
+          }
+        ]
+      },
+      {
+        name: "해당 없음",
+        description: "해당 없음"
+      },
     ], searchBoo: true, },
     next: { name: "전화 예정일", position: "process.call.next", type: "date", searchBoo: false, yesNo: [ "Y", "N" ], },
     callHistory: { name: "연락 기록", position: "process.call.history", type: "object", inputFunction: callHistoryInputFunction.toString().replace(/\}$/, '').replace(/^function[^\(\)]*\([^\(\)]*\)[^\{]*\{/gi, ''), objectFunction: callHistoryToObject.toString().replace(/\}$/, '').replace(/function \(value, pastValue, vaildMode\) \{/gi, ''), searchBoo: false, },

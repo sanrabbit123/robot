@@ -583,6 +583,12 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   let checkCircleVisual;
   let textAreaMother;
   let descriptionMaker;
+  let pannelBoxPaddingBottom, pannelBoxPaddingRight;
+  let pannelMother;
+  let pannelBlockPadding;
+  let pannelBlockMargin;
+  let pannelBlockHeight;
+  let pannelBlockVisual;
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
@@ -628,6 +634,12 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     checkCircleTop = 7;
     checkCircleWidth = 10;
     checkCircleVisual = 1;
+    pannelBoxPaddingBottom = 13;
+    pannelBoxPaddingRight = 15;
+    pannelBlockPadding = 15;
+    pannelBlockMargin = 8;
+    pannelBlockHeight = 38;
+    pannelBlockVisual = 2;
 
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
     lengthArr.sort((a, b) => { return b - a; });
@@ -636,7 +648,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     textAreaMother = {};
 
     descriptionMap = new Map();
-    for (let { name, description } of itemDescription) {
+    for (let { name, description, pannel } of itemDescription) {
       checklistFactor = null;
       for (let check of checklist) {
         if (check.setting.target.action.includes(name)) {
@@ -644,7 +656,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
           break;
         }
       }
-      descriptionMap.set(name, { description, checklist: checklistFactor });
+      descriptionMap.set(name, { description, checklist: checklistFactor, pannel });
     }
 
     descriptionMaker = (action) => {
@@ -842,6 +854,54 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
           num++;
         }
       }
+
+      if (descriptionMap.get(action).pannel.length > 0) {
+
+        pannelMother = createNode({
+          mother: textAreaMother,
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "absolute",
+            bottom: String(textAreaPaddingLeft + pannelBoxPaddingBottom - pannelBlockMargin) + ea,
+            right: String(textAreaPaddingLeft + pannelBoxPaddingRight) + ea,
+          }
+        });
+
+        for (let { name } of descriptionMap.get(action).pannel) {
+          createNode({
+            mother: pannelMother,
+            class: [ "hoverDefault_lite" ],
+            style: {
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: colorChip.gradientGreen3,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 12px -9px " + colorChip.shadow,
+              height: String(pannelBlockHeight) + ea,
+              textAlign: "center",
+              paddingLeft: String(pannelBlockPadding) + ea,
+              paddingRight: String(pannelBlockPadding) + ea,
+              marginBottom: String(pannelBlockMargin) + ea,
+            },
+            children: [
+              {
+                text: name,
+                style: {
+                  position: "relative",
+                  top: String(pannelBlockVisual * -1) + ea,
+                  fontSize: String(noticeTextSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.whiteBlack,
+                }
+              }
+            ]
+          });
+        }
+
+      }
     }
 
     base = createNode({
@@ -969,13 +1029,11 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                       a.setAttribute("focus", "off");
                     }
                   }
-                  setQueue(() => {
-                    grandMother.style.opacity = String(1);
-                    grandMother.setAttribute("focus", "on");
-                    arrow.style.opacity = String(1);
-                    arrow.setAttribute("focus", "on");
-                    descriptionMaker(action);
-                  }, 300);
+                  grandMother.style.opacity = String(1);
+                  grandMother.setAttribute("focus", "on");
+                  arrow.style.opacity = String(1);
+                  arrow.setAttribute("focus", "on");
+                  descriptionMaker(action);
                 }
 
               } else {

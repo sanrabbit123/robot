@@ -276,7 +276,7 @@ ReceiptRouter.prototype.rou_post_createStylingContract = function () {
         await requestSystem(url, { requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal(), contractName, contractAddress }, { headers: { "Content-type": "application/json" } });
       } else {
         console.log("styling form cancel : " + proid);
-        await messageSend({ text: "프로젝트 " + proid + "의 스타일링 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer" });
+        await messageSend({ text: "프로젝트 " + proid + "의 스타일링 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer", voice: true });
       }
 
       res.set({
@@ -316,9 +316,7 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
       client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
       if (client !== null) {
         await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
-        messageSend({ text: "계약서 작성 및 알림톡 전송 완료 : " + client.name, channel: "#400_customer" }).then(() => {
-          return ghostRequest("voice", { text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!" });
-        }).catch((err) => {
+        messageSend({ text: client.name + " 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
           console.log(err);
         });
       }
@@ -564,9 +562,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
           message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
-          messageSend({ text: message, channel: "#700_operation" }).then(() => {
-            return ghostRequest("/voice", { text: message });
-          }).catch((err) => {
+          messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
             console.log(err);
           })
           await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
@@ -692,9 +688,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           });
 
           message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
-          messageSend({ text: message, channel: "#700_operation" }).then(() => {
-            return ghostRequest("/voice", { text: message });
-          }).catch((err) => {
+          messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
             console.log(err);
           })
           await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
@@ -869,9 +863,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[requestNumber].proofs;
 
       message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
-      messageSend({ text: message, channel: "#700_operation" }).then(() => {
-        return ghostRequest("/voice", { text: message });
-      }).catch((err) => {
+      messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
         console.log(err);
       });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
@@ -1266,9 +1258,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
             cliid: client.cliid,
             needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
           });
-          messageSend({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" }).then(() => {
-            return ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" });
-          }).catch((err) => {
+          messageSend({ text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!", channel: "#700_operation", voice: true }).catch((err) => {
             console.log(err);
           });
         }
@@ -1405,9 +1395,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
           cliid: client.cliid,
           needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
         });
-        messageSend({ text: "추가 디자인비 요청 알림톡 전송 완료 : " + client.name, channel: "#700_operation" }).then(() => {
-          return ghostRequest("voice", { text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!" });
-        }).catch((err) => {
+        messageSend({ text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!", channel: "#700_operation", voice: true }).catch((err) => {
           console.log(err);
         });
       }
@@ -1564,7 +1552,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
         percentage: (!Number.isNaN(Number(req.body.percentage)) ? Number(req.body.percentage) : 100),
         amount: report.price.refund
       }).then(() => {
-        return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation" });
+        return messageSend({ text: client.name + " 고객님의 환불 요청이 완료되었습니다!", channel: "#700_operation", voice: true });
       }).catch((err) => {
         console.log(err);
       });

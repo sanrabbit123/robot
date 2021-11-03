@@ -26,8 +26,7 @@ DataRouter.prototype.rou_post_designerProposal_submit = function () {
       await requestSystem("https://" + address.pythoninfo.host + ":3000/createStylingBill", { proid, desid }, { headers: { "Content-Type": "application/json" } });
       await back.updateProject([ { proid }, { "service.online": (method === "online") } ], { selfMongo: instance.mongo });
 
-      await messageSend({ text: `${name} 고객님이 ${designer}(${desid}) 디자이너를 선택하셨습니다! 알림톡이 갔으니 확인 연락 부탁드립니다!\n${name} 고객님 : https://${address.backinfo.host}/client?cliid=${cliid}\n제안서 : https://${address.homeinfo.ghost.host}/middle/proposal?proid=${proid}&mode=test\n디자이너 : https://${address.backinfo.host}/designer?desid=${desid}`, channel: "#400_customer" });
-      ghostRequest("voice", { text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.` }).then(() => {
+      messageSend({ text: `${name} 고객님이 ${designer} 디자이너를 선택하셨어요.`, channel: "#400_customer", voice: true }).then(() => {
         return requestSystem("https://" + address.backinfo.host + ":3000/generalMongo", {
           mode: "sse",
           db: "console",
