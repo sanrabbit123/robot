@@ -753,7 +753,7 @@ GraphicBot.prototype.startWork = function () {
 GraphicBot.prototype.botRouter = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, statusReading } = this.mother;
+  const { fileSystem, shell, shellExec, shellLink, equalJson, requestSystem, sleep, stringToDate, getDateMatrix, statusReading } = this.mother;
   const orderConst = 'g';
   const tong = this.tong;
   const address = this.address;
@@ -1305,6 +1305,32 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
+  funcObj.post_pdf = {
+    link: [ "/pdf" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      try {
+        const coreTarget = instance.address.officeinfo.map.find((obj) => { return obj.name === "core" });
+        if (coreTarget === undefined) {
+          throw new Error("invaild infoObj");
+        }
+        const scpConst = `${coreTarget.user}@${coreTarget.ip}:${instance.address.officeinfo.ghost.file.static}`;
+        await shellExec(`wkhtmltopdf ${req.body.link} /home/homeliaison/${shellLink(req.body.name)};`);
+        await shellExec(`scp /home/homeliaison/${shellLink(req.body.name)} ${scpConst};`);
+        await shellExec(`rm -rf /home/homeliaison/${shellLink(req.body.name)};`);
+        res.send({ message: "done" });
+      } catch (e) {
+        console.log(e);
+        res.send({ message: "error : " + e.message });
+      }
+    }
+  };
+
   //end : set router
   let resultObj = { get: [], post: [] };
   for (let i in funcObj) {
@@ -1411,9 +1437,9 @@ GraphicBot.prototype.botServer = async function () {
   const app = express();
 
   app.use(useragent.express());
-  app.use(express.json());
+  app.use(express.json({ limit: "50mb" }));
   app.use(multiForms.array());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
   try {
     let front, routerObj;

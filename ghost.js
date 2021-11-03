@@ -1654,12 +1654,12 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invaild post : html must be string");
         }
         const static = instance.address.officeinfo.ghost.file.static;
-        const pdfServerIp = instance.address.officeinfo.map.find((obj) => { return obj.name === "pdf"; }).ip;
+        const pdfServerIp = instance.address.officeinfo.map.find((obj) => { return obj.name === "graphic"; }).ip;
         const htmlName = `html_name_${uniqueValue("string")}.html`;
         const pdfName = htmlName.replace(/\.html$/i, ".pdf");
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        await requestSystem("http://" + pdfServerIp + "/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
+        await requestSystem("http://" + pdfServerIp + ":3000/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
         setQueue(() => {
           shell.exec(`rm -rf ${shellLink(static)}/${htmlName};rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
         }, 15 * 60 * 1000);
