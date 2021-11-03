@@ -1659,7 +1659,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         const pdfName = htmlName.replace(/\.html$/i, ".pdf");
 
         await fileSystem("write", [ `${static}/${htmlName}`, req.body.html.replace(/__equal__/gi, '=').replace(/__ampersand__/gi, '&') ]);
-        await requestSystem("http://" + pdfServerIp + ":3000/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
+        const r = await requestSystem("http://" + pdfServerIp + ":3000/pdf", { link: "https://" + instance.address.officeinfo.ghost.host + "/" + htmlName, name: pdfName }, { headers: { "Content-Type": "application/json" } });
+        console.log(r)
         setQueue(() => {
           shell.exec(`rm -rf ${shellLink(static)}/${htmlName};rm -rf ${shellLink(static)}/${shellLink(pdfName)}`);
         }, 15 * 60 * 1000);
@@ -1667,6 +1668,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify({ pdf: `https://${instance.address.officeinfo.ghost.host}/${global.encodeURIComponent(pdfName)}` }));
 
       } catch (e) {
+        console.log(e);
         res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     }
