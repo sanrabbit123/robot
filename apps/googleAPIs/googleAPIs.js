@@ -17,121 +17,6 @@ const GoogleAPIs = function (credentials = "default") {
   this.oAuth2Client = new this.google.auth.OAuth2(this.oAuth2Info.credentials.installed.client_id, this.oAuth2Info.credentials.installed.client_secret, this.oAuth2Info.credentials.installed.redirect_uris[0]);
 }
 
-GoogleAPIs.prototype.fileSystem = function (sw, arr) {
-  const fs = require('fs');
-  if (!Array.isArray(arr)) { throw new Error("second argument must be array"); return; }
-  switch (sw) {
-    case "read":
-      return new Promise(function (resolve, reject) {
-        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
-        fs.readFile(arr[0], (err, data) => {
-          if (err) { reject(err); }
-          else { resolve(data); }
-        });
-      });
-      break;
-    case "readString":
-      return new Promise(function (resolve, reject) {
-        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
-        fs.readFile(arr[0], "utf8", (err, data) => {
-          if (err) { reject(err); }
-          else { resolve(data); }
-        });
-      });
-      break;
-    case "readBinary":
-      return new Promise(function (resolve, reject) {
-        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
-        fs.readFile(arr[0], "binary", (err, data) => {
-          if (err) { reject(err); }
-          else { resolve(data); }
-        });
-      });
-      break;
-    case "readDir":
-      return new Promise(function (resolve, reject) {
-        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
-        fs.readdir(arr[0], function (err, filelist) {
-          if (err) { reject(err); }
-          else { resolve(filelist); }
-        });
-      });
-      break;
-    case "write":
-      return new Promise(function (resolve, reject) {
-        if (arr.length !== 2) { reject("second argument must be length 2 array"); }
-        fs.writeFile(arr[0], arr[1], "utf8", (err) => {
-          if (err) { reject(err); }
-          else { resolve("success"); }
-        });
-      });
-      break;
-    case "writeBinary":
-      return new Promise(function (resolve, reject) {
-        if (arr.length !== 2) { reject("second argument must be length 2 array"); }
-        fs.writeFile(arr[0], arr[1], "binary", (err) => {
-          if (err) { reject(err); }
-          else { resolve("success"); }
-        });
-      });
-      break;
-    case "size":
-      return new Promise(function (resolve, reject) {
-        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
-        const { spawn } = require("child_process");
-        const du = spawn("du", [ "-sk", arr[0] ]);
-        let out;
-        out = "";
-        du.stdout.on("data", (data) => { out += String(data); });
-        du.stderr.on("data", (data) => { reject(String(data)); });
-        du.on("close", (code) => { resolve(Number((String(out).split("\t"))[0]) * 1000); });
-      });
-    case "mkdir":
-      return new Promise(function (resolve, reject) {
-        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
-        const { spawn } = require("child_process");
-        const mkdir = spawn("mkdir", [ arr[0] ]);
-        let out;
-        out = "";
-        mkdir.stdout.on("data", (data) => { out += String(data); });
-        mkdir.stderr.on("data", (data) => { reject(String(data)); });
-        mkdir.on("close", (code) => { resolve(arr[0]); });
-      });
-    case "exist":
-      return new Promise(function(resolve, reject) {
-        if (arr.length !== 1) { reject("second argument must be length 1 array"); }
-        fs.access(arr[0], fs.constants.F_OK, function (err) {
-          try {
-            if (!err) { resolve(true); }
-            else { resolve(false); }
-          } catch (e) {
-            resolve(false);
-          }
-        });
-      });
-  }
-}
-
-GoogleAPIs.prototype.consoleQ = function (question) {
-  const readline = require(`readline`);
-  const rL = readline.createInterface({ input : process.stdin, output : process.stdout });
-  return new Promise(function(resolve, reject) {
-    rL.question(question, function (input) {
-      resolve(input);
-      rL.close();
-    });
-  });
-}
-
-GoogleAPIs.prototype.sleep = function (time) {
-  let instance = this;
-  return new Promise(function (resolve, reject) {
-    setTimeout(function(){
-      resolve('awake');
-    }, time);
-  });
-}
-
 GoogleAPIs.prototype.get_token = function (code) {
   let instance = this;
   return new Promise(function(resolve, reject) {
@@ -203,71 +88,6 @@ GoogleAPIs.prototype.get_app = async function (app) {
   return return_app;
 }
 
-GoogleAPIs.prototype.pythonExecute = function (target, args = [], inputObj) {
-  const fs = require(`fs`);
-  const shell = require(`shelljs`);
-
-  let targetLink, targetArr;
-
-  //shellLink and make target path
-  targetLink = '';
-  targetArr = target.split('/');
-  for (let i of targetArr) {
-    if (!/ /g.test(i)) {
-      targetLink += i + '/';
-    } else if (!/^'/.test(i) && !/'$/.test(i)) {
-      targetLink += "'" + i + "'" + '/';
-    } else {
-      targetLink += i + '/';
-    }
-  }
-  targetLink = targetLink.slice(0, -1);
-
-  const name = targetArr[targetArr.length - 3];
-  const bridgeFile = process.cwd() + "/temp/" + name + ".json";
-
-  return new Promise(function(resolve, reject) {
-    fs.writeFile(bridgeFile, JSON.stringify(inputObj, null, 2), "utf8", function (err) {
-      if (err) { reject(err); }
-      let output, result, order, jsonRaw, json;
-
-      order = `python3 ${targetLink}`;
-      if (args.length > 0) {
-        order += ` ${args.join(' ')}`;
-      }
-      output = shell.exec(order, { silent: true });
-      jsonRaw = output.stdout.replace(/\n$/, '');
-
-      try {
-        json = JSON.parse(jsonRaw);
-        result = json;
-      } catch (e) {
-        result = jsonRaw;
-      }
-
-      resolve(result);
-    });
-  });
-}
-
-GoogleAPIs.prototype.shellLink = function (str) {
-  let arr = str.split('/');
-  let newStr = '';
-  for (let i of arr) {
-    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
-      newStr += i + '/';
-    } else if (!/'/g.test(i)) {
-      newStr += "'" + i + "'" + '/';
-    } else if (!/"/g.test(i)) {
-      newStr += '"' + i + '"' + '/';
-    } else {
-      newStr += i + '/';
-    }
-  }
-  newStr = newStr.slice(0, -1);
-  return newStr;
-}
-
 GoogleAPIs.prototype.parsingId = function (link) {
   let linkArr, target;
   if (/^http/i.test(link)) {
@@ -283,6 +103,11 @@ GoogleAPIs.prototype.parsingId = function (link) {
     target = link;
   }
   return target;
+}
+
+const Mother = require(`${process.cwd()}/apps/mother.js`);
+for (let func in Mother.prototype) {
+  GoogleAPIs.prototype[func] = Mother.prototype[func];
 }
 
 module.exports = GoogleAPIs;

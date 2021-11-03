@@ -105,7 +105,7 @@ BridgeCloud.prototype.bridgeToOffice = async function (obj, option = { selfMongo
   const instance = this;
   const address = this.address;
   const back = this.back;
-  const { shell, shellLink, googleSystem, ghostRequest, requestSystem, generalFileUpload, messageLog, errorLog, messageSend } = this.mother;
+  const { shell, shellLink, ghostRequest, requestSystem, generalFileUpload, messageLog, errorLog, messageSend } = this.mother;
   try {
     const { tong, folder } = obj;
     const binaryFolder = instance.dir + "/binary";
@@ -187,8 +187,9 @@ BridgeCloud.prototype.bridgeToOffice = async function (obj, option = { selfMongo
 
 BridgeCloud.prototype.bridgeToSheets = async function (obj) {
   const instance = this;
-  const { shell, shellLink, googleSystem, messageSend } = this.mother;
-  const sheets = googleSystem("sheets");
+  const { shell, shellLink, messageSend } = this.mother;
+  const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
+  const sheets = new GoogleSheet();
   const dateToString = function (dateObject) {
     const zeroAddition = function (number) {
       if (number < 10) {
@@ -309,7 +310,8 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, googleSystem, ghostRequest, headRequest, sleep, statusReading, equalJson, messageSend, errorLog } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, ghostRequest, headRequest, sleep, statusReading, equalJson, messageSend, errorLog } = this.mother;
+  const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, MONGOLOCALC, KAKAO, HUMAN, ADDRESS ] = needs;
   const ignorePhone = this.ignorePhone;
@@ -610,7 +612,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
         }
       }
-      const calendar = googleSystem("calendar");
+      const calendar = new GoogleCalendar();
 
       let filteredObj, message;
       let tempArr;

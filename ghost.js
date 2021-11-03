@@ -763,7 +763,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const back = this.back;
   const { webHook } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
@@ -1541,7 +1541,8 @@ Ghost.prototype.ghostRouter = function (needs) {
           throw new Error("invaild post : who must be string");
         }
         const targetFolder = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
-        const googleDrive = instance.mother.googleSystem("drive");
+        const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
+        const googleDrive = new GoogleDrive();
         const { files, who } = equalJson(req.body);
         if (!files.every((i) => { return typeof i === "object" })) {
           throw new Error("invaild post");
@@ -1586,7 +1587,8 @@ Ghost.prototype.ghostRouter = function (needs) {
             await messageSend({ text, channel: "#file" });
             instance.setTimer(async function () {
               try {
-                const googleDrive = instance.mother.googleSystem("drive");
+                const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
+                const googleDrive = new GoogleDrive();
                 await googleDrive.delete_inPython(zipLink);
               } catch (e) {
                 console.log(e);
@@ -2299,7 +2301,7 @@ Ghost.prototype.clientRouter = function (needs) {
   const folderName = "고객";
   const pathNameConst = "/client_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, mongo, mongoinfo, mongolocalinfo } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -2343,7 +2345,7 @@ Ghost.prototype.designerRouter = function (needs) {
   const pathNameConst = "/designer_";
   const standardId = "desid";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, sleep } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -2512,7 +2514,7 @@ Ghost.prototype.photoRouter = function (needs) {
   const folderName = "사진_등록_포트폴리오";
   const pathNameConst = "/photo_";
   const sambaDir = this.homeliaisonServer + "/" + folderName;
-  const { fileSystem, requestSystem, shell, shellExec, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, dateToString, sleep } = this.mother;
+  const { fileSystem, requestSystem, shell, shellExec, shellLink, todayMaker, mongo, mongoinfo, mongolocalinfo, dateToString, sleep } = this.mother;
   let funcObj = {};
 
   //POST - ls
@@ -2577,8 +2579,9 @@ Ghost.prototype.photoRouter = function (needs) {
         if (req.body.pid === undefined || req.body.pay === undefined) {
           res.send(JSON.stringify({ message: "invaild body : must be 'pid' and 'pay'" }));
         } else {
+          const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
           const targetFolderId = "1oxsJCy_7OKZa5gysCo5VlbLbmuKMFr7y";
-          const googleDrive = instance.mother.googleSystem("drive");
+          const googleDrive = new GoogleDrive();
           const { pid } = req.body;
           const pay = (Number(req.body.pay) === 1);
           const c780 = "780";
@@ -2776,7 +2779,7 @@ Ghost.prototype.fileRouter = function (static) {
   const back = this.back;
   const address = this.address;
   const staticDir = static;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, googleSystem, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash, treeParsing } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, mongo, mongoinfo, mongolocalinfo, cryptoString, decryptoHash, treeParsing } = this.mother;
   let funcObj = {};
   const ghostWall = function (callback, binary = false) {
     const banCode = "<html><head><title>error</title></head><body><script>window.close();</script></body></html>"

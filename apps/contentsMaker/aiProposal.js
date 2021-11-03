@@ -113,7 +113,8 @@ AiProposal.prototype.proposalLaunching = async function () {
       end: false,
     });
 
-    const gd = this.mother.googleSystem("drive");
+    const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
+    const gd = new GoogleDrive();
 
     fromArr = [];
     toArr = [];

@@ -49,7 +49,6 @@ GoogleAnalytics.prototype.returnTimeline = function (str) {
 GoogleAnalytics.prototype.getAgeGender = async function () {
   const instance = this;
   const mother = this.mother;
-  const sheet = this.mother.googleSystem("sheets");
   try {
     const { age: { reports: [ ageResultRaw ] }, gender: { reports: [ genderResultRaw ] } } = await mother.pythonExecute(this.pythonApp, [ "analytics", "getAgeGender" ], {});
     const { data: { rows: ageResult } } = ageResultRaw;

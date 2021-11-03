@@ -1,46 +1,20 @@
 module.exports = function (arg, info) {
   return [
-    "https://www.hometax.go.kr/",
+    "https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/comm/a/b/UTXPPABA01.xml&w2xHome=/ui/pp/&w2xDocumentRoot=",
     async function () {
-      const loginButtonId = "group88615548";
-      while (document.getElementById(loginButtonId) === null) {
-        await sleep(500);
-      }
-      await endFront();
-      document.getElementById(loginButtonId).click();
-    },
-    async function () {
-      const iframeId = "txppIframe";
       const idLoginButtonId = "anchor15";
       const returnButtonId = "anchor25";
       const inputs = {
         id: "iptUserId",
         pwd: "iptUserPw"
       };
-
-      while (document.getElementById(iframeId) === null) {
-        await sleep(500);
-      }
-      while (document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId) === null) {
-        await sleep(500);
-      }
-      document.getElementById(iframeId).contentWindow.document.getElementById(idLoginButtonId).click();
-      await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.id), "info.hometax.id");
-      await clickElement(document.getElementById("trigger8"));
-      await injectionInput(document.getElementById(iframeId).contentWindow.document.getElementById(inputs.pwd), "info.hometax.pwd");
-      await endFront();
-      document.getElementById(iframeId).contentWindow.document.getElementById(returnButtonId).click();
+      document.getElementById(idLoginButtonId).click();
+      document.getElementById(inputs.id).value = INFO.hometax.id;
+      document.getElementById(inputs.pwd).value = INFO.hometax.pwd;
+      document.getElementById(returnButtonId).click();
     },
+    "toss: https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml"
     async function () {
-      const firstTargetButtonId = "myMenuQuickLi4";
-      while (document.getElementById(firstTargetButtonId) === null) {
-        await sleep(500);
-      }
-      await endFront();
-      document.getElementById(firstTargetButtonId).click();
-    },
-    async function () {
-      const iframeId = "txppIframe";
       let buttons;
       let pageNumber, pageButtons;
       let domTargets, textArr;
@@ -48,34 +22,31 @@ module.exports = function (arg, info) {
       let timeIndex;
       let tempObj;
 
-      while (document.getElementById(iframeId) === null) {
-        await sleep(500);
-      }
-      while (document.getElementById(iframeId).contentWindow.document.querySelector('.w2radio_label') === null) {
+      while (document.querySelector('.w2radio_label') === null) {
         await sleep(500);
       }
 
-      await sleep(3000);
+      await sleep(2000);
 
-      buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
+      buttons = document.querySelectorAll('.w2radio_label');
       buttons[2].click();
 
       await sleep(500);
 
-      document.getElementById(iframeId).contentWindow.document.getElementById("trigger1").click();
+      document.getElementById("trigger1").click();
 
       await sleep(2000);
 
-      pageButtons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2pageList_control_label');
+      pageButtons = document.querySelectorAll('.w2pageList_control_label');
       pageNumber = pageButtons.length;
 
       total = [];
       for (let i = 0; i < pageNumber; i++) {
-        pageButtons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2pageList_control_label');
+        pageButtons = document.querySelectorAll('.w2pageList_control_label');
         pageButtons[i].click();
         await sleep(2000);
 
-        domTargets = document.getElementById(iframeId).contentWindow.document.getElementById("grdCshpt").querySelectorAll("td");
+        domTargets = document.getElementById("grdCshpt").querySelectorAll("td");
         textArr = [];
         for (let dom of domTargets) {
           textArr.push(dom.textContent);
@@ -114,23 +85,8 @@ module.exports = function (arg, info) {
       await ajaxPromise({ to: "python", path: "/cashReceipt", data: { cashOut: total } }, RECEIVECONST);
 
     },
+    "toss: https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB005.xml"
     async function () {
-      const homeButtonId = "hdGroup820";
-      while (document.getElementById(homeButtonId) === null) {
-        await sleep(500);
-      }
-      await endFront();
-      document.getElementById(homeButtonId).click();
-    },
-    async function () {
-      while (document.getElementById("myMenuQuickLi5") === null) {
-        await sleep(500);
-      }
-      await endFront();
-      document.getElementById("myMenuQuickLi5").click();
-    },
-    async function () {
-      const iframeId = "txppIframe";
       let buttons;
       let pageNumber, pageButtons;
       let domTargets, textArr;
@@ -138,34 +94,31 @@ module.exports = function (arg, info) {
       let timeIndex;
       let tempObj;
 
-      while (document.getElementById(iframeId) === null) {
-        await sleep(500);
-      }
-      while (document.getElementById(iframeId).contentWindow.document.querySelector('.w2radio_label') === null) {
+      while (document.querySelector('.w2radio_label') === null) {
         await sleep(500);
       }
 
       await sleep(3000);
 
-      buttons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2radio_label');
+      buttons = document.querySelectorAll('.w2radio_label');
       buttons[2].click();
 
       await sleep(500);
 
-      document.getElementById(iframeId).contentWindow.document.getElementById("trigger1").click();
+      document.getElementById("trigger1").click();
 
       await sleep(2000);
 
-      pageButtons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2pageList_control_label');
+      pageButtons = document.querySelectorAll('.w2pageList_control_label');
       pageNumber = pageButtons.length;
 
       total = [];
       for (let i = 0; i < pageNumber; i++) {
-        pageButtons = document.getElementById(iframeId).contentWindow.document.querySelectorAll('.w2pageList_control_label');
+        pageButtons = document.querySelectorAll('.w2pageList_control_label');
         pageButtons[i].click();
         await sleep(2000);
 
-        domTargets = document.getElementById(iframeId).contentWindow.document.getElementById("grdCshpt").querySelectorAll("td");
+        domTargets = document.getElementById("grdCshpt").querySelectorAll("td");
         textArr = [];
         for (let dom of domTargets) {
           textArr.push(dom.textContent);

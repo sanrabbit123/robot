@@ -402,37 +402,6 @@ Mother.prototype.fileSystem = function (sw, arr) {
   }
 }
 
-Mother.prototype.googleSystem = function (sw) {
-  let app;
-  switch (sw) {
-    case "sheets":
-      const GoogleSheet = require(process.cwd() + "/apps/googleAPIs/googleSheet.js");
-      app = new GoogleSheet();
-      return app;
-      break;
-    case "docs":
-      const GoogleDocs = require(process.cwd() + "/apps/googleAPIs/googleDocs.js");
-      app = new GoogleDocs();
-      return app;
-      break;
-    case "drive":
-      const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
-      app = new GoogleDrive();
-      return app;
-      break;
-    case "gmail":
-      const GoogleMail = require(process.cwd() + "/apps/googleAPIs/googleMail.js");
-      app = new GoogleMail();
-      return app;
-      break;
-    case "calendar":
-      const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
-      app = new GoogleCalendar();
-      return app;
-      break;
-  }
-}
-
 Mother.prototype.babelSystem = function (code, webpack = false, minify = false) {
   const babel = require("@babel/core");
   if (webpack) { minify = false; }

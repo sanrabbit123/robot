@@ -2956,7 +2956,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
           let requestNumber;
           if (clients.length > 0) {
             const [ client ] = clients;
-            const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { desid: { $regex: "^d" } } ] }, { selfMongo });
+            const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo });
             if (projects.length > 0) {
               const [ project ] = projects;
               const bills = await bill.getBillsByQuery({ $and: [

@@ -167,21 +167,21 @@ DesignerJs.prototype.projectDetail = function (desid) {
   baseTongPaddingBottom = 50;
 
   areaBetween = <%% 13, 12, 12, 12, 12 %%>;
-  innerPaddingTop = <%% 24, 24, 24, 24, 24 %%>;
-  innerPaddingLeft = <%% 36, 36, 36, 36, 36 %%>;
-  titleHeight = <%% 62, 62, 62, 62, 62 %%>;
+  innerPaddingTop = <%% 24, 22, 20, 16, 24 %%>;
+  innerPaddingLeft = <%% 36, 32, 30, 24, 36 %%>;
+  titleHeight = <%% 62, 58, 56, 52, 62 %%>;
 
-  areaPaddingTop = <%% 50, 50, 50, 50, 50 %%>;
+  areaPaddingTop = <%% 50, 48, 46, 44, 50 %%>;
   areaPaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
   areaPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
 
-  areaTitleTop = <%% 14, 14, 14, 14, 14 %%>;
+  areaTitleTop = <%% 13, 13, 13, 13, 14 %%>;
   areaTitleLeft = <%% 20, 20, 20, 20, 20 %%>;
 
-  fontSize0 = <%% 25, 25, 25, 25, 25 %%>;
-  fontSize1 = <%% 17, 17, 17, 17, 17 %%>;
-  fontSize2 = <%% 14, 14, 14, 14, 14 %%>;
-  fontSize3 = <%% 12, 12, 12, 12, 12 %%>;
+  fontSize0 = <%% 25, 23, 22, 21, 5 %%>;
+  fontSize1 = <%% 16, 16, 15, 14, 17 %%>;
+  fontSize2 = <%% 14, 14, 13, 12, 14 %%>;
+  fontSize3 = <%% 12, 12, 11, 11, 12 %%>;
 
   mainTitleTextTop = <%% -3, -3, -3, -3, -3 %%>;
   mainTitleTextLeft = <%% 3, 3, 3, 3, 3 %%>;
@@ -451,6 +451,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
           const zIndex = 2;
           let cancelBack, whiteBox;
           let whiteMargin;
+          let whiteResult;
 
           whiteMargin = 40;
           cancelBack = createNode({
@@ -488,7 +489,10 @@ DesignerJs.prototype.projectDetail = function (desid) {
             }
           });
 
-          instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
+          whiteResult = instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
+          if (!whiteResult) {
+            cancelBack.click();
+          }
         }
       },
       style: {
@@ -592,54 +596,55 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
 
   pIndex = projects.findIndex((obj) => { return obj.proid === proid; });
   cIndex = clients.findIndex((obj) => { return obj.cliid === cliid; });
-  if (pIndex !== -1 && cIndex !== -1) {
+
+  if (pIndex !== -1 && cIndex !== -1 && action !== "해당 없음") {
     project = projects[pIndex];
     client = clients[cIndex];
     designer = designers.pick(desid);
     const { request, analytics } = client.requests[requestNumber];
 
-    baseTop = <%% 40, 40, 40, 40, 40 %%>;
-    baseLeft = <%% 45, 45, 45, 45, 45 %%>;
-    baseBottom = <%% 48, 48, 48, 48, 48 %%>;
-    titleSize = <%% 21, 21, 21, 21, 21 %%>;
+    baseTop = <%% 40, 33, 30, 22, 40 %%>;
+    baseLeft = <%% 45, 38, 35, 25, 45 %%>;
+    baseBottom = <%% 48, 41, 38, 28, 48 %%>;
+    titleSize = <%% 21, 20, 19, 18, 21 %%>;
     titleHeight = <%% 30, 30, 30, 30, 30 %%>;
     subTitleHeight = <%% 20, 20, 20, 20, 20 %%>;
     titleTextBetween = <%% 10, 10, 10, 10, 10 %%>;
     titlePaddingBottom = <%% 13, 13, 13, 13, 13 %%>;
-    areaTitleSize = <%% 15, 15, 15, 15, 15 %%>;
-    rowMarginTop = <%% 25, 25, 25, 25, 25 %%>;
-    rowFirstMarginTop = <%% 32, 32, 32, 32, 32 %%>;
+    areaTitleSize = <%% 15, 14, 14, 13, 15 %%>;
+    rowMarginTop = <%% 21, 16, 11, 10, 25 %%>;
+    rowFirstMarginTop = <%% 30, 27, 22, 17, 32 %%>;
     areaTitleBottom = <%% 13, 13, 13, 13, 13 %%>;
     barHeight = <%% 34, 34, 34, 34, 34 %%>;
-    factorSize = <%% 13, 13, 13, 13, 13 %%>;
-    detailBoxMarginTop = <%% 40, 40, 40, 40, 40 %%>;
+    factorSize = <%% 13, 12, 12, 10, 3 %%>;
+    detailBoxMarginTop = <%% 45, 40, 35, 30, 40 %%>;
 
     arrowTop = <%% 8, 8, 8, 8, 8 %%>;
     arrowWidth = <%% 9, 8, 8, 8, 8 %%>;
 
-    whiteBoxTop = <%% 48, 48, 48, 48, 48 %%>;
-    whiteBoxLeft = <%% 20, 20, 20, 20, 20 %%>;
-    noticeTextSize = <%% 14, 14, 14, 14, 14 %%>;
+    whiteBoxTop = <%% 48, 46, 44, 42, 48 %%>;
+    whiteBoxLeft = <%% 20, 18, 16, 14, 20 %%>;
+    noticeTextSize = <%% 14, 13, 13, 12, 3 %%>;
     noticeTextTop = <%% 18, 18, 18, 18, 18 %%>;
     noticeTextLeft = <%% 24, 24, 24, 24, 24 %%>;
 
-    accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
+    accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
 
-    textAreaPaddingTop = 22;
-    textAreaPaddingLeft = 26;
-    lineHeightMargin = 8;
-    contentsPaddingLeft = 14;
-    arrowTop2 = 7;
-    arrowWidth2 = 8;
-    checkCircleTop = 7;
-    checkCircleWidth = 10;
-    checkCircleVisual = 1;
-    pannelBoxPaddingBottom = 13;
-    pannelBoxPaddingRight = 15;
-    pannelBlockPadding = 15;
-    pannelBlockMargin = 8;
-    pannelBlockHeight = 38;
-    pannelBlockVisual = 2;
+    textAreaPaddingTop = <%% 22, 22, 22, 22, 22 %%>;
+    textAreaPaddingLeft = <%% 26, 26, 26, 26, 26 %%>;
+    lineHeightMargin = <%% 8, 8, 8, 8, 8 %%>;
+    contentsPaddingLeft = <%% 14, 14, 13, 12, 14 %%>;
+    arrowTop2 = <%% 7, 7, 6, 6, 7 %%>;
+    arrowWidth2 = <%% 8, 8, 7, 7, 8 %%>;
+    checkCircleTop = <%% 7, 7, 6, 5, 7 %%>;
+    checkCircleWidth = <%% 10, 10, 9, 8, 10 %%>;
+    checkCircleVisual = <%% 1, 1, 1, 1, 1 %%>;
+    pannelBoxPaddingBottom = <%% 13, 13, 13, 13, 13 %%>;
+    pannelBoxPaddingRight = <%% 15, 15, 15, 15, 15 %%>;
+    pannelBlockPadding = <%% 15, 15, 15, 15, 15 %%>;
+    pannelBlockMargin = <%% 8, 8, 8, 8, 8 %%>;
+    pannelBlockHeight = <%% 38, 38, 38, 38, 38 %%>;
+    pannelBlockVisual = <%% 2, 2, 2, 2, 2 %%>;
 
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
     lengthArr.sort((a, b) => { return b - a; });
@@ -952,83 +957,106 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     barChildren = [];
     num = 0;
     for (let [ title, arr ] of divisionEntireMap) {
-
-      arr = arr.flat();
-      areaMother = createNode({
-        mother: base,
-        attribute: {
-          toggle: arr.includes(action) ? "on" : "off",
-          focus: "off",
-          index: String(num),
-        },
-        style: {
-          display: "block",
-          position: "relative",
-          marginTop: String(num !== 0 ? rowMarginTop : rowFirstMarginTop) + ea,
-          width: withOut(0, ea),
-          opacity: arr.includes(action) ? String(1) : String(0.4),
-        },
-        children: [
-          {
-            text: title,
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(areaTitleSize) + ea,
-              fontWeight: String(600),
-              height: String(subTitleHeight) + ea,
-              color: colorChip.black,
-            }
-          },
-          {
-            style: {
-              display: "block",
-              position: "relative",
-              marginTop: String(areaTitleBottom) + ea,
-              width: String(100) + '%',
-              height: String(barHeight) + ea,
-            }
-          }
-        ]
-      });
-      area = areaMother.children[1];
-      barChildren.push(areaMother);
-
-      for (let i = 0; i < arr.length; i++) {
-        createNode({
-          mother: area,
+      if (num !== divisionEntireMap.length - 1) {
+        arr = arr.flat();
+        areaMother = createNode({
+          mother: base,
           attribute: {
-            action: arr[i]
+            toggle: arr.includes(action) ? "on" : "off",
+            focus: "off",
+            index: String(num),
           },
-          event: {
-            click: function (e) {
-              const grandMother = this.parentElement.parentElement;
-              const arrow = this.querySelector("svg").parentElement;
-              const arrows = [ ...this.parentElement.querySelectorAll("svg") ].map((dom) => { return dom.parentElement; });
-              const toggle = grandMother.getAttribute("toggle");
-              const focus = grandMother.getAttribute("focus");
-              const thisIndex = Number(grandMother.getAttribute("index"));
-              const action = this.getAttribute("action");
-              let focusArr, otherArrows;
+          style: {
+            display: "block",
+            position: "relative",
+            marginTop: String(num !== 0 ? rowMarginTop : rowFirstMarginTop) + ea,
+            width: withOut(0, ea),
+            opacity: arr.includes(action) ? String(1) : String(0.4),
+          },
+          children: [
+            {
+              text: title,
+              style: {
+                display: "block",
+                position: "relative",
+                fontSize: String(areaTitleSize) + ea,
+                fontWeight: String(600),
+                height: String(subTitleHeight) + ea,
+                color: colorChip.black,
+              }
+            },
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                marginTop: String(areaTitleBottom) + ea,
+                width: String(100) + '%',
+                height: String(barHeight) + ea,
+              }
+            }
+          ]
+        });
+        area = areaMother.children[1];
+        barChildren.push(areaMother);
 
-              if (focus === "on") {
+        for (let i = 0; i < arr.length; i++) {
+          createNode({
+            mother: area,
+            attribute: {
+              action: arr[i]
+            },
+            event: {
+              click: function (e) {
+                const grandMother = this.parentElement.parentElement;
+                const arrow = this.querySelector("svg").parentElement;
+                const arrows = [ ...this.parentElement.querySelectorAll("svg") ].map((dom) => { return dom.parentElement; });
+                const toggle = grandMother.getAttribute("toggle");
+                const focus = grandMother.getAttribute("focus");
+                const thisIndex = Number(grandMother.getAttribute("index"));
+                const action = this.getAttribute("action");
+                let focusArr, otherArrows;
 
-                if (arrow.getAttribute("focus") === "on") {
-                  grandMother.setAttribute("focus", "off");
-                  for (let a of arrows) {
-                    if (a.getAttribute("toggle") === "off") {
-                      a.style.opacity = String(0);
-                      a.setAttribute("focus", "off");
+                if (focus === "on") {
+
+                  if (arrow.getAttribute("focus") === "on") {
+                    grandMother.setAttribute("focus", "off");
+                    for (let a of arrows) {
+                      if (a.getAttribute("toggle") === "off") {
+                        a.style.opacity = String(0);
+                        a.setAttribute("focus", "off");
+                      }
                     }
+                  } else {
+                    grandMother.setAttribute("focus", "off");
+                    for (let a of arrows) {
+                      if (a.getAttribute("toggle") === "off") {
+                        a.style.opacity = String(0);
+                        a.setAttribute("focus", "off");
+                      }
+                    }
+                    grandMother.style.opacity = String(1);
+                    grandMother.setAttribute("focus", "on");
+                    arrow.style.opacity = String(1);
+                    arrow.setAttribute("focus", "on");
+                    descriptionMaker(action);
                   }
+
                 } else {
-                  grandMother.setAttribute("focus", "off");
-                  for (let a of arrows) {
-                    if (a.getAttribute("toggle") === "off") {
-                      a.style.opacity = String(0);
-                      a.setAttribute("focus", "off");
+
+                  for (let barChild of barChildren) {
+                    if (grandMother !== barChild) {
+                      barChild.style.opacity = String(0.4);
+                      barChild.setAttribute("focus", "off");
+                      otherArrows = [ ...barChild.querySelectorAll("svg") ].map((dom) => { return dom.parentElement; });
+                      for (let a of otherArrows) {
+                        if (a.getAttribute("toggle") === "off") {
+                          a.style.opacity = String(0);
+                          a.setAttribute("focus", "off");
+                        }
+                      }
                     }
                   }
+
                   grandMother.style.opacity = String(1);
                   grandMother.setAttribute("focus", "on");
                   arrow.style.opacity = String(1);
@@ -1036,108 +1064,85 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                   descriptionMaker(action);
                 }
 
-              } else {
-
-                for (let barChild of barChildren) {
-                  if (grandMother !== barChild) {
-                    barChild.style.opacity = String(0.4);
-                    barChild.setAttribute("focus", "off");
-                    otherArrows = [ ...barChild.querySelectorAll("svg") ].map((dom) => { return dom.parentElement; });
-                    for (let a of otherArrows) {
-                      if (a.getAttribute("toggle") === "off") {
-                        a.style.opacity = String(0);
-                        a.setAttribute("focus", "off");
-                      }
+              }
+            },
+            style: {
+              display: "inline-block",
+              position: "relative",
+              height: String(100) + '%',
+              width: "calc(100% / " + String(maxLength) + ")",
+              cursor: "pointer",
+            },
+            children: [
+              {
+                style: {
+                  position: "relative",
+                  left: String(0),
+                  width: String(100) + '%',
+                  height: String(75) + '%',
+                  borderBottom: "1px solid " + colorChip.gray4,
+                  boxSizing: "border-box",
+                }
+              },
+              {
+                style: {
+                  top: String(50) + '%',
+                  left: String(0),
+                  width: String(100) + '%',
+                  position: "absolute",
+                  height: String(50) + '%',
+                  borderLeft: "1px solid " + colorChip.gray4,
+                  borderRight: (i === arr.length - 1 ? "1px solid " + colorChip.gray4 : ""),
+                  boxSizing: "border-box",
+                }
+              },
+              {
+                text: arr[i],
+                style: {
+                  position: "absolute",
+                  top: String(0),
+                  left: String(0),
+                  width: String(100) + '%',
+                  fontSize: String(factorSize) + ea,
+                  fontWeight: String(arr[i] === action ? 600 : 400),
+                  color: (arr[i] === action ? colorChip.green : colorChip.black),
+                  textAlign: "center",
+                }
+              },
+              {
+                attribute: {
+                  toggle: arr[i] === action ? "on" : "off",
+                  focus: "off",
+                },
+                style: {
+                  display: "flex",
+                  top: String(75) + '%',
+                  left: String(0),
+                  width: String(100) + '%',
+                  position: "absolute",
+                  height: String(50) + '%',
+                  justifyContent: "center",
+                  textAlign: "center",
+                  paddingTop: String(arrowTop) + ea,
+                  opacity: String(arr[i] === action ? 1 : 0),
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: instance.mother.returnArrow("right", arr[i] === action ? colorChip.green : colorChip.deactive),
+                    style: {
+                      display: "inline-block",
+                      width: String(arrowWidth),
+                      transform: "rotate(270deg)",
                     }
                   }
-                }
-
-                grandMother.style.opacity = String(1);
-                grandMother.setAttribute("focus", "on");
-                arrow.style.opacity = String(1);
-                arrow.setAttribute("focus", "on");
-                descriptionMaker(action);
-              }
-
-            }
-          },
-          style: {
-            display: "inline-block",
-            position: "relative",
-            height: String(100) + '%',
-            width: "calc(100% / " + String(maxLength) + ")",
-            cursor: "pointer",
-          },
-          children: [
-            {
-              style: {
-                position: "relative",
-                left: String(0),
-                width: String(100) + '%',
-                height: String(75) + '%',
-                borderBottom: "1px solid " + colorChip.gray4,
-                boxSizing: "border-box",
-              }
-            },
-            {
-              style: {
-                top: String(50) + '%',
-                left: String(0),
-                width: String(100) + '%',
-                position: "absolute",
-                height: String(50) + '%',
-                borderLeft: "1px solid " + colorChip.gray4,
-                borderRight: (i === arr.length - 1 ? "1px solid " + colorChip.gray4 : ""),
-                boxSizing: "border-box",
-              }
-            },
-            {
-              text: arr[i],
-              style: {
-                position: "absolute",
-                top: String(0),
-                left: String(0),
-                width: String(100) + '%',
-                fontSize: String(factorSize) + ea,
-                fontWeight: String(arr[i] === action ? 600 : 400),
-                color: (arr[i] === action ? colorChip.green : colorChip.black),
-                textAlign: "center",
-              }
-            },
-            {
-              attribute: {
-                toggle: arr[i] === action ? "on" : "off",
-                focus: "off",
+                ]
               },
-              style: {
-                display: "flex",
-                top: String(75) + '%',
-                left: String(0),
-                width: String(100) + '%',
-                position: "absolute",
-                height: String(50) + '%',
-                justifyContent: "center",
-                textAlign: "center",
-                paddingTop: String(arrowTop) + ea,
-                opacity: String(arr[i] === action ? 1 : 0),
-              },
-              children: [
-                {
-                  mode: "svg",
-                  source: instance.mother.returnArrow("right", arr[i] === action ? colorChip.green : colorChip.deactive),
-                  style: {
-                    display: "inline-block",
-                    width: String(arrowWidth),
-                    transform: "rotate(270deg)",
-                  }
-                }
-              ]
-            },
-          ]
-        });
+            ]
+          });
 
+        }
       }
-
       num++;
     }
 
@@ -1156,6 +1161,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
 
     descriptionMaker(action);
   }
+
+  return (pIndex !== -1 && cIndex !== -1 && action !== "해당 없음");
 }
 
 DesignerJs.prototype.projectIconSet = function (desid) {

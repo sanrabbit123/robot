@@ -12,6 +12,7 @@ const GoogleDrive = require(APP_PATH + "/googleAPIs/googleDrive.js");
 const GoogleCalendar = require(APP_PATH + "/googleAPIs/googleCalendar.js");
 const GoogleMail = require(APP_PATH + "/googleAPIs/googleMail.js");
 const GoogleDocs = require(APP_PATH + "/googleAPIs/googleDocs.js");
+const GoogleChrome = require(`${process.cwd()}/apps/googleAPIs/googleChrome.js`);
 const AiGraph = require(APP_PATH + "/contentsMaker/aiGraph.js");
 const AiConsole = require(APP_PATH + "/contentsMaker/aiConsole.js");
 const AiContents = require(APP_PATH + "/contentsMaker/aiContents.js");
@@ -58,7 +59,6 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { chromeRequest } = require(`${process.cwd()}/apps/googleAPIs/googleChrome.js`);
   const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, requestSystem, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer } = this.mother;
   try {
     await this.MONGOC.connect();
@@ -72,6 +72,9 @@ DevContext.prototype.launching = async function () {
     const bill = new BillMaker();
     const { Agent } = require("https");
     const agent = new Agent({ rejectUnauthorized: false });
+    const chrome = new GoogleChrome();
+
+
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
     // const count = (await this.findCode("count")).scripts
@@ -96,9 +99,9 @@ DevContext.prototype.launching = async function () {
     // const aliveMembers = await this.pureScan();
     // console.log(await aliveMembers.aliveRequest("/push", { text: "이제 다시 사용하셔도 됩니다!" }));
 
+    
 
 
-    // console.log(await chromeRequest("https://www.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/pp/index.xml"));
 
 
 

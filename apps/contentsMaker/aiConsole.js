@@ -20,7 +20,8 @@ AiConsole.prototype.cardToRequest = async function (cliid) {
   const { fileSystem, shell, shellLink, messageSend } = this.mother;
   const { home_dir } = this.options;
   try {
-    const gDrive = this.mother.googleSystem("drive");
+    const GoogleDrive = require(process.cwd() + "/apps/googleAPIs/googleDrive.js");
+    const gDrive = new GoogleDrive();
     const folderId = "1yFU5RpFklRAqSwQDnVOL61IKFY7Y9Voa";
     let resultDir;
     let resultDirSw;
