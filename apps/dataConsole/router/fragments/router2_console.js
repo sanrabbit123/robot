@@ -2366,14 +2366,9 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
           };
           const clients = await back.getClientsByQuery({ phone: buyer_tel }, { selfMongo });
           let requestNumber;
-          messageSend({ text: String(clients.length), channel: "#error_log" }).catch((e) => { console.log(e); });
-
           if (clients.length > 0) {
             const [ client ] = clients;
-            const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid }, { desid: { $regex: "^d" } } ] }, { selfMongo });
-
-            messageSend({ text: String(projects.length), channel: "#error_log" }).catch((e) => { console.log(e); });
-
+            const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo });
             if (projects.length > 0) {
               const [ project ] = projects;
               const bills = await bill.getBillsByQuery({ $and: [
