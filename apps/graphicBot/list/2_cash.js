@@ -9,8 +9,8 @@ module.exports = function (arg, info) {
         pwd: "iptUserPw"
       };
       document.getElementById(idLoginButtonId).click();
-      document.getElementById(inputs.id).value = INFO.hometax.id;
-      document.getElementById(inputs.pwd).value = INFO.hometax.pwd;
+      document.getElementById(inputs.id).value = INFO.find((obj) => { return obj.name === "hometax"; }).user;
+      document.getElementById(inputs.pwd).value = INFO.find((obj) => { return obj.name === "hometax"; }).password;
       document.getElementById(returnButtonId).click();
     },
     "toss: https://tecr.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/cr/c/b/UTECRCB013.xml",

@@ -497,7 +497,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     frontFirst += "const ENDCONST = \"" + this.localhost + "/frontEnd\";\n\n";
     frontFirst += "const HOSTCONST = \"" + this.localhost + "\";\n\n";
     frontFirst += "const ACCUMULATIONCONST = \"" + this.localhost + "/accumulation\";\n\n";
-    frontFirst += "const INFO = " + JSON.stringify(this.info, null, 2) + ";\n\n";
+    frontFirst += "const INFO = " + JSON.stringify(this.address.homeinfo.map.find((obj) => { return obj.name === "graphic" }).info, null, 2) + ";\n\n";
 
     frontFirst += "const equalJson = " + this.frontGeneral.equalJson.toString() + ";\n\n";
     frontFirst += "const ajaxPromise = " + this.frontGeneral.ajaxPromise.toString() + ";\n\n";
