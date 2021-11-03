@@ -92,6 +92,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+
     // const aliveMembers = await this.pureScan();
     // console.log(await aliveMembers.aliveRequest("/push", { text: "이제 다시 사용하셔도 됩니다!" }));
 
@@ -100,7 +101,7 @@ DevContext.prototype.launching = async function () {
     // console.log(await chromeRequest("https://www.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/pp/index.xml"));
 
 
-    
+
 
     // let note, targetArr;
     // let level1Index;
