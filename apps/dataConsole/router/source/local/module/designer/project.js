@@ -200,8 +200,8 @@ DesignerJs.prototype.projectDetail = function (desid) {
   idFontSize = <%% 11, 11, 11, 11, 2.8 %%>;
   nameWordTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), -0.3 %%>;
   idWordTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), 3 %%>;
-  intend = <%% (isMac() ? 15 : 10), (isMac() ? 15 : 10), (isMac() ? 15 : 10), (isMac() ? 15 : 10), 4 %%>;
-  between = <%% 8, 8, 8, 8, 1 %%>;
+  intend = <%% 16, 16, 16, 16, 4 %%>;
+  between = <%% (isMac() ? 8 : 3), (isMac() ? 8 : 3), (isMac() ? 8 : 3), (isMac() ? 8 : 3), 1 %%>;
 
   cards = designer.projects;
 

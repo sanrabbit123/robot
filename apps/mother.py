@@ -106,8 +106,8 @@ def searchDir(target, detail=False):
     return tempArr4
 
 try:
-    BUCKETNAMECONST = "homeliaison"
-    data = getBridge()
+    BUCKETNAMECONST = "homeliaisonbucket"
+    # data = getBridge()
 
     if argv[1] == "fileUpload":
         s3 = boto3.resource("s3")
