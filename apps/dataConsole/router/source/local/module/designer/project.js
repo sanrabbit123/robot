@@ -96,11 +96,12 @@ DesignerJs.prototype.projectDetail = function (desid) {
     throw new Error("invaild input");
   }
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, findByAttribute, uniqueValue } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, findByAttribute, uniqueValue, swipePatch } = GeneralJs;
   const { totalMother, ea, grayBarWidth, belowHeight, projectMap } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   const token = "__split__";
+  const detailWhitePopupConst = "detailWhitePopupConst";
   let designer;
   let margin;
   let baseTong0, baseTong;
@@ -138,7 +139,6 @@ DesignerJs.prototype.projectDetail = function (desid) {
   let cardWidthConstant;
   let fixedHeightSize;
   let outerMargin;
-  let cardMagin;
   let divisionMap;
   let nameFontSize, nameWordTop;
   let idFontSize, idWordTop;
@@ -196,8 +196,6 @@ DesignerJs.prototype.projectDetail = function (desid) {
   cardMargin = <%% 10, 10, 10, 10, 1.5 %%>;
   areaMinHeight = cardHeight + (cardMargin * 2);
 
-  cardMagin = <%% 10, 10, 10, 10, 1 %%>;
-
   nameFontSize = <%% 14, 14, 14, 14, 2.8 %%>;
   idFontSize = <%% 11, 11, 11, 11, 2.8 %%>;
   nameWordTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), -0.3 %%>;
@@ -215,11 +213,11 @@ DesignerJs.prototype.projectDetail = function (desid) {
     } else {
       totalStandard = (100 - (outerMargin * 2) - (innerPaddingLeft * 2) - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
     }
-    divideNumber = Math.floor(totalStandard / (cardMagin + cardWidthConstant));
+    divideNumber = Math.floor(totalStandard / (cardMargin + cardWidthConstant));
     if (divideNumber === 0) {
       divideNumber = 1;
     }
-    tempSize = (totalStandard - (cardMagin * (divideNumber + 1))) / divideNumber;
+    tempSize = (totalStandard - (cardMargin * (divideNumber + 1))) / divideNumber;
     divideArr.push(divideNumber);
     sizeArr.push(tempSize);
   }
@@ -411,10 +409,10 @@ DesignerJs.prototype.projectDetail = function (desid) {
                 display: "block",
                 position: "relative",
                 background: colorChip.gray1,
-                minHeight: String(areaMinHeight - cardMagin) + ea,
-                height: withOut(cardMagin, ea),
+                minHeight: String(areaMinHeight - cardMargin) + ea,
+                height: withOut(cardMargin, ea),
                 borderRadius: String(5) + "px",
-                paddingBottom: String(cardMagin) + ea,
+                paddingBottom: String(cardMargin) + ea,
                 borderTopRightRadius: desktop ? "" : String(0),
                 borderTopLeftRadius: desktop ? "" : String(0),
               }
@@ -486,12 +484,13 @@ DesignerJs.prototype.projectDetail = function (desid) {
           });
           whiteBox = createNode({
             mother: totalMother,
+            class: [ detailWhitePopupConst ],
             style: {
               position: "fixed",
               top: String(whiteMargin) + ea,
               left: String(instance.grayBarWidth + whiteMargin) + ea,
               width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
-              height: withOut(belowHeight + (whiteMargin * 2), ea),
+              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100vh - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight) + "px)",
               background: colorChip.white,
               borderRadius: String(5) + "px",
               zIndex: String(zIndex),
@@ -501,8 +500,30 @@ DesignerJs.prototype.projectDetail = function (desid) {
           });
 
           whiteResult = instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
+
           if (!whiteResult) {
             cancelBack.click();
+          } else {
+
+            if (mobile) {
+              if (mobile) {
+                swipePatch({
+                  left: (e) => {
+                    if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                    }
+                  },
+                  right: (e) => {
+                    if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                    }
+                  },
+                });
+              }
+            }
+
           }
         }
       },
@@ -511,8 +532,8 @@ DesignerJs.prototype.projectDetail = function (desid) {
         position: "relative",
         width: desktop ? String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea : "calc(" + String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea + " - " + String(2 / divideArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + "px" + ")",
         height: String(fixedHeightSize) + ea,
-        marginLeft: String(cardMagin) + ea,
-        marginTop: String(cardMagin) + ea,
+        marginLeft: String(cardMargin) + ea,
+        marginTop: String(cardMargin) + ea,
         background: colorChip.white,
         borderRadius: String(5) + "px",
         cursor: "pointer",
@@ -562,6 +583,8 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
   const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren } = GeneralJs;
   const { ea, projects, clients, designers, projectMap, checklist } = this;
   const { action: { itemDescription } } = projectMap;
+  const mobile = this.media[4];
+  const desktop = !mobile;
   let pIndex, cIndex;
   let project, client, designer;
   let base;
@@ -618,52 +641,52 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     designer = designers.pick(desid);
     const { request, analytics } = client.requests[requestNumber];
 
-    baseTop = <%% 40, 33, 30, 22, 40 %%>;
-    baseLeft = <%% 45, 38, 35, 25, 45 %%>;
-    baseBottom = <%% 48, 41, 38, 28, 48 %%>;
-    titleSize = <%% 21, 20, 19, 18, 21 %%>;
-    titleHeight = <%% 30, 30, 30, 30, 30 %%>;
-    subTitleHeight = <%% 20, 20, 20, 20, 20 %%>;
-    titleTextBetween = <%% 10, 10, 10, 10, 10 %%>;
-    titlePaddingBottom = <%% 13, 13, 13, 13, 13 %%>;
-    areaTitleSize = <%% 15, 14, 14, 13, 15 %%>;
-    rowMarginTop = <%% 22, 16, 11, 10, 25 %%>;
-    rowFirstMarginTop = <%% 32, 27, 22, 17, 32 %%>;
-    areaTitleBottom = <%% 13, 13, 13, 13, 13 %%>;
-    barHeight = <%% 34, 34, 34, 34, 34 %%>;
-    factorSize = <%% 13, 12, 12, 10, 3 %%>;
-    detailBoxMarginTop = <%% 50, 40, 35, 30, 40 %%>;
+    baseTop = <%% 40, 33, 30, 22, 6 %%>;
+    baseLeft = <%% 45, 38, 35, 25, 6.1 %%>;
+    baseBottom = <%% 48, 41, 38, 28, 6.1 %%>;
+    titleSize = <%% 21, 20, 19, 18, 4 %%>;
+    titleHeight = <%% 30, 30, 30, 30, 5 %%>;
+    subTitleHeight = <%% 20, 20, 20, 20, 2 %%>;
+    titleTextBetween = <%% 10, 10, 10, 10, 1 %%>;
+    titlePaddingBottom = <%% 13, 13, 13, 13, 2.5 %%>;
+    areaTitleSize = <%% 15, 14, 14, 13, 3.4 %%>;
+    rowMarginTop = <%% 22, 16, 11, 10, 3 %%>;
+    rowFirstMarginTop = <%% 32, 27, 22, 17, 5 %%>;
+    areaTitleBottom = <%% 13, 13, 13, 13, 1 %%>;
+    barHeight = <%% 34, 34, 34, 34, 9 %%>;
+    factorSize = <%% 13, 12, 12, 10, 2 %%>;
+    detailBoxMarginTop = <%% 50, 40, 35, 30, 6 %%>;
 
-    arrowTop = <%% 8, 8, 8, 8, 8 %%>;
-    arrowWidth = <%% 9, 8, 8, 8, 8 %%>;
+    arrowTop = <%% 8, 8, 8, 8, 1 %%>;
+    arrowWidth = <%% 9, 8, 8, 8, 1.5 %%>;
 
-    whiteBoxTop = <%% 48, 46, 44, 42, 48 %%>;
-    whiteBoxLeft = <%% 20, 18, 16, 14, 20 %%>;
+    whiteBoxTop = <%% 48, 46, 44, 42, 4 %%>;
+    whiteBoxLeft = <%% 20, 18, 16, 14, 2 %%>;
     noticeTextSize = <%% 14, 13, 13, 12, 3 %%>;
-    noticeTextTop = <%% 18, 18, 18, 18, 18 %%>;
-    noticeTextLeft = <%% 24, 24, 24, 24, 24 %%>;
+    noticeTextTop = <%% 18, 18, 18, 18, 1 %%>;
+    noticeTextLeft = <%% 24, 24, 24, 24, 3 %%>;
 
     accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
 
-    textAreaPaddingTop = <%% 22, 22, 22, 22, 22 %%>;
-    textAreaPaddingLeft = <%% 26, 26, 26, 26, 26 %%>;
-    lineHeightMargin = <%% 8, 8, 8, 8, 8 %%>;
-    contentsPaddingLeft = <%% 14, 14, 13, 12, 14 %%>;
-    arrowTop2 = <%% 7, 7, 6, 6, 7 %%>;
-    arrowWidth2 = <%% 8, 8, 7, 7, 8 %%>;
-    checkCircleTop = <%% 7, 7, 6, 5, 7 %%>;
-    checkCircleWidth = <%% 10, 10, 9, 8, 10 %%>;
+    textAreaPaddingTop = <%% 22, 22, 22, 22, 3.8 %%>;
+    textAreaPaddingLeft = <%% 26, 26, 26, 26, 4.5 %%>;
+    lineHeightMargin = <%% 8, 8, 8, 8, 1 %%>;
+    contentsPaddingLeft = <%% 14, 14, 13, 12, 2 %%>;
+    arrowTop2 = <%% 7, 7, 6, 6, 1.5 %%>;
+    arrowWidth2 = <%% 8, 8, 7, 7, 1.4 %%>;
+    checkCircleTop = <%% 7, 7, 6, 5, 1.4 %%>;
+    checkCircleWidth = <%% 10, 10, 9, 8, 2 %%>;
     checkCircleVisual = <%% 1, 1, 1, 1, 1 %%>;
-    pannelBoxPaddingBottom = <%% 13, 13, 13, 13, 13 %%>;
-    pannelBoxPaddingRight = <%% 15, 15, 15, 15, 15 %%>;
-    pannelBlockPadding = <%% 15, 15, 15, 15, 15 %%>;
-    pannelBlockMargin = <%% 8, 8, 8, 8, 8 %%>;
-    pannelBlockHeight = <%% 38, 38, 38, 38, 38 %%>;
-    pannelBlockVisual = <%% 2, 2, 2, 2, 2 %%>;
+    pannelBoxPaddingBottom = <%% 13, 13, 13, 13, 3 %%>;
+    pannelBoxPaddingRight = <%% 15, 15, 15, 15, 3 %%>;
+    pannelBlockPadding = <%% 15, 15, 15, 15, 3 %%>;
+    pannelBlockMargin = <%% 6, 6, 6, 6, 1 %%>;
+    pannelBlockHeight = <%% 38, 38, 38, 38, 7.2 %%>;
+    pannelBlockVisual = <%% 2, 2, 2, 2, 0.3 %%>;
 
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
     lengthArr.sort((a, b) => { return b - a; });
-    maxLength = lengthArr[0];
+    maxLength = desktop ? lengthArr[0] : 3;
 
     textAreaMother = {};
 
@@ -685,12 +708,13 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         mother: textAreaMother,
         text: "<b%" + action + "%b>&nbsp;&nbsp;check list",
         style: {
-          position: "absolute",
-          top: String(noticeTextTop) + ea,
+          position: desktop ? "absolute" : "relative",
+          top: String(desktop ? noticeTextTop : 0) + ea,
           left: String(noticeTextLeft) + ea,
           fontSize: String(noticeTextSize) + ea,
           fontWeight: String(400),
           color: colorChip.green,
+          marginBottom: desktop ? "" : String(1.5) + ea,
         },
         bold: {
           fontSize: String(noticeTextSize) + ea,
@@ -701,11 +725,11 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
       textArea = createNode({
         mother: textAreaMother,
         style: {
-          position: "absolute",
-          top: String(whiteBoxTop) + ea,
+          position: desktop ? "absolute" : "relative",
+          top: String(desktop ? whiteBoxTop : 0) + ea,
           left: String(whiteBoxLeft) + ea,
           width: withOut(whiteBoxLeft * 2, ea),
-          height: withOut(whiteBoxTop + whiteBoxLeft, ea),
+          height: desktop ? withOut(whiteBoxTop + whiteBoxLeft, ea) : "",
           background: colorChip.white,
           borderRadius: String(5) + "px",
           boxShadow: "0px 2px 11px -9px " + colorChip.shadow
@@ -875,6 +899,16 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         }
       }
 
+      if (descriptionMap.get(action).pannel.length === 0 || descriptionMap.get(action).pannel[descriptionMap.get(action).pannel.length - 1].name !== "목록으로") {
+        descriptionMap.get(action).pannel.push({
+          name: "목록으로",
+          event: (function (e) {
+            document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+            document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+          }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
+        });
+      }
+
       if (descriptionMap.get(action).pannel.length > 0) {
 
         pannelMother = createNode({
@@ -882,16 +916,22 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
           style: {
             display: "flex",
             flexDirection: "column",
-            position: "absolute",
-            bottom: String(textAreaPaddingLeft + pannelBoxPaddingBottom - pannelBlockMargin) + ea,
-            right: String(textAreaPaddingLeft + pannelBoxPaddingRight) + ea,
+            position: "fixed",
+            bottom: String(desktop ? baseBottom + textAreaPaddingLeft + pannelBoxPaddingBottom - pannelBlockMargin : baseBottom - pannelBlockMargin) + ea,
+            right: String(desktop ? baseLeft + textAreaPaddingLeft + pannelBoxPaddingRight : baseLeft) + ea,
           }
         });
 
-        for (let { name } of descriptionMap.get(action).pannel) {
+        for (let { name, event: eventFunction } of descriptionMap.get(action).pannel) {
           createNode({
             mother: pannelMother,
             class: [ "hoverDefault_lite" ],
+            event: {
+              click: function (e) {
+                const func = new Function('e', eventFunction);
+                func.call(this, e);
+              }
+            },
             style: {
               position: "relative",
               display: "flex",
@@ -932,8 +972,9 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         top: String(baseTop) + ea,
         left: String(baseLeft) + ea,
         width: withOut(baseLeft * 2, ea),
-        height: withOut(baseTop + baseBottom, ea),
-        overflow: "scroll",
+        height: withOut(baseTop + (desktop ? baseBottom : 0), ea),
+        overflowY: "scroll",
+        overflowX: "hidden",
       }
     });
 
@@ -996,8 +1037,9 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 position: "relative",
                 fontSize: String(areaTitleSize) + ea,
                 fontWeight: String(600),
-                height: String(subTitleHeight) + ea,
+                height: desktop ? String(subTitleHeight) + ea : "",
                 color: colorChip.black,
+                marginBottom: desktop ? "" : String(3) + ea,
               }
             },
             {
@@ -1006,7 +1048,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 position: "relative",
                 marginTop: String(areaTitleBottom) + ea,
                 width: String(100) + '%',
-                height: String(barHeight) + ea,
+                height: desktop ? String(barHeight) + ea : "",
               }
             }
           ]
@@ -1037,7 +1079,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                     grandMother.setAttribute("focus", "off");
                     for (let a of arrows) {
                       if (a.getAttribute("toggle") === "off") {
-                        a.style.opacity = String(0);
+                        a.style.opacity = String(desktop ? 0 : 0.4);
                         a.setAttribute("focus", "off");
                       }
                     }
@@ -1045,7 +1087,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                     grandMother.setAttribute("focus", "off");
                     for (let a of arrows) {
                       if (a.getAttribute("toggle") === "off") {
-                        a.style.opacity = String(0);
+                        a.style.opacity = String(desktop ? 0 : 0.4);
                         a.setAttribute("focus", "off");
                       }
                     }
@@ -1065,7 +1107,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                       otherArrows = [ ...barChild.querySelectorAll("svg") ].map((dom) => { return dom.parentElement; });
                       for (let a of otherArrows) {
                         if (a.getAttribute("toggle") === "off") {
-                          a.style.opacity = String(0);
+                          a.style.opacity = String(desktop ? 0 : 0.4);
                           a.setAttribute("focus", "off");
                         }
                       }
@@ -1084,9 +1126,10 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
             style: {
               display: "inline-block",
               position: "relative",
-              height: String(100) + '%',
+              height: desktop ? String(100) + '%' : String(barHeight) + ea,
               width: "calc(100% / " + String(maxLength) + ")",
               cursor: "pointer",
+              marginBottom: desktop ? "" : String(1) + ea
             },
             children: [
               {
@@ -1094,18 +1137,18 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                   position: "relative",
                   left: String(0),
                   width: String(100) + '%',
-                  height: String(75) + '%',
+                  height: String(desktop ? 75 : 50) + '%',
                   borderBottom: "1px solid " + colorChip.gray4,
                   boxSizing: "border-box",
                 }
               },
               {
                 style: {
-                  top: String(50) + '%',
+                  top: String(desktop ? 50 : 40) + '%',
                   left: String(0),
                   width: String(100) + '%',
                   position: "absolute",
-                  height: String(50) + '%',
+                  height: String(desktop ? 50 : 20) + '%',
                   borderLeft: "1px solid " + colorChip.gray4,
                   borderRight: (i === arr.length - 1 ? "1px solid " + colorChip.gray4 : ""),
                   boxSizing: "border-box",
@@ -1115,7 +1158,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 text: arr[i],
                 style: {
                   position: "absolute",
-                  top: String(0),
+                  top: desktop ? String(0) : String(-0.2) + ea,
                   left: String(0),
                   width: String(100) + '%',
                   fontSize: String(factorSize) + ea,
@@ -1131,7 +1174,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                 },
                 style: {
                   display: "flex",
-                  top: String(75) + '%',
+                  top: String(desktop ? 75 : 50) + '%',
                   left: String(0),
                   width: String(100) + '%',
                   position: "absolute",
@@ -1139,7 +1182,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                   justifyContent: "center",
                   textAlign: "center",
                   paddingTop: String(arrowTop) + ea,
-                  opacity: String(arr[i] === action ? 1 : 0),
+                  opacity: String(arr[i] === action ? 1 : (desktop ? 0 : 0.4)),
                 },
                 children: [
                   {
@@ -1147,7 +1190,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
                     source: instance.mother.returnArrow("right", arr[i] === action ? colorChip.green : colorChip.deactive),
                     style: {
                       display: "inline-block",
-                      width: String(arrowWidth),
+                      width: String(arrowWidth) + ea,
                       transform: "rotate(270deg)",
                     }
                   }
@@ -1168,13 +1211,17 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
         position: "relative",
         marginTop: String(detailBoxMarginTop) + ea,
         width: String(100) + '%',
-        height: withOut(accumulate, ea),
+        height: desktop ? withOut(accumulate, ea) : "",
         background: colorChip.gray0,
         borderRadius: String(5) + "px",
+        paddingTop: desktop ? "" : String(2.5) + ea,
+        paddingBottom: desktop ? "" : String(2.5) + ea,
+        marginBottom: desktop ? "" : String(baseBottom * 5) + ea,
       }
     });
 
     descriptionMaker(action);
+
   }
 
   return (pIndex !== -1 && cIndex !== -1 && action !== "해당 없음");

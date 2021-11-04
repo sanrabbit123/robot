@@ -5740,7 +5740,10 @@ DataPatch.prototype.projectMap = function () {
         description: "고객님이 계약금을 지불하시면, 현장 미팅을 위해 디자이너와 시간과 장소를 맞추는 단계입니다.",
         pannel: [
           {
-            name: "가능 일자 전송"
+            name: "가능 일자 전송",
+            event: (function (e) {
+              console.log("test");
+            }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
           }
         ]
       },
@@ -5749,7 +5752,10 @@ DataPatch.prototype.projectMap = function () {
         description: "현장 미팅의 시간과 공간이 조율되고 확정되어 현장 미팅을 대기하고 있는 단계입니다.",
         pannel: [
           {
-            name: "미팅 일자 확인"
+            name: "미팅 일자 확인",
+            event: (function (e) {
+              console.log("test");
+            }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
           }
         ]
       },
@@ -5758,7 +5764,10 @@ DataPatch.prototype.projectMap = function () {
         description: "홈리에종에서 홈스타일링 의뢰서를 작성하여 해당 디자이너님께 의뢰서를 전송해드리는 단계입니다.",
         pannel: [
           {
-            name: "의뢰서 확인"
+            name: "의뢰서 확인",
+            event: (function (e) {
+              console.log("test");
+            }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
           }
         ]
       },
@@ -5767,7 +5776,10 @@ DataPatch.prototype.projectMap = function () {
         description: "현장 미팅이 끝나고 고객님과 디자이너님의 피드백과 진행 여부를 홈리에종이 받는 단계입니다.",
         pannel: [
           {
-            name: "현장미팅 피드백"
+            name: "현장미팅 피드백",
+            event: (function (e) {
+              console.log("test");
+            }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
           }
         ]
       },
@@ -5816,7 +5828,10 @@ DataPatch.prototype.projectMap = function () {
         description: "세팅의 완료 후 촬영을 위해 디자이너와 작가, 고객님의 일정을 조율하는 단계입니다.",
         pannel: [
           {
-            name: "가능 일자 전송"
+            name: "가능 일자 전송",
+            event: (function (e) {
+              console.log("test");
+            }).toString().trim().replace(/^function[^\(]*\([^\)]*\)[^\{]*\{\n?/i, '').replace(/\n?[ ]*\}$/i, '').trim()
           }
         ]
       },

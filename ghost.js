@@ -101,7 +101,7 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
   }
   const instance = this;
   const back = this.back;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink } = this.mother;
   const fontName = `/home/homeliaison/font/NanumGothicEco.ttf`;
   const getPrinterName = function () {
     const { spawn } = require("child_process");
@@ -137,8 +137,8 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
 
     printer = await getPrinterName();
 
-    shell.exec(getPrintCommand(printer, targetFile));
-    shell.exec(`rm -rf ${targetFile}`);
+    await shellExec(getPrintCommand(printer, targetFile));
+    await shellExec(`rm -rf ${targetFile}`);
 
     return client;
 
