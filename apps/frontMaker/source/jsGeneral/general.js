@@ -531,6 +531,7 @@ GeneralJs.nodes = {
   input: document.createElement("INPUT"),
   textarea: document.createElement("TEXTAREA"),
   a: document.createElement('A'),
+  b: document.createElement('B'),
   label: document.createElement('LABEL'),
   iframe: document.createElement('IFRAME'),
   aside: document.createElement('ASIDE'),

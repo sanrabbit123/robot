@@ -522,6 +522,9 @@ ProposalJs.prototype.below_initial = function () {
     }
   }
 
+  this.listViewEvent = listViewEvent;
+  this.createViewEvent = createViewEvent;
+
   down.addEventListener("click", listViewEvent);
   up.addEventListener("click", createViewEvent);
   left.addEventListener("click", listViewEvent);
@@ -6292,6 +6295,12 @@ ProposalJs.prototype.launching = async function () {
   const { arrow: { left, right }, square: { up, down, reportIcon, returnIcon }, sub: { extractIcon } } = this.mother.belowButtons;
   const { ajaxJson } = GeneralJs;
   try {
+    let query = GeneralJs.returnGet();
+    let proposal_list_raw, proposal_obj;
+    let textTarget;
+    let proid, cliid;
+    let serviceMap, xValueMap;
+    let clients;
 
     this.designers = new Designers(await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $regex: "완료" } } }, "/getDesigners", { equal: true }));
 
@@ -6306,25 +6315,6 @@ ProposalJs.prototype.launching = async function () {
     this.domBox = await this.firstProcess();
     this.thirdChildren = await this.thirdProcess();
     await this.secondProcess();
-
-    // GeneralJs.ajaxJson({
-    //   mode: "inspection",
-    //   addressArr: Array.from(this.designers).map((designer) => { return { id: designer.desid, address: designer.information.address.length === 0 ? "" : designer.information.address[0] } })
-    // }, "/parsingAddress").then((inspectionArr) => {
-    //   if (inspectionArr.length !== 0) {
-    //     window.alert("디자이너의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n디자이너의 주소를 올바른 형식으로 고쳐주세요!");
-    //     window.location.href = window.location.protocol + "//" + window.location.host + "/designer?desid=" + inspectionArr[0].id;
-    //   }
-    // }).catch((err) => {
-    //   console.log(err);
-    // });
-
-    let query = GeneralJs.returnGet();
-    let proposal_list_raw, proposal_obj;
-    let textTarget;
-    let proid, cliid;
-    let serviceMap, xValueMap;
-    let clients;
 
     if (query.proid !== undefined) {
 
@@ -6441,6 +6431,12 @@ ProposalJs.prototype.launching = async function () {
         GeneralJs.timeouts["belowLaunchingTimeOut"] = null;
       }, 0);
 
+    }
+
+    if (query.proid === undefined && query.cliid === undefined) {
+      if (typeof this.listViewEvent === "function") {
+        this.listViewEvent.call(instance.mother.belowButtons.square.down, {});
+      }
     }
 
   } catch (e) {

@@ -7736,6 +7736,9 @@ ProjectJs.prototype.launching = async function () {
     let cardViewInitial;
 
     cardViewInitial = (getObj.proid === undefined && getObj.cliid === undefined);
+    if (typeof getObj.specificids === "string") {
+      cardViewInitial = false;
+    }
 
     this.cardViewInitial = cardViewInitial;
     this.grayBarWidth = this.mother.grayBarWidth;
@@ -7751,39 +7754,41 @@ ProjectJs.prototype.launching = async function () {
     this.boardSwipe();
 
     getTarget = null;
-    if (getObj.proid !== undefined) {
-      for (let dom of this.standardDoms) {
-        if ((new RegExp(getObj.proid, 'gi')).test(dom.textContent)) {
-          getTarget = dom;
-        }
-      }
-      if (getTarget === null) {
-        tempFunction = this.makeSearchEvent(getObj.proid);
-        await tempFunction({ key: "Enter" });
+
+    if (typeof getObj.specificids === "string") {
+      tempFunction = this.makeSearchEvent("id:" + getObj.specificids);
+      await tempFunction({ key: "Enter" });
+    } else {
+      if (getObj.proid !== undefined) {
         for (let dom of this.standardDoms) {
           if ((new RegExp(getObj.proid, 'gi')).test(dom.textContent)) {
             getTarget = dom;
           }
         }
+        if (getTarget === null) {
+          tempFunction = this.makeSearchEvent(getObj.proid);
+          await tempFunction({ key: "Enter" });
+          for (let dom of this.standardDoms) {
+            if ((new RegExp(getObj.proid, 'gi')).test(dom.textContent)) {
+              getTarget = dom;
+            }
+          }
+        }
+      } else if (getObj.cliid !== undefined) {
+        tempFunction = this.makeSearchEvent(getObj.cliid);
+        await tempFunction({ key: "Enter" });
+        if (this.standardDoms.length > 1) {
+          getTarget = this.standardDoms[1];
+        }
+      } else {
+        instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {
+          instantMode: true
+        });
       }
-    } else if (getObj.cliid !== undefined) {
-      tempFunction = this.makeSearchEvent(getObj.cliid);
-      await tempFunction({ key: "Enter" });
-      if (this.standardDoms.length > 1) {
-        getTarget = this.standardDoms[1];
+      if (getTarget !== null) {
+        getTarget.click();
       }
-    } else {
-      instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {
-        instantMode: true
-      });
     }
-    if (getTarget !== null) {
-      getTarget.click();
-    }
-
-    window.addEventListener("resize", (e) => {
-      window.location.reload();
-    });
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});

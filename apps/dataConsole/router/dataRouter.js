@@ -703,36 +703,45 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
       let data;
       let rawJson;
       let filteredArr;
+      let idName;
 
       if (req.url === "/searchClients") {
         standard = instance.patch.clientStandard();
         map = instance.patch.clientMap();
+        idName = "cliid";
       } else if (req.url === "/searchProjects") {
         standard = instance.patch.projectStandard();
         map = instance.patch.projectMap();
+        idName = "proid";
       } else if (req.url === "/searchDesigners") {
         standard = instance.patch.designerStandard();
         map = instance.patch.designerMap();
+        idName = "desid";
       } else if (req.url === "/searchContents") {
         standard = instance.patch.contentsStandard();
         map = instance.patch.contentsMap();
+        idName = "conid";
       }
 
       mapArr = Object.values(map);
-
       searchQuery = {};
-      searchArr = [];
-      for (let { position, searchBoo } of mapArr) {
-        if (searchBoo) {
-          tempObj = {};
-          tempObj2 = {};
-          if (req.body.query !== "") {
-            tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
-          } else {
-            tempObj["$regex"] = new RegExp('.', 'gi');
+      if (/^id\:/gi.test(req.body.query)) {
+        searchArr = req.body.query.slice(3).trim().split(',').map((str) => { return str.trim(); });
+        searchArr = searchArr.map((str) => { let obj = {}; obj[idName] = str; return obj; });
+      } else {
+        searchArr = [];
+        for (let { position, searchBoo } of mapArr) {
+          if (searchBoo) {
+            tempObj = {};
+            tempObj2 = {};
+            if (req.body.query !== "") {
+              tempObj["$regex"] = new RegExp(DataRouter.queryFilter(req.body.query), 'gi');
+            } else {
+              tempObj["$regex"] = new RegExp('.', 'gi');
+            }
+            tempObj2[position] = tempObj["$regex"];
+            searchArr.push(tempObj2);
           }
-          tempObj2[position] = tempObj["$regex"];
-          searchArr.push(tempObj2);
         }
       }
       searchQuery["$or"] = searchArr;
@@ -1431,6 +1440,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let processNumber;
       let pastTong;
       let proposalsTong;
+      let cliidTempArr, proidTempArr;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -1465,6 +1475,10 @@ DataRouter.prototype.rou_post_getClientReport = function () {
         monthArr = [];
         for (let arr of matrix) {
           obj = {};
+
+          obj.cliid = {};
+          obj.proid = {};
+
           obj.startDay = `${zeroAddition(arr[0].getFullYear())}-${zeroAddition(arr[0].getMonth() + 1)}-${zeroAddition(arr[0].getDate())}`;
           obj.endDay = `${zeroAddition(arr[1].getFullYear())}-${zeroAddition(arr[1].getMonth() + 1)}-${zeroAddition(arr[1].getDate())}`;
 
@@ -1472,6 +1486,8 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           searchQuery = { "requests": { "$elemMatch": { "request.timeline": { "$gte": arr[0], "$lt": arr[2] } } } };
           clients = await instance.back.getClientsByQuery(searchQuery, { selfMongo: instance.mongo });
           obj.client = clients.length;
+          obj.cliid.client = clients.toNormal().map((obj) => { return obj.cliid; });
+          obj.proid.client = [];
 
           //proposal
           cliidArr_raw = [];
@@ -1498,6 +1514,8 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           } else {
             obj.proposal = 0;
           }
+          obj.cliid.proposal = cliidArr_raw;
+          obj.proid.proposal = [];
 
           //recommend
           searchQuery = { "proposal.date": { "$gte": arr[0], "$lt": arr[2] } };
@@ -1511,24 +1529,34 @@ DataRouter.prototype.rou_post_getClientReport = function () {
             pastTong.push(i.cliid);
           }
           obj.recommend = proposalsTong.length;
+          obj.cliid.recommend = [ ...new Set(proposals.toNormal().map((obj) => { return obj.cliid; })) ];
+          obj.proid.recommend = [];
 
           //contract
           searchQuery = { "process.contract.first.date": { "$gte": arr[0], "$lt": arr[2] } };
           contracts = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
           obj.contract = contracts.length;
+          obj.cliid.contract = [ ...new Set(contracts.toNormal().map((obj) => { return obj.cliid; })) ];
+          obj.proid.contract = contracts.toNormal().map((obj) => { return obj.proid });
 
           //process start
           processNumber = 0;
+          cliidTempArr = [];
+          proidTempArr = [];
           for (let c of clients) {
             for (let { analytics: { proposal } } of c.requests) {
               for (let obj of proposal) {
                 if (obj.contract) {
                   processNumber = processNumber + 1;
+                  cliidTempArr.push(c.cliid);
+                  proidTempArr.push(obj.proid);
                 }
               }
             }
           }
           obj.process = processNumber;
+          obj.cliid.process = [ ...new Set(cliidTempArr) ];
+          obj.proid.process = [ ...new Set(proidTempArr) ];
 
           monthArr.push(obj);
         }

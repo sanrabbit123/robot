@@ -5411,8 +5411,8 @@ ClientJs.prototype.returnValueEventMaker = function () {
 ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
   const instance = this;
   const report = JSON.parse(data);
-
-  let div_clone, div_clone2;
+  const { equalJson, blankHref, colorChip } = GeneralJs;
+  let div_clone, div_clone2, b_clone;
   let style;
   let ea = "px";
   let entireMargin;
@@ -5429,6 +5429,8 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
   let summaryBox, summaryTong;
   let propertyNum;
   let totalSummary;
+  let toClientEvent, toProjectEvent;
+  let totalCliid, totalProid;
 
   margin = 18;
   boxNumber = Math.floor((motherWidth - (margin * 3)) / (margin + 400));
@@ -5436,6 +5438,23 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
   boxWidth = (motherWidth - (margin * (boxNumber + 1 + 2))) / boxNumber;
   boxTop = 88;
   propertyNum = 7;
+
+  toClientEvent = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const cliidTarget = equalJson(this.getAttribute("client"));
+    if (cliidTarget.length > 0) {
+      blankHref(window.location.protocol + "//" + window.location.host + "/client?specificids=" + cliidTarget.join(','));
+    }
+  }
+  toProjectEvent = function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const proidTarget = equalJson(this.getAttribute("project"));
+    if (proidTarget.length > 0) {
+      blankHref(window.location.protocol + "//" + window.location.host + "/project?specificids=" + proidTarget.join(','));
+    }
+  }
 
   //entire scroll box
   scrollBox = GeneralJs.nodes.div.cloneNode(true);
@@ -5618,8 +5637,22 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
     div_clone2.textContent = "진행";
     matrixBox.appendChild(div_clone2);
 
+    totalCliid = {
+      client: [],
+      recommend: [],
+      proposal: [],
+      contract: [],
+      process: []
+    };
+    totalProid = {
+      client: [],
+      recommend: [],
+      proposal: [],
+      contract: [],
+      process: []
+    };
     reportNumber = 0;
-    for (let { startDay, endDay, client, recommend, proposal, contract, process } of report[i]) {
+    for (let { startDay, endDay, client, recommend, proposal, contract, process, cliid: cliidObj, proid: proidObj } of report[i]) {
 
       columnTop = columnTop + columnLineHeight + columnPaddingTop;
 
@@ -5638,6 +5671,7 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
 
       //client
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("hoverDefault_lite");
       matrixStyle1.top = String(columnTop) + ea;
       matrixStyle1.left = String(matrixWidth * (2 / propertyNum)) + ea;
       matrixStyle1.background = "";
@@ -5649,46 +5683,80 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
         div_clone2.style[z] = matrixStyle1[z];
       }
       div_clone2.textContent = String(client);
+      totalCliid.client = totalCliid.client.concat(cliidObj.client);
+      totalProid.client = totalProid.client.concat(proidObj.client);
+      div_clone2.setAttribute("client", JSON.stringify(cliidObj.client));
+      div_clone2.setAttribute("project", JSON.stringify(proidObj.client));
+      div_clone2.addEventListener("click", toClientEvent);
+      div_clone2.addEventListener("contextmenu", toProjectEvent);
       matrixBox.appendChild(div_clone2);
       summaryTong.client += client;
 
       //proposal
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("hoverDefault_lite");
       matrixStyle1.left = String(matrixWidth * (3 / propertyNum)) + ea;
       for (let z in matrixStyle1) {
         div_clone2.style[z] = matrixStyle1[z];
       }
       div_clone2.textContent = String(proposal);
+      totalCliid.proposal = totalCliid.proposal.concat(cliidObj.proposal);
+      totalProid.proposal = totalProid.proposal.concat(proidObj.proposal);
+      div_clone2.setAttribute("client", JSON.stringify(cliidObj.proposal));
+      div_clone2.setAttribute("project", JSON.stringify(proidObj.proposal));
+      div_clone2.addEventListener("click", toClientEvent);
+      div_clone2.addEventListener("contextmenu", toProjectEvent);
       matrixBox.appendChild(div_clone2);
       summaryTong.proposal += proposal;
 
       //recommend
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("hoverDefault_lite");
       matrixStyle1.left = String(matrixWidth * (4 / propertyNum)) + ea;
       for (let z in matrixStyle1) {
         div_clone2.style[z] = matrixStyle1[z];
       }
       div_clone2.textContent = String(recommend);
+      totalCliid.recommend = totalCliid.recommend.concat(cliidObj.recommend);
+      totalProid.recommend = totalProid.recommend.concat(proidObj.recommend);
+      div_clone2.setAttribute("client", JSON.stringify(cliidObj.recommend));
+      div_clone2.setAttribute("project", JSON.stringify(proidObj.recommend));
+      div_clone2.addEventListener("click", toClientEvent);
+      div_clone2.addEventListener("contextmenu", toProjectEvent);
       matrixBox.appendChild(div_clone2);
       summaryTong.recommend += recommend;
 
       //contract
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("hoverDefault_lite");
       matrixStyle1.left = String(matrixWidth * (5 / propertyNum)) + ea;
       for (let z in matrixStyle1) {
         div_clone2.style[z] = matrixStyle1[z];
       }
       div_clone2.textContent = String(contract);
+      totalCliid.contract = totalCliid.contract.concat(cliidObj.contract);
+      totalProid.contract = totalProid.contract.concat(proidObj.contract);
+      div_clone2.setAttribute("client", JSON.stringify(cliidObj.contract));
+      div_clone2.setAttribute("project", JSON.stringify(proidObj.contract));
+      div_clone2.addEventListener("click", toClientEvent);
+      div_clone2.addEventListener("contextmenu", toProjectEvent);
       matrixBox.appendChild(div_clone2);
       summaryTong.contract += contract;
 
-      //contract
+      //process
       div_clone2 = GeneralJs.nodes.div.cloneNode(true);
+      div_clone2.classList.add("hoverDefault_lite");
       matrixStyle1.left = String(matrixWidth * (6 / propertyNum)) + ea;
       for (let z in matrixStyle1) {
         div_clone2.style[z] = matrixStyle1[z];
       }
       div_clone2.textContent = String(process);
+      totalCliid.process = totalCliid.process.concat(cliidObj.process);
+      totalProid.process = totalProid.process.concat(proidObj.process);
+      div_clone2.setAttribute("client", JSON.stringify(cliidObj.process));
+      div_clone2.setAttribute("project", JSON.stringify(proidObj.process));
+      div_clone2.addEventListener("click", toClientEvent);
+      div_clone2.addEventListener("contextmenu", toProjectEvent);
       matrixBox.appendChild(div_clone2);
       summaryTong.process += process;
 
@@ -5713,7 +5781,79 @@ ClientJs.prototype.reportScrollBox = function (data, motherWidth) {
       summaryBox.style[z] = style[z];
     }
 
-    summaryBox.insertAdjacentHTML(`beforeend`, `문의 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.client)}</b>명&nbsp;&nbsp;제안 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.proposal)}</b>명&nbsp;&nbsp;추천 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.recommend)}</b>명&nbsp;&nbsp;계약 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.contract)}</b>명&nbsp;&nbsp;진행 <b style="color:${GeneralJs.colorChip.green}">${String(summaryTong.process)}</b>명<br>제안율 <b style="color:${GeneralJs.colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:${GeneralJs.colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
+    totalCliid.client = [ ...new Set(totalCliid.client) ];
+    totalCliid.recommend = [ ...new Set(totalCliid.recommend) ];
+    totalCliid.proposal = [ ...new Set(totalCliid.proposal) ];
+    totalCliid.contract = [ ...new Set(totalCliid.contract) ];
+    totalCliid.process = [ ...new Set(totalCliid.process) ];
+
+    totalProid.client = [ ...new Set(totalProid.client) ];
+    totalProid.recommend = [ ...new Set(totalProid.recommend) ];
+    totalProid.proposal = [ ...new Set(totalProid.proposal) ];
+    totalProid.contract = [ ...new Set(totalProid.contract) ];
+    totalProid.process = [ ...new Set(totalProid.process) ];
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `문의 `);
+
+    b_clone = GeneralJs.nodes.b.cloneNode(true);
+    b_clone.style.color = colorChip.green;
+    b_clone.style.cursor = "pointer";
+    b_clone.textContent = String(summaryTong.client);
+    b_clone.setAttribute("client", JSON.stringify(totalCliid.client));
+    b_clone.setAttribute("project", JSON.stringify(totalProid.client));
+    b_clone.addEventListener("click", toClientEvent);
+    b_clone.addEventListener("contextmenu", toProjectEvent);
+    summaryBox.appendChild(b_clone);
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;제안 `);
+
+    b_clone = GeneralJs.nodes.b.cloneNode(true);
+    b_clone.style.color = colorChip.green;
+    b_clone.style.cursor = "pointer";
+    b_clone.textContent = String(summaryTong.proposal);
+    b_clone.setAttribute("client", JSON.stringify(totalCliid.proposal));
+    b_clone.setAttribute("project", JSON.stringify(totalProid.proposal));
+    b_clone.addEventListener("click", toClientEvent);
+    b_clone.addEventListener("contextmenu", toProjectEvent);
+    summaryBox.appendChild(b_clone);
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;추천 `);
+
+    b_clone = GeneralJs.nodes.b.cloneNode(true);
+    b_clone.style.color = colorChip.green;
+    b_clone.style.cursor = "pointer";
+    b_clone.textContent = String(summaryTong.recommend);
+    b_clone.setAttribute("client", JSON.stringify(totalCliid.recommend));
+    b_clone.setAttribute("project", JSON.stringify(totalProid.recommend));
+    b_clone.addEventListener("click", toClientEvent);
+    b_clone.addEventListener("contextmenu", toProjectEvent);
+    summaryBox.appendChild(b_clone);
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;계약 `);
+
+    b_clone = GeneralJs.nodes.b.cloneNode(true);
+    b_clone.style.color = colorChip.green;
+    b_clone.style.cursor = "pointer";
+    b_clone.textContent = String(summaryTong.contract);
+    b_clone.setAttribute("client", JSON.stringify(totalCliid.contract));
+    b_clone.setAttribute("project", JSON.stringify(totalProid.contract));
+    b_clone.addEventListener("click", toClientEvent);
+    b_clone.addEventListener("contextmenu", toProjectEvent);
+    summaryBox.appendChild(b_clone);
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `명&nbsp;&nbsp;진행 `);
+
+    b_clone = GeneralJs.nodes.b.cloneNode(true);
+    b_clone.style.color = colorChip.green;
+    b_clone.style.cursor = "pointer";
+    b_clone.textContent = String(summaryTong.process);
+    b_clone.setAttribute("client", JSON.stringify(totalCliid.process));
+    b_clone.setAttribute("project", JSON.stringify(totalProid.process));
+    b_clone.addEventListener("click", toClientEvent);
+    b_clone.addEventListener("contextmenu", toProjectEvent);
+    summaryBox.appendChild(b_clone);
+
+    summaryBox.insertAdjacentHTML(`beforeend`, `명<br>제안율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.proposal / summaryTong.client) * 100))}</b>%&nbsp;&nbsp;진행율 <b style="color:${colorChip.green}">${String(Math.round((summaryTong.process / summaryTong.client) * 100))}</b>%`);
     div_clone.appendChild(summaryBox);
 
     totalSummary.client += summaryTong.client;
@@ -6021,7 +6161,7 @@ ClientJs.prototype.makeSearchEvent = function (search = null) {
     if (GeneralJs.confirmKey.includes(e.key)) {
 
       if (search === null) {
-        this.value = this.value.replace(/[ \n]/g, '');
+        this.value = this.value.replace(/[ \n]/g, '').trim();
       }
 
       if (instance.totalFather !== null && instance.totalFather !== undefined) {
@@ -7103,6 +7243,9 @@ ClientJs.prototype.launching = async function () {
     let cardViewInitial;
 
     cardViewInitial = (getObj.cliid === undefined);
+    if (typeof getObj.specificids === "string") {
+      cardViewInitial = false;
+    }
 
     this.cardViewInitial = cardViewInitial;
     this.grayBarWidth = this.mother.grayBarWidth;
@@ -7123,30 +7266,35 @@ ClientJs.prototype.launching = async function () {
     });
 
     getTarget = null;
-    if (!cardViewInitial) {
-      for (let dom of this.standardDoms) {
-        if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
-          getTarget = dom;
-        }
-      }
-      if (getTarget === null || getObj.view === "row") {
-        tempFunction = this.makeSearchEvent(getObj.cliid);
-        await tempFunction({ key: "Enter" });
+    if (typeof getObj.specificids === "string") {
+      tempFunction = this.makeSearchEvent("id:" + getObj.specificids);
+      await tempFunction({ key: "Enter" });
+    } else {
+      if (!cardViewInitial) {
         for (let dom of this.standardDoms) {
           if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
             getTarget = dom;
           }
         }
-      }
-      if (getTarget !== null) {
-        if (getObj.view !== "row") {
-          getTarget.click();
+        if (getTarget === null || getObj.view === "row") {
+          tempFunction = this.makeSearchEvent(getObj.cliid);
+          await tempFunction({ key: "Enter" });
+          for (let dom of this.standardDoms) {
+            if ((new RegExp(getObj.cliid, 'gi')).test(dom.textContent)) {
+              getTarget = dom;
+            }
+          }
         }
+        if (getTarget !== null) {
+          if (getObj.view !== "row") {
+            getTarget.click();
+          }
+        }
+      } else {
+        instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {
+          instantMode: true
+        });
       }
-    } else {
-      instance.cardViewMaker().call(instance.mother.belowButtons.square.up, {
-        instantMode: true
-      });
     }
 
   } catch (e) {
