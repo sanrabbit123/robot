@@ -153,10 +153,10 @@ DesignerJs.prototype.projectDetail = function (desid) {
     divisionMap = divisionMap.concat(arr[1]);
   }
 
-  cardWidthConstant = 140;
-  fixedHeightSize = 40;
+  cardWidthConstant = <%% 140, 140, 140, 140, 14 %%>;
+  fixedHeightSize = <%% 40, 40, 40, 40, 7 %%>;
 
-  margin = 8;
+  margin = <%% 8, 8, 8, 8, 1 %%>;
   topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
   leftMargin = <%% 34, 34, 34, 34, 8 %%>;
   bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 11 %%>;
@@ -166,41 +166,41 @@ DesignerJs.prototype.projectDetail = function (desid) {
   outerMargin = <%% 24, 24, 24, 24, 4 %%>;
 
   baseTongPaddingTop = 1;
-  baseTongPaddingBottom = 50;
+  baseTongPaddingBottom = <%% 50, 50, 50, 50, 5 %%>;
 
-  areaBetween = <%% 13, 12, 12, 12, 12 %%>;
-  innerPaddingTop = <%% 24, 22, 20, 16, 24 %%>;
-  innerPaddingLeft = <%% 36, 32, 30, 24, 36 %%>;
-  titleHeight = <%% 62, 58, 56, 52, 62 %%>;
+  areaBetween = <%% 13, 12, 12, 12, 1.5 %%>;
+  innerPaddingTop = <%% 24, 22, 20, 16, 5.2 %%>;
+  innerPaddingLeft = <%% 36, 32, 30, 24, 6 %%>;
+  titleHeight = <%% 62, 58, 56, 52, 10.5 %%>;
 
-  areaPaddingTop = <%% 50, 48, 46, 44, 50 %%>;
-  areaPaddingLeft = <%% 15, 15, 15, 15, 15 %%>;
-  areaPaddingBottom = <%% 15, 15, 15, 15, 15 %%>;
+  areaPaddingTop = <%% 50, 48, 46, 44, 7.5 %%>;
+  areaPaddingLeft = <%% 15, 15, 15, 15, 0 %%>;
+  areaPaddingBottom = <%% 15, 15, 15, 15, 0 %%>;
 
-  areaTitleTop = <%% 13, 13, 13, 13, 14 %%>;
-  areaTitleLeft = <%% 20, 20, 20, 20, 20 %%>;
+  areaTitleTop = <%% 13, 13, 13, 13, 1.8 %%>;
+  areaTitleLeft = <%% 20, 20, 20, 20, 3 %%>;
 
-  fontSize0 = <%% 25, 23, 22, 21, 5 %%>;
-  fontSize1 = <%% 16, 16, 15, 14, 17 %%>;
-  fontSize2 = <%% 14, 14, 13, 12, 14 %%>;
-  fontSize3 = <%% 12, 12, 11, 11, 12 %%>;
+  fontSize0 = <%% 25, 23, 22, 21, 4 %%>;
+  fontSize1 = <%% 16, 16, 15, 14, 2.8 %%>;
+  fontSize2 = <%% 14, 14, 13, 12, 3 %%>;
+  fontSize3 = <%% 12, 12, 11, 11, 2.5 %%>;
 
-  mainTitleTextTop = <%% -3, -3, -3, -3, -3 %%>;
-  mainTitleTextLeft = <%% 3, 3, 3, 3, 3 %%>;
-  countNumberBetween = <%% 9, 9, 9, 9, 9 %%>;
-  countNumberTextTop = <%% 1, 1, 1, 1, 1 %%>;
+  mainTitleTextTop = <%% -3, -3, -3, -3, 0 %%>;
+  mainTitleTextLeft = <%% 3, 3, 3, 3, 1 %%>;
+  countNumberBetween = <%% 9, 9, 9, 9, 1 %%>;
+  countNumberTextTop = <%% 1, 1, 1, 1, 0 %%>;
 
-  lastMargin = <%% 30, 30, 30, 30, 30 %%>;
+  lastMargin = <%% 30, 30, 30, 30, 3 %%>;
 
-  cardHeight = <%% 40, 40, 40, 40, 40 %%>;
-  cardMargin = <%% 10, 10, 10, 10, 10 %%>;
+  cardHeight = <%% 40, 40, 40, 40, 6 %%>;
+  cardMargin = <%% 10, 10, 10, 10, 1.5 %%>;
   areaMinHeight = cardHeight + (cardMargin * 2);
 
   cardMagin = <%% 10, 10, 10, 10, 1 %%>;
 
-  nameFontSize = <%% 14, 14, 14, 14, 3.5 %%>;
+  nameFontSize = <%% 14, 14, 14, 14, 2.8 %%>;
   idFontSize = <%% 11, 11, 11, 11, 2.8 %%>;
-  nameWordTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), 2 %%>;
+  nameWordTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), -0.3 %%>;
   idWordTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), 3 %%>;
   intend = <%% 16, 16, 16, 16, 4 %%>;
   between = <%% 8, 8, 8, 8, 1 %%>;
@@ -210,8 +210,15 @@ DesignerJs.prototype.projectDetail = function (desid) {
   divideArr = [];
   sizeArr = [];
   for (let i = 0; i < 5; i++) {
-    totalStandard = (window.innerWidth - this.grayBarWidth - (outerMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+    if (desktop) {
+      totalStandard = (window.innerWidth - this.grayBarWidth - (outerMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+    } else {
+      totalStandard = (100 - (outerMargin * 2) - (innerPaddingLeft * 2) - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+    }
     divideNumber = Math.floor(totalStandard / (cardMagin + cardWidthConstant));
+    if (divideNumber === 0) {
+      divideNumber = 1;
+    }
     tempSize = (totalStandard - (cardMagin * (divideNumber + 1))) / divideNumber;
     divideArr.push(divideNumber);
     sizeArr.push(tempSize);
@@ -247,7 +254,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
       background: colorChip.white,
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
-      paddingTop: desktop ? String(innerPaddingTop) + ea : String(baseTongPaddingTop) + ea,
+      paddingTop: String(innerPaddingTop) + ea,
       paddingBottom: String(baseTongPaddingBottom) + ea,
     }
   });
@@ -332,7 +339,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
                 {
                   text: String(0) + "명",
                   style: {
-                    display: "inline-block",
+                    display: desktop ? "inline-block" : "none",
                     position: "relative",
                     fontSize: String(fontSize2) + ea,
                     fontWeight: String(400),
@@ -408,6 +415,8 @@ DesignerJs.prototype.projectDetail = function (desid) {
                 height: withOut(cardMagin, ea),
                 borderRadius: String(5) + "px",
                 paddingBottom: String(cardMagin) + ea,
+                borderTopRightRadius: desktop ? "" : String(0),
+                borderTopLeftRadius: desktop ? "" : String(0),
               }
             }
           ]
@@ -455,7 +464,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
           let whiteMargin;
           let whiteResult;
 
-          whiteMargin = 40;
+          whiteMargin = <%% 40, 40, 40, 40, 4 %%>;
           cancelBack = createNode({
             mother: totalMother,
             event: {
@@ -469,7 +478,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
               top: String(0),
               left: String(instance.grayBarWidth) + ea,
               width: withOut(instance.grayBarWidth, ea),
-              height: withOut(belowHeight, ea),
+              height: desktop ? withOut(belowHeight, ea) : String(100) + "vh",
               background: colorChip.shadow,
               zIndex: String(zIndex),
               animation: "justfadeinmiddle 0.3s ease forwards",
@@ -498,15 +507,17 @@ DesignerJs.prototype.projectDetail = function (desid) {
         }
       },
       style: {
-        display: "inline-block",
+        display: desktop ? "inline-block" : "inline-flex",
         position: "relative",
-        width: String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea,
+        width: desktop ? String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea : "calc(" + String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea + " - " + String(2 / divideArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + "px" + ")",
         height: String(fixedHeightSize) + ea,
         marginLeft: String(cardMagin) + ea,
         marginTop: String(cardMagin) + ea,
         background: colorChip.white,
         borderRadius: String(5) + "px",
         cursor: "pointer",
+        justifyContent: desktop ? "" : "center",
+        alignItems: desktop ? "" : "center",
       }
     });
 
@@ -514,12 +525,13 @@ DesignerJs.prototype.projectDetail = function (desid) {
       mother: whiteCard,
       text: obj.name,
       style: {
-        position: "absolute",
+        display: desktop ? "block" : "inline-block",
+        position: desktop ? "absolute" : "relative",
         fontSize: String(nameFontSize) + ea,
         fontWeight: String(500),
         top: String(nameWordTop) + ea,
-        left: String(intend) + ea,
-        color: GeneralJs.colorChip.black,
+        left: desktop ? String(intend) + ea : "",
+        color: desktop ? colorChip.black : colorChip.green,
         cursor: "pointer",
       }
     });
@@ -528,6 +540,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
       mother: whiteCard,
       text: obj.proid,
       style: {
+        display: desktop ? "block" : "none",
         position: "absolute",
         fontSize: String(idFontSize) + ea,
         fontWeight: String(400),
@@ -614,12 +627,12 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     titleTextBetween = <%% 10, 10, 10, 10, 10 %%>;
     titlePaddingBottom = <%% 13, 13, 13, 13, 13 %%>;
     areaTitleSize = <%% 15, 14, 14, 13, 15 %%>;
-    rowMarginTop = <%% 21, 16, 11, 10, 25 %%>;
-    rowFirstMarginTop = <%% 30, 27, 22, 17, 32 %%>;
+    rowMarginTop = <%% 22, 16, 11, 10, 25 %%>;
+    rowFirstMarginTop = <%% 32, 27, 22, 17, 32 %%>;
     areaTitleBottom = <%% 13, 13, 13, 13, 13 %%>;
     barHeight = <%% 34, 34, 34, 34, 34 %%>;
     factorSize = <%% 13, 12, 12, 10, 3 %%>;
-    detailBoxMarginTop = <%% 45, 40, 35, 30, 40 %%>;
+    detailBoxMarginTop = <%% 50, 40, 35, 30, 40 %%>;
 
     arrowTop = <%% 8, 8, 8, 8, 8 %%>;
     arrowWidth = <%% 9, 8, 8, 8, 8 %%>;

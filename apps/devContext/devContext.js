@@ -1403,9 +1403,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김영아",
-    //     designer: "권미정",
-    //     link: "https://drive.google.com/drive/folders/1kT12ORnmZmYZV7MsUlv-Vao6dZdzb3vI",
+    //     client: "김효정",
+    //     designer: "이정아",
+    //     link: "https://drive.google.com/drive/folders/16hI-qXnQERo2n_KpIvWfqqZL87e9k6aX",
     //     pay: false
     //   },
     // ]);
