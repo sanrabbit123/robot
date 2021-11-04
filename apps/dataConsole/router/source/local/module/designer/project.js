@@ -177,7 +177,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   areaPaddingLeft = <%% 15, 15, 15, 15, 0 %%>;
   areaPaddingBottom = <%% 15, 15, 15, 15, 0 %%>;
 
-  areaTitleTop = <%% 13, 13, 13, 13, 1.8 %%>;
+  areaTitleTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 1.8 %%>;
   areaTitleLeft = <%% 20, 20, 20, 20, 3 %%>;
 
   fontSize0 = <%% 25, 23, 22, 21, 4 %%>;
@@ -657,13 +657,13 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     factorSize = <%% 13, 12, 12, 10, 2 %%>;
     detailBoxMarginTop = <%% 50, 40, 35, 30, 6 %%>;
 
-    arrowTop = <%% 8, 8, 8, 8, 1 %%>;
+    arrowTop = <%% (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 8 : 9), (isMac() ? 8 : 9), 1 %%>;
     arrowWidth = <%% 9, 8, 8, 8, 1.5 %%>;
 
     whiteBoxTop = <%% 48, 46, 44, 42, 4 %%>;
     whiteBoxLeft = <%% 20, 18, 16, 14, 2 %%>;
     noticeTextSize = <%% 14, 13, 13, 12, 3 %%>;
-    noticeTextTop = <%% 18, 18, 18, 18, 1 %%>;
+    noticeTextTop = <%% (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), (isMac() ? 18 : 20), 1 %%>;
     noticeTextLeft = <%% 24, 24, 24, 24, 3 %%>;
 
     accumulate = titleHeight + titlePaddingBottom + ((rowMarginTop + subTitleHeight + areaTitleBottom + barHeight) * (divisionEntireMap.length - 1)) + rowFirstMarginTop - rowMarginTop + detailBoxMarginTop;
@@ -672,9 +672,9 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     textAreaPaddingLeft = <%% 26, 26, 26, 26, 4.5 %%>;
     lineHeightMargin = <%% 8, 8, 8, 8, 1 %%>;
     contentsPaddingLeft = <%% 14, 14, 13, 12, 2 %%>;
-    arrowTop2 = <%% 7, 7, 6, 6, 1.5 %%>;
+    arrowTop2 = <%% (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 6 : 5), (isMac() ? 6 : 5), 1.5 %%>;
     arrowWidth2 = <%% 8, 8, 7, 7, 1.4 %%>;
-    checkCircleTop = <%% 7, 7, 6, 5, 1.4 %%>;
+    checkCircleTop = <%% (isMac() ? 7 : 5), (isMac() ? 7 : 5), (isMac() ? 6 : 5), (isMac() ? 5 : 5), 1.4 %%>;
     checkCircleWidth = <%% 10, 10, 9, 8, 2 %%>;
     checkCircleVisual = <%% 1, 1, 1, 1, 1 %%>;
     pannelBoxPaddingBottom = <%% 13, 13, 13, 13, 3 %%>;
@@ -682,7 +682,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     pannelBlockPadding = <%% 15, 15, 15, 15, 3 %%>;
     pannelBlockMargin = <%% 6, 6, 6, 6, 1 %%>;
     pannelBlockHeight = <%% 38, 38, 38, 38, 7.2 %%>;
-    pannelBlockVisual = <%% 2, 2, 2, 2, 0.3 %%>;
+    pannelBlockVisual = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), 0.3 %%>;
 
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
     lengthArr.sort((a, b) => { return b - a; });
