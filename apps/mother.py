@@ -107,7 +107,7 @@ def searchDir(target, detail=False):
 
 try:
     BUCKETNAMECONST = "homeliaisonbucket"
-    # data = getBridge()
+    data = getBridge()
 
     if argv[1] == "fileUpload":
         s3 = boto3.resource("s3")
