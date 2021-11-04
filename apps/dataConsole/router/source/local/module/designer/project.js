@@ -173,7 +173,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   innerPaddingLeft = <%% 36, 32, 30, 24, 6 %%>;
   titleHeight = <%% 62, 58, 56, 52, 10.5 %%>;
 
-  areaPaddingTop = <%% 50, 48, 46, 44, 7.5 %%>;
+  areaPaddingTop = <%% (isMac() ? 48 : 47), (isMac() ? 48 : 47), (isMac() ? 46 : 45), (isMac() ? 44 : 43), 7.5 %%>;
   areaPaddingLeft = <%% 15, 15, 15, 15, 0 %%>;
   areaPaddingBottom = <%% 15, 15, 15, 15, 0 %%>;
 
@@ -580,7 +580,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
 
 DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid, requestNumber, desid, divisionEntireMap) {
   const instance = this;
-  const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren } = GeneralJs;
+  const { createNode, colorChip, withOut, ajaxJson, setQueue, cleanChildren, isMac } = GeneralJs;
   const { ea, projects, clients, designers, projectMap, checklist } = this;
   const { action: { itemDescription } } = projectMap;
   const mobile = this.media[4];
