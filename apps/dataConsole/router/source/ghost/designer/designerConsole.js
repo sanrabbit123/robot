@@ -422,13 +422,19 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         },
         {
           text: "<b%Designer%b> Console",
+          event: {
+            click: function (e) {
+              window.location.reload();
+            }
+          },
           style: {
             position: "relative",
             fontSize: String(titleSize) + ea,
             fontFamily: "graphik",
             fontWeight: String(300),
             color: colorChip.black,
-            lineHeight: String(1.3)
+            lineHeight: String(1.3),
+            cursor: "pointer",
           },
           bold: {
             fontSize: String(titleSize) + ea,
@@ -641,6 +647,11 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       {
         mother: -2,
         text: "Designer",
+        event: {
+          click: function (e) {
+            window.location.reload();
+          }
+        },
         style: {
           position: "absolute",
           fontSize: String(size) + "px",
@@ -650,11 +661,17 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           color: colorChip.white,
           top: String(fontTop) + "px",
           left: String(fontLeft) + ea,
+          cursor: "pointer",
         }
       },
       {
         mother: -3,
         text: "console",
+        event: {
+          click: function (e) {
+            window.location.reload();
+          }
+        },
         style: {
           position: "absolute",
           fontSize: String(size) + "px",
@@ -663,6 +680,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           color: colorChip.white,
           top: String(fontTop) + "px",
           left: "calc(" + String(fontLeft) + ea + " + " + String(naviDesignerWidth + naviBetweenMargin) + "px" + ")",
+          cursor: "pointer",
         }
       },
       {
@@ -1605,8 +1623,10 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
           let cancelBack, whiteBox;
           let whiteMargin;
           let whiteResult;
+          let mobileNavigatorHeight;
 
           whiteMargin = <%% 40, 40, 40, 40, 4 %%>;
+          mobileNavigatorHeight = 60;
           cancelBack = createNode({
             mother: totalMother,
             event: {
@@ -1631,10 +1651,10 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
             class: [ detailWhitePopupConst ],
             style: {
               position: "fixed",
-              top: String(whiteMargin) + ea,
+              top: desktop ? String(whiteMargin) + ea : "calc(" + String(whiteMargin) + ea + " + " + String(mobileNavigatorHeight) + "px" + ")",
               left: String(instance.grayBarWidth + whiteMargin) + ea,
               width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
-              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100vh - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight) + "px)",
+              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100vh - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight + mobileNavigatorHeight) + "px)",
               background: colorChip.white,
               borderRadius: String(5) + "px",
               zIndex: String(zIndex),
@@ -1695,7 +1715,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
         fontSize: String(nameFontSize) + ea,
         fontWeight: String(500),
         top: String(nameWordTop) + ea,
-        marginLeft: String(intend) + ea,
+        marginLeft: desktop ? String(intend) + ea : "",
         color: desktop ? colorChip.black : colorChip.green,
         cursor: "pointer",
       }

@@ -461,8 +461,10 @@ DesignerJs.prototype.projectDetail = function (desid) {
           let cancelBack, whiteBox;
           let whiteMargin;
           let whiteResult;
+          let mobileNavigatorHeight;
 
           whiteMargin = <%% 40, 40, 40, 40, 4 %%>;
+          mobileNavigatorHeight = 60;
           cancelBack = createNode({
             mother: totalMother,
             event: {
@@ -487,10 +489,10 @@ DesignerJs.prototype.projectDetail = function (desid) {
             class: [ detailWhitePopupConst ],
             style: {
               position: "fixed",
-              top: String(whiteMargin) + ea,
+              top: desktop ? String(whiteMargin) + ea : "calc(" + String(whiteMargin) + ea + " + " + String(mobileNavigatorHeight) + "px" + ")",
               left: String(instance.grayBarWidth + whiteMargin) + ea,
               width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
-              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100vh - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight) + "px)",
+              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100vh - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight + mobileNavigatorHeight) + "px)",
               background: colorChip.white,
               borderRadius: String(5) + "px",
               zIndex: String(zIndex),
@@ -551,7 +553,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
         fontSize: String(nameFontSize) + ea,
         fontWeight: String(500),
         top: String(nameWordTop) + ea,
-        marginLeft: String(intend) + ea,
+        marginLeft: desktop ? String(intend) + ea : "",
         color: desktop ? colorChip.black : colorChip.green,
         cursor: "pointer",
       }
