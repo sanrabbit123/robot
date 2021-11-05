@@ -1111,7 +1111,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   initDescriptionIndent = <%% 40, 40, 40, 40, 5 %%>;
 
   fifthTitleMarginTop = <%% 12, 12, 12, 12, 1 %%>;
-  fifthTitleMarginBottom = <%% 16, 16, 16, 16, 1.6 %%>;
+  fifthTitleMarginBottom = <%% 16, 16, 16, 16, 0 %%>;
   fifthTitle = title[title.length - 1];
 
   cardWidthConstant = <%% 140, 140, 140, 140, 14 %%>;
@@ -1295,6 +1295,14 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
               children: [
                 {
                   text: title[i],
+                  event: {
+                    click: function (e) {
+                      if (mobile) {
+                        console.log(instance.mobileNavigator);
+                        instance.mobileNavigator.children[0].firstChild.click();
+                      }
+                    }
+                  },
                   style: {
                     display: "block",
                     fontSize: String(fontSize0) + ea,
@@ -1327,7 +1335,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
                       text: String(i + 1),
                       style: {
                         position: "relative",
-                        top: String(-1) + ea,
+                        top: String(desktop ? -1 : 0) + ea,
                         fontSize: String(fontSize2) + ea,
                         lineHeight: String(1.6),
                         fontWeight: String(700),
