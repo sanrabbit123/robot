@@ -1089,18 +1089,18 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   }
 
   initialBoxNumber = title.length - 1;
-  initialDivide = <%% title.length - 1, 4, 2, 2, 2 %%>;
+  initialDivide = <%% title.length - 1, 2, 2, 2, 2 %%>;
 
-  initialWordingSize = <%% 43, 43, 43, 43, 5 %%>;
-  twinkleAdditional = <%% 33, 33, 33, 33, 3 %%>;
+  initialWordingSize = <%% 43, 40, 36, 32, 5 %%>;
+  twinkleAdditional = <%% 33, 30, 22, 2, 3 %%>;
   initialWordingTop = <%% 80, 80, 80, 80, 8 %%>;
   twinkleTop = <%% -3, -3, -3, -3, -0.2 %%>;
-  colorAreaHeight0 = <%% 265, 265, 265, 265, 26 %%>;
-  colorAreaHeight1 = <%% 160, 160, 160, 160, 16 %%>;
+  colorAreaHeight0 = <%% 265, 255, 235, 180, 26 %%>;
+  colorAreaHeight1 = <%% 160, 140, 130, 85, 16 %%>;
   colorAreaHeight = colorAreaHeight0 + colorAreaHeight1;
 
   motherMargin = <%% 40, 40, 40, 40, 4 %%>;
-  blockMargin = <%% 15, 15, 15, 15, 1 %%>;
+  blockMargin = <%% 15, 12, 10, 8, 1 %%>;
 
   whiteTongHeight = <%% 360, 360, 360, 360, 36 %%>;
 
@@ -1140,7 +1140,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   areaPaddingLeft = <%% 15, 15, 15, 15, 0 %%>;
   areaPaddingBottom = <%% 15, 15, 15, 15, 0 %%>;
 
-  areaTitleTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 1.8 %%>;
+  areaTitleTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 1.7 %%>;
   areaTitleLeft = <%% 20, 20, 20, 20, 3 %%>;
 
   fontSize0 = <%% 25, 23, 22, 21, 4 %%>;
