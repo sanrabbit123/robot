@@ -145,7 +145,7 @@ DesignerJs.prototype.requestReturnStatic = function (designer, project, client, 
       className: "mainContents_construct",
       position: "request.about.construct",
       contents: emptyReload(projectHistory.request.about.construct, [ "시공 관련 상세 사항 없음" ]),
-      spread: false,
+      spread: true,
     },
     {
       title: "스타일링 관련",

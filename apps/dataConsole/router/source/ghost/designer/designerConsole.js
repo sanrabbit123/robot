@@ -1091,27 +1091,27 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   initialBoxNumber = title.length - 1;
   initialDivide = <%% title.length - 1, 4, 2, 2, 2 %%>;
 
-  initialWordingSize = 43;
-  twinkleAdditional = 33;
-  initialWordingTop = 80;
-  twinkleTop = -3;
-  colorAreaHeight0 = 265;
-  colorAreaHeight1 = 160;
+  initialWordingSize = <%% 43, 43, 43, 43, 5 %%>;
+  twinkleAdditional = <%% 33, 33, 33, 33, 3 %%>;
+  initialWordingTop = <%% 80, 80, 80, 80, 8 %%>;
+  twinkleTop = <%% -3, -3, -3, -3, -0.2 %%>;
+  colorAreaHeight0 = <%% 265, 265, 265, 265, 26 %%>;
+  colorAreaHeight1 = <%% 160, 160, 160, 160, 16 %%>;
   colorAreaHeight = colorAreaHeight0 + colorAreaHeight1;
 
-  motherMargin = 40;
-  blockMargin = 15;
+  motherMargin = <%% 40, 40, 40, 40, 4 %%>;
+  blockMargin = <%% 15, 15, 15, 15, 1 %%>;
 
-  whiteTongHeight = 360;
+  whiteTongHeight = <%% 360, 360, 360, 360, 36 %%>;
 
-  mainTitleLineTop0 = 10;
-  mainTitleLineTop1 = 2;
+  mainTitleLineTop0 = <%% 10, 10, 10, 10, 1 %%>;
+  mainTitleLineTop1 = <%% 2, 2, 2, 2, 0 %%>;
 
-  initDescriptionPaddingTop = 28;
-  initDescriptionIndent = 40;
+  initDescriptionPaddingTop = <%% 28, 28, 28, 28, 4 %%>;
+  initDescriptionIndent = <%% 40, 40, 40, 40, 5 %%>;
 
-  fifthTitleMarginTop = 12;
-  fifthTitleMarginBottom = 16;
+  fifthTitleMarginTop = <%% 12, 12, 12, 12, 1 %%>;
+  fifthTitleMarginBottom = <%% 16, 16, 16, 16, 1.6 %%>;
   fifthTitle = title[title.length - 1];
 
   cardWidthConstant = <%% 140, 140, 140, 140, 14 %%>;
@@ -1311,7 +1311,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
                 },
                 {
                   style: {
-                    display: "block",
+                    display: desktop ? "block" : "none",
                     height: String(mainTitleLineTop1) + ea,
                     borderBottom: "1px solid " + color,
                   }
@@ -1412,7 +1412,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
       },
       {
         style: {
-          display: "block",
+          display: desktop ? "block" : "none",
           width: withOut(innerPaddingLeft * 1, ea),
           height: String(mainTitleLineTop1) + ea,
           borderBottom: "1px solid " + color,
