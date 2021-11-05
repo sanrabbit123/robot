@@ -201,7 +201,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   nameWordTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), -0.3 %%>;
   idWordTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), 3 %%>;
   intend = <%% 16, 16, 16, 16, 4 %%>;
-  between = <%% (isMac() ? 8 : 3), (isMac() ? 8 : 3), (isMac() ? 8 : 3), (isMac() ? 8 : 3), 1 %%>;
+  between = <%% 8, 8, 8, 8, 1 %%>;
 
   cards = designer.projects;
 
@@ -546,12 +546,12 @@ DesignerJs.prototype.projectDetail = function (desid) {
       mother: whiteCard,
       text: obj.name,
       style: {
-        display: desktop ? "block" : "inline-block",
-        position: desktop ? "absolute" : "relative",
+        display: "inline-block",
+        position: "relative",
         fontSize: String(nameFontSize) + ea,
         fontWeight: String(500),
         top: String(nameWordTop) + ea,
-        left: desktop ? String(intend) + ea : "",
+        marginLeft: String(intend) + ea,
         color: desktop ? colorChip.black : colorChip.green,
         cursor: "pointer",
       }
@@ -561,12 +561,12 @@ DesignerJs.prototype.projectDetail = function (desid) {
       mother: whiteCard,
       text: obj.proid,
       style: {
-        display: desktop ? "block" : "none",
-        position: "absolute",
+        display: desktop ? "inline-block" : "none",
+        position: "relative",
         fontSize: String(idFontSize) + ea,
         fontWeight: String(400),
-        top: String(idWordTop) + ea,
-        left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
+        top: String(nameWordTop) + ea,
+        marginLeft: String(between) + ea,
         color: colorChip.green,
         cursor: "pointer",
       }
@@ -681,7 +681,7 @@ DesignerJs.prototype.projectWhiteDetail = function (mother, action, proid, cliid
     pannelBoxPaddingRight = <%% 15, 15, 15, 15, 3 %%>;
     pannelBlockPadding = <%% 15, 15, 15, 15, 3 %%>;
     pannelBlockMargin = <%% 6, 6, 6, 6, 1 %%>;
-    pannelBlockHeight = <%% 38, 38, 38, 38, 7.2 %%>;
+    pannelBlockHeight = <%% 33, 33, 33, 33, 7.2 %%>;
     pannelBlockVisual = <%% (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), (isMac() ? 2 : 0), 0.3 %%>;
 
     lengthArr = divisionEntireMap.map((arr) => { return arr[1].flat().length; });
@@ -1687,7 +1687,7 @@ DesignerJs.prototype.projectView = async function () {
 
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request", "possible" ];
+    this.modes = [ "checklist", "report", "request", "possible", "project" ];
     this.mode = this.modes[0];
     this.result = null;
     this.searchCondition = {
@@ -1696,12 +1696,7 @@ DesignerJs.prototype.projectView = async function () {
       blocks: [],
     };
 
-    if (!middleMode) {
-      this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: { $regex: "^d" } } }, "/getProjects", { equal: true });
-    } else {
-      this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: this.desid } }, "/getProjects", { equal: true });
-    }
-
+    this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: { $regex: "^d" } } }, "/getProjects", { equal: true });
     this.clients = await ajaxJson({ noFlat: true, whereQuery: { $or: [ ...new Set(this.projects.map((obj) => { return obj.cliid; })) ].map((cliid) => { return { cliid }; }) } }, "/getClients", { equal: true })
     this.designers.setProjects(this.projects);
     this.designers.setClients(this.clients);

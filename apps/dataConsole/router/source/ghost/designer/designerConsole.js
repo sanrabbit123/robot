@@ -45,6 +45,79 @@ const DesignerConsoleJs = function () {
   this.totalContents = document.getElementById("totalcontents");
 }
 
+DesignerConsoleJs.prototype.consoleStatics = function (mode = "random") {
+  const instance = this;
+  let color, emoji, title, contents;
+
+  color = [
+    "darkseagreen",
+    "indianred",
+    "lightseagreen",
+    "darkkhaki",
+    "rosybrown",
+  ];
+
+  emoji = [
+    "U+1F604",
+    "U+1F609",
+    "U+1F60A",
+    "U+1F60E",
+    "U+1F929",
+    "U+1F61A",
+    "U+1F917",
+    "U+1F60C",
+  ];
+
+  title = [
+    "기본 정보 관리",
+    "디자이너 리포트",
+    "일정 관리",
+    "의뢰서 보기",
+    "프로젝트 관리",
+  ];
+
+  contents = [
+    [
+      "기본적인 인적 사항과 업무 특성, 스타일 경향성 등을 체크하실 수 있습니다. 이 정보는 <b%제안시 중요한 근거가 되고, 일부 정보는 고객님께 직접 제공되니 정확하게 기입%b>해주세요! &#x1F913;",
+      "기본적인 정보을 체크하실 수 있습니다. <b%제안시 중요한 근거가 되고, 일부는 고객님께 제공되니 정확하게 기입%b>해주세요! &#x1F913;",
+    ],
+    [
+      "홈리에종이 디자이너님을 누구에게 어떤 방식으로 <b%제안했고, 어떤 고객님과 연결이 되어 진행을 했는지, 얼마가 정산 되었는지%b> 등의 정보를 표 형식으로 볼 수 있는 페이지입니다. &#x1F609;",
+      "홈리에종이 디자이너님을 누구에게 <b%제안했고, 정산 되었는지%b> 등의 정보를 표 형식으로 볼 수 있는 페이지입니다. &#x1F609;",
+    ],
+    [
+      "디자이너님이 프로젝트가 가능한 일자를 표시하고, 월별로 가능한 프로젝트 개수를 기입할 수 있는 페이지입니다. <b%이 일정을 기반으로 고객님께 제안되니 정확하게 기입%b>해주세요! &#x1F9D0;",
+      "디자이너님이 프로젝트가 가능한 일자를 표시하는 페이지입니다. <b%이 일정을 기반으로 제안되니 정확하게 기입%b>해주세요! &#x1F9D0;",
+    ],
+    [
+      "계약금을 지불하신 고객님과 현장 미팅을 위한 <b%홈스타일링 의뢰서의 목록과 상세 사항을 보실 수 있는 페이지%b>입니다! PDF 추출 기능을 통해 문서 형태로 출력하실 수도 있습니다! &#x1F973;",
+      "계약금을 지불하신 고객님과 현장 미팅을 위한 <b%홈스타일링 의뢰서의 목록과 상세 사항을 보실 수 있는 페이지%b>입니다! &#x1F973;",
+    ],
+  ];
+
+  if (mode === "random") {
+
+    color = color[Math.floor(Math.random() * color.length)];
+    emoji = emoji[Math.floor(Math.random() * emoji.length)];
+
+    return { color, emoji };
+
+  } else if (mode === "dashboard") {
+
+    return { title, contents };
+
+  } else if (mode === "all") {
+
+    color = color[Math.floor(Math.random() * color.length)];
+    emoji = emoji[Math.floor(Math.random() * emoji.length)];
+
+    return { color, emoji, title, contents };
+
+  } else {
+    throw new Error("invaild mode");
+  }
+}
+
 DesignerConsoleJs.prototype.navigatorLaunching = function () {
   const instance = this;
   const { ea, designer, desid, modes, media, grayBarWidth, tabletWidth } = this;
@@ -199,6 +272,23 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         colorFunc.call(this);
       },
     },
+    {
+      title: "프로젝트 관리",
+      mode: modes[4],
+      position: 0,
+      mobile: true,
+      event: function (e) {
+        instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
+        instance.projectDetailLaunching(desid, () => {
+          scrollTo(document.querySelector(".totalMother"), 0);
+          if (typeof e.__asyncCallBack__ === "function") {
+            e.__asyncCallBack__();
+          }
+        });
+        instance.mode = modes[4];
+        colorFunc.call(this);
+      },
+    },
   ];
   this.menuMap = menuMap;
   let margin;
@@ -248,7 +338,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       menu.push({
         class: [ "hoverDefault", menuClassName ],
         attribute: [
-          { toggle: (i === 0) ? "on" : "off" },
+          { toggle: "off" },
           { index: String(i) },
           { mode: menuMap[i].mode }
         ],
@@ -297,7 +387,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
               left: String(indent) + ea,
               fontSize: "inherit",
               fontWeight: "inherit",
-              color: (i === 0 ? colorChip.green : "inherit"),
+              color: "inherit",
             }
           },
         ]
@@ -856,13 +946,789 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
 }
 
+DesignerConsoleJs.prototype.consoleDetailLaunching = function (desid) {
+  const instance = this;
+  const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
+  const totalMother = document.querySelector(".totalMother");
+  const standardBar = this.standardDoms[0].parentElement;
+  const { scrollTo, ajaxJson, colorChip } = GeneralJs;
+  let target, pastScrollTop;
+
+  pastScrollTop = totalMother.scrollTop;
+  this.desid = desid;
+  this.fixTargets = [];
+
+  window.history.pushState({ path: "console", status: "list", desid }, '');
+
+  if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
+    this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
+    this.mainBaseTong = null;
+    for (let i = 1; i < this.standardDoms.length; i++) {
+      this.standardDoms[i].style.color = colorChip.black;
+    }
+    if (this.iconTong !== undefined && this.iconTong !== null) {
+      this.iconTong.parentElement.removeChild(this.iconTong);
+    }
+    this.iconTong = null;
+    if (document.getElementById("memoTong") !== null) {
+      totalMother.removeChild(document.getElementById("memoTong"));
+    }
+  }
+
+  ajaxJson({
+    page: "console",
+    mode: "page",
+    who: instance.designer.information.phone,
+    desid,
+  }, "/ghostDesigner_updateAnalytics").then((message) => {
+    console.log(message);
+  }).catch((err) => {
+    console.log(err);
+  });
+
+  this.consoleDetail(desid);
+  this.checkListIconSet(desid);
+}
+
+DesignerConsoleJs.prototype.consoleDetail = function (desid) {
+  if (desid === undefined) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, findByAttribute, uniqueValue, swipePatch } = GeneralJs;
+  const { totalMother, ea, grayBarWidth, belowHeight, projectMap } = this;
+  const mobile = this.media[4];
+  const desktop = !mobile;
+  const token = "__split__";
+  const detailWhitePopupConst = "detailWhitePopupConst";
+  const { color, emoji, title, contents } = this.consoleStatics("all");
+  let designer;
+  let margin;
+  let baseTong0, baseTong1, baseTong;
+  let tempObj, nodeArr, subNodeArr;
+  let topMargin, leftMargin, bottomMargin;
+  let size;
+  let temp;
+  let tong;
+  let baseTongMarginBottom;
+  let baseTongPaddingTop, baseTongPaddingBottom;
+  let divisionEntireMap;
+  let baseArea;
+  let num, num2;
+  let areaBetween;
+  let innerPaddingTop;
+  let innerPaddingLeft;
+  let titleHeight;
+  let areaPaddingTop, areaPaddingLeft, areaPaddingBottom;
+  let areaTitleTop, areaTitleLeft;
+  let fontSize0, fontSize1, fontSize2, fontSize3;
+  let mainTitleTextTop, mainTitleTextLeft;
+  let countNumberBetween;
+  let countNumberTextTop;
+  let lastMargin;
+  let cardHeight;
+  let cardMargin;
+  let areaMinHeight;
+  let cards;
+  let whiteCard, nameWord, idWord;
+  let division;
+  let divideArr, sizeArr;
+  let totalStandard;
+  let tempSize;
+  let divideNumber;
+  let cardWidthConstant;
+  let fixedHeightSize;
+  let outerMargin;
+  let divisionMap;
+  let nameFontSize, nameWordTop;
+  let idFontSize, idWordTop;
+  let intend;
+  let between;
+  let requestNumber;
+  let whiteTong;
+  let whiteTongHeight;
+  let initialBoxNumber;
+  let initialDivide;
+  let colorAreaHeight0, colorAreaHeight1;
+  let colorAreaHeight;
+  let motherMargin;
+  let blockMargin;
+  let initialWordingSize;
+  let twinkleAdditional;
+  let twinkleTop;
+  let initialWordingTop;
+  let innerPaddingMiddle;
+  let innerPaddingHigh;
+  let mainTitleLineTop0, mainTitleLineTop1;
+  let initDescriptionIndent, initDescriptionPaddingTop;
+  let fifthTitleMarginTop, fifthTitleMarginBottom, fifthTitle;
+
+  designer = this.designers.pick(desid);
+  divisionEntireMap = projectMap.action.itemMap;
+  divisionMap = [];
+  for (let arr of divisionEntireMap) {
+    divisionMap = divisionMap.concat(arr[1]);
+  }
+
+  initialBoxNumber = title.length - 1;
+  initialDivide = <%% title.length - 1, 4, 2, 2, 2 %%>;
+
+  initialWordingSize = 43;
+  twinkleAdditional = 33;
+  initialWordingTop = 80;
+  twinkleTop = -3;
+  colorAreaHeight0 = 265;
+  colorAreaHeight1 = 160;
+  colorAreaHeight = colorAreaHeight0 + colorAreaHeight1;
+
+  motherMargin = 40;
+  blockMargin = 15;
+
+  whiteTongHeight = 360;
+
+  mainTitleLineTop0 = 10;
+  mainTitleLineTop1 = 2;
+
+  initDescriptionPaddingTop = 28;
+  initDescriptionIndent = 40;
+
+  fifthTitleMarginTop = 12;
+  fifthTitleMarginBottom = 16;
+  fifthTitle = title[title.length - 1];
+
+  cardWidthConstant = <%% 140, 140, 140, 140, 14 %%>;
+  fixedHeightSize = <%% 40, 40, 40, 40, 7 %%>;
+
+  margin = <%% 8, 8, 8, 8, 1 %%>;
+  topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
+  leftMargin = <%% 34, 34, 34, 34, 8 %%>;
+  bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 11 %%>;
+  baseTongMarginBottom = <%% 80, 80, 80, 80, 25 %%>;
+  size = <%% 16, 15, 15, 15, 3.5 %%>;
+
+  outerMargin = <%% 24, 24, 24, 24, 4 %%>;
+
+  baseTongPaddingTop = 1;
+  baseTongPaddingBottom = <%% 50, 50, 50, 50, 5 %%>;
+
+  areaBetween = <%% 13, 12, 12, 12, 1.5 %%>;
+  innerPaddingTop = <%% 24, 22, 20, 16, 5.2 %%>;
+  innerPaddingMiddle = <%% 30, 26, 24, 18, 5 %%>;
+  innerPaddingLeft = <%% 36, 32, 30, 24, 6 %%>;
+  innerPaddingHigh = <%% 42, 38, 36, 30, 6 %%>;
+  titleHeight = <%% 62, 58, 56, 52, 10.5 %%>;
+
+  areaPaddingTop = <%% (isMac() ? 48 : 47), (isMac() ? 48 : 47), (isMac() ? 46 : 45), (isMac() ? 44 : 43), 7.5 %%>;
+  areaPaddingLeft = <%% 15, 15, 15, 15, 0 %%>;
+  areaPaddingBottom = <%% 15, 15, 15, 15, 0 %%>;
+
+  areaTitleTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 1.8 %%>;
+  areaTitleLeft = <%% 20, 20, 20, 20, 3 %%>;
+
+  fontSize0 = <%% 25, 23, 22, 21, 4 %%>;
+  fontSize1 = <%% 16, 16, 15, 14, 2.8 %%>;
+  fontSize2 = <%% 14, 14, 13, 12, 3 %%>;
+  fontSize3 = <%% 12, 12, 11, 11, 2.5 %%>;
+
+  mainTitleTextTop = <%% -3, -3, -3, -3, 0 %%>;
+  mainTitleTextLeft = <%% 3, 3, 3, 3, 1 %%>;
+  countNumberBetween = <%% 9, 9, 9, 9, 1 %%>;
+  countNumberTextTop = <%% 1, 1, 1, 1, 0 %%>;
+
+  lastMargin = <%% 30, 30, 30, 30, 3 %%>;
+
+  cardHeight = <%% 40, 40, 40, 40, 6 %%>;
+  cardMargin = <%% 10, 10, 10, 10, 1.5 %%>;
+  areaMinHeight = cardHeight + (cardMargin * 2);
+
+  nameFontSize = <%% 14, 14, 14, 14, 2.8 %%>;
+  idFontSize = <%% 11, 11, 11, 11, 2.8 %%>;
+  nameWordTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), -0.3 %%>;
+  idWordTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), 3 %%>;
+  intend = <%% 16, 16, 16, 16, 4 %%>;
+  between = <%% 8, 8, 8, 8, 1 %%>;
+
+  cards = designer.projects;
+
+  divideArr = [];
+  sizeArr = [];
+  for (let i = 0; i < 5; i++) {
+    if (desktop) {
+      totalStandard = (window.innerWidth - this.grayBarWidth - (outerMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+    } else {
+      totalStandard = (100 - (outerMargin * 2) - (innerPaddingLeft * 2) - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+    }
+    divideNumber = Math.floor(totalStandard / (cardMargin + cardWidthConstant));
+    if (divideNumber === 0) {
+      divideNumber = 1;
+    }
+    tempSize = (totalStandard - (cardMargin * (divideNumber + 1))) / divideNumber;
+    divideArr.push(divideNumber);
+    sizeArr.push(tempSize);
+  }
+
+  if (mobile) {
+    totalMother.style.background = colorChip.gray2;
+  }
+
+  baseTong0 = createNode({
+    mother: totalMother,
+    class: [ "mainBaseTong" ],
+    style: {
+      position: "absolute",
+      top: desktop ? String(0) + ea : String(60) + "px",
+      left: String(grayBarWidth) + ea,
+      width: withOut(grayBarWidth, ea),
+      height: "auto",
+      animation: "",
+      paddingTop: String(colorAreaHeight0) + ea,
+    }
+  });
+
+  baseTong1 = createNode({
+    mother: baseTong0,
+    style: {
+      display: "block",
+      position: "relative",
+      background: colorChip.gray2,
+      paddingTop: String(motherMargin) + ea,
+      paddingBottom: String(baseTongPaddingBottom) + ea,
+      paddingLeft: String(motherMargin) + ea,
+      paddingRight: String(motherMargin) + ea,
+      width: withOut(motherMargin * 2, ea),
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          top: String(-1 * colorAreaHeight0) + ea,
+          left: String(0),
+          width: String(100) + '%',
+          height: String(colorAreaHeight) + ea,
+          background: color,
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          top: String(initialWordingTop - colorAreaHeight0) + ea,
+          left: String(motherMargin) + ea,
+          width: withOut(motherMargin * 2, ea),
+          textAlign: "center",
+        },
+        children: [
+          {
+            text: "안녕하세요" + emoji.replace(/^U\+/, "&#x") + ";&nbsp;" + designer.designer + " 디자이너님! <u%_%u>",
+            style: {
+              display: "block",
+              position: "relative",
+              fontSize: String(initialWordingSize) + ea,
+              fontWeight: String(700),
+              top: String(0),
+              color: colorChip.white,
+              textAlign: "center",
+            },
+            under: {
+              position: "relative",
+              top: String(twinkleTop) + ea,
+              fontSize: String(initialWordingSize + twinkleAdditional) + ea,
+              fontWeight: String(300),
+              color: colorChip.white,
+              animation: "twinkle 1.1s ease infinite"
+            }
+          },
+        ]
+      }
+    ]
+  });
+
+  for (let i = 0; i < initialBoxNumber; i++) {
+    whiteTong = createNode({
+      mother: baseTong1,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+        background: colorChip.white,
+        width: "calc(calc(100% - " + String(blockMargin * (initialDivide - 1)) + ea + ") / " + String(initialDivide) + ")",
+        marginRight: String(i % initialDivide === initialDivide - 1 ? 0 : blockMargin) + ea,
+        marginBottom: String(blockMargin) + ea,
+        paddingTop: String(innerPaddingMiddle) + ea,
+        paddingBottom: String(innerPaddingHigh) + ea,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            position: "relative",
+            paddingLeft: String(innerPaddingLeft) + ea,
+            paddingRight: String(innerPaddingLeft) + ea,
+            width: withOut(innerPaddingLeft * 2, ea),
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                position: "relative",
+                textAlign: "left",
+              },
+              children: [
+                {
+                  text: title[i],
+                  style: {
+                    display: "block",
+                    fontSize: String(fontSize0) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
+                  }
+                },
+                {
+                  style: {
+                    display: "block",
+                    height: String(mainTitleLineTop0) + ea,
+                    borderBottom: "1px solid " + color,
+                  }
+                },
+                {
+                  style: {
+                    display: "block",
+                    height: String(mainTitleLineTop1) + ea,
+                    borderBottom: "1px solid " + color,
+                  }
+                },
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "row",
+                    paddingTop: String(initDescriptionPaddingTop) + ea,
+                  },
+                  children: [
+                    {
+                      text: String(i + 1),
+                      style: {
+                        position: "relative",
+                        top: String(-1) + ea,
+                        fontSize: String(fontSize2) + ea,
+                        lineHeight: String(1.6),
+                        fontWeight: String(700),
+                        color: color,
+                        textAlign: "left",
+                        marginRight: String(initDescriptionIndent) + ea,
+                      }
+                    },
+                    {
+                      text: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + contents[i][desktop ? 0 : 1],
+                      style: {
+                        display: "block",
+                        fontSize: String(fontSize2) + ea,
+                        lineHeight: String(1.6),
+                        fontWeight: String(400),
+                        color: colorChip.black,
+                        textAlign: "right",
+                      },
+                      bold: {
+                        fontSize: String(fontSize2) + ea,
+                        fontWeight: String(600),
+                        color: colorChip.black,
+                      }
+                    },
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    });
+  }
+
+  baseTong = createNode({
+    mother: baseTong1,
+    style: {
+      display: "block",
+      position: "relative",
+      top: String(0) + ea,
+      left: String(0) + ea,
+      width: String(100) + '%',
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: colorChip.white,
+      overflow: "hidden",
+      marginBottom: String(baseTongMarginBottom) + ea,
+      paddingTop: String(innerPaddingTop) + ea,
+      paddingBottom: String(baseTongPaddingBottom) + ea,
+    }
+  });
+
+  division = new Map();
+
+  createNode({
+    mother: baseTong,
+    style: {
+      display: "block",
+      position: "relative",
+      height: String(titleHeight) + ea,
+      paddingLeft: String(innerPaddingLeft) + ea,
+      marginTop: String(fifthTitleMarginTop) + ea,
+      marginBottom: String(fifthTitleMarginBottom) + ea,
+    },
+    children: [
+      {
+        text: fifthTitle,
+        style: {
+          fontSize: String(fontSize0) + ea,
+          fontWeight: String(600),
+          color: colorChip.black,
+          position: "relative",
+        }
+      },
+      {
+        style: {
+          display: "block",
+          width: withOut(innerPaddingLeft * 1, ea),
+          height: String(mainTitleLineTop0) + ea,
+          borderBottom: "1px solid " + color,
+        }
+      },
+      {
+        style: {
+          display: "block",
+          width: withOut(innerPaddingLeft * 1, ea),
+          height: String(mainTitleLineTop1) + ea,
+          borderBottom: "1px solid " + color,
+        }
+      },
+    ]
+  });
+
+  for (let [ title, subTitles ] of divisionEntireMap) {
+
+    createNode({
+      mother: baseTong,
+      style: {
+        display: "flex",
+        position: "relative",
+        alignItems: "center",
+        height: String(titleHeight) + ea,
+        paddingLeft: String(innerPaddingLeft) + ea,
+      },
+      children: [
+        {
+          text: title,
+          style: {
+            fontSize: String(fontSize0) + ea,
+            fontWeight: String(600),
+            color: colorChip.black,
+            position: "relative",
+            top: String(mainTitleTextTop) + ea,
+          }
+        }
+      ]
+    });
+
+    num2 = 0;
+    for (let subTitle of subTitles) {
+      baseArea = createNode({
+        mother: baseTong,
+        style: {
+          display: "flex",
+          flexDirection: "row",
+          position: "relative",
+          paddingLeft: String(innerPaddingLeft) + ea,
+          width: withOut(innerPaddingLeft * 2, ea),
+          marginBottom: String(num2 !== subTitles.length - 1 ? areaBetween : lastMargin) + ea,
+        },
+      });
+      num = 0;
+      for (let sub of subTitle) {
+        tong = createNode({
+          mother: baseArea,
+          style: {
+            verticalAlign: "top",
+            position: "relative",
+            borderRadius: String(5) + "px",
+            border: "1px dashed " + colorChip.gray4,
+            boxSizing: "border-box",
+            width: "calc(calc(100% - " + String(areaBetween * (subTitle.length - 1)) + ea + ") / " + String(subTitle.length) + ")",
+            marginRight: String(num !== subTitle.length - 1 ? areaBetween : 0) + ea,
+            paddingTop: String(areaPaddingTop) + ea,
+            paddingLeft: String(areaPaddingLeft) + ea,
+            paddingRight: String(areaPaddingLeft) + ea,
+            paddingBottom: String(areaPaddingBottom) + ea,
+          },
+          children: [
+            {
+              style: {
+                display: "block",
+                position: "absolute",
+                width: withOut(areaTitleLeft * 2, ea),
+                top: String(areaTitleTop) + ea,
+                left: String(areaTitleLeft) + ea,
+              },
+              children: [
+                {
+                  text: sub,
+                  style: {
+                    display: "inline-block",
+                    position: "relative",
+                    fontSize: String(fontSize1) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
+                  }
+                },
+                {
+                  text: String(0) + "명",
+                  style: {
+                    display: desktop ? "inline-block" : "none",
+                    position: "relative",
+                    fontSize: String(fontSize2) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.deactive,
+                    top: String(countNumberTextTop) + ea,
+                    marginLeft: String(countNumberBetween) + ea,
+                  }
+                }
+              ]
+            },
+            {
+              attribute: {
+                kinds: "area",
+                name: sub,
+                action: sub,
+                family: JSON.stringify(subTitle),
+                length: String(subTitle.length),
+                size: String(sizeArr[subTitle.length - 1]),
+                divide: String(divideArr[subTitle.length - 1]),
+              },
+              event: {
+                dragenter: (e) => { e.preventDefault(); },
+                dragleave: function (e) {
+                  e.preventDefault();
+                  this.style.background = colorChip.gray1;
+                  this.parentElement.firstChild.style.color = colorChip.black;
+                },
+                dragover: function (e) {
+                  e.preventDefault();
+                  this.style.background = colorChip.whiteGreen;
+                  this.parentElement.firstChild.style.color = colorChip.green;
+                },
+                drop: async function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const name = this.getAttribute("name");
+                  const length = Number(this.getAttribute("length"));
+                  const size = Number(this.getAttribute("size"));
+                  const divide = Number(this.getAttribute("divide"));
+                  const proid = e.dataTransfer.getData("dragData").split(token)[0];
+                  const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
+                  const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
+                  const card = findByAttribute(instance.whiteCards, [ "proid", "request" ], [ proid, String(requestNumber) ]);
+                  const from = division.get(fromAction);
+                  const fromSize = Number(from.getAttribute("size"));
+                  const fromName = from.getAttribute("name");
+                  const fromDivide = Number(from.getAttribute("divide"));
+                  instance.randomToken = uniqueValue();
+                  try {
+                    let thisChildren;
+                    let thisChildrenLength;
+
+                    this.style.background = colorChip.gray1;
+                    this.parentElement.firstChild.style.color = colorChip.black;
+                    this.appendChild(card);
+
+                    thisChildren = this.children;
+                    thisChildrenLength = thisChildren.length;
+                    for (let c of thisChildren) {
+                      c.style.width = String(size) + ea;
+                    }
+
+                  } catch (e) {
+                    console.log(e);
+                  }
+                },
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                background: colorChip.gray1,
+                minHeight: String(areaMinHeight - cardMargin) + ea,
+                height: withOut(cardMargin, ea),
+                borderRadius: String(5) + "px",
+                paddingBottom: String(cardMargin) + ea,
+                borderTopRightRadius: desktop ? "" : String(0),
+                borderTopLeftRadius: desktop ? "" : String(0),
+              }
+            }
+          ]
+        });
+        division.set(sub, tong.children[1]);
+        num++;
+      }
+      num2++;
+    }
+  }
+
+  this.whiteCards = [];
+  for (let obj of cards) {
+    whiteCard = createNode({
+      mother: division.get(obj.process.action),
+      attribute: {
+        kinds: "card",
+        action: obj.process.action,
+        proid: obj.proid,
+        cliid: obj.cliid,
+        draggable: "true",
+        request: String(obj.requestNumber),
+      },
+      event: {
+        dragstart: function (e) {
+          e.dataTransfer.setData("dragData", this.getAttribute("proid") + token + this.getAttribute("action") + token + this.getAttribute("request"));
+        },
+        dragend: function (e) {
+          e.preventDefault();
+        },
+        dragenter: function (e) {
+          e.preventDefault();
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+        },
+        click: function (e) {
+          const proid = this.getAttribute("proid");
+          const action = this.getAttribute("action");
+          const requestNumber = Number(this.getAttribute("request"));
+          const cliid = this.getAttribute("cliid");
+          const totalMother = document.querySelector(".totalMother");
+          const zIndex = 2;
+          let cancelBack, whiteBox;
+          let whiteMargin;
+          let whiteResult;
+
+          whiteMargin = <%% 40, 40, 40, 40, 4 %%>;
+          cancelBack = createNode({
+            mother: totalMother,
+            event: {
+              click: function (e) {
+                document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+              }
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(instance.grayBarWidth) + ea,
+              width: withOut(instance.grayBarWidth, ea),
+              height: desktop ? withOut(belowHeight, ea) : String(100) + "vh",
+              background: colorChip.shadow,
+              zIndex: String(zIndex),
+              animation: "justfadeinmiddle 0.3s ease forwards",
+            }
+          });
+          whiteBox = createNode({
+            mother: totalMother,
+            class: [ detailWhitePopupConst ],
+            style: {
+              position: "fixed",
+              top: String(whiteMargin) + ea,
+              left: String(instance.grayBarWidth + whiteMargin) + ea,
+              width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
+              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100vh - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight) + "px)",
+              background: colorChip.white,
+              borderRadius: String(5) + "px",
+              zIndex: String(zIndex),
+              boxShadow: "0px 3px 15px -9px " + colorChip.darkDarkShadow,
+              animation: "fadeup 0.3s ease forwards",
+            }
+          });
+
+          whiteResult = instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
+
+          if (!whiteResult) {
+            cancelBack.click();
+          } else {
+
+            if (mobile) {
+              if (mobile) {
+                swipePatch({
+                  left: (e) => {
+                    if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                    }
+                  },
+                  right: (e) => {
+                    if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                    }
+                  },
+                });
+              }
+            }
+
+          }
+        }
+      },
+      style: {
+        display: desktop ? "inline-block" : "inline-flex",
+        position: "relative",
+        width: desktop ? String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea : "calc(" + String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea + " - " + String(2 / divideArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + "px" + ")",
+        height: String(fixedHeightSize) + ea,
+        marginLeft: String(cardMargin) + ea,
+        marginTop: String(cardMargin) + ea,
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        cursor: "pointer",
+        justifyContent: desktop ? "" : "center",
+        alignItems: desktop ? "" : "center",
+      }
+    });
+
+    nameWord = createNode({
+      mother: whiteCard,
+      text: obj.name,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontSize: String(nameFontSize) + ea,
+        fontWeight: String(500),
+        top: String(nameWordTop) + ea,
+        marginLeft: String(intend) + ea,
+        color: desktop ? colorChip.black : colorChip.green,
+        cursor: "pointer",
+      }
+    });
+
+    idWord = createNode({
+      mother: whiteCard,
+      text: obj.proid,
+      style: {
+        display: desktop ? "inline-block" : "none",
+        position: "relative",
+        fontSize: String(idFontSize) + ea,
+        fontWeight: String(400),
+        top: String(nameWordTop) + ea,
+        marginLeft: String(between) + ea,
+        color: colorChip.green,
+        cursor: "pointer",
+      }
+    });
+
+    this.whiteCards.push(whiteCard);
+  }
+
+  this.mainBaseTong = baseTong0;
+}
+
 DesignerConsoleJs.prototype.consoleView = async function () {
   const instance = this;
   try {
     const loading = await this.mother.loadingRun();
-    const middleMode = /middle/gi.test(window.location.pathname);
+    const middleMode = true;
     this.backGrayBar();
-    await this.spreadData(null, true, middleMode ? "middle" : null);
+    await this.spreadData(null, true, "middle");
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson, scrollTo, setQueue } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight, media, desid, tabletWidth } = this;
     const mobile = media[4];
@@ -886,24 +1752,18 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     let targetIndex;
     let eventObject;
 
-    if (!middleMode) {
-      designers = await ajaxJson({ noFlat: true, whereQuery: { "information.contract.status": { $not: { $regex: "해지" } } } }, "/getDesigners", { equal: true });
-      length = designers.length;
-      this.designers = new Designers(designers);
-    } else {
-      designers = await ajaxJson({ noFlat: true, whereQuery: { desid: getObj.desid } }, "/getDesigners", { equal: true });
-      if (designers.length === 0) {
-        throw new Error("invaild desid");
-      }
-      length = designers.length;
-      this.designers = new Designers(designers);
-      this.designer = this.designers.pick(getObj.desid);
+    designers = await ajaxJson({ noFlat: true, whereQuery: { desid: getObj.desid } }, "/getDesigners", { equal: true });
+    if (designers.length === 0) {
+      throw new Error("invaild desid");
     }
+    length = designers.length;
+    this.designers = new Designers(designers);
+    this.designer = this.designers.pick(getObj.desid);
 
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request", "possible" ];
-    this.mode = this.modes[0];
+    this.modes = [ "checklist", "report", "request", "possible", "project" ];
+    this.mode = "console";
     this.result = null;
     this.searchCondition = {
       mode: "or",
@@ -911,18 +1771,18 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       blocks: [],
     };
 
+    this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: this.desid } }, "/getProjects", { equal: true });
+    this.clients = await ajaxJson({ noFlat: true, whereQuery: { $or: [ ...new Set(this.projects.map((obj) => { return obj.cliid; })) ].map((cliid) => { return { cliid }; }) } }, "/getClients", { equal: true })
+    this.designers.setProjects(this.projects);
+    this.designers.setClients(this.clients);
+
     motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
     this.firstTop = this.standardDoms[1].getBoundingClientRect().top;
     this.motherHeight = motherHeight;
 
-    //sse
-    if (!this.middleMode) {
-      const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-      es.addEventListener("updateTong", (e) => {
-        instance.checkListSseParsing(equalJson(e.data));
-      });
-    }
+    this.projectMap = await ajaxJson({ method: "projectMap" }, "/getDataPatch");
+    this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
 
     loading.parentNode.removeChild(loading);
 
@@ -936,47 +1796,37 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       let targets, targetIndex;
       e.preventDefault();
       if (instance.pageHistory.length > 1) {
-        if (!middleMode) {
-          if (getObj.mode === instance.pageHistory[1].path) {
-            instance.checkListDetailLaunching(instance.pageHistory[1].desid);
-            instance.pageHistory.shift();
-            instance.pageHistory.shift();
+        targets = document.querySelectorAll(".leftMenus");
+        if (instance.pageHistory[1].status === "page") {
+          if (targets[instance.pageHistory[1].index] !== undefined) {
+            targets[instance.pageHistory[1].index].click();
+          } else if (instance.menuMap[instance.pageHistory[1].index] !== undefined) {
+            instance.menuMap[instance.pageHistory[1].index].event.call(({
+              getAttribute: (index) => {
+                return instance.pageHistory[1].index;
+              }
+            }));
           }
-        } else {
-
-          targets = document.querySelectorAll(".leftMenus");
-          if (instance.pageHistory[1].status === "page") {
-            if (targets[instance.pageHistory[1].index] !== undefined) {
-              targets[instance.pageHistory[1].index].click();
-            } else if (instance.menuMap[instance.pageHistory[1].index] !== undefined) {
-              instance.menuMap[instance.pageHistory[1].index].event.call(({
-                getAttribute: (index) => {
-                  return instance.pageHistory[1].index;
-                }
-              }));
-            }
-            instance.pageHistory.shift();
-            instance.pageHistory.shift();
-          } else if (instance.pageHistory[1].status === "card") {
-            if (targets[instance.pageHistory[1].index] !== undefined) {
-              targets[instance.pageHistory[1].index].click();
-            } else if (instance.menuMap[instance.pageHistory[1].index] !== undefined) {
-              instance.menuMap[instance.pageHistory[1].index].event.call(({
-                getAttribute: (index) => {
-                  return instance.pageHistory[1].index;
-                }
-              }));
-            }
-            instance.pageHistory.shift();
-            instance.pageHistory.shift();
+          instance.pageHistory.shift();
+          instance.pageHistory.shift();
+        } else if (instance.pageHistory[1].status === "card") {
+          if (targets[instance.pageHistory[1].index] !== undefined) {
+            targets[instance.pageHistory[1].index].click();
+          } else if (instance.menuMap[instance.pageHistory[1].index] !== undefined) {
+            instance.menuMap[instance.pageHistory[1].index].event.call(({
+              getAttribute: (index) => {
+                return instance.pageHistory[1].index;
+              }
+            }));
           }
-
+          instance.pageHistory.shift();
+          instance.pageHistory.shift();
         }
       }
     });
 
     //launching
-    this.checkListDetailLaunching(this.desid);
+    this.consoleDetailLaunching(this.desid);
     this.navigatorLaunching();
 
     if (this.menuMap !== undefined && getObj.mode !== undefined && getObj.cliid !== undefined) {
@@ -1035,6 +1885,7 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
       "report.js",
       "request.js",
       "possible.js",
+      "project.js",
     ];
 
     await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
@@ -1045,8 +1896,8 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     this.grayBarWidth = <%% 210, 180, 0, 0, 0 %%>;
     this.tabletWidth = <%% 0, 0, 148, 140, 0 %%>;
     this.belowHeight = 0;
-    this.modes = [ "checklist", "report", "request", "possible" ];
-    this.mode = this.modes[0];
+    this.modes = [ "checklist", "report", "request", "possible", "project" ];
+    this.mode = "console";
     this.desid = getObj.desid;
 
     if (this.desid === "d1701_aa01s") {

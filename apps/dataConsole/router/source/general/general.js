@@ -716,6 +716,24 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes loadingrotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
   @keyframes fadecancel{from{opacity:0}to{opacity:0.2}}
 
+  @keyframes twinkle {
+    from {
+      opacity: 1;
+    }
+    49% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    99% {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   @keyframes rotateProgress {
     from {
       transform: rotate(0deg);

@@ -166,7 +166,7 @@ DesignerJs.prototype.requestReturnStatic = function (designer, project, client, 
       className: "mainContents_progress",
       position: "request.about.progress",
       contents: emptyReload(projectHistory.request.about.progress, [ "기타 관련 상세 사항 없음" ]),
-      spread: false,
+      spread: true,
     }
   ];
   const pictureContents = "고객님이 선택한 사진";
@@ -3478,7 +3478,7 @@ DesignerJs.prototype.requestView = async function () {
     this.designers = new Designers(designers);
     this.desid = (getObj.desid !== undefined) ? getObj.desid : this.standardDoms[this.standardDoms.length - 1].getAttribute("desid");
     this.middleMode = middleMode;
-    this.modes = [ "checklist", "report", "request", "possible" ];
+    this.modes = [ "checklist", "report", "request", "possible", "project" ];
     this.mode = this.modes[2];
     this.result = null;
     this.searchCondition = {

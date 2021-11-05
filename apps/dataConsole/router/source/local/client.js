@@ -2777,11 +2777,12 @@ ClientJs.prototype.makeBoard = function (cases) {
       mother: whiteCard,
       text: obj.name,
       style: {
-        position: "absolute",
+        display: "inline-block",
+        position: "relative",
         fontSize: String(nameFontSize) + ea,
         fontWeight: String(500),
         top: String(titleTop) + ea,
-        left: String(intend) + ea,
+        marginLeft: String(intend) + ea,
         color: GeneralJs.colorChip.black,
         cursor: "pointer",
       }
@@ -2791,11 +2792,12 @@ ClientJs.prototype.makeBoard = function (cases) {
       mother: whiteCard,
       text: obj.cliid,
       style: {
-        position: "absolute",
+        display: "inline-block",
+        position: "relative",
         fontSize: String(fontSize) + ea,
         fontWeight: String(400),
-        top: String(idWordTop) + ea,
-        left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
+        top: String(titleTop) + ea,
+        marginLeft: String(between) + ea,
         color: (obj.important && !obj.curation.analytics.full) ? colorChip.red : (obj.curation.analytics.full ? colorChip.purple : colorChip.green),
         cursor: "pointer",
       }

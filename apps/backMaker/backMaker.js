@@ -3366,6 +3366,13 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
         career: "",
         issue: "",
         manager: "-",
+        console: {
+          analytics: {
+            page: [],
+            update: [],
+            send: [],
+          },
+        },
         checklist: {
           analytics: {
             page: [],
@@ -3392,7 +3399,14 @@ BackMaker.prototype.createHistory = async function (method, updateQuery, option 
             update: [],
             send: [],
           },
-        }
+        },
+        project: {
+          analytics: {
+            page: [],
+            update: [],
+            send: [],
+          },
+        },
       };
     } else if (/project/gi.test(method)) {
       collection = "projectHistory";

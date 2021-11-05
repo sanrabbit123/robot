@@ -3062,11 +3062,12 @@ ProjectJs.prototype.makeBoard = function (cases) {
       mother: whiteCard,
       text: obj.name,
       style: {
-        position: "absolute",
+        display: "inline-block",
+        position: "relative",
         fontSize: String(nameFontSize) + ea,
         fontWeight: String(500),
         top: String(titleTop) + ea,
-        left: String(intend) + ea,
+        marginLeft: String(intend) + ea,
         color: GeneralJs.colorChip.black,
         cursor: "pointer",
       }
@@ -3076,11 +3077,12 @@ ProjectJs.prototype.makeBoard = function (cases) {
       mother: whiteCard,
       text: obj.proid,
       style: {
-        position: "absolute",
+        display: "inline-block",
+        position: "relative",
         fontSize: String(fontSize) + ea,
         fontWeight: String(400),
-        top: String(idWordTop) + ea,
-        left: String(intend + nameWord.getBoundingClientRect().width + between) + ea,
+        top: String(titleTop) + ea,
+        marginLeft: String(between) + ea,
         color: colorChip.green,
         cursor: "pointer",
       }
