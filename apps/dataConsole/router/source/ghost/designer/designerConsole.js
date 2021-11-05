@@ -1308,7 +1308,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
                   event: {
                     click: function (e) {
                       const targetIndex = Number(this.getAttribute("index"));
-
+                      // DEV
                       if (targetIndex === 1) {
                         window.alert("아직 서비스 오픈 전입니다!");
                       } else {
@@ -1322,7 +1322,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
                           }, {});
                         }
                       }
-
+                      // DEV
                     }
                   },
                   style: {
