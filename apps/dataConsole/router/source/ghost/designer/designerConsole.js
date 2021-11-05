@@ -47,7 +47,7 @@ const DesignerConsoleJs = function () {
 
 DesignerConsoleJs.prototype.consoleStatics = function (mode = "random") {
   const instance = this;
-  let color, emoji, title, contents;
+  let color, emoji, title, contents, index;
 
   color = [
     "darkseagreen",
@@ -95,6 +95,13 @@ DesignerConsoleJs.prototype.consoleStatics = function (mode = "random") {
     ],
   ];
 
+  index = [
+    0,
+    4,
+    1,
+    6
+  ];
+
   if (mode === "random") {
 
     color = color[Math.floor(Math.random() * color.length)];
@@ -104,14 +111,14 @@ DesignerConsoleJs.prototype.consoleStatics = function (mode = "random") {
 
   } else if (mode === "dashboard") {
 
-    return { title, contents };
+    return { title, contents, index };
 
   } else if (mode === "all") {
 
     color = color[Math.floor(Math.random() * color.length)];
     emoji = emoji[Math.floor(Math.random() * emoji.length)];
 
-    return { color, emoji, title, contents };
+    return { color, emoji, title, contents, index };
 
   } else {
     throw new Error("invaild mode");
@@ -1019,7 +1026,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   const desktop = !mobile;
   const token = "__split__";
   const detailWhitePopupConst = "detailWhitePopupConst";
-  const { color, emoji, title, contents } = this.consoleStatics("all");
+  const { color, emoji, title, contents, index } = this.consoleStatics("all");
   let designer;
   let margin;
   let baseTong0, baseTong1, baseTong;
@@ -1295,12 +1302,27 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
               children: [
                 {
                   text: title[i],
+                  attribute: {
+                    index: String(index[i])
+                  },
                   event: {
                     click: function (e) {
-                      if (mobile) {
-                        console.log(instance.mobileNavigator);
-                        instance.mobileNavigator.children[0].firstChild.click();
+                      const targetIndex = Number(this.getAttribute("index"));
+
+                      if (targetIndex === 1) {
+                        window.alert("아직 서비스 오픈 전입니다!");
+                      } else {
+                        if (document.querySelectorAll(".leftMenus").length > 0) {
+                          instance.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex], {});
+                        } else {
+                          instance.menuMap[targetIndex].event.call({
+                            getAttribute: (index) => {
+                              return targetIndex;
+                            }
+                          }, {});
+                        }
                       }
+
                     }
                   },
                   style: {
