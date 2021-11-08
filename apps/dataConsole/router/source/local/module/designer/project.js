@@ -1691,9 +1691,7 @@ DesignerJs.prototype.projectSseParsing = function (raw) {
           loop = [ fromArea, toArea ];
 
           if (card.parentElement !== toArea) {
-
             toArea.appendChild(card);
-
             for (let self of loop) {
               name = self.getAttribute("name");
               divide = Number(self.getAttribute("divide"));
@@ -1709,19 +1707,14 @@ DesignerJs.prototype.projectSseParsing = function (raw) {
             card.setAttribute("action", name);
 
             instance.designer.projects.find((obj) => { return obj.proid === proid }).process.action = name;
-
           }
 
         }, debounceNameConst + String(num));
 
         num++;
       }
-
     }
   }
-
-
-
 }
 
 DesignerJs.prototype.projectView = async function () {
