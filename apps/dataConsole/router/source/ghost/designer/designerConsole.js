@@ -563,7 +563,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
           top: String(0),
           right: String(0),
           width: String(98) + "vw",
-          height: String(100) + "vh",
+          height: String(100) + "%",
           zIndex: String(3),
         };
         for (let i in style) {
@@ -1670,7 +1670,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
               top: String(0),
               left: String(instance.grayBarWidth) + ea,
               width: withOut(instance.grayBarWidth, ea),
-              height: desktop ? withOut(belowHeight, ea) : String(100) + "vh",
+              height: desktop ? withOut(belowHeight, ea) : String(100) + "%",
               background: colorChip.shadow,
               zIndex: String(zIndex),
               animation: "justfadeinmiddle 0.3s ease forwards",
@@ -1684,7 +1684,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
               top: desktop ? String(whiteMargin) + ea : "calc(" + String(whiteMargin) + ea + " + " + String(mobileNavigatorHeight) + "px" + ")",
               left: String(instance.grayBarWidth + whiteMargin) + ea,
               width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
-              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100vh - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight + mobileNavigatorHeight) + "px)",
+              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100% - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight + mobileNavigatorHeight) + "px)",
               background: colorChip.white,
               borderRadius: String(5) + "px",
               zIndex: String(zIndex),

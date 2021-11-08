@@ -1407,9 +1407,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "김태완",
-    //     designer: "김윤진",
-    //     link: "https://drive.google.com/drive/folders/187gPvG2Uogcwihbj0zTkUPxRhgylTB5e",
+    //     client: "이해정",
+    //     designer: "김소영",
+    //     link: "https://drive.google.com/drive/folders/1mAZBi37ESr199kSRTz9yND2OgXcHK9Ix",
     //     pay: true
     //   },
     // ]);
@@ -1435,7 +1435,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "이미영", "2021-10-12" ],
+    //   [ "강주현", "2021-11-08" ],
     // ]);
 
 
@@ -1444,16 +1444,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2110_aa02s", [
-    //   { porlid: "a84", index: 1 },
-    //   { porlid: "a84", index: 3 },
-    //   { porlid: "a84", index: 6 },
-    //   { porlid: "a84", index: 9 },
-    //   { porlid: "a84", index: 13 },
+    // await this.setProposalSettingForDesigner("d2111_aa01s", [
+    //   { porlid: "ghost", index: 5 },
+    //   { porlid: "ghost", index: 2 },
+    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 4 },
+    //   { porlid: "ghost", index: 7 },
+    //   { porlid: "ghost", index: 1 },
     // ], [
-    //   "고객님의 선호 스타일에 최대한 맞추어 조정하는 편입니다.",
-    //   "고객의 라이프스타일을 조금은 꼼꼼하게 체크하는 편입니다.",
-    //   "주어진 시간에 최대한 충실하려고 계획하는 편입니다."
+    //   "그 집의 구성원, 패턴, 니즈를 모두 반영하여 고객 중심의 공간을 만듭니다.",
+    //   "새롭거나 놀라워 의외의 느낌을 주는 동시에 실용적인 공간을 만듭니다.",
+    //   "최소한의 가구와 패브릭, 그리고 소품으로 단순하고 세련된 스타일을 구사합니다."
     // ]);
 
 
