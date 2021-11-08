@@ -1063,7 +1063,6 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   let divideNumber;
   let cardWidthConstant;
   let fixedHeightSize;
-  let outerMargin;
   let divisionMap;
   let nameFontSize, nameWordTop;
   let idFontSize, idWordTop;
@@ -1089,6 +1088,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   let fifthTitleMarginTop, fifthTitleMarginBottom, fifthTitle;
   let whiteFlexNum;
   let grayBarWidthMinus;
+  let numbers;
 
   designer = this.designers.pick(desid);
   divisionEntireMap = projectMap.action.itemMap;
@@ -1134,8 +1134,6 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   baseTongMarginBottom = <%% 80, 80, 80, 80, 25 %%>;
   size = <%% 16, 15, 15, 15, 3.5 %%>;
 
-  outerMargin = <%% 24, 24, 24, 24, 4 %%>;
-
   baseTongPaddingTop = 1;
   baseTongPaddingBottom = <%% 50, 50, 50, 50, 5 %%>;
 
@@ -1176,17 +1174,16 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   intend = <%% 16, 16, 16, 16, 4 %%>;
   between = <%% 8, 8, 8, 8, 1 %%>;
 
-  grayBarWidthMinus = <%% this.grayBarWidth, this.grayBarWidth, (-1 * this.tabletWidth), (-1 * this.tabletWidth), this.grayBarWidth %%>;
-
+  grayBarWidthMinus = this.grayBarWidth;
   cards = designer.projects;
 
   divideArr = [];
   sizeArr = [];
   for (let i = 0; i < 5; i++) {
     if (desktop) {
-      totalStandard = (window.innerWidth - grayBarWidthMinus - (outerMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+      totalStandard = (window.innerWidth - grayBarWidthMinus - (motherMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
     } else {
-      totalStandard = (100 - (outerMargin * 2) - (innerPaddingLeft * 2) - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+      totalStandard = (100 - (motherMargin * 2) - (innerPaddingLeft * 2) - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
     }
     divideNumber = Math.floor(totalStandard / (cardMargin + cardWidthConstant));
     if (divideNumber === 0) {
@@ -1433,6 +1430,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
     }
   });
 
+  numbers = new Map();
   division = new Map();
 
   createNode({
@@ -1634,6 +1632,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
             }
           ]
         });
+        numbers.set(sub, tong.children[0].children[1]);
         division.set(sub, tong.children[1]);
         num++;
       }
@@ -1791,6 +1790,11 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
 
     this.whiteCards.push(whiteCard);
   }
+
+  numbers.forEach((value, key) => {
+    numbers.get(key).textContent = String(division.get(key).children.length) + "명";
+    numbers.get(key).setAttribute("number", String(division.get(key).children.length));
+  });
 
   this.divisionMap = division;
   this.mainBaseTong = baseTong0;

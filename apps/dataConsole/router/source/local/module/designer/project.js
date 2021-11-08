@@ -146,6 +146,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   let between;
   let requestNumber;
   let grayBarWidthMinus;
+  let numbers;
 
   designer = this.designers.pick(desid);
   divisionEntireMap = projectMap.action.itemMap;
@@ -204,12 +205,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   intend = <%% 16, 16, 16, 16, 4 %%>;
   between = <%% 8, 8, 8, 8, 1 %%>;
 
-  if (middleMode) {
-    grayBarWidthMinus = <%% this.grayBarWidth, this.grayBarWidth, (-1 * this.tabletWidth), (-1 * this.tabletWidth), this.grayBarWidth %%>;
-  } else {
-    grayBarWidthMinus = this.grayBarWidth;
-  }
-
+  grayBarWidthMinus = this.grayBarWidth;
   cards = designer.projects;
 
   divideArr = [];
@@ -264,6 +260,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
     }
   });
 
+  numbers = new Map();
   division = new Map();
   for (let [ title, subTitles ] of divisionEntireMap) {
 
@@ -426,6 +423,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
             }
           ]
         });
+        numbers.set(sub, tong.children[0].children[1]);
         division.set(sub, tong.children[1]);
         num++;
       }
@@ -583,6 +581,11 @@ DesignerJs.prototype.projectDetail = function (desid) {
 
     this.whiteCards.push(whiteCard);
   }
+
+  numbers.forEach((value, key) => {
+    numbers.get(key).textContent = String(division.get(key).children.length) + "명";
+    numbers.get(key).setAttribute("number", String(division.get(key).children.length));
+  });
 
   this.divisionMap = division;
   this.mainBaseTong = baseTong0;
@@ -1692,16 +1695,20 @@ DesignerJs.prototype.projectSseParsing = function (raw) {
             toArea.appendChild(card);
 
             for (let self of loop) {
-
               name = self.getAttribute("name");
-
-              self.parentElement.children[1].setAttribute("number", String(self.children.length));
-              self.parentElement.children[1].textContent = String(self.children.length) + "명";
-
+              divide = Number(self.getAttribute("divide"));
+              size = Number(self.getAttribute("size"));
+              for (let c of self.children) {
+                c.style.width = String(size) + ea;
+              }
+              self.parentElement.children[0].children[1].setAttribute("number", String(self.children.length));
+              self.parentElement.children[0].children[1].textContent = String(self.children.length) + "명";
             }
 
             name = toArea.getAttribute("name");
             card.setAttribute("action", name);
+
+            instance.designer.projects.find((obj) => { return obj.proid === proid }).process.action = name;
 
           }
 
