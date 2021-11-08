@@ -1029,7 +1029,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   const { color, emoji, title, contents, index } = this.consoleStatics("all");
   let designer;
   let margin;
-  let baseTong0, baseTong1, baseTong;
+  let baseTong0, baseTong1, baseTong2, baseTong;
   let tempObj, nodeArr, subNodeArr;
   let topMargin, leftMargin, bottomMargin;
   let size;
@@ -1087,6 +1087,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   let mainTitleLineTop0, mainTitleLineTop1;
   let initDescriptionIndent, initDescriptionPaddingTop;
   let fifthTitleMarginTop, fifthTitleMarginBottom, fifthTitle;
+  let whiteFlexNum;
 
   designer = this.designers.pick(desid);
   divisionEntireMap = projectMap.action.itemMap;
@@ -1096,7 +1097,8 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   }
 
   initialBoxNumber = title.length - 1;
-  initialDivide = <%% title.length - 1, 2, 2, 2, 2 %%>;
+  initialDivide = <%% 4, 2, 2, 2, 2 %%>;
+  whiteFlexNum = Math.ceil(initialBoxNumber / initialDivide);
 
   initialWordingSize = <%% 43, 40, 36, 32, 5 %%>;
   twinkleAdditional = <%% 33, 30, 22, 2, 3 %%>;
@@ -1267,129 +1269,147 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
     ]
   });
 
-  for (let i = 0; i < initialBoxNumber; i++) {
-    whiteTong = createNode({
+  for (let z = 0; z < whiteFlexNum; z++) {
+
+    baseTong2 = createNode({
       mother: baseTong1,
       style: {
-        display: "inline-block",
-        position: "relative",
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-        background: colorChip.white,
-        width: "calc(calc(100% - " + String(blockMargin * (initialDivide - 1)) + ea + ") / " + String(initialDivide) + ")",
-        marginRight: String(i % initialDivide === initialDivide - 1 ? 0 : blockMargin) + ea,
+        display: "flex",
+        width: String(100) + '%',
         marginBottom: String(blockMargin) + ea,
-        paddingTop: String(innerPaddingMiddle) + ea,
-        paddingBottom: String(innerPaddingHigh) + ea,
-        cursor: "pointer",
-      },
-      children: [
-        {
-          style: {
-            display: "block",
-            position: "relative",
-            paddingLeft: String(innerPaddingLeft) + ea,
-            paddingRight: String(innerPaddingLeft) + ea,
-            width: withOut(innerPaddingLeft * 2, ea),
-          },
-          children: [
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                textAlign: "left",
-              },
-              children: [
-                {
-                  text: title[i],
-                  attribute: {
-                    index: String(index[i])
-                  },
-                  event: {
-                    click: function (e) {
-                      const targetIndex = Number(this.getAttribute("index"));
-                      // DEV
-                      if (targetIndex === 1) {
-                        window.alert("아직 서비스 오픈 전입니다!");
-                      } else {
-                        if (document.querySelectorAll(".leftMenus").length > 0) {
-                          instance.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex], {});
+        flexDirection: "row",
+      }
+    });
+
+    for (let i = 0; i < initialDivide; i++) {
+
+      if (index[i + (z * initialDivide)] === undefined) {
+        break;
+      }
+
+      whiteTong = createNode({
+        mother: baseTong2,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+          background: colorChip.white,
+          width: "calc(calc(100% - " + String(blockMargin * (initialDivide - 1)) + ea + ") / " + String(initialDivide) + ")",
+          marginRight: String(i === initialDivide - 1 ? 0 : blockMargin) + ea,
+          paddingTop: String(innerPaddingMiddle) + ea,
+          paddingBottom: String(innerPaddingHigh) + ea,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              paddingLeft: String(innerPaddingLeft) + ea,
+              paddingRight: String(innerPaddingLeft) + ea,
+              width: withOut(innerPaddingLeft * 2, ea),
+            },
+            children: [
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  textAlign: "left",
+                },
+                children: [
+                  {
+                    text: title[i + (z * initialDivide)],
+                    attribute: {
+                      index: String(index[i + (z * initialDivide)])
+                    },
+                    event: {
+                      click: function (e) {
+                        const targetIndex = Number(this.getAttribute("index"));
+                        // DEV
+                        if (targetIndex === 1) {
+                          window.alert("아직 서비스 오픈 전입니다!");
                         } else {
-                          instance.menuMap[targetIndex].event.call({
-                            getAttribute: (index) => {
-                              return targetIndex;
-                            }
-                          }, {});
+                          if (document.querySelectorAll(".leftMenus").length > 0) {
+                            instance.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex], {});
+                          } else {
+                            instance.menuMap[targetIndex].event.call({
+                              getAttribute: (index) => {
+                                return targetIndex;
+                              }
+                            }, {});
+                          }
                         }
+                        // DEV
                       }
-                      // DEV
+                    },
+                    style: {
+                      display: "block",
+                      fontSize: String(fontSize0) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.black,
                     }
                   },
-                  style: {
-                    display: "block",
-                    fontSize: String(fontSize0) + ea,
-                    fontWeight: String(600),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "block",
-                    height: String(mainTitleLineTop0) + ea,
-                    borderBottom: "1px solid " + color,
-                  }
-                },
-                {
-                  style: {
-                    display: desktop ? "block" : "none",
-                    height: String(mainTitleLineTop1) + ea,
-                    borderBottom: "1px solid " + color,
-                  }
-                },
-                {
-                  style: {
-                    display: "flex",
-                    flexDirection: "row",
-                    paddingTop: String(initDescriptionPaddingTop) + ea,
+                  {
+                    style: {
+                      display: "block",
+                      height: String(mainTitleLineTop0) + ea,
+                      borderBottom: "1px solid " + color,
+                    }
                   },
-                  children: [
-                    {
-                      text: String(i + 1),
-                      style: {
-                        position: "relative",
-                        top: String(desktop ? -1 : 0) + ea,
-                        fontSize: String(fontSize2) + ea,
-                        lineHeight: String(1.6),
-                        fontWeight: String(700),
-                        color: color,
-                        textAlign: "left",
-                        marginRight: String(initDescriptionIndent) + ea,
-                      }
+                  {
+                    style: {
+                      display: desktop ? "block" : "none",
+                      height: String(mainTitleLineTop1) + ea,
+                      borderBottom: "1px solid " + color,
+                    }
+                  },
+                  {
+                    style: {
+                      display: "flex",
+                      flexDirection: "row",
+                      paddingTop: String(initDescriptionPaddingTop) + ea,
                     },
-                    {
-                      text: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + contents[i][desktop ? 0 : 1],
-                      style: {
-                        display: "block",
-                        fontSize: String(fontSize2) + ea,
-                        lineHeight: String(1.6),
-                        fontWeight: String(400),
-                        color: colorChip.black,
-                        textAlign: "right",
+                    children: [
+                      {
+                        text: String(i + 1),
+                        style: {
+                          position: "relative",
+                          top: String(desktop ? -1 : 0) + ea,
+                          fontSize: String(fontSize2) + ea,
+                          lineHeight: String(1.6),
+                          fontWeight: String(700),
+                          color: color,
+                          textAlign: "left",
+                          marginRight: String(initDescriptionIndent) + ea,
+                        }
                       },
-                      bold: {
-                        fontSize: String(fontSize2) + ea,
-                        fontWeight: String(600),
-                        color: colorChip.black,
-                      }
-                    },
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    });
+                      {
+                        text: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + contents[i + (z * initialDivide)][desktop ? 0 : 1],
+                        style: {
+                          display: "block",
+                          fontSize: String(fontSize2) + ea,
+                          lineHeight: String(1.6),
+                          fontWeight: String(400),
+                          color: colorChip.black,
+                          textAlign: "right",
+                        },
+                        bold: {
+                          fontSize: String(fontSize2) + ea,
+                          fontWeight: String(600),
+                          color: colorChip.black,
+                        }
+                      },
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      });
+    }
+
   }
 
   baseTong = createNode({

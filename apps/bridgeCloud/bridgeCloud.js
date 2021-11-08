@@ -1052,11 +1052,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           for (let i = 0; i < list.length; i++) {
             if (Array.isArray(files[filesKeys[i]])) {
               for (let j of files[filesKeys[i]]) {
-                shell.exec(`mv ${shellLink(j.path)} ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + j.name)};`);
+                shell.exec(`mv ${shellLink(j.filepath)} ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + j.name)};`);
                 fileTong[list[i]].push(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + j.name);
               }
             } else {
-              shell.exec(`mv ${shellLink(files[filesKeys[i]].path)} ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name)};`);
+              shell.exec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name)};`);
               fileTong[list[i]].push(binaryFolder + '/' + cilentFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name);
             }
           }
@@ -1152,11 +1152,11 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           for (let i = 0; i < list.length; i++) {
             if (Array.isArray(files[filesKeys[i]])) {
               for (let j of files[filesKeys[i]]) {
-                shell.exec(`mv ${shellLink(j.path)} ${shellLink(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + j.name)};`);
+                shell.exec(`mv ${shellLink(j.filepath)} ${shellLink(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + j.name)};`);
                 fileTong[list[i]].push(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + j.name);
               }
             } else {
-              shell.exec(`mv ${shellLink(files[filesKeys[i]].path)} ${shellLink(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name)};`);
+              shell.exec(`mv ${shellLink(files[filesKeys[i]].filepath)} ${shellLink(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name)};`);
               fileTong[list[i]].push(binaryFolder + '/' + designerFolderName + '/' + list[i] + '/' + files[filesKeys[i]].name);
             }
           }

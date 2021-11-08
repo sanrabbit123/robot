@@ -849,7 +849,7 @@ Ghost.prototype.ghostRouter = function (needs) {
             }
 
             num = 0;
-            for (let { path } of fromArr) {
+            for (let { filepath: path } of fromArr) {
               tempArr = toArr[num].split("/");
               tempString = staticFolder;
               if (tempArr.length === 0) {
@@ -2860,7 +2860,7 @@ Ghost.prototype.fileRouter = function (static) {
             }
 
             num = 0;
-            for (let { path } of fromArr) {
+            for (let { filepath: path } of fromArr) {
               tempArr = toArr[num].split("/");
               tempString = staticFolder;
               if (tempArr.length === 0) {
@@ -3309,7 +3309,6 @@ Ghost.prototype.robotPassLaunching = async function () {
   const http = require("http");
   const express = require("express");
   const app = express();
-  const bodyParser = require("body-parser");
   const multer = require("multer");
   const multiForms = multer();
   const useragent = require("express-useragent");
@@ -3320,9 +3319,9 @@ Ghost.prototype.robotPassLaunching = async function () {
   let doing;
 
   app.use(useragent.express());
-  app.use(bodyParser.json());
+  app.use(express.json());
   app.use(multiForms.array());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true }));
   app.use(express.static(staticFolder));
 
   try {
@@ -3436,7 +3435,6 @@ Ghost.prototype.wssLaunching = async function () {
     const https = require("https");
     const express = require("express");
     const app = express();
-    const bodyParser = require("body-parser");
     const useragent = require("express-useragent");
     const WebSocket = require("ws");
     const url = require("url");
@@ -3447,8 +3445,8 @@ Ghost.prototype.wssLaunching = async function () {
     let certDir, keyDir, caDir;
 
     app.use(useragent.express());
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
     sockets = [];
     for (let i = 0; i < socketNumbers; i++) {

@@ -87,6 +87,7 @@ DevContext.prototype.launching = async function () {
 
 
 
+    console.log(await this.findCode("formidable"));
 
 
 
@@ -1403,6 +1404,7 @@ DevContext.prototype.launching = async function () {
     // });
 
 
+
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
@@ -1728,14 +1730,10 @@ DevContext.prototype.pureSpawn = async function () {
     delete package.devDependencies;
     delete package.dependencies["@babel/runtime"];
     delete package.dependencies["@babel/runtime-corejs3"];
-    delete package.dependencies["body-parser"];
-    delete package.dependencies["connect-mongo"];
     delete package.dependencies["csso"];
     delete package.dependencies["express"];
-    delete package.dependencies["express-session"];
     delete package.dependencies["express-useragent"];
     delete package.dependencies["multer"];
-    delete package.dependencies["node-schedule"];
     delete package.dependencies["shelljs"];
 
     if (await fileSystem(`exist`, [ `${home}/.${serverName}` ])) {

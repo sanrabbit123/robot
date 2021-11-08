@@ -1,7 +1,6 @@
 const GoogleSheet = function (credentials = "default", access_token = "default") {
   const Mother = require("../mother.js");
   this.mother = new Mother();
-  this.schedule = require("node-schedule");
   const { Google } = require('googleapis');
   let oAuth2Info = {
     credentials: {"installed":{"client_id":"1031238153418-p9o07pfllu78p4lie24ko6hlqja5q26l.apps.googleusercontent.com","project_id":"decoded-vision-274704","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"S7zSU-3Um8u5oK95t46vsVV7","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}},

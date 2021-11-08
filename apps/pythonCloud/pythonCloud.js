@@ -5,7 +5,6 @@ const PythonCloud = function () {
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/pythonCloud";
   this.tong = this.dir + "/tong";
-  this.formidable = require('formidable');
   this.pythonApp = this.dir + "/python/app.py";
 }
 
