@@ -6,18 +6,18 @@ DesignerJs.prototype.projectDetailLaunching = function (desid, callback = null) 
   const { scrollTo, ajaxJson, colorChip } = GeneralJs;
   let target, pastScrollTop;
 
-  // if (middleMode) {
-  //   if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
-  //     GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-  //     GeneralJs.stacks["designerConsoleSseSource"] = null;
-  //     GeneralJs.stacks["designerConsoleSseEvent"] = null;
-  //   }
-  //   GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-  //   GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
-  //     instance.checkListSseParsing(GeneralJs.equalJson(e.data));
-  //   }
-  //   GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
-  // }
+  if (middleMode) {
+    if (typeof GeneralJs.stacks["designerConsoleSseEvent"] === "function") {
+      GeneralJs.stacks["designerConsoleSseSource"].removeEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+      GeneralJs.stacks["designerConsoleSseSource"] = null;
+      GeneralJs.stacks["designerConsoleSseEvent"] = null;
+    }
+    GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
+    GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
+      instance.projectSseParsing(GeneralJs.equalJson(e.data));
+    }
+    GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
+  }
 
   pastScrollTop = totalMother.scrollTop;
   this.desid = desid;
@@ -97,7 +97,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   }
   const instance = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, findByAttribute, uniqueValue, swipePatch } = GeneralJs;
-  const { totalMother, ea, grayBarWidth, belowHeight, projectMap } = this;
+  const { totalMother, ea, grayBarWidth, belowHeight, projectMap, middleMode } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
   const token = "__split__";
@@ -145,6 +145,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
   let intend;
   let between;
   let requestNumber;
+  let grayBarWidthMinus;
 
   designer = this.designers.pick(desid);
   divisionEntireMap = projectMap.action.itemMap;
@@ -203,13 +204,19 @@ DesignerJs.prototype.projectDetail = function (desid) {
   intend = <%% 16, 16, 16, 16, 4 %%>;
   between = <%% 8, 8, 8, 8, 1 %%>;
 
+  if (middleMode) {
+    grayBarWidthMinus = <%% this.grayBarWidth, this.grayBarWidth, (-1 * this.tabletWidth), (-1 * this.tabletWidth), this.grayBarWidth %%>;
+  } else {
+    grayBarWidthMinus = this.grayBarWidth;
+  }
+
   cards = designer.projects;
 
   divideArr = [];
   sizeArr = [];
   for (let i = 0; i < 5; i++) {
     if (desktop) {
-      totalStandard = (window.innerWidth - this.grayBarWidth - (outerMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+      totalStandard = (window.innerWidth - grayBarWidthMinus - (outerMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
     } else {
       totalStandard = (100 - (outerMargin * 2) - (innerPaddingLeft * 2) - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
     }
@@ -577,6 +584,7 @@ DesignerJs.prototype.projectDetail = function (desid) {
     this.whiteCards.push(whiteCard);
   }
 
+  this.divisionMap = division;
   this.mainBaseTong = baseTong0;
 }
 
@@ -1645,6 +1653,70 @@ DesignerJs.prototype.projectIconSet = function (desid) {
 
 }
 
+DesignerJs.prototype.projectSseParsing = function (raw) {
+  const instance = this;
+  const { ea } = this;
+  const { equalJson, setDebounce, findByAttribute } = GeneralJs;
+  const order = equalJson(raw);
+  const debounceNameConst = "sseCardAction_";
+  let division, num;
+  let fromArea, toArea;
+  let divide, oppositeDivide;
+  let self, opposite;
+  let thisHeightNumber, oppositeHeightNumber;
+  let thisHeight, oppositeHeight;
+  let finalHeight;
+  let size;
+  let name, oppositeName;
+  let loop;
+  let index, indexTong;
+  let rowDom;
+  let thisStandardDom, thisCaseDom;
+  let length;
+  let fromAction;
+
+  if (this.divisionMap !== null) {
+    division = this.divisionMap;
+    num = 0;
+    if (Array.isArray(order) && order.length > 0 && order[0].randomToken !== instance.randomToken) {
+      for (let { proid, requestNumber, from, to, randomToken } of order) {
+
+        setDebounce(() => {
+          card = findByAttribute(instance.whiteCards, [ "proid", "request" ], [ proid, String(requestNumber) ]);
+          fromArea = division.get(from);
+          toArea = division.get(to);
+          loop = [ fromArea, toArea ];
+
+          if (card.parentElement !== toArea) {
+
+            toArea.appendChild(card);
+
+            for (let self of loop) {
+
+              name = self.getAttribute("name");
+
+              self.parentElement.children[1].setAttribute("number", String(self.children.length));
+              self.parentElement.children[1].textContent = String(self.children.length) + "명";
+
+            }
+
+            name = toArea.getAttribute("name");
+            card.setAttribute("action", name);
+
+          }
+
+        }, debounceNameConst + String(num));
+
+        num++;
+      }
+
+    }
+  }
+
+
+
+}
+
 DesignerJs.prototype.projectView = async function () {
   const instance = this;
   try {
@@ -1770,12 +1842,12 @@ DesignerJs.prototype.projectView = async function () {
     this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
 
     //sse
-    // if (!this.middleMode) {
-    //   const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
-    //   es.addEventListener("updateTong", (e) => {
-    //     instance.checkListSseParsing(equalJson(e.data));
-    //   });
-    // }
+    if (!this.middleMode) {
+      const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/checklistDesigner");
+      es.addEventListener("updateTong", (e) => {
+        instance.projectSseParsing(equalJson(e.data));
+      });
+    }
 
     loading.parentNode.removeChild(loading);
 

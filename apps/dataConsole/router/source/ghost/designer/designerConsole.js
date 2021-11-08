@@ -41,7 +41,7 @@
 
 const DesignerConsoleJs = function () {
   this.mother = new GeneralJs();
-  this.ea = "px";
+  this.ea = <%% "px", "px", "px", "px", "vw" %%>;
   this.totalContents = document.getElementById("totalcontents");
 }
 
@@ -1088,6 +1088,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   let initDescriptionIndent, initDescriptionPaddingTop;
   let fifthTitleMarginTop, fifthTitleMarginBottom, fifthTitle;
   let whiteFlexNum;
+  let grayBarWidthMinus;
 
   designer = this.designers.pick(desid);
   divisionEntireMap = projectMap.action.itemMap;
@@ -1175,13 +1176,15 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
   intend = <%% 16, 16, 16, 16, 4 %%>;
   between = <%% 8, 8, 8, 8, 1 %%>;
 
+  grayBarWidthMinus = <%% this.grayBarWidth, this.grayBarWidth, (-1 * this.tabletWidth), (-1 * this.tabletWidth), this.grayBarWidth %%>;
+
   cards = designer.projects;
 
   divideArr = [];
   sizeArr = [];
   for (let i = 0; i < 5; i++) {
     if (desktop) {
-      totalStandard = (window.innerWidth - this.grayBarWidth - (outerMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
+      totalStandard = (window.innerWidth - grayBarWidthMinus - (outerMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
     } else {
       totalStandard = (100 - (outerMargin * 2) - (innerPaddingLeft * 2) - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
     }
@@ -1789,6 +1792,7 @@ DesignerConsoleJs.prototype.consoleDetail = function (desid) {
     this.whiteCards.push(whiteCard);
   }
 
+  this.divisionMap = division;
   this.mainBaseTong = baseTong0;
 }
 
@@ -1959,6 +1963,12 @@ DesignerConsoleJs.prototype.launching = async function (loading) {
     ];
 
     await protoPatch(instance, moduleList.map((m) => { return `${modulePath}/${m}`; }), `DesignerJs`);
+
+    GeneralJs.stacks["designerConsoleSseSource"] = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
+    GeneralJs.stacks["designerConsoleSseEvent"] = function (e) {
+      instance.projectSseParsing(GeneralJs.equalJson(e.data));
+    }
+    GeneralJs.stacks["designerConsoleSseSource"].addEventListener("updateTong", GeneralJs.stacks["designerConsoleSseEvent"]);
 
     loading.parentElement.removeChild(loading);
 

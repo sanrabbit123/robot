@@ -1923,7 +1923,6 @@ ProjectJs.prototype.boardGrayBar = function (divisionMap, cases, staticList) {
               updateQuery: {
                 proid,
                 requestNumber,
-                mode: "status",
                 from: fromStatus,
                 to: name,
                 randomToken: instance.randomToken,
@@ -2697,7 +2696,6 @@ ProjectJs.prototype.makeBoard = function (cases) {
                 updateQuery: {
                   proid,
                   requestNumber,
-                  mode: "action",
                   from: fromName,
                   to: name,
                   randomToken: instance.randomToken,
@@ -2788,7 +2786,6 @@ ProjectJs.prototype.makeBoard = function (cases) {
             updateQuery: {
               proid,
               requestNumber,
-              mode: "status",
               from: from,
               to: value,
               randomToken: instance.randomToken,
@@ -3263,7 +3260,7 @@ ProjectJs.prototype.cardViewMaker = function () {
 
       totalFather = createNode({
         mother: document.getElementById("totalcontents"),
-        class: (e.instantMode ? [ "totalMother" ] : [ "totalFather", "fadein" ]),
+        class: (e.instantMode ? [ "totalFather" ] : [ "totalFather", "fadein" ]),
         style: {
           height: "calc(100vh - " + String(belowHeight) + ea + ")",
           width: String(100) + '%',
@@ -7728,6 +7725,122 @@ ProjectJs.prototype.communicationRender = function () {
 
 }
 
+ProjectJs.prototype.sseCardParsing = function (raw) {
+  const instance = this;
+  const { equalJson, setDebounce, findByAttribute } = GeneralJs;
+  const order = equalJson(raw);
+  const debounceNameConst = "sseCardAction_";
+  const actionClass = "boardGray_actionBlock";
+  const actionArea = "mainArea_actionArea";
+  const boardDoms = [ ...document.querySelectorAll("." + actionClass) ];
+  const areaDoms = [ ...document.querySelectorAll("." + actionArea) ];
+  const ea = "px";
+  let division, num;
+  let fromArea, toArea;
+  let divide, oppositeDivide;
+  let self, opposite;
+  let thisHeightNumber, oppositeHeightNumber;
+  let thisHeight, oppositeHeight;
+  let finalHeight;
+  let fixedHeightSize, margin;
+  let tongPaddingTop, tongPaddingBottom;
+  let size;
+  let name, oppositeName;
+  let loop;
+  let index, indexTong;
+  let rowDom;
+  let thisStandardDom, thisCaseDom;
+  let length;
+  let fromAction;
+
+  margin = 10;
+  fixedHeightSize = 40;
+  tongPaddingTop = (margin * 1.5) + 35;
+  tongPaddingBottom = margin * 1.5;
+
+  if (document.querySelector(".totalFather") !== null) {
+    if (this.divisionMap !== null) {
+      division = this.divisionMap;
+      num = 0;
+      if (Array.isArray(order) && order.length > 0 && order[0].randomToken !== instance.randomToken) {
+        for (let { proid, requestNumber, from, to, randomToken } of order) {
+          setDebounce(() => {
+            card = findByAttribute(instance.totalFatherChildren, [ "proid", "request" ], [ proid, String(requestNumber) ]);
+            fromArea = division.get(from);
+            toArea = division.get(to);
+            loop = [ fromArea, toArea ];
+            if (card.parentElement !== toArea) {
+
+              toArea.appendChild(card);
+
+              for (let self of loop) {
+
+                name = self.getAttribute("name");
+                opposite = division.get(self.getAttribute("opposite"));
+                oppositeName = opposite.getAttribute("name");
+                divide = Number(self.getAttribute("divide"));
+                oppositeDivide = Number(opposite.getAttribute("divide"));
+                size = Number(self.getAttribute("size"));
+
+                thisHeightNumber = Math.ceil(self.children.length / divide);
+                oppositeHeightNumber = Math.ceil(opposite.children.length / oppositeDivide);
+                thisHeightNumber = thisHeightNumber === 0 ? 1 : thisHeightNumber;
+                oppositeHeightNumber = oppositeHeightNumber === 0 ? 1 : oppositeHeightNumber;
+                thisHeight = (thisHeightNumber * fixedHeightSize) + ((thisHeightNumber + 1) * margin);
+                oppositeHeight = (oppositeHeightNumber * fixedHeightSize) + ((oppositeHeightNumber + 1) * margin);
+                if (thisHeight <= oppositeHeight) {
+                  finalHeight = oppositeHeight;
+                } else {
+                  finalHeight = thisHeight;
+                }
+                finalHeight = finalHeight + tongPaddingTop + tongPaddingBottom + 2;
+                for (let c of self.children) {
+                  c.style.width = String(size) + ea;
+                }
+
+                self.parentElement.style.height = String(finalHeight) + ea;
+                opposite.parentElement.style.height = String(finalHeight) + ea;
+
+                self.parentElement.children[1].setAttribute("number", String(self.children.length));
+                self.parentElement.children[1].textContent = String(self.children.length) + "명";
+                findByAttribute(boardDoms, "action", name).textContent = String(self.children.length);
+
+                opposite.parentElement.children[1].setAttribute("number", String(opposite.children.length));
+                opposite.parentElement.children[1].textContent = String(opposite.children.length) + "명";
+                findByAttribute(boardDoms, "action", oppositeName).textContent = String(opposite.children.length);
+
+              }
+
+              name = toArea.getAttribute("name");
+
+              indexTong = [];
+              for (let i = 0; i < instance.cases.length; i++) {
+                if (instance.cases[i] !== null) {
+                  if (instance.cases[i].proid === proid) {
+                    indexTong.push({ index: i, thisCase: equalJson(JSON.stringify(instance.cases[i])) });
+                  }
+                }
+              }
+              index = indexTong[requestNumber].index;
+
+              instance.cases[index].action = name;
+              rowDom = findByAttribute([ ...document.querySelector("." + proid).children ], "column", "action");
+              if (rowDom !== null) {
+                rowDom.textContent = name;
+              }
+              card.setAttribute("action", name);
+
+            }
+          }, debounceNameConst + String(num));
+          num++;
+        }
+
+      }
+    }
+  }
+
+}
+
 ProjectJs.prototype.launching = async function () {
   const instance = this;
   try {
@@ -7755,8 +7868,12 @@ ProjectJs.prototype.launching = async function () {
     this.communicationRender();
     this.boardSwipe();
 
-    getTarget = null;
+    const es = new EventSource("https://" + SSEHOST + ":3000/specificsse/projectCard");
+    es.addEventListener("updateTong", (e) => {
+      instance.sseCardParsing(e.data);
+    });
 
+    getTarget = null;
     if (typeof getObj.specificids === "string") {
       tempFunction = this.makeSearchEvent("id:" + getObj.specificids);
       await tempFunction({ key: "Enter" });
