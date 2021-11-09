@@ -2662,8 +2662,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         { sort: "1" },
       ],
       style: {
-        display: instance.contentsSearchIndex.includes(index) ? "none" : (photoSourceBoo ? "block" : "none"),
+        display: instance.contentsSearchIndex.includes(index) ? "none" : (photoSourceBoo ? "flex" : "none"),
         position: "relative",
+        flexDirection: "rows",
         background: colorChip[boo ? "white" : "gray0"],
         width: String(100) + '%',
         height: String(height) + ea,
@@ -2686,10 +2687,10 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         }
       ],
       style: {
-        position: "absolute",
+        position: "relative",
         width: String(width0) + ea,
         top: String(top + (isMac() ? 1 : 0)) + ea,
-        left: String(left) + ea,
+        // left: String(left) + ea,
         fontSize: String(size) + ea,
         zIndex: String(2),
       }
@@ -2698,10 +2699,10 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       mother: -2,
       text: '|',
       style: {
-        position: "absolute",
+        position: "relative",
         width: String(width1) + ea,
         top: String(top + (isMac() ? 1 : 0)) + ea,
-        left: String(left + width0 + textMargin) + ea,
+        // left: String(left + width0 + textMargin) + ea,
         fontSize: String(size) + ea,
         color: colorChip.gray4,
         zIndex: String(2),
@@ -2710,10 +2711,10 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     {
       mother: -3,
       style: {
-        position: "absolute",
+        position: "relative",
         width: String(left + width0 + textMargin + width1 + (textMargin * 1.5)) + ea,
         top: String(0) + ea,
-        left: String(0) + ea,
+        // left: String(0) + ea,
         height: String(100) + '%',
         background: colorChip.white,
         zIndex: String(1),
@@ -2963,9 +2964,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         },
       ],
       style: {
-        position: "absolute",
+        position: "relative",
         top: String(top) + ea,
-        left: String(startLeft) + ea,
+        // left: String(startLeft) + ea,
         fontSize: String(size) + ea,
         fontWeight: String(400),
         height: ((i === stringArr.length - 1) ? String(factorHeight) + ea : ""),
@@ -3067,25 +3068,25 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   for (let i = 0; i < projects.length; i++) {
     if (!actionList.includes(projects[i].process.action)) {
       [ startLeft, betweenText, widthArr, domArr ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i);
-      width.push(widthArr);
-      dom.push(domArr);
+      // width.push(widthArr);
+      // dom.push(domArr);
     }
   }
 
-  if (width.length > 0) {
-    for (let i = 0; i < width[0].length; i++) {
-      width.sort((a, b) => { return b[i] - a[i] });
-      maxWidth.push(width[0][i]);
-    }
-    for (let i = 0; i < dom.length; i++) {
-      temp = startLeft;
-      for (let j = 0; j < dom[i].length; j++) {
-        dom[i][j].style.left = String(temp) + ea;
-        dom[i][j].style.width = String(maxWidth[j] + 1) + ea;
-        temp += maxWidth[j] + betweenText;
-      }
-    }
-  }
+  // if (width.length > 0) {
+  //   for (let i = 0; i < width[0].length; i++) {
+  //     width.sort((a, b) => { return b[i] - a[i] });
+  //     maxWidth.push(width[0][i]);
+  //   }
+  //   for (let i = 0; i < dom.length; i++) {
+  //     temp = startLeft;
+  //     for (let j = 0; j < dom[i].length; j++) {
+  //       dom[i][j].style.left = String(temp) + ea;
+  //       dom[i][j].style.width = String(maxWidth[j] + 1) + ea;
+  //       temp += maxWidth[j] + betweenText;
+  //     }
+  //   }
+  // }
 
 }
 
