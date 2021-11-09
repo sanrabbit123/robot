@@ -135,7 +135,7 @@ Robot.prototype.aliveTest = async function () {
       { name: "bridge", protocol: "https:", host: address.bridgeinfo.host, port: generalPort, },
       { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
-      { name: "homeGraphic", protocol: "https:", host: address.homeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
+      { name: "officeGraphic", protocol: "https:", host: address.officeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
       { name: "mirror", protocol: "https:", host: address.mirrorinfo.host, port: generalPort, }
     ];
 
@@ -423,15 +423,8 @@ Robot.prototype.taxBill = async function () {
 Robot.prototype.cashReceipt = async function () {
   try {
     const { shell, shellLink } = this.mother;
-    const { homeinfo: { map, ghost } } = this.address;
-    const target = "graphic";
-    let port;
-    for (let obj of map) {
-      if (obj.name === target) {
-        port = obj.port.express[0];
-      }
-    }
-    shell.exec(`curl https://${ghost.host}:${String(port)}/cash`);
+    const url = "https://" + this.address.officeinfo.ghost.host + ":" + String(this.address.officeinfo.ghost.graphic.port[0]) + "/cash";
+    shell.exec(`curl ${url}`);
   } catch (e) {
     console.log(e);
   }
