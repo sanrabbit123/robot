@@ -282,21 +282,28 @@ DevContext.prototype.launching = async function () {
         },
       }
     };
+    */
 
-    const selfMongo = this.MONGOLOCALC;
-    const projects = await back.getProjectsByQuery({}, { selfMongo: this.MONGOLOCALC });
-    let whereQuery, updateQuery;
 
-    for (let project of projects) {
-      whereQuery = { proid: project.proid };
-      updateQuery = {};
-      updateQuery["process.design.construct.partner"] = "";
-      await selfMongo.db(`miro81`).collection(`project`).updateOne(whereQuery, { $set: updateQuery });
-      console.log(whereQuery, updateQuery);
-    }
+
+
+
+    // const selfMongo = this.MONGOC;
+    // const projects = await back.getProjectsByQuery({}, { selfMongo });
+    // let whereQuery, updateQuery;
+    //
+    // for (let project of projects) {
+    //   whereQuery = { proid: project.proid };
+    //   updateQuery = {};
+    //   updateQuery["process.design.construct.partner"] = "";
+    //   await selfMongo.db(`miro81`).collection(`project`).updateOne(whereQuery, { $set: updateQuery });
+    //   console.log(whereQuery, updateQuery);
+    // }
+
+
 
     // console.log(projects[100].process.toNormal());
-    */
+
 
 
 

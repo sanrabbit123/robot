@@ -4259,6 +4259,8 @@ DataRouter.prototype.rou_post_ghostDesigner_updateAnalytics = function () {
         if (ipObj === null) {
           ipObj = { ip };
         }
+        console.log(history);
+        console.log(page);
         history[page].analytics.page.push({ page, date: new Date(), who, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj });
         updateQuery = {};
         updateQuery[page + ".analytics.page"] = history[page].analytics.page;

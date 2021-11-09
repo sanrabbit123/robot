@@ -1850,7 +1850,11 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     };
 
     this.projects = await ajaxJson({ noFlat: true, whereQuery: { desid: this.desid } }, "/getProjects", { equal: true });
-    this.clients = await ajaxJson({ noFlat: true, whereQuery: { $or: [ ...new Set(this.projects.map((obj) => { return obj.cliid; })) ].map((cliid) => { return { cliid }; }) } }, "/getClients", { equal: true })
+    if (this.projects.length === 0) {
+      this.clients = [];
+    } else {
+      this.clients = await ajaxJson({ noFlat: true, whereQuery: { $or: [ ...new Set(this.projects.map((obj) => { return obj.cliid; })) ].map((cliid) => { return { cliid }; }) } }, "/getClients", { equal: true })
+    }
     this.designers.setProjects(this.projects);
     this.designers.setClients(this.clients);
 
