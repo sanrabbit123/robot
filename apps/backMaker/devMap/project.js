@@ -80,6 +80,7 @@ module.exports = {
             },
             construct: {
               provided: false,
+              partner: "",
               detail: [],
             },
             purchase: {
@@ -173,6 +174,49 @@ module.exports = {
       dummy = {
         date: new Date(1800, 0, 1),
         desid: "",
+      };
+    } else if (subject === "process.design.construct.detail") {
+      dummy = {
+        status: "",
+        request: new Date(1800, 0, 1),
+        estimate: [],
+        contract: {
+          partner: "",
+          form: {
+            id: "",
+            guide: new Date(1800, 0, 1),
+            date: {
+              from: new Date(1800, 0, 1),
+              to: new Date(1800, 0, 1),
+              cancel: new Date(1800, 0, 1),
+            }
+          },
+          payments: [],
+        }
+      };
+    } else if (subject === "process.design.construct.detail.estimate") {
+      dummy = {
+        invid: "",
+        date: new Date(1800, 0, 1),
+      };
+    } else if (subject === "process.design.construct.detail.contract.payments") {
+      dummy = {
+        guide: new Date(1800, 0, 1),
+        date: new Date(1800, 0, 1),
+        cancel: new Date(1800, 0, 1),
+        calculation: {
+          amount: {
+            supply: 0,
+            vat: 0,
+            consumer: 0,
+          },
+          info: {
+            method: "",
+            proof: "",
+            to: "",
+          },
+          refund: 0,
+        },
       };
     }
     return dummy;

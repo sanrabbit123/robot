@@ -54,8 +54,8 @@ GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
   const { sleep } = this.general;
   const { chromeLauncher, chromeRemote } = require(this.module + "/index.js");
   try {
-    const chrome = await chromeLauncher.launch({ chromeFlags: [] });
-    // const chrome = await chromeLauncher.launch({ chromeFlags: [ "--no-sandbox", "--headless", "--disable-gpu" ] });
+    // const chrome = await chromeLauncher.launch({ chromeFlags: [] });
+    const chrome = await chromeLauncher.launch({ chromeFlags: [ "--no-sandbox", "--headless", "--disable-gpu" ] });
     const protocol = await chromeRemote({ port: chrome.port });
     const { Network, Page, DOM, Emulation, Runtime, Console } = protocol;
     let result;
@@ -77,11 +77,6 @@ GoogleChrome.prototype.scriptRequest = async function (url, frontCodeArr) {
       await Runtime.evaluate({ expression: (await instance.frontRender(frontCode)) });
       await sleep(2000);
     }
-
-
-
-    await sleep(20000);
-
 
     console.log(result);
     await sleep(500);
