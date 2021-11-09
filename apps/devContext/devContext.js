@@ -63,7 +63,7 @@ DevContext.prototype.launching = async function () {
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
-    await rethink.connect();
+    // await rethink.connect();
     const address = this.address;
     const back = this.back;
     const report = new BackReport();
@@ -87,9 +87,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await this.findCode("ghostFileUpload"));
 
-      
 
 
 
@@ -395,7 +393,7 @@ DevContext.prototype.launching = async function () {
       matrix.push(arr);
     }
 
-    for (let i = 3; i < 9; i++) {
+    for (let i = 3; i < 10; i++) {
 
       matrix.push([ '', '', '', '', '' ]);
       matrix.push([ "2021년 " + String(i + 1) + "월", '', '', '', '' ]);
@@ -1552,7 +1550,7 @@ DevContext.prototype.launching = async function () {
   } finally {
     await this.MONGOC.close();
     await this.MONGOLOCALC.close();
-    await rethink.close();
+    // await rethink.close();
     console.log(`done`);
   }
 }
