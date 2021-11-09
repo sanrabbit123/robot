@@ -1167,12 +1167,35 @@ Mother.prototype.orderSystem = function (type, number) {
 }
 
 Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
-  const axios = require('axios');
-  const fs = require('fs');
-  const FormData = require('form-data');
+  if (!Array.isArray(fromArr) || !Array.isArray(toArr)) {
+    throw new Error("input must be from array, to array")
+  }
+  const axios = require("axios");
+  const fs = require("fs");
+  const FormData = require("form-data");
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
-  const crypto = require('crypto');
-  const algorithm = 'aes-192-cbc';
+  const shell = require("shelljs");
+  const shellLink = (path) => {
+    let targetLink;
+    targetLink = '';
+    for (let i of path.split('/')) {
+      if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+        targetLink += i + '/';
+      } else if (!/'/g.test(i)) {
+        targetLink += "'" + i + "'" + '/';
+      } else if (!/"/g.test(i)) {
+        targetLink += '"' + i + '"' + '/';
+      } else {
+        targetLink += i + '/';
+      }
+    }
+    targetLink = targetLink.slice(0, -1);
+    return targetLink;
+  }
+  const modulePath = process.cwd() + "/apps/mother.py";
+  const bridgeFile = process.cwd() + "/temp/motherPythonBridge.json";
+  const crypto = require("crypto");
+  const algorithm = "aes-192-cbc";
   let num, form, formHeaders, toList;
   return new Promise(function (resolve, reject) {
     crypto.scrypt("homeliaison", 'salt', 24, function (err, key) {
@@ -1204,9 +1227,17 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
             headers: { ...formHeaders },
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
-          }).then(function (response) {
-            resolve(response);
-          }).catch(function (error) {
+          }).then((response) => {
+            fs.writeFile(bridgeFile, JSON.stringify({ fromArr, toArr }, null, 2), "utf8", (err) => {
+              if (err) {
+                reject(err);
+              }
+              let child, json;
+              child = shell.exec(`python3 ${shellLink(modulePath)} fileUpload`, { silent: true });
+              json = JSON.parse(child.stdout.replace(/\n$/, ''));
+              resolve(json.message);
+            });
+          }).catch((error) => {
             reject(error);
           });
         });

@@ -652,7 +652,7 @@ Ghost.prototype.clientReport = async function () {
 Ghost.prototype.requestObject = async function () {
   const instance = this;
   const back = this.back;
-  const { shell, shellLink, fileSystem, ghostFileUpload, mongo, mongoinfo, mongolocalinfo, requestSystem } = this.mother;
+  const { shell, shellLink, fileSystem, mongo, mongoinfo, mongolocalinfo, requestSystem } = this.mother;
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   try {

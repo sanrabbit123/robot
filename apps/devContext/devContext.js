@@ -87,11 +87,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await this.mother.s3FileUpload([
-      process.env.HOME + "/Desktop/sian.ai",
-    ], [
-      "/sian.ai"
-    ]));
+    console.log(await this.findCode("ghostFileUpload"));
+
+      
+
+
+
+
+
 
 
 
