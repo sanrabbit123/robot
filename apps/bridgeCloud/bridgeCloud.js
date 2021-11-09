@@ -521,23 +521,16 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           await messageSend({ text: message, channel: "#401_consulting" });
 
           //send alimtalk and print
-          // KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).then(() => {
-          //   return ghostRequest("/print", { cliid });
-          // }).then(() => {
-          //   return ADDRESS.apartNameSearch(requestObj["requests.0.request.space.address"]);
-          // }).then((data) => {
-          //   data.cliid = cliid;
-          //   return ghostRequest("/apartment", { data });
-          // }).catch((err) => {
-          //   errorLog("Bridge 서버 문제 생김 (submit, ghost 전달) : " + err.message).catch((e) => { console.log(e); });
-          // });
-
           KAKAO.sendTalk("complete", requestObj["name"], requestObj["phone"]).then(() => {
             return ghostRequest("/print", { cliid });
+          }).then(() => {
+            return ADDRESS.apartNameSearch(requestObj["requests.0.request.space.address"]);
+          }).then((data) => {
+            data.cliid = cliid;
+            return ghostRequest("/apartment", { data });
           }).catch((err) => {
             errorLog("Bridge 서버 문제 생김 (submit, ghost 전달) : " + err.message).catch((e) => { console.log(e); });
           });
-
 
         } else {
           message = '';
