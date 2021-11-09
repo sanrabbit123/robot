@@ -551,6 +551,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         } else if (i === "close") {
           await this.chromeClose();
         } else if (/^toss\: /.test(i)) {
+          await sleep(3000);
           await this.moveAndClick(chromeSize.urlPosition.x, chromeSize.urlPosition.y);
           await this.pressKey("delete");
           await this.clipBoard(i.replace(/^toss\: /gi, ''));
