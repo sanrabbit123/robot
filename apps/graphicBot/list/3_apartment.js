@@ -3,16 +3,10 @@ module.exports = function (arg, info) {
     "https://new.land.naver.com/complexes",
     async function () {
       try {
-        const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
-        await injectionInput(document.querySelector(".search_input"), apart.replace(/아파트/gi, '').trim());
-        document.querySelector(".button_search--icon").click();
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async function () {
-      try {
         const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
+        await injectionInput(document.querySelector(".search_input"), apart.replace(/아파트/gi, '').trim());
+        await clickElement(document.querySelector(".button_search--icon"));
+
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
           if (document.querySelector('.no_data_area') === null && document.querySelector('.item_list') !== null) {
@@ -27,6 +21,7 @@ module.exports = function (arg, info) {
             document.querySelector(".button_search--icon").click();
           }
         }
+
       } catch (e) {
         console.log(e);
       }
@@ -219,17 +214,11 @@ module.exports = function (arg, info) {
     "toss: https://new.land.naver.com/complexes",
     async function () {
       try {
-        const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
-        await injectionInput(document.querySelector(".search_input"), apartName.trim().replace(/\([^\)]+\)/gi, '').replace(/아파트/gi, '').trim());
-        document.querySelector(".button_search--icon").click();
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async function () {
-      try {
         const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
+        await injectionInput(document.querySelector(".search_input"), apartName.trim().replace(/\([^\)]+\)/gi, '').replace(/아파트/gi, '').trim());
+        await clickElement(document.querySelector(".button_search--icon"));
+
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
           if (document.querySelector('.no_data_area') === null && document.querySelector('.item_list') !== null) {

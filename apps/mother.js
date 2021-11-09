@@ -1198,7 +1198,7 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
   const algorithm = "aes-192-cbc";
   let num, form, formHeaders, toList;
   return new Promise(function (resolve, reject) {
-    crypto.scrypt("homeliaison", 'salt', 24, function (err, key) {
+    crypto.scrypt("homeliaison", "salt", 24, function (err, key) {
       if (err) {
         reject(err);
       } else {
@@ -1228,14 +1228,13 @@ Mother.prototype.ghostFileUpload = function (fromArr, toArr) {
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
           }).then((response) => {
-            fs.writeFile(bridgeFile, JSON.stringify({ fromArr, toArr }, null, 2), "utf8", (err) => {
+            fs.writeFile(bridgeFile, JSON.stringify({ fromList: fromArr, toList: toArr }, null, 2), "utf8", (err) => {
               if (err) {
                 reject(err);
               }
-              let child, json;
+              let child;
               child = shell.exec(`python3 ${shellLink(modulePath)} fileUpload`, { silent: true });
-              json = JSON.parse(child.stdout.replace(/\n$/, ''));
-              resolve(json.message);
+              resolve(JSON.parse(child.stdout.replace(/\n$/, '')).message);
             });
           }).catch((error) => {
             reject(error);
