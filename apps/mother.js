@@ -1043,6 +1043,7 @@ Mother.prototype.returnUragenPath = function () {
 }
 
 Mother.prototype.ipCheck = function () {
+  const standardInfo = "backinfo";
   const axios = require(`axios`);
   const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   const keys = Object.keys(ADDRESS);
@@ -1050,38 +1051,61 @@ Mother.prototype.ipCheck = function () {
   return new Promise(function(resolve, reject) {
     axios.get("https://" + ADDRESS["pythoninfo"]["host"] + ":3000").then(function (response) {
       const ip = response.data.replace(/[^0-9\.]/g, '');
-      let obj = { ip };
-      let target = "unknown", targetNum = 0;
-      let number = 0;
-      for (let { ip: { outer } } of values) {
-        if (outer === ip) {
-          target = keys[number].replace(/info$/, '');
-          targetNum = number;
-        }
-        number++;
-      }
-      obj.name = target;
-      obj.rawObj = values[targetNum];
+      let obj;
+      let target;
+      let targetNum;
+      let number;
+      let networkInterfaces;
+      let macList;
 
-      if (target === "home" || target === "office") {
-        const networkInterfaces = require("os").networkInterfaces();
-        let macList;
-        macList = [];
-        for (let i in networkInterfaces) {
-          for (let { mac, family } of networkInterfaces[i]) {
-            if (/4/g.test(family) && Number(mac.replace(/[^0-9]/g, '')) !== 0) {
-              macList.push(mac);
+      obj = { ip };
+      target = "unknown";
+      targetNum = 0;
+      number = 0;
+
+      if (/^223/.test(ip) && Number(ip.split('.')[1]) >= 32 && Number(ip.split('.')[1]) <= 63) {
+
+        obj.name = "skt";
+        obj.rawObj = ADDRESS[standardInfo];
+        obj.rawObj.host = "localhost";
+        obj.rawObj.ip.outer = ip;
+        networkInterfaces = require("os").networkInterfaces();
+        obj.rawObj.ip.inner = Object.values(networkInterfaces).flat().filter((obj) => { return /4/gi.test(obj.family) }).filter((obj) => { return !/127\.0\.0\.1/gi.test(obj.address) })[0].address;
+        obj.rawObj.isGhost = false;
+
+      } else {
+
+        for (let { ip: { outer } } of values) {
+          if (outer === ip) {
+            target = keys[number].replace(/info$/, '');
+            targetNum = number;
+          }
+          number++;
+        }
+
+        obj.name = target;
+        obj.rawObj = values[targetNum];
+
+        if (target === "home" || target === "office") {
+          networkInterfaces = require("os").networkInterfaces();
+          macList = [];
+          for (let i in networkInterfaces) {
+            for (let { mac, family } of networkInterfaces[i]) {
+              if (/4/g.test(family) && Number(mac.replace(/[^0-9]/g, '')) !== 0) {
+                macList.push(mac);
+              }
             }
           }
+          macList = Array.from(new Set(macList));
+          if (macList.includes(obj.rawObj.ghost.mac)) {
+            obj.rawObj = values[targetNum].ghost;
+            obj.rawObj.ip = {};
+            obj.rawObj.ip.outer = obj.rawObj.outer;
+            obj.rawObj.ip.inner = obj.rawObj.inner;
+            obj.rawObj.isGhost = true;
+          }
         }
-        macList = Array.from(new Set(macList));
-        if (macList.includes(obj.rawObj.ghost.mac)) {
-          obj.rawObj = values[targetNum].ghost;
-          obj.rawObj.ip = {};
-          obj.rawObj.ip.outer = obj.rawObj.outer;
-          obj.rawObj.ip.inner = obj.rawObj.inner;
-          obj.rawObj.isGhost = true;
-        }
+
       }
 
       resolve(obj);
