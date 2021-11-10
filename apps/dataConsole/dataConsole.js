@@ -855,10 +855,10 @@ DataConsole.prototype.connect = async function (noStatic = false) {
       if (process.argv[3] === "--test") {
         https.createServer(pems, app).listen(TESTOUTBOUND, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
       } else {
-        https.createServer(pems, app).listen(PORT, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+        https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
       }
     } else {
-      https.createServer(pems, app).listen(PORT, address.ip.inner, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
+      https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
     }
 
   } catch (e) {

@@ -2639,6 +2639,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       { index: String(index) },
       { sortstandard: "" },
       { sort: "1" },
+      { title: titleMode ? 1 : 0 }
     ],
     style: {
       display: instance.contentsSearchIndex.includes(index) ? "none" : (photoSourceBoo ? "block" : "none"),
@@ -2712,6 +2713,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       mother: whiteBlock,
       attribute: [
         { arrindex: String(i) },
+        { title: titleMode ? 1 : 0 }
       ],
       text: stringArr[i],
       class: [ "white_child_" + String(i) ],
@@ -2721,113 +2723,120 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           event: function (e) {
             e.stopPropagation();
             e.preventDefault();
-            if (this.querySelectorAll("aside").length === 0) {
-              const self = this;
-              const index = Number(this.getAttribute("arrindex"));
-              const { ea } = instance;
-              const { createNode, createNodes, colorChip, withOut } = GeneralJs;
-              const valueDom = this.querySelector(".value");
-              let thisCase;
-              thisCase = {};
-              for (let column in map) {
-                if (document.getElementById(project.proid + "_" + column) === null) {
-                  throw new Error("invaild doms");
+            const titleMode = Number(this.getAttribute("title")) === 1;
+            if (titleMode) {
+
+              console.log("this!");
+
+            } else {
+              if (this.querySelectorAll("aside").length === 0) {
+                const self = this;
+                const index = Number(this.getAttribute("arrindex"));
+                const { ea } = instance;
+                const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+                const valueDom = this.querySelector(".value");
+                let thisCase;
+                thisCase = {};
+                for (let column in map) {
+                  if (document.getElementById(project.proid + "_" + column) === null) {
+                    throw new Error("invaild doms");
+                  }
+                  thisCase[column] = document.getElementById(project.proid + "_" + column);
                 }
-                thisCase[column] = document.getElementById(project.proid + "_" + column);
-              }
-              const option = {
-                ea,
-                top: 25,
-                createNode,
-                createNodes,
-                colorChip,
-                withOut,
-                thisCase,
-                boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
-                animation: "fadeuplite 0.2s ease forwards",
-                borderRadius: String(5) + "px",
-                zIndex: String(1),
-                valueDom,
-                height: 31,
-                size,
-                textTop: (isMac() ? 5 : 7)
-              };
-              let cancelBox, parent, calendarEvent;
+                const option = {
+                  ea,
+                  top: 25,
+                  createNode,
+                  createNodes,
+                  colorChip,
+                  withOut,
+                  thisCase,
+                  boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                  animation: "fadeuplite 0.2s ease forwards",
+                  borderRadius: String(5) + "px",
+                  zIndex: String(1),
+                  valueDom,
+                  height: 31,
+                  size,
+                  textTop: (isMac() ? 5 : 7)
+                };
+                let cancelBox, parent, calendarEvent;
 
-              parent = this.parentElement;
+                parent = this.parentElement;
 
-              cancelBox = createNode({
-                mother: this,
-                mode: "aside",
-                events: [
-                  {
-                    type: "click",
-                    event: async function (e) {
-                      try {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        const directParent = this.parentElement;
-                        const removeTargets = directParent.querySelectorAll("aside");
-                        for (let dom of removeTargets) {
-                          directParent.removeChild(dom);
+                cancelBox = createNode({
+                  mother: this,
+                  mode: "aside",
+                  events: [
+                    {
+                      type: "click",
+                      event: async function (e) {
+                        try {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          const directParent = this.parentElement;
+                          const removeTargets = directParent.querySelectorAll("aside");
+                          for (let dom of removeTargets) {
+                            directParent.removeChild(dom);
+                          }
+                          instance.resetWidthEvent();
+                        } catch (e) {
+                          console.log(e);
                         }
-                        instance.resetWidthEvent();
-                      } catch (e) {
-                        console.log(e);
                       }
                     }
+                  ],
+                  style: {
+                    position: "fixed",
+                    top: String(0) + ea,
+                    left: String(0) + ea,
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: "transparent",
+                    zIndex: option.zIndex,
                   }
-                ],
-                style: {
-                  position: "fixed",
-                  top: String(0) + ea,
-                  left: String(0) + ea,
-                  width: String(100) + '%',
-                  height: String(100) + '%',
-                  background: "transparent",
-                  zIndex: option.zIndex,
-                }
-              });
+                });
 
-              calendarEvent = null;
-              if (instance.type === "photo") {
-                if (thisCase["boo"].textContent.trim() === "O") {
-                  calendarEvent = function (thisCase) {
-                    const to = "photographing";
-                    const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
-                    let tempArr, dateValue, updateDate, start;
+                calendarEvent = null;
+                if (instance.type === "photo") {
+                  if (thisCase["boo"].textContent.trim() === "O") {
+                    calendarEvent = function (thisCase) {
+                      const to = "photographing";
+                      const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
+                      let tempArr, dateValue, updateDate, start;
 
-                    dateValue = thisCase["date"].textContent.trim();
+                      dateValue = thisCase["date"].textContent.trim();
 
-                    if (dateValue !== "미정" && dateValue !== "해당 없음" && !/디자이너/gi.test(thisCase["photographer"].textContent) && !/고객/gi.test(thisCase["photographer"].textContent)) {
-                      tempArr = dateValue.split('-');
-                      updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
-                      start = updateDate;
-                    } else {
-                      start = null;
-                    }
-
-                    GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
-                      if (start !== null) {
-                        if (list.length === 0) {
-                          return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
-                        } else {
-                          return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
-                        }
+                      if (dateValue !== "미정" && dateValue !== "해당 없음" && !/디자이너/gi.test(thisCase["photographer"].textContent) && !/고객/gi.test(thisCase["photographer"].textContent)) {
+                        tempArr = dateValue.split('-');
+                        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
+                        start = updateDate;
                       } else {
-                        if (list.length !== 0) {
-                          return GeneralJs.ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
-                        }
+                        start = null;
                       }
-                    }).catch((err) => {
-                      throw new Error(err);
-                    });
 
+                      GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
+                        if (start !== null) {
+                          if (list.length === 0) {
+                            return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
+                          } else {
+                            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
+                          }
+                        } else {
+                          if (list.length !== 0) {
+                            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
+                          }
+                        }
+                      }).catch((err) => {
+                        throw new Error(err);
+                      });
+
+                    }
                   }
                 }
-              }
 
-              updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent, instance.resetWidthEvent);
+                updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent, instance.resetWidthEvent);
+              }
             }
           }
         },
