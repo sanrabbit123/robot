@@ -1,106 +1,7 @@
-DesignerJs.prototype.contentsBase = function (search = null) {
+DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
-  const { ea, belowHeight } = this;
-  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
-  const { white, green } = colorChip;
-  let totalMother;
-  let margin;
-  let titleArea, contentsArea;
-  let titleDesigner, titleProject, titleTime;
-  let contentsDesigner, contentsProject, contentsTong;
-  let size;
-  let borderBack;
-  let dashBoardHeight, dashBoardMargin;
-  let dashBoard;
-  let topMargin, leftMargin;
-
-  margin = 30;
-  size = 18;
-  dashBoardHeight = 49;
-  dashBoardMargin = 16;
-  topMargin = 11;
-  leftMargin = 10;
-
-  totalMother = createNode({
-    mother: document.getElementById("totalcontents"),
-    class: [ "totalMother" ],
-    style: {
-      position: "fixed",
-      top: String(0),
-      left: String(0),
-      paddingTop: String(margin) + ea,
-      paddingLeft: String(margin) + ea,
-      paddingRight: String(margin) + ea,
-      width: withOut(margin * 2, ea),
-      height: withOut(margin + belowHeight, ea),
-    }
-  });
-  this.totalMother = totalMother;
-
-  [ borderBack, dashBoard, contentsArea, contentsTong ] = createNodes([
-    {
-      mother: totalMother,
-      style: {
-        position: "absolute",
-        top: String(margin + dashBoardHeight + dashBoardMargin) + ea,
-        left: String(margin) + ea,
-        width: withOut(margin * 2, ea),
-        height: withOut(margin + dashBoardHeight + dashBoardMargin, ea),
-        borderBottom: String(0),
-        borderTopLeftRadius: String(3) + "px",
-        borderTopRightRadius: String(3) + "px",
-        boxSizing: "border-box",
-        background: colorChip.gray2,
-      }
-    },
-    {
-      mother: totalMother,
-      style: {
-        position: "relative",
-        height: String(dashBoardHeight) + ea,
-        marginBottom: String(dashBoardMargin) + ea,
-        background: colorChip.gray2,
-        borderRadius: String(3) + "px",
-        textAlign: "center",
-      }
-    },
-    {
-      mother: totalMother,
-      style: {
-        position: "relative",
-        height: withOut(dashBoardHeight + dashBoardMargin, ea),
-      }
-    },
-    {
-      mother: -1,
-      style: {
-        display: "block",
-        position: "relative",
-        paddingTop: String(topMargin) + ea,
-        paddingLeft: String(leftMargin) + ea,
-        height: String(100) + '%',
-        width: String(100) + '%',
-        top: String(0) + ea,
-        boxSizing: "border-box",
-        overflowY: "scroll",
-        overflowX: "hidden",
-      }
-    }
-  ]);
-
-  this.contentsSpec.contentsTong = contentsTong;
-  this.contentsSpec.dashBoard = dashBoard;
-  this.contentsBlockInjection();
-  this.contentsDashBoard();
-}
-
-DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index, titleMode = false) {
-  if (mother === undefined || project === undefined) {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const { ea, photoActionList } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
+  const { ea } = this;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const { address, contents: { photo, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
   const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
@@ -109,15 +10,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
   const textMaker = (title, value, color, column) => {
     return `<b id="${!titleMode ? project.proid : "title"}_${column}" title="${title}" class="value" style="color:${colorChip[titleMode ? "whiteBlack" : color]};">${titleMode ? title : value}</b>`;
-  }
-  const dateToString = (dateObj) => {
-    if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
-      return "미정";
-    } else if (dateObj.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
-      return "해당 없음";
-    } else {
-      return `${String(dateObj.getFullYear())}-${zeroAddition(dateObj.getMonth() + 1)}-${zeroAddition(dateObj.getDate())}`;
-    }
   }
   const dateToColor = (dateObj, reverse = true) => {
     if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
@@ -140,7 +32,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   let startLeft;
   let previousWidth, betweenText;
   let widthArr, domArr;
-  let totalObj;
   let tempQsa;
   let whiteBack;
   let whiteWidth;
@@ -160,8 +51,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   leftMargin = 10;
   motherMargin = 30;
 
-  totalObj = [];
-
   height = 43;
   margin = 1;
 
@@ -169,15 +58,12 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   width1 = 3;
   titleBlockTop = 105;
 
-  top = isMac() ? 11 : 12;
+  top = (titleMode ? (isMac() ? 12 : 13) : (isMac() ? 11 : 12));
   left = 16;
   size = 14;
   textMargin = 6;
   startLeft = 0;
   betweenText = 50;
-
-  totalObj.push(startLeft);
-  totalObj.push(betweenText);
 
   whiteWidth = 16;
 
@@ -185,22 +71,16 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   updateArr = [];
 
   generalMargin = 1;
-  lastMargin = 60;
+  lastMargin = 1;
 
   factorHeight = 20;
 
   emptyDate = new Date(1800, 0, 1);
   emptyValue = "해당 없음";
 
-  photoSourceBoo = true;
-  if (this.type === "contents" || this.type === "share") {
-    if (photoActionList.includes(project.contents.raw.photo.status)) {
-      photoSourceBoo = false;
-    }
-    if (photoSourceBoo && this.pastPhotoSourceBoo) {
-      last = true;
-    }
-  }
+  stringArr = [];
+  updateArr = [];
+
   if (this.type === "photo") {
 
     map = {
@@ -2632,6 +2512,266 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
   });
 
+  return { map, stringArr, updateArr };
+}
+
+DesignerJs.prototype.contentsBase = function (search = null) {
+  const instance = this;
+  const { ea, belowHeight } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { white, green } = colorChip;
+  let totalMother;
+  let margin;
+  let titleArea, contentsArea;
+  let titleDesigner, titleProject, titleTime;
+  let contentsDesigner, contentsProject, contentsTong;
+  let size;
+  let borderBack;
+  let dashBoardHeight, dashBoardMargin;
+  let dashBoard;
+  let topMargin, leftMargin;
+
+  margin = 30;
+  size = 18;
+  dashBoardHeight = 49;
+  dashBoardMargin = 16;
+  topMargin = 11;
+  leftMargin = 10;
+
+  totalMother = createNode({
+    mother: document.getElementById("totalcontents"),
+    class: [ "totalMother" ],
+    style: {
+      position: "fixed",
+      top: String(0),
+      left: String(0),
+      paddingTop: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+      height: withOut(margin + belowHeight, ea),
+    }
+  });
+  this.totalMother = totalMother;
+
+  [ borderBack, dashBoard, contentsArea, contentsTong ] = createNodes([
+    {
+      mother: totalMother,
+      style: {
+        position: "absolute",
+        top: String(margin + dashBoardHeight + dashBoardMargin) + ea,
+        left: String(margin) + ea,
+        width: withOut(margin * 2, ea),
+        height: withOut(margin + dashBoardHeight + dashBoardMargin, ea),
+        borderBottom: String(0),
+        borderTopLeftRadius: String(3) + "px",
+        borderTopRightRadius: String(3) + "px",
+        boxSizing: "border-box",
+        background: colorChip.gray2,
+      }
+    },
+    {
+      mother: totalMother,
+      style: {
+        position: "relative",
+        height: String(dashBoardHeight) + ea,
+        marginBottom: String(dashBoardMargin) + ea,
+        background: colorChip.gray2,
+        borderRadius: String(3) + "px",
+        textAlign: "center",
+      }
+    },
+    {
+      mother: totalMother,
+      style: {
+        position: "relative",
+        height: withOut(dashBoardHeight + dashBoardMargin, ea),
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingTop: String(topMargin) + ea,
+        paddingLeft: String(leftMargin) + ea,
+        height: String(100) + '%',
+        width: String(100) + '%',
+        top: String(0) + ea,
+        boxSizing: "border-box",
+        overflowY: "scroll",
+        overflowX: "hidden",
+      }
+    }
+  ]);
+
+  this.contentsSpec.contentsTong = contentsTong;
+  this.contentsSpec.dashBoard = dashBoard;
+  this.contentsBlockInjection();
+  this.contentsDashBoard();
+}
+
+DesignerJs.prototype.contentsBlockInjection = function () {
+  const instance = this;
+  const { ea, projects, actionList } = this;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
+  const { contentsTong } = this.contentsSpec;
+  let scrollTong;
+  let width, dom;
+  let maxWidth;
+  let startLeft, betweenText, widthArr, domArr;
+  let temp;
+  let firstBoo;
+  let leftMargin;
+  let firstPaddingTop;
+  let tongPaddingBottom;
+
+  leftMargin = 10;
+  firstPaddingTop = 44;
+  tongPaddingBottom = 500;
+
+  cleanChildren(contentsTong);
+
+  scrollTong = createNode({
+    mother: contentsTong,
+    style: {
+      position: "relative",
+      width: withOut(leftMargin, ea),
+      overflowX: "hidden",
+      paddingTop: String(firstPaddingTop) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
+    }
+  });
+
+  maxWidth = [];
+
+  projects.sort((a, b) => { return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf(); });
+
+  this.scrollTong = scrollTong;
+  this.contentsBlocks = [];
+  this.pastPhotoSourceBoo = true;
+  this.ignoreNumbers = [ 3, 1 ];
+  this.resetWidthEvent = async function () {
+    try {
+      const { xyConverting } = GeneralJs;
+      const { ignoreNumbers } = instance;
+      let children;
+      let widthArrMother, widthArrMotherConverted;
+      let widthArr;
+      let tempArr;
+
+      widthArrMother = [];
+      for (let block of instance.contentsBlocks) {
+        children = block.children;
+        widthArr = [];
+        for (let i = 0; i < children.length; i++) {
+          if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
+            children[i].style.width = "auto";
+          }
+          widthArr.push(children[i].getBoundingClientRect().width);
+        }
+        widthArrMother.push(widthArr);
+      }
+
+      widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
+        arr.sort((a, b) => { return b - a; });
+        return arr[0];
+      });
+
+      for (let block of instance.contentsBlocks) {
+        children = block.children;
+        for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+          children[i].style.width = String(widthArrMotherConverted[i]) + ea;
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  firstBoo = true;
+  for (let i = 0; i < projects.length; i++) {
+    if (!actionList.includes(projects[i].process.action)) {
+      if (firstBoo) {
+        this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, true);
+        firstBoo = false;
+      }
+      this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, false);
+    }
+  }
+
+  this.resetWidthEvent();
+}
+
+DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index, titleMode = false) {
+  if (mother === undefined || project === undefined) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { ea, photoActionList } = this;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
+  const { map, stringArr, updateArr } = this.contentsDataRender(project, titleMode);
+  let height, margin;
+  let whiteBlock;
+  let width0, width1;
+  let top, left, size;
+  let textMargin;
+  let startLeft;
+  let previousWidth, betweenText;
+  let widthArr, domArr;
+  let tempQsa;
+  let whiteBack;
+  let whiteWidth;
+  let tempDom;
+  let tempString, tempString0, tempString1, tempString2, tempString3;
+  let emptyDate, emptyValue;
+  let mapColumn;
+  let photoSourceBoo;
+  let generalMargin, lastMargin;
+  let factorHeight;
+  let num;
+  let leftMargin;
+  let motherMargin;
+  let titleBlockTop;
+
+  leftMargin = 10;
+  motherMargin = 30;
+
+  height = 43;
+  margin = 1;
+
+  width0 = 115;
+  width1 = 3;
+  titleBlockTop = 105;
+
+  top = (titleMode ? (isMac() ? 12 : 13) : (isMac() ? 11 : 12));
+  left = 16;
+  size = 14;
+  textMargin = 6;
+  startLeft = 0;
+  betweenText = 50;
+
+  whiteWidth = 16;
+
+  generalMargin = 1;
+  lastMargin = 1;
+
+  factorHeight = 20;
+
+  emptyDate = new Date(1800, 0, 1);
+  emptyValue = "해당 없음";
+
+  photoSourceBoo = true;
+  if (this.type === "contents" || this.type === "share") {
+    if (photoActionList.includes(project.contents.raw.photo.status)) {
+      photoSourceBoo = false;
+    }
+    if (photoSourceBoo && this.pastPhotoSourceBoo) {
+      last = true;
+    }
+  }
+
   whiteBlock = createNode({
     mother,
     id: project.proid,
@@ -2712,8 +2852,10 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     tempDom = createNode({
       mother: whiteBlock,
       attribute: [
+        { index: String(index) },
         { arrindex: String(i) },
-        { title: titleMode ? 1 : 0 }
+        { title: titleMode ? 1 : 0 },
+        { sort: String(1), }
       ],
       text: stringArr[i],
       class: [ "white_child_" + String(i) ],
@@ -2723,17 +2865,57 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           event: function (e) {
             e.stopPropagation();
             e.preventDefault();
+            const { ea, ignoreNumbers, contentsBlocks, scrollTong } = instance;
+            const { createNode, createNodes, colorChip, withOut, xyConverting } = GeneralJs;
             const titleMode = Number(this.getAttribute("title")) === 1;
+            const thisIndex = Number(this.getAttribute("arrindex"));
+            const thisSort = Number(this.getAttribute("sort"));
             if (titleMode) {
+              const targets = contentsBlocks.map((dom, index) => { return { dom, index: index - 1 }; }).slice(1);
+              const children = xyConverting(targets.map((obj) => { return [ ...obj.dom.children ].slice(ignoreNumbers[0], -1 * ignoreNumbers[1]); }));
+              const sortTargets = children[thisIndex];
+              let indexArr, tempIndex, numberSortBoo;
 
-              console.log("this!");
+              numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
+
+              if (!numberSortBoo) {
+                if (thisSort === 1) {
+                  sortTargets.sort((a, b) => {
+                    return b.querySelector(".value").textContent > a.querySelector(".value").textContent ? 1 : -1;
+                  });
+                  this.setAttribute("sort", String(0));
+                } else {
+                  sortTargets.sort((a, b) => {
+                    return a.querySelector(".value").textContent > b.querySelector(".value").textContent ? 1 : -1;
+                  });
+                  this.setAttribute("sort", String(1));
+                }
+              } else {
+                if (thisSort === 1) {
+                  sortTargets.sort((a, b) => {
+                    return (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
+                  });
+                  this.setAttribute("sort", String(0));
+                } else {
+                  sortTargets.sort((a, b) => {
+                    return (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
+                  });
+                  this.setAttribute("sort", String(1));
+                }
+              }
+
+              indexArr = sortTargets.map((dom) => { return Number(dom.getAttribute("index")) });
+              for (let index of indexArr) {
+                tempIndex = targets.findIndex((obj) => { return obj.index === index });
+                if (tempIndex !== -1) {
+                  scrollTong.appendChild(targets[tempIndex].dom);
+                }
+              }
 
             } else {
               if (this.querySelectorAll("aside").length === 0) {
                 const self = this;
                 const index = Number(this.getAttribute("arrindex"));
-                const { ea } = instance;
-                const { createNode, createNodes, colorChip, withOut } = GeneralJs;
                 const valueDom = this.querySelector(".value");
                 let thisCase;
                 thisCase = {};
@@ -2860,8 +3042,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     widthArr.push(previousWidth);
     startLeft = startLeft + previousWidth + betweenText;
   }
-  totalObj.push(widthArr);
-  totalObj.push(domArr);
 
   whiteBack = createNode({
     mother: whiteBlock,
@@ -2875,130 +3055,21 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     }
   });
 
-  if (!boo) {
-    tempQsa = whiteBlock.querySelectorAll("div");
-    for (let dom of tempQsa) {
-      dom.style.color = colorChip.gray4;
-    }
-    tempQsa = whiteBlock.querySelectorAll("b");
-    for (let dom of tempQsa) {
-      dom.style.color = colorChip.gray4;
-    }
-    whiteBlock.children[2].style.background = colorChip.gray0;
-    whiteBack.style.background = colorChip.gray0;
-  }
+  // if (!boo) {
+  //   tempQsa = whiteBlock.querySelectorAll("div");
+  //   for (let dom of tempQsa) {
+  //     dom.style.color = colorChip.gray4;
+  //   }
+  //   tempQsa = whiteBlock.querySelectorAll("b");
+  //   for (let dom of tempQsa) {
+  //     dom.style.color = colorChip.gray4;
+  //   }
+  //   whiteBlock.children[2].style.background = colorChip.gray0;
+  //   whiteBack.style.background = colorChip.gray0;
+  // }
 
   this.contentsBlocks.push(whiteBlock);
-  if (photoSourceBoo && this.pastPhotoSourceBoo) {
-    num = 2;
-    while (this.contentsBlocks[this.contentsBlocks.length - num] !== undefined) {
-      this.contentsBlocks[this.contentsBlocks.length - num].style.marginBottom = String(margin * generalMargin) + ea;
-      num++;
-    }
-  }
   this.pastPhotoSourceBoo = photoSourceBoo;
-
-  totalObj.push(whiteBlock);
-
-  return totalObj;
-}
-
-DesignerJs.prototype.contentsBlockInjection = function () {
-  const instance = this;
-  const { ea, projects, actionList } = this;
-  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
-  const { contentsTong } = this.contentsSpec;
-  let scrollTong;
-  let width, dom;
-  let maxWidth;
-  let startLeft, betweenText, widthArr, domArr;
-  let temp;
-  let firstBoo;
-  let leftMargin;
-  let firstPaddingTop;
-  let tongPaddingBottom;
-
-  leftMargin = 10;
-  firstPaddingTop = 44;
-  tongPaddingBottom = 500;
-
-  cleanChildren(contentsTong);
-
-  scrollTong = createNode({
-    mother: contentsTong,
-    style: {
-      position: "relative",
-      width: withOut(leftMargin, ea),
-      overflowX: "hidden",
-      paddingTop: String(firstPaddingTop) + ea,
-      paddingBottom: String(tongPaddingBottom) + ea,
-    }
-  });
-
-  width = [];
-  dom = [];
-  maxWidth = [];
-
-  projects.sort((a, b) => { return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf(); });
-
-  this.contentsBlocks = [];
-  this.pastPhotoSourceBoo = true;
-  this.resetWidthEvent = async function () {
-    try {
-      const { xyConverting } = GeneralJs;
-      const ignoreNumbers = [ 3, 1 ];
-      let children;
-      let widthArrMother, widthArrMotherConverted;
-      let widthArr;
-      let tempArr;
-
-      widthArrMother = [];
-      for (let block of instance.contentsBlocks) {
-        children = block.children;
-        widthArr = [];
-        for (let i = 0; i < children.length; i++) {
-          if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
-            children[i].style.width = "auto";
-          }
-          widthArr.push(children[i].getBoundingClientRect().width);
-        }
-        widthArrMother.push(widthArr);
-      }
-
-      widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
-        arr.sort((a, b) => { return b - a; });
-        return arr[0];
-      });
-
-      for (let block of instance.contentsBlocks) {
-        children = block.children;
-        for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-          children[i].style.width = String(widthArrMotherConverted[i]) + ea;
-        }
-      }
-
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  firstBoo = true;
-  for (let i = 0; i < projects.length; i++) {
-    if (!actionList.includes(projects[i].process.action)) {
-      if (firstBoo) {
-        [ startLeft, betweenText, widthArr, domArr, whiteBlock ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, true);
-        whiteBlock.style.display = "block";
-        width.push(widthArr);
-        dom.push(domArr);
-        firstBoo = false;
-      }
-      [ startLeft, betweenText, widthArr, domArr, whiteBlock ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, false);
-      width.push(widthArr);
-      dom.push(domArr);
-    }
-  }
-
-  this.resetWidthEvent();
 
 }
 
@@ -3409,10 +3480,10 @@ DesignerJs.prototype.contentsView = async function () {
       "세팅 마무리",
     ];
     this.photoActionList = [
-      '촬영 대기',
-      '원본 요청 요망',
-      '원본 요청 완료',
-      '해당 없음'
+      "촬영 대기",
+      "원본 요청 요망",
+      "원본 요청 완료",
+      "해당 없음"
     ];
 
     whereQuery = {};
