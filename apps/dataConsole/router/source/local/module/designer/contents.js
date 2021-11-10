@@ -1,6 +1,6 @@
 DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
-  const { ea } = this;
+  const { ea, photoActionList } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const { address, contents: { photo, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
@@ -26,54 +26,27 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   }
   let height, margin;
   let whiteBlock;
-  let width0, width1;
   let top, left, size;
-  let textMargin;
   let startLeft;
-  let previousWidth, betweenText;
+  let previousWidth;
   let widthArr, domArr;
   let tempQsa;
   let whiteBack;
-  let whiteWidth;
   let stringArr, tempDom;
   let tempString, tempString0, tempString1, tempString2, tempString3;
   let updateArr;
   let emptyDate, emptyValue;
-  let map, mapColumn;
-  let photoSourceBoo;
-  let generalMargin, lastMargin;
-  let factorHeight;
+  let map;
+  let displayBoo;
   let num;
-  let leftMargin;
-  let motherMargin;
-  let titleBlockTop;
-
-  leftMargin = 10;
-  motherMargin = 30;
 
   height = 43;
   margin = 1;
 
-  width0 = 115;
-  width1 = 3;
-  titleBlockTop = 105;
-
   top = (titleMode ? (isMac() ? 12 : 13) : (isMac() ? 11 : 12));
   left = 16;
   size = 14;
-  textMargin = 6;
   startLeft = 0;
-  betweenText = 50;
-
-  whiteWidth = 16;
-
-  stringArr = [];
-  updateArr = [];
-
-  generalMargin = 1;
-  lastMargin = 1;
-
-  factorHeight = 20;
 
   emptyDate = new Date(1800, 0, 1);
   emptyValue = "해당 없음";
@@ -2512,7 +2485,17 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
 
   });
 
-  return { map, stringArr, updateArr };
+  displayBoo = true;
+  if (this.type === "contents" || this.type === "share") {
+    if (photoActionList.includes(project.contents.raw.photo.status)) {
+      displayBoo = false;
+    }
+  }
+  if (titleMode) {
+    displayBoo = true;
+  }
+
+  return { map, stringArr, updateArr, boo, displayBoo };
 }
 
 DesignerJs.prototype.contentsBase = function (search = null) {
@@ -2649,7 +2632,6 @@ DesignerJs.prototype.contentsBlockInjection = function () {
 
   this.scrollTong = scrollTong;
   this.contentsBlocks = [];
-  this.pastPhotoSourceBoo = true;
   this.ignoreNumbers = [ 3, 1 ];
   this.resetWidthEvent = async function () {
     try {
@@ -2709,28 +2691,21 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     throw new Error("invaild input");
   }
   const instance = this;
-  const { ea, photoActionList } = this;
+  const { ea } = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
-  const { map, stringArr, updateArr } = this.contentsDataRender(project, titleMode);
+  const { map, stringArr, updateArr, boo, displayBoo } = this.contentsDataRender(project, titleMode);
   let height, margin;
   let whiteBlock;
   let width0, width1;
   let top, left, size;
   let textMargin;
-  let startLeft;
   let previousWidth, betweenText;
   let widthArr, domArr;
   let tempQsa;
   let whiteBack;
   let whiteWidth;
   let tempDom;
-  let tempString, tempString0, tempString1, tempString2, tempString3;
-  let emptyDate, emptyValue;
-  let mapColumn;
-  let photoSourceBoo;
-  let generalMargin, lastMargin;
   let factorHeight;
-  let num;
   let leftMargin;
   let motherMargin;
   let titleBlockTop;
@@ -2745,32 +2720,14 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   width1 = 3;
   titleBlockTop = 105;
 
-  top = (titleMode ? (isMac() ? 12 : 13) : (isMac() ? 11 : 12));
+  top = (titleMode ? (isMac() ? 11 : 12) : (isMac() ? 11 : 12));
   left = 16;
   size = 14;
   textMargin = 6;
-  startLeft = 0;
   betweenText = 50;
 
   whiteWidth = 16;
-
-  generalMargin = 1;
-  lastMargin = 1;
-
   factorHeight = 20;
-
-  emptyDate = new Date(1800, 0, 1);
-  emptyValue = "해당 없음";
-
-  photoSourceBoo = true;
-  if (this.type === "contents" || this.type === "share") {
-    if (photoActionList.includes(project.contents.raw.photo.status)) {
-      photoSourceBoo = false;
-    }
-    if (photoSourceBoo && this.pastPhotoSourceBoo) {
-      last = true;
-    }
-  }
 
   whiteBlock = createNode({
     mother,
@@ -2782,11 +2739,11 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       { title: titleMode ? 1 : 0 }
     ],
     style: {
-      display: instance.contentsSearchIndex.includes(index) ? "none" : (photoSourceBoo ? "block" : "none"),
+      display: instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none"),
       position: titleMode ? "fixed" : "relative",
       width: String(8000) + ea,
       height: String(height) + ea,
-      marginBottom: String(margin * (!last ? generalMargin : lastMargin)) + ea,
+      marginBottom: String(margin) + ea,
       transition: "all 0s ease",
       zIndex: titleMode ? String(4) : "",
       top: titleMode ? String(titleBlockTop) + ea : "",
@@ -3040,7 +2997,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     domArr.push(tempDom);
     previousWidth = tempDom.getBoundingClientRect().width;
     widthArr.push(previousWidth);
-    startLeft = startLeft + previousWidth + betweenText;
   }
 
   whiteBack = createNode({
@@ -3055,21 +3011,20 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     }
   });
 
-  // if (!boo) {
-  //   tempQsa = whiteBlock.querySelectorAll("div");
-  //   for (let dom of tempQsa) {
-  //     dom.style.color = colorChip.gray4;
-  //   }
-  //   tempQsa = whiteBlock.querySelectorAll("b");
-  //   for (let dom of tempQsa) {
-  //     dom.style.color = colorChip.gray4;
-  //   }
-  //   whiteBlock.children[2].style.background = colorChip.gray0;
-  //   whiteBack.style.background = colorChip.gray0;
-  // }
+  if (!boo) {
+    tempQsa = whiteBlock.querySelectorAll("div");
+    for (let dom of tempQsa) {
+      dom.style.color = colorChip.gray4;
+    }
+    tempQsa = whiteBlock.querySelectorAll("b");
+    for (let dom of tempQsa) {
+      dom.style.color = colorChip.gray4;
+    }
+    whiteBlock.children[2].style.background = colorChip.gray0;
+    whiteBack.style.background = colorChip.gray0;
+  }
 
   this.contentsBlocks.push(whiteBlock);
-  this.pastPhotoSourceBoo = photoSourceBoo;
 
 }
 
