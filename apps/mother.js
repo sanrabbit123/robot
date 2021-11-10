@@ -3418,4 +3418,29 @@ Mother.prototype.pureServer = function (mode = "class", app = null, port = 8000)
   }
 }
 
+Mother.prototype.xyConverting = function (original) {
+  if (!Array.isArray(original)) {
+    throw new Error("input must be array");
+  }
+  if (original.length > 0) {
+    if (!original.every((arr) => { return Array.isArray(arr); })) {
+      throw new Error("input must be matrix");
+    }
+  }
+  let converted, tempArr;
+
+  converted = [];
+  if (original.length > 0) {
+    for (let i = 0; i < original[0].length; i++) {
+      tempArr = [];
+      for (let arr of original) {
+        tempArr.push(arr[i]);
+      }
+      converted.push(tempArr);
+    }
+  }
+
+  return converted;
+}
+
 module.exports = Mother;

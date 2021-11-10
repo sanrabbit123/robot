@@ -18,8 +18,8 @@ DesignerJs.prototype.contentsBase = function (search = null) {
   size = 18;
   dashBoardHeight = 49;
   dashBoardMargin = 16;
-  topMargin = 21;
-  leftMargin = 20;
+  topMargin = 11;
+  leftMargin = 10;
 
   totalMother = createNode({
     mother: document.getElementById("totalcontents"),
@@ -78,7 +78,6 @@ DesignerJs.prototype.contentsBase = function (search = null) {
         position: "relative",
         paddingTop: String(topMargin) + ea,
         paddingLeft: String(leftMargin) + ea,
-        paddingRight: String(leftMargin) + ea,
         height: String(100) + '%',
         width: String(100) + '%',
         top: String(0) + ea,
@@ -95,7 +94,7 @@ DesignerJs.prototype.contentsBase = function (search = null) {
   this.contentsDashBoard();
 }
 
-DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index) {
+DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index, titleMode = false) {
   if (mother === undefined || project === undefined) {
     throw new Error("invaild input");
   }
@@ -108,7 +107,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   const { client: { photo: photoClient, contents: contentsClient }, designer: { photo: photoDesigner, contents: contentsDesigner } } = share;
   const { portfolio: { long: longPortfolio, short: shortPortfoilo }, interview: { long: longInterview, short: shortInterview } } = sns;
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-  const textMaker = (title, value, color, column) => { const space = "&nbsp;"; return `<b style="color:${colorChip.gray5};font-weight:200">${title}${space}:${space}</b><b id="${project.proid}_${column}" class="value" style="color:${colorChip[color]}">${value}</b>`; }
+  const textMaker = (title, value, color, column) => {
+    return `<b id="${!titleMode ? project.proid : "title"}_${column}" title="${title}" class="value" style="color:${colorChip[titleMode ? "whiteBlack" : color]};">${titleMode ? title : value}</b>`;
+  }
   const dateToString = (dateObj) => {
     if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
       return "미정";
@@ -141,10 +142,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   let widthArr, domArr;
   let totalObj;
   let tempQsa;
-  let circle, whiteBack;
-  let radius;
-  let circleTop;
-  let redPoint;
+  let whiteBack;
   let whiteWidth;
   let stringArr, tempDom;
   let tempString, tempString0, tempString1, tempString2, tempString3;
@@ -155,29 +153,33 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   let generalMargin, lastMargin;
   let factorHeight;
   let num;
+  let leftMargin;
+  let motherMargin;
+  let titleBlockTop;
+
+  leftMargin = 10;
+  motherMargin = 30;
 
   totalObj = [];
 
-  height = 41;
-  margin = 4;
+  height = 43;
+  margin = 1;
 
   width0 = 115;
   width1 = 3;
+  titleBlockTop = 105;
 
-  top = isMac() ? 9 : 11;
+  top = isMac() ? 11 : 9;
   left = 16;
-  size = 15;
+  size = 14;
   textMargin = 6;
-  startLeft = 160;
-  betweenText = 30;
+  startLeft = 0;
+  betweenText = 50;
 
   totalObj.push(startLeft);
   totalObj.push(betweenText);
 
-  radius = 4;
-  circleTop = 16;
-  redPoint = false;
-  whiteWidth = 40;
+  whiteWidth = 16;
 
   stringArr = [];
   updateArr = [];
@@ -203,7 +205,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
     map = {
       boo: {
-        title: "촬영 여부",
+        title: "촬영",
         position: "contents.photo.boo",
         values: [ 'O', 'X' ],
         chain: {
@@ -278,9 +280,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 31.5;
       width = 36;
       margin = 4;
+      startLeft = 0;
 
       background = colorChip.gradientGreen4;
       updateEvent = async function (e) {
@@ -300,8 +302,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -389,8 +391,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -499,7 +501,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 31.5;
+      startLeft = 0;
       width = 36;
       margin = 4;
 
@@ -532,8 +534,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -543,7 +545,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         {
           mother: this,
           mode: "aside",
-          text: `<b style="display:inline-block;font-weight:200;color:${colorChip.green}">${this.textContent.split(':')[0]}:&nbsp;</b>`,
           events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
           style: {
             position: "absolute",
@@ -551,8 +552,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             left: String(0) + ea,
             width: String(this.getBoundingClientRect().width) + ea,
             height: String(this.getBoundingClientRect().height) + ea,
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(200),
             color: colorChip.green,
             background: colorChip.white,
             zIndex
@@ -563,8 +562,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           mode: "input",
           attribute: [
             { type: "text" },
-            { value: this.textContent.split(':')[1].trim() },
-            { past: this.textContent.split(':')[1].trim() },
+            { value: this.textContent.trim() },
+            { past: this.textContent.trim() },
           ],
           events: [
             { type: "click", event: (e) => { e.stopPropagation(); } },
@@ -584,13 +583,13 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           ],
           style: {
             display: "inline-block",
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(400),
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
             color: colorChip.green,
             background: colorChip.white,
             outline: String(0),
             border: String(0),
-            width: String(Math.floor(valueDom.parentElement.getBoundingClientRect().width - valueDom.parentElement.firstChild.getBoundingClientRect().width)) + ea,
+            width: String(100) + '%',
             height: String(valueDom.getBoundingClientRect().height) + ea,
           }
         }
@@ -615,7 +614,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 21;
+      startLeft = 0;
       width = 114;
       margin = 4;
 
@@ -633,8 +632,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -688,7 +687,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 20;
+      startLeft = 0;
       width = 70;
       margin = 4;
 
@@ -711,8 +710,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -766,7 +765,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 20;
+      startLeft = 0;
       width = 70;
       margin = 4;
 
@@ -789,8 +788,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -832,13 +831,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      parent.style.overflow = "hidden";
-      resetWidthEvent(mother).catch((err) => { console.log(err); });
-    });
 
-    if (date.valueOf() > (new Date(3000, 0, 1).valueOf()) || photographer === "미정" || interviewer === "미정") {
-      redPoint = true;
-    }
+      resetWidthEvent();
+    });
 
   } else if (this.type === "source") {
 
@@ -896,7 +891,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 89;
+      startLeft = 0;
       width = 110;
       margin = 4;
 
@@ -920,8 +915,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -976,7 +971,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 31.5;
+      startLeft = 0;
       width = 36;
       margin = 4;
 
@@ -999,8 +994,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1010,7 +1005,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         {
           mother: this,
           mode: "aside",
-          text: `<b style="display:inline-block;font-weight:200;color:${colorChip.green}">${this.textContent.split(':')[0]}:&nbsp;</b>`,
           events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
           style: {
             position: "absolute",
@@ -1018,8 +1012,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             left: String(0) + ea,
             width: String(this.getBoundingClientRect().width) + ea,
             height: String(this.getBoundingClientRect().height) + ea,
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(200),
             color: colorChip.green,
             background: colorChip.white,
             zIndex
@@ -1047,13 +1039,13 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           ],
           style: {
             display: "inline-block",
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(400),
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
             color: colorChip.green,
             background: colorChip.white,
             outline: String(0),
             border: String(0),
-            width: String(Math.floor(valueDom.parentElement.getBoundingClientRect().width - valueDom.parentElement.firstChild.getBoundingClientRect().width)) + ea,
+            width: String(100) + '%',
             height: String(valueDom.getBoundingClientRect().height) + ea,
           }
         }
@@ -1078,7 +1070,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 65;
+      startLeft = 0;
       width = 110;
       margin = 4;
 
@@ -1102,8 +1094,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1158,7 +1150,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 31.5;
+      startLeft = 0;
       width = 36;
       margin = 4;
 
@@ -1175,8 +1167,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1186,7 +1178,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
         {
           mother: this,
           mode: "aside",
-          text: `<b style="display:inline-block;font-weight:200;color:${colorChip.green}">${this.textContent.split(':')[0]}:&nbsp;</b>`,
           events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
           style: {
             position: "absolute",
@@ -1194,8 +1185,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             left: String(0) + ea,
             width: String(this.getBoundingClientRect().width) + ea,
             height: String(this.getBoundingClientRect().height) + ea,
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(200),
             color: colorChip.green,
             background: colorChip.white,
             zIndex
@@ -1223,13 +1212,13 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           ],
           style: {
             display: "inline-block",
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(400),
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
             color: colorChip.green,
             background: colorChip.white,
             outline: String(0),
             border: String(0),
-            width: String(Math.floor(valueDom.parentElement.getBoundingClientRect().width - valueDom.parentElement.firstChild.getBoundingClientRect().width)) + ea,
+            width: String(100) + '%',
             height: String(valueDom.getBoundingClientRect().height) + ea,
           }
         }
@@ -1254,7 +1243,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       position = map[column].position;
       values = map[column].values;
       chainQuery = map[column].chain;
-      startLeft = 51;
+      startLeft = 0;
       width = 110;
       margin = 4;
 
@@ -1278,8 +1267,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1317,10 +1306,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       }
       createNodes(nodeArr);
     });
-
-    if (/요망/gi.test(portfolioStatus) || /요망/gi.test(interviewStatus) || /요망/gi.test(photoStatus)) {
-      redPoint = true;
-    }
 
   } else if (this.type === "contents") {
 
@@ -1412,8 +1397,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1554,8 +1539,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1696,8 +1681,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1838,8 +1823,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -1935,13 +1920,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
-      parent.style.overflow = "hidden";
-      resetWidthEvent(mother).catch((err) => { console.log(err); });
-    });
 
-    if (/미정/gi.test(tempString0) || /미정/gi.test(tempString1) || /미정/gi.test(tempString2) || /미정/gi.test(tempString3)) {
-      redPoint = true;
-    }
+      resetWidthEvent();
+    });
 
   } else if (this.type === "share") {
 
@@ -2021,8 +2002,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2163,8 +2144,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2305,8 +2286,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2447,8 +2428,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          parent.style.overflow = "hidden";
-          resetWidthEvent(mother);
+
+          resetWidthEvent();
         } catch (e) {
           console.log(e);
         }
@@ -2543,7 +2524,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
   }
 
-  stringArr.push(textMaker("촬영 메모", history.replace(/\n/g, ' ').slice(0, 40), "black", "history"));
+  stringArr.push(textMaker("메모", history.replace(/\n/g, ' ').slice(0, 40), "black", "history"));
   updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
     const mother = this;
     const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
@@ -2556,7 +2537,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
     updateQuery = {};
     whereQuery = { proid: project.proid };
-    startLeft = 0;
+    startLeft = -20;
     width = 560;
     historyHeight = 400;
     margin = 4;
@@ -2607,8 +2588,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                 if (e.key === "Tab") {
                   e.preventDefault();
                   e.stopPropagation();
-                  mother.style.overflow = "hidden";
-                  parent.style.overflow = "hidden";
+
                   const removeTargets = mother.querySelectorAll("aside");
                   const value = this.value;
                   const cookies = GeneralJs.getCookiesAll();
@@ -2625,7 +2605,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                     mother.removeChild(dom);
                   }
 
-                  resetWidthEvent(mother);
+                  resetWidthEvent();
                 }
               } catch (e) {
                 console.log(e);
@@ -2639,7 +2619,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           left: String(historyMargin + 3) + ea,
           width: withOut(100, (historyMargin + 3) * 2, ea),
           height: withOut(100, historyMargin * 2, ea),
-          fontSize: String(size + 1) + ea,
+          fontSize: String(size) + ea,
           fontWeight: String(300),
           background: colorChip.white,
           lineHeight: String(1.7),
@@ -2652,75 +2632,78 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
 
   });
 
-  [ whiteBlock ] = createNodes([
-    {
-      mother,
-      id: project.proid,
-      attribute: [
-        { index: String(index) },
-        { sortstandard: "" },
-        { sort: "1" },
-      ],
-      style: {
-        display: instance.contentsSearchIndex.includes(index) ? "none" : (photoSourceBoo ? "flex" : "none"),
-        position: "relative",
-        flexDirection: "rows",
-        background: colorChip[boo ? "white" : "gray0"],
-        width: String(100) + '%',
-        height: String(height) + ea,
-        borderRadius: String(5) + "px",
-        marginBottom: String(margin * (!last ? generalMargin : lastMargin)) + ea,
-        overflow: "hidden",
-        transition: "all 0s ease",
-      }
+  whiteBlock = createNode({
+    mother,
+    id: project.proid,
+    attribute: [
+      { index: String(index) },
+      { sortstandard: "" },
+      { sort: "1" },
+    ],
+    style: {
+      display: instance.contentsSearchIndex.includes(index) ? "none" : (photoSourceBoo ? "block" : "none"),
+      position: titleMode ? "fixed" : "relative",
+      width: String(8000) + ea,
+      height: String(height) + ea,
+      marginBottom: String(margin * (!last ? generalMargin : lastMargin)) + ea,
+      transition: "all 0s ease",
+      zIndex: titleMode ? String(4) : "",
+      top: titleMode ? String(titleBlockTop) + ea : "",
     },
-    {
-      mother: -1,
-      text: project.title,
-      class: [ "hoverDefault" ],
-      events: [
-        {
-          type: "click",
-          event: function (e) {
-            window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + project.proid;
-          }
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: "calc(100vw - " + String((motherMargin * 2) + (leftMargin * 2)) + ea + ")",
+          height: String(100) + '%',
+          borderRadius: String(3) + "px",
+          background: titleMode ? colorChip.gradientGreen2 : colorChip[boo ? "white" : "gray0"],
+          top: String(0),
+          left: String(0),
+          transition: "all 0s ease",
+          boxShadow: titleMode ? "0px 2px 13px -9px " + colorChip.shadow : "",
+          opacity: titleMode ? String(0.92) : "",
         }
-      ],
-      style: {
-        position: "relative",
-        width: String(width0) + ea,
-        top: String(top + (isMac() ? 1 : 0)) + ea,
-        // left: String(left) + ea,
-        fontSize: String(size) + ea,
-        zIndex: String(2),
-      }
-    },
-    {
-      mother: -2,
-      text: '|',
-      style: {
-        position: "relative",
-        width: String(width1) + ea,
-        top: String(top + (isMac() ? 1 : 0)) + ea,
-        // left: String(left + width0 + textMargin) + ea,
-        fontSize: String(size) + ea,
-        color: colorChip.gray4,
-        zIndex: String(2),
-      }
-    },
-    {
-      mother: -3,
-      style: {
-        position: "relative",
-        width: String(left + width0 + textMargin + width1 + (textMargin * 1.5)) + ea,
-        top: String(0) + ea,
-        // left: String(0) + ea,
-        height: String(100) + '%',
-        background: colorChip.white,
-        zIndex: String(1),
-      }
-    },
-  ]);
+      },
+      {
+        text: !titleMode ? project.title : "",
+        class: [ "hoverDefault" ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + project.proid;
+            }
+          }
+        ],
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          width: String(width0) + ea,
+          top: String(top + (isMac() ? 1 : 0)) + ea,
+          marginLeft: String(left) + ea,
+          fontSize: String(size) + ea,
+          zIndex: String(2),
+          color: colorChip.black,
+        }
+      },
+      {
+        text: !titleMode ? '|' : "",
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          width: String(width1) + ea,
+          top: String(top + (isMac() ? 1 : 0)) + ea,
+          marginLeft: String(textMargin) + ea,
+          fontSize: String(size) + ea,
+          color: colorChip.gray4,
+          zIndex: String(2),
+        }
+      },
+    ]
+  });
 
   widthArr = [];
   domArr = [];
@@ -2739,236 +2722,124 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
             e.stopPropagation();
             e.preventDefault();
             if (this.querySelectorAll("aside").length === 0) {
-              if (!e.altKey) {
-                const self = this;
-                const index = Number(this.getAttribute("arrindex"));
-                const { ea } = instance;
-                const { createNodes, colorChip, withOut } = GeneralJs;
-                const valueDom = this.querySelector(".value");
-                let thisCase;
-                thisCase = {};
-                for (let column in map) {
-                  if (document.getElementById(project.proid + "_" + column) === null) {
-                    throw new Error("invaild doms");
-                  }
-                  thisCase[column] = document.getElementById(project.proid + "_" + column);
+              const self = this;
+              const index = Number(this.getAttribute("arrindex"));
+              const { ea } = instance;
+              const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+              const valueDom = this.querySelector(".value");
+              let thisCase;
+              thisCase = {};
+              for (let column in map) {
+                if (document.getElementById(project.proid + "_" + column) === null) {
+                  throw new Error("invaild doms");
                 }
-                const option = { ea, top: 25, createNodes, colorChip, withOut, thisCase, boxShadow: "0px 3px 16px -9px " + colorChip.shadow, animation: "fadeuplite 0.2s ease forwards", borderRadius: String(5) + "px", zIndex: String(1), valueDom, height: 31, size: 14, textTop: (isMac() ? 5 : 7) };
-                let cancelBox, parent, calendarEvent, resetWidthEvent;
-
-                resetWidthEvent = async function (domFactor) {
-                  try {
-                    const ignoreNumbers = [ 3, 2 ];
-                    const thisDom = domFactor.parentElement;
-                    const thisId = thisDom.id;
-                    let children, width, left;
-                    let between, betweenArr, betweenBeforeArr;
-                    let tempArr, tempWidthArr;
-                    let leftArr, widthArr;
-
-                    children = thisDom.children;
-                    if (children.length <= ignoreNumbers[0] + ignoreNumbers[1] + 1) {
-                      throw new Error("invaild block");
-                    }
-                    betweenBeforeArr = [];
-                    for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-                      left = Number(children[i].style.left.replace(/[^0-9\-\.]/gi, ''));
-                      width = Number(children[i].style.width.replace(/[^0-9\-\.]/gi, ''));
-                      tempArr = [ left, width ];
-                      betweenBeforeArr.push(tempArr);
-                    }
-                    betweenArr = [];
-                    for (let i = 1; i < betweenBeforeArr.length; i++) {
-                      betweenArr.push(Math.round(betweenBeforeArr[i][0] - (betweenBeforeArr[i - 1][0] + betweenBeforeArr[i - 1][1])));
-                    }
-                    betweenArr.sort((a, b) => { return b - a; });
-                    between = betweenArr[0];
-
-                    left = Number(children[ignoreNumbers[0]].style.left.replace(/[^0-9\-\.]/gi, '')) - between;
-                    width = 0;
-                    leftArr = [];
-                    widthArr = [];
-
-                    for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-                      left = left + width + between;
-                      tempWidthArr = [];
-                      for (let block of instance.contentsBlocks) {
-                        block.children[i].style.width = "auto";
-                        width = block.children[i].getBoundingClientRect().width;
-                        tempWidthArr.push(width);
-                      }
-                      tempWidthArr.sort((a, b) => { return b - a; });
-                      width = tempWidthArr[0];
-                      leftArr.push(left);
-                      widthArr.push(width);
-                    }
-
-                    for (let block of instance.contentsBlocks) {
-                      children = block.children;
-                      for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
-                        children[i].style.left = String(leftArr[i - ignoreNumbers[0]]) + ea;
-                        children[i].style.width = String(widthArr[i - ignoreNumbers[0]]) + ea;
-                        children[i].style.overflow = "hidden";
-                      }
-                    }
-
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }
-
-                parent = this.parentElement;
-
-                [ cancelBox ] = createNodes([
-                  {
-                    mother: this,
-                    mode: "aside",
-                    events: [
-                      {
-                        type: "click",
-                        event: async function (e) {
-                          try {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            parent.style.overflow = "hidden";
-                            const directParent = this.parentElement;
-                            const removeTargets = directParent.querySelectorAll("aside");
-                            for (let dom of removeTargets) {
-                              directParent.removeChild(dom);
-                            }
-                            resetWidthEvent(self);
-                          } catch (e) {
-                            console.log(e);
-                          }
-                        }
-                      }
-                    ],
-                    style: {
-                      position: "fixed",
-                      top: String(0) + ea,
-                      left: String(0) + ea,
-                      width: String(100) + '%',
-                      height: String(100) + '%',
-                      background: "transparent",
-                      zIndex: option.zIndex,
-                    }
-                  }
-                ]);
-                parent.style.overflow = "visible";
-                this.style.overflow = "visible";
-                calendarEvent = null;
-                if (instance.type === "photo") {
-                  if (thisCase["boo"].textContent.trim() === "O") {
-                    calendarEvent = function (thisCase) {
-                      const to = "photographing";
-                      const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
-                      let tempArr, dateValue, updateDate, start;
-
-                      dateValue = thisCase["date"].textContent.trim();
-
-                      if (dateValue !== "미정" && dateValue !== "해당 없음" && !/디자이너/gi.test(thisCase["photographer"].textContent) && !/고객/gi.test(thisCase["photographer"].textContent)) {
-                        tempArr = dateValue.split('-');
-                        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
-                        start = updateDate;
-                      } else {
-                        start = null;
-                      }
-
-                      GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
-                        if (start !== null) {
-                          if (list.length === 0) {
-                            return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
-                          } else {
-                            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
-                          }
-                        } else {
-                          if (list.length !== 0) {
-                            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
-                          }
-                        }
-                      }).catch((err) => {
-                        throw new Error(err);
-                      });
-
-                    }
-                  }
-                }
-
-                updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent, resetWidthEvent);
-
-              } else {
-
-                if (instance.contentsBlocks.length > 0) {
-
-                  const mother = instance.contentsBlocks[0].parentElement;
-                  const index = Number(this.getAttribute("arrindex"));
-                  const sort = Number(instance.contentsBlocks[0].getAttribute("sort"));
-                  const nameConst = "white_child_";
-                  let tempArr;
-                  let thisValue;
-                  let numberBoo;
-
-                  numberBoo = false;
-
-                  for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                    tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
-                    thisValue = tempArr[1].trim();
-                    if (/[0-9]/gi.test(thisValue)) {
-                      numberBoo = true;
-                    }
-                  }
-
-                  for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                    tempArr = instance.contentsBlocks[z].querySelector('.' + nameConst + String(index)).textContent.split(':');
-                    thisValue = tempArr[1].trim();
-                    if (/[0-9]/gi.test(thisValue)) {
-                      instance.contentsBlocks[z].setAttribute("sortstandard", thisValue.replace(/[^0-9]/gi, ''));
-                    } else {
-                      if (numberBoo) {
-                        if (thisValue === "예정" || thisValue === "미정") {
-                          instance.contentsBlocks[z].setAttribute("sortstandard", "9999999999999999");
-                        } else {
-                          instance.contentsBlocks[z].setAttribute("sortstandard", "0");
-                        }
-                      } else {
-                        instance.contentsBlocks[z].setAttribute("sortstandard", thisValue);
-                      }
-                    }
-                  }
-
-                  if (sort === 1) {
-                    if (numberBoo) {
-                      instance.contentsBlocks.sort((a, b) => { return Number(b.getAttribute("sortstandard")) - Number(a.getAttribute("sortstandard")) });
-                    } else {
-                      instance.contentsBlocks.sort((a, b) => { return (b > a) ? 1 : -1 });
-                    }
-                  } else {
-                    if (numberBoo) {
-                      instance.contentsBlocks.sort((a, b) => { return Number(a.getAttribute("sortstandard")) - Number(b.getAttribute("sortstandard")) });
-                    } else {
-                      instance.contentsBlocks.sort((a, b) => { return (a > b) ? 1 : -1 });
-                    }
-                  }
-
-                  for (let z = 0; z < instance.contentsBlocks.length; z++) {
-                    mother.appendChild(instance.contentsBlocks[z]);
-                    instance.contentsBlocks[z].style.marginBottom = String(margin * ((z !== instance.contentsBlocks.length - 1) ? generalMargin : lastMargin)) + ea;
-                    instance.contentsBlocks[z].setAttribute("sort", (sort === 1) ? "0" : "1");
-                  }
-
-                }
-
+                thisCase[column] = document.getElementById(project.proid + "_" + column);
               }
+              const option = {
+                ea,
+                top: 25,
+                createNode,
+                createNodes,
+                colorChip,
+                withOut,
+                thisCase,
+                boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                animation: "fadeuplite 0.2s ease forwards",
+                borderRadius: String(5) + "px",
+                zIndex: String(1),
+                valueDom,
+                height: 31,
+                size,
+                textTop: (isMac() ? 5 : 7)
+              };
+              let cancelBox, parent, calendarEvent;
+
+              parent = this.parentElement;
+
+              cancelBox = createNode({
+                mother: this,
+                mode: "aside",
+                events: [
+                  {
+                    type: "click",
+                    event: async function (e) {
+                      try {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        const directParent = this.parentElement;
+                        const removeTargets = directParent.querySelectorAll("aside");
+                        for (let dom of removeTargets) {
+                          directParent.removeChild(dom);
+                        }
+                        instance.resetWidthEvent();
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+                  }
+                ],
+                style: {
+                  position: "fixed",
+                  top: String(0) + ea,
+                  left: String(0) + ea,
+                  width: String(100) + '%',
+                  height: String(100) + '%',
+                  background: "transparent",
+                  zIndex: option.zIndex,
+                }
+              });
+
+              calendarEvent = null;
+              if (instance.type === "photo") {
+                if (thisCase["boo"].textContent.trim() === "O") {
+                  calendarEvent = function (thisCase) {
+                    const to = "photographing";
+                    const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
+                    let tempArr, dateValue, updateDate, start;
+
+                    dateValue = thisCase["date"].textContent.trim();
+
+                    if (dateValue !== "미정" && dateValue !== "해당 없음" && !/디자이너/gi.test(thisCase["photographer"].textContent) && !/고객/gi.test(thisCase["photographer"].textContent)) {
+                      tempArr = dateValue.split('-');
+                      updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
+                      start = updateDate;
+                    } else {
+                      start = null;
+                    }
+
+                    GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
+                      if (start !== null) {
+                        if (list.length === 0) {
+                          return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
+                        } else {
+                          return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
+                        }
+                      } else {
+                        if (list.length !== 0) {
+                          return GeneralJs.ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
+                        }
+                      }
+                    }).catch((err) => {
+                      throw new Error(err);
+                    });
+
+                  }
+                }
+              }
+
+              updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent, instance.resetWidthEvent);
             }
           }
         },
       ],
       style: {
+        display: "inline-block",
+        verticalAlign: "top",
         position: "relative",
         top: String(top) + ea,
-        // left: String(startLeft) + ea,
+        marginLeft: String(betweenText) + ea,
         fontSize: String(size) + ea,
-        fontWeight: String(400),
+        fontWeight: String(titleMode ? 700 : 500),
         height: ((i === stringArr.length - 1) ? String(factorHeight) + ea : ""),
         overflow: ((i === stringArr.length - 1) ? "hidden" : "visible"),
         transition: "all 0s ease",
@@ -2983,31 +2854,17 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   totalObj.push(widthArr);
   totalObj.push(domArr);
 
-  [ whiteBack, circle ] = createNodes([
-    {
-      mother: whiteBlock,
-      style: {
-        position: "absolute",
-        top: String(0) + ea,
-        right: String(0) + ea,
-        width: String(whiteWidth) + ea,
-        height: String(100) + '%',
-        background: colorChip["white"]
-      }
-    },
-    {
-      mother: whiteBlock,
-      style: {
-        position: "absolute",
-        top: String(circleTop) + ea,
-        right: String(left + 1) + ea,
-        width: String(radius * 2) + ea,
-        height: String(radius * 2) + ea,
-        borderRadius: String(radius * 2) + ea,
-        background: colorChip[redPoint ? "red" : "green"]
-      }
+  whiteBack = createNode({
+    mother: whiteBlock,
+    style: {
+      position: "absolute",
+      top: String(0) + ea,
+      right: String(0) + ea,
+      width: String(whiteWidth) + ea,
+      height: String(100) + '%',
+      background: colorChip.white
     }
-  ]);
+  });
 
   if (!boo) {
     tempQsa = whiteBlock.querySelectorAll("div");
@@ -3020,7 +2877,6 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     }
     whiteBlock.children[2].style.background = colorChip.gray0;
     whiteBack.style.background = colorChip.gray0;
-    circle.style.background = colorChip.gray4;
   }
 
   this.contentsBlocks.push(whiteBlock);
@@ -3032,6 +2888,8 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     }
   }
   this.pastPhotoSourceBoo = photoSourceBoo;
+
+  totalObj.push(whiteBlock);
 
   return totalObj;
 }
@@ -3046,6 +2904,14 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   let maxWidth;
   let startLeft, betweenText, widthArr, domArr;
   let temp;
+  let firstBoo;
+  let leftMargin;
+  let firstPaddingTop;
+  let tongPaddingBottom;
+
+  leftMargin = 10;
+  firstPaddingTop = 44;
+  tongPaddingBottom = 500;
 
   cleanChildren(contentsTong);
 
@@ -3053,7 +2919,10 @@ DesignerJs.prototype.contentsBlockInjection = function () {
     mother: contentsTong,
     style: {
       position: "relative",
-      width: String(100) + '%',
+      width: withOut(leftMargin, ea),
+      overflowX: "hidden",
+      paddingTop: String(firstPaddingTop) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
     }
   });
 
@@ -3065,28 +2934,62 @@ DesignerJs.prototype.contentsBlockInjection = function () {
 
   this.contentsBlocks = [];
   this.pastPhotoSourceBoo = true;
-  for (let i = 0; i < projects.length; i++) {
-    if (!actionList.includes(projects[i].process.action)) {
-      [ startLeft, betweenText, widthArr, domArr ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i);
-      // width.push(widthArr);
-      // dom.push(domArr);
+  this.resetWidthEvent = async function () {
+    try {
+      const { xyConverting } = GeneralJs;
+      const ignoreNumbers = [ 3, 1 ];
+      let children;
+      let widthArrMother, widthArrMotherConverted;
+      let widthArr;
+      let tempArr;
+
+      widthArrMother = [];
+      for (let block of instance.contentsBlocks) {
+        children = block.children;
+        widthArr = [];
+        for (let i = 0; i < children.length; i++) {
+          if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
+            children[i].style.width = "auto";
+          }
+          widthArr.push(children[i].getBoundingClientRect().width);
+        }
+        widthArrMother.push(widthArr);
+      }
+
+      widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
+        arr.sort((a, b) => { return b - a; });
+        return arr[0];
+      });
+
+      for (let block of instance.contentsBlocks) {
+        children = block.children;
+        for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+          children[i].style.width = String(widthArrMotherConverted[i]) + ea;
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
     }
   }
 
-  // if (width.length > 0) {
-  //   for (let i = 0; i < width[0].length; i++) {
-  //     width.sort((a, b) => { return b[i] - a[i] });
-  //     maxWidth.push(width[0][i]);
-  //   }
-  //   for (let i = 0; i < dom.length; i++) {
-  //     temp = startLeft;
-  //     for (let j = 0; j < dom[i].length; j++) {
-  //       dom[i][j].style.left = String(temp) + ea;
-  //       dom[i][j].style.width = String(maxWidth[j] + 1) + ea;
-  //       temp += maxWidth[j] + betweenText;
-  //     }
-  //   }
-  // }
+  firstBoo = true;
+  for (let i = 0; i < projects.length; i++) {
+    if (!actionList.includes(projects[i].process.action)) {
+      if (firstBoo) {
+        [ startLeft, betweenText, widthArr, domArr, whiteBlock ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, true);
+        whiteBlock.style.display = "block";
+        width.push(widthArr);
+        dom.push(domArr);
+        firstBoo = false;
+      }
+      [ startLeft, betweenText, widthArr, domArr, whiteBlock ] = this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, false);
+      width.push(widthArr);
+      dom.push(domArr);
+    }
+  }
+
+  this.resetWidthEvent();
 
 }
 
