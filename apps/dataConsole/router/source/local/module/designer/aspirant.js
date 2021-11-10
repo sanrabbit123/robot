@@ -1,1865 +1,3614 @@
-DesignerJs.prototype.reportContents = function (data, mother, loadingIcon, callback = function (doms) {}) {
+// DATA -----------------------------------------------------------------------------------------------------------------
+DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
-  const zeroAddition = function (number) {
-    if (number < 10) {
-      return "0" + String(number);
+  const { ea, photoActionList, resetWidthEvent } = this;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
+  const { address, contents: { photo, raw, share, sns }, history } = project;
+  const { boo, date, info: { interviewer, photographer }, status } = photo;
+  const { portfolio: { status: portfolioStatus, link: portfolioLink }, interview: { status: interviewStatus, link: interviewLink }, photo: { status: photoStatus, link: photoLink } } = raw;
+  const { client: { photo: photoClient, contents: contentsClient }, designer: { photo: photoDesigner, contents: contentsDesigner } } = share;
+  const { portfolio: { long: longPortfolio, short: shortPortfoilo }, interview: { long: longInterview, short: shortInterview } } = sns;
+  const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
+  const textMaker = (title, value, color, column) => {
+    return `<b id="${!titleMode ? project.proid : "title"}_${column}" title="${title}" class="value" style="color:${colorChip[titleMode ? "whiteBlack" : color]};">${titleMode ? title : value}</b>`;
+  }
+  const dateToColor = (dateObj, reverse = true) => {
+    if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
+      return "red";
+    } else if (dateObj.valueOf() < (new Date(2000, 0, 1)).valueOf()) {
+      return "gray5";
     } else {
-      return String(number);
-    }
-  }
-  const stringToDateValue = function (str) {
-    let tempArr0, tempArr1, tempArr2;
-    let resultDate;
-    tempArr0 = str.split(" ");
-    tempArr1 = tempArr0[0].split("-");
-    tempArr2 = tempArr0[1].split(":");
-    resultDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
-    return resultDate.valueOf();
-  }
-  const stringToCareerNumber = function (str) {
-    let tempArr0, tempArr1, tempArr2;
-    tempArr0 = str.split("년 ");
-    return (Number(tempArr0[0].replace(/[^0-9]/g, '').replace(/^0/, '')) * 12) + Number(tempArr0[1].replace(/[^0-9]/g, '').replace(/^0/, ''));
-  }
-  class DataDoms extends Array {
-    pickValue(colmun, index) {
-      let targetDom;
-      for (let i of this[index].children) {
-        if (i.getAttribute("column") === column) {
-          targetDom = i.firstChild;
-        }
+      if (dateObj.valueOf() <= (new Date()).valueOf()) {
+        return !reverse ? "green" : "black";
+      } else {
+        return !reverse ? "black" : "green";
       }
-      return targetDom.textContent;
-    }
-    valueFilter(column, value, reverse=false) {
-      let arr, boo;
-      arr = [];
-      for (let i of this) {
-        boo = false;
-        for (let j of i.children) {
-          if (j.getAttribute("column") === column) {
-            if (j.firstChild.textContent === value) {
-              boo = true;
-            }
-          }
-        }
-        if (value === "all") {
-          boo = true;
-        }
-        if (reverse ? !boo : boo) {
-          arr.push(i);
-        }
-      }
-      return arr;
     }
   }
-  const columns = Object.keys(data.columns);
-  const { portfolioBooArr, alarmStandard, updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, cardViewMap, reportTargetMap, sameStandard, editables } = DataPatch.designerRawMap();
-  const map = columnRelativeMap[data.mode];
-  let div_clone, gray_line;
-  let text_div;
-  let style;
-  let ea;
-  let temp, tempArr, tempObj;
-  let mainMargin, mainTopBottom;
-  let subMargin;
-  let motherWidth;
-  let titleArea;
-  let titleFontSize, titleHeight;
-  let titleIcon0, titleIcon1, titleIcon2;
-  let titleIcon0_2, titleIcon0_3, titleIcon0_4;
-  let dataArea;
-  let dataScrollBox;
-  let dataTitleZone;
-  let dataTitleBox;
-  let dataTitleFactor;
-  let dataTitleFactors;
-  let dataDataZone;
-  let dataDataBox;
-  let dataDataFactor;
-  let dataDataFactorsTotal, dataDataFactors;
-  let dataDoms;
-  let reportArea;
-  let reportScrollBox;
-  let visualSpecific;
-  let relativeRatio;
-  let totalWidth;
-  let fixedWidth;
-  let factorsMargin;
-  let iconHeight;
-  let moveTargets, moveParsing, moveAmount;
-  let sortTargets;
-  let columnIndex;
-  let dataAreaToCardEvent;
-  let reportHeight;
-  let reportFontSize;
-  let reportTextWidth, reportTextHeight;
-  let reportContentsBox;
-  let reportTargetColumn;
-  let reportTargetColumnTong;
-  let reportTargetAllBox;
-  let reportTargetNumberValue;
-  let reportScrollBoxTotalWidth;
-  let editFunction;
-  let tempFunction, tempFunctionOutput;
-  let tempWidth0, tempWidth1, tempWidth2;
-  let reportSortTitleTop;
-  let alarmTargets;
-  let alarmCircle;
+  let height, margin;
+  let whiteBlock;
+  let top, left, size;
+  let startLeft;
+  let previousWidth;
+  let widthArr, domArr;
+  let tempQsa;
+  let whiteBack;
+  let stringArr, tempDom;
+  let tempString, tempString0, tempString1, tempString2, tempString3;
+  let updateArr;
+  let emptyDate, emptyValue;
+  let map;
+  let displayBoo;
+  let num;
+  let calendarEvent;
 
+  height = 43;
+  margin = 1;
 
-  motherWidth = Number(mother.style.width.replace((new RegExp(ea + '$')), ''));
-  ea = "px";
-  mainMargin = 45;
-  subMargin = 15;
-  mainTopBottom = mainMargin - 4;
+  top = (titleMode ? (isMac() ? 12 : 13) : (isMac() ? 11 : 12));
+  left = 16;
+  size = 14;
+  startLeft = 0;
 
-  titleFontSize = 22;
-  titleHeight = 28;
-  iconHeight = 11;
+  emptyDate = new Date(1800, 0, 1);
+  emptyValue = "해당 없음";
 
-  reportHeight = 90;
-  visualSpecific = 2.5
-  relativeRatio = 1.2;
+  stringArr = [];
+  updateArr = [];
 
-  factorsMargin = 10;
+  if (this.type === "photo") {
 
-  reportFontSize = 21;
-
-  moveTargets = [];
-  moveParsing = function (dom, move) {
-    let number;
-    let ea;
-    let translateX;
-    translateX = dom.style.transform;
-    ea = "px";
-    number = Number(translateX.replace(/[^0-9\-\.]/gi, ''));
-    return { style: "translateX(" + String(number + move) + ea + ")", number: number + move };
-  }
-  moveAmount = (data.mode === "presentation") ? 200 : 360;
-
-  totalWidth = 100;
-  for (let i of columns) {
-    totalWidth += (data.columns[i].relative * relativeRatio) + factorsMargin;
-  }
-
-  dataArea = {};
-  dataDataZone = {};
-  sortTargets = [];
-  dataDataFactorsTotal = [];
-  alarmTargets = [];
-
-  titleIcon0 = {};
-  titleIcon0_2 = {};
-  titleIcon0_3 = {};
-  titleIcon0_4 = {};
-
-  editFunction = function (thisColumnName, inputFunction, outputFunction) {
-    return {
-      calendar: function (e) {
-        e.stopPropagation();
-        if (e.cancelable) {
-          e.preventDefault();
-        }
-        const grandMother = this.parentNode.parentNode;
-        const mother = this.parentNode;
-        const { top: grandMotherTop, left: grandMotherLeft } = grandMother.getBoundingClientRect();
-        const { top, left, height, width } = this.getBoundingClientRect();
-        const targetSpot = this.firstChild;
-        const thisWidth = Number(this.style.width.replace(/[^0-9\.\-]/gi, ''));
-        const thisDate = inputFunction(targetSpot.textContent);
-        const thisStandard = this.getAttribute("standard");
-        const ea = "px";
-        let style, calendarWidth, calendarHeight, cancelBack, calendar, calendarTong;
-        let whiteTop, whiteLeft;
-
-        calendarTong = GeneralJs.nodes.div.cloneNode(true);
-        calendar = instance.mother.makeCalendar(thisDate, function (e) {
-          e.stopPropagation();
-
-          const dateString = this.getAttribute("buttonValue");
-          let tempArr, thisDate;
-          let finalValue;
-          let promptData;
-
-          tempArr = dateString.split('-');
-          thisDateObj = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
-
-          finalValue = outputFunction(thisDateObj);
-
-          promptData = window.prompt("시간을 한글 없이, 숫자 형태로만 적어주세요! (예 : 오후 2시 => 14, 오전 9시 => 9, 오후 11시 => 23, 새벽 12시 => 0)");
-          promptData = Number(promptData.replace(/[^0-9]/g, ''));
-          if (Number.isNaN(promptData)) {
-            promptData = 14;
+    map = {
+      boo: {
+        title: "촬영",
+        position: "contents.photo.boo",
+        values: [ 'O', 'X' ],
+        chain: {
+          condition: 'X',
+          updateQuery: {
+            "contents.photo.status": emptyValue,
+            "contents.photo.date": emptyDate,
+            "contents.photo.info.photographer": emptyValue,
+            "contents.photo.info.interviewer": emptyValue,
+            "contents.share.client.photo": emptyDate,
+            "contents.share.client.contents": emptyDate,
+            "contents.share.designer.photo": emptyDate,
+            "contents.share.designer.contents": emptyDate,
+            "contents.sns.portfolio.long": emptyDate,
+            "contents.sns.portfolio.short": emptyDate,
+            "contents.sns.interview.long": emptyDate,
+            "contents.sns.interview.short": emptyDate,
           }
-          if (!(promptData >= 0 && promptData < 24)) {
-            promptData = 14;
-          }
-
-          finalValue = finalValue.slice(0, -3) + String(promptData) + '시';
-
-          targetSpot.style.width = "";
-          targetSpot.style.left = "";
-
-          targetSpot.textContent = finalValue;
-
-          targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
-          targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
-
-          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue + "&calendar=true", "/updateAspirantReport", function (res) {
-            let statusDom;
-
-            mother.setAttribute("alarm", "off");
-            for (let dom of mother.children) {
-              if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
-                if (dom.querySelector("svg") !== null) {
-                  dom.querySelector("svg").remove();
-                }
-                dom.setAttribute("alarm", "off");
-              }
-              if (dom.getAttribute("column") === alarmStandard[data.mode].standard) {
-                statusDom = dom;
-              }
-            }
-
-            if (alarmStandard[data.mode].value.includes(statusDom.firstChild.textContent)) {
-              statusDom.firstChild.textContent = alarmStandard[data.mode].convertValue;
-              GeneralJs.ajax("standard=" + thisStandard + "&column=" + alarmStandard[data.mode].standard + "&value=" + alarmStandard[data.mode].convertValue, "/updateAspirantReport", function (res) {});
-            }
-
-            for (let obj of data.data) {
-              if (obj.phone === thisStandard) {
-                obj[thisColumnName] = finalValue;
-                if (alarmStandard[data.mode].value.includes(statusDom.firstChild.textContent)) {
-                  obj[alarmStandard[data.mode].standard] = alarmStandard[data.mode].convertValue;
-                }
-              }
-            }
-
-            GeneralJs.stacks.reportSortTitleFunction();
-
-            grandMother.removeChild(grandMother.lastChild);
-            grandMother.removeChild(grandMother.lastChild);
-          });
-        });
-        calendarWidth = Number(calendar.calendarBase.style.width.replace(/[^0-9\.\-]/gi, ''));
-        calendarHeight = Number(calendar.calendarBase.style.height.replace(/[^0-9\.\-]/gi, ''));
-        whiteTop = grandMother.scrollTop + top - grandMotherTop + height + 5;
-        whiteLeft = left - grandMotherLeft + (width / 2) - (calendarWidth / 2);
-
-        style = {
-          position: "absolute",
-          background: GeneralJs.colorChip.white,
-          top: String(whiteTop) + ea,
-          left: String(whiteLeft) + ea,
-          boxShadow: "0px 4px 14px -8px " + GeneralJs.colorChip.shadow,
-          paddingTop: String(1) + ea,
-          borderRadius: String(5) + ea,
-          animation: "fadeuplite 0.3s ease forwards",
-          width: String(calendarWidth) + ea,
-          height: String(calendarHeight) + ea,
-          overflow: "hidden",
-        };
-        GeneralJs.timeouts["designerReportEditableCalendar"] = setTimeout(function () {
-          calendarTong.style.animation = "";
-          clearTimeout(GeneralJs.timeouts["designerReportEditableCalendar"]);
-          GeneralJs.timeouts["designerReportEditableCalendar"] = null;
-        }, 301);
-        for (let i in style) {
-          calendarTong.style[i] = style[i];
         }
-
-        moveTargets.push(calendarTong);
-
-        cancelBack = GeneralJs.nodes.div.cloneNode(true);
-        style = {
-          position: "absolute",
-          background: "gray",
-          opacity: String(0),
-          top: String(0) + ea,
-          left: String(0) + ea,
-          width: String(100) + '%',
-          height: String(6 + (36 * data.data.length) + 500) + ea,
-          animation: "justfadein 0.3s ease forwards",
-        };
-        for (let i in style) {
-          cancelBack.style[i] = style[i];
-        }
-
-        cancelBack.addEventListener("click", function (e) {
-          cancelBack.parentNode.removeChild(calendarTong);
-          cancelBack.parentNode.removeChild(cancelBack);
-        });
-
-        grandMother.appendChild(cancelBack);
-        calendarTong.appendChild(calendar.calendarBase);
-        grandMother.appendChild(calendarTong);
       },
-      menu: function (e) {
-        e.stopPropagation();
-        if (e.cancelable) {
-          e.preventDefault();
+      date: {
+        title: "날짜",
+        position: "contents.photo.date",
+        values: [ '미정', '해당 없음' ],
+        chain: null
+      },
+      dateHour: {
+        title: "시간",
+        position: "contents.photo.date",
+        values: [],
+        chain: null
+      },
+      status: {
+        title: "상태",
+        position: "contents.photo.status",
+        values: [ '세팅 대기', '촬영 컨택 요망', '촬영 컨택중', '촬영 일정 확정', '촬영 완료', '촬영 홀딩', '해당 없음' ],
+        chain: null
+      },
+      photographer: {
+        title: "포토",
+        position: "contents.photo.info.photographer",
+        values: [ '미정', '정경일', '이현익', '김다현', '디자이너', '고객', '박혜연', '배창규' ],
+        chain: null
+      },
+      interviewer: {
+        title: "담당",
+        position: "contents.photo.info.interviewer",
+        values: [ '미정', '정재은', '강해진', '임혜령', '임지민', '이큰별', '배창규', '박혜연' ],
+        chain: null
+      },
+      address: {
+        title: "주소",
+        position: "",
+        values: [],
+        chain: null
+      },
+    };
+
+    calendarEvent = function (thisCase) {
+      const to = "photographing";
+      const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
+      let tempArr, dateValue, updateDate, start;
+
+      dateValue = thisCase["date"].textContent.trim();
+
+      if (dateValue !== "미정" && dateValue !== "예정" && dateValue !== "해당 없음" && !/디자이너/gi.test(thisCase["photographer"].textContent) && !/고객/gi.test(thisCase["photographer"].textContent)) {
+        tempArr = dateValue.split('-');
+        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
+        start = updateDate;
+      } else {
+        start = null;
+      }
+
+      GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
+        if (start !== null) {
+          if (list.length === 0) {
+            return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
+          } else {
+            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
+          }
+        } else {
+          if (list.length !== 0) {
+            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
+          }
         }
-        const grandMother = this.parentNode.parentNode;
-        const mother = this.parentNode;
-        const { top: grandMotherTop, left: grandMotherLeft } = grandMother.getBoundingClientRect();
-        const { top, left, height, width } = this.getBoundingClientRect();
-        const targetSpot = this.firstChild;
-        const thisWidth = Number(this.style.width.replace(/[^0-9\.\-]/gi, ''));
-        const items = outputFunction();
-        const thisItem = inputFunction(targetSpot.textContent);
-        const thisStandard = this.getAttribute("standard");
-        const ea = "px";
-        let style;
-        let itemsTong;
-        let itemFactor;
-        let itemStyle, itemTextStyle;
-        let text_div;
-        let tongWidth, tongHeight;
-        let itemHeight;
-        let cancelBack;
-        let whiteTop, whiteLeft;
-        let itemClickEvent;
+      }).catch((err) => {
+        throw new Error(err);
+      });
 
-        tongWidth = 80;
-        itemHeight = 32;
+    }
 
-        whiteTop = grandMother.scrollTop + top - grandMotherTop + height + 5;
-        whiteLeft = left - grandMotherLeft + (width / 2) - (tongWidth / 2);
+    stringArr.push(textMaker(map["boo"].title, boo ? 'O' : 'X', "black", "boo"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "boo";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
 
-        itemClickEvent = function (e) {
-          e.stopPropagation();
-          if (e.cancelable) {
-            e.preventDefault();
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      width = 36;
+      margin = 4;
+      startLeft = 0;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value === 'O';
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          instance.contentsDeactivate(project.proid, (value === 'X'));
+          valueDom.textContent = value;
+          thisCase["status"].textContent = emptyValue;
+          thisCase["date"].textContent = emptyValue;
+          thisCase["photographer"].textContent = emptyValue;
+          thisCase["interviewer"].textContent = emptyValue;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
           }
 
-          let finalValue;
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
 
-          finalValue = this.getAttribute("value");
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width + margin) * i)) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+    stringArr.push(textMaker(map["date"].title, dateToString(date), dateToColor(date, true), "date"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "date";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
 
-          targetSpot.style.left = "";
-          targetSpot.style.width = "";
-          targetSpot.firstChild.textContent = finalValue;
-          targetSpot.style.left = String((thisWidth / 2) - (targetSpot.getBoundingClientRect().width / 2) - 2) + ea;
-          targetSpot.style.width = String(targetSpot.getBoundingClientRect().width + 4) + ea;
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
 
-          GeneralJs.ajax("standard=" + thisStandard + "&column=" + thisColumnName + "&value=" + finalValue, "/updateAspirantReport", function (res) {
-            let alarmCircle;
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "미정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            thisCase["dateHour"].style.color = valueDom.style.color = colorChip.red;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            thisCase["dateHour"].style.color = valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
+            if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
+              thisCase["dateHour"].style.color = valueDom.style.color = colorChip.green;
+            } else {
+              thisCase["dateHour"].style.color = valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
 
-            if (alarmStandard[data.mode].standard === thisColumnName) {
-              if (!alarmStandard[data.mode].value.includes(finalValue)) {
-                mother.setAttribute("alarm", "off");
-                for (let dom of mother.children) {
-                  if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
-                    if (dom.querySelector("svg") !== null) {
-                      dom.querySelector("svg").remove();
-                    }
-                    dom.setAttribute("alarm", "off");
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시 ${zeroAddition(date.getMinutes())}분`, dateToColor(date, true), "dateHour"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "dateHour";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let newDom, newInput;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 36;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (thisCase["date"].textContent.trim() === "미정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            thisCase["date"].style.color = valueDom.style.color = colorChip.red;
+          } else if (thisCase["date"].textContent.trim() === "없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            thisCase["date"].style.color = valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = thisCase["date"].textContent.trim().split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(value.split('시')[0].replace(/[^0-9]/g, '')), Number(value.split('시')[1].replace(/[^0-9]/g, '')));
+            if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
+              thisCase["date"].style.color = valueDom.style.color = colorChip.green;
+            } else {
+              thisCase["date"].style.color = valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      [ newDom, newInput ] = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(this.getBoundingClientRect().width) + ea,
+            height: String(this.getBoundingClientRect().height) + ea,
+            color: colorChip.green,
+            background: colorChip.white,
+            zIndex
+          }
+        },
+        {
+          mother: -1,
+          mode: "input",
+          attribute: [
+            { type: "text" },
+            { value: this.textContent.trim() },
+            { past: this.textContent.trim() },
+          ],
+          events: [
+            { type: "click", event: (e) => { e.stopPropagation(); } },
+            {
+              type: "keypress",
+              event: function (e) {
+                if (e.key === "Enter") {
+                  if (/^[0-9]+시 [0-9][0-9]분$/i.test(this.value.trim())) {
+                    this.setAttribute("value", this.value.trim());
+                    updateEvent.call(this, e);
+                  } else {
+                    this.value = this.getAttribute("past");
                   }
                 }
-              } else {
-                mother.setAttribute("alarm", "on");
-                for (let dom of mother.children) {
-                  if (alarmStandard[data.mode].target.includes(dom.getAttribute("column"))) {
-                    alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(4) : String(2)) + "px;", GeneralJs.colorChip.red));
-                    dom.firstChild.appendChild(alarmCircle);
-                    dom.setAttribute("alarm", "on");
+              }
+            },
+          ],
+          style: {
+            display: "inline-block",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.green,
+            background: colorChip.white,
+            outline: String(0),
+            border: String(0),
+            width: String(100) + '%',
+            height: String(valueDom.getBoundingClientRect().height) + ea,
+          }
+        }
+      ]);
+
+      newInput.focus();
+
+    });
+    stringArr.push(textMaker(map["status"].title, status, "black", "status"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "status";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 114;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+    stringArr.push(textMaker(map["photographer"].title, photographer, (photographer === "미정" ? "red" : "black"), "photographer"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "photographer";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 70;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          if (value === "미정") {
+            valueDom.style.color = colorChip.red;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+    stringArr.push(textMaker(map["interviewer"].title, interviewer, (interviewer === "미정" ? "red" : "black"), "interviewer"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "interviewer";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 70;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          if (value === "미정") {
+            valueDom.style.color = colorChip.red;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+    stringArr.push(textMaker(map["address"].title, address.replace(/시 /gi, " ").replace(/도 /gi, " ").replace(/군 /gi, " ").replace(/구 /gi, " ").slice(0, 40), "black", "address"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+
+      resetWidthEvent();
+    });
+
+  } else if (this.type === "source") {
+
+    map = {
+      portfolioStatus: {
+        title: "디자이너글 상태",
+        position: "contents.raw.portfolio.status",
+        values: [ '세팅 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ],
+        chain: null
+      },
+      portfolioLink: {
+        title: "디자이너글 링크",
+        position: "contents.raw.portfolio.link",
+        values: [],
+        chain: {
+          condition: "^http",
+          updateQuery: {
+            "contents.raw.portfolio.status": "원본 수집 완료"
+          },
+        }
+      },
+      interviewStatus: {
+        title: "인터뷰 상태",
+        position: "contents.raw.interview.status",
+        values: [ '세팅 대기', '인터뷰 요망', '인터뷰 완료', '원본 편집중', '원본 편집 완료', '해당 없음' ],
+        chain: null
+      },
+      interviewLink: {
+        title: "인터뷰 링크",
+        position: "contents.raw.interview.link",
+        values: [],
+        chain: null
+      },
+      photoStatus: {
+        title: "사진 상태",
+        position: "contents.raw.photo.status",
+        values: [ '촬영 대기', '원본 요청 요망', '원본 요청 완료', '원본 수집 완료', '원본 보정중', '원본 보정 완료', '해당 없음' ],
+        chain: null
+      },
+    };
+
+    stringArr.push(textMaker(map["portfolioStatus"].title, portfolioStatus, /요망/gi.test(portfolioStatus) ? "red" : (/요청 완료/gi.test(portfolioStatus) ? "purple" : (/편집 완료/gi.test(portfolioStatus) ? "green" : "black")), "portfolioStatus"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "portfolioStatus";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 110;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          if (/요망/gi.test(value)) {
+            valueDom.style.color = colorChip.red;
+          } else if (/편집 완료/gi.test(value)) {
+            valueDom.style.color = colorChip.green;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+    stringArr.push(textMaker(map["portfolioLink"].title, portfolioLink === '' ? "링크 없음" : "링크 있음", "black", "portfolioLink"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "portfolioLink";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let newDom, newInput;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 36;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          if (value === '') {
+            valueDom.textContent = "링크 없음";
+          } else {
+            valueDom.textContent = "링크 있음";
+            thisCase["portfolioStatus"].textContent = "원본 수집 완료";
+            thisCase["portfolioStatus"].style.color = colorChip.black;
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      [ newDom, newInput ] = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(this.getBoundingClientRect().width) + ea,
+            height: String(this.getBoundingClientRect().height) + ea,
+            color: colorChip.green,
+            background: colorChip.white,
+            zIndex
+          }
+        },
+        {
+          mother: -1,
+          mode: "input",
+          attribute: [
+            { type: "text" },
+            { value: project.contents.raw.portfolio.link },
+            { past: project.contents.raw.portfolio.link },
+          ],
+          events: [
+            { type: "click", event: (e) => { e.stopPropagation(); } },
+            {
+              type: "keypress",
+              event: function (e) {
+                if (e.key === "Enter") {
+                  this.setAttribute("value", this.value.trim());
+                  updateEvent.call(this, e);
+                }
+              }
+            },
+          ],
+          style: {
+            display: "inline-block",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.green,
+            background: colorChip.white,
+            outline: String(0),
+            border: String(0),
+            width: String(100) + '%',
+            height: String(valueDom.getBoundingClientRect().height) + ea,
+          }
+        }
+      ]);
+
+      newInput.focus();
+
+    });
+    stringArr.push(textMaker(map["interviewStatus"].title, interviewStatus, /요망/gi.test(interviewStatus) ? "red" : (/편집 완료/gi.test(interviewStatus) ? "green" : "black"), "interviewStatus"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "interviewStatus";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 110;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          if (/요망/gi.test(value)) {
+            valueDom.style.color = colorChip.red;
+          } else if (/편집 완료/gi.test(value)) {
+            valueDom.style.color = colorChip.green;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+    stringArr.push(textMaker(map["interviewLink"].title, interviewLink === '' ? "링크 없음" : "링크 있음", "black", "interviewLink"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "interviewLink";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let newDom, newInput;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 36;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = (value === '') ? "링크 없음" : "링크 있음";
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      [ newDom, newInput ] = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(this.getBoundingClientRect().width) + ea,
+            height: String(this.getBoundingClientRect().height) + ea,
+            color: colorChip.green,
+            background: colorChip.white,
+            zIndex
+          }
+        },
+        {
+          mother: -1,
+          mode: "input",
+          attribute: [
+            { type: "text" },
+            { value: project.contents.raw.interview.link },
+            { past: project.contents.raw.interview.link },
+          ],
+          events: [
+            { type: "click", event: (e) => { e.stopPropagation(); } },
+            {
+              type: "keypress",
+              event: function (e) {
+                if (e.key === "Enter") {
+                  this.setAttribute("value", this.value.trim());
+                  updateEvent.call(this, e);
+                }
+              }
+            },
+          ],
+          style: {
+            display: "inline-block",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.green,
+            background: colorChip.white,
+            outline: String(0),
+            border: String(0),
+            width: String(100) + '%',
+            height: String(valueDom.getBoundingClientRect().height) + ea,
+          }
+        }
+      ]);
+
+      newInput.focus();
+
+    });
+    stringArr.push(textMaker(map["photoStatus"].title, photoStatus, /요망/gi.test(photoStatus) ? "red" : (/보정 완료/gi.test(photoStatus) ? "green" : "black"), "photoStatus"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "photoStatus";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 110;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          updateQuery[position] = value;
+          if (/요망/gi.test(value)) {
+            valueDom.style.color = colorChip.red;
+          } else if (/보정 완료/gi.test(value)) {
+            valueDom.style.color = colorChip.green;
+          } else {
+            valueDom.style.color = colorChip.black;
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[i] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
+    });
+
+  } else if (this.type === "contents") {
+
+    map = {
+      portfolioLong: {
+        title: "블로그 포폴",
+        position: "contents.sns.portfolio.long",
+        values: [ '미정', '해당 없음' ],
+        chain: null
+      },
+      interviewLong: {
+        title: "블로그 인터뷰",
+        position: "contents.sns.interview.long",
+        values: [ '미정', '해당 없음' ],
+        chain: null
+      },
+      portfolioShort: {
+        title: "인스타 포폴",
+        position: "contents.sns.portfolio.short",
+        values: [ '미정', '해당 없음' ],
+        chain: null
+      },
+      interviewShort: {
+        title: "인스타 인터뷰",
+        position: "contents.sns.interview.short",
+        values: [ '미정', '해당 없음' ],
+        chain: null
+      },
+      webPublish: {
+        title: "웹",
+        position: "",
+        values: [],
+        chain: null
+      },
+    };
+
+    tempString0 = dateToString(longPortfolio);
+    tempString1 = dateToString(longInterview);
+    tempString2 = dateToString(shortPortfoilo);
+    tempString3 = dateToString(shortInterview);
+
+    stringArr.push(textMaker(map["interviewLong"].title, tempString1, dateToColor(longInterview, false), "interviewLong"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "interviewLong";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "미정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            thisCase["webPublish"].style.color = valueDom.style.color = colorChip.red;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            thisCase["webPublish"].style.color = valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            if (updateQuery[position].valueOf() <= (new Date()).valueOf()) {
+              thisCase["webPublish"].style.color = valueDom.style.color = colorChip.green;
+            } else {
+              thisCase["webPublish"].style.color = valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          thisCase["webPublish"].textContent = value;
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["portfolioLong"].title, tempString0, dateToColor(longPortfolio, false), "portfolioLong"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "portfolioLong";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "미정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            valueDom.style.color = colorChip.red;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            if (updateQuery[position].valueOf() <= (new Date()).valueOf()) {
+              valueDom.style.color = colorChip.green;
+            } else {
+              valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["interviewShort"].title, tempString3, dateToColor(shortInterview, false), "interviewShort"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "interviewShort";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "미정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            valueDom.style.color = colorChip.red;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            if (updateQuery[position].valueOf() <= (new Date()).valueOf()) {
+              valueDom.style.color = colorChip.green;
+            } else {
+              valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["portfolioShort"].title, tempString2, dateToColor(shortPortfoilo, false), "portfolioShort"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "portfolioShort";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "미정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            valueDom.style.color = colorChip.red;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            if (updateQuery[position].valueOf() <= (new Date()).valueOf()) {
+              valueDom.style.color = colorChip.green;
+            } else {
+              valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["webPublish"].title, dateToString(project.web), dateToColor(project.web, false), "webPublish"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+
+      resetWidthEvent();
+    });
+
+  } else if (this.type === "share") {
+
+    map = {
+      clientPhoto: {
+        title: "고객 사진 공유",
+        position: "contents.share.client.photo",
+        values: [ '예정', '해당 없음' ],
+        chain: null
+      },
+      clientContents: {
+        title: "고객 컨텐츠 공유",
+        position: "contents.share.client.contents",
+        values: [ '예정', '해당 없음' ],
+        chain: null
+      },
+      designerPhoto: {
+        title: "디자이너 사진 공유",
+        position: "contents.share.designer.photo",
+        values: [ '예정', '해당 없음' ],
+        chain: null
+      },
+      designerContents: {
+        title: "디자이너 컨텐츠 공유",
+        position: "contents.share.designer.contents",
+        values: [ '예정', '해당 없음' ],
+        chain: null
+      },
+    };
+
+    stringArr.push(textMaker(map["clientPhoto"].title, dateToString(photoClient).replace(/미정/g, "예정"), dateToColor(photoClient, false).replace(/red/gi, "black"), "clientPhoto"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "clientPhoto";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "예정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            valueDom.style.color = colorChip.black;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            if (updateQuery[position].valueOf() >= (new Date()).valueOf()) {
+              valueDom.style.color = colorChip.black;
+            } else {
+              valueDom.style.color = colorChip.green;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["designerPhoto"].title, dateToString(photoDesigner).replace(/미정/g, "예정"), dateToColor(photoDesigner, false).replace(/red/gi, "black"), "designerPhoto"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "designerPhoto";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "예정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            valueDom.style.color = colorChip.black;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            if (updateQuery[position].valueOf() >= (new Date()).valueOf()) {
+              valueDom.style.color = colorChip.black;
+            } else {
+              valueDom.style.color = colorChip.green;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["clientContents"].title, dateToString(contentsClient).replace(/미정/g, "예정"), dateToColor(contentsClient, false).replace(/red/gi, "black"), "clientContents"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "clientContents";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "예정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            valueDom.style.color = colorChip.black;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            if (updateQuery[position].valueOf() >= (new Date()).valueOf()) {
+              valueDom.style.color = colorChip.black;
+            } else {
+              valueDom.style.color = colorChip.green;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+    stringArr.push(textMaker(map["designerContents"].title, dateToString(contentsDesigner).replace(/미정/g, "예정"), dateToColor(contentsDesigner, false).replace(/red/gi, "black"), "designerContents"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "designerContents";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { proid: project.proid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "예정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            valueDom.style.color = colorChip.black;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            if (updateQuery[position].valueOf() >= (new Date()).valueOf()) {
+              valueDom.style.color = colorChip.black;
+            } else {
+              valueDom.style.color = colorChip.green;
+            }
+          }
+          await instance.contentsUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+    });
+
+  }
+
+  stringArr.push(textMaker("메모", history.replace(/\n/g, ' ').slice(0, 40), "black", "history"));
+  updateArr.push(function (e, option, cancelBox, parent) {
+    const mother = this;
+    const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+    const column = "status";
+    let startLeft, width, margin, background;
+    let values, updateEvent;
+    let whereQuery, updateQuery, chainQuery;
+    let historyHeight;
+    let historyMargin;
+
+    updateQuery = {};
+    whereQuery = { proid: project.proid };
+    startLeft = -20;
+    width = 560;
+    historyHeight = 400;
+    margin = 4;
+    historyMargin = 15;
+
+    this.style.overflow = "visible";
+
+    background = colorChip.white;
+
+    createNodes([
+      {
+        mother: this,
+        mode: "aside",
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }
+        ],
+        style: {
+          position: "absolute",
+          top: String(top + 1) + ea,
+          left: String(startLeft) + ea,
+          width: String(width) + ea,
+          height: String(historyHeight) + ea,
+          background: colorChip.white,
+          zIndex, boxShadow, borderRadius, animation,
+        }
+      },
+      {
+        mother: -1,
+        mode: "textarea",
+        text: history.replace(/\<br\>/gi, "\n"),
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              e.stopPropagation();
+            }
+          },
+          {
+            type: "keydown",
+            event: async function (e) {
+              try {
+                if (e.key === "Tab") {
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  const removeTargets = mother.querySelectorAll("aside");
+                  const value = this.value;
+                  const cookies = GeneralJs.getCookiesAll();
+
+                  (mother.querySelectorAll('b'))[1].textContent = value.slice(0, 40);
+                  await GeneralJs.ajaxJson({
+                    id: project.proid,
+                    column: "photo",
+                    value,
+                    email: cookies.homeliaisonConsoleLoginedEmail
+                  }, "/updateProjectHistory");
+
+                  for (let dom of removeTargets) {
+                    mother.removeChild(dom);
                   }
+
+                  resetWidthEvent();
                 }
+              } catch (e) {
+                console.log(e);
               }
             }
-
-            for (let obj of data.data) {
-              if (obj.phone === thisStandard) {
-                obj[thisColumnName] = finalValue;
-              }
-            }
-
-            GeneralJs.stacks.reportSortTitleFunction();
-
-            if (/드[랍롭]/.test(finalValue)) {
-              titleIcon0.click();
-            }
-
-            grandMother.removeChild(grandMother.lastChild);
-            grandMother.removeChild(grandMother.lastChild);
-          });
-        }
-
-        //item tong
-        itemsTong = GeneralJs.nodes.div.cloneNode(true);
-        style = {
+          }
+        ],
+        style: {
           position: "absolute",
-          top: String(whiteTop) + ea,
-          left: String(whiteLeft) + ea,
-          paddingTop: String(1) + ea,
-          animation: "fadeuplite 0.3s ease forwards",
-          width: String(tongWidth) + ea,
-        };
-        for (let i in style) {
-          itemsTong.style[i] = style[i];
+          top: String(historyMargin) + ea,
+          left: String(historyMargin + 3) + ea,
+          width: withOut(100, (historyMargin + 3) * 2, ea),
+          height: withOut(100, historyMargin * 2, ea),
+          fontSize: String(size) + ea,
+          fontWeight: String(300),
+          background: colorChip.white,
+          lineHeight: String(1.7),
+          color: colorChip.black,
+          border: String(0),
+          outline: String(0),
         }
-
-        GeneralJs.timeouts["designerReportEditableMenuBox"] = setTimeout(function () {
-          itemsTong.style.animation = "";
-          clearTimeout(GeneralJs.timeouts["designerReportEditableMenuBox"]);
-          GeneralJs.timeouts["designerReportEditableMenuBox"] = null;
-        }, 301);
-
-        moveTargets.push(itemsTong);
-
-        //set item style
-        itemStyle = {
-          display: "block",
-          position: "relative",
-          width: String(100) + '%',
-          height: String(itemHeight) + ea,
-          background: GeneralJs.colorChip.white,
-          boxShadow: "0px 2px 14px -8px " + GeneralJs.colorChip.shadow,
-          borderRadius: String(3) + ea,
-          marginBottom: String(5) + ea,
-          cursor: "pointer",
-        };
-        itemTextStyle = {
-          fontSize: String(13) + ea,
-          fontWeight: String(500),
-          position: "absolute",
-          width: String(100) + '%',
-          top: String(GeneralJs.isMac() ? 6 : 8) + ea,
-          textAlign: "center",
-          color: GeneralJs.colorChip.green,
-        };
-
-        //append items
-        for (let i = 0; i < items.length; i++) {
-          itemFactor = GeneralJs.nodes.div.cloneNode(true);
-          for (let j in itemStyle) {
-            itemFactor.style[j] = itemStyle[j];
-          }
-          text_div = GeneralJs.nodes.div.cloneNode(true);
-          text_div.classList.add("hoverDefault_lite");
-          text_div.textContent = items[i];
-          for (let j in itemTextStyle) {
-            text_div.style[j] = itemTextStyle[j];
-          }
-          itemFactor.appendChild(text_div);
-          itemFactor.setAttribute("value", items[i]);
-          itemFactor.addEventListener("click", itemClickEvent);
-          itemsTong.appendChild(itemFactor);
-        }
-
-        //cancel back
-        cancelBack = GeneralJs.nodes.div.cloneNode(true);
-        style = {
-          position: "absolute",
-          background: "gray",
-          opacity: String(0),
-          top: String(0) + ea,
-          left: String(0) + ea,
-          width: String(100) + '%',
-          height: String(6 + (36 * data.data.length) + 500) + ea,
-          animation: "justfadein 0.3s ease forwards",
-        };
-        for (let i in style) {
-          cancelBack.style[i] = style[i];
-        }
-
-        cancelBack.addEventListener("click", function (e) {
-          cancelBack.parentNode.removeChild(itemsTong);
-          cancelBack.parentNode.removeChild(cancelBack);
-        });
-
-        //end
-        grandMother.appendChild(cancelBack);
-        grandMother.appendChild(itemsTong);
       }
-    };
-  }
+    ]);
 
-  //title area
-  titleArea = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    paddingTop: String(mainTopBottom) + ea,
-    paddingLeft: String(mainMargin) + ea,
-    height: String(titleHeight) + ea,
-  };
-  for (let i in style) {
-    titleArea.style[i] = style[i];
-  }
-
-  div_clone = GeneralJs.nodes.div.cloneNode(true);
-  div_clone.textContent = data.title;
-  style = {
-    display: "inline-block",
-    position: "relative",
-    width: "auto",
-    fontSize: String(titleFontSize) + ea,
-    fontWeight: String(600),
-    bottom: String(GeneralJs.isMac() ? 0 : -2) + ea,
-  };
-  for (let i in style) {
-    div_clone.style[i] = style[i];
-  }
-  titleArea.appendChild(div_clone);
-
-
-  titleIcon0 = GeneralJs.nodes.div.cloneNode(true);
-  titleIcon0.classList.add("hoverDefault_lite");
-  style = {
-    position: "absolute",
-    height: String(15) + ea,
-    width: String(300) + ea,
-    bottom: String(0) + ea,
-  };
-  for (let i in style) {
-    titleIcon0.style[i] = style[i];
-  }
-  text_div = GeneralJs.nodes.div.cloneNode(true);
-  text_div.textContent = "전체 보기";
-  style = {
-    position: "absolute",
-    fontSize: String(13) + ea,
-    bottom: String(0) + ea,
-    fontWeight: String(500),
-    color: (data.mode === "total" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray4),
-  };
-  for (let i in style) {
-    text_div.style[i] = style[i];
-  }
-  titleIcon0.appendChild(text_div);
-  titleIcon0.addEventListener("click", function (e) {
-    while (mother.firstChild !== loadingIcon) {
-      mother.removeChild(mother.firstChild);
-    }
-    while (mother.lastChild !== loadingIcon) {
-      mother.removeChild(mother.lastChild);
-    }
-    loadingIcon.style.opacity = "1";
-    GeneralJs.ajax("mode=total", "/getAspirantReport", function (data) {
-      loadingIcon.style.opacity = "0";
-      instance.reportContents(JSON.parse(data), mother, loadingIcon);
-    });
   });
-  titleArea.appendChild(titleIcon0);
 
-
-  titleIcon0_2 = GeneralJs.nodes.div.cloneNode(true);
-  titleIcon0_2.classList.add("hoverDefault_lite");
-  style = {
-    position: "absolute",
-    height: String(15) + ea,
-    width: String(300) + ea,
-    bottom: String(0) + ea,
-  };
-  for (let i in style) {
-    titleIcon0_2.style[i] = style[i];
-  }
-  text_div = GeneralJs.nodes.div.cloneNode(true);
-  text_div.textContent = "설명회";
-  style = {
-    position: "absolute",
-    fontSize: String(13) + ea,
-    bottom: String(0) + ea,
-    fontWeight: String(500),
-    color: (data.mode === "presentation" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray4),
-  };
-  for (let i in style) {
-    text_div.style[i] = style[i];
-  }
-  titleIcon0_2.appendChild(text_div);
-  titleIcon0_2.addEventListener("click", function (e) {
-    while (mother.firstChild !== loadingIcon) {
-      mother.removeChild(mother.firstChild);
-    }
-    while (mother.lastChild !== loadingIcon) {
-      mother.removeChild(mother.lastChild);
-    }
-    loadingIcon.style.opacity = "1";
-    GeneralJs.ajax("mode=presentation", "/getAspirantReport", function (data) {
-      loadingIcon.style.opacity = "0";
-      instance.reportContents(JSON.parse(data), mother, loadingIcon);
-    });
-  });
-  titleArea.appendChild(titleIcon0_2);
-
-
-  titleIcon0_3 = GeneralJs.nodes.div.cloneNode(true);
-  titleIcon0_3.classList.add("hoverDefault_lite");
-  style = {
-    position: "absolute",
-    height: String(15) + ea,
-    width: String(300) + ea,
-    bottom: String(0) + ea,
-  };
-  for (let i in style) {
-    titleIcon0_3.style[i] = style[i];
-  }
-  text_div = GeneralJs.nodes.div.cloneNode(true);
-  text_div.textContent = "파트너십";
-  style = {
-    position: "absolute",
-    fontSize: String(13) + ea,
-    bottom: String(0) + ea,
-    fontWeight: String(500),
-    color: (data.mode === "partnership" ? GeneralJs.colorChip.green : GeneralJs.colorChip.gray4),
-  };
-  for (let i in style) {
-    text_div.style[i] = style[i];
-  }
-  titleIcon0_3.appendChild(text_div);
-  titleIcon0_3.addEventListener("click", function (e) {
-    while (mother.firstChild !== loadingIcon) {
-      mother.removeChild(mother.firstChild);
-    }
-    while (mother.lastChild !== loadingIcon) {
-      mother.removeChild(mother.lastChild);
-    }
-    loadingIcon.style.opacity = "1";
-    GeneralJs.ajax("mode=partnership", "/getAspirantReport", function (data) {
-      loadingIcon.style.opacity = "0";
-      instance.reportContents(JSON.parse(data), mother, loadingIcon);
-    });
-  });
-  titleArea.appendChild(titleIcon0_3);
-
-
-  titleIcon0_4 = GeneralJs.nodes.div.cloneNode(true);
-  titleIcon0_4.classList.add("hoverDefault_lite");
-  style = {
-    position: "absolute",
-    height: String(15) + ea,
-    width: String(300) + ea,
-    bottom: String(0) + ea,
-  };
-  for (let i in style) {
-    titleIcon0_4.style[i] = style[i];
-  }
-  text_div = GeneralJs.nodes.div.cloneNode(true);
-  text_div.textContent = "추출";
-  style = {
-    position: "absolute",
-    fontSize: String(13) + ea,
-    bottom: String(0) + ea,
-    fontWeight: String(500),
-    color: GeneralJs.colorChip.gray4,
-  };
-  for (let i in style) {
-    text_div.style[i] = style[i];
-  }
-  titleIcon0_4.appendChild(text_div);
-  titleIcon0_4.addEventListener("click", function (e) {
-    const today = new Date();
-    const parentId = "1JcUBOu9bCrFBQfBAG-yXFcD9gqYMRC1c";
-    let ajaxData, matrix, tempArr;
-    let targetWhite, grayBack, style, ea;
-
-    matrix = [];
-
-    tempArr = [];
-    for (let c of columns) {
-      tempArr.push(map[c].name);
-    }
-    matrix.push(tempArr);
-
-    for (let i of data.data) {
-      tempArr = [];
-      for (let c of columns) {
-        tempArr.push(i[c]);
-      }
-      matrix.push(tempArr);
-    }
-
-    ajaxData = '';
-    ajaxData += "values=";
-    ajaxData += JSON.stringify(matrix).replace(/&/g, '').replace(/=/g, '');
-    ajaxData += "&newMake=";
-    ajaxData += "true";
-    ajaxData += "&parentId=";
-    ajaxData += parentId;
-    ajaxData += "&sheetName=";
-    ajaxData += "fromDB_rawDesigner_" + String(today.getFullYear()) + instance.mother.todayMaker();
-
-    ea = "px";
-    targetWhite = loadingIcon.parentNode;
-
-    loadingIcon.style.opacity = String(1);
-    loadingIcon.style.zIndex = String(1);
-
-    grayBack = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: String(100) + '%',
-      height: String(100) + '%',
-      background: GeneralJs.colorChip.gray4,
-      opacity: String(0.4),
-      top: String(0) + ea,
-      left: String(0) + ea,
-      animation: "justfadein 0.3s ease",
-    };
-    for (let i in style) {
-      grayBack.style[i] = style[i];
-    }
-    targetWhite.appendChild(grayBack);
-
-    GeneralJs.ajax(ajaxData, "/sendSheets", function (res) {
-      const { link } = JSON.parse(res);
-      loadingIcon.style.opacity = String(0);
-      loadingIcon.style.zIndex = String(0);
-      targetWhite.removeChild(targetWhite.lastChild);
-      window.open(link, "_blank");
-    });
-  });
-  titleArea.appendChild(titleIcon0_4);
-
-
-  titleIcon1 = SvgTong.stringParsing(this.mother.returnArrow("left", GeneralJs.colorChip.green));
-  titleIcon1.classList.add("hoverDefault_lite");
-  style = {
-    position: "absolute",
-    width: String(iconHeight * SvgTong.getRatio(titleIcon1)) + ea,
-    height: String(iconHeight) + ea,
-    right: String(mainMargin + 18) + ea,
-    bottom: String(0) + ea,
-  };
-  for (let i in style) {
-    titleIcon1.style[i] = style[i];
-  }
-  titleIcon1.addEventListener("click", function (e) {
-    let tempObj;
-    let minArr;
-    let minimumMove;
-    minArr = [];
-    for (let dom of moveTargets) {
-      tempObj = moveParsing(dom, (moveAmount * -1));
-      minArr.push(tempObj.number);
-    }
-    minArr.sort((a, b) => { return a - b; });
-
-    minimumMove = moveAmount * -1;
-
-    for (let dom of moveTargets) {
-      tempObj = moveParsing(dom, (moveAmount * 1));
-      if (minArr[0] >= minimumMove) {
-        dom.style.transform = "translateX(0px)";
-      } else {
-        dom.style.transform = tempObj.style;
-      }
-    }
-  });
-  titleArea.appendChild(titleIcon1);
-
-  titleIcon2 = SvgTong.stringParsing(this.mother.returnArrow("right", GeneralJs.colorChip.green));
-  titleIcon2.classList.add("hoverDefault_lite");
-  style = {
-    position: "absolute",
-    width: String(iconHeight * SvgTong.getRatio(titleIcon1)) + ea,
-    height: String(iconHeight) + ea,
-    right: String(mainMargin) + ea,
-    bottom: String(0) + ea,
-  };
-  for (let i in style) {
-    titleIcon2.style[i] = style[i];
-  }
-  titleIcon2.addEventListener("click", function (e) {
-    let tempObj;
-    let standard;
-    let maxArr;
-    standard = dataArea.getBoundingClientRect().width - (mainMargin * 2);
-    maxArr = [];
-    for (let dom of moveTargets) {
-      tempObj = moveParsing(dom, (moveAmount * -1));
-      maxArr.push(tempObj.number);
-    }
-    maxArr.sort((a, b) => { return b - a; });
-    for (let dom of moveTargets) {
-      tempObj = moveParsing(dom, (moveAmount * -1));
-      if (maxArr[0] <= standard - totalWidth) {
-        dom.style.transform = "translateX(" + String(standard - totalWidth) + "px)";
-      } else {
-        dom.style.transform = tempObj.style;
-      }
-    }
-  });
-  titleArea.appendChild(titleIcon2);
-  mother.appendChild(titleArea);
-
-  titleIcon0.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11) + ea;
-  tempWidth0 = titleIcon0.firstChild.getBoundingClientRect().width;
-  titleIcon0.style.width = String(tempWidth0 + 1) + ea;
-
-  titleIcon0_2.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11 + tempWidth0 + 9) + ea;
-  tempWidth1 = titleIcon0_2.firstChild.getBoundingClientRect().width;
-  titleIcon0_2.style.width = String(tempWidth1 + 1) + ea;
-
-  titleIcon0_3.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11 + tempWidth0 + 9 + tempWidth1 + 9) + ea;
-  tempWidth2 = titleIcon0_3.firstChild.getBoundingClientRect().width;
-  titleIcon0_3.style.width = String(tempWidth2 + 1) + ea;
-
-  titleIcon0_4.style.left = String(mainMargin + div_clone.getBoundingClientRect().width + 11 + tempWidth0 + 9 + tempWidth1 + 9 + tempWidth2 + 9) + ea;
-  titleIcon0_4.style.width = String(titleIcon0_4.firstChild.getBoundingClientRect().width + 1) + ea;
-
-  //data area
-  dataArea = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    paddingLeft: String(mainMargin) + ea,
-    paddingRight: String(mainMargin) + ea,
-    width: "calc(100% - " + String(mainMargin * 2) + ea + ")",
-    height: "calc(calc(100% - " + String(((mainMargin * 2) + visualSpecific) + titleHeight) + ea + ") - " + String(reportHeight) + ea + ")",
-  };
-  for (let i in style) {
-    dataArea.style[i] = style[i];
-  }
-
-  dataAreaToCardEvent = function (e) {
-    const thisCase = this.parentNode;
-    const thisIndex = Number(this.getAttribute("index"));
-    const thisRelation = (this.getAttribute(sameStandard.name) === "true");
-    const thisRelationIndex = thisRelation ? 1 : 0;
-    const thisBinary = (this.getAttribute(binaryStandard.name) === "true");
-    const thisBinaryIndex = thisBinary ? 1 : 0;
-    const thisFolderId = this.getAttribute(binaryStandard.target);
-    const thisData = data.data[thisIndex];
-    const { designer, phone } = thisData;
-    let newArea;
-    let cardArea;
-    let div_clone, text_div;
-    let style;
-    let ea;
-    let cardTitleWidth, cardTitleHeight;
-    let cardTitleTop;
-    let cardMargin;
-    let cardGrayBar;
-    let contentsStartTop;
-    let lineHeight, indexNumber, valueIndent;
-    let cardTitleFontSize, cardDefaultFontSize;
-    let buttonsTargets;
-    let buttonsWidthAddtion;
-    let titleIcon1, titleIcon2;
-    let cardValueTong;
-    let tempBoo;
-
-    ea = "px";
-    cardMargin = 42;
-    cardTitleTop = 30;
-    lineHeight = 30;
-    valueIndent = 120;
-    cardTitleFontSize = 38;
-    cardDefaultFontSize = 15;
-
-    //initial
-    newArea = dataArea.cloneNode(true);
-    newArea.style.position = "absolute";
-    newArea.style.top = String(mainTopBottom + titleHeight) + ea;
-    cardArea = newArea.firstChild;
-
-    while (cardArea.firstChild) {
-      cardArea.removeChild(cardArea.lastChild);
-    }
-
-    if (e.noFadeInAnimation !== undefined) {
-      newArea.style.transition = "all 0s ease";
-      dataArea.style.transition = "all 0s ease";
-      newArea.style.animation = "fadein 0s ease forwards";
-      dataArea.style.animation = "fadeout 0s ease forwards";
-    } else {
-      newArea.style.transition = "all 0.3s ease";
-      dataArea.style.transition = "all 0.3s ease";
-      newArea.style.animation = "fadein 0.3s ease forwards";
-      dataArea.style.animation = "fadeout 0.3s ease forwards";
-    }
-    dataArea.parentNode.insertBefore(newArea, dataArea.nextElementSibling);
-
-    //button setting
-    buttonsTargets = [
-      {
-        toggle: [ "목록으로", "목록으로" ],
-        click: function (e) {
-          dataArea.parentNode.removeChild(newArea);
-          dataArea.style.animation = "fadein 0.3s ease forwards";
-        },
-        color: [ GeneralJs.colorChip.black, GeneralJs.colorChip.black ],
-        mode: null,
-      },
-      {
-        toggle: [ ((data.mode !== "partnership") ? "파트너십 신청 안 함" : "설명회 신청 안 함"), ((data.mode !== "partnership") ? "파트너십 신청" : "설명회 신청") ],
-        click: function (e) {
-          if (thisRelation) {
-            while (mother.firstChild !== loadingIcon) {
-              mother.removeChild(mother.firstChild);
-            }
-            while (mother.lastChild !== loadingIcon) {
-              mother.removeChild(mother.lastChild);
-            }
-            loadingIcon.style.opacity = "1";
-            GeneralJs.ajax("mode=" + ((data.mode === "presentation") ? "partnership" : "presentation"), "/getAspirantReport", function (data) {
-              loadingIcon.style.opacity = "0";
-              instance.reportContents(JSON.parse(data), mother, loadingIcon, function (doms) {
-                const target = (doms.valueFilter("phone", phone))[0];
-                GeneralJs.timeouts["convertDesignerReportTimeouts"] = setTimeout(function () {
-                  target.firstChild.click();
-                  clearTimeout(GeneralJs.timeouts["convertDesignerReportTimeouts"]);
-                  GeneralJs.timeouts["convertDesignerReportTimeouts"] = null;
-                }, 0);
-              });
-            });
-          } else {
-            alert("추가 신청이 없습니다!");
-          }
-        },
-        color: [ GeneralJs.colorChip.red, GeneralJs.colorChip.green ],
-        mode: "opposite",
-      },
-      {
-        toggle: [ "포트폴리오 없음", "포트폴리오 보기" ],
-        click: function (e) {
-          let str;
-          if (thisFolderId !== null) {
-            if (!/^__link__/.test(thisFolderId)) {
-              str = "https://drive.google.com/drive/folders/";
-              str += thisFolderId;
-              str += "?usp=sharing";
-            } else {
-              str = thisFolderId.replace(/^__link__/, '');
-            }
-            for (let doms of thisCase.children) {
-              if (portfolioBooArr.includes(doms.getAttribute("column"))) {
-                if (doms.firstChild.querySelector("svg") !== null) {
-                  doms.firstChild.querySelector("svg").remove();
-                }
-              }
-            }
-            GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewAspirantRawPortfolio", function (data) {});
-            window.open(str, "_blank");
-          } else {
-            alert("포트폴리오가 없습니다!");
-          }
-        },
-        color: [ GeneralJs.colorChip.red, GeneralJs.colorChip.green ],
-        mode: "binary",
-      },
-    ];
-
-    //name
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("hoverDefault_lite");
-    style = {
-      position: "relative",
-      marginTop: String(cardTitleTop) + ea,
-      left: String(cardMargin) + ea,
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-    text_div = GeneralJs.nodes.div.cloneNode(true);
-    text_div.textContent = designer;
-    style = {
-      position: "absolute",
-      fontSize: String(cardTitleFontSize) + ea,
-      fontWeight: String(500),
-      top: String(0) + ea,
-    };
-    for (let i in style) {
-      text_div.style[i] = style[i];
-    }
-    div_clone.addEventListener("click", buttonsTargets[0].click);
-    div_clone.appendChild(text_div);
-    cardArea.appendChild(div_clone);
-
-    cardTitleWidth = text_div.getBoundingClientRect().width;
-    cardTitleHeight = text_div.getBoundingClientRect().height;
-
-    div_clone.style.width = String(cardTitleWidth) + ea;
-    div_clone.style.height = String(cardTitleHeight) + ea;
-
-    //phone
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("hoverDefault_lite");
-    style = {
-      position: "absolute",
-      top: String((cardTitleTop * 2) - (cardMargin - cardTitleFontSize)) + ea,
-      left: String(cardMargin + cardTitleWidth + 11) + ea,
-      width: String(1000) + ea,
-      transition: "all 0s ease",
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-    text_div = GeneralJs.nodes.div.cloneNode(true);
-    text_div.textContent = phone;
-    style = {
-      position: "absolute",
-      fontSize: String(cardDefaultFontSize + 1) + ea,
-      fontWeight: String(200),
-      color: GeneralJs.colorChip.green,
-      top: String(0) + ea,
-    };
-    for (let i in style) {
-      text_div.style[i] = style[i];
-    }
-    div_clone.appendChild(text_div);
-    div_clone.addEventListener("click", buttonsTargets[0].click);
-    cardArea.appendChild(div_clone);
-
-    cardTitleWidth = text_div.getBoundingClientRect().width;
-    cardTitleHeight = text_div.getBoundingClientRect().height;
-
-    div_clone.style.width = String(cardTitleWidth) + ea;
-    div_clone.style.height = String(cardTitleHeight) + ea;
-
-    //icons
-    titleIcon1 = SvgTong.stringParsing(instance.mother.returnArrow("left", GeneralJs.colorChip.green));
-    titleIcon1.classList.add("hoverDefault_lite");
-    style = {
-      position: "absolute",
-      width: String(iconHeight * SvgTong.getRatio(titleIcon1)) + ea,
-      height: String(iconHeight) + ea,
-      right: String(cardMargin + 18) + ea,
-      top: String(64) + ea,
-    };
-    for (let i in style) {
-      titleIcon1.style[i] = style[i];
-    }
-    titleIcon1.addEventListener("click", function (e) {
-      if (thisCase.previousElementSibling !== null) {
-        dataArea.parentNode.removeChild(newArea);
-        e.noFadeInAnimation = true;
-        dataAreaToCardEvent.call(thisCase.previousElementSibling.firstChild, e);
-      }
-    });
-    cardArea.appendChild(titleIcon1);
-
-    titleIcon2 = SvgTong.stringParsing(instance.mother.returnArrow("right", GeneralJs.colorChip.green));
-    titleIcon2.classList.add("hoverDefault_lite");
-    style = {
-      position: "absolute",
-      width: String(iconHeight * SvgTong.getRatio(titleIcon1)) + ea,
-      height: String(iconHeight) + ea,
-      right: String(cardMargin) + ea,
-      top: String(64) + ea,
-    };
-    for (let i in style) {
-      titleIcon2.style[i] = style[i];
-    }
-    titleIcon2.addEventListener("click", function (e) {
-      if (thisCase.nextElementSibling !== null) {
-        dataArea.parentNode.removeChild(newArea);
-        e.noFadeInAnimation = true;
-        dataAreaToCardEvent.call(thisCase.nextElementSibling.firstChild, e);
-      }
-    });
-    cardArea.appendChild(titleIcon2);
-
-    //gray bar
-    contentsStartTop = ((cardTitleTop * 2) - (cardMargin - cardTitleFontSize)) + cardTitleHeight + 12;
-    cardGrayBar = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(contentsStartTop) + ea,
-      borderTop: "1px solid " + GeneralJs.colorChip.gray3,
-      width: "calc(100% - " + String(cardMargin * 2) + ea + ")",
-      left: String(cardMargin) + ea,
-    };
-    for (let i in style) {
-      cardGrayBar.style[i] = style[i];
-    }
-    cardArea.appendChild(cardGrayBar);
-
-    //card values
-    cardValueTong = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "relative",
-      marginTop: String(11) + ea,
-      width: "calc(100% - " + String(cardMargin * 2) + ea + ")",
-      left: String(cardMargin) + ea,
-      height: "calc(100% - " + String(130) + ea + ")",
-      overflow: "scroll",
-    };
-    for (let i in style) {
-      cardValueTong.style[i] = style[i];
-    }
-    cardArea.appendChild(cardValueTong);
-
-    contentsStartTop = contentsStartTop + cardTitleTop;
-    indexNumber = 0;
-    for (let obj of cardViewMap[data.mode]) {
-
-      //column name
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        top: String(cardTitleTop + (lineHeight * indexNumber)) + ea,
-        left: String(0) + ea,
-        width: String(2000) + ea,
-        transition: "all 0s ease",
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-      text_div = GeneralJs.nodes.div.cloneNode(true);
-      text_div.textContent = map[obj.column].name;
-      style = {
-        position: "absolute",
-        fontSize: String(cardDefaultFontSize) + ea,
-        fontWeight: String(600),
-        color: GeneralJs.colorChip.black,
-        top: String(0) + ea,
-      };
-      for (let i in style) {
-        text_div.style[i] = style[i];
-      }
-      div_clone.appendChild(text_div);
-      cardValueTong.appendChild(div_clone);
-
-      cardTitleWidth = text_div.getBoundingClientRect().width;
-      cardTitleHeight = text_div.getBoundingClientRect().height;
-
-      div_clone.style.width = String(cardTitleWidth) + ea;
-      div_clone.style.height = String(cardTitleHeight) + ea;
-
-      //value
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        top: String(cardTitleTop + (lineHeight * indexNumber)) + ea,
-        left: String(valueIndent) + ea,
-        width: String(12000) + ea,
-        overflow: "scroll",
-        transition: "all 0s ease",
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-      text_div = GeneralJs.nodes.div.cloneNode(true);
-      if (obj.complex !== undefined) {
-        text_div.textContent = thisData[obj.column];
-        text_div.textContent = text_div.textContent + " ";
-        for (let c of obj.complex) {
-          text_div.textContent = text_div.textContent + thisData[c];
-          text_div.textContent = text_div.textContent + " ";
-        }
-        text_div.textContent = text_div.textContent.slice(0, -1);
-      } else {
-        text_div.textContent = thisData[obj.column];
-      }
-      style = {
-        position: "absolute",
-        fontSize: String(cardDefaultFontSize) + ea,
-        fontWeight: String(300),
-        textAlign: "left",
-        color: GeneralJs.colorChip.black,
-        top: String(0) + ea,
-      };
-      for (let i in style) {
-        text_div.style[i] = style[i];
-      }
-      div_clone.appendChild(text_div);
-      cardValueTong.appendChild(div_clone);
-
-      cardTitleWidth = text_div.getBoundingClientRect().width;
-      cardTitleHeight = text_div.getBoundingClientRect().height;
-
-      div_clone.style.width = String(cardTitleWidth) + ea;
-      div_clone.style.height = String(cardTitleHeight) + ea;
-      text_div.style.width = String(cardTitleWidth) + ea;
-      div_clone.style.width = "calc(100% - " + String(valueIndent) + ea + ")";
-
-      indexNumber++;
-    }
-
-    //buttons
-    buttonsWidthAddtion = 0;
-    for (let obj of buttonsTargets) {
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      style = {
-        position: "absolute",
-        bottom: String(cardMargin - 2) + ea,
-        right: String(cardMargin + buttonsWidthAddtion) + ea,
-        width: String(1000) + ea,
-        border: "1px solid " + GeneralJs.colorChip.gray3,
-        borderRadius: String(3) + ea,
-        transition: "all 0s ease",
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-      text_div = GeneralJs.nodes.div.cloneNode(true);
-      text_div.textContent = obj.toggle[obj.mode === "binary" ? thisBinaryIndex : thisRelationIndex];
-      text_div.classList.add("hoverDefault_lite");
-      style = {
-        position: "absolute",
-        fontSize: String(cardDefaultFontSize - 1) + ea,
-        fontWeight: String(600),
-        color: obj.color[obj.mode === "binary" ? thisBinaryIndex : thisRelationIndex],
-        top: String(5) + ea,
-        left: String(13) + ea,
-      };
-      for (let i in style) {
-        text_div.style[i] = style[i];
-      }
-      div_clone.appendChild(text_div);
-      cardArea.appendChild(div_clone);
-
-      cardTitleWidth = text_div.getBoundingClientRect().width;
-      cardTitleHeight = text_div.getBoundingClientRect().height;
-
-      div_clone.style.width = String(cardTitleWidth + (13 * 2)) + ea;
-      div_clone.style.height = String(cardTitleHeight + (5 * 2) + 2) + ea;
-
-      div_clone.addEventListener("click", obj.click);
-
-      buttonsWidthAddtion = buttonsWidthAddtion + (cardTitleWidth + (13 * 2)) + 10;
+  displayBoo = true;
+  if (this.type === "contents" || this.type === "share") {
+    if (photoActionList.includes(project.contents.raw.photo.status)) {
+      displayBoo = false;
     }
   }
-
-  dataScrollBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    top: String(subMargin) + ea,
-    height: "calc(100% - " + String(subMargin) + ea + ")",
-    border: "1px solid " + GeneralJs.colorChip.gray3,
-    borderRadius: String(4) + ea,
-  };
-  for (let i in style) {
-    dataScrollBox.style[i] = style[i];
+  if (titleMode) {
+    displayBoo = true;
   }
 
-  dataTitleZone = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    height: String(46) + ea,
-    borderBottom: "1px solid " + GeneralJs.colorChip.gray3,
-    overflow: "hidden",
-  };
-  for (let i in style) {
-    dataTitleZone.style[i] = style[i];
-  }
-
-  dataTitleBox = GeneralJs.nodes.div.cloneNode(true);
-  moveTargets.push(dataTitleBox);
-  style = {
-    position: "relative",
-    height: String(46) + ea,
-    width: String(totalWidth) + ea,
-    transform: "translateX(" + String(0) + ea + ")",
-  };
-  for (let i in style) {
-    dataTitleBox.style[i] = style[i];
-  }
-
-  dataTitleFactors = [];
-
-  columnIndex = 0;
-  for (let z of columns) {
-    dataTitleFactor = GeneralJs.nodes.div.cloneNode(true);
-    dataTitleFactor.classList.add("hoverDefault_lite");
-    style = {
-      display: "inline-block",
-      position: "relative",
-      height: "100%",
-      width: String(1000) + ea,
-      transition: "all 0s ease",
-      opacity: String(0),
-      overflow: "hidden",
-      marginRight: String(factorsMargin) + ea,
-    };
-    for (let i in style) {
-      dataTitleFactor.style[i] = style[i];
-    }
-
-    text_div = GeneralJs.nodes.div.cloneNode(true);
-    text_div.textContent = data.columns[z].name;
-    style = {
-      position: "absolute",
-      top: String(GeneralJs.isMac() ? 12 : 13) + ea,
-      fontSize: String(14) + ea,
-      fontWeight: String(600),
-      width: "auto",
-      color: GeneralJs.colorChip.green,
-      transition: "all 0s ease",
-      textAlign: "center",
-    };
-    for (let i in style) {
-      text_div.style[i] = style[i];
-    }
-    dataTitleFactor.appendChild(text_div);
-    dataTitleFactor.setAttribute("index", String(columnIndex));
-    dataTitleFactor.setAttribute("sort_toggle", String(1));
-    dataTitleFactor.addEventListener("click", function (e) {
-      const columnIndex = Number(this.getAttribute("index"));
-      const toggle = Number(this.getAttribute("sort_toggle"));
-      if (map[z].sort === "string") {
-        sortTargets.sort((a, b) => {
-          if (b.children[columnIndex].firstChild.textContent >= a.children[columnIndex].firstChild.textContent) {
-            return -1 * toggle;
-          } else {
-            return 1 * toggle;
-          }
-        });
-      } else if (map[z].sort === "number") {
-        sortTargets.sort((a, b) => {
-          return toggle * (Number(a.children[columnIndex].firstChild.textContent.replace(/[^0-9]/g, '')) - Number(b.children[columnIndex].firstChild.textContent.replace(/[^0-9]/g, '')));
-        });
-      } else if (map[z].sort === "date") {
-        sortTargets.sort((a, b) => {
-          return toggle * (stringToDateValue(a.children[columnIndex].firstChild.textContent) - stringToDateValue(b.children[columnIndex].firstChild.textContent));
-        });
-      } else if (map[z].sort === "career") {
-        sortTargets.sort((a, b) => {
-          return toggle * (stringToCareerNumber(a.children[columnIndex].firstChild.textContent) - stringToCareerNumber(b.children[columnIndex].firstChild.textContent));
-        });
-      }
-      for (let div of sortTargets) {
-        dataDataZone.appendChild(div);
-      }
-      this.setAttribute("sort_toggle", String(-1 * toggle));
-    });
-
-    dataTitleFactors.push({ tong: dataTitleFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
-    dataTitleBox.appendChild(dataTitleFactor);
-    columnIndex++;
-  }
-  dataTitleZone.appendChild(dataTitleBox);
-  dataScrollBox.appendChild(dataTitleZone);
-
-  dataDataZone = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    paddingTop: String(6) + ea,
-    paddingBottom: String(200) + ea,
-    height: "calc(100% - " + String(46 + (6 + 200)) + ea + ")",
-    overflowY: "scroll",
-    overflowX: "hidden",
-  };
-  for (let i in style) {
-    dataDataZone.style[i] = style[i];
-  }
-
-  dataDoms = new DataDoms();
-  for (let j = 0; j < data.data.length; j++) {
-    dataDataBox = GeneralJs.nodes.div.cloneNode(true);
-    dataDataBox.setAttribute("index", String(j));
-    dataDataBox.setAttribute("standard", data.data[j][data.standard]);
-    dataDataBox.setAttribute(sameStandard.name, String(data.data[j][sameStandard.name]));
-    dataDataBox.setAttribute(binaryStandard.name, String(data.data[j][binaryStandard.name]));
-    if (alarmStandard[data.mode].value.includes(data.data[j][alarmStandard[data.mode].standard])) {
-      dataDataBox.setAttribute("alarm", "on");
-    } else {
-      dataDataBox.setAttribute("alarm", "off");
-    }
-    moveTargets.push(dataDataBox);
-    style = {
-      height: String(36) + ea,
-      width: String(totalWidth) + ea,
-      transform: "translateX(" + String(0) + ea + ")",
-      opacity: data.data[j][binaryStandard.name] ? String(1) : String(0.5),
-    };
-    for (let i in style) {
-      dataDataBox.style[i] = style[i];
-    }
-
-    dataDataFactors = [];
-    for (let z of columns) {
-      dataDataFactor = GeneralJs.nodes.div.cloneNode(true);
-      dataDataFactor.classList.add("hoverDefault_lite");
-      dataDataFactor.setAttribute("index", String(j));
-      dataDataFactor.setAttribute("standard", data.data[j][data.standard]);
-      dataDataFactor.setAttribute("column", z);
-      dataDataFactor.setAttribute(sameStandard.name, String(data.data[j][sameStandard.name]));
-      dataDataFactor.setAttribute(binaryStandard.name, String(data.data[j][binaryStandard.name]));
-      if (data.data[j][binaryStandard.target] !== null) {
-        dataDataFactor.setAttribute(binaryStandard.target, String(data.data[j][binaryStandard.target]));
-      }
-      style = {
-        display: "inline-block",
-        position: "relative",
-        height: "100%",
-        width: String(1000) + ea,
-        transition: "all 0s ease",
-        opacity: String(0),
-        overflow: "hidden",
-        marginRight: String(factorsMargin) + ea,
-      };
-      for (let i in style) {
-        dataDataFactor.style[i] = style[i];
-      }
-
-      text_div = GeneralJs.nodes.div.cloneNode(true);
-      text_div.setAttribute("index", String(j));
-      text_div.setAttribute("column", z);
-      text_div.textContent = data.data[j][z];
-      style = {
-        position: "absolute",
-        top: String(7) + ea,
-        fontSize: String(14) + ea,
-        width: "auto",
-        lineHeight: String(1.8),
-        color: GeneralJs.colorChip.realBlack,
-        fontWeight: data.data[j][sameStandard.name] ? String(500) : String(200),
-        transition: "all 0s ease",
-        textAlign: "center",
-      };
-      for (let i in style) {
-        text_div.style[i] = style[i];
-      }
-      dataDataFactor.appendChild(text_div);
-      if (editables[z] !== undefined) {
-        tempFunction = editables[z];
-        tempFunctionOutput = tempFunction();
-        dataDataFactor.addEventListener("click", (editFunction(tempFunctionOutput.thisColumnName, tempFunctionOutput.inputFunction, tempFunctionOutput.outputFunction))[tempFunctionOutput.type]);
-        dataDataFactor.addEventListener("contextmenu", (editFunction(tempFunctionOutput.thisColumnName, tempFunctionOutput.inputFunction, tempFunctionOutput.outputFunction))[tempFunctionOutput.type]);
-      } else {
-        dataDataFactor.addEventListener("click", dataAreaToCardEvent);
-      }
-      dataDataFactors.push({ tong: dataDataFactor, text: text_div, width: (data.columns[z].relative * relativeRatio) });
-      if (alarmStandard[data.mode].target.includes(z)) {
-        if (alarmStandard[data.mode].value.includes(data.data[j][alarmStandard[data.mode].standard])) {
-          dataDataFactor.setAttribute("alarm", "on");
-        } else {
-          dataDataFactor.setAttribute("alarm", "off");
-        }
-        alarmTargets.push(dataDataFactor);
-      }
-
-      if (portfolioBooArr.includes(z)) {
-
-        dataDataFactor.addEventListener("click", function (e) {
-          const thisCase = this.parentNode;
-          const thisFolderId = this.getAttribute(binaryStandard.target);
-          const thisIndex = Number(this.getAttribute("index"));
-          const thisData = data.data[thisIndex];
-          const { designer, phone } = thisData;
-          let str;
-          if (thisFolderId !== null) {
-            if (!/^__link__/.test(thisFolderId)) {
-              str = "https://drive.google.com/drive/folders/";
-              str += thisFolderId;
-              str += "?usp=sharing";
-            } else {
-              str = thisFolderId.replace(/^__link__/, '');
-            }
-            for (let doms of thisCase.children) {
-              if (portfolioBooArr.includes(doms.getAttribute("column"))) {
-                if (doms.firstChild.querySelector("svg") !== null) {
-                  doms.firstChild.querySelector("svg").remove();
-                }
-              }
-            }
-            GeneralJs.ajax("standard=" + phone + "&user=" + instance.user.email, "/viewAspirantRawPortfolio", function (data) {});
-            window.open(str, "_blank");
-          } else {
-            alert("포트폴리오가 없습니다!");
-          }
-        });
-
-        if (data.data[j][portfolioBooArr.standardColumnName] === portfolioBooArr.standardColumnValue) {
-          if (JSON.parse(data.data[j][portfolioBooArr.flatColumnName]).length > 0) {
-            tempBoo = false;
-            for (let p of JSON.parse(data.data[j][portfolioBooArr.flatColumnName])) {
-              if (p.who === instance.user.email) {
-                tempBoo = true;
-              }
-            }
-            if (!tempBoo) {
-              dataDataFactor.setAttribute("alarm", "on");
-              alarmTargets.push(dataDataFactor);
-            }
-          } else {
-            dataDataFactor.setAttribute("alarm", "on");
-            alarmTargets.push(dataDataFactor);
-          }
-        }
-      }
-
-      dataDataBox.appendChild(dataDataFactor);
-    }
-    sortTargets.push(dataDataBox);
-    dataDataFactorsTotal.push(dataDataFactors);
-    dataDataZone.appendChild(dataDataBox);
-    dataDoms.push(dataDataBox);
-  }
-
-  this.aspirants = dataDoms;
-  dataScrollBox.appendChild(dataDataZone);
-
-  dataArea.appendChild(dataScrollBox);
-  mother.appendChild(dataArea);
-
-  //fix data area factor's width
-  for (let { tong, text, width } of dataTitleFactors) {
-    fixedWidth = text.getBoundingClientRect().width;
-    tong.style.width = String(width) + ea;
-    text.style.width = String(fixedWidth + 4) + ea;
-    text.style.left = "calc(50% - " + String((fixedWidth / 2) + 2) + ea + ")";
-    tong.style.opacity = String(1);
-  }
-
-  for (let arr of dataDataFactorsTotal) {
-    for (let { tong, text, width } of arr) {
-      fixedWidth = text.getBoundingClientRect().width;
-      tong.style.width = String(width) + ea;
-      text.style.width = String(fixedWidth + 4) + ea;
-      text.style.left = "calc(50% - " + String((fixedWidth / 2) + 2) + ea + ")";
-      tong.style.opacity = String(1);
-    }
-  }
-
-  for (let a of alarmTargets) {
-    if (a.getAttribute("alarm") === "on") {
-      alarmCircle = SvgTong.stringParsing(instance.mother.returnCircle("position:absolute;transform:scale(0.4);transform-origin:100% 0%;right:-5.5px;top:" + (GeneralJs.isMac() ? String(4) : String(2)) + "px;", GeneralJs.colorChip.red));
-      a.firstChild.appendChild(alarmCircle);
-    }
-  }
-
-  //report area
-  reportArea = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    paddingLeft: String(mainMargin) + ea,
-    paddingRight: String(mainMargin) + ea,
-    height: String(reportHeight) + ea,
-  };
-  for (let i in style) {
-    reportArea.style[i] = style[i];
-  }
-  reportScrollBox = GeneralJs.nodes.div.cloneNode(true);
-  style = {
-    position: "relative",
-    top: String(subMargin) + ea,
-    height: "calc(100% - " + String(subMargin) + ea + ")",
-    background: GeneralJs.colorChip.gray1,
-    borderRadius: String(4) + ea,
-  };
-  for (let i in style) {
-    reportScrollBox.style[i] = style[i];
-  }
-  reportArea.appendChild(reportScrollBox);
-  mother.appendChild(reportArea);
-
-  //report sort standards contents
-
-  //report sort title
-  GeneralJs.stacks["reportSortTitleFunction"] = function () {
-    let div_clone, text_div;
-    let style;
-    let ea;
-    let tempArr;
-
-    //reset
-    while (reportScrollBox.firstChild) {
-      reportScrollBox.removeChild(reportScrollBox.lastChild);
-    }
-
-    ea = "px";
-
-    reportSortTitleTop = GeneralJs.isMac() ? 20 : 24;
-
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "relative",
-      top: String(reportSortTitleTop) + ea,
-      left: String(28) + ea,
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-    text_div = GeneralJs.nodes.div.cloneNode(true);
-    text_div.textContent = "분류 기준";
-    style = {
-      position: "absolute",
-      fontSize: String(reportFontSize) + ea,
-      fontWeight: String(500),
-    };
-    for (let i in style) {
-      text_div.style[i] = style[i];
-    }
-    div_clone.appendChild(text_div);
-
-    reportScrollBox.appendChild(div_clone);
-    reportTextWidth = text_div.getBoundingClientRect().width;
-    reportTextHeight = text_div.getBoundingClientRect().height;
-    div_clone.style.width = String(reportTextWidth) + ea;
-    div_clone.style.height = String(reportTextHeight) + ea;
-
-    //report sort bar
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(reportSortTitleTop - 1) + ea,
-      left: String(28 + reportTextWidth + 12) + ea,
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-    text_div = GeneralJs.nodes.div.cloneNode(true);
-    text_div.textContent = "|";
-    style = {
-      position: "absolute",
-      fontSize: String(reportFontSize) + ea,
-      fontWeight: String(200),
-      color: GeneralJs.colorChip.gray4,
-    };
-    for (let i in style) {
-      text_div.style[i] = style[i];
-    }
-    div_clone.appendChild(text_div);
-
-    reportScrollBox.appendChild(div_clone);
-    div_clone.style.width = String(text_div.getBoundingClientRect().width) + ea;
-    div_clone.style.height = String(text_div.getBoundingClientRect().height) + ea;
-
-    //report contents
-    reportContentsBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(reportSortTitleTop) + ea,
-      left: String(28 + reportTextWidth + 12 + text_div.getBoundingClientRect().width + 25) + ea,
-      width: "calc(100% - " + String(28 + reportTextWidth + 12 + text_div.getBoundingClientRect().width + 25 + 28) + ea + ")",
-      height: "calc(100% - " + String(reportSortTitleTop * 2) + ea + ")",
-      overflow: "scroll",
-    };
-    for (let i in style) {
-      reportContentsBox.style[i] = style[i];
-    }
-
-    reportTargetColumn = reportTargetMap[data.mode][0];
-    reportTargetColumnTong = [];
-    for (let i = 0; i < data.data.length; i++) {
-      reportTargetColumnTong.push(data.data[i][reportTargetColumn]);
-    }
-
-    reportTargetColumnTong = Array.from(new Set(reportTargetColumnTong));
-    reportTargetColumnTong.sort((a, b) => {
-      if (a >= b) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
-
-    tempArr = [];
-    reportTargetNumberValue = 0;
-    for (let c of reportTargetColumnTong) {
-      tempObj = {};
-      reportTargetNumberValue = 0;
-      for (let i = 0; i < data.data.length; i++) {
-        if (data.data[i][reportTargetColumn] === c) {
-          reportTargetNumberValue = reportTargetNumberValue + 1;
-        }
-      }
-      tempObj.name = c;
-      tempObj.value = reportTargetNumberValue;
-      tempObj.eventFunction = function (e) {
-        const displayNoneTarget = dataDoms.valueFilter(reportTargetColumn, c, true);
-        const displayBlockTarget = dataDoms.valueFilter(reportTargetColumn, c, false);
-        for (let z of displayNoneTarget) {
-          z.style.display = "none";
-        }
-        for (let z of displayBlockTarget) {
-          z.style.display = "block";
-        }
-      }
-      tempArr.push(tempObj);
-    }
-
-    if (reportTargetColumn === "presentationTimes" || reportTargetColumn === "meetingTime") {
-      tempArr.sort((a, b) => {
-        return ((b.name.slice(0, 5).replace(/[^0-9]/g, '').length === 0) ? 9999999999 : ((b.name.slice(0, 5).replace(/[^0-9]/g, '').length === 2) ? Number(b.name.slice(0, 1) + '0' + b.name.slice(1, 5).replace(/[^0-9]/g, '')) : Number(b.name.slice(0, 5).replace(/[^0-9]/g, '')))) - ((a.name.slice(0, 5).replace(/[^0-9]/g, '').length === 0) ? 9999999999 : ((a.name.slice(0, 5).replace(/[^0-9]/g, '').length === 2) ? Number(a.name.slice(0, 1) + '0' + a.name.slice(1, 5).replace(/[^0-9]/g, '')) : Number(a.name.slice(0, 5).replace(/[^0-9]/g, ''))));
-      });
-    } else {
-      tempArr.sort((a, b) => {
-        if (a.name >= b.name) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-    }
-
-    reportTargetColumnTong = tempArr;
-    reportTargetColumnTong.unshift({
-      name: "전체 보기",
-      value: null,
-      eventFunction: function (e) {
-        const displayBlockTarget = dataDoms.valueFilter(reportTargetColumn, "all", false);
-        for (let z of displayBlockTarget) {
-          z.style.display = "block";
-        }
-      }
-    });
-
-    reportTargetAllBox = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: String(8000) + ea,
-      height: String(100) + '%',
-      left: String(0) + ea,
-      top: String(0) + ea,
-      transition: "all 0s ease",
-    };
-    for (let i in style) {
-      reportTargetAllBox.style[i] = style[i];
-    }
-    reportContentsBox.appendChild(reportTargetAllBox);
-    reportScrollBox.appendChild(reportContentsBox);
-
-    reportScrollBoxTotalWidth = 0;
-    for (let i = 0; i < reportTargetColumnTong.length; i++) {
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("hoverDefault");
-      style = {
-        display: "inline-block",
-        position: "relative",
-        height: String(100) + '%',
-        width: String(500) + ea,
-        marginRight: String(28) + ea,
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-      text_div = GeneralJs.nodes.div.cloneNode(true);
-      if (reportTargetColumnTong[i].value !== null) {
-        text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name + ' : <b style="font-size:' + String(reportFontSize - 2) + ea + ';color:' + GeneralJs.colorChip.green + ';font-weight:500">' + String(reportTargetColumnTong[i].value) + '</b>');
-      } else {
-        text_div.insertAdjacentHTML("beforeend", reportTargetColumnTong[i].name);
-      }
-      style = {
-        position: "absolute",
-        fontSize: String(reportFontSize - 2) + ea,
-        fontWeight: String(200),
-        color: GeneralJs.colorChip.realBlack,
-      };
-      for (let i in style) {
-        text_div.style[i] = style[i];
-      }
-      div_clone.appendChild(text_div);
-      reportTargetAllBox.appendChild(div_clone);
-
-      reportScrollBoxTotalWidth += text_div.getBoundingClientRect().width + 28 + 2;
-      div_clone.style.width = String(text_div.getBoundingClientRect().width) + ea;
-      div_clone.addEventListener("click", reportTargetColumnTong[i].eventFunction);
-    }
-
-    reportTargetAllBox.style.width = String(reportScrollBoxTotalWidth) + ea;
-    GeneralJs.addScrollXEvent(reportContentsBox);
-
-  }
-
-  GeneralJs.stacks.reportSortTitleFunction();
-
-  callback(dataDoms);
+  return { map, stringArr, updateArr, grayBoo: boo, displayBoo };
 }
 
-DesignerJs.prototype.reportViewMakerDetail = function (recycle = false) {
+DesignerJs.prototype.contentsUpdate = async function (whereQuery, updateQuery, chainQuery = null, rawValue = '') {
   const instance = this;
+  const { colorChip, ajaxJson } = GeneralJs;
   try {
-    return function () {
-      const searchTarget = instance.searchInput.parentNode;
-      const searchTarget_new = searchTarget.cloneNode(true);
-      searchTarget.style.opacity = String(0);
-      searchTarget_new.style.position = "absolute";
-      searchTarget.parentNode.insertBefore(searchTarget_new, instance.searchInput.parentNode.nextElementSibling);
-      searchTarget_new.querySelector("input").addEventListener("keypress", function (e) {
-        this.value = this.value.replace(/[\~\!\@\#\$\%\^\&\*\(\)\_\[\]\{\}\<\>\/\? \n]/g, '').trim();
-        if (e.key === "Enter") {
-          const finalValue = this.value.replace(/[\~\!\@\#\$\%\^\&\*\(\)\_\[\]\{\}\<\>\/\? \n]/g, '').trim();
-          const regexp = new RegExp(finalValue, "gi");
-          for (let dom of instance.aspirants) {
-            if (!regexp.test(dom.textContent)) {
-              dom.style.display = "none";
+    if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
+      throw new Error("invaild input");
+    }
+    if (chainQuery !== null) {
+      if (chainQuery.condition === undefined || chainQuery.updateQuery === undefined) {
+        throw new Error("invaild input");
+      }
+    }
+    const { proid } = whereQuery;
+    const project = this.projects.search("proid", proid);
+    let tempArr, target;
+    let boo;
+    let tempQsa0, tempQsa1, tempQsa2;
+
+    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+
+    for (let query in updateQuery) {
+      tempArr = query.split('.');
+      target = project;
+      for (let i = 0; i < tempArr.length - 1; i++) {
+        target = target[tempArr[i]];
+      }
+      target[tempArr[tempArr.length - 1]] = updateQuery[query];
+    }
+
+    if (chainQuery !== null) {
+      const { condition, updateQuery: chainUpdateQuery } = chainQuery;
+      boo = false;
+      if ((new RegExp(condition, "gi")).test(rawValue)) {
+        boo = true;
+      }
+      if (boo) {
+        await ajaxJson({ whereQuery, updateQuery: chainUpdateQuery }, "/rawUpdateProject");
+        for (let query in chainUpdateQuery) {
+          tempArr = query.split('.');
+          target = project;
+          for (let i = 0; i < tempArr.length - 1; i++) {
+            target = target[tempArr[i]];
+          }
+          target[tempArr[tempArr.length - 1]] = chainUpdateQuery[query];
+        }
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.contentsDeactivate = function (proid, offMode = true) {
+  const instance = this;
+  const { colorChip, stacks } = GeneralJs;
+  let emptyDate, emptyValue;
+  let tempQsa;
+  let whiteBlock;
+  let num;
+  let name;
+  let tong;
+  let children;
+  let length;
+
+  whiteBlock = document.getElementById(proid);
+  children = whiteBlock.children;
+  length = children.length;
+  emptyDate = new Date(1800, 0, 1);
+  emptyValue = "해당 없음";
+  name = "deactive_" + proid;
+
+  if (offMode) {
+    stacks[name] = [];
+    tong = stacks[name];
+    tempQsa = whiteBlock.querySelectorAll("div");
+    for (let dom of tempQsa) {
+      tong.push(dom.style.color);
+      dom.style.color = colorChip.gray4;
+    }
+    tempQsa = whiteBlock.querySelectorAll("b");
+    for (let dom of tempQsa) {
+      tong.push(dom.style.color);
+      dom.style.color = colorChip.gray4;
+    }
+    tong.push(whiteBlock.style.background);
+    whiteBlock.style.background = colorChip.gray0;
+    tong.push(children[length - 2].style.background);
+    children[length - 2].style.background = colorChip.gray0;
+    tong.push(children[length - 1].style.background);
+    children[length - 1].style.background = colorChip.gray4;
+  } else {
+    if (Array.isArray(stacks[name])) {
+      num = 0;
+      tong = stacks[name];
+      tempQsa = whiteBlock.querySelectorAll("div");
+      for (let dom of tempQsa) {
+        dom.style.color = tong[num];
+        num = num + 1;
+      }
+      tempQsa = whiteBlock.querySelectorAll("b");
+      for (let dom of tempQsa) {
+        dom.style.color = tong[num];
+        num = num + 1;
+      }
+      whiteBlock.style.background = tong[num];
+      num = num + 1;
+      children[length - 2].style.background = tong[num];
+      num = num + 1;
+      children[length - 1].style.background = tong[num];
+    } else {
+      window.location.reload();
+    }
+  }
+
+}
+
+// LOGIC -----------------------------------------------------------------------------------------------------------------
+
+DesignerJs.prototype.aspirantBase = function (search = null) {
+  const instance = this;
+  const { ea, belowHeight } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { white, green } = colorChip;
+  let totalMother;
+  let margin;
+  let titleArea, contentsArea;
+  let titleDesigner, titleProject, titleTime;
+  let contentsDesigner, contentsProject, contentsTong;
+  let size;
+  let borderBack;
+  let dashBoardHeight, dashBoardMargin;
+  let dashBoard;
+  let topMargin, leftMargin;
+
+  margin = 30;
+  size = 18;
+  dashBoardHeight = 49;
+  dashBoardMargin = 16;
+  topMargin = 11;
+  leftMargin = 10;
+
+  totalMother = createNode({
+    mother: document.getElementById("totalcontents"),
+    class: [ "totalMother" ],
+    style: {
+      position: "fixed",
+      top: String(0),
+      left: String(0),
+      paddingTop: String(margin) + ea,
+      paddingLeft: String(margin) + ea,
+      paddingRight: String(margin) + ea,
+      width: withOut(margin * 2, ea),
+      height: withOut(margin + belowHeight, ea),
+    }
+  });
+  this.totalMother = totalMother;
+
+  [ borderBack, dashBoard, contentsArea, contentsTong ] = createNodes([
+    {
+      mother: totalMother,
+      style: {
+        position: "absolute",
+        top: String(margin + dashBoardHeight + dashBoardMargin) + ea,
+        left: String(margin) + ea,
+        width: withOut(margin * 2, ea),
+        height: withOut(margin + dashBoardHeight + dashBoardMargin, ea),
+        borderBottom: String(0),
+        borderTopLeftRadius: String(3) + "px",
+        borderTopRightRadius: String(3) + "px",
+        boxSizing: "border-box",
+        background: colorChip.gray2,
+      }
+    },
+    {
+      mother: totalMother,
+      style: {
+        position: "relative",
+        height: String(dashBoardHeight) + ea,
+        marginBottom: String(dashBoardMargin) + ea,
+        background: colorChip.gray2,
+        borderRadius: String(3) + "px",
+        textAlign: "center",
+      }
+    },
+    {
+      mother: totalMother,
+      style: {
+        position: "relative",
+        height: withOut(dashBoardHeight + dashBoardMargin, ea),
+      }
+    },
+    {
+      mother: -1,
+      style: {
+        display: "block",
+        position: "relative",
+        paddingTop: String(topMargin) + ea,
+        paddingLeft: String(leftMargin) + ea,
+        height: String(100) + '%',
+        width: String(100) + '%',
+        top: String(0) + ea,
+        boxSizing: "border-box",
+        overflowY: "scroll",
+        overflowX: "hidden",
+      }
+    }
+  ]);
+
+  this.contentsSpec.contentsTong = contentsTong;
+  this.contentsSpec.dashBoard = dashBoard;
+  this.aspirantBlockInjection();
+  this.aspirantDashBoard();
+}
+
+DesignerJs.prototype.aspirantBlockInjection = function () {
+  const instance = this;
+  const { ea, projects, actionList } = this;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
+  const { contentsTong } = this.contentsSpec;
+  let scrollTong;
+  let width, dom;
+  let maxWidth;
+  let startLeft, betweenText, widthArr, domArr;
+  let temp;
+  let firstBoo;
+  let leftMargin;
+  let firstPaddingTop;
+  let tongPaddingBottom;
+
+  leftMargin = 10;
+  firstPaddingTop = 44;
+  tongPaddingBottom = 500;
+
+  cleanChildren(contentsTong);
+
+  scrollTong = createNode({
+    mother: contentsTong,
+    style: {
+      position: "relative",
+      width: withOut(leftMargin, ea),
+      overflowX: "hidden",
+      paddingTop: String(firstPaddingTop) + ea,
+      paddingBottom: String(tongPaddingBottom) + ea,
+    }
+  });
+
+  maxWidth = [];
+
+  projects.sort((a, b) => { return b.contents.photo.date.valueOf() - a.contents.photo.date.valueOf(); });
+
+  this.scrollTong = scrollTong;
+  this.contentsBlocks = [];
+  this.ignoreNumbers = [ 3, 1 ];
+  this.resetWidthEvent = async function () {
+    try {
+      const { xyConverting } = GeneralJs;
+      const { ignoreNumbers } = instance;
+      let children;
+      let widthArrMother, widthArrMotherConverted;
+      let widthArr;
+      let tempArr;
+
+      widthArrMother = [];
+      for (let block of instance.contentsBlocks) {
+        children = block.children;
+        widthArr = [];
+        for (let i = 0; i < children.length; i++) {
+          if (i >= ignoreNumbers[0] && i < children.length - ignoreNumbers[1]) {
+            children[i].style.width = "auto";
+          }
+          widthArr.push(children[i].getBoundingClientRect().width);
+        }
+        widthArrMother.push(widthArr);
+      }
+
+      widthArrMotherConverted = xyConverting(widthArrMother).map((arr) => {
+        arr.sort((a, b) => { return b - a; });
+        return arr[0];
+      });
+
+      for (let block of instance.contentsBlocks) {
+        children = block.children;
+        for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+          children[i].style.width = String(widthArrMotherConverted[i]) + ea;
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  firstBoo = true;
+  for (let i = 0; i < projects.length; i++) {
+    if (!actionList.includes(projects[i].process.action)) {
+      if (firstBoo) {
+        this.aspirantWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, true);
+        firstBoo = false;
+      }
+      this.aspirantWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, false);
+    }
+  }
+
+  this.resetWidthEvent();
+}
+
+DesignerJs.prototype.aspirantWhiteBlock = function (mother, project, last, index, titleMode = false) {
+  if (mother === undefined || project === undefined) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { ea } = this;
+  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
+  const { map, stringArr, updateArr, grayBoo, displayBoo } = this.contentsDataRender(project, titleMode);
+  let height, margin;
+  let whiteBlock;
+  let width0, width1;
+  let top, left, size;
+  let textMargin;
+  let previousWidth, betweenText;
+  let widthArr, domArr;
+  let tempQsa;
+  let whiteBack;
+  let whiteWidth;
+  let tempDom;
+  let factorHeight;
+  let leftMargin;
+  let motherMargin;
+  let titleBlockTop;
+  let menuMargin;
+  let menuHeight;
+  let menuTextTop;
+
+  leftMargin = 10;
+  motherMargin = 30;
+
+  height = 43;
+  margin = 1;
+
+  width0 = 115;
+  width1 = 3;
+  titleBlockTop = 105;
+
+  top = (titleMode ? (isMac() ? 11 : 12) : (isMac() ? 11 : 12));
+  left = 16;
+  size = 14;
+  textMargin = 6;
+  betweenText = 50;
+
+  whiteWidth = 16;
+  factorHeight = 20;
+
+  menuMargin = 25;
+  menuHeight = 31;
+  menuTextTop = isMac() ? 5 : 7;
+
+  whiteBlock = createNode({
+    mother,
+    id: titleMode ? "title" : project.proid,
+    attribute: [
+      { index: String(index) },
+      { sortstandard: "" },
+      { sort: "1" },
+      { title: titleMode ? 1 : 0 }
+    ],
+    style: {
+      display: instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none"),
+      position: titleMode ? "fixed" : "relative",
+      width: String(8000) + ea,
+      height: String(height) + ea,
+      marginBottom: String(margin) + ea,
+      transition: "all 0s ease",
+      zIndex: titleMode ? String(4) : "",
+      top: titleMode ? String(titleBlockTop) + ea : "",
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: "calc(100vw - " + String((motherMargin * 2) + (leftMargin * 2)) + ea + ")",
+          height: String(100) + '%',
+          borderRadius: String(3) + "px",
+          background: titleMode ? colorChip.gradientGreen2 : colorChip[grayBoo ? "white" : "gray0"],
+          top: String(0),
+          left: String(0),
+          transition: "all 0s ease",
+          boxShadow: titleMode ? "0px 2px 13px -9px " + colorChip.shadow : "",
+          opacity: titleMode ? String(0.92) : "",
+        }
+      },
+      {
+        text: !titleMode ? project.title : "",
+        class: [ "hoverDefault" ],
+        events: [
+          {
+            type: "click",
+            event: function (e) {
+              window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + project.proid;
+            }
+          }
+        ],
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          width: String(width0) + ea,
+          top: String(top + (isMac() ? 1 : 0)) + ea,
+          marginLeft: String(left) + ea,
+          fontSize: String(size) + ea,
+          zIndex: String(2),
+          color: colorChip.black,
+          transition: "all 0s ease",
+        }
+      },
+      {
+        text: !titleMode ? '|' : "",
+        style: {
+          display: "inline-block",
+          verticalAlign: "top",
+          position: "relative",
+          width: String(width1) + ea,
+          top: String(top + (isMac() ? 1 : 0)) + ea,
+          marginLeft: String(textMargin) + ea,
+          fontSize: String(size) + ea,
+          color: colorChip.gray4,
+          zIndex: String(2),
+          transition: "all 0s ease",
+        }
+      },
+    ]
+  });
+
+  widthArr = [];
+  domArr = [];
+  for (let i = 0; i < stringArr.length; i++) {
+    tempDom = createNode({
+      mother: whiteBlock,
+      attribute: [
+        { index: String(index) },
+        { arrindex: String(i) },
+        { title: titleMode ? 1 : 0 },
+        { sort: String(1), }
+      ],
+      text: stringArr[i],
+      class: [ "white_child_" + String(i) ],
+      events: [
+        {
+          type: [ "click", "contextmenu" ],
+          event: function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            const { ea, ignoreNumbers, contentsBlocks, scrollTong } = instance;
+            const { createNode, createNodes, colorChip, withOut, xyConverting } = GeneralJs;
+            const titleMode = Number(this.getAttribute("title")) === 1;
+            const thisIndex = Number(this.getAttribute("arrindex"));
+            const thisSort = Number(this.getAttribute("sort"));
+            if (titleMode) {
+              const targets = contentsBlocks.map((dom, index) => { return { dom, index: index - 1 }; }).slice(1);
+              const children = xyConverting(targets.map((obj) => { return [ ...obj.dom.children ].slice(ignoreNumbers[0], -1 * ignoreNumbers[1]); }));
+              const sortTargets = children[thisIndex];
+              let indexArr, tempIndex, numberSortBoo;
+
+              numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
+
+              if (!numberSortBoo) {
+                if (thisSort === 1) {
+                  sortTargets.sort((a, b) => {
+                    return b.querySelector(".value").textContent > a.querySelector(".value").textContent ? 1 : -1;
+                  });
+                  this.setAttribute("sort", String(0));
+                } else {
+                  sortTargets.sort((a, b) => {
+                    return a.querySelector(".value").textContent > b.querySelector(".value").textContent ? 1 : -1;
+                  });
+                  this.setAttribute("sort", String(1));
+                }
+              } else {
+                if (thisSort === 1) {
+                  sortTargets.sort((a, b) => {
+                    return (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
+                  });
+                  this.setAttribute("sort", String(0));
+                } else {
+                  sortTargets.sort((a, b) => {
+                    return (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
+                  });
+                  this.setAttribute("sort", String(1));
+                }
+              }
+
+              indexArr = sortTargets.map((dom) => { return Number(dom.getAttribute("index")) });
+              for (let index of indexArr) {
+                tempIndex = targets.findIndex((obj) => { return obj.index === index });
+                if (tempIndex !== -1) {
+                  scrollTong.appendChild(targets[tempIndex].dom);
+                }
+              }
+
             } else {
-              dom.style.display = "block";
+              if (this.querySelectorAll("aside").length === 0) {
+                const self = this;
+                const index = Number(this.getAttribute("arrindex"));
+                const valueDom = this.querySelector(".value");
+                let thisCase;
+                thisCase = {};
+                for (let column in map) {
+                  if (document.getElementById(project.proid + "_" + column) === null) {
+                    throw new Error("invaild doms");
+                  }
+                  thisCase[column] = document.getElementById(project.proid + "_" + column);
+                }
+                const option = {
+                  ea,
+                  top: menuMargin,
+                  createNode,
+                  createNodes,
+                  colorChip,
+                  withOut,
+                  thisCase,
+                  boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+                  animation: "fadeuplite 0.2s ease forwards",
+                  borderRadius: String(5) + "px",
+                  zIndex: String(1),
+                  valueDom,
+                  height: menuHeight,
+                  size,
+                  textTop: menuTextTop
+                };
+                let cancelBox, parent;
+
+                parent = this.parentElement;
+                cancelBox = createNode({
+                  mother: this,
+                  mode: "aside",
+                  events: [
+                    {
+                      type: "click",
+                      event: async function (e) {
+                        try {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          const directParent = this.parentElement;
+                          const removeTargets = directParent.querySelectorAll("aside");
+                          for (let dom of removeTargets) {
+                            directParent.removeChild(dom);
+                          }
+                          instance.resetWidthEvent();
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    }
+                  ],
+                  style: {
+                    position: "fixed",
+                    top: String(0) + ea,
+                    left: String(0) + ea,
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: "transparent",
+                    zIndex: option.zIndex,
+                  }
+                });
+
+                updateArr[index].call(this, e, option, cancelBox, parent, instance.resetWidthEvent);
+              }
+            }
+          }
+        },
+      ],
+      style: {
+        display: "inline-block",
+        verticalAlign: "top",
+        position: "relative",
+        top: String(top) + ea,
+        marginLeft: String(betweenText) + ea,
+        fontSize: String(size) + ea,
+        fontWeight: String(titleMode ? 700 : 500),
+        height: ((i === stringArr.length - 1) ? String(factorHeight) + ea : ""),
+        overflow: ((i === stringArr.length - 1) ? "hidden" : "visible"),
+        transition: "all 0s ease",
+        cursor: "pointer",
+      }
+    });
+    domArr.push(tempDom);
+    previousWidth = tempDom.getBoundingClientRect().width;
+    widthArr.push(previousWidth);
+  }
+
+  whiteBack = createNode({
+    mother: whiteBlock,
+    style: {
+      position: "absolute",
+      top: String(0) + ea,
+      right: String(0) + ea,
+      width: String(whiteWidth) + ea,
+      height: String(100) + '%',
+      background: colorChip.white
+    }
+  });
+
+  if (!grayBoo) {
+    tempQsa = whiteBlock.querySelectorAll("div");
+    for (let dom of tempQsa) {
+      dom.style.color = colorChip.gray4;
+    }
+    tempQsa = whiteBlock.querySelectorAll("b");
+    for (let dom of tempQsa) {
+      dom.style.color = colorChip.gray4;
+    }
+    whiteBlock.children[2].style.background = colorChip.gray0;
+    whiteBack.style.background = colorChip.gray0;
+  }
+
+  this.contentsBlocks.push(whiteBlock);
+
+}
+
+DesignerJs.prototype.aspirantDashBoard = function () {
+  const instance = this;
+  const { ea, projects } = this;
+  const { createNode, createNodes, colorChip, withOut } = GeneralJs;
+  const { dashBoard } = this.contentsSpec;
+  let size, top, left;
+  let nodeArr;
+  let textArr;
+  let typeNum;
+  let dashBoardBox;
+
+  size = 16;
+  top = 11;
+  left = 19;
+
+  textArr = [];
+  typeNum = 0;
+  for (let i = 0; i < this.typeArr.length; i++) {
+    if (this.typeArr[i] === this.type) {
+      typeNum = i;
+    }
+    textArr.push(this.typeArr[i].slice(0, 1).toUpperCase() + this.typeArr[i].slice(1));
+  }
+
+  dashBoardBox = createNode({
+    mother: dashBoard,
+    style: {
+      position: "relative",
+      width: withOut(left * 2, ea),
+      height: String(100) + '%',
+      left: String(left) + ea,
+      textAlign: "left",
+    }
+  });
+
+  nodeArr = [];
+  for (let i = 0; i < textArr.length; i++) {
+    nodeArr.push({
+      mother: dashBoardBox,
+      text: textArr[i],
+      class: [ "hoverDefault" ],
+      attribute: [
+        { value: instance.typeArr[i] }
+      ],
+      events: [
+        {
+          type: "click",
+          event: function (e) {
+            instance.type = this.getAttribute("value");
+            for (let i = 0; i < instance.typeArr.length; i++) {
+              if (instance.typeArr[i] === instance.type) {
+                instance.typeDoms[i].style.color = colorChip.green;
+              } else {
+                instance.typeDoms[i].style.color = colorChip.shadowWhite;
+              }
+            }
+            instance.aspirantBlockInjection();
+          }
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        fontFamily: "graphik",
+        fontSize: String(size) + ea,
+        fontWeight: String(400),
+        top: String(top) + ea,
+        color: colorChip[i === typeNum ? "green" : "shadowWhite"],
+      }
+    });
+    if (i !== textArr.length - 1) {
+      nodeArr.push({
+        mother: dashBoardBox,
+        text: `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`,
+        style: {
+          display: "inline-block",
+          position: "relative",
+          fontFamily: "graphik",
+          fontSize: String(size) + ea,
+          fontWeight: String(200),
+          top: String(top) + ea,
+          color: colorChip.gray5
+        }
+      });
+    }
+  }
+  nodeArr.push({
+    mother: dashBoardBox,
+    text: 'D',
+    class: [ "hoverDefault" ],
+    events: [
+      {
+        type: "click",
+        event: function (e) {
+          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?mode=general");
+        }
+      }
+    ],
+    style: {
+      position: "absolute",
+      fontFamily: "graphik",
+      fontSize: String(size + 2) + ea,
+      fontWeight: String(500),
+      top: String(top - 1) + ea,
+      right: String(0) + ea,
+      fontStyle: "italic",
+      color: colorChip.black,
+    }
+  });
+  nodeArr.push({
+    mother: dashBoardBox,
+    text: 'C',
+    class: [ "hoverDefault" ],
+    events: [
+      {
+        type: "click",
+        event: function (e) {
+          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/project");
+        }
+      }
+    ],
+    style: {
+      position: "absolute",
+      fontFamily: "graphik",
+      fontSize: String(size + 2) + ea,
+      fontWeight: String(500),
+      top: String(top - 1) + ea,
+      right: String(18) + ea,
+      fontStyle: "italic",
+      color: colorChip.black,
+    }
+  });
+
+  nodeArr.push({
+    mother: dashBoardBox,
+    mode: "svg",
+    source: this.mother.returnHamburger(colorChip.black),
+    class: [ "hoverDefault" ],
+    events: [
+      {
+        type: "click",
+        event: function (e) {
+          instance.contentsSearchIndex = [];
+          instance.aspirantBlockInjection();
+        }
+      }
+    ],
+    style: {
+      position: "absolute",
+      height: String(11) + ea,
+      top: String(18) + ea,
+      right: String(38) + ea,
+    }
+  });
+
+  nodeArr = createNodes(nodeArr);
+  instance.typeDoms = [];
+  for (let i = 0; i < nodeArr.length; i++) {
+    if (i % 2 === 0) {
+      instance.typeDoms.push(nodeArr[i]);
+    }
+  }
+}
+
+DesignerJs.prototype.aspirantSearchEvent = function () {
+  const instance = this;
+  const { ea } = this;
+  const input = this.searchInput;
+  let width, length;
+
+  length = this.projects.length;
+  width = 800;
+
+  input.parentNode.style.width = String(width) + ea;
+  input.parentNode.style.left = GeneralJs.withOut(50, width / 2, ea);
+  input.addEventListener("keypress", function (e) {
+    let tempArr, orArr;
+    if (e.key === "Enter") {
+      instance.contentsSearchIndex = [];
+      orArr = [];
+      tempArr = this.value.trim().split(',');
+      for (let value of tempArr) {
+        if (value.trim() !== '' && value.trim() !== '.') {
+          for (let dom of instance.contentsBlocks) {
+            if ((new RegExp(value.trim(), "gi")).test(dom.textContent)) {
+              orArr.push(Number(dom.getAttribute("index")));
             }
           }
         }
-      });
-      instance.aspirants_searchInput = searchTarget_new;
-
-      let div_clone, svg_icon;
-      let style;
-      let ea = "px";
-      let margin;
-      let domTargets;
-      let motherBoo;
-      let width;
-
-      motherBoo = (instance.onView === "mother") ? true : false;
-
-      margin = 30;
-
-      if (!recycle) {
-
-        instance.whiteBox = {};
-
-        //cancel box
-        div_clone = GeneralJs.nodes.div.cloneNode(true);
-        div_clone.classList.add("justfadein");
-        style = {
-          position: "fixed",
-          background: GeneralJs.colorChip.cancelBlack,
-          top: String(0) + ea,
-          left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
-          width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
-          height: "calc(100% - " + String(instance.belowHeight) + ea + ")",
-          zIndex: String(2),
-        };
-        for (let i in style) {
-          div_clone.style[i] = style[i];
+      }
+      if (this.value.trim() !== '' && this.value.trim() !== '.') {
+        for (let i = 0; i < length; i++) {
+          if (!orArr.includes(i)) {
+            instance.contentsSearchIndex.push(i);
+          }
         }
-
-        div_clone.addEventListener("click", instance.whiteCancelMaker());
-
-        instance.whiteBox.cancelBox = div_clone;
-        instance.totalContents.appendChild(div_clone);
-
       }
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("fadeup");
-      div_clone.classList.add("totalWhite");
-      style = {
-        position: "fixed",
-        background: GeneralJs.colorChip.white,
-        top: String(margin) + ea,
-        left: String((motherBoo ? instance.grayBarWidth : 0) + margin) + ea,
-        borderRadius: String(5) + ea,
-        boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
-        width: String(window.innerWidth - (motherBoo ? instance.grayBarWidth : 0) - (margin * 2)) + ea,
-        height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
-        zIndex: String(2),
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-
-      width = 50;
-
-      svg_icon = instance.mother.returnLoadingIcon();
-      style = {
-        width: String(width) + ea,
-        height: String(width) + ea,
-        top: 'calc(50% - ' + String(width / 2) + ea + ')',
-        left: 'calc(50% - ' + String(width / 2) + ea + ')',
-      }
-      for (let i in style) {
-        svg_icon.style[i] = style[i];
-      }
-      div_clone.appendChild(svg_icon);
-
-      instance.whiteBox.contentsBox = div_clone;
-      instance.totalContents.appendChild(div_clone);
-
-      GeneralJs.ajax("mode=total", "/getAspirantReport", function (data) {
-        svg_icon.style.opacity = "0";
-        instance.reportContents(JSON.parse(data), div_clone, svg_icon);
-      });
-
-      GeneralJs.stacks.whiteBox = 0;
+      instance.aspirantBlockInjection();
     }
+  });
+}
+
+DesignerJs.prototype.aspirantExtractEvent = function () {
+  const instance = this;
+  const { ignoreNumbers, parentId, sheetName } = this;
+  const { ajaxJson, blankHref } = GeneralJs;
+  const { belowButtons: { sub: { extractIcon } } } = this.mother;
+
+  extractIcon.addEventListener("click", async function (e) {
+    try {
+      const domTargets = instance.contentsBlocks.filter((dom) => {
+        return (dom.id !== "title") && (dom.style.display !== "none");
+      });
+      const childrenTargets = domTargets.map((dom) => {
+        let target = [ ...dom.children ].slice(ignoreNumbers[0], -1 * ignoreNumbers[1]);
+        target.unshift(dom.children[1]);
+        return target;
+      });
+      const newMake = true;
+      let values, titleMatrix;
+      let loading;
+
+      values = childrenTargets.map((arr) => {
+        return arr.map((dom) => {
+          if (dom.querySelector(".value") !== null) {
+            return dom.querySelector(".value").textContent;
+          } else {
+            return dom.textContent;
+          }
+        });
+      })
+
+      titleMatrix = childrenTargets.map((arr) => {
+        return arr.map((dom) => {
+          if (dom.querySelector(".value") !== null) {
+            return dom.querySelector(".value").getAttribute("title");
+          } else {
+            return "이름";
+          }
+        });
+      })
+
+      if (titleMatrix.length > 0) {
+        values.unshift(titleMatrix[0]);
+        loading = instance.mother.grayLoading();
+        const { link } = await ajaxJson({ values, newMake, parentId, sheetName }, "/sendSheets");
+        loading.remove();
+        blankHref(link);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
+DesignerJs.prototype.aspirantBlockMove = function () {
+  const instance = this;
+  const { ea } = this;
+  const { belowButtons: { arrow: { left, right } } } = this.mother;
+  const moveEvent = function (type = "left") {
+    return function (e) {
+      const blocks = instance.contentsBlocks;
+      const movementAmount = 50;
+      const ignoreNumbers = [ 1, 1 ];
+      let children;
+      let left;
+      for (let block of blocks) {
+        children = block.children;
+        for (let i = ignoreNumbers[0]; i < children.length - ignoreNumbers[1]; i++) {
+          left = Number(children[i].style.left.replace(/[^0-9\-\.]/gi, ''));
+          left = left + (movementAmount * (type === "left" ? -1 : 1));
+          children[i].style.left = String(left) + ea;
+        }
+      }
+    }
+  }
+  left.addEventListener("click", moveEvent("left"));
+  right.addEventListener("click", moveEvent("right"));
+}
+
+DesignerJs.prototype.aspirantView = async function () {
+  const instance = this;
+  try {
+    class SearchArray extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      search(target, value) {
+        let obj = null;
+        for (let i of this) {
+          if (i[target] === value) {
+            obj = i;
+          }
+        }
+        return obj;
+      }
+    }
+    const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
+    const todayDateValue = (new Date()).valueOf();
+    let loading;
+    let projects;
+    let designers, desidArr_raw, desidArr;
+    let clients, cliidArr_raw, cliidArr;
+    let proidArr_raw;
+    let contents;
+    let temp;
+    let type, typeArr;
+    let projectHistory;
+    let proidArr;
+    let whereQuery;
+    let aspirants, aspirant;
+
+    loading = await this.mother.loadingRun();
+
+    typeArr = [ "photo", "source", "contents", "share" ];
+    type = returnGet().type;
+    if (type === undefined || type === null || !typeArr.includes(type)) {
+      type = typeArr[0];
+    }
+
+    this.parentId = "1fc961yeNnaZX4-_NpJfs2xG5-vw7vP0u";
+    this.sheetName = "fromDB_aspirant_" + uniqueValue("string");
+    this.typeArr = typeArr;
+    this.type = type;
+    this.contentsSpec = {};
+    this.contentsSearchIndex = [];
+    this.contentsBlocks = null;
+    this.actionList = [
+      "계약금 안내",
+      "현장미팅 조율",
+      "현장미팅 확정",
+      "의뢰서 공유",
+      "현장미팅 피드백",
+      "잔금 안내",
+      "시작 대기",
+      "1차 제안",
+      "수정 제안",
+      "시공 진행",
+      "제품 구매",
+      "배송중",
+      "세팅 마무리",
+    ];
+    this.photoActionList = [
+      "촬영 대기",
+      "원본 요청 요망",
+      "원본 요청 완료",
+      "해당 없음"
+    ];
+
+    whereQuery = {};
+    whereQuery["$and"] = [];
+    whereQuery["$and"].push({ desid: { $regex: "^d" } });
+    whereQuery["$and"].push({ "process.status": { $regex: "^[진홀완]" } });
+    for (let i of this.actionList) {
+      whereQuery["$and"].push({ "process.action": { $not: { $regex: i } } });
+    }
+    whereQuery["$and"].push({
+      $or: [
+        { "contents.share.client.photo": { $gte: new Date() } },
+        { "contents.share.client.contents": { $gte: new Date() } },
+        { "contents.share.designer.photo": { $gte: new Date() } },
+        { "contents.share.designer.contents": { $gte: new Date() } },
+        { "contents.sns.portfolio.long": { $gte: new Date() } },
+        { "contents.sns.portfolio.short": { $gte: new Date() } },
+        { "contents.sns.interview.long": { $gte: new Date() } },
+        { "contents.sns.interview.short": { $gte: new Date() } },
+        { "process.calculation.payments.remain.date": { $lte: new Date(2000, 0, 1) } }
+      ]
+    });
+
+    projects = new SearchArray(await ajaxJson({ noFlat: true, whereQuery }, "/getProjects", { equal: true }));
+
+    aspirants = await ajaxJson({ whereQuery: {} }, "/getAspirants", { equal: true });
+    console.log(aspirants);
+
+    desidArr_raw = [];
+    cliidArr_raw = [];
+    proidArr_raw = [];
+    proidArr = [];
+    for (let project of projects) {
+      desidArr_raw.push(project.desid);
+      cliidArr_raw.push(project.cliid);
+      proidArr_raw.push({ proid: project.proid });
+      proidArr.push(project.proid);
+    }
+
+    desidArr_raw = Array.from(new Set(desidArr_raw));
+    desidArr = [];
+    for (let desid of desidArr_raw) {
+      desidArr.push({ desid });
+    }
+    cliidArr_raw = Array.from(new Set(cliidArr_raw));
+    cliidArr = [];
+    for (let cliid of cliidArr_raw) {
+      cliidArr.push({ cliid });
+    }
+
+    designers = new SearchArray(await ajaxJson({
+      noFlat: true,
+      whereQuery: {
+        $or: desidArr
+      }
+    }, "/getDesigners", { equal: true }));
+
+    clients = new SearchArray(await ajaxJson({
+      noFlat: true,
+      whereQuery: {
+        $or: cliidArr
+      }
+    }, "/getClients"));
+
+    contents = new SearchArray(await ajaxJson({
+      noFlat: true,
+      whereQuery: {
+        $or: proidArr_raw
+      }
+    }, "/getContents", { equal: true }));
+
+    projectHistory = await ajaxJson({
+      idArr: proidArr,
+      method: "project",
+      property: "photo",
+    }, "/getHistoryProperty");
+
+    for (let p of projects) {
+      p.designer = designers.search("desid", p.desid).designer;
+      temp = clients.search("cliid", p.cliid);
+      p.name = temp.name;
+      p.address = temp.requests[0].request.space.address;
+      p.title = `${p.name} <b style="color:${colorChip.green}">C</b>&nbsp;&nbsp;${p.designer} <b style="color:${colorChip.green}">D</b>`;
+      temp = contents.search("proid", p.proid);
+      if (temp !== null) {
+        p.web = temp.contents.portfolio.date;
+        p.pid = temp.contents.portfolio.pid;
+      } else {
+        p.web = p.contents.sns.interview.long;
+        p.pid = "미정";
+      }
+      p.history = projectHistory[p.proid];
+    }
+
+    this.projects = projects;
+    this.designers = new Designers(designers);
+    this.designers.setProjects(projects);
+    this.designers.setClients(clients);
+
+    loading.parentNode.removeChild(loading);
+
+    this.aspirantBase();
+    this.aspirantSearchEvent();
+    this.aspirantBlockMove();
+    this.aspirantExtractEvent();
+
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }

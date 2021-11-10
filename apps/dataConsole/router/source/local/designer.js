@@ -3886,15 +3886,14 @@ DesignerJs.prototype.launching = async function () {
 
     } else if (getObj.mode === "aspirant") {
 
-      this.backGrayBar();
+      this.grayBarWidth = 0;
+      this.mother.grayBarWidth = 0;
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
-      await this.spreadData();
+      document.getElementById("grayLeftOpenButton").remove();
+      await this.aspirantView();
       this.addTransFormEvent();
-      this.addSearchEvent();
-      this.addExtractEvent();
-      this.whiteResize();
-      tempFunction = instance.reportViewMaker();
-      tempFunction();
+      document.getElementById("moveRightArea").style.display = "none";
+      document.getElementById("moveLeftArea").style.display = "none";
 
     } else if (getObj.mode === "calendar") {
 

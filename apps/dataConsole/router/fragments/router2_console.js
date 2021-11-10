@@ -1175,106 +1175,27 @@ DataRouter.prototype.rou_post_getProjectReport = function () {
 DataRouter.prototype.rou_post_getAspirantInfo = function () {
   const instance = this;
   const back = this.back;
-  const patch = this.patch;
+  const { equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/getAspirantReport", "/updateAspirantReport", "/viewAspirantRawPortfolio" ];
+  obj.link = [ "/getAspirants" ];
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
-      const { updateStandard, binaryStandard, dbNameMap, titleNameMap, columnRelativeMap, sameStandard, cloudLinkTargets } = patch.designerRawMap();
-      const dateToString = function (str) {
-        const zeroAddition = function (num) {
-          if (num < 10) {
-            return `0${String(num)}`;
-          } else {
-            return String(num);
-          }
-        }
-        let date;
-        date = new Date(str);
-        return `${String(date.getFullYear())}-${zeroAddition(date.getMonth() + 1)}-${zeroAddition(date.getDate())} ${zeroAddition(date.getHours())}:${zeroAddition(date.getMinutes())}:${zeroAddition(date.getSeconds())}`;
+      if (req.body.whereQuery === undefined) {
+        throw new Error("invaild post");
       }
-      const stringToDateValue = function (str) {
-        let tempArr0, tempArr1, tempArr2;
-        let resultDate;
-        tempArr0 = str.split(" ");
-        tempArr1 = tempArr0[0].split("-");
-        tempArr2 = tempArr0[1].split(":");
-        resultDate = new Date(Number(tempArr1[0]), Number(tempArr1[1].replace(/^0/, '')) - 1, Number(tempArr1[2].replace(/^0/, '')), Number(tempArr2[0].replace(/^0/, '')), Number(tempArr2[1].replace(/^0/, '')), Number(tempArr2[2].replace(/^0/, '')));
-        return resultDate.valueOf();
-      }
-      const stringToDateWording = function (str) {
-        const today = new Date();
-        let temp;
-        temp = str.split(" ");
-        return new Date(today.getFullYear(), Number(temp[0].replace(/[^0-9]/g, '')) - 1, Number(temp[1].replace(/[^0-9]/g, '')), Number(temp[3].replace(/[^0-9]/g, '')));
-      }
-      const oppositeMode = req.body.mode !== "total" ? ((req.body.mode === "presentation") ? "partnership" : "presentation") : "presentation";
-      let row, oppositeRow, binaryRow;
-      let sameStandardColumn;
-      let realData;
-      let tempObj;
-      let targetIndex;
-      let whereQuery, updateQuery;
-      let tempLink;
-      let phoneTong;
-      let tempAspirants, tempAspirant;
+      const { whereQuery } = equalJson(req.body);
+      let rows;
 
-      if (req.url === "/getAspirantReport") {
-
-        row = await back.getAspirantsByQuery({ "meeting.status": { "$not": { "$regex": "드" } } }, { withTools: true, selfMongo: instance.mongo, portfolioReset: true });
-        realData = [];
-        for (let i of row) {
-          if (i.flatDeath(req.body.mode) !== null) {
-            realData.push(i.flatDeath(req.body.mode));
-          }
-        }
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ mode: req.body.mode, oppositeMode: oppositeMode, title: titleNameMap[req.body.mode], columns: columnRelativeMap[req.body.mode], data: realData, standard: updateStandard }));
-
-      } else if (req.url === "/updateAspirantReport") {
-
-        whereQuery = {};
-        updateQuery = {};
-
-        whereQuery[updateStandard] = req.body.standard;
-        if (req.body.column === "status") {
-          updateQuery["meeting.status"] = req.body.value;
-        } else if (req.body.column === "presentationTimes" || req.body.column === "meetingTime") {
-          updateQuery["meeting.date"] = stringToDateWording(req.body.value);
-        }
-
-        await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
-
-        // if (req.body.calendar !== undefined) {
-        //   tempAspirants = await back.getAspirantsByQuery(whereQuery, { selfMongo: instance.mongo });
-        //   tempAspirant = tempAspirants[0];
-        //   if (tempAspirant.calendar.id !== "") {
-        //     instance.calendar.updateSchedule(tempAspirant.calendar.mother, tempAspirant.calendar.id, { start: tempAspirant.meeting.date });
-        //   } else {
-        //     instance.calendar.makeSchedule(tempAspirant.calendar.mother, tempAspirant.designer + " 디자이너 사전 미팅", "", tempAspirant.meeting.date).then(function (res) {
-        //       back.updateAspirant([ whereQuery, { "calendar.id": res.eventId } ], { selfMongo: instance.mongo });
-        //     }).catch(function (e) {
-        //       console.log(e);
-        //     });
-        //   }
-        // }
-
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ message: "success" }));
-
-      } else if (req.url === "/viewAspirantRawPortfolio") {
-
-        whereQuery = {};
-        whereQuery[updateStandard] = req.body.standard;
-        await back.unshiftAspirantPortfolioConfirm(whereQuery, 0, (new Date()), req.body.user, { selfMongo: instance.mongo });
-
-        res.set("Content-Type", "application/json");
-        res.send(JSON.stringify({ message: "success" }));
+      if (req.url === "/getAspirants") {
+        rows = await back.getAspirantsByQuery(whereQuery, { selfMongo: instance.mongo });
       }
 
+      res.send(JSON.stringify(rows));
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getAspirantInfo): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;
