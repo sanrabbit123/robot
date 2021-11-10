@@ -1,6 +1,8 @@
+// DATA -----------------------------------------------------------------------------------------------------------------
+
 DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   const instance = this;
-  const { ea, photoActionList } = this;
+  const { ea, photoActionList, resetWidthEvent } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const { address, contents: { photo, raw, share, sns }, history } = project;
   const { boo, date, info: { interviewer, photographer }, status } = photo;
@@ -39,6 +41,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   let map;
   let displayBoo;
   let num;
+  let calendarEvent;
 
   height = 43;
   margin = 1;
@@ -117,8 +120,41 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       },
     };
 
+    calendarEvent = function (thisCase) {
+      const to = "photographing";
+      const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
+      let tempArr, dateValue, updateDate, start;
+
+      dateValue = thisCase["date"].textContent.trim();
+
+      if (dateValue !== "미정" && dateValue !== "예정" && dateValue !== "해당 없음" && !/디자이너/gi.test(thisCase["photographer"].textContent) && !/고객/gi.test(thisCase["photographer"].textContent)) {
+        tempArr = dateValue.split('-');
+        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
+        start = updateDate;
+      } else {
+        start = null;
+      }
+
+      GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
+        if (start !== null) {
+          if (list.length === 0) {
+            return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
+          } else {
+            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
+          }
+        } else {
+          if (list.length !== 0) {
+            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
+          }
+        }
+      }).catch((err) => {
+        throw new Error(err);
+      });
+
+    }
+
     stringArr.push(textMaker(map["boo"].title, boo ? 'O' : 'X', "black", "boo"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "boo";
@@ -195,7 +231,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["date"].title, dateToString(date), dateToColor(date, true), "date"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "date";
@@ -338,7 +374,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시 ${zeroAddition(date.getMinutes())}분`, dateToColor(date, true), "dateHour"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "dateHour";
@@ -452,7 +488,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
 
     });
     stringArr.push(textMaker(map["status"].title, status, "black", "status"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "status";
@@ -525,7 +561,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["photographer"].title, photographer, (photographer === "미정" ? "red" : "black"), "photographer"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "photographer";
@@ -603,7 +639,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["interviewer"].title, interviewer, (interviewer === "미정" ? "red" : "black"), "interviewer"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewer";
@@ -681,7 +717,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["address"].title, address.replace(/시 /gi, " ").replace(/도 /gi, " ").replace(/군 /gi, " ").replace(/구 /gi, " ").slice(0, 40), "black", "address"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
 
@@ -729,7 +765,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
     };
 
     stringArr.push(textMaker(map["portfolioStatus"].title, portfolioStatus, /요망/gi.test(portfolioStatus) ? "red" : (/요청 완료/gi.test(portfolioStatus) ? "purple" : (/편집 완료/gi.test(portfolioStatus) ? "green" : "black")), "portfolioStatus"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "portfolioStatus";
@@ -808,7 +844,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["portfolioLink"].title, portfolioLink === '' ? "링크 없음" : "링크 있음", "black", "portfolioLink"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "portfolioLink";
@@ -908,7 +944,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
 
     });
     stringArr.push(textMaker(map["interviewStatus"].title, interviewStatus, /요망/gi.test(interviewStatus) ? "red" : (/편집 완료/gi.test(interviewStatus) ? "green" : "black"), "interviewStatus"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewStatus";
@@ -987,7 +1023,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       createNodes(nodeArr);
     });
     stringArr.push(textMaker(map["interviewLink"].title, interviewLink === '' ? "링크 없음" : "링크 있음", "black", "interviewLink"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewLink";
@@ -1081,7 +1117,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
 
     });
     stringArr.push(textMaker(map["photoStatus"].title, photoStatus, /요망/gi.test(photoStatus) ? "red" : (/보정 완료/gi.test(photoStatus) ? "green" : "black"), "photoStatus"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "photoStatus";
@@ -1201,7 +1237,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
     tempString3 = dateToString(shortInterview);
 
     stringArr.push(textMaker(map["interviewLong"].title, tempString1, dateToColor(longInterview, false), "interviewLong"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewLong";
@@ -1344,7 +1380,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["portfolioLong"].title, tempString0, dateToColor(longPortfolio, false), "portfolioLong"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "portfolioLong";
@@ -1486,7 +1522,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["interviewShort"].title, tempString3, dateToColor(shortInterview, false), "interviewShort"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "interviewShort";
@@ -1628,7 +1664,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["portfolioShort"].title, tempString2, dateToColor(shortPortfoilo, false), "portfolioShort"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "portfolioShort";
@@ -1770,7 +1806,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["webPublish"].title, dateToString(project.web), dateToColor(project.web, false), "webPublish"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
 
@@ -1807,7 +1843,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
     };
 
     stringArr.push(textMaker(map["clientPhoto"].title, dateToString(photoClient).replace(/미정/g, "예정"), dateToColor(photoClient, false).replace(/red/gi, "black"), "clientPhoto"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "clientPhoto";
@@ -1949,7 +1985,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["designerPhoto"].title, dateToString(photoDesigner).replace(/미정/g, "예정"), dateToColor(photoDesigner, false).replace(/red/gi, "black"), "designerPhoto"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "designerPhoto";
@@ -2091,7 +2127,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["clientContents"].title, dateToString(contentsClient).replace(/미정/g, "예정"), dateToColor(contentsClient, false).replace(/red/gi, "black"), "clientContents"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "clientContents";
@@ -2233,7 +2269,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       calendarTong.appendChild(calendar.calendarBase);
     });
     stringArr.push(textMaker(map["designerContents"].title, dateToString(contentsDesigner).replace(/미정/g, "예정"), dateToColor(contentsDesigner, false).replace(/red/gi, "black"), "designerContents"));
-    updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+    updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "designerContents";
@@ -2378,7 +2414,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   }
 
   stringArr.push(textMaker("메모", history.replace(/\n/g, ' ').slice(0, 40), "black", "history"));
-  updateArr.push(function (e, option, cancelBox, parent, calendarEvent, resetWidthEvent) {
+  updateArr.push(function (e, option, cancelBox, parent) {
     const mother = this;
     const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
     const column = "status";
@@ -2495,8 +2531,127 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
     displayBoo = true;
   }
 
-  return { map, stringArr, updateArr, boo, displayBoo };
+  return { map, stringArr, updateArr, grayBoo: boo, displayBoo };
 }
+
+DesignerJs.prototype.contentsUpdate = async function (whereQuery, updateQuery, chainQuery = null, rawValue = '') {
+  const instance = this;
+  const { colorChip, ajaxJson } = GeneralJs;
+  try {
+    if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
+      throw new Error("invaild input");
+    }
+    if (chainQuery !== null) {
+      if (chainQuery.condition === undefined || chainQuery.updateQuery === undefined) {
+        throw new Error("invaild input");
+      }
+    }
+    const { proid } = whereQuery;
+    const project = this.projects.search("proid", proid);
+    let tempArr, target;
+    let boo;
+    let tempQsa0, tempQsa1, tempQsa2;
+
+    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+
+    for (let query in updateQuery) {
+      tempArr = query.split('.');
+      target = project;
+      for (let i = 0; i < tempArr.length - 1; i++) {
+        target = target[tempArr[i]];
+      }
+      target[tempArr[tempArr.length - 1]] = updateQuery[query];
+    }
+
+    if (chainQuery !== null) {
+      const { condition, updateQuery: chainUpdateQuery } = chainQuery;
+      boo = false;
+      if ((new RegExp(condition, "gi")).test(rawValue)) {
+        boo = true;
+      }
+      if (boo) {
+        await ajaxJson({ whereQuery, updateQuery: chainUpdateQuery }, "/rawUpdateProject");
+        for (let query in chainUpdateQuery) {
+          tempArr = query.split('.');
+          target = project;
+          for (let i = 0; i < tempArr.length - 1; i++) {
+            target = target[tempArr[i]];
+          }
+          target[tempArr[tempArr.length - 1]] = chainUpdateQuery[query];
+        }
+      }
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+DesignerJs.prototype.contentsDeactivate = function (proid, offMode = true) {
+  const instance = this;
+  const { colorChip, stacks } = GeneralJs;
+  let emptyDate, emptyValue;
+  let tempQsa;
+  let whiteBlock;
+  let num;
+  let name;
+  let tong;
+  let children;
+  let length;
+
+  whiteBlock = document.getElementById(proid);
+  children = whiteBlock.children;
+  length = children.length;
+  emptyDate = new Date(1800, 0, 1);
+  emptyValue = "해당 없음";
+  name = "deactive_" + proid;
+
+  if (offMode) {
+    stacks[name] = [];
+    tong = stacks[name];
+    tempQsa = whiteBlock.querySelectorAll("div");
+    for (let dom of tempQsa) {
+      tong.push(dom.style.color);
+      dom.style.color = colorChip.gray4;
+    }
+    tempQsa = whiteBlock.querySelectorAll("b");
+    for (let dom of tempQsa) {
+      tong.push(dom.style.color);
+      dom.style.color = colorChip.gray4;
+    }
+    tong.push(whiteBlock.style.background);
+    whiteBlock.style.background = colorChip.gray0;
+    tong.push(children[length - 2].style.background);
+    children[length - 2].style.background = colorChip.gray0;
+    tong.push(children[length - 1].style.background);
+    children[length - 1].style.background = colorChip.gray4;
+  } else {
+    if (Array.isArray(stacks[name])) {
+      num = 0;
+      tong = stacks[name];
+      tempQsa = whiteBlock.querySelectorAll("div");
+      for (let dom of tempQsa) {
+        dom.style.color = tong[num];
+        num = num + 1;
+      }
+      tempQsa = whiteBlock.querySelectorAll("b");
+      for (let dom of tempQsa) {
+        dom.style.color = tong[num];
+        num = num + 1;
+      }
+      whiteBlock.style.background = tong[num];
+      num = num + 1;
+      children[length - 2].style.background = tong[num];
+      num = num + 1;
+      children[length - 1].style.background = tong[num];
+    } else {
+      window.location.reload();
+    }
+  }
+
+}
+
+// LOGIC -----------------------------------------------------------------------------------------------------------------
 
 DesignerJs.prototype.contentsBase = function (search = null) {
   const instance = this;
@@ -2693,7 +2848,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   const instance = this;
   const { ea } = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
-  const { map, stringArr, updateArr, boo, displayBoo } = this.contentsDataRender(project, titleMode);
+  const { map, stringArr, updateArr, grayBoo, displayBoo } = this.contentsDataRender(project, titleMode);
   let height, margin;
   let whiteBlock;
   let width0, width1;
@@ -2709,6 +2864,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   let leftMargin;
   let motherMargin;
   let titleBlockTop;
+  let menuMargin;
+  let menuHeight;
+  let menuTextTop;
 
   leftMargin = 10;
   motherMargin = 30;
@@ -2729,9 +2887,13 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   whiteWidth = 16;
   factorHeight = 20;
 
+  menuMargin = 25;
+  menuHeight = 31;
+  menuTextTop = isMac() ? 5 : 7;
+
   whiteBlock = createNode({
     mother,
-    id: project.proid,
+    id: titleMode ? "title" : project.proid,
     attribute: [
       { index: String(index) },
       { sortstandard: "" },
@@ -2755,7 +2917,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           width: "calc(100vw - " + String((motherMargin * 2) + (leftMargin * 2)) + ea + ")",
           height: String(100) + '%',
           borderRadius: String(3) + "px",
-          background: titleMode ? colorChip.gradientGreen2 : colorChip[boo ? "white" : "gray0"],
+          background: titleMode ? colorChip.gradientGreen2 : colorChip[grayBoo ? "white" : "gray0"],
           top: String(0),
           left: String(0),
           transition: "all 0s ease",
@@ -2784,6 +2946,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           fontSize: String(size) + ea,
           zIndex: String(2),
           color: colorChip.black,
+          transition: "all 0s ease",
         }
       },
       {
@@ -2798,6 +2961,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
           fontSize: String(size) + ea,
           color: colorChip.gray4,
           zIndex: String(2),
+          transition: "all 0s ease",
         }
       },
     ]
@@ -2884,7 +3048,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                 }
                 const option = {
                   ea,
-                  top: 25,
+                  top: menuMargin,
                   createNode,
                   createNodes,
                   colorChip,
@@ -2895,14 +3059,13 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                   borderRadius: String(5) + "px",
                   zIndex: String(1),
                   valueDom,
-                  height: 31,
+                  height: menuHeight,
                   size,
-                  textTop: (isMac() ? 5 : 7)
+                  textTop: menuTextTop
                 };
-                let cancelBox, parent, calendarEvent;
+                let cancelBox, parent;
 
                 parent = this.parentElement;
-
                 cancelBox = createNode({
                   mother: this,
                   mode: "aside",
@@ -2936,45 +3099,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                   }
                 });
 
-                calendarEvent = null;
-                if (instance.type === "photo") {
-                  if (thisCase["boo"].textContent.trim() === "O") {
-                    calendarEvent = function (thisCase) {
-                      const to = "photographing";
-                      const title = `촬영 W ${project.name}C ${project.designer}D ${thisCase["photographer"].textContent}P ${thisCase["interviewer"].textContent}I ${project.proid}`;
-                      let tempArr, dateValue, updateDate, start;
-
-                      dateValue = thisCase["date"].textContent.trim();
-
-                      if (dateValue !== "미정" && dateValue !== "해당 없음" && !/디자이너/gi.test(thisCase["photographer"].textContent) && !/고객/gi.test(thisCase["photographer"].textContent)) {
-                        tempArr = dateValue.split('-');
-                        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
-                        start = updateDate;
-                      } else {
-                        start = null;
-                      }
-
-                      GeneralJs.ajaxJson({ from: to, search: project.proid }, "/listSchedule", { equal: true }).then((list) => {
-                        if (start !== null) {
-                          if (list.length === 0) {
-                            return GeneralJs.ajaxJson({ to, title, start }, "/makeSchedule");
-                          } else {
-                            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
-                          }
-                        } else {
-                          if (list.length !== 0) {
-                            return GeneralJs.ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
-                          }
-                        }
-                      }).catch((err) => {
-                        throw new Error(err);
-                      });
-
-                    }
-                  }
-                }
-
-                updateArr[index].call(this, e, option, cancelBox, parent, calendarEvent, instance.resetWidthEvent);
+                updateArr[index].call(this, e, option, cancelBox, parent, instance.resetWidthEvent);
               }
             }
           }
@@ -3011,7 +3136,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
     }
   });
 
-  if (!boo) {
+  if (!grayBoo) {
     tempQsa = whiteBlock.querySelectorAll("div");
     for (let dom of tempQsa) {
       dom.style.color = colorChip.gray4;
@@ -3230,121 +3355,57 @@ DesignerJs.prototype.contentsSearchEvent = function () {
   });
 }
 
-DesignerJs.prototype.contentsUpdate = async function (whereQuery, updateQuery, chainQuery = null, rawValue = '') {
+DesignerJs.prototype.contentsExtractEvent = function () {
   const instance = this;
-  const { colorChip, ajaxJson } = GeneralJs;
-  try {
-    if (typeof whereQuery !== "object" || typeof updateQuery !== "object") {
-      throw new Error("invaild input");
-    }
-    if (chainQuery !== null) {
-      if (chainQuery.condition === undefined || chainQuery.updateQuery === undefined) {
-        throw new Error("invaild input");
-      }
-    }
-    const { proid } = whereQuery;
-    const project = this.projects.search("proid", proid);
-    let tempArr, target;
-    let boo;
-    let tempQsa0, tempQsa1, tempQsa2;
+  const { ignoreNumbers, parentId, sheetName } = this;
+  const { ajaxJson, blankHref } = GeneralJs;
+  const { belowButtons: { sub: { extractIcon } } } = this.mother;
 
-    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+  extractIcon.addEventListener("click", async function (e) {
+    try {
+      const domTargets = instance.contentsBlocks.filter((dom) => {
+        return (dom.id !== "title") && (dom.style.display !== "none");
+      });
+      const childrenTargets = domTargets.map((dom) => {
+        let target = [ ...dom.children ].slice(ignoreNumbers[0], -1 * ignoreNumbers[1]);
+        target.unshift(dom.children[1]);
+        return target;
+      });
+      const newMake = true;
+      let values, titleMatrix;
+      let loading;
 
-    for (let query in updateQuery) {
-      tempArr = query.split('.');
-      target = project;
-      for (let i = 0; i < tempArr.length - 1; i++) {
-        target = target[tempArr[i]];
-      }
-      target[tempArr[tempArr.length - 1]] = updateQuery[query];
-    }
-
-    if (chainQuery !== null) {
-      const { condition, updateQuery: chainUpdateQuery } = chainQuery;
-      boo = false;
-      if ((new RegExp(condition, "gi")).test(rawValue)) {
-        boo = true;
-      }
-      if (boo) {
-        await ajaxJson({ whereQuery, updateQuery: chainUpdateQuery }, "/rawUpdateProject");
-        for (let query in chainUpdateQuery) {
-          tempArr = query.split('.');
-          target = project;
-          for (let i = 0; i < tempArr.length - 1; i++) {
-            target = target[tempArr[i]];
+      values = childrenTargets.map((arr) => {
+        return arr.map((dom) => {
+          if (dom.querySelector(".value") !== null) {
+            return dom.querySelector(".value").textContent;
+          } else {
+            return dom.textContent;
           }
-          target[tempArr[tempArr.length - 1]] = chainUpdateQuery[query];
-        }
+        });
+      })
+
+      titleMatrix = childrenTargets.map((arr) => {
+        return arr.map((dom) => {
+          if (dom.querySelector(".value") !== null) {
+            return dom.querySelector(".value").getAttribute("title");
+          } else {
+            return "이름";
+          }
+        });
+      })
+
+      if (titleMatrix.length > 0) {
+        values.unshift(titleMatrix[0]);
+        loading = instance.mother.grayLoading();
+        const { link } = await ajaxJson({ values, newMake, parentId, sheetName }, "/sendSheets");
+        loading.remove();
+        blankHref(link);
       }
+    } catch (e) {
+      console.log(e);
     }
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DesignerJs.prototype.contentsDeactivate = function (proid, offMode = true) {
-  const instance = this;
-  const { colorChip, stacks } = GeneralJs;
-  let emptyDate, emptyValue;
-  let tempQsa;
-  let whiteBlock;
-  let num;
-  let name;
-  let tong;
-  let children;
-  let length;
-
-  whiteBlock = document.getElementById(proid);
-  children = whiteBlock.children;
-  length = children.length;
-  emptyDate = new Date(1800, 0, 1);
-  emptyValue = "해당 없음";
-  name = "deactive_" + proid;
-
-  if (offMode) {
-    stacks[name] = [];
-    tong = stacks[name];
-    tempQsa = whiteBlock.querySelectorAll("div");
-    for (let dom of tempQsa) {
-      tong.push(dom.style.color);
-      dom.style.color = colorChip.gray4;
-    }
-    tempQsa = whiteBlock.querySelectorAll("b");
-    for (let dom of tempQsa) {
-      tong.push(dom.style.color);
-      dom.style.color = colorChip.gray4;
-    }
-    tong.push(whiteBlock.style.background);
-    whiteBlock.style.background = colorChip.gray0;
-    tong.push(children[length - 2].style.background);
-    children[length - 2].style.background = colorChip.gray0;
-    tong.push(children[length - 1].style.background);
-    children[length - 1].style.background = colorChip.gray4;
-  } else {
-    if (Array.isArray(stacks[name])) {
-      num = 0;
-      tong = stacks[name];
-      tempQsa = whiteBlock.querySelectorAll("div");
-      for (let dom of tempQsa) {
-        dom.style.color = tong[num];
-        num = num + 1;
-      }
-      tempQsa = whiteBlock.querySelectorAll("b");
-      for (let dom of tempQsa) {
-        dom.style.color = tong[num];
-        num = num + 1;
-      }
-      whiteBlock.style.background = tong[num];
-      num = num + 1;
-      children[length - 2].style.background = tong[num];
-      num = num + 1;
-      children[length - 1].style.background = tong[num];
-    } else {
-      window.location.reload();
-    }
-  }
-
+  });
 }
 
 DesignerJs.prototype.contentsBlockMove = function () {
@@ -3355,7 +3416,7 @@ DesignerJs.prototype.contentsBlockMove = function () {
     return function (e) {
       const blocks = instance.contentsBlocks;
       const movementAmount = 50;
-      const ignoreNumbers = [ 3, 2 ];
+      const ignoreNumbers = [ 1, 1 ];
       let children;
       let left;
       for (let block of blocks) {
@@ -3392,7 +3453,7 @@ DesignerJs.prototype.contentsView = async function () {
         return obj;
       }
     }
-    const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep } = GeneralJs;
+    const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
     const todayDateValue = (new Date()).valueOf();
     let loading;
     let projects;
@@ -3414,6 +3475,8 @@ DesignerJs.prototype.contentsView = async function () {
       type = typeArr[0];
     }
 
+    this.parentId = "1fc961yeNnaZX4-_NpJfs2xG5-vw7vP0u";
+    this.sheetName = "fromDB_contents_" + uniqueValue("string");
     this.typeArr = typeArr;
     this.type = type;
     this.contentsSpec = {};
@@ -3540,6 +3603,7 @@ DesignerJs.prototype.contentsView = async function () {
     this.contentsBase();
     this.contentsSearchEvent();
     this.contentsBlockMove();
+    this.contentsExtractEvent();
 
   } catch (e) {
     console.log(e);

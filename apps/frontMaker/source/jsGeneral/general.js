@@ -1898,7 +1898,7 @@ GeneralJs.dateToString = function (date, detail = false, dayOption = false) {
     throw new Error("second input must be boolean");
   }
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
-  const emptyDateValue = (new Date(1901, 0, 1)).valueOf();
+  const emptyDateValue = (new Date(1999, 0, 1)).valueOf();
   const futureDateValue = (new Date(3000, 0, 1)).valueOf();
   if (date.valueOf() <= emptyDateValue) {
     return "해당 없음";
