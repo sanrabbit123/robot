@@ -169,7 +169,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   width1 = 3;
   titleBlockTop = 105;
 
-  top = isMac() ? 11 : 13;
+  top = isMac() ? 11 : 12;
   left = 16;
   size = 14;
   textMargin = 6;
