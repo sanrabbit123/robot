@@ -832,8 +832,6 @@ Ghost.prototype.ghostRouter = function (needs) {
               "Access-Control-Allow-Headers": '*',
             });
 
-            console.log(files);
-
             const staticFolder = instance.address.officeinfo.ghost.file.static;
             const toArr = JSON.parse(fields.toArr).map((path) => { return hangul.fixString(path); });
             let filesKey, fromArr, num;
@@ -848,8 +846,6 @@ Ghost.prototype.ghostRouter = function (needs) {
             for (let key of filesKey) {
               fromArr.push(files[key]);
             }
-
-            console.log(fromArr);
 
             num = 0;
             for (let { filepath: path } of fromArr) {
