@@ -3,9 +3,9 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
-  const { aspid, designer, phone, email, address, meeting: { date, status }, information, submit } = aspirant;
+  const { aspid, designer, phone, email, address, portfolio, meeting: { date, status }, information, submit } = aspirant;
   const { firstRequest: { date: request }, comeFrom } = submit;
-  const { career, company } = information;
+  const { career, company, channel: { web, sns, cloud } } = information;
   const { businessNumber, classification, name, representative } = company;
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
   const textMaker = (title, value, color, column) => {
@@ -181,10 +181,36 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
 
   } else if (this.type === "portfolio") {
 
+    console.log(portfolio, web, sns, cloud);
+
     map = {
       email: {
         title: "이메일",
         position: "email",
+        values: [],
+        chain: null
+      },
+      portfolio: {
+        title: "포트폴리오",
+        position: "portfolio",
+        values: [],
+        chain: null
+      },
+      web: {
+        title: "웹",
+        position: "information.channel.web",
+        values: [],
+        chain: null
+      },
+      sns: {
+        title: "SNS",
+        position: "information.channel.sns",
+        values: [],
+        chain: null
+      },
+      cloud: {
+        title: "클라우드",
+        position: "information.channel.cloud",
         values: [],
         chain: null
       },
@@ -195,6 +221,34 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "email";
+    });
+
+    stringArr.push(textMaker(map["portfolio"].title, (portfolio.length > 0 ? "제출" : "미제출"), "black", "portfolio"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "portfolio";
+    });
+
+    stringArr.push(textMaker(map["web"].title, web.map((str) => { return str.replace(/https?\:\/\//gi, '').trim().replace(/\/$/, ''); }).join(", "), "black", "web"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "web";
+    });
+
+    stringArr.push(textMaker(map["sns"].title, sns.map((str) => { return str.replace(/https?\:\/\//gi, '').trim().replace(/\/$/, ''); }).join(", "), "black", "sns"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "sns";
+    });
+
+    stringArr.push(textMaker(map["cloud"].title, cloud.map((str) => { return str.replace(/https?\:\/\//gi, '').trim().replace(/\/$/, ''); }).join(", "), "black", "cloud"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "cloud";
     });
 
   }

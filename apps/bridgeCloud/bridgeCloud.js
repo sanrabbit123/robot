@@ -1001,7 +1001,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     });
     try {
       console.log("file request get");
-      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         res.set({
@@ -1110,7 +1110,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      const form = instance.formidable({ multiples: true });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (3000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         const { designer, phone } = fields;
