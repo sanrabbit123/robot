@@ -3055,7 +3055,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                   boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
                   animation: "fadeuplite 0.2s ease forwards",
                   borderRadius: String(5) + "px",
-                  zIndex: String(1),
+                  zIndex: String(3),
                   valueDom,
                   height: menuHeight,
                   size,

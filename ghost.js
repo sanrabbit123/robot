@@ -1221,6 +1221,55 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - find designer photos
+  funcObj.post_designerPhoto = {
+    link: [ "/designerPhoto" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.aspid === undefined) {
+          throw new Error("invaild post");
+        }
+        const preferredPhotoName = "preferredPhoto";
+        const sitePhotoName = "sitePhoto";
+        const { aspid } = req.body;
+        let totalList, aspirant, phone;
+        let root;
+        let list;
+        let tempArr;
+
+        aspirant = await back.getAspirantById(aspid, { selfMongo: MONGOC });
+        if (aspirant === null) {
+          throw new Error("invaild aspid");
+        }
+        phone = aspirant.phone.replace(/[^0-9]/g, '');
+        root = instance.dirParsing("__designer__");
+        totalList = await fileSystem(`readDir`, [ root ]);
+        totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
+
+        list = [];
+        for (let t of totalList) {
+          if (t !== ".DS_Store") {
+            tempArr = await fileSystem(`readDir`, [ root + "/" + t ]);
+            tempArr = tempArr.filter((i) => { return i !== ".DS_Store" }).map((i) => { return `${root}/${t}/${i}`; });
+            list = list.concat(tempArr);
+          }
+        }
+
+        list = list.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
+
+        res.send(JSON.stringify({ list }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: e.message + " : post must be { aspid }" }));
+      }
+    }
+  };
+
   //POST - static delete
   funcObj.post_staticDelete = {
     link: [ "/staticDelete" ],

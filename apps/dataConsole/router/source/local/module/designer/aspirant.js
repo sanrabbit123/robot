@@ -2,7 +2,7 @@
 DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, blankHref, equalJson, ajaxJson } = GeneralJs;
   const { aspid, designer, phone, email, address, portfolio, meeting: { date, status }, information, submit } = aspirant;
   const { firstRequest: { date: request }, comeFrom } = submit;
   const { career, company, channel: { web, sns, cloud } } = information;
@@ -182,8 +182,6 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
 
   } else if (this.type === "portfolio") {
 
-    console.log(portfolio, web, sns, cloud);
-
     map = {
       email: {
         title: "이메일",
@@ -227,6 +225,13 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     stringArr.push(textMaker(map["portfolio"].title, (portfolio.length > 0 ? "제출" : "미제출"), "black", "portfolio"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
+      if (window.confirm("다운로드를 진행할까요?")) {
+        ajaxJson({ aspid: parent.id }, "/ghostPass_designerPhoto").then((list) => {
+          console.log(list);
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
@@ -237,7 +242,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const { valueDom } = option;
       const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
       for (let link of targetLinks) {
-        GeneralJs.blankHref("https://" + link);
+        blankHref("https://" + link);
       }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
@@ -249,7 +254,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const { valueDom } = option;
       const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
       for (let link of targetLinks) {
-        GeneralJs.blankHref("https://" + link);
+        blankHref("https://" + link);
       }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
@@ -261,7 +266,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const { valueDom } = option;
       const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
       for (let link of targetLinks) {
-        GeneralJs.blankHref("https://" + link);
+        blankHref("https://" + link);
       }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
@@ -793,7 +798,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, last, inde
                   boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
                   animation: "fadeuplite 0.2s ease forwards",
                   borderRadius: String(5) + "px",
-                  zIndex: String(1),
+                  zIndex: String(3),
                   valueDom,
                   height: menuHeight,
                   size,
