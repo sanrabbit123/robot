@@ -1290,9 +1290,11 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify({ list: finalList, folder: designerTemp, file: zipFileName }));
 
         } else if (mode === "delete") {
+          console.log(req.body);
           if (req.body.folder === undefined || req.body.file === undefined) {
             throw new Error("invaild post");
           }
+          console.log(req.body);
           await shellExec(`rm`, [ `-rf`, serverTempFolder + "/" + req.body.folder ]);
           await shellExec(`rm`, [ `-rf`, serverTempFolder + "/" + req.body.file ]);
           res.send(JSON.stringify({ message: "done" }));
