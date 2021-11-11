@@ -282,7 +282,7 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
   const AddressParser = require(`${process.cwd()}/apps/addressParser/addressParser.js`);
   const app = new AddressParser();
   const back = this.back;
-  const { messageSend, errorLog } = this.mother;
+  const { messageSend, errorLog, messageLog } = this.mother;
   try {
     let arr;
 
