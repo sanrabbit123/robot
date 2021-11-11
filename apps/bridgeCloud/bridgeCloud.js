@@ -1001,7 +1001,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
     });
     try {
       console.log("file request get");
-      const form = instance.formidable({ multiples: true });
+      const form = instance.formidable({ multiples: true, encoding: "utf-8", maxFileSize: (10000 * 1024 * 1024) });
       form.parse(req, async function (err, fields, files) {
         let filesKeys = Object.keys(files);
         res.set({
@@ -1081,7 +1081,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
 
           if (cliid !== null) {
             //upload google drive
-            instance.bridgeToOffice({ tong: fileTong, name: name, phone: phone, mode: "client", cliid: cliid, folder: cilentFolderName }, { selfMongo: MONGOC });
+            instance.bridgeToOffice({ tong: fileTong, name: name, phone: phone, mode: "client", cliid: cliid, folder: cilentFolderName }, { selfMongo: MONGOC }).catch((err) => { console.log(err); });
             //kakao and slack
             KAKAO.sendTalk("photo", name, phone).catch((e) => { console.log(e); });
             await messageSend({ text: name + "님이 파일 전송을 시도중입니다!", channel: "#401_consulting" });
@@ -1162,7 +1162,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
 
           //upload google drive
-          instance.bridgeToOffice({ name: designer, phone: phone, tong: fileTong, folder: designerFolderName, mode: "designer" }, { selfMongo: MONGOC });
+          instance.bridgeToOffice({ name: designer, phone: phone, tong: fileTong, folder: designerFolderName, mode: "designer" }, { selfMongo: MONGOC }).catch((err) => { console.log(err); });
 
           //kakao and slack
           KAKAO.sendTalk("photo", designer, phone).catch((e) => { console.log(e); });
