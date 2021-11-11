@@ -98,6 +98,7 @@ GoogleCalendar.prototype.returnCalendarIds = function () {
   const obj = {
     photographing: "d5qo2jf12banfo2m66us9qhcp4@group.calendar.google.com",
     designerMeeting: "gb87kl84fejja1h4gggh8in6gc@group.calendar.google.com",
+    newDesigner: "67t0gdlj7on3nnfmrnb69n9700@group.calendar.google.com",
   };
   return obj;
 }

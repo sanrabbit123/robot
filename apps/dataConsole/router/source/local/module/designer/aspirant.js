@@ -117,6 +117,38 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       }
     };
 
+    calendarEvent = function (thisCase) {
+      const to = "newDesigner";
+      const title = `신규 미팅 W ${aspirant.designer}D ${aspirant.aspid}`;
+      let tempArr, dateValue, updateDate, start;
+
+      dateValue = thisCase["date"].textContent.trim();
+
+      if (dateValue !== "미정" && dateValue !== "예정" && dateValue !== "해당 없음") {
+        tempArr = dateValue.split('-');
+        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
+        start = updateDate;
+      } else {
+        start = null;
+      }
+
+      ajaxJson({ from: to, search: aspirant.aspid }, "/listSchedule", { equal: true }).then((list) => {
+        if (start !== null) {
+          if (list.length === 0) {
+            return ajaxJson({ to, title, start }, "/makeSchedule");
+          } else {
+            return ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
+          }
+        } else {
+          if (list.length !== 0) {
+            return ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
+          }
+        }
+      }).catch((err) => {
+        throw new Error(err);
+      });
+    }
+
     stringArr.push(textMaker(map["classification"].title, classification, "black", "classification"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
@@ -260,7 +292,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
           }
           await instance.aspirantUpdate(whereQuery, updateQuery, chainQuery, value);
           valueDom.textContent = value;
-          // calendarEvent(thisCase);
+          calendarEvent(thisCase);
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
@@ -405,7 +437,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
           }
           await instance.aspirantUpdate(whereQuery, updateQuery, chainQuery, value);
           valueDom.textContent = value;
-          // calendarEvent(thisCase);
+          calendarEvent(thisCase);
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
