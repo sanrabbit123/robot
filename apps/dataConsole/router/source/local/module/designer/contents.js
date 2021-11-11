@@ -26,6 +26,8 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       }
     }
   }
+  const emptyDate = new Date(1800, 0, 1);
+  const emptyValue = "해당 없음";
   let height, margin;
   let whiteBlock;
   let top, left, size;
@@ -37,7 +39,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   let stringArr, tempDom;
   let tempString, tempString0, tempString1, tempString2, tempString3;
   let updateArr;
-  let emptyDate, emptyValue;
   let map;
   let displayBoo;
   let num;
@@ -50,9 +51,6 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
   left = 16;
   size = 14;
   startLeft = 0;
-
-  emptyDate = new Date(1800, 0, 1);
-  emptyValue = "해당 없음";
 
   stringArr = [];
   updateArr = [];
@@ -2997,7 +2995,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
               const sortTargets = children[thisIndex];
               let indexArr, tempIndex, numberSortBoo;
 
-              numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
+              numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.\: ]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
 
               if (!numberSortBoo) {
                 if (thisSort === 1) {

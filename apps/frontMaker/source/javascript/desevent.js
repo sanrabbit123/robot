@@ -863,7 +863,7 @@ DeseventJs.prototype.submitEvent = function (flatform = "desktop") {
                 window.location.href = "/index.php";
               }, 3000);
             }
-            
+
           });
         } catch (e) {
           window.location.href = "/index.php";
@@ -8594,9 +8594,10 @@ DeseventJs.prototype.launching = async function () {
     if (getObj.mode === undefined) {
       pageBoo = "partnership";
     } else {
-      if (getObj.mode === "presentation") {
-        pageBoo = "presentation";
-      } else if (getObj.mode === "partnership") {
+      if (getObj.mode === "presentation" || getObj.mode === "partnership") {
+        if (getObj.mode === "presentation") {
+          window.location.href = window.location.protocol + "//" + window.location.host + "/desevent.php?mode=partnership";
+        }
         pageBoo = "partnership";
       } else {
         pageBoo = "portfolio";

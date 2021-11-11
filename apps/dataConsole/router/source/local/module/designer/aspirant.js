@@ -3,7 +3,8 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
-  const { aspid, designer, phone, email, address, meeting: { date, status }, information } = aspirant;
+  const { aspid, designer, phone, email, address, meeting: { date, status }, information, submit } = aspirant;
+  const { firstRequest: { date: request }, comeFrom } = submit;
   const { career, company } = information;
   const { businessNumber, classification, name, representative } = company;
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
@@ -23,6 +24,8 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       }
     }
   }
+  const emptyDate = new Date(1800, 0, 1);
+  const emptyValue = "해당 없음";
   let height, margin;
   let whiteBlock;
   let top, left, size;
@@ -34,7 +37,6 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   let stringArr, tempDom;
   let tempString, tempString0, tempString1, tempString2, tempString3;
   let updateArr;
-  let emptyDate, emptyValue;
   let map;
   let displayBoo;
   let num;
@@ -49,10 +51,8 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   size = 14;
   startLeft = 0;
 
-  grayBoo = true;
-
-  emptyDate = new Date(1800, 0, 1);
-  emptyValue = "해당 없음";
+  grayBoo = !(/드랍/gi.test(status) || /없/gi.test(status));
+  displayBoo = true;
 
   stringArr = [];
   updateArr = [];
@@ -60,6 +60,12 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   if (this.type === "basic") {
 
     map = {
+      classification: {
+        title: "분류",
+        position: "information.company.classification",
+        values: [],
+        chain: null
+      },
       phone: {
         title: "연락처",
         position: "phone",
@@ -73,7 +79,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
         chain: null
       },
       status: {
-        title: "미팅",
+        title: "미팅 상태",
         position: "meeting.status",
         values: [],
         chain: null
@@ -84,13 +90,38 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
         values: [],
         chain: null
       },
+      dateHour: {
+        title: "미팅 시간",
+        position: "meeting.date",
+        values: [],
+        chain: null
+      },
       address: {
         title: "주소",
         position: "address",
         values: [],
         chain: null
       },
+      request: {
+        title: "문의일",
+        position: "submit.firstRequest.date",
+        values: [],
+        chain: null
+      },
+      comeFrom: {
+        title: "유입 경로",
+        position: "submit.comeFrom",
+        values: [],
+        chain: null
+      }
     };
+
+    stringArr.push(textMaker(map["classification"].title, classification, "black", "classification"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "classification";
+    });
 
     stringArr.push(textMaker(map["phone"].title, phone, "black", "phone"));
     updateArr.push(function (e, option, cancelBox, parent) {
@@ -120,6 +151,27 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const column = "date";
     });
 
+    stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시 ${zeroAddition(date.getMinutes())}분`, dateToColor(date, true), "dateHour"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "dateHour";
+    });
+
+    stringArr.push(textMaker(map["request"].title, dateToString(request, true), dateToColor(request, true), "request"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "request";
+    });
+
+    stringArr.push(textMaker(map["comeFrom"].title, comeFrom, "black", "comeFrom"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "comeFrom";
+    });
+
     stringArr.push(textMaker(map["address"].title, address, "black", "address"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
@@ -127,9 +179,25 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const column = "address";
     });
 
-  }
+  } else if (this.type === "portfolio") {
 
-  displayBoo = true;
+    map = {
+      email: {
+        title: "이메일",
+        position: "email",
+        values: [],
+        chain: null
+      },
+    };
+
+    stringArr.push(textMaker(map["email"].title, email, "black", "email"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "email";
+    });
+
+  }
 
   return { map, stringArr, updateArr, grayBoo, displayBoo };
 }
@@ -595,7 +663,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, last, inde
               const sortTargets = children[thisIndex];
               let indexArr, tempIndex, numberSortBoo;
 
-              numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
+              numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.\: ]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
 
               if (!numberSortBoo) {
                 if (thisSort === 1) {
@@ -1041,7 +1109,7 @@ DesignerJs.prototype.aspirantView = async function () {
 
     loading = await this.mother.loadingRun();
 
-    typeArr = [ "basic" ];
+    typeArr = [ "basic", "portfolio" ];
     type = returnGet().type;
     if (type === undefined || type === null || !typeArr.includes(type)) {
       type = typeArr[0];
@@ -1058,10 +1126,8 @@ DesignerJs.prototype.aspirantView = async function () {
     aspirants = await ajaxJson({ whereQuery: {} }, "/getAspirants", { equal: true });
     this.aspirants = aspirants;
     for (let aspirant of this.aspirants) {
-      aspirant.title = aspirant.designer + " 신청자";
+      aspirant.title = `${aspirant.designer}&nbsp;&nbsp;<b style="color:${colorChip.deactive}">디자이너</b>`;
     }
-
-    console.log(aspirants);
 
     loading.parentNode.removeChild(loading);
 

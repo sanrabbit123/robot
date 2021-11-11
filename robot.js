@@ -348,10 +348,14 @@ Robot.prototype.frontMaker = function (webpack) {
   fobot.totalLaunching(webpack);
 }
 
-Robot.prototype.frontUpdate = function (testMode) {
-  const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
-  let fobot = new FrontMaker();
-  fobot.totalUpdate(testMode);
+Robot.prototype.frontUpdate = async function (testMode) {
+  try {
+    const FrontMaker = require(process.cwd() + "/apps/frontMaker/frontMaker.js");
+    let fobot = new FrontMaker();
+    await fobot.totalUpdate(testMode);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 Robot.prototype.consoleSource = function () {

@@ -3,10 +3,16 @@ module.exports = function (arg, info) {
     "https://new.land.naver.com/complexes",
     async function () {
       try {
-        const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
+        const { raw, apart } = equalJson(JSON.stringify(POSTCONST));
         await injectionInput(document.querySelector(".search_input"), apart.replace(/아파트/gi, '').trim());
         await clickElement(document.querySelector(".button_search--icon"));
-
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async function () {
+      try {
+        const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
           if (document.querySelector('.no_data_area') === null && document.querySelector('.item_list') !== null) {
@@ -14,14 +20,13 @@ module.exports = function (arg, info) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
               await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apart.replace(/아파트/gi, ''));
-              document.querySelector(".button_search--icon").click();
+              await clickElement(document.querySelector(".button_search--icon"));
             }
           } else {
             await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apart.replace(/아파트/gi, ''));
-            document.querySelector(".button_search--icon").click();
+            await clickElement(document.querySelector(".button_search--icon"));
           }
         }
-
       } catch (e) {
         console.log(e);
       }
@@ -36,11 +41,11 @@ module.exports = function (arg, info) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
               await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[2].replace(/[동로가리길]$/i, '') + " " + apart.replace(/아파트/gi, ''));
-              document.querySelector(".button_search--icon").click();
+              await clickElement(document.querySelector(".button_search--icon"));
             }
           } else {
             await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[2].replace(/[동로가리길]$/i, '') + " " + apart.replace(/아파트/gi, ''));
-            document.querySelector(".button_search--icon").click();
+            await clickElement(document.querySelector(".button_search--icon"));
           }
         }
       } catch (e) {
@@ -214,11 +219,17 @@ module.exports = function (arg, info) {
     "toss: https://new.land.naver.com/complexes",
     async function () {
       try {
-        const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
         const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
         await injectionInput(document.querySelector(".search_input"), apartName.trim().replace(/\([^\)]+\)/gi, '').replace(/아파트/gi, '').trim());
         await clickElement(document.querySelector(".button_search--icon"));
-
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async function () {
+      try {
+        const { raw, apart, cliid } = equalJson(JSON.stringify(POSTCONST));
+        const { apartName } = equalJson(JSON.stringify(ACCUMULATIONDATA));
         await sleep(1000);
         if (document.querySelector('.complex_detail_link') === null) {
           if (document.querySelector('.no_data_area') === null && document.querySelector('.item_list') !== null) {
@@ -226,11 +237,11 @@ module.exports = function (arg, info) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
               await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
-              document.querySelector(".button_search--icon").click();
+              await clickElement(document.querySelector(".button_search--icon"));
             }
           } else {
             await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[1].replace(/[시구]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
-            document.querySelector(".button_search--icon").click();
+            await clickElement(document.querySelector(".button_search--icon"));
           }
         }
       } catch (e) {
@@ -248,11 +259,11 @@ module.exports = function (arg, info) {
               document.querySelector('.item_list').firstChild.querySelector('a').click();
             } else {
               await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[2].replace(/[동로가리길]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
-              document.querySelector(".button_search--icon").click();
+              await clickElement(document.querySelector(".button_search--icon"));
             }
           } else {
             await injectionInput(document.querySelector(".search_input"), raw.split(' ').map((i) => { return i.trim(); }).filter((i) => { return i !== '' })[2].replace(/[동로가리길]$/i, '') + " " + apartName.replace(/아파트/gi, ''));
-            document.querySelector(".button_search--icon").click();
+            await clickElement(document.querySelector(".button_search--icon"));
           }
         }
       } catch (e) {
