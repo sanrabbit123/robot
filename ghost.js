@@ -1281,7 +1281,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           for (let l of list) {
             await shellExec(`cp ${shellLink(l)} ${shellLink(serverTempFolder)}/${designerTemp};`);
           }
-          zipFileName = `${aspid}_${aspirant.designer}_${uniqueValue("string")}.zip`;
+          zipFileName = `${aspid}_${aspirant.phone.replace(/[^0-9]/gi, '')}_${uniqueValue("string")}.zip`;
           await shellExec(`cd ${shellLink(serverTempFolder)}/${designerTemp};zip ${shellLink(serverTempFolder)}/${zipFileName} ./*`);
 
           finalList = [ `${serverTempFolder}/${zipFileName}` ];
