@@ -1252,6 +1252,8 @@ Ghost.prototype.ghostRouter = function (needs) {
         totalList = await fileSystem(`readDir`, [ root ]);
         totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
 
+        console.log(totalList);
+
         list = [];
         for (let t of totalList) {
           if (t !== ".DS_Store") {
@@ -1261,7 +1263,11 @@ Ghost.prototype.ghostRouter = function (needs) {
           }
         }
 
+        console.log(list);
+
         list = list.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
+
+        console.log(list);
 
         res.send(JSON.stringify({ list }));
       } catch (e) {
