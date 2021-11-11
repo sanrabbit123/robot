@@ -154,15 +154,16 @@ KakaoTalk.prototype.templateTong = function (target) {
       convert: null
     },
     designerPresentationAlarm: {
-      name: "설명회 사전 안내",
-      id: "TD_6666",
+      name: "신청자 미팅 안내",
+      id: "TG_4335",
       needs: [
+        "designer",
         "date"
       ],
       convert: function (obj) {
         return [
-          { from: "고객명", to: obj.name },
-          { from: "날짜", to: obj.date }
+          { from: "designer", to: obj.designer },
+          { from: "date", to: obj.date }
         ];
       }
     },
