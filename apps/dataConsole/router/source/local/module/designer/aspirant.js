@@ -26,6 +26,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   }
   const emptyDate = new Date(1800, 0, 1);
   const emptyValue = "해당 없음";
+  const token = ", ";
   let height, margin;
   let whiteBlock;
   let top, left, size;
@@ -119,22 +120,22 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     stringArr.push(textMaker(map["classification"].title, classification, "black", "classification"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "classification";
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["phone"].title, phone, "black", "phone"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "phone";
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["email"].title, email, "black", "email"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "email";
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["status"].title, status, "black", "status"));
@@ -161,22 +162,22 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     stringArr.push(textMaker(map["request"].title, dateToString(request, true), dateToColor(request, true), "request"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "request";
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["comeFrom"].title, comeFrom, "black", "comeFrom"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "comeFrom";
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["address"].title, address, "black", "address"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "address";
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
   } else if (this.type === "portfolio") {
@@ -219,36 +220,51 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     stringArr.push(textMaker(map["email"].title, email, "black", "email"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "email";
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
     stringArr.push(textMaker(map["portfolio"].title, (portfolio.length > 0 ? "제출" : "미제출"), "black", "portfolio"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "portfolio";
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["web"].title, web.map((str) => { return str.replace(/https?\:\/\//gi, '').trim().replace(/\/$/, ''); }).join(", "), "black", "web"));
+    stringArr.push(textMaker(map["web"].title, web.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "web"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "web";
+      const { valueDom } = option;
+      const targetLinks = valueDom.split(token).map((str) => { return str.trim(); });
+      for (let link of targetLinks) {
+        GeneralJs.blankHref(link);
+      }
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["sns"].title, sns.map((str) => { return str.replace(/https?\:\/\//gi, '').trim().replace(/\/$/, ''); }).join(", "), "black", "sns"));
+    stringArr.push(textMaker(map["sns"].title, sns.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "sns"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "sns";
+      const { valueDom } = option;
+      const targetLinks = valueDom.split(token).map((str) => { return str.trim(); });
+      for (let link of targetLinks) {
+        GeneralJs.blankHref(link);
+      }
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["cloud"].title, cloud.map((str) => { return str.replace(/https?\:\/\//gi, '').trim().replace(/\/$/, ''); }).join(", "), "black", "cloud"));
+    stringArr.push(textMaker(map["cloud"].title, cloud.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "cloud"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "cloud";
+      const { valueDom } = option;
+      const targetLinks = valueDom.split(token).map((str) => { return str.trim(); });
+      for (let link of targetLinks) {
+        GeneralJs.blankHref(link);
+      }
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
   }
