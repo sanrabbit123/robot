@@ -1273,7 +1273,8 @@ Ghost.prototype.ghostRouter = function (needs) {
           list = list.concat(tempArr);
         }
 
-        await shellExec(`mkidr`, [ serverTempFolder + "/" + designerTemp ]);
+        await shellExec(`rm`, [ `-rf`, serverTempFolder + "/" + designerTemp ]);
+        await shellExec(`mkdir`, [ serverTempFolder + "/" + designerTemp ]);
         for (let l of list) {
           await shellExec(`cp ${shellLink(l)} ${shellLink(serverTempFolder)}/${designerTemp};`);
         }
