@@ -310,7 +310,7 @@ BridgeCloud.prototype.parsingAddress = async function (id, rawString, MONGOC) {
 
 BridgeCloud.prototype.bridgeServer = function (needs) {
   const instance = this;
-  const { fileSystem, requestSystem, shell, shellLink, todayMaker, ghostRequest, headRequest, sleep, statusReading, equalJson, messageSend, errorLog } = this.mother;
+  const { fileSystem, requestSystem, shell, shellLink, todayMaker, ghostRequest, headRequest, sleep, statusReading, equalJson, messageSend, errorLog, messageLog } = this.mother;
   const GoogleCalendar = require(process.cwd() + "/apps/googleAPIs/googleCalendar.js");
   const { filterAll, filterName, filterDate, filterCont, filterNull } = BridgeCloud.clientFilters;
   const [ MONGOC, MONGOLOCALC, KAKAO, HUMAN, ADDRESS ] = needs;
