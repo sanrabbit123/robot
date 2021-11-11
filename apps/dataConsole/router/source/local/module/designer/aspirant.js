@@ -2,7 +2,7 @@
 DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, blankHref, equalJson, ajaxJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, blankHref, equalJson, ajaxJson, downloadFile } = GeneralJs;
   const { aspid, designer, phone, email, address, portfolio, meeting: { date, status }, information, submit } = aspirant;
   const { firstRequest: { date: request }, comeFrom } = submit;
   const { career, company, channel: { web, sns, cloud } } = information;
@@ -226,8 +226,9 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       if (window.confirm("다운로드를 진행할까요?")) {
-        ajaxJson({ aspid: parent.id }, "/ghostPass_designerPhoto").then((list) => {
-          console.log(list);
+        ajaxJson({ aspid: parent.id }, "/ghostPass_designerPhoto").then((data) => {
+          const { list } = data;
+          return Promise.all(list.map((i) => { return downloadFile(i) }));
         }).catch((err) => {
           console.log(err);
         });
