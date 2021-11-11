@@ -1240,6 +1240,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         const { aspid } = req.body;
         let totalList, aspirant, phone;
         let root;
+        let middleList;
         let list;
         let tempArr;
 
@@ -1250,24 +1251,25 @@ Ghost.prototype.ghostRouter = function (needs) {
         phone = aspirant.phone.replace(/[^0-9]/g, '');
         root = instance.dirParsing("__designer__");
         totalList = await fileSystem(`readDir`, [ root ]);
-        totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
+        totalList = totalList.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return !/^\.\_/.test(i); }).filter((i) => { return (new RegExp(phone, "gi")).test(i); });
 
-        console.log(totalList);
-
-        list = [];
+        middleList = [];
         for (let t of totalList) {
           if (t !== ".DS_Store") {
             tempArr = await fileSystem(`readDir`, [ root + "/" + t ]);
-            tempArr = tempArr.filter((i) => { return i !== ".DS_Store" }).map((i) => { return `${root}/${t}/${i}`; });
-            list = list.concat(tempArr);
+            tempArr = tempArr.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return !/^\.\_/.test(i); }).map((i) => { return `${root}/${t}/${i}`; });
+            middleList = middleList.concat(tempArr);
           }
         }
 
-        console.log(list);
+        list = [];
+        for (let path of middleList) {
+          tempArr = await fileSystem(`readDir`, [ path ]);
+          tempArr = tempArr.filter((i) => { return i !== ".DS_Store" }).filter((i) => { return !/^\.\_/.test(i); }).map((i) => { return `${path}/${i}`; });
+          list = list.concat(tempArr);
+        }
 
         list = list.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
-
-        console.log(list);
 
         res.send(JSON.stringify({ list }));
       } catch (e) {
