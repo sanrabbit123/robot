@@ -225,10 +225,15 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     stringArr.push(textMaker(map["portfolio"].title, (portfolio.length > 0 ? "제출" : "미제출"), "black", "portfolio"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
+      let folderName, fileName;
       if (window.confirm("다운로드를 진행할까요?")) {
-        ajaxJson({ aspid: parent.id }, "/ghostPass_designerPhoto").then((data) => {
-          const { list } = data;
+        ajaxJson({ aspid: parent.id, mode: "download" }, "/ghostPass_designerPhoto").then((data) => {
+          const { list, folder, file } = data;
+          folderName = folder;
+          fileName = file;
           return Promise.all(list.map((i) => { return downloadFile(i) }));
+        }).then(() => {
+          return ajaxJson({ aspid: parent.id, mode: "delete", folder: folderName, file: fileName });
         }).catch((err) => {
           console.log(err);
         });
