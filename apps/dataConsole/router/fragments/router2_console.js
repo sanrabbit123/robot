@@ -655,7 +655,7 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
   const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents" ];
+  obj.link = [ "/rawUpdateClient", "/rawUpdateDesigner", "/rawUpdateProject", "/rawUpdateContents", "/rawUpdateAspirant" ];
   obj.func = async function (req, res) {
     try {
       let raw_data;
@@ -690,6 +690,8 @@ DataRouter.prototype.rou_post_rawUpdateDocument = function () {
         raw_data = await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       } else if (req.url === "/rawUpdateContents") {
         raw_data = await back.updateContents([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      } else if (req.url === "/rawUpdateAspirant") {
+        raw_data = await back.updateAspirant([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
       }
 
       cookies = DataRouter.cookieParsing(req);

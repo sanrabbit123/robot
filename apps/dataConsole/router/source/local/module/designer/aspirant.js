@@ -82,13 +82,13 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       status: {
         title: "미팅 상태",
         position: "meeting.status",
-        values: [],
+        values: [ "조정중", "조정 필요", "미팅 대기", "미팅 완료", "계약서 발송", "계약 완료", "메뉴얼 발송", "드랍" ],
         chain: null
       },
       date: {
         title: "미팅 날짜",
         position: "meeting.date",
-        values: [],
+        values: [ '예정', '해당 없음' ],
         chain: null
       },
       dateHour: {
@@ -143,6 +143,75 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "status";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+
+      position = map[column].position;
+      values = map[column].values;
+      startLeft = 0;
+      width = 92;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        try {
+          const value = this.getAttribute("value");
+          const position = this.getAttribute("position");
+          const aspid = this.getAttribute("aspid");
+          const removeTargets = mother.querySelectorAll("aside");
+          let whereQuery, updateQuery;
+
+          whereQuery = { aspid };
+          updateQuery = {};
+          updateQuery[position] = value;
+          valueDom.textContent = value;
+
+          await instance.aspirantUpdate(whereQuery, updateQuery, map[column].chain, value);
+          instance.aspirantDeactivate(aspid, (value === "드랍"));
+
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+          resetWidthEvent();
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: { value: values[i], position, aspid: aspirant.aspid },
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
     });
 
     stringArr.push(textMaker(map["date"].title, dateToString(date), dateToColor(date, true), "date"));
@@ -150,6 +219,144 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "date";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
+
+      updateQuery = {};
+      whereQuery = { aspid: aspirant.aspid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 260;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (value === "예정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            thisCase["dateHour"].style.color = valueDom.style.color = colorChip.red;
+          } else if (value === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            thisCase["dateHour"].style.color = valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = value.split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
+            if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
+              thisCase["dateHour"].style.color = valueDom.style.color = colorChip.green;
+            } else {
+              thisCase["dateHour"].style.color = valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.aspirantUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          // calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      nodeArr = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[0] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[0],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          attribute: [ { value: values[1] } ],
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top) + ea,
+            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+            width: String((width - margin) / 2) + ea,
+            height: String(height) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            zIndex, borderRadius, animation,
+          }
+        },
+        {
+          mother: -1,
+          text: values[1],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+          style: {
+            position: "absolute",
+            top: String(top + height + margin) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            zIndex, borderRadius, animation,
+            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+            background: colorChip.white,
+            transition: "all 0s ease",
+          }
+        }
+      ]);
+
+      calendarTong = nodeArr[4];
+
+      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setAttribute("value", this.getAttribute("buttonValue"));
+        updateEvent.call(this, e);
+      });
+      calendarTong.appendChild(calendar.calendarBase);
+
     });
 
     stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시 ${zeroAddition(date.getMinutes())}분`, dateToColor(date, true), "dateHour"));
@@ -157,6 +364,114 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "dateHour";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let newDom, newInput;
+
+      updateQuery = {};
+      whereQuery = { aspid: aspirant.aspid };
+      position = map[column].position;
+      values = map[column].values;
+      chainQuery = map[column].chain;
+      startLeft = 0;
+      width = 36;
+      margin = 4;
+
+      background = colorChip.gradientGreen;
+      updateEvent = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        try {
+          const value = this.getAttribute("value");
+          const removeTargets = mother.querySelectorAll("aside");
+          let tempArr;
+          if (thisCase["date"].textContent.trim() === "예정") {
+            updateQuery[position] = new Date(3800, 0, 1);
+            thisCase["date"].style.color = valueDom.style.color = colorChip.red;
+          } else if (thisCase["date"].textContent.trim() === "해당 없음") {
+            updateQuery[position] = new Date(1800, 0, 1);
+            thisCase["date"].style.color = valueDom.style.color = colorChip.gray5;
+          } else {
+            tempArr = thisCase["date"].textContent.trim().split('-');
+            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(value.split('시')[0].replace(/[^0-9]/g, '')), Number(value.split('시')[1].replace(/[^0-9]/g, '')));
+            if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
+              thisCase["date"].style.color = valueDom.style.color = colorChip.green;
+            } else {
+              thisCase["date"].style.color = valueDom.style.color = colorChip.black;
+            }
+          }
+          await instance.aspirantUpdate(whereQuery, updateQuery, chainQuery, value);
+          valueDom.textContent = value;
+          // calendarEvent(thisCase);
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+
+          resetWidthEvent();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      [ newDom, newInput ] = createNodes([
+        {
+          mother: this,
+          mode: "aside",
+          events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
+          style: {
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(this.getBoundingClientRect().width) + ea,
+            height: String(this.getBoundingClientRect().height) + ea,
+            color: colorChip.green,
+            background: colorChip.white,
+            zIndex
+          }
+        },
+        {
+          mother: -1,
+          mode: "input",
+          attribute: [
+            { type: "text" },
+            { value: this.textContent.trim() },
+            { past: this.textContent.trim() },
+          ],
+          events: [
+            { type: "click", event: (e) => { e.stopPropagation(); } },
+            {
+              type: "keypress",
+              event: function (e) {
+                if (e.key === "Enter") {
+                  if (/^[0-9]+시 [0-9][0-9]분$/i.test(this.value.trim())) {
+                    this.setAttribute("value", this.value.trim());
+                    updateEvent.call(this, e);
+                  } else {
+                    this.value = this.getAttribute("past");
+                  }
+                }
+              }
+            },
+          ],
+          style: {
+            display: "inline-block",
+            fontSize: String(size + 1) + ea,
+            fontWeight: String(500),
+            color: colorChip.green,
+            background: colorChip.white,
+            outline: String(0),
+            border: String(0),
+            width: String(100) + '%',
+            height: String(valueDom.getBoundingClientRect().height) + ea,
+          }
+        }
+      ]);
+
+      newInput.focus();
+
     });
 
     stringArr.push(textMaker(map["request"].title, dateToString(request, true), dateToColor(request, true), "request"));
@@ -306,17 +621,17 @@ DesignerJs.prototype.aspirantUpdate = async function (whereQuery, updateQuery, c
         throw new Error("invaild input");
       }
     }
-    const { proid } = whereQuery;
-    const project = this.projects.search("proid", proid);
+    const { aspid } = whereQuery;
+    const aspirant = this.aspirants.search("aspid", aspid);
     let tempArr, target;
     let boo;
     let tempQsa0, tempQsa1, tempQsa2;
 
-    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateAspirant");
 
     for (let query in updateQuery) {
       tempArr = query.split('.');
-      target = project;
+      target = aspirant;
       for (let i = 0; i < tempArr.length - 1; i++) {
         target = target[tempArr[i]];
       }
@@ -330,10 +645,10 @@ DesignerJs.prototype.aspirantUpdate = async function (whereQuery, updateQuery, c
         boo = true;
       }
       if (boo) {
-        await ajaxJson({ whereQuery, updateQuery: chainUpdateQuery }, "/rawUpdateProject");
+        await ajaxJson({ whereQuery, updateQuery: chainUpdateQuery }, "/rawUpdateAspirant");
         for (let query in chainUpdateQuery) {
           tempArr = query.split('.');
-          target = project;
+          target = aspirant;
           for (let i = 0; i < tempArr.length - 1; i++) {
             target = target[tempArr[i]];
           }
@@ -347,7 +662,7 @@ DesignerJs.prototype.aspirantUpdate = async function (whereQuery, updateQuery, c
   }
 }
 
-DesignerJs.prototype.aspirantDeactivate = function (proid, offMode = true) {
+DesignerJs.prototype.aspirantDeactivate = function (aspid, offMode = true) {
   const instance = this;
   const { colorChip, stacks } = GeneralJs;
   let emptyDate, emptyValue;
@@ -359,12 +674,12 @@ DesignerJs.prototype.aspirantDeactivate = function (proid, offMode = true) {
   let children;
   let length;
 
-  whiteBlock = document.getElementById(proid);
+  whiteBlock = document.getElementById(aspid);
   children = whiteBlock.children;
   length = children.length;
   emptyDate = new Date(1800, 0, 1);
   emptyValue = "해당 없음";
-  name = "deactive_" + proid;
+  name = "deactive_" + aspid;
 
   if (offMode) {
     stacks[name] = [];
@@ -379,8 +694,8 @@ DesignerJs.prototype.aspirantDeactivate = function (proid, offMode = true) {
       tong.push(dom.style.color);
       dom.style.color = colorChip.gray4;
     }
-    tong.push(whiteBlock.style.background);
-    whiteBlock.style.background = colorChip.gray0;
+    tong.push(whiteBlock.firstChild.style.background);
+    whiteBlock.firstChild.style.background = colorChip.gray0;
     tong.push(children[length - 2].style.background);
     children[length - 2].style.background = colorChip.gray0;
     tong.push(children[length - 1].style.background);
@@ -399,13 +714,15 @@ DesignerJs.prototype.aspirantDeactivate = function (proid, offMode = true) {
         dom.style.color = tong[num];
         num = num + 1;
       }
-      whiteBlock.style.background = tong[num];
+      whiteBlock.firstChild.style.background = tong[num];
       num = num + 1;
       children[length - 2].style.background = tong[num];
       num = num + 1;
       children[length - 1].style.background = tong[num];
     } else {
-      window.location.reload();
+      if (![ "rgb(255, 255, 255)", "#ffffff", "#fff", "#FFFFFF", "#FFF", "white" ].includes(whiteBlock.firstChild.style.background)) {
+        window.location.reload();
+      }
     }
   }
 
@@ -590,16 +907,16 @@ DesignerJs.prototype.aspirantBlockInjection = function () {
   firstBoo = true;
   for (let i = 0; i < aspirants.length; i++) {
     if (firstBoo) {
-      this.aspirantWhiteBlock(scrollTong, aspirants[i], (i === aspirants.length - 1), i, true);
+      this.aspirantWhiteBlock(scrollTong, aspirants[i], (i === 0), i, true);
       firstBoo = false;
     }
-    this.aspirantWhiteBlock(scrollTong, aspirants[i], (i === aspirants.length - 1), i, false);
+    this.aspirantWhiteBlock(scrollTong, aspirants[i], false, i, false);
   }
 
   this.resetWidthEvent();
 }
 
-DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, last, index, titleMode = false) {
+DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, index, titleMode = false) {
   if (mother === undefined || aspirant === undefined) {
     throw new Error("invaild input");
   }
@@ -645,9 +962,9 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, last, inde
   whiteWidth = 16;
   factorHeight = 20;
 
-  menuMargin = 25;
-  menuHeight = 31;
-  menuTextTop = isMac() ? 5 : 7;
+  menuMargin = 24;
+  menuHeight = 32;
+  menuTextTop = isMac() ? 6 : 7;
 
   whiteBlock = createNode({
     mother,
@@ -659,7 +976,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, last, inde
       { title: titleMode ? 1 : 0 }
     ],
     style: {
-      display: instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none"),
+      display: (first ? "block" : instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none")),
       position: titleMode ? "fixed" : "relative",
       width: String(8000) + ea,
       height: String(height) + ea,
@@ -818,7 +1135,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, last, inde
                   zIndex: String(3),
                   valueDom,
                   height: menuHeight,
-                  size,
+                  size: size - 1,
                   textTop: menuTextTop
                 };
                 let cancelBox, parent;
@@ -1081,7 +1398,7 @@ DesignerJs.prototype.aspirantSearchEvent = function () {
   const input = this.searchInput;
   let width, length;
 
-  length = this.projects.length;
+  length = this.aspirants.length;
   width = 800;
 
   input.parentNode.style.width = String(width) + ea;
@@ -1195,6 +1512,23 @@ DesignerJs.prototype.aspirantView = async function () {
   const instance = this;
   try {
     const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
+    class SearchArray extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      search(target, value) {
+        let obj = null;
+        for (let i of this) {
+          if (i[target] === value) {
+            obj = i;
+          }
+        }
+        return obj;
+      }
+    }
     let loading;
     let type, typeArr;
     let aspirants, aspirant;
@@ -1215,7 +1549,7 @@ DesignerJs.prototype.aspirantView = async function () {
     this.contentsSearchIndex = [];
     this.contentsBlocks = null;
 
-    aspirants = await ajaxJson({ whereQuery: {} }, "/getAspirants", { equal: true });
+    aspirants = new SearchArray(await ajaxJson({ whereQuery: {} }, "/getAspirants", { equal: true }));
     this.aspirants = aspirants;
     for (let aspirant of this.aspirants) {
       aspirant.title = `${aspirant.designer}&nbsp;&nbsp;<b style="color:${colorChip.deactive}">디자이너</b>`;

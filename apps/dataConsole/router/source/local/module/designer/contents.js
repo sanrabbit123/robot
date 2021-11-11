@@ -83,7 +83,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
       date: {
         title: "날짜",
         position: "contents.photo.date",
-        values: [ '미정', '해당 없음' ],
+        values: [ '예정', '해당 없음' ],
         chain: null
       },
       dateHour: {
@@ -257,7 +257,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
           let tempArr;
-          if (value === "미정") {
+          if (value === "예정") {
             updateQuery[position] = new Date(3800, 0, 1);
             thisCase["dateHour"].style.color = valueDom.style.color = colorChip.red;
           } else if (value === "해당 없음") {
@@ -400,10 +400,10 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
           let tempArr;
-          if (thisCase["date"].textContent.trim() === "미정") {
+          if (thisCase["date"].textContent.trim() === "예정") {
             updateQuery[position] = new Date(3800, 0, 1);
             thisCase["date"].style.color = valueDom.style.color = colorChip.red;
-          } else if (thisCase["date"].textContent.trim() === "없음") {
+          } else if (thisCase["date"].textContent.trim() === "해당 없음") {
             updateQuery[position] = new Date(1800, 0, 1);
             thisCase["date"].style.color = valueDom.style.color = colorChip.gray5;
           } else {
@@ -470,7 +470,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
           ],
           style: {
             display: "inline-block",
-            fontSize: String(size) + ea,
+            fontSize: String(size + 1) + ea,
             fontWeight: String(500),
             color: colorChip.green,
             background: colorChip.white,
@@ -2617,8 +2617,8 @@ DesignerJs.prototype.contentsDeactivate = function (proid, offMode = true) {
       tong.push(dom.style.color);
       dom.style.color = colorChip.gray4;
     }
-    tong.push(whiteBlock.style.background);
-    whiteBlock.style.background = colorChip.gray0;
+    tong.push(whiteBlock.firstChild.style.background);
+    whiteBlock.firstChild.style.background = colorChip.gray0;
     tong.push(children[length - 2].style.background);
     children[length - 2].style.background = colorChip.gray0;
     tong.push(children[length - 1].style.background);
@@ -2637,13 +2637,15 @@ DesignerJs.prototype.contentsDeactivate = function (proid, offMode = true) {
         dom.style.color = tong[num];
         num = num + 1;
       }
-      whiteBlock.style.background = tong[num];
+      whiteBlock.firstChild.style.background = tong[num];
       num = num + 1;
       children[length - 2].style.background = tong[num];
       num = num + 1;
       children[length - 1].style.background = tong[num];
     } else {
-      window.location.reload();
+      if (![ "rgb(255, 255, 255)", "#ffffff", "#fff", "#FFFFFF", "#FFF", "white" ].includes(whiteBlock.firstChild.style.background)) {
+        window.location.reload();
+      }
     }
   }
 
@@ -2829,17 +2831,17 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   for (let i = 0; i < projects.length; i++) {
     if (!actionList.includes(projects[i].process.action)) {
       if (firstBoo) {
-        this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, true);
+        this.contentsWhiteBlock(scrollTong, projects[i], (i === 0), i, true);
         firstBoo = false;
       }
-      this.contentsWhiteBlock(scrollTong, projects[i], (i === projects.length - 1), i, false);
+      this.contentsWhiteBlock(scrollTong, projects[i], false, i, false);
     }
   }
 
   this.resetWidthEvent();
 }
 
-DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index, titleMode = false) {
+DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, index, titleMode = false) {
   if (mother === undefined || project === undefined) {
     throw new Error("invaild input");
   }
@@ -2885,9 +2887,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
   whiteWidth = 16;
   factorHeight = 20;
 
-  menuMargin = 25;
-  menuHeight = 31;
-  menuTextTop = isMac() ? 5 : 7;
+  menuMargin = 24;
+  menuHeight = 32;
+  menuTextTop = isMac() ? 6 : 7;
 
   whiteBlock = createNode({
     mother,
@@ -2899,7 +2901,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
       { title: titleMode ? 1 : 0 }
     ],
     style: {
-      display: instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none"),
+      display: (first ? "block" : instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none")),
       position: titleMode ? "fixed" : "relative",
       width: String(8000) + ea,
       height: String(height) + ea,
@@ -3058,7 +3060,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, last, index
                   zIndex: String(3),
                   valueDom,
                   height: menuHeight,
-                  size,
+                  size: size - 1,
                   textTop: menuTextTop
                 };
                 let cancelBox, parent;
