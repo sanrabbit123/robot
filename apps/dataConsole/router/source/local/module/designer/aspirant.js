@@ -235,9 +235,9 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { valueDom } = option;
-      const targetLinks = valueDom.split(token).map((str) => { return str.trim(); });
+      const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
       for (let link of targetLinks) {
-        GeneralJs.blankHref(link);
+        GeneralJs.blankHref("https://" + link);
       }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
@@ -247,9 +247,9 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { valueDom } = option;
-      const targetLinks = valueDom.split(token).map((str) => { return str.trim(); });
+      const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
       for (let link of targetLinks) {
-        GeneralJs.blankHref(link);
+        GeneralJs.blankHref("https://" + link);
       }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
@@ -259,9 +259,9 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       const { valueDom } = option;
-      const targetLinks = valueDom.split(token).map((str) => { return str.trim(); });
+      const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
       for (let link of targetLinks) {
-        GeneralJs.blankHref(link);
+        GeneralJs.blankHref("https://" + link);
       }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();

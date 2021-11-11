@@ -1049,6 +1049,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           }
 
           //move and fileTong make
+          await messageLog({ text: name + "님 파일 전송 : " + JSON.stringify(files, null, 2), channel: "#error_log" });
           for (let i = 0; i < list.length; i++) {
             if (Array.isArray(files[filesKeys[i]])) {
               for (let j of files[filesKeys[i]]) {
