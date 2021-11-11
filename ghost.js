@@ -15,6 +15,7 @@ const Ghost = function () {
   this.photoServer = this.address.officeinfo.ghost.file.static + "/photo";
   this.photoServerClient = this.photoServer + "/고객 전송 사진";
   this.photoServerDesigner = this.photoServer + "/디자이너 포트폴리오";
+  this.serverTempFolder = this.address.officeinfo.ghost.file.static + "/temp";
   this.alien = process.cwd() + "/alien.js";
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
@@ -761,7 +762,7 @@ Ghost.prototype.dirParsing = function (dir) {
 Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
-  const { webHook } = this;
+  const { webHook, serverTempFolder } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
   const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
@@ -1237,12 +1238,15 @@ Ghost.prototype.ghostRouter = function (needs) {
         }
         const preferredPhotoName = "preferredPhoto";
         const sitePhotoName = "sitePhoto";
+        const designerTemp = "designerPhotoTemp";
         const { aspid } = req.body;
         let totalList, aspirant, phone;
         let root;
         let middleList;
         let list;
         let tempArr;
+        let zipFileName;
+        let finalList;
 
         aspirant = await back.getAspirantById(aspid, { selfMongo: MONGOC });
         if (aspirant === null) {
@@ -1269,9 +1273,17 @@ Ghost.prototype.ghostRouter = function (needs) {
           list = list.concat(tempArr);
         }
 
-        list = list.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
+        await shellExec(`mkidr`, [ serverTempFolder + "/" + designerTemp ]);
+        for (let l of list) {
+          await shellExec(`cp ${shellLink(l)} ${shellLink(serverTempFolder)}/${designerTemp};`);
+        }
+        zipFileName = `d_${uniqueValue("string")}.zip`;
+        await shellExec(`cd ${shellLink(serverTempFolder)}/${designerTemp};zip ${shellLink(serverTempFolder)}/${zipFileName} ./*`);
 
-        res.send(JSON.stringify({ list }));
+        finalList = [ `${serverTempFolder}/${zipFileName}` ];
+        finalList = finalList.map((i) => { return `https://${instance.address.officeinfo.ghost.host}/${global.encodeURI(i.replace(new RegExp(instance.photoServer.split('/').slice(0, -1).join('/'), "gi"), '')).replace(/^\//, '')}`; });
+
+        res.send(JSON.stringify({ list: finalList }));
       } catch (e) {
         res.send(JSON.stringify({ message: e.message + " : post must be { aspid }" }));
       }
