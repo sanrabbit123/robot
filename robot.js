@@ -487,16 +487,6 @@ Robot.prototype.tellVoice = async function () {
   }
 }
 
-Robot.prototype.sendAspirantPresentation = async function () {
-  try {
-    const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
-    const kakao = new KakaoTalk();
-    await kakao.sendAspirantPresentation();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Robot.prototype.kakaoTokenGenerate = async function () {
   try {
     const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
@@ -942,13 +932,6 @@ const MENU = {
   tellVoice: async function () {
     try {
       await robot.tellVoice();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  sendAspirantPresentation: async function () {
-    try {
-      await robot.sendAspirantPresentation();
     } catch (e) {
       console.log(e);
     }

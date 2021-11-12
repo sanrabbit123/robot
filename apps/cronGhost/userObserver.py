@@ -56,18 +56,3 @@ async def viewWhoLog():
         logFile.write(json.dumps(finalArr))
 
 asyncio.run(viewWhoLog())
-
-
-# scheduler = AsyncIOScheduler()
-# scheduler.add_job(sendAspirantPresentation, 'cron', hour='14', minute='40', second='30')
-# scheduler.add_job(mongoToJson, 'cron', hour='1', minute='30', second='30')
-# scheduler.add_job(analyticsParsing, 'cron', hour='2', minute='30', second='30')
-# scheduler.add_job(proposalToClient, 'cron', hour='3', minute='10', second='30')
-# scheduler.add_job(reflect, 'cron', hour='3', minute='40', second='30')
-# scheduler.add_job(clientReportToSheets, 'cron', hour='4', minute='30', second='30')
-# scheduler.add_job(fixDir, 'cron', hour='5', minute='30', second='30')
-# scheduler.start()
-# try:
-#     asyncio.get_event_loop().run_forever()
-# except (KeyboardInterrupt, SystemExit):
-#     pass

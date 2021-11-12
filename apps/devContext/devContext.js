@@ -86,6 +86,8 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    console.log(await this.findCode("sendAspirantPresentation"));
+
 
 
     // const sheetsId = "1vc4zYkdATYbDRPYxKyIvwQeK46mIcmxvIkpr6fyW2Y8";

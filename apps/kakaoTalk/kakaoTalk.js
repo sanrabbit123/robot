@@ -39,7 +39,6 @@ const KakaoTalk = function () {
   this.templates = {};
   this.message = {};
   this.dir = process.cwd() + "/kakaoTalk";
-  this.listDir = this.dir + "/list";
 }
 
 KakaoTalk.prototype.generateToken = async function () {
@@ -811,47 +810,6 @@ KakaoTalk.prototype.ready = async function () {
 
 KakaoTalk.prototype.getTemplate = function (target) {
   return this.templates[this.templateTong(target).id];
-}
-
-KakaoTalk.prototype.sendAspirantPresentation = async function () {
-  const instance = this;
-  const back = this.back;
-  try {
-    await this.ready();
-    const targetId = "TD_6666";
-    let allAspirants, targetArr;
-    let options, response;
-
-    allAspirants = await back.getAspirantsByQuery({});
-    targetArr = allAspirants.meetingAlarm();
-
-    for (let { name, phone, dateString, alarm } of targetArr) {
-      if (alarm) {
-        options = {
-          apikey: this.authObj.apikey,
-          userid: this.authObj.userid,
-          token: this.authObj.token,
-          senderkey: this.authObj.senderkey,
-          tpl_code: targetId,
-          sender: this.senderPhone,
-          receiver_1: phone.replace(/-/g, ''),
-          recvname_1: name,
-          subject_1: this.templates[targetId].templtName,
-          message_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, name).replace(/#\{날짜\}/g, dateString),
-          button_1: { button: this.templates[targetId].buttons },
-          failover: "Y",
-          fsubject_1: this.templates[targetId].templtName,
-          fmessage_1: this.templates[targetId].templtContent.replace(/#\{고객명\}/g, name).replace(/#\{날짜\}/g, dateString)
-        };
-        response = await this.mother.requestSystem("https://kakaoapi.aligo.in/akv10/alimtalk/send/", options);
-        await instance.mother.messageSend({ text: name + " 디자이너님에게 설명회 안내 알림톡을 전송하였습니다!", channel: "#300_designer" });
-        console.log(response.data);
-      }
-    }
-
-  } catch (e) {
-    console.log(e);
-  }
 }
 
 module.exports = KakaoTalk;
