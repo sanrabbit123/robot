@@ -1167,7 +1167,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       for (let { amount } of bill.requests[i].cancel) {
         cancelNum += amount;
       }
-      if (totalNum > payNum - cancelNum) {
+      if (Math.floor(totalNum) > Math.floor(payNum) - Math.floor(cancelNum)) {
         this.requestNumber = i;
       }
     }

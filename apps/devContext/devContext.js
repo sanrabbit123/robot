@@ -89,7 +89,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // const sheetsId = "1vc4zYkdATYbDRPYxKyIvwQeK46mIcmxvIkpr6fyW2Y8";
     // const matrix = await sheets.read({
     //   id: sheetsId,
@@ -115,7 +114,7 @@ DevContext.prototype.launching = async function () {
     //   ]
     // });
     //
-    // matrix.view();
+    // matrix.log();
 
 
 
@@ -1698,7 +1697,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p155");
+    // await this.getRawPortfolio("p138");
 
 
     // get corePortfolio by pid
