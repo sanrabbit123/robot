@@ -88,6 +88,51 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const sheetsId = "1vc4zYkdATYbDRPYxKyIvwQeK46mIcmxvIkpr6fyW2Y8";
+    const matrix = await sheets.read({
+      id: sheetsId,
+      columns: [
+        "client",
+        "designer",
+        "request",
+        "contract",
+        "status",
+        "requestGuide",
+        "estimateFirst",
+        "estimateSecond",
+        "formSend",
+        "formComplete",
+        "constructor",
+        "constructRange",
+        "address",
+        "contractMoney",
+        "startMoney",
+        "middleMoney",
+        "remainMoney",
+        "etc"
+      ]
+    });
+
+    matrix.view();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1655,7 +1700,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p117");
+    // await this.getCorePortfolio("p155");
 
 
     // aspirant to designer
