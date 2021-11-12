@@ -88,32 +88,32 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const sheetsId = "1vc4zYkdATYbDRPYxKyIvwQeK46mIcmxvIkpr6fyW2Y8";
-    const matrix = await sheets.read({
-      id: sheetsId,
-      columns: [
-        "client",
-        "designer",
-        "request",
-        "contract",
-        "status",
-        "requestGuide",
-        "estimateFirst",
-        "estimateSecond",
-        "formSend",
-        "formComplete",
-        "constructor",
-        "constructRange",
-        "address",
-        "contractMoney",
-        "startMoney",
-        "middleMoney",
-        "remainMoney",
-        "etc"
-      ]
-    });
-
-    matrix.view();
+    // const sheetsId = "1vc4zYkdATYbDRPYxKyIvwQeK46mIcmxvIkpr6fyW2Y8";
+    // const matrix = await sheets.read({
+    //   id: sheetsId,
+    //   columns: [
+    //     "client",
+    //     "designer",
+    //     "request",
+    //     "contract",
+    //     "status",
+    //     "requestGuide",
+    //     "estimateFirst",
+    //     "estimateSecond",
+    //     "formSend",
+    //     "formComplete",
+    //     "constructor",
+    //     "constructRange",
+    //     "address",
+    //     "contractMoney",
+    //     "startMoney",
+    //     "middleMoney",
+    //     "remainMoney",
+    //     "etc"
+    //   ]
+    // });
+    //
+    // matrix.view();
 
 
 
@@ -1700,7 +1700,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p155");
+    // await this.getCorePortfolio("a85");
 
 
     // aspirant to designer
@@ -1710,7 +1710,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2110_aa02s" ]);
+    // await work.newDesignerToFront([ "d2109_aa01s" ]);
 
 
     // new designer set proposal setting

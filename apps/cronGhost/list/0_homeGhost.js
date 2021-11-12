@@ -1,13 +1,5 @@
 module.exports = [
   {
-    name: "sendAspirantPresentation",
-    time: {
-      hour: 14,
-      minute: 40,
-      second: 30,
-    }
-  },
-  {
     name: "mongoToJson",
     time: {
       hour: 1,
