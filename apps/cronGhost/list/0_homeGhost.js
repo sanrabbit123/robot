@@ -22,13 +22,5 @@ module.exports = [
       minute: 40,
       second: 30,
     }
-  },
-  {
-    name: "clientReportToSheets",
-    time: {
-      hour: 4,
-      minute: 30,
-      second: 30,
-    }
   }
 ];
