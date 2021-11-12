@@ -8,6 +8,14 @@ module.exports = [
     }
   },
   {
+    name: "mongoToJson",
+    time: {
+      hour: 5,
+      minute: 10,
+      second: 30,
+    }
+  },
+  {
     name: "mysqlReflect",
     time: {
       hour: 5,

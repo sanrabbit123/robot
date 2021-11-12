@@ -16,14 +16,6 @@ module.exports = [
     }
   },
   {
-    name: "proposalToClient",
-    time: {
-      hour: 3,
-      minute: 10,
-      second: 30,
-    }
-  },
-  {
     name: "reflect",
     time: {
       hour: 3,
