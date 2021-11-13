@@ -87,36 +87,135 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const sheetsId = "1A0qgkt8D9NtWthVotQw5YrENtY6KTR3S5Pruj03D7r4";
+    const matrix = await sheets.read({
+      id: sheetsId,
+      columns: [
+        "client",
+        "designer",
+        "request",
+        "contract",
+        "status",
+        "requestGuide",
+        "estimateFirst",
+        "estimateSecond",
+        "formSend",
+        "formComplete",
+        "constructor",
+        "constructRange",
+        "address",
+        "contractMoney",
+        "startMoney",
+        "middleMoney",
+        "remainMoney",
+        "etc"
+      ]
+    });
+    const statusFilter = (raw) => {
+      raw = raw.trim();
+      raw = raw.replace(/^[0-9]+\)/gi, '').replace(/\//gi, '');
+      if (/완$/gi.test(raw)) {
+        raw = raw + "료";
+      }
+      return raw;
+    }
+
+    const partnerFilter = (raw) => {
+      const map = [
+        {
+          standards: [ "유창민", "예음" ],
+          result: "유창민_예음"
+        },
+        {
+          standards: [ "조호익", "태호금속" ],
+          result: "조호익_태호금속"
+        },
+        {
+          standards: [ "이청호" ],
+          result: "이청호"
+        },
+        {
+          standards: [ "김민정", "키친앤숲" ],
+          result: "김민정_키친앤숲"
+        },
+        {
+          standards: [ "이기석", "율" ],
+          result: "이기석_율"
+        },
+        {
+          standards: [ "외부업체" ],
+          result: "외부업체"
+        },
+      ];
+      let boo;
+      for (let { standards, result } of map) {
+        boo = false;
+        for (let keyword of standards) {
+          if ((new RegExp(keyword, "gi")).test(raw)) {
+            boo = true;
+            break;
+          }
+        }
+        if (boo) {
+          return result;
+        }
+      }
+      return "";
+    }
+
+    const selfMongo = this.MONGOLOCALC;
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+    let projects, project, dummy;
+
+    for (let obj of matrix) {
+      projects = await back.getProjectsByNames([ obj.client, obj.designer ], { selfMongo });
+      projects = projects.proceedFilter();
+      project = projects[0];
+      obj.proid = project.proid;
+      delete obj.client;
+      delete obj.designer;
+      delete obj.address;
+
+      dummy = back.returnProjectDummies("process.design.construct.detail");
+
+      dummy.status = statusFilter(obj.status);
+      delete obj.status;
+
+      dummy.request = obj.requestGuide;
+      delete obj.requestGuide;
+
+      if (obj.estimateFirst.valueOf() >= emptyDateValue) {
+        dummy.estimate.push({ invid: "", date: obj.estimateFirst });
+        if (obj.estimateSecond.valueOf() >= emptyDateValue) {
+          dummy.estimate.push({ invid: "", date: obj.estimateSecond });
+        }
+      }
+      delete obj.estimateFirst;
+      delete obj.estimateSecond;
+
+      dummy.contract.partner = partnerFilter(obj.constructor);
+      delete obj.constructor;
+
+      if (obj.formSend.valueOf() >= emptyDateValue) {
+        dummy.contract.form.guide = obj.formSend;
+      }
+      if (obj.formComplete.valueOf() >= emptyDateValue) {
+        dummy.contract.form.guide = obj.formComplete;
+      }
+      delete obj.formSend;
+      delete obj.formComplete;
 
 
-    // const sheetsId = "1vc4zYkdATYbDRPYxKyIvwQeK46mIcmxvIkpr6fyW2Y8";
-    // const matrix = await sheets.read({
-    //   id: sheetsId,
-    //   columns: [
-    //     "client",
-    //     "designer",
-    //     "request",
-    //     "contract",
-    //     "status",
-    //     "requestGuide",
-    //     "estimateFirst",
-    //     "estimateSecond",
-    //     "formSend",
-    //     "formComplete",
-    //     "constructor",
-    //     "constructRange",
-    //     "address",
-    //     "contractMoney",
-    //     "startMoney",
-    //     "middleMoney",
-    //     "remainMoney",
-    //     "etc"
-    //   ]
-    // });
-    //
-    // matrix.log();
 
 
+
+      obj.dummy = dummy;
+    }
+
+
+    for (let obj of matrix) {
+      console.log(obj);
+    }
 
 
 
