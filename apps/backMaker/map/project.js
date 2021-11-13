@@ -78,11 +78,7 @@ module.exports = {
               limit: null,
               detail: []
             },
-            construct: {
-              provided: false,
-              partner: "",
-              detail: [],
-            },
+            construct: null,
             purchase: {
               provided: false,
               detail: [],
@@ -175,7 +171,7 @@ module.exports = {
         date: new Date(1800, 0, 1),
         desid: "",
       };
-    } else if (subject === "process.design.construct.detail") {
+    } else if (subject === "process.design.construct") {
       dummy = {
         status: "",
         request: new Date(1800, 0, 1),
@@ -192,14 +188,24 @@ module.exports = {
             }
           },
           payments: [],
+          after: {
+            expired: new Date(1800, 0, 1),
+            history: [],
+          }
         }
       };
-    } else if (subject === "process.design.construct.detail.estimate") {
+    } else if (subject === "process.design.construct.estimate") {
       dummy = {
         invid: "",
         date: new Date(1800, 0, 1),
       };
-    } else if (subject === "process.design.construct.detail.contract.payments") {
+    } else if (subject === "process.design.construct.contract.after.history") {
+      dummy = {
+        from: new Date(1800, 0, 1),
+        to: new Date(1800, 0, 1),
+        amount: 0,
+      };
+    } else if (subject === "process.design.construct.contract.payments") {
       dummy = {
         guide: new Date(1800, 0, 1),
         date: new Date(1800, 0, 1),

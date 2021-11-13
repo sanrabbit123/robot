@@ -87,6 +87,9 @@ DevContext.prototype.launching = async function () {
 
 
 
+
+    /*
+    const selfMongo = this.MONGOC;
     const sheetsId = "1A0qgkt8D9NtWthVotQw5YrENtY6KTR3S5Pruj03D7r4";
     const matrix = await sheets.read({
       id: sheetsId,
@@ -119,7 +122,6 @@ DevContext.prototype.launching = async function () {
       }
       return raw;
     }
-
     const partnerFilter = (raw) => {
       const map = [
         {
@@ -160,12 +162,20 @@ DevContext.prototype.launching = async function () {
           return result;
         }
       }
+
+      if (/^C/i.test(raw)) {
+        return "고객";
+      } else if (/^D/.test(raw)) {
+        return "디자이너";
+      }
+
       return "";
     }
-
-    const selfMongo = this.MONGOLOCALC;
     const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-    let projects, project, dummy;
+    let projects, project, dummy, tempArr;
+    let paymentsDummy;
+    let proidArr;
+    let whereQuery, updateQuery;
 
     for (let obj of matrix) {
       projects = await back.getProjectsByNames([ obj.client, obj.designer ], { selfMongo });
@@ -176,7 +186,7 @@ DevContext.prototype.launching = async function () {
       delete obj.designer;
       delete obj.address;
 
-      dummy = back.returnProjectDummies("process.design.construct.detail");
+      dummy = back.returnProjectDummies("process.design.construct");
 
       dummy.status = statusFilter(obj.status);
       delete obj.status;
@@ -193,8 +203,15 @@ DevContext.prototype.launching = async function () {
       delete obj.estimateFirst;
       delete obj.estimateSecond;
 
-      dummy.contract.partner = partnerFilter(obj.constructor);
+      if (obj.constructor.trim() !== "") {
+        dummy.contract.partner = partnerFilter(obj.constructor);
+      } else {
+        dummy.contract.partner = partnerFilter(obj.contract);
+      }
       delete obj.constructor;
+      delete obj.contract;
+      delete obj.request;
+      delete obj.etc;
 
       if (obj.formSend.valueOf() >= emptyDateValue) {
         dummy.contract.form.guide = obj.formSend;
@@ -205,17 +222,63 @@ DevContext.prototype.launching = async function () {
       delete obj.formSend;
       delete obj.formComplete;
 
+      if (obj.constructRange !== '') {
+        tempArr = obj.constructRange.split(/[^0-9]/);
+        tempArr = tempArr.filter((str) => { return /[0-9]/gi.test(str); });
+        tempArr = tempArr.filter((str) => { return str.replace(/[^0-9]/gi, '').length === 6 });
+        tempArr = tempArr.map((str) => { return str.replace(/[^0-9]/gi, ''); });
+        if (tempArr.length === 2) {
+          tempArr = tempArr.map((str) => { return new Date(Number("20" + str.slice(0, 2)), Number(str.slice(2, 4)) - 1, Number(str.slice(4))); });
+          dummy.contract.form.date.from = tempArr[0];
+          dummy.contract.form.date.to = tempArr[1];
+        }
+      }
+      delete obj.constructRange;
 
-
-
+      if (obj.contractMoney.valueOf() >= emptyDateValue) {
+        paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
+        paymentsDummy.date = obj.contractMoney;
+        dummy.contract.payments.push(equalJson(JSON.stringify(paymentsDummy)));
+      }
+      if (obj.startMoney.valueOf() >= emptyDateValue) {
+        paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
+        paymentsDummy.date = obj.startMoney;
+        dummy.contract.payments.push(equalJson(JSON.stringify(paymentsDummy)));
+      }
+      if (obj.middleMoney.valueOf() >= emptyDateValue) {
+        paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
+        paymentsDummy.date = obj.middleMoney;
+        dummy.contract.payments.push(equalJson(JSON.stringify(paymentsDummy)));
+      }
+      if (obj.remainMoney.valueOf() >= emptyDateValue) {
+        paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
+        paymentsDummy.date = obj.remainMoney;
+        dummy.contract.payments.push(equalJson(JSON.stringify(paymentsDummy)));
+      }
+      delete obj.contractMoney;
+      delete obj.startMoney;
+      delete obj.middleMoney;
+      delete obj.remainMoney;
 
       obj.dummy = dummy;
     }
 
-
-    for (let obj of matrix) {
-      console.log(obj);
+    proidArr = [];
+    for (let { proid, dummy } of matrix) {
+      whereQuery = { proid };
+      updateQuery = {};
+      updateQuery["process.design.construct"] = dummy
+      await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+      proidArr.push(proid);
+      console.log(`update ${proid}`);
     }
+
+    */
+
+
+
+
+
 
 
 

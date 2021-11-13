@@ -62,6 +62,17 @@ class Projects extends Array {
     return tong;
   }
 
+  proceedFilter() {
+    let arr;
+    arr = new Projects();
+    for (let i of this) {
+      if (i.desid !== "") {
+        arr.push(i);
+      }
+    }
+    return arr;
+  }
+
 }
 
 const withTools = function (Project) {

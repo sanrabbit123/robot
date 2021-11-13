@@ -125,6 +125,48 @@ DesignProposal.prototype.toNormal = function () {
 
 // construct -------------------------------------------------------------------------
 
+const ConstructContractAfterHistoryFactor = function (json) {
+  this.from = new DateParse(json.from);
+  this.to = new DateParse(json.to);
+  this.amount = json.amount;
+}
+
+ConstructContractAfterHistoryFactor.prototype.toNormal = function () {
+  let obj = {};
+  obj.from = this.from.toNormal();
+  obj.to = this.to.toNormal();
+  obj.amount = this.amount;
+  return obj;
+}
+
+class ConstructContractAfterHistory extends Array {
+  constructor(arr) {
+    super();
+    for (let i of arr) {
+      this.push(new ConstructContractAfterHistoryFactor(i));
+    }
+  }
+  toNormal() {
+    let arr = [];
+    for (let i of this) {
+      arr.push(i.toNormal());
+    }
+    return arr;
+  }
+}
+
+const ConstructContractAfter = function (json) {
+  this.expired = new DateParse(json.expired);
+  this.history = new ConstructContractAfterHistory(json.history);
+}
+
+ConstructContractAfter.prototype.toNormal = function () {
+  let obj = {};
+  obj.expired = this.expired.toNormal();
+  obj.history = this.history.toNormal();
+  return obj;
+}
+
 const ConstructContractPaymentCalculationInfo = function (json) {
   this.method = json.method;
   this.proof = json.proof;
@@ -231,6 +273,7 @@ const ConstructContract = function (json) {
   this.partner = json.partner;
   this.form = new ConstructContractForm(json.form);
   this.payments = new ConstructContractPayments(json.payments);
+  this.after = new ConstructContractAfter(json.after);
 }
 
 ConstructContract.prototype.toNormal = function () {
@@ -238,6 +281,7 @@ ConstructContract.prototype.toNormal = function () {
   obj.partner = this.partner;
   obj.form = this.form.toNormal();
   obj.payments = this.payments.toNormal();
+  obj.after = this.after;
   return obj;
 }
 
@@ -282,36 +326,6 @@ ConstructDetail.prototype.toNormal = function () {
   obj.request = this.request.toNormal();
   obj.estimate = this.estimate.toNormal();
   obj.contract = this.contract.toNormal();
-  return obj;
-}
-
-class ConstructDetails extends Array {
-  constructor(arr) {
-    super();
-    for (let i of arr) {
-      this.push(new ConstructDetail(i));
-    }
-  }
-  toNormal() {
-    let arr = [];
-    for (let i of this) {
-      arr.push(i.toNormal());
-    }
-    return arr;
-  }
-}
-
-const Construct = function (json) {
-  this.provided = json.provided;
-  this.partner = json.partner;
-  this.detail = new ConstructDetails(json.detail);
-}
-
-Construct.prototype.toNormal = function () {
-  let obj = {};
-  obj.provided = this.provided;
-  obj.partner = this.partner;
-  obj.detail = this.detail.toNormal();
   return obj;
 }
 
@@ -374,14 +388,22 @@ Purchase.prototype.toNormal = function () {
 
 const Design = function (json) {
   this.proposal = new DesignProposal(json.proposal);
-  this.construct = new Construct(json.construct);
+  if (json.construct !== null) {
+    this.construct = new ConstructDetail(json.construct);
+  } else {
+    this.construct = null;
+  }
   this.purchase = new Purchase(json.purchase);
 }
 
 Design.prototype.toNormal = function () {
   let obj = {};
   obj.proposal = this.proposal.toNormal();
-  obj.construct = this.construct.toNormal();
+  if (this.construct === null) {
+    obj.construct = null;
+  } else {
+    obj.construct = this.construct.toNormal();
+  }
   obj.purchase = this.purchase.toNormal();
   return obj;
 }
