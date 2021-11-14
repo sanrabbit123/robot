@@ -187,7 +187,12 @@ module.exports = {
               cancel: new Date(1800, 0, 1),
             }
           },
-          payments: [],
+          payments: {
+            first: null,
+            start: null,
+            middle: null,
+            remain: null
+          },
           after: {
             expired: new Date(1800, 0, 1),
             history: [],
@@ -198,6 +203,12 @@ module.exports = {
       dummy = {
         invid: "",
         date: new Date(1800, 0, 1),
+      };
+    } else if (subject === "process.design.construct.contract.after.history") {
+      dummy = {
+        from: new Date(1800, 0, 1),
+        to: new Date(1800, 0, 1),
+        amount: 0,
       };
     } else if (subject === "process.design.construct.contract.payments") {
       dummy = {
@@ -220,11 +231,5 @@ module.exports = {
       };
     }
     return dummy;
-  } else if (subject === "process.design.construct.contract.after.history") {
-    dummy = {
-      from: new Date(1800, 0, 1),
-      to: new Date(1800, 0, 1),
-      amount: 0,
-    };
   }
 }

@@ -187,7 +187,12 @@ module.exports = {
               cancel: new Date(1800, 0, 1),
             }
           },
-          payments: [],
+          payments: {
+            first: null,
+            start: null,
+            middle: null,
+            remain: null
+          },
           after: {
             expired: new Date(1800, 0, 1),
             history: [],

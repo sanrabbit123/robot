@@ -218,27 +218,59 @@ const ConstructContractPayment = function (json) {
 
 ConstructContractPayment.prototype.toNormal = function () {
   let obj = {};
-  obj.guide = this.guide;
-  obj.date = this.date;
-  obj.cancel = this.cancel;
-  obj.calculation = this.calculation;
+  obj.guide = this.guide.toNormal();
+  obj.date = this.date.toNormal();
+  obj.cancel = this.cancel.toNormal();
+  obj.calculation = this.calculation.toNormal();
   return obj;
 }
 
-class ConstructContractPayments extends Array {
-  constructor(arr) {
-    super();
-    for (let i of arr) {
-      this.push(new ConstructContractPayment(i));
-    }
+const ConstructContractPayments = function (json) {
+  if (json.first !== null) {
+    this.first = new ConstructContractPayment(json.first);
+  } else {
+    this.first = null;
   }
-  toNormal() {
-    let arr = [];
-    for (let i of this) {
-      arr.push(i.toNormal());
-    }
-    return arr;
+  if (json.start !== null) {
+    this.start = new ConstructContractPayment(json.start);
+  } else {
+    this.start = null;
   }
+  if (json.middle !== null) {
+    this.middle = new ConstructContractPayment(json.middle);
+  } else {
+    this.middle = null;
+  }
+  if (json.remain !== null) {
+    this.remain = new ConstructContractPayment(json.remain);
+  } else {
+    this.remain = null;
+  }
+}
+
+ConstructContractPayments.prototype.toNormal = function () {
+  let obj = {};
+  if (this.first === null) {
+    obj.first = null;
+  } else {
+    obj.first = this.first.toNormal();
+  }
+  if (this.start === null) {
+    obj.start = null;
+  } else {
+    obj.start = this.start.toNormal();
+  }
+  if (this.middle === null) {
+    obj.middle = null;
+  } else {
+    obj.middle = this.middle.toNormal();
+  }
+  if (this.remain === null) {
+    obj.remain = null;
+  } else {
+    obj.remain = this.remain.toNormal();
+  }
+  return obj;
 }
 
 const ConstructContractFormDate = function (json) {
@@ -281,7 +313,7 @@ ConstructContract.prototype.toNormal = function () {
   obj.partner = this.partner;
   obj.form = this.form.toNormal();
   obj.payments = this.payments.toNormal();
-  obj.after = this.after;
+  obj.after = this.after.toNormal();
   return obj;
 }
 

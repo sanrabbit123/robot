@@ -238,22 +238,22 @@ DevContext.prototype.launching = async function () {
       if (obj.contractMoney.valueOf() >= emptyDateValue) {
         paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
         paymentsDummy.date = obj.contractMoney;
-        dummy.contract.payments.push(equalJson(JSON.stringify(paymentsDummy)));
+        dummy.contract.payments.first = equalJson(JSON.stringify(paymentsDummy));
       }
       if (obj.startMoney.valueOf() >= emptyDateValue) {
         paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
         paymentsDummy.date = obj.startMoney;
-        dummy.contract.payments.push(equalJson(JSON.stringify(paymentsDummy)));
+        dummy.contract.payments.start = equalJson(JSON.stringify(paymentsDummy));
       }
       if (obj.middleMoney.valueOf() >= emptyDateValue) {
         paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
         paymentsDummy.date = obj.middleMoney;
-        dummy.contract.payments.push(equalJson(JSON.stringify(paymentsDummy)));
+        dummy.contract.payments.middle = equalJson(JSON.stringify(paymentsDummy));
       }
       if (obj.remainMoney.valueOf() >= emptyDateValue) {
         paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
         paymentsDummy.date = obj.remainMoney;
-        dummy.contract.payments.push(equalJson(JSON.stringify(paymentsDummy)));
+        dummy.contract.payments.remain = equalJson(JSON.stringify(paymentsDummy));
       }
       delete obj.contractMoney;
       delete obj.startMoney;
@@ -275,13 +275,8 @@ DevContext.prototype.launching = async function () {
 
     */
 
-
-
-
-
-
-
-
+    // const project = await back.getProjectById("p2110_aa02s", { selfMongo: this.MONGOLOCALC });
+    // console.log(project.toNormal());
 
 
 
