@@ -452,8 +452,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         requestObj["requests.0.request.etc.channel"] = filterAll(resultObj["wayto"]);
 
         requestObj["requests.0.request.timeline"] = new Date();
-        if (typeof requestObj["googleId"] === "string") {
-          requestObj["requests.0.analytics.googleAnalytics.userType"] = requestObj["googleId"];
+        if (typeof requestObj.googleId === "string") {
+          requestObj["requests.0.analytics.googleAnalytics.userType"] = requestObj.googleId;
+          delete requestObj.googleId;
         }
 
         //to mongo
@@ -522,7 +523,7 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!\n";
           message += thisClient.toMessage();
           message += "\n\n"
-          message += "구글 아이디 : " + requestObj["googleId"];
+          message += "구글 아이디 : " + requestObj["requests.0.analytics.googleAnalytics.userType"];
           await messageSend({ text: message, channel: "#401_consulting" });
 
           //send alimtalk and print
