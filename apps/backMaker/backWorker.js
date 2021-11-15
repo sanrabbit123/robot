@@ -533,6 +533,22 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
           const fileName = "designerFrontSettingAiCanvasScript_" + String((new Date()).valueOf()) + ".js";
           await fileSystem(`write`, [ `${process.cwd()}/temp/${fileName}`, aiScript ]);
           const { resultFolder, resultList } = await contents.generalLaunching(`${process.cwd()}/temp/${fileName}`);
+          const careerCalculation = function (designer) {
+            let yS, yM, rY, rM;
+            let monthResult;
+
+            yS = designer.information.business.career.startY;
+            yM = designer.information.business.career.startM;
+            rY = designer.information.business.career.relatedY;
+            rM = designer.information.business.career.relatedM;
+
+            monthResult = ((yS * 12) + yM) - ((rY * 12) + rM);
+
+            return {
+              year: Math.floor(monthResult / 12),
+              month: (monthResult % 12),
+            };
+          }
 
           let desktop = null, mobile = null, name = null;
           let newDesktop, newMobile, newName;
@@ -599,8 +615,8 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
             insertQuery = "INSERT INTO deslist (desid,name,start_Y,start_M,method1,method2,daepyo_a,daepyo_t,order_function) VALUES (";
             insertQuery += `'${pastDesid}',`;
             insertQuery += `'${designerObj.designer}',`;
-            insertQuery += `'${String(designerObj.information.business.career.startY)}',`;
-            insertQuery += `'${String(designerObj.information.business.career.startM)}',`;
+            insertQuery += `'${String(careerCalculation(designer).year)}',`;
+            insertQuery += `'${String(careerCalculation(designer).month)}',`;
             insertQuery += `'${frontSetting.methods[0]}',`;
             insertQuery += `'${frontSetting.methods[1]}',`;
             insertQuery += `'${frontSetting.photo.porlid}',`;

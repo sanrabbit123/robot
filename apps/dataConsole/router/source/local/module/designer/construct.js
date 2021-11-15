@@ -3,11 +3,11 @@
 DesignerJs.prototype.constructDataRender = function (project, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma } = GeneralJs;
   const { process, proid, address } = project;
   const { contract, design: { construct } } = process;
   const { form: { date: { from, to } } } = contract;
-  const { status, request, estimate, contract: { partner, form } } = construct;
+  const { status, request, estimate, contract: { partner, form, payments } } = construct;
   const { id, guide, date: formDate } = form;
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
   const textMaker = (title, value, color, column) => {
@@ -56,11 +56,12 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
   stringArr = [];
   updateArr = [];
 
-  displayBoo = true;
   grayBoo = ![ "완료", "드랍" ].includes(status);
 
 
   if (this.type === "construct") {
+
+    displayBoo = true;
 
     map = {
       projectFrom: {
@@ -196,27 +197,50 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
         let titleWeight;
         let areaHeight;
         let areaTop;
+        let areaWeight;
+        let betweenMargin0, betweenMargin1;
+        let firstMoney, firstRatio;
+        let startMoney, startRatio;
+        let middleMoney, middleRatio;
+        let remainMoney, remainRatio;
+        let totalMoney;
 
-        boxWidth = 600;
+        boxWidth = 680;
         boxHeight = 400;
 
         paddingLeft = 28;
-        paddingTop = 22;
+        paddingTop = 23;
 
         middlePaddingLeft = 20;
         middlePaddingTop = 18;
 
         fontSize = 23;
-        titleMarginBottom = 18;
+        titleMarginBottom = 16;
 
         textSize = 15;
         rowMargin = 10;
 
         titleWidth = 100;
         titleWeight = 500;
+        areaWeight = 300;
 
-        areaHeight = 26;
+        areaHeight = 25;
         areaTop = 0;
+
+        betweenMargin0 = 4;
+        betweenMargin1 = 15;
+
+        firstMoney = Math.floor(payments.first === null ? 0 : payments.first.calculation.amount.consumer);
+        startMoney = Math.floor(payments.start === null ? 0 : payments.start.calculation.amount.consumer);
+        middleMoney = Math.floor(payments.middle === null ? 0 : payments.middle.calculation.amount.consumer);
+        remainMoney = Math.floor(payments.remain === null ? 0 : payments.remain.calculation.amount.consumer);
+
+        totalMoney = Math.floor(firstMoney + startMoney + middleMoney + remainMoney);
+
+        firstRatio = totalMoney !== 0 ? firstMoney / totalMoney : 0;
+        startRatio = totalMoney !== 0 ? startMoney / totalMoney : 0;
+        middleRatio = totalMoney !== 0 ? middleMoney / totalMoney : 0;
+        remainRatio = totalMoney !== 0 ? remainMoney / totalMoney : 0;
 
         createNode({
           mother: this,
@@ -297,8 +321,28 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             width: withOut(titleWidth, ea),
                             height: String(areaHeight) + ea,
                             top: String(areaTop) + ea,
-                            background: "aqua",
-                          }
+                            overflow: "hidden",
+                          },
+                          children: [
+                            {
+                              style: {
+                                position: "relative",
+                                width: String(3000) + ea,
+                                left: String(0),
+                                top: String(0),
+                              },
+                              children: [
+                                {
+                                  text: (project.history.name === '' ? project.address + " 내부 리모델링" : project.history.name),
+                                  style: {
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                  }
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -328,8 +372,27 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             width: withOut(titleWidth, ea),
                             height: String(areaHeight) + ea,
                             top: String(areaTop) + ea,
-                            background: "aqua",
-                          }
+                          },
+                          children: [
+                            {
+                              style: {
+                                position: "relative",
+                                width: String(3000) + ea,
+                                left: String(0),
+                                top: String(0),
+                              },
+                              children: [
+                                {
+                                  text: (project.history.address === '' ? project.address : project.history.address),
+                                  style: {
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                  }
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -359,8 +422,68 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             width: withOut(titleWidth, ea),
                             height: String(areaHeight) + ea,
                             top: String(areaTop) + ea,
-                            background: "aqua",
-                          }
+                          },
+                          children: [
+                            {
+                              style: {
+                                position: "relative",
+                                width: String(3000) + ea,
+                                left: String(0),
+                                top: String(0),
+                              },
+                              children: [
+                                {
+                                  text: "착공 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: dateToString(project.process.design.construct.contract.form.date.from),
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "완공 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: dateToString(project.process.design.construct.contract.form.date.to),
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                  }
+                                },
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -390,8 +513,27 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             width: withOut(titleWidth, ea),
                             height: String(areaHeight) + ea,
                             top: String(areaTop) + ea,
-                            background: "aqua",
-                          }
+                          },
+                          children: [
+                            {
+                              style: {
+                                position: "relative",
+                                width: String(3000) + ea,
+                                left: String(0),
+                                top: String(0),
+                              },
+                              children: [
+                                {
+                                  text: autoComma(totalMoney) + "원",
+                                  style: {
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                  }
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -421,8 +563,108 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             width: withOut(titleWidth, ea),
                             height: String(areaHeight) + ea,
                             top: String(areaTop) + ea,
-                            background: "aqua",
-                          }
+                          },
+                          children: [
+                            {
+                              style: {
+                                position: "relative",
+                                width: String(3000) + ea,
+                                left: String(0),
+                                top: String(0),
+                              },
+                              children: [
+                                {
+                                  text: Math.round(firstRatio * 100) + "%",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: autoComma(firstMoney) + "원",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "예상일 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: dateToString(project.history.payments.first.date),
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "비고 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: project.history.payments.first.etc === '' ? "해당 없음" : project.history.payments.first.etc,
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                  }
+                                },
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -452,8 +694,108 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             width: withOut(titleWidth, ea),
                             height: String(areaHeight) + ea,
                             top: String(areaTop) + ea,
-                            background: "aqua",
-                          }
+                          },
+                          children: [
+                            {
+                              style: {
+                                position: "relative",
+                                width: String(3000) + ea,
+                                left: String(0),
+                                top: String(0),
+                              },
+                              children: [
+                                {
+                                  text: Math.round(startRatio * 100) + "%",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: autoComma(startMoney) + "원",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "예상일 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: dateToString(project.history.payments.start.date),
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "비고 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: project.history.payments.start.etc === '' ? "해당 없음" : project.history.payments.start.etc,
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                  }
+                                },
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -483,8 +825,108 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             width: withOut(titleWidth, ea),
                             height: String(areaHeight) + ea,
                             top: String(areaTop) + ea,
-                            background: "aqua",
-                          }
+                          },
+                          children: [
+                            {
+                              style: {
+                                position: "relative",
+                                width: String(3000) + ea,
+                                left: String(0),
+                                top: String(0),
+                              },
+                              children: [
+                                {
+                                  text: Math.round(middleRatio * 100) + "%",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: autoComma(middleMoney) + "원",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "예상일 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: dateToString(project.history.payments.middle.date),
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "비고 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: project.history.payments.middle.etc === '' ? "해당 없음" : project.history.payments.middle.etc,
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                  }
+                                },
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -514,8 +956,108 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             width: withOut(titleWidth, ea),
                             height: String(areaHeight) + ea,
                             top: String(areaTop) + ea,
-                            background: "aqua",
-                          }
+                          },
+                          children: [
+                            {
+                              style: {
+                                position: "relative",
+                                width: String(3000) + ea,
+                                left: String(0),
+                                top: String(0),
+                              },
+                              children: [
+                                {
+                                  text: Math.round(remainRatio * 100) + "%",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: autoComma(remainMoney) + "원",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "예상일 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: dateToString(project.history.payments.remain.date),
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: " | ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.green,
+                                    marginRight: String(betweenMargin1) + ea,
+                                  }
+                                },
+                                {
+                                  text: "비고 : ",
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.deactive,
+                                    marginRight: String(betweenMargin0) + ea,
+                                  }
+                                },
+                                {
+                                  text: project.history.payments.remain.etc === '' ? "해당 없음" : project.history.payments.remain.etc,
+                                  style: {
+                                    display: "inline-block",
+                                    fontSize: String(textSize) + ea,
+                                    fontWeight: String(areaWeight),
+                                    color: colorChip.black,
+                                  }
+                                },
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -526,19 +1068,199 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           ]
         });
 
-
-
-
-
-
-
-
-
-
       });
     }
 
     stringArr.push(textMaker(map["address"].title, address, "black", "address"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+  } else if (this.type === "payment") {
+
+    displayBoo = !(partner.trim() === "디자이너" || partner.trim() === "고객" || partner.trim() === "" || partner.trim === "외부업체");
+
+    map = {
+      status: {
+        title: "진행 단계",
+        position: "process.design.construct.status",
+        values: [],
+        chain: null
+      },
+      partner: {
+        title: "시공사",
+        position: "process.design.construct.contract.partner",
+        values: [],
+        chain: null
+      },
+      firstGuide: {
+        title: "계약금 안내",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      firstAmount: {
+        title: "계약금",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      firstDate: {
+        title: "계약금 입금",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      startGuide: {
+        title: "착수금 안내",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      startAmount: {
+        title: "착수금",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      startDate: {
+        title: "착수금 입금",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      middleGuide: {
+        title: "중도금 안내",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      middleAmount: {
+        title: "중도금",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      middleDate: {
+        title: "중도금 입금",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      remainGuide: {
+        title: "잔금 안내",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      remainAmount: {
+        title: "잔금",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      remainDate: {
+        title: "잔금 입금",
+        position: "process.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+    };
+
+    stringArr.push(textMaker(map["status"].title, status, "black", "status"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["partner"].title, partner, "black", "partner"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["firstGuide"].title, dateToString(payments.first !== null ? payments.first.guide : emptyDate), dateToColor(payments.first !== null ? payments.first.guide : emptyDate, false), "firstGuide"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["firstAmount"].title, autoComma(payments.first !== null ? payments.first.calculation.amount.consumer : 0) + '원', "black", "firstGuide"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["firstDate"].title, dateToString(payments.first !== null ? payments.first.date : emptyDate), dateToColor(payments.first !== null ? payments.first.date : emptyDate, false), "firstDate"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["startGuide"].title, dateToString(payments.start !== null ? payments.start.guide : emptyDate), dateToColor(payments.start !== null ? payments.start.guide : emptyDate, false), "startGuide"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["startAmount"].title, autoComma(payments.start !== null ? payments.start.calculation.amount.consumer : 0) + '원', "black", "startGuide"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["startDate"].title, dateToString(payments.start !== null ? payments.start.date : emptyDate), dateToColor(payments.start !== null ? payments.start.date : emptyDate, false), "startDate"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["middleGuide"].title, dateToString(payments.middle !== null ? payments.middle.guide : emptyDate), dateToColor(payments.middle !== null ? payments.middle.guide : emptyDate, false), "middleGuide"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["middleAmount"].title, autoComma(payments.middle !== null ? payments.middle.calculation.amount.consumer : 0) + '원', "black", "middleGuide"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["middleDate"].title, dateToString(payments.middle !== null ? payments.middle.date : emptyDate), dateToColor(payments.middle !== null ? payments.middle.date : emptyDate, false), "middleDate"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["remainGuide"].title, dateToString(payments.remain !== null ? payments.remain.guide : emptyDate), dateToColor(payments.remain !== null ? payments.remain.guide : emptyDate, false), "remainGuide"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["remainAmount"].title, autoComma(payments.remain !== null ? payments.remain.calculation.amount.consumer : 0) + '원', "black", "remainGuide"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
+
+    stringArr.push(textMaker(map["remainDate"].title, dateToString(payments.remain !== null ? payments.remain.date : emptyDate), dateToColor(payments.remain !== null ? payments.remain.date : emptyDate, false), "remainDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
@@ -1476,7 +2198,6 @@ DesignerJs.prototype.constructView = async function () {
     let projects;
     let designers, desidArr_raw, desidArr;
     let clients, cliidArr_raw, cliidArr;
-    let proidArr_raw;
     let contents;
     let type, typeArr;
     let projectHistory;
@@ -1487,7 +2208,7 @@ DesignerJs.prototype.constructView = async function () {
 
     loading = await this.mother.loadingRun();
 
-    typeArr = [ "construct" ];
+    typeArr = [ "construct", "payment" ];
     type = returnGet().type;
     if (type === undefined || type === null || !typeArr.includes(type)) {
       type = typeArr[0];
@@ -1511,9 +2232,11 @@ DesignerJs.prototype.constructView = async function () {
 
     desidArr_raw = [];
     cliidArr_raw = [];
+    proidArr = [];
     for (let project of projects) {
       desidArr_raw.push(project.desid);
       cliidArr_raw.push(project.cliid);
+      proidArr.push(project.proid);
     }
 
     desidArr_raw = Array.from(new Set(desidArr_raw));
@@ -1541,6 +2264,12 @@ DesignerJs.prototype.constructView = async function () {
       }
     }, "/getClients"));
 
+    projectHistory = await ajaxJson({
+      idArr: proidArr,
+      method: "project",
+      property: "construct",
+    }, "/getHistoryProperty", { equal: true });
+
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
       client = clients.search("cliid", p.cliid);
@@ -1554,6 +2283,7 @@ DesignerJs.prototype.constructView = async function () {
       }
       p.address = client.requests[requestNumber].request.space.address;
       p.title = `${p.name} <b style="color:${colorChip.green}">C</b>&nbsp;&nbsp;${p.designer} <b style="color:${colorChip.green}">D</b>`;
+      p.history = projectHistory[p.proid];
     }
 
     this.projects = projects;

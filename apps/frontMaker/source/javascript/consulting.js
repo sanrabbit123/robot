@@ -538,13 +538,14 @@ ConsultingJs.prototype.submitEvent = function (boo) {
       }
 
       //view certificationBox
-      instance.certificationBox(submitNamePhone[0], submitNamePhone[1], mother, boo, function () {
+      instance.certificationBox(submitNamePhone[0], submitNamePhone[1], mother, boo, () => {
         //send google analytics
         if (obj.cellphone !== "010-2747-3403") {
           window.gtag('event', 'login');
         }
         //submit
-        GeneralJs.ajax(ajaxdata, "https://homeliaison-bridge.xyz:3000/submit", function (data) {});
+        ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
+        GeneralJs.ajax(ajaxdata, "https://homeliaison-bridge.xyz:3000/submit", (data) => {});
         GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
       });
 

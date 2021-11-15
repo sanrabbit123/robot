@@ -518,6 +518,8 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
           message = '';
           message += (pastInfo_boo ? "재문의" : "새로운 상담 문의") + "가 왔습니다!\n";
           message += thisClient.toMessage();
+          message += "\n\n"
+          message += "구글 아이디 : " + requestObj["googleId"];
           await messageSend({ text: message, channel: "#401_consulting" });
 
           //send alimtalk and print
