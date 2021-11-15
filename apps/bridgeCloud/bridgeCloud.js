@@ -452,6 +452,9 @@ BridgeCloud.prototype.bridgeServer = function (needs) {
         requestObj["requests.0.request.etc.channel"] = filterAll(resultObj["wayto"]);
 
         requestObj["requests.0.request.timeline"] = new Date();
+        if (typeof requestObj["googleId"] === "string") {
+          requestObj["requests.0.analytics.googleAnalytics.userType"] = requestObj["googleId"];
+        }
 
         //to mongo
         console.log(requestObj);
