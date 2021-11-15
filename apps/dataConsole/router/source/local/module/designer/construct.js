@@ -1,15 +1,17 @@
 // DATA -----------------------------------------------------------------------------------------------------------------
-DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
+
+DesignerJs.prototype.constructDataRender = function (project, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, blankHref, equalJson, ajaxJson, downloadFile } = GeneralJs;
-  const { aspid, designer, phone, email, address, portfolio, meeting: { date, status }, information, submit } = aspirant;
-  const { firstRequest: { date: request }, comeFrom } = submit;
-  const { career, company, channel: { web, sns, cloud } } = information;
-  const { businessNumber, classification, name, representative } = company;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
+  const { process, proid, address } = project;
+  const { contract, design: { construct } } = process;
+  const { form: { date: { from, to } } } = contract;
+  const { status, request, estimate, contract: { partner, form } } = construct;
+  const { id, guide, date: formDate } = form;
   const zeroAddition = (num) => { return (num < 10) ? `0${String(num)}` : String(num); }
   const textMaker = (title, value, color, column) => {
-    return `<b id="${!titleMode ? aspirant.aspid : "title"}_${column}" title="${title}" class="value" style="color:${colorChip[titleMode ? "whiteBlack" : color]};">${titleMode ? title : value}</b>`;
+    return `<b id="${!titleMode ? project.proid : "title"}_${column}" title="${title}" class="value" style="color:${colorChip[titleMode ? "whiteBlack" : color]};">${titleMode ? title : value}</b>`;
   }
   const dateToColor = (dateObj, reverse = true) => {
     if (dateObj.valueOf() > (new Date(3000, 0, 1)).valueOf()) {
@@ -26,7 +28,6 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   }
   const emptyDate = new Date(1800, 0, 1);
   const emptyValue = "해당 없음";
-  const token = ", ";
   let height, margin;
   let whiteBlock;
   let top, left, size;
@@ -40,9 +41,9 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   let updateArr;
   let map;
   let displayBoo;
+  let grayBoo;
   let num;
   let calendarEvent;
-  let grayBoo;
 
   height = 43;
   margin = 1;
@@ -52,118 +53,79 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   size = 14;
   startLeft = 0;
 
-  grayBoo = !(/드랍/gi.test(status) || /없/gi.test(status));
-  displayBoo = true;
-
   stringArr = [];
   updateArr = [];
 
-  if (this.type === "basic") {
+  displayBoo = true;
+  grayBoo = ![ "완료", "드랍" ].includes(status);
+
+
+  if (this.type === "construct") {
 
     map = {
-      classification: {
-        title: "분류",
-        position: "information.company.classification",
-        values: [],
-        chain: null
-      },
-      phone: {
-        title: "연락처",
-        position: "phone",
-        values: [],
-        chain: null
-      },
-      email: {
-        title: "이메일",
-        position: "email",
-        values: [],
-        chain: null
-      },
-      status: {
-        title: "미팅 상태",
-        position: "meeting.status",
-        values: [ "조정중", "조정 필요", "미팅 대기", "미팅 완료", "계약서 발송", "계약 완료", "메뉴얼 발송", "드랍" ],
-        chain: null
-      },
-      date: {
-        title: "미팅 날짜",
-        position: "meeting.date",
-        values: [ '예정', '해당 없음' ],
-        chain: null
-      },
-      dateHour: {
-        title: "미팅 시간",
-        position: "meeting.date",
-        values: [],
-        chain: null
-      },
-      address: {
-        title: "주소",
-        position: "address",
+      projectFrom: {
+        title: "프로젝트 시작",
+        position: "process.contract.form.date.from",
         values: [],
         chain: null
       },
       request: {
-        title: "문의일",
-        position: "submit.firstRequest.date",
+        title: "시공 의뢰",
+        position: "process.design.construct.request",
         values: [],
         chain: null
       },
-      comeFrom: {
-        title: "유입 경로",
-        position: "submit.comeFrom",
+      status: {
+        title: "진행 단계",
+        position: "process.design.construct.status",
         values: [],
         chain: null
-      }
+      },
+      estimate: {
+        title: "견적 기록",
+        position: "process.design.construct.estimate",
+        values: [],
+        chain: null
+      },
+      contractGuide: {
+        title: "계약서 발송",
+        position: "process.design.construct.contract.form.guide",
+        values: [],
+        chain: null
+      },
+      // contractConfirm: {
+      //   title: "계약서 서명",
+      //   position: "process.design.construct.contract.form.id",
+      //   values: [],
+      //   chain: null
+      // },
+      partner: {
+        title: "시공사",
+        position: "process.design.construct.contract.partner",
+        values: [],
+        chain: null
+      },
+      contractFrom: {
+        title: "시공 시작일",
+        position: "process.design.construct.contract.form.date.from",
+        values: [],
+        chain: null
+      },
+      contractTo: {
+        title: "시공 종료일",
+        position: "process.design.construct.contract.form.date.to",
+        values: [],
+        chain: null
+      },
+      address: {
+        title: "현장 위치",
+        position: "",
+        values: [],
+        chain: null
+      },
     };
 
-    calendarEvent = function (thisCase) {
-      const to = "newDesigner";
-      const title = `신규 미팅 W ${aspirant.designer}D ${aspirant.aspid}`;
-      let tempArr, dateValue, updateDate, start;
-
-      dateValue = thisCase["date"].textContent.trim();
-
-      if (dateValue !== "미정" && dateValue !== "예정" && dateValue !== "해당 없음") {
-        tempArr = dateValue.split('-');
-        updateDate = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
-        start = updateDate;
-      } else {
-        start = null;
-      }
-
-      ajaxJson({ from: to, search: aspirant.aspid }, "/listSchedule", { equal: true }).then((list) => {
-        if (start !== null) {
-          if (list.length === 0) {
-            return ajaxJson({ to, title, start }, "/makeSchedule");
-          } else {
-            return ajaxJson({ from: to, id: list[0].eventId, updateQuery: { start, title } }, "/updateSchedule");
-          }
-        } else {
-          if (list.length !== 0) {
-            return ajaxJson({ from: to, id: list[0].eventId }, "/deleteSchedule");
-          }
-        }
-      }).catch((err) => {
-        throw new Error(err);
-      });
-    }
-
-    stringArr.push(textMaker(map["classification"].title, classification, "black", "classification"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
-
-    stringArr.push(textMaker(map["phone"].title, phone, "black", "phone"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
-
-    stringArr.push(textMaker(map["email"].title, email, "black", "email"));
+    stringArr.push(textMaker(map["projectFrom"].title, dateToString(from), "black", "projectFrom"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
@@ -173,352 +135,408 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
     stringArr.push(textMaker(map["status"].title, status, "black", "status"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "status";
-      let startLeft, width, margin, background;
-      let values, updateEvent;
-      let nodeArr;
-      let position;
-
-      position = map[column].position;
-      values = map[column].values;
-      startLeft = 0;
-      width = 92;
-      margin = 4;
-
-      background = colorChip.gradientGreen4;
-      updateEvent = async function (e) {
-        try {
-          const value = this.getAttribute("value");
-          const position = this.getAttribute("position");
-          const aspid = this.getAttribute("aspid");
-          const removeTargets = mother.querySelectorAll("aside");
-          let whereQuery, updateQuery;
-
-          whereQuery = { aspid };
-          updateQuery = {};
-          updateQuery[position] = value;
-          valueDom.textContent = value;
-
-          await instance.aspirantUpdate(whereQuery, updateQuery, map[column].chain, value);
-          instance.aspirantDeactivate(aspid, (value === "드랍"));
-
-          for (let dom of removeTargets) {
-            mother.removeChild(dom);
-          }
-          resetWidthEvent();
-
-        } catch (e) {
-          console.log(e);
-        }
-      }
-
-      nodeArr = [];
-      for (let i = 0; i < values.length; i++) {
-        nodeArr.push({
-          mother: this,
-          mode: "aside",
-          attribute: { value: values[i], position, aspid: aspirant.aspid },
-          events: [ { type: "click", event: updateEvent } ],
-          style: {
-            position: "absolute",
-            top: String(top + ((margin + height) * i)) + ea,
-            left: String(startLeft) + ea,
-            width: String(width) + ea,
-            height: String(height) + ea,
-            background, zIndex, boxShadow, borderRadius, animation,
-          }
-        });
-        nodeArr.push({
-          mother: -1,
-          text: values[i],
-          style: {
-            position: "absolute",
-            top: String(textTop) + ea,
-            width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(size) + ea,
-            fontWeight: String(500),
-            color: colorChip.whiteBlack,
-          }
-        });
-      }
-      createNodes(nodeArr);
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["date"].title, dateToString(date), dateToColor(date, true), "date"));
+    stringArr.push(textMaker(map["request"].title, dateToString(request), dateToColor(request, false), "request"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "date";
-      let startLeft, width, margin, background;
-      let values, updateEvent;
-      let nodeArr;
-      let position;
-      let whereQuery, updateQuery, chainQuery;
-      let calendarTong;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
 
-      updateQuery = {};
-      whereQuery = { aspid: aspirant.aspid };
-      position = map[column].position;
-      values = map[column].values;
-      chainQuery = map[column].chain;
-      startLeft = 0;
-      width = 260;
-      margin = 4;
+    stringArr.push(textMaker(map["estimate"].title, estimate.map((obj) => { return dateToString(obj.date) }).join(", "), "black", "estimate"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
 
-      background = colorChip.gradientGreen;
-      updateEvent = async function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        try {
-          const value = this.getAttribute("value");
-          const removeTargets = mother.querySelectorAll("aside");
-          let tempArr;
-          if (value === "예정") {
-            updateQuery[position] = new Date(3800, 0, 1);
-            thisCase["dateHour"].style.color = valueDom.style.color = colorChip.red;
-          } else if (value === "해당 없음") {
-            updateQuery[position] = new Date(1800, 0, 1);
-            thisCase["dateHour"].style.color = valueDom.style.color = colorChip.gray5;
-          } else {
-            tempArr = value.split('-');
-            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(thisCase["dateHour"].textContent.split('시')[0].replace(/[^0-9]/g, '')), Number(thisCase["dateHour"].textContent.split('시')[1].replace(/[^0-9]/g, '')));
-            if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
-              thisCase["dateHour"].style.color = valueDom.style.color = colorChip.green;
-            } else {
-              thisCase["dateHour"].style.color = valueDom.style.color = colorChip.black;
-            }
-          }
-          await instance.aspirantUpdate(whereQuery, updateQuery, chainQuery, value);
-          valueDom.textContent = value;
-          calendarEvent(thisCase);
-          for (let dom of removeTargets) {
-            mother.removeChild(dom);
-          }
+    stringArr.push(textMaker(map["partner"].title, partner, "black", "partner"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
 
-          resetWidthEvent();
-        } catch (e) {
-          console.log(e);
-        }
-      };
+    stringArr.push(textMaker(map["contractFrom"].title, dateToString(formDate.from), dateToColor(formDate.from, false), "contractFrom"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
 
-      nodeArr = createNodes([
-        {
-          mother: this,
-          mode: "aside",
-          attribute: [ { value: values[0] } ],
-          events: [ { type: "click", event: updateEvent } ],
-          style: {
-            position: "absolute",
-            top: String(top) + ea,
-            left: String(startLeft) + ea,
-            width: String((width - margin) / 2) + ea,
-            height: String(height) + ea,
-            background: colorChip.white,
-            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
-            zIndex, borderRadius, animation,
-          }
-        },
-        {
-          mother: -1,
-          text: values[0],
-          style: {
-            position: "absolute",
-            top: String(textTop) + ea,
-            width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(size) + ea,
-            fontWeight: String(500),
-            color: colorChip.black,
-          }
-        },
-        {
-          mother: this,
-          mode: "aside",
-          attribute: [ { value: values[1] } ],
-          events: [ { type: "click", event: updateEvent } ],
-          style: {
-            position: "absolute",
-            top: String(top) + ea,
-            left: String(startLeft + ((width - margin) / 2) + margin) + ea,
-            width: String((width - margin) / 2) + ea,
-            height: String(height) + ea,
-            background: colorChip.white,
-            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
-            zIndex, borderRadius, animation,
-          }
-        },
-        {
-          mother: -1,
-          text: values[1],
-          style: {
-            position: "absolute",
-            top: String(textTop) + ea,
-            width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(size) + ea,
-            fontWeight: String(500),
-            color: colorChip.black,
-          }
-        },
-        {
-          mother: this,
-          mode: "aside",
-          events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
-          style: {
-            position: "absolute",
-            top: String(top + height + margin) + ea,
-            left: String(startLeft) + ea,
-            width: String(width) + ea,
-            zIndex, borderRadius, animation,
-            boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
-            background: colorChip.white,
-            transition: "all 0s ease",
-          }
-        }
-      ]);
+    stringArr.push(textMaker(map["contractTo"].title, dateToString(formDate.to), dateToColor(formDate.to, false), "contractTo"));
+    updateArr.push(function (e, option, cancelBox, parent) {
+      const mother = this;
+      cancelBox.parentNode.removeChild(cancelBox);
+      resetWidthEvent();
+    });
 
-      calendarTong = nodeArr[4];
-
-      const calendar = instance.mother.makeCalendar(new Date(), function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        this.setAttribute("value", this.getAttribute("buttonValue"));
-        updateEvent.call(this, e);
+    stringArr.push(textMaker(map["contractGuide"].title, dateToString(guide), dateToColor(guide, true), "contractGuide"));
+    if (guide.valueOf() >= (new Date(2000, 0, 1)).valueOf() && guide.valueOf() < (new Date(3000, 0, 1)).valueOf()) {
+      updateArr.push(function (e, option, cancelBox, parent) {
+        const mother = this;
+        cancelBox.parentNode.removeChild(cancelBox);
+        resetWidthEvent();
       });
-      calendarTong.appendChild(calendar.calendarBase);
+    } else {
+      updateArr.push(function (e, option, cancelBox, parent) {
+        const mother = this;
+        const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+        let boxWidth, boxHeight;
+        let paddingLeft, paddingTop;
+        let fontSize;
+        let titleMarginBottom;
+        let textSize;
+        let rowMargin;
+        let middlePaddingTop, middlePaddingLeft;
+        let titleWidth;
+        let titleWeight;
+        let areaHeight;
+        let areaTop;
 
-    });
+        boxWidth = 600;
+        boxHeight = 400;
 
-    stringArr.push(textMaker(map["dateHour"].title, `${zeroAddition(date.getHours())}시 ${zeroAddition(date.getMinutes())}분`, dateToColor(date, true), "dateHour"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "dateHour";
-      let startLeft, width, margin, background;
-      let values, updateEvent;
-      let nodeArr;
-      let position;
-      let whereQuery, updateQuery, chainQuery;
-      let newDom, newInput;
+        paddingLeft = 28;
+        paddingTop = 22;
 
-      updateQuery = {};
-      whereQuery = { aspid: aspirant.aspid };
-      position = map[column].position;
-      values = map[column].values;
-      chainQuery = map[column].chain;
-      startLeft = 0;
-      width = 36;
-      margin = 4;
+        middlePaddingLeft = 20;
+        middlePaddingTop = 18;
 
-      background = colorChip.gradientGreen;
-      updateEvent = async function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        try {
-          const value = this.getAttribute("value");
-          const removeTargets = mother.querySelectorAll("aside");
-          let tempArr;
-          if (thisCase["date"].textContent.trim() === "예정") {
-            updateQuery[position] = new Date(3800, 0, 1);
-            thisCase["date"].style.color = valueDom.style.color = colorChip.red;
-          } else if (thisCase["date"].textContent.trim() === "해당 없음") {
-            updateQuery[position] = new Date(1800, 0, 1);
-            thisCase["date"].style.color = valueDom.style.color = colorChip.gray5;
-          } else {
-            tempArr = thisCase["date"].textContent.trim().split('-');
-            updateQuery[position] = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')), Number(value.split('시')[0].replace(/[^0-9]/g, '')), Number(value.split('시')[1].replace(/[^0-9]/g, '')));
-            if (updateQuery[position].valueOf() > (new Date()).valueOf()) {
-              thisCase["date"].style.color = valueDom.style.color = colorChip.green;
-            } else {
-              thisCase["date"].style.color = valueDom.style.color = colorChip.black;
-            }
-          }
-          await instance.aspirantUpdate(whereQuery, updateQuery, chainQuery, value);
-          valueDom.textContent = value;
-          calendarEvent(thisCase);
-          for (let dom of removeTargets) {
-            mother.removeChild(dom);
-          }
+        fontSize = 23;
+        titleMarginBottom = 18;
 
-          resetWidthEvent();
-        } catch (e) {
-          console.log(e);
-        }
-      };
+        textSize = 15;
+        rowMargin = 10;
 
-      [ newDom, newInput ] = createNodes([
-        {
+        titleWidth = 100;
+        titleWeight = 500;
+
+        areaHeight = 26;
+        areaTop = 0;
+
+        createNode({
           mother: this,
           mode: "aside",
-          events: [ { type: "click", event: (e) => { e.stopPropagation(); } } ],
           style: {
-            position: "absolute",
-            top: String(0) + ea,
-            left: String(0) + ea,
-            width: String(this.getBoundingClientRect().width) + ea,
-            height: String(this.getBoundingClientRect().height) + ea,
-            color: colorChip.green,
+            position: "fixed",
+            top: withOut(50, boxHeight / 2, ea),
+            left: withOut(50, boxWidth / 2, ea),
+            width: String(boxWidth - (paddingLeft * 2)) + ea,
+            height: String(boxHeight - (paddingTop * 2)) + ea,
             background: colorChip.white,
-            zIndex
-          }
-        },
-        {
-          mother: -1,
-          mode: "input",
-          attribute: [
-            { type: "text" },
-            { value: this.textContent.trim() },
-            { past: this.textContent.trim() },
-          ],
-          events: [
-            { type: "click", event: (e) => { e.stopPropagation(); } },
+            paddingTop: String(paddingTop) + ea,
+            paddingLeft: String(paddingLeft) + ea,
+            paddingRight: String(paddingLeft) + ea,
+            paddingBottom: String(paddingLeft) + ea,
+            zIndex, boxShadow, borderRadius, animation,
+          },
+          children: [
             {
-              type: "keypress",
-              event: function (e) {
-                if (e.key === "Enter") {
-                  if (/^[0-9]+시 [0-9][0-9]분$/i.test(this.value.trim())) {
-                    this.setAttribute("value", this.value.trim());
-                    updateEvent.call(this, e);
-                  } else {
-                    this.value = this.getAttribute("past");
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+              },
+              children: [
+                {
+                  text: "계약서 작성",
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(fontSize) + ea,
+                    fontWeight: String(600),
+                    color: colorChip.black,
+                    marginBottom: String(titleMarginBottom) + ea,
                   }
+                },
+                {
+                  style: {
+                    flexDirection: "column",
+                    position: "relative",
+                    border: "1px solid " + colorChip.gray3,
+                    boxSizing: "border-box",
+                    borderRadius: String(5) + "px",
+                    width: String(100) + '%',
+                    height: String(boxHeight) + ea,
+                    paddingTop: String(middlePaddingTop) + ea,
+                    paddingLeft: String(middlePaddingLeft) + ea,
+                    paddingRight: String(middlePaddingLeft) + ea,
+                  },
+                  children: [
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        marginBottom: String(rowMargin) + ea,
+                      },
+                      children: [
+                        {
+                          text: "공사명",
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            width: String(titleWidth) + ea,
+                            fontSize: String(textSize) + ea,
+                            fontWeight: String(titleWeight),
+                            color: colorChip.black,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            position: "relative",
+                            width: withOut(titleWidth, ea),
+                            height: String(areaHeight) + ea,
+                            top: String(areaTop) + ea,
+                            background: "aqua",
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        marginBottom: String(rowMargin) + ea,
+                      },
+                      children: [
+                        {
+                          text: "시공 장소",
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            width: String(titleWidth) + ea,
+                            fontSize: String(textSize) + ea,
+                            fontWeight: String(titleWeight),
+                            color: colorChip.black,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            position: "relative",
+                            width: withOut(titleWidth, ea),
+                            height: String(areaHeight) + ea,
+                            top: String(areaTop) + ea,
+                            background: "aqua",
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        marginBottom: String(rowMargin) + ea,
+                      },
+                      children: [
+                        {
+                          text: "공사 기간",
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            width: String(titleWidth) + ea,
+                            fontSize: String(textSize) + ea,
+                            fontWeight: String(titleWeight),
+                            color: colorChip.black,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            position: "relative",
+                            width: withOut(titleWidth, ea),
+                            height: String(areaHeight) + ea,
+                            top: String(areaTop) + ea,
+                            background: "aqua",
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        marginBottom: String(rowMargin) + ea,
+                      },
+                      children: [
+                        {
+                          text: "공사 금액",
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            width: String(titleWidth) + ea,
+                            fontSize: String(textSize) + ea,
+                            fontWeight: String(titleWeight),
+                            color: colorChip.black,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            position: "relative",
+                            width: withOut(titleWidth, ea),
+                            height: String(areaHeight) + ea,
+                            top: String(areaTop) + ea,
+                            background: "aqua",
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        marginBottom: String(rowMargin) + ea,
+                      },
+                      children: [
+                        {
+                          text: "계약금 정보",
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            width: String(titleWidth) + ea,
+                            fontSize: String(textSize) + ea,
+                            fontWeight: String(titleWeight),
+                            color: colorChip.black,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            position: "relative",
+                            width: withOut(titleWidth, ea),
+                            height: String(areaHeight) + ea,
+                            top: String(areaTop) + ea,
+                            background: "aqua",
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        marginBottom: String(rowMargin) + ea,
+                      },
+                      children: [
+                        {
+                          text: "착수금 정보",
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            width: String(titleWidth) + ea,
+                            fontSize: String(textSize) + ea,
+                            fontWeight: String(titleWeight),
+                            color: colorChip.black,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            position: "relative",
+                            width: withOut(titleWidth, ea),
+                            height: String(areaHeight) + ea,
+                            top: String(areaTop) + ea,
+                            background: "aqua",
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        marginBottom: String(rowMargin) + ea,
+                      },
+                      children: [
+                        {
+                          text: "중도금 정보",
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            width: String(titleWidth) + ea,
+                            fontSize: String(textSize) + ea,
+                            fontWeight: String(titleWeight),
+                            color: colorChip.black,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            position: "relative",
+                            width: withOut(titleWidth, ea),
+                            height: String(areaHeight) + ea,
+                            top: String(areaTop) + ea,
+                            background: "aqua",
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        marginBottom: String(rowMargin) + ea,
+                      },
+                      children: [
+                        {
+                          text: "잔금 정보",
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            width: String(titleWidth) + ea,
+                            fontSize: String(textSize) + ea,
+                            fontWeight: String(titleWeight),
+                            color: colorChip.black,
+                          }
+                        },
+                        {
+                          style: {
+                            display: "inline-block",
+                            verticalAlign: "top",
+                            position: "relative",
+                            width: withOut(titleWidth, ea),
+                            height: String(areaHeight) + ea,
+                            top: String(areaTop) + ea,
+                            background: "aqua",
+                          }
+                        }
+                      ]
+                    },
+                  ]
                 }
-              }
-            },
-          ],
-          style: {
-            display: "inline-block",
-            fontSize: String(size + 1) + ea,
-            fontWeight: String(500),
-            color: colorChip.green,
-            background: colorChip.white,
-            outline: String(0),
-            border: String(0),
-            width: String(100) + '%',
-            height: String(valueDom.getBoundingClientRect().height) + ea,
-          }
-        }
-      ]);
+              ]
+            }
+          ]
+        });
 
-      newInput.focus();
 
-    });
 
-    stringArr.push(textMaker(map["request"].title, dateToString(request, true), dateToColor(request, true), "request"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
 
-    stringArr.push(textMaker(map["comeFrom"].title, comeFrom, "black", "comeFrom"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
+
+
+
+
+
+
+      });
+    }
 
     stringArr.push(textMaker(map["address"].title, address, "black", "address"));
     updateArr.push(function (e, option, cancelBox, parent) {
@@ -527,121 +545,13 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       resetWidthEvent();
     });
 
-  } else if (this.type === "portfolio") {
-
-    map = {
-      email: {
-        title: "이메일",
-        position: "email",
-        values: [],
-        chain: null
-      },
-      portfolio: {
-        title: "포트폴리오",
-        position: "portfolio",
-        values: [],
-        chain: null
-      },
-      web: {
-        title: "웹",
-        position: "information.channel.web",
-        values: [],
-        chain: null
-      },
-      sns: {
-        title: "SNS",
-        position: "information.channel.sns",
-        values: [],
-        chain: null
-      },
-      cloud: {
-        title: "클라우드",
-        position: "information.channel.cloud",
-        values: [],
-        chain: null
-      },
-    };
-
-    stringArr.push(textMaker(map["email"].title, email, "black", "email"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
-
-    stringArr.push(textMaker(map["portfolio"].title, (portfolio.length > 0 ? "제출" : "미제출"), "black", "portfolio"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      let folderName, fileName, loading;
-      if (window.confirm("다운로드를 진행할까요?")) {
-        loading = instance.mother.grayLoading();
-        ajaxJson({ aspid: parent.id, mode: "download" }, "/ghostPass_designerPhoto").then((data) => {
-          const { list, folder, file } = data;
-          folderName = folder;
-          fileName = file;
-          if (list.length > 0) {
-            return downloadFile(list[0]);
-          } else {
-            return new Promise((resolve, reject) => { resolve(null); });
-          }
-        }).then(() => {
-          return ajaxJson({ aspid: parent.id, mode: "delete", folder: folderName, file: fileName }, "/ghostPass_designerPhoto");
-        }).then((data) => {
-          if (data.message === "done") {
-            loading.remove();
-          } else {
-            throw new Error("file download error");
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-      }
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
-
-    stringArr.push(textMaker(map["web"].title, web.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "web"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      const { valueDom } = option;
-      const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
-      for (let link of targetLinks) {
-        blankHref("https://" + link);
-      }
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
-
-    stringArr.push(textMaker(map["sns"].title, sns.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "sns"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      const { valueDom } = option;
-      const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
-      for (let link of targetLinks) {
-        blankHref("https://" + link);
-      }
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
-
-    stringArr.push(textMaker(map["cloud"].title, cloud.map((str) => { return str.replace(/https?\:?\/\//gi, '').trim().replace(/\/$/, ''); }).join(token), "black", "cloud"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      const { valueDom } = option;
-      const targetLinks = valueDom.textContent.split(token).map((str) => { return str.trim(); });
-      for (let link of targetLinks) {
-        blankHref("https://" + link);
-      }
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
-    });
-
   }
+
 
   return { map, stringArr, updateArr, grayBoo, displayBoo };
 }
 
-DesignerJs.prototype.aspirantUpdate = async function (whereQuery, updateQuery, chainQuery = null, rawValue = '') {
+DesignerJs.prototype.constructUpdate = async function (whereQuery, updateQuery, chainQuery = null, rawValue = '') {
   const instance = this;
   const { colorChip, ajaxJson } = GeneralJs;
   try {
@@ -653,17 +563,17 @@ DesignerJs.prototype.aspirantUpdate = async function (whereQuery, updateQuery, c
         throw new Error("invaild input");
       }
     }
-    const { aspid } = whereQuery;
-    const aspirant = this.aspirants.search("aspid", aspid);
+    const { proid } = whereQuery;
+    const project = this.projects.search("proid", proid);
     let tempArr, target;
     let boo;
     let tempQsa0, tempQsa1, tempQsa2;
 
-    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateAspirant");
+    await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
 
     for (let query in updateQuery) {
       tempArr = query.split('.');
-      target = aspirant;
+      target = project;
       for (let i = 0; i < tempArr.length - 1; i++) {
         target = target[tempArr[i]];
       }
@@ -677,10 +587,10 @@ DesignerJs.prototype.aspirantUpdate = async function (whereQuery, updateQuery, c
         boo = true;
       }
       if (boo) {
-        await ajaxJson({ whereQuery, updateQuery: chainUpdateQuery }, "/rawUpdateAspirant");
+        await ajaxJson({ whereQuery, updateQuery: chainUpdateQuery }, "/rawUpdateProject");
         for (let query in chainUpdateQuery) {
           tempArr = query.split('.');
-          target = aspirant;
+          target = project;
           for (let i = 0; i < tempArr.length - 1; i++) {
             target = target[tempArr[i]];
           }
@@ -694,7 +604,7 @@ DesignerJs.prototype.aspirantUpdate = async function (whereQuery, updateQuery, c
   }
 }
 
-DesignerJs.prototype.aspirantDeactivate = function (aspid, offMode = true) {
+DesignerJs.prototype.constructDeactivate = function (proid, offMode = true) {
   const instance = this;
   const { colorChip, stacks } = GeneralJs;
   let emptyDate, emptyValue;
@@ -706,12 +616,12 @@ DesignerJs.prototype.aspirantDeactivate = function (aspid, offMode = true) {
   let children;
   let length;
 
-  whiteBlock = document.getElementById(aspid);
+  whiteBlock = document.getElementById(proid);
   children = whiteBlock.children;
   length = children.length;
   emptyDate = new Date(1800, 0, 1);
   emptyValue = "해당 없음";
-  name = "deactive_" + aspid;
+  name = "deactive_" + proid;
 
   if (offMode) {
     stacks[name] = [];
@@ -762,7 +672,7 @@ DesignerJs.prototype.aspirantDeactivate = function (aspid, offMode = true) {
 
 // LOGIC -----------------------------------------------------------------------------------------------------------------
 
-DesignerJs.prototype.aspirantBase = function (search = null) {
+DesignerJs.prototype.constructBase = function (search = null) {
   const instance = this;
   const { ea, belowHeight } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
@@ -854,13 +764,13 @@ DesignerJs.prototype.aspirantBase = function (search = null) {
 
   this.contentsSpec.contentsTong = contentsTong;
   this.contentsSpec.dashBoard = dashBoard;
-  this.aspirantBlockInjection();
-  this.aspirantDashBoard();
+  this.constructBlockInjection();
+  this.constructDashBoard();
 }
 
-DesignerJs.prototype.aspirantBlockInjection = function () {
+DesignerJs.prototype.constructBlockInjection = function () {
   const instance = this;
-  const { ea, aspirants } = this;
+  const { ea, projects } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
   const { contentsTong } = this.contentsSpec;
   let scrollTong;
@@ -892,7 +802,7 @@ DesignerJs.prototype.aspirantBlockInjection = function () {
 
   maxWidth = [];
 
-  aspirants.sort((a, b) => { return b.submit.firstRequest.valueOf() - a.submit.firstRequest.valueOf(); });
+  projects.sort((a, b) => { return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf(); });
 
   this.scrollTong = scrollTong;
   this.contentsBlocks = [];
@@ -937,25 +847,25 @@ DesignerJs.prototype.aspirantBlockInjection = function () {
   }
 
   firstBoo = true;
-  for (let i = 0; i < aspirants.length; i++) {
+  for (let i = 0; i < projects.length; i++) {
     if (firstBoo) {
-      this.aspirantWhiteBlock(scrollTong, aspirants[i], (i === 0), i, true);
+      this.constructWhiteBlock(scrollTong, projects[i], (i === 0), i, true);
       firstBoo = false;
     }
-    this.aspirantWhiteBlock(scrollTong, aspirants[i], false, i, false);
+    this.constructWhiteBlock(scrollTong, projects[i], false, i, false);
   }
 
   this.resetWidthEvent();
 }
 
-DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, index, titleMode = false) {
-  if (mother === undefined || aspirant === undefined) {
+DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, index, titleMode = false) {
+  if (mother === undefined || project === undefined) {
     throw new Error("invaild input");
   }
   const instance = this;
   const { ea } = this;
   const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
-  const { map, stringArr, updateArr, grayBoo, displayBoo } = this.aspirantDataRender(aspirant, titleMode);
+  const { map, stringArr, updateArr, grayBoo, displayBoo } = this.constructDataRender(project, titleMode);
   let height, margin;
   let whiteBlock;
   let width0, width1;
@@ -1000,7 +910,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
 
   whiteBlock = createNode({
     mother,
-    id: titleMode ? "title" : aspirant.aspid,
+    id: titleMode ? "title" : project.proid,
     attribute: [
       { index: String(index) },
       { sortstandard: "" },
@@ -1033,13 +943,13 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
         }
       },
       {
-        text: !titleMode ? aspirant.title : "",
+        text: !titleMode ? project.title : "",
         class: [ "hoverDefault" ],
         events: [
           {
             type: "click",
             event: function (e) {
-
+              window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + project.proid;
             }
           }
         ],
@@ -1148,10 +1058,10 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
                 let thisCase;
                 thisCase = {};
                 for (let column in map) {
-                  if (document.getElementById(aspirant.aspid + "_" + column) === null) {
+                  if (document.getElementById(project.proid + "_" + column) === null) {
                     throw new Error("invaild doms");
                   }
-                  thisCase[column] = document.getElementById(aspirant.aspid + "_" + column);
+                  thisCase[column] = document.getElementById(project.proid + "_" + column);
                 }
                 const option = {
                   ea,
@@ -1260,7 +1170,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
 
 }
 
-DesignerJs.prototype.aspirantDashBoard = function () {
+DesignerJs.prototype.constructDashBoard = function () {
   const instance = this;
   const { ea, projects } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
@@ -1316,7 +1226,7 @@ DesignerJs.prototype.aspirantDashBoard = function () {
                 instance.typeDoms[i].style.color = colorChip.shadowWhite;
               }
             }
-            instance.aspirantBlockInjection();
+            instance.constructBlockInjection();
           }
         }
       ],
@@ -1403,7 +1313,7 @@ DesignerJs.prototype.aspirantDashBoard = function () {
         type: "click",
         event: function (e) {
           instance.contentsSearchIndex = [];
-          instance.aspirantBlockInjection();
+          instance.constructBlockInjection();
         }
       }
     ],
@@ -1424,13 +1334,13 @@ DesignerJs.prototype.aspirantDashBoard = function () {
   }
 }
 
-DesignerJs.prototype.aspirantSearchEvent = function () {
+DesignerJs.prototype.constructSearchEvent = function () {
   const instance = this;
   const { ea } = this;
   const input = this.searchInput;
   let width, length;
 
-  length = this.aspirants.length;
+  length = this.projects.length;
   width = 800;
 
   input.parentNode.style.width = String(width) + ea;
@@ -1457,12 +1367,12 @@ DesignerJs.prototype.aspirantSearchEvent = function () {
           }
         }
       }
-      instance.aspirantBlockInjection();
+      instance.constructBlockInjection();
     }
   });
 }
 
-DesignerJs.prototype.aspirantExtractEvent = function () {
+DesignerJs.prototype.contentsExtractEvent = function () {
   const instance = this;
   const { ignoreNumbers, parentId, sheetName } = this;
   const { ajaxJson, blankHref } = GeneralJs;
@@ -1515,7 +1425,7 @@ DesignerJs.prototype.aspirantExtractEvent = function () {
   });
 }
 
-DesignerJs.prototype.aspirantBlockMove = function () {
+DesignerJs.prototype.constructBlockMove = function () {
   const instance = this;
   const { ea } = this;
   const { belowButtons: { arrow: { left, right } } } = this.mother;
@@ -1540,10 +1450,9 @@ DesignerJs.prototype.aspirantBlockMove = function () {
   right.addEventListener("click", moveEvent("right"));
 }
 
-DesignerJs.prototype.aspirantView = async function () {
+DesignerJs.prototype.constructView = async function () {
   const instance = this;
   try {
-    const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
     class SearchArray extends Array {
       constructor(arr) {
         super();
@@ -1561,38 +1470,103 @@ DesignerJs.prototype.aspirantView = async function () {
         return obj;
       }
     }
+    const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
+    const todayDateValue = (new Date()).valueOf();
     let loading;
+    let projects;
+    let designers, desidArr_raw, desidArr;
+    let clients, cliidArr_raw, cliidArr;
+    let proidArr_raw;
+    let contents;
     let type, typeArr;
-    let aspirants, aspirant;
+    let projectHistory;
+    let proidArr;
+    let whereQuery;
+    let client;
+    let requestNumber;
 
     loading = await this.mother.loadingRun();
 
-    typeArr = [ "basic", "portfolio" ];
+    typeArr = [ "construct" ];
     type = returnGet().type;
     if (type === undefined || type === null || !typeArr.includes(type)) {
       type = typeArr[0];
     }
 
-    this.parentId = "1p9UDCbteR25i9ZNs2AF2Hdq99-TNyhEX";
-    this.sheetName = "fromDB_aspirant_" + uniqueValue("string");
+    this.parentId = "1lmed8VkFcNFkSdSj4RoT3dYpqLbHU1ps";
+    this.sheetName = "fromDB_construct_" + uniqueValue("string");
     this.typeArr = typeArr;
     this.type = type;
     this.contentsSpec = {};
     this.contentsSearchIndex = [];
     this.contentsBlocks = null;
 
-    aspirants = new SearchArray(await ajaxJson({ whereQuery: {} }, "/getAspirants", { equal: true }));
-    this.aspirants = aspirants;
-    for (let aspirant of this.aspirants) {
-      aspirant.title = `${aspirant.designer}&nbsp;&nbsp;<b style="color:${colorChip.deactive}">디자이너</b>`;
+    whereQuery = {};
+    whereQuery["$and"] = [];
+    whereQuery["$and"].push({ desid: { $regex: "^d" } });
+    whereQuery["$and"].push({ "process.status": { $regex: "^[진홀완]" } });
+
+    projects = await ajaxJson({ noFlat: true, whereQuery }, "/getProjects", { equal: true });
+    projects = new SearchArray(projects.filter((obj) => { return obj.process.design.construct !== null }));
+
+    desidArr_raw = [];
+    cliidArr_raw = [];
+    for (let project of projects) {
+      desidArr_raw.push(project.desid);
+      cliidArr_raw.push(project.cliid);
     }
+
+    desidArr_raw = Array.from(new Set(desidArr_raw));
+    desidArr = [];
+    for (let desid of desidArr_raw) {
+      desidArr.push({ desid });
+    }
+    cliidArr_raw = Array.from(new Set(cliidArr_raw));
+    cliidArr = [];
+    for (let cliid of cliidArr_raw) {
+      cliidArr.push({ cliid });
+    }
+
+    designers = new SearchArray(await ajaxJson({
+      noFlat: true,
+      whereQuery: {
+        $or: desidArr
+      }
+    }, "/getDesigners", { equal: true }));
+
+    clients = new SearchArray(await ajaxJson({
+      noFlat: true,
+      whereQuery: {
+        $or: cliidArr
+      }
+    }, "/getClients"));
+
+    for (let p of projects) {
+      p.designer = designers.search("desid", p.desid).designer;
+      client = clients.search("cliid", p.cliid);
+      p.name = client.name;
+      requestNumber = 0;
+      for (let i = 0; i < client.requests.length; i++) {
+        if (p.proposal.date.valueOf() >= client.requests[i].request.timeline.valueOf()) {
+          requestNumber = i;
+          break;
+        }
+      }
+      p.address = client.requests[requestNumber].request.space.address;
+      p.title = `${p.name} <b style="color:${colorChip.green}">C</b>&nbsp;&nbsp;${p.designer} <b style="color:${colorChip.green}">D</b>`;
+    }
+
+    this.projects = projects;
+    this.designers = new Designers(designers);
+    this.designers.setProjects(projects);
+    this.designers.setClients(clients);
 
     loading.parentNode.removeChild(loading);
 
-    this.aspirantBase();
-    this.aspirantSearchEvent();
-    this.aspirantBlockMove();
-    this.aspirantExtractEvent();
+    this.constructBase();
+    this.constructSearchEvent();
+    this.constructBlockMove();
+    this.contentsExtractEvent();
 
   } catch (e) {
     console.log(e);

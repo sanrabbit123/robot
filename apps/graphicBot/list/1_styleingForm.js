@@ -12,7 +12,7 @@ module.exports = function (proid, info) {
         const menuId = "btnMenuMyForms";
         const buttonQuery = ".sc-hZpJuv";
         const popupQuery = ".sc-jWUzTF";
-        let map;
+        let map, sendMap;
         let tempArr;
         let data, raw;
         let titleName;
@@ -23,6 +23,9 @@ module.exports = function (proid, info) {
         let calendarBox;
         let idLimitNumber;
         let idInformationButton;
+        let formTitle;
+        let finalRouter;
+        let contractOrder;
 
         rows = equalJson(await ajaxPromise({
           to: "python",
@@ -37,6 +40,10 @@ module.exports = function (proid, info) {
 
         if (rows.length === 0) {
 
+          // static
+
+          contractOrder = 2;
+
           titleName = client.name;
           if (contractName.trim() !== "") {
             titleName = contractName;
@@ -46,6 +53,10 @@ module.exports = function (proid, info) {
           if (contractAddress.trim() !== "") {
             titleAddress = contractAddress;
           }
+
+          formTitle = "홈스타일링계약서_" + titleName + "고객님_주홈리에종_";
+
+          finalRouter = "/receiveStylingContract";
 
           map = [
             { id: "field_TEXT_5faa618f9da73962a9050ef4", value: titleName },
@@ -74,6 +85,15 @@ module.exports = function (proid, info) {
             { id: "field_TEXT_5faa618f9da73962a9050f19", value: titleName },
           ];
 
+          sendMap = [
+            titleName,
+            client.email,
+            client.phone.replace(/[^0-9]/g, ''),
+          ];
+
+
+          // logic
+
           dateBoo = false;
           for (let obj of map) {
             if (/_DATE_/gi.test(obj.id)) {
@@ -100,12 +120,8 @@ module.exports = function (proid, info) {
           }
           let buttons;
           buttons = document.querySelectorAll(buttonQuery);
-          while (buttons.length <= 2) {
-            await sleep(500);
-            buttons = document.querySelectorAll(buttonQuery);
-          }
           await sleep(1000);
-          await clickElement(buttons[2]);
+          await clickElement(buttons[contractOrder]);
 
           while (document.querySelector(popupQuery) === null) {
             await sleep(500);
@@ -143,7 +159,7 @@ module.exports = function (proid, info) {
           }
 
           tempArr = dateToString(today).split('-');
-          await injectionInput(document.getElementById("sendFormName"), ("홈스타일링계약서_" + titleName + "고객님_주홈리에종_" + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
+          await injectionInput(document.getElementById("sendFormName"), (formTitle + tempArr[0].slice(2) + tempArr[1] + tempArr[2]));
 
           tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
           while (tempArr.length < 3) {
@@ -151,9 +167,9 @@ module.exports = function (proid, info) {
             tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
           }
 
-          await injectionInput(tempArr[0], titleName, true);
-          await injectionInput(tempArr[1], client.email, true);
-          await injectionInput(tempArr[2], client.phone.replace(/[^0-9]/g, ''), true);
+          for (let i of sendMap) {
+            await injectionInput(tempArr[0], i, true);
+          }
 
           await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
           await sleep(1000);
@@ -201,7 +217,7 @@ module.exports = function (proid, info) {
             data.requestNumber = requestNumber;
             data.cliid = client.cliid;
             data.proid = project.proid;
-            await ajaxPromise({ to: "python", path: "/receiveStylingContract", data }, RECEIVECONST);
+            await ajaxPromise({ to: "python", path: finalRouter, data }, RECEIVECONST);
           }
 
         }

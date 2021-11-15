@@ -273,14 +273,11 @@ DevContext.prototype.launching = async function () {
       console.log(`update ${proid}`);
     }
 
+    project = await back.getProjectById("p2110_aa02s", { selfMongo });
+    console.log(project.toNormal());
+
+
     */
-
-    // const project = await back.getProjectById("p2110_aa02s", { selfMongo: this.MONGOLOCALC });
-    // console.log(project.toNormal());
-
-
-
-
 
 
 
@@ -1835,9 +1832,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "이해정",
-    //     designer: "김소영",
-    //     link: "https://drive.google.com/drive/folders/1mAZBi37ESr199kSRTz9yND2OgXcHK9Ix",
+    //     client: null,
+    //     designer: "김원희",
+    //     link: "https://drive.google.com/drive/folders/1yLgY5Oee1JGRHdhL8CgW92TXOVcSqNKa",
     //     pay: true
     //   },
     // ]);
@@ -1868,7 +1865,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2109_aa01s" ]);
+    // await work.newDesignerToFront([ "d2110_aa01s" ]);
 
 
     // new designer set proposal setting
@@ -1928,7 +1925,7 @@ DevContext.prototype.launching = async function () {
 
 
     // front designer sync
-    // await this.frontDesignerSync();
+    await this.frontDesignerSync();
 
     // ready page block
     // await this.pageReady("webProposal");

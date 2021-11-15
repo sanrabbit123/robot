@@ -3466,6 +3466,8 @@ DesignerJs.prototype.contentsView = async function () {
     let projectHistory;
     let proidArr;
     let whereQuery;
+    let client;
+    let requestNumber;
 
     loading = await this.mother.loadingRun();
 
@@ -3578,9 +3580,16 @@ DesignerJs.prototype.contentsView = async function () {
 
     for (let p of projects) {
       p.designer = designers.search("desid", p.desid).designer;
-      temp = clients.search("cliid", p.cliid);
-      p.name = temp.name;
-      p.address = temp.requests[0].request.space.address;
+      client = clients.search("cliid", p.cliid);
+      p.name = client.name;
+      requestNumber = 0;
+      for (let i = 0; i < client.requests.length; i++) {
+        if (p.proposal.date.valueOf() >= client.requests[i].request.timeline.valueOf()) {
+          requestNumber = i;
+          break;
+        }
+      }
+      p.address = client.requests[requestNumber].request.space.address;
       p.title = `${p.name} <b style="color:${colorChip.green}">C</b>&nbsp;&nbsp;${p.designer} <b style="color:${colorChip.green}">D</b>`;
       temp = contents.search("proid", p.proid);
       if (temp !== null) {
