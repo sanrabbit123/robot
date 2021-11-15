@@ -92,42 +92,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const selfMongo = this.MONGOLOCALC;
-    // const collection = "projectHistory";
-    // const dummy = {
-    //   name: "",
-    //   address: "",
-    //   payments: {
-    //     first: {
-    //       date: new Date(1800, 0, 1),
-    //       etc: "",
-    //     },
-    //     start: {
-    //       date: new Date(1800, 0, 1),
-    //       etc: "",
-    //     },
-    //     middle: {
-    //       date: new Date(1800, 0, 1),
-    //       etc: "",
-    //     },
-    //     remain: {
-    //       date: new Date(1800, 0, 1),
-    //       etc: "",
-    //     },
-    //   }
-    // };
-    // await selfMongo.db(`miro81`).collection(collection).updateMany({}, { $set: { construct: equalJson(JSON.stringify(dummy)) } });
-    // const projectHistories = await back.mongoRead(collection, {}, { selfMongo });
-    // console.log(projectHistories);
-
-
-
-
-
-
-
-
-
 
 
 
