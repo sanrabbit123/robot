@@ -124,6 +124,7 @@ DevContext.prototype.launching = async function () {
 
 
     /*
+
     const selfMongo = this.MONGOLOCALC;
     const sheetsId = "1A0qgkt8D9NtWthVotQw5YrENtY6KTR3S5Pruj03D7r4";
     const matrix = await sheets.read({
@@ -152,10 +153,50 @@ DevContext.prototype.launching = async function () {
     const statusFilter = (raw) => {
       raw = raw.trim();
       raw = raw.replace(/^[0-9]+\)/gi, '').replace(/\//gi, '');
-      if (/완$/gi.test(raw)) {
-        raw = raw + "료";
+      raw = raw.trim();
+      if (raw === "의뢰서작성중") {
+        return "의뢰서 작성중";
+      } else if (raw === "견적확인중") {
+        return "견적 확인중";
+      } else if (raw === "견적안내") {
+        return "견적 안내";
+      } else if (raw === "수정견적확인중") {
+        return "견적 확인중";
+      } else if (raw === "수정견적안내") {
+        return "견적 안내";
+      } else if (raw === "시공미팅예정") {
+        return "미팅 예정";
+      } else if (raw === "계약발송") {
+        return "계약 발송";
+      } else if (raw === "계약입금완") {
+        return "계약금 입금";
+      } else if (raw === "착수입금완") {
+        return "착수금 입금";
+      } else if (raw === "중도입금완") {
+        return "중도금 입금";
+      } else if (raw === "잔금입금완") {
+        return "잔금 입금";
+      } else if (raw === "완료") {
+        return "완료";
+      } else if (raw === "미정") {
+        return "대기";
+      } else if (raw === "시작전") {
+        return "대기";
+      } else if (raw === "C진행중") {
+        return "고객 진행";
+      } else if (raw === "D진행중") {
+        return "디자이너 진행";
+      } else if (raw === "D수수료요청") {
+        return "수수료 요청";
+      } else if (raw === "확인필요") {
+        return "해당 없음";
+      } else if (raw === "확인요청") {
+        return "해당 없음";
+      } else if (raw === "AS진행중") {
+        return "AS 진행중";
+      } else if (raw === "드랍") {
+        return "드랍";
       }
-      return raw;
     }
     const partnerFilter = (raw) => {
       const map = [

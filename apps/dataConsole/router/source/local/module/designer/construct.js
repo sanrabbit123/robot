@@ -96,6 +96,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           "디자이너 진행",
           "수수료 요청",
           "AS 진행중",
+          "해당 없음",
         ],
         chain: null
       },
