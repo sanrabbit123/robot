@@ -1925,7 +1925,7 @@ DevContext.prototype.launching = async function () {
 
 
     // front designer sync
-    await this.frontDesignerSync();
+    // await this.frontDesignerSync();
 
     // ready page block
     // await this.pageReady("webProposal");
