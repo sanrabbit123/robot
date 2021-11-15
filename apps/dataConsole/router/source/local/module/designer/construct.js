@@ -79,7 +79,24 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       status: {
         title: "진행 단계",
         position: "process.design.construct.status",
-        values: [],
+        values: [
+          "대기",
+          "의뢰서 작성중",
+          "견적 확인중",
+          "견적 안내",
+          "미팅 예정",
+          "계약 발송",
+          "계약금 입금",
+          "착수금 입금",
+          "중도금 입금",
+          "잔금 입금",
+          "완료",
+          "드랍",
+          "고객 진행",
+          "디자이너 진행",
+          "수수료 요청",
+          "AS 진행중",
+        ],
         chain: null
       },
       estimate: {
@@ -136,9 +153,79 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     stringArr.push(textMaker(map["status"].title, status, "black", "status"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      cancelBox.parentNode.removeChild(cancelBox);
-      resetWidthEvent();
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "status";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+
+      position = map[column].position;
+      values = map[column].values;
+      startLeft = 0;
+      width = 100;
+      margin = 4;
+
+      background = colorChip.gradientGreen4;
+      updateEvent = async function (e) {
+        try {
+          const value = this.getAttribute("value");
+          const position = this.getAttribute("position");
+          const proid = this.getAttribute("proid");
+          const removeTargets = mother.querySelectorAll("aside");
+          let whereQuery, updateQuery;
+
+          whereQuery = { proid };
+          updateQuery = {};
+          updateQuery[position] = value;
+          valueDom.textContent = value;
+
+          await instance.projectUpdate(whereQuery, updateQuery, map[column].chain, value);
+          // instance.projectDeactivate(proid, (value === "드랍"));
+
+          for (let dom of removeTargets) {
+            mother.removeChild(dom);
+          }
+          resetWidthEvent();
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      nodeArr = [];
+      for (let i = 0; i < values.length; i++) {
+        nodeArr.push({
+          mother: this,
+          mode: "aside",
+          attribute: { value: values[i], position, proid: project.proid },
+          events: [ { type: "click", event: updateEvent } ],
+          style: {
+            position: "absolute",
+            top: String(top + ((margin + height) * i)) + ea,
+            left: String(startLeft) + ea,
+            width: String(width) + ea,
+            height: String(height) + ea,
+            background, zIndex, boxShadow, borderRadius, animation,
+          }
+        });
+        nodeArr.push({
+          mother: -1,
+          text: values[i],
+          style: {
+            position: "absolute",
+            top: String(textTop) + ea,
+            width: String(100) + '%',
+            textAlign: "center",
+            fontSize: String(size) + ea,
+            fontWeight: String(500),
+            color: colorChip.whiteBlack,
+          }
+        });
+      }
+      createNodes(nodeArr);
     });
+
 
     stringArr.push(textMaker(map["request"].title, dateToString(request), dateToColor(request, false), "request"));
     updateArr.push(function (e, option, cancelBox, parent) {

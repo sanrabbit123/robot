@@ -1,4 +1,5 @@
 // DATA -----------------------------------------------------------------------------------------------------------------
+
 DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
