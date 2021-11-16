@@ -3,7 +3,7 @@
 DesignerJs.prototype.constructDataRender = function (project, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson } = GeneralJs;
   const { process, proid, address } = project;
   const { contract, design: { construct } } = process;
   const { form: { date: { from, to } } } = contract;
@@ -845,6 +845,9 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
         let totalMoney;
         let thisProject;
         let updateEvent;
+        let sendVisual;
+        let sendSize;
+        let sendWeight;
 
         thisProject = instance.projects.search("proid", project.proid);
 
@@ -872,6 +875,10 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
 
         betweenMargin0 = 4;
         betweenMargin1 = 15;
+
+        sendVisual = 1;
+        sendSize = 13;
+        sendWeight = 500;
 
         firstMoney = Math.floor(payments.first === null ? 0 : payments.first.calculation.amount.consumer);
         startMoney = Math.floor(payments.start === null ? 0 : payments.start.calculation.amount.consumer);
@@ -1122,7 +1129,54 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                       fontWeight: String(600),
                       color: colorChip.black,
                       marginBottom: String(titleMarginBottom) + ea,
-                    }
+                    },
+                    children: [
+                      {
+                        class: [ "hoverDefault_lite" ],
+                        event: {
+                          selectstart: (e) => { e.preventDefault() },
+                          click: async function (e) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            try {
+                              const children = this.parentElement.nextElementSibling.children;
+                              let name, address, start, end;
+
+                              name = children[0].children[1].textContent.trim();
+                              address = children[1].children[1].textContent.trim();
+                              [ start, end ] = [ ...children[2].children[1].textContent.matchAll(/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/g) ].map((arr) => { return arr[0] });
+
+                              const { result, summary } = await ajaxJson({
+                                mode: "inspection",
+                                proid: project.proid,
+                                name, address, start, end,
+                              }, "/constructInteraction", { equal: true });
+
+                              if (result) {
+
+                                console.log(summary);
+
+                              } else {
+                                // window.alert("정보 기입 후에 계약서를 제작할 수 있습니다!");
+                              }
+
+                            } catch (e) {
+                              console.log(e);
+                            }
+                          }
+                        },
+                        text: "계약서 보내기",
+                        style: {
+                          position: "absolute",
+                          bottom: String(0) + ea,
+                          right: String(sendVisual) + ea,
+                          fontSize: String(sendSize) + ea,
+                          fontWeight: String(sendWeight),
+                          color: colorChip.green,
+                          cursor: "pointer",
+                        }
+                      }
+                    ]
                   },
                   {
                     style: {

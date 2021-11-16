@@ -4306,13 +4306,13 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
         throw new Error("invalid post");
       }
-      if (![ "updatePayments" ].includes(req.body.mode)) {
+      if (![ "updatePayments", "inspection" ].includes(req.body.mode)) {
         throw new Error("invalid post");
       }
       const { mode, proid } = req.body;
       const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
       const { process: { design: { construct } } } = project;
-      let result;
+      let result, summary;
 
       if (construct === null) {
         throw new Error("invaild proid");
@@ -4396,6 +4396,45 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
             remain: { date: remain.date, etc: remain.etc },
           }
         };
+
+      } else if (mode === "inspection") {
+
+        const { name, address, start, end } = equalJson(req.body);
+        if (construct.contract.payments.first === null || construct.contract.payments.start === null || construct.contract.payments.middle === null || construct.contract.payments.remain === null) {
+          result = { result: false, summary: null };
+        } else {
+          summary = {
+            total: 0,
+            name,
+            address,
+            date: { start, end },
+            first: {
+              ratio: 0,
+              amount: 0,
+              date: "",
+              etc: ""
+            },
+            start: {
+              ratio: 0,
+              amount: 0,
+              date: "",
+              etc: ""
+            },
+            middle: {
+              ratio: 0,
+              amount: 0,
+              date: "",
+              etc: ""
+            },
+            remain: {
+              ratio: 0,
+              amount: 0,
+              date: "",
+              etc: ""
+            },
+          }
+          result = { result: true, summary };
+        }
 
       } else {
         result = {};
