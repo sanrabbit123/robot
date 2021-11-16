@@ -2322,12 +2322,20 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
             const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo });
             if (projects.length > 0) {
               const [ project ] = projects;
-              const bills = await bill.getBillsByQuery({ $and: [
+              let bills;
+              bills = await bill.getBillsByQuery({ $and: [
                   { "links.proid": project.proid },
                   { "links.cliid": client.cliid },
                   { "links.method": project.service.online ? "online" : "offline" }
                 ]
               });
+              if (bills.length === 0) {
+                bills = await bill.getBillsByQuery({ $and: [
+                    { "links.proid": project.proid },
+                    { "links.cliid": client.cliid },
+                  ]
+                });
+              }
               if (bills.length > 0) {
                 const [ thisBill ] = bills;
                 requestNumber = 0;
@@ -2342,6 +2350,8 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
                   requestNumber,
                   data: convertingData
                 }, { headers: { "Content-Type": "application/json" } });
+              } else {
+                throw new Error("cannot find bills (from links.proid and links.cliid)");
               }
             }
           }
