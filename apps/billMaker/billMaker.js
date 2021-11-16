@@ -525,7 +525,7 @@ BillMaker.billDictionary = {
       contractAmount: 300000,
       vatRatio: 0.1,
       freeRatio: 0.967,
-      distancePercentage: 10,
+      distancePercentage: 7,
       designerCancel: {
         id: "_edcl",
         class: "designerCancel",

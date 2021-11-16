@@ -2910,11 +2910,20 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
             const projects = await back.getProjectsByQuery({ $and: [ { cliid: client.cliid } ] }, { selfMongo });
             if (projects.length > 0) {
               const [ project ] = projects;
-              const bills = await bill.getBillsByQuery({ $and: [
+              let bills;
+              bills = await bill.getBillsByQuery({ $and: [
                   { "links.proid": project.proid },
                   { "links.cliid": client.cliid },
+                  { "links.method": project.service.online ? "online" : "offline" }
                 ]
               });
+              if (bills.length === 0) {
+                bills = await bill.getBillsByQuery({ $and: [
+                    { "links.proid": project.proid },
+                    { "links.cliid": client.cliid },
+                  ]
+                });
+              }
               if (bills.length > 0) {
                 const [ thisBill ] = bills;
                 requestNumber = 0;
@@ -2929,6 +2938,8 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
                   requestNumber,
                   data: convertingData
                 }, { headers: { "Content-Type": "application/json" } });
+              } else {
+                throw new Error("cannot find bills (from links.proid and links.cliid)");
               }
             }
           }
@@ -4272,6 +4283,127 @@ DataRouter.prototype.rou_post_getDataPatch = function () {
       res.send(JSON.stringify(result));
     } catch (e) {
       await errorLog("Console 서버 문제 생김 (rou_post_getDataPatch): " + e.message);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
+DataRouter.prototype.rou_post_constructInteraction = function () {
+  const instance = this;
+  const back = this.back;
+  const { errorLog, equalJson } = this.mother;
+  let obj = {};
+  obj.link = [ "/constructInteraction" ];
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
+        throw new Error("invalid post");
+      }
+      if (![ "updatePayments" ].includes(req.body.mode)) {
+        throw new Error("invalid post");
+      }
+      const { mode, proid } = req.body;
+      const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+      const { process: { design: { construct } } } = project;
+      let result;
+
+      if (construct === null) {
+        throw new Error("invaild proid");
+      }
+
+      if (mode === "updatePayments") {
+        if (req.body.first === undefined || req.body.start === undefined || req.body.middle === undefined || req.body.remain === undefined || req.body.total === undefined) {
+          throw new Error("invaild post");
+        }
+        const { total, first, start, middle, remain } = equalJson(req.body);
+        let firstObj, startObj, middleObj, remainObj;
+        let whereQuery, updateQuery, historyQuery;
+
+        if (construct.contract.payments.first === null) {
+          firstObj = back.returnProjectDummies("process.design.construct.contract.payments");
+        } else {
+          firstObj = construct.contract.payments.first;
+        }
+        firstObj.calculation.amount.consumer = Math.floor(total * (first.ratio / 100));
+        firstObj.calculation.amount.vat = Math.floor(firstObj.calculation.amount.consumer / 11);
+        firstObj.calculation.amount.supply = firstObj.calculation.amount.consumer - firstObj.calculation.amount.vat;
+
+        if (construct.contract.payments.start === null) {
+          startObj = back.returnProjectDummies("process.design.construct.contract.payments");
+        } else {
+          startObj = construct.contract.payments.start;
+        }
+        startObj.calculation.amount.consumer = Math.floor(total * (start.ratio / 100));
+        startObj.calculation.amount.vat = Math.floor(startObj.calculation.amount.consumer / 11);
+        startObj.calculation.amount.supply = startObj.calculation.amount.consumer - startObj.calculation.amount.vat;
+
+        if (construct.contract.payments.middle === null) {
+          middleObj = back.returnProjectDummies("process.design.construct.contract.payments");
+        } else {
+          middleObj = construct.contract.payments.middle;
+        }
+        middleObj.calculation.amount.consumer = Math.floor(total * (middle.ratio / 100));
+        middleObj.calculation.amount.vat = Math.floor(middleObj.calculation.amount.consumer / 11);
+        middleObj.calculation.amount.supply = middleObj.calculation.amount.consumer - middleObj.calculation.amount.vat;
+
+        if (construct.contract.payments.remain === null) {
+          remainObj = back.returnProjectDummies("process.design.construct.contract.payments");
+        } else {
+          remainObj = construct.contract.payments.remain;
+        }
+        remainObj.calculation.amount.consumer = Math.floor(total * (remain.ratio / 100));
+        remainObj.calculation.amount.vat = Math.floor(remainObj.calculation.amount.consumer / 11);
+        remainObj.calculation.amount.supply = remainObj.calculation.amount.consumer - remainObj.calculation.amount.vat;
+
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.design.construct.contract.payments.first"] = firstObj;
+        updateQuery["process.design.construct.contract.payments.start"] = startObj;
+        updateQuery["process.design.construct.contract.payments.middle"] = middleObj;
+        updateQuery["process.design.construct.contract.payments.remain"] = remainObj;
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+        historyQuery = {};
+        historyQuery["construct.payments.first.date"] = first.date;
+        historyQuery["construct.payments.first.etc"] = first.etc;
+        historyQuery["construct.payments.start.date"] = start.date;
+        historyQuery["construct.payments.start.etc"] = start.etc;
+        historyQuery["construct.payments.middle.date"] = middle.date;
+        historyQuery["construct.payments.middle.etc"] = middle.etc;
+        historyQuery["construct.payments.remain.date"] = remain.date;
+        historyQuery["construct.payments.remain.etc"] = remain.etc;
+        await back.updateHistory("project", [ whereQuery, historyQuery ], { selfMongo: instance.mongolocal });
+
+        result = {
+          message: "success",
+          core: {
+            first: firstObj,
+            start: startObj,
+            middle: middleObj,
+            remain: remainObj,
+          },
+          history: {
+            first: { date: first.date, etc: first.etc },
+            start: { date: start.date, etc: start.etc },
+            middle: { date: middle.date, etc: middle.etc },
+            remain: { date: remain.date, etc: remain.etc },
+          }
+        };
+
+      } else {
+        result = {};
+      }
+
+      res.send(JSON.stringify(result));
+    } catch (e) {
+      await errorLog("Console 서버 문제 생김 (rou_post_constructInteraction): " + e.message);
       res.send(JSON.stringify({ message: "error" }));
     }
   }

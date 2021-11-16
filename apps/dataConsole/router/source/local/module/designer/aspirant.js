@@ -3,7 +3,7 @@
 DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, blankHref, equalJson, ajaxJson, downloadFile } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson } = GeneralJs;
   const { aspid, designer, phone, email, address, portfolio, meeting: { date, status }, information, submit } = aspirant;
   const { firstRequest: { date: request }, comeFrom } = submit;
   const { career, company, channel: { web, sns, cloud } } = information;
@@ -850,7 +850,37 @@ DesignerJs.prototype.aspirantBase = function (search = null) {
         overflowY: "scroll",
         overflowX: "hidden",
       }
-    }
+    },
+    {
+      mother: totalMother,
+      style: {
+        position: "absolute",
+        top: String(margin + dashBoardHeight + dashBoardMargin) + ea,
+        right: String(margin) + ea,
+        width: String(leftMargin) + ea,
+        height: withOut(margin + dashBoardHeight + dashBoardMargin, ea),
+        borderBottom: String(0),
+        borderTopLeftRadius: String(3) + "px",
+        borderTopRightRadius: String(3) + "px",
+        boxSizing: "border-box",
+        background: colorChip.gray2,
+        zIndex: String(4),
+      }
+    },
+    {
+      mother: totalMother,
+      style: {
+        position: "absolute",
+        top: String(margin + dashBoardHeight + dashBoardMargin) + ea,
+        right: String(0) + ea,
+        width: String(margin) + ea,
+        height: withOut(margin + dashBoardHeight + dashBoardMargin, ea),
+        borderBottom: String(0),
+        boxSizing: "border-box",
+        background: colorChip.white,
+        zIndex: String(4),
+      }
+    },
   ]);
 
   this.contentsSpec.contentsTong = contentsTong;
@@ -947,6 +977,9 @@ DesignerJs.prototype.aspirantBlockInjection = function () {
   }
 
   this.resetWidthEvent();
+  GeneralJs.setQueue(() => {
+    instance.resetWidthEvent();
+  }, 1000);
 }
 
 DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, index, titleMode = false) {
@@ -1006,7 +1039,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
       { index: String(index) },
       { sortstandard: "" },
       { sort: "1" },
-      { title: titleMode ? 1 : 0 }
+      { titlemode: titleMode ? 1 : 0 }
     ],
     style: {
       display: (first ? "block" : instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none")),
@@ -1083,7 +1116,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
       attribute: [
         { index: String(index) },
         { arrindex: String(i) },
-        { title: titleMode ? 1 : 0 },
+        { titlemode: titleMode ? 1 : 0 },
         { sort: String(1), }
       ],
       text: stringArr[i],
@@ -1096,7 +1129,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
             e.preventDefault();
             const { ea, ignoreNumbers, contentsBlocks, scrollTong } = instance;
             const { createNode, createNodes, colorChip, withOut, xyConverting } = GeneralJs;
-            const titleMode = Number(this.getAttribute("title")) === 1;
+            const titleMode = Number(this.getAttribute("titlemode")) === 1;
             const thisIndex = Number(this.getAttribute("arrindex"));
             const thisSort = Number(this.getAttribute("sort"));
             if (titleMode) {

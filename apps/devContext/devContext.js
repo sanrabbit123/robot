@@ -86,38 +86,135 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    const selfMongo = this.MONGOLOCALC;
+    const { officeinfo: { widsign: { id, key, endPoint } } } = this.address;
+    let pageSize;
+    let res;
+    let token;
+    let resultForms;
+    let forms;
+    let num;
+    let monthAgoValue;
+    let finalForms;
+    let rawMap;
+    let nameId;
+    let finalMap;
+    let valueReturn;
+    let amountReturn;
+    let dateReturn;
+    let projects;
+    let clients;
+    let constructTargets;
+
+    monthAgoValue = new Date();
+    monthAgoValue.setMonth(monthAgoValue.getMonth() - 400);
+    monthAgoValue = monthAgoValue.valueOf();
+
+    pageSize = 30;
+    res = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
 
 
-    // await this.MONGOCONSOLEC.connect();
-    // const selfMongo = this.MONGOCONSOLEC;
-    // const collection = "projectHistory";
-    // const dummy = {
-    //   name: "",
-    //   address: "",
-    //   payments: {
-    //     first: {
-    //       date: new Date(1800, 0, 1),
-    //       etc: "",
-    //     },
-    //     start: {
-    //       date: new Date(1800, 0, 1),
-    //       etc: "",
-    //     },
-    //     middle: {
-    //       date: new Date(1800, 0, 1),
-    //       etc: "",
-    //     },
-    //     remain: {
-    //       date: new Date(1800, 0, 1),
-    //       etc: "",
-    //     },
-    //   }
-    // };
-    // await selfMongo.db(`miro81`).collection(collection).updateMany({}, { $set: { construct: equalJson(JSON.stringify(dummy)) } });
-    // const projectHistories = await back.mongoRead(collection, {}, { selfMongo });
-    // console.log(projectHistories);
-    // await this.MONGOCONSOLEC.close();
+    token = res.data.access_token;
+    resultForms = [];
+    forms = [ null ];
+    num = 1;
+    while (forms.length > 0) {
+      res = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+      forms = equalJson(JSON.stringify(res.data.result)).map((obj) => {
+        let newObj;
+        newObj = {};
+        newObj.form = obj.form_id;
+        newObj.id = (obj.receiver_list.length > 0) ? obj.receiver_list[0] : null;
+        newObj.name = obj.title;
+        newObj.date = stringToDate(obj.created_date);
+        newObj.confirm = (obj.status === 'END');
+        return newObj;
+      });
+      if (forms.length > 0) {
+        forms.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+        if (forms[0].date.valueOf() <= monthAgoValue) {
+          break;
+        }
+        resultForms = resultForms.concat(forms);
+      }
+      num++;
+    }
 
+    resultForms.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+
+    finalForms = [];
+    for (let f of resultForms) {
+      boo = (finalForms.find((obj) => { return obj.name === f.name; }) !== undefined);
+      if (!boo) {
+        finalForms.push(f);
+      }
+    }
+
+    finalForms = finalForms.filter((obj) => { return /시공/gi.test(obj.name) && !/파트너/gi.test(obj.name); });
+
+    constructTargets = [];
+    for (let i = 0; i < finalForms.length; i++) {
+      res = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": finalForms[i].id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+      rawMap = res.data.result.doc.map((obj) => { return obj.items }).flat();
+
+      rawMap.sort((a, b) => {
+        return Number(a.name.replace(/[^0-9]/gi, '')) - Number(b.name.replace(/[^0-9]/gi, ''));
+      });
+
+      rawMap = rawMap.filter((obj) => { return /텍스트/gi.test(obj.name) }).map((obj) => { obj.name = Number(obj.name.replace(/[^0-9]/gi, '')); return obj; })
+      valueReturn = (num) => { let resultRaw, result; resultRaw = rawMap.find((obj) => { return obj.name === num }); if (resultRaw === undefined) { return "" } result = resultRaw.values; if (result === undefined) { return ""; } else { if (typeof result === "string") { return result.trim() } else { return ""; } } };
+      amountReturn = (str) => { return Number(str.replace(/[^0-9]/gi, '')) };
+      dateReturn = (str) => { return new Date(Number(str.split('-')[0]), Number(str.split('-')[1]) - 1, Number(str.split('-')[2])); };
+
+      finalMap = {
+        name: valueReturn(1),
+        form: {
+          name: valueReturn(2),
+          address: valueReturn(3),
+        },
+        payments: {
+          first: {
+            amount: amountReturn(valueReturn(18)),
+            date: dateReturn(valueReturn(25)),
+            etc: valueReturn(29),
+          },
+          start: {
+            amount: amountReturn(valueReturn(33)),
+            date: dateReturn(valueReturn(26)),
+            etc: valueReturn(30),
+          },
+          middle: {
+            amount: amountReturn(valueReturn(34)),
+            date: dateReturn(valueReturn(27)),
+            etc: valueReturn(31),
+          },
+          remain: {
+            amount: amountReturn(valueReturn(35)),
+            date: dateReturn(valueReturn(28)),
+            etc: valueReturn(32),
+          }
+        }
+      }
+
+      clients = await back.getClientsByQuery({ name: finalMap.name }, { selfMongo });
+      if (clients.length > 0) {
+        clients.toNormal().map((obj) => { return { cliid: obj.cliid } });
+        projects = await back.getProjectsByQuery({
+          $and: [
+            { desid: { $regex: "^d" } },
+            { $or: clients.toNormal().map((obj) => { return { cliid: obj.cliid } }) }
+          ]
+        }, { selfMongo });
+        finalMap.proid = projects.toNormal().map((obj) => { return obj.proid });
+      } else {
+        finalMap.proid = [];
+      }
+
+      constructTargets.unshift(finalMap);
+
+    }
+
+    console.log(constructTargets);
 
 
 
