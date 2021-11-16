@@ -548,6 +548,7 @@ ConsultingJs.prototype.submitEvent = function (boo) {
         if (typeof window.ga.getAll()[0].get('clientId') === "string") {
           ajaxdata += "&googleId=" + window.ga.getAll()[0].get('clientId');
         }
+
         GeneralJs.ajax(ajaxdata, "https://homeliaison-bridge.xyz:3000/submit", (data) => {});
         GeneralJs.ajax(ajaxdata, "/engine/Submit.php", instance.thankyouPage(boo, submitNamePhone));
       });
