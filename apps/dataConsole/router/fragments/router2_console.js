@@ -2325,6 +2325,7 @@ DataRouter.prototype.rou_post_webHookPayment = function () {
               const bills = await bill.getBillsByQuery({ $and: [
                   { "links.proid": project.proid },
                   { "links.cliid": client.cliid },
+                  { "links.method": project.service.online ? "online" : "offline" }
                 ]
               });
               if (bills.length > 0) {

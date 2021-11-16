@@ -467,8 +467,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       let paymentComplete;
       let message;
 
-      console.log(1);
-
       if (data.__ignorethis__ !== 1) {
 
         thisBill = await bill.getBillById(bilid, { selfMongo });
@@ -487,13 +485,9 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         project = await back.getProjectById(proid, { selfMongo: instance.mongo });
         proposal = project.selectProposal(desid);
 
-        console.log(2);
-
         if (client === null || designer === null || project === null || proposal === null) {
           throw new Error("invaild id");
         }
-
-        console.log(3);
 
         if (Array.isArray(thisBill.links.oid)) {
           oidArr = equalJson(JSON.stringify(thisBill.links.oid));
@@ -510,8 +504,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           oidArr = [ oid ];
         }
 
-        console.log(4);
-
         infoArr = equalJson(JSON.stringify(thisBill.requests[Number(requestNumber)].info));
         infoArr.unshift({ data });
         infoArr.unshift({ oid });
@@ -521,11 +513,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
         updateQuery["links.oid"] = oidArr;
         updateQuery["requests." + String(requestNumber) + ".info"] = infoArr;
 
-        console.log(5);
-
         amount = Number(data.TotPrice.replace(/[^0-9]/gi, ''));
-
-        console.log(amount);
 
         if (data.CARD_BankCode !== undefined) {
 
@@ -536,8 +524,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           payObject.amount = amount;
           payObject.oid = oid;
           payArr.unshift(payObject);
-
-          console.log(payArr);
 
           // itemNum = 0;
           // for (let { amount: { consumer } } of itemArr) {
@@ -564,8 +550,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
 
           updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
-          console.log(6);
-
           proofs = bill.returnBillDummies("proofs");
           if (typeof data.P_FN_NM === "string") {
             proofs.method = "카드(" + data.P_FN_NM.replace(/카드/gi, '') + ")";
@@ -577,18 +561,11 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           thisBill.requests[Number(requestNumber)].proofs.unshift(proofs);
           updateQuery["requests." + String(requestNumber) + ".proofs"] = thisBill.requests[Number(requestNumber)].proofs;
 
-
-          console.log(7);
-
-
           message = client.name + " 고객님이 " + proofs.method + "로 " + data.goodName.trim() + "을 결제하셨습니다!";
           messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
             console.log(err);
           })
           await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
-
-          console.log(8);
-
 
           if (paymentComplete) {
             if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
