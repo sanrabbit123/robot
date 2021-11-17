@@ -3942,7 +3942,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
       } else {
         await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC, feeObject });
-        pastRemainArr = remain.items.toNormal();
+        pastRemainArr = equalJson(JSON.stringify(remain.items));
         pastRemainArr[remainIndexItem].unit.price = newRequestAmount;
         pastRemainArr[remainIndexItem].amount.supply = newRequestAmount * pastRemainArr[remainIndexItem].unit.number;
         pastRemainArr[remainIndexItem].amount.vat = Math.round(pastRemainArr[remainIndexItem].amount.supply * vatRatio);
@@ -3969,7 +3969,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
       } else {
         await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC, feeObject });
-        pastRemainArr = remain.items.toNormal();
+        pastRemainArr = equalJson(JSON.stringify(remain.items));
         pastRemainArr[remainIndexItem].unit.price = newRequestAmount;
         pastRemainArr[remainIndexItem].amount.supply = newRequestAmount * pastRemainArr[remainIndexItem].unit.number;
         pastRemainArr[remainIndexItem].amount.vat = Math.round(pastRemainArr[remainIndexItem].amount.supply * vatRatio);
