@@ -28,6 +28,7 @@ module.exports = function (proid, info) {
         let finalRouter;
         let contractOrder;
         let clientPhone;
+        let num;
 
         rows = equalJson(await ajaxPromise({
           to: "python",
@@ -181,8 +182,10 @@ module.exports = function (proid, info) {
             tempArr = document.querySelector(".receiver-ul").querySelectorAll("input");
           }
 
+          num = 0;
           for (let i of sendMap) {
-            await injectionInput(tempArr[0], i, true);
+            await injectionInput(tempArr[num], i, true);
+            num++;
           }
 
           await clickElement(document.querySelectorAll(".Select-arrow-zone")[1]);
