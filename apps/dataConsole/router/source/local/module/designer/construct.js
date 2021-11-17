@@ -1140,7 +1140,8 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                             e.preventDefault();
                             try {
                               const children = this.parentElement.nextElementSibling.children;
-                              let name, address, start, end;
+                              let name, address, start, end, message;
+                              let contractName, contractAddress, contractPhone;
 
                               name = children[0].children[1].textContent.trim();
                               address = children[1].children[1].textContent.trim();
@@ -1153,13 +1154,50 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                               }, "/constructInteraction", { equal: true });
 
                               if (result) {
+                                message = '';
+                                message += "총 금액 : " + autoComma(summary.total) + "원 | " + summary.hangul + "\n";
+                                message += "계약금 : " + String(summary.first.percentage) + "% | " + autoComma(summary.first.amount) + "원 | " + summary.first.date + " | " + summary.first.etc + "\n";
+                                message += "착수금 : " + String(summary.start.percentage) + "% | " + autoComma(summary.start.amount) + "원 | " + summary.start.date + " | " + summary.start.etc + "\n";
+                                message += "중도금 : " + String(summary.middle.percentage) + "% | " + autoComma(summary.middle.amount) + "원 | " + summary.middle.date + " | " + summary.middle.etc + "\n";
+                                message += "잔금 : " + String(summary.remain.percentage) + "% | " + autoComma(summary.remain.amount) + "원 | " + summary.remain.date + " | " + summary.remain.etc + "\n\n";
+                                message += "정보가 올바르게 기입되었나요?";
 
-                                console.log(summary);
+                                if (window.confirm(message)) {
+
+                                  contractName = window.prompt("계약서 작성시 별도의 이름이 있나요? (별도로 없다면 '없음' 또는 공백)");
+                                  if (contractName === null || (typeof contractName === "string" && contractName.trim() === '') || (typeof contractName === "string" && /없/gi.test(contractName))) {
+                                    contractName = project.name;
+                                  }
+                                  contractAddress = window.prompt("계약서 작성시 별도의 주소가 있나요? (별도로 없다면 '없음' 또는 공백)");
+                                  if (contractAddress === null || (typeof contractAddress === "string" && contractAddress.trim() === '') || (typeof contractAddress === "string" && /없/gi.test(contractAddress))) {
+                                    contractAddress = project.address;
+                                  }
+                                  contractPhone = window.prompt("계약서 작성시 별도의 사업자 번호가 있나요? (별도로 없다면 '없음' 또는 공백)");
+                                  if (contractPhone === null || (typeof contractPhone === "string" && contractPhone.trim() === '') || (typeof contractPhone === "string" && /없/gi.test(contractPhone))) {
+                                    contractPhone = project.phone;
+                                  }
+
+                                  summary.contractName = contractName;
+                                  summary.contractAddress = contractAddress;
+                                  summary.contractPhone = contractPhone;
+
+                                  ajaxJson({ mode: "sendContract", proid: project.proid, summary }, "/constructInteraction").then((obj) => {
+                                    if (obj.message === "success") {
+                                      window.alert("계약서 자동 생성 및 발송 요청이 완료되었습니다!");
+                                    } else {
+                                      window.alert("계약서 생성 요청에 문제가 생겨 완료하지 못했습니다!");
+                                    }
+                                  }).catch((err) => {
+                                    window.alert("계약서 생성 요청에 문제가 생겨 완료하지 못했습니다!");
+                                  });
+
+                                } else {
+                                  window.alert("정보를 올바르게 다시 기입해주세요!");
+                                }
 
                               } else {
-                                // window.alert("정보 기입 후에 계약서를 제작할 수 있습니다!");
+                                window.alert("정보 기입 후에 계약서를 제작할 수 있습니다!");
                               }
-
                             } catch (e) {
                               console.log(e);
                             }
@@ -3359,6 +3397,7 @@ DesignerJs.prototype.constructView = async function () {
       p.designer = designers.search("desid", p.desid).designer;
       client = clients.search("cliid", p.cliid);
       p.name = client.name;
+      p.phone = client.phone;
       requestNumber = 0;
       for (let i = 0; i < client.requests.length; i++) {
         if (p.proposal.date.valueOf() >= client.requests[i].request.timeline.valueOf()) {

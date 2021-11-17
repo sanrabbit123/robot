@@ -207,4 +207,55 @@ ParsingHangul.prototype.fixDirPromise = function (target) {
   });
 }
 
+ParsingHangul.prototype.numberToHangul = function (number) {
+  if (typeof number !== "number") {
+    throw new Error("input must be integer");
+  }
+  const instance = this;
+  const hangul0 = [ '', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구' ];
+  const hangul1 = [ '', '십', '백', '천' ];
+  const hangul2 = [ '', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극' ];
+  try {
+    let numberStr, numberArr, hangul3, first;
+
+    hangul3 = [];
+    for (let i = 0; i < hangul2.length; i++) {
+      for (let j = 0; j < hangul1.length; j++) {
+        hangul3.push(hangul1[j] + hangul2[i]);
+      }
+    }
+
+    number = Math.floor(number);
+    numberStr = String(number);
+    numberArr = numberStr.split('').reverse();
+    numberArr = numberArr.map((str, index) => {
+      if (str === '0') {
+        return '';
+      } else {
+        return hangul0[Number(str)] + hangul3[index];
+      }
+    });
+
+    for (let i = 1; i < hangul2.length; i++) {
+      first = true;
+      for (let j = 0; j < numberArr.length; j++) {
+        if ((new RegExp(hangul2[i] + '$')).test(numberArr[j])) {
+          if (first) {
+            first = false;
+          } else {
+            numberArr[j] = numberArr[j].slice(0, -1);
+          }
+        }
+      }
+    }
+    numberArr.reverse();
+
+    return numberArr.join('');
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 module.exports = ParsingHangul;

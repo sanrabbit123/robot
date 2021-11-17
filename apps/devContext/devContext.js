@@ -456,6 +456,8 @@ DevContext.prototype.launching = async function () {
     */
 
 
+    const hangul = new ParsingHangul();
+    console.log(hangul.numberToHangul(800065340620))
 
 
 

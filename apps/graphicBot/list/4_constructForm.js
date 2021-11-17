@@ -3,7 +3,8 @@ module.exports = function (proid, info) {
     "https://widsign.com/signin",
     async function () {
       try {
-        const { requestNumber, client, project, designer, contractName, contractAddress } = equalJson(JSON.stringify(POSTCONST));
+        const { requestNumber, client, project, designer, summary } = equalJson(JSON.stringify(POSTCONST));
+        const { contractName, contractAddress, contractPhone } = summary;
         const { request, analytics } = client.requests[requestNumber];
         const today = new Date();
         const idId = "sign-in-id";
@@ -26,6 +27,7 @@ module.exports = function (proid, info) {
         let formTitle;
         let finalRouter;
         let contractOrder;
+        let clientPhone;
 
         rows = equalJson(await ajaxPromise({
           to: "python",
@@ -33,7 +35,7 @@ module.exports = function (proid, info) {
           data: {
             mode: "read",
             db: "python",
-            collection: "stylingForm",
+            collection: "constructForm",
             whereQuery: { proid: project.proid },
           }
         }, AJAXCONST));
@@ -54,14 +56,51 @@ module.exports = function (proid, info) {
             titleAddress = contractAddress;
           }
 
-          formTitle = "홈스타일링계약서_" + titleName + "고객님_주홈리에종_";
+          formTitle = "시공계약서_" + titleName + "고객님_주홈리에종_";
 
-          finalRouter = "/receiveStylingContract";
+          finalRouter = "/receiveConstructContract";
+
+          // clientPhone = client.phone;
+          clientPhone = "010-2747-3403";
 
           map = [
-            { id: "field_TEXT_5faa618f9da73962a9050ef4", value: titleName },
-            { id: "field_TEXT_5faa6196b3c0673961000001", value: titleAddress },
-            { id: "field_TEXT_5faa618f9da73962a9050ef6", value: client.phone },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ecc", value: titleName },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ecd", value: summary.name },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ece", value: summary.address },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ecf", value: summary.date.start },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed0", value: summary.date.end },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ee0", value: summary.hangul },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6edf", value: autoComma(summary.total) },
+
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed1", value: String(summary.first.percentage) + '%' },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed2", value: autoComma(summary.first.amount) },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed6", value: summary.first.date },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6edc", value: summary.first.etc },
+
+
+
+            
+
+
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed1", value: String(summary.start.percentage) + '%' },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed2", value: autoComma(summary.start.amount) },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed6", value: summary.start.date },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6edc", value: summary.start.etc },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            { id: "field_TEXT_5faa618f9da73962a9050ef6", value: clientPhone },
             { id: "field_DATE_5faa618f9da73962a9050ef7", value: dateToString(project.process.contract.first.date) },
             { id: "field_DATE_5faa618f9da73962a9050ef9", value: dateToString(project.process.contract.form.date.from) },
             { id: "field_DATE_5faa618f9da73962a9050efa", value: dateToString(project.process.contract.form.date.to) },
@@ -80,15 +119,21 @@ module.exports = function (proid, info) {
             { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
             { id: "field_TEXT_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) },
             { id: "field_TEXT_5faa618f9da73962a9050f16", value: titleName },
-            { id: "field_TEXT_5faa618f9da73962a9050f1a", value: client.phone },
+            { id: "field_TEXT_5faa618f9da73962a9050f1a", value: clientPhone },
             { id: "field_TEXT_5faa61beb3c0673961000002", value: titleAddress },
             { id: "field_TEXT_5faa618f9da73962a9050f19", value: titleName },
           ];
 
+          // sendMap = [
+          //   titleName,
+          //   client.email,
+          //   client.phone.replace(/[^0-9]/g, ''),
+          // ];
+
           sendMap = [
             titleName,
-            client.email,
-            client.phone.replace(/[^0-9]/g, ''),
+            "uragenbooks@gmail.com",
+            "01027473403",
           ];
 
 

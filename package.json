@@ -1,7 +1,7 @@
 {
   "name": "robot",
   "version": "1.0.0",
-  "description": "",
+  "description": "homeliaison autobot series <robot_ghost_alien> : Robot",
   "main": "robot.js",
   "scripts": {
     "node": "node robot.js",
@@ -9,7 +9,7 @@
     "source": "node robot.js frontsource --entire",
     "pack": "node robot.js front --webpack"
   },
-  "author": "",
+  "author": "uragen",
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.12.5",

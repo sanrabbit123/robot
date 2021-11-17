@@ -4292,7 +4292,57 @@ DataRouter.prototype.rou_post_getDataPatch = function () {
 DataRouter.prototype.rou_post_constructInteraction = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog, equalJson } = this.mother;
+  const { errorLog, equalJson, dateToString, requestSystem } = this.mother;
+  const numberToHangul = (number) => {
+    if (typeof number !== "number") {
+      throw new Error("input must be integer");
+    }
+    const instance = this;
+    const hangul0 = [ '', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구' ];
+    const hangul1 = [ '', '십', '백', '천' ];
+    const hangul2 = [ '', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극' ];
+    try {
+      let numberStr, numberArr, hangul3, first;
+
+      hangul3 = [];
+      for (let i = 0; i < hangul2.length; i++) {
+        for (let j = 0; j < hangul1.length; j++) {
+          hangul3.push(hangul1[j] + hangul2[i]);
+        }
+      }
+
+      number = Math.floor(number);
+      numberStr = String(number);
+      numberArr = numberStr.split('').reverse();
+      numberArr = numberArr.map((str, index) => {
+        if (str === '0') {
+          return '';
+        } else {
+          return hangul0[Number(str)] + hangul3[index];
+        }
+      });
+
+      for (let i = 1; i < hangul2.length; i++) {
+        first = true;
+        for (let j = 0; j < numberArr.length; j++) {
+          if ((new RegExp(hangul2[i] + '$')).test(numberArr[j])) {
+            if (first) {
+              first = false;
+            } else {
+              numberArr[j] = numberArr[j].slice(0, -1);
+            }
+          }
+        }
+      }
+      numberArr.reverse();
+
+      return numberArr.join('');
+
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
   let obj = {};
   obj.link = [ "/constructInteraction" ];
   obj.func = async function (req, res) {
@@ -4306,11 +4356,12 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
         throw new Error("invalid post");
       }
-      if (![ "updatePayments", "inspection" ].includes(req.body.mode)) {
+      if (![ "updatePayments", "inspection", "sendContract" ].includes(req.body.mode)) {
         throw new Error("invalid post");
       }
       const { mode, proid } = req.body;
       const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+      const projectHistory = await back.getHistoryById("project", proid, { selfMongo: instance.mongolocal });
       const { process: { design: { construct } } } = project;
       let result, summary;
 
@@ -4400,41 +4451,79 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       } else if (mode === "inspection") {
 
         const { name, address, start, end } = equalJson(req.body);
+        let firstAmount, firstPercentage;
+        let startAmount, startPercentage;
+        let middleAmount, middlePercentage;
+        let remainAmount, remainPercentage;
+        let totalAmount;
+
         if (construct.contract.payments.first === null || construct.contract.payments.start === null || construct.contract.payments.middle === null || construct.contract.payments.remain === null) {
           result = { result: false, summary: null };
         } else {
-          summary = {
-            total: 0,
-            name,
-            address,
-            date: { start, end },
-            first: {
-              ratio: 0,
-              amount: 0,
-              date: "",
-              etc: ""
-            },
-            start: {
-              ratio: 0,
-              amount: 0,
-              date: "",
-              etc: ""
-            },
-            middle: {
-              ratio: 0,
-              amount: 0,
-              date: "",
-              etc: ""
-            },
-            remain: {
-              ratio: 0,
-              amount: 0,
-              date: "",
-              etc: ""
-            },
+
+          firstAmount = Math.floor(construct.contract.payments.first.calculation.amount.consumer);
+          startAmount = Math.floor(construct.contract.payments.start.calculation.amount.consumer);
+          middleAmount = Math.floor(construct.contract.payments.middle.calculation.amount.consumer);
+          remainAmount = Math.floor(construct.contract.payments.remain.calculation.amount.consumer);
+
+          totalAmount = (firstAmount + startAmount + middleAmount + remainAmount);
+
+          firstPercentage = Math.round((firstAmount / totalAmount) * 100);
+          startPercentage = Math.round((startAmount / totalAmount) * 100);
+          middlePercentage = Math.round((middleAmount / totalAmount) * 100);
+          remainPercentage = 100 - (firstPercentage + startPercentage + middlePercentage);
+
+          if (firstPercentage < 0 || startPercentage < 0 || middlePercentage < 0 || remainPercentage < 0) {
+            result = { result: false, summary: null };
+          } else {
+
+            summary = {
+              total: Math.floor(totalAmount),
+              hangul: numberToHangul(Math.floor(totalAmount)) + '원',
+              name,
+              address,
+              date: { start, end },
+              first: {
+                percentage: Math.floor(firstPercentage),
+                amount: Math.floor(firstAmount),
+                date: dateToString(projectHistory.construct.payments.first.date),
+                etc: projectHistory.construct.payments.first.etc
+              },
+              start: {
+                percentage: Math.floor(startPercentage),
+                amount: Math.floor(startAmount),
+                date: dateToString(projectHistory.construct.payments.start.date),
+                etc: projectHistory.construct.payments.start.etc
+              },
+              middle: {
+                percentage: Math.floor(middlePercentage),
+                amount: Math.floor(middleAmount),
+                date: dateToString(projectHistory.construct.payments.middle.date),
+                etc: projectHistory.construct.payments.middle.etc
+              },
+              remain: {
+                percentage: Math.floor(remainPercentage),
+                amount: Math.floor(remainAmount),
+                date: dateToString(projectHistory.construct.payments.remain.date),
+                etc: projectHistory.construct.payments.remain.etc
+              },
+            }
+            result = { result: true, summary };
+
           }
-          result = { result: true, summary };
         }
+
+      } else if (mode === "sendContract") {
+
+        const { summary } = equalJson(req.body);
+
+        console.log(summary);
+
+        // requestSystem("https://" + instance.address.pythoninfo.host + ":3000/createConstructContract", { proid, summary }, { headers: { "Content-type": "application/json" } }).catch((err) => {
+        //   throw new Error(err);
+        // });
+
+        result = { message: "success" };
 
       } else {
         result = {};

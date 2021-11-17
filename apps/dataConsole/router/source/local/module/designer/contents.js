@@ -2480,7 +2480,7 @@ DesignerJs.prototype.contentsDataRender = function (project, titleMode) {
                   const value = this.value;
                   const cookies = GeneralJs.getCookiesAll();
 
-                  (mother.querySelectorAll('b'))[1].textContent = value.slice(0, 40);
+                  (mother.querySelectorAll('b'))[0].textContent = value.slice(0, 40);
                   await GeneralJs.ajaxJson({
                     id: project.proid,
                     column: "photo",

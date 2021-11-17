@@ -336,6 +336,104 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_createConstructContract = function () {
+  const instance = this;
+  const back = this.back;
+  const address = this.address;
+  const { requestSystem, messageSend } = this.mother;
+  let obj = {};
+  obj.link = "/createConstructContract";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.proid === undefined || req.body.summary === undefined) {
+        throw new Error("invaild post");
+      }
+      const { proid, summary } = req.body;
+
+      const rows = await back.mongoRead("constructForm", { proid }, { selfMongo: instance.mongolocal });
+
+      if (rows.length === 0) {
+        const selfMongo = instance.mongo;
+        const project = await back.getProjectById(proid, { selfMongo });
+        const client = await back.getClientById(project.cliid, { selfMongo });
+        const designer = await back.getDesignerById(project.desid, { selfMongo });
+        let url, requestNumber, proposalDate;
+
+        proposalDate = project.proposal.date.valueOf();
+
+        requestNumber = 0;
+        for (let i = 0; i < client.requests.length; i++) {
+          if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
+            requestNumber = i;
+            break;
+          }
+        }
+
+        url = "https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.graphic.port[0]) + "/constructForm";
+
+        await requestSystem(url, { summary, requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
+      } else {
+        console.log("styling form cancel : " + proid);
+        await messageSend({ text: "프로젝트 " + proid + "의 시공 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer", voice: true });
+      }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_createConstructContract): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const kakao = this.kakao;
+  const { equalJson, fileSystem, dateToString, autoComma, ghostRequest, messageSend, errorLog } = this.mother;
+  let obj = {};
+  obj.link = "/receiveConstructContract";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.json === undefined) {
+        throw new Error("must be json");
+      }
+      const json = equalJson(req.body.json);
+      const collection = "constructForm";
+      const selfMongo = instance.mongolocal;
+      let client;
+
+      await bill.createBill(collection, [ json ], { selfMongo: instance.mongolocal });
+      client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
+      if (client !== null) {
+        // await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
+        messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
+          console.log(err);
+        });
+      }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_receiveStylingContract): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_createStylingBill = function () {
   const instance = this;
   const back = this.back;
