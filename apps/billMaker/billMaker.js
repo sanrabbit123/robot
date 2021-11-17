@@ -3931,24 +3931,12 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
     } else if (remainBoo && !firstBoo) {
 
       newRequestAmount = supply - (remain.items[remainIndexItem].amount.supply + contractAmountSupply);
-      console.log(remainIndex);
-      console.log(remainIndexItem);
-      console.log(supply - contractAmountSupply);
+      updateQuery = {};
       if (newRequestAmount <= 0) {
-        updateQuery = {};
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
-      } else {
-        await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC, feeObject });
-        pastRemainArr = equalJson(JSON.stringify(remain.items));
-        pastRemainArr[remainIndexItem].unit.price = newRequestAmount;
-        pastRemainArr[remainIndexItem].amount.supply = newRequestAmount * pastRemainArr[remainIndexItem].unit.number;
-        pastRemainArr[remainIndexItem].amount.vat = Math.round(pastRemainArr[remainIndexItem].amount.supply * vatRatio);
-        pastRemainArr[remainIndexItem].amount.consumer = Math.round(pastRemainArr[remainIndexItem].amount.supply * (1 + vatRatio));
-        updateQuery = {};
-        updateQuery["requests." + String(0) + ".items." + String(0)] = equalJson(JSON.stringify(pastRemainArr[remainIndexItem]));
       }
 
       updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".unit.price"] = firstAmount;
@@ -3961,21 +3949,12 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
     } else if (remainBoo && firstBoo) {
 
       newRequestAmount = supply - (remain.items[remainIndexItem].amount.supply + contractAmountSupply);
+      updateQuery = {};
       if (newRequestAmount <= 0) {
-        updateQuery = {};
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.supply"] = supply - contractAmountSupply;
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.vat"] = (supply - contractAmountSupply) * vatRatio;
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".amount.consumer"] = (supply - contractAmountSupply) * (1 + vatRatio);
-      } else {
-        await this.requestInjection(bilid, "secondPayment", client, designer, project, method, { selfMongo: MONGOC, feeObject });
-        pastRemainArr = equalJson(JSON.stringify(remain.items));
-        pastRemainArr[remainIndexItem].unit.price = newRequestAmount;
-        pastRemainArr[remainIndexItem].amount.supply = newRequestAmount * pastRemainArr[remainIndexItem].unit.number;
-        pastRemainArr[remainIndexItem].amount.vat = Math.round(pastRemainArr[remainIndexItem].amount.supply * vatRatio);
-        pastRemainArr[remainIndexItem].amount.consumer = Math.round(pastRemainArr[remainIndexItem].amount.supply * (1 + vatRatio));
-        updateQuery = {};
-        updateQuery["requests." + String(0) + ".items." + String(0)] = equalJson(JSON.stringify(pastRemainArr[remainIndexItem]));
       }
 
       updateQuery["responses." + String(firstIndex) + ".items." + String(firstIndexItem) + ".amount.commission"] = (supply * (percentage / 100)) * (first.items[firstIndexItem].amount.pure / totalAmount);
