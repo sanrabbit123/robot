@@ -2720,7 +2720,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
   const doingSignature = "billMaker_serviceConvertingDoing_" + proid;
   const work = new BackWorker();
   const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem } = this.mother;
+  const { mongo, mongopythoninfo, mongoinfo, equalJson, sleep, fileSystem, errorLog } = this.mother;
   const vatRatio = BillMaker.billDictionary.styling.etc.vatRatio;
   const freeRatio = BillMaker.billDictionary.styling.etc.freeRatio;
   try {
@@ -3085,7 +3085,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         for (let { amount } of firstResponse.cancel) {
           cancelNumR0 += amount;
         }
-        firstBoo = (totalNumR0 <= payNumR0 - cancelNumR0);
+        firstBoo = (Math.floor(totalNumR0) <= Math.floor(payNumR0 - cancelNumR0));
         totalNumR1 = 0;
         for (let { amount: { pure } } of secondResponse.items) {
           totalNumR1 += pure;
@@ -3098,7 +3098,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         for (let { amount } of secondResponse.cancel) {
           cancelNumR1 += amount;
         }
-        remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
+        remainBoo = (Math.floor(totalNumR1) <= Math.floor(payNumR1 - cancelNumR1));
 
         if (!firstBoo && !remainBoo) {
 
@@ -3181,6 +3181,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
 
   } catch (e) {
     await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
+    await errorLog("BillMaker.prototype.serviceConverting error : " + e.message);
     console.log(e);
   }
 }
