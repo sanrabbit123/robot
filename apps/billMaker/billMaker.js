@@ -3931,7 +3931,9 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
     } else if (remainBoo && !firstBoo) {
 
       newRequestAmount = supply - (remain.items[remainIndexItem].amount.supply + contractAmountSupply);
-      console.log(newRequestAmount);
+      console.log(remainIndex);
+      console.log(remainIndexItem);
+      console.log(supply - contractAmountSupply);
       if (newRequestAmount <= 0) {
         updateQuery = {};
         updateQuery["requests." + String(remainIndex) + ".items." + String(remainIndexItem) + ".unit.price"] = supply - contractAmountSupply;
