@@ -548,6 +548,148 @@ BillMaker.billDictionary = {
       }
     }
   },
+  construct: {
+    class: "construct",
+    name: "시공",
+    requests: {
+      constructFirst: {
+        name: "시공 계약금",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ method });
+          return info;
+        },
+        item: (feeObject, subObj) => {
+          let { project, vatRatio, contractAmount } = subObj;
+          if (project.process.contract.first.calculation.amount !== 0) {
+            contractAmount = project.process.contract.first.calculation.amount * (1 / (1 + vatRatio));
+          }
+          return [
+            [ "designerTime", contractAmount ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: client.cliid,
+            name: client.name,
+            phone: client.phone,
+            email: client.email,
+          };
+        },
+        comments: [
+          "계약금은 전체 서비스 금액에 포함됩니다.",
+          "계약금을 입금하시면 담당 디자이너에게 고객님 정보가 전달되며, 현장 미팅이 진행됩니다.",
+          "현장 미팅 후 계약금을 제외한 잔금을 입금하시면 스타일링 서비스가 계속 진행됩니다.",
+          "현장 미팅 후 스타일링을 진행하지 않더라도, 계약금은 환불되지 않습니다.",
+        ]
+      },
+      constructStart: {
+        name: "시공 착수금",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ method });
+          return info;
+        },
+        item: (feeObject, subObj) => {
+          let { project, vatRatio, contractAmount } = subObj;
+          if (project.process.contract.first.calculation.amount !== 0) {
+            contractAmount = project.process.contract.first.calculation.amount * (1 / (1 + vatRatio));
+          }
+          return [
+            [ "designerTime", contractAmount ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: client.cliid,
+            name: client.name,
+            phone: client.phone,
+            email: client.email,
+          };
+        },
+        comments: [
+          "계약금은 전체 서비스 금액에 포함됩니다.",
+          "계약금을 입금하시면 담당 디자이너에게 고객님 정보가 전달되며, 현장 미팅이 진행됩니다.",
+          "현장 미팅 후 계약금을 제외한 잔금을 입금하시면 스타일링 서비스가 계속 진행됩니다.",
+          "현장 미팅 후 스타일링을 진행하지 않더라도, 계약금은 환불되지 않습니다.",
+        ]
+      },
+      constructMiddle: {
+        name: "시공 중도금",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ method });
+          return info;
+        },
+        item: (feeObject, subObj) => {
+          let { project, vatRatio, contractAmount } = subObj;
+          if (project.process.contract.first.calculation.amount !== 0) {
+            contractAmount = project.process.contract.first.calculation.amount * (1 / (1 + vatRatio));
+          }
+          return [
+            [ "designerTime", contractAmount ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: client.cliid,
+            name: client.name,
+            phone: client.phone,
+            email: client.email,
+          };
+        },
+        comments: [
+          "계약금은 전체 서비스 금액에 포함됩니다.",
+          "계약금을 입금하시면 담당 디자이너에게 고객님 정보가 전달되며, 현장 미팅이 진행됩니다.",
+          "현장 미팅 후 계약금을 제외한 잔금을 입금하시면 스타일링 서비스가 계속 진행됩니다.",
+          "현장 미팅 후 스타일링을 진행하지 않더라도, 계약금은 환불되지 않습니다.",
+        ]
+      },
+      constructRemain: {
+        name: "시공 잔금",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          info.push({ method });
+          return info;
+        },
+        item: (feeObject, subObj) => {
+          let { project, vatRatio, contractAmount } = subObj;
+          if (project.process.contract.first.calculation.amount !== 0) {
+            contractAmount = project.process.contract.first.calculation.amount * (1 / (1 + vatRatio));
+          }
+          return [
+            [ "designerTime", contractAmount ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: client.cliid,
+            name: client.name,
+            phone: client.phone,
+            email: client.email,
+          };
+        },
+        comments: [
+          "계약금은 전체 서비스 금액에 포함됩니다.",
+          "계약금을 입금하시면 담당 디자이너에게 고객님 정보가 전달되며, 현장 미팅이 진행됩니다.",
+          "현장 미팅 후 계약금을 제외한 잔금을 입금하시면 스타일링 서비스가 계속 진행됩니다.",
+          "현장 미팅 후 스타일링을 진행하지 않더라도, 계약금은 환불되지 않습니다.",
+        ]
+      },
+    }
+  }
 };
 
 BillMaker.returnBankCode = function (name, mode = "code") {
