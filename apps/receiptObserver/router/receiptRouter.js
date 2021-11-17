@@ -1351,7 +1351,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
             client: client.name,
             pastservice: serviceParsing(report.service.from),
             newservice: serviceParsing(report.service.to),
-            total: autoComma(report.price.between.consumer),
+            total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
             host: address.homeinfo.ghost.host,
             path: "estimation",
             cliid: client.cliid,
