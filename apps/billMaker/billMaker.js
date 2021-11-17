@@ -3589,7 +3589,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
         for (let { amount } of firstResponse.cancel) {
           cancelNumR0 += amount;
         }
-        firstBoo = (totalNumR0 <= payNumR0 - cancelNumR0);
+        firstBoo = (Math.floor(totalNumR0) <= Math.floor(payNumR0 - cancelNumR0));
         totalNumR1 = 0;
         for (let { amount: { pure } } of secondResponse.items) {
           totalNumR1 += pure;
@@ -3602,7 +3602,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
         for (let { amount } of secondResponse.cancel) {
           cancelNumR1 += amount;
         }
-        remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
+        remainBoo = (Math.floor(totalNumR1) <= Math.floor(payNumR1 - cancelNumR1));
 
         if (!firstBoo && !remainBoo) {
 
@@ -3895,7 +3895,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
     for (let { amount } of remain.cancel) {
       cancelNum += amount;
     }
-    remainBoo = (totalNum <= payNum + cancelNum);
+    remainBoo = (Math.floor(totalNum) <= Math.floor(payNum + cancelNum));
 
     firstBoo = false;
     totalNum = 0;
@@ -3910,7 +3910,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
     for (let { amount } of first.cancel) {
       cancelNum += amount;
     }
-    firstBoo = (totalNum <= payNum + cancelNum);
+    firstBoo = (Math.floor(totalNum) <= Math.floor(payNum + cancelNum));
 
 
     whereQuery = { bilid };
@@ -4162,7 +4162,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     for (let { amount } of firstResponse.cancel) {
       cancelNumR0 += amount;
     }
-    firstBoo = (totalNumR0 <= payNumR0 - cancelNumR0);
+    firstBoo = (Math.floor(totalNumR0) <= Math.floor(payNumR0 - cancelNumR0));
     totalNumR1 = 0;
     for (let { amount: { pure } } of secondResponse.items) {
       totalNumR1 += pure;
@@ -4175,7 +4175,7 @@ BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex,
     for (let { amount } of secondResponse.cancel) {
       cancelNumR1 += amount;
     }
-    remainBoo = (totalNumR1 <= payNumR1 - cancelNumR1);
+    remainBoo = (Math.floor(totalNumR1) <= Math.floor(payNumR1 - cancelNumR1));
 
     client = await back.getClientById(thisBill.links.cliid, { selfMongo: MONGOCOREC });
     project = await back.getProjectById(thisBill.links.proid, { selfMongo: MONGOCOREC });
