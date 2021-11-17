@@ -86,6 +86,9 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    const res = await requestSystem(`http://172.30.1.5/`, {}, { method: "get" });
+    console.log(res.data);
+
 
     /*
     // widsign to db (payments amount)
@@ -455,9 +458,6 @@ DevContext.prototype.launching = async function () {
     })();
     */
 
-
-    const hangul = new ParsingHangul();
-    console.log(hangul.numberToHangul(800065340620))
 
 
 
