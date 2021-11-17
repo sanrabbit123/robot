@@ -2895,6 +2895,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
         if (request.name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
           remain = request;
           remainIndex = num;
+          break;
         }
         num++;
       }
@@ -3371,6 +3372,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
         if (request.name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
           remain = request;
           remainIndex = num;
+          break;
         }
         num++;
       }
@@ -3847,6 +3849,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
       if (requestsCopied[i].name === BillMaker.billDictionary.styling.requests.secondPayment.name) {
         remain = requestsCopied[i];
         remainIndex = i;
+        break;
       }
     }
     for (let i = 0; i < remain.items.length; i++) {
