@@ -1241,7 +1241,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing, messageSend } = this.mother;
+  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing, messageSend, autoComma } = this.mother;
   let obj = {};
   obj.link = "/serviceConverting";
   obj.func = async function (req, res) {
@@ -1351,6 +1351,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
             client: client.name,
             pastservice: serviceParsing(report.service.from),
             newservice: serviceParsing(report.service.to),
+            total: autoComma(report.price.between.consumer),
             host: address.homeinfo.ghost.host,
             path: "estimation",
             cliid: client.cliid,
