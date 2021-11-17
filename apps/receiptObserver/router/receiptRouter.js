@@ -1392,7 +1392,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
   const bill = this.bill;
   const address = this.address;
   const kakao = this.kakao;
-  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing, messageSend } = this.mother;
+  const { equalJson, requestSystem, sleep, ghostRequest, serviceParsing, messageSend, autoComma } = this.mother;
   let obj = {};
   obj.link = "/designerConverting";
   obj.func = async function (req, res) {
@@ -1490,6 +1490,7 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
           pastdesigner: pastDesigner.designer,
           newdesigner: designer.designer,
           host: address.homeinfo.ghost.host,
+          total: autoComma(Math.abs(report.request.from.consumer - report.request.to.consumer)),
           path: "estimation",
           cliid: client.cliid,
           needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
