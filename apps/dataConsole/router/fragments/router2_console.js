@@ -3928,13 +3928,9 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       } else if (mode === "sendContract") {
 
         const { summary } = equalJson(req.body);
-
-        console.log(summary);
-
-        // requestSystem("https://" + instance.address.pythoninfo.host + ":3000/createConstructContract", { proid, summary }, { headers: { "Content-type": "application/json" } }).catch((err) => {
-        //   throw new Error(err);
-        // });
-
+        requestSystem("https://" + instance.address.pythoninfo.host + ":3000/createConstructContract", { proid, summary }, { headers: { "Content-type": "application/json" } }).catch((err) => {
+          throw new Error(err);
+        });
         result = { message: "success" };
 
       } else {
