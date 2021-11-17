@@ -61,8 +61,7 @@ module.exports = function (proid, info) {
 
           finalRouter = "/receiveConstructContract";
 
-          // clientPhone = client.phone;
-          clientPhone = "010-2747-3403";
+          clientPhone = client.phone;
 
           map = [
             { id: "field_TEXT_60b9d758f07a5cf0004c6ecc", value: titleName },
@@ -94,18 +93,11 @@ module.exports = function (proid, info) {
             { id: "field_TEXT_60b9d758f07a5cf0004c6ee8", value: clientPhone },
           ];
 
-          // sendMap = [
-          //   titleName,
-          //   client.email,
-          //   client.phone.replace(/[^0-9]/g, ''),
-          // ];
-
           sendMap = [
             titleName,
-            "uragenbooks@gmail.com",
-            "01027473403",
+            client.email,
+            client.phone.replace(/[^0-9]/g, ''),
           ];
-
 
           // logic
 
@@ -196,8 +188,6 @@ module.exports = function (proid, info) {
           }
           await clickElement(document.getElementById("react-select-11--option-4"));
 
-          /*
-
           await sleep(500);
           document.querySelector('.send').click();
           await sleep(500);
@@ -238,8 +228,6 @@ module.exports = function (proid, info) {
             data.proid = project.proid;
             await ajaxPromise({ to: "python", path: finalRouter, data }, RECEIVECONST);
           }
-
-          */
 
         }
 
