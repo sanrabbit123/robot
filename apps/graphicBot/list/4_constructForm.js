@@ -71,57 +71,26 @@ module.exports = function (proid, info) {
             { id: "field_TEXT_60b9d758f07a5cf0004c6ed0", value: summary.date.end },
             { id: "field_TEXT_60b9d758f07a5cf0004c6ee0", value: summary.hangul },
             { id: "field_TEXT_60b9d758f07a5cf0004c6edf", value: autoComma(summary.total) },
-
             { id: "field_TEXT_60b9d758f07a5cf0004c6ed1", value: String(summary.first.percentage) + '%' },
             { id: "field_TEXT_60b9d758f07a5cf0004c6ed2", value: autoComma(summary.first.amount) },
             { id: "field_TEXT_60b9d758f07a5cf0004c6ed6", value: summary.first.date },
             { id: "field_TEXT_60b9d758f07a5cf0004c6edc", value: summary.first.etc },
-
-
-
-            
-
-
-            { id: "field_TEXT_60b9d758f07a5cf0004c6ed1", value: String(summary.start.percentage) + '%' },
-            { id: "field_TEXT_60b9d758f07a5cf0004c6ed2", value: autoComma(summary.start.amount) },
-            { id: "field_TEXT_60b9d758f07a5cf0004c6ed6", value: summary.start.date },
-            { id: "field_TEXT_60b9d758f07a5cf0004c6edc", value: summary.start.etc },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            { id: "field_TEXT_5faa618f9da73962a9050ef6", value: clientPhone },
-            { id: "field_DATE_5faa618f9da73962a9050ef7", value: dateToString(project.process.contract.first.date) },
-            { id: "field_DATE_5faa618f9da73962a9050ef9", value: dateToString(project.process.contract.form.date.from) },
-            { id: "field_DATE_5faa618f9da73962a9050efa", value: dateToString(project.process.contract.form.date.to) },
-            { id: "field_TEXT_5faa618f9da73962a9050ef5", value: titleName },
-            { id: "field_TEXT_AREA_5faa618f9da73962a9050ef8", value: request.family },
-            { id: "field_TEXT_AREA_5faa618f9da73962a9050f04", value: titleAddress },
-            { id: "field_TEXT_5faa618f9da73962a9050f01", value: request.budget + " (디자이너 논의 및 조정)" },
-            { id: "field_TEXT_5faa618f9da73962a9050f02", value: designer.designer + ", " + designer.information.phone },
-            { id: "field_TEXT_5faa618f9da73962a9050efb", value: request.space.contract },
-            { id: "field_TEXT_5faa618f9da73962a9050efd", value: (/없/gi.test(dateToString(analytics.date.space.precheck)) ? '-' : dateToString(analytics.date.space.precheck)) },
-            { id: "field_TEXT_5faa618f9da73962a9050efe", value: (/없/gi.test(dateToString(analytics.date.space.empty)) ? '-' : dateToString(analytics.date.space.empty)) },
-            { id: "field_TEXT_5faa618f9da73962a9050efc", value: (/없/gi.test(dateToString(request.space.resident.expected)) ? '-' : dateToString(request.space.resident.expected)) },
-            { id: "field_TEXT_5faa618f9da73962a9050eff", value: String(request.space.pyeong) + "평" },
-            { id: "field_TEXT_AREA_5faa618f9da73962a9050f00", value: "방 " + String(request.space.spec.room) + "개 / 화장실 " + String(request.space.spec.bathroom) + "개" },
-            { id: "field_TEXT_5faa618f9da73962a9050f03", value: serviceParsing(project.service) },
-            { id: "field_TEXT_5faa618f9da73962a9050f05", value: autoComma(project.process.contract.remain.calculation.amount.consumer - project.process.contract.first.calculation.amount) },
-            { id: "field_TEXT_5faa618f9da73962a9050f06", value: autoComma(project.process.contract.remain.calculation.amount.consumer) },
-            { id: "field_TEXT_5faa618f9da73962a9050f16", value: titleName },
-            { id: "field_TEXT_5faa618f9da73962a9050f1a", value: clientPhone },
-            { id: "field_TEXT_5faa61beb3c0673961000002", value: titleAddress },
-            { id: "field_TEXT_5faa618f9da73962a9050f19", value: titleName },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed3", value: String(summary.start.percentage) + '%' },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ee2", value: autoComma(summary.start.amount) },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed5", value: summary.start.date },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6edd", value: summary.start.etc },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed7", value: String(summary.middle.percentage) + '%' },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ee1", value: autoComma(summary.middle.amount) },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed8", value: summary.middle.date },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed9", value: summary.middle.etc },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ed4", value: String(summary.remain.percentage) + '%' },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ede", value: autoComma(summary.remain.amount) },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6eda", value: summary.remain.date },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6edb", value: summary.remain.etc },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ee3", value: titleName },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ee5", value: contractPhone },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ee7", value: contractAddress },
+            { id: "field_TEXT_60b9d758f07a5cf0004c6ee8", value: clientPhone },
           ];
 
           // sendMap = [
@@ -224,6 +193,8 @@ module.exports = function (proid, info) {
           }
           await clickElement(document.getElementById("react-select-11--option-4"));
 
+          /*
+
           await sleep(500);
           document.querySelector('.send').click();
           await sleep(500);
@@ -264,6 +235,8 @@ module.exports = function (proid, info) {
             data.proid = project.proid;
             await ajaxPromise({ to: "python", path: finalRouter, data }, RECEIVECONST);
           }
+
+          */
 
         }
 
