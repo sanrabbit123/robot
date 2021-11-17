@@ -1337,25 +1337,6 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
     }
     thisRequest = stylingRequests[requestKey];
 
-    feeObject = null;
-    for (let proposal of project.proposal.detail) {
-      if (proposal.desid === designer.desid) {
-        for (let obj of proposal.fee) {
-          if (obj.method === method) {
-            feeObject = obj;
-          }
-        }
-      }
-    }
-    if (feeObject === null) {
-      if (option.feeObject !== undefined && option.feeObject !== null && typeof option.feeObject === "object") {
-        feeObject = option.feeObject;
-      } else {
-        throw new Error("cannot find fee object");
-      }
-    }
-    distance = feeObject.distance;
-
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
     } else {
@@ -1377,36 +1358,94 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
     requestObject.id = bilid + requestConst + String(thisBill.requests.length);
     requestObject.info = thisRequest.info(client, designer, project, method, null);
 
-    itemMatrix = thisRequest.item(feeObject, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
-    commentsArr = thisRequest.comments;
-    for (let [ property, thisAmount ] of itemMatrix) {
-      await sleep(100);
-      if (stylingItems[property] === undefined) {
-        throw new Error("item property error");
+
+    if (typeof option.customAmount !== "object" || option.customAmount === null) {
+
+      feeObject = null;
+      for (let proposal of project.proposal.detail) {
+        if (proposal.desid === designer.desid) {
+          for (let obj of proposal.fee) {
+            if (obj.method === method) {
+              feeObject = obj;
+            }
+          }
+        }
       }
-      item = stylingItems[property];
-      itemFactor = this.returnBillDummies("items");
-      itemFactor.id = bilid + item.id;
-      itemFactor.class = property;
-      itemFactor.name = item.name;
-      itemFactor.description = item.description;
-      itemFactor.unit.ea = item.ea;
-      itemFactor.unit.price = Math.round(item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
-      if (typeof option.number === "object" && option.number !== null) {
-        if (typeof option.number[property] === "number") {
-          itemFactor.unit.number = option.number[property];
+      if (feeObject === null) {
+        if (option.feeObject !== undefined && option.feeObject !== null && typeof option.feeObject === "object") {
+          feeObject = option.feeObject;
+        } else {
+          throw new Error("cannot find fee object");
+        }
+      }
+      distance = feeObject.distance;
+
+      itemMatrix = thisRequest.item(feeObject, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+      commentsArr = thisRequest.comments;
+      for (let [ property, thisAmount ] of itemMatrix) {
+        await sleep(100);
+        if (stylingItems[property] === undefined) {
+          throw new Error("item property error");
+        }
+        item = stylingItems[property];
+        itemFactor = this.returnBillDummies("items");
+        itemFactor.id = bilid + item.id;
+        itemFactor.class = property;
+        itemFactor.name = item.name;
+        itemFactor.description = item.description;
+        itemFactor.unit.ea = item.ea;
+        itemFactor.unit.price = Math.round(item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
+        if (typeof option.number === "object" && option.number !== null) {
+          if (typeof option.number[property] === "number") {
+            itemFactor.unit.number = option.number[property];
+          } else {
+            itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+          }
         } else {
           itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
         }
-      } else {
-        itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+        itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+        itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
+        itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+        requestObject.items.push(equalJson(JSON.stringify(itemFactor)));
+        commentsArr = commentsArr.concat(item.comments);
       }
-      itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-      itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
-      itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
-      requestObject.items.push(equalJson(JSON.stringify(itemFactor)));
-      commentsArr = commentsArr.concat(item.comments);
+
+    } else {
+
+      itemMatrix = thisRequest.item(option.customAmount, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+      commentsArr = thisRequest.comments;
+      for (let [ property, thisAmount ] of itemMatrix) {
+        await sleep(100);
+        if (stylingItems[property] === undefined) {
+          throw new Error("item property error");
+        }
+        item = stylingItems[property];
+        itemFactor = this.returnBillDummies("items");
+        itemFactor.id = bilid + item.id;
+        itemFactor.class = property;
+        itemFactor.name = item.name;
+        itemFactor.description = item.description;
+        itemFactor.unit.ea = item.ea;
+        itemFactor.unit.price = Math.round(item.amount(thisAmount, { client, designer, project, contractAmount, vatRatio, freeRatio }));
+        if (typeof option.number === "object" && option.number !== null) {
+          if (typeof option.number[property] === "number") {
+            itemFactor.unit.number = option.number[property];
+          } else {
+            itemFactor.unit.number = item.number({ client, designer, project, contractAmount, vatRatio, freeRatio });
+          }
+        } else {
+          itemFactor.unit.number = item.number({ client, designer, project, contractAmount, vatRatio, freeRatio });
+        }
+        itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
+        itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
+        itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+        requestObject.items.push(equalJson(JSON.stringify(itemFactor)));
+        commentsArr = commentsArr.concat(item.comments);
+      }
+
     }
+
 
     requestObject.name = thisRequest.name;
     for (let c of commentsArr) {
