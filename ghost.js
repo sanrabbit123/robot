@@ -3710,10 +3710,8 @@ Ghost.prototype.smsLaunching = async function () {
     });
 
     ws.on("message", async (message) => {
-      console.log(message);
       try {
         const data = JSON.parse(message);
-        console.log(data);
         if (data.type === "push") {
           if (typeof data.push === "object") {
             if (data.push.type === "sms_changed" && Array.isArray(data.push.notifications)) {
@@ -3747,7 +3745,7 @@ Ghost.prototype.smsLaunching = async function () {
                         }
                         name = messageArr[index + 1].trim();
 
-                        res = await requestSystem("https://" + instance.pythoninfo + ":3000/smsParsing", { date, amount, name }, { headers: { "Content-Type": "application/json" } });
+                        res = await requestSystem("https://" + instance.address.pythoninfo + ":3000/smsParsing", { date, amount, name }, { headers: { "Content-Type": "application/json" } });
                         if (typeof res.data !== "object" || res.data === null) {
                           throw new Error("request fail");
                         }
