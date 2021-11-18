@@ -87,7 +87,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
     sum: {},
     commentsTitle: "<b%*%b> 안내 사항",
     comments: [],
-    button: [ "카드 결제", "무통장 입금" ],
+    button: [ "카드 결제", "무통장 입금", "계좌 이체" ],
     pannel: [
       {
         name: "계좌 이체시",
@@ -102,7 +102,11 @@ UniversalEstimationJs.prototype.billWordings = function () {
           "카드 결제창",
         ]
       },
-    ]
+    ],
+    account: {
+      name: "(주)홈리에종",
+      number: "기업 049-085567-04-022",
+    }
   };
   if (desktop) {
     wordings.column = [
@@ -158,7 +162,9 @@ UniversalEstimationJs.prototype.billWordings = function () {
     wordings.completeComments = [];
     wordings.completeComments.push(dateToString(this.completeInfo.when) + " 까지 다음 가상계좌를 통해 입금해주시면 결제가 완료됩니다!");
     wordings.completeComments.push("가상계좌 정보 :&nbsp;&nbsp;<u%" + this.completeInfo.where.bank + between + this.completeInfo.where.account + between + this.completeInfo.where.to.replace(/ /g, '').replace(/\)/, ") ") + "%u>");
-  } else {
+  } else if (this.completeInfo.method === "real") {
+    wordings.completeComments.push(dateToString(this.completeInfo.when) + " 까지 다음 홈리에종 계좌를 통해 입금해주시면 결제가 완료됩니다!");
+    wordings.completeComments.push("계좌 정보 :&nbsp;&nbsp;<u%" + this.completeInfo.where.bank + between + this.completeInfo.where.account + between + this.completeInfo.where.to.replace(/ /g, '').replace(/\)/, ") ") + "%u>");
     wordings.completeComments = [];
   }
 
@@ -356,10 +362,14 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   if (completeMode) {
     if (completeInfo.method === "card") {
       wordings.mainTitle[0] = "카드 결제가";
-    } else {
+      wordings.mainTitle[1] = "<b%완료되었습니다!%b>";
+    } else if (completeInfo.method === "bank") {
       wordings.mainTitle[0] = "가상계좌 발급이";
+      wordings.mainTitle[1] = "<b%완료되었습니다!%b>";
+    } else {
+      wordings.mainTitle[0] = "홈리에종 계좌를";
+      wordings.mainTitle[1] = "<b%안내드립니다!%b>";
     }
-    wordings.mainTitle[1] = "<b%완료되었습니다!%b>";
   }
   titleBox = createNode({
     mother: whiteTong,
@@ -856,8 +866,10 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
           buyerPhone: instance.client.phone,
           buyerEmail: instance.client.email,
           currentPage: window.location.protocol + "//" + window.location.host,
-          gopaymethod: (/card/gi.test(motherMethod) ? "Card" : "VBank"),
+          gopaymethod: (/card/gi.test(motherMethod) ? "Card" : (/vbank/gi.test(motherMethod) ? "VBank" : "Account")),
           device: (desktop ? "desktop" : "mobile"),
+          requestNumber: String(instance.requestNumber),
+          bilid: instance.bill.bilid,
         }, "/inicisPayment");
         const formMother = document.createElement("DIV");
         const form = document.createElement("FORM");
@@ -870,19 +882,30 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
         document.body.appendChild(formMother);
         formMother.appendChild(form);
         if (desktop) {
-          for (let name in formValue) {
-            value = String(formValue[name]);
-            createNode({
-              mother: form,
-              mode: "input",
-              attribute: [ { name }, { value } ],
-              style: { display: "none" }
-            });
+
+          if (/vbank/gi.test(motherMethod) || /card/gi.test(motherMethod)) {
+
+            for (let name in formValue) {
+              value = String(formValue[name]);
+              createNode({
+                mother: form,
+                mode: "input",
+                attribute: [ { name }, { value } ],
+                style: { display: "none" }
+              });
+            }
+            plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
+            plugin();
+
+          } else {
+
+            window.alert("계좌 이체로 진행하실 경우, 현금 영수증이 자동으로 발급됩니다!");
+            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript;
+
           }
-          plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
-          plugin();
+
         } else {
-          if (!/card/gi.test(motherMethod)) {
+          if (/vbank/gi.test(motherMethod)) {
             form.setAttribute("method", "post");
             form.setAttribute("accept-charset", "euc-kr");
             mobileInisisInfo = {
@@ -911,7 +934,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             form.action = "https://mobile.inicis.com/smart/payment/";
             form.target = "_self";
             form.submit();
-          } else {
+          } else if (/card/gi.test(motherMethod)) {
             window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
             plugin = new Function(pluginScript);
             plugin();
@@ -925,6 +948,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                 buyer_tel: instance.client.phone,
                 m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid,
             }, (rsp) => {});
+          } else {
+
+            window.alert("계좌 이체로 진행하실 경우, 현금 영수증이 자동으로 발급됩니다!");
+            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript;
+
           }
         }
       } catch (e) {
@@ -987,6 +1015,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
       textAlign: "center",
       borderRadius: String(3) + "px",
       marginLeft: String(greenButtonBetween) + ea,
+      marginRight: String(greenButtonBetween) + ea,
     },
     children: [
       {
@@ -1005,6 +1034,41 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     ]
   });
 
+  createNode({
+    mother: greenButtonBase,
+    class: [ "hoverDefault_lite" ],
+    events: [
+      {
+        type: "click",
+        event: paymentEvent("account"),
+      }
+    ],
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(greenButtonWidth + 3) + ea,
+      height: String(greenButtonHeight) + ea,
+      background: colorChip.green,
+      textAlign: "center",
+      borderRadius: String(3) + "px",
+      marginLeft: String(greenButtonBetween) + ea,
+    },
+    children: [
+      {
+        text: wordings.button[2],
+        style: {
+          position: "absolute",
+          top: String(greenButtonTextTop) + ea,
+          width: String(100) + '%',
+          left: String(0),
+          fontSize: String(greenButtonFontSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.white,
+          textAlign: "center",
+        }
+      }
+    ]
+  });
 
   whiteBlock.style.height = "auto";
 }
@@ -1062,7 +1126,7 @@ UniversalEstimationJs.prototype.payComplete = async function (data, pythonSend =
       date = Number(data.VACT_Date.slice(-2).replace(/^0/, ''));
       to = new Date(year, month, date, 15);
       to.setDate(to.getDate() - 1);
-      completeInfo.method = "bank";
+      completeInfo.method = data.REAL_Account === undefined ? "bank" : "real";
       completeInfo.when = to;
       completeInfo.where = {
         bank: data.vactBankName,
@@ -1149,7 +1213,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       this.desid = desid;
       this.cliid = cliid;
     } else {
-      alert("아직 구축되지 않은 영역입니다!");
+      alert("잘못된 접근입니다!");
       window.location.href = this.frontPage;
     }
 
@@ -1215,6 +1279,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     await this.mother.ghostClientLaunching({
       name: "universalEstimation",
       client: client,
+      background: 3,
       base: {
         instance: this,
         binaryPath: UniversalEstimationJs.binaryPath,

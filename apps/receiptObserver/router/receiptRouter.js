@@ -439,6 +439,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
   const back = this.back;
   const bill = this.bill;
   const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
+  const collection = "accountTransfer";
   let obj = {};
   obj.link = "/smsParsing";
   obj.func = async function (req, res) {
@@ -446,7 +447,6 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       if (req.body.date === undefined || req.body.amount === undefined || req.body.name === undefined) {
         throw new Error("invaild post");
       }
-      const collection = "accountTransfer";
       const selfMongo = instance.mongolocal;
       const { date, amount, name } = equalJson(req.body);
       const errorMessage = "뭔가 은행 문자가 왔는데 찾을 수 없음 : " + name + " " + autoComma(amount) + "원";
@@ -468,6 +468,42 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       // } else {
       //   errorLog(errorMessage).catch((e) => { console.log(e); });
       // }
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_smsParsing): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
+  const collection = "accountTransfer";
+  let obj = {};
+  obj.link = "/accountTimeSet";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.amount === undefined || req.body.name === undefined) {
+        throw new Error("invaild post");
+      }
+      const selfMongo = instance.mongolocal;
+      const { amount, name } = equalJson(req.body);
+      let rows, result;
+
+      messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하기 위해 계좌번호를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
+      await back.mongoCreate(collection, equalJson(req.body), { selfMongo });
 
       res.set({
         "Content-Type": "application/json",
@@ -826,20 +862,36 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
 
         } else {
 
-          instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
-            client: client.name,
-            goodName: data.goodName,
-            bankName: data.vactBankName,
-            account: data.VACT_Num,
-            to: data.VACT_Name,
-            amount: autoComma(amount),
-            date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
-          });
+          if (data.REAL_Account === undefined) {
 
-          message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
-          messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
-            console.log(err);
-          })
+            instance.kakao.sendTalk("virtualAccount", client.name, client.phone, {
+              client: client.name,
+              goodName: data.goodName,
+              bankName: data.vactBankName,
+              account: data.VACT_Num,
+              to: data.VACT_Name,
+              amount: autoComma(amount),
+              date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+            });
+            message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
+            messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
+              console.log(err);
+            });
+
+          } else {
+
+            instance.kakao.sendTalk("realAccount", client.name, client.phone, {
+              client: client.name,
+              goodName: data.goodName,
+              bankName: data.vactBankName,
+              account: data.VACT_Num,
+              to: data.VACT_Name,
+              amount: autoComma(amount),
+              date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+            });
+
+          }
+
           await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
         }

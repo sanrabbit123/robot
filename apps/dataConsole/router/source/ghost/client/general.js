@@ -43,15 +43,22 @@ GeneralJs.prototype.setGeneralProperties = function (instance) {
   instance.media = this.media;
 }
 
-GeneralJs.prototype.setBackground = function (binaryPath, second = false) {
+GeneralJs.prototype.setBackground = function (binaryPath, second = false, random = 0) {
   const instance = this;
   const { ea, media, backHeight, totalContents } = this;
   const { createNodes, colorChip, withOut } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
-  const backgroundImageName = "back.jpg";
-  const secondBackgroundImageName = "back2.jpg";
+  let backgroundImageName, secondBackgroundImageName;
   let backgroundGray, backgroundImageBox, backgroundImageBox2;
+
+  backgroundImageName = "back.jpg";
+  if (typeof random === "number") {
+    if (random !== 0) {
+      backgroundImageName = "back" + String(Math.floor(Math.random() * random)) + ".jpg";
+    }
+  }
+  secondBackgroundImageName = "back2.jpg";
 
   if (!second) {
     [ backgroundGray, backgroundImageBox ] = createNodes([
@@ -241,7 +248,7 @@ GeneralJs.prototype.setBaseTong = function (child) {
   child.baseTong = this.baseTong;
 }
 
-GeneralJs.prototype.setGeneralBase = function (obj) {
+GeneralJs.prototype.setGeneralBase = function (obj, random = 0) {
   if (typeof obj !== "object") {
     throw new Error("must be object => { instance, binaryPath, subTitle }");
   }
@@ -249,7 +256,7 @@ GeneralJs.prototype.setGeneralBase = function (obj) {
     throw new Error("must be object => { instance, binaryPath, subTitle }");
   }
   const { instance, binaryPath, subTitle } = obj;
-  this.setBackground(binaryPath, obj.secondBackground === true);
+  this.setBackground(binaryPath, obj.secondBackground === true, random);
   this.setNavigator(subTitle);
   this.setBaseTong(instance);
 }
@@ -267,7 +274,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
     const { name, client, base, local } = obj;
     let belowTarget, removeTargets, getObj;
 
-    this.setGeneralBase(base);
+    this.setGeneralBase(base, typeof obj.background === "number" ? obj.background : 0);
     await local();
 
     if (this.media[4]) {

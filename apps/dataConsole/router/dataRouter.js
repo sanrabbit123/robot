@@ -3854,7 +3854,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           pluginScript += "\n";
           pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
-        } else {
+        } else if (gopaymethod !== "Account") {
           pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
           if (gopaymethod === "VBank") {
             acceptmethod = "va_receipt";
@@ -3862,6 +3862,14 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             acceptmethod = "below1000";
           }
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
+        } else {
+
+          
+
+
+          pluginScript = "";
+          formValue = {};
+
         }
 
         res.set({ "Content-Type": "application/json" });
@@ -3878,7 +3886,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ result }));
         }
-
 
       } else if (req.body.mode === "mobileCard") {
 

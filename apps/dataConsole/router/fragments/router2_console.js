@@ -3229,7 +3229,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, cryptoString, decryptoHash, equalJson, messageSend } = this.mother;
+  const { requestSystem, cryptoString, decryptoHash, equalJson, messageSend, dateToString } = this.mother;
   const crypto = require("crypto");
   const password = "homeliaison";
   let obj = {};
@@ -3239,7 +3239,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
       const now = new Date();
 
       if (req.body.mode === "script") {
-        const { cliid, kind, desid, proid, method, device } = req.body;
+        const { cliid, kind, desid, proid, method, device, bilid } = req.body;
         const oidConst = "homeliaisonBill_";
         const version = "1.0";
         const gopaymethod = req.body.gopaymethod;
@@ -3259,6 +3259,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         const closeUrl = req.body.currentPage + "/tools/trigger";
 
         let pluginScript, formValue, acceptmethod;
+        let future;
 
         if (device === "mobile" && gopaymethod === "Card") {
           pluginScript = '';
@@ -3266,7 +3267,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           pluginScript += "\n";
           pluginScript += (await requestSystem("https://cdn.iamport.kr/js/iamport.payment-1.1.5.js")).data;
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl };
-        } else {
+        } else if (gopaymethod !== "Account") {
           pluginScript = (await requestSystem("https://stdpay.inicis.com/stdjs/INIStdPay.js")).data;
           if (gopaymethod === "VBank") {
             acceptmethod = "va_receipt";
@@ -3274,6 +3275,49 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             acceptmethod = "below1000";
           }
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
+        } else {
+
+          await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
+            bilid,
+            requestNumber: Number(req.body.requestNumber),
+            proid,
+            cliid,
+            desid,
+            goodname,
+            date: new Date(),
+            name: buyername,
+            phone: buyerPhone,
+            amount: price
+          }, {
+            headers: { "Content-Type": "application/json" }
+          });
+
+          future = new Date();
+          future.setDate(future.getDate() + 7);
+
+          pluginScript = await cryptoString(password, JSON.stringify({
+            goodName: goodname,
+            goodsName: goodname,
+            resultCode: "0000",
+            resultMsg: "성공적으로 처리 하였습니다.",
+            tid: "realAccount",
+            payMethod: "ACCOUNT",
+            applDate: dateToString(new Date(), true).replace(/[^0-9]/gi, ''),
+            mid,
+            MOID: oid,
+            TotPrice: String(price),
+            buyerName: buyername,
+            CARD_Code: "",
+            vactBankName: "기업",
+            VACT_Num: "049-085567-04-022",
+            VACT_Name: "(주)홈리에종",
+            VACT_Date: dateToString(future).replace(/[^0-9]/gi, ''),
+            payDevice: "",
+            P_FN_NM: "realAccount",
+            REAL_Account: "true"
+          }));
+          formValue = {};
+
         }
 
         res.set({ "Content-Type": "application/json" });
@@ -3290,7 +3334,6 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ result }));
         }
-
 
       } else if (req.body.mode === "mobileCard") {
 
