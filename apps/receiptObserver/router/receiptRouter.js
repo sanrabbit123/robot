@@ -448,7 +448,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       }
       const { date, amount, name } = equalJson(req.body);
 
-      messageSend(`${name} 고객님이 ${autoComma(amount)}원을 기업은행에 입금하셨어요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
+      messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
 
       res.set({
         "Content-Type": "application/json",
