@@ -488,9 +488,13 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       }
 
       if (target !== null) {
-        await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
+
+        requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
           headers: { "Content-Type": "application/json" }
+        }).catch((err) => {
+          console.log(err);
         });
+
       }
 
       res.set({

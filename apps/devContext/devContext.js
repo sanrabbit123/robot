@@ -91,81 +91,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const sender = "01027473403";
-    const url = "wss://stream.pushbullet.com/websocket/o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr";
-    const WebSocket = require("ws");
-    const ws = new WebSocket(url);
-
-    setInterval(() => {
-      console.log("i'm alive in " + dateToString(new Date(), true));
-    }, (5 * 60 * 1000));
-
-    ws.on("message", async (message) => {
-      try {
-        const data = JSON.parse(message);
-        if (data.type === "push") {
-          if (typeof data.push === "object") {
-            if (data.push.type === "sms_changed" && Array.isArray(data.push.notifications)) {
-              if (data.push.notifications.length > 0) {
-                const [ sms ] = data.push.notifications;
-                if (typeof sms !== "object" || sms === null) {
-                  throw new Error("invaild message");
-                } else {
-                  if (typeof sms.title !== "string" || typeof sms.body !== "string" || typeof sms.timestamp !== "number") {
-                    throw new Error("invaild message");
-                  } else {
-                    const { title, body, timestamp } = sms;
-                    if (title.trim() === sender) {
-                      const date = new Date(timestamp * 1000);
-                      let messageArr, index, amount, name;
-
-                      messageArr = body.split("\n");
-                      if (messageArr.length >= 4) {
-
-                        messageArr = messageArr.slice(2);
-                        index = messageArr.findIndex((str) => { return /^입금/gi.test(str.trim()) });
-                        if (index === -1) {
-                          throw new Error("invaild message");
-                        }
-                        amount = Math.floor(Number(messageArr[index].replace(/[^0-9]/gi, '')));
-                        name = messageArr[index + 1].trim();
-
-                        console.log(date, amount, name);
-
-                      } else {
-                        await errorLog("receive message from " + title + " : " + body);
-                      }
-                    } else {
-                      await errorLog("receive message from " + title + " : " + body);
-                    }
-                  }
-                }
-              }
-            }
-          } else {
-            throw new Error("invaild message");
-          }
-        }
-      } catch (e) {
-        process.exit();
-      }
-    });
-
-    ws.on("open", () => {
-      setInterval(() => {
-        ws.send(JSON.stringify({ message: "alive" }));
-      }, 1000);
-      setInterval(async () => {
-        try {
-          await messageLog("sms wss alive");
-        } catch (e) {
-          await errorLog(e.message);
-          process.exit();
-        }
-      }, (30 * 60 * 1000));
-    });
-
-
 
 
 
@@ -749,9 +674,6 @@ DevContext.prototype.launching = async function () {
     */
 
 
-
-
-
     // const selfMongo = this.MONGOC;
     // const projects = await back.getProjectsByQuery({}, { selfMongo });
     // let whereQuery, updateQuery;
@@ -1017,8 +939,6 @@ DevContext.prototype.launching = async function () {
 
     //all passive sync
 
-
-
     /*
     const selfMongo = this.MONGOLOCALC;
 
@@ -1072,7 +992,7 @@ DevContext.prototype.launching = async function () {
       matrix.push(arr);
     }
 
-    for (let i = 3; i < 10; i++) {
+    for (let i = 3; i < 11; i++) {
 
       matrix.push([ '', '', '', '', '' ]);
       matrix.push([ "2021년 " + String(i + 1) + "월", '', '', '', '' ]);
