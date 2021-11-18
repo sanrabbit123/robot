@@ -91,7 +91,10 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    await requestSystem(`https://home-liaison.serveftp.com:55556/receipt`, {
+      amount: String(3000000),
+      phone: "010-2747-3403",
+    }, { headers: { "Content-Type": "application/json" } });
 
 
 

@@ -19,6 +19,9 @@ module.exports = function (arg, info) {
       document.getElementById("trsAmt").value = String(amount);
       document.getElementById("spstCnfrNoEncCntn").value = String(phone);
 
+
+      console.log(amount, phone);
+
       // await sleep(500);
       // await clickElement(document.querySelector("#trigger4"));
 
