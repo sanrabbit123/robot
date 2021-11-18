@@ -3713,6 +3713,7 @@ Ghost.prototype.smsLaunching = async function () {
       console.log(message);
       try {
         const data = JSON.parse(message);
+        console.log(data);
         if (data.type === "push") {
           if (typeof data.push === "object") {
             if (data.push.type === "sms_changed" && Array.isArray(data.push.notifications)) {
@@ -3770,6 +3771,7 @@ Ghost.prototype.smsLaunching = async function () {
         }
       } catch (e) {
         await errorLog("error in sms : " + e.message);
+        console.log(e);
         process.exit();
       }
     });
