@@ -276,7 +276,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   sumBoxPaddingBottom = <%% 10, 10, 10, 10, 5 %%>;
 
   completeMarginTop0 = <%% 32, 32, 24, 20, 3 %%>;
-  grayMarginTop0 = <%% 56, 56, 45, 36, 4 %%>;
+  grayMarginTop0 = <%% 60, 60, 50, 40, 4 %%>;
   grayMarginTop1 = <%% 20, 20, 14, 12, 2 %%>;
 
   cautionPaddingTop = <%% 34, 34, 34, 27, 4 %%>;
@@ -968,78 +968,79 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     };
   }
 
-  createNode({
-    mother: greenButtonBase,
-    class: [ "hoverDefault_lite" ],
-    events: [
-      {
-        type: "click",
-        event: paymentEvent("card"),
-      }
-    ],
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: String(greenButtonWidth) + ea,
-      height: String(greenButtonHeight) + ea,
-      background: colorChip.green,
-      textAlign: "center",
-      borderRadius: String(3) + "px",
-      marginRight: String(greenButtonBetween) + ea,
-    },
-    children: [
-      {
-        text: wordings.button[0],
-        style: {
-          position: "absolute",
-          top: String(greenButtonTextTop) + ea,
-          width: String(100) + '%',
-          left: String(0),
-          fontSize: String(greenButtonFontSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.white,
-          textAlign: "center",
+  if (!this.inicisDeactive) {
+    createNode({
+      mother: greenButtonBase,
+      class: [ "hoverDefault_lite" ],
+      events: [
+        {
+          type: "click",
+          event: paymentEvent("card"),
         }
-      }
-    ]
-  });
-
-  createNode({
-    mother: greenButtonBase,
-    class: [ "hoverDefault_lite" ],
-    events: [
-      {
-        type: "click",
-        event: paymentEvent("vbank"),
-      }
-    ],
-    style: {
-      display: "inline-block",
-      position: "relative",
-      width: String(greenButtonWidth + 3) + ea,
-      height: String(greenButtonHeight) + ea,
-      background: colorChip.green,
-      textAlign: "center",
-      borderRadius: String(3) + "px",
-      marginLeft: String(greenButtonBetween) + ea,
-      marginRight: String(greenButtonBetween) + ea,
-    },
-    children: [
-      {
-        text: wordings.button[1],
-        style: {
-          position: "absolute",
-          top: String(greenButtonTextTop) + ea,
-          width: String(100) + '%',
-          left: String(0),
-          fontSize: String(greenButtonFontSize) + ea,
-          fontWeight: String(400),
-          color: colorChip.white,
-          textAlign: "center",
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(greenButtonWidth) + ea,
+        height: String(greenButtonHeight) + ea,
+        background: colorChip.green,
+        textAlign: "center",
+        borderRadius: String(3) + "px",
+        marginRight: String(greenButtonBetween) + ea,
+      },
+      children: [
+        {
+          text: wordings.button[0],
+          style: {
+            position: "absolute",
+            top: String(greenButtonTextTop) + ea,
+            width: String(100) + '%',
+            left: String(0),
+            fontSize: String(greenButtonFontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.white,
+            textAlign: "center",
+          }
         }
-      }
-    ]
-  });
+      ]
+    });
+    createNode({
+      mother: greenButtonBase,
+      class: [ "hoverDefault_lite" ],
+      events: [
+        {
+          type: "click",
+          event: paymentEvent("vbank"),
+        }
+      ],
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(greenButtonWidth + 3) + ea,
+        height: String(greenButtonHeight) + ea,
+        background: colorChip.green,
+        textAlign: "center",
+        borderRadius: String(3) + "px",
+        marginLeft: String(greenButtonBetween) + ea,
+        marginRight: String(greenButtonBetween) + ea,
+      },
+      children: [
+        {
+          text: wordings.button[1],
+          style: {
+            position: "absolute",
+            top: String(greenButtonTextTop) + ea,
+            width: String(100) + '%',
+            left: String(0),
+            fontSize: String(greenButtonFontSize) + ea,
+            fontWeight: String(400),
+            color: colorChip.white,
+            textAlign: "center",
+          }
+        }
+      ]
+    });
+  }
 
   createNode({
     mother: greenButtonBase,
@@ -1255,6 +1256,11 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     };
     this.completeMode = false;
     this.completeInfo = {};
+
+    this.inicisDeactive = false;
+    if (getObj.inicisdeactive === "true") {
+      this.inicisDeactive = true;
+    }
 
     if (getObj.mobilecard !== undefined) {
       const { convertingData } = await ajaxJson({
