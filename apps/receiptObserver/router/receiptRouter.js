@@ -438,8 +438,9 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
+  const { equalJson, messageLog, messageSend, errorLog, autoComma, requestSystem } = this.mother;
   const collection = "accountTransfer";
+  const standardDay = 7;
   let obj = {};
   obj.link = "/smsParsing";
   obj.func = async function (req, res) {
@@ -450,24 +451,47 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       const selfMongo = instance.mongolocal;
       const { date, amount, name } = equalJson(req.body);
       const errorMessage = "뭔가 은행 문자가 왔는데 찾을 수 없음 : " + name + " " + autoComma(amount) + "원";
-      let rows;
+      let rows, ago, target, rows2;
 
       messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
 
-      // rows = await back.mongoRead(collection, { amount }, { selfMongo });
-      // if (rows.length > 0) {
-      //
-      //   rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-      //
-      //
-      //
-      //
-      //
-      //
-      //
-      // } else {
-      //   errorLog(errorMessage).catch((e) => { console.log(e); });
-      // }
+      ago = new Date();
+      ago.setDate(ago.getDate() - (standardDay * 2));
+
+      target = null;
+      rows = await back.mongoRead(collection, { amount }, { selfMongo });
+      if (rows.length > 0) {
+        rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+        rows = rows.filter((obj) => {
+          return obj.date.valueOf() >= ago.valueOf();
+        }).filter((obj) => {
+          return (new RegExp(obj.name, "gi")).test(name);
+        });
+        if (rows.length > 0) {
+          if (rows.length === 1) {
+            [ target ] = rows;
+          } else {
+            rows2 = rows.filter((obj) => {
+              return obj.name.trim() === name.trim();
+            });
+            if (rows2.length > 0) {
+              [ target ] = rows2;
+            } else {
+              [ target ] = rows;
+            }
+          }
+        } else {
+          errorLog(errorMessage).catch((e) => { console.log(e); });
+        }
+      } else {
+        errorLog(errorMessage).catch((e) => { console.log(e); });
+      }
+
+      if (target !== null) {
+        await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
+          headers: { "Content-Type": "application/json" }
+        });
+      }
 
       res.set({
         "Content-Type": "application/json",
@@ -1053,11 +1077,17 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
       proofs = bill.returnBillDummies("proofs");
-      if (typeof bankFrom === "string") {
-        proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
+
+      if (!(typeof req.body.real_account === "string")) {
+        if (typeof bankFrom === "string") {
+          proofs.method = "무통장 입금(" + bankFrom.replace(/은행/gi, '') + ")";
+        } else {
+          proofs.method = "무통장 입금(알 수 없음)";
+        }
       } else {
-        proofs.method = "무통장 입금(알 수 없음)";
+        proofs.method = "계좌 이체";
       }
+
       proofs.proof = inisis;
       proofs.to = nameFrom;
       thisBill.requests[requestNumber].proofs.unshift(proofs);

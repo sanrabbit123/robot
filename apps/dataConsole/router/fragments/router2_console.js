@@ -3287,7 +3287,16 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             date: new Date(),
             name: buyername,
             phone: buyertel,
-            amount: price
+            amount: price,
+            accountInfo: {
+              no_tid: "realAccount",
+              no_oid: oid,
+              cd_bank: "00",
+              nm_inputbank: "unknown",
+              nm_input: buyername,
+              amt_input: String(price),
+              real_account: "true"
+            }
           }, {
             headers: { "Content-Type": "application/json" }
           });

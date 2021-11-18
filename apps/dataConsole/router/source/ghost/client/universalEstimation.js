@@ -545,7 +545,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
               }
             },
             {
-              text: "결제 완료",
+              text: completeInfo.method === "card" ? "결제 완료" : "안내 완료",
               style: {
                 display: "inline-block",
                 position: "relative",
