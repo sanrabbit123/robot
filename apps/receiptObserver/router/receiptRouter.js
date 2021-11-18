@@ -454,16 +454,20 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
 
       messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
 
-      rows = await back.mongoRead(collection, { amount }, { selfMongo });
-      if (rows.length > 0) {
-
-        rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-
-
-
-      } else {
-        errorLog(errorMessage).catch((e) => { console.log(e); });
-      }
+      // rows = await back.mongoRead(collection, { amount }, { selfMongo });
+      // if (rows.length > 0) {
+      //
+      //   rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      // } else {
+      //   errorLog(errorMessage).catch((e) => { console.log(e); });
+      // }
 
       res.set({
         "Content-Type": "application/json",
