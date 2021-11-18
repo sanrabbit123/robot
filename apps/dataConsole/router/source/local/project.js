@@ -4714,7 +4714,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                 tempObj.text += "횟수 : ";
                 tempObj.text += String(number);
                 tempObj.text += " | ";
-                tempObj.text += (totalNum <= payNum - cancelNum ? "정산" : "미정산");
+                tempObj.text += (Math.floor(totalNum) <= Math.floor(payNum - cancelNum) ? "정산" : "미정산");
                 tempObj.id = id;
 
                 tempObj.deactive = (removal.valueOf() > (new Date(2000, 0, 1)).valueOf());

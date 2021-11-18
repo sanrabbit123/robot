@@ -327,7 +327,6 @@ BillMaker.billDictionary = {
           info = [];
           info.push({ address: client.requests[0].request.space.address.value });
           info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-          info.push({ method });
           return info;
         },
         item: (amountObject, subObj) => {
@@ -357,7 +356,6 @@ BillMaker.billDictionary = {
           info = [];
           info.push({ address: client.requests[0].request.space.address.value });
           info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-          info.push({ method });
           return info;
         },
         item: (amountObject, subObj) => {
@@ -387,7 +385,6 @@ BillMaker.billDictionary = {
           info = [];
           info.push({ address: client.requests[0].request.space.address.value });
           info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-          info.push({ method });
           return info;
         },
         item: (amountObject, subObj) => {
@@ -417,7 +414,6 @@ BillMaker.billDictionary = {
           info = [];
           info.push({ address: client.requests[0].request.space.address.value });
           info.push({ pyeong: client.requests[0].request.space.pyeong.value });
-          info.push({ method });
           return info;
         },
         item: (amountObject, subObj) => {
@@ -558,7 +554,123 @@ BillMaker.billDictionary = {
           };
         },
         comments: []
-      }
+      },
+      firstConstructFee: {
+        name: "시공 계약금 정산",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          return info;
+        },
+        item: (amountObject, subObj) => {
+          return [
+            [ "constructExpenses", amountObject.first ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: "",
+            name: "홈리에종",
+            phone: "02-2039-2252",
+            email: "master@home-liaison.com",
+          };
+        },
+        comments: [
+          "홈리에종 선금 정산은 디자이너님께 드리는 총 정산 비용의 50%입니다.",
+          "프로젝트가 모두 완료되고 고객님의 컨펌이 있은 후, 잔금 정산이 될 예정입니다.",
+          "총 정산 비용은 전체 디자인비에서 해당 디자이너님의 수수료 비율을 제한 금액입니다.",
+          "해당 디자이너님의 사업자 유형에 따라 정산의 방식이 다를 수 있습니다.",
+        ]
+      },
+      startConstructFee: {
+        name: "시공 착수금 정산",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          return info;
+        },
+        item: (amountObject, subObj) => {
+          return [
+            [ "constructExpenses", amountObject.start ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: "",
+            name: "홈리에종",
+            phone: "02-2039-2252",
+            email: "master@home-liaison.com",
+          };
+        },
+        comments: [
+          "홈리에종 선금 정산은 디자이너님께 드리는 총 정산 비용의 50%입니다.",
+          "프로젝트가 모두 완료되고 고객님의 컨펌이 있은 후, 잔금 정산이 될 예정입니다.",
+          "총 정산 비용은 전체 디자인비에서 해당 디자이너님의 수수료 비율을 제한 금액입니다.",
+          "해당 디자이너님의 사업자 유형에 따라 정산의 방식이 다를 수 있습니다.",
+        ]
+      },
+      middleConstructFee: {
+        name: "시공 중도금 정산",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          return info;
+        },
+        item: (amountObject, subObj) => {
+          return [
+            [ "constructExpenses", amountObject.middle ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: "",
+            name: "홈리에종",
+            phone: "02-2039-2252",
+            email: "master@home-liaison.com",
+          };
+        },
+        comments: [
+          "홈리에종 선금 정산은 디자이너님께 드리는 총 정산 비용의 50%입니다.",
+          "프로젝트가 모두 완료되고 고객님의 컨펌이 있은 후, 잔금 정산이 될 예정입니다.",
+          "총 정산 비용은 전체 디자인비에서 해당 디자이너님의 수수료 비율을 제한 금액입니다.",
+          "해당 디자이너님의 사업자 유형에 따라 정산의 방식이 다를 수 있습니다.",
+        ]
+      },
+      remainConstructFee: {
+        name: "시공 잔금 정산",
+        info: (client, designer, project, method, subObj = {}) => {
+          let info;
+          info = [];
+          info.push({ address: client.requests[0].request.space.address.value });
+          info.push({ pyeong: client.requests[0].request.space.pyeong.value });
+          return info;
+        },
+        item: (amountObject, subObj) => {
+          return [
+            [ "constructExpenses", amountObject.remain ]
+          ];
+        },
+        target: (client, designer, project, method, subObj = {}) => {
+          return {
+            id: "",
+            name: "홈리에종",
+            phone: "02-2039-2252",
+            email: "master@home-liaison.com",
+          };
+        },
+        comments: [
+          "홈리에종 선금 정산은 디자이너님께 드리는 총 정산 비용의 50%입니다.",
+          "프로젝트가 모두 완료되고 고객님의 컨펌이 있은 후, 잔금 정산이 될 예정입니다.",
+          "총 정산 비용은 전체 디자인비에서 해당 디자이너님의 수수료 비율을 제한 금액입니다.",
+          "해당 디자이너님의 사업자 유형에 따라 정산의 방식이 다를 수 있습니다.",
+        ]
+      },
     },
     goods: {
       designerTime: {
@@ -585,7 +697,7 @@ BillMaker.billDictionary = {
         ]
       },
       constructTime: {
-        id: "_idte",
+        id: "_icte",
         name: "시공비",
         description: "견적에 따른 인테리어 공사를 진행하는 비용입니다.",
         ea: null,
@@ -648,7 +760,19 @@ BillMaker.billDictionary = {
           "출장비는 대중 교통이 아닌 차량의 이동 거리 및 시간으로 측정됩니다.",
           "출장비에는 디자이너님의 미팅 시간이 감안된 디자인 인건비가 함께 포함되어 있습니다.",
         ]
-      }
+      },
+      constructExpenses: {
+        id: "_eces",
+        name: "시공 비용",
+        description: "시공 비용입니다.",
+        ea: null,
+        number: (subObj) => { return 1; },
+        amount: (amount, subObj) => {
+          const { client, designer, freeRatio } = subObj;
+          return { amount: amount, commission: 0 };
+        },
+        comments: []
+      },
     },
     etc: {
       contractAmount: 300000,
@@ -1433,7 +1557,6 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
 
     }
 
-
     requestObject.name = thisRequest.name;
     for (let c of commentsArr) {
       requestObject.comments.push(c);
@@ -1558,25 +1681,6 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
     }
     thisResponse = stylingResponses[responseKey];
 
-    feeObject = null;
-    for (let proposal of project.proposal.detail) {
-      if (proposal.desid === designer.desid) {
-        for (let obj of proposal.fee) {
-          if (obj.method === method) {
-            feeObject = obj;
-          }
-        }
-      }
-    }
-    if (feeObject === null) {
-      if (option.feeObject !== undefined && option.feeObject !== null && typeof option.feeObject === "object") {
-        feeObject = option.feeObject;
-      } else {
-        throw new Error("cannot find fee object");
-      }
-    }
-    distance = feeObject.distance;
-
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
     } else {
@@ -1598,40 +1702,99 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
     responseObject.id = bilid + responseConst + String(thisBill.responses.length);
     responseObject.info = thisResponse.info(client, designer, project, method, null);
 
-    itemMatrix = thisResponse.item(feeObject, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
-    commentsArr = thisResponse.comments;
-    for (let [ property, thisAmount ] of itemMatrix) {
-      await sleep(100);
-      if (designerCalculation[property] === undefined) {
-        throw new Error("item property error");
+
+    if (typeof option.customAmount !== "object" || option.customAmount === null) {
+
+      feeObject = null;
+      for (let proposal of project.proposal.detail) {
+        if (proposal.desid === designer.desid) {
+          for (let obj of proposal.fee) {
+            if (obj.method === method) {
+              feeObject = obj;
+            }
+          }
+        }
       }
-      item = designerCalculation[property];
-      itemFactor = this.returnBillDummies("responseItems");
-      itemFactor.id = bilid + item.id;
-      itemFactor.class = property;
-      itemFactor.name = item.name;
-      itemFactor.description = item.description;
-      itemFactor.unit.ea = item.ea;
-      tempObject = item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
-      tempAmount = tempObject.amount;
-      tempCommission = tempObject.commission;
-      itemFactor.unit.price = tempAmount;
-      if (typeof option.number === "object" && option.number !== null) {
-        if (typeof option.number[property] === "number") {
-          itemFactor.unit.number = option.number[property];
+      if (feeObject === null) {
+        if (option.feeObject !== undefined && option.feeObject !== null && typeof option.feeObject === "object") {
+          feeObject = option.feeObject;
+        } else {
+          throw new Error("cannot find fee object");
+        }
+      }
+      distance = feeObject.distance;
+
+      itemMatrix = thisResponse.item(feeObject, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+      commentsArr = thisResponse.comments;
+      for (let [ property, thisAmount ] of itemMatrix) {
+        await sleep(100);
+        if (designerCalculation[property] === undefined) {
+          throw new Error("item property error");
+        }
+        item = designerCalculation[property];
+        itemFactor = this.returnBillDummies("responseItems");
+        itemFactor.id = bilid + item.id;
+        itemFactor.class = property;
+        itemFactor.name = item.name;
+        itemFactor.description = item.description;
+        itemFactor.unit.ea = item.ea;
+        tempObject = item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+        tempAmount = tempObject.amount;
+        tempCommission = tempObject.commission;
+        itemFactor.unit.price = tempAmount;
+        if (typeof option.number === "object" && option.number !== null) {
+          if (typeof option.number[property] === "number") {
+            itemFactor.unit.number = option.number[property];
+          } else {
+            itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+          }
         } else {
           itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
         }
-      } else {
-        itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+        if (property === "travelExpenses") {
+          tempCommission = (tempCommission / distance.number) * itemFactor.unit.number;
+        }
+        itemFactor.amount.pure = Math.floor(itemFactor.unit.price * itemFactor.unit.number);
+        itemFactor.amount.commission = tempCommission;
+        responseObject.items.push(equalJson(JSON.stringify(itemFactor)));
+        commentsArr = commentsArr.concat(item.comments);
       }
-      if (property === "travelExpenses") {
-        tempCommission = (tempCommission / distance.number) * itemFactor.unit.number;
+
+    } else {
+
+      itemMatrix = thisResponse.item(feeObject, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+      commentsArr = thisResponse.comments;
+      for (let [ property, thisAmount ] of itemMatrix) {
+        await sleep(100);
+        if (designerCalculation[property] === undefined) {
+          throw new Error("item property error");
+        }
+        item = designerCalculation[property];
+        itemFactor = this.returnBillDummies("responseItems");
+        itemFactor.id = bilid + item.id;
+        itemFactor.class = property;
+        itemFactor.name = item.name;
+        itemFactor.description = item.description;
+        itemFactor.unit.ea = item.ea;
+        tempObject = item.amount(thisAmount, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+        tempAmount = tempObject.amount;
+        tempCommission = tempObject.commission;
+        itemFactor.unit.price = tempAmount;
+        if (typeof option.number === "object" && option.number !== null) {
+          if (typeof option.number[property] === "number") {
+            itemFactor.unit.number = option.number[property];
+          } else {
+            itemFactor.unit.number = item.number({ client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+          }
+        } else {
+          itemFactor.unit.number = item.number({ client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+        }
+        itemFactor.amount.pure = Math.floor(itemFactor.unit.price * itemFactor.unit.number);
+        itemFactor.amount.commission = tempCommission;
+        responseObject.items.push(equalJson(JSON.stringify(itemFactor)));
+        commentsArr = commentsArr.concat(item.comments);
       }
-      itemFactor.amount.pure = Math.floor(itemFactor.unit.price * itemFactor.unit.number);
-      itemFactor.amount.commission = tempCommission;
-      responseObject.items.push(equalJson(JSON.stringify(itemFactor)));
-      commentsArr = commentsArr.concat(item.comments);
+
     }
 
     responseObject.name = thisResponse.name;
@@ -4689,6 +4852,79 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
     }
 
     return resultObj;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.constructInjection = async function (bilid, amountObject, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof bilid !== "string" || typeof amountObject !== "object") {
+    throw new Error("invaild input");
+  }
+  if (typeof amountObject.first !== "number" || typeof amountObject.start !== "number" || typeof amountObject.middle !== "number" || typeof amountObject.remain !== "number") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongoinfo, mongopythoninfo, equalJson, sleep } = this.mother;
+  try {
+    const { first, start, middle, remain } = amountObject;
+    let thisBill;
+    let selfBoo, selfCoreBoo;
+    let MONGOC, MONGOCOREC;
+    let client, designer, project;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    thisBill = await this.getBillById(bilid, { selfMongo: MONGOC });
+    if (thisBill === null) {
+      throw new Error("invaild bilid");
+    }
+    const { cliid, desid, proid, method } = thisBill.links;
+    client = await back.getClientById(cliid, { selfMongo: MONGOCOREC });
+    designer = await back.getDesignerById(desid, { selfMongo: MONGOCOREC });
+    project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+
+    if (first !== 0) {
+      await this.requestInjection(bilid, "constructFirst", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "firstConstructFee", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+    }
+    if (start !== 0) {
+      await this.requestInjection(bilid, "constructStart", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "startConstructFee", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+    }
+    if (middle !== 0) {
+      await this.requestInjection(bilid, "constructMiddle", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "middleConstructFee", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+    }
+    if (remain !== 0) {
+      await this.requestInjection(bilid, "constructRemain", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "remainConstructFee", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+    }
 
   } catch (e) {
     console.log(e);
