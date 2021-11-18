@@ -489,8 +489,16 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
 
       if (target !== null) {
 
+        const { phone, amount } = target;
         requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
           headers: { "Content-Type": "application/json" }
+        }).then(() => {
+          return requestSystem(`https://${instance.address.officeinfo.ghost.host}:${String(instance.address.officeinfo.ghost.graphic.port[0])}/receiptSend`, {
+            amount: String(amount),
+            phone,
+          }, { headers: { "Content-Type": "application/json" } });
+        }).then(() => {
+          return messageSend(`${name} 고객님의 번호로 현금영수증 발행을 완료하였어요.`, "#700_operation", true);
         }).catch((err) => {
           console.log(err);
         });
