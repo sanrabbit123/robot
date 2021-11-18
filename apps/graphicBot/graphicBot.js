@@ -473,7 +473,6 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
     if (listDir[num] === undefined) {
       throw new Error("index out error");
     }
-    console.log(listDir[num]);
     const arrFunc = require(this.list + "/" + listDir[num]);
     const arr = arrFunc(arg, this.info);
     if (!Array.isArray(arr)) {

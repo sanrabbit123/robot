@@ -18,15 +18,9 @@ module.exports = function (arg, info) {
       const { amount, phone } = equalJson(JSON.stringify(POSTCONST));
       document.getElementById("trsAmt").value = String(amount);
       document.getElementById("spstCnfrNoEncCntn").value = String(phone);
-
-
-      console.log(amount, phone);
-
-      // await sleep(500);
-      // await clickElement(document.querySelector("#trigger4"));
-
-      await sleep(10000);
-
+      await sleep(500);
+      await clickElement(document.querySelector("#trigger4"));
+      await sleep(500);
     },
   ];
 };
