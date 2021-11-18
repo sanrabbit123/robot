@@ -3659,6 +3659,8 @@ Ghost.prototype.smsLaunching = async function () {
   const { fileSystem, dateToString, messageLog, errorLog, equalJson, requestSystem } = this.mother;
   const sender = "15662566";
   const token = "o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr";
+  const accountStartNumber = "049";
+  const accountEndNumber = "022";
   try {
     const https = require("https");
     const express = require("express");
@@ -3728,10 +3730,22 @@ Ghost.prototype.smsLaunching = async function () {
                       const date = new Date(timestamp * 1000);
                       let messageArr, index, amount, name, res;
 
-                      messageArr = body.split("\n");
-                      if (messageArr.length >= 4) {
+                      messageArr = body.split("\n").map((str) => { return str.trim(); });
+                      messageArr = messageArr.filter((str) => {
+                        return !(/^\[/.test(str) && /^\]/.test(str));
+                      }).filter((str) => {
+                        return !(/[0-9]/gi.test(str) && / /gi.test(str) && /\//gi.test(str) && /\:/gi.test(str) && str.replace(/[0-9\/\: ]/gi, '') === '');
+                      }).filter((str) => {
+                        return !/^잔액/gi.test(str);
+                      }).filter((str) => {
+                        return !((new RegExp('^' + accountStartNumber)).test(str) && (new RegExp(accountEndNumber + '$')).test(str));
+                      });
+                      if (messageArr[messageArr.length - 1].trim() === "기업") {
+                        messageArr = messageArr.slice(0, -1);
+                      }
 
-                        messageArr = messageArr.slice(2);
+                      if (messageArr.length >= 2) {
+
                         index = messageArr.findIndex((str) => { return /^입금/gi.test(str.trim()) });
                         if (index === -1) {
                           throw new Error("invaild message");
