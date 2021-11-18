@@ -488,7 +488,6 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       }
 
       if (target !== null) {
-
         const { phone, amount } = target;
         requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
           headers: { "Content-Type": "application/json" }
@@ -502,7 +501,6 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
         }).catch((err) => {
           console.log(err);
         });
-
       }
 
       res.set({
@@ -637,6 +635,137 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
     }
   }
   return obj;
+}
+
+ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumber, data, amount, proofs, inisis, needs) {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, autoComma, ghostRequest, requestSystem, messageSend, errorLog } = this.mother;
+  try {
+    const { thisBill, client, designer, project, proposal } = needs;
+    const { cliid } = client;
+    const { desid } = designer;
+    const { proid } = project;
+    let projectQuery;
+    let pureDesignFee;
+    let vat, consumer;
+    let classification, percentage;
+    let businessMethod;
+    let bankName, bankTo;
+    let calculate;
+    let designerHistory;
+
+    if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
+      projectQuery = {};
+      if (proposal.fee.length === 1) {
+        pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
+      } else {
+        for (let obj of proposal.fee) {
+          if (obj.method === thisBill.links.method) {
+            pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
+          }
+        }
+      }
+
+      if (/계약금/gi.test(data.goodName.trim())) {
+        projectQuery["process.contract.first.date"] = new Date();
+        projectQuery["process.contract.first.calculation.amount"] = amount;
+        projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
+        projectQuery["process.contract.first.calculation.info.proof"] = inisis;
+        projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
+
+        projectQuery["desid"] = desid;
+        projectQuery["service.online"] = !/off/gi.test(thisBill.links.method);
+        projectQuery["process.status"] = "대기";
+        projectQuery["proposal.status"] = "고객 선택";
+
+        vat = Math.round(pureDesignFee * 0.1);
+        consumer = Math.round(pureDesignFee * 1.1);
+
+        projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
+        projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
+        projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
+
+        classification = designer.information.business.businessInfo.classification;
+        percentage = Number(designer.information.business.service.cost.percentage);
+        businessMethod = "사업자(일반)";
+        if (/사업자/g.test(classification)) {
+          if (/일반/g.test(classification)) {
+            businessMethod = "사업자(일반)";
+          } else {
+            businessMethod = "사업자(간이)";
+          }
+        } else {
+          businessMethod = "프리랜서";
+        }
+        projectQuery["process.calculation.method"] = businessMethod;
+        projectQuery["process.calculation.percentage"] = percentage;
+
+        if (designer.information.business.account.length > 0) {
+          bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
+          bankTo = designer.information.business.account[0].to;
+          projectQuery["process.calculation.info.account"] = bankName;
+          projectQuery["process.calculation.info.proof"] = bankTo;
+          projectQuery["process.calculation.info.to"] = bankTo;
+        }
+
+        [ calculate ] = bill.designerCalculation(pureDesignFee, businessMethod, percentage, client, { toArray: true });
+        projectQuery["process.calculation.payments.totalAmount"] = calculate;
+        projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
+        projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
+
+        await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
+        designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
+        await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+        await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
+
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+        await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
+
+        instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
+          client: client.name,
+          designer: designer.designer,
+        });
+
+        requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
+          headers: {
+            "Content-Type": "application/json",
+            "origin": "https://" + instance.address.pythoninfo.host
+          }
+        }).then((obj) => {
+          if (obj.status >= 300) {
+            return errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) ", channel: "#error_log" }).catch((err) => { console.log(err); });
+          }
+        }).catch((err) => {
+          errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject, realtime 연산중 콘솔에서 문제 생김) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); })
+        });
+
+      } else if (/잔금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.status"] = "진행중";
+        projectQuery["process.action"] = "시작 대기";
+        projectQuery["process.contract.remain.date"] = new Date();
+        projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
+        projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
+        projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
+
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+        instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
+          client: client.name,
+          designer: designer.designer,
+          emoji: "(방긋)",
+        });
+
+      }
+
+    }
+
+  } catch (e) {
+    errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject) : " + e.message, channel: "#error_log" }).catch((e) => { console.log(e); })
+    console.log(e);
+  }
 }
 
 ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
@@ -789,111 +918,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
 
           if (paymentComplete) {
-            if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
-              projectQuery = {};
-              if (proposal.fee.length === 1) {
-                pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
-              } else {
-                for (let obj of proposal.fee) {
-                  if (obj.method === thisBill.links.method) {
-                    pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
-                  }
-                }
-              }
-
-              if (/계약금/gi.test(data.goodName.trim())) {
-                projectQuery["process.contract.first.date"] = new Date();
-                projectQuery["process.contract.first.calculation.amount"] = amount;
-                projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
-                projectQuery["process.contract.first.calculation.info.proof"] = inisis;
-                projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
-
-                projectQuery["desid"] = desid;
-                projectQuery["service.online"] = !/off/gi.test(thisBill.links.method);
-                projectQuery["process.status"] = "대기";
-                projectQuery["proposal.status"] = "고객 선택";
-
-                vat = Math.round(pureDesignFee * 0.1);
-                consumer = Math.round(pureDesignFee * 1.1);
-
-                projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
-                projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
-                projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
-
-                classification = designer.information.business.businessInfo.classification;
-                percentage = Number(designer.information.business.service.cost.percentage);
-                businessMethod = "사업자(일반)";
-                if (/사업자/g.test(classification)) {
-                  if (/일반/g.test(classification)) {
-                    businessMethod = "사업자(일반)";
-                  } else {
-                    businessMethod = "사업자(간이)";
-                  }
-                } else {
-                  businessMethod = "프리랜서";
-                }
-                projectQuery["process.calculation.method"] = businessMethod;
-                projectQuery["process.calculation.percentage"] = percentage;
-
-                if (designer.information.business.account.length > 0) {
-                  bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
-                  bankTo = designer.information.business.account[0].to;
-                  projectQuery["process.calculation.info.account"] = bankName;
-                  projectQuery["process.calculation.info.proof"] = bankTo;
-                  projectQuery["process.calculation.info.to"] = bankTo;
-                }
-
-                [ calculate ] = bill.designerCalculation(pureDesignFee, businessMethod, percentage, client, { toArray: true });
-                projectQuery["process.calculation.payments.totalAmount"] = calculate;
-                projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
-                projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
-
-                await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-                designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-                await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
-                await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
-
-                await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-                await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
-
-                instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
-                  client: client.name,
-                  designer: designer.designer,
-                });
-
-                requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
-                  headers: {
-                    "Content-Type": "application/json",
-                    "origin": "https://" + instance.address.pythoninfo.host
-                  }
-                }).then((obj) => {
-                  if (obj.status >= 300) {
-                    return errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" });
-                  }
-                }).catch((err) => {
-                  errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" }).catch((e) => { console.log(e); })
-                });
-
-              } else if (/잔금/gi.test(data.goodName.trim())) {
-
-                projectQuery["process.status"] = "진행중";
-                projectQuery["process.action"] = "시작 대기";
-                projectQuery["process.contract.remain.date"] = new Date();
-                projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
-                projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
-                projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
-
-                await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-
-                instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
-                  client: client.name,
-                  designer: designer.designer,
-                  emoji: "(방긋)",
-                });
-
-              }
-
-            }
+            await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
           }
 
         } else {
@@ -972,7 +997,6 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
   const back = this.back;
   const bill = this.bill;
   const { equalJson, requestSystem, ghostRequest, messageSend, errorLog } = this.mother;
-  const ParsingHangul = require(`${process.cwd()}/apps/parsingHangul/parsingHangul.js`);
   let obj = {};
   obj.link = "/webHookVAccount";
   obj.public = true;
@@ -1112,112 +1136,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
 
       if (paymentComplete) {
-        if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
-
-          projectQuery = {};
-          if (proposal.fee.length === 1) {
-            pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
-          } else {
-            for (let obj of proposal.fee) {
-              if (obj.method === thisBill.links.method) {
-                pureDesignFee = Math.round(obj.amount * (1 - obj.discount));
-              }
-            }
-          }
-
-          if (/계약금/gi.test(data.goodName.trim())) {
-            projectQuery["process.contract.first.date"] = new Date();
-            projectQuery["process.contract.first.calculation.amount"] = amount;
-            projectQuery["process.contract.first.calculation.info.method"] = proofs.method;
-            projectQuery["process.contract.first.calculation.info.proof"] = inisis;
-            projectQuery["process.contract.first.calculation.info.to"] = proofs.to;
-
-            projectQuery["desid"] = desid;
-            projectQuery["service.online"] = !/off/gi.test(thisBill.links.method);
-            projectQuery["process.status"] = "대기";
-            projectQuery["proposal.status"] = "고객 선택";
-
-            vat = Math.round(pureDesignFee * 0.1);
-            consumer = Math.round(pureDesignFee * 1.1);
-
-            projectQuery["process.contract.remain.calculation.amount.supply"] = Number(pureDesignFee);
-            projectQuery["process.contract.remain.calculation.amount.vat"] = Number(vat);
-            projectQuery["process.contract.remain.calculation.amount.consumer"] = Number(consumer);
-
-            classification = designer.information.business.businessInfo.classification;
-            percentage = Number(designer.information.business.service.cost.percentage);
-            businessMethod = "사업자(일반)";
-            if (/사업자/g.test(classification)) {
-              if (/일반/g.test(classification)) {
-                businessMethod = "사업자(일반)";
-              } else {
-                businessMethod = "사업자(간이)";
-              }
-            } else {
-              businessMethod = "프리랜서";
-            }
-            projectQuery["process.calculation.method"] = businessMethod;
-            projectQuery["process.calculation.percentage"] = percentage;
-
-            if (designer.information.business.account.length > 0) {
-              bankName = designer.information.business.account[0].bankName + " " + String(designer.information.business.account[0].accountNumber);
-              bankTo = designer.information.business.account[0].to;
-              projectQuery["process.calculation.info.account"] = bankName;
-              projectQuery["process.calculation.info.proof"] = bankTo;
-              projectQuery["process.calculation.info.to"] = bankTo;
-            }
-
-            [ calculate ] = bill.designerCalculation(pureDesignFee, businessMethod, percentage, client, { toArray: true });
-            projectQuery["process.calculation.payments.totalAmount"] = calculate;
-            projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
-            projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
-
-            await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-            designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-            await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
-            await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
-
-            await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-            await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
-
-            instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
-              client: client.name,
-              designer: designer.designer,
-            });
-
-            requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
-              headers: {
-                "Content-Type": "application/json",
-                "origin": "https://" + instance.address.pythoninfo.host
-              }
-            }).then((obj) => {
-              if (obj.status >= 300) {
-                errorLog({ text: "Python 서버 문제 생김 (rou_post_ghostClientBill, realtime 연산중 콘솔에서 문제 생김) " + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" }).catch((err) => { console.log(err); });
-              }
-            }).catch((err) => {
-              errorLog({ text: "Python 서버 문제 생김 (rou_post_webHookVAccount, realtime 연산중 콘솔에서 문제 생김) : " + err.message + "\n\n" + JSON.stringify(req.body, null, 2), channel: "#error_log" }).catch((err) => { console.log(err); });
-            });
-
-          } else if (/잔금/gi.test(data.goodName.trim())) {
-
-            projectQuery["process.status"] = "진행중";
-            projectQuery["process.action"] = "시작 대기";
-            projectQuery["process.contract.remain.date"] = new Date();
-            projectQuery["process.contract.remain.calculation.info.method"] = proofs.method;
-            projectQuery["process.contract.remain.calculation.info.proof"] = inisis;
-            projectQuery["process.contract.remain.calculation.info.to"] = proofs.to;
-
-            await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
-
-            instance.kakao.sendTalk("remainPaymentAndChannel", client.name, client.phone, {
-              client: client.name,
-              designer: designer.designer,
-              emoji: "(방긋)",
-            });
-
-          }
-
-        }
+        await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
       }
 
       res.set({ "Content-Type": "text/plain" });
