@@ -92,6 +92,47 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const url = "wss://stream.pushbullet.com/websocket/o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr";
+    const WebSocket = require("ws");
+    const ws = new WebSocket(url);
+
+    setInterval(() => {
+      console.log("i'm alive in " + dateToString(new Date(), true));
+    }, (5 * 60 * 1000));
+
+    ws.on("message", (message) => {
+      try {
+        const data = JSON.stringify(message);
+        if (data.type === "push") {
+          if (typeof data.push === "object") {
+            if (Array.isArray)
+          }
+        }
+      } catch (e) {
+        process.exit();
+      }
+    });
+
+    ws.on("open", () => {
+      setInterval(() => {
+        ws.send(JSON.stringify({ message: "alive" }));
+      }, 1000);
+      setInterval(async () => {
+        try {
+          await messageLog("sms wss alive");
+        } catch (e) {
+          await errorLog(e.message);
+          process.exit();
+        }
+      }, (30 * 60 * 1000));
+    });
+
+
+
+
+
+
+
     /*
     // widsign to db (payments amount)
     await (async () => {
