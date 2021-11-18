@@ -163,9 +163,9 @@ UniversalEstimationJs.prototype.billWordings = function () {
     wordings.completeComments.push(dateToString(this.completeInfo.when) + " 까지 다음 가상계좌를 통해 입금해주시면 결제가 완료됩니다!");
     wordings.completeComments.push("가상계좌 정보 :&nbsp;&nbsp;<u%" + this.completeInfo.where.bank + between + this.completeInfo.where.account + between + this.completeInfo.where.to.replace(/ /g, '').replace(/\)/, ") ") + "%u>");
   } else if (this.completeInfo.method === "real") {
+    wordings.completeComments = [];
     wordings.completeComments.push(dateToString(this.completeInfo.when) + " 까지 다음 홈리에종 계좌를 통해 입금해주시면 결제가 완료됩니다!");
     wordings.completeComments.push("계좌 정보 :&nbsp;&nbsp;<u%" + this.completeInfo.where.bank + between + this.completeInfo.where.account + between + this.completeInfo.where.to.replace(/ /g, '').replace(/\)/, ") ") + "%u>");
-    wordings.completeComments = [];
   }
 
   this.request.name = bill.requests[requestNumber].name;
@@ -853,6 +853,11 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   paymentEvent = function (motherMethod) {
     return async function (e) {
       try {
+        if (motherMethod === "account") {
+          if (!window.confirm("계좌 이체를 위한 안내를 받으시겠습니까?")) {
+            return;
+          }
+        }
         const { pluginScript, formValue } = await ajaxJson({
           cliid: instance.cliid,
           kind: instance.class,
@@ -898,6 +903,8 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
             plugin();
 
           } else {
+
+
 
             window.alert("계좌 이체로 진행하실 경우, 현금 영수증이 자동으로 발급됩니다!");
             window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript;

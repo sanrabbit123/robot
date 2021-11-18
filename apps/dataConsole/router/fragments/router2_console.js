@@ -3286,7 +3286,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
             goodname,
             date: new Date(),
             name: buyername,
-            phone: buyerPhone,
+            phone: buyertel,
             amount: price
           }, {
             headers: { "Content-Type": "application/json" }
@@ -3493,7 +3493,8 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_inicisPayment): " + e.message).catch((e) => { console.log(e); });
-      res.redirect("/middle/estimation?" + returnUrl.split('?')[1] + "&mode=fail");
+      res.set({ "Content-Type": "application/json" });
+      res.send(JSON.stringify({ message: "error" }));
     }
   }
   return obj;

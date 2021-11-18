@@ -502,7 +502,7 @@ ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
       const { amount, name } = equalJson(req.body);
       let rows, result;
 
-      messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하기 위해 계좌번호를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
+      messageSend(`${name} 고객님이 계좌에 입금을 위한 안내를 받으셨어요. 아직 입금한 건 아니에요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
       await back.mongoCreate(collection, equalJson(req.body), { selfMongo });
 
       res.set({
