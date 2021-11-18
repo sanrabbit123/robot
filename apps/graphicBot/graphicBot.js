@@ -1307,12 +1307,11 @@ GraphicBot.prototype.botRouter = function () {
     }
   };
 
-  funcObj.post_receipt = {
-    link: [ "/receipt" ],
+  funcObj.post_receiptSend = {
+    link: [ "/receiptSend" ],
     func: async function (req, res) {
       try {
         const taskNumber = 5;
-        console.log(taskNumber);
         await fileSystem(`write`, [ `${tong}/${orderConst}_${String(taskNumber)}_${String((new Date()).valueOf())}`, JSON.stringify(req.body) ]);
         if (instance.task !== null) {
           clearTimeout(instance.task);
