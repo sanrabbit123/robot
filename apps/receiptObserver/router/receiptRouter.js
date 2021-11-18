@@ -434,6 +434,38 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_smsParsing = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, messageLog, messageSend, errorLog } = this.mother;
+  let obj = {};
+  obj.link = "/smsParsing";
+  obj.func = async function (req, res) {
+    try {
+      if (req.body.date === undefined || req.body.amount === undefined || req.body.name === undefined) {
+        throw new Error("invaild post");
+      }
+      const { date, amount, name } = equalJson(req.body);
+
+      messageSend(`${name} 고객님이 ${autoComma(amount)}원을 기업은행에 입금하셨어요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_smsParsing): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_createStylingBill = function () {
   const instance = this;
   const back = this.back;
