@@ -3710,6 +3710,7 @@ Ghost.prototype.smsLaunching = async function () {
     });
 
     ws.on("message", async (message) => {
+      console.log(message);
       try {
         const data = JSON.parse(message);
         if (data.type === "push") {
