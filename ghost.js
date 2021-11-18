@@ -3694,7 +3694,7 @@ Ghost.prototype.smsLaunching = async function () {
         await errorLog("sms wss wake up");
         setInterval(() => {
           ws.send(JSON.stringify({ message: "alive" }));
-        }, 30 * 1000);
+        }, 3 * 1000);
         setInterval(async () => {
           try {
             await messageLog("sms wss alive");
