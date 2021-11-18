@@ -3694,7 +3694,7 @@ Ghost.prototype.smsLaunching = async function () {
         await errorLog("sms wss wake up");
         setInterval(() => {
           ws.send(JSON.stringify({ message: "alive" }));
-        }, 1000);
+        }, 30 * 1000);
         setInterval(async () => {
           try {
             await messageLog("sms wss alive");
@@ -3745,7 +3745,7 @@ Ghost.prototype.smsLaunching = async function () {
                         }
                         name = messageArr[index + 1].trim();
 
-                        res = await requestSystem("https://" + instance.address.pythoninfo + ":3000/smsParsing", { date, amount, name }, { headers: { "Content-Type": "application/json" } });
+                        res = await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/smsParsing", { date, amount, name }, { headers: { "Content-Type": "application/json" } });
                         if (typeof res.data !== "object" || res.data === null) {
                           throw new Error("request fail");
                         }
