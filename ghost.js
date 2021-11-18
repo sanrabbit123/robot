@@ -3685,11 +3685,14 @@ Ghost.prototype.smsLaunching = async function () {
         if (now.getHours() === 4 && now.getMinutes() >= 0 && now.getMinutes() <= 9) {
           throw new Error("sms wss sleep");
         }
+        if (now.getHours() === 5 && now.getMinutes() >= 0 && now.getMinutes() <= 9) {
+          throw new Error("sms wss sleep");
+        }
       } catch (e) {
         await errorLog(e.message);
         process.exit();
       }
-    }, (5 * 60 * 1000));
+    }, (10 * 60 * 1000));
 
     ws.on("open", async () => {
       try {
