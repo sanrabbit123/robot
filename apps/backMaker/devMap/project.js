@@ -173,7 +173,7 @@ module.exports = {
       };
     } else if (subject === "process.design.construct") {
       dummy = {
-        status: "",
+        status: "대기",
         request: new Date(1800, 0, 1),
         estimate: [],
         contract: {

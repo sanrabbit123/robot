@@ -143,6 +143,7 @@ Service.prototype.toNormal = function () {
 
 const Business = function (json) {
   let tempInstance;
+  this.company = json.company;
   this.career = new Career(json.career);
   this.account = new Accounts();
   for (let i of json.account) {
@@ -155,6 +156,7 @@ const Business = function (json) {
 
 Business.prototype.toNormal = function () {
   let obj = {};
+  obj.company = this.company;
   obj.career = this.career.toNormal();
   obj.account = this.account.toNormal();
   obj.businessInfo = this.businessInfo.toNormal();

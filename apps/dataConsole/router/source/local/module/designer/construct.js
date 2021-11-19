@@ -79,14 +79,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     "AS 진행중",
     "해당 없음",
   ];
-  partnerValues = [
-    "유창민_예음",
-    "조호익_태호금속",
-    "이청호",
-    "김민정_키친앤숲",
-    "이기석_율",
-    "외부업체",
-  ];
+  partnerValues = this.builderNames;
 
   if (this.type === "construct") {
 
@@ -3328,6 +3321,7 @@ DesignerJs.prototype.constructView = async function () {
     let whereQuery;
     let client;
     let requestNumber;
+    let builders, builderNames;
 
     loading = await this.mother.loadingRun();
 
@@ -3385,7 +3379,7 @@ DesignerJs.prototype.constructView = async function () {
       whereQuery: {
         $or: cliidArr
       }
-    }, "/getClients"));
+    }, "/getClients", { equal: true }));
 
     projectHistory = await ajaxJson({
       idArr: proidArr,
@@ -3410,6 +3404,17 @@ DesignerJs.prototype.constructView = async function () {
       p.history = projectHistory[p.proid];
     }
 
+    builders = await ajaxJson({ noFlat: true, whereQuery: {} }, "/getBuilders", { equal: true });
+    builderNames = builders.map((obj) => {
+      if (obj.information.business.company.trim() === '') {
+        return obj.builder;
+      } else {
+        return obj.builder + "_" + obj.information.business.company;
+      }
+    });
+    builderNames.push("외부업체");
+
+    this.builderNames = builderNames;
     this.projects = projects;
     this.designers = new Designers(designers);
     this.designers.setProjects(projects);

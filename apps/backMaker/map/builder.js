@@ -14,6 +14,7 @@ module.exports = {
           email: "",
           address: [],
           business: {
+            company: "",
             career: {
               relatedY: 0,
               relatedM: 0,
@@ -22,7 +23,7 @@ module.exports = {
             },
             account: [],
             businessInfo: {
-              classification: "",
+              classification: "개인사업자(일반)",
               businessNumber: "",
             },
             service: {
@@ -44,6 +45,7 @@ module.exports = {
           },
           construct: {
             level: 1,
+            cost: 1,
             available: [],
           }
         }

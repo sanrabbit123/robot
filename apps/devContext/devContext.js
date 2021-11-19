@@ -73,7 +73,7 @@ DevContext.prototype.launching = async function () {
     const { Agent } = require("https");
     const agent = new Agent({ rejectUnauthorized: false });
     const chrome = new GoogleChrome();
-
+    const findCode = this.findCode.bind(this);
 
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
@@ -90,7 +90,20 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(res.data, null, 2));
 
 
-    // builder
+
+
+
+
+    // await bill.constructInjection("b2199_aa03s", "u2111_aa02s", {
+    //   first: 300000,
+    //   start: 300000,
+    //   middle: 300000,
+    //   remain: 300000,
+    // }, { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC });
+
+
+
+
 
     
 
@@ -2692,6 +2705,7 @@ DevContext.prototype.findCode = async function (str, openMode = false) {
         await shellExec(`atom ${shellLink(process.cwd() + s)};`);
       }
     }
+    console.log(report);
     return report;
   } catch (e) {
     console.log(e);

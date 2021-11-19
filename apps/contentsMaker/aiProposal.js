@@ -79,7 +79,7 @@ AiProposal.prototype.proposalLaunching = async function () {
     if (this.proid !== "none") {
       this.text = await this.back.getProjectById(this.proid);
     } else {
-      this.text = await this.back.getLatestProject();
+      this.text = (await this.back.getProjectsByQuery({}))[0];
     }
 
     for (let j = 0; j < this.text.proposal.detail.length; j++) {

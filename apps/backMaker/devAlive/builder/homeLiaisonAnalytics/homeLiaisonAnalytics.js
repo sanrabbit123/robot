@@ -33,12 +33,14 @@ class Available extends Array {
 
 const ConstructAnalytics = function (json) {
   this.level = json.level;
-  this.available = new Available(this.available);
+  this.cost = json.cost;
+  this.available = new Available(json.available);
 }
 
 ConstructAnalytics.prototype.toNormal = function () {
   let obj = {};
   obj.level = this.level;
+  obj.cost = this.cost;
   obj.available = this.available.toNormal();
   return obj;
 }

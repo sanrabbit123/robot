@@ -2902,9 +2902,50 @@ ProjectJs.prototype.makeBoard = function (cases) {
           let menu;
           let cancelBox, menuBox;
           let cxMembers;
+          let constructWordings;
+          let constructEvent;
 
           cancelBox = null;
           menuBox = null;
+
+          constructWordings = [
+            "시공화 진행...",
+            "역시공화 진행..."
+          ];
+
+          constructEvent = function (onoff = 0) {
+            return async function (e) {
+              const card = this.parentElement.parentElement;
+              try {
+                const onMode = (onoff === 0);
+                if (onMode) {
+
+                  await GeneralJs.ajaxJson({
+                    mode: "constructOnoff",
+                    action: "on",
+                    proid,
+                  }, "/constructInteraction");
+                  window.alert("성공하였습니다! 시공 콘솔을 확인해보세요.");
+
+                } else {
+
+                  if (window.confirm("이 작업으로 인해 삭제되는 데이터는 복구할 수 없습니다! 계속하시겠습니까?")) {
+                    await GeneralJs.ajaxJson({
+                      mode: "constructOnoff",
+                      action: "off",
+                      proid,
+                    }, "/constructInteraction");
+                    window.alert("성공하였습니다!");
+                  }
+
+                }
+                card.removeChild(card.children[card.children.length - 2]);
+                card.removeChild(card.lastChild);
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          }
 
           map.status.items
           cxMembers = instance.allMembers.filter((obj) => { return obj.roles.includes("CX") || obj.roles.includes("CEO"); }).map((obj) => { return obj.name; });
@@ -2944,7 +2985,6 @@ ProjectJs.prototype.makeBoard = function (cases) {
               left: String(0),
             }
           });
-
           menuBox = createNode({
             mother: this,
             event: {
@@ -2962,7 +3002,6 @@ ProjectJs.prototype.makeBoard = function (cases) {
           });
 
           for (let [ left, right ] of menu) {
-
             createNode({
               mother: menuBox,
               attribute: {
@@ -3000,7 +3039,6 @@ ProjectJs.prototype.makeBoard = function (cases) {
                 }
               ]
             });
-
             createNode({
               mother: menuBox,
               attribute: {
@@ -3037,7 +3075,44 @@ ProjectJs.prototype.makeBoard = function (cases) {
                 }
               ]
             });
+          }
 
+          for (let i = 0; i < constructWordings.length; i++) {
+            createNode({
+              mother: menuBox,
+              attribute: {
+                mode: "status",
+                value: constructWordings[i],
+              },
+              event: {
+                click: constructEvent(i),
+                contextmenu: (e) => { e.preventDefault(); e.stopPropagation(); }
+              },
+              style: {
+                display: "block",
+                position: "relative",
+                background: colorChip.green,
+                borderRadius: String(3) + "px",
+                height: String(contextMenuBlockHeight) + ea,
+                marginBottom: String(contextMenuBlockMargin) + ea,
+                boxShadow: "0px 2px 15px -9px " + colorChip.shadow,
+              },
+              children: [
+                {
+                  text: constructWordings[i],
+                  style: {
+                    position: "absolute",
+                    fontSize: String(contextMenuBlockSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.whiteBlack,
+                    width: String(100) + '%',
+                    top: String(contextMenuBlockTextTop) + ea,
+                    left: String(0),
+                    textAlign: "center",
+                  }
+                }
+              ]
+            });
           }
 
         },

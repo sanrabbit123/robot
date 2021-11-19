@@ -569,12 +569,13 @@ BillMaker.billDictionary = {
             [ "constructExpenses", amountObject.first ]
           ];
         },
-        target: (client, designer, project, method, subObj = {}) => {
+        target: (client, designer, project, method, subObj) => {
+          const { builder } = subObj;
           return {
-            id: "",
-            name: "홈리에종",
-            phone: "02-2039-2252",
-            email: "master@home-liaison.com",
+            id: builder.buiid,
+            name: builder.builder,
+            phone: builder.information.phone,
+            email: builder.information.email,
           };
         },
         comments: [
@@ -598,12 +599,13 @@ BillMaker.billDictionary = {
             [ "constructExpenses", amountObject.start ]
           ];
         },
-        target: (client, designer, project, method, subObj = {}) => {
+        target: (client, designer, project, method, subObj) => {
+          const { builder } = subObj;
           return {
-            id: "",
-            name: "홈리에종",
-            phone: "02-2039-2252",
-            email: "master@home-liaison.com",
+            id: builder.buiid,
+            name: builder.builder,
+            phone: builder.information.phone,
+            email: builder.information.email,
           };
         },
         comments: [
@@ -627,12 +629,13 @@ BillMaker.billDictionary = {
             [ "constructExpenses", amountObject.middle ]
           ];
         },
-        target: (client, designer, project, method, subObj = {}) => {
+        target: (client, designer, project, method, subObj) => {
+          const { builder } = subObj;
           return {
-            id: "",
-            name: "홈리에종",
-            phone: "02-2039-2252",
-            email: "master@home-liaison.com",
+            id: builder.buiid,
+            name: builder.builder,
+            phone: builder.information.phone,
+            email: builder.information.email,
           };
         },
         comments: [
@@ -656,12 +659,13 @@ BillMaker.billDictionary = {
             [ "constructExpenses", amountObject.remain ]
           ];
         },
-        target: (client, designer, project, method, subObj = {}) => {
+        target: (client, designer, project, method, subObj) => {
+          const { builder } = subObj;
           return {
-            id: "",
-            name: "홈리에종",
-            phone: "02-2039-2252",
-            email: "master@home-liaison.com",
+            id: builder.buiid,
+            name: builder.builder,
+            phone: builder.information.phone,
+            email: builder.information.email,
           };
         },
         comments: [
@@ -768,8 +772,12 @@ BillMaker.billDictionary = {
         ea: null,
         number: (subObj) => { return 1; },
         amount: (amount, subObj) => {
-          const { client, designer, freeRatio } = subObj;
-          return { amount: amount, commission: 0 };
+          const { client, designer, freeRatio, builder } = subObj;
+          let classification, percentage, calculate, commission;
+          classification = builder.information.business.businessInfo.classification;
+          percentage = builder.information.business.service.cost.percentage;
+          [ calculate, commission ] = BillMaker.designerCalculation(amount, classification, percentage, client, { toArray: true });
+          return { amount: Math.floor((calculate / 1) / 10) * 10, commission: Math.floor((commission / 1) / 10) * 10 };
         },
         comments: []
       },
@@ -1675,6 +1683,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
     let whereQuery, updateQuery;
     let commentsArr;
     let tempObject, tempAmount, tempCommission;
+    let optionObject;
 
     if (stylingResponses[responseKey] === undefined) {
       throw new Error("invaild response key");
@@ -1776,7 +1785,14 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
         itemFactor.name = item.name;
         itemFactor.description = item.description;
         itemFactor.unit.ea = item.ea;
-        tempObject = item.amount(thisAmount, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+
+        if (typeof option.customSub === "object" && option.customSub !== null) {
+          optionObject = { client, designer, project, contractAmount, vatRatio, freeRatio, ...option.customSub };
+        } else {
+          optionObject = { client, designer, project, contractAmount, vatRatio, freeRatio };
+        }
+
+        tempObject = item.amount(thisAmount, optionObject);
         tempAmount = tempObject.amount;
         tempCommission = tempObject.commission;
         itemFactor.unit.price = tempAmount;
@@ -1784,10 +1800,10 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
           if (typeof option.number[property] === "number") {
             itemFactor.unit.number = option.number[property];
           } else {
-            itemFactor.unit.number = item.number({ client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+            itemFactor.unit.number = item.number(optionObject);
           }
         } else {
-          itemFactor.unit.number = item.number({ client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+          itemFactor.unit.number = item.number(optionObject);
         }
         itemFactor.amount.pure = Math.floor(itemFactor.unit.price * itemFactor.unit.number);
         itemFactor.amount.commission = tempCommission;
@@ -1802,7 +1818,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
       responseObject.comments.push(c);
     }
 
-    responseObject.target = thisResponse.target(client, designer, project, method, null);
+    responseObject.target = thisResponse.target(client, designer, project, method, typeof option.customSub === "object" ? option.customSub : null);
 
     tempArr = thisBill.responses.toNormal();
     tempArr.unshift(responseObject);
@@ -4858,8 +4874,8 @@ BillMaker.prototype.contractCancel = async function (bilid, option = { selfMongo
   }
 }
 
-BillMaker.prototype.constructInjection = async function (bilid, amountObject, option = { selfMongo: null, selfCoreMongo: null }) {
-  if (typeof bilid !== "string" || typeof amountObject !== "object") {
+BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObject, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof bilid !== "string" || typeof buiid !== "string" || typeof amountObject !== "object") {
     throw new Error("invaild input");
   }
   if (typeof amountObject.first !== "number" || typeof amountObject.start !== "number" || typeof amountObject.middle !== "number" || typeof amountObject.remain !== "number") {
@@ -4874,6 +4890,7 @@ BillMaker.prototype.constructInjection = async function (bilid, amountObject, op
     let selfBoo, selfCoreBoo;
     let MONGOC, MONGOCOREC;
     let client, designer, project;
+    let builder;
 
     if (option.selfMongo === undefined || option.selfMongo === null) {
       selfBoo = false;
@@ -4908,22 +4925,23 @@ BillMaker.prototype.constructInjection = async function (bilid, amountObject, op
     client = await back.getClientById(cliid, { selfMongo: MONGOCOREC });
     designer = await back.getDesignerById(desid, { selfMongo: MONGOCOREC });
     project = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    builder = await back.getBuilderById(buiid, { selfMongo: MONGOCOREC });
 
     if (first !== 0) {
       await this.requestInjection(bilid, "constructFirst", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "firstConstructFee", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "firstConstructFee", client, designer, project, method, { customAmount: amountObject, customSub: { builder }, selfMongo: MONGOC });
     }
     if (start !== 0) {
       await this.requestInjection(bilid, "constructStart", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "startConstructFee", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "startConstructFee", client, designer, project, method, { customAmount: amountObject, customSub: { builder }, selfMongo: MONGOC });
     }
     if (middle !== 0) {
       await this.requestInjection(bilid, "constructMiddle", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "middleConstructFee", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "middleConstructFee", client, designer, project, method, { customAmount: amountObject, customSub: { builder }, selfMongo: MONGOC });
     }
     if (remain !== 0) {
       await this.requestInjection(bilid, "constructRemain", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "remainConstructFee", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "remainConstructFee", client, designer, project, method, { customAmount: amountObject, customSub: { builder }, selfMongo: MONGOC });
     }
 
   } catch (e) {

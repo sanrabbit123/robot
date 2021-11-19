@@ -129,8 +129,20 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     stylingForm: {
-      name: "스타일링 계약서 서명 요청",
-      id: "TF_0608",
+      name: "스타일링 계약 서명 요청",
+      id: "TG_5277",
+      needs: [
+        "client"
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client }
+        ];
+      },
+    },
+    constructForm: {
+      name: "시공 계약 서명 요청",
+      id: "TG_5279",
       needs: [
         "client"
       ],
@@ -462,8 +474,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     realAccount: {
-      name: "홈리에종 계좌 안내",
-      id: "TG_5133",
+      name: "홈리에종 계좌 안내 수정",
+      id: "TG_5195",
       needs: [
         "client",
         "goodName",
@@ -742,6 +754,100 @@ KakaoTalk.prototype.templateTong = function (target) {
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
           { from: "proid", to: obj.proid },
+        ];
+      },
+    },
+    constructFirst: {
+      name: "시공 계약금",
+      id: "TG_5282",
+      needs: [
+        "client",
+        "amount",
+        "host",
+        "path",
+        "cliid",
+        "needs",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "amount", to: obj.amount },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
+        ];
+      },
+    },
+    constructStart: {
+      name: "시공 착수금",
+      id: "TG_5286",
+      needs: [
+        "client",
+        "amount",
+        "host",
+        "path",
+        "cliid",
+        "needs",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "amount", to: obj.amount },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
+        ];
+      },
+    },
+    constructMiddle: {
+      name: "시공 중도금",
+      id: "TG_5288",
+      needs: [
+        "client",
+        "amount",
+        "host",
+        "path",
+        "cliid",
+        "needs",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "amount", to: obj.amount },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
+        ];
+      },
+    },
+    constructRemain: {
+      name: "시공 잔금",
+      id: "TG_5289",
+      needs: [
+        "client",
+        "amount0",
+        "amount1",
+        "amount2",
+        "amount3",
+        "host",
+        "path",
+        "cliid",
+        "needs",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "amount0", to: obj.amount0 },
+          { from: "amount1", to: obj.amount1 },
+          { from: "amount2", to: obj.amount2 },
+          { from: "amount3", to: obj.amount3 },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "cliid", to: obj.cliid },
+          { from: "needs", to: obj.needs },
         ];
       },
     },

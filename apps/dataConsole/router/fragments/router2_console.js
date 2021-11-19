@@ -2,9 +2,10 @@
 
 DataRouter.prototype.rou_post_getDocuments = function () {
   const instance = this;
+  const back = this.back;
   const { equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents" ];
+  obj.link = [ "/getClients", "/getDesigners", "/getProjects", "/getContents", "/getBuilders" ];
   obj.func = async function (req, res) {
     try {
       let standard, raw_data, data, optionQuery, whereQuery;
@@ -19,15 +20,15 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getLatestClients(req.body.limit, optionQuery);
+            raw_data = await back.getClientsByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
           } else {
-            raw_data = await instance.back.getLatestClients("all", optionQuery);
+            raw_data = await back.getClientsByQuery({}, { withTools: true, selfMongo: instance.mongo });
           }
         } else {
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
-          raw_data = await instance.back.getClientsByQuery(equalJson(req.body.where), optionQuery);
+          raw_data = await back.getClientsByQuery(equalJson(req.body.where), optionQuery);
         }
       } else if (req.url === "/getDesigners") {
         standard = instance.patch.designerStandard();
@@ -37,15 +38,15 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getLatestDesigners(req.body.limit, optionQuery);
+            raw_data = await back.getDesignersByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
           } else {
-            raw_data = await instance.back.getLatestDesigners("all", optionQuery);
+            raw_data = await back.getDesignersByQuery({}, { withTools: true, selfMongo: instance.mongo });
           }
         } else {
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
-          raw_data = await instance.back.getDesignersByQuery(equalJson(req.body.where), optionQuery);
+          raw_data = await back.getDesignersByQuery(equalJson(req.body.where), optionQuery);
         }
       } else if (req.url === "/getProjects") {
         standard = instance.patch.projectStandard();
@@ -55,16 +56,16 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getLatestProjects(req.body.limit, optionQuery);
+            raw_data = await back.getProjectsByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
           } else {
-            raw_data = await instance.back.getLatestProjects("all", optionQuery);
+            raw_data = await back.getProjectsByQuery({}, { withTools: true, selfMongo: instance.mongo });
           }
         } else {
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
           whereQuery = equalJson(req.body.where);
-          raw_data = await instance.back.getProjectsByQuery(whereQuery, optionQuery);
+          raw_data = await back.getProjectsByQuery(whereQuery, optionQuery);
         }
       } else if (req.url === "/getContents") {
         standard = instance.patch.contentsStandard();
@@ -74,15 +75,33 @@ DataRouter.prototype.rou_post_getDocuments = function () {
         }
         if (req.body.where === undefined) {
           if (req.body.limit !== undefined) {
-            raw_data = await instance.back.getLatestContentsArr(req.body.limit, optionQuery);
+            raw_data = await back.getContentsArrByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
           } else {
-            raw_data = await instance.back.getLatestContentsArr("all", optionQuery);
+            raw_data = await back.getContentsArrByQuery({}, { withTools: true, selfMongo: instance.mongo });
           }
         } else {
           if (req.body.limit !== undefined) {
             optionQuery.limit = Number(req.body.limit);
           }
-          raw_data = await instance.back.getContentsArrByQuery(equalJson(req.body.where), optionQuery);
+          raw_data = await back.getContentsArrByQuery(equalJson(req.body.where), optionQuery);
+        }
+      } else if (req.url === "/getBuilders") {
+        standard = null;
+        optionQuery = { withTools: true, selfMongo: instance.mongo };
+        if (req.body.sort !== undefined) {
+          optionQuery.sort = equalJson(req.body.sort);
+        }
+        if (req.body.where === undefined) {
+          if (req.body.limit !== undefined) {
+            raw_data = await back.getBuildersByQuery({}, { withTools: true, selfMongo: instance.mongo, limit: Number(req.body.limit) });
+          } else {
+            raw_data = await back.getBuildersByQuery({}, { withTools: true, selfMongo: instance.mongo });
+          }
+        } else {
+          if (req.body.limit !== undefined) {
+            optionQuery.limit = Number(req.body.limit);
+          }
+          raw_data = await back.getBuildersByQuery(equalJson(req.body.where), optionQuery);
         }
       }
 
@@ -3819,10 +3838,10 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
     });
     try {
       if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
-        throw new Error("invalid post");
+        throw new Error("invalid post 1");
       }
-      if (![ "updatePayments", "inspection", "sendContract" ].includes(req.body.mode)) {
-        throw new Error("invalid post");
+      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff" ].includes(req.body.mode)) {
+        throw new Error("invalid post 2");
       }
       const { mode, proid } = req.body;
       const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
@@ -3830,7 +3849,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       const { process: { design: { construct } } } = project;
       let result, summary;
 
-      if (construct === null) {
+      if (mode !== "constructOnoff" && construct === null) {
         throw new Error("invaild proid");
       }
 
@@ -3984,6 +4003,22 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         requestSystem("https://" + instance.address.pythoninfo.host + ":3000/createConstructContract", { proid, summary }, { headers: { "Content-type": "application/json" } }).catch((err) => {
           throw new Error(err);
         });
+        result = { message: "success" };
+
+      } else if (mode === "constructOnoff") {
+        const { action } = req.body;
+        let whereQuery, updateQuery;
+
+        whereQuery = { proid };
+        updateQuery = {};
+
+        if (action === "on") {
+          updateQuery["process.design.construct"] = back.returnProjectDummies("process.design.construct");
+        } else {
+          updateQuery["process.design.construct"] = null;
+        }
+
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
         result = { message: "success" };
 
       } else {

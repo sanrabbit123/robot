@@ -275,7 +275,7 @@ GoogleAnalytics.prototype.getClientsInfoByNumber = async function (number = 0, t
       number = usersObj.length;
     }
 
-    clients = await back.getLatestClients(number, { withTools: true });
+    clients = await back.getClientsByQuery({}, { withTools: true, limit: number });
     for (let i = 0; i < number; i++) {
       try {
         tempObj = await this.getClientById(usersObj[i].id);
