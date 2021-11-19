@@ -1356,7 +1356,7 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (req.body.images === undefined) {
           throw new Error("invaild post, must be 'images' array");
         }
-        const selfMongo = MONGOLOCALC;
+        const selfMongo = MONGOC;
         const { images } = equalJson(req.body);
         if (images === undefined) {
           throw new Error("images must be array");
