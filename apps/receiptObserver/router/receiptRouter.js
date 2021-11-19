@@ -339,8 +339,9 @@ ReceiptRouter.prototype.rou_post_receiveStylingContract = function () {
 ReceiptRouter.prototype.rou_post_createConstructContract = function () {
   const instance = this;
   const back = this.back;
+  const bill = this.bill;
   const address = this.address;
-  const { requestSystem, messageSend } = this.mother;
+  const { requestSystem, messageSend, messageLog, errorLog } = this.mother;
   let obj = {};
   obj.link = "/createConstructContract";
   obj.func = async function (req, res) {
@@ -354,24 +355,77 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
 
       if (rows.length === 0) {
         const selfMongo = instance.mongo;
-        const project = await back.getProjectById(proid, { selfMongo });
-        const client = await back.getClientById(project.cliid, { selfMongo });
-        const designer = await back.getDesignerById(project.desid, { selfMongo });
-        let url, requestNumber, proposalDate;
+        const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
+        const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
+        const designer = await back.getDesignerById(project.desid, { selfMongo: instance.mongo });
+        const thisBills = await bill.getBillsByQuery({
+          $and: [
+            { "links.proid": project.proid },
+            { "links.desid": project.desid },
+            { "links.cliid": project.cliid },
+            { "links.method": project.service.online ? "online" : "offline" }
+          ]
+        }, { selfMongo: instance.mongolocal });
+        if (thisBills.length > 0) {
+          const [ thisBill ] = thisBills;
+          let url, requestNumber, proposalDate;
+          let searchPoint0, searchPoint1;
+          let tempArr;
+          let projectNormal;
+          let builders;
 
-        proposalDate = project.proposal.date.valueOf();
+          projectNormal = project.toNormal();
 
-        requestNumber = 0;
-        for (let i = 0; i < client.requests.length; i++) {
-          if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
-            requestNumber = i;
-            break;
+          if (projectNormal.process.design.construct.contract.partner !== "") {
+
+            if (/_/gi.test(projectNormal.process.design.construct.contract.partner)) {
+              tempArr = projectNormal.process.design.construct.contract.partner.split('_');
+              searchPoint0 = tempArr[0].trim();
+              searchPoint1 = tempArr[1].trim();
+            } else {
+              searchPoint0 = projectNormal.process.design.construct.contract.partner.trim();
+              searchPoint1 = '';
+            }
+
+            builders = await back.getBuildersByQuery({
+              $and: [
+                { "builder": searchPoint0 },
+                { "information.business.company": searchPoint1 }
+              ]
+            }, { selfMongo: instance.mongo });
+
+            if (builders.length !== 0) {
+              const [ builder ] = builders;
+
+              await bill.constructInjection(thisBill.bilid, builder.buiid, {
+                first: summary.first.supply,
+                start: summary.start.supply,
+                middle: summary.middle.supply,
+                remain: summary.remain.supply,
+              }, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
+              await messageLog(thisBill.bilid + " construct request, response set complete");
+
+              proposalDate = project.proposal.date.valueOf();
+              requestNumber = 0;
+              for (let i = 0; i < client.requests.length; i++) {
+                if (client.requests[i].request.timeline.valueOf() <= proposalDate) {
+                  requestNumber = i;
+                  break;
+                }
+              }
+
+              url = "https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.graphic.port[0]) + "/constructForm";
+              await requestSystem(url, { summary, requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
+
+            } else {
+              await messageSend({ text: "프로젝트 " + proid + "에서 지정된 파트서 시공사가 등록된 파트너가 아니에요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
+            }
+          } else {
+            await messageSend({ text: "프로젝트 " + proid + "는 파트서 시공사가 지정되지 않았어요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
           }
+        } else {
+          await messageSend({ text: "프로젝트 " + proid + "의 영수증을 찾을 수 없어요. 계약서를 쓸 수가 없어요.", channel: "#400_customer", voice: true });
         }
-
-        url = "https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.graphic.port[0]) + "/constructForm";
-
-        await requestSystem(url, { summary, requestNumber, client: client.toNormal(), designer: designer.toNormal(), project: project.toNormal() }, { headers: { "Content-type": "application/json" } });
       } else {
         console.log("styling form cancel : " + proid);
         await messageSend({ text: "프로젝트 " + proid + "의 시공 계약서는 이미 만들어졌기에, 중복해서 만들지 않았습니다!", channel: "#400_customer", voice: true });
@@ -385,7 +439,7 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_createConstructContract): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Python 서버 문제 생김 (rou_post_createConstructContract): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }

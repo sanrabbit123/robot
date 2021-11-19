@@ -94,21 +94,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await bill.constructInjection("b2199_aa03s", "u2111_aa02s", {
-    //   first: 300000,
-    //   start: 300000,
-    //   middle: 300000,
-    //   remain: 300000,
-    // }, { selfMongo: this.MONGOLOCALC, selfCoreMongo: this.MONGOLOCALC });
-
-
-
-
-
-    
-
-
-
 
 
 
@@ -247,7 +232,6 @@ DevContext.prototype.launching = async function () {
 
       console.log(constructTargets);
     })();
-
     // sheets to db
     await (async () => {
       const selfMongo = this.MONGOLOCALC;

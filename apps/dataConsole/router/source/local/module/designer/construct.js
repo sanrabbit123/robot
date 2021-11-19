@@ -885,7 +885,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
         middleRatio = totalMoney !== 0 ? middleMoney / totalMoney : 0;
         remainRatio = totalMoney !== 0 ? remainMoney / totalMoney : 0;
 
-        if (thisProject.process.design.construct.contract.form.date.from.valueOf() > (new Date(2000, 0, 1)).valueOf() && thisProject.process.design.construct.contract.form.date.to.valueOf() > (new Date(2000, 0, 1)).valueOf()) {
+        if (thisProject.process.design.construct.contract.form.date.from.valueOf() > (new Date(2000, 0, 1)).valueOf() && thisProject.process.design.construct.contract.form.date.to.valueOf() > (new Date(2000, 0, 1)).valueOf() && thisProject.process.design.construct.contract.partner !== "") {
 
           updateEvent = function (key) {
             let to, column;
@@ -1173,6 +1173,11 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                                   summary.contractName = contractName;
                                   summary.contractAddress = contractAddress;
                                   summary.contractPhone = contractPhone;
+
+                                  summary.first.supply = Math.floor((summary.first.amount * (10 / 11)) / 10) * 10;
+                                  summary.start.supply = Math.floor((summary.start.amount * (10 / 11)) / 10) * 10;
+                                  summary.middle.supply = Math.floor((summary.middle.amount * (10 / 11)) / 10) * 10;
+                                  summary.remain.supply = Math.floor((summary.remain.amount * (10 / 11)) / 10) * 10;
 
                                   ajaxJson({ mode: "sendContract", proid: project.proid, summary }, "/constructInteraction").then((obj) => {
                                     if (obj.message === "success") {
@@ -2008,7 +2013,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             ]
           });
         } else {
-          window.alert("공사 기간을 먼저 설정해주세요!");
+          window.alert("공사 기간, 파트너 시공사를 먼저 모두 설정해주세요!");
           cancelBox.parentNode.removeChild(cancelBox);
           resetWidthEvent();
         }
