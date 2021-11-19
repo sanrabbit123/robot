@@ -90,11 +90,13 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(res.data, null, 2));
 
 
+    // builder
 
-    await requestSystem(`https://home-liaison.serveftp.com:55556/receiptSend`, {
-      amount: String(3000000),
-      phone: "010-2747-3403",
-    }, { headers: { "Content-Type": "application/json" } });
+    
+
+
+
+
 
 
 
@@ -2038,7 +2040,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a85");
+    // await this.getCorePortfolio("p138");
 
 
     // aspirant to designer

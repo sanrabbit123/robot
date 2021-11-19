@@ -1762,7 +1762,7 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
 
     } else {
 
-      itemMatrix = thisResponse.item(feeObject, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+      itemMatrix = thisResponse.item(option.customAmount, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
       commentsArr = thisResponse.comments;
       for (let [ property, thisAmount ] of itemMatrix) {
         await sleep(100);
