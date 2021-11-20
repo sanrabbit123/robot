@@ -3840,7 +3840,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
         throw new Error("invalid post 1");
       }
-      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff" ].includes(req.body.mode)) {
+      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff", "amountSync" ].includes(req.body.mode)) {
         throw new Error("invalid post 2");
       }
       const { mode, proid } = req.body;
@@ -4021,6 +4021,39 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
         result = { message: "success" };
 
+      } else if (mode === "amountSync") {
+        const { amount: amountRaw } = req.body;
+        const amount = Number(amountRaw);
+        let whereQuery, updateQuery;
+        let supply, vat, consumer;
+        if (construct.contract.payments.remain !== null) {
+
+          consumer = Math.floor(amount);
+          vat = Math.floor(consumer / 11);
+          supply = Math.floor(consumer - vat);
+
+          whereQuery = { proid };
+          updateQuery = {};
+
+          updateQuery["process.design.construct.contract.payments.remain.calculation.amount.supply"] = supply;
+          updateQuery["process.design.construct.contract.payments.remain.calculation.amount.vat"] = vat;
+          updateQuery["process.design.construct.contract.payments.remain.calculation.amount.consumer"] = consumer;
+
+          await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+          requestSystem("https://" + instance.address.pythoninfo.host + ":3000/constructAmountSync", {
+            proid,
+            cliid: project.cliid,
+            desid: project.desid,
+            method: (project.service.online ? "online" : "offline"),
+            amount: { supply, vat, consumer },
+          }, { headers: { "Content-type": "application/json" } }).catch((err) => {
+            throw new Error(err);
+          });
+
+        }
+
+        result = {};
       } else {
         result = {};
       }

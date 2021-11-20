@@ -2339,6 +2339,67 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     stringArr.push(textMaker(map["remainAmount"].title, autoComma(payments.remain !== null ? payments.remain.calculation.amount.consumer : 0) + '원', "black", "remainAmount"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
+      if (window.confirm("시공 금액을 변경하시겠습니까?")) {
+        let answer, answerRaw, boo, message, zeroBoo, loading;
+        do {
+          do {
+            answer = window.prompt("새로운 시공 잔금을 소비자가 기준으로 숫자로만, 또는 만원 단위로 써서 입력해주세요!\n예) 24000000원 또는 2400만원 등등");
+            if (typeof answer === "string") {
+              answerRaw = answer;
+              answer = answer.trim().replace(/[^0-9]/gi, '');
+              if (answer === '') {
+                boo = false;
+              } else {
+                answer =  Number(answer);
+                if (Number.isNaN(answer)) {
+                  boo = false;
+                } else {
+                  if (answer < 100000) {
+                    if (/만/gi.test(answerRaw)) {
+                      answer = answer * 10000;
+                      boo = true;
+                    } else if (/억/gi.test(answerRaw)) {
+                      answer = answer * 10000 * 10000;
+                      boo = true;
+                    } else {
+                      boo = false;
+                    }
+                  } else {
+                    boo = true;
+                  }
+                }
+              }
+            } else {
+              boo = false;
+            }
+          } while (!boo);
+          message = '';
+          if ((answer / 10000) > 10000) {
+            message = String(answer / (10000 * 10000)) + "억원";
+          } else {
+            message = String(answer / 10000) + "만원";
+          }
+          message += "이 맞습니까?";
+          zeroBoo = !window.confirm(message);
+        } while (zeroBoo);
+
+        loading = instance.mother.grayLoading();
+        ajaxJson({ mode: "amountSync", proid, amount: answer }, "/constructInteraction").then(() => {
+          loading.remove();
+          window.alert("업데이트가 완료되었습니다!");
+        }).catch((err) => {
+          console.log(err);
+        });
+
+
+
+
+
+
+        console.log(answer);
+
+
+      }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });

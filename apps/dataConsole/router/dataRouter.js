@@ -4428,7 +4428,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
         throw new Error("invalid post 1");
       }
-      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff" ].includes(req.body.mode)) {
+      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff", "amountSync" ].includes(req.body.mode)) {
         throw new Error("invalid post 2");
       }
       const { mode, proid } = req.body;
@@ -4454,7 +4454,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         } else {
           firstObj = construct.contract.payments.first;
         }
-        firstObj.calculation.amount.consumer = Math.floor(total * (first.ratio / 100));
+        firstObj.calculation.amount.consumer = Math.round(Math.floor(total * (first.ratio / 100)) / 1000) * 1000;
         firstObj.calculation.amount.vat = Math.floor(firstObj.calculation.amount.consumer / 11);
         firstObj.calculation.amount.supply = firstObj.calculation.amount.consumer - firstObj.calculation.amount.vat;
 
@@ -4463,7 +4463,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         } else {
           startObj = construct.contract.payments.start;
         }
-        startObj.calculation.amount.consumer = Math.floor(total * (start.ratio / 100));
+        startObj.calculation.amount.consumer = Math.round(Math.floor(total * (start.ratio / 100)) / 1000) * 1000;
         startObj.calculation.amount.vat = Math.floor(startObj.calculation.amount.consumer / 11);
         startObj.calculation.amount.supply = startObj.calculation.amount.consumer - startObj.calculation.amount.vat;
 
@@ -4472,7 +4472,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         } else {
           middleObj = construct.contract.payments.middle;
         }
-        middleObj.calculation.amount.consumer = Math.floor(total * (middle.ratio / 100));
+        middleObj.calculation.amount.consumer = Math.round(Math.floor(total * (middle.ratio / 100)) / 1000) * 1000;
         middleObj.calculation.amount.vat = Math.floor(middleObj.calculation.amount.consumer / 11);
         middleObj.calculation.amount.supply = middleObj.calculation.amount.consumer - middleObj.calculation.amount.vat;
 
@@ -4481,7 +4481,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         } else {
           remainObj = construct.contract.payments.remain;
         }
-        remainObj.calculation.amount.consumer = Math.floor(total * (remain.ratio / 100));
+        remainObj.calculation.amount.consumer = Math.round(Math.floor(total * (remain.ratio / 100)) / 1000) * 1000;
         remainObj.calculation.amount.vat = Math.floor(remainObj.calculation.amount.consumer / 11);
         remainObj.calculation.amount.supply = remainObj.calculation.amount.consumer - remainObj.calculation.amount.vat;
 
@@ -4609,6 +4609,15 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
         result = { message: "success" };
 
+      } else if (mode === "amountSync") {
+        const { amount: amountRaw } = req.body;
+        const amount = Number(amountRaw);
+
+        await instance.mother.sleep(2000);
+
+        console.log(proid, amount);
+
+        result = {};
       } else {
         result = {};
       }
