@@ -1540,7 +1540,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
         itemFactor.amount.supply = itemSupply * itemFactor.unit.number;
         itemFactor.amount.vat = itemVat * itemFactor.unit.number;
         itemFactor.amount.consumer = itemConsumer * itemFactor.unit.number;
-        
+
         requestObject.items.push(equalJson(JSON.stringify(itemFactor)));
         commentsArr = commentsArr.concat(item.comments);
       }
@@ -1578,7 +1578,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
           if (typeof option.number[property] === "number") {
             itemFactor.unit.number = option.number[property];
           } else {
-            itemFactor.unit.number = Math.floor(item.number({ client, designer, project, contractAmount, vatRatio, freeRatio });)
+            itemFactor.unit.number = Math.floor(item.number({ client, designer, project, contractAmount, vatRatio, freeRatio }));
           }
         } else {
           itemFactor.unit.number = Math.floor(item.number({ client, designer, project, contractAmount, vatRatio, freeRatio }));
