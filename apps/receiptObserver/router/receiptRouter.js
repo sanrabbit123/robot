@@ -562,7 +562,7 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
 
       res.send(JSON.stringify({ message: "success" }));
     } catch (e) {
-      errorLog("Python 서버 문제 생김 (rou_post_createConstructContract): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Python 서버 문제 생김 (rou_post_constructAmountSync): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
