@@ -75,6 +75,10 @@ DevContext.prototype.launching = async function () {
     const chrome = new GoogleChrome();
     const findCode = this.findCode.bind(this);
 
+
+
+
+
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
     // const count = (await this.findCode("count")).scripts
@@ -88,14 +92,6 @@ DevContext.prototype.launching = async function () {
 
     // const res = await requestSystem(`http://172.30.1.5/`, {}, { method: "get" });
     // console.log(JSON.stringify(res.data, null, 2));
-
-
-
-
-
-
-
-
 
 
 
@@ -465,11 +461,6 @@ DevContext.prototype.launching = async function () {
       console.log(project.toNormal());
     })();
     */
-
-
-
-
-
 
 
 

@@ -1174,11 +1174,6 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                                   summary.contractAddress = contractAddress;
                                   summary.contractPhone = contractPhone;
 
-                                  summary.first.supply = Math.floor((summary.first.amount * (10 / 11)) / 10) * 10;
-                                  summary.start.supply = Math.floor((summary.start.amount * (10 / 11)) / 10) * 10;
-                                  summary.middle.supply = Math.floor((summary.middle.amount * (10 / 11)) / 10) * 10;
-                                  summary.remain.supply = Math.floor((summary.remain.amount * (10 / 11)) / 10) * 10;
-
                                   ajaxJson({ mode: "sendContract", proid: project.proid, summary }, "/constructInteraction").then((obj) => {
                                     if (obj.message === "success") {
                                       window.alert("계약서 자동 생성 및 발송 요청이 완료되었습니다!");

@@ -1450,6 +1450,7 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
     let tempArr;
     let whereQuery, updateQuery;
     let commentsArr;
+    let itemSupply, itemVat, itemConsumer;
 
     if (stylingRequests[requestKey] === undefined) {
       throw new Error("invaild request key");
@@ -1513,19 +1514,33 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
         itemFactor.name = item.name;
         itemFactor.description = item.description;
         itemFactor.unit.ea = item.ea;
-        itemFactor.unit.price = Math.round(item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
+
+        if (option.consumerMode !== true) {
+          itemSupply = Math.round(item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
+          itemVat = Math.round(itemSupply * vatRatio);
+          itemConsumer = itemSupply + itemVat;
+        } else {
+          itemConsumer = Math.round(item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
+          itemVat = Math.floor(itemConsumer / ((1 + vatRatio) * 10));
+          itemSupply = itemConsumer - itemVat;
+        }
+
+        itemFactor.unit.price = itemSupply;
+
         if (typeof option.number === "object" && option.number !== null) {
           if (typeof option.number[property] === "number") {
             itemFactor.unit.number = option.number[property];
           } else {
-            itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+            itemFactor.unit.number = Math.floor(item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
           }
         } else {
-          itemFactor.unit.number = item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
+          itemFactor.unit.number = Math.floor(item.number(method, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage }));
         }
-        itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-        itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
-        itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+
+        itemFactor.amount.supply = itemSupply * itemFactor.unit.number;
+        itemFactor.amount.vat = itemVat * itemFactor.unit.number;
+        itemFactor.amount.consumer = itemConsumer * itemFactor.unit.number;
+        
         requestObject.items.push(equalJson(JSON.stringify(itemFactor)));
         commentsArr = commentsArr.concat(item.comments);
       }
@@ -1546,19 +1561,33 @@ BillMaker.prototype.requestInjection = async function (bilid, requestKey, client
         itemFactor.name = item.name;
         itemFactor.description = item.description;
         itemFactor.unit.ea = item.ea;
-        itemFactor.unit.price = Math.round(item.amount(thisAmount, { client, designer, project, contractAmount, vatRatio, freeRatio }));
+
+        if (option.consumerMode !== true) {
+          itemSupply = Math.round(item.amount(thisAmount, { client, designer, project, contractAmount, vatRatio, freeRatio }));
+          itemVat = Math.round(itemSupply * vatRatio);
+          itemConsumer = itemSupply + itemVat;
+        } else {
+          itemConsumer = Math.round(item.amount(thisAmount, { client, designer, project, contractAmount, vatRatio, freeRatio }));
+          itemVat = Math.floor(itemConsumer / ((1 + vatRatio) * 10));
+          itemSupply = itemConsumer - itemVat;
+        }
+
+        itemFactor.unit.price = itemSupply;
+
         if (typeof option.number === "object" && option.number !== null) {
           if (typeof option.number[property] === "number") {
             itemFactor.unit.number = option.number[property];
           } else {
-            itemFactor.unit.number = item.number({ client, designer, project, contractAmount, vatRatio, freeRatio });
+            itemFactor.unit.number = Math.floor(item.number({ client, designer, project, contractAmount, vatRatio, freeRatio });)
           }
         } else {
-          itemFactor.unit.number = item.number({ client, designer, project, contractAmount, vatRatio, freeRatio });
+          itemFactor.unit.number = Math.floor(item.number({ client, designer, project, contractAmount, vatRatio, freeRatio }));
         }
-        itemFactor.amount.supply = Math.round(itemFactor.unit.price * itemFactor.unit.number);
-        itemFactor.amount.vat = Math.round(itemFactor.amount.supply * vatRatio);
-        itemFactor.amount.consumer = Math.round(itemFactor.amount.supply * (1 + vatRatio));
+
+        itemFactor.amount.supply = itemSupply * itemFactor.unit.number;
+        itemFactor.amount.vat = itemVat * itemFactor.unit.number;
+        itemFactor.amount.consumer = itemConsumer * itemFactor.unit.number;
+
         requestObject.items.push(equalJson(JSON.stringify(itemFactor)));
         commentsArr = commentsArr.concat(item.comments);
       }
@@ -4928,20 +4957,20 @@ BillMaker.prototype.constructInjection = async function (bilid, buiid, amountObj
     builder = await back.getBuilderById(buiid, { selfMongo: MONGOCOREC });
 
     if (first !== 0) {
-      await this.requestInjection(bilid, "constructFirst", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "firstConstructFee", client, designer, project, method, { customAmount: amountObject, customSub: { builder }, selfMongo: MONGOC });
+      await this.requestInjection(bilid, "constructFirst", client, designer, project, method, { customAmount: amountObject, consumerMode: true, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "firstConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
     }
     if (start !== 0) {
-      await this.requestInjection(bilid, "constructStart", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "startConstructFee", client, designer, project, method, { customAmount: amountObject, customSub: { builder }, selfMongo: MONGOC });
+      await this.requestInjection(bilid, "constructStart", client, designer, project, method, { customAmount: amountObject, consumerMode: true, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "startConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
     }
     if (middle !== 0) {
-      await this.requestInjection(bilid, "constructMiddle", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "middleConstructFee", client, designer, project, method, { customAmount: amountObject, customSub: { builder }, selfMongo: MONGOC });
+      await this.requestInjection(bilid, "constructMiddle", client, designer, project, method, { customAmount: amountObject, consumerMode: true, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "middleConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
     }
     if (remain !== 0) {
-      await this.requestInjection(bilid, "constructRemain", client, designer, project, method, { customAmount: amountObject, selfMongo: MONGOC });
-      await this.responseInjection(bilid, "remainConstructFee", client, designer, project, method, { customAmount: amountObject, customSub: { builder }, selfMongo: MONGOC });
+      await this.requestInjection(bilid, "constructRemain", client, designer, project, method, { customAmount: amountObject, consumerMode: true, selfMongo: MONGOC });
+      await this.responseInjection(bilid, "remainConstructFee", client, designer, project, method, { customAmount: amountObject, consumerMode: true, customSub: { builder }, selfMongo: MONGOC });
     }
 
   } catch (e) {

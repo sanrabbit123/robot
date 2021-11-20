@@ -398,10 +398,10 @@ ReceiptRouter.prototype.rou_post_createConstructContract = function () {
               const [ builder ] = builders;
 
               await bill.constructInjection(thisBill.bilid, builder.buiid, {
-                first: summary.first.supply,
-                start: summary.start.supply,
-                middle: summary.middle.supply,
-                remain: summary.remain.supply,
+                first: summary.first.amount,
+                start: summary.start.amount,
+                middle: summary.middle.amount,
+                remain: summary.remain.amount,
               }, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
               await messageLog(thisBill.bilid + " construct request, response set complete");
 
