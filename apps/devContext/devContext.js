@@ -75,10 +75,6 @@ DevContext.prototype.launching = async function () {
     const chrome = new GoogleChrome();
     const findCode = this.findCode.bind(this);
 
-
-
-
-
     // in config { httpsAgent: agent }
     // console.log(await this.findCode("* 1.1)"));
     // const count = (await this.findCode("count")).scripts

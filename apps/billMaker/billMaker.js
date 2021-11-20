@@ -776,7 +776,7 @@ BillMaker.billDictionary = {
           let classification, percentage, calculate, commission;
           classification = builder.information.business.businessInfo.classification;
           percentage = builder.information.business.service.cost.percentage;
-          [ calculate, commission ] = BillMaker.designerCalculation(amount, classification, percentage, client, { toArray: true });
+          [ calculate, commission ] = BillMaker.designerCalculation(amount, classification, percentage, client, { toArray: true, forcePercentage: true });
           return { amount: Math.floor((calculate / 1) / 10) * 10, commission: Math.floor((commission / 1) / 10) * 10 };
         },
         comments: []
@@ -1776,6 +1776,11 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
         itemFactor.name = item.name;
         itemFactor.description = item.description;
         itemFactor.unit.ea = item.ea;
+
+        if (option.consumerMode === true) {
+          thisAmount = thisAmount - Math.floor(thisAmount * (1 / ((1 + vatRatio) * 10)));
+        }
+
         tempObject = item.amount(method, thisAmount, distance, { client, designer, project, contractAmount, vatRatio, freeRatio, distancePercentage });
         tempAmount = tempObject.amount;
         tempCommission = tempObject.commission;
@@ -1814,6 +1819,10 @@ BillMaker.prototype.responseInjection = async function (bilid, responseKey, clie
         itemFactor.name = item.name;
         itemFactor.description = item.description;
         itemFactor.unit.ea = item.ea;
+
+        if (option.consumerMode === true) {
+          thisAmount = thisAmount - Math.floor(thisAmount * (1 / ((1 + vatRatio) * 10)));
+        }
 
         if (typeof option.customSub === "object" && option.customSub !== null) {
           optionObject = { client, designer, project, contractAmount, vatRatio, freeRatio, ...option.customSub };
