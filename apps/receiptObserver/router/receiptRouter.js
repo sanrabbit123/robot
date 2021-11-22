@@ -451,7 +451,7 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
   const back = this.back;
   const bill = this.bill;
   const kakao = this.kakao;
-  const { equalJson, fileSystem, dateToString, autoComma, ghostRequest, messageSend, errorLog } = this.mother;
+  const { equalJson, fileSystem, dateToString, autoComma, ghostRequest, messageSend, errorLog, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/receiveConstructContract";
   obj.func = async function (req, res) {
@@ -468,9 +468,16 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
       client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
       if (client !== null) {
         await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
-        messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
+        messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).then(() => {
+          return requestSystem("https://" + instance.address.backinfo.host + ":3000/constructInteraction", {
+            mode: "chargeGuide",
+            proid: json.proid,
+            method: "first",
+          }, { headers: { "Content-Type": "application/json" } });
+        }).catch((err) => {
           console.log(err);
         });
+        
       }
 
       res.set({

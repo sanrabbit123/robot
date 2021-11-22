@@ -11,6 +11,7 @@ const BillMaker = function () {
 }
 
 BillMaker.billCollections = [
+  "accountTransfer",
   "cashReceipt",
   "taxBill",
   "stylingForm",

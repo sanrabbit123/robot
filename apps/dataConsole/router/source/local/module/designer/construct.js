@@ -1179,6 +1179,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                                   ajaxJson({ mode: "sendContract", proid: project.proid, summary }, "/constructInteraction").then((obj) => {
                                     if (obj.message === "success") {
                                       window.alert("계약서 자동 생성 및 발송 요청이 완료되었습니다!");
+                                      window.location.reload();
                                     } else {
                                       window.alert("계약서 생성 요청에 문제가 생겨 완료하지 못했습니다!");
                                     }
