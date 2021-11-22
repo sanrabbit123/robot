@@ -902,6 +902,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             return async function (e) {
               try {
                 const self = this;
+                const selfBox = self.getBoundingClientRect();
                 const div = this.children[0];
                 let cancel, input;
                 cancel = createNode({
@@ -917,10 +918,10 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                   },
                   style: {
                     position: "fixed",
-                    top: String(0),
-                    left: String(0),
-                    width: String(100) + '%',
-                    height: String(100) + '%',
+                    top: String(selfBox.top * -1) + ea,
+                    left: String(selfBox.left * -1) + ea,
+                    width: String(window.outerWidth) + ea,
+                    height: String(window.outerHeight) + ea,
                     background: "transparent",
                     zIndex: String(1),
                   }
@@ -1099,7 +1100,8 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
               paddingLeft: String(paddingLeft) + ea,
               paddingRight: String(paddingLeft) + ea,
               paddingBottom: String(paddingLeft) + ea,
-              zIndex, boxShadow, borderRadius, animation,
+              zIndex: String(5),
+              boxShadow, borderRadius, animation,
             },
             children: [
               {
