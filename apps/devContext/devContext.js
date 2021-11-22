@@ -2000,8 +2000,8 @@ DevContext.prototype.launching = async function () {
     // await filter.rawToRaw([
     //   {
     //     client: null,
-    //     designer: "김원희",
-    //     link: "https://drive.google.com/drive/folders/1yLgY5Oee1JGRHdhL8CgW92TXOVcSqNKa",
+    //     designer: "유수진",
+    //     link: "https://drive.google.com/drive/folders/1bwJ-Qw1bANm7QTt18ljSnHtwoAXyGneN",
     //     pay: true
     //   },
     // ]);
@@ -2027,7 +2027,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "강주현", "2021-11-08" ],
+    //   [ "유수진", "2021-11-15" ],
     // ]);
 
 
