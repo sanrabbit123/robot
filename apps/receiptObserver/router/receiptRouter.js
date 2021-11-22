@@ -473,11 +473,11 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
             mode: "chargeGuide",
             proid: json.proid,
             method: "first",
-          }, { headers: { "Content-Type": "application/json" } });
+          }, { headers: { "Content-Type": "application/json", "origin": instance.address.pythoninfo.host } });
         }).catch((err) => {
           console.log(err);
         });
-        
+
       }
 
       res.set({

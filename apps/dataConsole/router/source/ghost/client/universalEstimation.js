@@ -1052,7 +1052,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
     style: {
       display: "inline-block",
       position: "relative",
-      width: String(greenButtonWidth + 3) + ea,
+      width: String(greenButtonWidth) + ea,
       height: String(greenButtonHeight) + ea,
       background: colorChip.green,
       textAlign: "center",

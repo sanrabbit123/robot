@@ -16,11 +16,14 @@ module.exports = function (arg, info) {
     "toss: https://tecr.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/cr/c/b/UTECRCB041.xml",
     async function () {
       const { amount, phone } = equalJson(JSON.stringify(POSTCONST));
-      document.getElementById("trsAmt").value = String(amount);
-      document.getElementById("spstCnfrNoEncCntn").value = String(phone);
-      await sleep(500);
+      await injectionInput(document.getElementById("trsAmt"), String(amount), true);
+      await injectionInput(document.getElementById("spstCnfrNoEncCntn"), String(phone), true);
+      await sleep(1000);
       await clickElement(document.querySelector("#trigger4"));
-      await sleep(500);
+      await sleep(2000);
+      await pressKey("enter");
+      await sleep(1500);
+      await pressKey("enter");
     },
   ];
 };
