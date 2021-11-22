@@ -504,7 +504,7 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.proid === undefined || req.body.summary === undefined) {
+      if (req.body.proid === undefined || req.body.cliid === undefined || req.body.desid === undefined || req.body.method === undefined || req.body.amount === undefined) {
         throw new Error("invaild post");
       }
       const { proid, cliid, desid, method, amount: { supply, vat, consumer } } = equalJson(req.body);
