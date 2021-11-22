@@ -573,7 +573,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
   const instance = this;
   const back = this.back;
   const bill = this.bill;
-  const { equalJson, messageLog, messageSend, errorLog, autoComma, requestSystem } = this.mother;
+  const { equalJson, messageLog, messageSend, errorLog, autoComma, requestSystem, sleep } = this.mother;
   const collection = "accountTransfer";
   const standardDay = 7;
   let obj = {};
@@ -586,56 +586,67 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       const selfMongo = instance.mongolocal;
       const { date, amount, name } = equalJson(req.body);
       const errorMessage = "뭔가 은행 문자가 왔는데 찾을 수 없음 : " + name + " " + autoComma(amount) + "원";
+      const ignoreMessage = "무시하는 리스트에 포함된 은행 문자 왔음 : " + name + " " + autoComma(amount) + "원";
+      const ignoreList = [
+        "KG이니시스",
+      ];
       let rows, ago, target, rows2;
 
-      messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
+      if (!ignoreList.includes(name.trim())) {
+        messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
 
-      ago = new Date();
-      ago.setDate(ago.getDate() - (standardDay * 2));
+        ago = new Date();
+        ago.setDate(ago.getDate() - (standardDay * 2));
 
-      target = null;
-      rows = await back.mongoRead(collection, { amount }, { selfMongo });
-      if (rows.length > 0) {
-        rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
-        rows = rows.filter((obj) => {
-          return obj.date.valueOf() >= ago.valueOf();
-        }).filter((obj) => {
-          return (new RegExp(obj.name, "gi")).test(name);
-        });
+        target = null;
+        rows = await back.mongoRead(collection, { amount }, { selfMongo });
         if (rows.length > 0) {
-          if (rows.length === 1) {
-            [ target ] = rows;
-          } else {
-            rows2 = rows.filter((obj) => {
-              return obj.name.trim() === name.trim();
-            });
-            if (rows2.length > 0) {
-              [ target ] = rows2;
-            } else {
+          rows.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+          rows = rows.filter((obj) => {
+            return obj.date.valueOf() >= ago.valueOf();
+          }).filter((obj) => {
+            return (new RegExp(obj.name, "gi")).test(name);
+          });
+          if (rows.length > 0) {
+            if (rows.length === 1) {
               [ target ] = rows;
+            } else {
+              rows2 = rows.filter((obj) => {
+                return obj.name.trim() === name.trim();
+              });
+              if (rows2.length > 0) {
+                [ target ] = rows2;
+              } else {
+                [ target ] = rows;
+              }
             }
+          } else {
+            errorLog(errorMessage).catch((e) => { console.log(e); });
           }
         } else {
           errorLog(errorMessage).catch((e) => { console.log(e); });
         }
-      } else {
-        errorLog(errorMessage).catch((e) => { console.log(e); });
-      }
 
-      if (target !== null) {
-        const { phone, amount } = target;
-        requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
-          headers: { "Content-Type": "application/json" }
-        }).then(() => {
-          return requestSystem(`https://${instance.address.officeinfo.ghost.host}:${String(instance.address.officeinfo.ghost.graphic.port[0])}/receiptSend`, {
-            amount: String(amount),
-            phone,
-          }, { headers: { "Content-Type": "application/json" } });
-        }).then(() => {
-          return messageSend(`${name} 고객님의 번호로 현금영수증 발행을 완료하였어요.`, "#700_operation", true);
-        }).catch((err) => {
-          console.log(err);
-        });
+        if (target !== null) {
+
+          await sleep(500);
+
+          const { phone, amount } = target;
+          requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
+            headers: { "Content-Type": "application/json" }
+          }).then(() => {
+            return requestSystem(`https://${instance.address.officeinfo.ghost.host}:${String(instance.address.officeinfo.ghost.graphic.port[0])}/receiptSend`, {
+              amount: String(amount),
+              phone,
+            }, { headers: { "Content-Type": "application/json" } });
+          }).then(() => {
+            return messageSend(`${name} 고객님의 번호로 현금영수증 발행을 완료하였어요.`, "#700_operation", true);
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+      } else {
+        errorLog(ignoreMessage).catch((e) => { console.log(e); });
       }
 
       res.set({
