@@ -186,7 +186,7 @@ module.exports = function (proid, info) {
           while (document.querySelector(".Select-menu-outer") === null) {
             await sleep(500);
           }
-          await clickElement(document.getElementById("react-select-11--option-4"));
+          await clickElement(document.getElementById("react-select-11--option-3"));
 
           await sleep(500);
           document.querySelector('.send').click();

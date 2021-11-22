@@ -467,7 +467,7 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
       await bill.createBill(collection, [ json ], { selfMongo: instance.mongolocal });
       client = await back.getClientById(json.cliid, { selfMongo: instance.mongo });
       if (client !== null) {
-        // await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
+        await kakao.sendTalk(collection, client.name, client.phone, { client: client.name });
         messageSend({ text: client.name + " 시공 계약서를 작성하고 알림톡을 전송했어요!", channel: "#400_customer", voice: true }).catch((err) => {
           console.log(err);
         });
@@ -481,7 +481,7 @@ ReceiptRouter.prototype.rou_post_receiveConstructContract = function () {
       });
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
-      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_receiveStylingContract): " + e.message).catch((e) => { console.log(e); });
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_receiveConstructContract): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
     }
   }
