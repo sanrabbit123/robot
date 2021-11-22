@@ -2269,6 +2269,24 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     stringArr.push(textMaker(map["firstGuide"].title, dateToString(payments.first !== null ? payments.first.guide : emptyDate), dateToColor(payments.first !== null ? payments.first.guide : emptyDate, false), "firstGuide"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
+      if (window.confirm("계약금 안내를 보낼까요?")) {
+
+        ajaxJson({
+          mode: "chargeGuide",
+          proid,
+          method: "first",
+        }, "/constructInteraction", { equal: true }).then((result) => {
+          const { date, now } = result;
+          window.alert("계약금 안내를 전송하였습니다!");
+          mother.querySelector(".value").textContent = date;
+          mother.querySelector(".value").style.color = colorChip.black;
+          instance.projects.search("proid", proid).process.design.construct.contract.payments.first.guide = now;
+          resetWidthEvent();
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
@@ -2290,6 +2308,24 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     stringArr.push(textMaker(map["startGuide"].title, dateToString(payments.start !== null ? payments.start.guide : emptyDate), dateToColor(payments.start !== null ? payments.start.guide : emptyDate, false), "startGuide"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
+      if (window.confirm("착수금 안내를 보낼까요?")) {
+
+        ajaxJson({
+          mode: "chargeGuide",
+          proid,
+          method: "start",
+        }, "/constructInteraction", { equal: true }).then((result) => {
+          const { date, now } = result;
+          window.alert("착수금 안내를 전송하였습니다!");
+          mother.querySelector(".value").textContent = date;
+          mother.querySelector(".value").style.color = colorChip.black;
+          instance.projects.search("proid", proid).process.design.construct.contract.payments.start.guide = now;
+          resetWidthEvent();
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
@@ -2311,6 +2347,24 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     stringArr.push(textMaker(map["middleGuide"].title, dateToString(payments.middle !== null ? payments.middle.guide : emptyDate), dateToColor(payments.middle !== null ? payments.middle.guide : emptyDate, false), "middleGuide"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
+      if (window.confirm("중도금 안내를 보낼까요?")) {
+
+        ajaxJson({
+          mode: "chargeGuide",
+          proid,
+          method: "middle",
+        }, "/constructInteraction", { equal: true }).then((result) => {
+          const { date, now } = result;
+          window.alert("중도금 안내를 전송하였습니다!");
+          mother.querySelector(".value").textContent = date;
+          mother.querySelector(".value").style.color = colorChip.black;
+          instance.projects.search("proid", proid).process.design.construct.contract.payments.middle.guide = now;
+          resetWidthEvent();
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
@@ -2332,6 +2386,24 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     stringArr.push(textMaker(map["remainGuide"].title, dateToString(payments.remain !== null ? payments.remain.guide : emptyDate), dateToColor(payments.remain !== null ? payments.remain.guide : emptyDate, false), "remainGuide"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
+      if (window.confirm("잔금 안내를 보낼까요?")) {
+
+        ajaxJson({
+          mode: "chargeGuide",
+          proid,
+          method: "remain",
+        }, "/constructInteraction", { equal: true }).then((result) => {
+          const { date, now } = result;
+          window.alert("잔금 안내를 전송하였습니다!");
+          mother.querySelector(".value").textContent = date;
+          mother.querySelector(".value").style.color = colorChip.black;
+          instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.guide = now;
+          resetWidthEvent();
+        }).catch((err) => {
+          console.log(err);
+        });
+
+      }
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
@@ -2391,13 +2463,10 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           console.log(err);
         });
 
-
-
-
-
-
-        console.log(answer);
-
+        mother.querySelector(".value").textContent = autoComma(answer) + '원';
+        instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.supply = Math.floor(answer) - Math.floor(answer / 11);
+        instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.vat = Math.floor(answer / 11);
+        instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.consumer = Math.floor(answer);
 
       }
       cancelBox.parentNode.removeChild(cancelBox);

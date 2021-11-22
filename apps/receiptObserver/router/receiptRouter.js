@@ -791,7 +791,7 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     let calculate;
     let designerHistory;
 
-    if (/계약금/gi.test(data.goodName.trim()) || /잔금/gi.test(data.goodName.trim())) {
+    if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
       if (proposal.fee.length === 1) {
         pureDesignFee = Math.round(proposal.fee[0].amount * (1 - proposal.fee[0].discount));
@@ -861,6 +861,8 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
         instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
           client: client.name,
           designer: designer.designer,
+        }).catch((err) => {
+          console.log(err);
         });
 
         requestSystem("https://" + instance.address.backinfo.host + "/realtimeDesigner", { mode: "sync", proid }, {
@@ -891,9 +893,58 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
           client: client.name,
           designer: designer.designer,
           emoji: "(방긋)",
+        }).catch((err) => {
+          console.log(err);
         });
 
       }
+
+    } else if (/시공 계약금/gi.test(data.goodName.trim()) || /시공 착수금/gi.test(data.goodName.trim()) || /시공 중도금/gi.test(data.goodName.trim()) || /시공 잔금/gi.test(data.goodName.trim())) {
+
+      if (/계약금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.design.construct.status"] = "계약금 입금";
+        projectQuery["process.design.construct.contract.payments.first.date"] = new Date();
+        projectQuery["process.design.construct.contract.payments.first.calculation.info.method"] = proofs.method;
+        projectQuery["process.design.construct.contract.payments.first.calculation.info.proof"] = inisis;
+        projectQuery["process.design.construct.contract.payments.first.calculation.info.to"] = proofs.to;
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      } else if (/착수금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.design.construct.status"] = "착수금 입금";
+        projectQuery["process.design.construct.contract.payments.start.date"] = new Date();
+        projectQuery["process.design.construct.contract.payments.start.calculation.info.method"] = proofs.method;
+        projectQuery["process.design.construct.contract.payments.start.calculation.info.proof"] = inisis;
+        projectQuery["process.design.construct.contract.payments.start.calculation.info.to"] = proofs.to;
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      } else if (/중도금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.design.construct.status"] = "중도금 입금";
+        projectQuery["process.design.construct.contract.payments.middle.date"] = new Date();
+        projectQuery["process.design.construct.contract.payments.middle.calculation.info.method"] = proofs.method;
+        projectQuery["process.design.construct.contract.payments.middle.calculation.info.proof"] = inisis;
+        projectQuery["process.design.construct.contract.payments.middle.calculation.info.to"] = proofs.to;
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      } else if (/잔금/gi.test(data.goodName.trim())) {
+
+        projectQuery["process.design.construct.status"] = "잔금 입금";
+        projectQuery["process.design.construct.contract.payments.remain.date"] = new Date();
+        projectQuery["process.design.construct.contract.payments.remain.calculation.info.method"] = proofs.method;
+        projectQuery["process.design.construct.contract.payments.remain.calculation.info.proof"] = inisis;
+        projectQuery["process.design.construct.contract.payments.remain.calculation.info.to"] = proofs.to;
+        await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
+
+      }
+
+      instance.kakao.sendTalk("generalPayments", client.name, client.phone, {
+        client: client.name,
+        goods: data.goodName.trim(),
+      }).catch((err) => {
+        console.log(err);
+      });
 
     }
 
@@ -1068,6 +1119,8 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               to: data.VACT_Name,
               amount: autoComma(amount),
               date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+            }).catch((err) => {
+              console.log(err);
             });
             message = client.name + " 고객님이 " + data.goodName.trim() + " 결제를 위한 가상 계좌를 발급하셨습니다!";
             messageSend({ text: message, channel: "#700_operation", voice: true }).catch((err) => {
@@ -1084,6 +1137,8 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
               to: data.VACT_Name,
               amount: autoComma(amount),
               date: data.VACT_Date.slice(0, 4) + "년 " + data.VACT_Date.slice(4, -2) + "월 " + data.VACT_Date.slice(-2) + "일",
+            }).catch((err) => {
+              console.log(err);
             });
 
           }
@@ -1555,6 +1610,8 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
             path: "estimation",
             cliid: client.cliid,
             needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
+          }).catch((err) => {
+            console.log(err);
           });
           messageSend({ text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!", channel: "#700_operation", voice: true }).catch((err) => {
             console.log(err);
@@ -1693,6 +1750,8 @@ ReceiptRouter.prototype.rou_post_designerConverting = function () {
           path: "estimation",
           cliid: client.cliid,
           needs: "style," + project.desid + "," + proid + "," + (report.service.to.online ? "online" : "offline"),
+        }).catch((err) => {
+          console.log(err);
         });
         messageSend({ text: client.name + " 고객님의 추가 디자인비 요청 알림톡을 전송했어요!", channel: "#700_operation", voice: true }).catch((err) => {
           console.log(err);

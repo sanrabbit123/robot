@@ -824,14 +824,11 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     constructRemain: {
-      name: "시공 잔금",
-      id: "TG_5289",
+      name: "시공 잔금 수정",
+      id: "TG_5432",
       needs: [
         "client",
-        "amount0",
-        "amount1",
-        "amount2",
-        "amount3",
+        "amount",
         "host",
         "path",
         "cliid",
@@ -840,14 +837,25 @@ KakaoTalk.prototype.templateTong = function (target) {
       convert: function (obj) {
         return [
           { from: "client", to: obj.client },
-          { from: "amount0", to: obj.amount0 },
-          { from: "amount1", to: obj.amount1 },
-          { from: "amount2", to: obj.amount2 },
-          { from: "amount3", to: obj.amount3 },
+          { from: "amount", to: obj.amount },
           { from: "host", to: obj.host },
           { from: "path", to: obj.path },
           { from: "cliid", to: obj.cliid },
           { from: "needs", to: obj.needs },
+        ];
+      },
+    },
+    generalPayments: {
+      name: "일반 결제 완료",
+      id: "TG_5450",
+      needs: [
+        "client",
+        "goods",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "goods", to: obj.goods },
         ];
       },
     },

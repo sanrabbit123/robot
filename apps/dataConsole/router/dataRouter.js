@@ -4364,7 +4364,8 @@ DataRouter.prototype.rou_post_getDataPatch = function () {
 DataRouter.prototype.rou_post_constructInteraction = function () {
   const instance = this;
   const back = this.back;
-  const { errorLog, equalJson, dateToString, requestSystem } = this.mother;
+  const kakao = this.kakao;
+  const { errorLog, equalJson, dateToString, requestSystem, autoComma } = this.mother;
   const numberToHangul = (number) => {
     if (typeof number !== "number") {
       throw new Error("input must be integer");
@@ -4428,7 +4429,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
         throw new Error("invalid post 1");
       }
-      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff", "amountSync" ].includes(req.body.mode)) {
+      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff", "amountSync", "chargeGuide" ].includes(req.body.mode)) {
         throw new Error("invalid post 2");
       }
       const { mode, proid } = req.body;
@@ -4642,6 +4643,51 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         }
 
         result = {};
+
+      } else if (mode === "chargeGuide") {
+        const { method } = equalJson(req.body);
+        const now = new Date();
+        const client = await back.getClientById(project.cliid, { selfMongo: instance.mongo });
+        const cliid = client.cliid;
+        const host = instance.address.homeinfo.ghost.host;
+        const path = "estimation";
+        const needs = "style," + project.desid + "," + project.proid + "," + (project.service.online ? "online" : "offline");
+        const name = client.name;
+        const phone = client.phone;
+        let whereQuery, updateQuery;
+        whereQuery = { proid };
+        updateQuery = {};
+        if (method === "first") {
+          await kakao.sendTalk("constructFirst", name, phone, {
+            client: name,
+            amount: autoComma(project.process.design.construct.contract.payments.first.calculation.amount.consumer),
+            host, path, cliid, needs
+          });
+          updateQuery["process.design.construct.contract.payments.first.guide"] = now;
+        } else if (method === "start") {
+          await kakao.sendTalk("constructStart", name, phone, {
+            client: name,
+            amount: autoComma(project.process.design.construct.contract.payments.start.calculation.amount.consumer),
+            host, path, cliid, needs
+          });
+          updateQuery["process.design.construct.contract.payments.start.guide"] = now;
+        } else if (method === "middle") {
+          await kakao.sendTalk("constructMiddle", name, phone, {
+            client: name,
+            amount: autoComma(project.process.design.construct.contract.payments.middle.calculation.amount.consumer),
+            host, path, cliid, needs
+          });
+          updateQuery["process.design.construct.contract.payments.middle.guide"] = now;
+        } else if (method === "remain") {
+          await kakao.sendTalk("constructRemain", name, phone, {
+            client: name,
+            amount: autoComma(project.process.design.construct.contract.payments.remain.calculation.amount.consumer),
+            host, path, cliid, needs
+          });
+          updateQuery["process.design.construct.contract.payments.remain.guide"] = now;
+        }
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        result = { date: dateToString(now), now };
       } else {
         result = {};
       }

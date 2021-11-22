@@ -904,8 +904,6 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
 
           } else {
 
-
-
             window.alert("계좌 이체로 진행하실 경우, 현금 영수증이 자동으로 발급됩니다!");
             window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript;
 
