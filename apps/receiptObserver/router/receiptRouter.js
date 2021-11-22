@@ -807,7 +807,6 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     let businessMethod;
     let bankName, bankTo;
     let calculate;
-    let designerHistory;
 
     if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
@@ -869,12 +868,23 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
         projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
         await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
-        designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-        await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
         await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
 
         await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
         await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
+
+        back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true }).then((designerHistory) => {
+          if (designerHistory !== null && typeof designerHistory[desid] === "string") {
+            errorLog({ text: "sync_paymentProject catch => " + proid + " : " + desid + " : " + designerHistory[desid], channel: "#error_log" }).catch((e) => { console.log(e); })
+            return back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
+          } else {
+            return new Promise((resolve, reject) => {
+              resolve(null);
+            });
+          }
+        }).catch((err) => {
+          errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject, history 연산중 콘솔에서 문제 생김) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); })
+        });
 
         instance.kakao.sendTalk("paymentAndChannel", client.name, client.phone, {
           client: client.name,
@@ -1014,7 +1024,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       let businessMethod;
       let bankName, bankTo;
       let calculate;
-      let designerHistory;
       let itemArr, payArr, cancelArr;
       let itemNum, payNum, cancelNum;
       let payObject;
@@ -1236,7 +1245,6 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       let businessMethod;
       let bankName, bankTo;
       let calculate;
-      let designerHistory;
       let whereQuery, updateQuery;
       let proofs;
       let itemArr, payArr, cancelArr;

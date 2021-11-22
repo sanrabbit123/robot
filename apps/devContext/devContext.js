@@ -461,12 +461,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const desid = "d2104_aa07s";
-    const proid = "p2111_aa44s"
-    const designerHistory = await back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true });
-    await back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
-
-    console.log(designerHistory);
 
 
     /*
