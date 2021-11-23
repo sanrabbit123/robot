@@ -2775,6 +2775,11 @@ DevContext.prototype.launching = async function () {
     // await this.pageRender(process.env.HOME + "/improvingContract/improvingContract.ai");
 
 
+    // voice to text
+    // const audio = new PlayAudio();
+    // await audio.voiceToText();
+
+
     // send native alarm
     // const alarm = new NativeNotifier();
     // await alarm.sendAlarm("안녕안녕", () => {});
