@@ -3,7 +3,7 @@
 DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson, blankHref, downloadFile } = GeneralJs;
   const { aspid, designer, phone, email, address, portfolio, meeting: { date, status }, information, submit } = aspirant;
   const { firstRequest: { date: request }, comeFrom } = submit;
   const { career, company, channel: { web, sns, cloud } } = information;

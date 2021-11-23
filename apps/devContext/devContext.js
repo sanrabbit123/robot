@@ -90,7 +90,7 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(res.data, null, 2));
 
 
-
+    const selfMongo = this.MONGOLOCALC;
     const widsignTargets = [
       {
         name: "신정안",
@@ -1083,6 +1083,51 @@ DevContext.prototype.launching = async function () {
         "proid": "p2109_aa50s"
       },
     ];
+    let targetProjects;
+
+    targetProjects = [];
+    for (let { proid } of widsignTargets) {
+      targetProjects.push((await back.getProjectById(proid, { selfMongo })).toNormal())
+    }
+
+    targetProjects = targetProjects.filter((obj) => {
+      return obj.process.design.construct !== null;
+    });
+
+    targetProjects = targetProjects.map((obj) => {
+      obj.process.design.construct.contract.payments.proid = obj.proid;
+      return obj.process.design.construct.contract;
+    })
+
+    targetProjects = targetProjects.map((obj) => {
+      if (/유창민/gi.test(obj.partner)) {
+        obj.payments.buiid = "u2111_aa01s";
+      } else if (/조호익/gi.test(obj.partner)) {
+        obj.payments.buiid = "u2111_aa02s";
+      } else if (/이청호/gi.test(obj.partner)) {
+        obj.payments.buiid = "u2111_aa03s";
+      } else if (/김민정/gi.test(obj.partner)) {
+        obj.payments.buiid = "u2111_aa04s";
+      } else {
+        obj.payments.buiid = null;
+      }
+      return obj;
+    })
+
+    targetProjects = targetProjects.filter((obj) => {
+      return obj.payments.buiid !== null;
+    });
+
+    targetProjects = targetProjects.map((obj) => {
+      return obj.payments;
+    })
+
+    targetProjects = targetProjects.filter((obj) => {
+      return !(obj.first === null && obj.start === null && obj.middle === null && obj.remain === null);
+    });
+
+
+    console.log(targetProjects);
 
 
 
