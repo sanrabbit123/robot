@@ -581,7 +581,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
           folderName = folder;
           fileName = file;
           if (list.length > 0) {
-            return downloadFile(list[0]);
+            return GeneralJs.downloadFile(list[0]);
           } else {
             return new Promise((resolve, reject) => { resolve(null); });
           }
