@@ -4365,7 +4365,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
-  const { errorLog, equalJson, dateToString, requestSystem, autoComma } = this.mother;
+  const { errorLog, equalJson, dateToString, requestSystem, autoComma, messageSend } = this.mother;
   const numberToHangul = (number) => {
     if (typeof number !== "number") {
       throw new Error("input must be integer");
@@ -4589,6 +4589,13 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       } else if (mode === "sendContract") {
 
         const { summary } = equalJson(req.body);
+        let whereQuery, updateQuery;
+
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.design.construct.contract.form.guide"] = new Date();
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
         requestSystem("https://" + instance.address.pythoninfo.host + ":3000/createConstructContract", { proid, summary }, { headers: { "Content-type": "application/json" } }).catch((err) => {
           throw new Error(err);
         });
@@ -4655,8 +4662,10 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         const name = client.name;
         const phone = client.phone;
         let whereQuery, updateQuery;
+        let target;
         whereQuery = { proid };
         updateQuery = {};
+        target = "";
         if (method === "first") {
           await kakao.sendTalk("constructFirst", name, phone, {
             client: name,
@@ -4664,6 +4673,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
             host, path, cliid, needs
           });
           updateQuery["process.design.construct.contract.payments.first.guide"] = now;
+          target = "계약금";
         } else if (method === "start") {
           await kakao.sendTalk("constructStart", name, phone, {
             client: name,
@@ -4671,6 +4681,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
             host, path, cliid, needs
           });
           updateQuery["process.design.construct.contract.payments.start.guide"] = now;
+          target = "착수금";
         } else if (method === "middle") {
           await kakao.sendTalk("constructMiddle", name, phone, {
             client: name,
@@ -4678,6 +4689,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
             host, path, cliid, needs
           });
           updateQuery["process.design.construct.contract.payments.middle.guide"] = now;
+          target = "중도금";
         } else if (method === "remain") {
           await kakao.sendTalk("constructRemain", name, phone, {
             client: name,
@@ -4685,8 +4697,12 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
             host, path, cliid, needs
           });
           updateQuery["process.design.construct.contract.payments.remain.guide"] = now;
+          target = "잔금";
         }
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+        messageSend({ text: name + " 고객님께 시공 " + target + " 안내 알림톡을 전송했어요.", channel: "#400_customer", voice: true }).catch((err) => {
+          console.log(err);
+        });
         result = { date: dateToString(now), now };
       } else {
         result = {};

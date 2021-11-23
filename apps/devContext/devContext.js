@@ -90,11 +90,244 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(res.data, null, 2));
 
 
+    /*
+    // sheets to db
+    await (async () => {
+      const selfMongo = instance.MONGOC;
+      const sheetsId = "1A0qgkt8D9NtWthVotQw5YrENtY6KTR3S5Pruj03D7r4";
+      const matrix = await sheets.read({
+        id: sheetsId,
+        columns: [
+          "client",
+          "designer",
+          "request",
+          "contract",
+          "status",
+          "requestGuide",
+          "estimateFirst",
+          "estimateSecond",
+          "formSend",
+          "formComplete",
+          "constructor",
+          "constructRange",
+          "address",
+          "contractMoney",
+          "startMoney",
+          "middleMoney",
+          "remainMoney",
+          "etc"
+        ]
+      });
+      const statusFilter = (raw) => {
+        raw = raw.trim();
+        raw = raw.replace(/^[0-9]+\)/gi, '').replace(/\//gi, '');
+        raw = raw.trim();
+        if (raw === "의뢰서작성중") {
+          return "의뢰서 작성중";
+        } else if (raw === "견적확인중") {
+          return "견적 확인중";
+        } else if (raw === "견적안내") {
+          return "견적 안내";
+        } else if (raw === "수정견적확인중") {
+          return "견적 확인중";
+        } else if (raw === "수정견적안내") {
+          return "견적 안내";
+        } else if (raw === "시공미팅예정") {
+          return "미팅 예정";
+        } else if (raw === "계약발송") {
+          return "계약 발송";
+        } else if (raw === "계약입금완") {
+          return "계약금 입금";
+        } else if (raw === "착수입금완") {
+          return "착수금 입금";
+        } else if (raw === "중도입금완") {
+          return "중도금 입금";
+        } else if (raw === "잔금입금완") {
+          return "잔금 입금";
+        } else if (raw === "완료") {
+          return "완료";
+        } else if (raw === "미정") {
+          return "대기";
+        } else if (raw === "시작전") {
+          return "대기";
+        } else if (raw === "C진행중") {
+          return "고객 진행";
+        } else if (raw === "D진행중") {
+          return "디자이너 진행";
+        } else if (raw === "D수수료요청") {
+          return "수수료 요청";
+        } else if (raw === "확인필요") {
+          return "해당 없음";
+        } else if (raw === "확인요청") {
+          return "해당 없음";
+        } else if (raw === "AS진행중") {
+          return "AS 진행중";
+        } else if (raw === "드랍") {
+          return "드랍";
+        }
+      }
+      const partnerFilter = (raw) => {
+        const map = [
+          {
+            standards: [ "유창민", "예음" ],
+            result: "유창민_예음"
+          },
+          {
+            standards: [ "조호익", "태호금속" ],
+            result: "조호익_태호금속"
+          },
+          {
+            standards: [ "이청호" ],
+            result: "이청호"
+          },
+          {
+            standards: [ "김민정", "키친앤숲" ],
+            result: "김민정_키친앤숲"
+          },
+          {
+            standards: [ "이기석", "율" ],
+            result: "이기석_율"
+          },
+          {
+            standards: [ "외부업체" ],
+            result: "외부업체"
+          },
+        ];
+        let boo;
+        for (let { standards, result } of map) {
+          boo = false;
+          for (let keyword of standards) {
+            if ((new RegExp(keyword, "gi")).test(raw)) {
+              boo = true;
+              break;
+            }
+          }
+          if (boo) {
+            return result;
+          }
+        }
 
-    ///*
+        if (/^C/i.test(raw)) {
+          return "고객";
+        } else if (/^D/.test(raw)) {
+          return "디자이너";
+        }
+
+        return "";
+      }
+      const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+      let projects, project, dummy, tempArr;
+      let paymentsDummy;
+      let proidArr;
+      let whereQuery, updateQuery;
+
+      for (let obj of matrix) {
+        projects = await back.getProjectsByNames([ obj.client, obj.designer ], { selfMongo });
+        if (projects.length === 0) {
+          console.log(obj);
+        }
+        projects = projects.proceedFilter();
+        project = projects[0];
+        obj.proid = project.proid;
+        delete obj.client;
+        delete obj.designer;
+        delete obj.address;
+
+        dummy = back.returnProjectDummies("process.design.construct");
+
+        dummy.status = statusFilter(obj.status);
+        delete obj.status;
+
+        dummy.request = obj.requestGuide;
+        delete obj.requestGuide;
+
+        if (obj.estimateFirst.valueOf() >= emptyDateValue) {
+          dummy.estimate.push({ invid: "", date: obj.estimateFirst });
+          if (obj.estimateSecond.valueOf() >= emptyDateValue) {
+            dummy.estimate.push({ invid: "", date: obj.estimateSecond });
+          }
+        }
+        delete obj.estimateFirst;
+        delete obj.estimateSecond;
+
+        if (obj.constructor.trim() !== "") {
+          dummy.contract.partner = partnerFilter(obj.constructor);
+        } else {
+          dummy.contract.partner = partnerFilter(obj.contract);
+        }
+        delete obj.constructor;
+        delete obj.contract;
+        delete obj.request;
+        delete obj.etc;
+
+        if (obj.formSend.valueOf() >= emptyDateValue) {
+          dummy.contract.form.guide = obj.formSend;
+        }
+        if (obj.formComplete.valueOf() >= emptyDateValue) {
+          dummy.contract.form.guide = obj.formComplete;
+        }
+        delete obj.formSend;
+        delete obj.formComplete;
+
+        if (obj.constructRange !== '') {
+          tempArr = obj.constructRange.split(/[^0-9]/);
+          tempArr = tempArr.filter((str) => { return /[0-9]/gi.test(str); });
+          tempArr = tempArr.filter((str) => { return str.replace(/[^0-9]/gi, '').length === 6 });
+          tempArr = tempArr.map((str) => { return str.replace(/[^0-9]/gi, ''); });
+          if (tempArr.length === 2) {
+            tempArr = tempArr.map((str) => { return new Date(Number("20" + str.slice(0, 2)), Number(str.slice(2, 4)) - 1, Number(str.slice(4))); });
+            dummy.contract.form.date.from = tempArr[0];
+            dummy.contract.form.date.to = tempArr[1];
+          }
+        }
+        delete obj.constructRange;
+
+        if (obj.contractMoney.valueOf() >= emptyDateValue) {
+          paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
+          paymentsDummy.date = obj.contractMoney;
+          dummy.contract.payments.first = equalJson(JSON.stringify(paymentsDummy));
+        }
+        if (obj.startMoney.valueOf() >= emptyDateValue) {
+          paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
+          paymentsDummy.date = obj.startMoney;
+          dummy.contract.payments.start = equalJson(JSON.stringify(paymentsDummy));
+        }
+        if (obj.middleMoney.valueOf() >= emptyDateValue) {
+          paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
+          paymentsDummy.date = obj.middleMoney;
+          dummy.contract.payments.middle = equalJson(JSON.stringify(paymentsDummy));
+        }
+        if (obj.remainMoney.valueOf() >= emptyDateValue) {
+          paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
+          paymentsDummy.date = obj.remainMoney;
+          dummy.contract.payments.remain = equalJson(JSON.stringify(paymentsDummy));
+        }
+        delete obj.contractMoney;
+        delete obj.startMoney;
+        delete obj.middleMoney;
+        delete obj.remainMoney;
+
+        obj.dummy = dummy;
+      }
+
+      proidArr = [];
+      for (let { proid, dummy } of matrix) {
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.design.construct"] = dummy
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+        proidArr.push(proid);
+        console.log(`update ${proid}`);
+      }
+
+      project = await back.getProjectById("p2110_aa02s", { selfMongo });
+      console.log(project.toNormal());
+    })();
+
     // widsign to db (payments amount)
     await (async () => {
-
+      const selfMongo = instance.MONGOC;
+      const selfConsoleMongo = instance.MONGOCONSOLEC;
       const widsignTargets = [
         {
           name: "신정안",
@@ -1087,250 +1320,132 @@ DevContext.prototype.launching = async function () {
           "proid": "p2109_aa50s"
         },
       ];
-
-
-      console.log(widsignTargets)
-
-
-    })();
-    //*/
-
-
-    /*
-    // sheets to db
-    await (async () => {
-      const selfMongo = this.MONGOLOCALC;
-      const sheetsId = "1A0qgkt8D9NtWthVotQw5YrENtY6KTR3S5Pruj03D7r4";
-      const matrix = await sheets.read({
-        id: sheetsId,
-        columns: [
-          "client",
-          "designer",
-          "request",
-          "contract",
-          "status",
-          "requestGuide",
-          "estimateFirst",
-          "estimateSecond",
-          "formSend",
-          "formComplete",
-          "constructor",
-          "constructRange",
-          "address",
-          "contractMoney",
-          "startMoney",
-          "middleMoney",
-          "remainMoney",
-          "etc"
-        ]
-      });
-      const statusFilter = (raw) => {
-        raw = raw.trim();
-        raw = raw.replace(/^[0-9]+\)/gi, '').replace(/\//gi, '');
-        raw = raw.trim();
-        if (raw === "의뢰서작성중") {
-          return "의뢰서 작성중";
-        } else if (raw === "견적확인중") {
-          return "견적 확인중";
-        } else if (raw === "견적안내") {
-          return "견적 안내";
-        } else if (raw === "수정견적확인중") {
-          return "견적 확인중";
-        } else if (raw === "수정견적안내") {
-          return "견적 안내";
-        } else if (raw === "시공미팅예정") {
-          return "미팅 예정";
-        } else if (raw === "계약발송") {
-          return "계약 발송";
-        } else if (raw === "계약입금완") {
-          return "계약금 입금";
-        } else if (raw === "착수입금완") {
-          return "착수금 입금";
-        } else if (raw === "중도입금완") {
-          return "중도금 입금";
-        } else if (raw === "잔금입금완") {
-          return "잔금 입금";
-        } else if (raw === "완료") {
-          return "완료";
-        } else if (raw === "미정") {
-          return "대기";
-        } else if (raw === "시작전") {
-          return "대기";
-        } else if (raw === "C진행중") {
-          return "고객 진행";
-        } else if (raw === "D진행중") {
-          return "디자이너 진행";
-        } else if (raw === "D수수료요청") {
-          return "수수료 요청";
-        } else if (raw === "확인필요") {
-          return "해당 없음";
-        } else if (raw === "확인요청") {
-          return "해당 없음";
-        } else if (raw === "AS진행중") {
-          return "AS 진행중";
-        } else if (raw === "드랍") {
-          return "드랍";
-        }
-      }
-      const partnerFilter = (raw) => {
-        const map = [
-          {
-            standards: [ "유창민", "예음" ],
-            result: "유창민_예음"
-          },
-          {
-            standards: [ "조호익", "태호금속" ],
-            result: "조호익_태호금속"
-          },
-          {
-            standards: [ "이청호" ],
-            result: "이청호"
-          },
-          {
-            standards: [ "김민정", "키친앤숲" ],
-            result: "김민정_키친앤숲"
-          },
-          {
-            standards: [ "이기석", "율" ],
-            result: "이기석_율"
-          },
-          {
-            standards: [ "외부업체" ],
-            result: "외부업체"
-          },
-        ];
-        let boo;
-        for (let { standards, result } of map) {
-          boo = false;
-          for (let keyword of standards) {
-            if ((new RegExp(keyword, "gi")).test(raw)) {
-              boo = true;
-              break;
-            }
-          }
-          if (boo) {
-            return result;
-          }
-        }
-
-        if (/^C/i.test(raw)) {
-          return "고객";
-        } else if (/^D/.test(raw)) {
-          return "디자이너";
-        }
-
-        return "";
-      }
-      const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
-      let projects, project, dummy, tempArr;
-      let paymentsDummy;
-      let proidArr;
-      let whereQuery, updateQuery;
-
-      for (let obj of matrix) {
-        projects = await back.getProjectsByNames([ obj.client, obj.designer ], { selfMongo });
-        if (projects.length === 0) {
-          console.log(obj);
-        }
-        projects = projects.proceedFilter();
-        project = projects[0];
-        obj.proid = project.proid;
-        delete obj.client;
-        delete obj.designer;
-        delete obj.address;
-
-        dummy = back.returnProjectDummies("process.design.construct");
-
-        dummy.status = statusFilter(obj.status);
-        delete obj.status;
-
-        dummy.request = obj.requestGuide;
-        delete obj.requestGuide;
-
-        if (obj.estimateFirst.valueOf() >= emptyDateValue) {
-          dummy.estimate.push({ invid: "", date: obj.estimateFirst });
-          if (obj.estimateSecond.valueOf() >= emptyDateValue) {
-            dummy.estimate.push({ invid: "", date: obj.estimateSecond });
-          }
-        }
-        delete obj.estimateFirst;
-        delete obj.estimateSecond;
-
-        if (obj.constructor.trim() !== "") {
-          dummy.contract.partner = partnerFilter(obj.constructor);
+      const stringParsing = (str) => {
+        if (typeof str !== "string") {
+          return new Date(1800, 0, 1);
         } else {
-          dummy.contract.partner = partnerFilter(obj.contract);
-        }
-        delete obj.constructor;
-        delete obj.contract;
-        delete obj.request;
-        delete obj.etc;
-
-        if (obj.formSend.valueOf() >= emptyDateValue) {
-          dummy.contract.form.guide = obj.formSend;
-        }
-        if (obj.formComplete.valueOf() >= emptyDateValue) {
-          dummy.contract.form.guide = obj.formComplete;
-        }
-        delete obj.formSend;
-        delete obj.formComplete;
-
-        if (obj.constructRange !== '') {
-          tempArr = obj.constructRange.split(/[^0-9]/);
-          tempArr = tempArr.filter((str) => { return /[0-9]/gi.test(str); });
-          tempArr = tempArr.filter((str) => { return str.replace(/[^0-9]/gi, '').length === 6 });
-          tempArr = tempArr.map((str) => { return str.replace(/[^0-9]/gi, ''); });
-          if (tempArr.length === 2) {
-            tempArr = tempArr.map((str) => { return new Date(Number("20" + str.slice(0, 2)), Number(str.slice(2, 4)) - 1, Number(str.slice(4))); });
-            dummy.contract.form.date.from = tempArr[0];
-            dummy.contract.form.date.to = tempArr[1];
+          if (str.trim() === '') {
+            return new Date(1800, 0, 1);
+          }
+          if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(str.trim())) {
+            return stringToDate(str);
+          } else {
+            return new Date(str);
           }
         }
-        delete obj.constructRange;
-
-        if (obj.contractMoney.valueOf() >= emptyDateValue) {
-          paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
-          paymentsDummy.date = obj.contractMoney;
-          dummy.contract.payments.first = equalJson(JSON.stringify(paymentsDummy));
-        }
-        if (obj.startMoney.valueOf() >= emptyDateValue) {
-          paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
-          paymentsDummy.date = obj.startMoney;
-          dummy.contract.payments.start = equalJson(JSON.stringify(paymentsDummy));
-        }
-        if (obj.middleMoney.valueOf() >= emptyDateValue) {
-          paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
-          paymentsDummy.date = obj.middleMoney;
-          dummy.contract.payments.middle = equalJson(JSON.stringify(paymentsDummy));
-        }
-        if (obj.remainMoney.valueOf() >= emptyDateValue) {
-          paymentsDummy = back.returnProjectDummies("process.design.construct.contract.payments");
-          paymentsDummy.date = obj.remainMoney;
-          dummy.contract.payments.remain = equalJson(JSON.stringify(paymentsDummy));
-        }
-        delete obj.contractMoney;
-        delete obj.startMoney;
-        delete obj.middleMoney;
-        delete obj.remainMoney;
-
-        obj.dummy = dummy;
       }
+      let tong;
+      let tempObj;
+      let thisProject, thisClient;
+      let whereQuery, updateQuery, historyQuery;
+      let supply, vat, consumer;
 
-      proidArr = [];
-      for (let { proid, dummy } of matrix) {
-        whereQuery = { proid };
+      tong = [];
+      for (let obj of widsignTargets) {
+        tempObj = {};
+
+        tempObj.proid = obj.proid;
+        tempObj.form = obj.form;
+        tempObj.payments = {
+          first: {
+            amount: (typeof obj.payments.first.amount !== "number" ? 0 : obj.payments.first.amount),
+            date: stringParsing(obj.payments.first.date),
+            etc: (typeof obj.payments.first.etc !== "string" ? '' : obj.payments.first.etc),
+          },
+          start: {
+            amount: (typeof obj.payments.start.amount !== "number" ? 0 : obj.payments.start.amount),
+            date: stringParsing(obj.payments.start.date),
+            etc: (typeof obj.payments.start.etc !== "string" ? '' : obj.payments.start.etc),
+          },
+          middle: {
+            amount: (typeof obj.payments.middle.amount !== "number" ? 0 : obj.payments.middle.amount),
+            date: stringParsing(obj.payments.middle.date),
+            etc: (typeof obj.payments.middle.etc !== "string" ? '' : obj.payments.middle.etc),
+          },
+          remain: {
+            amount: (typeof obj.payments.remain.amount !== "number" ? 0 : obj.payments.remain.amount),
+            date: stringParsing(obj.payments.remain.date),
+            etc: (typeof obj.payments.remain.etc !== "string" ? '' : obj.payments.remain.etc),
+          },
+        }
+
+        thisProject = await back.getProjectById(tempObj.proid, { selfMongo });
+        thisClient = await back.getClientById(thisProject.cliid, { selfMongo });
+
+        whereQuery = { proid: tempObj.proid };
         updateQuery = {};
-        updateQuery["process.design.construct"] = dummy
-        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
-        proidArr.push(proid);
-        console.log(`update ${proid}`);
+        historyQuery = {};
+
+        if (thisProject.process.design.construct.contract.payments.first !== null) {
+          consumer = Math.floor(tempObj.payments.first.amount);
+          vat = Math.floor(consumer / 11);
+          supply = Math.floor(consumer - vat);
+          updateQuery["process.design.construct.contract.payments.first.calculation.amount.supply"] = supply;
+          updateQuery["process.design.construct.contract.payments.first.calculation.amount.vat"] = vat;
+          updateQuery["process.design.construct.contract.payments.first.calculation.amount.consumer"] = consumer;
+          updateQuery["process.design.construct.contract.payments.first.calculation.info.method"] = "계좌 이체";
+          updateQuery["process.design.construct.contract.payments.first.calculation.info.proof"] = "현금 영수증";
+          updateQuery["process.design.construct.contract.payments.first.calculation.info.to"] = thisClient.name;
+        }
+
+        if (thisProject.process.design.construct.contract.payments.start !== null) {
+          consumer = Math.floor(tempObj.payments.start.amount);
+          vat = Math.floor(consumer / 11);
+          supply = Math.floor(consumer - vat);
+          updateQuery["process.design.construct.contract.payments.start.calculation.amount.supply"] = supply;
+          updateQuery["process.design.construct.contract.payments.start.calculation.amount.vat"] = vat;
+          updateQuery["process.design.construct.contract.payments.start.calculation.amount.consumer"] = consumer;
+          updateQuery["process.design.construct.contract.payments.start.calculation.info.method"] = "계좌 이체";
+          updateQuery["process.design.construct.contract.payments.start.calculation.info.proof"] = "현금 영수증";
+          updateQuery["process.design.construct.contract.payments.start.calculation.info.to"] = thisClient.name;
+        }
+
+        if (thisProject.process.design.construct.contract.payments.middle !== null) {
+          consumer = Math.floor(tempObj.payments.middle.amount);
+          vat = Math.floor(consumer / 11);
+          supply = Math.floor(consumer - vat);
+          updateQuery["process.design.construct.contract.payments.middle.calculation.amount.supply"] = supply;
+          updateQuery["process.design.construct.contract.payments.middle.calculation.amount.vat"] = vat;
+          updateQuery["process.design.construct.contract.payments.middle.calculation.amount.consumer"] = consumer;
+          updateQuery["process.design.construct.contract.payments.middle.calculation.info.method"] = "계좌 이체";
+          updateQuery["process.design.construct.contract.payments.middle.calculation.info.proof"] = "현금 영수증";
+          updateQuery["process.design.construct.contract.payments.middle.calculation.info.to"] = thisClient.name;
+        }
+
+        if (thisProject.process.design.construct.contract.payments.remain !== null) {
+          consumer = Math.floor(tempObj.payments.remain.amount);
+          vat = Math.floor(consumer / 11);
+          supply = Math.floor(consumer - vat);
+          updateQuery["process.design.construct.contract.payments.remain.calculation.amount.supply"] = supply;
+          updateQuery["process.design.construct.contract.payments.remain.calculation.amount.vat"] = vat;
+          updateQuery["process.design.construct.contract.payments.remain.calculation.amount.consumer"] = consumer;
+          updateQuery["process.design.construct.contract.payments.remain.calculation.info.method"] = "계좌 이체";
+          updateQuery["process.design.construct.contract.payments.remain.calculation.info.proof"] = "현금 영수증";
+          updateQuery["process.design.construct.contract.payments.remain.calculation.info.to"] = thisClient.name;
+        }
+
+        historyQuery["construct.name"] = tempObj.form.name;
+        historyQuery["construct.address"] = tempObj.form.address;
+        historyQuery["construct.payments.first.date"] = tempObj.payments.first.date;
+        historyQuery["construct.payments.first.etc"] = tempObj.payments.first.etc;
+        historyQuery["construct.payments.start.date"] = tempObj.payments.start.date;
+        historyQuery["construct.payments.start.etc"] = tempObj.payments.start.etc;
+        historyQuery["construct.payments.middle.date"] = tempObj.payments.middle.date;
+        historyQuery["construct.payments.middle.etc"] = tempObj.payments.middle.etc;
+        historyQuery["construct.payments.remain.date"] = tempObj.payments.remain.date;
+        historyQuery["construct.payments.remain.etc"] = tempObj.payments.remain.etc;
+
+        if (Object.keys(updateQuery).length !== 0) {
+          await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+        }
+        await back.updateHistory("project", [ whereQuery, historyQuery ], { selfMongo: selfConsoleMongo });
+        console.log(whereQuery, updateQuery)
+
+        tong.push(equalJson(JSON.stringify(tempObj)));
       }
 
-      project = await back.getProjectById("p2110_aa02s", { selfMongo });
-      console.log(project.toNormal());
     })();
     */
-
 
 
 

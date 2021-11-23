@@ -2037,12 +2037,6 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
         values: statusValues,
         chain: null
       },
-      partner: {
-        title: "시공사",
-        position: "process.design.construct.contract.partner",
-        values: partnerValues,
-        chain: null
-      },
       firstGuide: {
         title: "계약금 안내",
         position: "process.design.construct.contract.payments.first.guide",
@@ -2153,82 +2147,6 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
-          resetWidthEvent();
-
-        } catch (e) {
-          console.log(e);
-        }
-      }
-
-      nodeArr = [];
-      for (let i = 0; i < values.length; i++) {
-        nodeArr.push({
-          mother: this,
-          mode: "aside",
-          attribute: { value: values[i], position, proid: project.proid },
-          events: [ { type: "click", event: updateEvent } ],
-          style: {
-            position: "absolute",
-            top: String(top + ((margin + height) * i)) + ea,
-            left: String(startLeft) + ea,
-            width: String(width) + ea,
-            height: String(height) + ea,
-            background, zIndex, boxShadow, borderRadius, animation,
-          }
-        });
-        nodeArr.push({
-          mother: -1,
-          text: values[i],
-          style: {
-            position: "absolute",
-            top: String(textTop) + ea,
-            width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(size) + ea,
-            fontWeight: String(500),
-            color: colorChip.whiteBlack,
-          }
-        });
-      }
-      createNodes(nodeArr);
-    });
-
-    stringArr.push(textMaker(map["partner"].title, partner === '' ? "-" : partner, partner === '' ? "gray5" : "black", "partner"));
-    updateArr.push(function (e, option, cancelBox, parent) {
-      const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
-      const column = "partner";
-      let startLeft, width, margin, background;
-      let values, updateEvent;
-      let nodeArr;
-      let position;
-
-      position = map[column].position;
-      values = map[column].values;
-      startLeft = 0;
-      width = 116;
-      margin = 4;
-
-      background = colorChip.gradientGreen4;
-      updateEvent = async function (e) {
-        try {
-          const value = this.getAttribute("value");
-          const position = this.getAttribute("position");
-          const proid = this.getAttribute("proid");
-          const removeTargets = mother.querySelectorAll("aside");
-          let whereQuery, updateQuery;
-
-          whereQuery = { proid };
-          updateQuery = {};
-          updateQuery[position] = value;
-          valueDom.textContent = value;
-
-          await instance.constructUpdate(whereQuery, updateQuery, map[column].chain, value);
-
-          for (let dom of removeTargets) {
-            mother.removeChild(dom);
-          }
-          thisCase[column].style.color = colorChip.black;
           resetWidthEvent();
 
         } catch (e) {
