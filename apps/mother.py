@@ -51,6 +51,7 @@ except Exception as e:
 import boto3
 import subprocess
 import re
+import time
 
 def searchDir(target, detail=False):
     fileList_raw = subprocess.check_output([ "ls", "-al", target ], shell=False, encoding='utf8')
@@ -127,7 +128,7 @@ try:
 
     elif argv[1] == "listBucket":
 
-        s3 = boto3.resource('s3')
+        s3 = boto3.resource("s3")
         bucket = s3.Bucket(BUCKETNAMECONST)
 
         tong = []
@@ -138,7 +139,7 @@ try:
 
     elif argv[1] == "listBucketAll":
 
-        s3 = boto3.resource('s3')
+        s3 = boto3.resource("s3")
         bucket = s3.Bucket(BUCKETNAMECONST)
 
         tong = []
@@ -146,6 +147,13 @@ try:
             tong.append(obj.key)
 
         print(dumps({ "message": tong }))
+
+    elif argv[1] == "delete":
+
+        s3 = boto3.resource("s3")
+        s3.Object(BUCKETNAMECONST, data["key"]).delete()
+        print(dumps({ "message": "done" }))
+
 
 
 except Exception as e:

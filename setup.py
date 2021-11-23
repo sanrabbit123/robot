@@ -21,7 +21,8 @@ class RobotInstall:
             [ "lxml" ],
             [ "wheel" ],
             [ "apscheduler" ],
-            [ "aiohttp" ]
+            [ "aiohttp" ],
+            [ "cloudconvert" ],
         ]
         self.upgrade = [
             [ "google-api-core" ],
@@ -164,15 +165,4 @@ elif sys.argv[1] == 'install' or sys.argv[1] == 'refresh':
         newInfoObj.write(infoObjString)
 
     if sys.argv[1] == 'install':
-        print("npm install")
-        print("npm install -g pm2")
-        print("python3 -m venv .")
-        print("source ./bin/activate")
-        print("pip3 install wheel")
-        print("pip3 install aiohttp")
-        print("pip3 install gunicorn")
-        print("pip3 install requests")
-        print("pip3 install bs4")
-        print("pip3 install apscheduler")
-        print("pip3 install pymongo")
-        print("pip3 install PyMySQL")
+        print("install done");

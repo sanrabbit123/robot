@@ -1,6 +1,8 @@
 const PlayAudio = function (option = {}) {
   const Mother = require(`${process.cwd()}/apps/mother.js`);
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
   this.mother = new Mother();
+  this.address = ADDRESS;
   if (option.players === undefined) {
     this.players = [
       'mplayer',
@@ -53,6 +55,8 @@ const PlayAudio = function (option = {}) {
   }
   this.urlRegex = /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/i;
   this.restapiKey = "e0d7657d8f0da70f3df436046728c0a0";
+  this.dir = process.cwd() + "/apps/playAudio";
+  this.python = this.dir + "/python/app.py";
 }
 
 PlayAudio.prototype.play = function (audio, options = {}) {
@@ -143,36 +147,101 @@ PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
   }
 }
 
-PlayAudio.prototype.fileToText = async function (fileName) {
-  if (typeof fileName !== "string") {
-    throw new Error("input must be file name");
-  }
+PlayAudio.prototype.voiceToText = async function (fileName) {
   const instance = this;
-  const { restapiKey } = this;
-  const { shell, shellLink, fileSystem } = this.mother;
+  const { shellExec, shellLink, fileSystem, uniqueValue, s3FileUpload, s3FileDelete, pythonExecute, requestSystem, equalJson } = this.mother;
+  const { python } = this;
+  const home = process.env.HOME;
+  const audioTongName = "audioTong";
+  const folder = `${home}/${audioTongName}`;
+  const s3Const = "/voiceTong";
+  const nameConst = "audioTong_";
+  const to = "mp3";
+  const parentId = "1MehWQWy7rp7AkZWGdp_X3zdMwOKcIpjS";
+  const wordTitleConst = "음성추출_";
+  const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
+  const docs = new GoogleDocs();
+  const docsConst0 = "https://docs.google.com/document/d/";
+  const docsConst1 = "/edit?usp=sharing";
   try {
-    let command, response, tempArr;
-    if (await fileSystem(`exist`, [ fileName ])) {
-      command = ``;
-      command += `curl -v -X POST "https://kakaoi-newtone-openapi.kakao.com/v1/recognize" `;
-      command += `-H "Transfer-Encoding: chunked" `;
-      command += `-H "Content-Type: application/octet-stream" `;
-      command += `-H "Authorization: ${restapiKey}" `;
-      command += `--data-binary @${fileName}`;
+    const homeDir = await fileSystem(`readDir`, [ home ]);
+    if (!homeDir.includes(audioTongName)) {
+      await shellExec(`mkdir`, [ folder ]);
+    }
+    const targetFiles = (await fileSystem(`readDir`, [ folder ])).filter((str) => { return !/DS_Store/gi.test(str) });
+    let fromArr, toArr;
+    let tong, tempName, exe;
+    let tempObj, res;
+    let name;
+    let response;
+    let wordingTong;
+    let resultTong;
+    let tempLink;
+    let tempId;
+    let targetStr, targetObj;
 
-      response = shell.exec(command, { silent: false });
+    if (targetFiles.length > 0) {
 
-      tempArr = response.stdout.split("\n").map((i) => { return i.trim(); }).reverse().filter((i) => { return i !== '' }).filter((i) => { return /^[\{\[]/.test(i); });
-      if (tempArr.length === 0) {
-        return { text: '' };
-      } else {
-        return { text: JSON.parse(tempArr[0]).value };
+      tong = [];
+      fromArr = [];
+      toArr = [];
+      for (let file of targetFiles) {
+        tempObj = {};
+
+        exe = file.split('.')[file.split('.').length - 1];
+        tempObj.name = nameConst + uniqueValue("string");
+        tempName = tempObj.name + '.' + exe;
+
+        await shellExec(`mv`, [ `${home}/${audioTongName}/${file}`, `${home}/${audioTongName}/${tempName}` ]);
+        console.log("converting start");
+        res = await pythonExecute(python, [ `convert` ], { input: `${home}/${audioTongName}/${tempName}`, from: exe, to, folder });
+        console.log("converting success : " + res.output);
+
+        name = res.output.split("/")[res.output.split("/").length - 1];
+        exe = name.split('.')[name.split('.').length - 1];
+        tempObj.exe = exe;
+        tempName = tempObj.name + '.' + exe;
+        tempObj.uri = `s3://${instance.address.s3info.bucket}${s3Const}/${tempName}`;
+
+        fromArr.push(res.output);
+        toArr.push(`${s3Const}/${tempName}`);
+        tong.push(tempObj);
       }
 
-    } else {
-      throw new Error("there is no file");
-    }
+      console.log(`target : `, fromArr, toArr);
+      await s3FileUpload(fromArr, toArr);
 
+      resultTong = [];
+      for (let { uri, exe, name } of tong) {
+        console.log("transcribe start");
+        res = await pythonExecute(python, [ `transcribe` ], { uri, exe, name });
+        console.log("transcribe success");
+
+        targetStr = res;
+        targetStr = targetStr.slice(targetStr.search(/\{ *['"]TranscriptFileUri/));
+        targetStr = targetStr.slice(0, targetStr.search(/\}/) + 1).replace(/\'/gi, "\"");
+        targetObj = equalJson(targetStr);
+
+        console.log("request : ", targetObj);
+        response = await requestSystem(targetObj.TranscriptFileUri);
+        wordingTong = response.data.results.transcripts.map((obj) => { return obj.transcript }).join("\n\n").split(".").map((str) => { return str.trim(); });
+
+        tempId = await docs.create_newDocs_inPython(wordTitleConst + name, parentId);
+        console.log(wordingTong);
+        await docs.update_contents_inPython(tempId, wordingTong);
+
+        await s3FileDelete(s3Const + "/" + name + "." + exe);
+        await shellExec(`rm`, [ `-rf`, `${home}/${audioTongName}/${name}.${exe}` ]);
+        console.log("clean success");
+
+        tempLink = docsConst0 + tempId + docsConst1;
+        resultTong.push(tempLink);
+      }
+
+      console.log(resultTong);
+      return resultTong;
+
+    }
   } catch (e) {
     console.log(e);
   }

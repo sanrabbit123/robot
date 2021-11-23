@@ -2826,6 +2826,53 @@ Mother.prototype.s3FileList = function (query = "all") {
   });
 }
 
+Mother.prototype.s3FileDelete = function (key) {
+  const fs = require(`fs`);
+  const shell = require(`shelljs`);
+
+  let target = process.cwd() + "/apps/mother.py";
+  let targetLink, targetArr;
+
+  //shellLink and make target path
+  targetLink = '';
+  targetArr = target.split('/');
+  for (let i of targetArr) {
+    if (!/ /g.test(i) && !/\&/g.test(i) && !/\(/g.test(i) && !/\)/g.test(i) && !/\#/g.test(i) && !/\%/g.test(i) && !/\[/g.test(i) && !/\]/g.test(i) && !/\{/g.test(i) && !/\}/g.test(i) && !/\@/g.test(i) && !/\!/g.test(i) && !/\=/g.test(i) && !/\+/g.test(i) && !/\~/g.test(i) && !/\?/g.test(i) && !/\$/g.test(i)) {
+      targetLink += i + '/';
+    } else if (!/'/g.test(i)) {
+      targetLink += "'" + i + "'" + '/';
+    } else if (!/"/g.test(i)) {
+      targetLink += '"' + i + '"' + '/';
+    } else {
+      targetLink += i + '/';
+    }
+  }
+  targetLink = targetLink.slice(0, -1);
+
+  if (/^\//.test(key)) {
+    key = key.slice(1);
+  }
+
+  //set bridge
+  const bridgeFile = process.cwd() + "/temp/motherPythonBridge.json";
+
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(bridgeFile, JSON.stringify({ key }, null, 2), "utf8", function (err) {
+      if (err) {
+        reject(err);
+      }
+      let order, child;
+      let result, jsonRaw, json;
+      order = `python3 ${targetLink} delete`;
+      child = shell.exec(order, { silent: true });
+      jsonRaw = child.stdout.replace(/\n$/, '');
+      json = JSON.parse(jsonRaw);
+      result = json;
+      resolve(result.message);
+    });
+  });
+}
+
 Mother.prototype.serviceParsing = function (serviceObj, startDateMode = false) {
   const onoffString = [ "온라인", "오프라인" ];
   const serviceString = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "엑스트라 스타일링" ];

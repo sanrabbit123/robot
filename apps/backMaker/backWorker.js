@@ -615,8 +615,8 @@ BackWorker.prototype.newDesignerToFront = async function (desidArr, option = { s
             insertQuery = "INSERT INTO deslist (desid,name,start_Y,start_M,method1,method2,daepyo_a,daepyo_t,order_function) VALUES (";
             insertQuery += `'${pastDesid}',`;
             insertQuery += `'${designerObj.designer}',`;
-            insertQuery += `'${String(careerCalculation(designer).year)}',`;
-            insertQuery += `'${String(careerCalculation(designer).month)}',`;
+            insertQuery += `'${String(careerCalculation(designerObj).year)}',`;
+            insertQuery += `'${String(careerCalculation(designerObj).month)}',`;
             insertQuery += `'${frontSetting.methods[0]}',`;
             insertQuery += `'${frontSetting.methods[1]}',`;
             insertQuery += `'${frontSetting.photo.porlid}',`;

@@ -21,9 +21,8 @@ module.exports = function (arg, info) {
       await sleep(1000);
       await clickElement(document.querySelector("#trigger4"));
       await sleep(2000);
-      await pressKey("enter");
-      await sleep(1500);
-      await pressKey("enter");
+      
+
     },
   ];
 };
