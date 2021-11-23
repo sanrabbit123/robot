@@ -576,7 +576,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       let folderName, fileName, loading;
       if (window.confirm("다운로드를 진행할까요?")) {
         loading = instance.mother.grayLoading();
-        ajaxJson({ aspid: parent.id, mode: "download" }, "/ghostPass_designerPhoto").then((data) => {
+        GeneralJs.ajaxJson({ aspid: parent.id, mode: "download" }, "/ghostPass_designerPhoto").then((data) => {
           const { list, folder, file } = data;
           folderName = folder;
           fileName = file;
@@ -586,7 +586,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
             return new Promise((resolve, reject) => { resolve(null); });
           }
         }).then(() => {
-          return ajaxJson({ aspid: parent.id, mode: "delete", folder: folderName, file: fileName }, "/ghostPass_designerPhoto");
+          return GeneralJs.ajaxJson({ aspid: parent.id, mode: "delete", folder: folderName, file: fileName }, "/ghostPass_designerPhoto");
         }).then((data) => {
           if (data.message === "done") {
             loading.remove();
