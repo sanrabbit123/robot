@@ -867,21 +867,35 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
         projectQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
         projectQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
+        if (Number(project.service.serid.split("_")[1].replace(/[^0-9]/gi, '').replace(/^0/, '')) !== 1) {
+          projectQuery["process.design.construct"] = back.returnProjectDummies("process.design.construct");
+        }
+
         await back.updateClient([ { cliid }, { "requests.0.analytics.response.status": "진행" } ], { selfMongo: instance.mongo });
         await bill.designerSelect(proid, desid, { selfMongo: instance.mongolocal });
 
         await back.updateProject([ { proid }, projectQuery ], { selfMongo: instance.mongo });
         await bill.amountConverting(thisBill.bilid, { selfMongo: instance.mongolocal });
 
-        back.getHistoryProperty("designer", "manager", [ desid ], { fromConsole: true }).then((designerHistory) => {
-          if (designerHistory !== null && typeof designerHistory[desid] === "string") {
-            errorLog({ text: "sync_paymentProject catch => " + proid + " : " + desid + " : " + designerHistory[desid], channel: "#error_log" }).catch((e) => { console.log(e); })
-            return back.updateHistory("project", [ { proid }, { manager: designerHistory[desid] } ], { fromConsole: true });
-          } else {
-            return new Promise((resolve, reject) => {
-              resolve(null);
-            });
+        requestSystem("https://" + instance.address.backinfo.host + ":3000/getHistoryProperty", { idArr: [ desid ], method: "designer", property: "manager" }, {
+          headers: {
+            "Content-Type": "application/json",
+            "origin": "https://" + instance.address.pythoninfo.host,
           }
+        }).then((res) => {
+          const { data } = res;
+          return requestSystem("https://" + instance.address.backinfo.host + ":3000/getHistoryProperty", {
+            method: "project",
+            id: proid,
+            column: "manager",
+            value: data[desid],
+            email: null
+          }, {
+            headers: {
+              "Content-Type": "application/json",
+              "origin": "https://" + instance.address.pythoninfo.host,
+            }
+          });
         }).catch((err) => {
           errorLog({ text: "Python 서버 문제 생김 (sync_paymentProject, history 연산중 콘솔에서 문제 생김) : " + err.message, channel: "#error_log" }).catch((e) => { console.log(e); })
         });

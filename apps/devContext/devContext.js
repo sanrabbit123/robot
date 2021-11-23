@@ -1127,12 +1127,12 @@ DevContext.prototype.launching = async function () {
     });
 
 
-    console.log(targetProjects);
 
 
+    // console.log(targetProjects);
 
 
-
+    
 
 
 

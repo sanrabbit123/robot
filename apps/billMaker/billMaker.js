@@ -333,7 +333,7 @@ BillMaker.billDictionary = {
         },
         item: (amountObject, subObj) => {
           return [
-            [ "constructTime", amountObject.first ]
+            [ "constructTimeFirst", amountObject.first ]
           ];
         },
         target: (client, designer, project, method, subObj = {}) => {
@@ -362,7 +362,7 @@ BillMaker.billDictionary = {
         },
         item: (amountObject, subObj) => {
           return [
-            [ "constructTime", amountObject.start ]
+            [ "constructTimeStart", amountObject.start ]
           ];
         },
         target: (client, designer, project, method, subObj = {}) => {
@@ -391,7 +391,7 @@ BillMaker.billDictionary = {
         },
         item: (amountObject, subObj) => {
           return [
-            [ "constructTime", amountObject.middle ]
+            [ "constructTimeMiddle", amountObject.middle ]
           ];
         },
         target: (client, designer, project, method, subObj = {}) => {
@@ -420,7 +420,7 @@ BillMaker.billDictionary = {
         },
         item: (amountObject, subObj) => {
           return [
-            [ "constructTime", amountObject.remain ]
+            [ "constructTimeRemain", amountObject.remain ]
           ];
         },
         target: (client, designer, project, method, subObj = {}) => {
@@ -702,10 +702,37 @@ BillMaker.billDictionary = {
           "출장비에는 디자이너의 미팅 시간이 감안된 디자인 인건비가 함께 포함되어 있습니다.",
         ]
       },
-      constructTime: {
-        id: "_icte",
-        name: "시공비",
-        description: "견적에 따른 인테리어 공사를 진행하는 비용입니다.",
+      constructTimeFirst: {
+        id: "_ictf",
+        name: "시공 계약금",
+        description: "견적에 따른 인테리어 공사를 진행하는 비용 중 계약금입니다.",
+        ea: null,
+        number: (subObj) => { return 1; },
+        amount: (amount, subObj) => { return amount; },
+        comments: []
+      },
+      constructTimeStart: {
+        id: "_icts",
+        name: "시공 착수금",
+        description: "견적에 따른 인테리어 공사를 진행하는 비용 중 착수금입니다.",
+        ea: null,
+        number: (subObj) => { return 1; },
+        amount: (amount, subObj) => { return amount; },
+        comments: []
+      },
+      constructTimeMiddle: {
+        id: "_ictm",
+        name: "시공 중도금",
+        description: "견적에 따른 인테리어 공사를 진행하는 비용 중 중도금입니다.",
+        ea: null,
+        number: (subObj) => { return 1; },
+        amount: (amount, subObj) => { return amount; },
+        comments: []
+      },
+      constructTimeRemain: {
+        id: "_ictr",
+        name: "시공 잔금",
+        description: "견적에 따른 인테리어 공사를 진행하는 비용 중 잔금입니다.",
         ea: null,
         number: (subObj) => { return 1; },
         amount: (amount, subObj) => { return amount; },

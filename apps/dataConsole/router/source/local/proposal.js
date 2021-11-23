@@ -4540,8 +4540,15 @@ ProposalJs.prototype.list_menuEvents = async function (obj, mother, proid) {
                 updateQuery["process.calculation.payments.first.amount"] = Math.round(calculate / 2);
                 updateQuery["process.calculation.payments.remain.amount"] = Math.round(calculate / 2);
 
-
                 await ajaxJson({ whereQuery: { proid }, updateQuery }, "/rawUpdateProject");
+
+                if (Number(thisProject.service.serid.split("_")[1].replace(/[^0-9]/gi, '').replace(/^0/, '')) !== 1) {
+                  await ajaxJson({
+                    mode: "constructOnoff",
+                    action: "on",
+                    proid,
+                  }, "/constructInteraction");
+                }
 
                 clientUpdateQuery = {};
                 clientUpdateQuery["requests." + String(requestNumber) + ".analytics.response.action"] = action;

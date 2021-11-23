@@ -1446,10 +1446,13 @@ DataRouter.prototype.rou_post_updateHistory = function () {
       let managerTargetArr;
       let page, query, dummy, cookies;
 
-      for (let member of members) {
-        if (member.email.includes(email)) {
-          thisPerson = member.name;
-          break;
+      thisPerson = null;
+      if (email !== null) {
+        for (let member of members) {
+          if (member.email.includes(email)) {
+            thisPerson = member.name;
+            break;
+          }
         }
       }
 
@@ -1521,7 +1524,7 @@ DataRouter.prototype.rou_post_updateHistory = function () {
         }
       }
 
-      if (column !== null) {
+      if (column !== null && thisPerson !== null) {
         await fileSystem(`write`, [ logDir + "/" + method + "_" + "latest.json", JSON.stringify({ path: method, who: thisPerson, where: id, column: "history_" + column, value: "", date: today }) ]);
         const dir = await fileSystem(`readDir`, [ logDir ]);
         fileTarget = null;
@@ -1568,8 +1571,8 @@ DataRouter.prototype.rou_post_updateHistory = function () {
           date: new Date(),
           mode: query,
           who: {
-            name: cookies.homeliaisonConsoleLoginedName,
-            email: cookies.homeliaisonConsoleLoginedEmail
+            name: typeof cookies.homeliaisonConsoleLoginedName === "string" ? cookies.homeliaisonConsoleLoginedName : "unknown",
+            email: typeof cookies.homeliaisonConsoleLoginedEmail === "string" ? cookies.homeliaisonConsoleLoginedEmail : "unknown"
           }
         };
         if (Array.isArray(historyObj.curation.analytics.send)) {
