@@ -2898,47 +2898,97 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
             const thisIndex = Number(this.getAttribute("arrindex"));
             const thisSort = Number(this.getAttribute("sort"));
             if (titleMode) {
+
               const targets = contentsBlocks.map((dom, index) => { return { dom, index: index - 1 }; }).slice(1);
               const children = xyConverting(targets.map((obj) => { return [ ...obj.dom.children ].slice(ignoreNumbers[0], -1 * ignoreNumbers[1]); }));
               const sortTargets = children[thisIndex];
+              const sortTargetsText = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; });
               let indexArr, tempIndex, numberSortBoo;
 
-              numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.\: ]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
+              if (e.type === "contextmenu") {
 
-              if (!numberSortBoo) {
-                if (thisSort === 1) {
-                  sortTargets.sort((a, b) => {
-                    return b.querySelector(".value").textContent > a.querySelector(".value").textContent ? 1 : -1;
-                  });
-                  this.setAttribute("sort", String(0));
+                // sort
+
+                numberSortBoo = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; }).some((str) => { return (str.replace(/[0-9\-\.\: ]/gi, '').trim() === '' && /[0-9]/gi.test(str)) });
+
+                if (!numberSortBoo) {
+                  if (thisSort === 1) {
+                    sortTargets.sort((a, b) => {
+                      return b.querySelector(".value").textContent > a.querySelector(".value").textContent ? 1 : -1;
+                    });
+                    this.setAttribute("sort", String(0));
+                  } else {
+                    sortTargets.sort((a, b) => {
+                      return a.querySelector(".value").textContent > b.querySelector(".value").textContent ? 1 : -1;
+                    });
+                    this.setAttribute("sort", String(1));
+                  }
                 } else {
-                  sortTargets.sort((a, b) => {
-                    return a.querySelector(".value").textContent > b.querySelector(".value").textContent ? 1 : -1;
-                  });
-                  this.setAttribute("sort", String(1));
+                  if (thisSort === 1) {
+                    sortTargets.sort((a, b) => {
+                      return (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
+                    });
+                    this.setAttribute("sort", String(0));
+                  } else {
+                    sortTargets.sort((a, b) => {
+                      return (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
+                    });
+                    this.setAttribute("sort", String(1));
+                  }
                 }
+
+                indexArr = sortTargets.map((dom) => { return Number(dom.getAttribute("index")) });
+                for (let index of indexArr) {
+                  tempIndex = targets.findIndex((obj) => { return obj.index === index });
+                  if (tempIndex !== -1) {
+                    scrollTong.appendChild(targets[tempIndex].dom);
+                  }
+                }
+
               } else {
-                if (thisSort === 1) {
-                  sortTargets.sort((a, b) => {
-                    return (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 0 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
-                  });
-                  this.setAttribute("sort", String(0));
+
+                // filter
+
+                if (sortTargetsText.some((str) => { return /[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(str); })) {
+                  if (sortTargetsText.some((str) => { return /\,/gi.test(str) })) {
+                    // date history
+                    console.log("date history");
+
+
+
+
+                  } else {
+                    // date
+                    console.log("date");
+
+
+
+
+                  }
+                } else if (sortTargetsText.every((str) => { return str.length < 20; })) {
+                  if (sortTargetsText.some((str) => { return /원$/.test(str) && /^[0-9]/gi.test(str) })) {
+                    // money
+                    console.log("money");
+
+
+
+
+                  } else {
+                    //menu
+                    console.log("menu");
+
+
+
+                  }
                 } else {
-                  sortTargets.sort((a, b) => {
-                    return (a.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(a.querySelector(".value").textContent.replace(/[^0-9]/gi, ''))) - (b.querySelector(".value").textContent.replace(/[^0-9]/gi, '') === '' ? 90000 * 90000 : Number(b.querySelector(".value").textContent.replace(/[^0-9]/gi, '')));
-                  });
-                  this.setAttribute("sort", String(1));
+                  // long
+
+
+                  console.log("long");
+
+
                 }
               }
-
-              indexArr = sortTargets.map((dom) => { return Number(dom.getAttribute("index")) });
-              for (let index of indexArr) {
-                tempIndex = targets.findIndex((obj) => { return obj.index === index });
-                if (tempIndex !== -1) {
-                  scrollTong.appendChild(targets[tempIndex].dom);
-                }
-              }
-
             } else {
               if (this.querySelectorAll("aside").length === 0) {
                 const self = this;

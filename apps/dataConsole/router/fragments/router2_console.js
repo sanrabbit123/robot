@@ -874,6 +874,7 @@ DataRouter.prototype.rou_post_getClientReport = function () {
       let pastTong;
       let proposalsTong;
       let cliidTempArr, proidTempArr;
+      let motherClients, motherProjects, motherProjects_raw;
 
       if (req.body.month === undefined) {
         if (req.body.startYear === undefined) {
@@ -902,11 +903,16 @@ DataRouter.prototype.rou_post_getClientReport = function () {
         }
       }
 
-      resultArr = [];
+      motherClients = (await back.getClientsByQuery({}, { selfMongo: instance.mongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; return obj; });
+      motherProjects_raw = (await back.getProjectsByQuery({}, { selfMongo: instance.mongo })).toNormal();
+      motherProjects = motherProjects_raw.filter((obj) => {  return obj.process.contract.first.date.valueOf() >= (new Date(2000, 0, 1)).valueOf() });
 
+      resultArr = [];
       for (let matrix of dateMatrix) {
+
         monthArr = [];
         for (let arr of matrix) {
+
           obj = {};
 
           obj.cliid = {};
@@ -916,43 +922,21 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.endDay = `${zeroAddition(arr[1].getFullYear())}-${zeroAddition(arr[1].getMonth() + 1)}-${zeroAddition(arr[1].getDate())}`;
 
           //client
-          searchQuery = { "requests": { "$elemMatch": { "request.timeline": { "$gte": arr[0], "$lt": arr[2] } } } };
-          clients = await instance.back.getClientsByQuery(searchQuery, { selfMongo: instance.mongo });
+          clients = motherClients.filter((obj) => { return obj.timeline >= arr[0].valueOf() && obj.timeline < arr[2].valueOf() });
           obj.client = clients.length;
-          obj.cliid.client = clients.toNormal().map((obj) => { return obj.cliid; });
+          obj.cliid.client = clients.map((obj) => { return obj.cliid; });
           obj.proid.client = [];
 
           //proposal
-          cliidArr_raw = [];
-          cliidArr = [];
-          processTong = [];
-          pastTong = [];
-          for (let client of clients) {
-            cliidArr_raw.push(client.cliid);
-          }
+          cliidArr_raw = clients.map((obj) => { return obj.cliid; });
           cliidArr_raw = Array.from(new Set(cliidArr_raw));
-          for (let cliid of cliidArr_raw) {
-            cliidArr.push({ cliid });
-          }
-          if (cliidArr.length > 0) {
-            searchQuery = { "$or": cliidArr };
-            process = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
-            for (let i of process) {
-              if (!pastTong.includes(i.cliid)) {
-                processTong.push(i);
-              }
-              pastTong.push(i.cliid);
-            }
-            obj.proposal = processTong.length;
-          } else {
-            obj.proposal = 0;
-          }
-          obj.cliid.proposal = cliidArr_raw;
-          obj.proid.proposal = [];
+          process = motherProjects_raw.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+          obj.proposal = process.length;
+          obj.cliid.proposal = process.map((obj) => { return obj.cliid });
+          obj.proid.proposal = process.map((obj) => { return obj.cliid });
 
           //recommend
-          searchQuery = { "proposal.date": { "$gte": arr[0], "$lt": arr[2] } };
-          proposals = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
+          proposals = motherProjects.filter((obj) => { return obj.proposal.date >= arr[0].valueOf() && obj.proposal.date < arr[2].valueOf() });
           pastTong = [];
           proposalsTong = [];
           for (let i of proposals) {
@@ -962,34 +946,20 @@ DataRouter.prototype.rou_post_getClientReport = function () {
             pastTong.push(i.cliid);
           }
           obj.recommend = proposalsTong.length;
-          obj.cliid.recommend = [ ...new Set(proposals.toNormal().map((obj) => { return obj.cliid; })) ];
+          obj.cliid.recommend = [ ...new Set(proposals.map((obj) => { return obj.cliid; })) ];
           obj.proid.recommend = [];
 
           //contract
-          searchQuery = { "process.contract.first.date": { "$gte": arr[0], "$lt": arr[2] } };
-          contracts = await instance.back.getProjectsByQuery(searchQuery, { selfMongo: instance.mongo });
+          contracts = motherProjects.filter((obj) => { return obj.process.contract.first.date >= arr[0].valueOf() && obj.process.contract.first.date < arr[2].valueOf() });
           obj.contract = contracts.length;
-          obj.cliid.contract = [ ...new Set(contracts.toNormal().map((obj) => { return obj.cliid; })) ];
-          obj.proid.contract = contracts.toNormal().map((obj) => { return obj.proid });
+          obj.cliid.contract = [ ...new Set(contracts.map((obj) => { return obj.cliid; })) ];
+          obj.proid.contract = contracts.map((obj) => { return obj.proid });
 
           //process start
-          processNumber = 0;
-          cliidTempArr = [];
-          proidTempArr = [];
-          for (let c of clients) {
-            for (let { analytics: { proposal } } of c.requests) {
-              for (let obj of proposal) {
-                if (obj.contract) {
-                  processNumber = processNumber + 1;
-                  cliidTempArr.push(c.cliid);
-                  proidTempArr.push(obj.proid);
-                }
-              }
-            }
-          }
-          obj.process = processNumber;
-          obj.cliid.process = [ ...new Set(cliidTempArr) ];
-          obj.proid.process = [ ...new Set(proidTempArr) ];
+          process = motherProjects.filter((obj) => { return cliidArr_raw.includes(obj.cliid) });
+          obj.process = process.length;
+          obj.cliid.process = process.map((obj) => { return obj.cliid });
+          obj.proid.process = process.map((obj) => { return obj.cliid });
 
           monthArr.push(obj);
         }
