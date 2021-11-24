@@ -2774,6 +2774,7 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
   let menuHeight;
   let menuTextTop;
   let blockArr;
+  let blockMap;
 
   leftMargin = 10;
   motherMargin = 30;
