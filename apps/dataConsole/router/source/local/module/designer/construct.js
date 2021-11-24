@@ -2773,6 +2773,7 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
   let menuMargin;
   let menuHeight;
   let menuTextTop;
+  let blockArr;
 
   leftMargin = 10;
   motherMargin = 30;
@@ -2797,6 +2798,22 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
   menuHeight = 32;
   menuTextTop = isMac() ? 6 : 7;
 
+  blockMap = window.localStorage.getItem(instance.localStorageConst + instance.blockMapConst + instance.type);
+  if (blockMap === null) {
+    blockMap = {};
+  } else {
+    blockMap = JSON.parse(blockMap);
+  }
+
+  if (blockMap[project.proid] === undefined) {
+    blockArr = (new Array(stringArr.length)).fill("block");
+  } else {
+    blockArr = blockMap[project.proid];
+    blockArr.pop();
+  }
+
+  blockArr.push(first ? "block" : instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none"));
+
   whiteBlock = createNode({
     mother,
     id: titleMode ? "title" : project.proid,
@@ -2804,10 +2821,11 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
       { index: String(index) },
       { sortstandard: "" },
       { sort: "1" },
-      { titlemode: titleMode ? 1 : 0 }
+      { titlemode: titleMode ? 1 : 0 },
+      { blockarr: JSON.stringify(blockArr) }
     ],
     style: {
-      display: (first ? "block" : instance.contentsSearchIndex.includes(index) ? "none" : (displayBoo ? "block" : "none")),
+      display: first ? "block" : blockArr.every((str) => { return str.trim() === "block" }) ? "block" : "none",
       position: titleMode ? "fixed" : "relative",
       width: String(8000) + ea,
       height: String(height) + ea,
@@ -2882,7 +2900,7 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
         { index: String(index) },
         { arrindex: String(i) },
         { titlemode: titleMode ? 1 : 0 },
-        { sort: String(1), }
+        { sort: String(1) }
       ],
       text: stringArr[i],
       class: [ "white_child_" + String(i) ],
@@ -2892,8 +2910,9 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
           event: function (e) {
             e.stopPropagation();
             e.preventDefault();
+            const self = this;
             const { ea, ignoreNumbers, contentsBlocks, scrollTong } = instance;
-            const { createNode, createNodes, colorChip, withOut, xyConverting } = GeneralJs;
+            const { createNode, createNodes, colorChip, withOut, xyConverting, dateToString, stringToDate } = GeneralJs;
             const titleMode = Number(this.getAttribute("titlemode")) === 1;
             const thisIndex = Number(this.getAttribute("arrindex"));
             const thisSort = Number(this.getAttribute("sort"));
@@ -2904,6 +2923,26 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
               const sortTargets = children[thisIndex];
               const sortTargetsText = sortTargets.map((dom) => { return dom.querySelector(".value").textContent; });
               let indexArr, tempIndex, numberSortBoo;
+              let target, column;
+              let width, widthFactor;
+              let innerMargin;
+              let margin;
+              let tong;
+              let factor;
+              let paddingLeft;
+              let widthArr;
+              let factorArr;
+              let newWidth;
+              let originalWidth;
+              let height;
+              let visual;
+              let tongMargin;
+              let cancel;
+              let callback;
+              let cancelLive;
+              let onoff;
+              let mode;
+              let fontSize;
 
               if (e.type === "contextmenu") {
 
@@ -2948,46 +2987,395 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
               } else {
 
                 // filter
+                margin = 10;
+                innerMargin = 4;
+                widthFactor = 600;
+                paddingLeft = 12;
+                height = 36;
+                visual = -2;
+                tongMargin = 13;
+                cancelLive = true;
+                fontSize = 14;
+
+                cancel = createNode({
+                  mother: this,
+                  style: {
+                    position: "fixed",
+                    top: String(0),
+                    left: String(0),
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: "transparent",
+                    zIndex: String(1),
+                  }
+                });
 
                 if (sortTargetsText.some((str) => { return /[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(str); })) {
                   if (sortTargetsText.some((str) => { return /\,/gi.test(str) })) {
                     // date history
-                    console.log("date history");
-
-
-
-
+                    target = [ "있음", "없음" ];
+                    column = 1;
+                    mode = "dateHistory";
                   } else {
                     // date
-                    console.log("date");
-
-
-
-
+                    target = [ "미래", "과거", "미정" ];
+                    column = 1;
+                    mode = "date";
                   }
                 } else if (sortTargetsText.every((str) => { return str.length < 20; })) {
                   if (sortTargetsText.some((str) => { return /원$/.test(str) && /^[0-9]/gi.test(str) })) {
                     // money
-                    console.log("money");
-
-
-
-
+                    target = [ "있음", "없음" ];
+                    column = 1;
+                    mode = "money";
                   } else {
-                    //menu
-                    console.log("menu");
-
-
-
+                    // menu
+                    target = [ ...new Set(sortTargetsText) ];
+                    column = Math.ceil(target.length / 5);
+                    mode = "menu";
                   }
                 } else {
                   // long
-
-
-                  console.log("long");
-
-
+                  cancel.remove();
+                  cancelLive = false;
                 }
+
+                if (cancelLive) {
+
+                  width = (widthFactor * column) + (innerMargin * (column - 1));
+
+                  tong = createNode({
+                    mother: this,
+                    event: {
+                      click: (e) => { e.preventDefault(); e.stopPropagation(); }
+                    },
+                    style: {
+                      display: "block",
+                      position: "absolute",
+                      top: String(this.getBoundingClientRect().height + margin) + ea,
+                      left: String((this.firstChild.getBoundingClientRect().width / 2) - (width / 2)) + ea,
+                      width: String(width + column) + ea,
+                      height: "auto",
+                      transition: "all 0s ease",
+                      borderRadius: String(3) + ea,
+                      animation: "fadeuplite 0.3s ease",
+                      boxShadow: "0px 4px 13px -9px " + colorChip.shadow,
+                      zIndex: String(1),
+                    },
+                    children: [
+                      {
+                        style: {
+                          position: "absolute",
+                          top: String(0),
+                          left: String(0),
+                          width: String(100) + '%',
+                          height: String(100) + '%',
+                          background: colorChip.gray1,
+                          opacity: String(0.9),
+                          borderRadius: String(3) + ea,
+                        }
+                      }
+                    ]
+                  });
+
+
+                  if (!Array.isArray(GeneralJs.stacks[instance.type + String(thisIndex)])) {
+                    if (window.localStorage.getItem(instance.localStorageConst + instance.type + String(thisIndex)) !== null) {
+                      GeneralJs.stacks[instance.type + String(thisIndex)] = JSON.parse(window.localStorage.getItem(instance.localStorageConst + instance.type + String(thisIndex)));
+                    } else {
+                      GeneralJs.stacks[instance.type + String(thisIndex)] = [[]];
+                      window.localStorage.setItem(instance.localStorageConst + instance.type + String(thisIndex), JSON.stringify([[]]));
+                    }
+                  }
+                  widthArr = [];
+                  factorArr = [];
+                  for (let str of target) {
+                    onoff = GeneralJs.stacks[instance.type + String(thisIndex)][0].includes(str);
+                    factor = createNode({
+                      mother: tong,
+                      attribute: {
+                        toggle: onoff ? "on" : "off",
+                        value: str,
+                      },
+                      event: {
+                        click: function (e) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const toggle = this.getAttribute("toggle");
+                          if (toggle === "off") {
+                            this.firstChild.style.color = colorChip.whiteBlack;
+                            this.style.background = colorChip.green;
+                            this.setAttribute("toggle", "on");
+                          } else {
+                            this.firstChild.style.color = colorChip.gray5;
+                            this.style.background = colorChip.deactive;
+                            this.setAttribute("toggle", "off");
+                          }
+                        }
+                      },
+                      style: {
+                        display: "inline-flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                        width: String(widthFactor) + ea,
+                        marginRight: String(innerMargin) + ea,
+                        marginBottom: String(innerMargin) + ea,
+                        height: String(height) + ea,
+                        background: onoff ? colorChip.green : colorChip.deactive,
+                        borderRadius: String(3) + ea,
+                        paddingLeft: String(paddingLeft) + ea,
+                        paddingRight: String(paddingLeft) + ea,
+                      },
+                      children: [
+                        {
+                          class: [ "hoverDefault_lite" ],
+                          text: str,
+                          style: {
+                            fontSize: String(fontSize) + ea,
+                            fontWeight: String(500),
+                            color: onoff ? colorChip.whiteBlack : colorChip.gray5,
+                            textAlign: "center",
+                            width: String(100) + '%',
+                            position: "relative",
+                            top: String(visual) + ea,
+                          }
+                        }
+                      ]
+                    });
+
+                    factor.style.width = "auto";
+                    widthArr.push(factor.getBoundingClientRect().width);
+                    factorArr.push(factor);
+                  }
+
+                  widthArr.sort((a, b) => { return b - a; });
+                  originalWidth = Math.ceil(widthArr[0]);
+                  newWidth = originalWidth - (paddingLeft * 2);
+                  factorArr.forEach((dom) => {
+                    dom.style.width = String(newWidth) + ea;
+                  });
+
+                  width = (originalWidth * column) + (innerMargin * (column - 1));
+
+                  tong.style.paddingLeft = String(tongMargin) + ea;
+                  tong.style.paddingTop = String(tongMargin) + ea;
+                  tong.style.paddingRight = String(tongMargin - innerMargin) + ea;
+                  tong.style.paddingBottom = String(tongMargin - innerMargin) + ea;
+
+                  tong.style.left = String((this.firstChild.getBoundingClientRect().width / 2) - ((width + tongMargin + tongMargin) / 2)) + ea;
+                  tong.style.width = String(width + innerMargin) + ea;
+
+                  callback = async () => {
+                    try {
+                      const targetValues = factorArr.filter((dom) => { return dom.getAttribute("toggle") === "on" }).map((dom) => { return dom.getAttribute("value"); });
+                      let blockArr, blockMap;
+                      blockMap = {};
+
+                      if (mode === "dateHistory") {
+                        if (targetValues.length > 0) {
+                          for (let dom of sortTargets) {
+                            blockArr = JSON.parse(dom.parentElement.getAttribute("blockarr"));
+
+                            if (targetValues.includes("있음")) {
+                              if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(dom.querySelector(".value").textContent)) {
+                                blockArr[thisIndex] = "none";
+                              } else {
+                                blockArr[thisIndex] = "block";
+                              }
+                            }
+
+                            if (targetValues.includes("없음")) {
+                              if (!/[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]/gi.test(dom.querySelector(".value").textContent)) {
+                                blockArr[thisIndex] = "block";
+                              } else {
+                                if (!targetValues.includes("있음")) {
+                                  blockArr[thisIndex] = "none";
+                                }
+                              }
+                            }
+
+                            blockMap[dom.parentElement.id] = blockArr;
+                            dom.parentElement.setAttribute("blockarr", JSON.stringify(blockArr));
+                            if (blockArr.every((str) => { return str === "block" })) {
+                              dom.parentElement.style.display = "block";
+                            } else {
+                              dom.parentElement.style.display = "none";
+                            }
+                          }
+                        } else {
+                          for (let dom of sortTargets) {
+                            blockArr = JSON.parse(dom.parentElement.getAttribute("blockarr"));
+                            blockArr[thisIndex] = "block";
+                            blockMap[dom.parentElement.id] = blockArr;
+                            dom.parentElement.setAttribute("blockarr", JSON.stringify(blockArr));
+                            if (blockArr.every((str) => { return str === "block" })) {
+                              dom.parentElement.style.display = "block";
+                            } else {
+                              dom.parentElement.style.display = "none";
+                            }
+                          }
+                        }
+                      } else if (mode === "date") {
+                        if (targetValues.length > 0) {
+
+                          const past = new Date(2000, 0, 1);
+                          const now = new Date();
+                          const future = new Date(3000, 0, 1);
+
+                          for (let dom of sortTargets) {
+                            blockArr = JSON.parse(dom.parentElement.getAttribute("blockarr"));
+
+                            if (targetValues.includes("미래")) {
+                              if (now.valueOf() <= stringToDate(dom.querySelector(".value").textContent.trim()).valueOf() && stringToDate(dom.querySelector(".value").textContent.trim()).valueOf() < future.valueOf()) {
+                                blockArr[thisIndex] = "block";
+                              } else {
+                                blockArr[thisIndex] = "none";
+                              }
+                            }
+                            if (targetValues.includes("과거")) {
+                              if (now.valueOf() > stringToDate(dom.querySelector(".value").textContent.trim()).valueOf() && stringToDate(dom.querySelector(".value").textContent.trim()).valueOf() > past.valueOf()) {
+                                blockArr[thisIndex] = "block";
+                              } else {
+                                if (!targetValues.includes("미래")) {
+                                  blockArr[thisIndex] = "none";
+                                }
+                              }
+                            }
+                            if (targetValues.includes("미정")) {
+                              if (future.valueOf() < stringToDate(dom.querySelector(".value").textContent.trim()).valueOf() || stringToDate(dom.querySelector(".value").textContent.trim()).valueOf() < past.valueOf()) {
+                                blockArr[thisIndex] = "block";
+                              } else {
+                                if (!targetValues.includes("미래") && !targetValues.includes("과거")) {
+                                  blockArr[thisIndex] = "none";
+                                }
+                              }
+                            }
+
+                            blockMap[dom.parentElement.id] = blockArr;
+                            dom.parentElement.setAttribute("blockarr", JSON.stringify(blockArr));
+                            if (blockArr.every((str) => { return str === "block" })) {
+                              dom.parentElement.style.display = "block";
+                            } else {
+                              dom.parentElement.style.display = "none";
+                            }
+                          }
+
+                        } else {
+                          for (let dom of sortTargets) {
+                            blockArr = JSON.parse(dom.parentElement.getAttribute("blockarr"));
+                            blockArr[thisIndex] = "block";
+                            blockMap[dom.parentElement.id] = blockArr;
+                            dom.parentElement.setAttribute("blockarr", JSON.stringify(blockArr));
+                            if (blockArr.every((str) => { return str === "block" })) {
+                              dom.parentElement.style.display = "block";
+                            } else {
+                              dom.parentElement.style.display = "none";
+                            }
+                          }
+                        }
+                      } else if (mode === "money") {
+                        if (targetValues.length > 0) {
+                          for (let dom of sortTargets) {
+                            blockArr = JSON.parse(dom.parentElement.getAttribute("blockarr"));
+
+                            if (targetValues.includes("있음")) {
+                              if (dom.querySelector(".value").textContent.trim() === "0원") {
+                                blockArr[thisIndex] = "none";
+                              } else {
+                                blockArr[thisIndex] = "block";
+                              }
+                            }
+
+                            if (targetValues.includes("없음")) {
+                              if (dom.querySelector(".value").textContent.trim() === "0원") {
+                                blockArr[thisIndex] = "block";
+                              } else {
+                                if (!targetValues.includes("있음")) {
+                                  blockArr[thisIndex] = "none";
+                                }
+                              }
+                            }
+
+                            blockMap[dom.parentElement.id] = blockArr;
+                            dom.parentElement.setAttribute("blockarr", JSON.stringify(blockArr));
+                            if (blockArr.every((str) => { return str === "block" })) {
+                              dom.parentElement.style.display = "block";
+                            } else {
+                              dom.parentElement.style.display = "none";
+                            }
+                          }
+                        } else {
+                          for (let dom of sortTargets) {
+                            blockArr = JSON.parse(dom.parentElement.getAttribute("blockarr"));
+                            blockArr[thisIndex] = "block";
+                            blockMap[dom.parentElement.id] = blockArr;
+                            dom.parentElement.setAttribute("blockarr", JSON.stringify(blockArr));
+                            if (blockArr.every((str) => { return str === "block" })) {
+                              dom.parentElement.style.display = "block";
+                            } else {
+                              dom.parentElement.style.display = "none";
+                            }
+                          }
+                        }
+                      } else if (mode === "menu") {
+                        if (targetValues.length > 0) {
+                          for (let dom of sortTargets) {
+                            blockArr = JSON.parse(dom.parentElement.getAttribute("blockarr"));
+                            if (targetValues.includes(dom.querySelector(".value").textContent.trim())) {
+                              blockArr[thisIndex] = "block";
+                            } else {
+                              blockArr[thisIndex] = "none";
+                            }
+                            blockMap[dom.parentElement.id] = blockArr;
+                            dom.parentElement.setAttribute("blockarr", JSON.stringify(blockArr));
+                            if (blockArr.every((str) => { return str === "block" })) {
+                              dom.parentElement.style.display = "block";
+                            } else {
+                              dom.parentElement.style.display = "none";
+                            }
+                          }
+                        } else {
+                          for (let dom of sortTargets) {
+                            blockArr = JSON.parse(dom.parentElement.getAttribute("blockarr"));
+                            blockArr[thisIndex] = "block";
+                            blockMap[dom.parentElement.id] = blockArr;
+                            dom.parentElement.setAttribute("blockarr", JSON.stringify(blockArr));
+                            if (blockArr.every((str) => { return str === "block" })) {
+                              dom.parentElement.style.display = "block";
+                            } else {
+                              dom.parentElement.style.display = "none";
+                            }
+                          }
+                        }
+                      }
+
+                      window.localStorage.setItem(instance.localStorageConst + instance.blockMapConst + instance.type, JSON.stringify(blockMap));
+
+                      GeneralJs.stacks[instance.type + String(thisIndex)].unshift(targetValues);
+                      window.localStorage.setItem(instance.localStorageConst + instance.type + String(thisIndex), JSON.stringify(GeneralJs.stacks[instance.type + String(thisIndex)]));
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }
+
+                  cancel.addEventListener("click", async (e) => {
+                    try {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      if (typeof callback === "function") {
+                        await callback();
+                      }
+
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  });
+                }
+
               }
             } else {
               if (this.querySelectorAll("aside").length === 0) {
@@ -3439,6 +3827,8 @@ DesignerJs.prototype.constructView = async function () {
     this.contentsSpec = {};
     this.contentsSearchIndex = [];
     this.contentsBlocks = null;
+    this.localStorageConst = "constructFilter_";
+    this.blockMapConst = "blockMap_";
 
     whereQuery = {};
     whereQuery["$and"] = [];

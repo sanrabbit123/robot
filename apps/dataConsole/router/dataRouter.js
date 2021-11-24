@@ -1549,25 +1549,6 @@ DataRouter.prototype.rou_post_getClientReport = function () {
           obj.cliid.process = process.map((obj) => { return obj.cliid });
           obj.proid.process = process.map((obj) => { return obj.cliid });
 
-
-          // processNumber = 0;
-          // cliidTempArr = [];
-          // proidTempArr = [];
-          // for (let c of clients) {
-          //   for (let { analytics: { proposal } } of c.requests) {
-          //     for (let obj of proposal) {
-          //       if (obj.contract) {
-          //         processNumber = processNumber + 1;
-          //         cliidTempArr.push(c.cliid);
-          //         proidTempArr.push(obj.proid);
-          //       }
-          //     }
-          //   }
-          // }
-          // obj.process = processNumber;
-          // obj.cliid.process = [ ...new Set(cliidTempArr) ];
-          // obj.proid.process = [ ...new Set(proidTempArr) ];
-
           monthArr.push(obj);
         }
         resultArr.push(monthArr);
