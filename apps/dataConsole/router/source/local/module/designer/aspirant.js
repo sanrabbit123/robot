@@ -1335,11 +1335,9 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
                           e.stopPropagation();
                           const toggle = this.getAttribute("toggle");
                           if (toggle === "off") {
-                            this.firstChild.style.color = colorChip.whiteBlack;
                             this.style.background = colorChip.green;
                             this.setAttribute("toggle", "on");
                           } else {
-                            this.firstChild.style.color = colorChip.gray5;
                             this.style.background = colorChip.deactive;
                             this.setAttribute("toggle", "off");
                           }
@@ -1366,7 +1364,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
                           style: {
                             fontSize: String(fontSize) + ea,
                             fontWeight: String(500),
-                            color: onoff ? colorChip.whiteBlack : colorChip.gray5,
+                            color: colorChip.whiteBlack,
                             textAlign: "center",
                             width: String(100) + '%',
                             position: "relative",

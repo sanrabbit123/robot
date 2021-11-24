@@ -3229,11 +3229,9 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
                           e.stopPropagation();
                           const toggle = this.getAttribute("toggle");
                           if (toggle === "off") {
-                            this.firstChild.style.color = colorChip.whiteBlack;
                             this.style.background = colorChip.green;
                             this.setAttribute("toggle", "on");
                           } else {
-                            this.firstChild.style.color = colorChip.gray5;
                             this.style.background = colorChip.deactive;
                             this.setAttribute("toggle", "off");
                           }
@@ -3260,7 +3258,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
                           style: {
                             fontSize: String(fontSize) + ea,
                             fontWeight: String(500),
-                            color: onoff ? colorChip.whiteBlack : colorChip.gray5,
+                            color: colorChip.whiteBlack,
                             textAlign: "center",
                             width: String(100) + '%',
                             position: "relative",
