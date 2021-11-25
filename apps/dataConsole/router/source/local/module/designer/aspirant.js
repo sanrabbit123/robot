@@ -48,7 +48,7 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
   height = 43;
   margin = 1;
 
-  top = (titleMode ? (isMac() ? 12 : 13) : (isMac() ? 11 : 12));
+  top = (titleMode ? (isMac() ? 12 : 13) : (isMac() ? 11 : 12.5));
   left = 16;
   size = 14;
   startLeft = 0;
@@ -1021,7 +1021,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
   width1 = 3;
   titleBlockTop = 105;
 
-  top = (titleMode ? (isMac() ? 11 : 12) : (isMac() ? 11 : 12));
+  top = (titleMode ? (isMac() ? 11 : 12.5) : (isMac() ? 11 : 12.5));
   left = 16;
   size = 14;
   textMargin = 6;
