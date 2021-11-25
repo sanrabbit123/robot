@@ -46,6 +46,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
   let calendarEvent;
   let temp;
   let statusValues, partnerValues;
+  let statusValuesMatrix;
 
   height = 43;
   margin = 1;
@@ -59,6 +60,24 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
   updateArr = [];
 
   grayBoo = ![ "완료", "드랍" ].includes(status);
+
+  statusValuesMatrix = [
+    [ "대기" ],
+    [ "의뢰서 작성중" ],
+    [ "견적 확인중" ],
+    [ "견적 안내" ],
+    [ "홈리에종 진행", "고객 진행", "디자이너 진행" ],
+    [ "미팅 예정", "-", "-" ],
+    [ "계약 발송", "-", "-" ],
+    [ "계약금 입금", "-", "-" ],
+    [ "착수금 입금", "-", "-" ],
+    [ "중도금 입금", "-", "-" ],
+    [ "잔금 입금", "-", "수수료 요청" ],
+    [ "AS 진행중", "-", "AS 진행중" ],
+    [ "완료" ],
+    [ "드랍" ],
+    [ "해당 없음" ],
+  ];
 
   statusValues = [
     "대기",
@@ -158,18 +177,32 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     stringArr.push(textMaker(map["status"].title, status, "black", "status"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const { ea, top, createNode, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
       const column = "status";
       let startLeft, width, margin, background;
       let values, updateEvent;
       let nodeArr;
       let position;
+      let maxColumnNumber;
+      let tong, tongTong;
+      let factorWidth;
+      let paddingLeft;
+      let unitBlockWidth;
+      let factor, factorTong, factorWidthTong;
+      let tempMax;
+      let maxTong;
+      let maxWidth;
+      let tongTongArr;
+      let children;
 
       position = map[column].position;
       values = map[column].values;
       startLeft = 0;
-      width = 100;
+      factorWidth = 500;
       margin = 4;
+      paddingLeft = 14;
+      maxColumnNumber = statusValuesMatrix.map((arr) => { return arr.length }).reduce((acc, curr) => { return Math.max(acc, curr) });
+      width = (factorWidth * maxColumnNumber) + (margin * (maxColumnNumber - 1));
 
       background = colorChip.gradientGreen4;
       updateEvent = async function (e) {
@@ -198,37 +231,100 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
         }
       }
 
-      nodeArr = [];
-      for (let i = 0; i < values.length; i++) {
-        nodeArr.push({
-          mother: this,
-          mode: "aside",
-          attribute: { value: values[i], position, proid: project.proid },
-          events: [ { type: "click", event: updateEvent } ],
+      tong = createNode({
+        mother: this,
+        mode: "aside",
+        style: {
+          display: "block",
+          position: "absolute",
+          top: String(top) + ea,
+          left: String(startLeft) + ea,
+          width: String(width) + ea,
+          height: "auto",
+          transition: "all 0s ease",
+          zIndex, animation
+        }
+      });
+
+      maxTong = [];
+      tongTongArr = [];
+      for (let arr of statusValuesMatrix) {
+
+        unitBlockWidth = (width - (margin * (arr.length - 1))) / arr.length;
+        unitBlockWidth = unitBlockWidth - (paddingLeft * 2);
+
+        tongTong = createNode({
+          mother: tong,
           style: {
-            position: "absolute",
-            top: String(top + ((margin + height) * i)) + ea,
-            left: String(startLeft) + ea,
-            width: String(width) + ea,
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+            marginBottom: String(margin) + ea,
             height: String(height) + ea,
-            background, zIndex, boxShadow, borderRadius, animation,
-          }
-        });
-        nodeArr.push({
-          mother: -1,
-          text: values[i],
-          style: {
-            position: "absolute",
-            top: String(textTop) + ea,
             width: String(100) + '%',
-            textAlign: "center",
-            fontSize: String(size) + ea,
-            fontWeight: String(500),
-            color: colorChip.whiteBlack,
           }
         });
+        tongTongArr.push(tongTong);
+
+        factorTong = [];
+        for (let i = 0; i < arr.length; i++) {
+          factor = createNode({
+            mother: tongTong,
+            attribute: { value: arr[i], position, proid: project.proid },
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              display: "inline-flex",
+              position: "relative",
+              width: String(unitBlockWidth) + ea,
+              height: String(100) + '%',
+              paddingLeft: String(paddingLeft) + ea,
+              paddingRight: String(paddingLeft) + ea,
+              marginRight: String(i !== arr.length - 1 ? margin : 0) + ea,
+              background: (arr[i].trim() !== '-' && arr[i].trim() !== '' ? colorChip.gradientGreen : colorChip.deactive),
+              justifyContent: "center",
+              transition: "all 0s ease",
+              boxShadow, borderRadius,
+            },
+            children: [
+              {
+                text: arr[i],
+                style: {
+                  position: "relative",
+                  top: String(textTop) + ea,
+                  fontSize: String(size) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.whiteBlack,
+                }
+              }
+            ]
+          });
+          factorTong.push(factor);
+        }
+
+        for (let dom of factorTong) {
+          dom.style.width = "auto";
+        }
+        factorWidthTong = factorTong.map((dom) => { return dom.getBoundingClientRect().width });
+        tempMax = Math.max(...factorWidthTong);
+        for (let dom of factorTong) {
+          dom.style.width = String(tempMax) + ea;
+        }
+        maxTong.push((tempMax * arr.length) + (margin * (arr.length - 1)));
+
       }
-      createNodes(nodeArr);
+
+      maxWidth = Math.max(...maxTong);
+      tong.style.width = String(maxWidth) + ea;
+
+      for (let tongTong of tongTongArr) {
+        children = [ ...tongTong.children ];
+        unitBlockWidth = (maxWidth - (margin * (children.length - 1))) / children.length;
+        unitBlockWidth = unitBlockWidth - (paddingLeft * 2);
+        for (let dom of children) {
+          dom.style.width = String(unitBlockWidth) + ea;
+        }
+      }
+
     });
 
     stringArr.push(textMaker(map["request"].title, dateToString(request), dateToColor(request, false), "request"));
