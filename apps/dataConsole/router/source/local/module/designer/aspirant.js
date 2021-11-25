@@ -1148,7 +1148,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
             e.preventDefault();
             const self = this;
             const { ea, ignoreNumbers, contentsBlocks, scrollTong } = instance;
-            const { createNode, createNodes, colorChip, withOut, xyConverting, dateToString, stringToDate } = GeneralJs;
+            const { createNode, createNodes, colorChip, withOut, xyConverting, dateToString, stringToDate, isMac } = GeneralJs;
             const titleMode = Number(this.getAttribute("titlemode")) === 1;
             const thisIndex = Number(this.getAttribute("arrindex"));
             const thisSort = Number(this.getAttribute("sort"));
@@ -1224,7 +1224,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
                 widthFactor = 600;
                 paddingLeft = 12;
                 height = 36;
-                visual = -2;
+                visual = isMac() ? -2 : 0;
                 tongMargin = 13;
                 cancelLive = true;
                 fontSize = 14;
