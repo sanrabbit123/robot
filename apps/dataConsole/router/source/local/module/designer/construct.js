@@ -27,6 +27,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     }
   }
   const emptyDate = new Date(1800, 0, 1);
+  const emptyDateValue = ((new Date(2000, 0, 1))).valueOf();
   const emptyValue = "해당 없음";
   let height, margin;
   let whiteBlock;
@@ -2391,28 +2392,173 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
 
     });
 
-    stringArr.push(textMaker(map["firstGuide"].title, dateToString(payments.first !== null ? payments.first.guide : emptyDate), dateToColor(payments.first !== null ? payments.first.guide : emptyDate, false), "firstGuide"));
+    tempValue = (payments.first !== null ? payments.first.guide : emptyDate);
+    if (tempValue.valueOf() < emptyDateValue) {
+      tempValue = project.history.payments.first.date;
+    }
+    stringArr.push(textMaker(map["firstGuide"].title, dateToString(tempValue), dateToColor(tempValue, true), "firstGuide"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      if (window.confirm("계약금 안내를 보낼까요?")) {
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "firstGuide";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
 
-        ajaxJson({
-          mode: "chargeGuide",
-          proid,
-          method: "first",
-        }, "/constructInteraction", { equal: true }).then((result) => {
-          const { date, now } = result;
-          window.alert("계약금 안내를 전송하였습니다!");
-          mother.querySelector(".value").textContent = date;
-          mother.querySelector(".value").style.color = colorChip.black;
-          instance.projects.search("proid", proid).process.design.construct.contract.payments.first.guide = now;
-          resetWidthEvent();
-        }).catch((err) => {
-          console.log(err);
+      if (e.type === "click") {
+        if (window.confirm("계약금 안내를 보낼까요?")) {
+
+          ajaxJson({
+            mode: "chargeGuide",
+            proid,
+            method: "first",
+          }, "/constructInteraction", { equal: true }).then((result) => {
+            const { date, now } = result;
+            window.alert("계약금 안내를 전송하였습니다!");
+            mother.querySelector(".value").textContent = date;
+            mother.querySelector(".value").style.color = colorChip.black;
+            instance.projects.search("proid", proid).process.design.construct.contract.payments.first.guide = now;
+            resetWidthEvent();
+          }).catch((err) => {
+            console.log(err);
+          });
+
+        }
+        cancelBox.parentNode.removeChild(cancelBox);
+      } else {
+
+        values = map[column].values;
+        startLeft = 0;
+        width = 260;
+        margin = 4;
+
+        background = colorChip.gradientGreen;
+        updateEvent = async function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          try {
+            const value = this.getAttribute("value");
+            const removeTargets = mother.querySelectorAll("aside");
+            let dateValue, tempArr;
+            if (value === "예정") {
+              dateValue = new Date(3800, 0, 1);
+            } else if (value === "해당 없음") {
+              dateValue = new Date(1800, 0, 1);
+            } else {
+              tempArr = value.split('-');
+              dateValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            }
+
+            await ajaxJson({
+              method: "project",
+              id: project.proid,
+              column: "construct.payments.first.date",
+              value: dateValue,
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            }, "/updateHistory");
+
+            valueDom.textContent = value;
+            for (let dom of removeTargets) {
+              mother.removeChild(dom);
+            }
+            thisCase[column].style.color = colorChip[dateToColor(dateValue, true)];
+            resetWidthEvent();
+          } catch (e) {
+            console.log(e);
+          }
+        };
+
+        nodeArr = createNodes([
+          {
+            mother: this,
+            mode: "aside",
+            attribute: [ { value: values[0] } ],
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(startLeft) + ea,
+              width: String((width - margin) / 2) + ea,
+              height: String(height) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              zIndex, borderRadius, animation,
+            }
+          },
+          {
+            mother: -1,
+            text: values[0],
+            style: {
+              position: "absolute",
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            mother: this,
+            mode: "aside",
+            attribute: [ { value: values[1] } ],
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+              width: String((width - margin) / 2) + ea,
+              height: String(height) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              zIndex, borderRadius, animation,
+            }
+          },
+          {
+            mother: -1,
+            text: values[1],
+            style: {
+              position: "absolute",
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            mother: this,
+            mode: "aside",
+            events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+            style: {
+              position: "absolute",
+              top: String(top + height + margin) + ea,
+              left: String(startLeft) + ea,
+              width: String(width) + ea,
+              zIndex, borderRadius, animation,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              background: colorChip.white,
+              transition: "all 0s ease",
+            }
+          }
+        ]);
+
+        calendarTong = nodeArr[4];
+
+        const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          this.setAttribute("value", this.getAttribute("buttonValue"));
+          updateEvent.call(this, e);
         });
+        calendarTong.appendChild(calendar.calendarBase);
 
       }
-      cancelBox.parentNode.removeChild(cancelBox);
+
       resetWidthEvent();
     });
 
@@ -2423,35 +2569,179 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["firstDate"].title, dateToString(payments.first !== null ? payments.first.date : emptyDate), dateToColor(payments.first !== null ? payments.first.date : emptyDate, false), "firstDate"));
+    stringArr.push(textMaker(map["firstDate"].title, dateToString(payments.first !== null ? payments.first.date : emptyDate), dateToColor(payments.first !== null ? payments.first.date : emptyDate, true), "firstDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["startGuide"].title, dateToString(payments.start !== null ? payments.start.guide : emptyDate), dateToColor(payments.start !== null ? payments.start.guide : emptyDate, false), "startGuide"));
+    tempValue = (payments.start !== null ? payments.start.guide : emptyDate);
+    if (tempValue.valueOf() < emptyDateValue) {
+      tempValue = project.history.payments.start.date;
+    }
+    stringArr.push(textMaker(map["startGuide"].title, dateToString(tempValue), dateToColor(tempValue, true), "startGuide"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      if (window.confirm("착수금 안내를 보낼까요?")) {
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "startGuide";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
 
-        ajaxJson({
-          mode: "chargeGuide",
-          proid,
-          method: "start",
-        }, "/constructInteraction", { equal: true }).then((result) => {
-          const { date, now } = result;
-          window.alert("착수금 안내를 전송하였습니다!");
-          mother.querySelector(".value").textContent = date;
-          mother.querySelector(".value").style.color = colorChip.black;
-          instance.projects.search("proid", proid).process.design.construct.contract.payments.start.guide = now;
-          resetWidthEvent();
-        }).catch((err) => {
-          console.log(err);
+      if (e.type === "click") {
+        if (window.confirm("착수금 안내를 보낼까요?")) {
+
+          ajaxJson({
+            mode: "chargeGuide",
+            proid,
+            method: "start",
+          }, "/constructInteraction", { equal: true }).then((result) => {
+            const { date, now } = result;
+            window.alert("착수금 안내를 전송하였습니다!");
+            mother.querySelector(".value").textContent = date;
+            mother.querySelector(".value").style.color = colorChip.black;
+            instance.projects.search("proid", proid).process.design.construct.contract.payments.start.guide = now;
+            resetWidthEvent();
+          }).catch((err) => {
+            console.log(err);
+          });
+
+        }
+        cancelBox.parentNode.removeChild(cancelBox);
+      } else {
+        values = map[column].values;
+        startLeft = 0;
+        width = 260;
+        margin = 4;
+
+        background = colorChip.gradientGreen;
+        updateEvent = async function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          try {
+            const value = this.getAttribute("value");
+            const removeTargets = mother.querySelectorAll("aside");
+            let dateValue, tempArr;
+            if (value === "예정") {
+              dateValue = new Date(3800, 0, 1);
+            } else if (value === "해당 없음") {
+              dateValue = new Date(1800, 0, 1);
+            } else {
+              tempArr = value.split('-');
+              dateValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            }
+
+            await ajaxJson({
+              method: "project",
+              id: project.proid,
+              column: "construct.payments.start.date",
+              value: dateValue,
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            }, "/updateHistory");
+
+            valueDom.textContent = value;
+            for (let dom of removeTargets) {
+              mother.removeChild(dom);
+            }
+            thisCase[column].style.color = colorChip[dateToColor(dateValue, true)];
+            resetWidthEvent();
+          } catch (e) {
+            console.log(e);
+          }
+        };
+
+        nodeArr = createNodes([
+          {
+            mother: this,
+            mode: "aside",
+            attribute: [ { value: values[0] } ],
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(startLeft) + ea,
+              width: String((width - margin) / 2) + ea,
+              height: String(height) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              zIndex, borderRadius, animation,
+            }
+          },
+          {
+            mother: -1,
+            text: values[0],
+            style: {
+              position: "absolute",
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            mother: this,
+            mode: "aside",
+            attribute: [ { value: values[1] } ],
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+              width: String((width - margin) / 2) + ea,
+              height: String(height) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              zIndex, borderRadius, animation,
+            }
+          },
+          {
+            mother: -1,
+            text: values[1],
+            style: {
+              position: "absolute",
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            mother: this,
+            mode: "aside",
+            events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+            style: {
+              position: "absolute",
+              top: String(top + height + margin) + ea,
+              left: String(startLeft) + ea,
+              width: String(width) + ea,
+              zIndex, borderRadius, animation,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              background: colorChip.white,
+              transition: "all 0s ease",
+            }
+          }
+        ]);
+
+        calendarTong = nodeArr[4];
+
+        const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          this.setAttribute("value", this.getAttribute("buttonValue"));
+          updateEvent.call(this, e);
         });
+        calendarTong.appendChild(calendar.calendarBase);
 
       }
-      cancelBox.parentNode.removeChild(cancelBox);
+
       resetWidthEvent();
     });
 
@@ -2462,35 +2752,179 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["startDate"].title, dateToString(payments.start !== null ? payments.start.date : emptyDate), dateToColor(payments.start !== null ? payments.start.date : emptyDate, false), "startDate"));
+    stringArr.push(textMaker(map["startDate"].title, dateToString(payments.start !== null ? payments.start.date : emptyDate), dateToColor(payments.start !== null ? payments.start.date : emptyDate, true), "startDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["middleGuide"].title, dateToString(payments.middle !== null ? payments.middle.guide : emptyDate), dateToColor(payments.middle !== null ? payments.middle.guide : emptyDate, false), "middleGuide"));
+    tempValue = (payments.middle !== null ? payments.middle.guide : emptyDate);
+    if (tempValue.valueOf() < emptyDateValue) {
+      tempValue = project.history.payments.middle.date;
+    }
+    stringArr.push(textMaker(map["middleGuide"].title, dateToString(tempValue), dateToColor(tempValue, true), "middleGuide"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      if (window.confirm("중도금 안내를 보낼까요?")) {
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "middleGuide";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
 
-        ajaxJson({
-          mode: "chargeGuide",
-          proid,
-          method: "middle",
-        }, "/constructInteraction", { equal: true }).then((result) => {
-          const { date, now } = result;
-          window.alert("중도금 안내를 전송하였습니다!");
-          mother.querySelector(".value").textContent = date;
-          mother.querySelector(".value").style.color = colorChip.black;
-          instance.projects.search("proid", proid).process.design.construct.contract.payments.middle.guide = now;
-          resetWidthEvent();
-        }).catch((err) => {
-          console.log(err);
+      if (e.type === "click") {
+        if (window.confirm("중도금 안내를 보낼까요?")) {
+
+          ajaxJson({
+            mode: "chargeGuide",
+            proid,
+            method: "middle",
+          }, "/constructInteraction", { equal: true }).then((result) => {
+            const { date, now } = result;
+            window.alert("중도금 안내를 전송하였습니다!");
+            mother.querySelector(".value").textContent = date;
+            mother.querySelector(".value").style.color = colorChip.black;
+            instance.projects.search("proid", proid).process.design.construct.contract.payments.middle.guide = now;
+            resetWidthEvent();
+          }).catch((err) => {
+            console.log(err);
+          });
+
+        }
+        cancelBox.parentNode.removeChild(cancelBox);
+      } else {
+        values = map[column].values;
+        startLeft = 0;
+        width = 260;
+        margin = 4;
+
+        background = colorChip.gradientGreen;
+        updateEvent = async function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          try {
+            const value = this.getAttribute("value");
+            const removeTargets = mother.querySelectorAll("aside");
+            let dateValue, tempArr;
+            if (value === "예정") {
+              dateValue = new Date(3800, 0, 1);
+            } else if (value === "해당 없음") {
+              dateValue = new Date(1800, 0, 1);
+            } else {
+              tempArr = value.split('-');
+              dateValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            }
+
+            await ajaxJson({
+              method: "project",
+              id: project.proid,
+              column: "construct.payments.middle.date",
+              value: dateValue,
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            }, "/updateHistory");
+
+            valueDom.textContent = value;
+            for (let dom of removeTargets) {
+              mother.removeChild(dom);
+            }
+            thisCase[column].style.color = colorChip[dateToColor(dateValue, true)];
+            resetWidthEvent();
+          } catch (e) {
+            console.log(e);
+          }
+        };
+
+        nodeArr = createNodes([
+          {
+            mother: this,
+            mode: "aside",
+            attribute: [ { value: values[0] } ],
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(startLeft) + ea,
+              width: String((width - margin) / 2) + ea,
+              height: String(height) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              zIndex, borderRadius, animation,
+            }
+          },
+          {
+            mother: -1,
+            text: values[0],
+            style: {
+              position: "absolute",
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            mother: this,
+            mode: "aside",
+            attribute: [ { value: values[1] } ],
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+              width: String((width - margin) / 2) + ea,
+              height: String(height) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              zIndex, borderRadius, animation,
+            }
+          },
+          {
+            mother: -1,
+            text: values[1],
+            style: {
+              position: "absolute",
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            mother: this,
+            mode: "aside",
+            events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+            style: {
+              position: "absolute",
+              top: String(top + height + margin) + ea,
+              left: String(startLeft) + ea,
+              width: String(width) + ea,
+              zIndex, borderRadius, animation,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              background: colorChip.white,
+              transition: "all 0s ease",
+            }
+          }
+        ]);
+
+        calendarTong = nodeArr[4];
+
+        const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          this.setAttribute("value", this.getAttribute("buttonValue"));
+          updateEvent.call(this, e);
         });
+        calendarTong.appendChild(calendar.calendarBase);
 
       }
-      cancelBox.parentNode.removeChild(cancelBox);
+
       resetWidthEvent();
     });
 
@@ -2501,35 +2935,179 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["middleDate"].title, dateToString(payments.middle !== null ? payments.middle.date : emptyDate), dateToColor(payments.middle !== null ? payments.middle.date : emptyDate, false), "middleDate"));
+    stringArr.push(textMaker(map["middleDate"].title, dateToString(payments.middle !== null ? payments.middle.date : emptyDate), dateToColor(payments.middle !== null ? payments.middle.date : emptyDate, true), "middleDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["remainGuide"].title, dateToString(payments.remain !== null ? payments.remain.guide : emptyDate), dateToColor(payments.remain !== null ? payments.remain.guide : emptyDate, false), "remainGuide"));
+    tempValue = (payments.remain !== null ? payments.remain.guide : emptyDate);
+    if (tempValue.valueOf() < emptyDateValue) {
+      tempValue = project.history.payments.remain.date;
+    }
+    stringArr.push(textMaker(map["remainGuide"].title, dateToString(tempValue), dateToColor(tempValue, true), "remainGuide"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
-      if (window.confirm("잔금 안내를 보낼까요?")) {
+      const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
+      const column = "remainGuide";
+      let startLeft, width, margin, background;
+      let values, updateEvent;
+      let nodeArr;
+      let position;
+      let whereQuery, updateQuery, chainQuery;
+      let calendarTong;
 
-        ajaxJson({
-          mode: "chargeGuide",
-          proid,
-          method: "remain",
-        }, "/constructInteraction", { equal: true }).then((result) => {
-          const { date, now } = result;
-          window.alert("잔금 안내를 전송하였습니다!");
-          mother.querySelector(".value").textContent = date;
-          mother.querySelector(".value").style.color = colorChip.black;
-          instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.guide = now;
-          resetWidthEvent();
-        }).catch((err) => {
-          console.log(err);
+      if (e.type === "click") {
+        if (window.confirm("잔금 안내를 보낼까요?")) {
+
+          ajaxJson({
+            mode: "chargeGuide",
+            proid,
+            method: "remain",
+          }, "/constructInteraction", { equal: true }).then((result) => {
+            const { date, now } = result;
+            window.alert("잔금 안내를 전송하였습니다!");
+            mother.querySelector(".value").textContent = date;
+            mother.querySelector(".value").style.color = colorChip.black;
+            instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.guide = now;
+            resetWidthEvent();
+          }).catch((err) => {
+            console.log(err);
+          });
+
+        }
+        cancelBox.parentNode.removeChild(cancelBox);
+      } else {
+        values = map[column].values;
+        startLeft = 0;
+        width = 260;
+        margin = 4;
+
+        background = colorChip.gradientGreen;
+        updateEvent = async function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          try {
+            const value = this.getAttribute("value");
+            const removeTargets = mother.querySelectorAll("aside");
+            let dateValue, tempArr;
+            if (value === "예정") {
+              dateValue = new Date(3800, 0, 1);
+            } else if (value === "해당 없음") {
+              dateValue = new Date(1800, 0, 1);
+            } else {
+              tempArr = value.split('-');
+              dateValue = new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')));
+            }
+
+            await ajaxJson({
+              method: "project",
+              id: project.proid,
+              column: "construct.payments.remain.date",
+              value: dateValue,
+              email: GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail,
+            }, "/updateHistory");
+
+            valueDom.textContent = value;
+            for (let dom of removeTargets) {
+              mother.removeChild(dom);
+            }
+            thisCase[column].style.color = colorChip[dateToColor(dateValue, true)];
+            resetWidthEvent();
+          } catch (e) {
+            console.log(e);
+          }
+        };
+
+        nodeArr = createNodes([
+          {
+            mother: this,
+            mode: "aside",
+            attribute: [ { value: values[0] } ],
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(startLeft) + ea,
+              width: String((width - margin) / 2) + ea,
+              height: String(height) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              zIndex, borderRadius, animation,
+            }
+          },
+          {
+            mother: -1,
+            text: values[0],
+            style: {
+              position: "absolute",
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            mother: this,
+            mode: "aside",
+            attribute: [ { value: values[1] } ],
+            events: [ { type: "click", event: updateEvent } ],
+            style: {
+              position: "absolute",
+              top: String(top) + ea,
+              left: String(startLeft + ((width - margin) / 2) + margin) + ea,
+              width: String((width - margin) / 2) + ea,
+              height: String(height) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              zIndex, borderRadius, animation,
+            }
+          },
+          {
+            mother: -1,
+            text: values[1],
+            style: {
+              position: "absolute",
+              top: String(textTop) + ea,
+              width: String(100) + '%',
+              textAlign: "center",
+              fontSize: String(size) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+            }
+          },
+          {
+            mother: this,
+            mode: "aside",
+            events: [ { type: "click", event: (e) => { e.stopPropagation(); e.preventDefault(); } } ],
+            style: {
+              position: "absolute",
+              top: String(top + height + margin) + ea,
+              left: String(startLeft) + ea,
+              width: String(width) + ea,
+              zIndex, borderRadius, animation,
+              boxShadow: "0px 3px 16px -9px " + colorChip.shadow,
+              background: colorChip.white,
+              transition: "all 0s ease",
+            }
+          }
+        ]);
+
+        calendarTong = nodeArr[4];
+
+        const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          this.setAttribute("value", this.getAttribute("buttonValue"));
+          updateEvent.call(this, e);
         });
+        calendarTong.appendChild(calendar.calendarBase);
 
       }
-      cancelBox.parentNode.removeChild(cancelBox);
+
       resetWidthEvent();
     });
 
@@ -2598,7 +3176,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       resetWidthEvent();
     });
 
-    stringArr.push(textMaker(map["remainDate"].title, dateToString(payments.remain !== null ? payments.remain.date : emptyDate), dateToColor(payments.remain !== null ? payments.remain.date : emptyDate, false), "remainDate"));
+    stringArr.push(textMaker(map["remainDate"].title, dateToString(payments.remain !== null ? payments.remain.date : emptyDate), dateToColor(payments.remain !== null ? payments.remain.date : emptyDate, true), "remainDate"));
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       cancelBox.parentNode.removeChild(cancelBox);

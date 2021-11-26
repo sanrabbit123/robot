@@ -1133,11 +1133,53 @@ DevContext.prototype.launching = async function () {
     // await constructGeneralBillSync();
 
 
+    const selfMongo = this.MONGOLOCALC;
+    const projects = await back.getProjectsByQuery({}, { selfMongo })
+    const now = new Date();
+    const nowValue = now.valueOf();
+    const target = projects.toNormal().filter((obj) => { return obj.process.design.construct !== null });
+    const firstTarget = target.filter((obj) => { return obj.process.design.construct.contract.payments.first !== null });
+    const startTarget = target.filter((obj) => { return obj.process.design.construct.contract.payments.start !== null });
+    const middleTarget = target.filter((obj) => { return obj.process.design.construct.contract.payments.middle !== null });
+    const remainTarget = target.filter((obj) => { return obj.process.design.construct.contract.payments.remain !== null });
+    let whereQuery, updateQuery;
 
-
-
-
-
+    for (let project of firstTarget) {
+      if (project.process.design.construct.contract.payments.first.date.valueOf() > nowValue) {
+        whereQuery = { proid: project.proid };
+        updateQuery = {};
+        updateQuery["process.design.construct.contract.payments.first.date"] = new Date(1800, 0, 1);
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+        console.log(whereQuery);
+      }
+    }
+    for (let project of startTarget) {
+      if (project.process.design.construct.contract.payments.start.date.valueOf() > nowValue) {
+        whereQuery = { proid: project.proid };
+        updateQuery = {};
+        updateQuery["process.design.construct.contract.payments.start.date"] = new Date(1800, 0, 1);
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+        console.log(whereQuery);
+      }
+    }
+    for (let project of middleTarget) {
+      if (project.process.design.construct.contract.payments.middle.date.valueOf() > nowValue) {
+        whereQuery = { proid: project.proid };
+        updateQuery = {};
+        updateQuery["process.design.construct.contract.payments.middle.date"] = new Date(1800, 0, 1);
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+        console.log(whereQuery);
+      }
+    }
+    for (let project of remainTarget) {
+      if (project.process.design.construct.contract.payments.remain.date.valueOf() > nowValue) {
+        whereQuery = { proid: project.proid };
+        updateQuery = {};
+        updateQuery["process.design.construct.contract.payments.remain.date"] = new Date(1800, 0, 1);
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
+        console.log(whereQuery);
+      }
+    }
 
 
 
