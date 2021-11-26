@@ -3002,7 +3002,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
         }
       },
       {
-        text: !titleMode ? '|' : "",
+        text: !titleMode ? `|<b style="display:none">${project.proid + project.cliid + project.desid}</b>` : "",
         style: {
           display: "inline-block",
           verticalAlign: "top",

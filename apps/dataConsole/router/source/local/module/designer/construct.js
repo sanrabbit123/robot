@@ -565,7 +565,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       position = map[column].position;
       values = map[column].values;
       startLeft = 0;
-      width = 120;
+      width = 126;
       margin = 4;
 
       background = colorChip.gradientGreen4;
@@ -3657,7 +3657,7 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
         }
       },
       {
-        text: !titleMode ? '|' : "",
+        text: !titleMode ? `|<b style="display:none">${project.proid + project.cliid + project.desid}</b>` : "",
         style: {
           display: "inline-block",
           verticalAlign: "top",

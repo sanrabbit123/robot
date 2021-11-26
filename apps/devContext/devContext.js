@@ -1277,9 +1277,8 @@ DevContext.prototype.launching = async function () {
         ]
       }, { selfMongo });
 
-      if (builders.length !== 1) {
-        console.log(project);
-      }
+      [ builder ] = builders;
+      console.log(builder);
 
 
       // await bill.constructInjection(thisBill.bilid, builder.buiid, {
@@ -1287,8 +1286,8 @@ DevContext.prototype.launching = async function () {
       //   start: summary.start.amount,
       //   middle: summary.middle.amount,
       //   remain: summary.remain.amount,
-      // }, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
-      // await messageLog(thisBill.bilid + " construct request, response set complete");
+      // }, { selfMongo: selfPythonMongo, selfCoreMongo: selfMongo });
+      
 
     }
 

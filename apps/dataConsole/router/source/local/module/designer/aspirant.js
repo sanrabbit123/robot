@@ -1110,7 +1110,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
         }
       },
       {
-        text: !titleMode ? '|' : "",
+        text: !titleMode ? `|<b style="display:none">${aspirant.aspid}</b>` : "",
         style: {
           display: "inline-block",
           verticalAlign: "top",
