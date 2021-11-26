@@ -565,7 +565,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       position = map[column].position;
       values = map[column].values;
       startLeft = 0;
-      width = 116;
+      width = 120;
       margin = 4;
 
       background = colorChip.gradientGreen4;
@@ -4684,7 +4684,6 @@ DesignerJs.prototype.constructView = async function () {
         return obj.builder + "_" + obj.information.business.company;
       }
     });
-    builderNames.push("외부업체");
 
     this.builderNames = builderNames;
     this.projects = projects;

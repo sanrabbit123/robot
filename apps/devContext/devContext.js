@@ -1135,7 +1135,7 @@ DevContext.prototype.launching = async function () {
 
     const selfMongo = this.MONGOLOCALC;
     const selfPythonMongo = this.MONGOLOCALC;
-    const projects = await back.getProjectsByQuery({}, { selfMongo })
+    const projects = await back.getProjectsByQuery({}, { selfMongo, withTools: true })
     const empty = new Date(2000, 0, 1);
     const emptyDate = new Date(1800, 0, 1);
     const emptyValue = empty.valueOf();
@@ -1147,6 +1147,14 @@ DevContext.prototype.launching = async function () {
     let whereQuery, updateQuery;
     let rows;
     let proidTargets;
+    let projectTargets;
+    let projectNormal;
+    let thisBills, thisBill;
+    let tempArr;
+    let searchPoint0;
+    let searchPoint1;
+    let builders;
+    let builder;
 
     proidTargets = [];
 
@@ -1233,40 +1241,47 @@ DevContext.prototype.launching = async function () {
 
     proidTargets = [ ...new Set(proidTargets) ];
 
-    console.log(proidTargets);
 
+    projectTargets = [];
     for (let proid of proidTargets) {
-      whereQuery = { proid };
-      updateQuery = {};
-      updateQuery["process.design.construct.contract.form.guide"] = new Date();
-      // await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+      projectTargets.push(projects.search(proid));
+    }
 
-      // const thisBills = await bill.getBillsByQuery({
-      //   $and: [
-      //     { "links.proid": project.proid },
-      //     { "links.desid": project.desid },
-      //     { "links.cliid": project.cliid },
-      //     { "links.method": project.service.online ? "online" : "offline" }
-      //   ]
-      // }, { selfMongo: instance.mongolocal });
-      // projectNormal = project.toNormal();
-      //
-      // if (/_/gi.test(projectNormal.process.design.construct.contract.partner)) {
-      //   tempArr = projectNormal.process.design.construct.contract.partner.split('_');
-      //   searchPoint0 = tempArr[0].trim();
-      //   searchPoint1 = tempArr[1].trim();
-      // } else {
-      //   searchPoint0 = projectNormal.process.design.construct.contract.partner.trim();
-      //   searchPoint1 = '';
-      // }
-      // builders = await back.getBuildersByQuery({
-      //   $and: [
-      //     { "builder": searchPoint0 },
-      //     { "information.business.company": searchPoint1 }
-      //   ]
-      // }, { selfMongo: instance.mongo });
-      //   const [ builder ] = builders;
-      //
+
+    for (let project of projectTargets) {
+
+      thisBills = await bill.getBillsByQuery({
+        $and: [
+          { "links.proid": project.proid },
+          { "links.desid": project.desid },
+          { "links.cliid": project.cliid },
+          { "links.method": project.service.online ? "online" : "offline" }
+        ]
+      }, { selfMongo: selfPythonMongo });
+      projectNormal = project.toNormal();
+
+      [ thisBill ] = thisBills;
+
+      if (/_/gi.test(projectNormal.process.design.construct.contract.partner)) {
+        tempArr = projectNormal.process.design.construct.contract.partner.split('_');
+        searchPoint0 = tempArr[0].trim();
+        searchPoint1 = tempArr[1].trim();
+      } else {
+        searchPoint0 = projectNormal.process.design.construct.contract.partner.trim();
+        searchPoint1 = '';
+      }
+      builders = await back.getBuildersByQuery({
+        $and: [
+          { "builder": searchPoint0 },
+          { "information.business.company": searchPoint1 }
+        ]
+      }, { selfMongo });
+
+      if (builders.length !== 1) {
+        console.log(project);
+      }
+
+
       // await bill.constructInjection(thisBill.bilid, builder.buiid, {
       //   first: summary.first.amount,
       //   start: summary.start.amount,
