@@ -2798,7 +2798,7 @@ DesignerJs.prototype.constructBlockInjection = function () {
 
   leftMargin = 10;
   firstPaddingTop = 44;
-  tongPaddingBottom = 500;
+  tongPaddingBottom = 1000;
 
   cleanChildren(contentsTong);
 
