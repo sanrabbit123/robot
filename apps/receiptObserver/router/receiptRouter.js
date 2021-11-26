@@ -600,8 +600,6 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       let rows, ago, target, rows2;
 
       if (!ignoreList.includes(name.trim())) {
-        messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", true).catch((err) => { throw new Error(err.message); });
-
         ago = new Date();
         ago.setDate(ago.getDate() - (standardDay * 2));
 
@@ -627,12 +625,10 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
                 [ target ] = rows;
               }
             }
-          } else {
-            errorLog(errorMessage).catch((e) => { console.log(e); });
           }
-        } else {
-          errorLog(errorMessage).catch((e) => { console.log(e); });
         }
+
+        messageSend(`${name} 고객님이 ${autoComma(amount)}원을 계좌에 입금하여 주셨어요.`, "#700_operation", (target === null)).catch((err) => { throw new Error(err.message); });
 
         if (target !== null) {
 
@@ -651,7 +647,11 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           }).catch((err) => {
             console.log(err);
           });
+
+        } else {
+          errorLog(errorMessage).catch((e) => { console.log(e); });
         }
+
       } else {
         errorLog(ignoreMessage).catch((e) => { console.log(e); });
       }
