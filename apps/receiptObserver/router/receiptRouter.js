@@ -808,6 +808,8 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     let bankName, bankTo;
     let calculate;
 
+    console.log(data);
+
     if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
       if (proposal.fee.length === 1) {
@@ -943,6 +945,8 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
 
     } else if (/시공 계약금/gi.test(data.goodName.trim()) || /시공 착수금/gi.test(data.goodName.trim()) || /시공 중도금/gi.test(data.goodName.trim()) || /시공 잔금/gi.test(data.goodName.trim())) {
 
+      console.log("this!");
+
       if (/계약금/gi.test(data.goodName.trim())) {
 
         projectQuery["process.design.construct.status"] = "계약금 입금";
@@ -1041,7 +1045,6 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
       let itemArr, payArr, cancelArr;
       let itemNum, payNum, cancelNum;
       let payObject;
-      let paymentComplete;
       let message;
 
       if (data.__ignorethis__ !== 1) {
@@ -1102,28 +1105,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
           payObject.oid = oid;
           payArr.unshift(payObject);
 
-          // itemNum = 0;
-          // for (let { amount: { consumer } } of itemArr) {
-          //   itemNum += consumer;
-          // }
-          // payNum = 0;
-          // for (let { amount: payAmount } of payArr) {
-          //   payNum += payAmount;
-          // }
-          // cancelNum = 0;
-          // for (let { amount: cancelAmount } of cancelArr) {
-          //   cancelNum += cancelAmount;
-          // }
-          //
-          // if (itemNum <= payNum - cancelNum) {
-          //   updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-          //   paymentComplete = true;
-          // } else {
-          //   paymentComplete = false;
-          // }
-
           updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-          paymentComplete = true;
 
           updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
@@ -1143,10 +1125,7 @@ ReceiptRouter.prototype.rou_post_ghostClientBill = function () {
             console.log(err);
           })
           await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
-
-          if (paymentComplete) {
-            await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
-          }
+          await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
 
         } else {
 
@@ -1264,7 +1243,6 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       let itemArr, payArr, cancelArr;
       let itemNum, payNum, cancelNum;
       let payObject;
-      let paymentComplete;
       let message;
 
       thisBill = bills[0];
@@ -1318,28 +1296,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
       payObject.amount = amount;
       payArr.unshift(payObject);
 
-      // itemNum = 0;
-      // for (let { amount: { consumer } } of itemArr) {
-      //   itemNum += consumer;
-      // }
-      // payNum = 0;
-      // for (let { amount: payAmount } of payArr) {
-      //   payNum += payAmount;
-      // }
-      // cancelNum = 0;
-      // for (let { amount: cancelAmount } of cancelArr) {
-      //   cancelNum += cancelAmount;
-      // }
-      // if (itemNum <= payNum - cancelNum) {
-      //   updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-      //   paymentComplete = true;
-      // } else {
-      //   paymentComplete = false;
-      // }
-
       updateQuery["requests." + String(requestNumber) + ".status"] = "결제 완료";
-      paymentComplete = true;
-
       updateQuery["requests." + String(requestNumber) + ".pay"] = payArr;
 
       proofs = bill.returnBillDummies("proofs");
@@ -1364,10 +1321,7 @@ ReceiptRouter.prototype.rou_post_webHookVAccount = function () {
         console.log(err);
       });
       await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
-
-      if (paymentComplete) {
-        await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
-      }
+      await instance.sync_paymentProject(bilid, requestNumber, data, amount, proofs, inisis, { thisBill, client, designer, project, proposal });
 
       res.set({ "Content-Type": "text/plain" });
       res.send("OK");
