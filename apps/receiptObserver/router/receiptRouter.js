@@ -647,7 +647,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
               phone,
             }, { headers: { "Content-Type": "application/json" } });
           }).then(() => {
-            return messageSend(`${name} 고객님의 번호로 현금영수증 발행을 완료하였어요.`, "#700_operation", true);
+            return messageSend(`${name} 고객님의 번호로 현금 영수증 발행을 완료하였어요.`, "#700_operation", false);
           }).catch((err) => {
             console.log(err);
           });
