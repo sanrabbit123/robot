@@ -808,8 +808,6 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
     let bankName, bankTo;
     let calculate;
 
-    console.log(data);
-
     if (/홈리에종 계약금/gi.test(data.goodName.trim()) || /홈리에종 잔금/gi.test(data.goodName.trim())) {
       projectQuery = {};
       if (proposal.fee.length === 1) {
@@ -945,7 +943,7 @@ ReceiptRouter.prototype.sync_paymentProject = async function (bilid, requestNumb
 
     } else if (/시공 계약금/gi.test(data.goodName.trim()) || /시공 착수금/gi.test(data.goodName.trim()) || /시공 중도금/gi.test(data.goodName.trim()) || /시공 잔금/gi.test(data.goodName.trim())) {
 
-      console.log("this!");
+      projectQuery = {};
 
       if (/계약금/gi.test(data.goodName.trim())) {
 
