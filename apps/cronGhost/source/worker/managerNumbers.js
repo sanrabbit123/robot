@@ -17,6 +17,7 @@ const worker = async function (package) {
   const { messageLog, errorLog, equalJson } = mother;
   try {
     const selfMongo = mongo;
+    const selfConsoleMongo = mongoconsole;
     const sheetsId = "1nqjhgB8xYqoM_6R_wbO7qHJL8EcGMfpa6vc9-xYxNro";
     let clients, cliidArr, projects, projectsRaw, secondCliidArr, targetClients, targetClientHistories, totalClientHistories;
     let arr, result, total, matrix, num, table;
@@ -35,7 +36,7 @@ const worker = async function (package) {
     clients = (await back.getClientsByQuery({}, { selfMongo, withTools: true })).getRequestsTong().map((arr) => { let obj = arr[0].toNormal(); obj.cliid = arr.cliid; return obj; });
     clients.sort((a, b) => { return a.timeline.valueOf() - b.timeline.valueOf(); });
     cliidArr = clients.map((obj) => { return { cliid: obj.cliid }; });
-    totalClientHistories = await back.getHistoriesByQuery("client", { $or: cliidArr }, { selfMongo });
+    totalClientHistories = await back.getHistoriesByQuery("client", { $or: cliidArr }, { selfMongo: mongoconsole });
     for (let obj of clients) {
       for (let history of totalClientHistories) {
         if (obj.cliid === history.cliid) {
@@ -46,7 +47,7 @@ const worker = async function (package) {
 
     clients.sort((a, b) => { return a.timeline.valueOf() - b.timeline.valueOf(); });
     cliidArr = clients.map((obj) => { return { cliid: obj.cliid }; });
-    totalClientHistories = await back.getHistoriesByQuery("client", { $or: cliidArr }, { selfMongo });
+    totalClientHistories = await back.getHistoriesByQuery("client", { $or: cliidArr }, { selfMongo: mongoconsole });
 
     start = new Date(JSON.stringify(clients[0].timeline).slice(1, -1));
     end = new Date(JSON.stringify(clients[clients.length - 1].timeline).slice(1, -1));
