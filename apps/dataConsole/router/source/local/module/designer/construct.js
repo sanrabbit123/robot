@@ -933,6 +933,8 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       let totalTong;
       let totalBase;
       let titleArea, contentsArea;
+      let dom_constructName, dom_address, dom_range, dom_total, dom_first, dom_start, dom_middle, dom_remain;
+      let domMap;
 
       thisProject = instance.projects.search("proid", project.proid);
 
@@ -976,6 +978,26 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       startRatio = totalMoney !== 0 ? startMoney / totalMoney : 0;
       middleRatio = totalMoney !== 0 ? middleMoney / totalMoney : 0;
       remainRatio = totalMoney !== 0 ? remainMoney / totalMoney : 0;
+
+
+
+
+      domMap = [
+        {
+          title: "계약금 정보",
+          contents: [
+
+
+          ]
+        }
+      ]
+
+
+
+
+
+
+
 
       if (thisProject.process.design.construct.contract.form.date.from.valueOf() > (new Date(2000, 0, 1)).valueOf() && thisProject.process.design.construct.contract.form.date.to.valueOf() > (new Date(2000, 0, 1)).valueOf() && thisProject.process.design.construct.contract.partner !== "") {
 
@@ -1323,790 +1345,798 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             paddingLeft: String(middlePaddingLeft) + ea,
             paddingRight: String(middlePaddingLeft) + ea,
           },
+        });
+
+        dom_constructName = createNode({
+          mother: contentsArea,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(rowMargin) + ea,
+          },
           children: [
             {
+              text: "공사명",
               style: {
-                display: "block",
-                position: "relative",
-                marginBottom: String(rowMargin) + ea,
-              },
-              children: [
-                {
-                  text: "공사명",
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    width: String(titleWidth) + ea,
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    position: "relative",
-                    width: withOut(titleWidth, ea),
-                    height: String(areaHeight) + ea,
-                    top: String(areaTop) + ea,
-                    overflow: "hidden",
-                  },
-                  children: [
-                    {
-                      event: {
-                        click: updateEvent("historyName")
-                      },
-                      style: {
-                        position: "relative",
-                        width: String(3000) + ea,
-                        left: String(0),
-                        top: String(0),
-                      },
-                      children: [
-                        {
-                          text: (project.history.name === '' ? project.address + " 내부 리모델링" : project.history.name),
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+                display: "inline-block",
+                verticalAlign: "top",
+                width: String(titleWidth) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+              }
             },
             {
               style: {
-                display: "block",
+                display: "inline-block",
+                verticalAlign: "top",
                 position: "relative",
-                marginBottom: String(rowMargin) + ea,
+                width: withOut(titleWidth, ea),
+                height: String(areaHeight) + ea,
+                top: String(areaTop) + ea,
+                overflow: "hidden",
               },
               children: [
                 {
-                  text: "시공 장소",
+                  event: {
+                    click: updateEvent("historyName")
+                  },
                   style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    width: String(titleWidth) + ea,
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
                     position: "relative",
-                    width: withOut(titleWidth, ea),
-                    height: String(areaHeight) + ea,
-                    top: String(areaTop) + ea,
+                    width: String(3000) + ea,
+                    left: String(0),
+                    top: String(0),
                   },
                   children: [
                     {
-                      event: {
-                        click: updateEvent("historyAddress")
-                      },
+                      text: (project.history.name === '' ? project.address + " 내부 리모델링" : project.history.name),
                       style: {
-                        position: "relative",
-                        width: String(3000) + ea,
-                        left: String(0),
-                        top: String(0),
-                      },
-                      children: [
-                        {
-                          text: (project.history.address === '' ? project.address : project.history.address),
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                          }
-                        }
-                      ]
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                      }
                     }
                   ]
                 }
               ]
+            }
+          ]
+        });
+        dom_address = createNode({
+          mother: contentsArea,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(rowMargin) + ea,
+          },
+          children: [
+            {
+              text: "시공 장소",
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                width: String(titleWidth) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+              }
             },
             {
               style: {
-                display: "block",
+                display: "inline-block",
+                verticalAlign: "top",
                 position: "relative",
-                marginBottom: String(rowMargin) + ea,
+                width: withOut(titleWidth, ea),
+                height: String(areaHeight) + ea,
+                top: String(areaTop) + ea,
               },
               children: [
                 {
-                  text: "공사 기간",
+                  event: {
+                    click: updateEvent("historyAddress")
+                  },
                   style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    width: String(titleWidth) + ea,
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
                     position: "relative",
-                    width: withOut(titleWidth, ea),
-                    height: String(areaHeight) + ea,
-                    top: String(areaTop) + ea,
+                    width: String(3000) + ea,
+                    left: String(0),
+                    top: String(0),
                   },
                   children: [
                     {
+                      text: (project.history.address === '' ? project.address : project.history.address),
                       style: {
-                        position: "relative",
-                        width: String(3000) + ea,
-                        left: String(0),
-                        top: String(0),
-                      },
-                      children: [
-                        {
-                          text: "착공 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: dateToString(project.process.design.construct.contract.form.date.from),
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "완공 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: dateToString(project.process.design.construct.contract.form.date.to),
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                          }
-                        },
-                      ]
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                      }
                     }
                   ]
                 }
               ]
+            }
+          ]
+        });
+        dom_range = createNode({
+          mother: contentsArea,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(rowMargin) + ea,
+          },
+          children: [
+            {
+              text: "공사 기간",
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                width: String(titleWidth) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+              }
             },
             {
               style: {
-                display: "block",
+                display: "inline-block",
+                verticalAlign: "top",
                 position: "relative",
-                marginBottom: String(rowMargin) + ea,
+                width: withOut(titleWidth, ea),
+                height: String(areaHeight) + ea,
+                top: String(areaTop) + ea,
               },
               children: [
                 {
-                  text: "공사 금액",
                   style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    width: String(titleWidth) + ea,
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
                     position: "relative",
-                    width: withOut(titleWidth, ea),
-                    height: String(areaHeight) + ea,
-                    top: String(areaTop) + ea,
+                    width: String(3000) + ea,
+                    left: String(0),
+                    top: String(0),
                   },
                   children: [
                     {
-                      event: {
-                        click: updateEvent("amount")
-                      },
+                      text: "착공 : ",
                       style: {
-                        position: "relative",
-                        width: String(3000) + ea,
-                        left: String(0),
-                        top: String(0),
-                      },
-                      children: [
-                        {
-                          text: autoComma(totalMoney) + "원",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                          }
-                        }
-                      ]
-                    }
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: dateToString(project.process.design.construct.contract.form.date.from),
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "완공 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: dateToString(project.process.design.construct.contract.form.date.to),
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                      }
+                    },
                   ]
                 }
               ]
+            }
+          ]
+        });
+        dom_total = createNode({
+          mother: contentsArea,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(rowMargin) + ea,
+          },
+          children: [
+            {
+              text: "공사 금액",
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                width: String(titleWidth) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+              }
             },
             {
               style: {
-                display: "block",
+                display: "inline-block",
+                verticalAlign: "top",
                 position: "relative",
-                marginBottom: String(rowMargin) + ea,
+                width: withOut(titleWidth, ea),
+                height: String(areaHeight) + ea,
+                top: String(areaTop) + ea,
               },
               children: [
                 {
-                  text: "계약금 정보",
+                  event: {
+                    click: updateEvent("amount")
+                  },
                   style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    width: String(titleWidth) + ea,
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
                     position: "relative",
-                    width: withOut(titleWidth, ea),
-                    height: String(areaHeight) + ea,
-                    top: String(areaTop) + ea,
+                    width: String(3000) + ea,
+                    left: String(0),
+                    top: String(0),
                   },
                   children: [
                     {
+                      text: autoComma(totalMoney) + "원",
                       style: {
-                        position: "relative",
-                        width: String(3000) + ea,
-                        left: String(0),
-                        top: String(0),
-                      },
-                      children: [
-                        {
-                          text: Math.round(firstRatio * 100) + "%",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: autoComma(firstMoney) + "원",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "예상일 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: dateToString(project.history.payments.first.date),
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "비고 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: project.history.payments.first.etc === '' ? "해당 없음" : project.history.payments.first.etc,
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                          }
-                        },
-                      ]
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                      }
                     }
                   ]
                 }
               ]
-            },
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                marginBottom: String(rowMargin) + ea,
-              },
-              children: [
-                {
-                  text: "착수금 정보",
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    width: String(titleWidth) + ea,
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    position: "relative",
-                    width: withOut(titleWidth, ea),
-                    height: String(areaHeight) + ea,
-                    top: String(areaTop) + ea,
-                  },
-                  children: [
-                    {
-                      style: {
-                        position: "relative",
-                        width: String(3000) + ea,
-                        left: String(0),
-                        top: String(0),
-                      },
-                      children: [
-                        {
-                          text: Math.round(startRatio * 100) + "%",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: autoComma(startMoney) + "원",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "예상일 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: dateToString(project.history.payments.start.date),
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "비고 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: project.history.payments.start.etc === '' ? "해당 없음" : project.history.payments.start.etc,
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                          }
-                        },
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                marginBottom: String(rowMargin) + ea,
-              },
-              children: [
-                {
-                  text: "중도금 정보",
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    width: String(titleWidth) + ea,
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    position: "relative",
-                    width: withOut(titleWidth, ea),
-                    height: String(areaHeight) + ea,
-                    top: String(areaTop) + ea,
-                  },
-                  children: [
-                    {
-                      style: {
-                        position: "relative",
-                        width: String(3000) + ea,
-                        left: String(0),
-                        top: String(0),
-                      },
-                      children: [
-                        {
-                          text: Math.round(middleRatio * 100) + "%",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: autoComma(middleMoney) + "원",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "예상일 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: dateToString(project.history.payments.middle.date),
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "비고 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: project.history.payments.middle.etc === '' ? "해당 없음" : project.history.payments.middle.etc,
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                          }
-                        },
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                marginBottom: String(rowMargin) + ea,
-              },
-              children: [
-                {
-                  text: "잔금 정보",
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    width: String(titleWidth) + ea,
-                    fontSize: String(textSize) + ea,
-                    fontWeight: String(titleWeight),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  style: {
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    position: "relative",
-                    width: withOut(titleWidth, ea),
-                    height: String(areaHeight) + ea,
-                    top: String(areaTop) + ea,
-                  },
-                  children: [
-                    {
-                      style: {
-                        position: "relative",
-                        width: String(3000) + ea,
-                        left: String(0),
-                        top: String(0),
-                      },
-                      children: [
-                        {
-                          text: Math.round(remainRatio * 100) + "%",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: autoComma(remainMoney) + "원",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "예상일 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: dateToString(project.history.payments.remain.date),
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: " | ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.green,
-                            marginRight: String(betweenMargin1) + ea,
-                          }
-                        },
-                        {
-                          text: "비고 : ",
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.deactive,
-                            marginRight: String(betweenMargin0) + ea,
-                          }
-                        },
-                        {
-                          text: project.history.payments.remain.etc === '' ? "해당 없음" : project.history.payments.remain.etc,
-                          style: {
-                            display: "inline-block",
-                            fontSize: String(textSize) + ea,
-                            fontWeight: String(areaWeight),
-                            color: colorChip.black,
-                          }
-                        },
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
+            }
           ]
         });
 
-        
+        dom_first = createNode({
+          mother: contentsArea,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(rowMargin) + ea,
+          },
+          children: [
+            {
+              text: "계약금 정보",
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                width: String(titleWidth) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                width: withOut(titleWidth, ea),
+                height: String(areaHeight) + ea,
+                top: String(areaTop) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    position: "relative",
+                    width: String(3000) + ea,
+                    left: String(0),
+                    top: String(0),
+                  },
+                  children: [
+                    {
+                      text: Math.round(firstRatio * 100) + "%",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: autoComma(firstMoney) + "원",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "예상일 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: dateToString(project.history.payments.first.date),
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "비고 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: project.history.payments.first.etc === '' ? "해당 없음" : project.history.payments.first.etc,
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                      }
+                    },
+                  ]
+                }
+              ]
+            }
+          ]
+        });
 
+        dom_start = createNode({
+          mother: contentsArea,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(rowMargin) + ea,
+          },
+          children: [
+            {
+              text: "착수금 정보",
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                width: String(titleWidth) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                width: withOut(titleWidth, ea),
+                height: String(areaHeight) + ea,
+                top: String(areaTop) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    position: "relative",
+                    width: String(3000) + ea,
+                    left: String(0),
+                    top: String(0),
+                  },
+                  children: [
+                    {
+                      text: Math.round(startRatio * 100) + "%",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: autoComma(startMoney) + "원",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "예상일 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: dateToString(project.history.payments.start.date),
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "비고 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: project.history.payments.start.etc === '' ? "해당 없음" : project.history.payments.start.etc,
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                      }
+                    },
+                  ]
+                }
+              ]
+            }
+          ]
+        });
+
+        dom_middle = createNode({
+          mother: contentsArea,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(rowMargin) + ea,
+          },
+          children: [
+            {
+              text: "중도금 정보",
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                width: String(titleWidth) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                width: withOut(titleWidth, ea),
+                height: String(areaHeight) + ea,
+                top: String(areaTop) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    position: "relative",
+                    width: String(3000) + ea,
+                    left: String(0),
+                    top: String(0),
+                  },
+                  children: [
+                    {
+                      text: Math.round(middleRatio * 100) + "%",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: autoComma(middleMoney) + "원",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "예상일 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: dateToString(project.history.payments.middle.date),
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "비고 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: project.history.payments.middle.etc === '' ? "해당 없음" : project.history.payments.middle.etc,
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                      }
+                    },
+                  ]
+                }
+              ]
+            }
+          ]
+        });
+
+        dom_remain = createNode({
+          mother: contentsArea,
+          style: {
+            display: "block",
+            position: "relative",
+            marginBottom: String(rowMargin) + ea,
+          },
+          children: [
+            {
+              text: "잔금 정보",
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                width: String(titleWidth) + ea,
+                fontSize: String(textSize) + ea,
+                fontWeight: String(titleWeight),
+                color: colorChip.black,
+              }
+            },
+            {
+              style: {
+                display: "inline-block",
+                verticalAlign: "top",
+                position: "relative",
+                width: withOut(titleWidth, ea),
+                height: String(areaHeight) + ea,
+                top: String(areaTop) + ea,
+              },
+              children: [
+                {
+                  style: {
+                    position: "relative",
+                    width: String(3000) + ea,
+                    left: String(0),
+                    top: String(0),
+                  },
+                  children: [
+                    {
+                      text: Math.round(remainRatio * 100) + "%",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: autoComma(remainMoney) + "원",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "예상일 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: dateToString(project.history.payments.remain.date),
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: " | ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.green,
+                        marginRight: String(betweenMargin1) + ea,
+                      }
+                    },
+                    {
+                      text: "비고 : ",
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.deactive,
+                        marginRight: String(betweenMargin0) + ea,
+                      }
+                    },
+                    {
+                      text: project.history.payments.remain.etc === '' ? "해당 없음" : project.history.payments.remain.etc,
+                      style: {
+                        display: "inline-block",
+                        fontSize: String(textSize) + ea,
+                        fontWeight: String(areaWeight),
+                        color: colorChip.black,
+                      }
+                    },
+                  ]
+                }
+              ]
+            }
+          ]
+        });
 
       } else {
         window.alert("공사 기간, 파트너 시공사를 먼저 모두 설정해주세요!");
