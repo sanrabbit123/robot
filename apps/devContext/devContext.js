@@ -1134,55 +1134,148 @@ DevContext.prototype.launching = async function () {
 
 
     const selfMongo = this.MONGOLOCALC;
+    const selfPythonMongo = this.MONGOLOCALC;
     const projects = await back.getProjectsByQuery({}, { selfMongo })
-    const now = new Date();
-    const nowValue = now.valueOf();
+    const empty = new Date(2000, 0, 1);
+    const emptyDate = new Date(1800, 0, 1);
+    const emptyValue = empty.valueOf();
     const target = projects.toNormal().filter((obj) => { return obj.process.design.construct !== null });
     const firstTarget = target.filter((obj) => { return obj.process.design.construct.contract.payments.first !== null });
     const startTarget = target.filter((obj) => { return obj.process.design.construct.contract.payments.start !== null });
     const middleTarget = target.filter((obj) => { return obj.process.design.construct.contract.payments.middle !== null });
     const remainTarget = target.filter((obj) => { return obj.process.design.construct.contract.payments.remain !== null });
     let whereQuery, updateQuery;
+    let rows;
+    let proidTargets;
+
+    proidTargets = [];
 
     for (let project of firstTarget) {
-      if (project.process.design.construct.contract.payments.first.date.valueOf() > nowValue) {
-        whereQuery = { proid: project.proid };
-        updateQuery = {};
-        updateQuery["process.design.construct.contract.payments.first.date"] = new Date(1800, 0, 1);
-        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
-        console.log(whereQuery);
+      if (project.process.design.construct.contract.payments.first.date.valueOf() > emptyValue) {
+        rows = await back.mongoRead("generalBill", {
+          $and: [
+            { "links.proid": project.proid },
+            { "links.method": project.service.online ? "online" : "offline" }
+          ]
+        }, { selfMongo: selfPythonMongo });
+        if (rows.length > 0) {
+          if (rows.length !== 1) {
+            console.log(project.proid);
+          } else {
+            const [ { requests } ] = rows;
+            if (!requests.some((obj) => { return /시공/gi.test(obj.name); })) {
+              proidTargets.push(project.proid);
+            }
+          }
+        }
       }
     }
     for (let project of startTarget) {
-      if (project.process.design.construct.contract.payments.start.date.valueOf() > nowValue) {
-        whereQuery = { proid: project.proid };
-        updateQuery = {};
-        updateQuery["process.design.construct.contract.payments.start.date"] = new Date(1800, 0, 1);
-        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
-        console.log(whereQuery);
+      if (project.process.design.construct.contract.payments.start.date.valueOf() > emptyValue) {
+        rows = await back.mongoRead("generalBill", {
+          $and: [
+            { "links.proid": project.proid },
+            { "links.method": project.service.online ? "online" : "offline" }
+          ]
+        }, { selfMongo: selfPythonMongo });
+        if (rows.length > 0) {
+          if (rows.length !== 1) {
+            console.log(project.proid);
+          } else {
+            const [ { requests } ] = rows;
+            if (!requests.some((obj) => { return /시공/gi.test(obj.name); })) {
+              proidTargets.push(project.proid);
+            }
+          }
+        }
       }
     }
     for (let project of middleTarget) {
-      if (project.process.design.construct.contract.payments.middle.date.valueOf() > nowValue) {
-        whereQuery = { proid: project.proid };
-        updateQuery = {};
-        updateQuery["process.design.construct.contract.payments.middle.date"] = new Date(1800, 0, 1);
-        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
-        console.log(whereQuery);
+      if (project.process.design.construct.contract.payments.middle.date.valueOf() > emptyValue) {
+        rows = await back.mongoRead("generalBill", {
+          $and: [
+            { "links.proid": project.proid },
+            { "links.method": project.service.online ? "online" : "offline" }
+          ]
+        }, { selfMongo: selfPythonMongo });
+        if (rows.length > 0) {
+          if (rows.length !== 1) {
+            console.log(project.proid);
+          } else {
+            const [ { requests } ] = rows;
+            if (!requests.some((obj) => { return /시공/gi.test(obj.name); })) {
+              proidTargets.push(project.proid);
+            }
+          }
+        }
       }
     }
     for (let project of remainTarget) {
-      if (project.process.design.construct.contract.payments.remain.date.valueOf() > nowValue) {
-        whereQuery = { proid: project.proid };
-        updateQuery = {};
-        updateQuery["process.design.construct.contract.payments.remain.date"] = new Date(1800, 0, 1);
-        await back.updateProject([ whereQuery, updateQuery ], { selfMongo });
-        console.log(whereQuery);
+      if (project.process.design.construct.contract.payments.remain.date.valueOf() > emptyValue) {
+        rows = await back.mongoRead("generalBill", {
+          $and: [
+            { "links.proid": project.proid },
+            { "links.method": project.service.online ? "online" : "offline" }
+          ]
+        }, { selfMongo: selfPythonMongo });
+        if (rows.length > 0) {
+          if (rows.length !== 1) {
+            console.log(project.proid);
+          } else {
+            const [ { requests } ] = rows;
+            if (!requests.some((obj) => { return /시공/gi.test(obj.name); })) {
+              proidTargets.push(project.proid);
+            }
+          }
+        }
       }
     }
 
+    proidTargets = [ ...new Set(proidTargets) ];
 
+    console.log(proidTargets);
 
+    for (let proid of proidTargets) {
+      whereQuery = { proid };
+      updateQuery = {};
+      updateQuery["process.design.construct.contract.form.guide"] = new Date();
+      // await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+      // const thisBills = await bill.getBillsByQuery({
+      //   $and: [
+      //     { "links.proid": project.proid },
+      //     { "links.desid": project.desid },
+      //     { "links.cliid": project.cliid },
+      //     { "links.method": project.service.online ? "online" : "offline" }
+      //   ]
+      // }, { selfMongo: instance.mongolocal });
+      // projectNormal = project.toNormal();
+      //
+      // if (/_/gi.test(projectNormal.process.design.construct.contract.partner)) {
+      //   tempArr = projectNormal.process.design.construct.contract.partner.split('_');
+      //   searchPoint0 = tempArr[0].trim();
+      //   searchPoint1 = tempArr[1].trim();
+      // } else {
+      //   searchPoint0 = projectNormal.process.design.construct.contract.partner.trim();
+      //   searchPoint1 = '';
+      // }
+      // builders = await back.getBuildersByQuery({
+      //   $and: [
+      //     { "builder": searchPoint0 },
+      //     { "information.business.company": searchPoint1 }
+      //   ]
+      // }, { selfMongo: instance.mongo });
+      //   const [ builder ] = builders;
+      //
+      // await bill.constructInjection(thisBill.bilid, builder.buiid, {
+      //   first: summary.first.amount,
+      //   start: summary.start.amount,
+      //   middle: summary.middle.amount,
+      //   remain: summary.remain.amount,
+      // }, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
+      // await messageLog(thisBill.bilid + " construct request, response set complete");
+
+    }
 
 
 
