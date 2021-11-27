@@ -3535,7 +3535,7 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
   }
   const instance = this;
   const { ea } = this;
-  const { createNode, createNodes, colorChip, withOut, isMac } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, isMac, blankHref } = GeneralJs;
   const { map, stringArr, updateArr, grayBoo, displayBoo } = this.constructDataRender(project, titleMode);
   let height, margin;
   let whiteBlock;
@@ -3639,7 +3639,7 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
           {
             type: "click",
             event: function (e) {
-              window.location.href = window.location.protocol + "//" + window.location.host + "/project?proid=" + project.proid;
+              blankHref(window.location.protocol + "//" + window.location.host + "/project?proid=" + project.proid + "&rmode=true");
             }
           }
         ],

@@ -5149,9 +5149,23 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 }).filter((obj) => {
                                   return (obj.data.mid !== undefined && obj.data.tid !== undefined && obj.data.TotPrice !== undefined && obj.data.MOID !== undefined);
                                 });
+                                if (pay.length > infoCopied.length) {
+                                  for (let i = 0; i < pay.length - infoCopied.length; i++) {
+                                    infoCopied.push({
+                                      data: {
+                                        mid: "",
+                                        tid: "",
+                                        TotPrice: 0,
+                                        MOID: "",
+                                        payMethod: "ACCOUNT",
+                                        vactBankName: "",
+                                      }
+                                    });
+                                  }
+                                }
                                 pay = pay.map((obj, index) => {
                                   let total, amount;
-                                  obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : "무통장";
+                                  obj.payMethod = /CARD/gi.test(infoCopied[index].data.payMethod) ? "카드" : (infoCopied[index].data.payMethod !== "ACCOUNT" ? "무통장" : "계좌 이체");
                                   obj.detail = obj.payMethod === "카드" ? infoCopied[index].data.P_FN_NM : infoCopied[index].data.vactBankName;
                                   if (typeof obj.detail === "string") {
                                     obj.detail = obj.detail.replace(/카드/gi, '').replace(/은행/gi, '');
@@ -5174,7 +5188,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   }
                                   return obj;
                                 });
-
                                 itemTong = [];
                                 for (let i of items) {
                                   children = [
@@ -7919,7 +7932,7 @@ ProjectJs.prototype.sseCardParsing = function (raw) {
 ProjectJs.prototype.launching = async function () {
   const instance = this;
   try {
-    const { returnGet, setQueue } = GeneralJs;
+    const { returnGet, setQueue, sleep } = GeneralJs;
     const getObj = returnGet();
     let getTarget;
     let tempFunction;
@@ -7981,6 +7994,14 @@ ProjectJs.prototype.launching = async function () {
       }
       if (getTarget !== null) {
         getTarget.click();
+        await sleep(500);
+        if (getObj.rmode !== undefined) {
+          if (typeof instance.whiteBox === "object" && instance.whiteBox !== null) {
+            try {
+              instance.whiteBox.contentsBox.firstChild.firstChild.children[9].click();
+            } catch {}
+          }
+        }
       }
     }
 
