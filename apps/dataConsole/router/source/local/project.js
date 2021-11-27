@@ -3488,7 +3488,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //proid
   betweenSpace = "&nbsp;&nbsp;<b style=\"color: " + GeneralJs.colorChip.gray3 + "\">/</b>&nbsp;&nbsp;";
   div_clone3 = GeneralJs.nodes.div.cloneNode(true);
-  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Cl)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서"));
+  div_clone3.insertAdjacentHTML("beforeend", (thisCase[standard[1]] + betweenSpace + thisCase.name + " (Cl)" + betweenSpace + thisCase.designer.split(' ')[0] + " (De)" + betweenSpace + "의뢰서" + betweenSpace + "시공"));
   div_clone3.classList.add("hoverDefault_lite");
   style = {
     position: "absolute",
@@ -3506,6 +3506,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
       const slashesPosition0 = slashes[0].getBoundingClientRect().x;
       const slashesPosition1 = slashes[1].getBoundingClientRect().x;
       const slashesPosition2 = slashes[2].getBoundingClientRect().x;
+      const slashesPosition3 = slashes[3].getBoundingClientRect().x;
       const proid = thisCase[standard[1]];
       let projects, project, tempFunction;
       if (e.x < slashesPosition0) {
@@ -3519,10 +3520,20 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
         project = projects[0];
         GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?desid=" + project.desid);
-      } else {
+      } else if (e.x < slashesPosition3) {
         projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects");
         project = projects[0];
-        window.location.href = window.location.protocol + "//" + window.location.host + "/designer?mode=request&desid=" + project.desid + "&cliid=" + project.cliid;
+        GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?mode=request&desid=" + project.desid + "&cliid=" + project.cliid);
+      } else {
+        projects = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid } }, "/getProjects", { equal: true });
+        project = projects[0];
+        if (project.process.design.construct === null) {
+          window.alert("이 프로젝트에는 시공이 없습니다!");
+        } else if (thisCase["status"] === "대기") {
+          window.alert("아직 대기중인 프로젝트는 시공 콘솔을 이용할 수 없습니다!");
+        } else {
+          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/designer?mode=construct&proid=" + project.proid);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -4300,7 +4311,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     propertyBox.appendChild(div_clone3);
   }
 
-  //referrer links
+  //travel expenses
   GeneralJs.ajaxJson({ noFlat: true, whereQuery: { proid: thisCase["proid"] } }, "/getProjects").then((projects) => {
     const project = projects[0];
     const { proid, cliid, desid } = project;

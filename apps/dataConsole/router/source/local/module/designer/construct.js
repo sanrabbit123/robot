@@ -4453,7 +4453,7 @@ DesignerJs.prototype.constructSearchEvent = function () {
 
   input.parentNode.style.width = String(width) + ea;
   input.parentNode.style.left = GeneralJs.withOut(50, width / 2, ea);
-  input.addEventListener("keypress", function (e) {
+  this.searchEvent = function (e) {
     let tempArr, orArr;
     if (e.key === "Enter") {
       instance.contentsSearchIndex = [];
@@ -4477,7 +4477,8 @@ DesignerJs.prototype.constructSearchEvent = function () {
       }
       instance.constructBlockInjection();
     }
-  });
+  }
+  input.addEventListener("keypress", this.searchEvent);
 }
 
 DesignerJs.prototype.contentsExtractEvent = function () {
@@ -4697,6 +4698,14 @@ DesignerJs.prototype.constructView = async function () {
     this.constructSearchEvent();
     this.constructBlockMove();
     this.contentsExtractEvent();
+
+    if (returnGet().proid !== undefined) {
+      this.searchEvent.call({
+        value: returnGet().proid
+      }, {
+        key: "Enter"
+      })
+    }
 
   } catch (e) {
     console.log(e);
