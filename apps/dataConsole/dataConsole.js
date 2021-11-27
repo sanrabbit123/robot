@@ -165,7 +165,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
-    let finalMinifyObj, finalMinifyString;
     let resultFromArr;
 
     //set general js
@@ -267,7 +266,6 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
 
 DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle) {
   const instance = this;
-  const { minify } = require("terser");
   const generalMap = require(`${process.cwd()}/apps/mapMaker/map/general.js`);
   const { fileSystem, shell, shellLink, babelSystem, treeParsing } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
@@ -347,7 +345,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     let code0, code1, code2, code3;
     let result, moduleString;
     let prototypes, dataPatchScript, prototypeBoo;
-    let finalMinifyObj, finalMinifyString;
     let generalSvg;
     let treeArray;
     let moduleBoo;
@@ -536,11 +533,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       console.log(`${i}${moduleBoo ? "(module)": ""} merge success`);
       if (moduleBoo) {
 
-        finalMinifyObj = await minify(result);
-        result = finalMinifyObj.code;
-        finalMinifyObj = await minify(moduleString);
-        moduleString = finalMinifyObj.code;
-
         treeArray = await treeParsing(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
         treeArray.setFromDir(this.middleModuleDir + "/" + i.replace(/\.js$/i, ''));
         treeArray.setToDir(staticFolder + "/middle/module/" + i.replace(/\.js$/i, ''));
@@ -558,9 +550,6 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
         resultFromArr.push(`${staticFolder}/middle/${i.replace(/\.js$/i, '')}.mjs`);
 
       } else {
-
-        finalMinifyObj = await minify(result);
-        result = finalMinifyObj.code;
 
         await fileSystem(`write`, [ `${staticFolder}/middle/${i}`, result ]);
         resultFromArr.push(`${staticFolder}/middle/${i}`);
