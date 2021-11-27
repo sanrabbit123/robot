@@ -3175,12 +3175,11 @@ Ghost.prototype.serverLaunching = async function () {
 
     //set address info
     const { name, rawObj: address } = await this.mother.ipCheck();
-    let isGhost = (address.isGhost === true);
     if (name === "unknown") {
       throw new Error("invalid address");
     }
     console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching ghost in ${name.replace(/info/i, '')} ==============`);
     console.log(``);
 
     await this.back.setInfoObj({ getMode: false });
@@ -3332,7 +3331,7 @@ Ghost.prototype.fileLaunching = async function () {
     if (isGhost) {
 
       console.log(``);
-      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching file ghost in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
+      console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching file ghost in ${name.replace(/info/i, '')} ==============`);
       console.log(``);
 
       //set pem key

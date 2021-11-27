@@ -57,7 +57,7 @@ DataConsole.prototype.mediaQuery = function (code) {
   return { conditions: updateProto, code: code.replace(matchReg, replacer) };
 }
 
-DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch, isGhost) {
+DataConsole.prototype.renderStatic = async function (staticFolder, address, DataPatch) {
   const instance = this;
   const { fileSystem, shell, shellLink, sleep } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
@@ -265,13 +265,13 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   }
 }
 
-DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle, isGhost) {
+DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address, DataPatch, DataMiddle) {
   const instance = this;
   const { minify } = require("terser");
   const generalMap = require(`${process.cwd()}/apps/mapMaker/map/general.js`);
   const { fileSystem, shell, shellLink, babelSystem, treeParsing } = this.mother;
   const S3HOST = this.address.homeinfo.ghost.protocol + "://" + this.address.homeinfo.ghost.host;
-  const SSEHOST = (isGhost ? (address.host === this.address.officeinfo.ghost.host ? address.host : this.address.backinfo.host) : address.host);
+  const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
@@ -678,13 +678,12 @@ DataConsole.prototype.connect = async function (noStatic = false) {
   try {
     //set address info
     const { name, rawObj: address } = await this.mother.ipCheck();
-    let isGhost = (address.isGhost === true);
     let isLocal;
     if (name === "unknown") {
       throw new Error("invalid address");
     }
     console.log(``);
-    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ${isGhost ? "(ghost) " : ""}==============`);
+    console.log(`\x1b[36m\x1b[1m%s\x1b[0m`, `launching console in ${name.replace(/info/i, '')} ==============`);
     console.log(``);
 
     //set mongo connetion
@@ -700,11 +699,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
       isLocal = false;
       MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
       console.log(`\x1b[33m%s\x1b[0m`, `set DB server => ${this.address.mongoinfo.host}`);
-      if (isGhost) {
-        MONGOLOCALC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
-      } else {
-        MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
-      }
+      MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
       console.log(`\x1b[33m%s\x1b[0m`, `set SSE server => ${this.address.backinfo.host}`);
     }
     console.log(``);
@@ -723,11 +718,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
 
     //set dataMiddle
     let DataMiddle;
-    if (isLocal || isGhost) {
-      DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
-    } else {
-      DataMiddle = null;
-    }
+    DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
 
     //set pem key
     let pems, pemsLink;
@@ -768,7 +759,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     //set router
     const DataPatch = require(`${this.dir}/router/dataPatch.js`);
     const DataRouter = await this.mergeRouter(DataMiddle !== null);
-    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isGhost, isLocal);
+    const router = new DataRouter(DataPatch, DataMiddle, MONGOC, MONGOLOCALC, kakaoInstance, humanInstance, isLocal);
     await router.setMembers();
     const rouObj = router.getAll();
     for (let obj of rouObj.get) {
@@ -833,9 +824,9 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     console.log(`set router`);
 
     //set static
-    this.renderStatic(staticFolder, address, DataPatch, isGhost).then(() => {
+    this.renderStatic(staticFolder, address, DataPatch).then(() => {
       if (DataMiddle !== null) {
-        return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
+        return instance.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle);
       } else {
         return new Promise(function (resolve, reject) {
           resolve(null);
@@ -860,72 +851,6 @@ DataConsole.prototype.connect = async function (noStatic = false) {
     } else {
       https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
     }
-
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-DataConsole.prototype.staticUpload = async function (to = "ghost") {
-  const instance = this;
-  const { fileSystem, shellExec, ghostFileUpload, sleep } = this.mother;
-  const staticName = "static";
-  const staticFolder = process.env.HOME + "/" + staticName;
-  const DataMiddle = require(`${this.dir}/router/dataMiddle.js`);
-  const DataPatch = require(`${this.dir}/router/dataPatch.js`);
-  try {
-    let address, isGhost;
-    let tempObj, tempValue;
-    let homeDir;
-    let tempArr;
-    let fromArr, toArr;
-
-    if (to === "ghost") {
-      tempObj = this.address["homeinfo"]["ghost"];
-      tempObj.ip = {};
-      tempObj.ip.outer = tempObj.outer;
-      tempObj.ip.inner = tempObj.inner;
-      tempObj.isGhost = true;
-      address = tempObj;
-    } else {
-      throw new Error("not yet update");
-    }
-
-    homeDir = await fileSystem(`readDir`, [ process.env.HOME ]);
-    tempValue = String((new Date()).valueOf()) + String(Math.round(Math.random() * 100000));
-    if (homeDir.includes(staticName)) {
-      await shellExec(`mv`, [ `${process.env.HOME}/${staticName}`, `${process.env.HOME}/${staticName}_${tempValue}` ]);
-    }
-    await shellExec(`mkdir`, [ `${process.env.HOME}/${staticName}` ]);
-
-    fromArr = [];
-
-    //set static
-    tempArr = await this.renderStatic(staticFolder, address, DataPatch, isGhost);
-    fromArr = fromArr.concat(tempArr);
-    tempArr = await this.renderMiddleStatic(staticFolder, address, DataPatch, DataMiddle, isGhost);
-    fromArr = fromArr.concat(tempArr);
-
-    //set binary
-    tempArr = await this.setBinary();
-    fromArr = fromArr.concat(tempArr);
-
-    toArr = [];
-    for (let path of fromArr) {
-      toArr.push(path.replace(new RegExp('^' + staticFolder, 'i'), '').replace(/^\//, ''));
-    }
-
-    console.log(fromArr, toArr);
-    await ghostFileUpload(fromArr, toArr);
-
-    for (let z = 0; z < 3; z++) {
-      console.log(`static delete waiting... ${String(3 - z)}s`);
-      await sleep(1000);
-    }
-
-    await shellExec(`rm`, [ `-rf`, `${process.env.HOME}/${staticName}` ]);
-    await shellExec(`mv`, [ `${process.env.HOME}/${staticName}_${tempValue}`, `${process.env.HOME}/${staticName}` ]);
-    console.log(`static to ghost done`);
 
   } catch (e) {
     console.log(e);

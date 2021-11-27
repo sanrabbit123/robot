@@ -94,12 +94,6 @@ Robot.prototype.dataConsole = function (noStatic = false) {
   app.connect(noStatic);
 }
 
-Robot.prototype.staticUpload = function () {
-  const DataConsole = require(process.cwd() + "/apps/dataConsole/dataConsole.js");
-  let app = new DataConsole();
-  app.staticUpload();
-}
-
 Robot.prototype.contentsMaker = function (button, arg) {
   const AiContents = require(process.cwd() + "/apps/contentsMaker/aiContents.js");
   const ResourceMaker = require(process.cwd() + "/apps/resourceMaker/resourceMaker.js");
@@ -1060,13 +1054,6 @@ const MENU = {
   kakaoTokenGenerate: async function () {
     try {
       await robot.kakaoTokenGenerate();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  staticUpload: async function () {
-    try {
-      await robot.staticUpload();
     } catch (e) {
       console.log(e);
     }

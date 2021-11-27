@@ -146,13 +146,10 @@ DataRouter.prototype.rou_get_First = function () {
       let target;
 
       ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      pass = true;
-      if (instance.isGhost) {
-        if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
-          pass = true;
-        } else {
-          pass = false;
-        }
+      if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+        pass = true;
+      } else {
+        pass = false;
       }
 
       if (req.params.id === "ssl") {
