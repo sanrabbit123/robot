@@ -1639,7 +1639,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           ]
         });
 
-        totalValueDom = createNode({});
+        // totalValueDom = createNode({});
 
         ratioEventFunction = (kind) => {
           return function (e) {
@@ -1647,7 +1647,6 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             e.stopPropagation();
 
             console.log(domMap);
-
 
             console.log(kind, "ratio");
           }
