@@ -91,9 +91,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const m = new MongoReflection();
-
-    await m.mongoMigration("local", "backinfo");
 
 
 
