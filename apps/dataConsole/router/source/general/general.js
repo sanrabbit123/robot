@@ -2177,6 +2177,8 @@ GeneralJs.prototype.greenBar = function () {
   let naviIconsHost, naviIconsLeftException;
   let naviIconsLinks, naviIconsContextLinks;
   let naviIconsMap;
+  let opacityMap;
+  let opacityStandard;
 
   naviIconsHost = window.location.protocol + "//" + window.location.host;
   naviIconsLinks = [
@@ -2211,6 +2213,10 @@ GeneralJs.prototype.greenBar = function () {
     [ "contents" ],
     [ "bill" ]
   ];
+  opacityMap = {
+    construct: "project",
+    contents: "contents",
+  };
 
   for (let i = 0; i < naviIcons.length; i++) {
     svg_icon = SvgTong.stringParsing(naviIcons[i]);
@@ -2228,9 +2234,16 @@ GeneralJs.prototype.greenBar = function () {
     for (let i in additionalStyle) {
       svg_icon.style[i] = additionalStyle[i];
     }
-    if (naviIconsMap[i].includes(thisPathName)) {
+
+    opacityStandard = thisPathName;
+    if (/mode/gi.test(window.location.search) && window.location.search.split("&").map((str) => { return str.split("=") }).flat().map((str) => { return str.replace(/[\&\=\?]/gi, '') }).some((key) => { return Object.keys(opacityMap).includes(key) })) {
+      opacityStandard = opacityMap[window.location.search.split("&").map((str) => { return str.split("=") }).flat().map((str) => { return str.replace(/[\&\=\?]/gi, '') }).find((key) => { return Object.keys(opacityMap).includes(key) })];
+    }
+    if (naviIconsMap[i].includes(opacityStandard)) {
       svg_icon.style.opacity = String(0.5);
     }
+
+
     GeneralJs.addHrefEvent(svg_icon, (naviIconsHost + naviIconsLinks[i]));
     svg_icon.addEventListener("contextmenu", function (e) {
       e.preventDefault();
