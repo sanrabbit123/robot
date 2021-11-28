@@ -3549,7 +3549,7 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
                           for (let dom of removeTargets) {
                             directParent.removeChild(dom);
                           }
-                          instance.resetWidthEvent();
+                          GeneralJs.setQueue(() => { instance.resetWidthEvent(); });
                         } catch (e) {
                           console.log(e);
                         }

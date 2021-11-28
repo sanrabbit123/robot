@@ -947,6 +947,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
       let ratioEventFunction, moneyEventFunction, dateEventFunction, etcEventFunction;
       let tempObj;
       let totalValueDom;
+      let greenInputEvent;
 
       thisProject = instance.projects.search("proid", project.proid);
 
@@ -1619,14 +1620,79 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           ]
         }).firstChild;
 
+        greenInputEvent = (callback) => {
+          return function (e) {
+            const self = this;
+            let cancel, input;
+            cancel = createNode({
+              mother: this,
+              mode: "aside",
+              event: {
+                click: function (e) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  self.removeChild(self.lastChild);
+                  self.removeChild(self.lastChild);
+                }
+              },
+              style: {
+                position: "fixed",
+                top: String(0) + ea,
+                left: String(0) + ea,
+                width: String(window.outerWidth) + ea,
+                height: String(window.outerHeight) + ea,
+                background: "transparent",
+                zIndex: String(1),
+                transition: "all 0s ease",
+              }
+            });
+            cancel.style.top = String(cancel.getBoundingClientRect().top * -1) + ea;
+            cancel.style.left = String(cancel.getBoundingClientRect().left * -1) + ea;
+            cancel.style.width = String(window.innerWidth) + ea;
+
+            input = createNode({
+              mother: this,
+              mode: "input",
+              event: {
+                click: function (e) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                },
+                keypress: async function (e) {
+                  if (e.key === "Enter") {
+                    callback();
+                  }
+                }
+              },
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                border: String(0),
+                outline: String(0),
+                fontSize: String(textSize) + ea,
+                fontWeight: String(areaWeight),
+                color: colorChip.green,
+                background: colorChip.white,
+                width: String(self.getBoundingClientRect().width + 10) + ea,
+                height: String(100) + '%',
+                zIndex: String(1),
+              }
+            });
+            input.value = this.getAttribute("value");
+            input.focus();
+          }
+        }
+
         ratioEventFunction = (kind) => {
           return function (e) {
             e.preventDefault();
             e.stopPropagation();
+            greenInputEvent(() => {
+              console.log(domMap);
+              console.log(kind, "ratio");
 
-            console.log(domMap);
-
-            console.log(kind, "ratio");
+            }).call(this, e);
           }
         }
         moneyEventFunction = (kind) => {
@@ -1825,9 +1891,6 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           domMap[kind] = tempObj;
           domMap.push(tempObj);
         }
-
-        console.log(domMap);
-
 
       } else {
         window.alert("공사 기간, 파트너 시공사를 먼저 모두 설정해주세요!");
@@ -3896,7 +3959,7 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
                           for (let dom of removeTargets) {
                             directParent.removeChild(dom);
                           }
-                          instance.resetWidthEvent();
+                          GeneralJs.setQueue(() => { instance.resetWidthEvent(); });
                         } catch (e) {
                           console.log(e);
                         }

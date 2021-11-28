@@ -1655,7 +1655,7 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
                           for (let dom of removeTargets) {
                             directParent.removeChild(dom);
                           }
-                          instance.resetWidthEvent();
+                          GeneralJs.setQueue(() => { instance.resetWidthEvent(); });
                         } catch (e) {
                           console.log(e);
                         }
