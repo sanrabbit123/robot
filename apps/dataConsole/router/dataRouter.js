@@ -297,7 +297,7 @@ DataRouter.prototype.rou_get_First = function () {
   const { statusReading } = this.mother;
   let obj = {};
   let ipTong;
-  ipTong = [ 127001, 172301254 ];
+  ipTong = [ 1, 127001, 172301254 ];
   for (let info in instance.address) {
     if (instance.address[info].ip.outer.length > 0) {
       ipTong.push(Number(instance.address[info].ip.outer.replace(/[^0-9]/g, '')));
@@ -4463,17 +4463,6 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         updateQuery["process.design.construct.contract.payments.remain"] = remainObj;
         await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
 
-        historyQuery = {};
-        historyQuery["construct.payments.first.date"] = first.date;
-        historyQuery["construct.payments.first.etc"] = first.etc;
-        historyQuery["construct.payments.start.date"] = start.date;
-        historyQuery["construct.payments.start.etc"] = start.etc;
-        historyQuery["construct.payments.middle.date"] = middle.date;
-        historyQuery["construct.payments.middle.etc"] = middle.etc;
-        historyQuery["construct.payments.remain.date"] = remain.date;
-        historyQuery["construct.payments.remain.etc"] = remain.etc;
-        await back.updateHistory("project", [ whereQuery, historyQuery ], { selfMongo: instance.mongolocal });
-
         result = {
           message: "success",
           core: {
@@ -4481,12 +4470,6 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
             start: startObj,
             middle: middleObj,
             remain: remainObj,
-          },
-          history: {
-            first: { date: first.date, etc: first.etc },
-            start: { date: start.date, etc: start.etc },
-            middle: { date: middle.date, etc: middle.etc },
-            remain: { date: remain.date, etc: remain.etc },
           }
         };
 

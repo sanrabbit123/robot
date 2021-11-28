@@ -1111,18 +1111,10 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
 
                             totalNumber = Math.floor(value);
                             questions = [
-                              { question: "계약금의 비율을 숫자로만 알려주세요! 단위 %", type: "number", answer: null, target: "first", dom: 4, column: "ratio" },
-                              { question: "착수금의 비율을 숫자로만 알려주세요! 단위 %", type: "number", answer: null, target: "start", dom: 5, column: "ratio" },
-                              { question: "중도금의 비율을 숫자로만 알려주세요! 단위 %", type: "number", answer: null, target: "middle", dom: 6, column: "ratio" },
-                              { question: "잔금의 비율을 숫자로만 알려주세요! 단위 %", type: "number", answer: null, target: "remain", dom: 7, column: "ratio" },
-                              { question: "계약금 입금이 예상되는 날짜를 알려주세요! 형식 0000-00-00", type: "date", answer: null, target: "first", dom: 4, column: "date" },
-                              { question: "착수금 입금이 예상되는 날짜를 알려주세요! 형식 0000-00-00", type: "date", answer: null, target: "start", dom: 5, column: "date" },
-                              { question: "중도금 입금이 예상되는 날짜를 알려주세요! 형식 0000-00-00", type: "date", answer: null, target: "middle", dom: 6, column: "date" },
-                              { question: "잔금 입금이 예상되는 날짜를 알려주세요! 형식 0000-00-00", type: "date", answer: null, target: "remain", dom: 7, column: "date" },
-                              { question: "계약금 입금의 비고 사항을 알려주세요!", type: "string", answer: null, target: "first", dom: 4, column: "etc" },
-                              { question: "착수금 입금의 비고 사항을 알려주세요!", type: "string", answer: null, target: "start", dom: 5, column: "etc" },
-                              { question: "중도금 입금의 비고 사항을 알려주세요!", type: "string", answer: null, target: "middle", dom: 6, column: "etc" },
-                              { question: "잔금 입금의 비고 사항을 알려주세요!", type: "string", answer: null, target: "remain", dom: 7, column: "etc" },
+                              { question: "계약금의 비율을 숫자로만 알려주세요! 단위 %", answer: null, target: "first", dom: 4, column: "ratio" },
+                              { question: "착수금의 비율을 숫자로만 알려주세요! 단위 %", answer: null, target: "start", dom: 5, column: "ratio" },
+                              { question: "중도금의 비율을 숫자로만 알려주세요! 단위 %", answer: null, target: "middle", dom: 6, column: "ratio" },
+                              { question: "잔금의 비율을 숫자로만 알려주세요! 단위 %", answer: null, target: "remain", dom: 7, column: "ratio" },
                             ];
 
                             num = 0;
@@ -1132,25 +1124,15 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                                 window.alert("올바른 형식이 아닙니다!");
                                 continue;
                               }
-                              if (questions[num].type === "number") {
-                                if (answer === '') {
-                                  window.alert("올바른 형식이 아닙니다!");
-                                  continue;
-                                }
-                                if (Number.isNaN(Number(answer.replace(/[^0-9\.\-]/gi, '')))) {
-                                  window.alert("올바른 형식이 아닙니다!");
-                                  continue;
-                                }
-                                questions[num].answer = Math.floor(Number(answer.replace(/[^0-9\.\-]/gi, '')));
-                              } else if (questions[num].type === "date") {
-                                if (!/^[0-9][0-9][0-9][0-9][ \-\.][0-9][0-9][ \-\.][0-9][0-9]$/.test(answer.trim())) {
-                                  window.alert("올바른 형식이 아닙니다!");
-                                  continue;
-                                }
-                                questions[num].answer = answer.trim();
-                              } else if (questions[num].type === "string") {
-                                questions[num].answer = answer.trim();
+                              if (answer === '') {
+                                window.alert("올바른 형식이 아닙니다!");
+                                continue;
                               }
+                              if (Number.isNaN(Number(answer.replace(/[^0-9\.\-]/gi, '')))) {
+                                window.alert("올바른 형식이 아닙니다!");
+                                continue;
+                              }
+                              questions[num].answer = Math.floor(Number(answer.replace(/[^0-9\.\-]/gi, '')));
                               if (questions.length - 1 === num) {
                                 break;
                               }
@@ -1165,17 +1147,10 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                                 if (result[target] === undefined) {
                                   result[target] = {};
                                 }
-                                if (column === "ratio") {
-                                  result[target][column] = answer;
-                                  self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[0].textContent = String(answer) + '%';
-                                  self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[2].textContent = autoComma(Math.round(totalNumber * (answer / 100))) + '원';
-                                } else if (column === "date") {
-                                  result[target][column] = new Date(Number(answer.split('-')[0]), Number(answer.split('-')[1]) - 1, Number(answer.split('-')[2]));
-                                  self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[5].textContent = answer;
-                                } else if (column === "etc") {
-                                  result[target][column] = answer;
-                                  self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[8].textContent = answer;
-                                }
+                                result[target][column] = answer;
+                                self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[0].textContent = String(answer) + '%';
+                                self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[2].textContent = autoComma(Math.round(totalNumber * (answer / 100))) + '원';
+
                               }
 
                               result.total = totalNumber;
@@ -1184,13 +1159,12 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
 
                               ajaxResult = await GeneralJs.ajaxJson(result, "/constructInteraction", { equal: true });
                               if (ajaxResult.message === "success") {
-                                const { core, history: historyPayments } = await GeneralJs.ajaxJson(result, "/constructInteraction", { equal: true });
+                                const { core } = ajaxResult;
 
                                 instance.projects.search("proid", project.proid).process.design.construct.contract.payments.first = core.first;
                                 instance.projects.search("proid", project.proid).process.design.construct.contract.payments.start = core.start;
                                 instance.projects.search("proid", project.proid).process.design.construct.contract.payments.middle = core.middle;
                                 instance.projects.search("proid", project.proid).process.design.construct.contract.payments.remain = core.remain;
-                                instance.projects.search("proid", project.proid).history.payments = historyPayments;
                                 div.textContent = autoComma(value) + '원';
 
                               } else {
@@ -1614,32 +1588,36 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                 height: String(areaHeight) + ea,
                 top: String(areaTop) + ea,
               },
-              children: [
-                {
-                  style: {
-                    position: "relative",
-                    width: String(3000) + ea,
-                    left: String(0),
-                    top: String(0),
-                  },
-                  children: [
-                    {
-                      text: autoComma(totalMoney) + "원",
-                      style: {
-                        display: "inline-block",
-                        fontSize: String(textSize) + ea,
-                        fontWeight: String(areaWeight),
-                        color: colorChip.black,
-                      }
-                    }
-                  ]
-                }
-              ]
             }
           ]
         });
 
-        // totalValueDom = createNode({});
+        totalValueDom = createNode({
+          mother: dom_total.children[1],
+          event: {
+            click: updateEvent("amount")
+          },
+          style: {
+            position: "relative",
+            width: String(3000) + ea,
+            left: String(0),
+            top: String(0),
+          },
+          children: [
+            {
+              attribute: {
+                value: autoComma(totalMoney) + "원"
+              },
+              text: autoComma(totalMoney) + "원",
+              style: {
+                display: "inline-block",
+                fontSize: String(textSize) + ea,
+                fontWeight: String(areaWeight),
+                color: colorChip.black,
+              }
+            }
+          ]
+        }).firstChild;
 
         ratioEventFunction = (kind) => {
           return function (e) {
@@ -1835,6 +1813,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             mother: tempDom,
             title: tempTitleDom,
             kind,
+            total: totalValueDom,
             contents: {
               ratio: tempRatioDom,
               amount: tempMoneyDom,
