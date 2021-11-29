@@ -708,6 +708,38 @@ ReceiptRouter.prototype.rou_post_accountTimeSet = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
+  const instance = this;
+  const back = this.back;
+  const bill = this.bill;
+  const { equalJson, messageLog, messageSend, errorLog, autoComma } = this.mother;
+  const collection = "accountTransfer";
+  let obj = {};
+  obj.link = "/accountTimeUpdate";
+  obj.func = async function (req, res) {
+    try {
+      const selfMongo = instance.mongolocal;
+      const { whereQuery, updateQuery } = equalJson(req.body);
+
+      errorLog(`현금영수증 번호 업데이트 감지 => \n${JSON.stringify(whereQuery, null, 2)}\n${JSON.stringify(updateQuery, null, 2)}`).catch((err) => { throw new Error(err.message); });
+      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+      });
+      res.send(JSON.stringify({ message: "will do" }));
+    } catch (e) {
+      errorLog("Python 서버 문제 생김 (rou_post_smsParsing): " + e.message).catch((e) => { console.log(e); });
+      console.log(e);
+      res.send(JSON.stringify({ message: "error" }));
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_createStylingBill = function () {
   const instance = this;
   const back = this.back;

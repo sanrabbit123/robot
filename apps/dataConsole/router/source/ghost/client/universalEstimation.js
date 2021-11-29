@@ -1191,44 +1191,43 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
         }
       ]
     });
-    createNode({
-      mother: greenButtonBase,
-      class: [ "hoverDefault_lite" ],
-      events: [
-        {
-          type: "click",
-          event: paymentEvent("vbank"),
-        }
-      ],
-      style: {
-        display: "inline-block",
-        position: "relative",
-        width: String(greenButtonWidth + 3) + ea,
-        height: String(greenButtonHeight) + ea,
-        background: colorChip.green,
-        textAlign: "center",
-        borderRadius: String(3) + "px",
-        marginLeft: String(greenButtonBetween) + ea,
-        marginRight: String(greenButtonBetween) + ea,
-      },
-      children: [
-        {
-          text: wordings.button[1],
-          style: {
-            position: "absolute",
-            top: String(greenButtonTextTop) + ea,
-            width: String(100) + '%',
-            left: String(0),
-            fontSize: String(greenButtonFontSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.white,
-            textAlign: "center",
-          }
-        }
-      ]
-    });
   }
-
+  createNode({
+    mother: greenButtonBase,
+    class: [ "hoverDefault_lite" ],
+    events: [
+      {
+        type: "click",
+        event: paymentEvent("vbank"),
+      }
+    ],
+    style: {
+      display: "inline-block",
+      position: "relative",
+      width: String(greenButtonWidth + 3) + ea,
+      height: String(greenButtonHeight) + ea,
+      background: colorChip.green,
+      textAlign: "center",
+      borderRadius: String(3) + "px",
+      marginLeft: String(greenButtonBetween) + ea,
+      marginRight: String(greenButtonBetween) + ea,
+    },
+    children: [
+      {
+        text: wordings.button[1],
+        style: {
+          position: "absolute",
+          top: String(greenButtonTextTop) + ea,
+          width: String(100) + '%',
+          left: String(0),
+          fontSize: String(greenButtonFontSize) + ea,
+          fontWeight: String(400),
+          color: colorChip.white,
+          textAlign: "center",
+        }
+      }
+    ]
+  });
   createNode({
     mother: greenButtonBase,
     class: [ "hoverDefault_lite" ],
@@ -1469,6 +1468,15 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         mode: "decrypto",
       }, "/inicisPayment", { equal: true });
       if (typeof getObj.cashphone === "string") {
+        await ajaxJson({
+          mode: "cashPhone",
+          phone: getObj.cashphone,
+          hash: getObj.hash,
+          bilid: this.bill.bilid,
+          proid,
+          desid,
+          cliid,
+        }, "/inicisPayment");
         data.cashPhone = getObj.cashphone;
       }
       if (getObj.mode === "complete") {
