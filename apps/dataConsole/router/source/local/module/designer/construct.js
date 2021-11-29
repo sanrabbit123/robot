@@ -100,6 +100,8 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     "해당 없음",
   ];
   partnerValues = this.builderNames;
+  partnerValues.push("디자이너");
+  partnerValues.push("고객");
 
   if (this.type === "construct") {
 
