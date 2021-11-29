@@ -3863,29 +3863,29 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
         } else {
 
-          // await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
-          //   bilid,
-          //   requestNumber: Number(req.body.requestNumber),
-          //   proid,
-          //   cliid,
-          //   desid,
-          //   goodname,
-          //   date: new Date(),
-          //   name: buyername,
-          //   phone: buyertel,
-          //   amount: price,
-          //   accountInfo: {
-          //     no_tid: "realAccount",
-          //     no_oid: oid,
-          //     cd_bank: "00",
-          //     nm_inputbank: "unknown",
-          //     nm_input: buyername,
-          //     amt_input: String(price),
-          //     real_account: "true"
-          //   }
-          // }, {
-          //   headers: { "Content-Type": "application/json" }
-          // });
+          await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
+            bilid,
+            requestNumber: Number(req.body.requestNumber),
+            proid,
+            cliid,
+            desid,
+            goodname,
+            date: new Date(),
+            name: buyername,
+            phone: buyertel,
+            amount: price,
+            accountInfo: {
+              no_tid: "realAccount",
+              no_oid: oid,
+              cd_bank: "00",
+              nm_inputbank: "unknown",
+              nm_input: buyername,
+              amt_input: String(price),
+              real_account: "true"
+            }
+          }, {
+            headers: { "Content-Type": "application/json" }
+          });
 
           future = new Date();
           future.setDate(future.getDate() + 7);
@@ -3971,6 +3971,25 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
         } else {
           res.send(JSON.stringify({ convertingData: { error: "error" } }));
         }
+
+      } else if (req.body.mode === "cashPhone") {
+
+        const { phone, hash, bilid, proid, desid, cliid } = equalJson(req.body);
+        const data = JSON.parse(await decryptoHash(password, hash.trim()));
+        await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeUpdate", {
+          whereQuery: {
+            $and: [
+              { bilid },
+              { proid },
+              { "accountInfo.no_oid": data.MOID }
+            ]
+          },
+          updateQuery: { phone }
+        }, {
+          headers: { "Content-Type": "application/json" }
+        });
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ message: "done" }));
 
       } else {
 
@@ -4343,7 +4362,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
   const instance = this;
   const back = this.back;
   const kakao = this.kakao;
-  const { errorLog, equalJson, dateToString, requestSystem, autoComma, messageSend } = this.mother;
+  const { errorLog, equalJson, dateToString, stringToDate, requestSystem, autoComma, messageSend } = this.mother;
   const numberToHangul = (number) => {
     if (typeof number !== "number") {
       throw new Error("input must be integer");
@@ -4407,7 +4426,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
       if (typeof req.body.mode !== "string" || typeof req.body.proid !== "string") {
         throw new Error("invalid post 1");
       }
-      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff", "amountSync", "chargeGuide" ].includes(req.body.mode)) {
+      if (![ "updatePayments", "inspection", "sendContract", "constructOnoff", "amountSync", "chargeGuide", "changeAmount", "historyUpdate" ].includes(req.body.mode)) {
         throw new Error("invalid post 2");
       }
       const { mode, proid } = req.body;
@@ -4426,7 +4445,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         }
         const { total, first, start, middle, remain } = equalJson(req.body);
         let firstObj, startObj, middleObj, remainObj;
-        let whereQuery, updateQuery, historyQuery;
+        let whereQuery, updateQuery;
 
         if (construct.contract.payments.first === null) {
           firstObj = back.returnProjectDummies("process.design.construct.contract.payments");
@@ -4665,6 +4684,78 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
           console.log(err);
         });
         result = { date: dateToString(now), now };
+
+      } else if (mode === "changeAmount") {
+
+        if (req.body.map === undefined) {
+          throw new Error("invaild post");
+        }
+        const { map: { first, start, middle, remain } } = equalJson(req.body);
+        let firstObj, startObj, middleObj, remainObj;
+        let whereQuery, updateQuery;
+
+        if (construct.contract.payments.first === null) {
+          firstObj = back.returnProjectDummies("process.design.construct.contract.payments");
+        } else {
+          firstObj = construct.contract.payments.first;
+        }
+        firstObj.calculation.amount.consumer = first;
+        firstObj.calculation.amount.vat = Math.floor(firstObj.calculation.amount.consumer / 11);
+        firstObj.calculation.amount.supply = firstObj.calculation.amount.consumer - firstObj.calculation.amount.vat;
+
+        if (construct.contract.payments.start === null) {
+          startObj = back.returnProjectDummies("process.design.construct.contract.payments");
+        } else {
+          startObj = construct.contract.payments.start;
+        }
+        startObj.calculation.amount.consumer = start;
+        startObj.calculation.amount.vat = Math.floor(startObj.calculation.amount.consumer / 11);
+        startObj.calculation.amount.supply = startObj.calculation.amount.consumer - startObj.calculation.amount.vat;
+
+        if (construct.contract.payments.middle === null) {
+          middleObj = back.returnProjectDummies("process.design.construct.contract.payments");
+        } else {
+          middleObj = construct.contract.payments.middle;
+        }
+        middleObj.calculation.amount.consumer = middle;
+        middleObj.calculation.amount.vat = Math.floor(middleObj.calculation.amount.consumer / 11);
+        middleObj.calculation.amount.supply = middleObj.calculation.amount.consumer - middleObj.calculation.amount.vat;
+
+        if (construct.contract.payments.remain === null) {
+          remainObj = back.returnProjectDummies("process.design.construct.contract.payments");
+        } else {
+          remainObj = construct.contract.payments.remain;
+        }
+        remainObj.calculation.amount.consumer = remain;
+        remainObj.calculation.amount.vat = Math.floor(remainObj.calculation.amount.consumer / 11);
+        remainObj.calculation.amount.supply = remainObj.calculation.amount.consumer - remainObj.calculation.amount.vat;
+
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["process.design.construct.contract.payments.first"] = firstObj;
+        updateQuery["process.design.construct.contract.payments.start"] = startObj;
+        updateQuery["process.design.construct.contract.payments.middle"] = middleObj;
+        updateQuery["process.design.construct.contract.payments.remain"] = remainObj;
+        await back.updateProject([ whereQuery, updateQuery ], { selfMongo: instance.mongo });
+
+        result = {
+          message: "success",
+          core: {
+            first: firstObj,
+            start: startObj,
+            middle: middleObj,
+            remain: remainObj,
+          }
+        };
+
+      } else if (mode === "historyUpdate") {
+        const { kind, value, column } = equalJson(req.body);
+        let whereQuery, updateQuery;
+        whereQuery = { proid };
+        updateQuery = {};
+        updateQuery["construct.payments." + kind + "." + column] = (column === "date" ? stringToDate(value) : value);
+        await back.updateHistory("project", [ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+        result = {};
       } else {
         result = {};
       }

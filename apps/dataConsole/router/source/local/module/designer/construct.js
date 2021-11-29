@@ -908,6 +908,36 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       class DomMap extends Array {
 
+        thisDom(kind, contentsKey) {
+          let target;
+          target = null;
+          for (let key in this) {
+            if (key.replace(/[0-9]/gi, '') !== '') {
+              if (kind === key) {
+                target = this[key].contents[contentsKey];
+              }
+            }
+          }
+          return target;
+        }
+
+        oppositeDoms(kind, contentsKey) {
+          let tong;
+          tong = [];
+          for (let key in this) {
+            if (key.replace(/[0-9]/gi, '') !== '') {
+              if (kind !== key) {
+                tong.push(this[key].contents[contentsKey]);
+              }
+            }
+          }
+          return tong;
+        }
+
+        get totalDom() {
+          return this[0].total;
+        }
+
       }
       const mother = this;
       const { ea, top, createNodes, colorChip, withOut, boxShadow, animation, borderRadius, zIndex, thisCase, valueDom, height, size, textTop } = option;
@@ -1149,9 +1179,10 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                                   result[target] = {};
                                 }
                                 result[target][column] = answer;
+                                self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[0].setAttribute("value", String(answer) + '%');
                                 self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[0].textContent = String(answer) + '%';
+                                self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[2].setAttribute("value", autoComma(Math.round(totalNumber * (answer / 100))) + '원');
                                 self.parentNode.parentNode.parentNode.children[dom].children[1].children[0].children[2].textContent = autoComma(Math.round(totalNumber * (answer / 100))) + '원';
-
                               }
 
                               result.total = totalNumber;
@@ -1199,9 +1230,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                   zIndex: String(1),
                 }
               });
-              if (key !== "amount") {
-                input.value = div.textContent;
-              }
+              input.value = div.textContent;
 
               input.focus();
 
@@ -1628,6 +1657,10 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
               mother: this,
               mode: "aside",
               event: {
+                selectstart: (e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                },
                 click: function (e) {
                   e.stopPropagation();
                   e.preventDefault();
@@ -1654,13 +1687,21 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
               mother: this,
               mode: "input",
               event: {
-                click: function (e) {
+                selectstart: (e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                },
+                click: (e) => {
                   e.stopPropagation();
                   e.preventDefault();
                 },
                 keypress: async function (e) {
                   if (e.key === "Enter") {
-                    await callback();
+                    e.stopPropagation();
+                    e.preventDefault();
+                    await callback(this.value);
+                    self.removeChild(self.lastChild);
+                    self.removeChild(self.lastChild);
                   }
                 }
               },
@@ -1688,14 +1729,82 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           return function (e) {
             e.preventDefault();
             e.stopPropagation();
-            greenInputEvent(async () => {
-              try {
-                console.log(domMap);
-                console.log(kind, "ratio");
-              } catch (e) {
-                console.log(e);
-              }
-            }).call(this, e);
+            if (this.querySelector("input") === null) {
+              greenInputEvent(async (value) => {
+                try {
+                  const max = 100;
+                  const unit = '%';
+                  const key = "ratio";
+                  const amountKey = "amount";
+                  const thisDom = domMap.thisDom(kind, key);
+                  const thisValue = Number(value.replace(/[^0-9\-\.]/gi, ''));
+                  const thisAmountDom = domMap.thisDom(kind, amountKey);
+                  const [ oppoDom0, oppoDom1, oppoDom2 ] = domMap.oppositeDoms(kind, key);
+                  const oppoValue0 = Number(oppoDom0.textContent.replace(/[^0-9\-\.]/gi, ''));
+                  const oppoValue1 = Number(oppoDom1.textContent.replace(/[^0-9\-\.]/gi, ''));
+                  const oppoValue2 = Number(oppoDom2.textContent.replace(/[^0-9\-\.]/gi, ''));
+                  const oppoTotal = oppoValue0 + oppoValue1 + oppoValue2;
+                  const [ oppoAmountDom0, oppoAmountDom1, oppoAmountDom2 ] = domMap.oppositeDoms(kind, amountKey);
+                  const totalAmount = Number(domMap.totalDom.textContent.replace(/[^0-9\-]/gi, ''));
+                  let oppositeMax;
+                  let oppoFinal0, oppoFinal1, oppoFinal2;
+                  let thisAmountFinal, oppoAmountFinal0, oppoAmountFinal1, oppoAmountFinal2;
+                  let map;
+
+                  oppositeMax = max - thisValue;
+                  if (oppoTotal === 0) {
+                    oppoFinal0 = Math.round(oppositeMax * (1 / 3));
+                    oppoFinal1 = Math.round(oppositeMax * (1 / 3));
+                  } else {
+                    oppoFinal0 = Math.round(oppositeMax * (oppoValue0 / oppoTotal));
+                    oppoFinal1 = Math.round(oppositeMax * (oppoValue1 / oppoTotal));
+                  }
+                  oppoFinal2 = oppositeMax - oppoFinal0 - oppoFinal1;
+
+                  thisDom.firstChild.textContent = String(thisValue) + unit;
+                  thisDom.setAttribute("value", String(thisValue) + unit);
+                  oppoDom0.firstChild.textContent = String(oppoFinal0) + unit;
+                  oppoDom0.setAttribute("value", String(oppoFinal0) + unit);
+                  oppoDom1.firstChild.textContent = String(oppoFinal1) + unit;
+                  oppoDom1.setAttribute("value", String(oppoFinal1) + unit);
+                  oppoDom2.firstChild.textContent = String(oppoFinal2) + unit;
+                  oppoDom2.setAttribute("value", String(oppoFinal2) + unit);
+
+                  thisAmountFinal = autoComma(Math.floor((totalAmount * (thisValue / 100)) / 10) * 10) + '원';
+                  oppoAmountFinal0 = autoComma(Math.floor((totalAmount * (oppoFinal0 / 100)) / 10) * 10) + '원';
+                  oppoAmountFinal1 = autoComma(Math.floor((totalAmount * (oppoFinal1 / 100)) / 10) * 10) + '원';
+                  oppoAmountFinal2 = autoComma(Math.floor((totalAmount * (oppoFinal2 / 100)) / 10) * 10) + '원';
+
+                  thisAmountDom.firstChild.textContent = thisAmountFinal;
+                  thisAmountDom.setAttribute("value", thisAmountFinal);
+                  oppoAmountDom0.firstChild.textContent = oppoAmountFinal0;
+                  oppoAmountDom0.setAttribute("value", oppoAmountFinal0);
+                  oppoAmountDom1.firstChild.textContent = oppoAmountFinal1;
+                  oppoAmountDom1.setAttribute("value", oppoAmountFinal1);
+                  oppoAmountDom2.firstChild.textContent = oppoAmountFinal2;
+                  oppoAmountDom2.setAttribute("value", oppoAmountFinal2);
+
+                  const { core } = await ajaxJson({
+                    mode: "changeAmount",
+                    proid: project.proid,
+                    map: {
+                      first: Number(domMap[0].contents.amount.getAttribute("value").replace(/[^0-9\-\.]/gi, '')),
+                      start: Number(domMap[1].contents.amount.getAttribute("value").replace(/[^0-9\-\.]/gi, '')),
+                      middle: Number(domMap[2].contents.amount.getAttribute("value").replace(/[^0-9\-\.]/gi, '')),
+                      remain: Number(domMap[3].contents.amount.getAttribute("value").replace(/[^0-9\-\.]/gi, '')),
+                    }
+                  }, "/constructInteraction", { equal: true });
+
+                  instance.projects.search("proid", project.proid).process.design.construct.contract.payments.first = core.first;
+                  instance.projects.search("proid", project.proid).process.design.construct.contract.payments.start = core.start;
+                  instance.projects.search("proid", project.proid).process.design.construct.contract.payments.middle = core.middle;
+                  instance.projects.search("proid", project.proid).process.design.construct.contract.payments.remain = core.remain;
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }).call(this, e);
+            }
           }
         }
 
@@ -1703,7 +1812,69 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           return function (e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log(kind, "money");
+            if (this.querySelector("input") === null) {
+              greenInputEvent(async (value) => {
+                try {
+                  const unit = '원';
+                  const key = "amount";
+                  const ratioKey = "ratio";
+                  const thisDom = domMap.thisDom(kind, key);
+                  const thisValue = Number(value.replace(/[^0-9\-\.]/gi, ''));
+                  const thisRatioDom = domMap.thisDom(kind, ratioKey);
+                  const [ oppoDom0, oppoDom1, oppoDom2 ] = domMap.oppositeDoms(kind, key);
+                  const oppoValue0 = Number(oppoDom0.textContent.replace(/[^0-9\-\.]/gi, ''));
+                  const oppoValue1 = Number(oppoDom1.textContent.replace(/[^0-9\-\.]/gi, ''));
+                  const oppoValue2 = Number(oppoDom2.textContent.replace(/[^0-9\-\.]/gi, ''));
+                  const oppoTotal = oppoValue0 + oppoValue1 + oppoValue2;
+                  const [ oppoRatioDom0, oppoRatioDom1, oppoRatioDom2 ] = domMap.oppositeDoms(kind, ratioKey);
+                  const totalDom = domMap.totalDom;
+                  let thisFinal, oppoFinal0, oppoFinal1, oppoFinal2;
+                  let thisRatioFinal, oppoRatioFinal0, oppoRatioFinal1, oppoRatioFinal2;
+                  let totalValue;
+
+                  totalValue = thisValue + oppoValue0 + oppoValue1 + oppoValue2;
+
+                  totalDom.textContent = autoComma(totalValue) + unit;
+                  totalDom.setAttribute("value", autoComma(totalValue) + unit);
+
+                  thisDom.firstChild.textContent = autoComma(thisValue) + unit;
+                  thisDom.setAttribute("value", autoComma(thisValue) + unit);
+
+                  thisRatioFinal = Math.round(100 * (thisValue / totalValue));
+                  oppoRatioFinal0 = Math.round(100 * (oppoValue0 / totalValue));
+                  oppoRatioFinal1 = Math.round(100 * (oppoValue1 / totalValue));
+                  oppoRatioFinal2 = 100 - thisRatioFinal - oppoRatioFinal0 - oppoRatioFinal1;
+
+                  thisRatioDom.firstChild.textContent = String(thisRatioFinal) + '%';
+                  thisRatioDom.setAttribute("value", String(thisRatioFinal) + '%');
+                  oppoRatioDom0.firstChild.textContent = String(oppoRatioFinal0) + '%';
+                  oppoRatioDom0.setAttribute("value", String(oppoRatioFinal0) + '%');
+                  oppoRatioDom1.firstChild.textContent = String(oppoRatioFinal1) + '%';
+                  oppoRatioDom1.setAttribute("value", String(oppoRatioFinal1) + '%');
+                  oppoRatioDom2.firstChild.textContent = String(oppoRatioFinal2) + '%';
+                  oppoRatioDom2.setAttribute("value", String(oppoRatioFinal2) + '%');
+
+                  const { core } = await ajaxJson({
+                    mode: "changeAmount",
+                    proid: project.proid,
+                    map: {
+                      first: Number(domMap[0].contents.amount.getAttribute("value").replace(/[^0-9\-\.]/gi, '')),
+                      start: Number(domMap[1].contents.amount.getAttribute("value").replace(/[^0-9\-\.]/gi, '')),
+                      middle: Number(domMap[2].contents.amount.getAttribute("value").replace(/[^0-9\-\.]/gi, '')),
+                      remain: Number(domMap[3].contents.amount.getAttribute("value").replace(/[^0-9\-\.]/gi, '')),
+                    }
+                  }, "/constructInteraction", { equal: true });
+
+                  instance.projects.search("proid", project.proid).process.design.construct.contract.payments.first = core.first;
+                  instance.projects.search("proid", project.proid).process.design.construct.contract.payments.start = core.start;
+                  instance.projects.search("proid", project.proid).process.design.construct.contract.payments.middle = core.middle;
+                  instance.projects.search("proid", project.proid).process.design.construct.contract.payments.remain = core.remain;
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }).call(this, e);
+            }
           }
         }
 
@@ -1711,7 +1882,27 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           return function (e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log(kind, "date");
+            if (this.querySelector("input") === null) {
+              greenInputEvent(async (value) => {
+                try {
+                  if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(value.trim())) {
+                    domMap[kind].contents.date.firstChild.textContent = value;
+                    domMap[kind].contents.date.setAttribute("value", value);
+                    instance.projects.search("proid", project.proid).history.payments[kind].date = GeneralJs.stringToDate(value);
+                    await ajaxJson({
+                      mode: "historyUpdate",
+                      proid: project.proid,
+                      column: "date",
+                      kind, value
+                    }, "/constructInteraction");
+                  } else {
+                    window.alert("표준 형식으로 작성해주셔야 업데이트가 가능합니다!\n표준 형식 => 0000-00-00");
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }).call(this, e);
+            }
           }
         }
 
@@ -1719,7 +1910,23 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
           return function (e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log(kind, "etc");
+            if (this.querySelector("input") === null) {
+              greenInputEvent(async (value) => {
+                try {
+                  domMap[kind].contents.etc.firstChild.textContent = value;
+                  domMap[kind].contents.etc.setAttribute("value", value);
+                  instance.projects.search("proid", project.proid).history.payments[kind].etc = value;
+                  await ajaxJson({
+                    mode: "historyUpdate",
+                    proid: project.proid,
+                    column: "etc",
+                    kind, value
+                  }, "/constructInteraction");
+                } catch (e) {
+                  console.log(e);
+                }
+              }).call(this, e);
+            }
           }
         }
 
@@ -1771,10 +1978,12 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             attribute: { value: ratio },
             text: ratio,
             event: {
+              selectstart: (e) => { e.preventDefault(); e.stopPropagation(); },
               click: ratioEventFunction(kind),
             },
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.black,
@@ -1786,6 +1995,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             text: " | ",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.green,
@@ -1797,10 +2007,12 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             attribute: { value: money },
             text: money,
             event: {
+              selectstart: (e) => { e.preventDefault(); e.stopPropagation(); },
               click: moneyEventFunction(kind),
             },
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.black,
@@ -1812,6 +2024,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             text: " | ",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.green,
@@ -1823,6 +2036,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             text: "예상일 : ",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.deactive,
@@ -1834,10 +2048,12 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             attribute: { value: date },
             text: date,
             event: {
+              selectstart: (e) => { e.preventDefault(); e.stopPropagation(); },
               click: dateEventFunction(kind),
             },
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.black,
@@ -1849,6 +2065,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             text: " | ",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.green,
@@ -1860,6 +2077,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             text: "비고 : ",
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.deactive,
@@ -1871,10 +2089,12 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             attribute: { value: etc },
             text: etc,
             event: {
+              selectstart: (e) => { e.preventDefault(); e.stopPropagation(); },
               click: etcEventFunction(kind),
             },
             style: {
               display: "inline-block",
+              position: "relative",
               fontSize: String(textSize) + ea,
               fontWeight: String(areaWeight),
               color: colorChip.black,
