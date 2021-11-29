@@ -60,7 +60,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
   stringArr = [];
   updateArr = [];
 
-  grayBoo = ![ "완료", "드랍" ].includes(status);
+  grayBoo = ![ "완료", "고객 완료", "디자이너 완료", "드랍" ].includes(status);
 
   statusValuesMatrix = [
     [ "대기" ],
