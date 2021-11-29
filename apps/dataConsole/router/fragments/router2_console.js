@@ -3269,29 +3269,29 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
         } else {
 
-          await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
-            bilid,
-            requestNumber: Number(req.body.requestNumber),
-            proid,
-            cliid,
-            desid,
-            goodname,
-            date: new Date(),
-            name: buyername,
-            phone: buyertel,
-            amount: price,
-            accountInfo: {
-              no_tid: "realAccount",
-              no_oid: oid,
-              cd_bank: "00",
-              nm_inputbank: "unknown",
-              nm_input: buyername,
-              amt_input: String(price),
-              real_account: "true"
-            }
-          }, {
-            headers: { "Content-Type": "application/json" }
-          });
+          // await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
+          //   bilid,
+          //   requestNumber: Number(req.body.requestNumber),
+          //   proid,
+          //   cliid,
+          //   desid,
+          //   goodname,
+          //   date: new Date(),
+          //   name: buyername,
+          //   phone: buyertel,
+          //   amount: price,
+          //   accountInfo: {
+          //     no_tid: "realAccount",
+          //     no_oid: oid,
+          //     cd_bank: "00",
+          //     nm_inputbank: "unknown",
+          //     nm_input: buyername,
+          //     amt_input: String(price),
+          //     real_account: "true"
+          //   }
+          // }, {
+          //   headers: { "Content-Type": "application/json" }
+          // });
 
           future = new Date();
           future.setDate(future.getDate() + 7);

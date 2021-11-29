@@ -880,6 +880,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
         const form = document.createElement("FORM");
         let value, formId, plugin;
         let mobileInisisInfo;
+
         formId = "form" + String((new Date()).valueOf());
         form.id = formId;
         form.style.display = "none";
@@ -904,8 +905,196 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
 
           } else {
 
-            window.alert("계좌 이체로 진행하실 경우, 현금 영수증이 자동으로 발급됩니다!");
-            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript;
+            let cashWidth, cashHeight;
+            let cashWhiteBox;
+            let cashPaddingTop, cashPaddingLeft;
+            let cashLoading;
+            let cashLoadingRadius;
+            let cashLoadingTop;
+            let cashLoadingBetween;
+            let cashWording;
+            let cashWordingSize;
+            let cashWordingTop;
+            let inputBaseHeight;
+            let inputBaseVisual;
+            let cashInput;
+            let cashInputSize;
+            let cashPaddingBottom;
+            let cashInputVisual;
+            let cashSubmitEvent;
+            let cashSubmitButtonWidth;
+            let cashSubmitButtonSize;
+            let cashSubmitButtonBetween;
+            let submitTextTop;
+
+            cashWidth = 393;
+            cashHeight = 125;
+            cashPaddingLeft = 27;
+            cashPaddingTop = 25;
+            cashPaddingBottom = 28;
+            cashLoadingRadius = 19;
+            cashLoadingBetween = 8;
+            cashLoadingTop = 27;
+            cashWordingSize = 20;
+            cashWordingTop = 21;
+            inputBaseHeight = 36;
+            inputBaseVisual = 1;
+            cashInputSize = 16;
+            cashInputVisual = 1;
+            cashSubmitButtonWidth = 54;
+            cashSubmitButtonSize = 14;
+            cashSubmitButtonBetween = 6;
+            submitTextTop = -2;
+            cashInput = {};
+
+            cashSubmitEvent = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (cashInput.value === '') {
+                window.alert("휴대폰 번호 또는 사업자 등록번호를 입력해주세요!");
+                cashInput.value = instance.client.phone;
+                cashInput.focus();
+              } else {
+                if (/[^0-9\-]/gi.test(cashInput.value)) {
+                  window.alert("숫자와 하이픈(-)만 이용해서 입력해주세요!");
+                  cashInput.value = instance.client.phone;
+                  cashInput.focus();
+                } else {
+                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript + "&cashphone=" + cashInput.value.trim();
+                }
+              }
+            }
+
+            createNode({
+              mother: document.body,
+              event: {
+                click: cashSubmitEvent
+              },
+              style: {
+                position: "fixed",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                background: "transparent",
+              }
+            });
+
+            cashWhiteBox = createNode({
+              mother: document.body,
+              style: {
+                position: "fixed",
+                top: withOut(50, cashHeight / 2, ea),
+                left: withOut(50, cashWidth / 2, ea),
+                width: String(cashWidth) + ea,
+                height: String(cashHeight) + ea,
+                borderRadius: String(5) + ea,
+                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+                background: colorChip.white,
+                animation: "fadeuplite 0.3s ease",
+                zIndex: String(5),
+              }
+            });
+
+            cashLoading = instance.mother.returnLoadingIcon();
+            cashLoading.style.position = "absolute";
+            cashLoading.style.width = String(cashLoadingRadius) + ea;
+            cashLoading.style.height = String(cashLoadingRadius) + ea;
+            cashLoading.style.top = String(cashLoadingTop) + ea;
+            cashLoading.style.left = String(cashPaddingLeft) + ea;
+            cashWhiteBox.appendChild(cashLoading);
+
+            cashWording = createNode({
+              mother: cashWhiteBox,
+              text: "현금영수증을 받으실 번호를 알려주세요!",
+              style: {
+                position: "absolute",
+                top: String(cashWordingTop) + ea,
+                left: String(cashPaddingLeft + cashLoadingRadius + cashLoadingBetween) + ea,
+                fontSize: String(cashWordingSize) + ea,
+                fontWeight: String(500),
+                color: colorChip.black
+              }
+            });
+
+            createNode({
+              mother: cashWhiteBox,
+              style: {
+                position: "absolute",
+                bottom: String(cashPaddingBottom) + ea,
+                left: String(cashPaddingLeft + inputBaseVisual) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.gray1,
+                width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
+                height: String(inputBaseHeight) + ea,
+              }
+            });
+
+            cashInput = createNode({
+              mother: cashWhiteBox,
+              mode: "input",
+              event: {
+                keyup: function (e) {
+                  this.value = this.value.replace(/[^0-9\-]/gi, '');
+                },
+                keypress: function (e) {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    cashSubmitEvent.call(this, e);
+                  }
+                }
+              },
+              style: {
+                position: "absolute",
+                bottom: String(cashPaddingBottom + cashInputVisual) + ea,
+                left: String(cashPaddingLeft + inputBaseVisual) + ea,
+                border: String(0),
+                outline: String(0),
+                fontSize: String(cashInputSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                background: "transparent",
+                width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
+                height: String(inputBaseHeight) + ea,
+                zIndex: String(1),
+                textAlign: "center",
+              }
+            });
+            cashInput.value = instance.client.phone;
+            cashInput.focus();
+
+            createNode({
+              mother: cashWhiteBox,
+              class: [ "hoverDefault_lite" ],
+              event: {
+                click: cashSubmitEvent
+              },
+              style: {
+                display: "flex",
+                position: "absolute",
+                justifyContent: "center",
+                alignItems: "center",
+                bottom: String(cashPaddingBottom) + ea,
+                right: String(cashPaddingLeft + inputBaseVisual) + ea,
+                borderRadius: String(5) + "px",
+                background: colorChip.gradientGreen,
+                width: String(cashSubmitButtonWidth) + ea,
+                height: String(inputBaseHeight) + ea,
+              },
+              children: [
+                {
+                  text: "제출",
+                  style: {
+                    fontSize: String(cashSubmitButtonSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.white,
+                    position: "relative",
+                    top: String(submitTextTop) + ea,
+                  }
+                }
+              ]
+            });
 
           }
 
@@ -1279,6 +1468,9 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
         hash: getObj.hash,
         mode: "decrypto",
       }, "/inicisPayment", { equal: true });
+      if (typeof getObj.cashphone === "string") {
+        data.cashPhone = getObj.cashphone;
+      }
       if (getObj.mode === "complete") {
         await this.payComplete(data, true);
       }

@@ -320,6 +320,16 @@ DataRouter.prototype.rou_get_First = function () {
         pass = false;
       }
 
+      if (!pass) {
+        if (/^223/.test(ip)) {
+          if (32 <= Number(ip.split('.')[1]) && 63 >= Number(ip.split('.')[1])) {
+            pass = true;
+          }
+        } else {
+          pass = false;
+        }
+      }
+
       if (req.params.id === "ssl") {
 
         statusReading().catch((err) => {
@@ -3853,29 +3863,29 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
         } else {
 
-          await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
-            bilid,
-            requestNumber: Number(req.body.requestNumber),
-            proid,
-            cliid,
-            desid,
-            goodname,
-            date: new Date(),
-            name: buyername,
-            phone: buyertel,
-            amount: price,
-            accountInfo: {
-              no_tid: "realAccount",
-              no_oid: oid,
-              cd_bank: "00",
-              nm_inputbank: "unknown",
-              nm_input: buyername,
-              amt_input: String(price),
-              real_account: "true"
-            }
-          }, {
-            headers: { "Content-Type": "application/json" }
-          });
+          // await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
+          //   bilid,
+          //   requestNumber: Number(req.body.requestNumber),
+          //   proid,
+          //   cliid,
+          //   desid,
+          //   goodname,
+          //   date: new Date(),
+          //   name: buyername,
+          //   phone: buyertel,
+          //   amount: price,
+          //   accountInfo: {
+          //     no_tid: "realAccount",
+          //     no_oid: oid,
+          //     cd_bank: "00",
+          //     nm_inputbank: "unknown",
+          //     nm_input: buyername,
+          //     amt_input: String(price),
+          //     real_account: "true"
+          //   }
+          // }, {
+          //   headers: { "Content-Type": "application/json" }
+          // });
 
           future = new Date();
           future.setDate(future.getDate() + 7);
@@ -4146,7 +4156,8 @@ DataRouter.prototype.rou_post_callTo = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, equalJson } = this.mother;
+  const { requestSystem, equalJson, errorLog } = this.mother;
+  const querystring = require("querystring");
   let obj = {};
   obj.link = [ "/callTo" ];
   obj.func = async function (req, res) {
@@ -4157,7 +4168,7 @@ DataRouter.prototype.rou_post_callTo = function () {
       } else {
         const who = req.body.who;
         const members = instance.members;
-        let thisPerson, index, number, phone;
+        let thisPerson, index, number, phone, query;
 
         if (req.body.phone !== undefined) {
           phone = req.body.phone;
@@ -4177,20 +4188,18 @@ DataRouter.prototype.rou_post_callTo = function () {
         if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "OK" }));
-          throw new Error("invaild post");
+          errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index").catch((e) => { console.log(e); });
         } else {
           number = address.officeinfo.phone.numbers[index];
-          await requestSystem("https://" + address.mirrorinfo.host + ":3000/clickDial", {
-            id: number,
-            destnumber: phone.replace(/[^0-9]/g, '')
-          }, { headers: { "Content-Type": "application/json" } });
+          query = { id: number, pass: instance.address.officeinfo.phone.password, destnumber: phone.replace(/[^0-9]/g, '') };
+          await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "true" }));
         }
       }
     } catch (e) {
       console.log(e);
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_callTo): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Console 서버 문제 생김 (rou_post_callTo): " + e.message).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "OK" }));
     }
