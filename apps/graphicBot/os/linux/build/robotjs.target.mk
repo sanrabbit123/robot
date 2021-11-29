@@ -9,6 +9,7 @@ DEFS_Debug := \
 	'-DV8_DEPRECATION_WARNINGS=1' \
 	'-DV8_DEPRECATION_WARNINGS' \
 	'-DV8_IMMINENT_DEPRECATION_WARNINGS' \
+	'-D_GLIBCXX_USE_CXX11_ABI=1' \
 	'-D_LARGEFILE_SOURCE' \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-D__STDC_FORMAT_MACROS' \
@@ -42,16 +43,16 @@ CFLAGS_C_Debug :=
 CFLAGS_CC_Debug := \
 	-fno-rtti \
 	-fno-exceptions \
-	-std=gnu++1y
+	-std=gnu++14
 
 INCS_Debug := \
-	-I/home/uragen/.cache/node-gyp/14.17.0/include/node \
-	-I/home/uragen/.cache/node-gyp/14.17.0/src \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/openssl/config \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/openssl/openssl/include \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/uv/include \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/zlib \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/v8/include \
+	-I/home/uragen/.cache/node-gyp/16.13.0/include/node \
+	-I/home/uragen/.cache/node-gyp/16.13.0/src \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/openssl/config \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/openssl/openssl/include \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/uv/include \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/zlib \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/v8/include \
 	-I$(srcdir)/../nan
 
 DEFS_Release := \
@@ -61,6 +62,7 @@ DEFS_Release := \
 	'-DV8_DEPRECATION_WARNINGS=1' \
 	'-DV8_DEPRECATION_WARNINGS' \
 	'-DV8_IMMINENT_DEPRECATION_WARNINGS' \
+	'-D_GLIBCXX_USE_CXX11_ABI=1' \
 	'-D_LARGEFILE_SOURCE' \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-D__STDC_FORMAT_MACROS' \
@@ -91,16 +93,16 @@ CFLAGS_C_Release :=
 CFLAGS_CC_Release := \
 	-fno-rtti \
 	-fno-exceptions \
-	-std=gnu++1y
+	-std=gnu++14
 
 INCS_Release := \
-	-I/home/uragen/.cache/node-gyp/14.17.0/include/node \
-	-I/home/uragen/.cache/node-gyp/14.17.0/src \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/openssl/config \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/openssl/openssl/include \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/uv/include \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/zlib \
-	-I/home/uragen/.cache/node-gyp/14.17.0/deps/v8/include \
+	-I/home/uragen/.cache/node-gyp/16.13.0/include/node \
+	-I/home/uragen/.cache/node-gyp/16.13.0/src \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/openssl/config \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/openssl/openssl/include \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/uv/include \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/zlib \
+	-I/home/uragen/.cache/node-gyp/16.13.0/deps/v8/include \
 	-I$(srcdir)/../nan
 
 OBJS := \
@@ -126,25 +128,25 @@ $(OBJS): GYP_CXXFLAGS := $(DEFS_$(BUILDTYPE)) $(INCS_$(BUILDTYPE))  $(CFLAGS_$(B
 
 # Suffix rules, putting all outputs into $(obj).
 
-$(obj).$(TOOLSET)/$(TARGET)/%.o: $(srcdir)/%.cc FORCE_DO_CMD
-	@$(call do_cmd,cxx,1)
-
 $(obj).$(TOOLSET)/$(TARGET)/%.o: $(srcdir)/%.c FORCE_DO_CMD
 	@$(call do_cmd,cc,1)
 
-# Try building from generated source, too.
-
-$(obj).$(TOOLSET)/$(TARGET)/%.o: $(obj).$(TOOLSET)/%.cc FORCE_DO_CMD
+$(obj).$(TOOLSET)/$(TARGET)/%.o: $(srcdir)/%.cc FORCE_DO_CMD
 	@$(call do_cmd,cxx,1)
+
+# Try building from generated source, too.
 
 $(obj).$(TOOLSET)/$(TARGET)/%.o: $(obj).$(TOOLSET)/%.c FORCE_DO_CMD
 	@$(call do_cmd,cc,1)
 
-$(obj).$(TOOLSET)/$(TARGET)/%.o: $(obj)/%.cc FORCE_DO_CMD
+$(obj).$(TOOLSET)/$(TARGET)/%.o: $(obj).$(TOOLSET)/%.cc FORCE_DO_CMD
 	@$(call do_cmd,cxx,1)
 
 $(obj).$(TOOLSET)/$(TARGET)/%.o: $(obj)/%.c FORCE_DO_CMD
 	@$(call do_cmd,cc,1)
+
+$(obj).$(TOOLSET)/$(TARGET)/%.o: $(obj)/%.cc FORCE_DO_CMD
+	@$(call do_cmd,cxx,1)
 
 # End of this set of suffix rules
 ### Rules for final target.
