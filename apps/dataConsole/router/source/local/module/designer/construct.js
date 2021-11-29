@@ -75,7 +75,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     [ "중도금 입금", "-", "-" ],
     [ "잔금 입금", "-", "수수료 요청" ],
     [ "AS 진행중", "-", "AS 진행중" ],
-    [ "완료" ],
+    [ "완료", "고객 완료", "디자이너 완료" ],
     [ "드랍" ],
     [ "해당 없음" ],
   ];
