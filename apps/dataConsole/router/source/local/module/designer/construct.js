@@ -1887,7 +1887,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
             if (this.querySelector("input") === null) {
               greenInputEvent(async (value) => {
                 try {
-                  if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(value.trim())) {
+                  if (/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(value.trim()) || value.trim() === '-') {
                     domMap[kind].contents.date.firstChild.textContent = value;
                     domMap[kind].contents.date.setAttribute("value", value);
                     instance.projects.search("proid", project.proid).history.payments[kind].date = GeneralJs.stringToDate(value);
@@ -1898,7 +1898,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
                       kind, value
                     }, "/constructInteraction");
                   } else {
-                    window.alert("표준 형식으로 작성해주셔야 업데이트가 가능합니다!\n표준 형식 => 0000-00-00");
+                    window.alert("표준 형식으로 작성해주셔야 업데이트가 가능합니다!\n표준 형식 => 0000-00-00 또는 '-'");
                   }
                 } catch (e) {
                   console.log(e);
