@@ -3563,6 +3563,7 @@ DataRouter.prototype.rou_post_callTo = function () {
   const back = this.back;
   const address = this.address;
   const { requestSystem, equalJson, errorLog } = this.mother;
+  const querystring = require("querystring");
   let obj = {};
   obj.link = [ "/callTo" ];
   obj.func = async function (req, res) {
@@ -3573,7 +3574,7 @@ DataRouter.prototype.rou_post_callTo = function () {
       } else {
         const who = req.body.who;
         const members = instance.members;
-        let thisPerson, index, number, phone;
+        let thisPerson, index, number, phone, query;
 
         if (req.body.phone !== undefined) {
           phone = req.body.phone;
@@ -3596,10 +3597,8 @@ DataRouter.prototype.rou_post_callTo = function () {
           errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index").catch((e) => { console.log(e); });
         } else {
           number = address.officeinfo.phone.numbers[index];
-          await requestSystem("https://" + address.mirrorinfo.host + ":3000/clickDial", {
-            id: number,
-            destnumber: phone.replace(/[^0-9]/g, '')
-          }, { headers: { "Content-Type": "application/json" } });
+          query = { id: number, pass: instance.address.officeinfo.phone.password, destnumber: phone.replace(/[^0-9]/g, '') };
+          await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "true" }));
         }

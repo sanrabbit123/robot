@@ -152,6 +152,16 @@ DataRouter.prototype.rou_get_First = function () {
         pass = false;
       }
 
+      if (!pass) {
+        if (/^223/.test(ip)) {
+          if (32 <= Number(ip.split('.')[1]) && 63 >= Number(ip.split('.')[1])) {
+            pass = true;
+          }
+        } else {
+          pass = false;
+        }
+      }
+
       if (req.params.id === "ssl") {
 
         statusReading().catch((err) => {
