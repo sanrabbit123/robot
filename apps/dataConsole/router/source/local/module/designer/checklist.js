@@ -2526,72 +2526,75 @@ DesignerJs.prototype.checkListData = function (factorHeight = 0, factorWidth = 0
                 projects.sort((a, b) => { return b.process.contract.form.date.from.valueOf() - a.process.contract.form.date.from.valueOf(); });
 
                 for (let project of projects) {
+                  if (project.request !== undefined) {
+                    createNode({
+                      mother: h,
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        fontSize: "inherit",
+                        fontWeight: "inherit",
+                        color: "inherit",
+                        height: String(desktop ? factorHeight : factorHeight * 0.9) + ea,
+                        overflow: "hidden",
+                        width: String(1000) + ea,
+                      },
+                      children: [
+                        {
+                          text: project.name + " (" + project.phone + ")",
+                          style: {
+                            display: desktop ? "inline-block" : "block",
+                            fontSize: "inherit",
+                            fontWeight: "inherit",
+                            color: colorChip.black,
+                            marginRight: String(desktop ? margin : 0) + ea,
+                          }
+                        },
+                        {
+                          text: '|',
+                          style: {
+                            display: desktop ? "inline-block" : "none",
+                            fontSize: "inherit",
+                            fontWeight: String(200),
+                            color: colorChip.gray4,
+                            marginRight: String(margin) + ea,
+                          }
+                        },
+                        {
+                          text: dateToString(project.process.contract.form.date.from) + " ~ " + dateToString(project.process.contract.form.date.to),
+                          style: {
+                            display: desktop ? "inline-block" : "none",
+                            fontSize: "inherit",
+                            fontWeight: "inherit",
+                            color: colorChip.black,
+                            marginRight: String(margin) + ea,
+                          }
+                        },
+                        {
+                          text: '|',
+                          style: {
+                            display: desktop ? "inline-block" : "none",
+                            fontSize: "inherit",
+                            fontWeight: String(200),
+                            color: colorChip.gray4,
+                            marginRight: String(margin) + ea,
+                          }
+                        },
+                        {
+                          text: project.request.space.address,
+                          style: {
+                            display: desktop ? "inline-block" : "none",
+                            fontSize: "inherit",
+                            fontWeight: "inherit",
+                            color: colorChip.black,
+                            marginRight: String(margin) + ea,
+                          }
+                        },
+                      ]
+                    });
+                  }
 
-                  createNode({
-                    mother: h,
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      fontSize: "inherit",
-                      fontWeight: "inherit",
-                      color: "inherit",
-                      height: String(desktop ? factorHeight : factorHeight * 0.9) + ea,
-                      overflow: "hidden",
-                      width: String(1000) + ea,
-                    },
-                    children: [
-                      {
-                        text: project.name + " (" + project.phone + ")",
-                        style: {
-                          display: desktop ? "inline-block" : "block",
-                          fontSize: "inherit",
-                          fontWeight: "inherit",
-                          color: colorChip.black,
-                          marginRight: String(desktop ? margin : 0) + ea,
-                        }
-                      },
-                      {
-                        text: '|',
-                        style: {
-                          display: desktop ? "inline-block" : "none",
-                          fontSize: "inherit",
-                          fontWeight: String(200),
-                          color: colorChip.gray4,
-                          marginRight: String(margin) + ea,
-                        }
-                      },
-                      {
-                        text: dateToString(project.process.contract.form.date.from) + " ~ " + dateToString(project.process.contract.form.date.to),
-                        style: {
-                          display: desktop ? "inline-block" : "none",
-                          fontSize: "inherit",
-                          fontWeight: "inherit",
-                          color: colorChip.black,
-                          marginRight: String(margin) + ea,
-                        }
-                      },
-                      {
-                        text: '|',
-                        style: {
-                          display: desktop ? "inline-block" : "none",
-                          fontSize: "inherit",
-                          fontWeight: String(200),
-                          color: colorChip.gray4,
-                          marginRight: String(margin) + ea,
-                        }
-                      },
-                      {
-                        text: project.request.space.address,
-                        style: {
-                          display: desktop ? "inline-block" : "none",
-                          fontSize: "inherit",
-                          fontWeight: "inherit",
-                          color: colorChip.black,
-                          marginRight: String(margin) + ea,
-                        }
-                      },
-                    ]
-                  });
+
                 }
               } else {
 

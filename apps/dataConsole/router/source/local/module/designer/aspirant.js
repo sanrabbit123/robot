@@ -892,7 +892,7 @@ DesignerJs.prototype.aspirantBase = function (search = null) {
 DesignerJs.prototype.aspirantBlockInjection = function () {
   const instance = this;
   const { ea, aspirants } = this;
-  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren, appendQuery, returnGet, removeQuery, setQueue } = GeneralJs;
   const { contentsTong } = this.contentsSpec;
   let scrollTong;
   let width, dom;
@@ -903,6 +903,7 @@ DesignerJs.prototype.aspirantBlockInjection = function () {
   let leftMargin;
   let firstPaddingTop;
   let tongPaddingBottom;
+  let resultArr;
 
   leftMargin = 10;
   firstPaddingTop = 44;
@@ -967,19 +968,33 @@ DesignerJs.prototype.aspirantBlockInjection = function () {
     }
   }
 
+  resultArr = [];
   firstBoo = true;
   for (let i = 0; i < aspirants.length; i++) {
     if (firstBoo) {
       this.aspirantWhiteBlock(scrollTong, aspirants[i], (i === 0), i, true);
       firstBoo = false;
     }
-    this.aspirantWhiteBlock(scrollTong, aspirants[i], false, i, false);
+    resultArr.push(this.aspirantWhiteBlock(scrollTong, aspirants[i], false, i, false));
   }
 
-  this.resetWidthEvent();
-  GeneralJs.setQueue(() => {
+  resultArr = resultArr.filter((obj) => { return obj.result; });
+  if (resultArr.length === 1) {
+    if (returnGet().aspid !== resultArr[0].aspid) {
+      appendQuery({
+        aspid: resultArr[0].aspid
+      });
+    }
+  } else if (resultArr.length === aspirants.length) {
+    setQueue(() => {
+      removeQuery("aspid");
+    });
+  }
+
+  instance.resetWidthEvent();
+  setQueue(() => {
     instance.resetWidthEvent();
-  }, 1000);
+  }, 200);
 }
 
 DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, index, titleMode = false) {
@@ -1725,6 +1740,10 @@ DesignerJs.prototype.aspirantWhiteBlock = function (mother, aspirant, first, ind
 
   this.contentsBlocks.push(whiteBlock);
 
+  return {
+    aspid: aspirant.aspid,
+    result: (first ? true : instance.contentsSearchIndex.includes(index) ? false : (displayBoo ? true : false))
+  };
 }
 
 DesignerJs.prototype.aspirantDashBoard = function () {

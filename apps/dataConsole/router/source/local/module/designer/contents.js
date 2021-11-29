@@ -2782,7 +2782,7 @@ DesignerJs.prototype.contentsBase = function (search = null) {
 DesignerJs.prototype.contentsBlockInjection = function () {
   const instance = this;
   const { ea, projects, actionList } = this;
-  const { createNode, createNodes, colorChip, withOut, cleanChildren } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren, appendQuery, returnGet, removeQuery, setQueue } = GeneralJs;
   const { contentsTong } = this.contentsSpec;
   let scrollTong;
   let width, dom;
@@ -2793,6 +2793,7 @@ DesignerJs.prototype.contentsBlockInjection = function () {
   let leftMargin;
   let firstPaddingTop;
   let tongPaddingBottom;
+  let resultArr;
 
   leftMargin = 10;
   firstPaddingTop = 44;
@@ -2857,6 +2858,7 @@ DesignerJs.prototype.contentsBlockInjection = function () {
     }
   }
 
+  resultArr = [];
   firstBoo = true;
   for (let i = 0; i < projects.length; i++) {
     if (!actionList.includes(projects[i].process.action)) {
@@ -2864,14 +2866,27 @@ DesignerJs.prototype.contentsBlockInjection = function () {
         this.contentsWhiteBlock(scrollTong, projects[i], (i === 0), i, true);
         firstBoo = false;
       }
-      this.contentsWhiteBlock(scrollTong, projects[i], false, i, false);
+      resultArr.push(this.contentsWhiteBlock(scrollTong, projects[i], false, i, false));
     }
   }
 
-  this.resetWidthEvent();
-  GeneralJs.setQueue(() => {
+  resultArr = resultArr.filter((obj) => { return obj.result; });
+  if (resultArr.length === 1) {
+    if (returnGet().proid !== resultArr[0].proid) {
+      appendQuery({
+        proid: resultArr[0].proid
+      });
+    }
+  } else if (resultArr.length === projects.length) {
+    setQueue(() => {
+      removeQuery("proid");
+    });
+  }
+
+  instance.resetWidthEvent();
+  setQueue(() => {
     instance.resetWidthEvent();
-  }, 1000);
+  }, 200);
 }
 
 DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, index, titleMode = false) {
@@ -3619,6 +3634,10 @@ DesignerJs.prototype.contentsWhiteBlock = function (mother, project, first, inde
 
   this.contentsBlocks.push(whiteBlock);
 
+  return {
+    proid: project.proid,
+    result: (first ? true : instance.contentsSearchIndex.includes(index) ? false : (displayBoo ? true : false))
+  };
 }
 
 DesignerJs.prototype.contentsDashBoard = function () {

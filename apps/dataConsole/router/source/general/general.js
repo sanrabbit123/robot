@@ -2855,6 +2855,7 @@ GeneralJs.prototype.memberView = function () {
       obj["homeliaisonConsoleLoginedEmail"] = '';
       obj["homeliaisonConsoleLoginedBoolean"] = '';
       GeneralJs.setCookie(obj, true);
+      window.localStorage.removeItem("GoogleClientProfile");
       window.location.reload();
     });
     div_clone.appendChild(svg_clone);
@@ -3025,6 +3026,7 @@ GeneralJs.prototype.greenAlert = async function (message, blackMode = false) {
 GeneralJs.prototype.loginBox = async function () {
   const instance = this;
   try {
+    const cookies = GeneralJs.getCookiesAll();
     let div_clone;
     let style;
     let ea = "px";
@@ -3032,20 +3034,43 @@ GeneralJs.prototype.loginBox = async function () {
     let name, email, id;
     let memberBoo, thisMember;
     let tempObj;
+    let loginBox;
+    let storage;
+    let response;
+    let storageCookie;
 
-    const cookies = GeneralJs.getCookiesAll();
-    if (cookies.hasOwnProperty("homeliaisonConsoleLoginedEmail")) {
-      let { result } = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + cookies["homeliaisonConsoleLoginedEmail"], "/getMembers"));
-      if (result !== null) {
+
+    storage = window.localStorage.getItem("GoogleClientProfile");
+    if (storage === null) {
+      if (cookies.hasOwnProperty("homeliaisonConsoleLoginedEmail")) {
+        response = await GeneralJs.ajaxJson({
+          type: "boo",
+          value: cookies.homeliaisonConsoleLoginedEmail
+        }, "/getMembers");
+        if (response.result !== null) {
+          memberBoo = true;
+          thisMember = response.result;
+        } else {
+          memberBoo = false;
+          thisMember = null;
+        }
+      }
+    } else {
+      storageCookie = JSON.parse(storage);
+      response = await GeneralJs.ajaxJson({
+        type: "boo",
+        value: storageCookie.homeliaisonConsoleLoginedEmail
+      }, "/getMembers");
+      if (response.result !== null) {
         memberBoo = true;
-        thisMember = result;
+        thisMember = response.result;
       } else {
         memberBoo = false;
         thisMember = null;
       }
     }
 
-    this.loginBox = [];
+    loginBox = null;
 
     if (memberBoo) {
 
@@ -3056,37 +3081,20 @@ GeneralJs.prototype.loginBox = async function () {
       div_clone = GeneralJs.nodes.div.cloneNode(true);
       style = {
         position: "fixed",
-        width: "100%",
-        height: "100%",
-        background: GeneralJs.colorChip.white,
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: GeneralJs.colorChip.gradientGreen4,
         opacity: String(0),
-        zIndex: String(3),
-        backdropFilter: "invert(1)",
-        animation: "loginfadeup0 0.5s ease forwards",
+        zIndex: String(5),
+        animation: "justfadeinoriginal 0.2s ease forwards",
       };
       for (let i in style) {
         div_clone.style[i] = style[i];
       }
-      this.totalContents.appendChild(div_clone);
-      this.loginBox.push(div_clone);
-
-      div_clone = GeneralJs.nodes.div.cloneNode(true);
-      div_clone.classList.add("backblurdefault_lite");
-      style = {
-        position: "fixed",
-        width: "100%",
-        height: "100%",
-        background: GeneralJs.colorChip.white,
-        opacity: String(0),
-        zIndex: String(3),
-        animation: "loginfadeup1 0.5s ease forwards",
-      };
-      for (let i in style) {
-        div_clone.style[i] = style[i];
-      }
-
-      this.totalContents.appendChild(div_clone);
-      this.loginBox.push(div_clone);
+      document.body.appendChild(div_clone);
+      loginBox = div_clone;
 
       if (GeneralJs.stacks["GoogleAuth"] !== undefined && GeneralJs.stacks["GoogleAuth"] !== null) {
         googleAuth = GeneralJs.stacks["GoogleAuth"];
@@ -3105,29 +3113,28 @@ GeneralJs.prototype.loginBox = async function () {
       GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedName = name;
       GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedEmail = email;
       GeneralJs.stacks["GoogleClientProfile"].homeliaisonConsoleLoginedBoolean = true;
-
       GeneralJs.setCookie(GeneralJs.stacks["GoogleClientProfile"]);
+
+      window.localStorage.setItem("GoogleClientProfile", JSON.stringify(GeneralJs.stacks["GoogleClientProfile"]));
 
       tempObj = JSON.parse(await GeneralJs.ajaxPromise("type=boo&value=" + email, "/getMembers"));
       if (tempObj.result !== null) {
         thisMember = tempObj.result;
         this.member = thisMember;
-        this.loginBox[0].style.animation = "loginfadedown0 0.5s ease forwards";
-        this.loginBox[1].style.animation = "loginfadedown1 0.5s ease forwards";
-        GeneralJs.timeouts["login"] = setTimeout(function () {
-          instance.totalContents.removeChild(instance.totalContents.lastChild);
-          instance.totalContents.removeChild(instance.totalContents.lastChild);
+        loginBox.style.animation = "justfadeoutoriginal 0.2s ease forwards";
+        GeneralJs.timeouts["login"] = setTimeout(() => {
+          document.body.removeChild(loginBox);
           clearTimeout(GeneralJs.timeouts["login"]);
           GeneralJs.timeouts["login"] = null;
-        }, 500);
+        }, 201);
       } else {
         alert("허가된 멤버가 아닙니다.");
-        // window.location.href = "https://home-liaison.com";
+        window.location.href = "https://home-liaison.com";
       }
     }
 
   } catch (e) {
-    // window.location.href = "https://home-liaison.com";
+    console.log(e);
   }
 }
 

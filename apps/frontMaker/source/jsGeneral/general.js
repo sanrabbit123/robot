@@ -2252,6 +2252,89 @@ GeneralJs.xyConverting = function (original) {
   return converted;
 }
 
+GeneralJs.appendQuery = function (obj) {
+  if (typeof obj !== "object") {
+    throw new Error("invaild input");
+  }
+  if (obj === null) {
+    throw new Error("invaild input(null)");
+  }
+  if (!Object.values(obj).every((str) => { return typeof str === "string" })) {
+    throw new Error("invaild object factor, must be string");
+  }
+  let now;
+  let title;
+  let original;
+
+  now = new Date();
+  title = String(now.valueOf()) + String(Math.round(Math.random() * 10000));
+  original = window.location.href;
+
+  if (/\?/gi.test(original)) {
+    if (/\=/gi.test(original)) {
+      if (!/\&$/gi.test(original)) {
+        original += '&';
+      }
+    }
+  } else {
+    original += '?';
+  }
+
+  for (let key in obj) {
+    original += key;
+    original += '=';
+    original += String(obj[key]);
+    original += '&';
+  }
+
+  if (/\&$/gi.test(original)) {
+    original = original.slice(0, -1);
+  }
+
+  window.history.replaceState({}, title, original);
+}
+
+GeneralJs.removeQuery = function (key) {
+  if (typeof key !== "string") {
+    throw new Error("invaild input");
+  }
+  let now;
+  let title;
+  let original;
+  let obj;
+  let newUrl;
+
+  now = new Date();
+  title = String(now.valueOf()) + String(Math.round(Math.random() * 10000));
+  original = window.location.search;
+  newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?";
+
+  if (/\?/gi.test(original)) {
+
+    obj = {};
+    original.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function (origin, name, value) {
+      let decode = function (str) { return decodeURIComponent(str.split("+").join(" ")); }
+      obj[decode(name)] = decode(value);
+    });
+
+    for (let str in obj) {
+      if (str !== key) {
+        newUrl += str;
+        newUrl += '=';
+        newUrl += String(obj[str]);
+        newUrl += '&';
+      }
+    }
+
+    if (/\&$/gi.test(newUrl)) {
+      newUrl = newUrl.slice(0, -1);
+    }
+
+    window.history.replaceState({}, title, newUrl);
+
+  }
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;

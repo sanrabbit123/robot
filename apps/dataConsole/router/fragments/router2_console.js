@@ -3562,7 +3562,7 @@ DataRouter.prototype.rou_post_callTo = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, equalJson } = this.mother;
+  const { requestSystem, equalJson, errorLog } = this.mother;
   let obj = {};
   obj.link = [ "/callTo" ];
   obj.func = async function (req, res) {
@@ -3593,7 +3593,7 @@ DataRouter.prototype.rou_post_callTo = function () {
         if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "OK" }));
-          throw new Error("invaild post");
+          errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index").catch((e) => { console.log(e); });
         } else {
           number = address.officeinfo.phone.numbers[index];
           await requestSystem("https://" + address.mirrorinfo.host + ":3000/clickDial", {
@@ -3606,7 +3606,7 @@ DataRouter.prototype.rou_post_callTo = function () {
       }
     } catch (e) {
       console.log(e);
-      instance.mother.errorLog("Console 서버 문제 생김 (rou_post_callTo): " + e.message).catch((e) => { console.log(e); });
+      errorLog("Console 서버 문제 생김 (rou_post_callTo): " + e.message).catch((e) => { console.log(e); });
       res.set({ "Content-Type": "application/json" });
       res.send(JSON.stringify({ message: "OK" }));
     }
