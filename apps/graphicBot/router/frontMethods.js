@@ -92,7 +92,7 @@ FrontMethods.prototype.addFrontMethods = async function () {
       await sleep(500);
     }
 
-    frontGeneral.clickElement = async function (dom, iframeBoo = false, iframe = null) {
+    frontGeneral.clickElement = async function (dom, iframeBoo = false, iframe = null, alert = false, double = false) {
       if (dom === undefined || dom === null) {
         throw new Error("must be dom");
       }
@@ -137,7 +137,7 @@ FrontMethods.prototype.addFrontMethods = async function () {
       x = iframeRect.left + rect.left + (rect.width / 2);
       y = iframeRect.top + rect.top + (rect.height / 2);
 
-      data = { x, y };
+      data = { x, y, alert: alert ? 1 : 0, double: double ? 1 : 0 };
 
       await ajaxPromise(data, HOSTCONST + "/clickElement");
 

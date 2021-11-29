@@ -19,10 +19,8 @@ module.exports = function (arg, info) {
       await injectionInput(document.getElementById("trsAmt"), String(amount), true);
       await injectionInput(document.getElementById("spstCnfrNoEncCntn"), String(phone), true);
       await sleep(1000);
-      await clickElement(document.querySelector("#trigger4"));
+      await clickElement(document.querySelector("#trigger4"), false, null, true, true);
       await sleep(2000);
-      
-
     },
   ];
 };

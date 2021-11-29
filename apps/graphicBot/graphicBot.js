@@ -445,6 +445,18 @@ GraphicBot.prototype.pressKey = async function (key) {
   }
 }
 
+GraphicBot.prototype.clickAlert = async function () {
+  const instance = this;
+  const { sleep } = this.mother;
+  try {
+    await sleep(2000);
+    await moveAndClick(1168, 200);
+    await sleep(1000);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 GraphicBot.prototype.clipBoard = async function (text) {
   const instance = this;
   const { sleep, copyToClipboard } = this.mother;
@@ -608,7 +620,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
         while (instance.front === 1) {
           console.log("front waiting...");
           console.log(frontWaitingNumber);
-          await sleep(500);
+          await sleep(1000);
           frontWaitingNumber = frontWaitingNumber + 1;
           if (instance.frontProblem) {
             await errorLog("Graphic server front js 문제 일어남 => front problem");
@@ -621,7 +633,7 @@ GraphicBot.prototype.botOrders = async function (num, arg) {
             await sleep(500);
             return false;
           }
-          if (frontWaitingNumber >= (30 * 30)) {
+          if (frontWaitingNumber >= (60 * 20)) {
             await errorLog("Graphic server front js 문제 일어남 => timeout");
             if (instance.frontProcess !== null) {
               clearTimeout(instance.frontProcess);
@@ -985,7 +997,7 @@ GraphicBot.prototype.botRouter = function () {
         const chromeHeight = chromeSize.top;
         const chromeLeft = chromeSize.left;
         const robot = instance.bot;
-        let { x, y } = req.body;
+        let { x, y, alert, double } = req.body;
 
         x = Number(x);
         y = Number(y);
@@ -994,6 +1006,17 @@ GraphicBot.prototype.botRouter = function () {
 
         robot.moveMouse(x, y);
         robot.mouseClick("left");
+
+        alert = Number(alert);
+        double = Number(double);
+        if (alert === 1) {
+          await sleep(2000);
+          instance.clickAlert();
+          if (double === 1) {
+            await sleep(3000);
+            instance.clickAlert();
+          }
+        }
 
         res.set({
           "Content-Type": "application/json",
