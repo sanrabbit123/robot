@@ -423,11 +423,17 @@ MirrorRouter.prototype.rou_post_clickDial = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem } = this.mother;
+  const { requestSystem, errorLog } = this.mother;
   const querystring = require("querystring");
   let obj = {};
   obj.link = "/clickDial";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-Headers": '*',
+    });
     try {
       if (req.body.id === undefined || req.body.destnumber === undefined) {
         throw new Error("invaild post");
@@ -450,15 +456,10 @@ MirrorRouter.prototype.rou_post_clickDial = function () {
         console.log(err);
       });
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
       res.send(JSON.stringify({ message: "hello?" }));
     } catch (e) {
-      console.log(e);
+      await errorLog("MirrorRouter error (rou_post_clickDial) : " + e.message);
+      res.send(JSON.stringify({ message: "error" }));
     }
   }
   return obj;
