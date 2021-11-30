@@ -49,6 +49,16 @@ const GraphicBot = function () {
       y: 0
     }
   };
+  this.alertPosition = {
+    linux: {
+      x: 1164,
+      y: 200,
+    },
+    mac: {
+      x: 1294,
+      y: 200,
+    }
+  };
   this.address = ADDRESS;
   this.dir = process.cwd() + "/apps/graphicBot";
   this.list = this.dir + "/list";
@@ -450,7 +460,7 @@ GraphicBot.prototype.clickAlert = async function () {
   const { sleep } = this.mother;
   try {
     await sleep(2000);
-    await moveAndClick(1168, 200);
+    await this.moveAndClick(this.alertPosition[this.os].x, this.alertPosition[this.os].y);
     await sleep(1000);
   } catch (e) {
     console.log(e);
@@ -1416,7 +1426,7 @@ GraphicBot.prototype.getChromeSize = async function () {
   const instance = this;
   const { sleep, colorParsing } = this.mother;
   const { bot: robot } = this;
-  const urlRatio = (4 / 5);
+  const urlRatio = 0.63;
   try {
     await this.chromeOpen("https://" + this.address.pythoninfo.host + ":3000/bluePrint");
     await this.pressKey("f12");
