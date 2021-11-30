@@ -5925,6 +5925,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                         const bilid = responseId.split('_').slice(0, -1).join('_');
                         const responsesIndex = Number(this.getAttribute("order"));
                         const responseName = this.children[1].textContent;
+                        const responseAmount = Number(this.children[2].textContent.split(':').replace(/[^0-9]/gi, ''));
                         const proid = this.children[0].getAttribute("proid");
                         let thisResponse, thisResponseIndex;
                         let status, pay, proofs;
@@ -5979,6 +5980,11 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 value: autoComma(amount) + '원',
                                 event: async function (e) {
                                   try {
+                                    if (this.getAttribute("value") === '' || this.getAttribute("value") === '-' || this.getAttribute("value") === '0' || this.getAttribute("value") === '0원') {
+                                      this.setAttribute("value", autoComma(responseAmount) + '원');
+                                      this.textContent = autoComma(responseAmount) + '원';
+                                    }
+
                                     const self = this;
                                     const zIndex = 1;
                                     let cloneInput, cancel;
