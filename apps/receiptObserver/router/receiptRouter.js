@@ -1527,7 +1527,6 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
       if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
         throw new Error("invaild post");
       }
-      console.log(req.body);
       const selfMongo = instance.mongolocal;
       const { proid, method, serid } = equalJson(req.body);
       const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
@@ -1538,13 +1537,9 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
       let report, map;
       let newPrice, confirmMode;
 
-      console.log(2);
-
       if (req.body.mode === "confirm") {
 
         confirmMode = true;
-        console.log(3);
-
         if (req.body.newPrice === undefined) {
           report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, confirmMode });
         } else {
@@ -1555,8 +1550,6 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
           report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo, newPrice, confirmMode });
         }
 
-        console.log(4);
-
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -1566,7 +1559,6 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
         res.send(JSON.stringify(report));
 
       } else {
-        console.log(5);
 
         if (req.body.newPrice !== undefined && !Number.isNaN(Number(req.body.newPrice))) {
           newPrice = Math.round(Number(req.body.newPrice));
@@ -1574,8 +1566,6 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
         } else {
           report = await bill.serviceConverting(proid, method, serid, { selfMongo, selfCoreMongo: instance.mongo });
         }
-
-        console.log(6);
 
         map = [
           {

@@ -3174,7 +3174,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     let safeNum;
 
     safeNum = 0;
-    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 200) {
+    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 100) {
       await sleep(300);
       safeNum++;
     }
@@ -3653,7 +3653,7 @@ BillMaker.prototype.designerConverting = async function (proid, method, desid, o
     let designerCancelCalculate;
 
     safeNum = 0;
-    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 200) {
+    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 100) {
       await sleep(300);
       safeNum++;
     }
@@ -4137,7 +4137,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
     let payArr;
 
     safeNum = 0;
-    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 200) {
+    while ((await fileSystem(`exist`, [ `${process.cwd()}/temp/${doingSignature}.json` ])) && safeNum < 100) {
       await sleep(300);
       safeNum++;
     }
