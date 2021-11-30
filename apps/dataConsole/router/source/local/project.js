@@ -6026,7 +6026,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                             for (let { title, value } of map) {
                               createNode({
                                 mother: baseTong,
-                                text: title,
                                 style: {
                                   position: "relative",
                                   display: "block",
@@ -6037,6 +6036,19 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 },
                                 children: [
                                   {
+                                    text: title,
+                                    style: {
+                                      position: "relative",
+                                      display: "inline-block",
+                                      fontSize: String(fontSize) + ea,
+                                      fontWeight: String(300),
+                                      color: colorChip.black,
+                                      marginBottom: String(imageMargin) + ea,
+                                      paddingRight: String(imageMargin) + ea,
+                                      background: colorChip.gray0,
+                                    }
+                                  },
+                                  {
                                     text: value,
                                     style: {
                                       position: "absolute",
@@ -6045,6 +6057,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       fontSize: String(fontSize) + ea,
                                       fontWeight: String(300),
                                       color: colorChip.black,
+                                      paddingLeft: String(imageMargin) + ea,
+                                      background: colorChip.gray0,
                                       textAlign: "right",
                                     }
                                   }

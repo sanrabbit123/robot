@@ -1619,7 +1619,6 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
         ];
 
         for (let { column, position, pastValue, finalValue } of map) {
-          console.log("a");
           await requestSystem("https://" + address.backinfo.host + ":3000/updateLog", { id: proid, column, position, pastValue, finalValue }, { headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
           await sleep(timeConst);
         }
