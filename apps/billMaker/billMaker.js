@@ -3254,6 +3254,7 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     pastFeeObject = await work.getDesignerFee(desid, cliid, pastSerid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
     newFeeObject = await work.getDesignerFee(desid, cliid, serid, xValue, { selfMongo: MONGOCOREC, selfLocalMongo: null });
     if (newFeeObject.detail[method] === 0) {
+      await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
       return { error: "unable in this service" };
     } else {
 
@@ -3581,7 +3582,6 @@ BillMaker.prototype.serviceConverting = async function (proid, method, serid, op
     }
 
     await fileSystem(`remove`, [ `${process.cwd()}/temp/${doingSignature}.json` ]);
-
     return returnObject;
 
   } catch (e) {

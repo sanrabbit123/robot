@@ -4563,6 +4563,13 @@ DataPatch.prototype.projectMap = function () {
 
                 GeneralJs.ajaxJson(ajaxData, PYTHONHOST + "/serviceConverting").then((report) => {
                   let message;
+                  if (typeof report.error === "string") {
+                    window.alert(report.error);
+                    window.alert("이 디자이너는 해당 서비스를 진행할 수 없습니다!");
+                    return new Promise((resolve, reject) => {
+                      resolve(null);
+                    });
+                  }
                   message = "다음 상세 사항을 확인해주세요! 추가 견적이 발생할 경우 자동으로 알림톡이 발송될 예정입니다, 확실합니까?\n";
                   message += "기존 공급가 : " + GeneralJs.autoComma(report.price.supply.from) + '원' + '\n';
                   message += "기존 잔금 : " + GeneralJs.autoComma(report.price.remain.from) + '원' + '\n';
