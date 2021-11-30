@@ -4642,7 +4642,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //r initial event
   GeneralJs.stacks[thisProjectBill] = null;
   rInitialBox.addEventListener("click", function (e) {
-    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, isMac } = GeneralJs;
+    const { colorChip, createNode, createNodes, withOut, ajaxJson, stringToDate, dateToString, cleanChildren, autoComma, isMac } = GeneralJs;
     let matrixBox;
     let loadingWidth;
     let tong;
@@ -4653,6 +4653,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     let titleHeight, titleBottom;
     let innerPaddingTop, innerPaddingBottom, innerPaddingLeft;
     let circleRadius, circleBottom, circleRight;
+    let innerPaddingLeftVisual, innerPaddingLeftVisual2;
 
     loadingWidth = fontSize * (40 / 15);
     innerMargin = fontSize * (20 / 15);
@@ -4664,6 +4665,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     innerPaddingTop = fontSize * ((isMac() ? 8 : 11) / 15);
     innerPaddingBottom = fontSize * ((isMac() ? 11 : 11) / 15);
     innerPaddingLeft = fontSize * (16 / 15);
+    innerPaddingLeftVisual = fontSize * ((isMac() ? 11 : 13) / 15);
+    innerPaddingLeftVisual2 = fontSize * ((isMac() ? 10 : 11) / 15);
     circleRadius = fontSize * (8 / 15);
     circleBottom = fontSize * ((isMac() ? 15 : 16) / 15);
     circleRight = fontSize * (2 / 15);
@@ -4893,156 +4896,6 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
             scrollTong.parentElement.setAttribute("desid", desid);
             scrollTong.parentElement.setAttribute("cliid", cliid);
             scrollTong.parentElement.setAttribute("method", method);
-            scrollTong.parentElement.addEventListener("contextmenu", function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              const thisRect = this.getBoundingClientRect();
-              const proid = this.getAttribute("proid");
-              const desid = this.getAttribute("desid");
-              const cliid = this.getAttribute("cliid");
-              const method = this.getAttribute("method");
-              let x, y;
-
-              x = e.x - thisRect.x;
-              y = e.y - thisRect.y;
-
-              const menuClass = "billMenu";
-              const menuContents = [
-                {
-                  text: "출장 견적 추가",
-                  eventFunction: async function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    try {
-                      let number, bill, tempObj, removeTargets, promptValue;
-                      promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
-                      if (promptValue !== null) {
-                        number = promptValue.trim();
-                        number = Number(String(number).replace(/[^0-9]/gi, ''));
-                        if (Number.isNaN(number)) {
-                          number = 2;
-                        }
-                        bill = await ajaxJson({ injectionCase: "request", proid, method, number }, PYTHONHOST + "/travelInjection", { equal: true });
-                        GeneralJs.stacks[thisProjectBill] = bill;
-                        cleanChildren(scrollTong);
-                        requestArrMake();
-                        responseArrMake();
-                        requestLoad();
-                        removeTargets = document.querySelectorAll('.' + menuClass);
-                        for (let dom of removeTargets) {
-                          dom.remove();
-                        }
-                      }
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  }
-                },
-                {
-                  text: "촬영 견적 추가",
-                  eventFunction: function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }
-                },
-              ];
-              let menuFontSize;
-              let menuPaddingTop, menuPaddingBottom, menuPaddingLeft;
-              let menuMargin;
-              let menuTong;
-              let num;
-
-              menuFontSize = fontSize - 1;
-              menuPaddingTop = innerPaddingTop - 2;
-              menuPaddingBottom = innerPaddingBottom - 2;
-              menuPaddingLeft = innerPaddingLeft - 1;
-              menuMargin = imageMargin / 2;
-
-              createNode({
-                mother: this,
-                class: [ menuClass ],
-                events: [
-                  {
-                    type: "click",
-                    event: function (e) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      const targets = document.querySelectorAll('.' + menuClass);
-                      for (let dom of targets) {
-                        dom.remove();
-                      }
-                    }
-                  },
-                  {
-                    type: "contextmenu",
-                    event: function (e) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }
-                  }
-                ],
-                style: {
-                  position: "fixed",
-                  top: String(0),
-                  left: String(0),
-                  width: String(100) + '%',
-                  height: String(100) + '%',
-                  background: "transparent",
-                  zIndex: String(1),
-                }
-              });
-
-              menuTong = createNode({
-                mother: this,
-                class: [ menuClass ],
-                events: [
-                  {
-                    type: "click",
-                    event: (e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }
-                  }
-                ],
-                style: {
-                  position: "absolute",
-                  top: String(y) + ea,
-                  left: String(x) + ea,
-                  zIndex: String(1),
-                  animation: "fadeuplite 0.2s ease",
-                }
-              });
-
-              for (let { text, eventFunction } of menuContents) {
-                createNode({
-                  mother: menuTong,
-                  events: [
-                    {
-                      type: "click",
-                      event: eventFunction
-                    }
-                  ],
-                  text,
-                  style: {
-                    position: "relative",
-                    fontSize: String(menuFontSize) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.whiteBlack,
-                    background: colorChip.greenGray,
-                    paddingTop: String(menuPaddingTop) + ea,
-                    paddingBottom: String(menuPaddingBottom) + ea,
-                    paddingLeft: String(menuPaddingLeft) + ea,
-                    paddingRight: String(menuPaddingLeft) + ea,
-                    borderRadius: String(3) + "px",
-                    marginBottom: String(menuMargin) + ea,
-                    cursor: "pointer",
-                    textAlign: "center",
-                    boxShadow: "0px 2px 12px -9px " + colorChip.shadow,
-                  }
-                });
-              }
-
-            });
             let num;
             num = 0;
             for (let { text, id, deactive } of requestArr) {
@@ -6055,6 +5908,159 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                   { index: id },
                   { order: String(num) }
                 ],
+                events: [
+                  {
+                    type: [ "click", "contextmenu" ],
+                    event: async function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      try {
+                        const self = this;
+                        const responseId = this.getAttribute("index");
+                        const bilid = responseId.split('_').slice(0, -1).join('_');
+                        const responsesIndex = Number(this.getAttribute("order"));
+                        let thisResponse, thisResponseIndex;
+                        let status, pay, proofs;
+                        let amount, date, oid;
+                        let method, proof, to;
+                        let baseTong;
+                        let map;
+
+                        thisResponseIndex = bill.responses.findIndex((obj) => { return obj.id === responseId });
+                        if (thisResponseIndex !== -1) {
+                          thisResponse = bill.responses[thisResponseIndex];
+                          ({ status, pay, proofs } = thisResponse);
+
+                          if (pay.length === 0) {
+                            amount = 0;
+                            date = new Date(1800, 0, 1);
+                            oid = "";
+                          } else {
+                            [ { amount, date, oid } ] = pay;
+                          }
+
+                          if (proofs.length === 0) {
+                            method = "-";
+                            proof = "-";
+                            to = "-";
+                          } else {
+                            [ { method, proof, to } ] = proofs;
+                            if (method === '') {
+                              method = "-";
+                            }
+                            if (proof === '') {
+                              proof = "-";
+                            }
+                            if (to === '') {
+                              to = "-";
+                            }
+                          }
+
+                          map = [
+                            [ "정산 금액", autoComma(amount) + '원' ],
+                            [ "정산 날짜", dateToString(date) ],
+                            [ "정산 방법", method ],
+                            [ "증빙", proof ],
+                            [ "수신자", to ]
+                          ];
+
+                          baseTong = createNode({
+                            mother: this,
+                            event: {
+                              click: (e) => { e.stopPropagation(); },
+                              contextmenu: (e) => { e.stopPropagation(); }
+                            },
+                            style: {
+                              position: "relative",
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "flex-start",
+                              background: colorChip.gradientGreen,
+                              paddingTop: String(innerPaddingLeft) + ea,
+                              paddingBottom: String(innerPaddingLeft) + ea,
+                              paddingLeft: String(innerPaddingLeft) + ea,
+                              paddingRight: String(innerPaddingLeft) + ea,
+                              borderRadius: String(3) + "px",
+                              marginTop: String(imageMargin) + ea,
+                              cursor: "",
+                            },
+                            children: [
+                              {
+                                text: "정산 정보 입력",
+                                style: {
+                                  position: "relative",
+                                  display: "inline-flex",
+                                  flexShrink: String(0),
+                                  fontSize: String(fontSize) + ea,
+                                  fontWeight: String(600),
+                                  color: colorChip.black,
+                                  background: colorChip.gray0,
+                                  paddingTop: String(innerPaddingTop) + ea,
+                                  paddingBottom: String(innerPaddingBottom) + ea,
+                                  paddingLeft: String(innerPaddingLeft) + ea,
+                                  paddingRight: String(innerPaddingLeft) + ea,
+                                  borderRadius: String(3) + "px",
+                                  marginRight: String(imageMargin) + ea,
+                                }
+                              },
+                              {
+                                position: "relative",
+                                display: "block",
+                                background: colorChip.gray0,
+                                paddingTop: String(innerPaddingLeftVisual) + ea,
+                                paddingBottom: String(innerPaddingLeftVisual2) + ea,
+                                paddingLeft: String(innerPaddingLeft) + ea,
+                                paddingRight: String(innerPaddingLeft) + ea,
+                                borderRadius: String(3) + "px",
+                                width: String(100) + '%',
+                              }
+                            ]
+                          }).children[1];
+
+                          for (let [ title, value ] of map) {
+                            createNode({
+                              mother: baseTong,
+                              text: title,
+                              style: {
+                                position: "relative",
+                                display: "block",
+                                fontSize: String(fontSize) + ea,
+                                fontWeight: String(300),
+                                color: colorChip.black,
+                                marginBottom: String(imageMargin) + ea,
+                              },
+                              children: [
+                                {
+                                  text: value,
+                                  style: {
+                                    position: "absolute",
+                                    right: String(0),
+                                    top: String(0),
+                                    fontSize: String(fontSize) + ea,
+                                    fontWeight: String(300),
+                                    color: colorChip.black,
+                                    textAlign: "right",
+                                  }
+                                }
+                              ]
+                            });
+                          }
+
+
+
+
+                          console.log(bill);
+                          console.log(self);
+                          console.log(thisResponse);
+
+
+                        }
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+                  }
+                ],
                 style: {
                   position: "relative",
                   display: "block",
@@ -6150,6 +6156,7 @@ ProjectJs.prototype.whiteCancelMaker = function (callback = null, recycle = fals
 ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   const instance = this;
   const { standard, info } = DataPatch.projectWhiteViewStandard();
+  const { colorChip, hasQuery, removeQuery, appendQuery } = GeneralJs;
   return function () {
     const thisCase = { ...instance.cases[index], index };
     let div_clone;
@@ -6165,10 +6172,10 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     for (let z = 1; z < instance.standardDoms.length; z++) {
       if (instance.standardDoms[z].firstChild.textContent === thisCase.proid) {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
+        domTargets[0].style.color = domTargets[1].style.color = colorChip.green;
       } else {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.gray4;
+        domTargets[0].style.color = domTargets[1].style.color = colorChip.gray4;
       }
     }
 
@@ -6183,7 +6190,7 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: GeneralJs.colorChip.cancelBlack,
+        background: colorChip.cancelBlack,
         top: String(0) + ea,
         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
         width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -6222,11 +6229,11 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
 
     style = {
       position: "fixed",
-      background: GeneralJs.colorChip.white,
+      background: colorChip.white,
       top: String(margin) + ea,
       left: String(instance.grayBarWidth + margin) + ea,
       borderRadius: String(5) + ea,
-      boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
+      boxShadow: "0 2px 10px -6px " + colorChip.shadow,
       width: String(window.innerWidth - instance.grayBarWidth - (margin * 2)) + ea,
       height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
       zIndex: String(2),
@@ -6234,6 +6241,11 @@ ProjectJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     for (let i in style) {
       div_clone.style[i] = style[i];
     }
+
+    if (hasQuery("proid")) {
+      removeQuery("proid");
+    }
+    appendQuery({ proid: thisCase[standard[1]] });
 
     instance.whiteContentsMaker(thisCase, div_clone);
     instance.whiteBox.contentsBox = div_clone;

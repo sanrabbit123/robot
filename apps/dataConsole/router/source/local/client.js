@@ -5206,6 +5206,7 @@ ClientJs.prototype.whiteCancelMaker = function (callback = null, recycle = false
 ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   const instance = this;
   const { standard, info } = DataPatch.clientWhiteViewStandard();
+  const { colorChip, hasQuery, removeQuery, appendQuery } = GeneralJs;
   return function () {
     const thisCase = { ...instance.cases[index], index };
     let div_clone;
@@ -5221,10 +5222,10 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     for (let z = 1; z < instance.standardDoms.length; z++) {
       if (instance.standardDoms[z].firstChild.textContent === thisCase.cliid) {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.green;
+        domTargets[0].style.color = domTargets[1].style.color = colorChip.green;
       } else {
         domTargets = instance.standardDoms[z].children;
-        domTargets[0].style.color = domTargets[1].style.color = GeneralJs.colorChip.gray4;
+        domTargets[0].style.color = domTargets[1].style.color = colorChip.gray4;
       }
     }
 
@@ -5239,7 +5240,7 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
       div_clone.classList.add("justfadein");
       style = {
         position: "fixed",
-        background: GeneralJs.colorChip.cancelBlack,
+        background: colorChip.cancelBlack,
         top: String(0) + ea,
         left: String(motherBoo ? instance.grayBarWidth : 0) + ea,
         width: "calc(100% - " + String(motherBoo ? instance.grayBarWidth : 0) + ea + ")",
@@ -5278,11 +5279,11 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
 
     style = {
       position: "fixed",
-      background: GeneralJs.colorChip.white,
+      background: colorChip.white,
       top: String(margin) + ea,
       left: String(instance.grayBarWidth + margin) + ea,
       borderRadius: String(5) + ea,
-      boxShadow: "0 2px 10px -6px " + GeneralJs.colorChip.shadow,
+      boxShadow: "0 2px 10px -6px " + colorChip.shadow,
       width: String(window.innerWidth - instance.grayBarWidth - (margin * 2)) + ea,
       height: String(window.innerHeight - instance.belowHeight - (margin * 2) - 10) + ea,
       zIndex: String(2),
@@ -5290,6 +5291,11 @@ ClientJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
     for (let i in style) {
       div_clone.style[i] = style[i];
     }
+
+    if (hasQuery("cliid")) {
+      removeQuery("cliid");
+    }
+    appendQuery({ cliid: thisCase[standard[1]] });
 
     instance.whiteContentsMaker(thisCase, div_clone);
     instance.whiteBox.contentsBox = div_clone;

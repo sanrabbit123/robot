@@ -2335,6 +2335,34 @@ GeneralJs.removeQuery = function (key) {
   }
 }
 
+GeneralJs.hasQuery = function (key) {
+  if (typeof key !== "string") {
+    throw new Error("invaild input");
+  }
+  let original;
+  let obj;
+  let keys;
+
+  original = window.location.search;
+
+  if (original === '') {
+    return false;
+  } else {
+
+    original = original.slice(1);
+
+    obj = {};
+    original.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function (origin, name, value) {
+      let decode = function (str) { return decodeURIComponent(str.split("+").join(" ")); }
+      obj[decode(name)] = decode(value);
+    });
+
+    keys = Object.keys(obj);
+
+    return keys.includes(key);
+  }
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;
