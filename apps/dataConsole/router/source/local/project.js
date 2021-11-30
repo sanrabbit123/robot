@@ -6121,6 +6121,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
 
                                     const calendar = instance.mother.makeCalendar(new Date(), function (e) {
                                       self.textContent = this.getAttribute("buttonValue");
+                                      self.setAttribute("value", this.getAttribute("buttonValue"));
                                       self.parentElement.removeChild(self.parentElement.lastChild);
                                       self.parentElement.removeChild(self.parentElement.lastChild);
                                     });
