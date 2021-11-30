@@ -5926,133 +5926,133 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                         let baseTong;
                         let map;
 
-                        thisResponseIndex = bill.responses.findIndex((obj) => { return obj.id === responseId });
-                        if (thisResponseIndex !== -1) {
-                          thisResponse = bill.responses[thisResponseIndex];
-                          ({ status, pay, proofs } = thisResponse);
+                        if (this.querySelector("aside") !== null) {
 
-                          if (pay.length === 0) {
-                            amount = 0;
-                            date = new Date(1800, 0, 1);
-                            oid = "";
-                          } else {
-                            [ { amount, date, oid } ] = pay;
-                          }
+                          this.removeChild(this.querySelector("aside"));
 
-                          if (proofs.length === 0) {
-                            method = "-";
-                            proof = "-";
-                            to = "-";
-                          } else {
-                            [ { method, proof, to } ] = proofs;
-                            if (method === '') {
+                        } else {
+
+                          thisResponseIndex = bill.responses.findIndex((obj) => { return obj.id === responseId });
+                          if (thisResponseIndex !== -1) {
+                            thisResponse = bill.responses[thisResponseIndex];
+                            ({ status, pay, proofs } = thisResponse);
+
+                            if (pay.length === 0) {
+                              amount = 0;
+                              date = new Date(1800, 0, 1);
+                              oid = "";
+                            } else {
+                              [ { amount, date, oid } ] = pay;
+                            }
+
+                            if (proofs.length === 0) {
                               method = "-";
-                            }
-                            if (proof === '') {
                               proof = "-";
-                            }
-                            if (to === '') {
                               to = "-";
+                            } else {
+                              [ { method, proof, to } ] = proofs;
+                              if (method === '') {
+                                method = "-";
+                              }
+                              if (proof === '') {
+                                proof = "-";
+                              }
+                              if (to === '') {
+                                to = "-";
+                              }
                             }
-                          }
 
-                          map = [
-                            [ "정산 금액", autoComma(amount) + '원' ],
-                            [ "정산 날짜", dateToString(date) ],
-                            [ "정산 방법", method ],
-                            [ "증빙", proof ],
-                            [ "수신자", to ]
-                          ];
+                            map = [
+                              { title: "정산 금액", value: autoComma(amount) + '원' },
+                              { title: "정산 날짜", value: dateToString(date) },
+                              { title: "정산 방법", value: method },
+                              { title: "증빙", value: proof },
+                              { title: "수신자", value: to }
+                            ];
 
-                          baseTong = createNode({
-                            mother: this,
-                            event: {
-                              click: (e) => { e.stopPropagation(); },
-                              contextmenu: (e) => { e.stopPropagation(); }
-                            },
-                            style: {
-                              position: "relative",
-                              display: "flex",
-                              flexDirection: "row",
-                              alignItems: "flex-start",
-                              background: colorChip.gradientGreen,
-                              paddingTop: String(innerPaddingLeft) + ea,
-                              paddingBottom: String(innerPaddingLeft) + ea,
-                              paddingLeft: String(innerPaddingLeft) + ea,
-                              paddingRight: String(innerPaddingLeft) + ea,
-                              borderRadius: String(3) + "px",
-                              marginTop: String(imageMargin) + ea,
-                              cursor: "",
-                            },
-                            children: [
-                              {
-                                text: "정산 정보 입력",
-                                style: {
-                                  position: "relative",
-                                  display: "inline-flex",
-                                  flexShrink: String(0),
-                                  fontSize: String(fontSize) + ea,
-                                  fontWeight: String(600),
-                                  color: colorChip.black,
-                                  background: colorChip.gray0,
-                                  paddingTop: String(innerPaddingTop) + ea,
-                                  paddingBottom: String(innerPaddingBottom) + ea,
-                                  paddingLeft: String(innerPaddingLeft) + ea,
-                                  paddingRight: String(innerPaddingLeft) + ea,
-                                  borderRadius: String(3) + "px",
-                                  marginRight: String(imageMargin) + ea,
-                                }
+                            baseTong = createNode({
+                              mother: this,
+                              mode: "aside",
+                              event: {
+                                click: (e) => { e.stopPropagation(); },
+                                contextmenu: (e) => { e.stopPropagation(); }
                               },
-                              {
+                              style: {
                                 position: "relative",
-                                display: "block",
-                                background: colorChip.gray0,
-                                paddingTop: String(innerPaddingLeftVisual) + ea,
-                                paddingBottom: String(innerPaddingLeftVisual2) + ea,
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "flex-start",
+                                background: colorChip.gradientGreen,
+                                paddingTop: String(innerPaddingLeft) + ea,
+                                paddingBottom: String(innerPaddingLeft) + ea,
                                 paddingLeft: String(innerPaddingLeft) + ea,
                                 paddingRight: String(innerPaddingLeft) + ea,
                                 borderRadius: String(3) + "px",
-                                width: String(100) + '%',
-                              }
-                            ]
-                          }).children[1];
-
-                          for (let [ title, value ] of map) {
-                            createNode({
-                              mother: baseTong,
-                              text: title,
-                              style: {
-                                position: "relative",
-                                display: "block",
-                                fontSize: String(fontSize) + ea,
-                                fontWeight: String(300),
-                                color: colorChip.black,
-                                marginBottom: String(imageMargin) + ea,
+                                marginTop: String(imageMargin) + ea,
+                                cursor: "",
                               },
                               children: [
                                 {
-                                  text: value,
+                                  text: "정산 정보 입력",
                                   style: {
-                                    position: "absolute",
-                                    right: String(0),
-                                    top: String(0),
+                                    position: "relative",
+                                    display: "inline-flex",
+                                    flexShrink: String(0),
                                     fontSize: String(fontSize) + ea,
-                                    fontWeight: String(300),
+                                    fontWeight: String(600),
                                     color: colorChip.black,
-                                    textAlign: "right",
+                                    background: colorChip.gray0,
+                                    paddingTop: String(innerPaddingTop) + ea,
+                                    paddingBottom: String(innerPaddingBottom) + ea,
+                                    paddingLeft: String(innerPaddingLeft) + ea,
+                                    paddingRight: String(innerPaddingLeft) + ea,
+                                    borderRadius: String(3) + "px",
+                                    marginRight: String(imageMargin) + ea,
                                   }
+                                },
+                                {
+                                  position: "relative",
+                                  display: "block",
+                                  background: colorChip.gray0,
+                                  paddingTop: String(innerPaddingLeftVisual) + ea,
+                                  paddingBottom: String(innerPaddingLeftVisual2) + ea,
+                                  paddingLeft: String(innerPaddingLeft) + ea,
+                                  paddingRight: String(innerPaddingLeft) + ea,
+                                  borderRadius: String(3) + "px",
+                                  width: String(100) + '%',
                                 }
                               ]
-                            });
+                            }).children[1];
+                            for (let { title, value } of map) {
+                              createNode({
+                                mother: baseTong,
+                                text: title,
+                                style: {
+                                  position: "relative",
+                                  display: "block",
+                                  fontSize: String(fontSize) + ea,
+                                  fontWeight: String(300),
+                                  color: colorChip.black,
+                                  marginBottom: String(imageMargin) + ea,
+                                },
+                                children: [
+                                  {
+                                    text: value,
+                                    style: {
+                                      position: "absolute",
+                                      right: String(0),
+                                      top: String(0),
+                                      fontSize: String(fontSize) + ea,
+                                      fontWeight: String(300),
+                                      color: colorChip.black,
+                                      textAlign: "right",
+                                    }
+                                  }
+                                ]
+                              });
+                            }
+
                           }
-
-
-
-
-                          console.log(bill);
-                          console.log(self);
-                          console.log(thisResponse);
-
 
                         }
                       } catch (e) {

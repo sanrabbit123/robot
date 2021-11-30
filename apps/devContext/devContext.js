@@ -91,6 +91,20 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const res = await requestSystem("https://" + address.backinfo.host + ":3000/ssl", {}, { method: "get", headers: { "origin": "https://" + address.pythoninfo.host, "Content-Type": "application/json" } });
+
+    console.log(res);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1467,7 +1481,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p132");
+    // await this.getRawPortfolio("p143");
 
 
     // get corePortfolio by pid
