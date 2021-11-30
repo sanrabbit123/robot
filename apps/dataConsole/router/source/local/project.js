@@ -5925,7 +5925,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                         const bilid = responseId.split('_').slice(0, -1).join('_');
                         const responsesIndex = Number(this.getAttribute("order"));
                         const responseName = this.children[1].textContent;
-                        const responseAmount = Number(this.children[2].textContent.split(':').replace(/[^0-9]/gi, ''));
+                        const responseAmount = Number(this.children[2].textContent.split(':')[1].replace(/[^0-9]/gi, ''));
                         const proid = this.children[0].getAttribute("proid");
                         let thisResponse, thisResponseIndex;
                         let status, pay, proofs;
