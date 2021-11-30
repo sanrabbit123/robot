@@ -781,6 +781,12 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
   let obj = {};
   obj.link = "/generalBill";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.mode === undefined) {
         throw new Error("must be mode => [ create, read, update, delete, sse ]");
@@ -803,20 +809,25 @@ ReceiptRouter.prototype.rou_post_generalBill = function () {
           option.limit = Number(req.body.limit);
         }
         result = await bill.getBillsByQuery(whereQuery, option);
+
+      } else if (mode === "update") {
+
+        if (req.body.whereQuery === undefined || req.body.updateQuery === undefined) {
+          throw new Error("must be whereQuery, updateQuery");
+        }
+        ({ whereQuery, updateQuery } = equalJson(req.body));
+        await bill.updateBill([ whereQuery, updateQuery ], { selfMongo });
+        result = { message: "success" };
+
       } else {
-        throw new Error("must be mode => [ read ]");
+        throw new Error("must be mode => [ read, update ]");
       }
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify(result));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_generalBill): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ error: e.message }));
     }
   }
   return obj;

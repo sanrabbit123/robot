@@ -4654,6 +4654,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     let innerPaddingTop, innerPaddingBottom, innerPaddingLeft;
     let circleRadius, circleBottom, circleRight;
     let innerPaddingLeftVisual, innerPaddingLeftVisual2;
+    let lineTop, lineOpacity;
+    let calendarTop;
 
     loadingWidth = fontSize * (40 / 15);
     innerMargin = fontSize * (20 / 15);
@@ -4665,11 +4667,14 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     innerPaddingTop = fontSize * ((isMac() ? 8 : 11) / 15);
     innerPaddingBottom = fontSize * ((isMac() ? 11 : 11) / 15);
     innerPaddingLeft = fontSize * (16 / 15);
-    innerPaddingLeftVisual = fontSize * ((isMac() ? 11 : 13) / 15);
-    innerPaddingLeftVisual2 = fontSize * ((isMac() ? 10 : 11) / 15);
+    innerPaddingLeftVisual = fontSize * ((isMac() ? 13 : 15) / 15);
+    innerPaddingLeftVisual2 = fontSize * ((isMac() ? 6 : 8) / 15);
     circleRadius = fontSize * (8 / 15);
     circleBottom = fontSize * ((isMac() ? 15 : 16) / 15);
     circleRight = fontSize * (2 / 15);
+    lineTop = 36;
+    calendarTop = 30;
+    lineOpacity = 0.45;
 
     if (/fadeout/gi.test(historyBox.style.animation)) {
 
@@ -5919,12 +5924,16 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                         const responseId = this.getAttribute("index");
                         const bilid = responseId.split('_').slice(0, -1).join('_');
                         const responsesIndex = Number(this.getAttribute("order"));
+                        const responseName = this.children[1].textContent;
+                        const proid = this.children[0].getAttribute("proid");
                         let thisResponse, thisResponseIndex;
                         let status, pay, proofs;
                         let amount, date, oid;
                         let method, proof, to;
                         let baseTong;
                         let map;
+                        let tempDom;
+                        let domArr;
 
                         if (this.querySelector("aside") !== null) {
 
@@ -5936,6 +5945,8 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                           if (thisResponseIndex !== -1) {
                             thisResponse = bill.responses[thisResponseIndex];
                             ({ status, pay, proofs } = thisResponse);
+
+                            domArr = [];
 
                             if (pay.length === 0) {
                               amount = 0;
@@ -5963,11 +5974,415 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                             }
 
                             map = [
-                              { title: "정산 금액", value: autoComma(amount) + '원' },
-                              { title: "정산 날짜", value: dateToString(date) },
-                              { title: "정산 방법", value: method },
-                              { title: "증빙", value: proof },
-                              { title: "수신자", value: to }
+                              {
+                                title: "정산 금액",
+                                value: autoComma(amount) + '원',
+                                event: async function (e) {
+                                  try {
+                                    const self = this;
+                                    const zIndex = 1;
+                                    let cloneInput, cancel;
+
+                                    cancel = createNode({
+                                      mother: this.parentElement,
+                                      event: {
+                                        click: (e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          const finalValue = autoComma(Number(this.parentElement.lastChild.value.trim().replace(/[^0-9]/gi, ''))) + '원';
+                                          this.setAttribute("value", finalValue);
+                                          this.textContent = finalValue;
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                        },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                      },
+                                      style: {
+                                        position: "fixed",
+                                        top: String(0),
+                                        left: String(0),
+                                        width: String(100) + '%',
+                                        height: String(100) + '%',
+                                        background: "transparent",
+                                        transition: "all 0s ease",
+                                        zIndex
+                                      }
+                                    });
+
+                                    cancel.style.top = String(cancel.getBoundingClientRect().top * -1) + ea;
+                                    cancel.style.left = String(cancel.getBoundingClientRect().left * -1) + ea;
+                                    cancel.style.width = String(window.innerWidth) + ea;
+                                    cancel.style.height = String(window.innerHeight) + ea;
+
+                                    cloneInput = createNode({
+                                      mother: this.parentElement,
+                                      mode: "input",
+                                      event: {
+                                        click: (e) => { e.preventDefault(); e.stopPropagation(); },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                        keypress: function (e) {
+                                          if (e.key === "Enter") {
+                                            const finalValue = autoComma(Number(this.value.trim().replace(/[^0-9]/gi, ''))) + '원';
+                                            self.setAttribute("value", finalValue);
+                                            self.textContent = finalValue;
+                                            self.parentElement.removeChild(self.parentElement.lastChild);
+                                            self.parentElement.removeChild(self.parentElement.lastChild);
+                                          }
+                                        }
+                                      },
+                                      style: {
+                                        position: "absolute",
+                                        right: String(0),
+                                        top: String(0),
+                                        outline: String(0),
+                                        border: String(0),
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(300),
+                                        color: colorChip.green,
+                                        background: colorChip.gray0,
+                                        textAlign: "right",
+                                        width: String(this.getBoundingClientRect().width) + ea,
+                                        height: String(this.getBoundingClientRect().height) + ea,
+                                        zIndex
+                                      }
+                                    });
+
+                                    cloneInput.value = this.getAttribute("value");
+                                    cloneInput.focus();
+
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              },
+                              {
+                                title: "정산 날짜",
+                                value: dateToString(date),
+                                event: async function (e) {
+                                  try {
+                                    const self = this;
+                                    const zIndex = 1;
+                                    let base, cancel;
+
+                                    cancel = createNode({
+                                      mother: this.parentElement,
+                                      event: {
+                                        click: (e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                        },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                      },
+                                      style: {
+                                        position: "fixed",
+                                        top: String(0),
+                                        left: String(0),
+                                        width: String(100) + '%',
+                                        height: String(100) + '%',
+                                        background: "transparent",
+                                        transition: "all 0s ease",
+                                        zIndex
+                                      }
+                                    });
+
+                                    cancel.style.top = String(cancel.getBoundingClientRect().top * -1) + ea;
+                                    cancel.style.left = String(cancel.getBoundingClientRect().left * -1) + ea;
+                                    cancel.style.width = String(window.innerWidth) + ea;
+                                    cancel.style.height = String(window.innerHeight) + ea;
+
+                                    base = createNode({
+                                      mother: this.parentElement,
+                                      event: {
+                                        click: (e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                        },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                      },
+                                      style: {
+                                        position: "absolute",
+                                        right: String(0),
+                                        top: String(calendarTop) + ea,
+                                        background: colorChip.white,
+                                        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+                                        borderRadius: String(5) + ea,
+                                        animation: "fadeuplite 0.3s ease",
+                                        zIndex
+                                      }
+                                    });
+
+                                    const calendar = instance.mother.makeCalendar(new Date(), function (e) {
+                                      self.textContent = this.getAttribute("buttonValue");
+                                      self.parentElement.removeChild(self.parentElement.lastChild);
+                                      self.parentElement.removeChild(self.parentElement.lastChild);
+                                    });
+                                    base.appendChild(calendar.calendarBase);
+
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              },
+                              {
+                                title: "정산 방법",
+                                value: method,
+                                event: async function (e) {
+                                  try {
+                                    if (this.getAttribute("value") === '' || this.getAttribute("value") === '-') {
+                                      this.setAttribute("value", "계좌 이체");
+                                      this.textContent = "계좌 이체";
+                                    }
+
+                                    const self = this;
+                                    const zIndex = 1;
+                                    let cloneInput, cancel;
+
+                                    cancel = createNode({
+                                      mother: this.parentElement,
+                                      event: {
+                                        click: (e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          const finalValue = this.parentElement.lastChild.value.trim();
+                                          this.setAttribute("value", finalValue);
+                                          this.textContent = finalValue;
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                        },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                      },
+                                      style: {
+                                        position: "fixed",
+                                        top: String(0),
+                                        left: String(0),
+                                        width: String(100) + '%',
+                                        height: String(100) + '%',
+                                        background: "transparent",
+                                        transition: "all 0s ease",
+                                        zIndex
+                                      }
+                                    });
+
+                                    cancel.style.top = String(cancel.getBoundingClientRect().top * -1) + ea;
+                                    cancel.style.left = String(cancel.getBoundingClientRect().left * -1) + ea;
+                                    cancel.style.width = String(window.innerWidth) + ea;
+                                    cancel.style.height = String(window.innerHeight) + ea;
+
+                                    cloneInput = createNode({
+                                      mother: this.parentElement,
+                                      mode: "input",
+                                      event: {
+                                        click: (e) => { e.preventDefault(); e.stopPropagation(); },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                        keypress: function (e) {
+                                          if (e.key === "Enter") {
+                                            const finalValue = this.parentElement.lastChild.value.trim();
+                                            self.setAttribute("value", finalValue);
+                                            self.textContent = finalValue;
+                                            self.parentElement.removeChild(self.parentElement.lastChild);
+                                            self.parentElement.removeChild(self.parentElement.lastChild);
+                                          }
+                                        }
+                                      },
+                                      style: {
+                                        position: "absolute",
+                                        right: String(0),
+                                        top: String(0),
+                                        outline: String(0),
+                                        border: String(0),
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(300),
+                                        color: colorChip.green,
+                                        background: colorChip.gray0,
+                                        textAlign: "right",
+                                        width: this.getAttribute("value") === '-' || this.getAttribute("value") === '' ? "" : String(this.getBoundingClientRect().width) + ea,
+                                        height: String(this.getBoundingClientRect().height) + ea,
+                                        zIndex
+                                      }
+                                    });
+
+                                    cloneInput.value = this.getAttribute("value");
+                                    cloneInput.focus();
+
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              },
+                              {
+                                title: "증빙",
+                                value: proof,
+                                event: async function (e) {
+                                  try {
+                                    if (this.getAttribute("value") === '' || this.getAttribute("value") === '-') {
+                                      this.setAttribute("value", "현금 영수증");
+                                      this.textContent = "현금 영수증";
+                                    }
+
+                                    const self = this;
+                                    const zIndex = 1;
+                                    let cloneInput, cancel;
+
+                                    cancel = createNode({
+                                      mother: this.parentElement,
+                                      event: {
+                                        click: (e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          const finalValue = this.parentElement.lastChild.value.trim();
+                                          this.setAttribute("value", finalValue);
+                                          this.textContent = finalValue;
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                        },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                      },
+                                      style: {
+                                        position: "fixed",
+                                        top: String(0),
+                                        left: String(0),
+                                        width: String(100) + '%',
+                                        height: String(100) + '%',
+                                        background: "transparent",
+                                        transition: "all 0s ease",
+                                        zIndex
+                                      }
+                                    });
+
+                                    cancel.style.top = String(cancel.getBoundingClientRect().top * -1) + ea;
+                                    cancel.style.left = String(cancel.getBoundingClientRect().left * -1) + ea;
+                                    cancel.style.width = String(window.innerWidth) + ea;
+                                    cancel.style.height = String(window.innerHeight) + ea;
+
+                                    cloneInput = createNode({
+                                      mother: this.parentElement,
+                                      mode: "input",
+                                      event: {
+                                        click: (e) => { e.preventDefault(); e.stopPropagation(); },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                        keypress: function (e) {
+                                          if (e.key === "Enter") {
+                                            const finalValue = this.parentElement.lastChild.value.trim();
+                                            self.setAttribute("value", finalValue);
+                                            self.textContent = finalValue;
+                                            self.parentElement.removeChild(self.parentElement.lastChild);
+                                            self.parentElement.removeChild(self.parentElement.lastChild);
+                                          }
+                                        }
+                                      },
+                                      style: {
+                                        position: "absolute",
+                                        right: String(0),
+                                        top: String(0),
+                                        outline: String(0),
+                                        border: String(0),
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(300),
+                                        color: colorChip.green,
+                                        background: colorChip.gray0,
+                                        textAlign: "right",
+                                        width: this.getAttribute("value") === '-' || this.getAttribute("value") === '' ? "" : String(this.getBoundingClientRect().width) + ea,
+                                        height: String(this.getBoundingClientRect().height) + ea,
+                                        zIndex
+                                      }
+                                    });
+
+                                    cloneInput.value = this.getAttribute("value");
+                                    cloneInput.focus();
+
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              },
+                              {
+                                title: "수신자",
+                                value: to,
+                                event: async function (e) {
+                                  try {
+                                    if (this.getAttribute("value") === '' || this.getAttribute("value") === '-') {
+                                      const [ { name } ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients");
+                                      this.setAttribute("value", name);
+                                      this.textContent = name;
+                                    }
+                                    const self = this;
+                                    const zIndex = 1;
+                                    let cloneInput, cancel;
+
+                                    cancel = createNode({
+                                      mother: this.parentElement,
+                                      event: {
+                                        click: (e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          const finalValue = this.parentElement.lastChild.value.trim();
+                                          this.setAttribute("value", finalValue);
+                                          this.textContent = finalValue;
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                          this.parentElement.removeChild(this.parentElement.lastChild);
+                                        },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                      },
+                                      style: {
+                                        position: "fixed",
+                                        top: String(0),
+                                        left: String(0),
+                                        width: String(100) + '%',
+                                        height: String(100) + '%',
+                                        background: "transparent",
+                                        transition: "all 0s ease",
+                                        zIndex
+                                      }
+                                    });
+
+                                    cancel.style.top = String(cancel.getBoundingClientRect().top * -1) + ea;
+                                    cancel.style.left = String(cancel.getBoundingClientRect().left * -1) + ea;
+                                    cancel.style.width = String(window.innerWidth) + ea;
+                                    cancel.style.height = String(window.innerHeight) + ea;
+
+                                    cloneInput = createNode({
+                                      mother: this.parentElement,
+                                      mode: "input",
+                                      event: {
+                                        click: (e) => { e.preventDefault(); e.stopPropagation(); },
+                                        contextmenu: (e) => { e.stopPropagation(); },
+                                        keypress: function (e) {
+                                          if (e.key === "Enter") {
+                                            const finalValue = this.parentElement.lastChild.value.trim();
+                                            self.setAttribute("value", finalValue);
+                                            self.textContent = finalValue;
+                                            self.parentElement.removeChild(self.parentElement.lastChild);
+                                            self.parentElement.removeChild(self.parentElement.lastChild);
+                                          }
+                                        }
+                                      },
+                                      style: {
+                                        position: "absolute",
+                                        right: String(0),
+                                        top: String(0),
+                                        outline: String(0),
+                                        border: String(0),
+                                        fontSize: String(fontSize) + ea,
+                                        fontWeight: String(300),
+                                        color: colorChip.green,
+                                        background: colorChip.gray0,
+                                        textAlign: "right",
+                                        width: this.getAttribute("value") === '-' || this.getAttribute("value") === '' ? "" : String(this.getBoundingClientRect().width) + ea,
+                                        height: String(this.getBoundingClientRect().height) + ea,
+                                        zIndex
+                                      }
+                                    });
+
+                                    cloneInput.value = this.getAttribute("value");
+                                    cloneInput.focus();
+
+                                  } catch (e) {
+                                    console.log(e);
+                                  }
+                                }
+                              }
                             ];
 
                             baseTong = createNode({
@@ -5981,35 +6396,17 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 position: "relative",
                                 display: "flex",
                                 flexDirection: "row",
-                                alignItems: "flex-start",
+                                alignItems: "flex-end",
                                 background: colorChip.gradientGreen,
-                                paddingTop: String(innerPaddingLeft) + ea,
-                                paddingBottom: String(innerPaddingLeft) + ea,
-                                paddingLeft: String(innerPaddingLeft) + ea,
-                                paddingRight: String(innerPaddingLeft) + ea,
+                                paddingTop: String(innerPaddingLeft * (0.6)) + ea,
+                                paddingBottom: String(innerPaddingLeft * (0.6)) + ea,
+                                paddingLeft: String(innerPaddingLeft * (0.6)) + ea,
+                                paddingRight: String(innerPaddingLeft) * (0.6) + ea,
                                 borderRadius: String(3) + "px",
                                 marginTop: String(imageMargin) + ea,
                                 cursor: "",
                               },
                               children: [
-                                {
-                                  text: "정산 정보 입력",
-                                  style: {
-                                    position: "relative",
-                                    display: "inline-flex",
-                                    flexShrink: String(0),
-                                    fontSize: String(fontSize) + ea,
-                                    fontWeight: String(600),
-                                    color: colorChip.black,
-                                    background: colorChip.gray0,
-                                    paddingTop: String(innerPaddingTop) + ea,
-                                    paddingBottom: String(innerPaddingBottom) + ea,
-                                    paddingLeft: String(innerPaddingLeft) + ea,
-                                    paddingRight: String(innerPaddingLeft) + ea,
-                                    borderRadius: String(3) + "px",
-                                    marginRight: String(imageMargin) + ea,
-                                  }
-                                },
                                 {
                                   position: "relative",
                                   display: "block",
@@ -6020,36 +6417,106 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   paddingRight: String(innerPaddingLeft) + ea,
                                   borderRadius: String(3) + "px",
                                   width: String(100) + '%',
-                                }
+                                },
+                                {
+                                  text: "저장",
+                                  event: {
+                                    click: async function (e) {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      try {
+                                        let [ amount, date, method, proof, to ] = domArr.map((dom) => { return dom.getAttribute("value"); });
+                                        let whereQuery, updateQuery;
+                                        if (Number.isNaN(Number(amount.replace(/[^0-9]/gi, ''))) || Number(amount.replace(/[^0-9]/gi, '')) === 0 || !/^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]$/.test(date)) {
+                                          window.alert("정보를 먼저 올바르게 기입해주세요!");
+                                        } else {
+                                          amount = Number(amount.replace(/[^0-9]/gi, ''));
+                                          date = stringToDate(date);
+
+                                          whereQuery = { bilid };
+                                          updateQuery = {};
+
+                                          updateQuery["responses." + String(responsesIndex) + ".pay"] = [ { amount, date, oid: "" } ];
+                                          updateQuery["responses." + String(responsesIndex) + ".proofs"] = [ { date, method, proof, to } ];
+                                          await ajaxJson({ mode: "update", whereQuery, updateQuery }, "/pythonPass_generalBill");
+
+                                          if (responseName === "디자인비 잔금" || responseName === "디자인비 잔금") {
+                                            whereQuery = { proid };
+                                            updateQuery = {};
+                                            if (responseName === "디자인비 선금") {
+                                              updateQuery["process.calculation.payments.first.date"] = date;
+                                            } else {
+                                              updateQuery["process.calculation.payments.remain.date"] = date;
+                                            }
+                                            await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
+                                          }
+
+                                          window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&rmode=true";
+
+                                        }
+                                      } catch (e) {
+                                        console.log(e);
+                                      }
+                                    }
+                                  },
+                                  style: {
+                                    position: "relative",
+                                    display: "inline-flex",
+                                    flexShrink: String(0),
+                                    fontSize: String(fontSize) + ea,
+                                    fontWeight: String(600),
+                                    color: colorChip.green,
+                                    background: colorChip.gray0,
+                                    paddingTop: String(innerPaddingTop) + ea,
+                                    paddingBottom: String(innerPaddingBottom) + ea,
+                                    paddingLeft: String(innerPaddingLeft) + ea,
+                                    paddingRight: String(innerPaddingLeft) + ea,
+                                    borderRadius: String(3) + "px",
+                                    marginLeft: String(imageMargin) + ea,
+                                    cursor: "pointer",
+                                  }
+                                },
                               ]
-                            }).children[1];
-                            for (let { title, value } of map) {
-                              createNode({
+                            }).children[0];
+                            for (let { title, value, event } of map) {
+                              tempDom = createNode({
                                 mother: baseTong,
                                 style: {
                                   position: "relative",
                                   display: "block",
                                   fontSize: String(fontSize) + ea,
-                                  fontWeight: String(300),
+                                  fontWeight: String(400),
                                   color: colorChip.black,
-                                  marginBottom: String(imageMargin) + ea,
+                                  marginBottom: String(imageMargin / 2) + ea,
                                 },
                                 children: [
+                                  {
+                                    style: {
+                                      position: "absolute",
+                                      display: "block",
+                                      borderBottom: "1px dashed " + colorChip.green,
+                                      height: String(lineTop) + '%',
+                                      width: String(100) + '%',
+                                      opacity: String(lineOpacity),
+                                    }
+                                  },
                                   {
                                     text: title,
                                     style: {
                                       position: "relative",
                                       display: "inline-block",
                                       fontSize: String(fontSize) + ea,
-                                      fontWeight: String(300),
+                                      fontWeight: String(400),
                                       color: colorChip.black,
                                       marginBottom: String(imageMargin) + ea,
-                                      paddingRight: String(imageMargin) + ea,
+                                      paddingRight: String(innerPaddingBottom) + ea,
                                       background: colorChip.gray0,
                                     }
                                   },
                                   {
                                     text: value,
+                                    attribute: { value },
+                                    event: { click: event },
                                     style: {
                                       position: "absolute",
                                       right: String(0),
@@ -6057,13 +6524,14 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                       fontSize: String(fontSize) + ea,
                                       fontWeight: String(300),
                                       color: colorChip.black,
-                                      paddingLeft: String(imageMargin) + ea,
+                                      paddingLeft: String(innerPaddingBottom) + ea,
                                       background: colorChip.gray0,
                                       textAlign: "right",
                                     }
                                   }
                                 ]
-                              });
+                              }).children[2];
+                              domArr.push(tempDom);
                             }
 
                           }
