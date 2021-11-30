@@ -6458,6 +6458,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                             await ajaxJson({ whereQuery, updateQuery }, "/rawUpdateProject");
                                           }
 
+                                          window.alert("저장되었습니다!");
                                           window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&rmode=true";
 
                                         }
