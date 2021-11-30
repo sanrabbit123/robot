@@ -1527,6 +1527,7 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
       if (req.body.proid === undefined || req.body.method === undefined || req.body.serid === undefined) {
         throw new Error("invaild post");
       }
+      console.log(req.body);
       const selfMongo = instance.mongolocal;
       const { proid, method, serid } = equalJson(req.body);
       const project = await back.getProjectById(proid, { selfMongo: instance.mongo });
@@ -1536,6 +1537,8 @@ ReceiptRouter.prototype.rou_post_serviceConverting = function () {
       const timeConst = 410;
       let report, map;
       let newPrice, confirmMode;
+
+      console.log(2);
 
       if (req.body.mode === "confirm") {
 
