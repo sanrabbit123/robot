@@ -784,7 +784,7 @@ DataConsole.prototype.connect = async function (noStatic = false) {
 
           __originTarget = req.headers["origin"] || "invaild";
           for (let host of __vailHosts) {
-            __wallLogicBoo = (__originTarget.trim().replace(/\/$/, '') === ("https://" + host));
+            __wallLogicBoo = ((__originTarget.trim().replace(/\/$/, '') === ("https://" + host)) || (__originTarget.trim().replace(/\/$/, '') === host));
             if (__wallLogicBoo) {
               break;
             }
