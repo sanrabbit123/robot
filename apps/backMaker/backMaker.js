@@ -927,7 +927,7 @@ BackMaker.prototype.getClientReport = async function () {
                 for (let z of tempColumnArr) {
                   finalObj = finalObj[z];
                 }
-                tempArr.push(String(finalObj));
+                tempArr.push(finalObj);
               }
             }
             result.push(tempArr);
@@ -945,7 +945,7 @@ BackMaker.prototype.getClientReport = async function () {
 
           tempArr = [ "문의" ];
           for (let i = 0; i < this.length; i++) {
-            tempArr.push(String(this[i].total));
+            tempArr.push(this[i].total);
             for (let j = 0; j < constColumns.length - 1; j++) {
               tempArr.push("");
             }
@@ -954,7 +954,7 @@ BackMaker.prototype.getClientReport = async function () {
 
           tempArr = [ "제안" ];
           for (let i = 0; i < this.length; i++) {
-            tempArr.push(String(this[i].proposalTotal));
+            tempArr.push(this[i].proposalTotal);
             for (let j = 0; j < constColumns.length - 1; j++) {
               tempArr.push("");
             }
@@ -964,7 +964,7 @@ BackMaker.prototype.getClientReport = async function () {
 
           tempArr = [ "진행" ];
           for (let i = 0; i < this.length; i++) {
-            tempArr.push(String(this[i].contactTotal));
+            tempArr.push(this[i].contactTotal);
             for (let j = 0; j < constColumns.length - 1; j++) {
               tempArr.push("");
             }

@@ -285,6 +285,7 @@ GeneralJs.prototype.ghostClientLaunching = async function (obj) {
       for (let dom of removeTargets) {
         belowTarget.removeChild(dom);
       }
+      this.homeliaisonTalk({}, true);
     } else {
       this.footerMake();
       this.homeliaisonTalk();
