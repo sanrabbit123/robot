@@ -665,7 +665,7 @@ module.exports = {
               "desktop": "계좌 이체시, 현금 영수증 발행을 위해 반드시 하단 '계좌 이체' 버튼을 눌러주세요!",
               "mobile": "계좌 이체시, 하단 '계좌 이체' 버튼을 꼭 눌러주세요!"
             },
-            "action": "window.location.href = '/about.php?popup=true';",
+            "action": "",
             "src": {
               "desktop": "g_interaction_universalEstimation_behaviors_desktop_0_33rspot07_120115.svg",
               "mobile": "g_interaction_universalEstimation_behaviors_mobile_0_21rspot016_120115.svg"
