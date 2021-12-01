@@ -22,17 +22,8 @@ module.exports = function (arg, info) {
       let timeIndex;
       let tempObj;
 
-      while (document.querySelector('.w2radio_label') === null) {
-        await sleep(500);
-      }
-
-      await sleep(2000);
-
-      buttons = document.querySelectorAll('.w2radio_label');
-      buttons[2].click();
-
+      document.getElementById('tabControl1_UTECRCB057_tab_tabs3').click();
       await sleep(500);
-
       document.getElementById("trigger1").click();
 
       await sleep(2000);
@@ -94,17 +85,8 @@ module.exports = function (arg, info) {
       let timeIndex;
       let tempObj;
 
-      while (document.querySelector('.w2radio_label') === null) {
-        await sleep(500);
-      }
-
-      await sleep(3000);
-
-      buttons = document.querySelectorAll('.w2radio_label');
-      buttons[2].click();
-
+      document.getElementById("tabControl1_UTECRCB005_tab_tabs3").click();
       await sleep(500);
-
       document.getElementById("trigger1").click();
 
       await sleep(2000);
