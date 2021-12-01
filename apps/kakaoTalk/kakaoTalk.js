@@ -518,8 +518,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     secondPayment: {
-      name: "잔금 안내 수정 수정",
-      id: "TF_6481",
+      name: "잔금 안내 수정 수정 수정",
+      id: "TG_6828",
       needs: [
         "client",
         "host",
@@ -758,8 +758,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     constructFirst: {
-      name: "시공 계약금 수정 수정",
-      id: "TG_5478",
+      name: "시공 계약금 수정 수정 수정",
+      id: "TG_6824",
       needs: [
         "client",
         "amount",
@@ -780,8 +780,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     constructStart: {
-      name: "시공 착수금 수정 수정",
-      id: "TG_5479",
+      name: "착수금 안내 수정 수정 수정",
+      id: "TG_6825",
       needs: [
         "client",
         "amount",
@@ -802,8 +802,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     constructMiddle: {
-      name: "시공 중도금 수정 수정",
-      id: "TG_5481",
+      name: "중도금 안내 수정 수정 수정",
+      id: "TG_6826",
       needs: [
         "client",
         "amount",
@@ -824,8 +824,8 @@ KakaoTalk.prototype.templateTong = function (target) {
       },
     },
     constructRemain: {
-      name: "시공 잔금 수정 수정",
-      id: "TG_5482",
+      name: "잔금 안내 수정 수정 수정",
+      id: "TG_6827",
       needs: [
         "client",
         "amount",

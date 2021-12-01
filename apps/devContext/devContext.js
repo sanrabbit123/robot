@@ -42,6 +42,7 @@ const MirrorRouter = require(APP_PATH + "/mirrorWhisk/router/mirrorRouter.js");
 const NativeNotifier = require(APP_PATH + "/nativeNotifier/nativeNotifier.js");
 const RethinkAccess = require(APP_PATH + "/rethinkAccess/rethinkAccess.js");
 const AppleCalendar = require(APP_PATH + "/appleAPIs/appleCalendar.js");
+const ExcelReader = require(APP_PATH + "/excelReader/excelReader.js");
 
 const DevContext = function () {
   this.mother = new Mother();
@@ -91,13 +92,11 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const excel = new ExcelReader();
+    const matrix = await excel.fileToMatrix(`${process.cwd()}/temp/test.xlsx`);
 
 
-
-
-
-
-
+    console.log(matrix);
 
 
 
