@@ -626,14 +626,11 @@ DevContext.prototype.launching = async function () {
     // num = 0;
     // for (let id of phoneNumbers) {
     //   callbackurl = "/receiveCall.php";
-    //   callbackhost = "220.117.13.12";
-    //   callbackport = 8080;
+    //   callbackhost = "121.130.214.221";
+    //   callbackport = 80;
     //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + String(callbackport), { id, pass, callbackurl, callbackhost, callbackport: String(callbackport) }, { headers: { "Content-Type": "application/json" } })).data);
     //   num++;
     // }
-
-
-
 
     // const url = "https://centrex.uplus.co.kr/RestApi/getringcallback";
     // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
@@ -646,8 +643,8 @@ DevContext.prototype.launching = async function () {
     // console.log(phoneNumbers);
     // num = 0;
     // for (let id of phoneNumbers) {
-    //   callbackurl = "/cloud" + String(num) + ".php";
-    //   callbackhost = "3.35.212.109";
+    //   callbackurl = "/receiveCall.php";
+    //   callbackhost = "121.130.214.221";
     //   callbackport = 80;
     //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass, { id, pass }, { headers: { "Content-Type": "application/json" } })).data);
     //   num++;
