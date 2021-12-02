@@ -1025,8 +1025,8 @@ Ghost.prototype.ghostRouter = function (needs) {
                 try {
                   await sleep(Math.round(1000 * Math.random()));
                   if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}.json` ])) {
-                    await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
                     const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
+                    await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
                     await ghostRequest("parsingCall", { phoneNumber, kind });
                   }
                 } catch (e) {
