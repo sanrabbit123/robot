@@ -372,7 +372,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         }
         console.log(data);
         console.log(page);
-      } while (data.LISTINFO.total > 10);
+      } while (data.SVC_RT > '0000');
     }
 
     console.log("this! 1");
