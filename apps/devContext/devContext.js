@@ -1478,7 +1478,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p115");
+    // await this.getCorePortfolio("a87");
 
 
     // aspirant to designer
@@ -1492,17 +1492,17 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2111_aa01s", [
-    //   { porlid: "ghost", index: 5 },
-    //   { porlid: "ghost", index: 2 },
-    //   { porlid: "ghost", index: 6 },
-    //   { porlid: "ghost", index: 4 },
-    //   { porlid: "ghost", index: 7 },
-    //   { porlid: "ghost", index: 1 },
+    // await this.setProposalSettingForDesigner("d2111_aa02s", [
+    //   { porlid: "a87", index: 13 },
+    //   { porlid: "a87", index: 16 },
+    //   { porlid: "a87", index: 17 },
+    //   { porlid: "a87", index: 10 },
+    //   { porlid: "a87", index: 3 },
+    //   { porlid: "a87", index: 4 },
     // ], [
-    //   "그 집의 구성원, 패턴, 니즈를 모두 반영하여 고객 중심의 공간을 만듭니다.",
-    //   "새롭거나 놀라워 의외의 느낌을 주는 동시에 실용적인 공간을 만듭니다.",
-    //   "최소한의 가구와 패브릭, 그리고 소품으로 단순하고 세련된 스타일을 구사합니다."
+    //   "홈스타일링이기에 고객의 생각을 가장 중요시하는 디자이너 입니다.",
+    //   "디자인의 완성도를 높이기 위해 항상 시뮬레이션 작업을 병행합니다.",
+    //   "기획 단계에서 소통을 가장 중요시하기에, 고객님의 이야기를 최대한 듣습니다."
     // ]);
 
 

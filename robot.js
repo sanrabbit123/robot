@@ -130,7 +130,6 @@ Robot.prototype.aliveTest = async function () {
       { name: "home", protocol: "https:", host: address.homeinfo.ghost.host, port: generalPort, },
       { name: "office", protocol: "https:", host: address.officeinfo.ghost.host, port: ghostPort, },
       { name: "officeGraphic", protocol: "https:", host: address.officeinfo.ghost.host, port: address.homeinfo.ghost.graphic.port[0], },
-      { name: "mirror", protocol: "https:", host: address.mirrorinfo.host, port: generalPort, }
     ];
 
     targetNumber = targets.length;
