@@ -37,8 +37,6 @@ const ReceiptObserver = require(APP_PATH + "/receiptObserver/receiptObserver.js"
 const GraphicBot = require(APP_PATH + "/graphicBot/graphicBot.js");
 const GaroseroParser = require(APP_PATH + "/garoseroParser/garoseroParser.js");
 const BillMaker = require(APP_PATH + "/billMaker/billMaker.js");
-const MirrorWhisk = require(APP_PATH + "/mirrorWhisk/mirrorWhisk.js");
-const MirrorRouter = require(APP_PATH + "/mirrorWhisk/router/mirrorRouter.js");
 const NativeNotifier = require(APP_PATH + "/nativeNotifier/nativeNotifier.js");
 const RethinkAccess = require(APP_PATH + "/rethinkAccess/rethinkAccess.js");
 const AppleCalendar = require(APP_PATH + "/appleAPIs/appleCalendar.js");
@@ -95,6 +93,8 @@ DevContext.prototype.launching = async function () {
     // const matrix = await excel.fileToMatrix(`${process.cwd()}/temp/test.xlsx`);
     // console.log(matrix);
 
+
+    await findCode("mirror");
 
 
 
