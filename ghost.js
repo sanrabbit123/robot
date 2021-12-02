@@ -968,7 +968,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": '*',
         });
-        console.log(req.body);
         if (req.body.sender === undefined || req.body.kind === undefined) {
           console.log(req.body);
           res.send(JSON.stringify({ error: "error" }));
@@ -1095,7 +1094,6 @@ Ghost.prototype.ghostRouter = function (needs) {
               }
             } else {
               client = rows[0];
-              instance.callObserver(client, null, address.officeinfo.phone.password).catch((err) => { console.log(err); });
               name = client.name;
               sub = "고객님";
               cliid = client.cliid;
