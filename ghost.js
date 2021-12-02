@@ -370,6 +370,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
           }
           tong[callConst + obj.SRC].push(JSON.parse(JSON.stringify(obj)));
         }
+        console.log(page);
       } while (data.LISTINFO.total > 10);
     }
 
