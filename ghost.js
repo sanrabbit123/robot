@@ -977,7 +977,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify({ error: "error" }));
         } else {
           const { sender, kind, ip } = req.body;
-          const timeoutConst = "receiveCall_" + uniqueValue("string");
+          const timeoutConst = "receiveCall";
           let phoneNumber, senderArr;
           let part0, part1, part2;
 
@@ -1023,10 +1023,10 @@ Ghost.prototype.ghostRouter = function (needs) {
               await fileSystem(`writeJson`, [ `${process.cwd()}/temp/${timeoutConst}.json`, { phoneNumber, kind } ]);
               setQueue(async () => {
                 try {
-                  await sleep(Math.round(600 * Math.random()));
+                  await sleep(Math.round(1000 * Math.random()));
                   if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}.json` ])) {
-                    const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
                     await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
+                    const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
                     await ghostRequest("parsingCall", { phoneNumber, kind });
                   }
                 } catch (e) {
