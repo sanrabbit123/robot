@@ -19,7 +19,6 @@ BackMaker.allDatabaseNames = [
   "mongoinfo",
   "backinfo",
   "pythoninfo",
-  "mirrorinfo",
   "bridgeinfo"
 ];
 

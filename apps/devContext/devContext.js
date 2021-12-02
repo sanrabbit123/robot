@@ -96,7 +96,7 @@ DevContext.prototype.launching = async function () {
     // console.log(matrix);
 
 
-
+    await findCode("mirror");
 
 
 
