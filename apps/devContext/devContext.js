@@ -91,12 +91,20 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(res.data, null, 2));
 
 
+    // const excel = new ExcelReader();
+    // const matrix = await excel.fileToMatrix(`${process.cwd()}/temp/test.xlsx`);
+    // console.log(matrix);
 
-    const excel = new ExcelReader();
-    const matrix = await excel.fileToMatrix(`${process.cwd()}/temp/test.xlsx`);
 
 
-    console.log(matrix);
+    
+
+
+
+
+
+
+
 
 
 
