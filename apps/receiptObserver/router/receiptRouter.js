@@ -1864,9 +1864,15 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
   let obj = {};
   obj.link = "/requestRefund";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.kind === undefined || req.body.bilid === undefined || req.body.requestIndex === undefined || req.body.payIndex === undefined) {
-        throw new Error("invaild post");
+        throw new Error("invaild post 0");
       }
       const selfMongo = instance.mongolocal;
       const { kind, bilid } = equalJson(req.body);
@@ -1876,7 +1882,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
         throw new Error("invaild post, kind must be : [ cardEntire, cardPartial, vaccountEntire, vaccountPartial ]");
       }
       if (Number.isNaN(requestIndex) || Number.isNaN(payIndex)) {
-        throw new Error("invaild post");
+        throw new Error("invaild post 1");
       }
       let report, option, client, designer, project, pastProject, proid;
       let timeConst, map;
@@ -1949,21 +1955,9 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
         console.log(err);
       });
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify(report));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_requestRefund): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }

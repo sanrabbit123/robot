@@ -4408,7 +4408,7 @@ BillMaker.prototype.amountConverting = async function (bilid, option = { selfMon
 
 BillMaker.prototype.requestRefund = async function (method, bilid, requestIndex, payIndex, option = { selfMongo: null, selfCoreMongo: null }) {
   if (typeof method !== "string" || typeof bilid !== "string" || typeof requestIndex !== "number" || typeof payIndex !== "number") {
-    throw new Error("invaild input");
+    throw new Error(`invaild input : method => ${String(method)}, bilid => ${String(bilid)}, requestIndex => ${String(requestIndex)} / ${typeof requestIndex}, payIndex => ${String(payIndex)}, ${typeof payIndex}`);
   }
   if (!([ "cardEntire", "cardPartial", "vaccountEntire", "vaccountPartial" ]).includes(method)) {
     throw new Error("invaild method, must be : [ cardEntire, cardPartial, vaccountEntire, vaccountPartial ]");
