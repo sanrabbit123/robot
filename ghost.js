@@ -1012,14 +1012,14 @@ Ghost.prototype.ghostRouter = function (needs) {
             phoneNumber = part0 + '-' + part1 + '-' + part2;
           }
 
-          if (MirrorRouter.timeouts[timeoutConst] !== undefined || MirrorRouter.timeouts[timeoutConst] !== null) {
-            clearTimeout(MirrorRouter.timeouts[timeoutConst]);
+          if (Ghost.timeouts[timeoutConst] !== undefined || Ghost.timeouts[timeoutConst] !== null) {
+            clearTimeout(Ghost.timeouts[timeoutConst]);
           }
-          MirrorRouter.timeouts[timeoutConst] = setTimeout(async () => {
+          Ghost.timeouts[timeoutConst] = setTimeout(async () => {
             try {
               await ghostRequest("parsingCall", { phoneNumber, kind });
-              clearTimeout(MirrorRouter.timeouts[timeoutConst]);
-              MirrorRouter.timeouts[timeoutConst] = null;
+              clearTimeout(Ghost.timeouts[timeoutConst]);
+              Ghost.timeouts[timeoutConst] = null;
             } catch (e) {
               console.log(e);
             }
@@ -1172,7 +1172,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify({ message: "success" }));
         }
       } catch (e) {
-        await errorLog("MirrorRouter 문제 생김 (rou_post_parsingCall) : " + e.message);
+        await errorLog("Ghost 문제 생김 (rou_post_parsingCall) : " + e.message);
         res.send(JSON.stringify({ message: "error" }));
       }
     }
