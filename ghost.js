@@ -807,8 +807,12 @@ Ghost.prototype.ghostRouter = function (needs) {
           return statusReading();
         }).then(() => {
           return instance.insyncCheck();
+        }).then(() => {
+          return instance.callHistory(MONGOC, MONGOCONSOLEC);
+        }).then(() => {
+          return messageLog("callHistory update success : " + JSON.stringify(new Date()));
         }).catch((err) => {
-          console.log(err);
+          errorLog("ghost error (ssl cron): " + err.message).catch((e) => { console.log(e); });
         });
         res.set({
           "Content-Type": "application/json",
