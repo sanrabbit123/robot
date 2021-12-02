@@ -287,6 +287,45 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
   }
 }
 
+Ghost.prototype.autoHypen = function (sender) {
+  let phoneNumber, senderArr;
+  let part0, part1, part2;
+  senderArr = sender.split('');
+  phoneNumber = '';
+  part0 = '';
+  part1 = '';
+  part2 = '';
+  if (/^01/gi.test(sender)) {
+    for (let i = 0; i < 3; i++) {
+      part0 += senderArr.shift();
+    }
+    for (let i = 0; i < 4; i++) {
+      part2 = senderArr.pop() + part2;
+    }
+    part1 = senderArr.join('');
+    phoneNumber = part0 + '-' + part1 + '-' + part2;
+  } else if (/^02/gi.test(sender)) {
+    for (let i = 0; i < 2; i++) {
+      part0 += senderArr.shift();
+    }
+    for (let i = 0; i < 4; i++) {
+      part2 = senderArr.pop() + part2;
+    }
+    part1 = senderArr.join('');
+    phoneNumber = part0 + '-' + part1 + '-' + part2;
+  } else {
+    for (let i = 0; i < 3; i++) {
+      part0 += senderArr.shift();
+    }
+    for (let i = 0; i < 4; i++) {
+      part2 = senderArr.pop() + part2;
+    }
+    part1 = senderArr.join('');
+    phoneNumber = part0 + '-' + part1 + '-' + part2;
+  }
+  return phoneNumber;
+}
+
 Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
   const instance = this;
   const back = this.back;
@@ -300,44 +339,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
     const callConst = "c_";
     const uniqueConst = "u_";
     const successStandardSec = 200;
-    const autoHypen = (sender) => {
-      let phoneNumber, senderArr;
-      let part0, part1, part2;
-      senderArr = sender.split('');
-      phoneNumber = '';
-      part0 = '';
-      part1 = '';
-      part2 = '';
-      if (/^01/gi.test(sender)) {
-        for (let i = 0; i < 3; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      } else if (/^02/gi.test(sender)) {
-        for (let i = 0; i < 2; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      } else {
-        for (let i = 0; i < 3; i++) {
-          part0 += senderArr.shift();
-        }
-        for (let i = 0; i < 4; i++) {
-          part2 = senderArr.pop() + part2;
-        }
-        part1 = senderArr.join('');
-        phoneNumber = part0 + '-' + part1 + '-' + part2;
-      }
-      return phoneNumber;
-    }
+    const autoHypen = this.autoHypen;
     let res, tong, data, query, calltype, page;
     let outArr, inArr;
     let tempObj;
@@ -362,7 +364,6 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         if (data.DATAS === null) {
           break;
         }
-        console.log(data);
         for (let obj of data.DATAS) {
           if (!Array.isArray(tong[callConst + obj.SRC])) {
             tong[callConst + obj.SRC] = [];
@@ -385,7 +386,6 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         query = { id, pass, calltype, page };
         res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
         data = res.data;
-        console.log(data);
         if (data.DATAS === null) {
           break;
         }
@@ -767,9 +767,11 @@ Ghost.prototype.dirParsing = function (dir) {
 Ghost.prototype.ghostRouter = function (needs) {
   const instance = this;
   const back = this.back;
+  const address = this.address;
   const { webHook, serverTempFolder } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
   const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend, messageLog } = this.mother;
+  const querystring = require("querystring");
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
@@ -921,6 +923,32 @@ Ghost.prototype.ghostRouter = function (needs) {
         res.send(JSON.stringify({ message: "hello?" }));
       } catch (e) {
         console.log(e);
+      }
+    }
+  };
+
+  //POST - clickDial
+  funcObj.get_clickDial = {
+    link: [ "/clickDial" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.id === undefined || req.body.destnumber === undefined) {
+          throw new Error("invaild post");
+        }
+        const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
+        let query, phone;
+        query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
+        await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+        res.send(JSON.stringify({ message: "hello?" }));
+      } catch (e) {
+        await errorLog("Ghost error (rou_post_clickDial) : " + e.message);
+        res.send(JSON.stringify({ message: "error" }));
       }
     }
   };

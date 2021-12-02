@@ -3581,8 +3581,7 @@ DataRouter.prototype.rou_post_callTo = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, equalJson, errorLog } = this.mother;
-  const querystring = require("querystring");
+  const { requestSystem, equalJson, errorLog, ghostRequest } = this.mother;
   let obj = {};
   obj.link = [ "/callTo" ];
   obj.func = async function (req, res) {
@@ -3616,8 +3615,7 @@ DataRouter.prototype.rou_post_callTo = function () {
           errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index").catch((e) => { console.log(e); });
         } else {
           number = address.officeinfo.phone.numbers[index];
-          query = { id: number, pass: instance.address.officeinfo.phone.password, destnumber: phone.replace(/[^0-9]/g, '') };
-          await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+          await ghostRequest("/clickDial", { id: number, destnumber: phone.replace(/[^0-9]/g, '') });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "true" }));
         }
