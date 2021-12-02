@@ -927,6 +927,35 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - clickDial
+  funcObj.get_clickDial = {
+    link: [ "/clickDial" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (req.body.id === undefined || req.body.destnumber === undefined) {
+          throw new Error("invaild post");
+        }
+        console.log(req);
+        const url = "https://centrex.uplus.co.kr/RestApi/clickdial";
+        let query, phone, response;
+        query = { id: req.body.id, pass: address.officeinfo.phone.password, destnumber: req.body.destnumber.replace(/[^0-9]/g, '') };
+        console.log(query);
+        response = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+        console.log(response);
+        res.send(JSON.stringify({ message: "hello?" }));
+      } catch (e) {
+        await errorLog("Ghost error (rou_post_clickDial) : " + e.message);
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    }
+  };
+
   //POST - receive
   funcObj.post_receiveCall = {
     link: [ "/receiveCall" ],
