@@ -528,6 +528,8 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
       }
     }
 
+    console.log("call history update success");
+
   } catch (e) {
     console.log(e);
   }

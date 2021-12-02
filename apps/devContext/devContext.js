@@ -103,7 +103,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await ghostRequest("callHistory");
+    console.log(await requestSystem("https://home-liaison.serveftp.com:8080/callHistory"));
 
 
 
