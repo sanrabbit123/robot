@@ -14,21 +14,9 @@ const worker = async function (package) {
     mongo, mongoconsole, mongolocal,
     rethink,
   } = package;
-  const { messageLog, errorLog } = mother;
+  const { requestSystem, errorLog } = mother;
   try {
-    const MirrorWhisk = require(`${process.cwd()}/apps/mirrorWhisk/mirrorWhisk.js`);
-    const mirror = new MirrorWhisk();
-    const logCollection = "recordBackupLog";
-    let log, safeNum;
-
-    safeNum = 0;
-    do {
-      log = await mirror.recordBackup();
-      safeNum++;
-    } while (log === false || safeNum > 10);
-
-    await rethink.rethinkCreate(logCollection, log);
-    await messageLog("record backup and delete done");
+    await requestSystem("https://" + address.officeinfo.ghost.host + ":8080/recordBackup");
     return true;
   } catch (e) {
     await errorLog("record backup and delete error : " + e.message);
