@@ -350,6 +350,8 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
     let pastHistory;
     let index, indexTarget;
 
+    console.log("this!");
+
     calltype = "outbound";
     tong = {};
     for (let id of phoneNumbers) {
@@ -902,7 +904,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     link: [ "/callHistory" ],
     func: async function (req, res) {
       try {
-
+        console.log(req);
         instance.callHistory(MONGOC, MONGOCONSOLEC).then(() => {
           return messageLog("callHistory update success : " + JSON.stringify(new Date()));
         }).catch((err) => {
