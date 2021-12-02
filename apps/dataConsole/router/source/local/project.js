@@ -6224,8 +6224,10 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 event: async function (e) {
                                   try {
                                     if (this.getAttribute("value") === '' || this.getAttribute("value") === '-') {
-                                      this.setAttribute("value", "현금 영수증");
-                                      this.textContent = "현금 영수증";
+                                      const [ designer ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
+                                      const defaultWording = /사업/gi.test(designer.information.business.businessInfo.classification) ? "세금 계산서" : "프리랜서";
+                                      this.setAttribute("value", defaultWording);
+                                      this.textContent = defaultWording;
                                     }
 
                                     const self = this;
@@ -6310,9 +6312,9 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                 event: async function (e) {
                                   try {
                                     if (this.getAttribute("value") === '' || this.getAttribute("value") === '-') {
-                                      const [ { name } ] = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients");
-                                      this.setAttribute("value", name);
-                                      this.textContent = name;
+                                      const [ { designer } ] = await ajaxJson({ noFlat: true, whereQuery: { desid } }, "/getDesigners", { equal: true });
+                                      this.setAttribute("value", designer);
+                                      this.textContent = designer;
                                     }
                                     const self = this;
                                     const zIndex = 1;
