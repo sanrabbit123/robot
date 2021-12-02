@@ -614,23 +614,23 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
-    const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
-    let id;
-    let callbackurl;
-    let callbackhost;
-    let callbackport;
-    let num;
-    phoneNumbers.push("0220392252")
-    console.log(phoneNumbers);
-    num = 0;
-    for (let id of phoneNumbers) {
-      callbackurl = "/receiveCall.php";
-      callbackhost = "220.117.13.12";
-      callbackport = 8080;
-      console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + String(callbackport), { id, pass, callbackurl, callbackhost, callbackport: String(callbackport) }, { headers: { "Content-Type": "application/json" } })).data);
-      num++;
-    }
+    // const url = "https://centrex.uplus.co.kr/RestApi/setringcallback";
+    // const { officeinfo: { phone: { numbers: phoneNumbers, password: pass } } } = this.address;
+    // let id;
+    // let callbackurl;
+    // let callbackhost;
+    // let callbackport;
+    // let num;
+    // phoneNumbers.push("0220392252")
+    // console.log(phoneNumbers);
+    // num = 0;
+    // for (let id of phoneNumbers) {
+    //   callbackurl = "/receiveCall.php";
+    //   callbackhost = "220.117.13.12";
+    //   callbackport = 8080;
+    //   console.log((await requestSystem(url + "?id=" + id + "&pass=" + pass + "&callbackurl=" + callbackurl + "&callbackhost=" + callbackhost + "&callbackport=" + String(callbackport), { id, pass, callbackurl, callbackhost, callbackport: String(callbackport) }, { headers: { "Content-Type": "application/json" } })).data);
+    //   num++;
+    // }
 
 
 

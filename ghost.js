@@ -929,31 +929,6 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
-  //GET - receiveCall
-  funcObj.get_receiveCall = {
-    link: [ "/receiveCall.php" ],
-    func: async function (req, res) {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers": '*',
-      });
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      try {
-        if (req.query.sender !== undefined && req.query.receiver !== undefined && req.body.kind !== undefined) {
-          await ghostRequest("receiveCall", { sender: req.query.sender, kind: req.query.kind, message: req.query.message });
-        } else {
-          throw new Error("invaild input");
-        }
-        res.send(JSON.stringify({ message: "hello?" }));
-      } catch (e) {
-        await errorLog("Ghost error (get_receiveCall) : " + e.message + "\nip : " + ip);
-        res.send(JSON.stringify({ message: "error" }));
-      }
-    }
-  };
-
   //POST - clickDial
   funcObj.post_clickDial = {
     link: [ "/clickDial" ],
