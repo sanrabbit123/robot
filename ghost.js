@@ -362,6 +362,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         if (data.DATAS === null) {
           break;
         }
+        console.log(data);
         for (let obj of data.DATAS) {
           if (!Array.isArray(tong[callConst + obj.SRC])) {
             tong[callConst + obj.SRC] = [];
@@ -384,6 +385,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         query = { id, pass, calltype, page };
         res = await requestSystem(url + "?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
         data = res.data;
+        console.log(data);
         if (data.DATAS === null) {
           break;
         }
@@ -903,7 +905,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     link: [ "/callHistory" ],
     func: async function (req, res) {
       try {
-        console.log(req);
+
         instance.callHistory(MONGOC, MONGOCONSOLEC).then(() => {
           return messageLog("callHistory update success : " + JSON.stringify(new Date()));
         }).catch((err) => {
