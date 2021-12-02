@@ -683,7 +683,6 @@ Ghost.prototype.recordBackup = async function () {
 
     await shellExec(`rm -rf ${shellLink(tempFolder)}/${folderName};`);
 
-    console.log(log)
     return log;
 
   } catch (e) {
