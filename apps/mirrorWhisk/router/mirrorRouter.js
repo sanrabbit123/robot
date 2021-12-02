@@ -465,14 +465,15 @@ MirrorRouter.prototype.rou_post_clickDial = function () {
   return obj;
 }
 
+
+
 MirrorRouter.prototype.rou_post_parsingCall = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, ghostRequest, messageSend, errorLog } = this.mother;
+  const { requestSystem, messageSend, errorLog } = this.mother;
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
-  const outerUrl = "http://www.moyaweb.com/search_result.do";
   let obj = {};
   obj.link = "/parsingCall";
   obj.func = async function (req, res) {
@@ -482,6 +483,7 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
       "Access-Control-Allow-Headers": '*',
     });
+    const outerUrl = "http://www.moyaweb.com/search_result.do";
     try {
       if (req.body.phoneNumber === undefined) {
         console.log(req.body);
@@ -605,8 +607,7 @@ MirrorRouter.prototype.rou_post_parsingCall = function () {
               }
             }
           }
-          await messageSend({ text, channel: "#call" });
-          ghostRequest("voice", { text }).catch((err) => { throw new Error(err); });
+          await messageSend({ text, channel: "#call", voice: true });
         }
         res.send(JSON.stringify({ message: "success" }));
       }
@@ -622,7 +623,7 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, messageLog, errorLog } = this.mother;
+  const { requestSystem, messageLog, errorLog, ghostRequest } = this.mother;
   let obj = {};
   obj.link = "/receiveCall";
   obj.func = async function (req, res) {
@@ -681,7 +682,7 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
         }
         MirrorRouter.timeouts[timeoutConst] = setTimeout(async () => {
           try {
-            await requestSystem("https://" + instance.address.mirrorinfo.host + ":3000/parsingCall", { phoneNumber, kind }, { headers: { "Content-Type": "application/json" } });
+            await ghostRequest("parsingCall", { phoneNumber, kind });
             clearTimeout(MirrorRouter.timeouts[timeoutConst]);
             MirrorRouter.timeouts[timeoutConst] = null;
           } catch (e) {
@@ -697,6 +698,8 @@ MirrorRouter.prototype.rou_post_receiveCall = function () {
   }
   return obj;
 }
+
+
 
 MirrorRouter.prototype.rou_post_messageLog = function () {
   const instance = this;

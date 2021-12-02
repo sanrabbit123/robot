@@ -774,6 +774,8 @@ Ghost.prototype.ghostRouter = function (needs) {
   const querystring = require("querystring");
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
+  const jsdom = require("jsdom");
+  const { JSDOM } = jsdom;
   const audio = new PlayAudio();
   const hangul = new ParsingHangul();
   let funcObj = {};
@@ -927,6 +929,31 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //GET - receiveCall
+  funcObj.get_receiveCall = {
+    link: [ "/receiveCall.php" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      try {
+        if (req.query.sender !== undefined && req.query.receiver !== undefined && req.body.kind !== undefined) {
+          await ghostRequest("receiveCall", { sender: req.query.sender, kind: req.query.kind, message: req.query.message });
+        } else {
+          throw new Error("invaild input");
+        }
+        res.send(JSON.stringify({ message: "hello?" }));
+      } catch (e) {
+        await errorLog("Ghost error (get_receiveCall) : " + e.message + "\nip : " + ip);
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    }
+  };
+
   //POST - clickDial
   funcObj.post_clickDial = {
     link: [ "/clickDial" ],
@@ -955,7 +982,7 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
-  //POST - receive
+  //POST - receiveCall
   funcObj.post_receiveCall = {
     link: [ "/receiveCall" ],
     func: async function (req, res) {
@@ -966,17 +993,97 @@ Ghost.prototype.ghostRouter = function (needs) {
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": '*',
         });
+        if (req.body.sender === undefined || req.body.kind === undefined) {
+          console.log(req.body);
+          res.send(JSON.stringify({ error: "error" }));
+        } else {
+          const { sender, kind, ip } = req.body;
+          const timeoutConst = "receiveCall";
+          let phoneNumber, senderArr;
+          let part0, part1, part2;
+
+          senderArr = sender.split('');
+          phoneNumber = '';
+          part0 = '';
+          part1 = '';
+          part2 = '';
+          if (/^01/gi.test(sender)) {
+            for (let i = 0; i < 3; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 = senderArr.pop() + part2;
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          } else if (/^02/gi.test(sender)) {
+            for (let i = 0; i < 2; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 = senderArr.pop() + part2;
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          } else {
+            for (let i = 0; i < 3; i++) {
+              part0 += senderArr.shift();
+            }
+            for (let i = 0; i < 4; i++) {
+              part2 = senderArr.pop() + part2;
+            }
+            part1 = senderArr.join('');
+            phoneNumber = part0 + '-' + part1 + '-' + part2;
+          }
+
+          if (MirrorRouter.timeouts[timeoutConst] !== undefined || MirrorRouter.timeouts[timeoutConst] !== null) {
+            clearTimeout(MirrorRouter.timeouts[timeoutConst]);
+          }
+          MirrorRouter.timeouts[timeoutConst] = setTimeout(async () => {
+            try {
+              await ghostRequest("parsingCall", { phoneNumber, kind });
+              clearTimeout(MirrorRouter.timeouts[timeoutConst]);
+              MirrorRouter.timeouts[timeoutConst] = null;
+            } catch (e) {
+              console.log(e);
+            }
+          }, 600);
+
+          res.send(JSON.stringify({ message: "success" }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  //POST - parsingCall
+  funcObj.post_parsingCall = {
+    link: [ "/parsingCall" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      const outerUrl = "http://www.moyaweb.com/search_result.do";
+      try {
         if (req.body.phoneNumber === undefined) {
           console.log(req.body);
           res.send(JSON.stringify({ error: "error" }));
         } else {
           const { phoneNumber, kind } = req.body;
           const method = (kind === '1' ? "전화" : "문자");
+          let client;
           let rows, temp, name, sub, text;
           let manager;
           let cliid, desid, proid;
           let projects;
           let boo;
+          let outerResponse;
+          let entireDom, resultDom, findName;
+          let addressBookRows;
 
           if (!/^2/.test(phoneNumber)) {
             manager = null;
@@ -1011,15 +1118,17 @@ Ghost.prototype.ghostRouter = function (needs) {
                 }
               }
             } else {
-              name = rows[0].name;
+              client = rows[0];
+              instance.callObserver(client, null, address.officeinfo.phone.password).catch((err) => { console.log(err); });
+              name = client.name;
               sub = "고객님";
-              cliid = rows[0].cliid;
+              cliid = client.cliid;
               boo = false;
-              for (let { analytics } of rows[0].requests) {
+              for (let { analytics } of client.requests) {
                 boo = /진행/gi.test(analytics.response.status);
               }
               if (boo) {
-                projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } }, { "process.status": { $regex: "^[진홀]" } } ] }, { selfMongo: MONGOC });
+                projects = await back.getProjectsByQuery({ $and: [ { cliid }, { desid: { $regex: "^d" } }, { "process.status": { $regex: "^[진홀]" } } ] }, { selfMongo: instance.mongo });
                 if (projects.length > 0) {
                   manager = await back.getHistoryById("project", projects[0].proid, { selfMongo: MONGOCONSOLEC });
                   if (manager !== null) {
@@ -1059,14 +1168,36 @@ Ghost.prototype.ghostRouter = function (needs) {
                 text += method + " 확인해주세요!";
               }
             }
-            await messageSend({ text, channel: "#cx" });
-            requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
-          }
+            if (name.trim() === "알 수 없는") {
 
+              addressBookRows = await back.mongoRead("addressBook", { phone: phoneNumber }, { selfMongo: MONGOLOCALC });
+              if (addressBookRows.length > 0) {
+                text = `${addressBookRows[0].name}에서 ${method}가 왔습니다!`;
+              } else {
+                text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
+              }
+              if (/^알 수 없는/gi.test(text)) {
+                rows = await back.getAspirantsByQuery({ phone: phoneNumber }, { selfMongo: MONGOC });
+                if (rows.length === 0) {
+                  outerResponse = await requestSystem(outerUrl, { SCH_TEL_NO: String(phoneNumber).replace(/[^0-9]/gi, '') }, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+                  entireDom = new JSDOM(outerResponse.data);
+                  resultDom = entireDom.window.document.getElementById("result_phone_text");
+                  if (resultDom !== null) {
+                    findName = resultDom.textContent.trim();
+                    text = `${findName}에서 ${method}가 왔습니다!`;
+                  }
+                } else {
+                  text = `${rows[0].designer} 디자이너 신청자로부터 ${method}가 왔습니다!`;
+                }
+              }
+            }
+            await messageSend({ text, channel: "#call", voice: true });
+          }
           res.send(JSON.stringify({ message: "success" }));
         }
       } catch (e) {
-        console.log(e);
+        await errorLog("MirrorRouter 문제 생김 (rou_post_parsingCall) : " + e.message);
+        res.send(JSON.stringify({ message: "error" }));
       }
     }
   };
