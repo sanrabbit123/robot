@@ -3959,7 +3959,7 @@ Ghost.prototype.smsLaunching = async function () {
     });
 
     pems = {};
-    pemsLink = process.cwd() + "/pems/" + this.address.mirrorinfo.host;
+    pemsLink = process.cwd() + "/pems/" + this.address.pythoninfo.host;
 
     certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
     keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
