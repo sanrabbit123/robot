@@ -977,7 +977,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           res.send(JSON.stringify({ error: "error" }));
         } else {
           const { sender, kind, ip } = req.body;
-          const timeoutConst = "receiveCall_" + uniqueValue("string") + ".json";
+          const timeoutConst = "receiveCall_" + uniqueValue("string");
           let phoneNumber, senderArr;
           let part0, part1, part2;
 
@@ -1015,17 +1015,27 @@ Ghost.prototype.ghostRouter = function (needs) {
             phoneNumber = part0 + '-' + part1 + '-' + part2;
           }
 
-          await fileSystem(`writeJson`, [ `${process.cwd()}/temp/${timeoutConst}`, { phoneNumber, kind } ]);
-
-          setQueue(async () => {
+          if (Ghost.timeouts[timeoutConst] !== undefined || Ghost.timeouts[timeoutConst] !== null) {
+            clearTimeout(Ghost.timeouts[timeoutConst]);
+          }
+          Ghost.timeouts[timeoutConst] = setTimeout(async () => {
             try {
-              if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}` ])) {
-                const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}` ]);
-                await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}` ]);
-                await ghostRequest("parsingCall", { phoneNumber, kind });
-              }
+              await fileSystem(`writeJson`, [ `${process.cwd()}/temp/${timeoutConst}.json`, { phoneNumber, kind } ]);
+              setQueue(async () => {
+                try {
+                  if (await fileSystem(`exist`, [ `${process.cwd()}/temp/${timeoutConst}.json` ])) {
+                    const { phoneNumber, kind } = await fileSystem(`readJson`, [ `${process.cwd()}/temp/${timeoutConst}.json` ]);
+                    await shellExec(`rm`, [ `-rf`, `${process.cwd()}/temp/${timeoutConst}.json` ]);
+                    await ghostRequest("parsingCall", { phoneNumber, kind });
+                  }
+                } catch (e) {
+                  throw new Error(e.message);
+                }
+              }, 300);
+              clearTimeout(Ghost.timeouts[timeoutConst]);
+              Ghost.timeouts[timeoutConst] = null;
             } catch (e) {
-              throw new Error(e.message);
+              console.log(e);
             }
           }, 600);
 
