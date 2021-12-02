@@ -97,13 +97,13 @@ DevContext.prototype.launching = async function () {
 
 
 
-    
 
 
 
 
 
 
+    await ghostRequest("callHistory");
 
 
 

@@ -900,10 +900,13 @@ Ghost.prototype.ghostRouter = function (needs) {
     link: [ "/callHistory" ],
     func: async function (req, res) {
       try {
-        instance.callHistory(MONGOC, MONGOCONSOLEC).catch((err) => {
+
+        instance.callHistory(MONGOC, MONGOCONSOLEC).then(() => {
+          return messageLog("callHistory update success : " + JSON.stringify(new Date()));
+        }).catch((err) => {
           errorLog("callHistory error : " + err.message).catch((e) => { console.log(e); });
-          console.log(err);
         });
+
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": '*',
