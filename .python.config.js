@@ -12,7 +12,7 @@ module.exports = {
       script: "./ghost.js",
       instances: 1,
       exec_mode: "cluster",
-      args: [ "wss" ]
+      args: [ "receiveSms" ]
     }
   ]
 };
