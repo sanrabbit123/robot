@@ -1058,7 +1058,7 @@ Ghost.prototype.ghostRouter = function (needs) {
           let boo;
           let outerResponse;
           let entireDom, resultDom, findName;
-          let addressBookRows;
+          let builders;
 
           if (!/^2/.test(phoneNumber)) {
             manager = null;
@@ -1143,10 +1143,9 @@ Ghost.prototype.ghostRouter = function (needs) {
               }
             }
             if (name.trim() === "알 수 없는") {
-
-              addressBookRows = await back.mongoRead("addressBook", { phone: phoneNumber }, { selfMongo: MONGOLOCALC });
-              if (addressBookRows.length > 0) {
-                text = `${addressBookRows[0].name}에서 ${method}가 왔습니다!`;
+              builders = await back.getBuildersByQuery({ "information.phone": phoneNumber }, { selfMongo: MONGOC });
+              if (builders.length > 0) {
+                text = `${builders[0].builder} 시공 소장님께 ${method}가 왔습니다!`;
               } else {
                 text = `알 수 없는 사람(${phoneNumber})으로부터 ${method}가 왔습니다!`
               }
