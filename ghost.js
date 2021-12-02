@@ -350,8 +350,6 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
     let pastHistory;
     let index, indexTarget;
 
-    console.log("this!");
-
     calltype = "outbound";
     tong = {};
     for (let id of phoneNumbers) {
@@ -370,21 +368,13 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
           }
           tong[callConst + obj.SRC].push(JSON.parse(JSON.stringify(obj)));
         }
-        console.log(data);
-        console.log(page);
-      } while (data.SVC_RT > '0000');
+      } while (data.SVC_RT === '0000');
     }
-
-    console.log("this! 1");
-
 
     for (let c in tong) {
       tong[c].sort((a, b) => { return a.NO - b.NO; });
       tong[c] = { out: JSON.parse(JSON.stringify(tong[c])), in: [] };
     }
-
-    console.log("this! 2");
-
 
     calltype = "inbound";
     for (let id of phoneNumbers) {
@@ -400,11 +390,8 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         for (let obj of data.DATAS) {
           tong[callConst + obj.DST].in.push(JSON.parse(JSON.stringify(obj)));
         }
-      } while (data.LISTINFO.total > 10);
+      } while (data.SVC_RT === '0000');
     }
-
-    console.log("this! 3");
-
 
     outArr = [];
     inArr = [];
@@ -442,7 +429,6 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         inArr.push(tempObj);
       }
     }
-    console.log("this! 4");
 
     outArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
     inArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
@@ -506,7 +492,6 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
 
       }
     }
-    console.log("this! 5");
 
     for (let { date, from, duration, success } of inArr) {
       rows = await back.getClientsByQuery({ phone: from }, { selfMongo });
@@ -782,7 +767,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   const back = this.back;
   const { webHook, serverTempFolder } = this;
   const [ MONGOC, MONGOLOCALC, MONGOCONSOLEC, rethink ] = needs;
-  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend } = this.mother;
+  const { fileSystem, headRequest, requestSystem, shell, shellExec, shellLink, ghostRequest, dateToString, todayMaker, mongo, mongoinfo, mongolocalinfo, sleep, equalJson, leafParsing, statusReading, uniqueValue, setQueue, ipParsing, errorLog, messageSend, messageLog } = this.mother;
   const PlayAudio = require(process.cwd() + "/apps/playAudio/playAudio.js");
   const ParsingHangul = require(process.cwd() + "/apps/parsingHangul/parsingHangul.js");
   const audio = new PlayAudio();
