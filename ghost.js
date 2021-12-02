@@ -372,10 +372,17 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         }
       } while (data.LISTINFO.total > 10);
     }
+
+    console.log("this! 1");
+
+
     for (let c in tong) {
       tong[c].sort((a, b) => { return a.NO - b.NO; });
       tong[c] = { out: JSON.parse(JSON.stringify(tong[c])), in: [] };
     }
+
+    console.log("this! 2");
+
 
     calltype = "inbound";
     for (let id of phoneNumbers) {
@@ -393,6 +400,9 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         }
       } while (data.LISTINFO.total > 10);
     }
+
+    console.log("this! 3");
+
 
     outArr = [];
     inArr = [];
@@ -430,6 +440,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
         inArr.push(tempObj);
       }
     }
+    console.log("this! 4");
 
     outArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
     inArr.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
@@ -493,6 +504,7 @@ Ghost.prototype.callHistory = async function (MONGOC, MONGOCONSOLEC) {
 
       }
     }
+    console.log("this! 5");
 
     for (let { date, from, duration, success } of inArr) {
       rows = await back.getClientsByQuery({ phone: from }, { selfMongo });
