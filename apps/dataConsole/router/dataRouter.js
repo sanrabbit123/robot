@@ -4175,7 +4175,7 @@ DataRouter.prototype.rou_post_callTo = function () {
   const instance = this;
   const back = this.back;
   const address = this.address;
-  const { requestSystem, equalJson, errorLog } = this.mother;
+  const { requestSystem, equalJson, errorLog, ghostRequest } = this.mother;
   const querystring = require("querystring");
   let obj = {};
   obj.link = [ "/callTo" ];
@@ -4204,17 +4204,31 @@ DataRouter.prototype.rou_post_callTo = function () {
           }
         }
         index = address.officeinfo.phone.members.indexOf(thisPerson);
-        if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
-          res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({ message: "OK" }));
-          errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index").catch((e) => { console.log(e); });
-        } else {
-          number = address.officeinfo.phone.numbers[index];
-          query = { id: number, pass: instance.address.officeinfo.phone.password, destnumber: phone.replace(/[^0-9]/g, '') };
-          await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
-          res.set({ "Content-Type": "application/json" });
-          res.send(JSON.stringify({ message: "true" }));
-        }
+
+
+        number = address.officeinfo.phone.numbers[2];
+        query = { id: number, pass: instance.address.officeinfo.phone.password, destnumber: phone.replace(/[^0-9]/g, '') };
+
+        console.log(await ghostRequest("clickDial", { id: number, destnumber: phone.replace(/[^0-9]/g, '') }));
+
+        // if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
+        //   res.set({ "Content-Type": "application/json" });
+        //   res.send(JSON.stringify({ message: "OK" }));
+        //   errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index").catch((e) => { console.log(e); });
+        // } else {
+        //   number = address.officeinfo.phone.numbers[index];
+        //   query = { id: number, pass: instance.address.officeinfo.phone.password, destnumber: phone.replace(/[^0-9]/g, '') };
+        //   await requestSystem("https://centrex.uplus.co.kr/RestApi/clickdial?" + querystring.stringify(query), query, { headers: { "Content-Type": "application/json" } });
+        //   res.set({ "Content-Type": "application/json" });
+        //   res.send(JSON.stringify({ message: "true" }));
+        // }
+
+        console.log(query);
+
+        res.set({ "Content-Type": "application/json" });
+        res.send(JSON.stringify({ message: "true" }));
+
+
       }
     } catch (e) {
       console.log(e);

@@ -928,7 +928,7 @@ Ghost.prototype.ghostRouter = function (needs) {
   };
 
   //POST - clickDial
-  funcObj.get_clickDial = {
+  funcObj.post_clickDial = {
     link: [ "/clickDial" ],
     func: async function (req, res) {
       res.set({
