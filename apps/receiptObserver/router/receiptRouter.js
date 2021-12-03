@@ -516,7 +516,7 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
       }
       const { proid, cliid, desid, method, amount: { supply, vat, consumer } } = equalJson(req.body);
       const find0 = "시공 잔금";
-      const find1 = "시공비";
+      const find1 = "시공";
       let bills, bilid, tempIndex, targetIndex, targetBill;
       let itemIndex;
       let whereQuery, updateQuery;
