@@ -657,11 +657,15 @@ Robot.prototype.designerCalculation = async function () {
   }
 }
 
-Robot.prototype.spawnBoradoli = async function () {
+Robot.prototype.spawnSector = async function (static = false) {
   try {
-    const SpawnBoradoli = require(`${process.cwd()}/apps/spawnBoradoli/spawnBoradoli.js`);
-    const app = new SpawnBoradoli();
-    await app.spawnLaunching();
+    const PublicSector = require(`${process.cwd()}/apps/publicSector/publicSector.js`);
+    const app = new PublicSector();
+    if (!static) {
+      await app.spawnSector();
+    } else {
+      await app.staticRender();
+    }
   } catch (e) {
     console.log(e);
   }
@@ -1061,9 +1065,11 @@ const MENU = {
       console.log(e);
     }
   },
-  spawnBoradoli: async function () {
+  spawnSector: async function () {
     try {
-      await robot.spawnBoradoli();
+      let arg;
+      arg = typeof process.argv[3] === "string" ? process.argv[3] : "";
+      await robot.spawnSector(arg === "static");
     } catch (e) {
       console.log(e);
     }
