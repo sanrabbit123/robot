@@ -515,61 +515,52 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
         throw new Error("invaild post");
       }
       const { proid, cliid, desid, method, amount: { supply, vat, consumer } } = equalJson(req.body);
-      const rows = await back.mongoRead("constructForm", { proid }, { selfMongo: instance.mongolocal });
       const find0 = "시공 잔금";
       const find1 = "시공비";
       let bills, bilid, tempIndex, targetIndex, targetBill;
       let itemIndex;
       let whereQuery, updateQuery;
 
-      console.log(rows);
-
-      if (rows.length !== 0) {
-
-        bills = await bill.getBillsByQuery({
-          $and: [
-            { "links.proid": proid },
-            { "links.cliid": cliid },
-            { "links.desid": desid },
-            { "links.method": method },
-          ]
-        }, { selfMongo: instance.mongolocal });
-        if (bills.length > 0) {
-          bilid = null;
-          targetBill = null;
-          targetIndex = -1;
-          for (let i = 0; i < bills.length; i++) {
-            tempIndex = bills[i].requests.findIndex((obj) => {
-              return (new RegExp(find0, "gi")).test(obj.name);
-            });
-            if (tempIndex !== -1) {
-              bilid = bills[i].bilid;
-              targetBill = bills[i];
-              targetIndex = tempIndex;
-              break;
-            }
-          }
-
-          console.log(targetIndex, itemIndex);
-
-          if (bilid !== null) {
-            itemIndex = -1;
-            for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
-              if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
-                itemIndex = i;
-                break;
-              }
-            }
-            whereQuery = { bilid };
-            updateQuery = {};
-            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = supply;
-            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = supply;
-            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = vat;
-            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = consumer;
-            await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+      bills = await bill.getBillsByQuery({
+        $and: [
+          { "links.proid": proid },
+          { "links.cliid": cliid },
+          { "links.desid": desid },
+          { "links.method": method },
+        ]
+      }, { selfMongo: instance.mongolocal });
+      if (bills.length > 0) {
+        bilid = null;
+        targetBill = null;
+        targetIndex = -1;
+        for (let i = 0; i < bills.length; i++) {
+          tempIndex = bills[i].requests.findIndex((obj) => {
+            return (new RegExp(find0, "gi")).test(obj.name);
+          });
+          if (tempIndex !== -1) {
+            bilid = bills[i].bilid;
+            targetBill = bills[i];
+            targetIndex = tempIndex;
+            break;
           }
         }
 
+        if (bilid !== null) {
+          itemIndex = -1;
+          for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
+            if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
+              itemIndex = i;
+              break;
+            }
+          }
+          whereQuery = { bilid };
+          updateQuery = {};
+          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = supply;
+          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = supply;
+          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = vat;
+          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = consumer;
+          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+        }
       }
 
       res.send(JSON.stringify({ message: "success" }));
