@@ -38,11 +38,19 @@ PublicSector.prototype.staticRender = async function () {
 PublicSector.prototype.spawnSector = async function () {
   const instance = this;
   const { home, name, spawnDir, serverDir, moduleName } = this;
-  const { fileSystem, shellExec, shellLink } = this.mother;
+  const { fileSystem, shellExec, shellLink, uniqueValue } = this.mother;
   try {
     const homeDir = await fileSystem(`readDir`, [ home ]);
     const package = await fileSystem(`readJson`, [ serverDir + "/package.json" ]);
+    const getTarget = spawnDir + "/router/get";
+    const postTarget = spawnDir + "/router/post";
+    const router = spawnDir + "/router/router.py";
     let order;
+    let getTargetDir, postTargetDir;
+    let tempScript, tempArr, tempStr, tempStr2;
+    let moduleTong, funcTong;
+    let routerScript, routerScriptArr;
+    let moduleIndex, funcIndex;
 
     if (homeDir.includes(name)) {
       await shellExec(`sudo rm -rf ${shellLink(spawnDir)}`);
@@ -55,6 +63,77 @@ PublicSector.prototype.spawnSector = async function () {
       console.log(`install ${m}...`);
     }
     await shellExec(order);
+
+    console.log(`moduel install all`);
+
+    if (await fileSystem(`exist`, [ getTarget ])) {
+      getTargetDir = await fileSystem(`readDir`, [ getTarget ]);
+    } else {
+      getTargetDir = [];
+    }
+
+    if (await fileSystem(`exist`, [ postTarget ])) {
+      postTargetDir = await fileSystem(`readDir`, [ postTarget ]);
+    } else {
+      postTargetDir = [];
+    }
+
+    getTargetDir = getTargetDir.filter((name) => { return name !== ".DS_Store"; });
+    postTargetDir = postTargetDir.filter((name) => { return name !== ".DS_Store"; });
+
+    moduleTong = [];
+    funcTong = [];
+
+    for (let name of getTargetDir) {
+      tempScript = await fileSystem(`readString`, [ `${getTarget}/${name}` ]);
+      tempArr = tempScript.split("\n");
+      tempArr = tempArr.filter((str) => { return /^\=\>/gi.test(str); });
+
+      tempStr = '';
+      tempStr += tempArr[0].replace(/^\=\> /, '');
+      tempStr += "\n";
+      tempStr += "async def get_" + uniqueValue("string") + "(request):";
+      tempStr += "\n";
+      tempStr += "    return " + tempArr[1].replace(/^\=\> /, '');
+      funcTong.push(tempStr);
+
+      tempStr2 = '';
+      tempStr2 += "from router.get." + name.split(".")[0] + " import " + "get" + name.split(".")[0].toUpperCase().slice(0, 1) + name.split(".")[0].slice(1);
+      moduleTong.push(tempStr2);
+
+      await fileSystem(`write`, [ `${getTarget}/${name}`, tempScript.split("\n").filter((str) => { return !/^\=\>/gi.test(str); }).join("\n") ]);
+    }
+
+    for (let name of postTargetDir) {
+      tempScript = await fileSystem(`readString`, [ `${postTargetDir}/${name}` ]);
+      tempArr = tempScript.split("\n");
+      tempArr = tempArr.filter((str) => { return /^\=\>/gi.test(str); });
+
+      tempStr = '';
+      tempStr += tempArr[0].replace(/^\=\> /, '');
+      tempStr += "\n";
+      tempStr += "async def post_" + uniqueValue("string") + "(request):";
+      tempStr += "\n";
+      tempStr += "    return " + tempArr[1].replace(/^\=\> /, '');
+      funcTong.push(tempStr);
+
+      tempStr2 = '';
+      tempStr2 += "from router.post." + name.split(".")[0] + " import " + "post" + name.split(".")[0].toUpperCase().slice(0, 1) + name.split(".")[0].slice(1);
+      moduleTong.push(tempStr2);
+
+      await fileSystem(`write`, [ `${postTarget}/${name}`, tempScript.split("\n").filter((str) => { return !/^\=\>/gi.test(str); }).join("\n") ]);
+    }
+
+    routerScript = await fileSystem(`readString`, [ router ]);
+    routerScriptArr = routerScript.split("\n");
+
+    moduleIndex = routerScriptArr.findIndex((str) => { return /^\=\> module/.test(str); });
+    funcIndex = routerScriptArr.findIndex((str) => { return /^\=\> function/.test(str); });
+
+    routerScriptArr[moduleIndex] = moduleTong.join("\n");
+    routerScriptArr[funcIndex] = funcTong.join("\n\n");
+
+    await fileSystem(`write`, [ router, routerScriptArr.join("\n") ]);
 
     await shellExec(`cp`, [ `-r`, `${process.cwd()}/pems`, spawnDir ]);
 
