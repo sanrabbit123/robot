@@ -1,15 +1,9 @@
 from router.mother import *
-import aiohttp
 import platform, psutil
 import multiprocessing
 import socket
 import getmac
 from netifaces import interfaces, ifaddresses, AF_INET
-
-async def request(url):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            return (await resp.text()).strip()
 
 def getInnerIpArr():
     result = []
@@ -30,8 +24,7 @@ def getInnerIpArr():
 
     return final
 
-
-async def getStatus(req):
+async def getStatus(request, mongoConnection):
     result = {}
 
     result["os"] = {}
@@ -50,7 +43,11 @@ async def getStatus(req):
     result["network"]["hostname"] = socket.gethostname().strip()
     result["network"]["mac"] = getmac.get_mac_address().strip()
     result["network"]["ip"] = {}
-    result["network"]["ip"]["outer"] = await request("https://icanhazip.com")
+    result["network"]["ip"]["outer"] = await requestSystem("https://icanhazip.com")
     result["network"]["ip"]["inner"] = getInnerIpArr()
 
     return result
+
+
+=> @routes.get("/info/status")
+=> web.json_response(await getStatus(request, mongoConnection))

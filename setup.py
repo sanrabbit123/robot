@@ -8,9 +8,6 @@ class RobotInstall:
     def __init__(self):
         self.install = [
             [ "notion" ],
-            [ "flask" ],
-            [ "pymysql" ],
-            [ "PyMySQL" ],
             [ "pymongo" ],
             [ "argparse" ],
             [ "cryptography" ],

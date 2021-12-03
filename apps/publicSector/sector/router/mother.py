@@ -1,4 +1,11 @@
+import os
 import sys
+import aiohttp
+
+async def requestSystem(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            return (await resp.text()).strip()
 
 def returnModulepath():
     rawPath = os.getcwd()

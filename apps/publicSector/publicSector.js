@@ -45,13 +45,14 @@ PublicSector.prototype.spawnSector = async function () {
     let order;
 
     if (homeDir.includes(name)) {
-      await shellExec(`rm`, [ `-rf`, spawnDir ]);
+      await shellExec(`sudo rm -rf ${shellLink(spawnDir)}`);
     }
     await shellExec(`cp`, [ `-r`, serverDir, home ]);
 
     order = `cd ${shellLink(spawnDir)};mkdir ${moduleName};`;
-    for (let moduleName of package.dependencies) {
-      order += `pip3 install ${moduleName} --target="${shellLink(spawnDir)}/${moduleName}";`;
+    for (let m of package.dependencies) {
+      order += `pip3 install ${m} --target="${shellLink(spawnDir)}/${moduleName}";`;
+      console.log(`install ${m}...`);
     }
     await shellExec(order);
 
