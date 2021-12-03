@@ -1,0 +1,16 @@
+#!/bin/bash
+if [ $1 = "start" ]; then
+  gunicorn public:main --bind 0.0.0.0:8080 --worker-class aiohttp.GunicornWebWorker --daemon
+  echo "gunicorn server start in 8080"
+elif [ $1 = "update" ]; then
+  pkill gunicorn
+  gunicorn public:main --bind 0.0.0.0:8080 --worker-class aiohttp.GunicornWebWorker --daemon
+  echo "gunicorn server restart"
+elif [ $1 = "restart" ]; then
+  pkill gunicorn
+  gunicorn public:main --bind 0.0.0.0:8080 --worker-class aiohttp.GunicornWebWorker --daemon
+  echo "gunicorn server restart"
+else
+  pkill gunicorn
+  echo "gunicorn server stop"
+fi
