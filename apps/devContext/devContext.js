@@ -94,7 +94,10 @@ DevContext.prototype.launching = async function () {
     // console.log(matrix);
 
 
-    await findCode("mirror");
+
+
+
+
 
 
 
@@ -1043,11 +1046,6 @@ DevContext.prototype.launching = async function () {
     // console.log(await address.getTravelExpenses('세종특별자치시 새롬동 601', '대구광역시 북구 침산동 233-3', new Date(2021, 7, 10, 3, 30)));
 
 
-
-
-
-
-
     // const selfMongo = this.MONGOLOCALC;
     // const designers = await back.getDesignersByQuery({}, { selfMongo });
     // let p, c, a, matrix;
@@ -1476,7 +1474,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("a87");
+    // await this.getCorePortfolio("p143");
 
 
     // aspirant to designer
@@ -1486,7 +1484,7 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer to front web
-    // await work.newDesignerToFront([ "d2111_aa02s" ]);
+    // await work.newDesignerToFront([ "d2111_aa01s" ]);
 
 
     // new designer set proposal setting
