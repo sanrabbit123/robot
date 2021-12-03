@@ -522,6 +522,8 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
       let itemIndex;
       let whereQuery, updateQuery;
 
+      console.log(rows);
+
       if (rows.length !== 0) {
 
         bills = await bill.getBillsByQuery({
@@ -547,6 +549,9 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
               break;
             }
           }
+
+          console.log(targetIndex, itemIndex);
+
           if (bilid !== null) {
             itemIndex = -1;
             for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {

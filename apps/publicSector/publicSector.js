@@ -12,6 +12,7 @@ const PublicSector = function () {
   this.serverDir = this.dir + "/" + this.name;
   this.spawnDir = this.home + "/" + this.name;
   this.staticDir = this.home + "/" + this.staticName;
+  this.moduleName = "python_modules";
 }
 
 PublicSector.prototype.staticRender = async function () {
@@ -36,7 +37,7 @@ PublicSector.prototype.staticRender = async function () {
 
 PublicSector.prototype.spawnSector = async function () {
   const instance = this;
-  const { home, name, spawnDir, serverDir } = this;
+  const { home, name, spawnDir, serverDir, moduleName } = this;
   const { fileSystem, shellExec, shellLink } = this.mother;
   try {
     const homeDir = await fileSystem(`readDir`, [ home ]);
@@ -48,11 +49,13 @@ PublicSector.prototype.spawnSector = async function () {
     }
     await shellExec(`cp`, [ `-r`, serverDir, home ]);
 
-    order = `cd ${shellLink(spawnDir)};python3 -m venv .;source ./bin/activate;`;
+    order = `cd ${shellLink(spawnDir)};mkdir ${moduleName};`;
     for (let moduleName of package.dependencies) {
-      order += `pip3 install ${moduleName};`;
+      order += `pip3 install ${moduleName} --target="${shellLink(spawnDir)}/${moduleName}";`;
     }
     await shellExec(order);
+
+    await shellExec(`cp`, [ `-r`, `${process.cwd()}/pems`, spawnDir ]);
 
     await this.staticRender();
 

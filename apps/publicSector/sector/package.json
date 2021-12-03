@@ -6,7 +6,6 @@
   "author": "uragen",
   "license": "ISC",
   "dependencies": [
-    "gunicorn",
     "aiohttp",
     "psutil",
     "getmac",
