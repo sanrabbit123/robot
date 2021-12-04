@@ -240,7 +240,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
       result = '';
       result += code0;
       result += "\n\n";
-      if (svgTongItemsString === null) {
+      if (svgTongItemsString !== null) {
         result += svgTongItemsString;
         result += "\n\n";
       }
@@ -512,7 +512,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
       result = '';
       result += code0;
       result += "\n\n";
-      if (svgTongItemsString === null) {
+      if (svgTongItemsString !== null) {
         result += svgTongItemsString;
         result += "\n\n";
       }

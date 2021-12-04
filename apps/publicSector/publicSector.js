@@ -8,7 +8,7 @@ const PublicSector = function () {
   this.dir = process.cwd() + "/apps/publicSector";
   this.home = process.env.HOME;
   this.name = "sector";
-  this.staticName = "static";
+  this.staticName = "samba";
   this.serverDir = this.dir + "/" + this.name;
   this.spawnDir = this.home + "/" + this.name;
   this.staticDir = this.home + "/" + this.staticName;
@@ -20,12 +20,81 @@ PublicSector.prototype.staticRender = async function () {
   const instance = this;
   const { home, name, spawnDir, serverDir, staticName, staticDir } = this;
   const { fileSystem, shellExec } = this.mother;
+  const DataConsole = require(`${process.cwd()}/apps/dataConsole/dataConsole.js`);
+  const con = new DataConsole();
   try {
+    const targetDir = `${this.dir}/router/source/local`;
+    const targetDirList = (await fileSystem(`readDir`, [ targetDir ])).filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
+    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, polyfillString, trapString;
+    let code0, code1, code2, code3;
+    let result;
+    let prototypes, dataPatchScript, prototypeBoo;
+    let resultFromArr;
+    let tempMediaResult;
 
 
-    console.log("this")
+    if (!(await fileSystem(`exist`, [ staticDir ]))) {
+      await shellExec(`mkdir`, [ staticDir ]);
+    }
 
+    svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
+    generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
+    generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
+    consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
+    trapString = await this.back.setAjaxAuthorization();
 
+    console.log(`set target :`, targetDirList);
+
+    for (let i of targetDirList) {
+
+      result = '';
+      code0 = '';
+      code1 = '';
+      svgTongItemsString = null;
+
+      execString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/exec.js` ]);
+      execString = execString.replace(/\/<%name%>\//, (i.slice(0, 1).toUpperCase() + i.replace(/\.js$/, '').slice(1)));
+      fileString = await fileSystem(`readString`, [ `${this.dir}/router/source/local/${i}` ]);
+      if (/\/<%map%>\//g.test(fileString)) {
+        fileString = fileString.replace(/(\/<%map%>\/)/g, function (match, p1, offset, string) {
+          return JSON.stringify(require(`${instance.dir}/router/source/svg/map/${i}`), null, 2);
+        });
+        svgTongItemsString = await fileSystem(`readString`, [ `${this.dir}/router/source/svg/svgTong/${i}` ]);
+      }
+
+      //merge
+      code0 = svgTongString + "\n\n" + trapString + "\n\n";
+      code2 = generalString + "\n\n" + consoleGeneralString + "\n\n";
+      code3 = fileString + "\n\n" + execString;
+
+      //set media query
+      if (/<%%/gi.test(code2)) {
+        tempMediaResult = con.mediaQuery(code2);
+        code2 = tempMediaResult.code;
+      }
+      if (/<%%/gi.test(code3)) {
+        tempMediaResult = con.mediaQuery(code3);
+        code3 = tempMediaResult.conditions + "\n\n" + tempMediaResult.code;
+      }
+
+      result = '';
+      result += code0;
+      result += "\n\n";
+      if (svgTongItemsString !== null) {
+        result += svgTongItemsString;
+        result += "\n\n";
+      }
+      result += code1;
+      result += "\n\n";
+      result += code2;
+      result += "\n\n";
+      result += code3;
+      result += "\n\n";
+
+      console.log(`${i} merge success`);
+      await fileSystem(`write`, [ `${staticDir}/${i}`, result ]);
+
+    }
 
   } catch (e) {
     console.log(e);
@@ -196,13 +265,13 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
 
 PublicSector.prototype.pythonServer = async function () {
   const instance = this;
-  const { home, name, spawnDir, serverDir, staticName, staticDir, initFile } = this;
+  const { home, name, spawnDir, serverDir, initFile } = this;
   const { fileSystem, shellExec, shellLink } = this.mother;
   try {
     if (!(await fileSystem(`exist`, [ spawnDir ]))) {
       throw new Error("spawn first");
     }
-    await shellExec(`python3 ${shellLink(spawnDir)}/${initFile}`);
+    await shellExec(`cd ${shellLink(spawnDir)};python3 ${initFile};`);
   } catch (e) {
     console.log(e);
   }
