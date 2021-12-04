@@ -38,19 +38,24 @@ PublicSector.prototype.staticRender = async function () {
 PublicSector.prototype.spawnSector = async function () {
   const instance = this;
   const { home, name, spawnDir, serverDir, moduleName } = this;
-  const { fileSystem, shellExec, shellLink, uniqueValue } = this.mother;
+  const { fileSystem, shellExec, shellLink, uniqueValue, ipCheck } = this.mother;
   try {
     const homeDir = await fileSystem(`readDir`, [ home ]);
     const package = await fileSystem(`readJson`, [ serverDir + "/package.json" ]);
     const getTarget = spawnDir + "/router/get";
     const postTarget = spawnDir + "/router/post";
     const router = spawnDir + "/router/router.py";
+    const main = spawnDir + "/public.py";
     let order;
     let getTargetDir, postTargetDir;
     let tempScript, tempArr, tempStr, tempStr2;
     let moduleTong, funcTong;
     let routerScript, routerScriptArr;
     let moduleIndex, funcIndex;
+    let mainScript;
+    let thisIp;
+    let certDir, keyDir;
+    let cert, key;
 
     if (homeDir.includes(name)) {
       await shellExec(`sudo rm -rf ${shellLink(spawnDir)}`);
@@ -124,6 +129,8 @@ PublicSector.prototype.spawnSector = async function () {
       await fileSystem(`write`, [ `${postTarget}/${name}`, tempScript.split("\n").filter((str) => { return !/^\=\>/gi.test(str); }).join("\n") ]);
     }
 
+    console.log("router update done", moduleTong);
+
     routerScript = await fileSystem(`readString`, [ router ]);
     routerScriptArr = routerScript.split("\n");
 
@@ -135,7 +142,25 @@ PublicSector.prototype.spawnSector = async function () {
 
     await fileSystem(`write`, [ router, routerScriptArr.join("\n") ]);
 
+    console.log("router patch done");
+
+    thisIp = await ipCheck();
+
+    certDir = await fileSystem(`readDir`, [ `${process.cwd()}/pems/${thisIp.rawObj.host}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${process.cwd()}/pems/${thisIp.rawObj.host}/key` ]);
+
+    cert = `"/pems/${thisIp.rawObj.host}/cert/${certDir.find((str) => { return /\.(pem|crt)$/i.test(str); })}"`;
+    key = `"/pems/${thisIp.rawObj.host}/key/${keyDir.find((str) => { return /\.(pem|key)$/i.test(str); })}"`;
+
+    mainScript = await fileSystem(`readString`, [ main ]);
+    mainScript = mainScript.replace(/__cert__/, cert);
+    mainScript = mainScript.replace(/__key__/, key);
+
+    await fileSystem(`write`, [ main, mainScript ]);
+
     await shellExec(`cp`, [ `-r`, `${process.cwd()}/pems`, spawnDir ]);
+
+    console.log("pem patch done");
 
     await this.staticRender();
 

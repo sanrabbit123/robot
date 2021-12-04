@@ -4,8 +4,8 @@ from router.router import routerReturn
 import ssl
 import os
 
-cert = os.getcwd() + "/pems/localhost/cert/server.crt"
-key = os.getcwd() + "/pems/localhost/key/server.key"
+cert = os.getcwd() + __cert__
+key = os.getcwd() + __key__
 
 routes = routerReturn()
 
