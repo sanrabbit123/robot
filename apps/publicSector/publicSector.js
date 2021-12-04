@@ -35,10 +35,10 @@ PublicSector.prototype.staticRender = async function () {
   }
 }
 
-PublicSector.prototype.spawnSector = async function () {
+PublicSector.prototype.spawnSector = async function (installMode = false) {
   const instance = this;
   const { home, name, spawnDir, serverDir, moduleName } = this;
-  const { fileSystem, shellExec, shellLink, uniqueValue, ipCheck } = this.mother;
+  const { fileSystem, shellExec, shellLink, uniqueValue, ipCheck, treeParsing } = this.mother;
   try {
     const homeDir = await fileSystem(`readDir`, [ home ]);
     const package = await fileSystem(`readJson`, [ serverDir + "/package.json" ]);
@@ -56,20 +56,32 @@ PublicSector.prototype.spawnSector = async function () {
     let thisIp;
     let certDir, keyDir;
     let cert, key;
+    let allTargets;
 
-    if (homeDir.includes(name)) {
-      await shellExec(`sudo rm -rf ${shellLink(spawnDir)}`);
+    if (installMode) {
+      if (homeDir.includes(name)) {
+        await shellExec(`sudo rm -rf ${shellLink(spawnDir)}`);
+      }
+      await shellExec(`cp`, [ `-rf`, serverDir, home ]);
+
+      order = `cd ${shellLink(spawnDir)};mkdir ${moduleName};`;
+      for (let m of package.dependencies) {
+        order += `pip3 install ${m} --target="${shellLink(spawnDir)}/${moduleName}";`;
+        console.log(`install ${m}...`);
+      }
+      await shellExec(order);
+
+      console.log(`moduel install all`);
+    } else {
+
+      allTargets = (await treeParsing(serverDir)).flatDeath.filter((obj) => { return !obj.directory }).map((obj) => { return obj.absolute });
+
+      console.log(allTargets);
+
+
     }
-    await shellExec(`cp`, [ `-r`, serverDir, home ]);
 
-    order = `cd ${shellLink(spawnDir)};mkdir ${moduleName};`;
-    for (let m of package.dependencies) {
-      order += `pip3 install ${m} --target="${shellLink(spawnDir)}/${moduleName}";`;
-      console.log(`install ${m}...`);
-    }
-    await shellExec(order);
-
-    console.log(`moduel install all`);
+    /*
 
     if (await fileSystem(`exist`, [ getTarget ])) {
       getTargetDir = await fileSystem(`readDir`, [ getTarget ]);
@@ -158,11 +170,12 @@ PublicSector.prototype.spawnSector = async function () {
 
     await fileSystem(`write`, [ main, mainScript ]);
 
+    await shellExec(`rm`, [ `-rf`, spawnDir + "/pems" ]);
     await shellExec(`cp`, [ `-r`, `${process.cwd()}/pems`, spawnDir ]);
 
     console.log("pem patch done");
 
-    await this.staticRender();
+    */
 
   } catch (e) {
     console.log(e);
