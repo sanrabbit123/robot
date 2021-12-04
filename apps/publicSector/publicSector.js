@@ -95,7 +95,7 @@ PublicSector.prototype.spawnSector = async function () {
       tempArr = tempArr.filter((str) => { return /^\=\>/gi.test(str); });
 
       tempStr = '';
-      tempStr += tempArr[0].replace(/^\=\> /, '');
+      tempStr += tempArr[0].replace(/^\=\> /, '').replace(/\//, "/publicSector/");
       tempStr += "\n";
       tempStr += "async def get_" + uniqueValue("string") + "(request):";
       tempStr += "\n";
