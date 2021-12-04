@@ -13,6 +13,7 @@ const PublicSector = function () {
   this.spawnDir = this.home + "/" + this.name;
   this.staticDir = this.home + "/" + this.staticName;
   this.moduleName = "python_modules";
+  this.initFile = "public.py";
 }
 
 PublicSector.prototype.staticRender = async function () {
@@ -22,11 +23,7 @@ PublicSector.prototype.staticRender = async function () {
   try {
 
 
-
-
     console.log("this")
-
-
 
 
 
@@ -192,6 +189,20 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
 
     console.log("pem patch done");
 
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+PublicSector.prototype.pythonServer = async function () {
+  const instance = this;
+  const { home, name, spawnDir, serverDir, staticName, staticDir, initFile } = this;
+  const { fileSystem, shellExec, shellLink } = this.mother;
+  try {
+    if (!(await fileSystem(`exist`, [ spawnDir ]))) {
+      throw new Error("spawn first");
+    }
+    await shellExec(`python3 ${shellLink(spawnDir)}/${initFile}`);
   } catch (e) {
     console.log(e);
   }
