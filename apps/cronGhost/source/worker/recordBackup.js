@@ -16,7 +16,7 @@ const worker = async function (package) {
   } = package;
   const { requestSystem, errorLog } = mother;
   try {
-    await requestSystem("https://" + address.officeinfo.ghost.host + ":8080/recordBackup");
+    await requestSystem("https://" + address.officeinfo.ghost.host + ":" + String(address.officeinfo.ghost.port) + "/recordBackup");
     return true;
   } catch (e) {
     await errorLog("record backup and delete error : " + e.message);
