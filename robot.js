@@ -1069,7 +1069,7 @@ const MENU = {
     try {
       let arg;
       arg = typeof process.argv[3] === "string" ? process.argv[3] : "";
-      await robot.spawnSector(arg === "static");
+      await robot.spawnSector(arg === "install");
     } catch (e) {
       console.log(e);
     }

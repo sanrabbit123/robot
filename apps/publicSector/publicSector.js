@@ -57,6 +57,8 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
     let certDir, keyDir;
     let cert, key;
     let allTargets;
+    let fromArr, toArr;
+    let targetFolder;
 
     if (installMode) {
       if (homeDir.includes(name)) {
@@ -74,14 +76,30 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
       console.log(`moduel install all`);
     } else {
 
-      allTargets = (await treeParsing(serverDir)).flatDeath.filter((obj) => { return !obj.directory }).map((obj) => { return obj.absolute });
+      allTargets = (await treeParsing(serverDir)).flatDeath.filter((obj) => { return !obj.directory }).map((obj) => { return obj.absolute.slice(serverDir.length) });
+      fromArr = allTargets.map((str) => { return serverDir + str });
+      toArr = allTargets.map((str) => { return spawnDir + str });
 
-      console.log(allTargets);
+      for (let i = 0; i < allTargets.length; i++) {
+        tempArr = allTargets[i].split("/");
+        tempArr.pop();
+        tempArr.shift();
+        tempArr.unshift(name);
+        targetFolder = home;
+        for (let f of tempArr) {
+          targetFolder += "/";
+          targetFolder += f;
+          if (!(await fileSystem(`exist`, [ targetFolder ]))) {
+            await shellExec(`mkdir`, [ targetFolder ]);
+          }
+        }
 
+        await shellExec(`cp`, [ `-f`, fromArr[i], toArr[i] ]);
+      }
 
+      console.log(`file patch all`);
     }
 
-    /*
 
     if (await fileSystem(`exist`, [ getTarget ])) {
       getTargetDir = await fileSystem(`readDir`, [ getTarget ]);
@@ -95,8 +113,8 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
       postTargetDir = [];
     }
 
-    getTargetDir = getTargetDir.filter((name) => { return name !== ".DS_Store"; });
-    postTargetDir = postTargetDir.filter((name) => { return name !== ".DS_Store"; });
+    getTargetDir = getTargetDir.filter((name) => { return name !== ".DS_Store" && name !== "__pycache__"; });
+    postTargetDir = postTargetDir.filter((name) => { return name !== ".DS_Store" && name !== "__pycache__"; });
 
     moduleTong = [];
     funcTong = [];
@@ -170,12 +188,9 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
 
     await fileSystem(`write`, [ main, mainScript ]);
 
-    await shellExec(`rm`, [ `-rf`, spawnDir + "/pems" ]);
-    await shellExec(`cp`, [ `-r`, `${process.cwd()}/pems`, spawnDir ]);
+    await shellExec(`cp`, [ `-rf`, `${process.cwd()}/pems`, spawnDir ]);
 
     console.log("pem patch done");
-
-    */
 
   } catch (e) {
     console.log(e);
