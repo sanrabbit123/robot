@@ -5,24 +5,37 @@ const PublicSector = function () {
   this.mother = new Mother();
   this.back = new BackMaker();
   this.address = ADDRESS;
-  this.dir = process.cwd() + "/apps/publicSector";
+  this.publicSector = "publicSector";
+  this.dir = process.cwd() + "/apps/" + this.publicSector;
   this.home = process.env.HOME;
   this.name = "sector";
-  this.staticName = "samba";
+  this.staticName = "static";
   this.serverDir = this.dir + "/" + this.name;
   this.spawnDir = this.home + "/" + this.name;
-  this.staticDir = this.home + "/" + this.staticName;
+  this.staticHome = this.home + "/" + this.staticName;
+  this.staticDir = this.staticHome + "/" + this.publicSector;
   this.moduleName = "python_modules";
   this.initFile = "public.py";
 }
 
 PublicSector.prototype.staticRender = async function () {
   const instance = this;
-  const { home, name, spawnDir, serverDir, staticName, staticDir } = this;
-  const { fileSystem, shellExec } = this.mother;
+  const { home, name, spawnDir, serverDir, publicSector } = this;
+  const { fileSystem, shellExec, ipCheck } = this.mother;
   const DataConsole = require(`${process.cwd()}/apps/dataConsole/dataConsole.js`);
   const con = new DataConsole();
   try {
+    const thisIp = await ipCheck();
+    let staticName, staticDir, staticHome;
+    if (thisIp.rawObj.isGhost) {
+      staticName = "samba";
+      staticHome = this.home + "/" + staticName;
+      staticDir = this.home + "/" + staticName + "/" + publicSector;
+    } else {
+      staticName = this.staticName;
+      staticHome = this.staticHome;
+      staticDir = this.staticDir;
+    }
     const targetDir = `${this.dir}/router/source/local`;
     const targetDirList = (await fileSystem(`readDir`, [ targetDir ])).filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
     let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, polyfillString, trapString;
@@ -33,6 +46,9 @@ PublicSector.prototype.staticRender = async function () {
     let tempMediaResult;
 
 
+    if (!(await fileSystem(`exist`, [ staticHome ]))) {
+      await shellExec(`mkdir`, [ staticHome ]);
+    }
     if (!(await fileSystem(`exist`, [ staticDir ]))) {
       await shellExec(`mkdir`, [ staticDir ]);
     }
@@ -125,6 +141,8 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
     let allTargets;
     let fromArr, toArr;
     let targetFolder;
+    let fileName;
+    let middleModule;
 
     if (installMode) {
       if (homeDir.includes(name)) {
@@ -168,61 +186,70 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
 
 
     if (await fileSystem(`exist`, [ getTarget ])) {
-      getTargetDir = await fileSystem(`readDir`, [ getTarget ]);
+      getTargetDir = (await treeParsing(getTarget)).flatDeath.filter((obj) => { return !obj.directory }).map((obj) => { return obj.absolute }).filter((str) => { return !/__pycache__/gi.test(str) && !/\.DS_Store/gi.test(str); });
     } else {
       getTargetDir = [];
     }
 
     if (await fileSystem(`exist`, [ postTarget ])) {
-      postTargetDir = await fileSystem(`readDir`, [ postTarget ]);
+      postTargetDir = (await treeParsing(postTarget)).flatDeath.filter((obj) => { return !obj.directory }).map((obj) => { return obj.absolute }).filter((str) => { return !/__pycache__/gi.test(str) && !/\.DS_Store/gi.test(str); });
     } else {
       postTargetDir = [];
     }
 
-    getTargetDir = getTargetDir.filter((name) => { return name !== ".DS_Store" && name !== "__pycache__"; });
-    postTargetDir = postTargetDir.filter((name) => { return name !== ".DS_Store" && name !== "__pycache__"; });
-
     moduleTong = [];
     funcTong = [];
 
-    for (let name of getTargetDir) {
-      tempScript = await fileSystem(`readString`, [ `${getTarget}/${name}` ]);
+    for (let absolute of getTargetDir) {
+      fileName = absolute.split("/")[absolute.split("/").length - 1];
+      middleModule = absolute.split("/")[absolute.split("/").length - 2];
+      if (middleModule === "get") {
+        middleModule = '';
+      }
+
+      tempScript = await fileSystem(`readString`, [ absolute ]);
       tempArr = tempScript.split("\n");
       tempArr = tempArr.filter((str) => { return /^\=\>/gi.test(str); });
 
       tempStr = '';
-      tempStr += tempArr[0].replace(/^\=\> /, '').replace(/\//, "/publicSector/");
+      tempStr += tempArr[0].replace(/^\=\> /, '').replace(/\//, "/publicSector" + "/" + middleModule + (middleModule === '' ? "" : "/"));
       tempStr += "\n";
-      tempStr += "async def get_" + uniqueValue("string") + "(request):";
+      tempStr += "async def get_" + fileName.split(".")[0] + middleModule + uniqueValue("string") + uniqueValue("string") + "(request):";
       tempStr += "\n";
       tempStr += "    return " + tempArr[1].replace(/^\=\> /, '');
       funcTong.push(tempStr);
 
       tempStr2 = '';
-      tempStr2 += "from router.get." + name.split(".")[0] + " import " + "get" + name.split(".")[0].toUpperCase().slice(0, 1) + name.split(".")[0].slice(1);
+      tempStr2 += "from router.get." + (middleModule !== '' ? middleModule + '.' : '') + fileName.split(".")[0] + " import " + "get" + fileName.split(".")[0].toUpperCase().slice(0, 1) + fileName.split(".")[0].slice(1);
       moduleTong.push(tempStr2);
 
-      await fileSystem(`write`, [ `${getTarget}/${name}`, tempScript.split("\n").filter((str) => { return !/^\=\>/gi.test(str); }).join("\n") ]);
+      await fileSystem(`write`, [ absolute, tempScript.split("\n").filter((str) => { return !/^\=\>/gi.test(str); }).join("\n") ]);
     }
 
-    for (let name of postTargetDir) {
-      tempScript = await fileSystem(`readString`, [ `${postTargetDir}/${name}` ]);
+    for (let absolute of postTargetDir) {
+      fileName = absolute.split("/")[absolute.split("/").length - 1];
+      middleModule = absolute.split("/")[absolute.split("/").length - 2];
+      if (middleModule === "post") {
+        middleModule = '';
+      }
+
+      tempScript = await fileSystem(`readString`, [ absolute ]);
       tempArr = tempScript.split("\n");
       tempArr = tempArr.filter((str) => { return /^\=\>/gi.test(str); });
 
       tempStr = '';
-      tempStr += tempArr[0].replace(/^\=\> /, '');
+      tempStr += tempArr[0].replace(/^\=\> /, '').replace(/\//, "/publicSector" + "/" + middleModule + (middleModule === '' ? "" : "/"));
       tempStr += "\n";
-      tempStr += "async def post_" + uniqueValue("string") + "(request):";
+      tempStr += "async def post_" + fileName.split(".")[0] + middleModule + uniqueValue("string") + uniqueValue("string") + "(request):";
       tempStr += "\n";
       tempStr += "    return " + tempArr[1].replace(/^\=\> /, '');
       funcTong.push(tempStr);
 
       tempStr2 = '';
-      tempStr2 += "from router.post." + name.split(".")[0] + " import " + "post" + name.split(".")[0].toUpperCase().slice(0, 1) + name.split(".")[0].slice(1);
+      tempStr2 += "from router.post." + (middleModule !== '' ? middleModule + '.' : '') + fileName.split(".")[0] + " import " + "post" + fileName.split(".")[0].toUpperCase().slice(0, 1) + fileName.split(".")[0].slice(1);
       moduleTong.push(tempStr2);
 
-      await fileSystem(`write`, [ `${postTarget}/${name}`, tempScript.split("\n").filter((str) => { return !/^\=\>/gi.test(str); }).join("\n") ]);
+      await fileSystem(`write`, [ absolute, tempScript.split("\n").filter((str) => { return !/^\=\>/gi.test(str); }).join("\n") ]);
     }
 
     console.log("router update done", moduleTong);
@@ -271,6 +298,7 @@ PublicSector.prototype.pythonServer = async function () {
     if (!(await fileSystem(`exist`, [ spawnDir ]))) {
       throw new Error("spawn first");
     }
+    console.log(`\x1b[33m%s\x1b[0m`, `Python server running in 8443`);
     await shellExec(`cd ${shellLink(spawnDir)};python3 ${initFile};`);
   } catch (e) {
     console.log(e);

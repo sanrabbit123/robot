@@ -294,7 +294,7 @@ CronGhost.prototype.cronServer = async function () {
     await sector.spawnSector();
     await sector.staticRender();
     await sector.pythonServer();
-    
+
   } catch (e) {
     console.log(e);
   }

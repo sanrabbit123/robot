@@ -657,15 +657,23 @@ Robot.prototype.designerCalculation = async function () {
   }
 }
 
-Robot.prototype.spawnSector = async function (static = false) {
+Robot.prototype.publicSector = async function () {
+  try {
+    const PublicSector = require(`${process.cwd()}/apps/publicSector/publicSector.js`);
+    const sector = new PublicSector();
+    await sector.spawnSector();
+    await sector.staticRender();
+    await sector.pythonServer();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+Robot.prototype.spawnSector = async function (install = false) {
   try {
     const PublicSector = require(`${process.cwd()}/apps/publicSector/publicSector.js`);
     const app = new PublicSector();
-    if (!static) {
-      await app.spawnSector();
-    } else {
-      await app.staticRender();
-    }
+    await app.spawnSector(install);
   } catch (e) {
     console.log(e);
   }
@@ -1070,6 +1078,13 @@ const MENU = {
       let arg;
       arg = typeof process.argv[3] === "string" ? process.argv[3] : "";
       await robot.spawnSector(arg === "install");
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  publicSector: async function () {
+    try {
+      await robot.publicSector();
     } catch (e) {
       console.log(e);
     }
