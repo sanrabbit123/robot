@@ -95,9 +95,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log(await this.mother.ipCheck());
-
-
 
 
     /*
@@ -1469,7 +1466,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get rawPortfolio by pid
-    // await this.getRawPortfolio("p143");
+    // await this.getRawPortfolio("p161");
 
 
     // get corePortfolio by pid
