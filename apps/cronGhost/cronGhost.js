@@ -176,7 +176,7 @@ CronGhost.prototype.cronRouter = async function () {
 
 CronGhost.prototype.cronServer = async function () {
   const instance = this;
-  const { pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, errorLog } = this.mother;
+  const { pureServer, dateToString, mongo, mongolocalinfo, mongoinfo, mongoconsoleinfo, mongopythoninfo, errorLog } = this.mother;
   const port = 3000;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
@@ -185,6 +185,7 @@ CronGhost.prototype.cronServer = async function () {
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
   const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
   const MONGOCONSOLEC = new mongo(mongoconsoleinfo, { useUnifiedTopology: true });
+  const MONGOPYTHONC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
   const RETHINKC = new RethinkAccess();
   const KakaoTalk = require(`${process.cwd()}/apps/kakaoTalk/kakaoTalk.js`);
   const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
@@ -211,6 +212,7 @@ CronGhost.prototype.cronServer = async function () {
     await MONGOC.connect();
     await MONGOLOCALC.connect();
     await MONGOCONSOLEC.connect();
+    await MONGOPYTHONC.connect();
 
     await RETHINKC.connect();
     await RETHINKC.bindCollection("cronLog");
@@ -245,6 +247,7 @@ CronGhost.prototype.cronServer = async function () {
       docs,
       MONGOC,
       MONGOCONSOLEC,
+      MONGOPYTHONC,
       MONGOLOCALC,
       RETHINKC
     );

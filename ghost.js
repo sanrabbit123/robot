@@ -164,7 +164,7 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
   const { requestSystem, equalJson, stringToDate, messageLog, errorLog, messageSend } = this.mother;
   const { mongo, mongopythoninfo } = this.mother;
   const { officeinfo: { widsign: { id, key, endPoint } } } = this.address;
-  const collection = "stylingForm";
+  const collections = [ "stylingForm", "constructForm" ];
   const back = this.back;
   const MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
   try {
@@ -183,102 +183,109 @@ Ghost.prototype.stylingFormSync = async function (MONGOCOREC) {
     let thisClient;
     let text;
 
-    monthAgoValue = new Date();
-    monthAgoValue.setMonth(monthAgoValue.getMonth() - 3);
-    monthAgoValue = monthAgoValue.valueOf();
+    for (let collection of collections) {
+      monthAgoValue = new Date();
+      monthAgoValue.setMonth(monthAgoValue.getMonth() - 3);
+      monthAgoValue = monthAgoValue.valueOf();
 
-    pageSize = 30;
-    res = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
+      pageSize = 30;
+      res = await requestSystem(endPoint + "/v2/token", {}, { method: "get", headers: { "x-api-id": id, "x-api-key": key } });
 
-    if (res.data.result_code !== 200) {
-      throw new Error("access token error");
-    } else {
-      token = res.data.access_token;
-      resultForms = [];
-      forms = [ null ];
-      num = 1;
-      while (forms.length > 0) {
-        res = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-        forms = equalJson(JSON.stringify(res.data.result)).map((obj) => {
-          let newObj;
-          newObj = {};
-          newObj.form = obj.form_id;
-          newObj.id = (obj.receiver_list.length > 0) ? obj.receiver_list[0] : null;
-          newObj.name = obj.title;
-          newObj.date = stringToDate(obj.created_date);
-          newObj.confirm = (obj.status === 'END');
-          return newObj;
-        });
-        if (forms.length > 0) {
-          forms.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
-          if (forms[0].date.valueOf() <= monthAgoValue) {
-            break;
+      if (res.data.result_code !== 200) {
+        throw new Error("access token error");
+      } else {
+        token = res.data.access_token;
+        resultForms = [];
+        forms = [ null ];
+        num = 1;
+        while (forms.length > 0) {
+          res = await requestSystem(endPoint + "/v2/doc", { page: num, page_size: pageSize }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+          forms = equalJson(JSON.stringify(res.data.result)).map((obj) => {
+            let newObj;
+            newObj = {};
+            newObj.form = obj.form_id;
+            newObj.id = (obj.receiver_list.length > 0) ? obj.receiver_list[0] : null;
+            newObj.name = obj.title;
+            newObj.date = stringToDate(obj.created_date);
+            newObj.confirm = (obj.status === 'END');
+            return newObj;
+          });
+          if (forms.length > 0) {
+            forms.sort((a, b) => { return a.date.valueOf() - b.date.valueOf(); });
+            if (forms[0].date.valueOf() <= monthAgoValue) {
+              break;
+            }
+            resultForms = resultForms.concat(forms);
           }
-          resultForms = resultForms.concat(forms);
+          num++;
         }
-        num++;
-      }
 
-      resultForms.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
+        resultForms.sort((a, b) => { return b.date.valueOf() - a.date.valueOf(); });
 
-      finalForms = [];
-      for (let f of resultForms) {
-        boo = (finalForms.find((obj) => { return obj.name === f.name; }) !== undefined);
-        if (!boo) {
-          finalForms.push(f);
-        }
-      }
-
-      whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
-
-      dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
-
-      for (let f of dbForms) {
-        whereQuery = { proid: f.proid };
-        updateQuery = {};
-
-        target = null;
-        for (let i of finalForms) {
-          if (i.name === f.name) {
-            target = i;
+        finalForms = [];
+        for (let f of resultForms) {
+          boo = (finalForms.find((obj) => { return obj.name === f.name; }) !== undefined);
+          if (!boo) {
+            finalForms.push(f);
           }
         }
 
-        if (target !== null) {
-          res = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-          if (typeof res.data === "object") {
-            if (res.data.result !== undefined) {
-              if (res.data.result.receiver_list.length > 0) {
-                updateQuery["id"] = target.id;
-                updateQuery["date"] = target.date;
-                updateQuery["confirm"] = target.confirm;
-                updateQuery["form"] = target.form;
-                updateQuery["detail"] = res.data.result.receiver_list[0];
-                res = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
-                if (typeof res.data === "object") {
-                  if (Array.isArray(res.data.result)) {
-                    updateQuery["history"] = res.data.result.map((obj) => {
-                      obj.date = stringToDate(obj.created_date);
-                      delete obj.created_date;
-                      return obj;
-                    });
-                    if (f.confirm !== true && target.confirm === true) {
-                      thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOCOREC });
-                      text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
-                      await messageSend({ text, channel: "#cx" });
-                      requestSystem("https://" + instance.address.officeinfo.ghost.host + ":" + String(instance.address.officeinfo.ghost.port) + "/voice", { text }, { headers: { "Content-Type": "application/json" } }).catch((err) => { console.log(err); });
+        whereQuery = { $or: finalForms.map((obj) => { return { name: obj.name } }) };
+
+        dbForms = await back.mongoRead(collection, whereQuery, { selfMongo });
+        for (let f of dbForms) {
+          whereQuery = { proid: f.proid };
+          updateQuery = {};
+
+          target = null;
+          for (let i of finalForms) {
+            if (i.name === f.name) {
+              target = i;
+            }
+          }
+
+          if (target !== null) {
+            res = await requestSystem(endPoint + "/v2/doc/detail", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+            if (typeof res.data === "object") {
+              if (res.data.result !== undefined) {
+                if (res.data.result.receiver_list.length > 0) {
+                  updateQuery["id"] = target.id;
+                  updateQuery["date"] = target.date;
+                  updateQuery["confirm"] = target.confirm;
+                  updateQuery["form"] = target.form;
+                  updateQuery["detail"] = res.data.result.receiver_list[0];
+                  res = await requestSystem(endPoint + "/v2/doc/history", { "receiver_meta_id": target.id }, { method: "get", headers: { "x-api-key": key, "x-access-token": token } });
+                  if (typeof res.data === "object") {
+                    if (Array.isArray(res.data.result)) {
+                      updateQuery["history"] = res.data.result.map((obj) => {
+                        obj.date = stringToDate(obj.created_date);
+                        delete obj.created_date;
+                        return obj;
+                      });
+                      if (f.confirm !== true && target.confirm === true) {
+                        thisClient = await back.getClientById(f.client.cliid, { selfMongo: MONGOCOREC });
+                        text = thisClient.name + " 고객님이 계약서에 서명을 완료하셨습니다!";
+                        await messageSend({ text, channel: "#cx", voice: true });
+                      }
+                      await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
+
+                      if (/styling/gi.test(collection)) {
+                        await back.updateProject([ { proid: f.proid }, { "process.contract.form.id": target.id } ], { selfMongo: MONGOCOREC });
+                      } else if (/construct/gi.test(collection)) {
+                        await back.updateProject([ { proid: f.proid }, { "process.design.construct.contract.form.id": target.id } ], { selfMongo: MONGOCOREC });
+                      }
+
                     }
-                    await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
                   }
                 }
               }
             }
           }
+
         }
       }
 
     }
-
     await messageLog("styling form sync success : " + JSON.stringify(new Date()));
   } catch (e) {
     await errorLog("ghost stylingFormSync 에러남 : " + e.message);
