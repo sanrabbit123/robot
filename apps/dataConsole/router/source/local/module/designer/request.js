@@ -520,8 +520,8 @@ DesignerJs.prototype.requestList = function (desid) {
   requestSize = <%% 18, 18, 17, 16, 4.4 %%>;
   secondFont = <%% 2, 2, 2, 2, 1 %%>;
   requestWordMargin = <%% 1, 1, 1, 1, 0 %%>;
-  requestWordPaddingTop = <%% (isMac() ? 24 : 26), (isMac() ? 24 : 26), (isMac() ? 24 : 26), (isMac() ? 24 : 26), 4.5 %%>;
-  requestWordPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), 4.8 %%>;
+  requestWordPaddingTop = <%% (isMac() ? 24 : 26), (isMac() ? 24 : 26), (isMac() ? 24 : 26), (isMac() ? 24 : 26), 4.7 %%>;
+  requestWordPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), 4.7 %%>;
 
   baseTongPaddingBottom = <%% 4, 4, 3, 3, 20 %%>;
   mobileOuterMargin = 4;
