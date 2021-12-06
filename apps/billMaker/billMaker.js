@@ -16,6 +16,7 @@ BillMaker.billCollections = [
   "taxBill",
   "stylingForm",
   "constructForm",
+  "constructInvoice",
 ];
 
 BillMaker.designerCalculation = function (supply, classification, percentage, client, option) {

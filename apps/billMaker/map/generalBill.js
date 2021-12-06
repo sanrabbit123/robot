@@ -1,5 +1,5 @@
 module.exports = {
-  collection: "taxBill",
+  collection: "generalBill",
   main: function () {
     return {
       bilid: "",
