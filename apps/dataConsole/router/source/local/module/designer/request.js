@@ -481,6 +481,8 @@ DesignerJs.prototype.requestList = function (desid) {
   let dateString;
   let baseTongPaddingBottom;
   let mobileOuterMargin;
+  let borderRadius;
+  let secondFont;
 
   designer = this.designers.pick(desid);
   projects = designer.projects;
@@ -515,13 +517,16 @@ DesignerJs.prototype.requestList = function (desid) {
 
   boxMargin = <%% 13, 13, 12, 10, 2 %%>;
 
-  requestSize = <%% 22, 22, 21, 20, 4.5 %%>;
+  requestSize = <%% 18, 18, 17, 16, 4.4 %%>;
+  secondFont = <%% 2, 2, 2, 2, 1 %%>;
   requestWordMargin = <%% 1, 1, 1, 1, 0 %%>;
-  requestWordPaddingTop = <%% (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), (isMac() ? 24 : 30), 4 %%>;
-  requestWordPaddingBottom = <%% (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), (isMac() ? 32 : 29), 5.5 %%>;
+  requestWordPaddingTop = <%% (isMac() ? 24 : 26), (isMac() ? 24 : 26), (isMac() ? 24 : 26), (isMac() ? 24 : 26), 4.5 %%>;
+  requestWordPaddingBottom = <%% (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), (isMac() ? 20 : 18), 4.8 %%>;
 
-  baseTongPaddingBottom = 20;
+  baseTongPaddingBottom = <%% 4, 4, 3, 3, 20 %%>;
   mobileOuterMargin = 4;
+
+  borderRadius = <%% 10, 10, 10, 10, 8 %%>;
 
   if (mobile) {
     totalMother.style.background = colorChip.gray2;
@@ -550,11 +555,11 @@ DesignerJs.prototype.requestList = function (desid) {
       borderRadius: String(5) + "px",
       border: desktop ? ("1px solid " + colorChip.gray4) : "",
       boxShadow: desktop ? "" : "0px 3px 15px -9px " + colorChip.shadow,
-      background: colorChip.white,
+      background: desktop ? colorChip.gray0 : colorChip.gray1,
       height: "auto",
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
-      paddingBottom: desktop ? "" : String(baseTongPaddingBottom) + ea,
+      paddingBottom: String(baseTongPaddingBottom) + ea,
     }
   });
 
@@ -570,13 +575,22 @@ DesignerJs.prototype.requestList = function (desid) {
 
     requestBox = createNode({
       mother: baseTong,
-      class: [ "hoverDefault_lite" ],
-      events: [
-        {
-          type: "click",
-          event: this.requestDocument(baseTong, i, designer, projects[i])
+      event: {
+        click: this.requestDocument(baseTong, i, designer, projects[i]),
+        mouseenter: function (e) {
+          this.style.transition = "";
+        },
+        mouseover: function (e) {
+          this.children[0].style.background = colorChip.green;
+          this.children[1].firstChild.style.color = colorChip.green;
+          this.style.transform = "translateY(-3px)";
+        },
+        mouseleave: function (e) {
+          this.children[0].style.background = colorChip.gray3;
+          this.children[1].firstChild.style.color = colorChip.black;
+          this.style.transform = "translateY(0px)";
         }
-      ],
+      },
       attribute: [
         { cliid: projects[i].cliid },
         { proid: projects[i].proid },
@@ -585,19 +599,34 @@ DesignerJs.prototype.requestList = function (desid) {
         position: "relative",
         display: "inline-block",
         width: "calc(calc(100% - " + String((boxNumber + 2) * boxMargin) + ea + ") / " + String(boxNumber) + ")",
-        borderRadius: String(5) + "px",
+        borderRadius: String(borderRadius) + "px",
         marginTop: String(Math.floor(i / boxNumber) === 0 ? boxMargin * 1.5 : boxMargin) + ea,
         marginRight: String(boxMargin) + ea,
         marginLeft: String(i % boxNumber === 0 ? boxMargin * 1.5 : 0) + ea,
         marginBottom: String(Math.floor(i / boxNumber) === Math.floor((maxBoxNumber - 1) / boxNumber) ? (boxMargin * 1.5) : 0) + ea,
-        background: colorChip.gray1,
+        background: colorChip.white,
+        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
         textAlign: "center",
         verticalAlign: "top",
         paddingTop: String(requestWordPaddingTop) + ea,
         paddingBottom: String(requestWordPaddingBottom) + ea,
+        cursor: "pointer",
         transition: "all 0s ease",
+        transform: "translateY(0px)",
       },
       children: [
+        {
+          style: {
+            position: "absolute",
+            top: String(0),
+            width: String(100) + '%',
+            left: String(0),
+            height: String(desktop ? borderRadius : 2) + ea,
+            background: colorChip.gray3,
+            borderTopRightRadius: String(borderRadius / 2) + "px",
+            borderTopLeftRadius: String(borderRadius / 2) + "px",
+          }
+        },
         {
           style: {
             position: "relative",
@@ -606,12 +635,16 @@ DesignerJs.prototype.requestList = function (desid) {
           },
           children: [
             {
-              text: projects[i].name,
+              text: projects[i].name + " <b%고객님%b>",
               style: {
                 fontSize: String(requestSize) + ea,
                 fontWeight: String(600),
                 color: colorChip.black,
                 display: "inline-block",
+              },
+              bold: {
+                color: colorChip.black,
+                fontWeight: String(300),
               }
             }
           ]
@@ -619,32 +652,15 @@ DesignerJs.prototype.requestList = function (desid) {
         {
           style: {
             position: "relative",
-            marginBottom: String(requestWordMargin) + ea,
           },
           children: [
             {
-              text: (desktop ? "고객님" : "고객님 (" + dateString.slice(0, -3) + ")"),
+              text: dateString,
               style: {
-                fontSize: String(requestSize) + ea,
-                fontWeight: String(200),
-                color: colorChip.black,
+                fontSize: String(requestSize - secondFont) + ea,
+                fontWeight: String(300),
+                color: colorChip.deactive,
                 display: "inline-block",
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            position: "relative",
-          },
-          children: [
-            {
-              text: dateString.slice(0, -3),
-              style: {
-                fontSize: String(requestSize) + ea,
-                fontWeight: String(200),
-                color: colorChip.black,
-                display: desktop ? "inline-block" : "none",
               }
             }
           ]
@@ -652,9 +668,9 @@ DesignerJs.prototype.requestList = function (desid) {
       ]
     });
     thisChildWidth = 0;
-    for (let dom of requestBox.children) {
-      if (thisChildWidth <= dom.firstChild.getBoundingClientRect().width) {
-        thisChildWidth = dom.firstChild.getBoundingClientRect().width;
+    for (let i = 1; i < Array.from(requestBox.children).length; i++) {
+      if (thisChildWidth <= requestBox.children[i].firstChild.getBoundingClientRect().width) {
+        thisChildWidth = requestBox.children[i].firstChild.getBoundingClientRect().width;
       }
     }
     thisChildWidth = thisChildWidth + (requestWordPaddingBottom * 3.2);
@@ -808,14 +824,16 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
         visualSpecific = <%% 1, 1, 1, 0, 0 %%>;
 
         for (let i = 0; i < blocks.length; i++) {
+          blocks[i].style.transition = "all 0s ease";
           blocks[i].setAttribute("top", String(Math.floor(blocks[i].getBoundingClientRect().top - mother.getBoundingClientRect().top)) + ea);
           blocks[i].setAttribute("left", String(Math.floor(blocks[i].getBoundingClientRect().left - Math.ceil(mother.getBoundingClientRect().left))) + ea);
           if (i !== index) {
             blocks[i].style.animation = "fadedownlite 0.2s ease forwards";
           } else {
+            thisBlock = blocks[i];
+            thisBlock.style.transform = "";
             for (let dom of blocks[i].children) {
               dom.style.opacity = String(0);
-              thisBlock = blocks[i];
             }
           }
         }
@@ -840,6 +858,8 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
 
       setQueue(() => {
         if (desktop) {
+          thisBlock.style.boxShadow = "";
+          thisBlock.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
           thisBlock.style.transition = "all 0.4s ease";
           thisBlock.style.position = "absolute";
           thisBlock.style.left = String(0);
@@ -866,7 +886,7 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
 
         setQueue(async () => {
           try {
-            mother.style.background = colorChip.gray2;
+            mother.style.background = desktop ? colorChip.gray0 : colorChip.gray2;
             const board = createNode({
               mother,
               style: {
