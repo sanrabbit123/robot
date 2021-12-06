@@ -513,22 +513,20 @@ DesignerJs.prototype.projectDetail = function (desid) {
           } else {
 
             if (mobile) {
-              if (mobile) {
-                swipePatch({
-                  left: (e) => {
-                    if (document.querySelector('.' + detailWhitePopupConst) !== null) {
-                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                    }
-                  },
-                  right: (e) => {
-                    if (document.querySelector('.' + detailWhitePopupConst) !== null) {
-                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                    }
-                  },
-                });
-              }
+              swipePatch({
+                left: (e) => {
+                  if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                  }
+                },
+                right: (e) => {
+                  if (document.querySelector('.' + detailWhitePopupConst) !== null) {
+                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                    document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
+                  }
+                },
+              });
             }
 
           }

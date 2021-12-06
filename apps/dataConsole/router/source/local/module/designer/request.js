@@ -581,14 +581,18 @@ DesignerJs.prototype.requestList = function (desid) {
           this.style.transition = "";
         },
         mouseover: function (e) {
-          this.children[0].style.background = colorChip.green;
-          this.children[1].firstChild.style.color = colorChip.green;
-          this.style.transform = "translateY(-3px)";
+          if (desktop) {
+            this.children[0].style.background = colorChip.green;
+            this.children[1].firstChild.style.color = colorChip.green;
+            this.style.transform = "translateY(-3px)";
+          }
         },
         mouseleave: function (e) {
-          this.children[0].style.background = colorChip.gray3;
-          this.children[1].firstChild.style.color = colorChip.black;
-          this.style.transform = "translateY(0px)";
+          if (desktop) {
+            this.children[0].style.background = colorChip.gray3;
+            this.children[1].firstChild.style.color = colorChip.black;
+            this.style.transform = "translateY(0px)";
+          }
         }
       },
       attribute: [
@@ -701,7 +705,7 @@ DesignerJs.prototype.requestList = function (desid) {
 
 DesignerJs.prototype.requestDocument = function (mother, index, designer, project) {
   const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, serviceParsing, setQueue } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, serviceParsing, setQueue, swipePatch } = GeneralJs;
   const { totalMother, ea, grayBarWidth } = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -905,6 +909,14 @@ DesignerJs.prototype.requestDocument = function (mother, index, designer, projec
             await instance.requestContents(board, designer, project, client, clientHistory, projectHistory, requestNumber);
             if (mobile) {
               mother.style.marginBottom = "";
+            }
+
+            if (mobile) {
+              swipePatch({
+                right: (e) => {
+                  instance.requestDetailLaunching(desid);
+                },
+              });
             }
 
             instance.pageHistory.unshift({ path: "request", status: "card", desid, cliid });
