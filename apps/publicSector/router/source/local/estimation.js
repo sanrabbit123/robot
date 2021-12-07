@@ -37,10 +37,9 @@ EstimationJs.prototype.backGrayBar = function () {
 
 EstimationJs.prototype.navigatorLaunching = function () {
   const instance = this;
-  const { ea, designer, desid, media, grayBarWidth, tabletWidth } = this;
+  const { ea, designer, desid, media, grayBarWidth, tabletWidth, totalContents, totalMother } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo, setQueue } = GeneralJs;
   const totalContents = document.getElementById("totalcontents");
-  const totalMother = document.querySelector(".totalMother");
   const mother = totalMother.firstChild;
   const mobile = media[4];
   const desktop = !mobile;
@@ -82,8 +81,6 @@ EstimationJs.prototype.navigatorLaunching = function () {
   let popupTop;
   let menuOnEvent;
   let titleSize;
-
-  cleanChildren(mother);
 
   this.pageHistory.unshift({ index: 0, status: "page" });
 
