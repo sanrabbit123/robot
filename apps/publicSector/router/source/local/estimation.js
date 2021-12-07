@@ -72,6 +72,8 @@ EstimationJs.prototype.baseMaker = function () {
       width: withOut(grayBarWidth, ea),
     }
   });
+
+  this.mother.searchInput(bottomPannel);
 }
 
 EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
