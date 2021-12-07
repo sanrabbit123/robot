@@ -37,7 +37,7 @@ EstimationJs.prototype.backGrayBar = function () {
 
 EstimationJs.prototype.navigatorLaunching = function () {
   const instance = this;
-  const { ea, designer, desid, media, grayBarWidth, tabletWidth, totalContents, totalMother } = this;
+  const { ea, media, grayBarWidth, tabletWidth, totalContents, totalMother, motherHeight, belowHeight } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo, setQueue } = GeneralJs;
   const mother = totalMother.nextElementSibling;
   const mobile = media[4];
@@ -45,7 +45,23 @@ EstimationJs.prototype.navigatorLaunching = function () {
   const menuClassName = "leftMenus";
   const menuMap = [
     {
-      title: "기본 정보",
+      title: "견적서 리스트",
+      position: 0,
+      mobile: true,
+      event: function (e) {
+
+      },
+    },
+    {
+      title: "견적서 샘플",
+      position: 0,
+      mobile: true,
+      event: function (e) {
+
+      },
+    },
+    {
+      title: "콘솔 메뉴얼",
       position: 0,
       mobile: true,
       event: function (e) {
@@ -72,7 +88,7 @@ EstimationJs.prototype.navigatorLaunching = function () {
   let style;
   let fontTop;
   let fontLeft;
-  let naviDesignerWidth;
+  let naviBuilderWidth;
   let naviBetweenMargin;
   let iconTop;
   let iconWidth;
@@ -80,6 +96,12 @@ EstimationJs.prototype.navigatorLaunching = function () {
   let popupTop;
   let menuOnEvent;
   let titleSize;
+  let radius;
+  let left;
+  let left2;
+  let bottom;
+  let color;
+  let listIcon;
 
   if (desktop) {
 
@@ -181,7 +203,7 @@ EstimationJs.prototype.navigatorLaunching = function () {
           }
         },
         {
-          text: "<b%Designer%b> Console",
+          text: "<b%Builder%b> Console",
           event: {
             click: function (e) {
               window.location.reload();
@@ -229,7 +251,7 @@ EstimationJs.prototype.navigatorLaunching = function () {
     size = 20;
     fontTop = 12;
     fontLeft = 7.2;
-    naviDesignerWidth = 85;
+    naviBuilderWidth = 68;
     naviBetweenMargin = 7;
     iconTop = 17;
     iconWidth = size + 1;
@@ -379,8 +401,6 @@ EstimationJs.prototype.navigatorLaunching = function () {
       }
     }
 
-    this.listIcon.addEventListener("click", menuOnEvent("up"));
-
     createNodes([
       {
         mother: mobileNavigator,
@@ -407,7 +427,7 @@ EstimationJs.prototype.navigatorLaunching = function () {
       },
       {
         mother: -2,
-        text: "Designer",
+        text: "Builder",
         event: {
           click: function (e) {
             window.location.reload();
@@ -440,7 +460,7 @@ EstimationJs.prototype.navigatorLaunching = function () {
           fontWeight: String(200),
           color: colorChip.white,
           top: String(fontTop) + "px",
-          left: "calc(" + String(fontLeft) + ea + " + " + String(naviDesignerWidth + naviBetweenMargin) + "px" + ")",
+          left: "calc(" + String(fontLeft) + ea + " + " + String(naviBuilderWidth + naviBetweenMargin) + "px" + ")",
           cursor: "pointer",
         }
       },
@@ -476,6 +496,83 @@ EstimationJs.prototype.navigatorLaunching = function () {
     ]);
 
   }
+
+  radius = <%% 20, 18.5, 17, 15, 6 %%>;
+  left = <%% 40, 30, 25, 19, 0 %%>;
+  left2 = <%% 40, 36, 36, 19, 0 %%>;
+  bottom = <%% 40, 36, 30, 22, 7.2 %%>;
+  margin = <%% 6, 5, 4, 4, 0 %%>;
+  color = colorChip.gradientGreen;
+  iconTop = <%% 12.5, 12, 11, 10, 3.8 %%>;
+
+  listIcon = createNode({
+    mother,
+    class: [ "iconTong" ],
+    style: {
+      display: "block",
+      position: "fixed",
+      height: String(desktop ? motherHeight : (bottom + (radius * 2))) + ea,
+      width: String(desktop ? grayBarWidth : (bottom + (radius * 2))) + ea,
+      left: desktop ? String(0) : "",
+      right: desktop ? "" : String(0),
+      bottom: String(0) + ea,
+      background: "transparent",
+      zIndex: String(2),
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          width: String(radius * 2) + ea,
+          height: String(radius * 2) + ea,
+          bottom: String(bottom) + ea,
+          left: String(left) + ea,
+          background: color,
+          borderRadius: String(radius * 2) + ea,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: this.mother.returnHamburger(colorChip.whiteIcon),
+            style: {
+              position: "absolute",
+              width: String(radius * 0.9) + ea,
+              left: "calc(50% - " + String(radius * 0.45) + ea + ")",
+              top: String(iconTop) + ea,
+            }
+          }
+        ]
+      }
+    ]
+  });
+  this.iconTong = listIcon;
+  this.listIcon = listIcon.children[0];
+  listIcon.addEventListener("click", function (e) {
+    const totalContents = document.getElementById("totalcontents");
+    const totalMother = document.querySelector(".totalMother");
+    const grayBack = totalContents.children[1];
+    const listPannel = totalMother.nextElementSibling.children[0];
+    const mainBaseTong = instance.mainBaseTong;
+    const outerMargin = Number(mainBaseTong.style.top.replace(/[^0-9\.\-]/gi, ''));
+
+    if (grayBack.getAttribute("toggle") !== "off") {
+      grayBack.style.width = String(0) + ea;
+      listPannel.style.transform = "translateX(" + String((instance.grayBarWidth + instance.tabletWidth) * -1) + ea + ")";
+      mainBaseTong.style.left = String(outerMargin) + ea;
+      mainBaseTong.style.width = withOut(outerMargin * 2, ea);
+      instance.listIcon.style.left = String(left2) + ea;
+      grayBack.setAttribute("toggle", "off");
+    } else {
+      grayBack.style.width = String(instance.grayBarWidth) + ea;
+      listPannel.style.transform = "translateX(" + String(0) + ea + ")";
+      mainBaseTong.style.left = String(instance.grayBarWidth + outerMargin) + ea;
+      mainBaseTong.style.width = withOut(instance.grayBarWidth + (outerMargin * 2), ea);
+      instance.listIcon.style.left = String(left) + ea;
+      grayBack.setAttribute("toggle", "on");
+    }
+
+  });
 
 }
 
@@ -549,8 +646,7 @@ EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
 EstimationJs.prototype.estimationList = function (buiid = '') {
   const instance = this;
   const { totalMother, ea, grayBarWidth } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, getCookiesAll, dateToString } = GeneralJs;
-  const cookies = getCookiesAll();
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const mobile = this.media[4];
   const desktop = !mobile;
   const wording = `+ 버튼을 눌러 견적서를 추가하거나, <b%샘플 파일%b>로 작업한 엑셀 파일을 + 버튼으로 드래그 앤 드롭해 견적서를 추가하세요.`;
@@ -665,7 +761,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
       position: "relative",
       top: String(0) + ea,
       left: String(0) + ea,
-      width: String(100) + '%',
+      width: withOut(0, ea),
       borderRadius: String(5) + "px",
       border: desktop ? ("1px solid " + colorChip.gray4) : "",
       boxShadow: desktop ? "" : "0px 3px 15px -9px " + colorChip.shadow,
@@ -675,6 +771,9 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
       marginBottom: String(margin) + ea,
       paddingBottom: String(baseTongPaddingBottom) + ea,
       boxSizing: "border-box",
+      paddingLeft: String(boxMargin * 1.5) + ea,
+      paddingRight: String(boxMargin * 0.5) + ea,
+      paddingTop: String(boxMargin * 1.5) + ea,
     }
   });
 
@@ -709,12 +808,10 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
       style: {
         position: "relative",
         display: "inline-block",
-        width: "calc(calc(100% - " + String((boxNumber + 2) * boxMargin) + ea + ") / " + String(boxNumber) + ")",
+        width: "calc(calc(100% - " + String((boxNumber) * boxMargin) + ea + ") / " + String(boxNumber) + ")",
         borderRadius: String(borderRadius) + "px",
-        marginTop: String(Math.floor(i / boxNumber) === 0 ? boxMargin * 1.5 : boxMargin) + ea,
         marginRight: String(boxMargin) + ea,
-        marginLeft: String(i % boxNumber === 0 ? boxMargin * 1.5 : 0) + ea,
-        marginBottom: String(Math.floor(i / boxNumber) === Math.floor((maxBoxNumber - 1) / boxNumber) ? (boxMargin * 1.5) : 0) + ea,
+        marginBottom: String(boxMargin) + ea,
         background: colorChip.white,
         boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
         textAlign: "center",
@@ -799,10 +896,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
     if (boxNumberArr.length > 0) {
       boxNumber = boxNumberArr[0];
       for (let i = 0; i < maxBoxNumber; i++) {
-        this.estimationBoxes[i].style.width = "calc(calc(100% - " + String((boxNumber + 2) * boxMargin) + ea + ") / " + String(boxNumber) + ")";
-        this.estimationBoxes[i].style.marginTop = String(Math.floor(i / boxNumber) === 0 ? boxMargin * 1.5 : boxMargin) + ea;
-        this.estimationBoxes[i].style.marginLeft = String(i % boxNumber === 0 ? boxMargin * 1.5 : 0) + ea;
-        this.estimationBoxes[i].style.marginBottom = String(Math.floor(i / boxNumber) === Math.floor((maxBoxNumber - 1) / boxNumber) ? (boxMargin * 1.5) : 0) + ea;
+        this.estimationBoxes[i].style.width = "calc(calc(100% - " + String((boxNumber) * boxMargin) + ea + ") / " + String(boxNumber) + ")";
       }
     }
   }
@@ -894,6 +988,25 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
   });
 
   this.mainBaseTong = baseTong0;
+  this.addSearchEvent();
+}
+
+EstimationJs.prototype.addSearchEvent = function () {
+  const instance = this;
+  const { totalMother, ea, searchInput, estimationBoxes } = this;
+
+  searchInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      for (let dom of estimationBoxes) {
+        if ((new RegExp(this.value.trim(), "gi")).test(dom.textContent)) {
+          dom.style.display = "inline-block";
+        } else {
+          dom.style.display = "none";
+        }
+      }
+    }
+  });
+
 }
 
 EstimationJs.prototype.launching = async function () {
@@ -904,6 +1017,8 @@ EstimationJs.prototype.launching = async function () {
     this.belowHeight = <%% 123, 123, 123, 123, 0 %%>;
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
     this.mother.grayBarWidth = <%% 210, 200, 200, 210, 0 %%>;
+    this.tabletWidth = <%% 0, 0, 148, 140, 0 %%>;
+    this.motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
     this.backGrayBar();
     this.baseMaker();

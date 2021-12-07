@@ -511,11 +511,15 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.proid === undefined || req.body.cliid === undefined || req.body.desid === undefined || req.body.method === undefined || req.body.amount === undefined) {
+      if (req.body.proid === undefined || req.body.cliid === undefined || req.body.desid === undefined || req.body.method === undefined) {
         throw new Error("invaild post");
       }
-      const { proid, cliid, desid, method, amount: { supply, vat, consumer } } = equalJson(req.body);
+      const { proid, cliid, desid, method } = equalJson(req.body);
       const find0 = "시공 잔금";
+      const findFirst = "시공 계약금";
+      const findStart = "시공 착수금";
+      const findMiddle = "시공 중도금";
+      const findRemain = "시공 잔금";
       const find1 = "시공";
       let bills, bilid, tempIndex, targetIndex, targetBill;
       let itemIndex;
@@ -546,20 +550,93 @@ ReceiptRouter.prototype.rou_post_constructAmountSync = function () {
         }
 
         if (bilid !== null) {
-          itemIndex = -1;
-          for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
-            if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
-              itemIndex = i;
-              break;
+          if (req.body.amount !== undefined) {
+            const { amount: { supply, vat, consumer } } = equalJson(req.body);
+
+            itemIndex = -1;
+            for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
+              if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
+                itemIndex = i;
+                break;
+              }
             }
+            whereQuery = { bilid };
+            updateQuery = {};
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = vat;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = consumer;
+            await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
+          } else {
+            const { first, start, middle, remain } = equalJson(req.body);
+
+            whereQuery = { bilid };
+            updateQuery = {};
+
+            targetIndex = targetBill.requests.findIndex((obj) => {
+              return (new RegExp(findFirst, "gi")).test(obj.name);
+            });
+            itemIndex = -1;
+            for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
+              if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
+                itemIndex = i;
+                break;
+              }
+            }
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = first.supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = first.supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = first.vat;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = first.consumer;
+
+            targetIndex = targetBill.requests.findIndex((obj) => {
+              return (new RegExp(findStart, "gi")).test(obj.name);
+            });
+            itemIndex = -1;
+            for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
+              if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
+                itemIndex = i;
+                break;
+              }
+            }
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = start.supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = start.supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = start.vat;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = start.consumer;
+
+            targetIndex = targetBill.requests.findIndex((obj) => {
+              return (new RegExp(findMiddle, "gi")).test(obj.name);
+            });
+            itemIndex = -1;
+            for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
+              if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
+                itemIndex = i;
+                break;
+              }
+            }
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = middle.supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = middle.supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = middle.vat;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = middle.consumer;
+
+            targetIndex = targetBill.requests.findIndex((obj) => {
+              return (new RegExp(findRemain, "gi")).test(obj.name);
+            });
+            itemIndex = -1;
+            for (let i = 0; i < targetBill.requests[targetIndex].items.length; i++) {
+              if ((new RegExp(find1, "gi")).test(targetBill.requests[targetIndex].items[i].name)) {
+                itemIndex = i;
+                break;
+              }
+            }
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = remain.supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = remain.supply;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = remain.vat;
+            updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = remain.consumer;
+
+            await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
           }
-          whereQuery = { bilid };
-          updateQuery = {};
-          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".unit.price"] = supply;
-          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.supply"] = supply;
-          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.vat"] = vat;
-          updateQuery["requests." + String(targetIndex) + ".items." + String(itemIndex) + ".amount.consumer"] = consumer;
-          await bill.updateBill([ whereQuery, updateQuery ], { selfMongo: instance.mongolocal });
+
         }
       }
 

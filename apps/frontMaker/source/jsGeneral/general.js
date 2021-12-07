@@ -3861,14 +3861,6 @@ GeneralJs.getCookiesAll = function () {
   resultObj = {};
   tempArr0 = cookies.split(';');
 
-  if (tempArr0[0] === undefined) {
-    return {};
-  } else {
-    if (tempArr0[0].split('=').length < 2) {
-      return {};
-    }
-  }
-
   for (let i of tempArr0) {
     tempArr1 = i.split('=');
     if (tempArr1.length > 1) {

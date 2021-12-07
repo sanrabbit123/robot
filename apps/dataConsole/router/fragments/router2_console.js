@@ -4099,6 +4099,7 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         const { map: { first, start, middle, remain } } = equalJson(req.body);
         let firstObj, startObj, middleObj, remainObj;
         let whereQuery, updateQuery;
+        let toPython;
 
         if (construct.contract.payments.first === null) {
           firstObj = back.returnProjectDummies("process.design.construct.contract.payments");
@@ -4135,6 +4136,37 @@ DataRouter.prototype.rou_post_constructInteraction = function () {
         remainObj.calculation.amount.consumer = remain;
         remainObj.calculation.amount.vat = Math.floor(remainObj.calculation.amount.consumer / 11);
         remainObj.calculation.amount.supply = remainObj.calculation.amount.consumer - remainObj.calculation.amount.vat;
+
+        toPython = {
+          proid,
+          cliid: project.cliid,
+          desid: project.desid,
+          method: project.service.online ? "online" : "offline",
+          first: {
+            consumer: firstObj.calculation.amount.consumer,
+            vat: firstObj.calculation.amount.vat,
+            supply: firstObj.calculation.amount.supply,
+          },
+          start: {
+            consumer: startObj.calculation.amount.consumer,
+            vat: startObj.calculation.amount.vat,
+            supply: startObj.calculation.amount.supply,
+          },
+          middle: {
+            consumer: middleObj.calculation.amount.consumer,
+            vat: middleObj.calculation.amount.vat,
+            supply: middleObj.calculation.amount.supply,
+          },
+          remain: {
+            consumer: remainObj.calculation.amount.consumer,
+            vat: remainObj.calculation.amount.vat,
+            supply: remainObj.calculation.amount.supply,
+          },
+        };
+
+        requestSystem("https://" + instance.address.pythoninfo.host + ":3000/constructAmountSync", toPython, { headers: { "Content-type": "application/json" } }).catch((err) => {
+          throw new Error(err);
+        });
 
         whereQuery = { proid };
         updateQuery = {};
