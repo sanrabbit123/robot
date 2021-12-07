@@ -35,6 +35,454 @@ EstimationJs.prototype.backGrayBar = function () {
   });
 }
 
+EstimationJs.prototype.navigatorLaunching = function () {
+  const instance = this;
+  const { ea, designer, desid, media, grayBarWidth, tabletWidth } = this;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo, setQueue } = GeneralJs;
+  const totalContents = document.getElementById("totalcontents");
+  const totalMother = document.querySelector(".totalMother");
+  const mother = totalMother.firstChild;
+  const mobile = media[4];
+  const desktop = !mobile;
+  const menuClassName = "leftMenus";
+  const menuMap = [
+    {
+      title: "기본 정보",
+      position: 0,
+      mobile: true,
+      event: function (e) {
+
+      },
+    },
+  ];
+  this.menuMap = menuMap;
+  let margin;
+  let size;
+  let barHeight;
+  let marginBottom;
+  let indent;
+  let menu;
+  let menuMargin;
+  let secondBold;
+  let boxPadding;
+  let boxWidth;
+  let factorHeight;
+  let factorSize;
+  let factorTextTop;
+  let naviHeight;
+  let mobileNavigator;
+  let style;
+  let fontTop;
+  let fontLeft;
+  let naviDesignerWidth;
+  let naviBetweenMargin;
+  let iconTop;
+  let iconWidth;
+  let iconIndent;
+  let popupTop;
+  let menuOnEvent;
+  let titleSize;
+
+  cleanChildren(mother);
+
+  this.pageHistory.unshift({ index: 0, status: "page" });
+
+  if (desktop) {
+
+    margin = <%% 40, 31, 27, 24, 35 %%>;
+    size = <%% 16, 15, 14, 13, 15 %%>;
+    barHeight = 19;
+    marginBottom = 23;
+    indent = 16;
+    menuMargin = <%% 15, 11, 9, 8, 15 %%>;
+    secondBold = 500;
+    titleSize = <%% 21, 19, 17, 15, 3 %%>;
+
+    menu = [];
+    for (let i = 0; i < menuMap.length; i++) {
+      menu.push({
+        class: [ "hoverDefault", menuClassName ],
+        attribute: [
+          { toggle: "off" },
+          { index: String(i) },
+          { mode: menuMap[i].mode }
+        ],
+        event: {
+          click: function (e) {
+            const index = Number(this.getAttribute("index"));
+            // DEV
+            if (index === 1) {
+              window.alert("아직 서비스 오픈 전입니다!");
+            } else {
+              menuMap[index].event.call(this, e);
+              if (tabletWidth !== 0) {
+                setQueue(() => {
+                  instance.listIcon.click();
+                }, 500);
+              }
+            }
+            // DEV
+          }
+        },
+        style: {
+          position: "relative",
+          fontSize: "inherit",
+          fontWeight: "inherit",
+          color: "inherit",
+          marginBottom: String(menuMargin) + ea,
+        },
+        children: [
+          {
+            text: String(i + 1),
+            style: {
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              fontSize: "inherit",
+              fontWeight: String(500),
+              color: colorChip.green,
+            }
+          },
+          {
+            text: menuMap[i].title,
+            class: [ "leftTitles" ],
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(indent) + ea,
+              fontSize: "inherit",
+              fontWeight: "inherit",
+              color: "inherit",
+            }
+          },
+        ]
+      });
+    }
+    createNode({
+      mother,
+      style: {
+        position: "fixed",
+        top: String(margin) + ea,
+        marginLeft: String(margin) + ea,
+        marginRight: String(margin) + ea,
+        width: String(grayBarWidth + tabletWidth - (margin * 2)) + ea,
+        height: withOut(100, margin * 2, ea),
+        fontSize: String(size) + ea,
+        fontWeight: String(secondBold),
+        color: colorChip.black
+      },
+      children: [
+        {
+          style: {
+            display: tabletWidth === 0 ? "none" : "block",
+            position: "absolute",
+            top: String(-1 * margin) + ea,
+            left: String(-1 * margin) + ea,
+            width: withOut(-1 * 2 * margin, ea),
+            height: withOut(-1 * 2 * margin, ea),
+            boxShadow: "1px 0px 13px -9px " + colorChip.shadow,
+            background: colorChip.gray0,
+            opacity: String(0.9),
+          }
+        },
+        {
+          text: "<b%Designer%b> Console",
+          event: {
+            click: function (e) {
+              window.location.reload();
+            }
+          },
+          style: {
+            position: "relative",
+            fontSize: String(titleSize) + ea,
+            fontFamily: "graphik",
+            fontWeight: String(300),
+            color: colorChip.black,
+            lineHeight: String(1.3),
+            cursor: "pointer",
+          },
+          bold: {
+            fontSize: String(titleSize) + ea,
+            fontFamily: "graphik",
+            fontWeight: String(500),
+            color: colorChip.black,
+          }
+        },
+        {
+          style: {
+            position: "relative",
+            height: String(barHeight) + ea,
+            width: String(100) + '%',
+            borderBottom: "1px solid " + colorChip.gray4,
+            marginBottom: String(marginBottom) + ea,
+          }
+        },
+        ...menu
+      ]
+    });
+  } else {
+
+    mother.style.display = "none";
+
+    boxPadding = 4;
+    boxWidth = 45;
+    factorHeight = 8.5;
+    factorSize = 4;
+    factorTextTop = 1.4;
+    naviHeight = 60;
+    size = 20;
+    fontTop = 12;
+    fontLeft = 7.2;
+    naviDesignerWidth = 85;
+    naviBetweenMargin = 7;
+    iconTop = 17;
+    iconWidth = size + 1;
+    iconIndent = 3;
+    popupTop = 29;
+
+    menu = [];
+    for (let { title, mode, position, mobile } of menuMap) {
+      if (mobile) {
+        menu.push({
+          attribute: [
+            { mode },
+            { position: String(position) },
+            { naviHeight: String(naviHeight) },
+          ],
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(100) + '%',
+            height: String(factorHeight) + ea,
+          },
+          children: [
+            {
+              text: title,
+              attribute: [
+                { mode },
+                { position: String(position) },
+                { naviHeight: String(naviHeight) },
+              ],
+              style: {
+                position: "absolute",
+                width: String(100) + '%',
+                textAlign: "center",
+                fontSize: String(factorSize) + ea,
+                fontWeight: String(500),
+                top: String(factorTextTop) + ea,
+              }
+            }
+          ]
+        });
+      }
+    }
+
+    this.mobileNavigator = createNode({
+      mother,
+      style: {
+        position: "absolute",
+        paddingTop: String(boxPadding) + ea,
+        paddingBottom: String(boxPadding) + ea,
+        width: String(boxWidth) + ea,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        background: colorChip.gray0,
+        animation: "fadeuplite 0.2s ease forwards",
+      },
+      children: menu
+    });
+
+    mobileNavigator = GeneralJs.nodes.div.cloneNode(true);
+    style = {
+      position: "fixed",
+      top: String(0),
+      left: String(0),
+      width: String(100) + '%',
+      height: String(naviHeight) + "px",
+      zIndex: String(2),
+      background: "transparent"
+    };
+    for (let i in style) {
+      mobileNavigator.style[i] = style[i];
+    }
+    totalContents.insertBefore(mobileNavigator, totalMother);
+
+    menuOnEvent = function (direction = "down") {
+      return function (e) {
+        const self = this;
+        const id0 = "mobileMenu_cancelBox";
+        const id1 = "mobileMenu_menuBox"
+        let mobileNavigator, menus, cancelBox, style;
+
+        cancelBox = GeneralJs.nodes.div.cloneNode(true);
+        cancelBox.id = id0;
+        style = {
+          position: "fixed",
+          top: String(0),
+          right: String(0),
+          width: String(98) + "vw",
+          height: String(100) + "%",
+          zIndex: String(3),
+        };
+        for (let i in style) {
+          cancelBox.style[i] = style[i];
+        }
+        cancelBox.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.removeChild(document.getElementById(id1));
+          self.removeChild(document.getElementById(id0));
+        });
+        this.appendChild(cancelBox);
+
+        mobileNavigator = instance.mobileNavigator.cloneNode(true);
+        mobileNavigator.id = id1;
+        if (direction === "down") {
+          mobileNavigator.style.top = String(popupTop) + "px";
+        } else {
+          mobileNavigator.style.bottom = String(14) + ea;
+        }
+        mobileNavigator.style.right = String(0);
+        mobileNavigator.style.zIndex = String(3);
+        mobileNavigator.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+        this.appendChild(mobileNavigator);
+
+        menus = mobileNavigator.children;
+
+        for (let z = 0; z < menus.length; z++) {
+          menus[z].setAttribute("mode", menuMap[z].mode);
+          menus[z].setAttribute("index", String(z));
+          menus[z].classList.add(menuClassName);
+          menus[z].addEventListener("click", function (e) {
+            const index = Number(this.getAttribute("index"));
+            const position = Number(this.getAttribute("position"));
+            const naviHeight = Number(this.getAttribute("naviHeight"));
+            let blocks;
+
+            // DEV
+            if (index === 1) {
+              window.alert("아직 서비스 오픈 전입니다!");
+            } else {
+              blocks = document.querySelector(".mainBaseTong").firstChild.children;
+              menuMap[index].event.call(this, e);
+              if (position !== 0 && blocks[position] !== undefined) {
+                scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
+              }
+
+              self.removeChild(document.getElementById(id1));
+              self.removeChild(document.getElementById(id0));
+            }
+            // DEV
+
+          });
+        }
+
+      }
+    }
+
+    this.listIcon.addEventListener("click", menuOnEvent("up"));
+
+    createNodes([
+      {
+        mother: mobileNavigator,
+        style: {
+          position: "relative",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(100) + '%',
+        }
+      },
+      {
+        mother: -1,
+        style: {
+          position: "absolute",
+          width: String(100) + '%',
+          height: String(100) + '%',
+          background: colorChip.black,
+          opacity: String(0.88),
+          backdropFilter: "blur(" + String(10) + "px" + ")",
+          top: String(0),
+          left: String(0)
+        }
+      },
+      {
+        mother: -2,
+        text: "Designer",
+        event: {
+          click: function (e) {
+            window.location.reload();
+          }
+        },
+        style: {
+          position: "absolute",
+          fontSize: String(size) + "px",
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          fontStyle: "italic",
+          color: colorChip.white,
+          top: String(fontTop) + "px",
+          left: String(fontLeft) + ea,
+          cursor: "pointer",
+        }
+      },
+      {
+        mother: -3,
+        text: "console",
+        event: {
+          click: function (e) {
+            window.location.reload();
+          }
+        },
+        style: {
+          position: "absolute",
+          fontSize: String(size) + "px",
+          fontFamily: "graphik",
+          fontWeight: String(200),
+          color: colorChip.white,
+          top: String(fontTop) + "px",
+          left: "calc(" + String(fontLeft) + ea + " + " + String(naviDesignerWidth + naviBetweenMargin) + "px" + ")",
+          cursor: "pointer",
+        }
+      },
+      {
+        mother: -4,
+        events: [
+          {
+            type: "click",
+            event: menuOnEvent(),
+          }
+        ],
+        style: {
+          position: "absolute",
+          top: String(iconTop) + "px",
+          right: String(fontLeft) + ea,
+          width: String(iconWidth) + "px",
+          height: String(iconWidth) + "px",
+          cursor: "pointer",
+        },
+        children: [
+          {
+            mode: "svg",
+            source: this.mother.returnHamburger(colorChip.white),
+            style: {
+              position: "absolute",
+              top: String(iconIndent) + "px",
+              right: String(0),
+              height: withOut(100, iconIndent * 2, "px"),
+            }
+          }
+        ]
+      },
+    ]);
+
+  }
+
+}
+
 EstimationJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth } = this;
@@ -74,6 +522,11 @@ EstimationJs.prototype.baseMaker = function () {
   });
 
   this.mother.searchInput(bottomPannel);
+  this.searchInput = this.mother.searchInput;
+
+  this.navigatorLaunching();
+
+  this.searchInput.focus();
 }
 
 EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
