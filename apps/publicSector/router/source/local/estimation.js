@@ -37,13 +37,41 @@ EstimationJs.prototype.backGrayBar = function () {
 
 EstimationJs.prototype.baseMaker = function () {
   const instance = this;
-  const { ea, totalContents, belowHeight } = this;
-  totalMother = GeneralJs.nodes.div.cloneNode(true);
-  totalMother.classList.add("totalMother");
-  totalMother.style.height = "calc(100% - " + String(belowHeight) + ea + ")";
+  const { ea, totalContents, belowHeight, grayBarWidth } = this;
+  const { createNode, colorChip, withOut } = GeneralJs;
+  let totalMother, leftPannel, bottomPannel;
 
-  totalContents.appendChild(totalMother);
+  totalMother = createNode({
+    mother: totalContents,
+    class: [ "totalMother" ],
+    style: {
+      height: "calc(100% - " + String(belowHeight) + ea + ")"
+    }
+  });
+
   this.totalMother = totalMother;
+
+  leftPannel = createNode({
+    mother: totalContents,
+    style: {
+      position: "fixed",
+      left: String(0),
+      top: String(0),
+      width: String(grayBarWidth) + ea,
+      height: String(100) + '%',
+    }
+  });
+
+  bottomPannel = createNode({
+    mother: totalContents,
+    style: {
+      position: "fixed",
+      left: String(grayBarWidth) + ea,
+      bottom: String(0),
+      height: String(belowHeight) + ea,
+      width: withOut(grayBarWidth, ea),
+    }
+  });
 }
 
 EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
@@ -65,7 +93,6 @@ EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
   }).catch((err) => {
     console.log(err);
   });
-
 }
 
 EstimationJs.prototype.estimationList = function (buiid = '') {
@@ -75,11 +102,11 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
   const cookies = getCookiesAll();
   const mobile = this.media[4];
   const desktop = !mobile;
-  const wording = `'+' 버튼을 눌러 견적서를 추가하거나, <b%샘플 파일%b>로 작업한 엑셀 파일을 '+' 버튼으로 드래그 앤 드롭해 견적서를 추가하세요.`;
+  const wording = `+ 버튼을 눌러 견적서를 추가하거나, <b%샘플 파일%b>로 작업한 엑셀 파일을 + 버튼으로 드래그 앤 드롭해 견적서를 추가하세요.`;
 
-  const testName0 = [ "김", "배", "박", "강", "임", "서", "이", "최", "허", "피", "유", "우", "원", "백" ];
-  const testName1 = [ "창", "규", "공", "지", "해", "민", "혜", "연", "별", "령", "재", "신", "찬", "은", "미", "화", "진", "금", "자", "가", "연", "듀", "오", "록" ];
-  const testName2 = [ "우", "창", "리", "규", "공", "헌", "지", "애", "경", "병", "해", "잠", "부", "수", "빈", "민", "혜", "연", "별", "령", "재", "은", "미", "화", "진", "금", "자", "가", "연", "듀", "오", "록", "롱", "마", "간", "나" ];
+  const testName0 = [ "김", "배", "박", "강", "임", "서", "이", "최", "허", "유", "우", "원", "백", "전" ];
+  const testName1 = [ "창", "규", "공", "지", "해", "민", "혜", "연", "재", "신", "찬", "은", "미", "화", "진", "금", "자", "가", "연", "오", "간", "수", "형" ];
+  const testName2 = [ "우", "창", "리", "규", "공", "헌", "지", "애", "경", "병", "해", "잠", "부", "수", "빈", "민", "혜", "형", "연", "별", "령", "재", "은", "미", "화", "연", "진", "금", "자", "가", "연", "오", "록", "만", "마", "기", "간", "나" ];
 
   let margin;
   let baseTong0, baseTong;
@@ -430,8 +457,6 @@ EstimationJs.prototype.launching = async function () {
     this.backGrayBar();
     this.baseMaker();
     this.listDetailLaunching();
-
-
 
   } catch (e) {
     console.log(e);
