@@ -38,7 +38,7 @@ PublicSector.prototype.staticRender = async function () {
     }
     const targetDir = `${this.dir}/router/source/local`;
     const targetDirList = (await fileSystem(`readDir`, [ targetDir ])).filter((fileName) => { return !(([ ".DS_Store", "module" ]).includes(fileName)); });
-    let svgTongString, generalString, consoleGeneralString, execString, fileString, svgTongItemsString, polyfillString, trapString;
+    let svgTongString, generalString, consoleGeneralString, publicGeneralString, execString, fileString, svgTongItemsString, polyfillString, trapString;
     let code0, code1, code2, code3;
     let result;
     let prototypes, dataPatchScript, prototypeBoo;
@@ -56,7 +56,8 @@ PublicSector.prototype.staticRender = async function () {
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
-    consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
+    consoleGeneralString = await fileSystem(`readString`, [ `${process.cwd()}/apps/dataConsole/router/source/general/general.js` ]);
+    publicGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     trapString = await this.back.setAjaxAuthorization();
 
     console.log(`set target :`, targetDirList);
@@ -80,7 +81,7 @@ PublicSector.prototype.staticRender = async function () {
 
       //merge
       code0 = svgTongString + "\n\n" + trapString + "\n\n";
-      code2 = generalString + "\n\n" + consoleGeneralString + "\n\n";
+      code2 = generalString + "\n\n" + consoleGeneralString + "\n\n" + publicGeneralString + "\n\n";
       code3 = fileString + "\n\n" + execString;
 
       //set media query

@@ -560,6 +560,7 @@ DesignerJs.prototype.requestList = function (desid) {
       overflow: "hidden",
       marginBottom: String(baseTongMarginBottom) + ea,
       paddingBottom: String(baseTongPaddingBottom) + ea,
+      boxSizing: "border-box",
     }
   });
 

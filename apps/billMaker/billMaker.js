@@ -986,8 +986,8 @@ BillMaker.prototype.createBill = async function (collection, updateQueryArr, opt
       console.log(e);
     }
   } else if (typeof collection === "string" && Array.isArray(updateQueryArr) && typeof option === "object") {
-    if (!BillMaker.billCollections.includes(collection)) {
-      throw new Error("generalBill must use getBillById or getBillsByQuery");
+    if (collection === "generalBill") {
+      throw new Error("generalBill must use no collection name use");
     }
     if (!updateQueryArr.every((o) => { return typeof o === "object"; })) {
       throw new Error("input must be String: bill collection, Array: updateQueryArr, Object: option");
@@ -1443,6 +1443,58 @@ BillMaker.prototype.createStylingBill = async function (proid, option = { selfMo
     }
 
     return bilidArr;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.createInvoice = async function (updateQuery = {}, option = { selfMongo: null }) {
+  const instance = this;
+  const { mongo, mongopythoninfo } = this.mother;
+  const collection = "constructInvoice";
+  const map = require(`${this.mapDir}/${collection}.js`);
+  try {
+    let MONGOC;
+    let selfBoo;
+    let rows;
+    let dummy;
+    let pastId;
+    let newId;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+
+    dummy = map.main();
+    rows = await MONGOC.db(`miro81`).collection(collection).find({}).sort({ "date": -1 }).limit(1).toArray();
+    if (rows.length === 0) {
+      pastId = "v2111_aa01s";
+    } else {
+      pastId = rows[0].invid;
+    }
+    dummy.invid = this.back.idMaker(pastId, false);
+    newId = dummy.invid;
+
+    await MONGOC.db(`miro81`).collection(collection).insertOne(dummy);
+    if (updateQuery !== null && Object.keys(updateQuery).length > 0) {
+      await MONGOC.db(`miro81`).collection(collection).updateOne({ invid: newId }, { $set: updateQuery });
+    }
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+
+    return newId;
 
   } catch (e) {
     console.log(e);
