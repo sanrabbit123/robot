@@ -197,7 +197,6 @@ CronGhost.prototype.cronServer = async function () {
   const GoogleCalendar = require(`${process.cwd()}/apps/googleAPIs/googleCalendar.js`);
   const GoogleDocs = require(`${process.cwd()}/apps/googleAPIs/googleDocs.js`);
   const BillMaker = require(`${process.cwd()}/apps/billMaker/billMaker.js`);
-  const PublicSector = require(`${process.cwd()}/apps/publicSector/publicSector.js`);
   try {
     const app = await this.cronRouter();
 
@@ -291,12 +290,6 @@ CronGhost.prototype.cronServer = async function () {
     }, interval);
 
     pureServer("listen", app, port);
-
-    // python server
-    const sector = new PublicSector();
-    await sector.spawnSector();
-    await sector.staticRender();
-    await sector.pythonServer();
 
   } catch (e) {
     console.log(e);
