@@ -3590,7 +3590,8 @@ DataRouter.prototype.rou_post_callTo = function () {
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify({ message: "OK" }));
       } else {
-        const who = req.body.who;
+        const cookies = DataRouter.cookieParsing(req);
+        const who = cookies.homeliaisonConsoleLoginedEmail;
         const members = instance.members;
         let thisPerson, index, number, phone;
 

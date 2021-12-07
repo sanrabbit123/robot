@@ -39,8 +39,7 @@ EstimationJs.prototype.navigatorLaunching = function () {
   const instance = this;
   const { ea, designer, desid, media, grayBarWidth, tabletWidth, totalContents, totalMother } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo, setQueue } = GeneralJs;
-  const totalContents = document.getElementById("totalcontents");
-  const mother = totalMother.firstChild;
+  const mother = totalMother.nextElementSibling;
   const mobile = media[4];
   const desktop = !mobile;
   const menuClassName = "leftMenus";
@@ -81,8 +80,6 @@ EstimationJs.prototype.navigatorLaunching = function () {
   let popupTop;
   let menuOnEvent;
   let titleSize;
-
-  this.pageHistory.unshift({ index: 0, status: "page" });
 
   if (desktop) {
 
@@ -155,6 +152,7 @@ EstimationJs.prototype.navigatorLaunching = function () {
         ]
       });
     }
+
     createNode({
       mother,
       style: {
@@ -217,6 +215,7 @@ EstimationJs.prototype.navigatorLaunching = function () {
         ...menu
       ]
     });
+
   } else {
 
     mother.style.display = "none";
