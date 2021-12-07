@@ -185,8 +185,8 @@ DataRouter.prototype.rou_get_First = function () {
             target = "client";
           } else if (/^de/i.test(req.params.id)) {
             target = "designer";
-          } else if (/^ser/i.test(req.params.id)) {
-            target = "service";
+          } else if (/^dash/i.test(req.params.id)) {
+            target = "dashboard";
           } else if (/^proj/i.test(req.params.id)) {
             target = "project";
           } else if (/^prop/i.test(req.params.id)) {

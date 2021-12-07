@@ -935,6 +935,30 @@ KakaoTalk.prototype.sendTalk = async function (method, name, phone, convertObj =
   }
 }
 
+KakaoTalk.prototype.ObserveRemain = async function () {
+  const instance = this;
+  const { requestSystem, messageSend, sleep } = this.mother;
+  try {
+    const convertConst = 8.400605449041372;
+    const timeConst = 30 * 1000;
+    const standard = 200;
+    const ea = '원';
+    let res;
+    do {
+      res = await requestSystem("https://apis.aligo.in/remain/", {
+        key: this.authObj.apikey,
+        user_id: this.authObj.userid,
+      });
+      if (res.data.MMS_CNT < standard) {
+        await messageSend({ text: "알리고 충전이 필요해요! 지금 " + String(Math.round(res.data.SMS_CNT * convertConst)) + ea + " 남아 있답니다.", channel: "#700_operation", voice: true });
+      }
+      await sleep(timeConst);
+    } while (res.data.MMS_CNT < standard);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 KakaoTalk.prototype.ready = async function () {
   const instance = this;
   try {
