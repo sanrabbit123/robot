@@ -1069,6 +1069,29 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - tong delete
+  funcObj.post_tongDelete = {
+    link: [ "/tongDelete" ],
+    func: async function (req, res) {
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        shellExec(`rm`, [ `-rf`, `${instance.address.officeinfo.ghost.file.static}/tong` ]).then(() => {
+          return shellExec(`mkdir`, [ `${instance.address.officeinfo.ghost.file.static}/tong` ]);
+        }).catch((err) => {
+          throw new Error(err.message);
+        })
+        res.send(JSON.stringify({ message: "will do" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //POST - file upload
   funcObj.post_fileUpload = {
     binary: true,

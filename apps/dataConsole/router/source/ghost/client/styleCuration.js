@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 서비스 안내 | 홈리에종');"
+      "return ('홈리에종 서비스 큐레이션 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 서비스 안내 페이지 입니다! | 홈리에종');"
+      "return ('홈리에종 서비스 큐레이션 페이지 입니다! | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -4159,37 +4159,40 @@ StyleCurationJs.prototype.insertPannelBox = function () {
           {
             type: "click",
             event: function (e) {
-              let pass;
+              if (instance.testMode === true && GeneralJs.returnGet().cliid === "c1801_aa01s") {
+                window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + "p1801_aa01s";
+              } else {
+                let pass;
 
-              pass = true;
-              for (let i in instance.values) {
-                for (let j of instance.values[i]) {
-                  if (j.required) {
-                    if (j.value === null) {
-                      window.alert(j.rewind);
-                      GeneralJs.scrollTo(window, j.dom, (instance.naviHeight + 20));
-                      pass = false;
-                      break;
+                pass = true;
+                for (let i in instance.values) {
+                  for (let j of instance.values[i]) {
+                    if (j.required) {
+                      if (j.value === null) {
+                        window.alert(j.rewind);
+                        GeneralJs.scrollTo(window, j.dom, (instance.naviHeight + 20));
+                        pass = false;
+                        break;
+                      }
                     }
                   }
-                }
-                if (!pass) {
-                  break;
-                }
-              }
-              if (pass) {
-                instance.mother.certificationBox(instance.client.name, instance.client.phone, async function (back, box) {
-                  try {
-                    await GeneralJs.sleep(500);
-                    document.body.removeChild(box);
-                    document.body.removeChild(back);
-                    instance.parsingValues();
-                  } catch (e) {
-                    await GeneralJs.ajaxJson({ message: "StyleCurationJs.certificationBox : " + e.message }, "/errorLog");
+                  if (!pass) {
+                    break;
                   }
-                });
+                }
+                if (pass) {
+                  instance.mother.certificationBox(instance.client.name, instance.client.phone, async function (back, box) {
+                    try {
+                      await GeneralJs.sleep(500);
+                      document.body.removeChild(box);
+                      document.body.removeChild(back);
+                      instance.parsingValues();
+                    } catch (e) {
+                      await GeneralJs.ajaxJson({ message: "StyleCurationJs.certificationBox : " + e.message }, "/errorLog");
+                    }
+                  });
+                }
               }
-
             }
           }
         ],
@@ -5515,6 +5518,13 @@ StyleCurationJs.prototype.launching = async function (loading) {
       this.values.style[0].value = null;
       this.alreadyStyleCheck = false;
     }
+
+    // TEST Center ==================================================================================================
+    if (getObj.cliid === "c1801_aa01s") {
+      this.client.name = "우수리미";
+      this.testMode = true;
+    }
+    // TEST Center ==================================================================================================
 
     await this.mother.ghostClientLaunching({
       name: "styleCuration",

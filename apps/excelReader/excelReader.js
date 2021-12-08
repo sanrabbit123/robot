@@ -29,11 +29,21 @@ ExcelReader.prototype.fileToMatrix = async function (filePath, sheetsName) {
   }
   const instance = this;
   const address = this.address;
-  const { generalFileUpload } = this.mother;
+  const { generalFileUpload, uniqueValue, requestSystem, ghostRequest } = this.mother;
+  const fileNameConst = "excel_";
   try {
-    await generalFileUpload("https://" + address.officeinfo.ghost.host + "/fileUpload", [ filePath ], [ "/temp" ]);
+    let tempFileName;
+    let matrix;
+    let file;
 
+    tempFileName = fileNameConst + uniqueValue("hex");
+    file = "/tong/" + tempFileName;
 
+    await generalFileUpload("https://" + address.officeinfo.ghost.host + "/fileUpload", [ filePath ], [ file ]);
+    matrix = (await requestSystem("https://" + address.officeinfo.ghost.host + "/publicSector/excel", { file, sheetsName }, { headers: { "Content-Type": "application/json" } })).data;
+    await ghostRequest("/tongDelete");
+
+    return matrix;
   } catch (e) {
     console.log(e);
   }

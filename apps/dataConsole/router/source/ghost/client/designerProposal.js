@@ -4301,6 +4301,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     if (getObj.proid === undefined) {
       window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
     }
+
     // TEST Center ==================================================================================================
     if (proid === "p1806_aa01s" && getObj.mode !== "test") {
       window.location.href = this.frontPage;
