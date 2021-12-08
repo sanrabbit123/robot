@@ -4301,6 +4301,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
     if (getObj.proid === undefined) {
       window.location.href = window.location.protocol + "//" + window.location.host + "/middle/proposal?proid=" + project.proid;
     }
+    // TEST Center ==================================================================================================
     if (proid === "p1806_aa01s" && getObj.mode !== "test") {
       window.location.href = this.frontPage;
     }
@@ -4308,6 +4309,13 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       this.client.name = "홍길동";
       this.testMode = true;
     }
+    if (proid === "p1801_aa01s") {
+      this.client.name = "우수리미";
+      for (let d of designers) {
+        d.end = false;
+      }
+    }
+    // TEST Center ==================================================================================================
 
     await this.mother.ghostClientLaunching({
       name: "designerProposal",

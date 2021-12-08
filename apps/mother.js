@@ -3310,6 +3310,35 @@ Mother.prototype.messageLog = function (text) {
 Mother.prototype.uniqueValue = function (type = "number") {
   if (type === "number") {
     return Number(String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000)));
+  } else if (type === "string") {
+    return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
+  } else if (type === "hex") {
+    const x = 16;
+    const length = 11;
+    const uniqueNumber = (new Date()).valueOf();
+    const hexChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' ];
+    const randomKeyWords = [ 'A', 'B', 'C', 'D', 'E', 'F' ];
+    let uniqueNumber_copied;
+    let maxExponent;
+    let cArr;
+    let temp;
+    let hexString;
+    uniqueNumber_copied = uniqueNumber;
+    maxExponent = 0;
+    while (Math.pow(x, maxExponent) <= uniqueNumber) {
+      maxExponent++;
+    }
+    cArr = [];
+    for (let i = 0; i < maxExponent; i++) {
+      temp = ((uniqueNumber_copied / Math.pow(x, i)) % x);
+      cArr.push(temp);
+      uniqueNumber_copied = uniqueNumber_copied - (temp * Math.pow(x, i));
+    }
+    hexString = cArr.map((index) => { return hexChars[index] }).join('');
+    for (let i = 0; i < length; i++) {
+      hexString += hexChars[Math.floor(hexChars.length * Math.random())];
+    }
+    return randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + hexChars[Math.floor(hexChars.length * Math.random())] + randomKeyWords[Math.floor(randomKeyWords.length * Math.random())] + String(uniqueNumber) + 'A' + hexString;
   } else {
     return String((new Date()).valueOf()) + String(Math.round(Math.random() * 10000));
   }

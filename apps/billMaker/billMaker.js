@@ -1501,6 +1501,236 @@ BillMaker.prototype.createInvoice = async function (updateQuery = {}, option = {
   }
 }
 
+BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (typeof proid !== "string" || typeof buiid !== "string" || typeof contents !== "object") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongopythoninfo, mongoinfo, uniqueValue } = this.mother;
+  const organizer = {
+    name: "홈리에종",
+    businessNumber: "221-81-49759",
+    phone: "02-2039-2252",
+    address: "서울특별시 성동구 성수이로22길 37 4층 408A호",
+  };
+  const requestIdConst = "r";
+  const itemIdConst = "i";
+  const itemDetailConst = "d";
+  const collection = "constructInvoice";
+  const map = require(`${this.mapDir}/${collection}.js`);
+  const { from, to, name, address, pyeong, commission: { supply, vat, consumer }, items, info, comments } = contents;
+  if (!Array.isArray(items)) {
+    throw new Error("invaild object");
+  }
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+    let mode;
+    let rows;
+    let invid;
+    let target;
+    let thisInvoice;
+    let thisProject, thisClient, thisDesigner;
+    let requestDummy;
+    let itemDummy;
+    let detailDummy;
+    let whereQuery, updateQuery;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+    if (!/^u[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]$/.test(buiid)) {
+      throw new Error("invaild input 3");
+    }
+    if (/^p[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]$/.test(proid)) {
+      rows = await this.readBill(collection, { "links.proid": proid }, { selfMongo: MONGOC });
+      if (rows.length === 0) {
+        mode = "create";
+      } else {
+        [ thisInvoice ] = rows;
+        mode = "update";
+        invid = thisInvoice.invid;
+      }
+    } else if (/^v[0-9][0-9][0-9][0-9]\_[a-z][a-z][0-9][0-9][a-z]$/.test(proid)) {
+      mode = "update";
+      invid = proid;
+      rows = await this.readBill(collection, { invid }, { selfMongo: MONGOC });
+      if (rows.length === 0) {
+        throw new Error("invaild invid");
+      }
+      [ thisInvoice ] = rows;
+      proid = thisInvoice.links.proid;
+    } else {
+      throw new Error("invaild input 3");
+    }
+
+    thisProject = await back.getProjectById(proid, { selfMongo: MONGOCOREC });
+    thisClient = await back.getClientById(thisProject.cliid, { selfMongo: MONGOCOREC });
+    thisDesigner = await back.getDesignerById(thisProject.desid, { selfMongo: MONGOCOREC });
+
+    if (thisProject === null || thisClient === null || thisDesigner === null) {
+      throw new Error("invaild project");
+    }
+
+    if (mode === "create") {
+      invid = await this.createInvoice({
+        "title": `${thisClient.name}C ${thisDesigner.designer}D 시공 견적`,
+        "date": new Date(),
+        "organizer": organizer,
+        "links.buiid": buiid,
+        "links.proid": proid,
+        "links.cliid": thisClient.cliid,
+        "links.desid": thisDesigner.desid,
+      });
+      [ thisInvoice ] = await this.readBill(collection, { invid }, { selfMongo: MONGOC });
+    }
+
+    requestDummy = map.sub("requests");
+
+    requestDummy.id = requestIdConst + uniqueValue("hex");
+    requestDummy.date = new Date();
+    requestDummy.period.from = from;
+    requestDummy.period.to = to;
+    requestDummy.name = name;
+    requestDummy.address = address;
+    requestDummy.pyeong = pyeong;
+    requestDummy.commission.supply = supply;
+    requestDummy.commission.vat = vat;
+    requestDummy.commission.consumer = consumer;
+
+    for (let { name, detail } of items) {
+      itemDummy = map.sub("items");
+      itemDummy.id = itemIdConst + uniqueValue("hex");
+      itemDummy.name = name;
+
+      for (let { name, description, info, unit: { ea, price, number }, amount: { supply, vat, consumer } } of detail) {
+        detailDummy = map.sub("detail");
+        detailDummy.id = itemDetailConst + uniqueValue("hex");
+        detailDummy.name = name;
+        detailDummy.description = description;
+        detailDummy.info = info;
+        detailDummy.unit.ea = ea;
+        detailDummy.unit.price = price;
+        detailDummy.unit.number = number;
+        detailDummy.amount.supply = supply;
+        detailDummy.amount.vat = vat;
+        detailDummy.amount.consumer = consumer;
+        itemDummy.detail.push(detailDummy);
+      }
+
+      requestDummy.items.push(itemDummy);
+    }
+
+    requestDummy.info = info;
+    requestDummy.comments = comments;
+
+    thisInvoice.requests.unshift(requestDummy);
+
+    whereQuery = { invid };
+    updateQuery = {};
+    updateQuery["requests"] = thisInvoice.requests;
+
+    await MONGOC.db(`miro81`).collection(collection).updateOne(whereQuery, { $set: updateQuery });
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+BillMaker.prototype.matrixToInvoice = async function (matrix, option = { selfMongo: null, selfCoreMongo: null }) {
+  if (!Array.isArray(matrix)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const back = this.back;
+  const { mongo, mongopythoninfo, mongoinfo } = this.mother;
+  const collection = "constructInvoice";
+  const map = require(`${this.mapDir}/${collection}.js`);
+  try {
+    let MONGOC, MONGOCOREC;
+    let selfBoo, selfCoreBoo;
+
+    if (option.selfMongo === undefined || option.selfMongo === null) {
+      selfBoo = false;
+    } else {
+      selfBoo = true;
+    }
+    if (!selfBoo) {
+      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
+      await MONGOC.connect();
+    } else {
+      MONGOC = option.selfMongo;
+    }
+    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
+      selfCoreBoo = false;
+    } else {
+      selfCoreBoo = true;
+    }
+    if (!selfCoreBoo) {
+      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
+      await MONGOCOREC.connect();
+    } else {
+      MONGOCOREC = option.selfCoreMongo;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if (!selfBoo) {
+      await MONGOC.close();
+    }
+    if (!selfCoreBoo) {
+      await MONGOCOREC.close();
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 BillMaker.prototype.requestInjection = async function (bilid, requestKey, client, designer, project, method, option = { selfMongo: null }) {
   if (typeof bilid !== "string" || typeof requestKey !== "string" || typeof client !== "object" || typeof designer !== "object" || typeof project !== "object" || typeof method !== "string") {
     throw new Error("invaild input");

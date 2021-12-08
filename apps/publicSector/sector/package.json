@@ -12,6 +12,8 @@
     "getmac",
     "netifaces",
     "pymongo",
-    "cloudconvert"
+    "cloudconvert",
+    "pandas",
+    "openpyxl"
   ]
 }

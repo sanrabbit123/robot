@@ -94,8 +94,23 @@ DevContext.prototype.launching = async function () {
     // console.log(matrix);
 
 
-
-
+    //
+    // {
+    //   invid: "",
+    //   title: "",
+    //   date: new Date(),
+    //   organizer: {
+    //     name: "홈리에종",
+    //     businessNumber: "221-81-49759",
+    //     phone: "02-2039-2252",
+    //     address: "서울특별시 성동구 성수이로22길 37 4층 408A호",
+    //   },
+    //   requests: [],
+    //   links: {
+    //     buiid: "",
+    //     proid: "",
+    //   },
+    // }
 
 
 
@@ -1564,7 +1579,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p143");
+    // await this.getCorePortfolio("p165");
 
 
     // aspirant to designer

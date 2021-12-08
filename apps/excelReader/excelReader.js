@@ -10,7 +10,7 @@ const ExcelReader = function () {
   this.readExcel = require(`${this.moduleDir}/readExcel.js`);
 }
 
-ExcelReader.prototype.fileToMatrix = async function (filePath) {
+ExcelReader.prototype.fileToMatrix_inLocal = async function (filePath) {
   if (typeof filePath !== "string") {
     throw new Error("invaild input");
   }
@@ -18,6 +18,22 @@ ExcelReader.prototype.fileToMatrix = async function (filePath) {
   try {
     const matrix = await this.readExcel(filePath);
     return matrix;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+ExcelReader.prototype.fileToMatrix = async function (filePath, sheetsName) {
+  if (typeof filePath !== "string" || typeof sheetsName !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const address = this.address;
+  const { generalFileUpload } = this.mother;
+  try {
+    await generalFileUpload("https://" + address.officeinfo.ghost.host + "/fileUpload", [ filePath ], [ "/temp" ]);
+
+
   } catch (e) {
     console.log(e);
   }
