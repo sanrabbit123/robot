@@ -5,7 +5,7 @@ import re
 
 STATIC_PATH = "/home/homeliaison/samba"
 
-async def excelToMatrix(request, mongoConnection):
+async def postExcel(request, mongoConnection):
     data = await request.post()
 
     # dic = pandas.read_excel(STATIC_PATH + data["file"], sheet_name=None)
@@ -25,4 +25,4 @@ async def excelToMatrix(request, mongoConnection):
 
 
 => @routes.get("/excel")
-=> web.json_response(await excelToMatrix(request, mongoConnection))
+=> web.json_response(await postExcel(request, mongoConnection))
