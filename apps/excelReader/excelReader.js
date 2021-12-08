@@ -41,14 +41,19 @@ ExcelReader.prototype.fileToMatrix = async function (filePath, sheetsName) {
     let matrix;
     let file;
 
-    tempFileName = fileNameConst + uniqueValue("hex");
+    tempFileName = fileNameConst + uniqueValue("hex") + ".xlsx";
     file = "/tong/" + tempFileName;
+
 
     await generalFileUpload("https://" + address.officeinfo.ghost.host + "/fileUpload", [ filePath ], [ file ]);
     matrix = (await requestSystem("https://" + address.officeinfo.ghost.host + "/publicSector/excel", { file, sheetsName })).data;
-    await ghostRequest("/tongDelete");
 
-    return matrix;
+
+    console.log(matrix);
+
+    // await ghostRequest("/tongDelete");
+
+    // return matrix;
   } catch (e) {
     console.log(e);
   }
