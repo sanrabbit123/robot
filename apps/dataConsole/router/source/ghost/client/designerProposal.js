@@ -4090,22 +4090,26 @@ DesignerProposalJs.prototype.insertPannelBox = function () {
       return;
     } else {
       if (!instance.designers.pick(desid).end) {
-        if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
+        if (GeneralJs.returnGet().proid !== "p1801_aa01s") {
+          if (window.confirm(target.textContent.trim() + " 디자이너를 선택하시겠습니까?")) {
 
-          for (let p of instance.proposal.detail) {
-            if (p.desid === desid) {
-              thisProposal = p;
+            for (let p of instance.proposal.detail) {
+              if (p.desid === desid) {
+                thisProposal = p;
+              }
             }
-          }
-          if (thisProposal.fee.length === 1) {
-            method = thisProposal.fee[0].method;
-          } else if (thisProposal.fee.length > 1) {
-            method = (window.confirm("오프라인 서비스를 선택하시겠습니까? (온라인을 희망하실 경우, '취소' 버튼을 눌러주세요!)") ? "offline" : "online");
-          }
+            if (thisProposal.fee.length === 1) {
+              method = thisProposal.fee[0].method;
+            } else if (thisProposal.fee.length > 1) {
+              method = (window.confirm("오프라인 서비스를 선택하시겠습니까? (온라인을 희망하실 경우, '취소' 버튼을 눌러주세요!)") ? "offline" : "online");
+            }
 
-          instance.submitEvent(desid, realName, method);
+            instance.submitEvent(desid, realName, method);
+          } else {
+            return;
+          }
         } else {
-          return;
+          window.alert("디자이너 선택이 완료되었습니다!");
         }
       } else {
         window.alert("해당 디자이너는 일정이 마감되었습니다!");
