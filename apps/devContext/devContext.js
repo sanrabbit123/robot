@@ -89,9 +89,43 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(res.data, null, 2));
 
 
-    const excel = new ExcelReader(this.mother, this.back, this.address);
-    const matrix = await excel.fileToMatrix(`${process.cwd()}/temp/test.xlsx`, "내역서");
-    console.log(matrix);
+
+    {
+
+
+      const excel = new ExcelReader(this.mother, this.back, this.address);
+      let matrix;
+      let startIndex;
+      let tempArr;
+
+      matrix = (await excel.fileToMatrix(`${process.cwd()}/temp/test.xlsx`, "내역서")).filter((arr) => {
+        return arr.some((i) => { return i !== null });
+      });
+
+      startIndex = matrix.map((arr) => {
+        return arr.map((i) => { return String(i).replace(/ /gi, '') }).join('');
+      }).findIndex((str) => {
+        return /품명/gi.test(str) && /단위/gi.test(str) && /단가/gi.test(str) && /금액/gi.test(str);
+      });
+
+      matrix = matrix.slice(startIndex + 1);
+      matrix = matrix.filter((arr) => {
+        return !(arr.map((i) => { return String(i).replace(/ /gi, '').trim() }).some((str) => { return str === "소계" || str === "합계" || str === "계" }) && arr.some((i) => { return typeof i === "number" }));
+      })
+
+
+
+      console.log(matrix);
+
+    }
+
+
+
+
+
+
+
+
 
 
     //
