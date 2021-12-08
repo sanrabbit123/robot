@@ -24,5 +24,5 @@ async def postExcel(request, mongoConnection):
     return { "message": "ok" }
 
 
-=> @routes.get("/excel")
+=> @routes.post("/excel")
 => web.json_response(await postExcel(request, mongoConnection))
