@@ -1519,11 +1519,14 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
   const itemDetailConst = "d";
   const collection = "constructInvoice";
   const map = require(`${this.mapDir}/${collection}.js`);
-  const { from, to, name, address, pyeong, commission: { supply, vat, consumer }, items, info, comments } = contents;
-  if (!Array.isArray(items)) {
-    throw new Error("invaild object");
-  }
   try {
+    if (typeof contents === "string") {
+      contents = await this.matrixToRequest(contents);
+    }
+    const { commission: { supply, vat, consumer }, items, info, comments } = contents;
+    if (!Array.isArray(items)) {
+      throw new Error("invaild object");
+    }
     let MONGOC, MONGOCOREC;
     let selfBoo, selfCoreBoo;
     let mode;
@@ -1610,11 +1613,6 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
 
     requestDummy.id = requestIdConst + uniqueValue("hex");
     requestDummy.date = new Date();
-    requestDummy.period.from = from;
-    requestDummy.period.to = to;
-    requestDummy.name = name;
-    requestDummy.address = address;
-    requestDummy.pyeong = pyeong;
     requestDummy.commission.supply = supply;
     requestDummy.commission.vat = vat;
     requestDummy.commission.consumer = consumer;
@@ -1624,18 +1622,17 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
       itemDummy.id = itemIdConst + uniqueValue("hex");
       itemDummy.name = name;
 
-      for (let { name, description, info, unit: { ea, price, number }, amount: { supply, vat, consumer } } of detail) {
+      for (let { name, description, info, unit: { ea, amount: { supply, vat, consumer }, number } } of detail) {
         detailDummy = map.sub("detail");
         detailDummy.id = itemDetailConst + uniqueValue("hex");
         detailDummy.name = name;
         detailDummy.description = description;
         detailDummy.info = info;
         detailDummy.unit.ea = ea;
-        detailDummy.unit.price = price;
+        detailDummy.unit.amount.supply = supply;
+        detailDummy.unit.amount.vat = vat;
+        detailDummy.unit.amount.consumer = consumer;
         detailDummy.unit.number = number;
-        detailDummy.amount.supply = supply;
-        detailDummy.amount.vat = vat;
-        detailDummy.amount.consumer = consumer;
         itemDummy.detail.push(detailDummy);
       }
 
@@ -1662,6 +1659,144 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
 
   } catch (e) {
     console.log(e);
+  }
+}
+
+BillMaker.prototype.matrixToRequest = async function (file) {
+  if (typeof file !== "string") {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const ExcelReader = require(`${process.cwd()}/apps/excelReader/excelReader.js`);
+  try {
+    const excel = new ExcelReader(this.mother, this.back, this.address);
+    const commissionPercentage = 10;
+    let matrix;
+    let startIndex, itemStartIndex;
+    let tempArr, tempArr2;
+    let tong, tong2, tong3;
+    let commentIndex, commentArr;
+    let tempObj, tempObj2, title;
+    let indexArr;
+    let sum;
+    let consumer, vat, supply;
+
+    matrix = (await excel.fileToMatrix(file, "내역서")).filter((arr) => {
+      return arr.some((i) => { return i !== null });
+    });
+
+    startIndex = matrix.map((arr) => {
+      return arr.map((i) => { return String(i).replace(/ /gi, '') }).join('');
+    }).findIndex((str) => {
+      return /품명/gi.test(str) && /단위/gi.test(str) && /단가/gi.test(str) && /금액/gi.test(str);
+    });
+
+    matrix = matrix.slice(startIndex + 1);
+    matrix = matrix.filter((arr) => {
+      return !(arr.map((i) => { return String(i).replace(/ /gi, '').trim() }).some((str) => { return str === "소계" || str === "합계" || str === "계" }) && arr.some((i) => { return typeof i === "number" }));
+    });
+    commentIndex = matrix.findIndex((arr) => {
+      return /참고사항/gi.test(arr.map((s) => { return String(s).replace(/ /g, '') }).join('')) && arr[0] === null && arr[arr.length - 1] === null;
+    });
+    commentArr = matrix.slice(commentIndex);
+    matrix = matrix.slice(0, commentIndex);
+
+    tong = [];
+    tempArr = null;
+    for (let arr of matrix) {
+      if (arr.length === 0) {
+        throw new Error("invaild matrix 0");
+      }
+      if (arr[0] !== null) {
+        if (tempArr !== null) {
+          tong.push(tempArr);
+        }
+        tempArr = [];
+      }
+      tempArr.push(arr);
+    }
+    tong.push(tempArr);
+
+    tong2 = [];
+    for (let m of tong) {
+      if (m.length === 0) {
+        throw new Error("invaild tong 0");
+      }
+      tempObj = {};
+      tempObj.name = m[0].find((i) => { return typeof i === "string" && !/^[0-9]+$/.test(i) });
+      m = m.slice(1);
+      indexArr = m.map((arr) => { return arr.findIndex((j) => { return j !== null }) });
+
+      indexArr.sort((a, b) => { return a - b; });
+      itemStartIndex = indexArr[0];
+
+      tempObj.detail = [];
+      for (let i = 0; i < m.length; i++) {
+        tempObj2 = {};
+        tempArr2 = m[i].slice(itemStartIndex);
+        if (tempArr2.length < 7) {
+          throw new Error("invaild tong 1");
+        }
+        tempObj2.name = tempArr2[0];
+        tempObj2.description = typeof tempArr2[6] === "string" ? tempArr2[6] : "";
+        tempObj2.info = [];
+        tempObj2.unit = {};
+        tempObj2.unit.ea = tempArr2[2];
+
+        tempObj2.unit.amount = {};
+        consumer = Math.floor(Number(tempArr2[3]));
+        vat = Math.floor((consumer / 11) / 10) * 10;
+        supply = Math.floor(consumer - vat);
+        tempObj2.unit.amount.supply = supply;
+        tempObj2.unit.amount.vat = vat;
+        tempObj2.unit.amount.consumer = consumer;
+        tempObj2.unit.number = typeof tempArr2[1] !== "number" ? (Number.isNaN(Number(tempArr2[1])) ? 0 : Math.floor(Number(tempArr2[1]))) : Math.floor(tempArr2[1]);
+
+        tempObj.detail.push(tempObj2);
+      }
+      tong2.push(tempObj);
+    }
+
+    commentArr = commentArr.map((arr) => {
+      return arr.filter((s) => { return s !== null });
+    }).map((arr) => {
+      if (arr.length !== 0) {
+        if (arr.length > 1) {
+          return arr[arr.length - 1];
+        } else {
+          return arr[0];
+        }
+      } else {
+        return '';
+      }
+    }).filter((str) => {
+      return str !== '';
+    }).map((str) => {
+      return str.replace(/^[0-9]+\. /gi, '');
+    })
+
+    tong3 = {};
+    tong3.items = tong2;
+    tong3.comments = commentArr;
+
+    sum = 0;
+    for (let { detail } of tong2) {
+      for (let { unit: { amount: { consumer }, number } } of detail) {
+        sum += consumer * number;
+      }
+    }
+
+    consumer = Math.floor(sum * (commissionPercentage / 100));
+    vat = Math.floor((consumer / 11) / 10) * 10;
+    supply = Math.floor(consumer - vat);
+    tong3.commission = { supply, vat, consumer };
+
+    tong3.info = [];
+
+    return tong3;
+  } catch (e) {
+    console.log(e);
+    return null;
   }
 }
 

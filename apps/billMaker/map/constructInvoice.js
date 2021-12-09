@@ -21,14 +21,7 @@ module.exports = {
       dummy = {
         id: "",
         date: new Date(),
-        period: {
-          from: new Date(1800, 0, 1),
-          to: new Date(1800, 0, 1),
-        },
-        name: "",
         status: "작성중",
-        address: "",
-        pyeong: 0,
         items: [],
         commission: {
           supply: 0,
@@ -52,14 +45,13 @@ module.exports = {
         info: [],
         unit: {
           ea: "",
-          price: 0,
+          amount: {
+            supply: 0,
+            vat: 0,
+            consumer: 0,
+          },
           number: 0,
         },
-        amount: {
-          supply: 0,
-          vat: 0,
-          consumer: 0,
-        }
       };
     }
     return dummy;
@@ -139,13 +131,13 @@ module.exports = {
     class Unit {
       constructor(json) {
         this.ea = json.ea;
-        this.price = json.price;
+        this.amount = new Amount(json.amount);
         this.number = json.number;
       }
       toNormal() {
         let obj = {};
         obj.ea = this.ea;
-        obj.price = this.price;
+        obj.amount = new Amount(this.amount);
         obj.number = this.number;
         return obj;
       }
@@ -158,7 +150,6 @@ module.exports = {
         this.description = json.description;
         this.info = new SeachArray(json.info);
         this.unit = new Unit(json.unit);
-        this.amount = new Amount(json.amount);
       }
       toNormal() {
         let obj = {};
@@ -167,7 +158,6 @@ module.exports = {
         obj.description = this.description;
         obj.info = this.info.toNormal();
         obj.unit = this.unit.toNormal();
-        obj.amount = this.amount.toNormal();
         return obj;
       }
     }
@@ -219,28 +209,11 @@ module.exports = {
       }
     }
 
-    class Period {
-      constructor(json) {
-        this.from = json.from;
-        this.to = json.to;
-      }
-      toNormal() {
-        let obj = {};
-        obj.from = this.from;
-        obj.to = this.to;
-        return obj;
-      }
-    }
-
     class Request {
       constructor(json) {
         this.id = json.id;
         this.date = json.date;
-        this.period = new Period(json.period);
-        this.name = json.name;
         this.status = json.status;
-        this.address = json.address;
-        this.pyeong = json.pyeong;
         this.items = new Items(json.items);
         this.commission = new Commission(json.commission);
         this.info = new SeachArray(json.info);
@@ -250,11 +223,7 @@ module.exports = {
         let obj = {};
         obj.id = this.id;
         obj.date = this.date;
-        obj.period = this.period.toNormal();
-        obj.name = this.name;
         obj.status = this.status;
-        obj.address = this.address;
-        obj.pyeong = this.pyeong;
         obj.items = this.items.toNormal();
         obj.commission = this.commission.toNormal();
         obj.info = this.info.toNormal();
