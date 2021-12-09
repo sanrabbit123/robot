@@ -38,7 +38,7 @@ EstimationJs.prototype.backGrayBar = function () {
 EstimationJs.prototype.navigatorLaunching = function () {
   const instance = this;
   const { ea, media, grayBarWidth, tabletWidth, totalContents, totalMother, motherHeight, belowHeight } = this;
-  const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo, setQueue } = GeneralJs;
+  const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo, setQueue, downloadFile } = GeneralJs;
   const mother = totalMother.nextElementSibling;
   const mobile = media[4];
   const desktop = !mobile;
@@ -56,8 +56,12 @@ EstimationJs.prototype.navigatorLaunching = function () {
       title: "견적서 샘플",
       position: 0,
       mobile: true,
-      event: function (e) {
-
+      event: async function (e) {
+        try {
+          await downloadFile(instance.sampleFile);
+        } catch (e) {
+          console.log(e);
+        }
       },
     },
     {
@@ -126,18 +130,12 @@ EstimationJs.prototype.navigatorLaunching = function () {
         event: {
           click: function (e) {
             const index = Number(this.getAttribute("index"));
-            // DEV
-            if (index === 1) {
-              window.alert("아직 서비스 오픈 전입니다!");
-            } else {
-              menuMap[index].event.call(this, e);
-              if (tabletWidth !== 0) {
-                setQueue(() => {
-                  instance.listIcon.click();
-                }, 500);
-              }
+            menuMap[index].event.call(this, e);
+            if (tabletWidth !== 0) {
+              setQueue(() => {
+                instance.listIcon.click();
+              }, 500);
             }
-            // DEV
           }
         },
         style: {
@@ -380,20 +378,14 @@ EstimationJs.prototype.navigatorLaunching = function () {
             const naviHeight = Number(this.getAttribute("naviHeight"));
             let blocks;
 
-            // DEV
-            if (index === 1) {
-              window.alert("아직 서비스 오픈 전입니다!");
-            } else {
-              blocks = document.querySelector(".mainBaseTong").firstChild.children;
-              menuMap[index].event.call(this, e);
-              if (position !== 0 && blocks[position] !== undefined) {
-                scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
-              }
-
-              self.removeChild(document.getElementById(id1));
-              self.removeChild(document.getElementById(id0));
+            blocks = document.querySelector(".mainBaseTong").firstChild.children;
+            menuMap[index].event.call(this, e);
+            if (position !== 0 && blocks[position] !== undefined) {
+              scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
             }
-            // DEV
+
+            self.removeChild(document.getElementById(id1));
+            self.removeChild(document.getElementById(id0));
 
           });
         }
@@ -646,7 +638,7 @@ EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
 EstimationJs.prototype.estimationList = function (buiid = '') {
   const instance = this;
   const { totalMother, ea, grayBarWidth, invoiceList } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, downloadFile } = GeneralJs;
   const mobile = this.media[4];
   const desktop = !mobile;
   const wording = `+ 버튼을 눌러 견적서를 추가하거나, <b%샘플 파일%b>로 작업한 엑셀 파일을 + 버튼으로 드래그 앤 드롭해 견적서를 추가하세요.`;
@@ -966,6 +958,15 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
     children: [
       {
         text: wording,
+        event: {
+          click: function (e) {
+            if (e.target.nodeName === 'B' || e.target.nodeName === 'b') {
+              downloadFile(instance.sampleFile).catch((err) => {
+                console.log(err);
+              });
+            }
+          }
+        },
         style: {
           position: "relative",
           fontSize: String(noticeSize) + ea,
@@ -1029,6 +1030,7 @@ EstimationJs.prototype.launching = async function () {
     const getObj = returnGet();
     const buiid = getObj.buiid || "u2111_aa01s";
     const invoiceList = await ajaxJson({ buiid }, "/publicSector/estimation/base", { equal: true });
+    const { host, static } = await ajaxJson({}, "/publicSector/static", { equal: true });
     let proidArr;
     let desidArr;
     let cliidArr;
@@ -1040,6 +1042,10 @@ EstimationJs.prototype.launching = async function () {
     this.mother.grayBarWidth = <%% 210, 200, 200, 210, 0 %%>;
     this.tabletWidth = <%% 0, 0, 148, 140, 0 %%>;
     this.motherHeight = <%% 154, 148, 148, 148, 148 %%>;
+
+    this.host = host;
+    this.downloadUrl = "https://" + host + "/publicSector";
+    this.sampleFile = this.downloadUrl + "/estimationSample.xlsx";
 
     this.buiid = buiid;
     this.invoiceList = invoiceList;

@@ -89,7 +89,7 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(res.data, null, 2));
 
 
-    console.log(await bill.matrixToRequest(`${process.cwd()}/temp/test.xlsx`));
+    // console.log(await bill.matrixToRequest(`${process.cwd()}/temp/test.xlsx`));
     // const selfPythonMongo = this.MONGOLOCALC;
     // const selfCoreMongo = this.MONGOLOCALC;
     // console.log(await bill.requestInvoice("u2111_aa01s", "p1801_aa01s", `${process.cwd()}/temp/test.xlsx`, { selfMongo: selfPythonMongo, selfCoreMongo }));
