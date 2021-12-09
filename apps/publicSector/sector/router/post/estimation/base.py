@@ -1,10 +1,9 @@
 from router.mother import *
+import json
 
 async def postBase(request, mongoConnection):
     data = await request.post()
-    result = {}
-    result["message"] = "ok"
-    return result
+    return mongoRead(collection="constructInvoice", find={ "links.buiid": data["buiid"] }, conn=mongoConnection)
 
-=> @routes.post("/test")
+=> @routes.post("/base")
 => web.json_response(await postBase(request, mongoConnection))

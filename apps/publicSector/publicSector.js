@@ -264,7 +264,7 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
     routerScriptArr[moduleIndex] = moduleTong.join("\n");
     routerScriptArr[funcIndex] = funcTong.join("\n\n");
 
-    await fileSystem(`write`, [ router, routerScriptArr.join("\n") ]);
+    await fileSystem(`write`, [ router, routerScriptArr.join("\n").replace(/__mongo__/, '"' + instance.mother.mongolocalinfo + '"') ]);
 
     console.log("router patch done");
 

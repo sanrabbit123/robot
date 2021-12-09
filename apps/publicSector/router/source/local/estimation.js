@@ -1014,6 +1014,9 @@ EstimationJs.prototype.launching = async function () {
   try {
     const { ajaxJson } = GeneralJs;
 
+    const invoiceList = await ajaxJson({ buiid: "u2111_aa01s" }, "/publicSector/estimation/base", { equal: true });
+    console.log(invoiceList);
+
     this.belowHeight = <%% 123, 123, 123, 123, 0 %%>;
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
     this.mother.grayBarWidth = <%% 210, 200, 200, 210, 0 %%>;

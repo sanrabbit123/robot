@@ -1502,7 +1502,7 @@ BillMaker.prototype.createInvoice = async function (updateQuery = {}, option = {
 }
 
 BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, option = { selfMongo: null, selfCoreMongo: null }) {
-  if (typeof proid !== "string" || typeof buiid !== "string" || typeof contents !== "object") {
+  if (typeof proid !== "string" || typeof buiid !== "string" || (typeof contents !== "object" && typeof contents !== "string")) {
     throw new Error("invaild input");
   }
   const instance = this;
@@ -1514,9 +1514,9 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
     phone: "02-2039-2252",
     address: "서울특별시 성동구 성수이로22길 37 4층 408A호",
   };
-  const requestIdConst = "r";
-  const itemIdConst = "i";
-  const itemDetailConst = "d";
+  const requestIdConst = "R";
+  const itemIdConst = "I";
+  const itemDetailConst = "D";
   const collection = "constructInvoice";
   const map = require(`${this.mapDir}/${collection}.js`);
   try {
@@ -1605,7 +1605,7 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
         "links.proid": proid,
         "links.cliid": thisClient.cliid,
         "links.desid": thisDesigner.desid,
-      });
+      }, { selfMongo: MONGOC });
       [ thisInvoice ] = await this.readBill(collection, { invid }, { selfMongo: MONGOC });
     }
 
@@ -1656,6 +1656,8 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
     if (!selfCoreBoo) {
       await MONGOCOREC.close();
     }
+
+    return thisInvoice;
 
   } catch (e) {
     console.log(e);

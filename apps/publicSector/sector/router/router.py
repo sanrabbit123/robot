@@ -5,7 +5,7 @@ from pymongo import MongoClient
 => module
 
 routes = web.RouteTableDef()
-mongoConnection = MongoClient("mongodb://localhost:27017/")
+mongoConnection = MongoClient(__mongo__)
 
 => function
 

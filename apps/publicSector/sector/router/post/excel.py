@@ -3,12 +3,10 @@ import pandas
 import json
 import re
 
-STATIC_PATH = "/home/homeliaison/samba"
-
 async def postExcel(request, mongoConnection):
     data = await request.post()
 
-    dic = pandas.read_excel(STATIC_PATH + data["file"], sheet_name=None)
+    dic = pandas.read_excel(returnStaticFolder() + data["file"], sheet_name=None)
     arr = dic[data["sheetsName"]].values.tolist()
 
     columns = dic[data["sheetsName"]].columns.tolist()
