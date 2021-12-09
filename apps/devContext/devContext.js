@@ -89,35 +89,43 @@ DevContext.prototype.launching = async function () {
     // console.log(JSON.stringify(res.data, null, 2));
 
 
+
+
+
     // console.log(await bill.matrixToRequest(`${process.cwd()}/temp/test.xlsx`));
     // const selfPythonMongo = this.MONGOLOCALC;
     // const selfCoreMongo = this.MONGOLOCALC;
-    // console.log(await bill.requestInvoice("u2111_aa01s", "p1801_aa01s", `${process.cwd()}/temp/test.xlsx`, { selfMongo: selfPythonMongo, selfCoreMongo }));
-
-
-    // await findCode("returnStaticFolder")
-
-
-
-
-
-    //
-    // {
-    //   invid: "",
-    //   title: "",
-    //   date: new Date(),
-    //   organizer: {
-    //     name: "홈리에종",
-    //     businessNumber: "221-81-49759",
-    //     phone: "02-2039-2252",
-    //     address: "서울특별시 성동구 성수이로22길 37 4층 408A호",
-    //   },
-    //   requests: [],
-    //   links: {
-    //     buiid: "",
-    //     proid: "",
-    //   },
+    // const proidArr = [
+    //   "p1801_aa01s",
+    //   "p2109_aa34s",
+    //   "p2110_aa26s",
+    //   "p2109_aa50s",
+    //   "p2109_aa30s",
+    //   "p2110_aa02s",
+    //   "p2108_aa45s",
+    //   "p2109_aa65s",
+    // ]
+    // for (let proid of proidArr) {
+    //   await bill.requestInvoice("u2111_aa01s", proid, `${process.cwd()}/temp/test.xlsx`, { selfMongo: selfPythonMongo, selfCoreMongo });
     // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -436,16 +444,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // setInterval(async () => {
-    //   console.log(await ghostRequest("insyncCheck", {}))
-    // }, 5000);
 
-
-
-
-
-    // const aliveMembers = await this.pureScan();
-    // console.log(await aliveMembers.aliveRequest("/push", { text: "이제 다시 사용하셔도 됩니다!" }));
 
 
 

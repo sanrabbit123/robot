@@ -5,36 +5,6 @@ const EstimationJs = function () {
   this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
 }
 
-EstimationJs.prototype.backGrayBar = function () {
-  const instance = this;
-  const { ea, totalContents, grayBarWidth, belowHeight } = this;
-  const { createNode, colorChip } = GeneralJs;
-  createNode({
-    mother: totalContents,
-    style: {
-      position: "absolute",
-      background: colorChip.gradientGreen,
-      height: String(belowHeight) + ea,
-      width: String(100) + '%',
-      bottom: String(0) + ea,
-      left: String(0) + ea,
-      zIndex: String(0),
-    }
-  });
-  createNode({
-    mother: totalContents,
-    style: {
-      position: "absolute",
-      background: colorChip.gray0,
-      width: String(grayBarWidth) + ea,
-      height: String(100) + "vh",
-      top: String(0) + ea,
-      left: String(0) + ea,
-      zIndex: String(0),
-    }
-  });
-}
-
 EstimationJs.prototype.navigatorLaunching = function () {
   const instance = this;
   const { ea, media, grayBarWidth, tabletWidth, totalContents, totalMother, motherHeight, belowHeight } = this;
@@ -592,6 +562,7 @@ EstimationJs.prototype.baseMaker = function () {
       top: String(0),
       width: String(grayBarWidth) + ea,
       height: String(100) + '%',
+      background: colorChip.gray0,
     }
   });
 
@@ -603,11 +574,15 @@ EstimationJs.prototype.baseMaker = function () {
       bottom: String(0),
       height: String(belowHeight) + ea,
       width: withOut(grayBarWidth, ea),
+      background: colorChip.gradientGreen,
+      transform: "translateY(0px)",
     }
   });
 
   this.mother.searchInput(bottomPannel);
   this.searchInput = this.mother.searchInput;
+  this.leftPannel = leftPannel;
+  this.bottomPannel = bottomPannel;
 
   this.navigatorLaunching();
 
@@ -638,7 +613,7 @@ EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
 EstimationJs.prototype.estimationList = function (buiid = '') {
   const instance = this;
   const { totalMother, ea, grayBarWidth, invoiceList } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, downloadFile } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, downloadFile, setQueue } = GeneralJs;
   const mobile = this.media[4];
   const desktop = !mobile;
   const wording = `+ 버튼을 눌러 견적서를 추가하거나, <b%샘플 파일%b>로 작업한 엑셀 파일을 + 버튼으로 드래그 앤 드롭해 견적서를 추가하세요.`;
@@ -773,8 +748,37 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 
     requestBox = createNode({
       mother: baseTong,
+      attribute: {
+        invid: invoiceList[i].invid,
+        proid: invoiceList[i].links.proid,
+        desid: invoiceList[i].links.desid,
+        cliid: invoiceList[i].links.cliid,
+      },
       event: {
-        click: (e) => {},
+        click: function (e) {
+          const invoice = invoiceList.search("invid", this.getAttribute("invid"));
+
+          instance.bottomPannel.style.transform = "translateY(" + String(instance.belowHeight) + ea + ")";
+          instance.mainBaseTong.style.animation = "fadedownlite 0.3s ease forwards";
+
+          setQueue(() => {
+
+
+            
+
+
+
+
+
+
+
+
+
+
+            console.log(invoice);
+          }, 301);
+
+        },
         mouseenter: function (e) {
           this.style.transition = "";
         },
@@ -1048,7 +1052,7 @@ EstimationJs.prototype.launching = async function () {
     this.sampleFile = this.downloadUrl + "/estimationSample.xlsx";
 
     this.buiid = buiid;
-    this.invoiceList = invoiceList;
+    this.invoiceList = new SearchArray(invoiceList);
     [ builder ] = await ajaxJson({ whereQuery: { $or: proidArr } }, "/publicSector/builders", { equal: true });
     if (builder === undefined) {
       throw new Error("invaild buiid");
@@ -1074,7 +1078,6 @@ EstimationJs.prototype.launching = async function () {
       invoice.links.client = clients.search("cliid", invoice.links.cliid);
     }
 
-    this.backGrayBar();
     this.baseMaker();
     this.listDetailLaunching();
 
