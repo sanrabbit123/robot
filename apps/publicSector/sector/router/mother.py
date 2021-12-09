@@ -11,7 +11,10 @@ async def requestSystem(url):
             return (await resp.text()).strip()
 
 def returnStaticFolder():
-    return "/home/homeliaison/samba"
+    dic = {}
+    dic["host"] = __host__
+    dic["static"] = __static__
+    return dic
 
 def returnDbName():
     return "miro81"

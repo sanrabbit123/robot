@@ -645,16 +645,12 @@ EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
 
 EstimationJs.prototype.estimationList = function (buiid = '') {
   const instance = this;
-  const { totalMother, ea, grayBarWidth } = this;
+  const { totalMother, ea, grayBarWidth, invoiceList } = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const mobile = this.media[4];
   const desktop = !mobile;
   const wording = `+ 버튼을 눌러 견적서를 추가하거나, <b%샘플 파일%b>로 작업한 엑셀 파일을 + 버튼으로 드래그 앤 드롭해 견적서를 추가하세요.`;
-
-  const testName0 = [ "김", "배", "박", "강", "임", "서", "이", "최", "허", "유", "우", "원", "백", "전" ];
-  const testName1 = [ "창", "규", "공", "지", "해", "민", "혜", "연", "재", "신", "찬", "은", "미", "화", "진", "금", "자", "가", "연", "오", "간", "수", "형" ];
-  const testName2 = [ "우", "창", "리", "규", "공", "헌", "지", "애", "경", "병", "해", "잠", "부", "수", "빈", "민", "혜", "형", "연", "별", "령", "재", "은", "미", "화", "연", "진", "금", "자", "가", "연", "오", "록", "만", "마", "기", "간", "나" ];
-
+  const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
   let margin;
   let baseTong0, baseTong;
   let matrix;
@@ -693,7 +689,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
   let noticeSize, noticeTextTop;
 
   boxNumber = <%% 6, 6, 6, 6, 2 %%>;
-  maxBoxNumber = 100;
+  maxBoxNumber = invoiceList.length;
 
   margin = 8;
   level1Width = <%% 210, 172, 172, 172, 34 %%>;
@@ -781,7 +777,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
   boxNumberArr = [];
   for (let i = 0; i < maxBoxNumber; i++) {
 
-    dateString = "00.00.00";
+    dateString = zeroAddition(invoiceList[i].date.getFullYear()) + '.' + zeroAddition(invoiceList[i].date.getMonth() + 1) + '.' + zeroAddition(invoiceList[i].date.getDate());
 
     requestBox = createNode({
       mother: baseTong,
@@ -843,7 +839,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           },
           children: [
             {
-              text: testName0[Math.floor(testName0.length * Math.random())] + testName1[Math.floor(testName1.length * Math.random())] + testName2[Math.floor(testName2.length * Math.random())] + " <b%고객님%b>",
+              text: invoiceList[i].links.client.name + " <b%고객님%b>",
               style: {
                 fontSize: String(requestSize) + ea,
                 fontWeight: String(600),
@@ -1012,10 +1008,32 @@ EstimationJs.prototype.addSearchEvent = function () {
 EstimationJs.prototype.launching = async function () {
   const instance = this;
   try {
-    const { ajaxJson } = GeneralJs;
-
-    const invoiceList = await ajaxJson({ buiid: "u2111_aa01s" }, "/publicSector/estimation/base", { equal: true });
-    console.log(invoiceList);
+    class SearchArray extends Array {
+      constructor(arr) {
+        super();
+        for (let i of arr) {
+          this.push(i);
+        }
+      }
+      search(target, value) {
+        let obj = null;
+        for (let i of this) {
+          if (i[target] === value) {
+            obj = i;
+          }
+        }
+        return obj;
+      }
+    }
+    const { ajaxJson, returnGet } = GeneralJs;
+    const getObj = returnGet();
+    const buiid = getObj.buiid || "u2111_aa01s";
+    const invoiceList = await ajaxJson({ buiid }, "/publicSector/estimation/base", { equal: true });
+    let proidArr;
+    let desidArr;
+    let cliidArr;
+    let projects, designers, clients;
+    let builder;
 
     this.belowHeight = <%% 123, 123, 123, 123, 0 %%>;
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
@@ -1023,11 +1041,40 @@ EstimationJs.prototype.launching = async function () {
     this.tabletWidth = <%% 0, 0, 148, 140, 0 %%>;
     this.motherHeight = <%% 154, 148, 148, 148, 148 %%>;
 
+    this.buiid = buiid;
+    this.invoiceList = invoiceList;
+    [ builder ] = await ajaxJson({ whereQuery: { $or: proidArr } }, "/publicSector/builders", { equal: true });
+    if (builder === undefined) {
+      throw new Error("invaild buiid");
+    }
+    this.builder = builder;
+
+    proidArr = [];
+    desidArr = [];
+    cliidArr = [];
+    for (let invoice of invoiceList) {
+      proidArr.push({ proid: invoice.links.proid });
+      desidArr.push({ desid: invoice.links.desid });
+      cliidArr.push({ cliid: invoice.links.cliid });
+    }
+
+    projects = new SearchArray(await ajaxJson({ whereQuery: { $or: proidArr } }, "/publicSector/projects", { equal: true }));
+    designers = new SearchArray(await ajaxJson({ whereQuery: { $or: desidArr } }, "/publicSector/designers", { equal: true }));
+    clients = new SearchArray(await ajaxJson({ whereQuery: { $or: cliidArr } }, "/publicSector/clients", { equal: true }));
+
+    for (let invoice of invoiceList) {
+      invoice.links.project = projects.search("proid", invoice.links.proid);
+      invoice.links.designer = designers.search("desid", invoice.links.desid);
+      invoice.links.client = clients.search("cliid", invoice.links.cliid);
+    }
+
     this.backGrayBar();
     this.baseMaker();
     this.listDetailLaunching();
 
   } catch (e) {
     console.log(e);
+    window.alert("잘못된 접근입니다!");
+    window.location.href = "https://home-liaison.com";
   }
 }

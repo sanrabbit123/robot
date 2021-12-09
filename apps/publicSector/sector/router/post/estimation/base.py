@@ -1,5 +1,4 @@
 from router.mother import *
-import json
 
 async def postBase(request, mongoConnection):
     data = await request.post()

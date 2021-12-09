@@ -128,6 +128,7 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
     const getTarget = spawnDir + "/router/get";
     const postTarget = spawnDir + "/router/post";
     const router = spawnDir + "/router/router.py";
+    const mother = spawnDir + "/router/mother.py";
     const main = spawnDir + "/public.py";
     let order;
     let getTargetDir, postTargetDir;
@@ -144,6 +145,8 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
     let targetFolder;
     let fileName;
     let middleModule;
+    let motherScript;
+
 
     if (installMode) {
       if (homeDir.includes(name)) {
@@ -185,6 +188,14 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
       console.log(`file patch all`);
     }
 
+
+    // mother
+
+    motherScript = await fileSystem(`readString`, [ mother ]);
+    await fileSystem(`write`, [ mother, motherScript.replace(/__host__/, '"' + instance.address.officeinfo.ghost.host + '"').replace(/__static__/, '"' + instance.address.officeinfo.ghost.file.static + '"') ]);
+
+
+    // router
 
     if (await fileSystem(`exist`, [ getTarget ])) {
       getTargetDir = (await treeParsing(getTarget)).flatDeath.filter((obj) => { return !obj.directory }).map((obj) => { return obj.absolute }).filter((str) => { return !/__pycache__/gi.test(str) && !/\.DS_Store/gi.test(str); });
@@ -267,6 +278,9 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
     await fileSystem(`write`, [ router, routerScriptArr.join("\n").replace(/__mongo__/, '"' + instance.mother.mongolocalinfo + '"') ]);
 
     console.log("router patch done");
+
+
+    // main
 
     thisIp = await ipCheck();
 
