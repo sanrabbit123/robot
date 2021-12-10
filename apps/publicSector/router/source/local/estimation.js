@@ -762,21 +762,35 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           instance.mainBaseTong.style.animation = "fadedownlite 0.3s ease forwards";
 
           setQueue(() => {
+            const totalMother = instance.totalMother;
+            const newMainBase = instance.mainBaseTong.cloneNode(false);
+            let top;
 
+            top = Number(newMainBase.style.top.replace(/[^0-9]/gi, ''));
 
-            
+            newMainBase.style.animation = "fadeuplite 0.3s ease forwards";
+            newMainBase.style.background = colorChip.white;
+            newMainBase.style.height = "calc(100% - " + String(top * 2) + ea + " + " + String(instance.belowHeight) + ea + ")";
+            newMainBase.style.borderRadius = String(5) + "px";
+            newMainBase.style.boxShadow = "0px 3px 14px -9px " + colorChip.shadow;
 
+            totalMother.style.overflow = "visible";
+            createNode({
+              mother: totalMother,
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: "calc(100% + " + String(instance.belowHeight) + ea + ")",
+                background: colorChip.gray3,
+                animation: "justfadeinoriginal 0.3s ease forwards",
+              }
+            });
+            totalMother.appendChild(newMainBase);
+            instance.estimationDocument(newMainBase, invoice);
 
-
-
-
-
-
-
-
-
-            console.log(invoice);
-          }, 301);
+          }, 350);
 
         },
         mouseenter: function (e) {
@@ -990,6 +1004,20 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 
   this.mainBaseTong = baseTong0;
   this.addSearchEvent();
+}
+
+EstimationJs.prototype.estimationDocument = function (base, invoice) {
+  const instance = this;
+  const { totalMother, ea } = this;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue } = GeneralJs;
+
+
+  
+
+
+
+  console.log(base, invoice);
+
 }
 
 EstimationJs.prototype.addSearchEvent = function () {
