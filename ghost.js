@@ -35,6 +35,7 @@ const Ghost = function () {
     },
     channel: "#error_log"
   };
+  this.innerMonitorNumber = 14;
 }
 
 Ghost.timeouts = {};

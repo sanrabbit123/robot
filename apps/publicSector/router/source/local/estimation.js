@@ -1151,6 +1151,16 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
   console.log(mother, invoice);
 
+
+
+  
+
+
+
+
+
+
+
 }
 
 EstimationJs.prototype.addSearchEvent = function () {

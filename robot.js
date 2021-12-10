@@ -740,6 +740,69 @@ Robot.prototype.cronServer = async function () {
   }
 }
 
+Robot.prototype.pureServer = async function () {
+  const instance = this;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
+  try {
+
+    const PureServer = pureServer("class");
+    const app = new PureServer();
+
+    app.get("/", async (req, res) => {
+      try {
+        res.send(JSON.stringify({ message: "It works!" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.post("/log", async (req, res) => {
+      try {
+        if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+
+        const colorLog = function (mode, text) {
+          const colors = {
+            red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
+            yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
+            cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
+          };
+          const now = new Date();
+          const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
+          let timeWording;
+
+          timeWording = '';
+          timeWording += String(now.getFullYear());
+          timeWording += '.';
+          timeWording += zeroAddition(now.getMonth() + 1);
+          timeWording += '.';
+          timeWording += zeroAddition(now.getDate());
+          timeWording += ' ';
+          timeWording += zeroAddition(now.getHours());
+          timeWording += ':';
+          timeWording += zeroAddition(now.getMinutes());
+          timeWording += ':';
+          timeWording += zeroAddition(now.getSeconds());
+
+          console.log(colors[mode], timeWording, text);
+        }
+
+        colorLog(req.body.color, req.body.message);
+
+        res.send(JSON.stringify({ message: "done" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    pureServer("listen", app, 3000);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.launching = async function () {
   const instance = this;
   const { consoleQ } = this.mother;
@@ -1169,6 +1232,13 @@ const MENU = {
   cronServer: async function () {
     try {
       await robot.cronServer();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  pureServer: async function () {
+    try {
+      await robot.pureServer();
     } catch (e) {
       console.log(e);
     }
