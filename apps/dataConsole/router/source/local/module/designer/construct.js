@@ -100,8 +100,6 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
     "해당 없음",
   ];
   partnerValues = this.builderNames;
-  partnerValues.push("디자이너");
-  partnerValues.push("고객");
 
   if (this.type === "construct") {
 
@@ -4685,6 +4683,10 @@ DesignerJs.prototype.constructView = async function () {
         return obj.builder + "_" + obj.information.business.company;
       }
     });
+
+    builderNames.push("고객");
+    builderNames.push("디자이너");
+    builderNames.push("-");
 
     this.builderNames = builderNames;
     this.projects = projects;
