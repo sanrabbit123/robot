@@ -1,17 +1,5 @@
 const dayId = [
-  "d090",
-  "d100",
-  "d110",
-  "d120",
-  "d131",
-  "d140",
-  "d150",
-  "d160",
-  "d170",
-  "d180",
-  "d190",
-  "d200",
-  "d210",
+  "d132",
 ];
 
 const hourId = [];
@@ -28,6 +16,8 @@ const worker = async function (package) {
   } = package;
   const { ghostRequest, errorLog, messageLog } = mother;
   try {
+    await messageLog("time alarm done 0");
+
     const now = new Date();
     let target, wording, wordings, second;
     now.setMinutes(now.getMinutes() + 20);
@@ -60,6 +50,7 @@ const worker = async function (package) {
     ];
 
     second = wordings[target];
+    await messageLog("time alarm done 1");
 
     if (target >= 12) {
       wording = "오후 ";
@@ -69,10 +60,12 @@ const worker = async function (package) {
     } else {
       wording = "오전 ";
     }
+    await messageLog("time alarm done 2");
 
     await ghostRequest("voice", { text: "지금은 " + wording + String(target) + "시 입니다. " + second });
+    await messageLog("time alarm done 3");
 
-    await errorLog("time alarm done");
+    await messageLog("time alarm done");
 
     return true;
   } catch (e) {
