@@ -3,7 +3,7 @@ const dayId = [
   "d100",
   "d110",
   "d120",
-  "d130",
+  "d131",
   "d140",
   "d150",
   "d160",
@@ -71,6 +71,8 @@ const worker = async function (package) {
     }
 
     await ghostRequest("voice", { text: "지금은 " + wording + String(target) + "시 입니다. " + second });
+
+    await errorLog("time alarm done");
 
     return true;
   } catch (e) {

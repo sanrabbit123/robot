@@ -1006,17 +1006,125 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
   this.addSearchEvent();
 }
 
-EstimationJs.prototype.estimationDocument = function (base, invoice) {
+EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   const instance = this;
   const { totalMother, ea } = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue } = GeneralJs;
+  const titleWording = "홈리에종\n시공 견적서";
+  let titleArea, contentsArea, greenArea;
+  let titleWidth;
+  let topMargin;
+  let leftMargin;
+  let middleMargin;
+  let titleSize, subTitleSize;
+  let barWidth, barTop, barHeight;
+  let realTopMargin;
+  let innerPaddingTop;
+  let sumHeight;
+
+  titleWidth = 200;
+  topMargin = 52;
+  leftMargin = 52;
+  middleMargin = 20;
+  titleSize = 32;
+  subTitleSize = 16;
+
+  barWidth = 18;
+  barTop = 60;
+  realTopMargin = barTop;
+  barHeight = 101;
+
+  sumHeight = 100;
+
+  innerPaddingTop = realTopMargin - topMargin;
+
+  greenArea = createNode({
+    mother,
+    style: {
+      position: "absolute",
+      left: String(0),
+      top: String(barTop) + ea,
+      width: String(barWidth) + ea,
+      height: String(barHeight) + ea,
+      borderTopRightRadius: String(6) + ea,
+      borderBottomRightRadius: String(6) + ea,
+      background: colorChip.gradientGreen
+    }
+  });
+
+  titleArea = createNode({
+    mother,
+    style: {
+      position: "relative",
+      display: "inline-block",
+      width: String(titleWidth) + ea,
+      height: withOut((topMargin * 2), ea),
+      top: String(topMargin) + ea,
+      marginLeft: String(leftMargin) + ea,
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    text: titleWording,
+    style: {
+      display: "block",
+      position: "relative",
+      color: colorChip.black,
+      fontSize: String(titleSize) + ea,
+      fontWeight: String(500),
+    }
+  });
+
+  createNode({
+    mother: titleArea,
+    text: invoice.title.replace(/시공 견적서/gi, '').replace(/시공 견적/gi, '').replace(/견적서/gi, '').replace(/견적/gi, ''),
+    style: {
+      display: "block",
+      position: "relative",
+      color: colorChip.deactive,
+      fontSize: String(subTitleSize) + ea,
+      marginTop: String(10) + ea,
+      marginLeft: String(2) + ea,
+      fontWeight: String(600),
+    }
+  });
 
 
-  
+
+
+  contentsArea = createNode({
+    mother,
+    style: {
+      position: "relative",
+      display: "inline-block",
+      width: withOut(titleWidth + middleMargin + (leftMargin * 2), ea),
+      paddingTop: String(innerPaddingTop) + ea,
+      paddingBottom: String(innerPaddingTop) + ea,
+      height: withOut((topMargin * 2) + (innerPaddingTop * 2), ea),
+      top: String(topMargin) + ea,
+      marginLeft: String(middleMargin) + ea,
+      verticalAlign: "top",
+    }
+  });
+
+  createNode({
+    mother: contentsArea,
+    style: {
+      position: "relative",
+      display: "block",
+      height: String(100) + '%',
+      width: String(100) + '%',
+      border: "1px solid " + colorChip.gray4,
+      boxSizing: "border-box",
+      borderRadius: String(8) + ea,
+    }
+  })
 
 
 
-  console.log(base, invoice);
+  console.log(mother, invoice);
 
 }
 
