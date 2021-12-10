@@ -85,8 +85,8 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    console.log((await requestSystem("http://172.30.1.14:8000/getMac")).data);
 
-    
 
 
 
