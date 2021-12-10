@@ -85,9 +85,7 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    console.log((await requestSystem("http://172.30.1.14:8000/getMac")).data);
-
-
+    await errorLog("hello")
 
 
 
@@ -1631,7 +1629,7 @@ DevContext.prototype.launching = async function () {
     // console.log(await human.sendSms({
     //   name: "배창규",
     //   phone: "01027473403",
-    //   subject: "안녕하세요!",
+    //   subject: "",
     //   contents: "안녕하세요.",
     // }));
 
