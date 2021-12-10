@@ -1021,6 +1021,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let realTopMargin;
   let innerPaddingTop;
   let sumHeight;
+  let contentsField;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1109,7 +1110,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     }
   });
 
-  createNode({
+  contentsField = createNode({
     mother: contentsArea,
     style: {
       position: "relative",
@@ -1120,9 +1121,29 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       boxSizing: "border-box",
       borderRadius: String(8) + ea,
     }
-  })
+  });
 
+  createNode({
+    mother: contentsField,
+    style: {
+      position: "relative",
+      display: "block",
+      width: String(100) + '%',
+      height: withOut(sumHeight, ea),
+      boxSizing: "border-box",
+      borderBottom: "1px solid " + colorChip.gray4,
+    }
+  });
 
+  createNode({
+    mother: contentsField,
+    style: {
+      position: "relative",
+      display: "block",
+      width: String(100) + '%',
+      height: String(sumHeight) + ea,
+    }
+  });
 
   console.log(mother, invoice);
 

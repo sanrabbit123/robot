@@ -72,7 +72,7 @@ CronSource.prototype.sourceLoad = async function () {
 
     this.sourceMap = sourceMap;
 
-    console.log(sourceMap);
+    console.log(JSON.stringify(sourceMap, null, 2));
 
     return sourceMap;
 
