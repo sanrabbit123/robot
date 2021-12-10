@@ -112,8 +112,6 @@ CronSource.prototype.targetLauching = async function (cronId) {
     let num;
     let res;
 
-    console.log(cronId);
-
     index = sourceMap.date.findIndex((arr) => { return arr[0] === dayId; });
     if (index !== -1) {
       targetList = sourceMap.date[index][1].map((path) => {

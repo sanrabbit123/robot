@@ -1022,6 +1022,8 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let innerPaddingTop;
   let sumHeight;
   let contentsField;
+  let detailField, sumField;
+  let subTitleMarginTop, subTitleVisual;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1029,13 +1031,15 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   middleMargin = 20;
   titleSize = 32;
   subTitleSize = 16;
+  subTitleMarginTop = 10;
+  subTitleVisual = 2;
 
   barWidth = 18;
   barTop = 60;
   realTopMargin = barTop;
   barHeight = 101;
 
-  sumHeight = 100;
+  sumHeight = 80;
 
   innerPaddingTop = realTopMargin - topMargin;
 
@@ -1086,14 +1090,11 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       position: "relative",
       color: colorChip.deactive,
       fontSize: String(subTitleSize) + ea,
-      marginTop: String(10) + ea,
-      marginLeft: String(2) + ea,
+      marginTop: String(subTitleMarginTop) + ea,
+      marginLeft: String(subTitleVisual) + ea,
       fontWeight: String(600),
     }
   });
-
-
-
 
   contentsArea = createNode({
     mother,
@@ -1120,10 +1121,11 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       border: "1px solid " + colorChip.gray4,
       boxSizing: "border-box",
       borderRadius: String(8) + ea,
+      overflow: "hidden",
     }
   });
 
-  createNode({
+  detailField = createNode({
     mother: contentsField,
     style: {
       position: "relative",
@@ -1132,10 +1134,12 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       height: withOut(sumHeight, ea),
       boxSizing: "border-box",
       borderBottom: "1px solid " + colorChip.gray4,
+      background: colorChip.gray1,
+      overflow: "scroll",
     }
   });
 
-  createNode({
+  sumField = createNode({
     mother: contentsField,
     style: {
       position: "relative",
