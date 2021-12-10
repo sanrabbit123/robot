@@ -2637,6 +2637,16 @@ Ghost.prototype.ghostRouter = function (needs) {
           project: project.toNormal().proposal,
         });
 
+        headRequest(instance.innerMonitorUrl).then((res) => {
+          if (res.statusCode === 200) {
+            return requestSystem(instance.innerMonitorUrl + "/log", { color: "red", message: proid + " proposal status save" }, { headers: { "Content-type": "application/json" } });
+          } else {
+            return null;
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -4236,8 +4246,12 @@ Ghost.prototype.smsLaunching = async function () {
 
 Ghost.prototype.logMonitorServer = async function () {
   const instance = this;
-  const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo } = this.mother;
+  const logCollection = "messageTotalLog"
   try {
+
+    const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
+    await MONGOLOCALC.connect();
 
     const PureServer = pureServer("class");
     const app = new PureServer();
@@ -4245,6 +4259,32 @@ Ghost.prototype.logMonitorServer = async function () {
     app.get("/", async (req, res) => {
       try {
         res.send(JSON.stringify({ message: "It works!" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.get("/getMac", async (req, res) => {
+      try {
+        const stdout = (await shellExec("arp-scan --localnet"));
+        let rawArr, selfMac, selfIp, tempArr, tempMatrix, tong, tempObj;
+        rawArr = stdout.split("\n");
+
+        rawArr = rawArr.slice(0, rawArr.findIndex((str) => { return str.trim() === '' }));
+        tempArr = rawArr.slice(0, rawArr.findIndex((str) => { return /^[0-9]/.test(str) }));
+        rawArr = rawArr.slice(rawArr.findIndex((str) => { return /^[0-9]/.test(str) }));
+        tempMatrix = tempArr[tempArr.length - 2].split(", ").map((str) => { return str.split(': ') });
+        selfMac = tempMatrix.find(arr => arr.includes('MAC'))[1];
+        selfIp = tempMatrix.find(arr => arr.includes('IPv4'))[1];
+        tempMatrix = rawArr.map(str => str.split("\t"));
+
+        tong = {};
+        for (let [ ip, mac ] of tempMatrix) {
+          tong[mac] = ip;
+        }
+        tong[selfMac] = selfIp;
+
+        res.send(JSON.stringify(tong));
       } catch (e) {
         console.log(e);
       }
@@ -4283,6 +4323,10 @@ Ghost.prototype.logMonitorServer = async function () {
         }
 
         colorLog(req.body.color, req.body.message);
+        await MONGOLOCALC.db(`miro81`).collection(collection).insertOne({
+          date: new Date(),
+          message: req.body.message
+        });
 
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {

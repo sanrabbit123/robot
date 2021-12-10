@@ -1024,12 +1024,21 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let contentsField;
   let detailField, sumField;
   let subTitleMarginTop, subTitleVisual;
+  let request, items;
+  let innerPadding;
+  let whiteBlock;
+  let whiteBlockMarginBottom;
+  let whitePaddingTop, whitePaddingLeft;
+  let num;
+  let whiteBlockTitleSize;
+  let titleMarginTop;
 
   titleWidth = 200;
   topMargin = 52;
   leftMargin = 52;
   middleMargin = 20;
-  titleSize = 32;
+  titleSize = 30;
+  titleMarginTop = 1;
   subTitleSize = 16;
   subTitleMarginTop = 10;
   subTitleVisual = 2;
@@ -1037,11 +1046,21 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   barWidth = 18;
   barTop = 60;
   realTopMargin = barTop;
-  barHeight = 101;
+  barHeight = 99;
 
-  sumHeight = 80;
+  sumHeight = 90;
+
+  innerPadding = 20;
+
+  whiteBlockMarginBottom = 10;
+  whitePaddingTop = 20;
+  whitePaddingLeft = 25;
+  whiteBlockTitleSize = 20;
 
   innerPaddingTop = realTopMargin - topMargin;
+
+  [ request ] = invoice.requests;
+  ({ items } = request);
 
   greenArea = createNode({
     mother,
@@ -1079,6 +1098,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       color: colorChip.black,
       fontSize: String(titleSize) + ea,
       fontWeight: String(500),
+      marginTop: String(titleMarginTop) + ea,
     }
   });
 
@@ -1135,6 +1155,9 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       boxSizing: "border-box",
       borderBottom: "1px solid " + colorChip.gray4,
       background: colorChip.gray1,
+      paddingTop: String(innerPadding) + ea,
+      paddingLeft: String(innerPadding) + ea,
+      paddingRight: String(innerPadding) + ea,
       overflow: "scroll",
     }
   });
@@ -1149,9 +1172,54 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     }
   });
 
+  num = 1;
+  for (let item of items) {
+    whiteBlock = createNode({
+      mother: detailField,
+      style: {
+        display: "block",
+        width: withOut(whitePaddingLeft * 2, ea),
+        height: String(200) + ea,
+        borderRadius: String(8) + "px",
+        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+        marginBottom: String(whiteBlockMarginBottom) + ea,
+        background: colorChip.white,
+        paddingTop: String(whitePaddingTop) + ea,
+        paddingBottom: String(whitePaddingTop) + ea,
+        paddingLeft: String(whitePaddingLeft) + ea,
+        paddingRight: String(whitePaddingLeft) + ea,
+      }
+    });
+
+    createNode({
+      mother: whiteBlock,
+      text: `<b%${String(num)}%b>&nbsp;&nbsp;${item.name}`,
+      style: {
+        display: "block",
+        position: "relative",
+        fontSize: String(whiteBlockTitleSize) + ea,
+        fontWeight: String(500),
+        color: colorChip.black,
+      },
+      bold: {
+        fontSize: String(whiteBlockTitleSize) + ea,
+        fontWeight: String(300),
+        color: colorChip.green,
+      }
+    })
+
+
+    console.log(item);
+
+
+    num++;
+  }
+
+
+
   console.log(mother, invoice);
 
-  
+
 
 
 

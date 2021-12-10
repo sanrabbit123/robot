@@ -2691,12 +2691,12 @@ Mother.prototype.ipParsing = function (ip) {
   }
   ip = ip.trim().replace(/[^0-9\.]/gi, '');
   if (ip.replace(/[0-9\.]/g, '') !== '') {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       resolve(null);
     });
   }
   if (!/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/g.test(ip)) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       resolve(null);
     });
   }
