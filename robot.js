@@ -796,7 +796,7 @@ Robot.prototype.pureServer = async function () {
       }
     });
 
-    pureServer("listen", app, 3000);
+    pureServer("listen", app, 8080);
 
   } catch (e) {
     console.log(e);
@@ -1232,13 +1232,6 @@ const MENU = {
   cronServer: async function () {
     try {
       await robot.cronServer();
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  pureServer: async function () {
-    try {
-      await robot.pureServer();
     } catch (e) {
       console.log(e);
     }

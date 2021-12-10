@@ -4214,6 +4214,69 @@ Ghost.prototype.smsLaunching = async function () {
   }
 }
 
+Ghost.prototype.logMonitorServer = async function () {
+  const instance = this;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
+  try {
+
+    const PureServer = pureServer("class");
+    const app = new PureServer();
+
+    app.get("/", async (req, res) => {
+      try {
+        res.send(JSON.stringify({ message: "It works!" }));
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    app.post("/log", async (req, res) => {
+      try {
+        if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
+          throw new Error("invaild post, must be text");
+        }
+
+        const colorLog = function (mode, text) {
+          const colors = {
+            red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
+            yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
+            cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
+          };
+          const now = new Date();
+          const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
+          let timeWording;
+
+          timeWording = '';
+          timeWording += String(now.getFullYear());
+          timeWording += '.';
+          timeWording += zeroAddition(now.getMonth() + 1);
+          timeWording += '.';
+          timeWording += zeroAddition(now.getDate());
+          timeWording += ' ';
+          timeWording += zeroAddition(now.getHours());
+          timeWording += ':';
+          timeWording += zeroAddition(now.getMinutes());
+          timeWording += ':';
+          timeWording += zeroAddition(now.getSeconds());
+
+          console.log(colors[mode], timeWording, text);
+        }
+
+        colorLog(req.body.color, req.body.message);
+
+        res.send(JSON.stringify({ message: "done" }));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error" }));
+      }
+    });
+
+    pureServer("listen", app, 8080);
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 // EXE --------------------------------------------------------------------------------------
 
 const app = new Ghost();
@@ -4229,4 +4292,6 @@ if (process.argv[2] === undefined || /server/gi.test(process.argv[2]) || /ghost/
   app.clientPrint(process.argv[3].trim(), null).catch((err) => { console.log(err); });
 } else if (/receiveSms/gi.test(process.argv[2])) {
   app.smsLaunching().catch((err) => { console.log(err); });
+} else if (/log/gi.test(process.argv[2])) {
+  app.logMonitorServer().catch((err) => { console.log(err); });
 }
