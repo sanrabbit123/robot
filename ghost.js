@@ -4270,7 +4270,7 @@ Ghost.prototype.logMonitorServer = async function () {
       }
     });
 
-    pureServer("listen", app, 8080);
+    pureServer("listen", app, 8000);
 
   } catch (e) {
     console.log(e);
