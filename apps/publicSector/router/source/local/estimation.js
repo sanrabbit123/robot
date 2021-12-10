@@ -1053,6 +1053,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   innerPadding = 20;
 
   whiteBlockMarginBottom = 10;
+  whiteBlockMarginBottomLast = 300;
   whitePaddingTop = 20;
   whitePaddingLeft = 25;
   whiteBlockTitleSize = 20;
@@ -1172,7 +1173,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     }
   });
 
-  num = 1;
+  num = 0;
   for (let item of items) {
     whiteBlock = createNode({
       mother: detailField,
@@ -1182,7 +1183,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
         height: String(200) + ea,
         borderRadius: String(8) + "px",
         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-        marginBottom: String(whiteBlockMarginBottom) + ea,
+        marginBottom: String(num !== items.length - 1 ? whiteBlockMarginBottom : whiteBlockMarginBottomLast) + ea,
         background: colorChip.white,
         paddingTop: String(whitePaddingTop) + ea,
         paddingBottom: String(whitePaddingTop) + ea,
@@ -1193,7 +1194,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
     createNode({
       mother: whiteBlock,
-      text: `<b%${String(num)}%b>&nbsp;&nbsp;${item.name}`,
+      text: `<b%${String(num + 1)}%b>&nbsp;&nbsp;${item.name}`,
       style: {
         display: "block",
         position: "relative",
