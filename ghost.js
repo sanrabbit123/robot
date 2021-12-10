@@ -2595,7 +2595,7 @@ Ghost.prototype.ghostRouter = function (needs) {
 
         headRequest(instance.innerMonitorUrl).then((res) => {
           if (res.statusCode === 200) {
-            return requestSystem(instance.innerMonitorUrl + "/log", { color: "yellow", message: thisName + " status log done" }, { headers: { "Content-type": "application/json" } });
+            return requestSystem(instance.innerMonitorUrl + "/log", { color: "yellow", message: (thisName !== "unknown" ? thisName : ip) + " status log done" }, { headers: { "Content-type": "application/json" } });
           } else {
             return null;
           }
@@ -2687,7 +2687,7 @@ Ghost.prototype.ghostRouter = function (needs) {
 
         headRequest(instance.innerMonitorUrl).then((res) => {
           if (res.statusCode === 200) {
-            return requestSystem(instance.innerMonitorUrl + "/log", { color: "red", message: text }, { headers: { "Content-type": "application/json" } });
+            return requestSystem(instance.innerMonitorUrl + "/log", { color: "cyan", message: text }, { headers: { "Content-type": "application/json" } });
           } else {
             return null;
           }
@@ -4268,9 +4268,9 @@ Ghost.prototype.logMonitorServer = async function () {
 
           timeWording = '';
           timeWording += String(now.getFullYear());
-          timeWording += '.';
+          timeWording += '-';
           timeWording += zeroAddition(now.getMonth() + 1);
-          timeWording += '.';
+          timeWording += '-';
           timeWording += zeroAddition(now.getDate());
           timeWording += ' ';
           timeWording += zeroAddition(now.getHours());

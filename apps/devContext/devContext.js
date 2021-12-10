@@ -85,9 +85,7 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    // const res = await requestSystem(`http://172.30.1.5/`, {}, { method: "get" });
-    // console.log(JSON.stringify(res.data, null, 2));
-
+    await findCode("taxBill")
 
 
 
