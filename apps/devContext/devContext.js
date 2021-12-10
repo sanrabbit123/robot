@@ -111,37 +111,6 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-    // console.log(await headRequest("http://172.30.1.14:3000"))
-
-
-    const colorLog = function (mode, text) {
-      const colors = {
-        red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
-        yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
-        cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
-      };
-      const now = new Date();
-      const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
-      let timeWording;
-
-      timeWording = '';
-      timeWording += String(now.getFullYear());
-      timeWording += '.';
-      timeWording += zeroAddition(now.getMonth() + 1);
-      timeWording += '.';
-      timeWording += zeroAddition(now.getDate());
-      timeWording += ' ';
-      timeWording += zeroAddition(now.getHours());
-      timeWording += ':';
-      timeWording += zeroAddition(now.getMinutes());
-      timeWording += ':';
-      timeWording += zeroAddition(now.getSeconds());
-
-      console.log(colors[mode], timeWording, text);
-    }
-
-
-    colorLog("cyan", "안녕하세요")
 
 
 

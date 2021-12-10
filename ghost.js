@@ -35,7 +35,7 @@ const Ghost = function () {
     },
     channel: "#error_log"
   };
-  this.innerMonitorNumber = 14;
+  this.innerMonitorUrl = "http://172.30.1.14:8000";
 }
 
 Ghost.timeouts = {};
@@ -2593,6 +2593,16 @@ Ghost.prototype.ghostRouter = function (needs) {
           from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
 
+        headRequest(instance.innerMonitorUrl).then((res) => {
+          if (res.statusCode === 200) {
+            return requestSystem(instance.innerMonitorUrl + "/log", { color: "yellow", message: thisName + " status log done" }, { headers: { "Content-type": "application/json" } });
+          } else {
+            return null;
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -2674,6 +2684,16 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (channel !== "silent") {
           await instance.slack_bot.chat.postMessage({ text, channel });
         }
+
+        headRequest(instance.innerMonitorUrl).then((res) => {
+          if (res.statusCode === 200) {
+            return requestSystem(instance.innerMonitorUrl + "/log", { color: "red", message: text }, { headers: { "Content-type": "application/json" } });
+          } else {
+            return null;
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
 
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
