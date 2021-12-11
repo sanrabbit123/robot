@@ -1009,7 +1009,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   const instance = this;
   const { totalMother, ea } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma } = GeneralJs;
   const titleWording = "홈리에종\n시공 견적서";
   let titleArea, contentsArea, greenArea;
   let titleWidth;
@@ -1032,6 +1032,29 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let num;
   let whiteBlockTitleSize;
   let titleMarginTop;
+  let whiteTableArea;
+  let tableHeight;
+  let price;
+  let namePercentage, numberPercentage, unitEaPercentage, consumerPercentage, pricePercentage, descriptionPercentage;
+  let percentages;
+  let detailWordings;
+  let whiteDetailBlock;
+  let tempArr;
+  let checkBoxPercentage;
+  let detailTextSize, detailTextTop;
+  let priceSum;
+  let tempDom;
+  let checkBoxWidth, checkBoxTop;
+  let detailDeactive;
+  let itemDeactive;
+  let whiteTitleArea;
+  let itemCheckWidth, itemCheckTop;
+  let totalSum;
+  let sumSize, sumTop;
+  let sumMarginRight;
+  let sumPaddingLeft;
+  let sumBarTop;
+  let orderWordingSize, orderWordingBottom;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1048,7 +1071,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   realTopMargin = barTop;
   barHeight = 99;
 
-  sumHeight = 90;
+  sumHeight = 80;
 
   innerPadding = 20;
 
@@ -1057,6 +1080,37 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   whitePaddingTop = 20;
   whitePaddingLeft = 25;
   whiteBlockTitleSize = 20;
+  whiteTitleMarginBottom = 16;
+
+  tableHeight = 36;
+
+  checkBoxPercentage = 4;
+  namePercentage = 36;
+  numberPercentage = 6;
+  unitEaPercentage = 6;
+  consumerPercentage = 14;
+  pricePercentage = 14;
+  descriptionPercentage = 20;
+  detailWordings = [ "", "품명", "수량", "단위", "단가", "가격", "규격" ];
+  percentages = [ checkBoxPercentage, namePercentage, numberPercentage, unitEaPercentage, consumerPercentage, pricePercentage, descriptionPercentage ];
+
+  detailTextSize = 13;
+  detailTextTop = -1;
+
+  checkBoxWidth = 11;
+  checkBoxTop = 0;
+
+  itemCheckWidth = 13;
+  itemCheckTop = 8;
+
+  sumSize = 26;
+  sumTop = -4;
+  sumMarginRight = 30;
+  sumPaddingLeft = 18;
+  sumBarTop = 37;
+
+  orderWordingSize = 13;
+  orderWordingBottom = 4;
 
   innerPaddingTop = realTopMargin - topMargin;
 
@@ -1167,12 +1221,15 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     mother: contentsField,
     style: {
       position: "relative",
-      display: "block",
+      display: "flex",
+      justifyContent: "right",
+      alignItems: "center",
       width: String(100) + '%',
       height: String(sumHeight) + ea,
     }
   });
 
+  totalSum = 0;
   num = 0;
   for (let item of items) {
     whiteBlock = createNode({
@@ -1180,7 +1237,6 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       style: {
         display: "block",
         width: withOut(whitePaddingLeft * 2, ea),
-        height: String(200) + ea,
         borderRadius: String(8) + "px",
         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
         marginBottom: String(num !== items.length - 1 ? whiteBlockMarginBottom : whiteBlockMarginBottomLast) + ea,
@@ -1192,12 +1248,13 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       }
     });
 
-    createNode({
+    whiteTitleArea = createNode({
       mother: whiteBlock,
       text: `<b%${String(num + 1)}%b>&nbsp;&nbsp;${item.name}`,
       style: {
         display: "block",
         position: "relative",
+        marginBottom: String(whiteTitleMarginBottom) + ea,
         fontSize: String(whiteBlockTitleSize) + ea,
         fontWeight: String(500),
         color: colorChip.black,
@@ -1207,29 +1264,280 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
         fontWeight: String(300),
         color: colorChip.green,
       }
-    })
+    });
 
+    whiteTableArea = createNode({
+      mother: whiteBlock,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        height: "auto",
+      },
+    });
 
-    console.log(item);
+    whiteDetailBlock = createNode({
+      mother: whiteTableArea,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(tableHeight) + ea,
+        border: "1px solid " + colorChip.gray3,
+        borderTopRightRadius: String(5) + "px",
+        borderTopLeftRadius: String(5) + "px",
+        boxSizing: "border-box",
+        background: colorChip.gray0
+      }
+    });
+    for (let i = 0; i < percentages.length; i++) {
+      createNode({
+        mother: whiteDetailBlock,
+        style: {
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          verticalAlign: "top",
+          width: String(percentages[i]) + '%',
+          boxSizing: "border-box",
+          height: String(100) + '%',
+          borderRight: i !== percentages.length - 1 ? "1px solid " + colorChip.gray3 : "",
+        },
+        children: [
+          {
+            text: detailWordings[i],
+            style: {
+              fontSize: String(detailTextSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              position: "relative",
+              top: String(detailTextTop) + ea,
+            }
+          }
+        ]
+      });
+    }
 
+    priceSum = 0;
+
+    for (let { name, unit: { number, ea: unitEa, amount: { consumer } }, description } of item.detail) {
+
+      price = Math.floor(consumer * number);
+      priceSum += price;
+      detailDeactive = price === 0;
+
+      tempArr = [];
+      tempArr.push('');
+      tempArr.push(name);
+      tempArr.push(String(number));
+      tempArr.push(unitEa);
+      tempArr.push(autoComma(consumer) + '원');
+      tempArr.push(autoComma(price) + '원');
+      tempArr.push(description);
+
+      whiteDetailBlock = createNode({
+        mother: whiteTableArea,
+        style: {
+          display: "block",
+          position: "relative",
+          height: String(tableHeight) + ea,
+          borderBottom: "1px solid " + colorChip.gray3,
+          borderRight: "1px solid " + colorChip.gray3,
+          borderLeft: "1px solid " + colorChip.gray3,
+          boxSizing: "border-box",
+        }
+      });
+
+      for (let i = 0; i < percentages.length; i++) {
+        tempDom = createNode({
+          mother: whiteDetailBlock,
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "top",
+            width: String(percentages[i]) + '%',
+            boxSizing: "border-box",
+            height: String(100) + '%',
+            borderRight: i !== percentages.length - 1 ? "1px solid " + colorChip.gray3 : "",
+          }
+        });
+        if (i !== 0) {
+          createNode({
+            mother: tempDom,
+            text: tempArr[i],
+            style: {
+              fontSize: String(detailTextSize) + ea,
+              fontWeight: String(400),
+              color: !detailDeactive ? colorChip.black : colorChip.deactive,
+              position: "relative",
+              top: String(detailTextTop) + ea,
+            }
+          })
+        } else {
+          createNode({
+            mother: tempDom,
+            mode: "svg",
+            source: instance.mother.returnCheckBox(!detailDeactive ? colorChip.green : colorChip.gray3, detailDeactive),
+            style: {
+              position: "relative",
+              width: String(checkBoxWidth) + ea,
+              top: String(checkBoxTop) + ea,
+            }
+          })
+        }
+
+      }
+
+    }
+
+    itemDeactive = priceSum === 0;
+    totalSum += priceSum;
+
+    createNode({
+      mother: whiteTitleArea,
+      mode: "svg",
+      source: instance.mother.returnCheckBox(!itemDeactive ? colorChip.green : colorChip.gray3, itemDeactive),
+      style: {
+        position: "absolute",
+        top: String(itemCheckTop) + ea,
+        right: String(0),
+        width: String(itemCheckWidth) + ea,
+      }
+    });
+    if (itemDeactive) {
+      whiteTitleArea.style.color = colorChip.deactive;
+      whiteTitleArea.querySelector('b').style.color = colorChip.deactive;
+    }
+
+    whiteDetailBlock = createNode({
+      mother: whiteTableArea,
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(tableHeight) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+        borderRight: "1px solid " + colorChip.gray3,
+        borderLeft: "1px solid " + colorChip.gray3,
+        borderBottomRightRadius: String(5) + "px",
+        borderBottomLeftRadius: String(5) + "px",
+        marginBottom: String(6) + ea,
+        boxSizing: "border-box",
+      },
+      children: [
+        {
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "top",
+            width: String(checkBoxPercentage) + '%',
+            boxSizing: "border-box",
+            height: String(100) + '%',
+            borderRight: "1px solid " + colorChip.gray3,
+          }
+        },
+        {
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "top",
+            width: String(namePercentage) + '%',
+            boxSizing: "border-box",
+            height: String(100) + '%',
+            borderRight: "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              text: "합계",
+              style: {
+                fontSize: String(detailTextSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(detailTextTop) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "top",
+            width: withOut(checkBoxPercentage + namePercentage, '%'),
+            boxSizing: "border-box",
+            height: String(100) + '%',
+          },
+          children: [
+            {
+              text: autoComma(priceSum) + '원',
+              style: {
+                fontSize: String(detailTextSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(detailTextTop) + ea,
+              }
+            }
+          ]
+        },
+      ]
+    });
 
     num++;
   }
 
+  createNode({
+    mother: sumField,
+    style: {
+      position: "absolute",
+      left: String(sumMarginRight) + ea,
+      top: String(0),
+      height: String(sumBarTop) + ea,
+      borderBottom: "1px dashed " + colorChip.green,
+      width: withOut(((sumMarginRight * 2) + 1), ea),
+      opacity: String(0.6),
+    }
+  });
 
+  createNode({
+    mother: sumField,
+    text: "합계 <b%: %b>" + "&nbsp;" + autoComma(totalSum) + '원',
+    style: {
+      position: "relative",
+      top: String(sumTop) + ea,
+      fontSize: String(sumSize) + ea,
+      fontWeight: String(500),
+      marginRight: String(sumMarginRight) + ea,
+      color: colorChip.black,
+      paddingLeft: String(sumPaddingLeft) + ea,
+      background: colorChip.white,
+    },
+    bold: {
+      color: colorChip.deactive,
+      fontWeight: String(300),
+    }
+  });
 
-  console.log(mother, invoice);
-
-
-
-
-
-
-
-
-
-
-
+  createNode({
+    mother: titleArea,
+    text: `<b%3번째%b> 견적서\n발생일 : 2021-12-30`,
+    style: {
+      position: "absolute",
+      fontSize: String(orderWordingSize) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      bottom: String(orderWordingBottom) + ea,
+      left: String(0),
+      lineHeight: String(1.5),
+    },
+    bold: {
+      fontWeight: String(400),
+      color: colorChip.green,
+    }
+  });
 }
 
 EstimationJs.prototype.addSearchEvent = function () {
