@@ -1374,6 +1374,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
           },
           event: {
             click: async function (e) {
+              const self = this;
               const index = Number(this.getAttribute("index"));
               const column = this.getAttribute("column");
               try {
@@ -1473,9 +1474,98 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
                 } else if (column === "name") {
 
+                  let cancelBack, cloneInput;
+                  let rect;
+                  let updateEvent;
 
+                  cancelBack = {};
+                  cloneInput = {};
 
+                  updateEvent = async function (e) {
+                    try {
+                      self.firstChild.textContent = cloneInput.value;
+                      self.setAttribute("value", cloneInput.value);
+                      self.firstChild.style.color = self.firstChild.getAttribute("past");
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
 
+                  cancelBack = createNode({
+                    mother: this,
+                    event: {
+                      click: async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        try {
+                          await updateEvent(e);
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    style: {
+                      position: "fixed",
+                      top: String(0),
+                      left: String(0),
+                      width: String(100) + '%',
+                      height: String(100) + '%',
+                      background: "transparent",
+                      zIndex: String(1),
+                      transition: "all 0s ease",
+                    }
+                  });
+
+                  rect = cancelBack.getBoundingClientRect();
+                  cancelBack.style.top = String(-1 * rect.top) + ea;
+                  cancelBack.style.left = String(-1 * rect.left) + ea;
+                  cancelBack.style.width = String(window.innerWidth) + ea;
+                  cancelBack.style.height = String(window.innerHeight) + ea;
+
+                  cloneInput = createNode({
+                    mother: this,
+                    mode: "input",
+                    attribute: {
+                      type: "text",
+                    },
+                    event: {
+                      click: (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      },
+                      keypress: async function (e) {
+                        try {
+                          if (e.key === "Enter") {
+                            await updateEvent(e);
+                          }
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }
+                    },
+                    style: {
+                      fontSize: String(detailTextSize) + ea,
+                      fontWeight: String(400),
+                      color: colorChip.green,
+                      position: "absolute",
+                      top: String(detailTextTop) + ea,
+                      left: String(0),
+                      width: String(100) + '%',
+                      height: String(100) + '%',
+                      background: "transparent",
+                      outline: String(0),
+                      border: String(0),
+                      zIndex: String(1),
+                      textAlign: "center",
+                    }
+                  });
+
+                  this.firstChild.setAttribute("past", this.firstChild.style.color);
+                  this.firstChild.style.color = "transparent";
+                  cloneInput.value = this.firstChild.textContent;
+                  cloneInput.focus();
 
                 } else if (column === "number") {
 
@@ -1521,6 +1611,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
           },
           style: {
             display: "inline-flex",
+            position: "relative",
             alignItems: "center",
             justifyContent: "center",
             verticalAlign: "top",
@@ -1541,6 +1632,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
               color: !detailDeactive ? colorChip.black : colorChip.deactive,
               position: "relative",
               top: String(detailTextTop) + ea,
+              transition: "all 0s ease",
             }
           })
         } else {
