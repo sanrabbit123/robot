@@ -1378,75 +1378,30 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
               const index = Number(this.getAttribute("index"));
               const column = this.getAttribute("column");
               try {
-                if (column === "checkBox") {
+                const won = '원';
+                const checkBoxDom = findByAttribute(this.parentElement.children, "column", "checkBox");
+                const numberDom = findByAttribute(this.parentElement.children, "column", "number");
+                const numberValue = Number(numberDom.getAttribute("value"));
+                const consumerDom = findByAttribute(this.parentElement.children, "column", "consumer");
+                const consumerValue = Number(consumerDom.getAttribute("value").replace(/[^0-9\-\.]/gi, ''));
+                const priceDom = findByAttribute(this.parentElement.children, "column", "price");
+                let totalTargets, totalFinal;
+                let totalDom, titleDom;
+                let areaMother;
+                let originalMother, originalMothers;
+                let ultimateTotal;
+                let cancelBack, cloneInput;
+                let rect;
+                let updateEvent;
+                let amountSync;
+                let checkOn, checkOff;
 
-                  //checkBox
-
-                  const won = '원';
-                  const standardDom = findByAttribute(this.parentElement.children, "column", "number");
-                  const standardValue = Number(standardDom.getAttribute("value"));
-                  const consumerDom = findByAttribute(this.parentElement.children, "column", "consumer");
-                  const consumerValue = Number(consumerDom.getAttribute("value").replace(/[^0-9\-\.]/gi, ''));
-                  const priceDom = findByAttribute(this.parentElement.children, "column", "price");
-                  let totalTargets, totalFinal;
-                  let totalDom, titleDom;
-                  let areaMother;
-                  let originalMother, originalMothers;
-                  let ultimateTotal;
-                  if (standardValue === 0) {
-
-                    // on
-
-                    let pastValue;
-
-                    if (standardDom.hasAttribute("pastvalue")) {
-                      pastValue = Number(standardDom.getAttribute("pastvalue"));
-                    } else {
-                      pastValue = 1;
-                    }
-
-                    this.querySelector("svg").style.background = colorChip.white;
-                    this.querySelector("path").setAttribute("fill", colorChip.green);
-
-                    standardDom.setAttribute("value", String(pastValue));
-                    standardDom.firstChild.textContent = String(pastValue);
-
-                    priceDom.setAttribute("value", autoComma(consumerValue * pastValue) + won);
-                    priceDom.firstChild.textContent = autoComma(consumerValue * pastValue) + won;
-
-                    this.parentElement.setAttribute("number", String(pastValue));
-
-                    [ ...this.parentNode.children ].forEach((dom) => {
-                      dom.firstChild.style.color = colorChip.black;
-                    });
-
-                  } else {
-
-                    // off
-
-                    this.querySelector("svg").style.background = colorChip.gray3;
-                    this.querySelector("path").setAttribute("fill", colorChip.gray3);
-
-                    standardDom.setAttribute("pastvalue", standardDom.getAttribute("value"));
-                    standardDom.setAttribute("value", String(0));
-                    standardDom.firstChild.textContent = String(0);
-
-                    priceDom.setAttribute("value", autoComma(consumerValue * 0) + won);
-                    priceDom.firstChild.textContent = autoComma(consumerValue * 0) + won;
-
-                    this.parentElement.setAttribute("number", String(0));
-
-                    [ ...this.parentNode.children ].forEach((dom) => {
-                      dom.firstChild.style.color = colorChip.deactive;
-                    });
-
-                  }
-
-                  totalTargets = [ ...this.parentElement.parentElement.children ].filter((dom) => { return dom.hasAttribute("consumer") });
+                amountSync = () => {
+                  totalTargets = [ ...self.parentElement.parentElement.children ].filter((dom) => { return dom.hasAttribute("consumer") });
                   totalFinal = totalTargets.reduce((sum, dom) => { return sum + (Number(dom.getAttribute("consumer")) * Number(dom.getAttribute("number"))) }, 0);
 
-                  areaMother = this.parentElement.parentElement;
-                  originalMother = this.parentElement.parentElement.parentElement;
+                  areaMother = self.parentElement.parentElement;
+                  originalMother = self.parentElement.parentElement.parentElement;
                   originalMothers = [ ...originalMother.parentElement.children ];
                   totalDom = areaMother.children[areaMother.children.length - 1];
                   titleDom = originalMother.firstChild;
@@ -1471,25 +1426,162 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
                   }, 0);
                   document.querySelector('.' + ultimateTotalClassName).querySelectorAll('b')[1].textContent = autoComma(ultimateTotal);
                   document.querySelector('.' + ultimateTotalClassName).setAttribute("ultimate", String(ultimateTotal));
+                }
 
-                } else if (column === "name") {
+                checkOn = () => {
+                  let pastValue;
 
-                  let cancelBack, cloneInput;
-                  let rect;
-                  let updateEvent;
+                  if (numberDom.hasAttribute("pastvalue")) {
+                    pastValue = Number(numberDom.getAttribute("pastvalue"));
+                  } else {
+                    pastValue = 1;
+                  }
+
+                  checkBoxDom.querySelector("svg").style.background = colorChip.white;
+                  checkBoxDom.querySelector("path").setAttribute("fill", colorChip.green);
+
+                  numberDom.setAttribute("value", String(pastValue));
+                  numberDom.firstChild.textContent = String(pastValue);
+
+                  priceDom.setAttribute("value", autoComma(consumerValue * pastValue) + won);
+                  priceDom.firstChild.textContent = autoComma(consumerValue * pastValue) + won;
+
+                  checkBoxDom.parentElement.setAttribute("number", String(pastValue));
+
+                  [ ...checkBoxDom.parentNode.children ].forEach((dom) => {
+                    dom.firstChild.style.color = colorChip.black;
+                  });
+                }
+
+                checkOff = () => {
+                  checkBoxDom.querySelector("svg").style.background = colorChip.gray3;
+                  checkBoxDom.querySelector("path").setAttribute("fill", colorChip.gray3);
+
+                  numberDom.setAttribute("pastvalue", numberDom.getAttribute("value"));
+                  numberDom.setAttribute("value", String(0));
+                  numberDom.firstChild.textContent = String(0);
+
+                  priceDom.setAttribute("value", autoComma(consumerValue * 0) + won);
+                  priceDom.firstChild.textContent = autoComma(consumerValue * 0) + won;
+
+                  checkBoxDom.parentElement.setAttribute("number", String(0));
+
+                  [ ...checkBoxDom.parentNode.children ].forEach((dom) => {
+                    dom.firstChild.style.color = colorChip.deactive;
+                  });
+                }
+
+                if (column === "checkBox") {
+
+                  if (numberValue === 0) {
+                    checkOn();
+                  } else {
+                    checkOff();
+                  }
+                  amountSync();
+
+                } else if (column !== "price") {
 
                   cancelBack = {};
                   cloneInput = {};
 
-                  updateEvent = async function (e) {
-                    try {
-                      self.firstChild.textContent = cloneInput.value;
-                      self.setAttribute("value", cloneInput.value);
-                      self.firstChild.style.color = self.firstChild.getAttribute("past");
-                      self.removeChild(self.lastChild);
-                      self.removeChild(self.lastChild);
-                    } catch (err) {
-                      console.log(err);
+                  if (column === "name") {
+                    updateEvent = async function (e) {
+                      try {
+                        self.firstChild.textContent = cloneInput.value;
+                        self.setAttribute("value", cloneInput.value);
+                        self.firstChild.style.color = self.firstChild.getAttribute("past");
+                        self.removeChild(self.lastChild);
+                        self.removeChild(self.lastChild);
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }
+                  } else if (column === "number") {
+                    updateEvent = async function (e) {
+                      try {
+                        self.firstChild.style.color = self.firstChild.getAttribute("past");
+
+                        cloneInput.value = cloneInput.value.replace(/[^0-9\.\-]/gi, '');
+                        if (cloneInput.value === '0') {
+                          checkOff();
+                        } else {
+                          checkOn();
+                        }
+
+                        self.parentNode.setAttribute("number", cloneInput.value);
+                        self.firstChild.textContent = cloneInput.value;
+                        self.setAttribute("value", cloneInput.value);
+
+                        priceDom.firstChild.textContent = autoComma(Math.floor(Number(cloneInput.value) * consumerValue)) + won;
+                        priceDom.setAttribute("value", autoComma(Math.floor(Number(cloneInput.value) * consumerValue)) + won);
+
+                        amountSync();
+
+                        self.removeChild(self.lastChild);
+                        self.removeChild(self.lastChild);
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }
+                  } else if (column === "ea") {
+                    updateEvent = async function (e) {
+                      try {
+                        self.firstChild.textContent = cloneInput.value;
+                        self.setAttribute("value", cloneInput.value);
+                        self.firstChild.style.color = self.firstChild.getAttribute("past");
+                        self.removeChild(self.lastChild);
+                        self.removeChild(self.lastChild);
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }
+                  } else if (column === "consumer") {
+                    updateEvent = async function (e) {
+                      try {
+                        self.firstChild.style.color = self.firstChild.getAttribute("past");
+
+                        cloneInput.value = cloneInput.value.replace(/[^0-9\.\-]/gi, '');
+                        if (cloneInput.value === '0') {
+                          checkOff();
+                        }
+
+                        self.parentNode.setAttribute("consumer", cloneInput.value);
+                        self.firstChild.textContent = autoComma(Number(cloneInput.value)) + won;
+                        self.setAttribute("value", autoComma(Number(cloneInput.value)) + won);
+
+                        priceDom.firstChild.textContent = autoComma(Math.floor(Number(cloneInput.value) * numberValue)) + won;
+                        priceDom.setAttribute("value", autoComma(Math.floor(Number(cloneInput.value) * numberValue)) + won);
+
+                        amountSync();
+
+                        self.removeChild(self.lastChild);
+                        self.removeChild(self.lastChild);
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }
+                  } else if (column === "description") {
+                    updateEvent = async function (e) {
+                      try {
+                        self.firstChild.textContent = cloneInput.value;
+                        self.setAttribute("value", cloneInput.value);
+                        self.firstChild.style.color = self.firstChild.getAttribute("past");
+                        self.removeChild(self.lastChild);
+                        self.removeChild(self.lastChild);
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }
+                  } else {
+                    updateEvent = async function (e) {
+                      try {
+                        self.firstChild.style.color = self.firstChild.getAttribute("past");
+                        self.removeChild(self.lastChild);
+                        self.removeChild(self.lastChild);
+                      } catch (err) {
+                        console.log(err);
+                      }
                     }
                   }
 
@@ -1564,32 +1656,14 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
                   this.firstChild.setAttribute("past", this.firstChild.style.color);
                   this.firstChild.style.color = "transparent";
-                  cloneInput.value = this.firstChild.textContent;
+
+                  if (column !== "number" && column !== "consumer") {
+                    cloneInput.value = this.firstChild.textContent;
+                  } else {
+                    cloneInput.value = this.firstChild.textContent.replace(/[^0-9\.\-]/gi, '');
+                  }
+
                   cloneInput.focus();
-
-                } else if (column === "number") {
-
-
-
-
-
-                } else if (column === "ea") {
-
-
-
-
-
-                } else if (column === "consumer") {
-
-
-
-
-
-                } else if (column === "description") {
-
-
-
-
 
                 }
               } catch (e) {
@@ -1608,6 +1682,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
                 this.querySelector("svg").style.opacity = String(1);
               }
             },
+            selectstart: (e) => { e.preventDefault(); }
           },
           style: {
             display: "inline-flex",
@@ -1626,6 +1701,9 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
           createNode({
             mother: tempDom,
             text: tempArr[i],
+            event: {
+              selectstart: (e) => { e.preventDefault(); }
+            },
             style: {
               fontSize: String(detailTextSize) + ea,
               fontWeight: String(400),
