@@ -35,21 +35,6 @@ const Ghost = function () {
     },
     channel: "#error_log"
   };
-  this.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.macMap[ADDRESS.officeinfo.ghost.monitor.mac] + ":" + String(ADDRESS.officeinfo.ghost.monitor.port);
-
-  const instance = this;
-  const { shellExec, shellLink, requestSystem, fileSystem } = this.mother;
-  requestSystem(this.innerMonitorUrl + "/getMac").then((res) => {
-    const { data } = res;
-    ADDRESS.officeinfo.macMap = data;
-    instance.address = ADDRESS;
-    instance.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.macMap[ADDRESS.officeinfo.ghost.monitor.mac] + ":" + String(ADDRESS.officeinfo.ghost.monitor.port);
-    return fileSystem(`write`, [ `${process.cwd()}/apps/infoObj.js`, `module.exports = ${JSON.stringify(ADDRESS, null, 2)}` ]);
-  }).then(() => {
-    return shellExec(`node ${shellLink(process.cwd())}/robot.js infoUpdate;`);
-  }).catch((err) => {
-    console.log(err);
-  });
 }
 
 Ghost.timeouts = {};
@@ -2608,16 +2593,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
 
-        headRequest(instance.innerMonitorUrl).then((res) => {
-          if (res.statusCode === 200) {
-            return requestSystem(instance.innerMonitorUrl + "/log", { color: "yellow", message: (thisName !== "unknown" ? thisName : ip) + " status log done" }, { headers: { "Content-type": "application/json" } });
-          } else {
-            return null;
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -2650,16 +2625,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           method: "send",
           date: new Date(),
           project: project.toNormal().proposal,
-        });
-
-        headRequest(instance.innerMonitorUrl).then((res) => {
-          if (res.statusCode === 200) {
-            return requestSystem(instance.innerMonitorUrl + "/log", { color: "red", message: proid + " proposal status save" }, { headers: { "Content-type": "application/json" } });
-          } else {
-            return null;
-          }
-        }).catch((err) => {
-          console.log(err);
         });
 
         res.send(JSON.stringify({ message: "done" }));
@@ -2709,16 +2674,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (channel !== "silent") {
           await instance.slack_bot.chat.postMessage({ text, channel });
         }
-
-        headRequest(instance.innerMonitorUrl).then((res) => {
-          if (res.statusCode === 200) {
-            return requestSystem(instance.innerMonitorUrl + "/log", { color: "cyan", message: text }, { headers: { "Content-type": "application/json" } });
-          } else {
-            return null;
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
 
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
