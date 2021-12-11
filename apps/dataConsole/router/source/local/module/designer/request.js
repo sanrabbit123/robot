@@ -580,8 +580,6 @@ DesignerJs.prototype.requestList = function (desid) {
         click: this.requestDocument(baseTong, i, designer, projects[i]),
         mouseenter: function (e) {
           this.style.transition = "";
-        },
-        mouseover: function (e) {
           if (desktop) {
             this.children[0].style.background = colorChip.green;
             this.children[1].firstChild.style.color = colorChip.green;

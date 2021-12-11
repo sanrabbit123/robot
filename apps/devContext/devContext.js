@@ -84,8 +84,22 @@ DevContext.prototype.launching = async function () {
 
     // await this.pureSpawn();
 
+    // const move = require(`${process.cwd()}/temp/move.js`);
+    // let tong;
+    //
+    // tong = [];
+    // for (let obj of move) {
+    //   delete obj._id;
+    //   tong.push(obj);
+    // }
+    //
+    // for (let obj of tong) {
+    //   await this.MONGOLOCALC.db(`miro81`).collection(`constructInvoice`).insertOne(obj);
+    // }
+    // console.log(tong);
 
-    await errorLog("hello")
+
+
 
 
 

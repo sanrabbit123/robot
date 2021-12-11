@@ -795,8 +795,6 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
         },
         mouseenter: function (e) {
           this.style.transition = "";
-        },
-        mouseover: function (e) {
           if (desktop) {
             this.children[0].style.background = colorChip.green;
             this.children[1].firstChild.style.color = colorChip.green;
@@ -913,8 +911,6 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
       click: (e) => {},
       mouseenter: function (e) {
         this.style.transition = "";
-      },
-      mouseover: function (e) {
         this.style.background = colorChip.green;
         this.querySelector("path").setAttribute("fill", colorChip.white);
       },
@@ -1009,7 +1005,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   const instance = this;
   const { totalMother, ea } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma, findByAttribute } = GeneralJs;
   const titleWording = "홈리에종\n시공 견적서";
   let titleArea, contentsArea, greenArea;
   let titleWidth;
@@ -1055,6 +1051,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let sumPaddingLeft;
   let sumBarTop;
   let orderWordingSize, orderWordingBottom;
+  let columnArr;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1326,16 +1323,35 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       detailDeactive = price === 0;
 
       tempArr = [];
+      columnArr = [];
+
+      columnArr.push("checkBox");
       tempArr.push('');
+
+      columnArr.push("name");
       tempArr.push(name);
+
+      columnArr.push("number");
       tempArr.push(String(number));
+
+      columnArr.push("ea");
       tempArr.push(unitEa);
+
+      columnArr.push("consumer");
       tempArr.push(autoComma(consumer) + '원');
+
+      columnArr.push("price");
       tempArr.push(autoComma(price) + '원');
+
+      columnArr.push("description");
       tempArr.push(description);
 
       whiteDetailBlock = createNode({
         mother: whiteTableArea,
+        attribute: {
+          consumer: String(consumer),
+          number: String(number),
+        },
         style: {
           display: "block",
           position: "relative",
@@ -1350,6 +1366,45 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       for (let i = 0; i < percentages.length; i++) {
         tempDom = createNode({
           mother: whiteDetailBlock,
+          attribute: {
+            index: String(i),
+            column: columnArr[i],
+            value: tempArr[i],
+          },
+          event: {
+            click: function (e) {
+              const index = Number(this.getAttribute("index"));
+              if (index === 0) {
+                const standardDom = findByAttribute(this.parentElement.children, "column", "number");
+                const standardValue = Number(standardDom.getAttribute("value"));
+                if (standardValue === 0) {
+
+
+
+
+
+                } else {
+                  
+
+
+
+
+                }
+              }
+            },
+            mouseenter: function (e) {
+              const index = Number(this.getAttribute("index"));
+              if (index === 0) {
+                this.querySelector("svg").style.opacity = String(0.5);
+              }
+            },
+            mouseleave: function (e) {
+              const index = Number(this.getAttribute("index"));
+              if (index === 0) {
+                this.querySelector("svg").style.opacity = String(1);
+              }
+            },
+          },
           style: {
             display: "inline-flex",
             alignItems: "center",
@@ -1359,6 +1414,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
             boxSizing: "border-box",
             height: String(100) + '%',
             borderRight: i !== percentages.length - 1 ? "1px solid " + colorChip.gray3 : "",
+            cursor: i === 0 ? "pointer" : "",
           }
         });
         if (i !== 0) {
@@ -1383,7 +1439,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
               width: String(checkBoxWidth) + ea,
               top: String(checkBoxTop) + ea,
             }
-          })
+          });
         }
 
       }
