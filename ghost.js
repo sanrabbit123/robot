@@ -4321,8 +4321,20 @@ Ghost.prototype.logMonitorServer = async function () {
 
       return nameArr;
     }
-    const interval = 5 * 60 * 1000;
+    const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+    const defaultInterval = 20 * 1000;
+    const interval = {
+      d080: 5 * 60 * 1000,
+      d090: 20 * 1000,
+      d100: 20 * 60 * 1000,
+      d160: 5 * 60 * 1000,
+      d180: 20 * 1000,
+      d200: 5 * 60 * 1000,
+      d210: 60 * 60 * 1000,
+    };
     let pastMonitor;
+    let intervalId;
+    let intervalFunc;
 
     app.get("/", async (req, res) => {
       try {
@@ -4386,9 +4398,11 @@ Ghost.prototype.logMonitorServer = async function () {
       }
     });
 
-    // set network monitoring;
+    // set network monitoring
+
+    intervalId = null;
     pastMonitor = [];
-    setInterval(async () => {
+    intervalFunc = async () => {
       try {
         const data = await getMac();
         let index;
@@ -4469,7 +4483,26 @@ Ghost.prototype.logMonitorServer = async function () {
       } catch (e) {
         console.log(e);
       }
-    }, interval);
+    }
+
+    setInterval(() => {
+      const now = new Date();
+      let dateKey;
+
+      dateKey = 'd' + zeroAddition(now.getHours()) + zeroAddition(now.getMinutes()).slice(0, 1);
+
+      if (typeof interval[dateKey] !== "number") {
+        if (intervalId === null) {
+          intervalId = setInterval(intervalFunc, defaultInterval);
+        }
+      } else {
+        if (intervalId !== null) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+        intervalId = setInterval(intervalFunc, interval[dateKey]);
+      }
+    }, 10 * 60 * 1000);
 
     pureServer("listen", app, 8080);
 
