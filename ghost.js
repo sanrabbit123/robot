@@ -4261,27 +4261,19 @@ Ghost.prototype.smsLaunching = async function () {
 
 Ghost.prototype.logMonitorServer = async function () {
   const instance = this;
-  const { pureServer, shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo } = this.mother;
-  const logCollection = "messageTotalLog"
+  const members = require(`${process.cwd()}/apps/memberObj.js`);
+  const { map } = this.address.officeinfo;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, equalJson, errorLog, sleep, messageSend } = this.mother;
+  const logCollection = "messageTotalLog";
   try {
 
     const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     await MONGOLOCALC.connect();
-
     const PureServer = pureServer("class");
     const app = new PureServer();
-
-    app.get("/", async (req, res) => {
+    const getMac = async function () {
       try {
-        res.send(JSON.stringify({ message: "It works!" }));
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    app.get("/getMac", async (req, res) => {
-      try {
-        const stdout = (await shellExec("arp-scan --localnet"));
+        const stdout = await shellExec("arp-scan --localnet");
         let rawArr, selfMac, selfIp, tempArr, tempMatrix, tong, tempObj;
         rawArr = stdout.split("\n");
 
@@ -4299,9 +4291,57 @@ Ghost.prototype.logMonitorServer = async function () {
         }
         tong[selfMac] = selfIp;
 
-        res.send(JSON.stringify(tong));
+        return tong;
       } catch (e) {
         console.log(e);
+        return null;
+      }
+    }
+    const macToName = function (macArr) {
+      let index;
+      let message;
+      let nameArr;
+      let thisMember;
+
+      nameArr = [];
+      for (let mac of macArr) {
+        index = map.findIndex((obj) => { return obj.mac === mac });
+        if (index !== -1) {
+          message = '';
+          if (typeof map[index].memid === "string") {
+            thisMember = members.find((obj) => { return obj.id === map[index].memid });
+            message += thisMember.name;
+            message += ' ';
+            message += thisMember.title;
+            message += '님';
+          } else {
+            message += map[index].name;
+          }
+          message += " alive";
+          nameArr.push(message);
+        }
+      }
+
+      return nameArr;
+    }
+    const interval = 60 * 1000;
+    let pastMonitor;
+
+    app.get("/", async (req, res) => {
+      try {
+        res.send(JSON.stringify({ message: "It works!" }));
+      } catch (e) {
+        console.log(e);
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    });
+
+    app.get("/getMac", async (req, res) => {
+      try {
+        res.send(JSON.stringify(await getMac()));
+      } catch (e) {
+        console.log(e);
+        res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
 
@@ -4345,9 +4385,97 @@ Ghost.prototype.logMonitorServer = async function () {
 
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
-        res.send(JSON.stringify({ message: "error" }));
+        res.send(JSON.stringify({ message: "error : " + e.message }));
       }
     });
+
+    // set network monitoring;
+    pastMonitor = [];
+    setInterval(async () => {
+      try {
+        const data = await getMac();
+        let index;
+        let alive;
+        let isSame;
+        let add, subtract;
+        let report;
+        let message;
+        let hibyeArr;
+        let thisMember;
+
+        alive = [];
+        messages = [];
+        for (let mac in data) {
+          index = map.findIndex((obj) => { return obj.mac === mac });
+          if (index !== -1) {
+            alive.push(mac);
+          }
+        }
+
+        isSame = (alive.length === pastMonitor.length);
+        if (isSame) {
+          for (let mac of alive) {
+            if (!pastMonitor.includes(mac)) {
+              isSame = false;
+              break;
+            }
+          }
+        }
+
+        if (!isSame) {
+          add = [];
+          for (let mac of alive) {
+            if (!pastMonitor.includes(mac)) {
+              add.push(mac);
+            }
+          }
+          subtract = [];
+          for (let mac of pastMonitor) {
+            if (!alive.includes(mac)) {
+              subtract.push(mac);
+            }
+          }
+
+          report = {
+            alive: macToName(alive),
+            add: macToName(add),
+            subtract: macToName(subtract),
+          };
+          message = "사무실 네트워크 변경 감지 : " + JSON.stringify(report, null, 2);
+          await errorLog(message);
+
+          hibyeArr = [];
+          for (let mac of add) {
+            index = map.findIndex((obj) => { return obj.mac === mac });
+            if (index !== -1) {
+              if (typeof map[index].memid === "string") {
+                thisMember = members.find((obj) => { return obj.id === map[index].memid });
+                hibyeArr.push(`${thisMember.name} ${thisMember.title}님, 안녕하세요!`);
+              }
+            }
+          }
+          for (let mac of subtract) {
+            index = map.findIndex((obj) => { return obj.mac === mac });
+            if (index !== -1) {
+              if (typeof map[index].memid === "string") {
+                thisMember = members.find((obj) => { return obj.id === map[index].memid });
+                hibyeArr.push(`${thisMember.name} ${thisMember.title}님, 안녕히 가세요.`);
+              }
+            }
+          }
+
+          for (let m of hibyeArr) {
+            await messageSend({ text: m, channel: "#error_log", voice: true });
+            await sleep(4000);
+          }
+        }
+
+        pastMonitor = equalJson(JSON.stringify(alive));
+
+      } catch (e) {
+        console.log(e);
+      }
+    }, interval);
 
     pureServer("listen", app, 8080);
 

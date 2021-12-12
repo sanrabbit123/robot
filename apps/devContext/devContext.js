@@ -99,6 +99,40 @@ DevContext.prototype.launching = async function () {
     // console.log(tong);
 
 
+    const { map } = this.address.officeinfo;
+    const url = this.address.officeinfo.ghost.monitor.protocol + "://" + this.address.officeinfo.macMap[this.address.officeinfo.ghost.monitor.mac] + ":" + String(this.address.officeinfo.ghost.monitor.port);
+    const { data } = await requestSystem(url + "/getMac");
+    const members = await back.setMemberObj({ getMode: true });
+    let index;
+    let thisMember;
+    let message;
+    let messages;
+
+    messages = [];
+    for (let mac in data) {
+      index = map.findIndex((obj) => { return obj.mac === mac });
+      if (index !== -1) {
+        message = '';
+        if (typeof map[index].memid === "string") {
+          thisMember = members.find((obj) => { return obj.id === map[index].memid });
+          message += thisMember.name;
+          message += ' ';
+          message += thisMember.title;
+          message += '님';
+          messages.push(String(message));
+        } else {
+          message += map[index].name;
+        }
+        message += " alive";
+        console.log(message);
+      }
+    }
+
+    messages = messages.map((str) => { return { hi: str + ", 안녕하세요!", bye: str + ", 안녕히 가세요." }; });
+
+
+    console.log(messages);
+
 
 
 
