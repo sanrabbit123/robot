@@ -4335,6 +4335,7 @@ Ghost.prototype.logMonitorServer = async function () {
     let pastMonitor;
     let intervalId;
     let intervalFunc;
+    let intervalSetting;
 
     app.get("/", async (req, res) => {
       try {
@@ -4484,8 +4485,7 @@ Ghost.prototype.logMonitorServer = async function () {
         console.log(e);
       }
     }
-
-    setInterval(() => {
+    intervalSetting = () => {
       const now = new Date();
       let dateKey;
 
@@ -4502,7 +4502,10 @@ Ghost.prototype.logMonitorServer = async function () {
         }
         intervalId = setInterval(intervalFunc, interval[dateKey]);
       }
-    }, 10 * 60 * 1000);
+    }
+
+    intervalSetting();
+    setInterval(intervalSetting, 10 * 60 * 1000);
 
     pureServer("listen", app, 8080);
 
