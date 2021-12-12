@@ -4317,14 +4317,13 @@ Ghost.prototype.logMonitorServer = async function () {
           } else {
             message += map[index].name;
           }
-          message += " alive";
           nameArr.push(message);
         }
       }
 
       return nameArr;
     }
-    const interval = 60 * 1000;
+    const interval = 30 * 1000;
     let pastMonitor;
 
     app.get("/", async (req, res) => {
@@ -4466,7 +4465,7 @@ Ghost.prototype.logMonitorServer = async function () {
 
           for (let m of hibyeArr) {
             await messageSend({ text: m, channel: "#error_log", voice: true });
-            await sleep(4000);
+            await sleep(3000);
           }
         }
 
