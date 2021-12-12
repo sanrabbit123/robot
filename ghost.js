@@ -4307,23 +4307,21 @@ Ghost.prototype.logMonitorServer = async function () {
       for (let mac of macArr) {
         index = map.findIndex((obj) => { return obj.mac === mac });
         if (index !== -1) {
-          message = '';
           if (typeof map[index].memid === "string") {
             thisMember = members.find((obj) => { return obj.id === map[index].memid });
-            message += thisMember.name;
-            message += ' ';
-            message += thisMember.title;
-            message += '님';
+            message = `${thisMember.name} ${thisMember.title} (${mac})`;
           } else {
-            message += map[index].name;
+            message = `${map[index].name} (${mac})`;
           }
-          nameArr.push(message);
+        } else {
+          message = `unknown (${mac})`;
         }
+        nameArr.push(message);
       }
 
       return nameArr;
     }
-    const interval = 30 * 1000;
+    const interval = 5 * 60 * 1000;
     let pastMonitor;
 
     app.get("/", async (req, res) => {
@@ -4405,10 +4403,7 @@ Ghost.prototype.logMonitorServer = async function () {
         alive = [];
         messages = [];
         for (let mac in data) {
-          index = map.findIndex((obj) => { return obj.mac === mac });
-          if (index !== -1) {
-            alive.push(mac);
-          }
+          alive.push(mac);
         }
 
         isSame = (alive.length === pastMonitor.length);
