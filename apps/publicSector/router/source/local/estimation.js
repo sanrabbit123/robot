@@ -1053,6 +1053,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let sumBarTop;
   let orderWordingSize, orderWordingBottom;
   let columnArr;
+  let plusCircleWidth, plusCircleTop;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1097,6 +1098,9 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
   checkBoxWidth = 11;
   checkBoxTop = 0;
+
+  plusCircleWidth = 12;
+  plusCircleTop = 0;
 
   itemCheckWidth = 13;
   itemCheckTop = 8;
@@ -1770,6 +1774,17 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       },
       children: [
         {
+          class: [ "hoverDefault_lite" ],
+          event: {
+            click: function (e) {
+              const cloneDom = this.parentNode.previousElementSibling.cloneNode(true);
+
+
+
+
+              this.parentNode.parentNode.insertBefore(cloneDom, this.parentNode);
+            }
+          },
           style: {
             display: "inline-flex",
             alignItems: "center",
@@ -1779,7 +1794,18 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
             boxSizing: "border-box",
             height: String(100) + '%',
             borderRight: "1px solid " + colorChip.gray3,
-          }
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnPlusCircle(colorChip.green),
+              style: {
+                position: "relative",
+                width: String(plusCircleWidth) + ea,
+                top: String(plusCircleTop) + ea,
+              }
+            }
+          ]
         },
         {
           style: {
