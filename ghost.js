@@ -4496,6 +4496,7 @@ Ghost.prototype.logMonitorServer = async function () {
 
       if (typeof interval[dateKey] !== "number") {
         if (intervalId === null) {
+          intervalFunc();
           intervalId = setInterval(intervalFunc, defaultInterval);
         }
       } else {
@@ -4503,6 +4504,7 @@ Ghost.prototype.logMonitorServer = async function () {
           clearInterval(intervalId);
           intervalId = null;
         }
+        intervalFunc();
         intervalId = setInterval(intervalFunc, interval[dateKey]);
       }
     }
