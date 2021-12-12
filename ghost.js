@@ -54,6 +54,8 @@ const Ghost = function () {
 
 Ghost.timeouts = {};
 
+Ghost.intervals = {};
+
 Ghost.prototype.setTimer = function (callback, timeObj) {
   if (typeof timeObj !== "object" || typeof callback !== "function") {
     throw new Error("arguments must be Object: timeObj, Function: callback");
@@ -4322,18 +4324,18 @@ Ghost.prototype.logMonitorServer = async function () {
       return nameArr;
     }
     const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
-    const defaultInterval = 5 * 60 * 1000;
+    const defaultInterval = 60 * 1000;
     const interval = {
-      d080: 5 * 60 * 1000,
-      d090: 20 * 1000,
-      d100: 20 * 60 * 1000,
-      d160: 5 * 60 * 1000,
-      d180: 20 * 1000,
-      d200: 5 * 60 * 1000,
-      d210: 60 * 60 * 1000,
+      d080: 5 * 60 * 1000, // 12
+      d090: 30 * 1000, // 120
+      d100: 60 * 1000, // 60
+      d110: 60 * 60 * 1000, // 6
+      d160: 5 * 60 * 1000, // 24
+      d180: 30 * 1000, // 120
+      d190: 60 * 1000, // 120
+      d210: 60 * 60 * 1000, // 12
     };
     let pastMonitor;
-    let intervalId;
     let intervalFunc;
     let intervalSetting;
 
@@ -4401,7 +4403,7 @@ Ghost.prototype.logMonitorServer = async function () {
 
     // set network monitoring
 
-    intervalId = null;
+    Ghost.intervals.monitorIntervalId = null;
     pastMonitor = [];
     intervalFunc = async () => {
       try {
@@ -4495,17 +4497,17 @@ Ghost.prototype.logMonitorServer = async function () {
       dateKey = 'd' + zeroAddition(now.getHours()) + zeroAddition(now.getMinutes()).slice(0, 1);
 
       if (typeof interval[dateKey] !== "number") {
-        if (intervalId === null) {
+        if (Ghost.intervals.monitorIntervalId === null) {
           intervalFunc();
-          intervalId = setInterval(intervalFunc, defaultInterval);
+          Ghost.intervals.monitorIntervalId = setInterval(intervalFunc, defaultInterval);
         }
       } else {
-        if (intervalId !== null) {
-          clearInterval(intervalId);
-          intervalId = null;
+        if (Ghost.intervals.monitorIntervalId !== null) {
+          clearInterval(Ghost.intervals.monitorIntervalId);
+          Ghost.intervals.monitorIntervalId = null;
         }
         intervalFunc();
-        intervalId = setInterval(intervalFunc, interval[dateKey]);
+        Ghost.intervals.monitorIntervalId = setInterval(intervalFunc, interval[dateKey]);
       }
     }
 
