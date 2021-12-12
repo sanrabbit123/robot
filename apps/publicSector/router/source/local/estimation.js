@@ -1008,6 +1008,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma, findByAttribute } = GeneralJs;
   const titleWording = "홈리에종\n시공 견적서";
   const ultimateTotalClassName = "ultimateTotal";
+  const won = '원';
   let titleArea, contentsArea, greenArea;
   let titleWidth;
   let topMargin;
@@ -1054,6 +1055,9 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let orderWordingSize, orderWordingBottom;
   let columnArr;
   let plusCircleWidth, plusCircleTop;
+  let makeDetailBlock;
+  let valueArr;
+  let amountSync;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1092,6 +1096,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   descriptionPercentage = 20;
   detailWordings = [ "", "품명", "수량", "단위", "단가", "가격", "규격" ];
   percentages = [ checkBoxPercentage, namePercentage, numberPercentage, unitEaPercentage, consumerPercentage, pricePercentage, descriptionPercentage ];
+  columnArr = [ "checkBox", "name", "number", "ea", "consumer", "price", "description" ];
 
   detailTextSize = 13;
   detailTextTop = -1;
@@ -1118,6 +1123,400 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
   [ request ] = invoice.requests;
   ({ items } = request);
+
+  makeDetailBlock = (whiteTableArea, price, name, number, unitEa, consumer, description, detailDeactive) => {
+    valueArr = [];
+    valueArr.push('');
+    valueArr.push(name);
+    valueArr.push(String(number));
+    valueArr.push(unitEa);
+    valueArr.push(autoComma(consumer) + '원');
+    valueArr.push(autoComma(price) + '원');
+    valueArr.push(description);
+
+    whiteDetailBlock = createNode({
+      mother: whiteTableArea,
+      attribute: {
+        consumer: String(consumer),
+        number: String(number),
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(tableHeight) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+        borderRight: "1px solid " + colorChip.gray3,
+        borderLeft: "1px solid " + colorChip.gray3,
+        boxSizing: "border-box",
+      }
+    });
+    for (let i = 0; i < percentages.length; i++) {
+      tempDom = createNode({
+        mother: whiteDetailBlock,
+        attribute: {
+          index: String(i),
+          column: columnArr[i],
+          value: valueArr[i],
+        },
+        event: {
+          click: async function (e) {
+            const self = this;
+            const index = Number(this.getAttribute("index"));
+            const column = this.getAttribute("column");
+            try {
+              const checkBoxDom = findByAttribute(this.parentElement.children, "column", "checkBox");
+              const numberDom = findByAttribute(this.parentElement.children, "column", "number");
+              const numberValue = Number(numberDom.getAttribute("value"));
+              const consumerDom = findByAttribute(this.parentElement.children, "column", "consumer");
+              const consumerValue = Number(consumerDom.getAttribute("value").replace(/[^0-9\-\.]/gi, ''));
+              const priceDom = findByAttribute(this.parentElement.children, "column", "price");
+              let totalTargets, totalFinal;
+              let totalDom, titleDom;
+              let areaMother;
+              let originalMother, originalMothers;
+              let ultimateTotal;
+              let cancelBack, cloneInput;
+              let rect;
+              let updateEvent;
+              let checkOn, checkOff;
+
+              checkOn = () => {
+                let pastValue;
+
+                if (numberDom.hasAttribute("pastvalue")) {
+                  pastValue = Number(numberDom.getAttribute("pastvalue"));
+                } else {
+                  pastValue = 1;
+                }
+
+                checkBoxDom.querySelector("svg").style.background = colorChip.white;
+                checkBoxDom.querySelector("path").setAttribute("fill", colorChip.green);
+
+                numberDom.setAttribute("value", String(pastValue));
+                numberDom.firstChild.textContent = String(pastValue);
+
+                priceDom.setAttribute("value", autoComma(consumerValue * pastValue) + won);
+                priceDom.firstChild.textContent = autoComma(consumerValue * pastValue) + won;
+
+                checkBoxDom.parentElement.setAttribute("number", String(pastValue));
+
+                [ ...checkBoxDom.parentNode.children ].forEach((dom) => {
+                  dom.firstChild.style.color = colorChip.black;
+                });
+              }
+
+              checkOff = () => {
+                checkBoxDom.querySelector("svg").style.background = colorChip.gray3;
+                checkBoxDom.querySelector("path").setAttribute("fill", colorChip.gray3);
+
+                numberDom.setAttribute("pastvalue", numberDom.getAttribute("value"));
+                numberDom.setAttribute("value", String(0));
+                numberDom.firstChild.textContent = String(0);
+
+                priceDom.setAttribute("value", autoComma(consumerValue * 0) + won);
+                priceDom.firstChild.textContent = autoComma(consumerValue * 0) + won;
+
+                checkBoxDom.parentElement.setAttribute("number", String(0));
+
+                [ ...checkBoxDom.parentNode.children ].forEach((dom) => {
+                  dom.firstChild.style.color = colorChip.deactive;
+                });
+              }
+
+              if (column === "checkBox") {
+
+                if (numberValue === 0) {
+                  checkOn();
+                } else {
+                  checkOff();
+                }
+                amountSync(self.parentElement.parentElement);
+
+              } else if (column !== "price") {
+
+                cancelBack = {};
+                cloneInput = {};
+
+                if (column === "name") {
+                  updateEvent = async function (e) {
+                    try {
+                      self.firstChild.textContent = cloneInput.value;
+                      self.setAttribute("value", cloneInput.value);
+                      self.firstChild.style.color = self.firstChild.getAttribute("past");
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
+                } else if (column === "number") {
+                  updateEvent = async function (e) {
+                    try {
+                      self.firstChild.style.color = self.firstChild.getAttribute("past");
+
+                      cloneInput.value = cloneInput.value.replace(/[^0-9\.\-]/gi, '');
+                      if (cloneInput.value === '0') {
+                        checkOff();
+                      } else {
+                        checkOn();
+                      }
+
+                      self.parentNode.setAttribute("number", cloneInput.value);
+                      self.firstChild.textContent = cloneInput.value;
+                      self.setAttribute("value", cloneInput.value);
+
+                      priceDom.firstChild.textContent = autoComma(Math.floor(Number(cloneInput.value) * consumerValue)) + won;
+                      priceDom.setAttribute("value", autoComma(Math.floor(Number(cloneInput.value) * consumerValue)) + won);
+
+                      amountSync(self.parentElement.parentElement);
+
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
+                } else if (column === "ea") {
+                  updateEvent = async function (e) {
+                    try {
+                      self.firstChild.textContent = cloneInput.value;
+                      self.setAttribute("value", cloneInput.value);
+                      self.firstChild.style.color = self.firstChild.getAttribute("past");
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
+                } else if (column === "consumer") {
+                  updateEvent = async function (e) {
+                    try {
+                      self.firstChild.style.color = self.firstChild.getAttribute("past");
+
+                      cloneInput.value = cloneInput.value.replace(/[^0-9\.\-]/gi, '');
+                      if (cloneInput.value === '0') {
+                        checkOff();
+                      }
+
+                      self.parentNode.setAttribute("consumer", cloneInput.value);
+                      self.firstChild.textContent = autoComma(Number(cloneInput.value)) + won;
+                      self.setAttribute("value", autoComma(Number(cloneInput.value)) + won);
+
+                      priceDom.firstChild.textContent = autoComma(Math.floor(Number(cloneInput.value) * numberValue)) + won;
+                      priceDom.setAttribute("value", autoComma(Math.floor(Number(cloneInput.value) * numberValue)) + won);
+
+                      amountSync(self.parentElement.parentElement);
+
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
+                } else if (column === "description") {
+                  updateEvent = async function (e) {
+                    try {
+                      self.firstChild.textContent = cloneInput.value;
+                      self.setAttribute("value", cloneInput.value);
+                      self.firstChild.style.color = self.firstChild.getAttribute("past");
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
+                } else {
+                  updateEvent = async function (e) {
+                    try {
+                      self.firstChild.style.color = self.firstChild.getAttribute("past");
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }
+                }
+
+                cancelBack = createNode({
+                  mother: this,
+                  event: {
+                    click: async (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      try {
+                        await updateEvent(e);
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+                  },
+                  style: {
+                    position: "fixed",
+                    top: String(0),
+                    left: String(0),
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: "transparent",
+                    zIndex: String(1),
+                    transition: "all 0s ease",
+                  }
+                });
+
+                rect = cancelBack.getBoundingClientRect();
+                cancelBack.style.top = String(-1 * rect.top) + ea;
+                cancelBack.style.left = String(-1 * rect.left) + ea;
+                cancelBack.style.width = String(window.innerWidth) + ea;
+                cancelBack.style.height = String(window.innerHeight) + ea;
+
+                cloneInput = createNode({
+                  mother: this,
+                  mode: "input",
+                  attribute: {
+                    type: "text",
+                  },
+                  event: {
+                    click: (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    },
+                    keypress: async function (e) {
+                      try {
+                        if (e.key === "Enter") {
+                          await updateEvent(e);
+                        }
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+                  },
+                  style: {
+                    fontSize: String(detailTextSize) + ea,
+                    fontWeight: String(400),
+                    color: colorChip.green,
+                    position: "absolute",
+                    top: String(detailTextTop) + ea,
+                    left: String(0),
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: "transparent",
+                    outline: String(0),
+                    border: String(0),
+                    zIndex: String(1),
+                    textAlign: "center",
+                  }
+                });
+
+                this.firstChild.setAttribute("past", this.firstChild.style.color);
+                this.firstChild.style.color = "transparent";
+
+                if (column !== "number" && column !== "consumer") {
+                  cloneInput.value = this.firstChild.textContent;
+                } else {
+                  cloneInput.value = this.firstChild.textContent.replace(/[^0-9\.\-]/gi, '');
+                }
+
+                cloneInput.focus();
+
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          },
+          mouseenter: function (e) {
+            const index = Number(this.getAttribute("index"));
+            if (index === 0) {
+              this.querySelector("svg").style.opacity = String(0.5);
+            }
+          },
+          mouseleave: function (e) {
+            const index = Number(this.getAttribute("index"));
+            if (index === 0) {
+              this.querySelector("svg").style.opacity = String(1);
+            }
+          },
+          selectstart: (e) => { e.preventDefault(); }
+        },
+        style: {
+          display: "inline-flex",
+          position: "relative",
+          alignItems: "center",
+          justifyContent: "center",
+          verticalAlign: "top",
+          width: String(percentages[i]) + '%',
+          boxSizing: "border-box",
+          height: String(100) + '%',
+          borderRight: i !== percentages.length - 1 ? "1px solid " + colorChip.gray3 : "",
+          cursor: i === 0 ? "pointer" : "",
+        }
+      });
+      if (i !== 0) {
+        createNode({
+          mother: tempDom,
+          text: valueArr[i],
+          event: {
+            selectstart: (e) => { e.preventDefault(); }
+          },
+          style: {
+            fontSize: String(detailTextSize) + ea,
+            fontWeight: String(400),
+            color: !detailDeactive ? colorChip.black : colorChip.deactive,
+            position: "relative",
+            top: String(detailTextTop) + ea,
+            transition: "all 0s ease",
+          }
+        })
+      } else {
+        createNode({
+          mother: tempDom,
+          mode: "svg",
+          source: instance.mother.returnCheckBox(!detailDeactive ? colorChip.green : colorChip.gray3, false, true),
+          style: {
+            position: "relative",
+            width: String(checkBoxWidth) + ea,
+            top: String(checkBoxTop) + ea,
+            background: !detailDeactive ? colorChip.white : colorChip.gray3,
+          }
+        });
+      }
+    }
+  }
+
+  amountSync = (areaMother) => {
+    let originalMother, originalMothers;
+    let totalDom, titleDom;
+    let totalTargets;
+    let totalFinal;
+    let ultimateTotal;
+
+    originalMother = areaMother.parentElement;
+    originalMothers = [ ...originalMother.parentElement.children ];
+    totalDom = areaMother.children[areaMother.children.length - 1];
+    titleDom = originalMother.firstChild;
+
+    totalTargets = [ ...areaMother.children ].filter((dom) => { return dom.hasAttribute("consumer") });
+    totalFinal = totalTargets.reduce((sum, dom) => { return sum + (Number(dom.getAttribute("consumer")) * Number(dom.getAttribute("number"))) }, 0);
+
+    totalDom.setAttribute("total", String(totalFinal));
+    totalDom.lastChild.firstChild.textContent = autoComma(totalFinal) + won;
+
+    if (totalFinal === 0) {
+      titleDom.style.color = colorChip.deactive;
+      titleDom.querySelector('b').style.color = colorChip.deactive;
+      titleDom.querySelector("svg").style.background = colorChip.gray3;
+      titleDom.querySelector("path").setAttribute("fill", colorChip.gray3);
+    } else {
+      titleDom.style.color = colorChip.black;
+      titleDom.querySelector('b').style.color = colorChip.green;
+      titleDom.querySelector("svg").style.background = colorChip.white;
+      titleDom.querySelector("path").setAttribute("fill", colorChip.green);
+    }
+
+    ultimateTotal = originalMothers.reduce((sum, original) => {
+      return sum + Number(original.lastChild.lastChild.getAttribute("total"))
+    }, 0);
+    document.querySelector('.' + ultimateTotalClassName).querySelectorAll('b')[1].textContent = autoComma(ultimateTotal);
+    document.querySelector('.' + ultimateTotalClassName).setAttribute("ultimate", String(ultimateTotal));
+  }
 
   greenArea = createNode({
     mother,
@@ -1322,417 +1721,9 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     priceSum = 0;
 
     for (let { name, unit: { number, ea: unitEa, amount: { consumer } }, description } of item.detail) {
-
       price = Math.floor(consumer * number);
       priceSum += price;
-      detailDeactive = price === 0;
-
-      tempArr = [];
-      columnArr = [];
-
-      columnArr.push("checkBox");
-      tempArr.push('');
-
-      columnArr.push("name");
-      tempArr.push(name);
-
-      columnArr.push("number");
-      tempArr.push(String(number));
-
-      columnArr.push("ea");
-      tempArr.push(unitEa);
-
-      columnArr.push("consumer");
-      tempArr.push(autoComma(consumer) + '원');
-
-      columnArr.push("price");
-      tempArr.push(autoComma(price) + '원');
-
-      columnArr.push("description");
-      tempArr.push(description);
-
-      whiteDetailBlock = createNode({
-        mother: whiteTableArea,
-        attribute: {
-          consumer: String(consumer),
-          number: String(number),
-        },
-        style: {
-          display: "block",
-          position: "relative",
-          height: String(tableHeight) + ea,
-          borderBottom: "1px solid " + colorChip.gray3,
-          borderRight: "1px solid " + colorChip.gray3,
-          borderLeft: "1px solid " + colorChip.gray3,
-          boxSizing: "border-box",
-        }
-      });
-
-      for (let i = 0; i < percentages.length; i++) {
-        tempDom = createNode({
-          mother: whiteDetailBlock,
-          attribute: {
-            index: String(i),
-            column: columnArr[i],
-            value: tempArr[i],
-          },
-          event: {
-            click: async function (e) {
-              const self = this;
-              const index = Number(this.getAttribute("index"));
-              const column = this.getAttribute("column");
-              try {
-                const won = '원';
-                const checkBoxDom = findByAttribute(this.parentElement.children, "column", "checkBox");
-                const numberDom = findByAttribute(this.parentElement.children, "column", "number");
-                const numberValue = Number(numberDom.getAttribute("value"));
-                const consumerDom = findByAttribute(this.parentElement.children, "column", "consumer");
-                const consumerValue = Number(consumerDom.getAttribute("value").replace(/[^0-9\-\.]/gi, ''));
-                const priceDom = findByAttribute(this.parentElement.children, "column", "price");
-                let totalTargets, totalFinal;
-                let totalDom, titleDom;
-                let areaMother;
-                let originalMother, originalMothers;
-                let ultimateTotal;
-                let cancelBack, cloneInput;
-                let rect;
-                let updateEvent;
-                let amountSync;
-                let checkOn, checkOff;
-
-                amountSync = () => {
-                  totalTargets = [ ...self.parentElement.parentElement.children ].filter((dom) => { return dom.hasAttribute("consumer") });
-                  totalFinal = totalTargets.reduce((sum, dom) => { return sum + (Number(dom.getAttribute("consumer")) * Number(dom.getAttribute("number"))) }, 0);
-
-                  areaMother = self.parentElement.parentElement;
-                  originalMother = self.parentElement.parentElement.parentElement;
-                  originalMothers = [ ...originalMother.parentElement.children ];
-                  totalDom = areaMother.children[areaMother.children.length - 1];
-                  titleDom = originalMother.firstChild;
-
-                  totalDom.setAttribute("total", String(totalFinal));
-                  totalDom.lastChild.firstChild.textContent = autoComma(totalFinal) + won;
-
-                  if (totalFinal === 0) {
-                    titleDom.style.color = colorChip.deactive;
-                    titleDom.querySelector('b').style.color = colorChip.deactive;
-                    titleDom.querySelector("svg").style.background = colorChip.gray3;
-                    titleDom.querySelector("path").setAttribute("fill", colorChip.gray3);
-                  } else {
-                    titleDom.style.color = colorChip.black;
-                    titleDom.querySelector('b').style.color = colorChip.green;
-                    titleDom.querySelector("svg").style.background = colorChip.white;
-                    titleDom.querySelector("path").setAttribute("fill", colorChip.green);
-                  }
-
-                  ultimateTotal = originalMothers.reduce((sum, original) => {
-                    return sum + Number(original.lastChild.lastChild.getAttribute("total"))
-                  }, 0);
-                  document.querySelector('.' + ultimateTotalClassName).querySelectorAll('b')[1].textContent = autoComma(ultimateTotal);
-                  document.querySelector('.' + ultimateTotalClassName).setAttribute("ultimate", String(ultimateTotal));
-                }
-
-                checkOn = () => {
-                  let pastValue;
-
-                  if (numberDom.hasAttribute("pastvalue")) {
-                    pastValue = Number(numberDom.getAttribute("pastvalue"));
-                  } else {
-                    pastValue = 1;
-                  }
-
-                  checkBoxDom.querySelector("svg").style.background = colorChip.white;
-                  checkBoxDom.querySelector("path").setAttribute("fill", colorChip.green);
-
-                  numberDom.setAttribute("value", String(pastValue));
-                  numberDom.firstChild.textContent = String(pastValue);
-
-                  priceDom.setAttribute("value", autoComma(consumerValue * pastValue) + won);
-                  priceDom.firstChild.textContent = autoComma(consumerValue * pastValue) + won;
-
-                  checkBoxDom.parentElement.setAttribute("number", String(pastValue));
-
-                  [ ...checkBoxDom.parentNode.children ].forEach((dom) => {
-                    dom.firstChild.style.color = colorChip.black;
-                  });
-                }
-
-                checkOff = () => {
-                  checkBoxDom.querySelector("svg").style.background = colorChip.gray3;
-                  checkBoxDom.querySelector("path").setAttribute("fill", colorChip.gray3);
-
-                  numberDom.setAttribute("pastvalue", numberDom.getAttribute("value"));
-                  numberDom.setAttribute("value", String(0));
-                  numberDom.firstChild.textContent = String(0);
-
-                  priceDom.setAttribute("value", autoComma(consumerValue * 0) + won);
-                  priceDom.firstChild.textContent = autoComma(consumerValue * 0) + won;
-
-                  checkBoxDom.parentElement.setAttribute("number", String(0));
-
-                  [ ...checkBoxDom.parentNode.children ].forEach((dom) => {
-                    dom.firstChild.style.color = colorChip.deactive;
-                  });
-                }
-
-                if (column === "checkBox") {
-
-                  if (numberValue === 0) {
-                    checkOn();
-                  } else {
-                    checkOff();
-                  }
-                  amountSync();
-
-                } else if (column !== "price") {
-
-                  cancelBack = {};
-                  cloneInput = {};
-
-                  if (column === "name") {
-                    updateEvent = async function (e) {
-                      try {
-                        self.firstChild.textContent = cloneInput.value;
-                        self.setAttribute("value", cloneInput.value);
-                        self.firstChild.style.color = self.firstChild.getAttribute("past");
-                        self.removeChild(self.lastChild);
-                        self.removeChild(self.lastChild);
-                      } catch (err) {
-                        console.log(err);
-                      }
-                    }
-                  } else if (column === "number") {
-                    updateEvent = async function (e) {
-                      try {
-                        self.firstChild.style.color = self.firstChild.getAttribute("past");
-
-                        cloneInput.value = cloneInput.value.replace(/[^0-9\.\-]/gi, '');
-                        if (cloneInput.value === '0') {
-                          checkOff();
-                        } else {
-                          checkOn();
-                        }
-
-                        self.parentNode.setAttribute("number", cloneInput.value);
-                        self.firstChild.textContent = cloneInput.value;
-                        self.setAttribute("value", cloneInput.value);
-
-                        priceDom.firstChild.textContent = autoComma(Math.floor(Number(cloneInput.value) * consumerValue)) + won;
-                        priceDom.setAttribute("value", autoComma(Math.floor(Number(cloneInput.value) * consumerValue)) + won);
-
-                        amountSync();
-
-                        self.removeChild(self.lastChild);
-                        self.removeChild(self.lastChild);
-                      } catch (err) {
-                        console.log(err);
-                      }
-                    }
-                  } else if (column === "ea") {
-                    updateEvent = async function (e) {
-                      try {
-                        self.firstChild.textContent = cloneInput.value;
-                        self.setAttribute("value", cloneInput.value);
-                        self.firstChild.style.color = self.firstChild.getAttribute("past");
-                        self.removeChild(self.lastChild);
-                        self.removeChild(self.lastChild);
-                      } catch (err) {
-                        console.log(err);
-                      }
-                    }
-                  } else if (column === "consumer") {
-                    updateEvent = async function (e) {
-                      try {
-                        self.firstChild.style.color = self.firstChild.getAttribute("past");
-
-                        cloneInput.value = cloneInput.value.replace(/[^0-9\.\-]/gi, '');
-                        if (cloneInput.value === '0') {
-                          checkOff();
-                        }
-
-                        self.parentNode.setAttribute("consumer", cloneInput.value);
-                        self.firstChild.textContent = autoComma(Number(cloneInput.value)) + won;
-                        self.setAttribute("value", autoComma(Number(cloneInput.value)) + won);
-
-                        priceDom.firstChild.textContent = autoComma(Math.floor(Number(cloneInput.value) * numberValue)) + won;
-                        priceDom.setAttribute("value", autoComma(Math.floor(Number(cloneInput.value) * numberValue)) + won);
-
-                        amountSync();
-
-                        self.removeChild(self.lastChild);
-                        self.removeChild(self.lastChild);
-                      } catch (err) {
-                        console.log(err);
-                      }
-                    }
-                  } else if (column === "description") {
-                    updateEvent = async function (e) {
-                      try {
-                        self.firstChild.textContent = cloneInput.value;
-                        self.setAttribute("value", cloneInput.value);
-                        self.firstChild.style.color = self.firstChild.getAttribute("past");
-                        self.removeChild(self.lastChild);
-                        self.removeChild(self.lastChild);
-                      } catch (err) {
-                        console.log(err);
-                      }
-                    }
-                  } else {
-                    updateEvent = async function (e) {
-                      try {
-                        self.firstChild.style.color = self.firstChild.getAttribute("past");
-                        self.removeChild(self.lastChild);
-                        self.removeChild(self.lastChild);
-                      } catch (err) {
-                        console.log(err);
-                      }
-                    }
-                  }
-
-                  cancelBack = createNode({
-                    mother: this,
-                    event: {
-                      click: async (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        try {
-                          await updateEvent(e);
-                        } catch (e) {
-                          console.log(e);
-                        }
-                      }
-                    },
-                    style: {
-                      position: "fixed",
-                      top: String(0),
-                      left: String(0),
-                      width: String(100) + '%',
-                      height: String(100) + '%',
-                      background: "transparent",
-                      zIndex: String(1),
-                      transition: "all 0s ease",
-                    }
-                  });
-
-                  rect = cancelBack.getBoundingClientRect();
-                  cancelBack.style.top = String(-1 * rect.top) + ea;
-                  cancelBack.style.left = String(-1 * rect.left) + ea;
-                  cancelBack.style.width = String(window.innerWidth) + ea;
-                  cancelBack.style.height = String(window.innerHeight) + ea;
-
-                  cloneInput = createNode({
-                    mother: this,
-                    mode: "input",
-                    attribute: {
-                      type: "text",
-                    },
-                    event: {
-                      click: (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      },
-                      keypress: async function (e) {
-                        try {
-                          if (e.key === "Enter") {
-                            await updateEvent(e);
-                          }
-                        } catch (e) {
-                          console.log(e);
-                        }
-                      }
-                    },
-                    style: {
-                      fontSize: String(detailTextSize) + ea,
-                      fontWeight: String(400),
-                      color: colorChip.green,
-                      position: "absolute",
-                      top: String(detailTextTop) + ea,
-                      left: String(0),
-                      width: String(100) + '%',
-                      height: String(100) + '%',
-                      background: "transparent",
-                      outline: String(0),
-                      border: String(0),
-                      zIndex: String(1),
-                      textAlign: "center",
-                    }
-                  });
-
-                  this.firstChild.setAttribute("past", this.firstChild.style.color);
-                  this.firstChild.style.color = "transparent";
-
-                  if (column !== "number" && column !== "consumer") {
-                    cloneInput.value = this.firstChild.textContent;
-                  } else {
-                    cloneInput.value = this.firstChild.textContent.replace(/[^0-9\.\-]/gi, '');
-                  }
-
-                  cloneInput.focus();
-
-                }
-              } catch (e) {
-                console.log(e);
-              }
-            },
-            mouseenter: function (e) {
-              const index = Number(this.getAttribute("index"));
-              if (index === 0) {
-                this.querySelector("svg").style.opacity = String(0.5);
-              }
-            },
-            mouseleave: function (e) {
-              const index = Number(this.getAttribute("index"));
-              if (index === 0) {
-                this.querySelector("svg").style.opacity = String(1);
-              }
-            },
-            selectstart: (e) => { e.preventDefault(); }
-          },
-          style: {
-            display: "inline-flex",
-            position: "relative",
-            alignItems: "center",
-            justifyContent: "center",
-            verticalAlign: "top",
-            width: String(percentages[i]) + '%',
-            boxSizing: "border-box",
-            height: String(100) + '%',
-            borderRight: i !== percentages.length - 1 ? "1px solid " + colorChip.gray3 : "",
-            cursor: i === 0 ? "pointer" : "",
-          }
-        });
-        if (i !== 0) {
-          createNode({
-            mother: tempDom,
-            text: tempArr[i],
-            event: {
-              selectstart: (e) => { e.preventDefault(); }
-            },
-            style: {
-              fontSize: String(detailTextSize) + ea,
-              fontWeight: String(400),
-              color: !detailDeactive ? colorChip.black : colorChip.deactive,
-              position: "relative",
-              top: String(detailTextTop) + ea,
-              transition: "all 0s ease",
-            }
-          })
-        } else {
-          createNode({
-            mother: tempDom,
-            mode: "svg",
-            source: instance.mother.returnCheckBox(!detailDeactive ? colorChip.green : colorChip.gray3, false, true),
-            style: {
-              position: "relative",
-              width: String(checkBoxWidth) + ea,
-              top: String(checkBoxTop) + ea,
-              background: !detailDeactive ? colorChip.white : colorChip.gray3,
-            }
-          });
-        }
-
-      }
-
+      makeDetailBlock(whiteTableArea, price, name, number, unitEa, consumer, description, (price === 0));
     }
 
     itemDeactive = priceSum === 0;
@@ -1777,12 +1768,9 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
           class: [ "hoverDefault_lite" ],
           event: {
             click: function (e) {
-              const cloneDom = this.parentNode.previousElementSibling.cloneNode(true);
-
-
-
-
-              this.parentNode.parentNode.insertBefore(cloneDom, this.parentNode);
+              makeDetailBlock(this.parentNode.parentNode, 10000, "품명 입력", 1, "개", 10000, "비고", false);
+              this.parentNode.parentNode.insertBefore(this.parentNode.parentNode.lastChild, this.parentNode);
+              amountSync(this.parentNode.parentNode);
             }
           },
           style: {
