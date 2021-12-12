@@ -4322,7 +4322,7 @@ Ghost.prototype.logMonitorServer = async function () {
       return nameArr;
     }
     const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
-    const defaultInterval = 20 * 1000;
+    const defaultInterval = 5 * 60 * 1000;
     const interval = {
       d080: 5 * 60 * 1000,
       d090: 20 * 1000,
@@ -4418,7 +4418,10 @@ Ghost.prototype.logMonitorServer = async function () {
         alive = [];
         messages = [];
         for (let mac in data) {
-          alive.push(mac);
+          index = map.findIndex((obj) => { return obj.mac === mac });
+          if (index !== -1) {
+            alive.push(mac);
+          }
         }
 
         isSame = (alive.length === pastMonitor.length);
