@@ -37,19 +37,21 @@ const Ghost = function () {
   };
   this.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.macMap[ADDRESS.officeinfo.ghost.monitor.mac] + ":" + String(ADDRESS.officeinfo.ghost.monitor.port);
 
-  const instance = this;
-  const { shellExec, shellLink, requestSystem, fileSystem } = this.mother;
-  requestSystem(this.innerMonitorUrl + "/getMac").then((res) => {
-    const { data } = res;
-    ADDRESS.officeinfo.macMap = data;
-    instance.address = ADDRESS;
-    instance.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.macMap[ADDRESS.officeinfo.ghost.monitor.mac] + ":" + String(ADDRESS.officeinfo.ghost.monitor.port);
-    return fileSystem(`write`, [ `${process.cwd()}/apps/infoObj.js`, `module.exports = ${JSON.stringify(ADDRESS, null, 2)}` ]);
-  }).then(() => {
-    return shellExec(`node ${shellLink(process.cwd())}/robot.js infoUpdate;`);
-  }).catch((err) => {
-    console.log(err);
-  });
+  if (process.argv[2] !== "log") {
+    const instance = this;
+    const { shellExec, shellLink, requestSystem, fileSystem } = this.mother;
+    requestSystem(this.innerMonitorUrl + "/getMac").then((res) => {
+      const { data } = res;
+      ADDRESS.officeinfo.macMap = data;
+      instance.address = ADDRESS;
+      instance.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.macMap[ADDRESS.officeinfo.ghost.monitor.mac] + ":" + String(ADDRESS.officeinfo.ghost.monitor.port);
+      return fileSystem(`write`, [ `${process.cwd()}/apps/infoObj.js`, `module.exports = ${JSON.stringify(ADDRESS, null, 2)}` ]);
+    }).then(() => {
+      return shellExec(`node ${shellLink(process.cwd())}/robot.js infoUpdate;`);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
 }
 
 Ghost.timeouts = {};
