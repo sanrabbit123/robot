@@ -1068,6 +1068,8 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let makeWhiteBlock;
   let blockSum, tempBlock;
 
+  this.invid = invoice.invid;
+
   titleWidth = 200;
   topMargin = 52;
   leftMargin = 52;
@@ -1508,9 +1510,26 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
                       e.stopPropagation();
                       try {
                         const areaMother = self.parentElement.parentElement;
+                        let newBlocks, num;
                         self.parentElement.remove();
                         setQueue(() => {
                           amountSync(areaMother);
+                          if (areaMother.children.length === 2) {
+                            newBlocks = [];
+                            num = 0;
+                            for (let block of instance.whiteBlocks) {
+                              if (block !== areaMother.parentElement) {
+                                block.firstChild.querySelector('b').textContent = String(num + 1);
+                                block.style.marginBottom = String(whiteBlockMarginBottom) + ea;
+                                newBlocks.push(block);
+                                num++;
+                              }
+                            }
+                            newBlocks[newBlocks.length - 1].style.marginBottom = String(whiteBlockMarginBottomLast) + ea;
+                            instance.whiteBlocks = newBlocks;
+                            areaMother.parentElement.remove();
+                            amountSync(newBlocks[newBlocks.length - 1].children[1]);
+                          }
                         });
                       } catch (e) {
                         console.log(e);
@@ -2283,6 +2302,64 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       color: colorChip.green,
     }
   });
+
+  this.autoSave();
+
+}
+
+EstimationJs.prototype.autoSave = function () {
+  const instance = this;
+  const { autoSaveConst } = this;
+  const intervalConst = 4000;
+  if (GeneralJs.stacks[autoSaveConst] !== null) {
+    clearInterval(GeneralJs.stacks[autoSaveConst]);
+  }
+  GeneralJs.stacks[autoSaveConst] = setInterval(async () => {
+    try {
+      await instance.saveState();
+    } catch (e) {
+      console.log(e);
+    }
+  }, intervalConst);
+}
+
+EstimationJs.prototype.saveState = async function () {
+  const instance = this;
+  const { ajaxJson, uniqueValue, equalJson } = GeneralJs;
+  const { invid, dummy: { item, detail } } = this;
+  const iConst = "I";
+  const dConst = "D";
+  try {
+    const blockToJson = function (whiteDom) {
+      let json;
+
+      json = equalJson(JSON.stringify(item));
+      json.id = iConst + uniqueValue("hex");
+      json.name = whiteDom.children[0].textContent.replace(/^[0-9]+[^0-9]/, '').trim();
+
+      
+
+
+
+      return json;
+    }
+    let whereQuery, updateQuery;
+    let tong;
+
+    whereQuery = { invid };
+    updateQuery = {};
+    tong = [];
+    for (let block of this.whiteBlocks) {
+      tong.push(blockToJson(block));
+    }
+    updateQuery["requests.0.items"] = tong;
+
+    console.log(whereQuery, updateQuery);
+
+
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 EstimationJs.prototype.addSearchEvent = function () {
@@ -2344,6 +2421,8 @@ EstimationJs.prototype.launching = async function () {
     this.host = host;
     this.downloadUrl = "https://" + host + "/publicSector";
     this.sampleFile = this.downloadUrl + "/estimationSample.xlsx";
+    this.autoSaveConst = "autoSaveInterval";
+    GeneralJs.stacks[this.autoSaveConst] = null;
 
     this.buiid = buiid;
     this.invoiceList = new SearchArray(invoiceList);
