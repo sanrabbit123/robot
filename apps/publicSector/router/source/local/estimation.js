@@ -2191,6 +2191,7 @@ EstimationJs.prototype.launching = async function () {
     let cliidArr;
     let projects, designers, clients;
     let builder;
+    let itemDummy, detailDummy;
 
     this.belowHeight = <%% 123, 123, 123, 123, 0 %%>;
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
@@ -2231,6 +2232,15 @@ EstimationJs.prototype.launching = async function () {
 
     this.baseMaker();
     this.listDetailLaunching();
+
+
+    itemDummy = await ajaxJson({ to: "returnDummy", json: { collection: "constructInvoice", subject: "items" } }, "/publicSector/python", { equal: true });
+    detailDummy = await ajaxJson({ to: "returnDummy", json: { collection: "constructInvoice", subject: "detail" } }, "/publicSector/python", { equal: true });
+    this.dummy = {
+      item: itemDummy,
+      detail: detailDummy
+    };
+
 
   } catch (e) {
     console.log(e);

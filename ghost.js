@@ -4344,159 +4344,177 @@ Ghost.prototype.logMonitorServer = async function () {
       d080: 10 * 60 * 1000,
       d210: 60 * 60 * 1000,
     };
-    let pastMonitor;
     let intervalFunc;
     let intervalSetting;
+    let getInfoFromInterFace;
 
-    app.get("/", async (req, res) => {
-      try {
-        res.send(JSON.stringify({ message: "It works!" }));
-      } catch (e) {
-        console.log(e);
-        res.send(JSON.stringify({ message: "error : " + e.message }));
-      }
-    });
 
-    app.get("/getMac", async (req, res) => {
-      try {
-        res.send(JSON.stringify(await getMac()));
-      } catch (e) {
-        console.log(e);
-        res.send(JSON.stringify({ message: "error : " + e.message }));
-      }
-    });
-
-    app.post("/log", async (req, res) => {
-      try {
-        if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
-          throw new Error("invaild post, must be text");
+    //routing
+    {
+      app.get("/", async (req, res) => {
+        try {
+          res.send(JSON.stringify({ message: "It works!" }));
+        } catch (e) {
+          console.log(e);
+          res.send(JSON.stringify({ message: "error : " + e.message }));
         }
+      });
 
-        const colorLog = function (mode, text) {
-          const colors = {
-            red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
-            yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
-            cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
-          };
-          const now = new Date();
-          const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
-          let timeWording;
-
-          timeWording = '';
-          timeWording += String(now.getFullYear());
-          timeWording += '-';
-          timeWording += zeroAddition(now.getMonth() + 1);
-          timeWording += '-';
-          timeWording += zeroAddition(now.getDate());
-          timeWording += ' ';
-          timeWording += zeroAddition(now.getHours());
-          timeWording += ':';
-          timeWording += zeroAddition(now.getMinutes());
-          timeWording += ':';
-          timeWording += zeroAddition(now.getSeconds());
-
-          console.log(colors[mode], timeWording, text);
+      app.get("/getMac", async (req, res) => {
+        try {
+          res.send(JSON.stringify(await getMac()));
+        } catch (e) {
+          console.log(e);
+          res.send(JSON.stringify({ message: "error : " + e.message }));
         }
+      });
 
-        colorLog(req.body.color, req.body.message);
-        await MONGOLOCALC.db(`miro81`).collection(collection).insertOne({
-          date: new Date(),
-          message: req.body.message
-        });
+      app.post("/log", async (req, res) => {
+        try {
+          if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
+            throw new Error("invaild post, must be text");
+          }
 
-        res.send(JSON.stringify({ message: "done" }));
-      } catch (e) {
-        res.send(JSON.stringify({ message: "error : " + e.message }));
-      }
-    });
+          const colorLog = function (mode, text) {
+            const colors = {
+              red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
+              yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
+              cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
+            };
+            const now = new Date();
+            const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
+            let timeWording;
+
+            timeWording = '';
+            timeWording += String(now.getFullYear());
+            timeWording += '-';
+            timeWording += zeroAddition(now.getMonth() + 1);
+            timeWording += '-';
+            timeWording += zeroAddition(now.getDate());
+            timeWording += ' ';
+            timeWording += zeroAddition(now.getHours());
+            timeWording += ':';
+            timeWording += zeroAddition(now.getMinutes());
+            timeWording += ':';
+            timeWording += zeroAddition(now.getSeconds());
+
+            console.log(colors[mode], timeWording, text);
+          }
+
+          colorLog(req.body.color, req.body.message);
+          await MONGOLOCALC.db(`miro81`).collection(collection).insertOne({
+            date: new Date(),
+            message: req.body.message
+          });
+
+          res.send(JSON.stringify({ message: "done" }));
+        } catch (e) {
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+    }
+
 
     // set network monitoring
-
     Ghost.intervals.monitorIntervalId = null;
-    pastMonitor = [];
-    intervalFunc = async () => {
+    Ghost.intervals.monitorPast = {};
+    getInfoFromInterFace = async (interface, filtering = false) => {
       try {
-        const data = await getMac();
+        if (!Array.isArray(Ghost.intervals.monitorPast[interface])) {
+          Ghost.intervals.monitorPast[interface] = [];
+        }
+        const data = await getMac(interface);
         let index;
         let alive;
         let isSame;
         let add, subtract;
         let report;
         let message;
-        let hibyeArr;
         let thisMember;
 
         alive = [];
         messages = [];
-        for (let mac in data) {
-          alive.push(mac);
+        if (!filtering) {
+          for (let mac in data) {
+            alive.push(mac);
+          }
+        } else {
+          for (let mac in data) {
+            index = map.findIndex((obj) => { return obj.mac === mac });
+            if (index !== -1) {
+              alive.push(mac);
+            }
+          }
         }
 
-        isSame = (alive.length === pastMonitor.length);
+        isSame = (alive.length === Ghost.intervals.monitorPast[interface].length);
         if (isSame) {
           for (let mac of alive) {
-            if (!pastMonitor.includes(mac)) {
+            if (!Ghost.intervals.monitorPast[interface].includes(mac)) {
               isSame = false;
               break;
             }
           }
         }
 
+        report = {
+          alive: macToName(alive, data),
+          unknown: macToName(alive, data).filter((str) => { return /^unknown/i.test(str); }),
+        };
+
         if (!isSame) {
           add = [];
           for (let mac of alive) {
-            if (!pastMonitor.includes(mac)) {
+            if (!Ghost.intervals.monitorPast[interface].includes(mac)) {
               add.push(mac);
             }
           }
           subtract = [];
-          for (let mac of pastMonitor) {
+          for (let mac of Ghost.intervals.monitorPast[interface]) {
             if (!alive.includes(mac)) {
               subtract.push(mac);
             }
           }
 
-          report = {
-            alive: macToName(alive, data),
-            add: macToName(add, data),
-            subtract: macToName(subtract, data),
-            unknown: macToName(alive, data).filter((str) => { return /^unknown/i.test(str); }),
-          };
-          message = "사무실 네트워크 변경 감지 : " + JSON.stringify(report, null, 2);
-          await messageLog(message);
-
-          hibyeArr = [];
-          for (let mac of add) {
-            index = map.findIndex((obj) => { return obj.mac === mac });
-            if (index !== -1) {
-              if (typeof map[index].memid === "string") {
-                thisMember = members.find((obj) => { return obj.id === map[index].memid });
-                hibyeArr.push(`${thisMember.name} ${thisMember.title}님, 안녕하세요!`);
-              }
-            }
-          }
-          for (let mac of subtract) {
-            index = map.findIndex((obj) => { return obj.mac === mac });
-            if (index !== -1) {
-              if (typeof map[index].memid === "string") {
-                thisMember = members.find((obj) => { return obj.id === map[index].memid });
-                hibyeArr.push(`${thisMember.name} ${thisMember.title}님, 안녕히 가세요.`);
-              }
-            }
-          }
-
-          for (let m of hibyeArr) {
-            await messageLog(m);
-            await sleep(3000);
-          }
+          report.add = macToName(add, data);
+          report.subtract = macToName(subtract, data);
         }
 
-        pastMonitor = equalJson(JSON.stringify(alive));
+        Ghost.intervals.monitorPast[interface] = equalJson(JSON.stringify(alive));
+
+        return report;
 
       } catch (e) {
         console.log(e);
       }
     }
+    intervalFunc = async () => {
+      try {
+        let rawInterfaces;
+        let rawInterfacesKeys, rawInterfacesValues;
+        let totalReport;
+
+        rawInterfaces = os.networkInterfaces();
+        rawInterfacesKeys = Object.keys(rawInterfaces);
+        rawInterfacesValues = rawInterfacesKeys.map((key) => { return rawInterfaces[key]; });
+        rawInterfacesKeys = rawInterfacesKeys.filter((key) => {
+          return key !== "lo" && !(/^w/i.test(key) && rawInterfacesValues[key].some((obj) => { return /^172/.test(obj.address) }));
+        });
+
+        console.log(rawInterfacesKeys);
+
+        totalReport = {};
+        for (let interface of rawInterfacesKeys) {
+          totalReport[interface] = await getInfoFromInterFace(interface, /^w/i.test(interface));
+        }
+
+        await messageLog(`네트워크 상태\n${JSON.stringify(totalReport, null, 2)}`);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+
     intervalSetting = () => {
       const now = new Date();
       let dateKey;

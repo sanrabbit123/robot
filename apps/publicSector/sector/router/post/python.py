@@ -3,9 +3,7 @@ import json
 
 async def postPython(request, mongoConnection):
     data = await request.post()
-    print(data)
-    res = await requestSystem("https://home-liaison.xyz:3000/" + data["to"], data["json"])
-    print(res)
+    res = await requestSystem("https://home-liaison.xyz:3000/" + data["to"], json.loads(data["json"]))
     return res
 
 => @routes.post("/python")

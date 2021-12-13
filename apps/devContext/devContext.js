@@ -200,12 +200,20 @@ DevContext.prototype.launching = async function () {
     */
 
 
-    
+    const os = require("os")
 
+    let rawInterfaces;
+    let rawInterfacesKeys, rawInterfacesValues;
+    let totalReport;
 
+    rawInterfaces = os.networkInterfaces();
+    rawInterfacesKeys = Object.keys(rawInterfaces);
+    rawInterfacesValues = rawInterfacesKeys.map((key) => { return rawInterfaces[key]; });
+    rawInterfacesKeys = rawInterfacesKeys.filter((key) => {
+      return !/^lo/i.test(key) && !(/^w/i.test(key) && rawInterfacesValues[key].some((obj) => { return /^172/.test(obj.address) }));
+    });
 
-
-
+    console.log(rawInterfacesKeys);
 
 
 
