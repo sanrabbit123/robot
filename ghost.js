@@ -4265,6 +4265,7 @@ Ghost.prototype.smsLaunching = async function () {
 
 Ghost.prototype.logMonitorServer = async function () {
   const instance = this;
+  const os = require(`os`);
   const members = require(`${process.cwd()}/apps/memberObj.js`);
   const { map } = this.address.officeinfo;
   const { pureServer, shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
@@ -4277,18 +4278,21 @@ Ghost.prototype.logMonitorServer = async function () {
     const app = new PureServer();
     const getMac = async function () {
       try {
+        let rawInterfaces;
+        let rawInterfacesKeys, rawInterfacesValues;
+        let interfaceTargetIndex;
         let networkInterface;
         let stdout, rawArr, selfMac, selfIp, tempArr, tempMatrix, tong, tempObj;
 
+        rawInterfaces = os.networkInterfaces();
+        rawInterfacesKeys = Object.keys(rawInterfaces);
+        rawInterfacesValues = rawInterfacesKeys.map((key) => { return rawInterfaces[key]; });
+        interfaceTargetIndex = rawInterfacesValues.findIndex((arr) => { return arr.some((obj) => { return obj.mac === instance.address.officeinfo.ghost.monitor.mac }); });
+        networkInterface = rawInterfacesKeys[interfaceTargetIndex];
 
+        console.log(networkInterface);
 
-
-
-
-
-
-
-        stdout = await shellExec(`arp-scan -I enx00e04c6802c9 --localnet`);
+        stdout = await shellExec(`arp-scan -I ${networkInterface} --localnet`);
         rawArr = stdout.split("\n");
 
         rawArr = rawArr.slice(0, rawArr.findIndex((str) => { return str.trim() === '' }));
