@@ -5,10 +5,15 @@ import pprint
 import re
 import json
 
-async def requestSystem(url):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            return (await resp.text()).strip()
+async def requestSystem(url, data={}):
+    if len(data.keys()) == 0:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                return (await resp.text()).strip()
+    else:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=data) as resp:
+                return (await resp.json())
 
 def returnStaticFolder():
     dic = {}

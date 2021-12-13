@@ -1096,6 +1096,14 @@ BillMaker.prototype.readBill = async function (collection, whereQuery, option = 
   }
 }
 
+BillMaker.prototype.returnDummies = function (collection, subject) {
+  const instance = this;
+  const map = require(`${this.mapDir}/${collection}.js`);
+  let dummy;
+  dummy = map.sub(subject);
+  return dummy;
+}
+
 BillMaker.prototype.returnBillDummies = function (subject) {
   const instance = this;
   const map = require(`${this.mapDir}/generalBill.js`);

@@ -2048,6 +2048,12 @@ ReceiptRouter.prototype.rou_post_contractCancel = function () {
   let obj = {};
   obj.link = "/contractCancel";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.bilid === undefined) {
         throw new Error("invaild post");
@@ -2095,21 +2101,9 @@ ReceiptRouter.prototype.rou_post_contractCancel = function () {
         await sleep(timeConst);
       }
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify(report));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_contractCancel): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -2124,22 +2118,16 @@ ReceiptRouter.prototype.rou_post_returnBankCode = function () {
   let obj = {};
   obj.link = "/returnBankCode";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify(bankCode));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_returnBankCode): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
@@ -2155,6 +2143,12 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
   let obj = {};
   obj.link = "/designerCalculation";
   obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
       if (req.body.supply === undefined || req.body.classification === undefined || req.body.percentage === undefined || req.body.cliid === undefined) {
         throw new Error("invaild post");
@@ -2185,12 +2179,6 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
 
       [ calculate, commission ] = bill.designerCalculation(supply, classification, percentage, client, { toArray: true });
 
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
       if (req.body.mode === "commission") {
         res.send(JSON.stringify({ commission }));
       } else if (req.body.mode === "total") {
@@ -2200,12 +2188,35 @@ ReceiptRouter.prototype.rou_post_designerCalculation = function () {
       }
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_designerCalculation): " + e.message).catch((e) => { console.log(e); });
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
+ReceiptRouter.prototype.rou_post_returnDummy = function () {
+  const instance = this;
+  const bill = this.bill;
+  const { equalJson, sleep } = this.mother;
+  let obj = {};
+  obj.link = "/returnDummy";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.collection === undefined || req.body.subject === undefined) {
+        throw new Error("invaild post : must be { collection, subject }");
+      }
+      const { collection, subject } = req.body;
+      const dummy = bill.returnDummies(collection, subject);
+      res.send(JSON.stringify(dummy));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_returnDummy): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));
       console.log(e);
     }
