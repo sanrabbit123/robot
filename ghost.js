@@ -4447,6 +4447,7 @@ Ghost.prototype.logMonitorServer = async function () {
             alive: macToName(alive, data),
             add: macToName(add, data),
             subtract: macToName(subtract, data),
+            unknown: macToName(alive, data).filter((str) => { return /^unknown/i.test(str); }),
           };
           message = "사무실 네트워크 변경 감지 : " + JSON.stringify(report, null, 2);
           await messageLog(message);
