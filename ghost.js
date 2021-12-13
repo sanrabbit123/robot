@@ -4277,7 +4277,7 @@ Ghost.prototype.logMonitorServer = async function () {
     const app = new PureServer();
     const getMac = async function () {
       try {
-        const stdout = await shellExec("arp-scan --localnet");
+        const stdout = await shellExec("arp-scan -i enx00e04c6802c9 --localnet");
         let rawArr, selfMac, selfIp, tempArr, tempMatrix, tong, tempObj;
         rawArr = stdout.split("\n");
 
