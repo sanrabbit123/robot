@@ -4468,6 +4468,15 @@ Ghost.prototype.logMonitorServer = async function () {
 
     // routing
     {
+      app.get(instance.address.officeinfo.ghost.monitor.path, async (req, res) => {
+        try {
+          res.send(JSON.stringify({ message: "OK" }));
+        } catch (e) {
+          console.log(e);
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+
       app.get(instance.address.officeinfo.ghost.monitor.path + "/getMac", async (req, res) => {
         try {
           res.send(JSON.stringify(await getMac()));

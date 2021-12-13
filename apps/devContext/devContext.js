@@ -204,7 +204,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    console.log((await requestSystem("http://172.30.1.13:8080/subway")).data)
+    await messageLog("안녕");
 
 
 
