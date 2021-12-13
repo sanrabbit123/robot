@@ -1005,7 +1005,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   const instance = this;
   const { totalMother, ea } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma, findByAttribute, uniqueValue } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma, findByAttribute, uniqueValue, equalJson } = GeneralJs;
   const titleWording = "홈리에종\n시공 견적서";
   const ultimateTotalClassName = "ultimateTotal";
   const won = '원';
@@ -1066,6 +1066,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let contextmenuTextTop;
   let contextmenuSize;
   let makeWhiteBlock;
+  let blockSum, tempBlock;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1701,7 +1702,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     document.querySelector('.' + ultimateTotalClassName).setAttribute("ultimate", String(ultimateTotal));
   }
 
-  makeWhiteBlock = (item, num) => {
+  makeWhiteBlock = (detailField, item, num) => {
     // total
     whiteBlock = createNode({
       mother: detailField,
@@ -1715,7 +1716,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
         width: withOut(whitePaddingLeft * 2, ea),
         borderRadius: String(8) + "px",
         boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-        marginBottom: String(num !== items.length - 1 ? whiteBlockMarginBottom : whiteBlockMarginBottomLast) + ea,
+        marginBottom: String(whiteBlockMarginBottom) + ea,
         background: colorChip.white,
         paddingTop: String(whitePaddingTop) + ea,
         paddingBottom: String(whitePaddingTop) + ea,
@@ -1961,7 +1962,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       ]
     });
 
-    return priceSum;
+    return [ whiteBlock, priceSum ];
   }
 
   greenArea = createNode({
@@ -2049,6 +2050,143 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
   detailField = createNode({
     mother: contentsField,
+    event: {
+      contextmenu: function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const self = this;
+        const contextMenu = [
+          {
+            name: "중분류 추가",
+            event: async function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              try {
+                let response;
+                let itemDummy, detailDummy;
+                let block, sum;
+
+                do {
+                  response = window.prompt("중분류의 명칭을 알려주세요!");
+                } while (typeof response !== "string" || response === '');
+
+                itemDummy = equalJson(JSON.stringify(instance.dummy.item));
+                itemDummy.name = response;
+
+                detailDummy = equalJson(JSON.stringify(instance.dummy.detail));
+                detailDummy.description = "비고";
+                detailDummy.name = "품명 입력";
+                detailDummy.unit.ea = "개";
+                detailDummy.unit.number = 1;
+                detailDummy.unit.amount.supply = 10000;
+                detailDummy.unit.amount.vat = 1000;
+                detailDummy.unit.amount.consumer = 11000;
+                itemDummy.detail.unshift(detailDummy);
+
+                for (let block of instance.whiteBlocks) {
+                  block.style.marginBottom = String(whiteBlockMarginBottom) + ea;
+                }
+
+                [ block, sum ] = makeWhiteBlock(self, itemDummy, instance.whiteBlocks.length);
+                block.style.marginBottom = String(whiteBlockMarginBottomLast) + ea;
+                instance.whiteBlocks.push(block);
+                amountSync(block.children[1]);
+
+                self.parentNode.removeChild(self.parentNode.lastChild);
+                self.parentNode.removeChild(self.parentNode.lastChild);
+              } catch (e) {
+                console.log(e);
+              }
+            }
+          },
+        ];
+        let cancelBack;
+        let menuTong;
+
+        cancelBack = createNode({
+          mother: this.parentNode,
+          events: [
+            {
+              type: [ "click", "contextmenu" ],
+              event: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                self.parentNode.removeChild(self.parentNode.lastChild);
+                self.parentNode.removeChild(self.parentNode.lastChild);
+              }
+            }
+          ],
+          style: {
+            position: "fixed",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(100) + '%',
+            background: "transparent",
+            zIndex: String(1),
+          }
+        });
+
+        menuTong = createNode({
+          mother: this.parentNode,
+          event: {
+            contextmenu: function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            },
+          },
+          style: {
+            position: "absolute",
+            top: String(e.offsetY) + ea,
+            left: String(e.offsetX) + ea,
+            width: String(contextmenuWidth) + ea,
+            zIndex: String(1),
+            animation: "fadeuplite 0.2s ease forwards",
+          }
+        });
+
+        for (let obj of contextMenu) {
+          createNode({
+            mother: menuTong,
+            event: {
+              contextmenu: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+              },
+              click: obj.event
+            },
+            style: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              background: colorChip.gradientGreen,
+              borderRadius: String(3) + "px",
+              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+              width: String(100) + '%',
+              height: String(contextmenuHeight) + ea,
+              marginBottom: String(contextmenuBetween) + ea,
+              cursor: "pointer",
+            },
+            children: [
+              {
+                text: obj.name,
+                style: {
+                  display: "inline-block",
+                  position: "relative",
+                  fontSize: String(contextmenuSize) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.white,
+                  textAlign: "center",
+                  top: String(contextmenuTextTop) + ea,
+                }
+              }
+            ]
+          });
+        }
+
+      }
+    },
     style: {
       position: "relative",
       display: "block",
@@ -2076,12 +2214,16 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     }
   });
 
+  this.whiteBlocks = [];
   totalSum = 0;
   num = 0;
   for (let item of items) {
-    totalSum += makeWhiteBlock(item, num);
+    [ tempBlock, blockSum ] = makeWhiteBlock(detailField, item, num);
+    totalSum += blockSum;
+    this.whiteBlocks.push(tempBlock);
     num++;
   }
+  tempBlock.style.marginBottom = String(whiteBlockMarginBottomLast) + ea;
 
   // total sum contents
   createNode({
