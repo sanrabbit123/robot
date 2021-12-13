@@ -19,7 +19,7 @@ const Ghost = function () {
   this.alien = process.cwd() + "/alien.js";
   this.ghost = process.cwd() + "/ghost.js";
   this.robot = process.cwd() + "/robot.js";
-  this.formidable = require('formidable');
+  this.formidable = require("formidable");
   this.webHook = {
     url: "https://wh.jandi.com/connect-api/webhook/20614472/1c7efd1bd02b1e237092e1b8a694e844",
     headers: {
@@ -35,23 +35,7 @@ const Ghost = function () {
     },
     channel: "#error_log"
   };
-  this.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.macMap[ADDRESS.officeinfo.ghost.monitor.mac] + ":" + String(ADDRESS.officeinfo.ghost.monitor.port);
-
-  if (process.argv[2] !== "log") {
-    const instance = this;
-    const { shellExec, shellLink, requestSystem, fileSystem } = this.mother;
-    requestSystem(this.innerMonitorUrl + "/getMac").then((res) => {
-      const { data } = res;
-      ADDRESS.officeinfo.macMap = data;
-      instance.address = ADDRESS;
-      instance.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.macMap[ADDRESS.officeinfo.ghost.monitor.mac] + ":" + String(ADDRESS.officeinfo.ghost.monitor.port);
-      return fileSystem(`write`, [ `${process.cwd()}/apps/infoObj.js`, `module.exports = ${JSON.stringify(ADDRESS, null, 2)}` ]);
-    }).then(() => {
-      return shellExec(`node ${shellLink(process.cwd())}/robot.js infoUpdate;`);
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
+  this.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.ghost.host + ":" + String(ADDRESS.officeinfo.ghost.monitor.port) + ADDRESS.officeinfo.ghost.monitor.path;
 }
 
 Ghost.timeouts = {};
@@ -4266,16 +4250,20 @@ Ghost.prototype.smsLaunching = async function () {
 Ghost.prototype.logMonitorServer = async function () {
   const instance = this;
   const os = require(`os`);
+  const https = require("https");
+  const express = require("express");
+  const multer = require("multer");
+  const useragent = require("express-useragent");
   const members = require(`${process.cwd()}/apps/memberObj.js`);
   const { map } = this.address.officeinfo;
-  const { pureServer, shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
+  const { shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
   const logCollection = "messageTotalLog";
   try {
-
+    const PORT = this.address.officeinfo.ghost.monitor.port;
     const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     await MONGOLOCALC.connect();
-    const PureServer = pureServer("class");
-    const app = new PureServer();
+    const app = express();
+    const multiForms = multer();
     const getMac = async function (networkInterface = null) {
       try {
         let rawInterfaces;
@@ -4348,6 +4336,38 @@ Ghost.prototype.logMonitorServer = async function () {
     let intervalSetting;
     let getInfoFromInterFace;
     let totalReports;
+    let pems, pemsLink;
+    let certDir, keyDir, caDir;
+
+    app.use(useragent.express());
+    app.use(express.json({ limit : "50mb" }));
+    app.use(multiForms.array());
+    app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+    pems = {};
+    pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
+
+    certDir = await fileSystem(`readDir`, [ `${pemsLink}/cert` ]);
+    keyDir = await fileSystem(`readDir`, [ `${pemsLink}/key` ]);
+    caDir = await fileSystem(`readDir`, [ `${pemsLink}/ca` ]);
+
+    for (let i of certDir) {
+      if (i !== `.DS_Store`) {
+        pems.cert = await fileSystem(`read`, [ `${pemsLink}/cert/${i}` ]);
+      }
+    }
+    for (let i of keyDir) {
+      if (i !== `.DS_Store`) {
+        pems.key = await fileSystem(`read`, [ `${pemsLink}/key/${i}` ]);
+      }
+    }
+    pems.ca = [];
+    for (let i of caDir) {
+      if (i !== `.DS_Store`) {
+        pems.ca.push(await fileSystem(`read`, [ `${pemsLink}/ca/${i}` ]));
+      }
+    }
+    pems.allowHTTP1 = true;
 
     // set network monitoring
     Ghost.intervals.monitorIntervalId = null;
@@ -4448,16 +4468,7 @@ Ghost.prototype.logMonitorServer = async function () {
 
     // routing
     {
-      app.get("/", async (req, res) => {
-        try {
-          res.send(JSON.stringify({ message: "It works!" }));
-        } catch (e) {
-          console.log(e);
-          res.send(JSON.stringify({ message: "error : " + e.message }));
-        }
-      });
-
-      app.get("/getMac", async (req, res) => {
+      app.get(instance.address.officeinfo.ghost.monitor.path + "/getMac", async (req, res) => {
         try {
           res.send(JSON.stringify(await getMac()));
         } catch (e) {
@@ -4466,7 +4477,7 @@ Ghost.prototype.logMonitorServer = async function () {
         }
       });
 
-      app.get("/subway", async (req, res) => {
+      app.get(instance.address.officeinfo.ghost.monitor.path + "/subway", async (req, res) => {
         try {
           res.send(JSON.stringify(await totalReports()));
         } catch (e) {
@@ -4475,7 +4486,7 @@ Ghost.prototype.logMonitorServer = async function () {
         }
       });
 
-      app.post("/log", async (req, res) => {
+      app.post(instance.address.officeinfo.ghost.monitor.path + "/log", async (req, res) => {
         try {
           if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
             throw new Error("invaild post, must be text");
@@ -4551,7 +4562,7 @@ Ghost.prototype.logMonitorServer = async function () {
     }
 
     // server launching
-    pureServer("listen", app, 8080);
+    https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
 
   } catch (e) {
     console.log(e);
