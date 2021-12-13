@@ -1058,6 +1058,11 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let makeDetailBlock;
   let valueArr;
   let amountSync;
+  let contextmenuBetween, contextmenuBetweenTop;
+  let contextmenuWidth;
+  let contextmenuHeight;
+  let contextmenuTextTop;
+  let contextmenuSize;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1118,6 +1123,15 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
   orderWordingSize = 13;
   orderWordingBottom = 4;
+
+  contextmenuWidth = 90;
+  contextmenuHeight = 30;
+  contextmenuTextTop = 0;
+  contextmenuSize = 14;
+  contextmenuBetween = 4;
+  contextmenuBetweenTop = 6;
+
+  amountSync = {};
 
   innerPaddingTop = realTopMargin - topMargin;
 
@@ -1422,16 +1436,129 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
               console.log(e);
             }
           },
-          mouseenter: function (e) {
-            const index = Number(this.getAttribute("index"));
-            if (index === 0) {
-              this.querySelector("svg").style.opacity = String(0.5);
-            }
-          },
-          mouseleave: function (e) {
-            const index = Number(this.getAttribute("index"));
-            if (index === 0) {
-              this.querySelector("svg").style.opacity = String(1);
+          contextmenu: async function (e) {
+            const self = this;
+            const column = this.getAttribute("column");
+            if (column === "checkBox") {
+              e.preventDefault();
+              e.stopPropagation();
+              try {
+                const contextMenu = [
+                  {
+                    name: "항목 삭제",
+                    event: async function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      try {
+                        const areaMother = self.parentElement.parentElement;
+                        self.parentElement.remove();
+                        setQueue(() => {
+                          amountSync(areaMother);
+                        });
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+                  },
+                ];
+                let cancelBack;
+                let menuTong;
+                let rect;
+                let tongTopMargin;
+
+                cancelBack = createNode({
+                  mother: this,
+                  event: {
+                    click: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    },
+                    contextmenu: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      self.removeChild(self.lastChild);
+                      self.removeChild(self.lastChild);
+                    },
+                  },
+                  style: {
+                    position: "fixed",
+                    top: String(0),
+                    left: String(0),
+                    width: String(100) + '%',
+                    height: String(100) + '%',
+                    background: "transparent",
+                    zIndex: String(1),
+                    transition: "all 0s ease",
+                  }
+                });
+
+                rect = cancelBack.getBoundingClientRect();
+                cancelBack.style.top = String(-1 * rect.top) + ea;
+                cancelBack.style.left = String(-1 * rect.left) + ea;
+                cancelBack.style.width = String(window.innerWidth) + ea;
+                cancelBack.style.height = String(window.innerHeight) + ea;
+
+                menuTong = createNode({
+                  mother: this,
+                  event: {
+                    contextmenu: function (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    },
+                  },
+                  style: {
+                    position: "absolute",
+                    top: String(self.querySelector("svg").getBoundingClientRect().top - self.getBoundingClientRect().top + self.querySelector("svg").getBoundingClientRect().height + contextmenuBetweenTop) + ea,
+                    left: String(self.querySelector("svg").getBoundingClientRect().left - self.getBoundingClientRect().left) + ea,
+                    width: String(contextmenuWidth) + ea,
+                    zIndex: String(1),
+                    animation: "fadeuplite 0.2s ease forwards",
+                  }
+                });
+
+                for (let obj of contextMenu) {
+                  createNode({
+                    mother: menuTong,
+                    event: {
+                      contextmenu: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      },
+                      click: obj.event
+                    },
+                    style: {
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      position: "relative",
+                      background: colorChip.gradientGreen,
+                      borderRadius: String(3) + "px",
+                      boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+                      width: String(100) + '%',
+                      height: String(contextmenuHeight) + ea,
+                      marginBottom: String(contextmenuBetween) + ea,
+                    },
+                    children: [
+                      {
+                        text: obj.name,
+                        style: {
+                          display: "inline-block",
+                          position: "relative",
+                          fontSize: String(contextmenuSize) + ea,
+                          fontWeight: String(400),
+                          color: colorChip.white,
+                          textAlign: "center",
+                          top: String(contextmenuTextTop) + ea,
+                        }
+                      }
+                    ]
+                  });
+                }
+              } catch (e) {
+                console.log(e);
+              }
             }
           },
           selectstart: (e) => { e.preventDefault(); }
@@ -1765,7 +1892,6 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
       },
       children: [
         {
-          class: [ "hoverDefault_lite" ],
           event: {
             click: function (e) {
               makeDetailBlock(this.parentNode.parentNode, 10000, "품명 입력", 1, "개", 10000, "비고", false);

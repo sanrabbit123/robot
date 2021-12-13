@@ -4267,7 +4267,7 @@ Ghost.prototype.logMonitorServer = async function () {
   const instance = this;
   const members = require(`${process.cwd()}/apps/memberObj.js`);
   const { map } = this.address.officeinfo;
-  const { pureServer, shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, equalJson, errorLog, sleep, messageSend } = this.mother;
+  const { pureServer, shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
   const logCollection = "messageTotalLog";
   try {
 
@@ -4301,7 +4301,7 @@ Ghost.prototype.logMonitorServer = async function () {
         return null;
       }
     }
-    const macToName = function (macArr) {
+    const macToName = function (macArr, data) {
       let index;
       let message;
       let nameArr;
@@ -4313,12 +4313,12 @@ Ghost.prototype.logMonitorServer = async function () {
         if (index !== -1) {
           if (typeof map[index].memid === "string") {
             thisMember = members.find((obj) => { return obj.id === map[index].memid });
-            message = `${thisMember.name} ${thisMember.title} (${mac})`;
+            message = `${thisMember.name} ${thisMember.title} (${mac}) => ${data[mac]}`;
           } else {
-            message = `${map[index].name} (${mac})`;
+            message = `${map[index].name} (${mac}) => ${data[mac]}`;
           }
         } else {
-          message = `unknown (${mac})`;
+          message = `unknown (${mac}) => ${data[mac]}`;
         }
         nameArr.push(message);
       }
@@ -4326,16 +4326,10 @@ Ghost.prototype.logMonitorServer = async function () {
       return nameArr;
     }
     const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
-    const defaultInterval = 60 * 1000;
+    const defaultInterval = 5 * 60 * 1000;
     const interval = {
-      d080: 60 * 1000, // 60
-      d090: 30 * 1000, // 120
-      d100: 60 * 1000, // 60
-      d110: 60 * 60 * 1000, // 6
-      d160: 5 * 60 * 1000, // 24
-      d180: 30 * 1000, // 120
-      d190: 60 * 1000, // 120
-      d210: 60 * 60 * 1000, // 12
+      d080: 5 * 60 * 1000,
+      d210: 60 * 60 * 1000,
     };
     let pastMonitor;
     let intervalFunc;
@@ -4422,10 +4416,7 @@ Ghost.prototype.logMonitorServer = async function () {
         alive = [];
         messages = [];
         for (let mac in data) {
-          index = map.findIndex((obj) => { return obj.mac === mac });
-          if (index !== -1) {
-            alive.push(mac);
-          }
+          alive.push(mac);
         }
 
         isSame = (alive.length === pastMonitor.length);
@@ -4453,12 +4444,12 @@ Ghost.prototype.logMonitorServer = async function () {
           }
 
           report = {
-            alive: macToName(alive),
-            add: macToName(add),
-            subtract: macToName(subtract),
+            alive: macToName(alive, data),
+            add: macToName(add, data),
+            subtract: macToName(subtract, data),
           };
           message = "사무실 네트워크 변경 감지 : " + JSON.stringify(report, null, 2);
-          await errorLog(message);
+          await messageLog(message);
 
           hibyeArr = [];
           for (let mac of add) {
@@ -4481,7 +4472,7 @@ Ghost.prototype.logMonitorServer = async function () {
           }
 
           for (let m of hibyeArr) {
-            await messageSend({ text: m, channel: "#error_log", voice: true });
+            await messageLog(m);
             await sleep(3000);
           }
         }
