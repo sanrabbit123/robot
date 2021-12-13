@@ -4276,21 +4276,20 @@ Ghost.prototype.logMonitorServer = async function () {
     await MONGOLOCALC.connect();
     const PureServer = pureServer("class");
     const app = new PureServer();
-    const getMac = async function () {
+    const getMac = async function (networkInterface = null) {
       try {
         let rawInterfaces;
         let rawInterfacesKeys, rawInterfacesValues;
         let interfaceTargetIndex;
-        let networkInterface;
         let stdout, rawArr, selfMac, selfIp, tempArr, tempMatrix, tong, tempObj;
 
-        rawInterfaces = os.networkInterfaces();
-        rawInterfacesKeys = Object.keys(rawInterfaces);
-        rawInterfacesValues = rawInterfacesKeys.map((key) => { return rawInterfaces[key]; });
-        interfaceTargetIndex = rawInterfacesValues.findIndex((arr) => { return arr.some((obj) => { return obj.mac === instance.address.officeinfo.ghost.monitor.mac }); });
-        networkInterface = rawInterfacesKeys[interfaceTargetIndex];
-
-        console.log(networkInterface);
+        if (networkInterface === null) {
+          rawInterfaces = os.networkInterfaces();
+          rawInterfacesKeys = Object.keys(rawInterfaces);
+          rawInterfacesValues = rawInterfacesKeys.map((key) => { return rawInterfaces[key]; });
+          interfaceTargetIndex = rawInterfacesValues.findIndex((arr) => { return arr.some((obj) => { return obj.mac === instance.address.officeinfo.ghost.monitor.mac }); });
+          networkInterface = rawInterfacesKeys[interfaceTargetIndex];
+        }
 
         stdout = await shellExec(`arp-scan -I ${networkInterface} --localnet`);
         rawArr = stdout.split("\n");
