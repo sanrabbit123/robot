@@ -1562,9 +1562,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "안정은",
-    //     designer: "김경수",
-    //     link: "https://drive.google.com/drive/folders/1_gN-IQzRWUR8Y-0cJSlDIdPnFife5v6i",
+    //     client: "정혜민",
+    //     designer: "전경화",
+    //     link: "https://drive.google.com/drive/folders/10T8J57Ue5krIY7WFvSzLB0RvUi2uLFdz",
     //     pay: true
     //   },
     // ]);

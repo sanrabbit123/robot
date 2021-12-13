@@ -4326,9 +4326,9 @@ Ghost.prototype.logMonitorServer = async function () {
       return nameArr;
     }
     const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
-    const defaultInterval = 5 * 60 * 1000;
+    const defaultInterval = 10 * 60 * 1000;
     const interval = {
-      d080: 5 * 60 * 1000,
+      d080: 10 * 60 * 1000,
       d210: 60 * 60 * 1000,
     };
     let pastMonitor;

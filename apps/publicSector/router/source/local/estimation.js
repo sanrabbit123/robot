@@ -1005,10 +1005,12 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   const instance = this;
   const { totalMother, ea } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma, findByAttribute } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma, findByAttribute, uniqueValue } = GeneralJs;
   const titleWording = "홈리에종\n시공 견적서";
   const ultimateTotalClassName = "ultimateTotal";
   const won = '원';
+  const whiteDetailBlockIdConst = "whiteDetailBlock_";
+  const dragConst = "dragData";
   let titleArea, contentsArea, greenArea;
   let titleWidth;
   let topMargin;
@@ -1063,6 +1065,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let contextmenuHeight;
   let contextmenuTextTop;
   let contextmenuSize;
+  let makeWhiteBlock;
 
   titleWidth = 200;
   topMargin = 52;
@@ -1132,6 +1135,12 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   contextmenuBetweenTop = 6;
 
   amountSync = {};
+  greenArea = {};
+  titleArea = {};
+  contentsArea = {};
+  contentsField = {};
+  detailField = {};
+  sumField = {};
 
   innerPaddingTop = realTopMargin - topMargin;
 
@@ -1149,10 +1158,57 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     valueArr.push(description);
 
     whiteDetailBlock = createNode({
+      id: whiteDetailBlockIdConst + uniqueValue("hex"),
       mother: whiteTableArea,
       attribute: {
         consumer: String(consumer),
         number: String(number),
+        draggable: "true",
+      },
+      event: {
+        dragstart: function (e) {
+          e.dataTransfer.setData(dragConst, this.id);
+        },
+        dragenter: function (e) {
+          e.preventDefault();
+          this.style.marginBottom = String(tableHeight) + ea;
+          this.style.background = colorChip.liteGreen;
+          this.nextElementSibling.style.borderTop = "1px solid " + colorChip.gray3;
+          this.nextElementSibling.style.background = colorChip.liteGreen;
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+          this.style.marginBottom = "";
+          this.style.background = "";
+          this.nextElementSibling.style.borderTop = "0px solid " + colorChip.gray3;
+          this.nextElementSibling.style.background = "";
+        },
+        dragover: function (e) {
+          e.preventDefault();
+          this.style.marginBottom = String(tableHeight) + ea;
+          this.style.background = colorChip.liteGreen;
+          this.nextElementSibling.style.borderTop = "1px solid " + colorChip.gray3;
+          this.nextElementSibling.style.background = colorChip.liteGreen;
+        },
+        drop: function (e) {
+          e.preventDefault();
+          const from = document.getElementById(e.dataTransfer.getData(dragConst));
+          const fromArea = from.parentElement;
+          const thisArea = this.parentElement;
+          this.style.marginBottom = "";
+          this.style.background = "";
+          this.nextElementSibling.style.borderTop = "0px solid " + colorChip.gray3;
+          this.nextElementSibling.style.background = "";
+          this.parentNode.insertBefore(from, this.nextElementSibling);
+          if (thisArea !== fromArea) {
+            setQueue(() => {
+              amountSync(thisArea);
+              setQueue(() => {
+                amountSync(fromArea);
+              });
+            });
+          }
+        }
       },
       style: {
         display: "block",
@@ -1561,7 +1617,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
               }
             }
           },
-          selectstart: (e) => { e.preventDefault(); }
+          selectstart: (e) => { e.preventDefault(); },
         },
         style: {
           display: "inline-flex",
@@ -1643,6 +1699,269 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
     }, 0);
     document.querySelector('.' + ultimateTotalClassName).querySelectorAll('b')[1].textContent = autoComma(ultimateTotal);
     document.querySelector('.' + ultimateTotalClassName).setAttribute("ultimate", String(ultimateTotal));
+  }
+
+  makeWhiteBlock = (item, num) => {
+    // total
+    whiteBlock = createNode({
+      mother: detailField,
+      event: {
+        contextmenu: function (e) {
+          e.stopPropagation();
+        }
+      },
+      style: {
+        display: "block",
+        width: withOut(whitePaddingLeft * 2, ea),
+        borderRadius: String(8) + "px",
+        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
+        marginBottom: String(num !== items.length - 1 ? whiteBlockMarginBottom : whiteBlockMarginBottomLast) + ea,
+        background: colorChip.white,
+        paddingTop: String(whitePaddingTop) + ea,
+        paddingBottom: String(whitePaddingTop) + ea,
+        paddingLeft: String(whitePaddingLeft) + ea,
+        paddingRight: String(whitePaddingLeft) + ea,
+      }
+    });
+
+    // title area
+    whiteTitleArea = createNode({
+      mother: whiteBlock,
+      text: `<b%${String(num + 1)}%b>&nbsp;&nbsp;${item.name}`,
+      style: {
+        display: "block",
+        position: "relative",
+        marginBottom: String(whiteTitleMarginBottom) + ea,
+        fontSize: String(whiteBlockTitleSize) + ea,
+        fontWeight: String(500),
+        color: colorChip.black,
+      },
+      bold: {
+        fontSize: String(whiteBlockTitleSize) + ea,
+        fontWeight: String(300),
+        color: colorChip.green,
+      }
+    });
+
+    // table area
+    whiteTableArea = createNode({
+      mother: whiteBlock,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        height: "auto",
+      },
+    });
+
+    // column row
+    whiteDetailBlock = createNode({
+      mother: whiteTableArea,
+      event: {
+        dragenter: function (e) {
+          e.preventDefault();
+          this.style.marginBottom = String(tableHeight) + ea;
+          this.nextElementSibling.style.borderTop = "1px solid " + colorChip.gray3;
+          this.nextElementSibling.style.background = colorChip.liteGreen;
+        },
+        dragleave: function (e) {
+          e.preventDefault();
+          this.style.marginBottom = "";
+          this.nextElementSibling.style.borderTop = "0px solid " + colorChip.gray3;
+          this.nextElementSibling.style.background = "";
+        },
+        dragover: function (e) {
+          e.preventDefault();
+          this.style.marginBottom = String(tableHeight) + ea;
+          this.nextElementSibling.style.borderTop = "1px solid " + colorChip.gray3;
+          this.nextElementSibling.style.background = colorChip.liteGreen;
+        },
+        drop: function (e) {
+          e.preventDefault();
+          const from = document.getElementById(e.dataTransfer.getData(dragConst));
+          const fromArea = from.parentElement;
+          const thisArea = this.parentElement;
+          this.style.marginBottom = "";
+          this.nextElementSibling.style.borderTop = "0px solid " + colorChip.gray3;
+          this.nextElementSibling.style.background = "";
+          this.parentNode.insertBefore(from, this.nextElementSibling);
+          if (thisArea !== fromArea) {
+            setQueue(() => {
+              amountSync(thisArea);
+              setQueue(() => {
+                amountSync(fromArea);
+              });
+            });
+          }
+        }
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(tableHeight) + ea,
+        border: "1px solid " + colorChip.gray3,
+        borderTopRightRadius: String(5) + "px",
+        borderTopLeftRadius: String(5) + "px",
+        boxSizing: "border-box",
+        background: colorChip.gray0
+      }
+    });
+    for (let i = 0; i < percentages.length; i++) {
+      createNode({
+        mother: whiteDetailBlock,
+        style: {
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          verticalAlign: "top",
+          width: String(percentages[i]) + '%',
+          boxSizing: "border-box",
+          height: String(100) + '%',
+          borderRight: i !== percentages.length - 1 ? "1px solid " + colorChip.gray3 : "",
+        },
+        children: [
+          {
+            text: detailWordings[i],
+            style: {
+              fontSize: String(detailTextSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              position: "relative",
+              top: String(detailTextTop) + ea,
+            }
+          }
+        ]
+      });
+    }
+
+    priceSum = 0;
+
+    for (let { name, unit: { number, ea: unitEa, amount: { consumer } }, description } of item.detail) {
+      price = Math.floor(consumer * number);
+      priceSum += price;
+      makeDetailBlock(whiteTableArea, price, name, number, unitEa, consumer, description, (price === 0));
+    }
+
+    itemDeactive = priceSum === 0;
+
+    // title check
+    createNode({
+      mother: whiteTitleArea,
+      mode: "svg",
+      source: instance.mother.returnCheckBox(!itemDeactive ? colorChip.green : colorChip.gray3, false, true),
+      style: {
+        position: "absolute",
+        top: String(itemCheckTop) + ea,
+        right: String(0),
+        width: String(itemCheckWidth) + ea,
+        background: !itemDeactive ? colorChip.white : colorChip.gray3,
+      }
+    });
+    if (itemDeactive) {
+      whiteTitleArea.style.color = colorChip.deactive;
+      whiteTitleArea.querySelector('b').style.color = colorChip.deactive;
+    }
+
+    // sum row
+    whiteDetailBlock = createNode({
+      mother: whiteTableArea,
+      attribute: {
+        total: String(priceSum)
+      },
+      style: {
+        display: "block",
+        position: "relative",
+        height: String(tableHeight) + ea,
+        borderBottom: "1px solid " + colorChip.gray3,
+        borderRight: "1px solid " + colorChip.gray3,
+        borderLeft: "1px solid " + colorChip.gray3,
+        borderBottomRightRadius: String(5) + "px",
+        borderBottomLeftRadius: String(5) + "px",
+        marginBottom: String(6) + ea,
+        boxSizing: "border-box",
+      },
+      children: [
+        {
+          event: {
+            click: function (e) {
+              makeDetailBlock(this.parentNode.parentNode, 10000, "품명 입력", 1, "개", 10000, "비고", false);
+              this.parentNode.parentNode.insertBefore(this.parentNode.parentNode.lastChild, this.parentNode);
+              amountSync(this.parentNode.parentNode);
+            }
+          },
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "top",
+            width: String(checkBoxPercentage) + '%',
+            boxSizing: "border-box",
+            height: String(100) + '%',
+            borderRight: "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnPlusCircle(colorChip.green),
+              style: {
+                position: "relative",
+                width: String(plusCircleWidth) + ea,
+                top: String(plusCircleTop) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "top",
+            width: String(namePercentage) + '%',
+            boxSizing: "border-box",
+            height: String(100) + '%',
+            borderRight: "1px solid " + colorChip.gray3,
+          },
+          children: [
+            {
+              text: "합계",
+              style: {
+                fontSize: String(detailTextSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(detailTextTop) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "top",
+            width: withOut(checkBoxPercentage + namePercentage, '%'),
+            boxSizing: "border-box",
+            height: String(100) + '%',
+          },
+          children: [
+            {
+              text: autoComma(priceSum) + '원',
+              style: {
+                fontSize: String(detailTextSize) + ea,
+                fontWeight: String(600),
+                color: colorChip.black,
+                position: "relative",
+                top: String(detailTextTop) + ea,
+              }
+            }
+          ]
+        },
+      ]
+    });
+
+    return priceSum;
   }
 
   greenArea = createNode({
@@ -1760,220 +2079,11 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   totalSum = 0;
   num = 0;
   for (let item of items) {
-    whiteBlock = createNode({
-      mother: detailField,
-      style: {
-        display: "block",
-        width: withOut(whitePaddingLeft * 2, ea),
-        borderRadius: String(8) + "px",
-        boxShadow: "0px 3px 13px -9px " + colorChip.shadow,
-        marginBottom: String(num !== items.length - 1 ? whiteBlockMarginBottom : whiteBlockMarginBottomLast) + ea,
-        background: colorChip.white,
-        paddingTop: String(whitePaddingTop) + ea,
-        paddingBottom: String(whitePaddingTop) + ea,
-        paddingLeft: String(whitePaddingLeft) + ea,
-        paddingRight: String(whitePaddingLeft) + ea,
-      }
-    });
-
-    whiteTitleArea = createNode({
-      mother: whiteBlock,
-      text: `<b%${String(num + 1)}%b>&nbsp;&nbsp;${item.name}`,
-      style: {
-        display: "block",
-        position: "relative",
-        marginBottom: String(whiteTitleMarginBottom) + ea,
-        fontSize: String(whiteBlockTitleSize) + ea,
-        fontWeight: String(500),
-        color: colorChip.black,
-      },
-      bold: {
-        fontSize: String(whiteBlockTitleSize) + ea,
-        fontWeight: String(300),
-        color: colorChip.green,
-      }
-    });
-
-    whiteTableArea = createNode({
-      mother: whiteBlock,
-      style: {
-        display: "block",
-        position: "relative",
-        width: String(100) + '%',
-        height: "auto",
-      },
-    });
-
-    whiteDetailBlock = createNode({
-      mother: whiteTableArea,
-      style: {
-        display: "block",
-        position: "relative",
-        height: String(tableHeight) + ea,
-        border: "1px solid " + colorChip.gray3,
-        borderTopRightRadius: String(5) + "px",
-        borderTopLeftRadius: String(5) + "px",
-        boxSizing: "border-box",
-        background: colorChip.gray0
-      }
-    });
-    for (let i = 0; i < percentages.length; i++) {
-      createNode({
-        mother: whiteDetailBlock,
-        style: {
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          verticalAlign: "top",
-          width: String(percentages[i]) + '%',
-          boxSizing: "border-box",
-          height: String(100) + '%',
-          borderRight: i !== percentages.length - 1 ? "1px solid " + colorChip.gray3 : "",
-        },
-        children: [
-          {
-            text: detailWordings[i],
-            style: {
-              fontSize: String(detailTextSize) + ea,
-              fontWeight: String(600),
-              color: colorChip.black,
-              position: "relative",
-              top: String(detailTextTop) + ea,
-            }
-          }
-        ]
-      });
-    }
-
-    priceSum = 0;
-
-    for (let { name, unit: { number, ea: unitEa, amount: { consumer } }, description } of item.detail) {
-      price = Math.floor(consumer * number);
-      priceSum += price;
-      makeDetailBlock(whiteTableArea, price, name, number, unitEa, consumer, description, (price === 0));
-    }
-
-    itemDeactive = priceSum === 0;
-    totalSum += priceSum;
-
-    createNode({
-      mother: whiteTitleArea,
-      mode: "svg",
-      source: instance.mother.returnCheckBox(!itemDeactive ? colorChip.green : colorChip.gray3, false, true),
-      style: {
-        position: "absolute",
-        top: String(itemCheckTop) + ea,
-        right: String(0),
-        width: String(itemCheckWidth) + ea,
-        background: !itemDeactive ? colorChip.white : colorChip.gray3,
-      }
-    });
-    if (itemDeactive) {
-      whiteTitleArea.style.color = colorChip.deactive;
-      whiteTitleArea.querySelector('b').style.color = colorChip.deactive;
-    }
-
-    whiteDetailBlock = createNode({
-      mother: whiteTableArea,
-      attribute: {
-        total: String(priceSum)
-      },
-      style: {
-        display: "block",
-        position: "relative",
-        height: String(tableHeight) + ea,
-        borderBottom: "1px solid " + colorChip.gray3,
-        borderRight: "1px solid " + colorChip.gray3,
-        borderLeft: "1px solid " + colorChip.gray3,
-        borderBottomRightRadius: String(5) + "px",
-        borderBottomLeftRadius: String(5) + "px",
-        marginBottom: String(6) + ea,
-        boxSizing: "border-box",
-      },
-      children: [
-        {
-          event: {
-            click: function (e) {
-              makeDetailBlock(this.parentNode.parentNode, 10000, "품명 입력", 1, "개", 10000, "비고", false);
-              this.parentNode.parentNode.insertBefore(this.parentNode.parentNode.lastChild, this.parentNode);
-              amountSync(this.parentNode.parentNode);
-            }
-          },
-          style: {
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            verticalAlign: "top",
-            width: String(checkBoxPercentage) + '%',
-            boxSizing: "border-box",
-            height: String(100) + '%',
-            borderRight: "1px solid " + colorChip.gray3,
-          },
-          children: [
-            {
-              mode: "svg",
-              source: instance.mother.returnPlusCircle(colorChip.green),
-              style: {
-                position: "relative",
-                width: String(plusCircleWidth) + ea,
-                top: String(plusCircleTop) + ea,
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            verticalAlign: "top",
-            width: String(namePercentage) + '%',
-            boxSizing: "border-box",
-            height: String(100) + '%',
-            borderRight: "1px solid " + colorChip.gray3,
-          },
-          children: [
-            {
-              text: "합계",
-              style: {
-                fontSize: String(detailTextSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                position: "relative",
-                top: String(detailTextTop) + ea,
-              }
-            }
-          ]
-        },
-        {
-          style: {
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            verticalAlign: "top",
-            width: withOut(checkBoxPercentage + namePercentage, '%'),
-            boxSizing: "border-box",
-            height: String(100) + '%',
-          },
-          children: [
-            {
-              text: autoComma(priceSum) + '원',
-              style: {
-                fontSize: String(detailTextSize) + ea,
-                fontWeight: String(600),
-                color: colorChip.black,
-                position: "relative",
-                top: String(detailTextTop) + ea,
-              }
-            }
-          ]
-        },
-      ]
-    });
-
+    totalSum += makeWhiteBlock(item, num);
     num++;
   }
 
+  // total sum contents
   createNode({
     mother: sumField,
     style: {
