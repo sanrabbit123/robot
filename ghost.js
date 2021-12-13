@@ -4501,8 +4501,6 @@ Ghost.prototype.logMonitorServer = async function () {
           return !/^lo/i.test(key) && !(/^w/i.test(key) && rawInterfaces[key].some((obj) => { return /^172/.test(obj.address) }));
         });
 
-        console.log(rawInterfacesKeys);
-
         totalReport = {};
         for (let interface of rawInterfacesKeys) {
           totalReport[interface] = await getInfoFromInterFace(interface, /^w/i.test(interface));
