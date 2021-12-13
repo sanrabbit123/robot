@@ -4277,16 +4277,26 @@ Ghost.prototype.logMonitorServer = async function () {
     const app = new PureServer();
     const getMac = async function () {
       try {
-        const stdout = await shellExec("arp-scan -I enx00e04c6802c9 --localnet");
-        let rawArr, selfMac, selfIp, tempArr, tempMatrix, tong, tempObj;
+        let networkInterface;
+        let stdout, rawArr, selfMac, selfIp, tempArr, tempMatrix, tong, tempObj;
+
+
+
+
+
+
+
+
+
+        stdout = await shellExec(`arp-scan -I enx00e04c6802c9 --localnet`);
         rawArr = stdout.split("\n");
 
         rawArr = rawArr.slice(0, rawArr.findIndex((str) => { return str.trim() === '' }));
         tempArr = rawArr.slice(0, rawArr.findIndex((str) => { return /^[0-9]/.test(str) }));
         rawArr = rawArr.slice(rawArr.findIndex((str) => { return /^[0-9]/.test(str) }));
         tempMatrix = tempArr[tempArr.length - 2].split(", ").map((str) => { return str.split(': ') });
-        selfMac = tempMatrix.find(arr => arr.includes('MAC'))[1];
-        selfIp = tempMatrix.find(arr => arr.includes('IPv4'))[1];
+        selfMac = tempMatrix.find(arr => arr.includes("MAC"))[1];
+        selfIp = tempMatrix.find(arr => arr.includes("IPv4"))[1];
         tempMatrix = rawArr.map(str => str.split("\t"));
 
         tong = {};

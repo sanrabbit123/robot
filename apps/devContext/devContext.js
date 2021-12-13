@@ -200,10 +200,12 @@ DevContext.prototype.launching = async function () {
     */
 
 
+    const os = require(`os`);
+
+    console.log(os.networkInterfaces())
 
 
 
-    await messageLog("안녕");
 
 
 
