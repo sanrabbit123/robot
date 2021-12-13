@@ -210,7 +210,7 @@ DevContext.prototype.launching = async function () {
     rawInterfacesKeys = Object.keys(rawInterfaces);
     rawInterfacesValues = rawInterfacesKeys.map((key) => { return rawInterfaces[key]; });
     rawInterfacesKeys = rawInterfacesKeys.filter((key) => {
-      return !/^lo/i.test(key) && !(/^w/i.test(key) && rawInterfacesValues[key].some((obj) => { return /^172/.test(obj.address) }));
+      return !/^lo/i.test(key) && !(/^w/i.test(key) && rawInterfaces[key].some((obj) => { return /^172/.test(obj.address) }));
     });
 
     console.log(rawInterfacesKeys);
