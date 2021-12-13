@@ -4470,6 +4470,17 @@ Ghost.prototype.logMonitorServer = async function () {
     {
       app.get(instance.address.officeinfo.ghost.monitor.path, async (req, res) => {
         try {
+
+
+
+          
+
+
+
+
+
+
+
           res.send(JSON.stringify({ message: "OK" }));
         } catch (e) {
           console.log(e);
