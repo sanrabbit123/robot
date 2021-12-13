@@ -204,10 +204,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await messageLog("안녕");
-
-
-
 
 
 
