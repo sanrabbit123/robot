@@ -4347,73 +4347,7 @@ Ghost.prototype.logMonitorServer = async function () {
     let intervalFunc;
     let intervalSetting;
     let getInfoFromInterFace;
-
-
-    //routing
-    {
-      app.get("/", async (req, res) => {
-        try {
-          res.send(JSON.stringify({ message: "It works!" }));
-        } catch (e) {
-          console.log(e);
-          res.send(JSON.stringify({ message: "error : " + e.message }));
-        }
-      });
-
-      app.get("/getMac", async (req, res) => {
-        try {
-          res.send(JSON.stringify(await getMac()));
-        } catch (e) {
-          console.log(e);
-          res.send(JSON.stringify({ message: "error : " + e.message }));
-        }
-      });
-
-      app.post("/log", async (req, res) => {
-        try {
-          if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
-            throw new Error("invaild post, must be text");
-          }
-
-          const colorLog = function (mode, text) {
-            const colors = {
-              red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
-              yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
-              cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
-            };
-            const now = new Date();
-            const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
-            let timeWording;
-
-            timeWording = '';
-            timeWording += String(now.getFullYear());
-            timeWording += '-';
-            timeWording += zeroAddition(now.getMonth() + 1);
-            timeWording += '-';
-            timeWording += zeroAddition(now.getDate());
-            timeWording += ' ';
-            timeWording += zeroAddition(now.getHours());
-            timeWording += ':';
-            timeWording += zeroAddition(now.getMinutes());
-            timeWording += ':';
-            timeWording += zeroAddition(now.getSeconds());
-
-            console.log(colors[mode], timeWording, text);
-          }
-
-          colorLog(req.body.color, req.body.message);
-          await MONGOLOCALC.db(`miro81`).collection(collection).insertOne({
-            date: new Date(),
-            message: req.body.message
-          });
-
-          res.send(JSON.stringify({ message: "done" }));
-        } catch (e) {
-          res.send(JSON.stringify({ message: "error : " + e.message }));
-        }
-      });
-    }
-
+    let totalReports;
 
     // set network monitoring
     Ghost.intervals.monitorIntervalId = null;
@@ -4488,7 +4422,7 @@ Ghost.prototype.logMonitorServer = async function () {
         console.log(e);
       }
     }
-    intervalFunc = async () => {
+    totalReports = async () => {
       try {
         let rawInterfaces;
         let rawInterfacesKeys, rawInterfacesValues;
@@ -4506,35 +4440,117 @@ Ghost.prototype.logMonitorServer = async function () {
           totalReport[interface] = await getInfoFromInterFace(interface, /^w/i.test(interface));
         }
 
-        await messageLog(`네트워크 상태\n${JSON.stringify(totalReport, null, 2)}`);
+        return totalReport;
       } catch (e) {
         console.log(e);
       }
     }
 
-
-    intervalSetting = () => {
-      const now = new Date();
-      let dateKey;
-
-      dateKey = 'd' + zeroAddition(now.getHours()) + zeroAddition(now.getMinutes()).slice(0, 1);
-
-      if (typeof interval[dateKey] !== "number") {
-        if (Ghost.intervals.monitorIntervalId === null) {
-          Ghost.intervals.monitorIntervalId = setInterval(intervalFunc, defaultInterval);
+    // routing
+    {
+      app.get("/", async (req, res) => {
+        try {
+          res.send(JSON.stringify({ message: "It works!" }));
+        } catch (e) {
+          console.log(e);
+          res.send(JSON.stringify({ message: "error : " + e.message }));
         }
-      } else {
-        if (Ghost.intervals.monitorIntervalId !== null) {
-          clearInterval(Ghost.intervals.monitorIntervalId);
-          Ghost.intervals.monitorIntervalId = null;
+      });
+
+      app.get("/getMac", async (req, res) => {
+        try {
+          res.send(JSON.stringify(await getMac()));
+        } catch (e) {
+          console.log(e);
+          res.send(JSON.stringify({ message: "error : " + e.message }));
         }
-        Ghost.intervals.monitorIntervalId = setInterval(intervalFunc, interval[dateKey]);
-      }
+      });
+
+      app.get("/subway", async (req, res) => {
+        try {
+          res.send(JSON.stringify(await totalReports()));
+        } catch (e) {
+          console.log(e);
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
+
+      app.post("/log", async (req, res) => {
+        try {
+          if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
+            throw new Error("invaild post, must be text");
+          }
+
+          const colorLog = function (mode, text) {
+            const colors = {
+              red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
+              yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
+              cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
+            };
+            const now = new Date();
+            const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
+            let timeWording;
+
+            timeWording = '';
+            timeWording += String(now.getFullYear());
+            timeWording += '-';
+            timeWording += zeroAddition(now.getMonth() + 1);
+            timeWording += '-';
+            timeWording += zeroAddition(now.getDate());
+            timeWording += ' ';
+            timeWording += zeroAddition(now.getHours());
+            timeWording += ':';
+            timeWording += zeroAddition(now.getMinutes());
+            timeWording += ':';
+            timeWording += zeroAddition(now.getSeconds());
+
+            console.log(colors[mode], timeWording, text);
+          }
+
+          colorLog(req.body.color, req.body.message);
+          await MONGOLOCALC.db(`miro81`).collection(collection).insertOne({
+            date: new Date(),
+            message: req.body.message
+          });
+
+          res.send(JSON.stringify({ message: "done" }));
+        } catch (e) {
+          res.send(JSON.stringify({ message: "error : " + e.message }));
+        }
+      });
     }
 
-    intervalSetting();
-    setInterval(intervalSetting, 10 * 60 * 1000);
+    // set interval
+    {
+      intervalFunc = async () => {
+        try {
+          const totalReport = await totalReports();
+          await messageLog(`네트워크 상태\n${JSON.stringify(totalReport, null, 2)}`);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      intervalSetting = () => {
+        const now = new Date();
+        let dateKey;
+        dateKey = 'd' + zeroAddition(now.getHours()) + zeroAddition(now.getMinutes()).slice(0, 1);
+        if (typeof interval[dateKey] !== "number") {
+          if (Ghost.intervals.monitorIntervalId === null) {
+            Ghost.intervals.monitorIntervalId = setInterval(intervalFunc, defaultInterval);
+          }
+        } else {
+          if (Ghost.intervals.monitorIntervalId !== null) {
+            clearInterval(Ghost.intervals.monitorIntervalId);
+            Ghost.intervals.monitorIntervalId = null;
+          }
+          Ghost.intervals.monitorIntervalId = setInterval(intervalFunc, interval[dateKey]);
+        }
+      }
+      intervalSetting();
+      setInterval(intervalSetting, 10 * 60 * 1000);
+    }
 
+    // server launching
     pureServer("listen", app, 8080);
 
   } catch (e) {
