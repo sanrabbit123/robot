@@ -943,6 +943,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           let whiteLineTitleSize, whiteLineTitleTop, whiteLineTitleWeight;
           let blackOpacity;
           let titleWording;
+          let questionTong;
 
           whiteLineBoxWidth = 500;
           whiteLineBoxHeight = 280;
@@ -976,7 +977,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
               top: String(0) + ea,
               left: String(0) + ea,
               width: String(100) + '%',
-              height: String(window.innerHeight) + ea,
+              height: String(100) + '%',
               background: colorChip.realBlack,
               zIndex: String(5),
               transition: "all 0.5s ease",
@@ -998,13 +999,12 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                   top: String(0) + ea,
                   left: String(0) + ea,
                   width: String(100) + '%',
-                  height: String(window.innerHeight) + ea,
-                  background: "transparent",
+                  height: String(100) + '%',
                   zIndex: String(5),
                 }
               });
 
-              createNode({
+              questionTong = createNode({
                 mother: questionBase,
                 style: {
                   display: "block",
@@ -1026,10 +1026,31 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                       top: String(whiteLineTitleTop) + ea,
                       left: String(0),
                     }
+                  },
+                  {
+                    style: {
+                      position: "relative",
+                      top: String(0),
+                      left: String(0),
+                      width: String(100) + '%',
+                      height: String(100) + '%'
+                    }
                   }
                 ]
-              })
+              }).children[1];
 
+              for (let box of instance.estimationBoxes) {
+                console.log(box);
+                createNode({
+                  mother: questionTong,
+                  style: {
+                    display: "block",
+                    width: String(100) + '%',
+                    height: String(30) + ea,
+                    background: "aqua",
+                  }
+                })
+              }
 
             }, 300);
           });
