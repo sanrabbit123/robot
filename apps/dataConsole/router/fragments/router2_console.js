@@ -356,7 +356,7 @@ DataRouter.prototype.rou_post_searchDocuments = function () {
 DataRouter.prototype.rou_post_updateDocument = function () {
   const instance = this;
   const back = this.back;
-  const { fileSystem, pythonExecute, shell, shellLink, equalJson } = this.mother;
+  const { fileSystem, pythonExecute, shell, shellLink, equalJson, dateToString } = this.mother;
   let obj = {};
   obj.link = [ "/updateClient", "/updateDesigner", "/updateProject", "/updateContents" ];
   obj.func = async function (req, res) {
@@ -390,6 +390,12 @@ DataRouter.prototype.rou_post_updateDocument = function () {
       }
 
       noUpdate = false;
+
+      if (typeof value !== "string") {
+        if (value instanceof Date) {
+          value = dateToString(value, true);
+        }
+      }
 
       switch (map[column].type) {
         case "string":

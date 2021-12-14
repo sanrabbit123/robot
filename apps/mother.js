@@ -2482,8 +2482,6 @@ Mother.prototype.equalJson = function (jsonString) {
     if (typeof jsonString !== "string") {
       jsonString = String(jsonString);
     }
-    jsonString = jsonString.replace(/\"([0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]) ([0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]\.[0-9][0-9][0-9])[0-9][0-9][0-9]\"/g, (match, p1, p2, offset, string) => { return '"' + p1 + "T" + p2 + "Z" + '"' });
-    jsonString = jsonString.replace(/\"([0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]) ([0-9][0-9]\:[0-9][0-9]\:[0-9][0-9])\"/g, (match, p1, p2, offset, string) => { return '"' + p1 + "T" + p2 + ".000Z" + '"' });
     const filtered = jsonString.replace(/(\"[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[^Z]+Z\")/g, function (match, p1, offset, string) { return "new Date(" + p1 + ")"; });
     const tempFunc = new Function("const obj = " + filtered + "; return obj;");
     const json = tempFunc();
