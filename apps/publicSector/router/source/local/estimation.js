@@ -1054,7 +1054,13 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let sumMarginRight;
   let sumPaddingLeft;
   let sumBarTop;
-  let orderWordingSize, orderWordingBottom;
+  let greenButtonWordingSize, greenButtonWordingBottom;
+  let greenButtonWidth;
+  let greenButtonHeight;
+  let greenButtonTextTop;
+  let greenButtonBetween;
+  let greenButtons;
+  let greenButtonEvents;
   let columnArr;
   let plusCircleWidth, plusCircleTop;
   let makeDetailBlock;
@@ -1127,8 +1133,15 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   sumPaddingLeft = 18;
   sumBarTop = 37;
 
-  orderWordingSize = 13;
-  orderWordingBottom = 4;
+  greenButtons = [
+    "견적서 발송",
+  ];
+  greenButtonWidth = 86;
+  greenButtonHeight = 30;
+  greenButtonTextTop = -1;
+  greenButtonBetween = 5;
+  greenButtonWordingSize = 13;
+  greenButtonWordingBottom = 8;
 
   contextmenuWidth = 90;
   contextmenuHeight = 30;
@@ -1149,6 +1162,21 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
   [ request ] = invoice.requests;
   ({ items } = request);
+
+  greenButtonEvents = [
+    async function (e) {
+      try {
+        if (window.confirm("견적서를 전송하시겠습니까?")) {
+          await instance.saveState(true);
+          // kakao
+
+          window.alert("견적서를 전송하였습니다!");
+        }
+      } catch (e) {
+        window.location.reload();
+      }
+    },
+  ];
 
   makeDetailBlock = (whiteTableArea, price, name, number, unitEa, consumer, description, detailDeactive) => {
     valueArr = [];
@@ -1411,18 +1439,28 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
                   }
                 }
 
+                self.parentElement.setAttribute("draggable", "false");
+
                 cancelBack = createNode({
                   mother: this,
+                  attribute: {
+                    draggable: "false",
+                  },
                   event: {
                     click: async (e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       try {
+                        self.parentElement.setAttribute("draggable", "true");
                         await updateEvent(e);
+                        await instance.saveState();
                       } catch (e) {
                         console.log(e);
                       }
-                    }
+                    },
+                    dragstart: function (e) {
+                      e.stopPropagation();
+                    },
                   },
                   style: {
                     position: "fixed",
@@ -1447,6 +1485,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
                   mode: "input",
                   attribute: {
                     type: "text",
+                    draggable: "false",
                   },
                   event: {
                     click: (e) => {
@@ -1456,13 +1495,20 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
                     keypress: async function (e) {
                       try {
                         if (e.key === "Enter") {
+                          self.parentElement.setAttribute("draggable", "true");
                           await updateEvent(e);
                           await instance.saveState();
                         }
                       } catch (e) {
                         console.log(e);
                       }
-                    }
+                    },
+                    selectstart: function (e) {
+                      e.stopPropagation();
+                    },
+                    dragstart: function (e) {
+                      e.stopPropagation();
+                    },
                   },
                   style: {
                     fontSize: String(detailTextSize) + ea,
@@ -2249,64 +2295,88 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   tempBlock.style.marginBottom = String(whiteBlockMarginBottomLast) + ea;
 
   // total sum contents
-  createNode({
-    mother: sumField,
-    style: {
-      position: "absolute",
-      left: String(sumMarginRight) + ea,
-      top: String(0),
-      height: String(sumBarTop) + ea,
-      borderBottom: "1px dashed " + colorChip.green,
-      width: withOut(((sumMarginRight * 2) + 1), ea),
-      opacity: String(0.6),
+  createNodes([
+    {
+      mother: sumField,
+      style: {
+        position: "absolute",
+        left: String(sumMarginRight) + ea,
+        top: String(0),
+        height: String(sumBarTop) + ea,
+        borderBottom: "1px dashed " + colorChip.green,
+        width: withOut(((sumMarginRight * 2) + 1), ea),
+        opacity: String(0.6),
+      }
+    },
+    {
+      mother: sumField,
+      class: [ ultimateTotalClassName ],
+      attribute: {
+        ultimate: String(totalSum),
+      },
+      text: "합계 <b%: %b>" + "&nbsp;<u%" + autoComma(totalSum) + '%u>원',
+      style: {
+        position: "relative",
+        top: String(sumTop) + ea,
+        fontSize: String(sumSize) + ea,
+        fontWeight: String(500),
+        marginRight: String(sumMarginRight) + ea,
+        color: colorChip.black,
+        paddingLeft: String(sumPaddingLeft) + ea,
+        background: colorChip.white,
+      },
+      bold: {
+        color: colorChip.deactive,
+        fontWeight: String(300),
+      },
+      under: {
+        color: colorChip.black,
+        fontWeight: String(500),
+      }
     }
-  });
+  ])
 
-  createNode({
-    mother: sumField,
-    class: [ ultimateTotalClassName ],
-    attribute: {
-      ultimate: String(totalSum),
-    },
-    text: "합계 <b%: %b>" + "&nbsp;<u%" + autoComma(totalSum) + '%u>원',
-    style: {
-      position: "relative",
-      top: String(sumTop) + ea,
-      fontSize: String(sumSize) + ea,
-      fontWeight: String(500),
-      marginRight: String(sumMarginRight) + ea,
-      color: colorChip.black,
-      paddingLeft: String(sumPaddingLeft) + ea,
-      background: colorChip.white,
-    },
-    bold: {
-      color: colorChip.deactive,
-      fontWeight: String(300),
-    },
-    under: {
-      color: colorChip.black,
-      fontWeight: String(500),
-    }
-  });
+  // save button
+  for (let i = 0; i < greenButtons.length; i++) {
+    createNode({
+      mother: titleArea,
+      event: {
+        contextmenu: (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        click: greenButtonEvents[i]
+      },
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "absolute",
+        width: String(greenButtonWidth) + ea,
+        height: String(greenButtonHeight) + ea,
+        borderRadius: String(3) + "px",
+        bottom: String(greenButtonWordingBottom + ((greenButtonHeight + greenButtonBetween) * i)) + ea,
+        left: String(0),
+        background: colorChip.gradientGreen,
+        cursor: "pointer",
+      },
+      children: [
+        {
+          class: [ "hoverDefault_lite" ],
+          text: greenButtons[i],
+          style: {
+            position: "relative",
+            fontSize: String(greenButtonWordingSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.white,
+            top: String(greenButtonTextTop) + ea,
+          }
+        }
+      ]
+    });
+  }
 
-  createNode({
-    mother: titleArea,
-    text: `<b%3번째%b> 견적서\n발생일 : 2021-12-30`,
-    style: {
-      position: "absolute",
-      fontSize: String(orderWordingSize) + ea,
-      fontWeight: String(500),
-      color: colorChip.black,
-      bottom: String(orderWordingBottom) + ea,
-      left: String(0),
-      lineHeight: String(1.5),
-    },
-    bold: {
-      fontWeight: String(400),
-      color: colorChip.green,
-    }
-  });
-
+  // auto save launching
   this.autoSave();
 
 }
@@ -2314,7 +2384,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 EstimationJs.prototype.autoSave = function () {
   const instance = this;
   const { autoSaveConst } = this;
-  const intervalConst = 5 * 60 * 1000;
+  const intervalConst = 10 * 60 * 1000;
   if (GeneralJs.stacks[autoSaveConst] !== null) {
     clearInterval(GeneralJs.stacks[autoSaveConst]);
   }
@@ -2327,10 +2397,11 @@ EstimationJs.prototype.autoSave = function () {
   }, intervalConst);
 }
 
-EstimationJs.prototype.saveState = async function () {
+EstimationJs.prototype.saveState = async function (unshiftMode = false) {
   const instance = this;
   const { ajaxJson, uniqueValue, equalJson } = GeneralJs;
   const { invid, dummy: { item, detail } } = this;
+  const rConst = "R";
   const iConst = "I";
   const dConst = "D";
   try {
@@ -2339,7 +2410,9 @@ EstimationJs.prototype.saveState = async function () {
       let json;
       let tempArr;
       let detailDummy;
+      let requestDummy;
       let consumer, vat, supply;
+      let thisInvoice;
 
       json = equalJson(JSON.stringify(item));
       json.id = iConst + uniqueValue("hex");
@@ -2379,7 +2452,20 @@ EstimationJs.prototype.saveState = async function () {
     for (let block of this.whiteBlocks) {
       tong.push(blockToJson(block));
     }
-    updateQuery["requests.0.items"] = tong;
+
+    if (!unshiftMode) {
+      this.invoiceList.search("invid", this.invid).requests[0].items = tong;
+      updateQuery["requests.0.items"] = tong;
+    } else {
+      thisInvoice = this.invoiceList.search("invid", this.invid);
+      requestDummy = equalJson(JSON.stringify(thisInvoice.requests[0]));
+      thisInvoice.requests[0].status = "작성 완료";
+      thisInvoice.requests.unshift(requestDummy);
+      thisInvoice.requests[0].id = rConst + uniqueValue("hex");
+      thisInvoice.requests[0].date = new Date();
+      thisInvoice.requests[0].items = tong;
+      updateQuery["requests"] = thisInvoice.requests;
+    }
 
     await ajaxJson({
       to: "generalMongo",
