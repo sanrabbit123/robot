@@ -938,6 +938,21 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           const staticConst = uniqueValue("hex");
           let formData;
           let res, res2;
+          let blackBack, questionBase;
+          let whiteLineBoxWidth, whiteLineBoxHeight;
+          let whiteLineTitleSize, whiteLineTitleTop, whiteLineTitleWeight;
+          let blackOpacity;
+          let titleWording;
+
+          whiteLineBoxWidth = 500;
+          whiteLineBoxHeight = 280;
+          whiteLineTitleSize = 22;
+          whiteLineTitleTop = -42;
+          whiteLineTitleWeight = 700;
+
+          titleWording = "Q. 누구의 견적서 파일인가요?";
+
+          blackOpacity = 0.7;
 
           formData = new FormData();
           formData.append("/" + staticConst, file);
@@ -951,12 +966,75 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 
           res2 = await ajaxJson({
             to: "invoiceRequest",
-            json: res
+            json: { matrix: res }
           }, "/publicSector/python", { equal: true });
 
+          blackBack = createNode({
+            mother: document.body,
+            style: {
+              position: "absolute",
+              top: String(0) + ea,
+              left: String(0) + ea,
+              width: String(100) + '%',
+              height: String(window.innerHeight) + ea,
+              background: colorChip.realBlack,
+              zIndex: String(5),
+              transition: "all 0.5s ease",
+              opacity: String(0),
+            }
+          });
+
+          setQueue(() => {
+            blackBack.style.opacity = String(blackOpacity);
+            setQueue(() => {
+
+              questionBase = createNode({
+                mother: document.body,
+                style: {
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "absolute",
+                  top: String(0) + ea,
+                  left: String(0) + ea,
+                  width: String(100) + '%',
+                  height: String(window.innerHeight) + ea,
+                  background: "transparent",
+                  zIndex: String(5),
+                }
+              });
+
+              createNode({
+                mother: questionBase,
+                style: {
+                  display: "block",
+                  position: "relative",
+                  width: String(whiteLineBoxWidth) + ea,
+                  height: String(whiteLineBoxHeight) + ea,
+                  borderRadius: String(8) + "px",
+                  border: "1px solid " + colorChip.white,
+                  animation: "fadeuplite 0.5s ease",
+                },
+                children: [
+                  {
+                    text: titleWording,
+                    style: {
+                      position: "absolute",
+                      fontSize: String(whiteLineTitleSize) + ea,
+                      fontWeight: String(whiteLineTitleWeight),
+                      color: colorChip.white,
+                      top: String(whiteLineTitleTop) + ea,
+                      left: String(0),
+                    }
+                  }
+                ]
+              })
+
+
+            }, 300);
+          });
+
           console.log(res2);
-
-
 
         } catch (e) {
           console.log(e);

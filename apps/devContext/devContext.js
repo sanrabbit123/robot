@@ -85,8 +85,8 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    const voice = new PlayAudio();
-    console.log(await voice.voiceToText(`${process.cwd()}/temp/test.m4a`));
+
+
 
 
     // console.log(await bill.matrixToRequest(`${process.cwd()}/temp/test.xlsx`));
