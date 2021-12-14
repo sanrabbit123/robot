@@ -939,11 +939,13 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           let formData;
           let res, res2;
           let blackBack, questionBase;
+          let questionBlock;
           let whiteLineBoxWidth, whiteLineBoxHeight;
           let whiteLineTitleSize, whiteLineTitleTop, whiteLineTitleWeight;
           let blackOpacity;
           let titleWording;
           let questionTong;
+          let questionArr;
 
           whiteLineBoxWidth = 500;
           whiteLineBoxHeight = 280;
@@ -1040,14 +1042,32 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
               }).children[1];
 
               for (let box of instance.estimationBoxes) {
-                console.log(box);
-                createNode({
+                questionArr = box.textContent.split("고객님").map((str) => { return str.trim() });
+                questionBlock = createNode({
                   mother: questionTong,
                   style: {
                     display: "block",
                     width: String(100) + '%',
-                    height: String(30) + ea,
-                    background: "aqua",
+                  }
+                });
+                createNode({
+                  mother: questionBlock,
+                  text: questionArr[0],
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(15) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.white,
+                  }
+                })
+                createNode({
+                  mother: questionBlock,
+                  text: questionArr[1],
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(15) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.white,
                   }
                 })
               }
