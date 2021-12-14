@@ -1673,9 +1673,6 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
 }
 
 BillMaker.prototype.matrixToRequest = async function (file) {
-  if (typeof file !== "string") {
-    throw new Error("invaild input");
-  }
   const instance = this;
   const ExcelReader = require(`${process.cwd()}/apps/excelReader/excelReader.js`);
   try {
@@ -1691,9 +1688,17 @@ BillMaker.prototype.matrixToRequest = async function (file) {
     let sum;
     let consumer, vat, supply;
 
-    matrix = (await excel.fileToMatrix(file, "내역서")).filter((arr) => {
-      return arr.some((i) => { return i !== null });
-    });
+    if (typeof file === "string") {
+      matrix = (await excel.fileToMatrix(file, "내역서")).filter((arr) => {
+        return arr.some((i) => { return i !== null });
+      });
+    } else if (Array.isArray(file)) {
+      matrix = file.filter((arr) => {
+        return arr.some((i) => { return i !== null });
+      });
+    } else {
+      throw new Error("invaild input");
+    }
 
     startIndex = matrix.map((arr) => {
       return arr.map((i) => { return String(i).replace(/ /gi, '') }).join('');
@@ -1807,72 +1812,6 @@ BillMaker.prototype.matrixToRequest = async function (file) {
   } catch (e) {
     console.log(e);
     return null;
-  }
-}
-
-BillMaker.prototype.matrixToInvoice = async function (matrix, option = { selfMongo: null, selfCoreMongo: null }) {
-  if (!Array.isArray(matrix)) {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const back = this.back;
-  const { mongo, mongopythoninfo, mongoinfo } = this.mother;
-  const collection = "constructInvoice";
-  const map = require(`${this.mapDir}/${collection}.js`);
-  try {
-    let MONGOC, MONGOCOREC;
-    let selfBoo, selfCoreBoo;
-
-    if (option.selfMongo === undefined || option.selfMongo === null) {
-      selfBoo = false;
-    } else {
-      selfBoo = true;
-    }
-    if (!selfBoo) {
-      MONGOC = new mongo(mongopythoninfo, { useUnifiedTopology: true });
-      await MONGOC.connect();
-    } else {
-      MONGOC = option.selfMongo;
-    }
-    if (option.selfCoreMongo === undefined || option.selfCoreMongo === null) {
-      selfCoreBoo = false;
-    } else {
-      selfCoreBoo = true;
-    }
-    if (!selfCoreBoo) {
-      MONGOCOREC = new mongo(mongoinfo, { useUnifiedTopology: true });
-      await MONGOCOREC.connect();
-    } else {
-      MONGOCOREC = option.selfCoreMongo;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if (!selfBoo) {
-      await MONGOC.close();
-    }
-    if (!selfCoreBoo) {
-      await MONGOCOREC.close();
-    }
-
-  } catch (e) {
-    console.log(e);
   }
 }
 

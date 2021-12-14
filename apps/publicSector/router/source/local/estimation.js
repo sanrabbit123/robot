@@ -19,7 +19,9 @@ EstimationJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
-
+        if (typeof instance.invid === "string") {
+          instance.estimationBackward();
+        }
       },
     },
     {
@@ -613,7 +615,7 @@ EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
 EstimationJs.prototype.estimationList = function (buiid = '') {
   const instance = this;
   const { totalMother, ea, grayBarWidth, invoiceList } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, downloadFile, setQueue } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, downloadFile, setQueue, cleanChildren, ajaxForm, uniqueValue } = GeneralJs;
   const mobile = this.media[4];
   const desktop = !mobile;
   const wording = `+ 버튼을 눌러 견적서를 추가하거나, <b%샘플 파일%b>로 작업한 엑셀 파일을 + 버튼으로 드래그 앤 드롭해 견적서를 추가하세요.`;
@@ -766,6 +768,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
             const newMainBase = instance.mainBaseTong.cloneNode(false);
             let top;
 
+            instance.mainBaseTong.style.opacity = String(0);
             top = Number(newMainBase.style.top.replace(/[^0-9]/gi, ''));
 
             newMainBase.style.animation = "fadeuplite 0.3s ease forwards";
@@ -775,8 +778,15 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
             newMainBase.style.boxShadow = "0px 3px 14px -9px " + colorChip.shadow;
 
             totalMother.style.overflow = "visible";
-            createNode({
+
+            instance.newMainBase = newMainBase;
+            instance.mainCancleBase = createNode({
               mother: totalMother,
+              event: {
+                click: function (e) {
+                  instance.estimationBackward();
+                }
+              },
               style: {
                 position: "absolute",
                 top: String(0),
@@ -917,6 +927,40 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
       mouseleave: function (e) {
         this.style.background = desktop ? colorChip.gray0 : colorChip.gray1;
         this.querySelector("path").setAttribute("fill", colorChip.gray5);
+      },
+      dragover: (e) => { e.preventDefault(); },
+      dragenter: (e) => { e.preventDefault(); },
+      dragleave: (e) => { e.preventDefault(); },
+      drop: async function (e) {
+        e.preventDefault();
+        try {
+          const [ file ] = [ ...e.dataTransfer.files ];
+          const staticConst = uniqueValue("hex");
+          let formData;
+          let res, res2;
+
+          formData = new FormData();
+          formData.append("/" + staticConst, file);
+
+          await ajaxForm(formData, "/publicSector/file");
+
+          res = await ajaxJson({
+            file: "/" + staticConst + "/" + file.name,
+            sheetsName: "내역서",
+          }, "/publicSector/excel", { equal: true });
+
+          res2 = await ajaxJson({
+            to: "invoiceRequest",
+            json: res
+          }, "/publicSector/python", { equal: true });
+
+          console.log(res2);
+
+
+
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
     style: {
@@ -1000,6 +1044,22 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 
   this.mainBaseTong = baseTong0;
   this.addSearchEvent();
+}
+
+EstimationJs.prototype.estimationBackward = function () {
+  const instance = this;
+  const { ea } = this;
+  const { setQueue } = GeneralJs;
+  this.newMainBase.style.animation = "fadedownlite 0.3s ease forwards";
+  this.mainCancleBase.style.animation = "fadedownlite 0.3s ease forwards";
+  this.bottomPannel.style.transform = "translateY(" + String(0) + ea + ")";
+  this.mainBaseTong.style.animation = "fadeuplite 0.3s ease forwards";
+  setQueue(() => {
+    instance.newMainBase.remove();
+    instance.mainCancleBase.remove();
+    instance.invid = null;
+    instance.totalMother.style.overflow = "scroll";
+  }, 301);
 }
 
 EstimationJs.prototype.estimationDocument = function (mother, invoice) {
@@ -2559,6 +2619,7 @@ EstimationJs.prototype.launching = async function () {
       throw new Error("invaild buiid");
     }
     this.builder = builder;
+    this.invid = null;
 
     proidArr = [];
     desidArr = [];

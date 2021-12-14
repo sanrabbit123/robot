@@ -147,7 +147,7 @@ PlayAudio.prototype.textToMp3 = async function (text = "안녕하세요?") {
   }
 }
 
-PlayAudio.prototype.voiceToText = async function (fileName) {
+PlayAudio.prototype.voiceToText = async function () {
   const instance = this;
   const { shellExec, shellLink, fileSystem, uniqueValue, s3FileUpload, s3FileDelete, pythonExecute, requestSystem, equalJson } = this.mother;
   const { python } = this;

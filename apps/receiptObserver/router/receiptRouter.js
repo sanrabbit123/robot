@@ -2224,6 +2224,35 @@ ReceiptRouter.prototype.rou_post_returnDummy = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_invoiceRequest = function () {
+  const instance = this;
+  const bill = this.bill;
+  const { equalJson, sleep } = this.mother;
+  let obj = {};
+  obj.link = "/invoiceRequest";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.matrix === undefined) {
+        throw new Error("invaild post : must be { collection, subject }");
+      }
+      const { matrix } = equalJson(req.body);
+      const request = await bill.matrixToRequest(matrix);
+      res.send(JSON.stringify(request));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_invoiceRequest): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.getAll = function () {
   let result, result_arr;
 

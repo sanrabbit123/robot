@@ -4,6 +4,7 @@ import aiohttp
 import pprint
 import re
 import json
+import asyncio
 
 async def requestSystem(url, data={}):
     result = {}
@@ -16,6 +17,15 @@ async def requestSystem(url, data={}):
             async with session.post(url, json=data) as resp:
                 result["data"] = (await resp.json())
     return result
+
+async def shellExec(cmdArr):
+    cmd = ' '.join(cmdArr)
+    proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    (stdout, stderr) = await proc.communicate()
+    if stdout:
+        print(stdout.decode())
+    if stderr:
+        print(stderr.decode())
 
 def returnDbName():
     return "miro81"
@@ -49,7 +59,9 @@ def returnHost(key=None):
         return tong[key]
 
 def returnStaticFolder():
-    return returnHost("officeinfo")
+    dict = returnHost("officeinfo")
+    dict["static"] = os.path.expanduser("~") + "/samba"
+    return dict
 
 def returnModulepath():
     rawPath = os.getcwd()
