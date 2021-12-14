@@ -950,9 +950,10 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           let whiteLineBoxPaddingLeft;
           let whiteLineFactorSize;
           let whiteLineFactorMarginBottom;
+          let whiteLineFactorMarginBottomLast;
 
-          whiteLineBoxWidth = 400;
-          whiteLineBoxHeight = 280;
+          whiteLineBoxWidth = 303;
+          whiteLineBoxHeight = 293;
           whiteLineTitleSize = 22;
           whiteLineTitleTop = -42;
           whiteLineTitleWeight = 700;
@@ -960,6 +961,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           whiteLineBoxPaddingLeft = 21;
           whiteLineFactorSize = 18;
           whiteLineFactorMarginBottom = 7;
+          whiteLineFactorMarginBottomLast = 60;
 
           titleWording = "Q. 누구의 견적서 파일인가요?";
 
@@ -1028,7 +1030,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                   paddingBottom: String(whiteLineBoxPaddingTop) + ea,
                   paddingLeft: String(whiteLineBoxPaddingLeft) + ea,
                   paddingRight: String(whiteLineBoxPaddingLeft) + ea,
-                  overflow: "scroll",
+                  overflow: "visible",
                 },
                 children: [
                   {
@@ -1048,13 +1050,14 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                       top: String(0),
                       left: String(0),
                       width: String(100) + '%',
-                      height: String(100) + '%'
+                      height: String(100) + '%',
+                      overflow: "scroll",
                     }
                   }
                 ]
               }).children[1];
 
-              for (var i = 0; i < 2; i++) {
+              for (var i = 0; i < 3; i++) {
 
                 for (let box of instance.estimationBoxes) {
                   questionArr = box.textContent.split("고객님").map((str) => { return str.trim() });
@@ -1062,6 +1065,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                     mother: questionTong,
                     style: {
                       display: "block",
+                      position: "relative",
                       width: String(100) + '%',
                       marginBottom: String(whiteLineFactorMarginBottom) + ea,
                     }
@@ -1081,6 +1085,9 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                     text: questionArr[1],
                     style: {
                       display: "inline-block",
+                      position: "absolute",
+                      right: String(0),
+                      top: String(0),
                       fontSize: String(whiteLineFactorSize) + ea,
                       fontWeight: String(500),
                       color: colorChip.white,
@@ -1092,6 +1099,14 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
               }
 
 
+              createNode({
+                mother: questionTong,
+                style: {
+                  display: "block",
+                  width: String(100) + '%',
+                  height: String(whiteLineFactorMarginBottomLast) + ea,
+                }
+              });
 
             }, 300);
           });
