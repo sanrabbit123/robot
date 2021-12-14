@@ -192,7 +192,24 @@ PublicSector.prototype.spawnSector = async function (installMode = false) {
     // mother
 
     motherScript = await fileSystem(`readString`, [ mother ]);
-    await fileSystem(`write`, [ mother, motherScript.replace(/__host__/, '"' + instance.address.officeinfo.ghost.host + '"').replace(/__static__/, '"' + instance.address.officeinfo.ghost.file.static + '"') ]);
+    motherScript = motherScript.replace(/__infoObj__/, JSON.stringify([
+      {
+        name: "pythoninfo",
+        protocol: "https",
+        host: instance.address.pythoninfo.host,
+        port: 3000,
+        static: "",
+      },
+      {
+        name: "officeinfo",
+        protocol: "https",
+        host: instance.address.officeinfo.ghost.host,
+        port: 443,
+        static: instance.address.officeinfo.ghost.file.static,
+      },
+    ]));
+
+    await fileSystem(`write`, [ mother, motherScript ]);
 
 
     // router

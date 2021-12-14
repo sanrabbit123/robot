@@ -43,7 +43,7 @@ async def getStatus(request, mongoConnection):
     result["network"]["hostname"] = socket.gethostname().strip()
     result["network"]["mac"] = getmac.get_mac_address().strip()
     result["network"]["ip"] = {}
-    result["network"]["ip"]["outer"] = await requestSystem("https://icanhazip.com")
+    result["network"]["ip"]["outer"] = (await requestSystem("https://icanhazip.com"))["data"]
     result["network"]["ip"]["inner"] = getInnerIpArr()
 
     return result

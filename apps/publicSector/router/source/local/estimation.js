@@ -1304,6 +1304,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
                   checkOff();
                 }
                 amountSync(self.parentElement.parentElement);
+                await instance.saveState();
 
               } else if (column !== "price") {
 
@@ -1456,6 +1457,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
                       try {
                         if (e.key === "Enter") {
                           await updateEvent(e);
+                          await instance.saveState();
                         }
                       } catch (e) {
                         console.log(e);
@@ -1492,7 +1494,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
               }
             } catch (e) {
-              console.log(e);
+              window.location.reload();
             }
           },
           contextmenu: async function (e) {
@@ -2113,8 +2115,10 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
                 self.parentNode.removeChild(self.parentNode.lastChild);
                 self.parentNode.removeChild(self.parentNode.lastChild);
+
+                await instance.saveState();
               } catch (e) {
-                console.log(e);
+                window.location.reload();
               }
             }
           },
@@ -2310,7 +2314,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 EstimationJs.prototype.autoSave = function () {
   const instance = this;
   const { autoSaveConst } = this;
-  const intervalConst = 4000;
+  const intervalConst = 5 * 60 * 1000;
   if (GeneralJs.stacks[autoSaveConst] !== null) {
     clearInterval(GeneralJs.stacks[autoSaveConst]);
   }
@@ -2331,15 +2335,38 @@ EstimationJs.prototype.saveState = async function () {
   const dConst = "D";
   try {
     const blockToJson = function (whiteDom) {
+      const optionalValue = (value, d) => { return (value === null ? d : value) }
       let json;
+      let tempArr;
+      let detailDummy;
+      let consumer, vat, supply;
 
       json = equalJson(JSON.stringify(item));
       json.id = iConst + uniqueValue("hex");
       json.name = whiteDom.children[0].textContent.replace(/^[0-9]+[^0-9]/, '').trim();
 
-      
+      detailDoms = [ ...whiteDom.children[1].children ].slice(1, -1);
+      for (let dom of detailDoms) {
+        tempArr = [ ...dom.children ].slice(1);
+        detailDummy = equalJson(JSON.stringify(detail));
 
+        detailDummy.id = dConst + uniqueValue("hex");
+        detailDummy.name = optionalValue(tempArr[0].getAttribute("value"), '').trim();
+        detailDummy.unit.number = Math.floor(Number(optionalValue(tempArr[1].getAttribute("value"), '0').replace(/[^0-9]/gi, '')));
+        detailDummy.unit.ea = optionalValue(tempArr[2].getAttribute("value"), '').trim();
 
+        consumer = Math.floor(Number(optionalValue(tempArr[3].getAttribute("value"), '0').replace(/[^0-9]/gi, '')));
+        vat = Math.floor((consumer / 11) / 10) * 10;
+        supply = Math.floor(consumer - vat);
+
+        detailDummy.unit.amount.consumer = consumer;
+        detailDummy.unit.amount.vat = vat;
+        detailDummy.unit.amount.supply = supply;
+
+        detailDummy.description = optionalValue(tempArr[5].getAttribute("value"), '').trim();
+
+        json.detail.push(detailDummy);
+      }
 
       return json;
     }
@@ -2354,8 +2381,15 @@ EstimationJs.prototype.saveState = async function () {
     }
     updateQuery["requests.0.items"] = tong;
 
-    console.log(whereQuery, updateQuery);
-
+    await ajaxJson({
+      to: "generalMongo",
+      json: {
+        mode: "update",
+        collection: "constructInvoice",
+        db: "python",
+        whereQuery, updateQuery
+      }
+    }, "/publicSector/python");
 
   } catch (e) {
     console.log(e);
@@ -2403,7 +2437,15 @@ EstimationJs.prototype.launching = async function () {
     const { ajaxJson, returnGet } = GeneralJs;
     const getObj = returnGet();
     const buiid = getObj.buiid || "u2111_aa01s";
-    const invoiceList = await ajaxJson({ buiid }, "/publicSector/estimation/base", { equal: true });
+    const invoiceList = await ajaxJson({
+      to: "generalMongo",
+      json: {
+        mode: "read",
+        collection: "constructInvoice",
+        db: "python",
+        whereQuery: { "links.buiid": buiid }
+      }
+    }, "/publicSector/python", { equal: true });
     const { host, static } = await ajaxJson({}, "/publicSector/static", { equal: true });
     let proidArr;
     let desidArr;
@@ -2454,14 +2496,12 @@ EstimationJs.prototype.launching = async function () {
     this.baseMaker();
     this.listDetailLaunching();
 
-
     itemDummy = await ajaxJson({ to: "returnDummy", json: { collection: "constructInvoice", subject: "items" } }, "/publicSector/python", { equal: true });
     detailDummy = await ajaxJson({ to: "returnDummy", json: { collection: "constructInvoice", subject: "detail" } }, "/publicSector/python", { equal: true });
     this.dummy = {
       item: itemDummy,
       detail: detailDummy
     };
-
 
   } catch (e) {
     console.log(e);

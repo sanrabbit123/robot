@@ -6,20 +6,16 @@ import re
 import json
 
 async def requestSystem(url, data={}):
+    result = {}
     if len(data.keys()) == 0:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
-                return (await resp.text()).strip()
+                result["data"] = (await resp.text()).strip()
     else:
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json=data) as resp:
-                return (await resp.json())
-
-def returnStaticFolder():
-    dic = {}
-    dic["host"] = __host__
-    dic["static"] = __static__
-    return dic
+                result["data"] = (await resp.json())
+    return result
 
 def returnDbName():
     return "miro81"
@@ -37,6 +33,23 @@ def mongoRead(collection, find, conn):
         temp = json.dumps(r, indent=4, sort_keys=True, default=str, ensure_ascii=False)
         tong.append(json.loads(temp))
     return tong
+
+def returnHost(key=None):
+    tong = {}
+    hostTargets = __infoObj__
+    for obj in hostTargets:
+        tong[obj["name"]] = {}
+        tong[obj["name"]]["protocol"] = obj["protocol"]
+        tong[obj["name"]]["host"] = obj["host"]
+        tong[obj["name"]]["port"] = obj["port"]
+        tong[obj["name"]]["static"] = obj["static"]
+    if key is None:
+        return tong
+    else:
+        return tong[key]
+
+def returnStaticFolder():
+    return returnHost("officeinfo")
 
 def returnModulepath():
     rawPath = os.getcwd()
