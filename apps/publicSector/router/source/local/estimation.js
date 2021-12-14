@@ -946,12 +946,20 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           let titleWording;
           let questionTong;
           let questionArr;
+          let whiteLineBoxPaddingTop;
+          let whiteLineBoxPaddingLeft;
+          let whiteLineFactorSize;
+          let whiteLineFactorMarginBottom;
 
-          whiteLineBoxWidth = 500;
+          whiteLineBoxWidth = 400;
           whiteLineBoxHeight = 280;
           whiteLineTitleSize = 22;
           whiteLineTitleTop = -42;
           whiteLineTitleWeight = 700;
+          whiteLineBoxPaddingTop = 16;
+          whiteLineBoxPaddingLeft = 21;
+          whiteLineFactorSize = 18;
+          whiteLineFactorMarginBottom = 7;
 
           titleWording = "Q. 누구의 견적서 파일인가요?";
 
@@ -1016,6 +1024,11 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                   borderRadius: String(8) + "px",
                   border: "1px solid " + colorChip.white,
                   animation: "fadeuplite 0.5s ease",
+                  paddingTop: String(whiteLineBoxPaddingTop) + ea,
+                  paddingBottom: String(whiteLineBoxPaddingTop) + ea,
+                  paddingLeft: String(whiteLineBoxPaddingLeft) + ea,
+                  paddingRight: String(whiteLineBoxPaddingLeft) + ea,
+                  overflow: "scroll",
                 },
                 children: [
                   {
@@ -1041,36 +1054,44 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                 ]
               }).children[1];
 
-              for (let box of instance.estimationBoxes) {
-                questionArr = box.textContent.split("고객님").map((str) => { return str.trim() });
-                questionBlock = createNode({
-                  mother: questionTong,
-                  style: {
-                    display: "block",
-                    width: String(100) + '%',
-                  }
-                });
-                createNode({
-                  mother: questionBlock,
-                  text: questionArr[0],
-                  style: {
-                    display: "inline-block",
-                    fontSize: String(15) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.white,
-                  }
-                })
-                createNode({
-                  mother: questionBlock,
-                  text: questionArr[1],
-                  style: {
-                    display: "inline-block",
-                    fontSize: String(15) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.white,
-                  }
-                })
+              for (var i = 0; i < 2; i++) {
+
+                for (let box of instance.estimationBoxes) {
+                  questionArr = box.textContent.split("고객님").map((str) => { return str.trim() });
+                  questionBlock = createNode({
+                    mother: questionTong,
+                    style: {
+                      display: "block",
+                      width: String(100) + '%',
+                      marginBottom: String(whiteLineFactorMarginBottom) + ea,
+                    }
+                  });
+                  createNode({
+                    mother: questionBlock,
+                    text: questionArr[0],
+                    style: {
+                      display: "inline-block",
+                      fontSize: String(whiteLineFactorSize) + ea,
+                      fontWeight: String(500),
+                      color: colorChip.white,
+                    }
+                  })
+                  createNode({
+                    mother: questionBlock,
+                    text: questionArr[1],
+                    style: {
+                      display: "inline-block",
+                      fontSize: String(whiteLineFactorSize) + ea,
+                      fontWeight: String(500),
+                      color: colorChip.white,
+                    }
+                  });
+                }
+
+
               }
+
+
 
             }, 300);
           });
