@@ -740,6 +740,16 @@ Robot.prototype.cronServer = async function () {
   }
 }
 
+Robot.prototype.officeMonitor = async function () {
+  try {
+    const OfficeMonitor = require(`${process.cwd()}/apps/officeMonitor/officeMonitor.js`);
+    const app = new OfficeMonitor();
+    await OfficeMonitor.connect();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Robot.prototype.pureServer = async function () {
   const instance = this;
   const { pureServer, shellExec, shellLink, fileSystem, setQueue } = this.mother;
@@ -1232,6 +1242,13 @@ const MENU = {
   cronServer: async function () {
     try {
       await robot.cronServer();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  officeMonitor: async function () {
+    try {
+      await robot.officeMonitor();
     } catch (e) {
       console.log(e);
     }

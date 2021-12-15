@@ -219,6 +219,40 @@ ConstructEstimationJs.prototype.insertInitBox = function () {
 
   buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
 
+
+  // items = JSON.parse(JSON.stringify(wordings.items));
+  // items = [ JSON.parse(JSON.stringify(wordings.column)) ].concat(items);
+
+  items = [ JSON.parse(JSON.stringify(wordings.column)) ];
+  itemsLength = items.map((arr) => { return arr.map((a) => {
+    return a.replace(/[ \n\.\_]/gi, '').replace(/[0-9]/gi, '').length + (a.replace(/[^0-9]/gi, '').length * 0.5);
+  }) });
+  itemsLengthConverted = [];
+  for (let i = 0; i < wordings.column.length; i++) {
+    tempArr = [];
+    for (let arr of itemsLength) {
+      tempArr.push(arr[i]);
+    }
+    itemsLengthConverted.push(tempArr);
+  }
+  itemsLengthConverted.forEach((arr) => {
+    arr.sort((a, b) => { return b - a; });
+  });
+  itemsLengthConverted = itemsLengthConverted.map((arr) => {
+    return arr[0] === undefined ? 0 : arr[0];
+  });
+  itemsLengthSum = 0;
+  for (let num of itemsLengthConverted) {
+    itemsLengthSum += num;
+  }
+  itemsRatio = itemsLengthConverted.map((num) => { return itemsLengthSum === 0 ? 0 : (num / itemsLengthSum) });
+  itemsRatio = itemsRatio.map((num) => { return String(Math.floor(num * 10000) / 100) + '%'; });
+
+
+  // dev
+  tablePaddingBottom = tablePaddingBottom + 800;
+  // dev
+
   whiteBlock = createNode({
     mother: baseTong,
     style: {
@@ -292,7 +326,7 @@ ConstructEstimationJs.prototype.insertInitBox = function () {
           width: String(titlePadding) + ea,
           borderRadius: String(3) + "px",
           height: desktop ? withOut(titleBarTopVisual + titleBarBottomVisual, ea) : String(0.8) + ea,
-          background: colorChip.gray2,
+          background: colorChip.gradientGreen,
           top: String(titleBarTopVisual) + ea,
         }
       },
@@ -343,6 +377,26 @@ ConstructEstimationJs.prototype.insertInitBox = function () {
       borderBottom: "1px solid " + colorChip.gray3
     }
   });
+  for (let i = 0; i < itemsRatio.length; i++) {
+    item = createNode({
+      mother: itemBar,
+      text: wordings.column[i],
+      style: {
+        display: "inline-block",
+        width: itemsRatio[i],
+        position: "relative",
+        paddingTop: String(itemBarTop) + ea,
+        paddingBottom: String(itemBarBottom) + ea,
+        borderRadius: String(3) + "px",
+        fontSize: String(initWordingSize) + ea,
+        fontWeight: String(600),
+        textAlign: "center",
+      }
+    });
+  }
+
+
+
 
   cautionBox = createNode({
     mother: whiteTong,

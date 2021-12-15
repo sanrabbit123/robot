@@ -35,7 +35,6 @@ const Ghost = function () {
     },
     channel: "#error_log"
   };
-  this.innerMonitorUrl = ADDRESS.officeinfo.ghost.monitor.protocol + "://" + ADDRESS.officeinfo.ghost.host + ":" + String(ADDRESS.officeinfo.ghost.monitor.port) + ADDRESS.officeinfo.ghost.monitor.path;
 }
 
 Ghost.timeouts = {};
@@ -2596,16 +2595,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           from: { name: thisName, referrer, userAgent, browser, os, platform, mobile: rawUserAgent.isMobile, ...ipObj }
         });
 
-        headRequest(instance.innerMonitorUrl).then((res) => {
-          if (res.statusCode === 200) {
-            return requestSystem(instance.innerMonitorUrl + "/log", { color: "yellow", message: (thisName !== "unknown" ? thisName : ip) + " status log done" }, { headers: { "Content-type": "application/json" } });
-          } else {
-            return null;
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
         res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -2638,16 +2627,6 @@ Ghost.prototype.ghostRouter = function (needs) {
           method: "send",
           date: new Date(),
           project: project.toNormal().proposal,
-        });
-
-        headRequest(instance.innerMonitorUrl).then((res) => {
-          if (res.statusCode === 200) {
-            return requestSystem(instance.innerMonitorUrl + "/log", { color: "red", message: proid + " proposal status save" }, { headers: { "Content-type": "application/json" } });
-          } else {
-            return null;
-          }
-        }).catch((err) => {
-          console.log(err);
         });
 
         res.send(JSON.stringify({ message: "done" }));
@@ -2697,16 +2676,6 @@ Ghost.prototype.ghostRouter = function (needs) {
         if (channel !== "silent") {
           await instance.slack_bot.chat.postMessage({ text, channel });
         }
-
-        headRequest(instance.innerMonitorUrl).then((res) => {
-          if (res.statusCode === 200) {
-            return requestSystem(instance.innerMonitorUrl + "/log", { color: "cyan", message: text }, { headers: { "Content-type": "application/json" } });
-          } else {
-            return null;
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
 
         res.send(JSON.stringify({ message: "done" }));
       } catch (e) {
@@ -4328,13 +4297,6 @@ Ghost.prototype.logMonitorServer = async function () {
       return nameArr;
     }
     const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
-    const defaultInterval = 30 * 60 * 1000;
-    const interval = {
-      d080: 30 * 60 * 1000,
-      d220: 120 * 60 * 1000,
-    };
-    let intervalFunc;
-    let intervalSetting;
     let getInfoFromInterFace;
     let totalReports;
     let pems, pemsLink;
@@ -4478,16 +4440,7 @@ Ghost.prototype.logMonitorServer = async function () {
         }
       });
 
-      app.get(instance.address.officeinfo.ghost.monitor.path + "/getMac", async (req, res) => {
-        try {
-          res.send(JSON.stringify(await getMac()));
-        } catch (e) {
-          console.log(e);
-          res.send(JSON.stringify({ message: "error : " + e.message }));
-        }
-      });
-
-      app.get(instance.address.officeinfo.ghost.monitor.path + "/subway", async (req, res) => {
+      app.post(instance.address.officeinfo.ghost.monitor.path + "/subway", async (req, res) => {
         try {
           res.send(JSON.stringify(await totalReports()));
         } catch (e) {
@@ -4496,79 +4449,6 @@ Ghost.prototype.logMonitorServer = async function () {
         }
       });
 
-      app.post(instance.address.officeinfo.ghost.monitor.path + "/log", async (req, res) => {
-        try {
-          if (typeof req.body.message !== "string" || typeof req.body.color !== "string") {
-            throw new Error("invaild post, must be text");
-          }
-
-          const colorLog = function (mode, text) {
-            const colors = {
-              red: "\x1b[31m%s\x1b[34m > \x1b[0m%s",
-              yellow: "\x1b[33m%s\x1b[34m > \x1b[0m%s",
-              cyan: "\x1b[36m%s\x1b[34m > \x1b[0m%s",
-            };
-            const now = new Date();
-            const zeroAddition = (num) => (num < 10 ? `0${String(num)}` : String(num));
-            let timeWording;
-
-            timeWording = '';
-            timeWording += String(now.getFullYear());
-            timeWording += '-';
-            timeWording += zeroAddition(now.getMonth() + 1);
-            timeWording += '-';
-            timeWording += zeroAddition(now.getDate());
-            timeWording += ' ';
-            timeWording += zeroAddition(now.getHours());
-            timeWording += ':';
-            timeWording += zeroAddition(now.getMinutes());
-            timeWording += ':';
-            timeWording += zeroAddition(now.getSeconds());
-
-            console.log(colors[mode], timeWording, text);
-          }
-
-          colorLog(req.body.color, req.body.message);
-          await MONGOLOCALC.db(`miro81`).collection(collection).insertOne({
-            date: new Date(),
-            message: req.body.message
-          });
-
-          res.send(JSON.stringify({ message: "done" }));
-        } catch (e) {
-          res.send(JSON.stringify({ message: "error : " + e.message }));
-        }
-      });
-    }
-
-    // set interval
-    {
-      intervalFunc = async () => {
-        try {
-          const totalReport = await totalReports();
-          await messageLog(`네트워크 상태\n${JSON.stringify(totalReport, null, 2)}`);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-      intervalSetting = () => {
-        const now = new Date();
-        let dateKey;
-        dateKey = 'd' + zeroAddition(now.getHours()) + zeroAddition(now.getMinutes()).slice(0, 1);
-        if (typeof interval[dateKey] !== "number") {
-          if (Ghost.intervals.monitorIntervalId === null) {
-            Ghost.intervals.monitorIntervalId = setInterval(intervalFunc, defaultInterval);
-          }
-        } else {
-          if (Ghost.intervals.monitorIntervalId !== null) {
-            clearInterval(Ghost.intervals.monitorIntervalId);
-            Ghost.intervals.monitorIntervalId = null;
-          }
-          Ghost.intervals.monitorIntervalId = setInterval(intervalFunc, interval[dateKey]);
-        }
-      }
-      intervalSetting();
-      setInterval(intervalSetting, 10 * 60 * 1000);
     }
 
     // server launching
