@@ -19,6 +19,7 @@ OfficeMonitor.intervals = {};
 OfficeMonitor.prototype.renderReport = async function () {
   const instance = this;
   const os = require(`os`);
+  const members = require(`${process.cwd()}/apps/memberObj.js`);
   const { map } = this.address.officeinfo;
   const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
   try {
@@ -224,8 +225,6 @@ OfficeMonitor.prototype.reportServer = async function () {
   const express = require("express");
   const multer = require("multer");
   const useragent = require("express-useragent");
-  const members = require(`${process.cwd()}/apps/memberObj.js`);
-  const { map } = this.address.officeinfo;
   const { shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, errorLog, sleep, messageSend, messageLog } = this.mother;
   try {
     const PORT = this.address.officeinfo.ghost.monitor.port;
