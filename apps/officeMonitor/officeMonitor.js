@@ -162,9 +162,31 @@ OfficeMonitor.prototype.renderReport = async function () {
 OfficeMonitor.prototype.routerPatch = function (app) {
   const instance = this;
   const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
+  const defaultPath = instance.address.officeinfo.ghost.monitor.path;
+  const ipPass = (req) => {
+    let ip, pass;
+    ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-  app.get(instance.address.officeinfo.ghost.monitor.path, async (req, res) => {
+    console.log(ip);
+    pass = true;
+
+    return pass;
+  }
+
+
+
+
+  app.get(defaultPath, async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
       res.send(JSON.stringify({ message: "OK" }));
     } catch (e) {
       console.log(e);
@@ -172,8 +194,17 @@ OfficeMonitor.prototype.routerPatch = function (app) {
     }
   });
 
-  app.post(instance.address.officeinfo.ghost.monitor.path + "/subway", async (req, res) => {
+  app.get(defaultPath + "/subway", async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
     try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
       res.send(JSON.stringify(await instance.renderReport()));
     } catch (e) {
       console.log(e);
