@@ -14,7 +14,7 @@ const OfficeMonitor = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/officeMonitor";
 }
 
-OfficeMonitor.prototype.renderReport = async function () {
+OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
   const instance = this;
   const os = require(`os`);
   const members = require(`${process.cwd()}/apps/memberObj.js`);
@@ -77,9 +77,17 @@ OfficeMonitor.prototype.renderReport = async function () {
         if (index !== -1) {
           if (typeof map[index].memid === "string") {
             thisMember = members.find((obj) => { return obj.id === map[index].memid });
-            message = `${thisMember.name} ${thisMember.title} (${mac}) => ${data[mac]}`;
+            if (liteMode) {
+              message = `${thisMember.name} ${thisMember.title}`;
+            } else {
+              message = `${thisMember.name} ${thisMember.title}`;
+            }
           } else {
-            message = `${map[index].name} (${mac}) => ${data[mac]}`;
+            if (liteMode) {
+              message = `${map[index].name} (${data[mac]})`;
+            } else {
+              message = `${map[index].name} (${data[mac]})`;
+            }
           }
         } else {
           message = `unknown (${mac}) => ${data[mac]}`;
@@ -212,7 +220,7 @@ OfficeMonitor.prototype.routerPatch = function (app) {
       if (!ipPass(req)) {
         throw new Error("ip ban");
       }
-      res.send(JSON.stringify(await instance.renderReport(), null, 2));
+      res.send(JSON.stringify(await instance.renderReport(true), null, 2));
     } catch (e) {
       console.log(e);
       res.send("error");
