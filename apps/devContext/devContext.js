@@ -1614,12 +1614,14 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // console.log(await human.sendSms({
-    //   name: "배창규",
-    //   phone: "01027473403",
+    // const name = "배창규";
+    // const amount = 1800000;
+    // await human.sendSms({
+    //   name: "",
+    //   phone: "01021993403",
     //   subject: "",
-    //   contents: "안녕하세요.",
-    // }));
+    //   contents: `2021/11/18 13:21\n입금 ${autoComma(amount)}원\n잔액 0원\n${name}\n049***56704022\n기업`,
+    // });
 
 
     // bill passive sync

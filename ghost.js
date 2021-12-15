@@ -4142,7 +4142,7 @@ Ghost.prototype.smsLaunching = async function () {
                     throw new Error("invaild message");
                   } else {
                     const { title, body, timestamp } = sms;
-                    if (sender.includes(title.trim().replace(/[^0-9]/gi, '')) || title === myname) {
+                    if (sender.includes(title.trim().replace(/[^0-9]/gi, '')) || title.trim() === myname) {
                       const date = new Date(timestamp * 1000);
                       let messageArr, index, amount, name, res;
 
