@@ -4069,7 +4069,7 @@ Ghost.prototype.wssLaunching = async function () {
 Ghost.prototype.smsLaunching = async function () {
   const instance = this;
   const { fileSystem, dateToString, messageLog, errorLog, equalJson, requestSystem } = this.mother;
-  const sender = [ "15662566", "01027473403" ];
+  const sender = [ "15662566", "01027473403", "배창규" ];
   const token = "o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr";
   const accountStartNumber = "049";
   const accountEndNumber = "022";
@@ -4473,7 +4473,7 @@ Ghost.prototype.logMonitorServer = async function () {
 
 
 
-          
+
 
 
 
