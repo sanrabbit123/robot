@@ -14,8 +14,6 @@ const OfficeMonitor = function (mother = null, back = null, address = null) {
   this.dir = process.cwd() + "/apps/officeMonitor";
 }
 
-OfficeMonitor.intervals = {};
-
 OfficeMonitor.prototype.renderReport = async function () {
   const instance = this;
   const os = require(`os`);
@@ -93,13 +91,8 @@ OfficeMonitor.prototype.renderReport = async function () {
     }
     zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
 
-    OfficeMonitor.intervals.monitorIntervalId = null;
-    OfficeMonitor.intervals.monitorPast = {};
     getInfoFromInterFace = async (interface, filtering = false) => {
       try {
-        if (!Array.isArray(OfficeMonitor.intervals.monitorPast[interface])) {
-          OfficeMonitor.intervals.monitorPast[interface] = [];
-        }
         const data = await getMac(interface);
         let index;
         let alive;
@@ -124,40 +117,10 @@ OfficeMonitor.prototype.renderReport = async function () {
           }
         }
 
-        isSame = (alive.length === OfficeMonitor.intervals.monitorPast[interface].length);
-        if (isSame) {
-          for (let mac of alive) {
-            if (!OfficeMonitor.intervals.monitorPast[interface].includes(mac)) {
-              isSame = false;
-              break;
-            }
-          }
-        }
-
         report = {
           alive: macToName(alive, data),
           unknown: macToName(alive, data).filter((str) => { return /^unknown/i.test(str); }),
         };
-
-        if (!isSame) {
-          add = [];
-          for (let mac of alive) {
-            if (!OfficeMonitor.intervals.monitorPast[interface].includes(mac)) {
-              add.push(mac);
-            }
-          }
-          subtract = [];
-          for (let mac of OfficeMonitor.intervals.monitorPast[interface]) {
-            if (!alive.includes(mac)) {
-              subtract.push(mac);
-            }
-          }
-
-          report.add = macToName(add, data);
-          report.subtract = macToName(subtract, data);
-        }
-
-        OfficeMonitor.intervals.monitorPast[interface] = equalJson(JSON.stringify(alive));
 
         return report;
 
