@@ -80,13 +80,13 @@ OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
             if (liteMode) {
               message = `${thisMember.name} ${thisMember.title}`;
             } else {
-              message = `${thisMember.name} ${thisMember.title}`;
+              message = `${thisMember.name} ${thisMember.title} (${mac}) => ${data[mac]}`;
             }
           } else {
             if (liteMode) {
-              message = `${map[index].name} (${data[mac]})`;
+              message = `${map[index].name}`;
             } else {
-              message = `${map[index].name} (${data[mac]})`;
+              message = `${map[index].name} (${mac}) => ${data[mac]}`;
             }
           }
         } else {
@@ -129,6 +129,10 @@ OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
           alive: macToName(alive, data),
           unknown: macToName(alive, data).filter((str) => { return /^unknown/i.test(str); }),
         };
+
+        if (liteMode) {
+          report.alive.sort((a, b) => { return (/[가-힣]/gi.test(b) ? 10000 : 0) - (/[가-힣]/gi.test(a) ? 10000 : 0) });
+        }
 
         return report;
 
