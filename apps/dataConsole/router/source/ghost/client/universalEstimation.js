@@ -18,11 +18,11 @@
   "meta": {
     "title": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 견적서 | 홈리에종');"
+      "return (thisPerson.name + ' 고객님 결제 안내 | 홈리에종');"
     ],
     "description": [
       "thisPerson",
-      "return (thisPerson.name + ' 고객님 견적서 | 홈리에종');"
+      "return (thisPerson.name + ' 고객님 결제 안내 | 홈리에종');"
     ],
     "image": [
       "thisPerson",
@@ -61,7 +61,7 @@ UniversalEstimationJs.prototype.billWordings = function () {
   const { dateToString, autoComma } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
-  const { analytics, request } = client.requests[0];
+  const { analytics, request } = client.requests[this.clientRequestNumber];
   const spendDates = (Number(String(analytics.response.service.serid).split('_')[1].replace(/[^0-9]/gi, '')) + 1) * 15;
   const serviceName = [ "홈퍼니싱", "홈스타일링", "토탈 스타일링", "설계 변경" ];
   let start, end;
@@ -1366,6 +1366,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     let bills, bill;
     let data;
     let totalNum, payNum, cancelNum;
+    let clientRequestNumber;
 
     clients = await ajaxJson({ noFlat: true, whereQuery: { cliid } }, "/getClients", { equal: true });
     if (clients.length === 0) {
@@ -1390,11 +1391,20 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
     project = projects[0];
     this.project = project;
 
+    clientRequestNumber = 0;
+    for (let i = 0; i < client.requests.length; i++) {
+      if (client.requests[i].request.timeline.valueOf() <= project.proposal.date.valueOf()) {
+        clientRequestNumber = i;
+        break;
+      }
+    }
+    this.clientRequestNumber = clientRequestNumber;
+
     bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": method } ] } }, "/pythonPass_generalBill", { equal: true });
     if (bills.length === 0) {
       bills = await ajaxJson({ mode: "read", whereQuery: { $and: [ { class: kind }, { "links.cliid": cliid }, { "links.desid": desid }, { "links.proid": proid }, { "links.method": (/off/gi.test(method) ? "online" : "offline") } ] } }, "/pythonPass_generalBill", { equal: true });
       if (bills.length === 0) {
-        alert("견적서가 없습니다! 홈리에종에 문의해주세요!");
+        alert("결제 안내 문서가 없습니다! 홈리에종에 문의해주세요!");
         window.location.href = this.frontPage;
       }
     }
@@ -1494,7 +1504,7 @@ UniversalEstimationJs.prototype.launching = async function (loading) {
       base: {
         instance: this,
         binaryPath: UniversalEstimationJs.binaryPath,
-        subTitle: (this.client.name + " 고객님 견적서"),
+        subTitle: (this.client.name + " 고객님 결제 안내"),
       },
       local: async () => {
         try {

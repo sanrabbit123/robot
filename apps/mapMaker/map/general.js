@@ -678,6 +678,9 @@ module.exports = {
       },
       "wholeSchedule": {
         "behaviors": []
+      },
+      "constructEstimation": {
+        "behaviors": []
       }
     },
     "login": {
