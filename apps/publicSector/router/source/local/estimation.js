@@ -918,7 +918,37 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
   createNode({
     mother: baseTong0,
     event: {
-      click: (e) => {},
+      click: async function (e) {
+        e.stopPropagation();
+        try {
+          const self = this;
+          let fileInput;
+          fileInput = createNode({
+            mother: this,
+            mode: "input",
+            event: {
+              click: (e) => { e.stopPropagation(); },
+              change: async function (e) {
+                try {
+                  const [ file ] = [ ...this.files ];
+                  await instance.fileAddition(file, self, e);
+                } catch (e) {
+                  window.location.reload();
+                }
+              },
+            },
+            attribute: {
+              type: "file",
+            },
+            style: {
+              display: "none",
+            }
+          });
+          fileInput.click();
+        } catch (e) {
+          window.location.reload();
+        }
+      },
       mouseenter: function (e) {
         this.style.transition = "";
         this.style.background = colorChip.green;
@@ -935,232 +965,9 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
         e.preventDefault();
         try {
           const [ file ] = [ ...e.dataTransfer.files ];
-          const staticConst = "/publicSector/temp/" + uniqueValue("hex");
-          let formData;
-          let res, res2;
-          let blackBack, questionBase;
-          let questionBlock;
-          let whiteLineBoxWidth, whiteLineBoxHeight;
-          let whiteLineTitleSize, whiteLineTitleTop, whiteLineTitleWeight;
-          let blackOpacity;
-          let titleWording;
-          let questionTong;
-          let questionArr;
-          let whiteLineBoxPaddingTop;
-          let whiteLineBoxPaddingLeft;
-          let whiteLineFactorSize;
-          let whiteLineFactorMarginBottom;
-          let whiteLineFactorMarginBottomLast;
-          let queryBlockWording0, queryBlockWording1;
-          let queryLineBetween;
-          let queryLineTop;
-          let newRequest;
-
-          whiteLineBoxWidth = 303;
-          whiteLineBoxHeight = 293;
-          whiteLineTitleSize = 22;
-          whiteLineTitleTop = -42;
-          whiteLineTitleWeight = 700;
-          whiteLineBoxPaddingTop = 21;
-          whiteLineBoxPaddingLeft = 26;
-          whiteLineFactorSize = 18;
-          whiteLineFactorMarginBottom = 7;
-          whiteLineFactorMarginBottomLast = 60;
-          queryLineBetween = 10;
-          queryLineTop = 12;
-
-          titleWording = "Q. 누구의 견적서 파일인가요?";
-
-          blackOpacity = 0.7;
-
-          formData = new FormData();
-          formData.append(staticConst, file);
-
-          await ajaxForm(formData, "/publicSector/file");
-
-          res = await ajaxJson({
-            file: staticConst + "/" + file.name,
-            sheetsName: "내역서",
-          }, "/publicSector/excel", { equal: true });
-
-          res2 = await ajaxJson({
-            to: "invoiceRequest",
-            json: { matrix: res }
-          }, "/publicSector/python", { equal: true });
-
-          newRequest = JSON.stringify(res2);
-
-          blackBack = createNode({
-            mother: document.body,
-            style: {
-              position: "absolute",
-              top: String(0) + ea,
-              left: String(0) + ea,
-              width: String(100) + '%',
-              height: String(100) + '%',
-              background: colorChip.realBlack,
-              zIndex: String(5),
-              transition: "all 0.5s ease",
-              opacity: String(0),
-            }
-          });
-
-          setQueue(() => {
-            blackBack.style.opacity = String(blackOpacity);
-            setQueue(() => {
-
-              questionBase = createNode({
-                mother: document.body,
-                style: {
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "absolute",
-                  top: String(0) + ea,
-                  left: String(0) + ea,
-                  width: String(100) + '%',
-                  height: String(100) + '%',
-                  zIndex: String(5),
-                }
-              });
-
-              questionTong = createNode({
-                mother: questionBase,
-                style: {
-                  display: "block",
-                  position: "relative",
-                  width: String(whiteLineBoxWidth) + ea,
-                  height: String(whiteLineBoxHeight) + ea,
-                  borderRadius: String(8) + "px",
-                  border: "1px solid " + colorChip.white,
-                  animation: "fadeuplite 0.5s ease",
-                  paddingTop: String(whiteLineBoxPaddingTop) + ea,
-                  paddingBottom: String(whiteLineBoxPaddingTop) + ea,
-                  paddingLeft: String(whiteLineBoxPaddingLeft) + ea,
-                  paddingRight: String(whiteLineBoxPaddingLeft) + ea,
-                  overflow: "visible",
-                },
-                children: [
-                  {
-                    text: titleWording,
-                    style: {
-                      position: "absolute",
-                      fontSize: String(whiteLineTitleSize) + ea,
-                      fontWeight: String(whiteLineTitleWeight),
-                      color: colorChip.white,
-                      top: String(whiteLineTitleTop) + ea,
-                      left: String(0),
-                    }
-                  },
-                  {
-                    attribute: {
-                      request: newRequest,
-                    },
-                    style: {
-                      position: "relative",
-                      top: String(0),
-                      left: String(0),
-                      width: String(100) + '%',
-                      height: String(100) + '%',
-                      overflow: "scroll",
-                    }
-                  }
-                ]
-              }).children[1];
-
-              for (let box of instance.estimationBoxes) {
-                questionArr = box.textContent.split("고객님").map((str) => { return str.trim() });
-                questionBlock = createNode({
-                  mother: questionTong,
-                  class: [ "hoverDefault_lite" ],
-                  attribute: {
-                    invid: box.getAttribute("invid"),
-                    cliid: box.getAttribute("cliid"),
-                    desid: box.getAttribute("desid"),
-                    proid: box.getAttribute("proid"),
-                  },
-                  event: {
-                    click: function (e) {
-                      const newRequest = equalJson(this.parentElement.getAttribute("request"));
-                      const invid = this.getAttribute("invid");
-                      const cliid = this.getAttribute("cliid");
-                      const desid = this.getAttribute("desid");
-                      const proid = this.getAttribute("proid");
-                      let targetInvoice;
-
-                      targetInvoice = instance.invoiceList.search("invid", invid);
-
-                      console.log(instance.invoiceList)
-                      console.log(targetInvoice);
-                      console.log(invid, cliid, desid, proid);
-                      console.log(newRequest);
-
-
-
-
-
-
-                    }
-                  },
-                  style: {
-                    display: "block",
-                    position: "relative",
-                    width: String(100) + '%',
-                    marginBottom: String(whiteLineFactorMarginBottom) + ea,
-                  }
-                });
-
-                queryBlockWording0 = createNode({
-                  mother: questionBlock,
-                  text: questionArr[0],
-                  style: {
-                    display: "inline-block",
-                    fontSize: String(whiteLineFactorSize) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.white,
-                  }
-                });
-
-                queryBlockWording1 = createNode({
-                  mother: questionBlock,
-                  text: questionArr[1],
-                  style: {
-                    position: "absolute",
-                    right: String(0),
-                    top: String(0),
-                    fontSize: String(whiteLineFactorSize) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.white,
-                  }
-                });
-
-                createNode({
-                  mother: questionBlock,
-                  style: {
-                    position: "absolute",
-                    borderBottom: "1px dashed " + colorChip.white,
-                    height: String(queryLineTop) + ea,
-                    width: withOut(queryBlockWording0.getBoundingClientRect().width + queryBlockWording1.getBoundingClientRect().width + (queryLineBetween * 2), ea),
-                    top: String(0),
-                    left: String(queryBlockWording0.getBoundingClientRect().width + queryLineBetween) + ea,
-                  }
-                });
-              }
-
-              createNode({
-                mother: questionTong,
-                style: {
-                  display: "block",
-                  width: String(100) + '%',
-                  height: String(whiteLineFactorMarginBottomLast) + ea,
-                }
-              });
-
-            }, 300);
-          });
-
+          await instance.fileAddition(file, this, e);
         } catch (e) {
-          console.log(e);
+          window.location.reload();
         }
       }
     },
@@ -2739,7 +2546,7 @@ EstimationJs.prototype.saveState = async function (unshiftMode = false) {
     }, "/publicSector/python");
 
   } catch (e) {
-    console.log(e);
+    window.location.reload();
   }
 }
 
@@ -2759,6 +2566,271 @@ EstimationJs.prototype.addSearchEvent = function () {
     }
   });
 
+}
+
+EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
+  const instance = this;
+  const { totalMother, ea, grayBarWidth, invoiceList } = this;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, setQueue, cleanChildren, ajaxForm, uniqueValue, equalJson } = GeneralJs;
+  try {
+    const staticConst = "/publicSector/temp/" + uniqueValue("hex");
+    const titleWording = "Q. 누구의 견적서 파일인가요?";
+    let formData;
+    let res, res2;
+    let blackBack, questionBase;
+    let questionBlock;
+    let whiteLineBoxWidth, whiteLineBoxHeight;
+    let whiteLineTitleSize, whiteLineTitleTop, whiteLineTitleWeight;
+    let blackOpacity;
+    let questionTong;
+    let questionArr;
+    let whiteLineBoxPaddingTop;
+    let whiteLineBoxPaddingLeft;
+    let whiteLineFactorSize;
+    let whiteLineFactorMarginBottom;
+    let whiteLineFactorMarginBottomLast;
+    let queryBlockWording0, queryBlockWording1;
+    let queryLineBetween;
+    let queryLineTop;
+    let newRequest;
+
+    whiteLineBoxWidth = 303;
+    whiteLineBoxHeight = 293;
+    whiteLineTitleSize = 22;
+    whiteLineTitleTop = -42;
+    whiteLineTitleWeight = 700;
+    whiteLineBoxPaddingTop = 21;
+    whiteLineBoxPaddingLeft = 26;
+    whiteLineFactorSize = 18;
+    whiteLineFactorMarginBottom = 7;
+    whiteLineFactorMarginBottomLast = 60;
+    queryLineBetween = 10;
+    queryLineTop = 12;
+
+    blackOpacity = 0.7;
+
+    formData = new FormData();
+    formData.append(staticConst, file);
+
+    await ajaxForm(formData, "/publicSector/file");
+
+    res = await ajaxJson({
+      file: staticConst + "/" + file.name,
+      sheetsName: "내역서",
+    }, "/publicSector/excel", { equal: true });
+
+    res2 = await ajaxJson({
+      to: "invoiceRequest",
+      json: { matrix: res }
+    }, "/publicSector/python", { equal: true });
+
+    newRequest = JSON.stringify(res2);
+
+    blackBack = createNode({
+      mother: document.body,
+      style: {
+        position: "absolute",
+        top: String(0) + ea,
+        left: String(0) + ea,
+        width: String(100) + '%',
+        height: String(100) + '%',
+        background: colorChip.realBlack,
+        zIndex: String(5),
+        transition: "all 0.5s ease",
+        opacity: String(0),
+      }
+    });
+
+    setQueue(() => {
+      blackBack.style.opacity = String(blackOpacity);
+      setQueue(() => {
+
+        questionBase = createNode({
+          mother: document.body,
+          style: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            top: String(0) + ea,
+            left: String(0) + ea,
+            width: String(100) + '%',
+            height: String(100) + '%',
+            zIndex: String(5),
+          }
+        });
+
+        questionTong = createNode({
+          mother: questionBase,
+          style: {
+            display: "block",
+            position: "relative",
+            width: String(whiteLineBoxWidth) + ea,
+            height: String(whiteLineBoxHeight) + ea,
+            borderRadius: String(8) + "px",
+            border: "1px solid " + colorChip.white,
+            animation: "fadeuplite 0.5s ease",
+            paddingTop: String(whiteLineBoxPaddingTop) + ea,
+            paddingBottom: String(whiteLineBoxPaddingTop) + ea,
+            paddingLeft: String(whiteLineBoxPaddingLeft) + ea,
+            paddingRight: String(whiteLineBoxPaddingLeft) + ea,
+            overflow: "visible",
+          },
+          children: [
+            {
+              text: titleWording,
+              style: {
+                position: "absolute",
+                fontSize: String(whiteLineTitleSize) + ea,
+                fontWeight: String(whiteLineTitleWeight),
+                color: colorChip.white,
+                top: String(whiteLineTitleTop) + ea,
+                left: String(0),
+              }
+            },
+            {
+              attribute: {
+                request: newRequest,
+              },
+              style: {
+                position: "relative",
+                top: String(0),
+                left: String(0),
+                width: String(100) + '%',
+                height: String(100) + '%',
+                overflow: "scroll",
+              }
+            }
+          ]
+        }).children[1];
+
+        for (let box of instance.estimationBoxes) {
+          questionArr = box.textContent.split("고객님").map((str) => { return str.trim() });
+          questionBlock = createNode({
+            mother: questionTong,
+            class: [ "hoverDefault_lite" ],
+            attribute: {
+              invid: box.getAttribute("invid"),
+              cliid: box.getAttribute("cliid"),
+              desid: box.getAttribute("desid"),
+              proid: box.getAttribute("proid"),
+            },
+            event: {
+              click: async function (e) {
+                try {
+                  const newRequest = equalJson(this.parentElement.getAttribute("request"));
+                  const invid = this.getAttribute("invid");
+                  const cliid = this.getAttribute("cliid");
+                  const desid = this.getAttribute("desid");
+                  const proid = this.getAttribute("proid");
+                  let targetInvoice;
+                  let whereQuery, updateQuery;
+
+                  instance.invoiceList.search("invid", invid).requests[0].status = "작성 완료";
+                  instance.invoiceList.search("invid", invid).requests.unshift(newRequest);
+                  targetInvoice = instance.invoiceList.search("invid", invid);
+
+                  whereQuery = { inivid: targetInvoice.invid };
+                  updateQuery = {};
+                  updateQuery["requests"] = targetInvoice.requests;
+
+                  // await ajaxJson({
+                  //   to: "generalMongo",
+                  //   json: {
+                  //     mode: "update",
+                  //     collection: "constructInvoice",
+                  //     db: "python",
+                  //     whereQuery, updateQuery
+                  //   }
+                  // }, "/publicSector/python");
+
+                  document.body.children[([ ...document.body.children ].length - 1)].style.animation = "fadedownlite 0.3s ease forwards";
+                  document.body.children[([ ...document.body.children ].length - 2)].style.opacity = String(0);
+
+                  setQueue(() => {
+                    document.body.removeChild(document.body.lastChild);
+                    document.body.removeChild(document.body.lastChild);
+
+                    const removeTargets = eventDom.querySelectorAll("input");
+                    for (let dom of removeTargets) {
+                      eventDom.removeChild(dom);
+                    }
+
+                    ajaxJson({
+                      target: "publicSector",
+                    }, "/publicSector/delete").then(() => {
+                      instance.estimationBoxes.find((dom) => { return dom.getAttribute("invid") === invid }).click();
+                    }).catch((err) => {
+                      window.location.reload();
+                    });
+
+                  }, 501);
+
+                } catch (e) {
+                  window.location.reload();
+                }
+              }
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              width: String(100) + '%',
+              marginBottom: String(whiteLineFactorMarginBottom) + ea,
+            }
+          });
+
+          queryBlockWording0 = createNode({
+            mother: questionBlock,
+            text: questionArr[0],
+            style: {
+              display: "inline-block",
+              fontSize: String(whiteLineFactorSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.white,
+            }
+          });
+
+          queryBlockWording1 = createNode({
+            mother: questionBlock,
+            text: questionArr[1],
+            style: {
+              position: "absolute",
+              right: String(0),
+              top: String(0),
+              fontSize: String(whiteLineFactorSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.white,
+            }
+          });
+
+          createNode({
+            mother: questionBlock,
+            style: {
+              position: "absolute",
+              borderBottom: "1px dashed " + colorChip.white,
+              height: String(queryLineTop) + ea,
+              width: withOut(queryBlockWording0.getBoundingClientRect().width + queryBlockWording1.getBoundingClientRect().width + (queryLineBetween * 2), ea),
+              top: String(0),
+              left: String(queryBlockWording0.getBoundingClientRect().width + queryLineBetween) + ea,
+            }
+          });
+        }
+
+        createNode({
+          mother: questionTong,
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            height: String(whiteLineFactorMarginBottomLast) + ea,
+          }
+        });
+
+      }, 300);
+    });
+
+  } catch (e) {
+    window.location.reload();
+  }
 }
 
 EstimationJs.prototype.launching = async function () {
