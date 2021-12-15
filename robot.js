@@ -744,7 +744,7 @@ Robot.prototype.officeMonitor = async function () {
   try {
     const OfficeMonitor = require(`${process.cwd()}/apps/officeMonitor/officeMonitor.js`);
     const app = new OfficeMonitor();
-    await OfficeMonitor.connect();
+    await app.reportServer();
   } catch (e) {
     console.log(e);
   }

@@ -218,7 +218,7 @@ OfficeMonitor.prototype.routerPatch = function (app) {
   });
 }
 
-OfficeMonitor.prototype.connect = async function () {
+OfficeMonitor.prototype.reportServer = async function () {
   const instance = this;
   const https = require("https");
   const express = require("express");
