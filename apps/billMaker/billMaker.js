@@ -1675,7 +1675,11 @@ BillMaker.prototype.requestInvoice = async function (buiid, proid, contents, opt
 BillMaker.prototype.matrixToRequest = async function (file) {
   const instance = this;
   const ExcelReader = require(`${process.cwd()}/apps/excelReader/excelReader.js`);
+  const { uniqueValue } = this.mother;
   try {
+    const requestIdConst = "R";
+    const collection = "constructInvoice";
+    const map = require(`${this.mapDir}/${collection}.js`);
     const excel = new ExcelReader(this.mother, this.back, this.address);
     const commissionPercentage = 10;
     let matrix;
@@ -1790,7 +1794,8 @@ BillMaker.prototype.matrixToRequest = async function (file) {
       return str.replace(/^[0-9]+\. /gi, '');
     })
 
-    tong3 = {};
+    tong3 = map.sub("requests");
+    tong3.id = requestIdConst + uniqueValue("hex");
     tong3.items = tong2;
     tong3.comments = commentArr;
 
@@ -1805,8 +1810,6 @@ BillMaker.prototype.matrixToRequest = async function (file) {
     vat = Math.floor((consumer / 11) / 10) * 10;
     supply = Math.floor(consumer - vat);
     tong3.commission = { supply, vat, consumer };
-
-    tong3.info = [];
 
     return tong3;
   } catch (e) {

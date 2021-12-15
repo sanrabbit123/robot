@@ -615,7 +615,7 @@ EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
 EstimationJs.prototype.estimationList = function (buiid = '') {
   const instance = this;
   const { totalMother, ea, grayBarWidth, invoiceList } = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, downloadFile, setQueue, cleanChildren, ajaxForm, uniqueValue } = GeneralJs;
+  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, downloadFile, setQueue, cleanChildren, ajaxForm, uniqueValue, equalJson } = GeneralJs;
   const mobile = this.media[4];
   const desktop = !mobile;
   const wording = `+ 버튼을 눌러 견적서를 추가하거나, <b%샘플 파일%b>로 작업한 엑셀 파일을 + 버튼으로 드래그 앤 드롭해 견적서를 추가하세요.`;
@@ -935,7 +935,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
         e.preventDefault();
         try {
           const [ file ] = [ ...e.dataTransfer.files ];
-          const staticConst = uniqueValue("hex");
+          const staticConst = "/publicSector/temp/" + uniqueValue("hex");
           let formData;
           let res, res2;
           let blackBack, questionBase;
@@ -951,29 +951,35 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
           let whiteLineFactorSize;
           let whiteLineFactorMarginBottom;
           let whiteLineFactorMarginBottomLast;
+          let queryBlockWording0, queryBlockWording1;
+          let queryLineBetween;
+          let queryLineTop;
+          let newRequest;
 
           whiteLineBoxWidth = 303;
           whiteLineBoxHeight = 293;
           whiteLineTitleSize = 22;
           whiteLineTitleTop = -42;
           whiteLineTitleWeight = 700;
-          whiteLineBoxPaddingTop = 16;
-          whiteLineBoxPaddingLeft = 21;
+          whiteLineBoxPaddingTop = 21;
+          whiteLineBoxPaddingLeft = 26;
           whiteLineFactorSize = 18;
           whiteLineFactorMarginBottom = 7;
           whiteLineFactorMarginBottomLast = 60;
+          queryLineBetween = 10;
+          queryLineTop = 12;
 
           titleWording = "Q. 누구의 견적서 파일인가요?";
 
           blackOpacity = 0.7;
 
           formData = new FormData();
-          formData.append("/" + staticConst, file);
+          formData.append(staticConst, file);
 
           await ajaxForm(formData, "/publicSector/file");
 
           res = await ajaxJson({
-            file: "/" + staticConst + "/" + file.name,
+            file: staticConst + "/" + file.name,
             sheetsName: "내역서",
           }, "/publicSector/excel", { equal: true });
 
@@ -981,6 +987,8 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
             to: "invoiceRequest",
             json: { matrix: res }
           }, "/publicSector/python", { equal: true });
+
+          newRequest = JSON.stringify(res2);
 
           blackBack = createNode({
             mother: document.body,
@@ -1045,6 +1053,9 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                     }
                   },
                   {
+                    attribute: {
+                      request: newRequest,
+                    },
                     style: {
                       position: "relative",
                       top: String(0),
@@ -1057,47 +1068,84 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
                 ]
               }).children[1];
 
-              for (var i = 0; i < 3; i++) {
+              for (let box of instance.estimationBoxes) {
+                questionArr = box.textContent.split("고객님").map((str) => { return str.trim() });
+                questionBlock = createNode({
+                  mother: questionTong,
+                  class: [ "hoverDefault_lite" ],
+                  attribute: {
+                    invid: box.getAttribute("invid"),
+                    cliid: box.getAttribute("cliid"),
+                    desid: box.getAttribute("desid"),
+                    proid: box.getAttribute("proid"),
+                  },
+                  event: {
+                    click: function (e) {
+                      const newRequest = equalJson(this.parentElement.getAttribute("request"));
+                      const invid = this.getAttribute("invid");
+                      const cliid = this.getAttribute("cliid");
+                      const desid = this.getAttribute("desid");
+                      const proid = this.getAttribute("proid");
+                      let targetInvoice;
 
-                for (let box of instance.estimationBoxes) {
-                  questionArr = box.textContent.split("고객님").map((str) => { return str.trim() });
-                  questionBlock = createNode({
-                    mother: questionTong,
-                    style: {
-                      display: "block",
-                      position: "relative",
-                      width: String(100) + '%',
-                      marginBottom: String(whiteLineFactorMarginBottom) + ea,
-                    }
-                  });
-                  createNode({
-                    mother: questionBlock,
-                    text: questionArr[0],
-                    style: {
-                      display: "inline-block",
-                      fontSize: String(whiteLineFactorSize) + ea,
-                      fontWeight: String(500),
-                      color: colorChip.white,
-                    }
-                  })
-                  createNode({
-                    mother: questionBlock,
-                    text: questionArr[1],
-                    style: {
-                      display: "inline-block",
-                      position: "absolute",
-                      right: String(0),
-                      top: String(0),
-                      fontSize: String(whiteLineFactorSize) + ea,
-                      fontWeight: String(500),
-                      color: colorChip.white,
-                    }
-                  });
-                }
+                      targetInvoice = instance.invoiceList.search("invid", invid);
+
+                      console.log(instance.invoiceList)
+                      console.log(targetInvoice);
+                      console.log(invid, cliid, desid, proid);
+                      console.log(newRequest);
 
 
+
+
+
+
+                    }
+                  },
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    width: String(100) + '%',
+                    marginBottom: String(whiteLineFactorMarginBottom) + ea,
+                  }
+                });
+
+                queryBlockWording0 = createNode({
+                  mother: questionBlock,
+                  text: questionArr[0],
+                  style: {
+                    display: "inline-block",
+                    fontSize: String(whiteLineFactorSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.white,
+                  }
+                });
+
+                queryBlockWording1 = createNode({
+                  mother: questionBlock,
+                  text: questionArr[1],
+                  style: {
+                    position: "absolute",
+                    right: String(0),
+                    top: String(0),
+                    fontSize: String(whiteLineFactorSize) + ea,
+                    fontWeight: String(500),
+                    color: colorChip.white,
+                  }
+                });
+
+                createNode({
+                  mother: questionBlock,
+                  style: {
+                    position: "absolute",
+                    borderBottom: "1px dashed " + colorChip.white,
+                    height: String(queryLineTop) + ea,
+                    width: withOut(queryBlockWording0.getBoundingClientRect().width + queryBlockWording1.getBoundingClientRect().width + (queryLineBetween * 2), ea),
+                    top: String(0),
+                    left: String(queryBlockWording0.getBoundingClientRect().width + queryLineBetween) + ea,
+                  }
+                });
               }
-
 
               createNode({
                 mother: questionTong,
@@ -1110,8 +1158,6 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
 
             }, 300);
           });
-
-          console.log(res2);
 
         } catch (e) {
           console.log(e);
