@@ -164,17 +164,24 @@ OfficeMonitor.prototype.routerPatch = function (app) {
   const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
   const defaultPath = instance.address.officeinfo.ghost.monitor.path;
   const ipPass = (req) => {
-    let ip, pass;
+    let ip;
     ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-    console.log(ip);
-    pass = true;
-
-    return pass;
+    if (/^172\.30\.1/.test(ip)) {
+      return true;
+    } else if (ip === "220.117.13.12") {
+      return true;
+    } else if (/^223\.3/.test(ip)) {
+      return true;
+    } else if (/^223\.4/.test(ip)) {
+      return true;
+    } else if (/^223\.5/.test(ip)) {
+      return true;
+    } else if (/^223\.6/.test(ip)) {
+      return true;
+    } else {
+      return false;
+    }
   }
-
-
-
 
   app.get(defaultPath, async (req, res) => {
     res.set({
