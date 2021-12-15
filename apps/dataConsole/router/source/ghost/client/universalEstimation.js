@@ -250,19 +250,19 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   titleBarBottomVisual = <%% (isMac() ? 6 : 10), (isMac() ? 6 : 10), (isMac() ? 6 : 10), (isMac() ? 6 : 8), 6 %%>;
 
   initWordingSize = <%% 14.5, 14, 14, 13, 3 %%>;
-  initWordingWeight = <%% 300, 300, 300, 300, 300 %%>;
+  initWordingWeight = <%% 400, 400, 400, 400, 400 %%>;
 
   subTitleBoxTop = <%% 35, 35, 31, 20, 35 %%>;
 
   itemBarLeft = <%% 28, 28, 28, 28, 2 %%>;
   itemBarTop = <%% 10, 10, 10, 10, 1 %%>;
-  itemBarBottom = <%% 16, 16, 16, 16, 2 %%>;
+  itemBarBottom = <%% 11, 11, 11, 11, 2 %%>;
 
   tableMarginTop = <%% 32, 32, 26, 22, 8.5 %%>;
-  tablePaddingTop = <%% 13, 13, 13, 13, 2.5 %%>;
-  tablePaddingBottom = <%% (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3 %%>;
-  barPaddingBottom = <%% 5, 5, 5, 5, 2 %%>;
-  barMarginBottom = <%% 14, 14, 14, 14, 2.5 %%>;
+  tablePaddingTop = <%% 10, 10, 10, 10, 2.5 %%>;
+  tablePaddingBottom = <%% (isMac() ? 20 : 17), (isMac() ? 20 : 17), (isMac() ? 20 : 17), (isMac() ? 20 : 17), 3 %%>;
+  barPaddingBottom = <%% 9, 9, 9, 9, 1.5 %%>;
+  barMarginBottom = <%% 13, 13, 13, 13, 2.5 %%>;
 
   sumBoxBarTop = <%% (isMac() ? 19 : 16), (isMac() ? 19 : 16), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.5 %%>;
   sumBoxMainFontSize = <%% 29, 29, 28, 27, 5.5 %%>;
