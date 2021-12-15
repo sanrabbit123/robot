@@ -2224,6 +2224,36 @@ ReceiptRouter.prototype.rou_post_returnDummy = function () {
   return obj;
 }
 
+ReceiptRouter.prototype.rou_post_invoiceRead = function () {
+  const instance = this;
+  const back = this.back;
+  const { equalJson, sleep } = this.mother;
+  let obj = {};
+  obj.link = "/invoiceRead";
+  obj.func = async function (req, res) {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (req.body.whereQuery === undefined) {
+        throw new Error("invaild post");
+      }
+      const collection = "constructInvoice";
+      const { whereQuery } = equalJson(req.body);
+      const rows = await back.mongoRead(collection, whereQuery, { selfMongo: instance.mongolocal });
+      res.send(JSON.stringify(rows));
+    } catch (e) {
+      instance.mother.errorLog("Python 서버 문제 생김 (rou_post_invoiceRead): " + e.message).catch((e) => { console.log(e); });
+      res.send(JSON.stringify({ message: "error" }));
+      console.log(e);
+    }
+  }
+  return obj;
+}
+
 ReceiptRouter.prototype.rou_post_invoiceRequest = function () {
   const instance = this;
   const bill = this.bill;

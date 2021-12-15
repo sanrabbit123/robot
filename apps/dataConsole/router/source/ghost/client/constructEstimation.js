@@ -504,6 +504,7 @@ ConstructEstimationJs.prototype.launching = async function (loading) {
     let designers, designer;
     let requestNumber;
     let service;
+    let invoiceList, invoice;
 
     if (getObj.proid === undefined) {
       window.alert("잘못된 접근입니다!");
@@ -548,7 +549,18 @@ ConstructEstimationJs.prototype.launching = async function (loading) {
     [ designer ] = designers;
     this.designer = designer;
 
+    invoiceList = await ajaxJson({
+      whereQuery: { "links.proid": proid }
+    }, "/pythonPass_invoiceRead", { equal: true });
+    if (invoiceList.length === 0) {
+      window.alert("잘못된 접근입니다!");
+      window.location.href = this.frontPage;
+    }
+    [ invoice ] = invoiceList;
+    this.invoice = invoice;
+    this.invid = invoice.invid;
 
+    console.log(invoice);
 
 
     await this.mother.ghostClientLaunching({

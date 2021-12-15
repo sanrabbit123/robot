@@ -3532,7 +3532,7 @@ DataRouter.prototype.rou_post_pythonPass = function () {
   const address = this.address;
   const { requestSystem, equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill" ];
+  obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill", "/pythonPass_invoiceRead" ];
   obj.func = async function (req, res) {
     try {
       const url = req.url.replace(/^\//gi, '');
