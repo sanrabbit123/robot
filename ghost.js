@@ -4069,7 +4069,8 @@ Ghost.prototype.wssLaunching = async function () {
 Ghost.prototype.smsLaunching = async function () {
   const instance = this;
   const { fileSystem, dateToString, messageLog, errorLog, equalJson, requestSystem } = this.mother;
-  const sender = [ "15662566", "01027473403", "배창규" ];
+  const sender = [ "15662566", "01027473403", "0220392252" ];
+  const myname = "배창규";
   const token = "o.u4wyBN6vM9IxqjHq8SLoFE0b1D82kbGr";
   const accountStartNumber = "049";
   const accountEndNumber = "022";
@@ -4141,7 +4142,7 @@ Ghost.prototype.smsLaunching = async function () {
                     throw new Error("invaild message");
                   } else {
                     const { title, body, timestamp } = sms;
-                    if (sender.includes(title.trim().replace(/[^0-9]/gi, ''))) {
+                    if (sender.includes(title.trim().replace(/[^0-9]/gi, '')) || title === myname) {
                       const date = new Date(timestamp * 1000);
                       let messageArr, index, amount, name, res;
 
