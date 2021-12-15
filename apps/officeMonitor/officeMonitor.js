@@ -203,6 +203,24 @@ OfficeMonitor.prototype.routerPatch = function (app) {
 
   app.get(defaultPath + "/subway", async (req, res) => {
     res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      res.send(JSON.stringify(await instance.renderReport(), null, 2));
+    } catch (e) {
+      console.log(e);
+      res.send("error");
+    }
+  });
+
+  app.post(defaultPath + "/subway", async (req, res) => {
+    res.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
