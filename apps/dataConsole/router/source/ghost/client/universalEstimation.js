@@ -361,7 +361,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   cashLoadingBetween = <%% 8, 8, 8, 8, 1.2 %%>;
   cashLoadingTop = <%% 30, 30, 30, 30, 5.7 %%>;
   cashWordingSize = <%% 20, 20, 20, 20, 3.7 %%>;
-  cashWordingTop = <%% isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, 4.8 %%>;
+  cashWordingTop = <%% isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, 4.6 %%>;
   inputBaseHeight = <%% 36, 36, 36, 36, 7 %%>;
   inputBaseVisual = <%% 1, 1, 1, 1, 0.1 %%>;
   cashInputSize = <%% 16, 16, 16, 16, 3 %%>;
@@ -374,7 +374,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   deactiveOpacity = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
   greenNoticePaddingTop = <%% 14, 14, 14, 14, 2.2 %%>;
-  greenNoticePaddingBottom = <%% 11, 11, 11, 11, 1.8 %%>;
+  greenNoticePaddingBottom = <%% 11, 11, 11, 11, 1.7 %%>;
   greenNoticePaddingLeft = <%% 16, 16, 16, 16, 3 %%>;
   greenNoticeBetween = <%% 6, 6, 6, 6, 1 %%>;
   greenNoticeSize = <%% 12, 12, 12, 12, 2.2 %%>;
