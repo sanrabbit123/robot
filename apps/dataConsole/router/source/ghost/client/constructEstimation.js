@@ -44,9 +44,11 @@ const ConstructEstimationJs = function () {
 
 ConstructEstimationJs.binaryPath = "/middle/cestimation";
 
-ConstructEstimationJs.prototype.estimationWordings = function () {
+ConstructEstimationJs.prototype.estimationWordings = function (requestIndex = 0) {
   const instance = this;
-  const { client, designer, project, media } = this;
+  const { client, designer, project, media, invoice } = this;
+  const targetRequest = invoice.requests[requestIndex];
+  const { items, comments, commission } = targetRequest;
   const { dateToString, autoComma } = GeneralJs;
   const mobile = media[4];
   const desktop = !mobile;
@@ -70,9 +72,15 @@ ConstructEstimationJs.prototype.estimationWordings = function () {
       "<b%예상 기간%b> : " + dateToString(start) + " ~ " + dateToString(end),
     ],
     column: [],
-    sum: {},
+    ratio: [],
     commentsTitle: "<b%*%b> 안내 사항",
-    comments: [],
+    comments,
+    items,
+    itemDetail: () => {},
+    itemPrice: (detail) => {
+      return Math.floor(detail.unit.amount.consumer * detail.unit.number);
+    },
+    commission,
   };
   if (desktop) {
     wordings.column = [
@@ -83,12 +91,39 @@ ConstructEstimationJs.prototype.estimationWordings = function () {
       "소비자가",
       "비고"
     ];
+    wordings.ratio = [
+      38,
+      14,
+      7,
+      7,
+      14,
+      20
+    ];
+    wordings.itemDetail = (detail) => {
+      return [
+        detail.name,
+        autoComma(detail.unit.amount.consumer) + '원',
+        String(detail.unit.number),
+        detail.unit.ea,
+        autoComma(Math.floor(detail.unit.amount.consumer * detail.unit.number)) + '원',
+        detail.description
+      ];
+    }
   } else {
     wordings.column = [
       "품명",
-      "수량",
       "소비자가",
     ];
+    wordings.ratio = [
+      62,
+      38,
+    ];
+    wordings.itemDetail = (detail) => {
+      return [
+        detail.name,
+        autoComma(Math.floor(detail.unit.amount.consumer * detail.unit.number)) + '원',
+      ];
+    }
   }
 
   return wordings;
@@ -97,12 +132,10 @@ ConstructEstimationJs.prototype.estimationWordings = function () {
 ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   const instance = this;
   const { client, designer, ea, baseTong, media, invoice } = this;
-  const targetRequest = invoice.requests[requestIndex];
-  const { items, comments, commission } = targetRequest;
   const mobile = media[4];
   const desktop = !mobile;
   const { createNode, createNodes, withOut, colorChip, ajaxJson, isMac, autoComma } = GeneralJs;
-  const wordings = this.estimationWordings();
+  const wordings = this.estimationWordings(requestIndex);
   let whiteBlock, whiteTong;
   let blockHeight;
   let margin;
@@ -126,12 +159,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   let tablePaddingBottom;
   let barPaddingBottom;
   let barMarginBottom;
-  let sumBox;
-  let sumBoxPaddingTop, sumBoxPaddingBottom;
-  let sumBoxBarTop;
-  let sumBoxMainFontSize, sumBoxMainFontWeight, sumBoxMainPaddingLeft;
-  let sumBoxVatFontSize, sumBoxVatFontWeight, sumBoxVatPaddingLeft;
-  let grayMarginTop0, grayMarginTop1;
+  let grayMarginTop0;
   let cautionBox;
   let cautionTitleBox, cautionContentsBox;
   let cautionPaddingTop;
@@ -142,21 +170,8 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   let cautionWordsMarginBottom;
   let cautionLogoBottom, cautionLogoHeight;
   let grayTong;
-  let grayHeight, grayTop, grayTextTop, grayTextLeft, grayTextSize, grayButtonHeight;
   let grayTextTong;
-  let grayTongMarginBottom;
-  let buttonOff, buttonOn, buttonTong;
-  let buttonTongHeight;
-  let greenButton;
-  let greenButtonBase;
-  let greenButtonWidth, greenButtonHeight;
-  let greenButtonFontSize;
-  let greenButtonTextTop;
-  let greenBasePaddingTop, greenBasePaddingBottom;
-  let completeMarginTop0;
-  let paymentEvent;
   let titleBoxPaddingTop;
-  let greenButtonBetween;
   let tableMarginTopFirst;
   let sumNumberSize;
   let itemSumNumber;
@@ -164,10 +179,19 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   let itemTitleTop, itemTitleSize;
   let itemSumBottom;
   let itemSumLineTop;
+  let sumBox;
+  let totalSum;
+  let whiteTongSecond;
+  let firstWhitePaddingBottom;
+  let firstBlockMarginBottom;
+  let sumBoxHeight;
+  let finalPaddingBottomVisual;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
+  firstWhitePaddingBottom = <%% 115, 115, 107, 99, 8 %%>;
+  firstBlockMarginBottom = <%% 12, 12, 12, 8, 2 %%>;
 
   titleFontSize = <%% 30, 30, 28, 23, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
@@ -195,20 +219,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   barPaddingBottom = <%% 9, 9, 9, 9, 1.5 %%>;
   barMarginBottom = <%% 13, 13, 13, 13, 2.5 %%>;
 
-  sumBoxBarTop = <%% (isMac() ? 19 : 16), (isMac() ? 19 : 16), (isMac() ? 18 : 15), (isMac() ? 18 : 15), 3.5 %%>;
-  sumBoxMainFontSize = <%% 29, 29, 28, 27, 5.5 %%>;
-  sumBoxMainFontWeight = <%% 500, 500, 500, 500, 500 %%>;
-  sumBoxMainPaddingLeft = <%% 19, 19, 19, 19, 3 %%>;
-  sumBoxVatFontSize = <%% 18, 18, 17, 16, 3 %%>;
-  sumBoxVatFontWeight = <%% 300, 300, 300, 300, 300 %%>;
-  sumBoxVatPaddingLeft = <%% 10, 10, 10, 10, 2 %%>;
-
-  sumBoxPaddingTop = <%% 15, 15, 14, 13, 2.5 %%>;
-  sumBoxPaddingBottom = <%% 10, 10, 10, 10, 5 %%>;
-
-  completeMarginTop0 = <%% 32, 32, 24, 20, 3 %%>;
   grayMarginTop0 = <%% 60, 60, 50, 40, 4 %%>;
-  grayMarginTop1 = <%% 20, 20, 14, 12, 2 %%>;
 
   cautionPaddingTop = <%% 34, 34, 34, 27, 4 %%>;
   cautionPaddingBottom = <%% (isMac() ? 29 : 25), (isMac() ? 29 : 25), (isMac() ? 29 : 25), (isMac() ? 24 : 22), 4 %%>;
@@ -220,16 +231,6 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   cautionLogoBottom = <%% 12, 12, 12, 12, 12 %%>;
   cautionLogoHeight = <%% 16, 16, 16, 16, 16 %%>;
 
-  grayHeight = <%% 180, 180, 180, 180, 42 %%>;
-  grayTop = <%% 5, 5, 5, 5, 0 %%>;
-  grayTextTop = <%% 22, 22, 20, 20, 3.5 %%>;
-  grayTextLeft = <%% 22, 22, 20, 20, 4 %%>;
-  grayTextSize = <%% 12, 12, 10, 10, 2 %%>;
-  grayButtonHeight = <%% 13, 13, 12, 11, 2.5 %%>;
-  grayTongMarginBottom = <%% 15, 15, 15, 15, 2.5 %%>;
-
-  buttonTongHeight = <%% 30, 30, 30, 30, 5 %%>;
-
   sumNumberSize = <%% 31, 31, 29, 28, 6 %%>;
   sumWhitePaddingLeft = <%% 12, 12, 10, 10, 2 %%>;
 
@@ -239,8 +240,11 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   itemSumBottom = <%% -55, -55, -54, -52, -10 %%>;
   itemSumLineTop = <%% 19, 19, 18, 17, 4 %%>;
 
-  itemsRatio = [ 38, 14, 7, 7, 14, 20 ];
-  itemsRatio = itemsRatio.map((num) => { return String(num) + '%'; });
+  sumBoxHeight = <%% 25, 25, 24, 23, 5 %%>;
+  finalPaddingBottomVisual = <%% 3, 3, 2, 1, 0 %%>;
+
+  itemsRatio = wordings.ratio.map((num) => { return String(num) + '%'; });
+  items = wordings.items;
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -251,8 +255,8 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
       height: desktop ? String(blockHeight - (margin * 2)) + ea : "auto",
       background: colorChip.white,
       paddingTop: String(desktop ? margin : 8.5) + ea,
-      paddingBottom: String(desktop ? margin : 8) + ea,
-      marginBottom: String(blockMarginBottom) + ea,
+      paddingBottom: String(firstWhitePaddingBottom) + ea,
+      marginBottom: String(firstBlockMarginBottom) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },
     children: [
@@ -339,6 +343,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
     ]
   });
 
+  totalSum = 0;
   for (let z = 0; z < items.length; z++) {
 
     itemSumNumber = 0;
@@ -407,15 +412,8 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
 
     for (let y = 0; y < items[z].detail.length; y++) {
 
-      itemDetailArr = [
-        items[z].detail[y].name,
-        autoComma(items[z].detail[y].unit.amount.consumer) + '원',
-        String(items[z].detail[y].unit.number),
-        items[z].detail[y].unit.ea,
-        autoComma(Math.floor(items[z].detail[y].unit.amount.consumer * items[z].detail[y].unit.number)) + '원',
-        items[z].detail[y].description
-      ];
-      itemSumNumber += Math.floor(items[z].detail[y].unit.amount.consumer * items[z].detail[y].unit.number);
+      itemDetailArr = wordings.itemDetail(items[z].detail[y]);
+      itemSumNumber += wordings.itemPrice(items[z].detail[y]);
 
       itemBar = createNode({
         mother: table,
@@ -479,13 +477,79 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
         }
       ]
     });
+    totalSum += itemSumNumber;
 
   }
 
+  whiteTongSecond = createNode({
+    mother: baseTong,
+    style: {
+      position: "relative",
+      borderRadius: String(desktop ? 8 : 1) + ea,
+      width: String(100) + '%',
+      height: desktop ? String(blockHeight - (margin * 2)) + ea : "auto",
+      background: colorChip.white,
+      paddingTop: String(desktop ? margin : 8.5) + ea,
+      paddingBottom: String(desktop ? margin + finalPaddingBottomVisual : 8) + ea,
+      marginBottom: String(blockMarginBottom) + ea,
+      boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+    },
+    children: [
+      {
+        display: "block",
+        position: "relative",
+        width: withOut(margin * 2, ea),
+        height: String(100) + '%',
+        marginLeft: String(margin) + ea,
+      }
+    ]
+  }).firstChild;
 
+  sumBox = createNode({
+    mother: whiteTongSecond,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(100) + '%',
+      height: String(sumBoxHeight) + ea,
+    },
+    children: [
+      {
+        style: {
+          position: "absolute",
+          display: "block",
+          top: String(0) + ea,
+          width: String(100) + '%',
+          textAlign: "right",
+        },
+        children: [
+          {
+            position: "absolute",
+            top: String(0),
+            left: String(0),
+            width: String(100) + '%',
+            height: String(itemSumLineTop) + ea,
+            borderBottom: "1px dashed " + colorChip.gray4,
+          },
+          {
+            text: "합계 :&nbsp;&nbsp;&nbsp;" + autoComma(totalSum) + '원',
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(sumNumberSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.green,
+              paddingLeft: String(sumWhitePaddingLeft) + ea,
+              background: colorChip.white,
+            },
+          }
+        ]
+      }
+    ]
+  });
 
   cautionBox = createNode({
-    mother: whiteTong,
+    mother: whiteTongSecond,
     style: {
       display: "block",
       position: "relative",

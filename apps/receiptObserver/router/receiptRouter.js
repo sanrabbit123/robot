@@ -792,9 +792,13 @@ ReceiptRouter.prototype.rou_post_accountTimeUpdate = function () {
   obj.func = async function (req, res) {
     try {
       const selfMongo = instance.mongolocal;
-      const { whereQuery, updateQuery } = equalJson(req.body);
+      const { whereQuery, updateQuery, name, phone } = equalJson(req.body);
 
-      errorLog(`현금영수증 번호 업데이트 감지 => \n${JSON.stringify(whereQuery, null, 2)}\n${JSON.stringify(updateQuery, null, 2)}`).catch((err) => { throw new Error(err.message); });
+      if (/^010/.test(phone)) {
+        errorLog(`현금영수증 번호 업데이트 감지 => \n${JSON.stringify(whereQuery, null, 2)}\n${JSON.stringify(updateQuery, null, 2)}`).catch((err) => { throw new Error(err.message); });
+      } else {
+        await messageSend({ text: `${name} 고객님이 ${phone} 번호로 세금 계산서 신청을 하셨습니다!`, channel: "#400_customer", voice: true });
+      }
       await back.mongoUpdate(collection, [ whereQuery, updateQuery ], { selfMongo });
 
       res.set({

@@ -3980,7 +3980,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
 
       } else if (req.body.mode === "cashPhone") {
 
-        const { phone, hash, bilid, proid, desid, cliid } = equalJson(req.body);
+        const { phone, hash, bilid, proid, desid, cliid, name } = equalJson(req.body);
         const data = JSON.parse(await decryptoHash(password, hash.trim()));
         await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeUpdate", {
           whereQuery: {
@@ -3990,7 +3990,9 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
               { "accountInfo.no_oid": data.MOID }
             ]
           },
-          updateQuery: { phone }
+          updateQuery: { phone },
+          name,
+          phone,
         }, {
           headers: { "Content-Type": "application/json" }
         });

@@ -1558,7 +1558,7 @@ DevContext.prototype.launching = async function () {
 
     // aspirant to designer
     // await this.aspirantToDesigner([
-    //   [ "유수진", "2021-11-15" ],
+    //   [ "조원숙", "2021-12-16" ],
     // ]);
 
 
@@ -1567,17 +1567,16 @@ DevContext.prototype.launching = async function () {
 
 
     // new designer set proposal setting
-    // await this.setProposalSettingForDesigner("d2111_aa02s", [
-    //   { porlid: "a87", index: 13 },
-    //   { porlid: "a87", index: 16 },
-    //   { porlid: "a87", index: 17 },
-    //   { porlid: "a87", index: 10 },
-    //   { porlid: "a87", index: 3 },
-    //   { porlid: "a87", index: 4 },
+    // await this.setProposalSettingForDesigner("d2112_aa01s", [
+    //   { porlid: "ghost", index: 1 },
+    //   { porlid: "ghost", index: 6 },
+    //   { porlid: "ghost", index: 3 },
+    //   { porlid: "ghost", index: 8 },
+    //   { porlid: "ghost", index: 9 },
     // ], [
-    //   "홈스타일링이기에 고객의 생각을 가장 중요시하는 디자이너 입니다.",
-    //   "디자인의 완성도를 높이기 위해 항상 시뮬레이션 작업을 병행합니다.",
-    //   "기획 단계에서 소통을 가장 중요시하기에, 고객님의 이야기를 최대한 듣습니다."
+    //   "무몰딩, 히든도어 등 심플하고 미니멀한 공간 스타일을 지향합니다.",
+    //   "정리 수납을 매우 중요하게 생각하며 공간을 디자인 합니다.",
+    //   "플라워를 통한 홈스타일링 마무리를 중요시하며, 플랜테리어 컨설팅도 가능합니다."
     // ]);
 
 
