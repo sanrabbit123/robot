@@ -1525,6 +1525,19 @@ DevContext.prototype.launching = async function () {
     //   emoji1: "(콜)",
     // });
 
+    // const kakao = new KakaoTalk();
+    // await kakao.ready();
+    // await kakao.sendTalk("firstMeetingDayAgo", "리에종", "010-5543-2039", {
+    //   client: "리에종",
+    //   date: "12월 26일",
+    //   day: "월",
+    //   hour: "13",
+    //   minute: "00",
+    //   host: "home-liaison.servehttp.com",
+    //   path: "meeting",
+    //   proid: "p1801_aa02s",
+    // });
+
 
     // raw photo to raw portfolio
     // const filter = new PortfolioFilter();
@@ -1609,8 +1622,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "배창규";
-    // const amount = 1800000;
+    // const name = "리에종";
+    // const amount = 330000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01021993403",

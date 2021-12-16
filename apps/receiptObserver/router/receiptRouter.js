@@ -714,6 +714,7 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
             headers: { "Content-Type": "application/json" }
           }).then(() => {
+            errorLog("현금 영수증 관련 핸드폰 번호 감지 => " + phone).catch((e) => { console.log(e); });
             if (/^010/.test(phone)) {
               return requestSystem(`https://${instance.address.officeinfo.ghost.host}:${String(instance.address.officeinfo.ghost.graphic.port[0])}/receiptSend`, {
                 amount: String(amount),
