@@ -345,7 +345,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   greenButtonWidth = <%% 122, 122, 122, 110, 20 %%>;
   greenButtonHeight = <%% 47, 47, 45, 40, 8.4 %%>;
   greenButtonFontSize = <%% 20, 20, 20, 16, 3.8 %%>;
-  greenButtonTextTop = <%% (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), (isMac() ? 8 : 10), 1.2 %%>;
+  greenButtonTextTop = <%% (isMac() ? 8 : 11), (isMac() ? 8 : 11), (isMac() ? 8 : 11), (isMac() ? 8 : 11), 1.2 %%>;
   greenButtonBetween = <%% 4, 4, 4, 2, 0.6 %%>;
 
   greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
