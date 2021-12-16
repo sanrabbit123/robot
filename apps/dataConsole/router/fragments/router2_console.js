@@ -3275,6 +3275,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           formValue = { version, gopaymethod, mid, oid, price, timestamp, signature, mKey, currency, goodname, buyername, buyertel, buyeremail, returnUrl, closeUrl, acceptmethod };
         } else {
 
+          /*
           await requestSystem("https://" + instance.address.pythoninfo.host + ":3000/accountTimeSet", {
             bilid,
             requestNumber: Number(req.body.requestNumber),
@@ -3298,6 +3299,7 @@ DataRouter.prototype.rou_post_inicisPayment = function () {
           }, {
             headers: { "Content-Type": "application/json" }
           });
+          */
 
           future = new Date();
           future.setDate(future.getDate() + 7);

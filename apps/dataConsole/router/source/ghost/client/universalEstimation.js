@@ -248,7 +248,7 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let cashWordingTop;
   let inputBaseHeight;
   let inputBaseVisual;
-  let cashInput;
+  let cashInput, businessInput;
   let cashInputSize;
   let cashInputTop;
   let cashPaddingBottom;
@@ -334,27 +334,27 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   greenBasePaddingTop = <%% 10, 10, 10, 10, 3.8 %%>;
   greenBasePaddingBottom = <%% 32, 32, 32, 32, 3.8 %%>;
 
-  cashWidth = 440;
-  cashHeight = 261;
-  cashPaddingLeft = 30;
-  cashPaddingTop = 25;
-  cashPaddingBottom = 28;
-  cashInputTop = 62;
-  cashLoadingRadius = 18;
-  cashLoadingBetween = 8;
-  cashLoadingTop = 30;
-  cashWordingSize = 20;
-  cashWordingTop = isMac() ? 24 : 27;
-  inputBaseHeight = 36;
-  inputBaseVisual = 1;
-  cashInputSize = 16;
-  cashInputVisual = isMac() ? 1 : 0;
-  cashSubmitButtonWidth = 54;
-  cashSubmitButtonSize = 14;
-  cashSubmitButtonBetween = 6;
-  submitTextTop = isMac() ? -2 : 0;
-  secondTop = 130;
-  deactiveOpacity = 0.5;
+  cashWidth = <%% 440, 440, 440, 440, 80 %%>;
+  cashHeight = <%% 261, 261, 261, 261, 48 %%>;
+  cashPaddingLeft = <%% 30, 30, 30, 30, 5.2 %%>;
+  cashPaddingTop = <%% 25, 25, 25, 25, 4.9 %%>;
+  cashPaddingBottom = <%% 28, 28, 28, 28, 4.9 %%>;
+  cashInputTop = <%% 62, 62, 62, 62, 11.5 %%>;
+  cashLoadingRadius = <%% 18, 18, 18, 18, 3.6 %%>;
+  cashLoadingBetween = <%% 8, 8, 8, 8, 1.2 %%>;
+  cashLoadingTop = <%% 30, 30, 30, 30, 5.3 %%>;
+  cashWordingSize = <%% 20, 20, 20, 20, 4 %%>;
+  cashWordingTop = <%% isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, 4.1 %%>;
+  inputBaseHeight = <%% 36, 36, 36, 36, 7 %%>;
+  inputBaseVisual = <%% 1, 1, 1, 1, 0 %%>;
+  cashInputSize = <%% 16, 16, 16, 16, 3 %%>;
+  cashInputVisual = <%% isMac() ? 1 : 0, isMac() ? 1 : 0, isMac() ? 1 : 0, isMac() ? 1 : 0, 0.2 %%>;
+  cashSubmitButtonWidth = <%% 54, 54, 54, 54, 10 %%>;
+  cashSubmitButtonSize = <%% 14, 14, 14, 14, 2 %%>;
+  cashSubmitButtonBetween = <%% 6, 6, 6, 6, 0 %%>;
+  submitTextTop = <%% isMac() ? -2 : 0, isMac() ? -2 : 0, isMac() ? -2 : 0, isMac() ? -2 : 0, 0 %%>;
+  secondTop = <%% 130, 130, 130, 130, 24 %%>;
+  deactiveOpacity = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
 
   items = JSON.parse(JSON.stringify(wordings.items));
   items = [ JSON.parse(JSON.stringify(wordings.column)) ].concat(items);
@@ -935,404 +935,404 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
         formMother.style.display = "none";
         document.body.appendChild(formMother);
         formMother.appendChild(form);
-        if (desktop) {
 
-          if (/vbank/gi.test(motherMethod) || /card/gi.test(motherMethod)) {
+        if (!/vbank/gi.test(motherMethod) && !/card/gi.test(motherMethod)) {
 
-            for (let name in formValue) {
-              value = String(formValue[name]);
-              createNode({
-                mother: form,
-                mode: "input",
-                attribute: [ { name }, { value } ],
-                style: { display: "none" }
-              });
-            }
-            plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
-            plugin();
+          cashInput = {};
+          businessInput = {};
 
-          } else {
-
-            cashInput = {};
-
-            //submit event
-            cashSubmitEvent = function (e) {
+          //submit event
+          cashSubmitEvent = function (thisInput) {
+            return function (e) {
               e.preventDefault();
               e.stopPropagation();
-              if (this.value === '') {
-                window.alert("휴대폰 번호 또는 사업자 등록번호를 입력해주세요!");
-                cashInput.value = instance.client.phone;
-                cashInput.focus();
-              } else {
-                if (/[^0-9\-]/gi.test(this.value)) {
-                  window.alert("숫자와 하이픈(-)만 이용해서 입력해주세요!");
-                  cashInput.value = instance.client.phone;
-                  cashInput.focus();
+              if (thisInput !== null) {
+                if (thisInput.value === '') {
+                  window.alert("휴대폰 번호 또는 사업자 등록번호를 입력해주세요!");
+                  thisInput.value = instance.client.phone;
+                  thisInput.focus();
                 } else {
-                  window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript + "&cashphone=" + this.value.trim();
+                  if (/[^0-9\-]/gi.test(thisInput.value)) {
+                    window.alert("숫자와 하이픈(-)만 이용해서 입력해주세요!");
+                    thisInput.value = instance.client.phone;
+                    thisInput.focus();
+                  } else {
+                    window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript + "&cashphone=" + thisInput.value.trim();
+                  }
                 }
+              } else {
+                window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript + "&cashphone=" + instance.client.phone;
               }
             }
-
-
-            // cancel back
-            createNode({
-              mother: document.body,
-              event: {
-                click: cashSubmitEvent
-              },
-              style: {
-                position: "fixed",
-                top: String(0),
-                left: String(0),
-                width: String(100) + '%',
-                height: String(100) + '%',
-                background: "transparent",
-              }
-            });
-
-            // white box
-            cashWhiteBox = createNode({
-              mother: document.body,
-              style: {
-                position: "fixed",
-                top: withOut(50, cashHeight / 2, ea),
-                left: withOut(50, cashWidth / 2, ea),
-                width: String(cashWidth) + ea,
-                height: String(cashHeight) + ea,
-                borderRadius: String(5) + ea,
-                boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-                background: colorChip.white,
-                animation: "fadeuplite 0.3s ease",
-                zIndex: String(5),
-              }
-            });
-
-
-            // first - cash
-
-            cashLoading = instance.mother.returnLoadingIcon();
-            cashLoading.style.position = "absolute";
-            cashLoading.style.width = String(cashLoadingRadius) + ea;
-            cashLoading.style.height = String(cashLoadingRadius) + ea;
-            cashLoading.style.top = String(cashLoadingTop) + ea;
-            cashLoading.style.left = String(cashPaddingLeft) + ea;
-            cashLoading.style.opacity = String(deactiveOpacity);
-            cashLoading.style.transition = "all 0.3s ease";
-            cashLoading.classList.add(cashTarget);
-            cashWhiteBox.appendChild(cashLoading);
-
-            cashWording = createNode({
-              mother: cashWhiteBox,
-              text: "현금영수증을 받으실 번호를 알려주세요!",
-              class: [ cashTarget ],
-              style: {
-                position: "absolute",
-                top: String(cashWordingTop) + ea,
-                left: String(cashPaddingLeft + cashLoadingRadius + cashLoadingBetween) + ea,
-                fontSize: String(cashWordingSize) + ea,
-                fontWeight: String(500),
-                color: colorChip.black,
-                opacity: String(deactiveOpacity),
-                transition: "all 0.3s ease",
-              }
-            });
-
-            createNode({
-              mother: cashWhiteBox,
-              class: [ cashTarget ],
-              style: {
-                position: "absolute",
-                top: String(cashInputTop) + ea,
-                left: String(cashPaddingLeft + inputBaseVisual) + ea,
-                borderRadius: String(5) + "px",
-                background: colorChip.gray1,
-                width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
-                height: String(inputBaseHeight) + ea,
-                opacity: String(deactiveOpacity),
-                transition: "all 0.3s ease",
-              }
-            });
-
-            cashInput = createNode({
-              mother: cashWhiteBox,
-              class: [ cashTarget ],
-              mode: "input",
-              event: {
-                keyup: function (e) {
-                  this.value = this.value.replace(/[^0-9\-]/gi, '');
-                },
-                keypress: function (e) {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    cashSubmitEvent.call(this, e);
-                  }
-                },
-                focus: function (e) {
-                  const targets = cashWhiteBox.querySelectorAll('.' + cashTarget);
-                  for (let dom of targets) {
-                    dom.style.opacity = String(1);
-                  }
-                  [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.green;
-                },
-                blur: function (e) {
-                  const targets = cashWhiteBox.querySelectorAll('.' + cashTarget);
-                  for (let dom of targets) {
-                    dom.style.opacity = String(deactiveOpacity);
-                  }
-                  [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.deactive;
-                }
-              },
-              style: {
-                position: "absolute",
-                top: String(cashInputTop - cashInputVisual) + ea,
-                left: String(cashPaddingLeft + inputBaseVisual) + ea,
-                border: String(0),
-                outline: String(0),
-                fontSize: String(cashInputSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                background: "transparent",
-                width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
-                height: String(inputBaseHeight) + ea,
-                zIndex: String(1),
-                textAlign: "center",
-                opacity: String(deactiveOpacity),
-                transition: "all 0.3s ease",
-              }
-            });
-            cashInput.value = instance.client.phone;
-            setQueue(() => { cashInput.focus(); });
-
-            createNode({
-              mother: cashWhiteBox,
-              class: [ "hoverDefault_lite", cashTarget ],
-              event: {
-                click: cashSubmitEvent
-              },
-              style: {
-                display: "flex",
-                position: "absolute",
-                justifyContent: "center",
-                alignItems: "center",
-                top: String(cashInputTop) + ea,
-                right: String(cashPaddingLeft + inputBaseVisual) + ea,
-                borderRadius: String(5) + "px",
-                background: colorChip.deactive,
-                width: String(cashSubmitButtonWidth) + ea,
-                height: String(inputBaseHeight) + ea,
-                transition: "all 0.3s ease",
-                opacity: String(deactiveOpacity),
-              },
-              children: [
-                {
-                  text: "제출",
-                  style: {
-                    fontSize: String(cashSubmitButtonSize) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.white,
-                    position: "relative",
-                    top: String(submitTextTop) + ea,
-                    transition: "all 0.3s ease",
-                  }
-                }
-              ]
-            });
-
-
-            // middle bar
-            createNode({
-              mother: cashWhiteBox,
-              style: {
-                position: "absolute",
-                top: String(secondTop) + ea,
-                left: String(cashPaddingLeft + inputBaseVisual) + ea,
-                borderBottom: "1px solid " + colorChip.gray3,
-                width: withOut((cashPaddingLeft + inputBaseVisual) * 2, ea),
-              }
-            });
-
-
-            // second - business
-
-            cashLoading = instance.mother.returnLoadingIcon();
-            cashLoading.style.position = "absolute";
-            cashLoading.style.width = String(cashLoadingRadius) + ea;
-            cashLoading.style.height = String(cashLoadingRadius) + ea;
-            cashLoading.style.top = String(secondTop + cashLoadingTop) + ea;
-            cashLoading.style.left = String(cashPaddingLeft) + ea;
-            cashLoading.style.opacity = String(deactiveOpacity);
-            cashLoading.style.transition = "all 0.3s ease";
-            cashLoading.classList.add(businessTarget);
-            cashWhiteBox.appendChild(cashLoading);
-
-            createNode({
-              mother: cashWhiteBox,
-              class: [ businessTarget ],
-              text: "사업자의 경우, 등록번호를 알려주세요!",
-              style: {
-                position: "absolute",
-                top: String(secondTop + cashWordingTop) + ea,
-                left: String(cashPaddingLeft + cashLoadingRadius + cashLoadingBetween) + ea,
-                fontSize: String(cashWordingSize) + ea,
-                fontWeight: String(500),
-                color: colorChip.black,
-                opacity: String(deactiveOpacity),
-                transition: "all 0.3s ease",
-              }
-            });
-            createNode({
-              mother: cashWhiteBox,
-              class: [ businessTarget ],
-              style: {
-                position: "absolute",
-                top: String(secondTop + cashInputTop) + ea,
-                left: String(cashPaddingLeft + inputBaseVisual) + ea,
-                borderRadius: String(5) + "px",
-                background: colorChip.gray1,
-                width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
-                height: String(inputBaseHeight) + ea,
-                opacity: String(deactiveOpacity),
-                transition: "all 0.3s ease",
-              }
-            });
-            createNode({
-              mother: cashWhiteBox,
-              class: [ businessTarget ],
-              mode: "input",
-              event: {
-                keyup: function (e) {
-                  this.value = this.value.replace(/[^0-9\-]/gi, '');
-                },
-                keypress: function (e) {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    cashSubmitEvent.call(this, e);
-                  }
-                },
-                focus: function (e) {
-                  const targets = cashWhiteBox.querySelectorAll('.' + businessTarget);
-                  for (let dom of targets) {
-                    dom.style.opacity = String(1);
-                  }
-                  [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.green;
-                },
-                blur: function (e) {
-                  const targets = cashWhiteBox.querySelectorAll('.' + businessTarget);
-                  for (let dom of targets) {
-                    dom.style.opacity = String(deactiveOpacity);
-                  }
-                  [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.deactive;
-                }
-              },
-              style: {
-                position: "absolute",
-                top: String(secondTop + cashInputTop - cashInputVisual) + ea,
-                left: String(cashPaddingLeft + inputBaseVisual) + ea,
-                border: String(0),
-                outline: String(0),
-                fontSize: String(cashInputSize) + ea,
-                fontWeight: String(400),
-                color: colorChip.black,
-                background: "transparent",
-                width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
-                height: String(inputBaseHeight) + ea,
-                zIndex: String(1),
-                textAlign: "center",
-                opacity: String(deactiveOpacity),
-                transition: "all 0.3s ease",
-              }
-            });
-            createNode({
-              mother: cashWhiteBox,
-              class: [ "hoverDefault_lite", businessTarget ],
-              event: {
-                click: cashSubmitEvent
-              },
-              style: {
-                display: "flex",
-                position: "absolute",
-                justifyContent: "center",
-                alignItems: "center",
-                top: String(secondTop + cashInputTop) + ea,
-                right: String(cashPaddingLeft + inputBaseVisual) + ea,
-                borderRadius: String(5) + "px",
-                background: colorChip.deactive,
-                width: String(cashSubmitButtonWidth) + ea,
-                height: String(inputBaseHeight) + ea,
-                transition: "all 0.3s ease",
-                opacity: String(deactiveOpacity),
-              },
-              children: [
-                {
-                  text: "제출",
-                  style: {
-                    fontSize: String(cashSubmitButtonSize) + ea,
-                    fontWeight: String(500),
-                    color: colorChip.white,
-                    position: "relative",
-                    top: String(submitTextTop) + ea,
-                    transition: "all 0.3s ease",
-                  }
-                }
-              ]
-            });
-
           }
+
+          // cancel back
+          createNode({
+            mother: document.body,
+            event: {
+              click: cashSubmitEvent(null)
+            },
+            style: {
+              position: "fixed",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+              height: String(100) + '%',
+              background: "transparent",
+            }
+          });
+
+          // white box
+          cashWhiteBox = createNode({
+            mother: document.body,
+            style: {
+              position: "fixed",
+              top: withOut(50, cashHeight / 2, ea),
+              left: withOut(50, cashWidth / 2, ea),
+              width: String(cashWidth) + ea,
+              height: String(cashHeight) + ea,
+              borderRadius: String(5) + "px",
+              boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+              background: colorChip.white,
+              animation: "fadeuplite 0.3s ease",
+              zIndex: String(5),
+            }
+          });
+
+          // first - cash
+          cashLoading = instance.mother.returnLoadingIcon();
+          cashLoading.style.position = "absolute";
+          cashLoading.style.width = String(cashLoadingRadius) + ea;
+          cashLoading.style.height = String(cashLoadingRadius) + ea;
+          cashLoading.style.top = String(cashLoadingTop) + ea;
+          cashLoading.style.left = String(cashPaddingLeft) + ea;
+          cashLoading.style.opacity = String(deactiveOpacity);
+          cashLoading.style.transition = "all 0.3s ease";
+          cashLoading.classList.add(cashTarget);
+          cashWhiteBox.appendChild(cashLoading);
+
+          cashWording = createNode({
+            mother: cashWhiteBox,
+            text: "현금영수증을 받으실 번호를 알려주세요!",
+            class: [ cashTarget ],
+            style: {
+              position: "absolute",
+              top: String(cashWordingTop) + ea,
+              left: String(cashPaddingLeft + cashLoadingRadius + cashLoadingBetween) + ea,
+              fontSize: String(cashWordingSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+              opacity: String(deactiveOpacity),
+              transition: "all 0.3s ease",
+            }
+          });
+
+          createNode({
+            mother: cashWhiteBox,
+            class: [ cashTarget ],
+            style: {
+              position: "absolute",
+              top: String(cashInputTop) + ea,
+              left: String(cashPaddingLeft + inputBaseVisual) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
+              height: String(inputBaseHeight) + ea,
+              opacity: String(deactiveOpacity),
+              transition: "all 0.3s ease",
+            }
+          });
+
+          cashInput = createNode({
+            mother: cashWhiteBox,
+            class: [ cashTarget ],
+            mode: "input",
+            event: {
+              keyup: function (e) {
+                this.value = this.value.replace(/[^0-9\-]/gi, '');
+              },
+              keypress: function (e) {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  cashSubmitEvent(cashInput).call(this, e);
+                }
+              },
+              focus: function (e) {
+                const targets = cashWhiteBox.querySelectorAll('.' + cashTarget);
+                for (let dom of targets) {
+                  dom.style.opacity = String(1);
+                }
+                [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.green;
+              },
+              blur: function (e) {
+                const targets = cashWhiteBox.querySelectorAll('.' + cashTarget);
+                for (let dom of targets) {
+                  dom.style.opacity = String(deactiveOpacity);
+                }
+                [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.deactive;
+              }
+            },
+            style: {
+              position: "absolute",
+              top: String(cashInputTop - cashInputVisual) + ea,
+              left: String(cashPaddingLeft + inputBaseVisual) + ea,
+              border: String(0),
+              outline: String(0),
+              fontSize: String(cashInputSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              background: "transparent",
+              width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
+              height: String(inputBaseHeight) + ea,
+              zIndex: String(1),
+              textAlign: "center",
+              opacity: String(deactiveOpacity),
+              transition: "all 0.3s ease",
+            }
+          });
+          cashInput.value = instance.client.phone;
+          setQueue(() => { cashInput.focus(); });
+
+          createNode({
+            mother: cashWhiteBox,
+            class: [ "hoverDefault_lite", cashTarget ],
+            event: {
+              click: cashSubmitEvent(cashInput)
+            },
+            style: {
+              display: "flex",
+              position: "absolute",
+              justifyContent: "center",
+              alignItems: "center",
+              top: String(cashInputTop) + ea,
+              right: String(cashPaddingLeft + inputBaseVisual) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.deactive,
+              width: String(cashSubmitButtonWidth) + ea,
+              height: String(inputBaseHeight) + ea,
+              transition: "all 0.3s ease",
+              opacity: String(deactiveOpacity),
+            },
+            children: [
+              {
+                text: "제출",
+                style: {
+                  fontSize: String(cashSubmitButtonSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.white,
+                  position: "relative",
+                  top: String(submitTextTop) + ea,
+                  transition: "all 0.3s ease",
+                }
+              }
+            ]
+          });
+
+          // middle bar
+          createNode({
+            mother: cashWhiteBox,
+            style: {
+              position: "absolute",
+              top: String(secondTop) + ea,
+              left: String(cashPaddingLeft + inputBaseVisual) + ea,
+              borderBottom: "1px solid " + colorChip.gray3,
+              width: withOut((cashPaddingLeft + inputBaseVisual) * 2, ea),
+            }
+          });
+
+          // second - business
+          cashLoading = instance.mother.returnLoadingIcon();
+          cashLoading.style.position = "absolute";
+          cashLoading.style.width = String(cashLoadingRadius) + ea;
+          cashLoading.style.height = String(cashLoadingRadius) + ea;
+          cashLoading.style.top = String(secondTop + cashLoadingTop) + ea;
+          cashLoading.style.left = String(cashPaddingLeft) + ea;
+          cashLoading.style.opacity = String(deactiveOpacity);
+          cashLoading.style.transition = "all 0.3s ease";
+          cashLoading.classList.add(businessTarget);
+          cashWhiteBox.appendChild(cashLoading);
+
+          createNode({
+            mother: cashWhiteBox,
+            class: [ businessTarget ],
+            text: "사업자의 경우, 등록번호를 알려주세요!",
+            style: {
+              position: "absolute",
+              top: String(secondTop + cashWordingTop) + ea,
+              left: String(cashPaddingLeft + cashLoadingRadius + cashLoadingBetween) + ea,
+              fontSize: String(cashWordingSize) + ea,
+              fontWeight: String(500),
+              color: colorChip.black,
+              opacity: String(deactiveOpacity),
+              transition: "all 0.3s ease",
+            }
+          });
+          createNode({
+            mother: cashWhiteBox,
+            class: [ businessTarget ],
+            style: {
+              position: "absolute",
+              top: String(secondTop + cashInputTop) + ea,
+              left: String(cashPaddingLeft + inputBaseVisual) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.gray1,
+              width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
+              height: String(inputBaseHeight) + ea,
+              opacity: String(deactiveOpacity),
+              transition: "all 0.3s ease",
+            }
+          });
+          businessInput = createNode({
+            mother: cashWhiteBox,
+            class: [ businessTarget ],
+            mode: "input",
+            event: {
+              keyup: function (e) {
+                this.value = this.value.replace(/[^0-9\-]/gi, '');
+              },
+              keypress: function (e) {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  cashSubmitEvent(businessInput).call(this, e);
+                }
+              },
+              focus: function (e) {
+                const targets = cashWhiteBox.querySelectorAll('.' + businessTarget);
+                for (let dom of targets) {
+                  dom.style.opacity = String(1);
+                }
+                [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.green;
+              },
+              blur: function (e) {
+                const targets = cashWhiteBox.querySelectorAll('.' + businessTarget);
+                for (let dom of targets) {
+                  dom.style.opacity = String(deactiveOpacity);
+                }
+                [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.deactive;
+              }
+            },
+            style: {
+              position: "absolute",
+              top: String(secondTop + cashInputTop - cashInputVisual) + ea,
+              left: String(cashPaddingLeft + inputBaseVisual) + ea,
+              border: String(0),
+              outline: String(0),
+              fontSize: String(cashInputSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              background: "transparent",
+              width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
+              height: String(inputBaseHeight) + ea,
+              zIndex: String(1),
+              textAlign: "center",
+              opacity: String(deactiveOpacity),
+              transition: "all 0.3s ease",
+            }
+          });
+          createNode({
+            mother: cashWhiteBox,
+            class: [ "hoverDefault_lite", businessTarget ],
+            event: {
+              click: cashSubmitEvent(businessInput)
+            },
+            style: {
+              display: "flex",
+              position: "absolute",
+              justifyContent: "center",
+              alignItems: "center",
+              top: String(secondTop + cashInputTop) + ea,
+              right: String(cashPaddingLeft + inputBaseVisual) + ea,
+              borderRadius: String(5) + "px",
+              background: colorChip.deactive,
+              width: String(cashSubmitButtonWidth) + ea,
+              height: String(inputBaseHeight) + ea,
+              transition: "all 0.3s ease",
+              opacity: String(deactiveOpacity),
+            },
+            children: [
+              {
+                text: "제출",
+                style: {
+                  fontSize: String(cashSubmitButtonSize) + ea,
+                  fontWeight: String(500),
+                  color: colorChip.white,
+                  position: "relative",
+                  top: String(submitTextTop) + ea,
+                  transition: "all 0.3s ease",
+                }
+              }
+            ]
+          });
 
         } else {
-          if (/vbank/gi.test(motherMethod)) {
-            form.setAttribute("method", "post");
-            form.setAttribute("accept-charset", "euc-kr");
-            mobileInisisInfo = {
-              P_INI_PAYMENT: "VBANK",
-              P_MID: formValue.mid,
-              P_OID: formValue.oid,
-              P_AMT: Math.floor(request.amount),
-              P_GOODS: formValue.goodname,
-              P_UNAME: instance.client.name,
-              P_NEXT_URL: formValue.returnUrl,
-              P_NOTI_URL: PYTHONHOST.replace(/\:3000/gi, '') + "/webHookVAccount.php",
-              P_HPP_METHOD: String(1),
-              P_CHARSET: "utf8",
-              P_RESERVED: "vbank_receipt=Y",
-              P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
-            };
-            for (let name in mobileInisisInfo) {
-              value = String(mobileInisisInfo[name]);
-              createNode({
-                mother: form,
-                mode: "input",
-                attribute: [ { name }, { value } ],
-                style: { display: "none" }
-              });
+
+          if (desktop) {
+            if (/vbank/gi.test(motherMethod) || /card/gi.test(motherMethod)) {
+
+              for (let name in formValue) {
+                value = String(formValue[name]);
+                createNode({
+                  mother: form,
+                  mode: "input",
+                  attribute: [ { name }, { value } ],
+                  style: { display: "none" }
+                });
+              }
+              plugin = new Function(`${pluginScript}\n\nINIStdPay.pay(${formId});`);
+              plugin();
+
             }
-            form.action = "https://mobile.inicis.com/smart/payment/";
-            form.target = "_self";
-            form.submit();
-          } else if (/card/gi.test(motherMethod)) {
-            window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
-            plugin = new Function(pluginScript);
-            plugin();
-            window.IMP.init("imp71921105");
-            window.IMP.request_pay({
-                merchant_uid: formValue.oid,
-                name: formValue.goodname,
-                amount: Math.floor(request.amount),
-                buyer_email: instance.client.email,
-                buyer_name: instance.client.name,
-                buyer_tel: instance.client.phone,
-                m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid,
-            }, (rsp) => {});
           } else {
-
-            window.alert("계좌 이체로 진행하실 경우, 현금 영수증이 자동으로 발급됩니다!");
-            window.location.href = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mode=complete&hash=" + pluginScript;
-
+            if (/vbank/gi.test(motherMethod)) {
+              form.setAttribute("method", "post");
+              form.setAttribute("accept-charset", "euc-kr");
+              mobileInisisInfo = {
+                P_INI_PAYMENT: "VBANK",
+                P_MID: formValue.mid,
+                P_OID: formValue.oid,
+                P_AMT: Math.floor(request.amount),
+                P_GOODS: formValue.goodname,
+                P_UNAME: instance.client.name,
+                P_NEXT_URL: formValue.returnUrl,
+                P_NOTI_URL: PYTHONHOST.replace(/\:3000/gi, '') + "/webHookVAccount.php",
+                P_HPP_METHOD: String(1),
+                P_CHARSET: "utf8",
+                P_RESERVED: "vbank_receipt=Y",
+                P_NOTI: formValue.goodname + "__split__" + formValue.mid + "__split__" + formValue.returnUrl,
+              };
+              for (let name in mobileInisisInfo) {
+                value = String(mobileInisisInfo[name]);
+                createNode({
+                  mother: form,
+                  mode: "input",
+                  attribute: [ { name }, { value } ],
+                  style: { display: "none" }
+                });
+              }
+              form.action = "https://mobile.inicis.com/smart/payment/";
+              form.target = "_self";
+              form.submit();
+            } else if (/card/gi.test(motherMethod)) {
+              window.removeEventListener("message", GeneralJs.stacks.messageCancelEvent);
+              plugin = new Function(pluginScript);
+              plugin();
+              window.IMP.init("imp71921105");
+              window.IMP.request_pay({
+                  merchant_uid: formValue.oid,
+                  name: formValue.goodname,
+                  amount: Math.floor(request.amount),
+                  buyer_email: instance.client.email,
+                  buyer_name: instance.client.name,
+                  buyer_tel: instance.client.phone,
+                  m_redirect_url: window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.search + "&mobilecard=true&mid=" + formValue.mid + "&oid=" + formValue.oid,
+              }, (rsp) => {});
+            }
           }
+
         }
+
       } catch (e) {
         await GeneralJs.ajaxJson({ message: "UniversalEstimationJs.insertInitBox.paymentEvent : " + e.message }, "/errorLog");
       }

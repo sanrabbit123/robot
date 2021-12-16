@@ -663,6 +663,9 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
       if (req.body.date === undefined || req.body.amount === undefined || req.body.name === undefined) {
         throw new Error("invaild post");
       }
+      const emptyPromise = () => {
+        return new Promise((resolve, reject) => { resolve(null); });
+      }
       const selfMongo = instance.mongolocal;
       const { date, amount, name } = equalJson(req.body);
       const errorMessage = "뭔가 은행 문자가 왔는데 찾을 수 없음 : " + name + " " + autoComma(amount) + "원";
@@ -711,12 +714,18 @@ ReceiptRouter.prototype.rou_post_smsParsing = function () {
           requestSystem("https://" + instance.address.pythoninfo.host + ":3000/webHookVAccount", target.accountInfo, {
             headers: { "Content-Type": "application/json" }
           }).then(() => {
-            return requestSystem(`https://${instance.address.officeinfo.ghost.host}:${String(instance.address.officeinfo.ghost.graphic.port[0])}/receiptSend`, {
-              amount: String(amount),
-              phone,
-            }, { headers: { "Content-Type": "application/json" } });
-          }).then(() => {
-            return messageSend(`${name} 고객님의 번호로 현금 영수증 발행을 완료하였어요.`, "#700_operation", false);
+            if (/^010/.test(phone)) {
+              return requestSystem(`https://${instance.address.officeinfo.ghost.host}:${String(instance.address.officeinfo.ghost.graphic.port[0])}/receiptSend`, {
+                amount: String(amount),
+                phone,
+              }, { headers: { "Content-Type": "application/json" } });
+            } else {
+              return emptyPromise();
+            }
+          }).then((promiseData) => {
+            if (promiseData !== null) {
+              return messageSend(`${name} 고객님의 번호로 현금 영수증 발행을 완료하였어요.`, "#700_operation", false);
+            }
           }).catch((err) => {
             console.log(err);
           });
