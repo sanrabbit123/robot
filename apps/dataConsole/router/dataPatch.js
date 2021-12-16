@@ -927,14 +927,14 @@ DataPatch.prototype.clientMap = function () {
     fontSize = Number(mother.style.fontSize.replace((new RegExp(ea, "gi")), ''));
     width = Number(mother.style.width.replace((new RegExp(ea, "gi")), '')) + 15;
     if (width === '' || Number.isNaN(width)) {
-      width = 120;
+      width = 190;
     }
-    top = height * 0.5;
-    paddingTop = height * (GeneralJs.isMac() ? 0.4 : 0.5);
+    top = height * 0.3;
+    paddingTop = height * (GeneralJs.isMac() ? 0.35 : 0.45);
     height = height * 1.8;
     iconWidth = 18;
     widthVisual = 0.1;
-    margin = height / 4;
+    margin = 4;
     motherWidth = (width * 2) + margin;
 
     div_clone = GeneralJs.createNode({
@@ -942,7 +942,7 @@ DataPatch.prototype.clientMap = function () {
       class: [ "removeTarget", "divTong" ],
       style: {
         position: "absolute",
-        top: String((height * 2) - top) + ea,
+        top: String((height) - top) + ea,
         left: GeneralJs.withOut(50, ((motherWidth / 2) + 0.1), ea),
         width: String(motherWidth) + ea,
         textAlign: "center",
@@ -1562,7 +1562,7 @@ DataPatch.prototype.clientMap = function () {
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
-      marginBottom: String(height / 4) + ea,
+      marginBottom: String(4) + ea,
     };
 
     buttonDetailStyles = [
@@ -1580,7 +1580,7 @@ DataPatch.prototype.clientMap = function () {
       },
       {
         position: "absolute",
-        left: "calc(28% + " + String(Math.round((height) / 4) * 1) + ea + ")",
+        left: "calc(28% + " + String(4 * 1) + ea + ")",
         top: String(0) + ea,
         width: "40%",
         height: "100%",
@@ -1594,7 +1594,7 @@ DataPatch.prototype.clientMap = function () {
         position: "absolute",
         right: String(0) + ea,
         top: String(0) + ea,
-        width: "calc(32% - " + String(Math.round((height) / 4) * 2) + ea + ")",
+        width: "calc(32% - " + String(4 * 2) + ea + ")",
         height: "100%",
         background: GeneralJs.colorChip.green,
         zIndex: String(3),
@@ -4655,7 +4655,7 @@ DataPatch.prototype.projectMap = function () {
       zIndex: String(3),
       borderRadius: String(3) + ea,
       animation: "fadeuplite 0.3s ease forwards",
-      marginBottom: String(height / 4) + ea,
+      marginBottom: String(4) + ea,
     };
 
     buttonDetailStyles = [
@@ -4673,7 +4673,7 @@ DataPatch.prototype.projectMap = function () {
       },
       {
         position: "absolute",
-        left: "calc(28% + " + String(Math.round((height) / 4) * 1) + ea + ")",
+        left: "calc(28% + " + String(4 * 1) + ea + ")",
         top: String(0) + ea,
         width: "40%",
         height: "100%",
@@ -4687,7 +4687,7 @@ DataPatch.prototype.projectMap = function () {
         position: "absolute",
         right: String(0) + ea,
         top: String(0) + ea,
-        width: "calc(32% - " + String(Math.round((height) / 4) * 2) + ea + ")",
+        width: "calc(32% - " + String(4 * 2) + ea + ")",
         height: "100%",
         background: GeneralJs.colorChip.green,
         zIndex: String(3),
