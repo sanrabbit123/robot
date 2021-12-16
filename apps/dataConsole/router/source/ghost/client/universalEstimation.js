@@ -106,6 +106,17 @@ UniversalEstimationJs.prototype.billWordings = function () {
     account: {
       name: "(주)홈리에종",
       number: "기업 049-085567-04-022",
+    },
+    notice: {
+      title: "* 주의 사항",
+      business: [
+        "계약서를 사업자명으로 작성하신 경우에만 사업자 등록번호로 세금 계산서 발행이 가능하며, 그렇지 않을 경우 신청자의 핸드폰 번호로 현금 영수증이 발행됩니다.",
+        "세금 계산서 발행으로 일어나는 모든 세무상 불이익은 홈리에종과 무관하며, 홈리에종이 책임지지 않습니다.",
+        "세금 계산서 발행을 한 경우에도, 입금자명을 신청자명으로 보내 주셔야 합니다. 그렇지 않을 경우, 입금 확인에 문제가 생길 수 있습니다."
+      ],
+      cash: [
+        "입금자명을 반드시 신청자명으로 보내 주셔야 합니다. 그렇지 않을 경우, 입금 확인에 문제가 생길 수 있습니다."
+      ]
     }
   };
   if (desktop) {
@@ -260,6 +271,12 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   let submitTextTop;
   let secondTop;
   let deactiveOpacity;
+  let greenNoticeMother;
+  let greenNoticePaddingTop;
+  let greenNoticePaddingBottom;
+  let greenNoticePaddingLeft;
+  let greenNoticeBetween;
+  let greenNoticeSize;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
@@ -335,26 +352,32 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
   greenBasePaddingBottom = <%% 32, 32, 32, 32, 3.8 %%>;
 
   cashWidth = <%% 440, 440, 440, 440, 80 %%>;
-  cashHeight = <%% 261, 261, 261, 261, 48 %%>;
+  cashHeight = <%% 261, 261, 261, 261, 49.2 %%>;
   cashPaddingLeft = <%% 30, 30, 30, 30, 5.2 %%>;
   cashPaddingTop = <%% 25, 25, 25, 25, 4.9 %%>;
   cashPaddingBottom = <%% 28, 28, 28, 28, 4.9 %%>;
   cashInputTop = <%% 62, 62, 62, 62, 11.5 %%>;
   cashLoadingRadius = <%% 18, 18, 18, 18, 3.6 %%>;
   cashLoadingBetween = <%% 8, 8, 8, 8, 1.2 %%>;
-  cashLoadingTop = <%% 30, 30, 30, 30, 5.3 %%>;
+  cashLoadingTop = <%% 30, 30, 30, 30, 5.7 %%>;
   cashWordingSize = <%% 20, 20, 20, 20, 4 %%>;
-  cashWordingTop = <%% isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, 4.1 %%>;
+  cashWordingTop = <%% isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, isMac() ? 24 : 27, 4.5 %%>;
   inputBaseHeight = <%% 36, 36, 36, 36, 7 %%>;
   inputBaseVisual = <%% 1, 1, 1, 1, 0 %%>;
   cashInputSize = <%% 16, 16, 16, 16, 3 %%>;
   cashInputVisual = <%% isMac() ? 1 : 0, isMac() ? 1 : 0, isMac() ? 1 : 0, isMac() ? 1 : 0, 0.2 %%>;
   cashSubmitButtonWidth = <%% 54, 54, 54, 54, 10 %%>;
-  cashSubmitButtonSize = <%% 14, 14, 14, 14, 2 %%>;
-  cashSubmitButtonBetween = <%% 6, 6, 6, 6, 0 %%>;
-  submitTextTop = <%% isMac() ? -2 : 0, isMac() ? -2 : 0, isMac() ? -2 : 0, isMac() ? -2 : 0, 0 %%>;
+  cashSubmitButtonSize = <%% 14, 14, 14, 14, 2.8 %%>;
+  cashSubmitButtonBetween = <%% 6, 6, 6, 6, 1 %%>;
+  submitTextTop = <%% isMac() ? -2 : 0, isMac() ? -2 : 0, isMac() ? -2 : 0, isMac() ? -2 : 0, -0.4 %%>;
   secondTop = <%% 130, 130, 130, 130, 24 %%>;
   deactiveOpacity = <%% 0.5, 0.5, 0.5, 0.5, 0.5 %%>;
+
+  greenNoticePaddingTop = <%% 14, 14, 14, 14, 2.4 %%>;
+  greenNoticePaddingBottom = <%% 11, 11, 11, 11, 2.3 %%>;
+  greenNoticePaddingLeft = <%% 16, 16, 16, 16, 3 %%>;
+  greenNoticeBetween = <%% 6, 6, 6, 6, 1 %%>;
+  greenNoticeSize = <%% 12, 12, 12, 12, 2.2 %%>;
 
   items = JSON.parse(JSON.stringify(wordings.items));
   items = [ JSON.parse(JSON.stringify(wordings.column)) ].concat(items);
@@ -1064,6 +1087,41 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                   dom.style.opacity = String(1);
                 }
                 [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.green;
+
+                greenNoticeMother = createNode({
+                  mode: "aside",
+                  mother: this.parentNode,
+                  style: {
+                    position: "absolute",
+                    width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
+                    top: String(cashInputTop + inputBaseHeight + cashSubmitButtonBetween) + ea,
+                    left: String(cashPaddingLeft + inputBaseVisual) + ea,
+                    background: colorChip.gradientGreen,
+                    borderRadius: String(5) + "px",
+                    animation: "fadeuplite 0.3s ease forwards",
+                    paddingTop: String(greenNoticePaddingTop) + ea,
+                    paddingBottom: String(greenNoticePaddingBottom) + ea,
+                  }
+                });
+
+                for (let str of wordings.notice.cash) {
+                  createNode({
+                    mother: greenNoticeMother,
+                    text: "* " + str,
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: String(greenNoticeSize) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.white,
+                      paddingLeft: String(greenNoticePaddingLeft) + ea,
+                      paddingRight: String(greenNoticePaddingLeft) + ea,
+                      marginBottom: String(greenNoticeBetween) + ea,
+                      lineHeight: String(1.45),
+                    }
+                  });
+                }
+
               },
               blur: function (e) {
                 const targets = cashWhiteBox.querySelectorAll('.' + cashTarget);
@@ -1071,6 +1129,12 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                   dom.style.opacity = String(deactiveOpacity);
                 }
                 [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.deactive;
+
+                const self = this;
+                const removeTargets = self.parentNode.querySelectorAll("aside");
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
               }
             },
             style: {
@@ -1204,6 +1268,57 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                   dom.style.opacity = String(1);
                 }
                 [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.green;
+
+                greenNoticeMother = createNode({
+                  mode: "aside",
+                  mother: this.parentNode,
+                  style: {
+                    position: "absolute",
+                    width: withOut((cashPaddingLeft * 2) + inputBaseVisual + cashSubmitButtonBetween + cashSubmitButtonWidth, ea),
+                    top: String(secondTop + cashInputTop + inputBaseHeight + cashSubmitButtonBetween) + ea,
+                    left: String(cashPaddingLeft + inputBaseVisual) + ea,
+                    background: colorChip.gradientGreen,
+                    borderRadius: String(5) + "px",
+                    animation: "fadeuplite 0.3s ease forwards",
+                    paddingTop: String(greenNoticePaddingTop) + ea,
+                    paddingBottom: String(greenNoticePaddingBottom) + ea,
+                  }
+                });
+
+                createNode({
+                  mother: greenNoticeMother,
+                  text: wordings.notice.title,
+                  style: {
+                    display: "block",
+                    position: "relative",
+                    fontSize: String(greenNoticeSize) + ea,
+                    fontWeight: String(700),
+                    color: colorChip.white,
+                    paddingLeft: String(greenNoticePaddingLeft) + ea,
+                    paddingRight: String(greenNoticePaddingLeft) + ea,
+                    marginBottom: String(greenNoticeBetween) + ea,
+                    lineHeight: String(1.4),
+                  }
+                });
+
+                for (let str of wordings.notice.business) {
+                  createNode({
+                    mother: greenNoticeMother,
+                    text: "- " + str,
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      fontSize: String(greenNoticeSize) + ea,
+                      fontWeight: String(600),
+                      color: colorChip.white,
+                      paddingLeft: String(greenNoticePaddingLeft) + ea,
+                      paddingRight: String(greenNoticePaddingLeft) + ea,
+                      marginBottom: String(greenNoticeBetween) + ea,
+                      lineHeight: String(1.4),
+                    }
+                  });
+                }
+
               },
               blur: function (e) {
                 const targets = cashWhiteBox.querySelectorAll('.' + businessTarget);
@@ -1211,6 +1326,13 @@ UniversalEstimationJs.prototype.insertInitBox = function () {
                   dom.style.opacity = String(deactiveOpacity);
                 }
                 [ ...targets ].find((dom) => { return /hoverDefault_lite/gi.test(dom.className) }).style.background = colorChip.deactive;
+
+                const self = this;
+                const removeTargets = self.parentNode.querySelectorAll("aside");
+                for (let dom of removeTargets) {
+                  dom.remove();
+                }
+
               }
             },
             style: {
