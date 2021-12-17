@@ -1726,12 +1726,27 @@ BillMaker.prototype.matrixToRequest = async function (file) {
       if (arr.length === 0) {
         throw new Error("invaild matrix 0");
       }
-      if (arr[0] !== null) {
+
+      if (typeof arr[0] === "string") {
+        arr[0] = arr[0].trim().replace(/[^0-9]/gi, '');
+        if (arr[0] === '' || Number.isNaN(Number(arr[0]))) {
+          arr[0] = null;
+        } else {
+          arr[0] = String(Number(arr[0]));
+        }
+      } else if (typeof arr[0] === "number") {
+        arr[0] = String(arr[0]);
+      } else {
+        arr[0] = null;
+      }
+
+      if (typeof arr[0] === "string" && /^[0-9]/gi.test(arr[0])) {
         if (tempArr !== null) {
           tong.push(tempArr);
         }
         tempArr = [];
       }
+
       tempArr.push(arr);
     }
     tong.push(tempArr);

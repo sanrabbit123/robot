@@ -2626,6 +2626,8 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
 
     newRequest = JSON.stringify(res2);
 
+    console.log(res2);
+
     blackBack = createNode({
       mother: document.body,
       style: {
@@ -2726,6 +2728,8 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
                   let targetInvoice;
                   let whereQuery, updateQuery;
 
+                  console.log(newRequest);
+
                   instance.invoiceList.search("invid", invid).requests[0].status = "작성 완료";
                   instance.invoiceList.search("invid", invid).requests.unshift(newRequest);
                   targetInvoice = instance.invoiceList.search("invid", invid);
@@ -2733,6 +2737,8 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
                   whereQuery = { inivid: targetInvoice.invid };
                   updateQuery = {};
                   updateQuery["requests"] = targetInvoice.requests;
+
+                  console.log(updateQuery);
 
                   // await ajaxJson({
                   //   to: "generalMongo",

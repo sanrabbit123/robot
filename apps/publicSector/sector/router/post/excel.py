@@ -12,12 +12,17 @@ async def postExcel(request, mongoConnection):
     columns = dic[data["sheetsName"]].columns.tolist()
     firstArr = []
     for i in columns:
-        if re.search("Unnamed: ", i) is None:
-            firstArr.append(i)
+        if isinstance(i, str):
+            if re.search("Unnamed: ", i) is None:
+                firstArr.append(i)
+            else:
+                firstArr.append(None)
         else:
             firstArr.append(None)
     arr.insert(0, firstArr)
     j = json.dumps(arr, ensure_ascii=False).replace("NaN", "null")
+
+    print(j)
     return json.loads(j)
 
 
