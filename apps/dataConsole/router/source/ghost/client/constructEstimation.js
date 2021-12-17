@@ -382,7 +382,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
             top: String(tableBackgroundMargin * -1) + ea,
             left: String(margin * -1) + ea,
             background: colorChip[z % 2 === 0 ? "white" : "gray0"],
-            opacity: String(0.9),
+            opacity: String(0.95),
           },
         },
         {
