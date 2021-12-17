@@ -15,6 +15,8 @@ const OfficeMonitor = function (mother = null, back = null, address = null) {
   this.scanResultName = "arpScanResult.json";
 }
 
+OfficeMonitor.intervals = {};
+
 OfficeMonitor.prototype.renderReport = async function () {
   const instance = this;
   const os = require(`os`);
@@ -288,6 +290,52 @@ OfficeMonitor.prototype.routerPatch = function (app) {
   });
 }
 
+OfficeMonitor.prototype.intervalMonitoring = function () {
+  const instance = this;
+  const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
+  const defaultInterval = 30 * 60 * 1000;
+  const interval = {
+    d080: 20 * 60 * 1000,
+    d091: 12 * 60 * 1000,
+    d183: 20 * 60 * 1000,
+    d210: 60 * 60 * 1000,
+    d220: 60 * 60 * 1000,
+  };
+  let intervalFunc;
+  let intervalSetting;
+
+  OfficeMonitor.intervals.monitorIntervalId = null;
+
+  intervalFunc = async () => {
+    try {
+      await instance.renderReport();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  intervalSetting = () => {
+    const now = new Date();
+    let dateKey;
+    dateKey = 'd' + zeroAddition(now.getHours()) + zeroAddition(now.getMinutes()).slice(0, 1);
+    if (typeof interval[dateKey] !== "number") {
+      if (OfficeMonitor.intervals.monitorIntervalId === null) {
+        OfficeMonitor.intervals.monitorIntervalId = setInterval(intervalFunc, defaultInterval);
+      }
+    } else {
+      if (OfficeMonitor.intervals.monitorIntervalId !== null) {
+        clearInterval(OfficeMonitor.intervals.monitorIntervalId);
+        OfficeMonitor.intervals.monitorIntervalId = null;
+      }
+      OfficeMonitor.intervals.monitorIntervalId = setInterval(intervalFunc, interval[dateKey]);
+    }
+  }
+
+  intervalSetting();
+  setInterval(intervalSetting, 10 * 60 * 1000);
+
+}
+
 OfficeMonitor.prototype.reportServer = async function () {
   const instance = this;
   const https = require("https");
@@ -336,13 +384,7 @@ OfficeMonitor.prototype.reportServer = async function () {
 
     this.routerPatch(app);
 
-    setInterval(async () => {
-      try {
-        await instance.renderReport();
-      } catch (e) {
-        console.log(e);
-      }
-    }, 30 * 60 * 1000);
+    this.intervalMonitoring();
 
     // server launching
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
