@@ -36,11 +36,12 @@ DashboardJs.prototype.whiteBoards = function () {
   let boxWidth0, boxWidth1;
   let boxHeight0, boxHeight1;
   let whiteRadius;
+  let onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock;
+  let firstMother, secondMother, thirdMother, fourthMother;
 
   outerMargin = <%% 30, 30, 28, 24, 4 %%>;
   innerMargin = <%% 5, 5, 4, 3, 1 %%>;
   whiteRadius = <%% 8, 8, 7, 6, 3 %%>;
-
 
   boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
   boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
