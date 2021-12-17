@@ -577,6 +577,9 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
       if (window.confirm("다운로드를 진행할까요?")) {
         loading = instance.mother.grayLoading();
         GeneralJs.ajaxJson({ aspid: parent.id, mode: "download" }, "/ghostPass_designerPhoto").then((data) => {
+          if (data.list === undefined || data.folder === undefined || data.file === undefined) {
+            throw new Error("error occur");
+          }
           const { list, folder, file } = data;
           folderName = folder;
           fileName = file;
@@ -594,6 +597,8 @@ DesignerJs.prototype.aspirantDataRender = function (aspirant, titleMode) {
             throw new Error("file download error");
           }
         }).catch((err) => {
+          window.alert("파일이 없거나 오류가 발생했습니다!");
+          loading.remove();
           console.log(err);
         });
       }

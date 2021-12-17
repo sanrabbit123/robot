@@ -17,7 +17,7 @@ DashboardJs.prototype.baseMaker = function () {
     style: {
       display: "inline-block",
       height: "calc(100% - " + String(belowHeight) + ea + ")",
-      background: colorChip.gray1
+      background: colorChip.gray3
     }
   });
 
@@ -42,17 +42,21 @@ DashboardJs.prototype.whiteBoards = function () {
   let firstMother, secondMother, thirdMother, fourthMother;
   let tempMother;
   let titleSize, subSize, lineHeight;
-  let title2Size;
+  let title2Size, title3Size;
+  let visualTop, visualTop2;
 
   outerMargin = <%% 30, 30, 28, 24, 4 %%>;
   innerMargin = <%% 5, 5, 4, 3, 1 %%>;
   whiteRadius = <%% 8, 8, 7, 6, 3 %%>;
 
-  titleSize = 2.8;
-  title2Size = 2.4;
-  subSize = 2.3;
+  titleSize = 2.6;
+  title2Size = 2.3;
+  title3Size = 2.3;
+  subSize = 2.2;
   lineHeight = 1.1;
   lineHeight2 = 1.25;
+  visualTop = -4;
+  visualTop2 = -3;
 
   boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
   boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
@@ -107,7 +111,28 @@ DashboardJs.prototype.whiteBoards = function () {
           backgroundSize: "100% auto",
           backgroundPosition: "50% 50%",
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
         },
+        event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "HomeLiaison web",
+            style: {
+              color: colorChip.whiteBlack,
+              fontSize: String(title3Size) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight),
+              fontFamily: "graphik",
+              position: "relative",
+              top: String(visualTop) + ea,
+              fontStyle: "italic",
+            },
+          }
+        ]
       },
     ]
   });
@@ -203,7 +228,7 @@ DashboardJs.prototype.whiteBoards = function () {
           width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
           height: boxHeight1,
           borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
+          background: colorChip.gray1,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
           marginRight: String(innerMargin) + ea,
           display: "inline-flex",
@@ -221,8 +246,10 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(title2Size) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
             }
           }
         ]
@@ -234,7 +261,7 @@ DashboardJs.prototype.whiteBoards = function () {
           width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
           height: boxHeight1,
           borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
+          background: colorChip.gray1,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
           display: "inline-flex",
           justifyContent: "center",
@@ -251,8 +278,10 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(title2Size) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
             }
           }
         ]
@@ -283,7 +312,7 @@ DashboardJs.prototype.whiteBoards = function () {
           width: boxWidth0,
           height: boxHeight0,
           borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
+          background: colorChip.gradientGreen,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
           marginBottom: String(innerMargin) + ea,
           marginRight: String(innerMargin) + ea,
@@ -299,17 +328,18 @@ DashboardJs.prototype.whiteBoards = function () {
             class: [ "hoverDefault_lite" ],
             text: "웹 제안서 관리\n<b%Proposal%b>",
             style: {
-              color: colorChip.black,
+              color: colorChip.whiteBlack,
               fontSize: String(titleSize) + vh,
               textAlign: "center",
               fontWeight: String(600),
               lineHeight: String(lineHeight),
             },
             bold: {
-              color: colorChip.green,
+              color: colorChip.whiteBlack,
               fontSize: String(subSize) + vh,
               fontFamily: "graphik",
               fontWeight: String(400),
+              opacity: String(0.7),
             }
           }
         ]
@@ -335,7 +365,28 @@ DashboardJs.prototype.whiteBoards = function () {
               backgroundPosition: "50% 50%",
               boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
               marginBottom: String(innerMargin) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
             },
+            event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+            children: [
+              {
+                class: [ "hoverDefault_lite" ],
+                text: "Builder console",
+                style: {
+                  color: colorChip.whiteBlack,
+                  fontSize: String(title3Size) + vh,
+                  textAlign: "center",
+                  fontWeight: String(500),
+                  lineHeight: String(lineHeight),
+                  fontFamily: "graphik",
+                  position: "relative",
+                  top: String(visualTop) + ea,
+                  fontStyle: "italic",
+                },
+              }
+            ]
           },
           {
             style: {
@@ -348,7 +399,28 @@ DashboardJs.prototype.whiteBoards = function () {
               backgroundSize: "100% auto",
               backgroundPosition: "50% 50%",
               boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
             },
+            event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+            children: [
+              {
+                class: [ "hoverDefault_lite" ],
+                text: "Designer console",
+                style: {
+                  color: colorChip.whiteBlack,
+                  fontSize: String(title3Size) + vh,
+                  textAlign: "center",
+                  fontWeight: String(500),
+                  lineHeight: String(lineHeight),
+                  fontFamily: "graphik",
+                  position: "relative",
+                  top: String(visualTop) + ea,
+                  fontStyle: "italic",
+                },
+              }
+            ]
           },
         ]
       },
@@ -393,7 +465,7 @@ DashboardJs.prototype.whiteBoards = function () {
           width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
           height: boxHeight1,
           borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
+          background: colorChip.gray1,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
           marginRight: String(innerMargin) + ea,
           display: "inline-flex",
@@ -411,8 +483,11 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(title2Size) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+
             }
           }
         ]
@@ -424,7 +499,7 @@ DashboardJs.prototype.whiteBoards = function () {
           width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
           height: boxHeight1,
           borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
+          background: colorChip.gray1,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
           marginRight: String(innerMargin) + ea,
           display: "inline-flex",
@@ -442,8 +517,11 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(title2Size) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+
             }
           }
         ]
@@ -455,7 +533,7 @@ DashboardJs.prototype.whiteBoards = function () {
           width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
           height: boxHeight1,
           borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
+          background: colorChip.gray1,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
           marginRight: String(innerMargin) + ea,
           display: "inline-flex",
@@ -473,8 +551,11 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(title2Size) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+
             }
           }
         ]
@@ -486,7 +567,7 @@ DashboardJs.prototype.whiteBoards = function () {
           width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
           height: boxHeight1,
           borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
+          background: colorChip.gray1,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
           display: "inline-flex",
           justifyContent: "center",
@@ -503,8 +584,10 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(title2Size) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
             }
           }
         ]
@@ -522,7 +605,7 @@ DashboardJs.prototype.whiteBoards = function () {
       width: "calc(calc(100vw - " + String((outerMargin * 2) + (innerMargin * 4)) + ea + ") - calc(" + boxWidth0 + " * 4))",
       height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
       borderRadius: String(whiteRadius) + ea,
-      background: colorChip.white,
+      background: colorChip.gray1,
       boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
       verticalAlign: "top",
       transition: "all 0s ease",

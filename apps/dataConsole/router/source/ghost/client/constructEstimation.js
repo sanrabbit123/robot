@@ -84,27 +84,33 @@ ConstructEstimationJs.prototype.estimationWordings = function (requestIndex = 0)
   };
   if (desktop) {
     wordings.column = [
+      "순번",
       "품명",
       "단가",
       "수량",
       "단위",
+      "공급가",
       "소비자가",
       "비고"
     ];
     wordings.ratio = [
-      38,
-      14,
-      7,
-      7,
-      14,
-      20
+      6,
+      34,
+      12,
+      6,
+      6,
+      12,
+      12,
+      12
     ];
-    wordings.itemDetail = (detail) => {
+    wordings.itemDetail = (detail, index) => {
       return [
+        String(index),
         detail.name,
         autoComma(detail.unit.amount.consumer) + '원',
         String(detail.unit.number),
         detail.unit.ea,
+        autoComma(Math.floor(detail.unit.amount.supply * detail.unit.number)) + '원',
         autoComma(Math.floor(detail.unit.amount.consumer * detail.unit.number)) + '원',
         detail.description
       ];
@@ -186,12 +192,16 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   let firstBlockMarginBottom;
   let sumBoxHeight;
   let finalPaddingBottomVisual;
+  let sumMiddleNumberSize;
+  let itemTotalSumLineTop;
+  let tableBackgroundMargin;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
   firstWhitePaddingBottom = <%% 115, 115, 107, 99, 8 %%>;
   firstBlockMarginBottom = <%% 12, 12, 12, 8, 2 %%>;
+  tableBackgroundMargin = <%% 80, 80, 67, 59, 4.7 %%>;
 
   titleFontSize = <%% 30, 30, 28, 23, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
@@ -213,9 +223,9 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   itemBarBottom = <%% 11, 11, 11, 11, 2 %%>;
 
   tableMarginTopFirst = <%% 92, 92, 90, 82, 8.5 %%>;
-  tableMarginTop = <%% 142, 142, 140, 138, 8.5 %%>;
+  tableMarginTop = <%% 150, 150, 150, 150, 8.5 %%>;
   tablePaddingTop = <%% 10, 10, 10, 10, 2.5 %%>;
-  tablePaddingBottom = <%% (isMac() ? 20 : 17), (isMac() ? 20 : 17), (isMac() ? 20 : 17), (isMac() ? 20 : 17), 3 %%>;
+  tablePaddingBottom = <%% (isMac() ? 85 : 83), (isMac() ? 85 : 83), (isMac() ? 85 : 83), (isMac() ? 85 : 83), 3 %%>;
   barPaddingBottom = <%% 9, 9, 9, 9, 1.5 %%>;
   barMarginBottom = <%% 13, 13, 13, 13, 2.5 %%>;
 
@@ -231,14 +241,16 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   cautionLogoBottom = <%% 12, 12, 12, 12, 12 %%>;
   cautionLogoHeight = <%% 16, 16, 16, 16, 16 %%>;
 
+  sumMiddleNumberSize = <%% 21, 21, 21, 20, 4 %%>;
   sumNumberSize = <%% 31, 31, 29, 28, 6 %%>;
-  sumWhitePaddingLeft = <%% 12, 12, 10, 10, 2 %%>;
+  sumWhitePaddingLeft = <%% 15, 15, 14, 13, 2 %%>;
 
-  itemTitleTop = <%% -45, -45, -43, -42, -2 %%>;
-  itemTitleSize = <%% 23, 22, 20, 19, 2 %%>;
+  itemTitleTop = <%% -38, -38, -36, -33, -2 %%>;
+  itemTitleSize = <%% 20, 20, 19, 18, 2 %%>;
 
-  itemSumBottom = <%% -55, -55, -54, -52, -10 %%>;
-  itemSumLineTop = <%% 19, 19, 18, 17, 4 %%>;
+  itemSumBottom = <%% 27, 27, 27, 26, 2 %%>;
+  itemSumLineTop = <%% -11, -11, -10, -10, 4 %%>;
+  itemTotalSumLineTop = <%% 19, 19, 18, 17, 4 %%>;
 
   sumBoxHeight = <%% 25, 25, 24, 23, 5 %%>;
   finalPaddingBottomVisual = <%% 3, 3, 2, 1, 0 %%>;
@@ -343,6 +355,10 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
     ]
   });
 
+  items = items.filter((obj) => {
+    return !obj.detail.every((i) => { return i.unit.number === 0; })
+  });
+
   totalSum = 0;
   for (let z = 0; z < items.length; z++) {
 
@@ -353,14 +369,34 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
       style: {
         display: "block",
         position: "relative",
-        borderRadius: String(3) + "px",
-        border: "1px solid " + colorChip.gray3,
-        boxSizing: "border-box",
         paddingTop: String(tablePaddingTop) + ea,
         paddingBottom: String(tablePaddingBottom) + ea,
         marginTop: String(z === 0 ? tableMarginTopFirst : tableMarginTop) + ea,
       },
       children: [
+        {
+          style: {
+            position: "absolute",
+            width: "calc(100% + " + String(margin * 2) + ea + ")",
+            height: "calc(100% + " + String(tableBackgroundMargin * 2) + ea + ")",
+            top: String(tableBackgroundMargin * -1) + ea,
+            left: String(margin * -1) + ea,
+            background: colorChip[z % 2 === 0 ? "white" : "gray0"],
+            opacity: String(0.9),
+          },
+        },
+        {
+          style: {
+            position: "absolute",
+            borderRadius: String(3) + "px",
+            width: String(100) + '%',
+            height: String(100) + '%',
+            border: "1px solid " + colorChip.gray3,
+            boxSizing: "border-box",
+            top: String(0),
+            left: String(0),
+          },
+        },
         {
           text: "<b%>%b>&nbsp;&nbsp;" + items[z].name,
           style: {
@@ -410,9 +446,13 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
       });
     }
 
+    items[z].detail = items[z].detail.filter((obj) => {
+      return obj.unit.number !== 0;
+    });
+
     for (let y = 0; y < items[z].detail.length; y++) {
 
-      itemDetailArr = wordings.itemDetail(items[z].detail[y]);
+      itemDetailArr = wordings.itemDetail(items[z].detail[y], (y + 1));
       itemSumNumber += wordings.itemPrice(items[z].detail[y]);
 
       itemBar = createNode({
@@ -451,29 +491,26 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
         position: "absolute",
         display: "block",
         bottom: String(itemSumBottom) + ea,
-        width: String(100) + '%',
+        width: withOut(itemBarLeft * 2, ea),
+        left: String(itemBarLeft) + ea,
         textAlign: "right",
       },
       children: [
         {
-          position: "absolute",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(itemSumLineTop) + ea,
-          borderBottom: "1px dashed " + colorChip.gray4,
-        },
-        {
-          text: autoComma(itemSumNumber) + '원',
+          text: "<b%>%b>&nbsp;&nbsp;" + autoComma(itemSumNumber) + '원',
           style: {
             display: "inline-block",
             position: "relative",
-            fontSize: String(sumNumberSize) + ea,
+            fontSize: String(sumMiddleNumberSize) + ea,
             fontWeight: String(500),
             color: colorChip.black,
             paddingLeft: String(sumWhitePaddingLeft) + ea,
-            background: colorChip.white,
           },
+          bold: {
+            fontSize: String(sumMiddleNumberSize) + ea,
+            fontWeight: String(800),
+            color: colorChip.gray3,
+          }
         }
       ]
     });
@@ -528,7 +565,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
             top: String(0),
             left: String(0),
             width: String(100) + '%',
-            height: String(itemSumLineTop) + ea,
+            height: String(itemTotalSumLineTop) + ea,
             borderBottom: "1px dashed " + colorChip.gray4,
           },
           {
