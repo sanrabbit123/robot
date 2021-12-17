@@ -3601,8 +3601,10 @@ ProposalJs.prototype.list_mainArea = async function (searchQuery = null, limit =
     }
 
     if (searchQuery === null) {
-      projectList = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&limit=" + String(limit), "/getProjects"));
-      clients = JSON.parse(await GeneralJs.ajaxPromise("noFlat=true&limit=" + String(limit + 1000), "/getClients"));
+      projectList = await GeneralJs.ajaxJson({ noFlat: true, limit }, "/getProjects");
+      clients = await GeneralJs.ajaxJson({ noFlat: true, whereQuery: {
+        $or: projectList.map((obj) => { return { cliid: obj.cliid } })
+      } }, "/getClients");
       number = 0;
       for (let p of projectList) {
         p.serviceName = `${serviceMap.get(p.service.serid)} ${xValueMap.get(p.service.xValue)}`;
@@ -3662,7 +3664,7 @@ ProposalJs.prototype.list_mainArea = async function (searchQuery = null, limit =
     }
 
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    GeneralJs.ajax("message=ProposalJs.prototype.list_mainArea 문제 생김 : " + e.message + "&channel=#error_log", "/sendSlack", function () {});
     console.log(e);
   }
 }

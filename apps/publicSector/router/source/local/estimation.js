@@ -758,50 +758,7 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
       },
       event: {
         click: function (e) {
-          const invoice = invoiceList.search("invid", this.getAttribute("invid"));
-
-          instance.bottomPannel.style.transform = "translateY(" + String(instance.belowHeight) + ea + ")";
-          instance.mainBaseTong.style.animation = "fadedownlite 0.3s ease forwards";
-
-          setQueue(() => {
-            const totalMother = instance.totalMother;
-            const newMainBase = instance.mainBaseTong.cloneNode(false);
-            let top;
-
-            instance.mainBaseTong.style.opacity = String(0);
-            top = Number(newMainBase.style.top.replace(/[^0-9]/gi, ''));
-
-            newMainBase.style.animation = "fadeuplite 0.3s ease forwards";
-            newMainBase.style.background = colorChip.white;
-            newMainBase.style.height = "calc(100% - " + String(top * 2) + ea + " + " + String(instance.belowHeight) + ea + ")";
-            newMainBase.style.borderRadius = String(5) + "px";
-            newMainBase.style.boxShadow = "0px 3px 14px -9px " + colorChip.shadow;
-
-            totalMother.style.overflow = "visible";
-
-            instance.newMainBase = newMainBase;
-            instance.mainCancleBase = createNode({
-              mother: totalMother,
-              event: {
-                click: function (e) {
-                  instance.estimationBackward();
-                }
-              },
-              style: {
-                position: "absolute",
-                top: String(0),
-                left: String(0),
-                width: String(100) + '%',
-                height: "calc(100% + " + String(instance.belowHeight) + ea + ")",
-                background: colorChip.gray3,
-                animation: "justfadeinoriginal 0.3s ease forwards",
-              }
-            });
-            totalMother.appendChild(newMainBase);
-            instance.estimationDocument(newMainBase, invoice);
-
-          }, 350);
-
+          instance.estimationDetailLaunching(this.getAttribute("invid"), false);
         },
         mouseenter: function (e) {
           this.style.transition = "";
@@ -1054,23 +1011,106 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
   this.addSearchEvent();
 }
 
-EstimationJs.prototype.estimationBackward = function () {
+EstimationJs.prototype.estimationDetailLaunching = function (invid, fastMode = false, requestNumber = null) {
+  const instance = this;
+  const { ea, belowHeight, totalMother, mainBaseTong, bottomPannel, invoiceList } = this;
+  const { createNode, createNodes, colorChip, withOut, isMac, setQueue } = GeneralJs;
+  const invoice = invoiceList.search("invid", invid);
+
+  if (fastMode) {
+
+    const newMainBase = mainBaseTong.cloneNode(false);
+    let top;
+
+    mainBaseTong.style.opacity = String(0);
+    top = Number(newMainBase.style.top.replace(/[^0-9]/gi, ''));
+
+    newMainBase.style.animation = "";
+    newMainBase.style.opacity = String(1);
+    newMainBase.style.background = colorChip.white;
+    newMainBase.style.height = "calc(100% - " + String(top * 2) + ea + " + " + String(belowHeight) + ea + ")";
+    newMainBase.style.borderRadius = String(5) + "px";
+    newMainBase.style.boxShadow = "0px 3px 14px -9px " + colorChip.shadow;
+
+    totalMother.style.overflow = "visible";
+
+    this.newMainBase = newMainBase;
+    totalMother.appendChild(newMainBase);
+    this.estimationDocument(newMainBase, invoice, requestNumber);
+
+  } else {
+    bottomPannel.style.transform = "translateY(" + String(belowHeight) + ea + ")";
+    mainBaseTong.style.animation = "fadedownlite 0.3s ease forwards";
+
+    setQueue(() => {
+      const newMainBase = mainBaseTong.cloneNode(false);
+      let top;
+
+      mainBaseTong.style.opacity = String(0);
+      top = Number(newMainBase.style.top.replace(/[^0-9]/gi, ''));
+
+      newMainBase.style.animation = "fadeuplite 0.3s ease forwards";
+      newMainBase.style.background = colorChip.white;
+      newMainBase.style.height = "calc(100% - " + String(top * 2) + ea + " + " + String(belowHeight) + ea + ")";
+      newMainBase.style.borderRadius = String(5) + "px";
+      newMainBase.style.boxShadow = "0px 3px 14px -9px " + colorChip.shadow;
+
+      totalMother.style.overflow = "visible";
+
+      instance.newMainBase = newMainBase;
+      instance.mainCancleBase = createNode({
+        mother: totalMother,
+        event: {
+          click: function (e) {
+            instance.estimationBackward();
+          }
+        },
+        style: {
+          position: "absolute",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: "calc(100% + " + String(instance.belowHeight) + ea + ")",
+          background: colorChip.gray3,
+          animation: "justfadeinoriginal 0.3s ease forwards",
+        }
+      });
+      totalMother.appendChild(newMainBase);
+      instance.estimationDocument(newMainBase, invoice, requestNumber);
+
+    }, 350);
+  }
+}
+
+EstimationJs.prototype.estimationBackward = function (fastMode = false) {
   const instance = this;
   const { ea } = this;
   const { setQueue } = GeneralJs;
-  this.newMainBase.style.animation = "fadedownlite 0.3s ease forwards";
-  this.mainCancleBase.style.animation = "fadedownlite 0.3s ease forwards";
-  this.bottomPannel.style.transform = "translateY(" + String(0) + ea + ")";
-  this.mainBaseTong.style.animation = "fadeuplite 0.3s ease forwards";
-  setQueue(() => {
-    instance.newMainBase.remove();
-    instance.mainCancleBase.remove();
-    instance.invid = null;
-    instance.totalMother.style.overflow = "scroll";
-  }, 301);
+
+  if (fastMode) {
+
+    this.newMainBase.remove();
+    // this.mainCancleBase.remove();
+    this.invid = null;
+    this.totalMother.style.overflow = "scroll";
+
+  } else {
+
+    this.newMainBase.style.animation = "fadedownlite 0.3s ease forwards";
+    this.mainCancleBase.style.animation = "fadedownlite 0.3s ease forwards";
+    this.bottomPannel.style.transform = "translateY(" + String(0) + ea + ")";
+    this.mainBaseTong.style.animation = "fadeuplite 0.3s ease forwards";
+    setQueue(() => {
+      instance.newMainBase.remove();
+      instance.mainCancleBase.remove();
+      instance.invid = null;
+      instance.totalMother.style.overflow = "scroll";
+    }, 301);
+
+  }
 }
 
-EstimationJs.prototype.estimationDocument = function (mother, invoice) {
+EstimationJs.prototype.estimationDocument = function (mother, invoice, pastNumber = null) {
   const instance = this;
   const { totalMother, ea } = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma, findByAttribute, uniqueValue, equalJson } = GeneralJs;
@@ -1128,7 +1168,9 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let greenButtonTextTop;
   let greenButtonBetween;
   let greenButtons;
+  let greenButtonBase;
   let greenButtonEvents;
+  let greenButtonPaddingTop, greenButtonPaddingLeft, greenButtonMarginRight;
   let columnArr;
   let plusCircleWidth, plusCircleTop;
   let makeDetailBlock;
@@ -1141,6 +1183,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   let contextmenuSize;
   let makeWhiteBlock;
   let blockSum, tempBlock;
+  let currentBoo;
 
   this.invid = invoice.invid;
 
@@ -1201,15 +1244,16 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
   sumPaddingLeft = 18;
   sumBarTop = 37;
 
-  greenButtons = [
-    "견적서 발송",
-  ];
-  greenButtonWidth = 86;
+  greenButtonWidth = 300;
   greenButtonHeight = 30;
   greenButtonTextTop = -1;
   greenButtonBetween = 5;
   greenButtonWordingSize = 13;
   greenButtonWordingBottom = 8;
+
+  greenButtonPaddingTop = 12;
+  greenButtonPaddingLeft = 6;
+  greenButtonMarginRight = 5;
 
   contextmenuWidth = 90;
   contextmenuHeight = 30;
@@ -1228,22 +1272,66 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
   innerPaddingTop = realTopMargin - topMargin;
 
-  [ request ] = invoice.requests;
+  currentBoo = (pastNumber === null || pastNumber === 0);
+  if (currentBoo) {
+    [ request ] = invoice.requests;
+    this.invoiceNumber = 0;
+  } else {
+    request = invoice.requests[pastNumber];
+    this.invoiceNumber = pastNumber;
+  }
+
   ({ items } = request);
 
-  greenButtonEvents = [
-    async function (e) {
-      try {
-        if (window.confirm("견적서를 전송하시겠습니까?")) {
-          await instance.saveState(true);
-          // kakao
+  greenButtons = [
+    [ "견적서 발송" ],
+    [ "이전", "다음" ]
+  ];
 
-          window.alert("견적서를 전송하였습니다!");
+  greenButtonEvents = [
+    [
+      async function (e) {
+        try {
+          if (window.confirm("견적서를 전송하시겠습니까?")) {
+            await instance.saveState(true);
+            // kakao
+
+            window.alert("견적서를 전송하였습니다!");
+          }
+        } catch (e) {
+          window.location.reload();
         }
-      } catch (e) {
-        window.location.reload();
-      }
-    },
+      },
+    ],
+    [
+      async function () {
+        try {
+          if (invoice.requests[instance.invoiceNumber + 1] !== undefined) {
+            instance.estimationBackward(true);
+            instance.estimationDetailLaunching(invoice.invid, true, instance.invoiceNumber + 1);
+          } else {
+            window.alert("가장 오래된 버전입니다!");
+          }
+
+        } catch (e) {
+          window.location.reload();
+        }
+      },
+      async function () {
+        try {
+
+          if (invoice.requests[instance.invoiceNumber - 1] !== undefined) {
+            instance.estimationBackward(true);
+            instance.estimationDetailLaunching(invoice.invid, true, instance.invoiceNumber - 1);
+          } else {
+            window.alert("가장 최신 버전입니다!");
+          }
+
+        } catch (e) {
+          window.location.reload();
+        }
+      },
+    ]
   ];
 
   makeDetailBlock = (whiteTableArea, price, name, number, unitEa, consumer, description, detailDeactive) => {
@@ -2406,42 +2494,60 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice) {
 
   // save button
   for (let i = 0; i < greenButtons.length; i++) {
-    createNode({
+
+    greenButtonBase = createNode({
       mother: titleArea,
-      event: {
-        contextmenu: (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        },
-        click: greenButtonEvents[i]
-      },
       style: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: "block",
         position: "absolute",
         width: String(greenButtonWidth) + ea,
         height: String(greenButtonHeight) + ea,
-        borderRadius: String(3) + "px",
         bottom: String(greenButtonWordingBottom + ((greenButtonHeight + greenButtonBetween) * i)) + ea,
         left: String(0),
-        background: colorChip.gradientGreen,
-        cursor: "pointer",
       },
-      children: [
-        {
-          class: [ "hoverDefault_lite" ],
-          text: greenButtons[i],
-          style: {
-            position: "relative",
-            fontSize: String(greenButtonWordingSize) + ea,
-            fontWeight: String(600),
-            color: colorChip.white,
-            top: String(greenButtonTextTop) + ea,
-          }
-        }
-      ]
     });
+
+    for (let j = 0; j < greenButtons[i].length; j++) {
+      createNode({
+        mother: greenButtonBase,
+        event: {
+          contextmenu: (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          },
+          click: greenButtonEvents[i][j]
+        },
+        style: {
+          display: "inline-flex",
+          alignItems: "center",
+          paddingLeft: String(greenButtonPaddingTop) + ea,
+          paddingRight: String(greenButtonPaddingTop) + ea,
+          paddingTop: String(greenButtonPaddingLeft) + ea,
+          paddingBottom: String(greenButtonPaddingLeft) + ea,
+          marginRight: String(greenButtonMarginRight) + ea,
+          justifyContent: "center",
+          borderRadius: String(3) + "px",
+          bottom: String(greenButtonWordingBottom + ((greenButtonHeight + greenButtonBetween) * i)) + ea,
+          left: String(0),
+          background: colorChip.gradientGreen,
+          cursor: "pointer",
+        },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: greenButtons[i][j],
+            style: {
+              position: "relative",
+              fontSize: String(greenButtonWordingSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.white,
+              top: String(greenButtonTextTop) + ea,
+            }
+          }
+        ]
+      });
+    }
+
   }
 
   // auto save launching
@@ -2473,78 +2579,79 @@ EstimationJs.prototype.saveState = async function (unshiftMode = false) {
   const iConst = "I";
   const dConst = "D";
   try {
-    const blockToJson = function (whiteDom) {
-      const optionalValue = (value, d) => { return (value === null ? d : value) }
-      let json;
-      let tempArr;
-      let detailDummy;
-      let requestDummy;
-      let consumer, vat, supply;
-      let thisInvoice;
+    if (this.invoiceNumber === 0) {
+      const blockToJson = function (whiteDom) {
+        const optionalValue = (value, d) => { return (value === null ? d : value) }
+        let json;
+        let tempArr;
+        let detailDummy;
+        let requestDummy;
+        let consumer, vat, supply;
+        let thisInvoice;
 
-      json = equalJson(JSON.stringify(item));
-      json.id = iConst + uniqueValue("hex");
-      json.name = whiteDom.children[0].textContent.replace(/^[0-9]+[^0-9]/, '').trim();
+        json = equalJson(JSON.stringify(item));
+        json.id = iConst + uniqueValue("hex");
+        json.name = whiteDom.children[0].textContent.replace(/^[0-9]+[^0-9]/, '').trim();
 
-      detailDoms = [ ...whiteDom.children[1].children ].slice(1, -1);
-      for (let dom of detailDoms) {
-        tempArr = [ ...dom.children ].slice(1);
-        detailDummy = equalJson(JSON.stringify(detail));
+        detailDoms = [ ...whiteDom.children[1].children ].slice(1, -1);
+        for (let dom of detailDoms) {
+          tempArr = [ ...dom.children ].slice(1);
+          detailDummy = equalJson(JSON.stringify(detail));
 
-        detailDummy.id = dConst + uniqueValue("hex");
-        detailDummy.name = optionalValue(tempArr[0].getAttribute("value"), '').trim();
-        detailDummy.unit.number = Math.floor(Number(optionalValue(tempArr[1].getAttribute("value"), '0').replace(/[^0-9]/gi, '')));
-        detailDummy.unit.ea = optionalValue(tempArr[2].getAttribute("value"), '').trim();
+          detailDummy.id = dConst + uniqueValue("hex");
+          detailDummy.name = optionalValue(tempArr[0].getAttribute("value"), '').trim();
+          detailDummy.unit.number = Math.floor(Number(optionalValue(tempArr[1].getAttribute("value"), '0').replace(/[^0-9]/gi, '')));
+          detailDummy.unit.ea = optionalValue(tempArr[2].getAttribute("value"), '').trim();
 
-        consumer = Math.floor(Number(optionalValue(tempArr[3].getAttribute("value"), '0').replace(/[^0-9]/gi, '')));
-        vat = Math.floor((consumer / 11) / 10) * 10;
-        supply = Math.floor(consumer - vat);
+          consumer = Math.floor(Number(optionalValue(tempArr[3].getAttribute("value"), '0').replace(/[^0-9]/gi, '')));
+          vat = Math.floor((consumer / 11) / 10) * 10;
+          supply = Math.floor(consumer - vat);
 
-        detailDummy.unit.amount.consumer = consumer;
-        detailDummy.unit.amount.vat = vat;
-        detailDummy.unit.amount.supply = supply;
+          detailDummy.unit.amount.consumer = consumer;
+          detailDummy.unit.amount.vat = vat;
+          detailDummy.unit.amount.supply = supply;
 
-        detailDummy.description = optionalValue(tempArr[5].getAttribute("value"), '').trim();
+          detailDummy.description = optionalValue(tempArr[5].getAttribute("value"), '').trim();
 
-        json.detail.push(detailDummy);
+          json.detail.push(detailDummy);
+        }
+
+        return json;
+      }
+      let whereQuery, updateQuery;
+      let tong;
+
+      whereQuery = { invid };
+      updateQuery = {};
+      tong = [];
+      for (let block of this.whiteBlocks) {
+        tong.push(blockToJson(block));
       }
 
-      return json;
-    }
-    let whereQuery, updateQuery;
-    let tong;
-
-    whereQuery = { invid };
-    updateQuery = {};
-    tong = [];
-    for (let block of this.whiteBlocks) {
-      tong.push(blockToJson(block));
-    }
-
-    if (!unshiftMode) {
-      this.invoiceList.search("invid", this.invid).requests[0].items = tong;
-      updateQuery["requests.0.items"] = tong;
-    } else {
-      thisInvoice = this.invoiceList.search("invid", this.invid);
-      requestDummy = equalJson(JSON.stringify(thisInvoice.requests[0]));
-      thisInvoice.requests[0].status = "작성 완료";
-      thisInvoice.requests.unshift(requestDummy);
-      thisInvoice.requests[0].id = rConst + uniqueValue("hex");
-      thisInvoice.requests[0].date = new Date();
-      thisInvoice.requests[0].items = tong;
-      updateQuery["requests"] = thisInvoice.requests;
-    }
-
-    await ajaxJson({
-      to: "generalMongo",
-      json: {
-        mode: "update",
-        collection: "constructInvoice",
-        db: "python",
-        whereQuery, updateQuery
+      if (!unshiftMode) {
+        this.invoiceList.search("invid", this.invid).requests[0].items = tong;
+        updateQuery["requests.0.items"] = tong;
+      } else {
+        thisInvoice = this.invoiceList.search("invid", this.invid);
+        requestDummy = equalJson(JSON.stringify(thisInvoice.requests[0]));
+        thisInvoice.requests[0].status = "작성 완료";
+        thisInvoice.requests.unshift(requestDummy);
+        thisInvoice.requests[0].id = rConst + uniqueValue("hex");
+        thisInvoice.requests[0].date = new Date();
+        thisInvoice.requests[0].items = tong;
+        updateQuery["requests"] = thisInvoice.requests;
       }
-    }, "/publicSector/python");
 
+      await ajaxJson({
+        to: "generalMongo",
+        json: {
+          mode: "update",
+          collection: "constructInvoice",
+          db: "python",
+          whereQuery, updateQuery
+        }
+      }, "/publicSector/python");
+    }
   } catch (e) {
     window.location.reload();
   }
@@ -2625,8 +2732,6 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
     }, "/publicSector/python", { equal: true });
 
     newRequest = JSON.stringify(res2);
-
-    console.log(res2);
 
     blackBack = createNode({
       mother: document.body,
@@ -2728,8 +2833,6 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
                   let targetInvoice;
                   let whereQuery, updateQuery;
 
-                  console.log(newRequest);
-
                   instance.invoiceList.search("invid", invid).requests[0].status = "작성 완료";
                   instance.invoiceList.search("invid", invid).requests.unshift(newRequest);
                   targetInvoice = instance.invoiceList.search("invid", invid);
@@ -2738,17 +2841,15 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
                   updateQuery = {};
                   updateQuery["requests"] = targetInvoice.requests;
 
-                  console.log(updateQuery);
-
-                  // await ajaxJson({
-                  //   to: "generalMongo",
-                  //   json: {
-                  //     mode: "update",
-                  //     collection: "constructInvoice",
-                  //     db: "python",
-                  //     whereQuery, updateQuery
-                  //   }
-                  // }, "/publicSector/python");
+                  await ajaxJson({
+                    to: "generalMongo",
+                    json: {
+                      mode: "update",
+                      collection: "constructInvoice",
+                      db: "python",
+                      whereQuery, updateQuery
+                    }
+                  }, "/publicSector/python");
 
                   document.body.children[([ ...document.body.children ].length - 1)].style.animation = "fadedownlite 0.3s ease forwards";
                   document.body.children[([ ...document.body.children ].length - 2)].style.opacity = String(0);

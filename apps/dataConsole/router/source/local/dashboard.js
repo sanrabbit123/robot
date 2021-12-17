@@ -15,6 +15,7 @@ DashboardJs.prototype.baseMaker = function () {
     mother: totalContents,
     class: [ "totalMother" ],
     style: {
+      display: "inline-block",
       height: "calc(100% - " + String(belowHeight) + ea + ")",
       background: colorChip.gray1
     }
@@ -23,7 +24,7 @@ DashboardJs.prototype.baseMaker = function () {
   this.totalMother = totalMother;
 }
 
-DashboardJs.prototype.boardFlex = function () {
+DashboardJs.prototype.whiteBoards = function () {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
   const { createNode, colorChip, withOut } = GeneralJs;
@@ -32,20 +33,25 @@ DashboardJs.prototype.boardFlex = function () {
   let childrenBox;
   let middleBox;
   let innerMargin;
-  let x, y;
+  let boxWidth0, boxWidth1;
+  let boxHeight0, boxHeight1;
+  let whiteRadius;
 
-  outerMargin = <%% 36, 36, 36, 36, 4 %%>;
-  innerMargin = <%% 6, 6, 6, 6, 1 %%>;
+  outerMargin = <%% 30, 30, 28, 24, 4 %%>;
+  innerMargin = <%% 5, 5, 4, 3, 1 %%>;
+  whiteRadius = <%% 8, 8, 7, 6, 3 %%>;
 
-  x = 3;
-  y = 6;
+
+  boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
+  boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
+
+  totalMother.style["min-width"] = "calc(" + boxWidth0 + " * 4.5)";
 
   motherBox = createNode({
     mother: totalMother,
     style: {
       position: "relative",
-      display: "flex",
-      flexDirection: "column",
+      display: "block",
       width: withOut(outerMargin * 2, ea),
       height: withOut(outerMargin * 2, ea),
       top: String(outerMargin) + ea,
@@ -53,33 +59,248 @@ DashboardJs.prototype.boardFlex = function () {
     }
   });
 
-  for (let j = 0; j < x; j++) {
-    middleBox = createNode({
-      mother: motherBox,
-      style: {
-        position: "relative",
-        display: "flex",
-        flexDirection: "row",
-        height: String(j === x - 1 ? 100 : 200) + '%',
-        marginBottom: String(j === x - 1 ? 0 : innerMargin) + ea,
-      }
-    });
-    for (let i = 0; i < (j !== x - 1 ? y : y * 2); i++) {
-      childrenBox = createNode({
-        mother: middleBox,
+  createNode({
+    mother: motherBox,
+    style: {
+      position: "relative",
+      display: "inline-block",
+      width: boxWidth0,
+      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+      marginRight: String(innerMargin) + ea,
+      verticalAlign: "top",
+      opacity: String(0),
+      animation: "fadeup 0.5s ease 0.1s forwards",
+    },
+    children: [
+      {
         style: {
-          display: "inline-block",
           position: "relative",
-          width: String(100) + '%',
-          height: String(100) + '%',
-          borderRadius: String(12) + "px",
+          display: "block",
+          width: boxWidth0,
+          height: "calc(calc(100% - " + boxHeight1 + ") - " + String(innerMargin) + ea + ")",
+          borderRadius: String(whiteRadius) + ea,
           background: colorChip.white,
-          marginLeft: String(i === 0 ? 0 : innerMargin) + ea,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-        }
-      });
-    }
-  }
+          marginBottom: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "block",
+          width: boxWidth0,
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        },
+      },
+    ]
+  });
+
+  createNode({
+    mother: motherBox,
+    style: {
+      position: "relative",
+      display: "inline-block",
+      width: boxWidth0,
+      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+      marginRight: String(innerMargin) + ea,
+      verticalAlign: "top",
+      opacity: String(0),
+      animation: "fadeup 0.5s ease 0.2s forwards",
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          display: "block",
+          width: boxWidth0,
+          height: boxHeight0,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "block",
+          width: boxWidth0,
+          height: boxHeight0,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginRight: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        },
+      },
+    ]
+  });
+
+  createNode({
+    mother: motherBox,
+    style: {
+      position: "relative",
+      display: "inline-block",
+      width: "calc(calc(" + boxWidth0 + " * 2) + " + String(innerMargin) + ea + ")",
+      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+      marginRight: String(innerMargin) + ea,
+      verticalAlign: "top",
+      opacity: String(0),
+      animation: "fadeup 0.5s ease 0.3s forwards",
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: boxWidth0,
+          height: boxHeight0,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(innerMargin) + ea,
+          marginRight: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: boxWidth0,
+          height: boxHeight0,
+          marginBottom: String(innerMargin) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              display: "block",
+              width: boxWidth0,
+              height: "calc(calc(" + boxHeight0 + " - " + String(innerMargin) + ea + ") / 2)",
+              borderRadius: String(5) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+              marginBottom: String(innerMargin) + ea,
+            },
+          },
+          {
+            style: {
+              position: "relative",
+              display: "block",
+              width: boxWidth0,
+              height: "calc(calc(" + boxHeight0 + " - " + String(innerMargin) + ea + ") / 2)",
+              borderRadius: String(5) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            },
+          },
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          display: "block",
+          height: boxHeight0,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginRight: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginRight: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginRight: String(innerMargin) + ea,
+        },
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        },
+      },
+    ]
+  });
+
+  createNode({
+    mother: motherBox,
+    style: {
+      position: "relative",
+      display: "inline-block",
+      width: "calc(calc(100vw - " + String((outerMargin * 2) + (innerMargin * 4)) + ea + ") - calc(" + boxWidth0 + " * 4))",
+      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+      borderRadius: String(whiteRadius) + ea,
+      background: colorChip.white,
+      boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+      verticalAlign: "top",
+      transition: "all 0s ease",
+      opacity: String(0),
+      animation: "fadeup 0.5s ease 0.4s forwards",
+    },
+  });
+
+
+
 
 }
 
@@ -91,8 +312,10 @@ DashboardJs.prototype.launching = async function () {
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
 
+    this.whiteBlocks = {};
+
     this.baseMaker();
-    this.boardFlex();
+    this.whiteBoards();
 
   } catch (e) {
     GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
