@@ -2442,7 +2442,7 @@ ProjectJs.prototype.makeBoard = function (cases) {
   contextMenuBlockBetween = 8;
   contextMenuBlockMargin = 5;
   contextMenuBlockSize = 14;
-  contextMenuBlockTextTop = isMac() ? 6 : 5;
+  contextMenuBlockTextTop = isMac() ? 7 : 9;
 
   thirdTitleSize = 26;
   thirdTitleWeight = 600;
