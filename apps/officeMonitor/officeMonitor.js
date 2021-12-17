@@ -12,12 +12,14 @@ const OfficeMonitor = function (mother = null, back = null, address = null) {
     this.address = ADDRESS;
   }
   this.dir = process.cwd() + "/apps/officeMonitor";
+  this.scanResultName = "arpScanResult.json";
 }
 
-OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
+OfficeMonitor.prototype.renderReport = async function () {
   const instance = this;
   const os = require(`os`);
   const members = require(`${process.cwd()}/apps/memberObj.js`);
+  const { scanResultName } = this;
   const { map } = this.address.officeinfo;
   const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
   try {
@@ -26,6 +28,7 @@ OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
     let zeroAddition;
     let getInfoFromInterFace;
     let totalReports;
+    let final;
 
     getMac = async function (networkInterface = null) {
       try {
@@ -77,17 +80,9 @@ OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
         if (index !== -1) {
           if (typeof map[index].memid === "string") {
             thisMember = members.find((obj) => { return obj.id === map[index].memid });
-            if (liteMode) {
-              message = `${thisMember.name} ${thisMember.title}`;
-            } else {
-              message = `${thisMember.name} ${thisMember.title} (${mac}) => ${data[mac]}`;
-            }
+            message = `${thisMember.name} ${thisMember.title} (${mac}) => ${data[mac]}`;
           } else {
-            if (liteMode) {
-              message = `${map[index].name}`;
-            } else {
-              message = `${map[index].name} (${mac}) => ${data[mac]}`;
-            }
+            message = `${map[index].name} (${mac}) => ${data[mac]}`;
           }
         } else {
           message = `unknown (${mac}) => ${data[mac]}`;
@@ -130,9 +125,8 @@ OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
           unknown: macToName(alive, data).filter((str) => { return /^unknown/i.test(str); }),
         };
 
-        if (liteMode) {
-          report.alive.sort((a, b) => { return (/[가-힣]/gi.test(b) ? 10000 : 0) - (/[가-힣]/gi.test(a) ? 10000 : 0) });
-        }
+
+        report.alive.sort((a, b) => { return (/[가-힣]/gi.test(b) ? 10000 : 0) - (/[가-힣]/gi.test(a) ? 10000 : 0) });
 
         return report;
 
@@ -154,6 +148,7 @@ OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
         });
 
         totalReport = {};
+        totalReport.date = new Date();
         for (let interface of rawInterfacesKeys) {
           totalReport[interface] = await getInfoFromInterFace(interface, /^w/i.test(interface));
         }
@@ -164,7 +159,11 @@ OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
       }
     }
 
-    return (await totalReports());
+    final = await totalReports();
+
+    await fileSystem(`writeJson`, [ this.address.officeinfo.ghost.file.static + "/" + scanResultName, final ]);
+
+    return final;
 
   } catch (e) {
     console.log(e);
@@ -173,8 +172,11 @@ OfficeMonitor.prototype.renderReport = async function (liteMode = false) {
 
 OfficeMonitor.prototype.routerPatch = function (app) {
   const instance = this;
+  const address = this.address;
+  const { scanResultName } = this;
   const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
-  const defaultPath = instance.address.officeinfo.ghost.monitor.path;
+  const defaultPath = address.officeinfo.ghost.monitor.path;
+  const resultFile = this.address.officeinfo.ghost.file.static + "/" + scanResultName;
   const ipPass = (req) => {
     let ip;
     ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -224,7 +226,7 @@ OfficeMonitor.prototype.routerPatch = function (app) {
       if (!ipPass(req)) {
         throw new Error("ip ban");
       }
-      res.send(JSON.stringify(await instance.renderReport(true), null, 2));
+      res.send(JSON.stringify(await instance.renderReport(), null, 2));
     } catch (e) {
       console.log(e);
       res.send("error");
@@ -243,6 +245,42 @@ OfficeMonitor.prototype.routerPatch = function (app) {
         throw new Error("ip ban");
       }
       res.send(JSON.stringify(await instance.renderReport()));
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  });
+
+  app.get(defaultPath + "/status", async (req, res) => {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      res.send(JSON.stringify((await fileSystem(`readJson`, [ resultFile ])), null, 2));
+    } catch (e) {
+      console.log(e);
+      res.send("error");
+    }
+  });
+
+  app.post(defaultPath + "/status", async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      res.send(JSON.stringify(await fileSystem(`readJson`, [ resultFile ])));
     } catch (e) {
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -297,6 +335,14 @@ OfficeMonitor.prototype.reportServer = async function () {
     pems.allowHTTP1 = true;
 
     this.routerPatch(app);
+
+    setInterval(async () => {
+      try {
+        await instance.renderReport();
+      } catch (e) {
+        console.log(e);
+      }
+    }, 30 * 60 * 1000);
 
     // server launching
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });
