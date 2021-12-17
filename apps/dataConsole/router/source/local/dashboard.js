@@ -623,6 +623,8 @@ DashboardJs.prototype.whiteBoards = function () {
 DashboardJs.prototype.launching = async function () {
   const instance = this;
   try {
+    const { ajaxJson } = GeneralJs;
+
     this.belowHeight = this.mother.belowHeight;
     this.searchInput = this.mother.searchInput;
     this.grayBarWidth = this.mother.grayBarWidth;
@@ -632,8 +634,16 @@ DashboardJs.prototype.launching = async function () {
     this.baseMaker();
     this.whiteBoards();
 
+    console.log(await ajaxJson({}, "https:" + OFFICEHOST.split(':')[1] + "/officeMonitor/status", { equal: true }));
+
+
   } catch (e) {
-    GeneralJs.ajax("message=" + JSON.stringify(e).replace(/[\&\=]/g, '') + "&channel=#error_log", "/sendSlack", function () {});
+    ajaxJson({
+      message: "DashboardJs.prototype.launching error : " + e.message,
+      channel: "#error_log"
+    }, "/sendSlack").catch((err) => {
+      console.log(err);
+    });
     console.log(e);
   }
 }

@@ -85,6 +85,8 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
+    // console.log(await requestSystem("https://home-liaison.serveftp.com/officeMonitor/status", { test: 1 }, { headers: { "Content-Type": "application/json" } }));
+
 
     // console.log(await bill.matrixToRequest(`${process.cwd()}/temp/test.xlsx`));
     // const selfPythonMongo = this.MONGOLOCALC;
