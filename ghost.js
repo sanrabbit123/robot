@@ -245,7 +245,6 @@ Ghost.prototype.slackToMongo = async function (selfMongo) {
       }
     }
 
-    console.log(uploadTargets);
     for (let obj of uploadTargets) {
       await selfMongo.db(`miro81`).collection(collection).insertOne(obj);
       console.log(obj);
