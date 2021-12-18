@@ -87,33 +87,9 @@ DevContext.prototype.launching = async function () {
 
     // console.log(await requestSystem("https://home-liaison.serveftp.com/officeMonitor/status", { test: 1 }, { headers: { "Content-Type": "application/json" } }));
 
-    const { WebClient } = require("@slack/web-api");
-    const token = "xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv";
-    const slack_bot = new WebClient(token);
-
-
-    const target = "#000_대표자공지";
-
-    let result, index;
-    let channelId;
 
 
 
-    result = await slack_bot.conversations.list({ token });
-    index = result.channels.findIndex((obj) => { return obj.name.trim() === target.replace(/\#/gi, '').trim() });
-    if (index === -1) {
-      throw new Error("cannot find channel");
-    }
-
-    channelId = result.channels[index].id;
-
-    console.log(channelId)
-
-    result = await slack_bot.conversations.history({
-      channel: channelId
-    });
-
-    console.log(result);
 
 
 

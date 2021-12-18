@@ -9,7 +9,8 @@ const Ghost = function () {
   this.back = new BackMaker();
   this.sheets = new GoogleSheet();
   this.drive = new GoogleDrive();
-  this.slack_bot = new WebClient("xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv");
+  this.slack_token = "xoxb-717757271335-2032150390679-1FTxRg4wQasMpe9kKDgAdqBv";
+  this.slack_bot = new WebClient(this.slack_token);
   this.address = ADDRESS;
   this.homeliaisonServer = this.address.officeinfo.ghost.file.static + this.address.officeinfo.ghost.file.office;
   this.photoServer = this.address.officeinfo.ghost.file.static + "/photo";
@@ -146,6 +147,116 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
     return client;
 
   } catch (e) {
+    console.log(e);
+  }
+}
+
+Ghost.prototype.slackToMongo = async function (selfMongo) {
+  const instance = this;
+  const { slack_token: token, slack_bot } = this;
+  const { messageLog, errorLog } = this.mother;
+  const collection = "slackMessages";
+  const userMap = {
+    UM1S7H3GQ: "Clare",
+    UM1SUNFFX: "Jini",
+    UM1CS4ZRS: "uragen",
+    UNYELBLNP: "jenny",
+    TM3N97Z9V: "Olivia",
+    U016MUF8TDE: "서미화",
+    U01JL6U5NPP: "임지민",
+    U01HFUADKB8: "이큰별",
+  };
+  const targets = [
+    "#000_master_notice",
+    "#100_service",
+    "#300_designer",
+    "#401_consulting",
+    "#502_sns_contents",
+    "#700_operation",
+    "#701_taxbill",
+  ];
+  try {
+    const channels = (await slack_bot.conversations.list({ token })).channels;
+    const returnMessages = async (target) => {
+      try {
+        let result, index;
+        let channelId;
+        let tong;
+        let tempDate;
+        let thisChannel;
+
+        index = channels.findIndex((obj) => { return (new RegExp(target.replace(/\#/gi, '').trim(), "gi")).test(obj.name.trim()) });
+        if (index === -1) {
+          throw new Error("cannot find channel");
+        }
+        thisChannel = channels[index];
+        channelId = thisChannel.id;
+        result = await slack_bot.conversations.history({
+          channel: channelId
+        });
+
+        result.messages = result.messages.filter((obj) => { return typeof obj.client_msg_id === "string" });
+
+        tong = [];
+        for (let obj of result.messages) {
+          obj.id = obj.client_msg_id;
+          delete obj.client_msg_id;
+          obj.date = new Date(Number(obj.ts) * 1000);
+          delete obj.ts;
+          obj.user = userMap[obj.user] === undefined ? obj.user : userMap[obj.user];
+          obj.channel = {
+            id: channelId,
+            name: thisChannel.name,
+          }
+          tong.push(obj);
+        }
+
+        tong.sort((a, b) => {
+          return a.date.valueOf() - b.date.valueOf();
+        });
+
+        return tong;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    let totalTong;
+    let tempArr;
+    let idArr;
+    let rows;
+    let uploadTargets;
+    let index;
+
+    totalTong = [];
+    for (let t of targets) {
+      tempArr = await returnMessages(t);
+      totalTong = totalTong.concat(tempArr);
+    }
+
+    idArr = totalTong.map((obj) => { return { id: obj.id } });
+
+    rows = await selfMongo.db(`miro81`).collection(collection).find({ $or: idArr }).toArray();
+
+    uploadTargets = [];
+    for (let t of totalTong) {
+      index = rows.findIndex((obj) => { return obj.id === t.id });
+      if (index === -1) {
+        uploadTargets.push(t);
+      }
+    }
+
+    console.log(uploadTargets);
+    for (let obj of uploadTargets) {
+      await selfMongo.db(`miro81`).collection(collection).insertOne(obj);
+      console.log(obj);
+    }
+
+    await messageLog("slack sync done : " + JSON.stringify(new Date()));
+
+    return totalTong;
+
+  } catch (e) {
+    await errorLog("slack sync error : " + e.message);
     console.log(e);
   }
 }
@@ -973,6 +1084,8 @@ Ghost.prototype.ghostRouter = function (needs) {
           return instance.callHistory(MONGOC, MONGOCONSOLEC);
         }).then(() => {
           return messageLog("callHistory update success : " + JSON.stringify(new Date()));
+        }).then(() => {
+          return instance.slackToMongo(MONGOLOCALC);
         }).catch((err) => {
           errorLog("ghost error (ssl cron): " + err.message).catch((e) => { console.log(e); });
         });
@@ -1020,6 +1133,27 @@ Ghost.prototype.ghostRouter = function (needs) {
           errorLog("callHistory error : " + err.message).catch((e) => { console.log(e); });
         });
 
+        res.set({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": '*',
+        });
+        res.send(JSON.stringify({ message: "hello?" }));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  //GET - slackSync
+  funcObj.get_slackSync = {
+    link: [ "/slackSync" ],
+    func: async function (req, res) {
+      try {
+        instance.slackToMongo(MONGOLOCALC).catch((err) => {
+          errorLog("slackToMongo error : " + err.message).catch((e) => { console.log(e); });
+        });
         res.set({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": '*',
