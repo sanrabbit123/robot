@@ -577,7 +577,7 @@ DashboardJs.prototype.whiteBoards = function () {
         children: [
           {
             class: [ "hoverDefault_lite" ],
-            text: "촬영\n조정",
+            text: "컨텐츠\n관리",
             style: {
               color: colorChip.black,
               fontSize: String(title2Size) + vh,
