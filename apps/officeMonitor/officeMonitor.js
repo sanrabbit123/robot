@@ -295,9 +295,9 @@ OfficeMonitor.prototype.intervalMonitoring = function () {
   const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num); }
   const defaultInterval = 30 * 60 * 1000;
   const interval = {
-    d080: 20 * 60 * 1000,
-    d091: 12 * 60 * 1000,
-    d183: 20 * 60 * 1000,
+    d080: 30 * 60 * 1000,
+    d091: 6 * 60 * 1000,
+    d183: 30 * 60 * 1000,
     d210: 60 * 60 * 1000,
     d220: 60 * 60 * 1000,
   };

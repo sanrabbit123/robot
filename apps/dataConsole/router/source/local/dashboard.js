@@ -28,10 +28,11 @@ DashboardJs.prototype.whiteBoards = function () {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
   const { onlineStatus, members, slackNotices } = this;
-  const { createNode, colorChip, withOut } = GeneralJs;
+  const { createNode, colorChip, withOut, blankHref } = GeneralJs;
   const vh = "vh";
   const memberTongClassName = "memberTong";
   const serverTongClassName = "serverTong";
+  const noticeTongClassName = "noticeTong";
   const thisHost = window.location.protocol + "//" + window.location.host;
   let outerMargin;
   let motherBox;
@@ -56,11 +57,16 @@ DashboardJs.prototype.whiteBoards = function () {
   let memberBlockPaddingLeft;
   let memberBlockMarginBottom;
   let memberBlockWidth;
-  let memberBlockTop, memberBlockLeft;
+  let memberBlockTop, memberBlockTop2, memberBlockLeft;
   let memberBlockSize;
   let memberBlockPaddingRight;
   let homeliaisonWifiKey, hubSeongSuWifiKey;
   let alive;
+  let serverTargets;
+  let noticeTong;
+  let noticeSize, noticeDateSize;
+  let noticePaddingLeft, noticePaddingTop, noticePaddingBottom;
+  let noticeMarginBottom;
 
   outerMargin = <%% 30, 30, 28, 24, 4 %%>;
   innerMargin = <%% 5, 5, 4, 3, 1 %%>;
@@ -69,29 +75,80 @@ DashboardJs.prototype.whiteBoards = function () {
   titleSize = 2.6;
   title2Size = 2.3;
   title3Size = 2.3;
-  subSize = 2.2;
-  lineHeight = 1.1;
+  subSize = 2;
+  lineHeight = 1.02;
   lineHeight2 = 1.25;
   visualTop = -4;
   visualTop2 = -3;
 
-  onlineWordingSize = 2;
-  onlineBoxTitleTop = 2.4;
-  onlineBoxLeft = 2.6;
-  onlineBoxTop = 6;
+  onlineWordingSize = 1.7;
+  onlineBoxTitleTop = 2.2;
+  onlineBoxLeft = 2.7;
+  onlineBoxTop = 5.4;
 
-  onlineBoxHeight0 = 42;
+  onlineBoxHeight0 = 33.2;
   onlineBoxBetween = 1;
   memberBlockPaddingLeft = 1.1;
-  memberBlockMarginBottom = 0.95;
+  memberBlockMarginBottom = 1.05;
   onlineBoxInnerMarginTop = 2;
   memberBlockWidth = 0.5;
-  memberBlockTop = 0.71;
+  memberBlockTop = 0.67;
+  memberBlockTop2 = 0.77;
   memberBlockLeft = 0.1;
-  memberBlockSize = 1.45;
+  memberBlockSize = 1.38;
   memberBlockPaddingRight = 1;
 
-  console.log(onlineStatus);
+  noticeSize = 1.2;
+  noticeDateSize = 0.8;
+  noticePaddingLeft = 1.3;
+  noticePaddingTop = 1;
+  noticePaddingBottom = 1.5;
+  noticeMarginBottom = 0.5;
+
+  serverTargets = [
+    {
+      name: "Console server",
+      alive: () => {
+        return true;
+      }
+    },
+    {
+      name: "File server",
+      alive: (onlineStatus) => {
+        return /a8:a1:59:87:2a:d6/gi.test(JSON.stringify(onlineStatus));
+      }
+    },
+    {
+      name: "Graphic server",
+      alive: (onlineStatus) => {
+        return /bc:5f:f4:93:ca:ed/gi.test(JSON.stringify(onlineStatus));
+      }
+    },
+    {
+      name: "Sms server",
+      alive: (onlineStatus) => {
+        return /88:36:6c:fd:b7:8e/gi.test(JSON.stringify(onlineStatus));
+      }
+    },
+    {
+      name: "Monitor server",
+      alive: (onlineStatus) => {
+        return /00:e0:4c:68:02:c9/gi.test(JSON.stringify(onlineStatus));
+      }
+    },
+    {
+      name: "Bill Server",
+      alive: () => {
+        return true;
+      }
+    },
+    {
+      name: "Bridge Server",
+      alive: () => {
+        return true;
+      }
+    },
+  ];
 
   homeliaisonWifiKey = Object.keys(onlineStatus).find(str => { return /^e/gi.test(str) });
   hubSeongSuWifiKey = Object.keys(onlineStatus).find(str => { return /^w/gi.test(str) });
@@ -102,22 +159,16 @@ DashboardJs.prototype.whiteBoards = function () {
   for (let member of members) {
     alive = (onlineStatus[homeliaisonWifiKey].alive.findIndex((str) => { return (new RegExp((member.name + " " + member.title), "gi")).test(str) }) !== -1);
     if (alive) {
-      member.alive = "homeliaison";
+      member.alive = "hliaison";
     } else {
       alive = (onlineStatus[hubSeongSuWifiKey].alive.findIndex((str) => { return (new RegExp((member.name + " " + member.title), "gi")).test(str) }) !== -1);
       if (alive) {
-        member.alive = "hubSeongsu";
+        member.alive = "seongsu";
       } else {
         member.alive = "offline";
       }
     }
   }
-
-  console.log(members);
-
-  // console.log(onlineStatus, members, slackNotices);
-
-
 
   boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
   boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
@@ -264,7 +315,7 @@ DashboardJs.prototype.whiteBoards = function () {
           alignItems: "center",
           cursor: "pointer",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+        event: { click: (e) => { blankHref(FRONTHOST); } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
@@ -290,7 +341,6 @@ DashboardJs.prototype.whiteBoards = function () {
 
   memberTong = firstMother.querySelector('.' + memberTongClassName);
   serverTong = firstMother.querySelector('.' + serverTongClassName);
-
   for (let member of members) {
     createNode({
       mother: memberTong,
@@ -308,7 +358,7 @@ DashboardJs.prototype.whiteBoards = function () {
           style: {
             position: "absolute",
             width: String(memberBlockWidth) + vh,
-            height: String(memberBlockWidth) + vh,
+            height: "",
             top: String(memberBlockTop) + vh,
             left: String(memberBlockLeft) + vh,
           }
@@ -324,17 +374,74 @@ DashboardJs.prototype.whiteBoards = function () {
             color: colorChip.black,
             paddingRight: String(memberBlockPaddingRight) + vh,
           }
+        },
+        {
+          text: member.alive,
+          style: {
+            position: "absolute",
+            right: String(0),
+            top: String(0),
+            background: colorChip.white,
+            fontSize: String(memberBlockSize) + vh,
+            fontWeight: String(300),
+            fontFamily: "graphik",
+            color: member.alive !== "offline" ? colorChip.green : colorChip.gray4,
+          }
         }
       ]
     });
   }
-
-
-
-
-
-
-
+  for (let server of serverTargets) {
+    createNode({
+      mother: serverTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(memberBlockPaddingLeft * 1, vh),
+        paddingLeft: String(memberBlockPaddingLeft) + vh,
+        marginBottom: String(memberBlockMarginBottom) + vh,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnRound(String(memberBlockWidth / 2) + vh, server.alive(onlineStatus) ? colorChip.green : colorChip.gray4),
+          style: {
+            position: "absolute",
+            width: String(memberBlockWidth) + vh,
+            height: "",
+            top: String(memberBlockTop2) + vh,
+            left: String(memberBlockLeft) + vh,
+          }
+        },
+        {
+          text: server.name,
+          style: {
+            display: "inline-block",
+            position: "relative",
+            background: colorChip.white,
+            fontSize: String(memberBlockSize) + vh,
+            fontWeight: String(300),
+            fontFamily: "graphik",
+            color: colorChip.black,
+            paddingRight: String(memberBlockPaddingRight) + vh,
+          }
+        },
+        {
+          text: server.alive(onlineStatus) ? "online" : "offline",
+          style: {
+            position: "absolute",
+            right: String(0),
+            top: String(0),
+            background: colorChip.white,
+            fontSize: String(memberBlockSize) + vh,
+            fontWeight: String(300),
+            fontFamily: "graphik",
+            color: server.alive(onlineStatus) ? colorChip.green : colorChip.gray4,
+          }
+        }
+      ]
+    });
+  }
 
   secondMother = createNode({
     mother: motherBox,
@@ -434,7 +541,7 @@ DashboardJs.prototype.whiteBoards = function () {
           cursor: "pointer",
           verticalAlign: "top",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/project"; } },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=construct"; } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
@@ -466,7 +573,7 @@ DashboardJs.prototype.whiteBoards = function () {
           cursor: "pointer",
           verticalAlign: "top",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/project"; } },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=contents"; } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
@@ -566,7 +673,7 @@ DashboardJs.prototype.whiteBoards = function () {
               alignItems: "center",
               cursor: "pointer",
             },
-            event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+            event: { click: (e) => { blankHref("https:" + OFFICEHOST.split(":")[1] + "/publicSector/estimation"); } },
             children: [
               {
                 class: [ "hoverDefault_lite" ],
@@ -600,7 +707,7 @@ DashboardJs.prototype.whiteBoards = function () {
               alignItems: "center",
               cursor: "pointer",
             },
-            event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+            event: { click: (e) => { blankHref(window.location.protocol + "//" + window.location.host + "/middle/console?desid=d1701_aa01s"); } },
             children: [
               {
                 class: [ "hoverDefault_lite" ],
@@ -671,7 +778,7 @@ DashboardJs.prototype.whiteBoards = function () {
           cursor: "pointer",
           verticalAlign: "top",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/project"; } },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=aspirant"; } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
@@ -704,7 +811,7 @@ DashboardJs.prototype.whiteBoards = function () {
           cursor: "pointer",
           verticalAlign: "top",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/project"; } },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=checklist"; } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
@@ -737,7 +844,7 @@ DashboardJs.prototype.whiteBoards = function () {
           cursor: "pointer",
           verticalAlign: "top",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/project"; } },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=possible"; } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
@@ -769,7 +876,7 @@ DashboardJs.prototype.whiteBoards = function () {
           cursor: "pointer",
           verticalAlign: "top",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/project"; } },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=request"; } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
@@ -795,9 +902,10 @@ DashboardJs.prototype.whiteBoards = function () {
     mother: motherBox,
     style: {
       position: "relative",
+      paddingTop: String(onlineBoxTop) + vh,
       display: "inline-block",
       width: "calc(calc(100vw - " + String((outerMargin * 2) + (innerMargin * 4)) + ea + ") - calc(" + boxWidth0 + " * 4))",
-      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+      height: "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ") - " + String(onlineBoxTop) + vh + ")",
       borderRadius: String(whiteRadius) + ea,
       background: colorChip.gray1,
       boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
@@ -806,8 +914,75 @@ DashboardJs.prototype.whiteBoards = function () {
       opacity: String(0),
       animation: "fadeup 0.5s ease 0.4s forwards",
     },
+    children: [
+      {
+        text: "Notice",
+        style: {
+          position: "absolute",
+          fontSize: String(onlineWordingSize) + vh,
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          top: String(onlineBoxTitleTop) + vh,
+          left: String(onlineBoxLeft) + vh,
+          color: colorChip.black,
+        }
+      },
+      {
+        class: [ noticeTongClassName ],
+        style: {
+          display: "block",
+          position: "relative",
+          left: String(onlineBoxLeft) + vh,
+          width: withOut(onlineBoxLeft * 2, vh),
+          height: String(100) + '%',
+          overflow: "scroll",
+        },
+      }
+    ]
   });
   noticeBlock = fourthMother;
+  noticeTong = fourthMother.querySelector("." + noticeTongClassName);
+
+  for (let { text, user, date } of slackNotices) {
+    createNode({
+      mother: noticeTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: String(100) + '%',
+        background: colorChip.white,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        marginBottom: String(noticeMarginBottom) + vh,
+      },
+      children: [
+        {
+          text: "<u%" + String(date.getFullYear()).slice(2) + "." + String(date.getMonth() + 1) + "." + String(date.getDate()) + " " + String(date.getHours()) + ":" + String(date.getDate()) + "%u>\n" + "<b%" + user + "%b> : " + text.replace(/\<[^\>]+\>/g, '').trim(),
+          style: {
+            paddingTop: String(noticePaddingTop) + vh,
+            paddingLeft: String(noticePaddingLeft) + vh,
+            paddingRight: String(noticePaddingLeft) + vh,
+            paddingBottom: String(noticePaddingBottom) + vh,
+            fontSize: String(noticeSize) + vh,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+          },
+          bold: {
+            fontSize: String(noticeSize) + vh,
+            fontWeight: String(600),
+            color: colorChip.black,
+          },
+          under: {
+            fontSize: String(noticeDateSize) + vh,
+            fontWeight: String(600),
+            color: colorChip.deactive,
+          }
+        }
+      ]
+    })
+
+  }
 
   this.whiteBlocks = { onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock };
 
