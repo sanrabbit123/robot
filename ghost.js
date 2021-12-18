@@ -2201,6 +2201,31 @@ Ghost.prototype.ghostRouter = function (needs) {
     }
   };
 
+  //POST - get slack messages
+  funcObj.post_slackMessages = {
+    link: [ "/slackMessages" ],
+    func: async function (req, res) {
+      const collection = "slackMessages";
+      res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": '*',
+      });
+      try {
+        if (typeof req.body.channel !== "string") {
+          throw new Error("invaild post");
+        }
+        const channel = req.body.channel.replace(/\#/gi, '').trim();
+        const limit = req.body.limit !== undefined ? Number(req.body.limit) : 100;
+        const rows = await MONGOLOCALC.db(`miro81`).collection(collection).find({ "channel.name": channel }).sort({ "date": -1 }).limit(limit).toArray();
+        res.send(JSON.stringify(rows));
+      } catch (e) {
+        res.send(JSON.stringify({ message: "error : " + e.message }));
+      }
+    }
+  };
+
   //POST - dirParsing
   funcObj.post_dirParsing = {
     link: [ "/dirParsing" ],
