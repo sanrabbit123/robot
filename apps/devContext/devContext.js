@@ -89,8 +89,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const rows = await ghostRequest("slackMessages", { channel: "000_master_notice" });
-    console.log(rows);
+
 
 
     // console.log(await bill.matrixToRequest(`${process.cwd()}/temp/test.xlsx`));

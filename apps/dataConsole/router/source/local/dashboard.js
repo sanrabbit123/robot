@@ -27,8 +27,11 @@ DashboardJs.prototype.baseMaker = function () {
 DashboardJs.prototype.whiteBoards = function () {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
+  const { onlineStatus, members, slackNotices } = this;
   const { createNode, colorChip, withOut } = GeneralJs;
   const vh = "vh";
+  const memberTongClassName = "memberTong";
+  const serverTongClassName = "serverTong";
   const thisHost = window.location.protocol + "//" + window.location.host;
   let outerMargin;
   let motherBox;
@@ -44,6 +47,20 @@ DashboardJs.prototype.whiteBoards = function () {
   let titleSize, subSize, lineHeight;
   let title2Size, title3Size;
   let visualTop, visualTop2;
+  let onlineBoxTop, onlineBoxTitleTop, onlineBoxLeft;
+  let onlineWordingSize;
+  let onlineBoxHeight0, onlineBoxBetween;
+  let onlineBoxInnerMargin;
+  let onlineBoxInnerMarginTop;
+  let memberTong, serverTong;
+  let memberBlockPaddingLeft;
+  let memberBlockMarginBottom;
+  let memberBlockWidth;
+  let memberBlockTop, memberBlockLeft;
+  let memberBlockSize;
+  let memberBlockPaddingRight;
+  let homeliaisonWifiKey, hubSeongSuWifiKey;
+  let alive;
 
   outerMargin = <%% 30, 30, 28, 24, 4 %%>;
   innerMargin = <%% 5, 5, 4, 3, 1 %%>;
@@ -57,6 +74,50 @@ DashboardJs.prototype.whiteBoards = function () {
   lineHeight2 = 1.25;
   visualTop = -4;
   visualTop2 = -3;
+
+  onlineWordingSize = 2;
+  onlineBoxTitleTop = 2.4;
+  onlineBoxLeft = 2.6;
+  onlineBoxTop = 6;
+
+  onlineBoxHeight0 = 42;
+  onlineBoxBetween = 1;
+  memberBlockPaddingLeft = 1.1;
+  memberBlockMarginBottom = 0.95;
+  onlineBoxInnerMarginTop = 2;
+  memberBlockWidth = 0.5;
+  memberBlockTop = 0.71;
+  memberBlockLeft = 0.1;
+  memberBlockSize = 1.45;
+  memberBlockPaddingRight = 1;
+
+  console.log(onlineStatus);
+
+  homeliaisonWifiKey = Object.keys(onlineStatus).find(str => { return /^e/gi.test(str) });
+  hubSeongSuWifiKey = Object.keys(onlineStatus).find(str => { return /^w/gi.test(str) });
+  if (hubSeongSuWifiKey === undefined) {
+    hubSeongSuWifiKey = null;
+  }
+
+  for (let member of members) {
+    alive = (onlineStatus[homeliaisonWifiKey].alive.findIndex((str) => { return (new RegExp((member.name + " " + member.title), "gi")).test(str) }) !== -1);
+    if (alive) {
+      member.alive = "homeliaison";
+    } else {
+      alive = (onlineStatus[hubSeongSuWifiKey].alive.findIndex((str) => { return (new RegExp((member.name + " " + member.title), "gi")).test(str) }) !== -1);
+      if (alive) {
+        member.alive = "hubSeongsu";
+      } else {
+        member.alive = "offline";
+      }
+    }
+  }
+
+  console.log(members);
+
+  // console.log(onlineStatus, members, slackNotices);
+
+
 
   boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
   boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
@@ -91,14 +152,102 @@ DashboardJs.prototype.whiteBoards = function () {
       {
         style: {
           position: "relative",
+          paddingTop: String(onlineBoxTop) + vh,
           display: "block",
           width: boxWidth0,
-          height: "calc(calc(100% - " + boxHeight1 + ") - " + String(innerMargin) + ea + ")",
+          height: "calc(calc(calc(100% - " + boxHeight1 + ") - " + String(innerMargin) + ea + ") - " + String(onlineBoxTop) + vh + ")",
           borderRadius: String(whiteRadius) + ea,
           background: colorChip.white,
           boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
           marginBottom: String(innerMargin) + ea,
         },
+        children: [
+          {
+            text: "Online",
+            style: {
+              position: "absolute",
+              fontSize: String(onlineWordingSize) + vh,
+              fontFamily: "graphik",
+              fontWeight: String(400),
+              top: String(onlineBoxTitleTop) + vh,
+              left: String(onlineBoxLeft) + vh,
+              color: colorChip.green,
+            }
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              left: String(onlineBoxLeft) + vh,
+              width: withOut(onlineBoxLeft * 2, vh),
+              height: String(onlineBoxHeight0) + vh,
+              boxSizing: "border-box",
+              border: "1px solid " + colorChip.gray4,
+              borderRadius: String(5) + "px",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  top: String(onlineBoxInnerMarginTop) + vh,
+                  left: String(onlineBoxInnerMarginTop) + vh,
+                  width: withOut(onlineBoxInnerMarginTop * 2, vh),
+                  height: withOut(onlineBoxInnerMarginTop * 2, vh),
+                  overflow: "scroll",
+                },
+                children: [
+                  {
+                    class: [ memberTongClassName ],
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      top: String(0),
+                      left: String(0),
+                      width: String(100) + '%',
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            style: {
+              display: "block",
+              position: "relative",
+              marginTop: String(onlineBoxBetween) + vh,
+              left: String(onlineBoxLeft) + vh,
+              width: withOut(onlineBoxLeft * 2, vh),
+              height: withOut(onlineBoxHeight0 + onlineBoxBetween + onlineBoxLeft, vh),
+              boxSizing: "border-box",
+              border: "1px solid " + colorChip.gray4,
+              borderRadius: String(5) + "px",
+            },
+            children: [
+              {
+                style: {
+                  position: "absolute",
+                  top: String(onlineBoxInnerMarginTop) + vh,
+                  left: String(onlineBoxInnerMarginTop) + vh,
+                  width: withOut(onlineBoxInnerMarginTop * 2, vh),
+                  height: withOut(onlineBoxInnerMarginTop * 2, vh),
+                  overflow: "scroll",
+                },
+                children: [
+                  {
+                    class: [ serverTongClassName ],
+                    style: {
+                      display: "block",
+                      position: "relative",
+                      top: String(0),
+                      left: String(0),
+                      width: String(100) + '%',
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+        ]
       },
       {
         style: {
@@ -138,6 +287,54 @@ DashboardJs.prototype.whiteBoards = function () {
   });
   onlineBlock = firstMother.firstChild;
   webBlock = firstMother.lastChild;
+
+  memberTong = firstMother.querySelector('.' + memberTongClassName);
+  serverTong = firstMother.querySelector('.' + serverTongClassName);
+
+  for (let member of members) {
+    createNode({
+      mother: memberTong,
+      style: {
+        display: "block",
+        position: "relative",
+        width: withOut(memberBlockPaddingLeft * 1, vh),
+        paddingLeft: String(memberBlockPaddingLeft) + vh,
+        marginBottom: String(memberBlockMarginBottom) + vh,
+      },
+      children: [
+        {
+          mode: "svg",
+          source: instance.mother.returnRound(String(memberBlockWidth / 2) + vh, member.alive !== "offline" ? colorChip.green : colorChip.gray4),
+          style: {
+            position: "absolute",
+            width: String(memberBlockWidth) + vh,
+            height: String(memberBlockWidth) + vh,
+            top: String(memberBlockTop) + vh,
+            left: String(memberBlockLeft) + vh,
+          }
+        },
+        {
+          text: member.name + " " + member.title + "님",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            background: colorChip.white,
+            fontSize: String(memberBlockSize) + vh,
+            fontWeight: String(400),
+            color: colorChip.black,
+            paddingRight: String(memberBlockPaddingRight) + vh,
+          }
+        }
+      ]
+    });
+  }
+
+
+
+
+
+
+
 
   secondMother = createNode({
     mother: motherBox,
@@ -487,7 +684,6 @@ DashboardJs.prototype.whiteBoards = function () {
               lineHeight: String(lineHeight2),
               position: "relative",
               top: String(visualTop2) + ea,
-
             }
           }
         ]
@@ -521,7 +717,6 @@ DashboardJs.prototype.whiteBoards = function () {
               lineHeight: String(lineHeight2),
               position: "relative",
               top: String(visualTop2) + ea,
-
             }
           }
         ]
@@ -555,7 +750,6 @@ DashboardJs.prototype.whiteBoards = function () {
               lineHeight: String(lineHeight2),
               position: "relative",
               top: String(visualTop2) + ea,
-
             }
           }
         ]
@@ -630,12 +824,12 @@ DashboardJs.prototype.launching = async function () {
     this.grayBarWidth = this.mother.grayBarWidth;
 
     this.whiteBlocks = {};
+    this.onlineStatus = await ajaxJson({}, "https:" + OFFICEHOST.split(':')[1] + "/officeMonitor/status", { equal: true });
+    this.members = (await ajaxJson({ type: "get" }, "/getMembers", { equal: true })).filter((obj) => { return obj.alive });
+    this.slackNotices = await ajaxJson({ channel: "000_master_notice" }, "https:" + OFFICEHOST.split(':')[1] + "/slackMessages", { equal: true });
 
     this.baseMaker();
     this.whiteBoards();
-
-    console.log(await ajaxJson({}, "https:" + OFFICEHOST.split(':')[1] + "/officeMonitor/status", { equal: true }));
-
 
   } catch (e) {
     ajaxJson({
