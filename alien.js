@@ -165,7 +165,7 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     generalSocket = new WebSocket.Server({ noServer: true });
     generalSocket.on("connection", (ws) => {
       ws.on("message", (message) => {
-        const clients = wss.clients;
+        const clients = generalSocket.clients;
         for (let c of clients) {
           if (c.readyState === WebSocket.OPEN) {
             c.send(message);
@@ -187,7 +187,6 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
       }
     });
     console.log(`\x1b[33m%s\x1b[0m`, `Wss running`);
-
 
     cronScript = await cron.scriptReady(cronNumber);
     shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
