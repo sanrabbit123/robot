@@ -162,8 +162,10 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       const { ipcRenderer } = require("electron");
       const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
 
-      wssSocket.onopen = () => {
+      wssSocket.onopen = (event) => {
 
+        console.log(event);
+        wssSocket.send("Here's some text that the server is urgently awaiting!");
         wssSocket.onmessage = (event) => {
           console.log(event);
         }
