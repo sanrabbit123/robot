@@ -92,7 +92,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-
+    /*
 
     const selfMongo = this.MONGOLOCALC;
     const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
@@ -175,6 +175,22 @@ DevContext.prototype.launching = async function () {
     // 견전 내기 나간 수
     // 견적 내기 성공
 
+    */
+
+
+
+    const WebSocket = require("ws");
+    const ws = new WebSocket('wss://home-liaison.serveftp.com:5000/general');
+
+    ws.on('open', function open() {
+      setInterval(function () {
+        ws.send('something');
+      }, 1000);
+    });
+
+    ws.on('message', function message(data) {
+      console.log('received: %s', data);
+    });
 
 
 

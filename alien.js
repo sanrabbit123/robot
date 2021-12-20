@@ -167,7 +167,7 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
       ws.on("message", (message) => {
         const clients = wss.clients;
         for (let c of clients) {
-          if (c.readyState === WebSocket.OPEN && ws !== c) {
+          if (c.readyState === WebSocket.OPEN) {
             c.send(message);
           }
         }
