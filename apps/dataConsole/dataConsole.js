@@ -64,6 +64,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
+  const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
@@ -175,7 +176,7 @@ DataConsole.prototype.renderStatic = async function (staticFolder, address, Data
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
-    officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";";
+    officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";\n" + "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     generalString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/general.js` ]);
     generalString = generalString.replace(/\/<%generalMap%>\//, "{}");
@@ -272,6 +273,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
   const SSEHOST = address.host;
   const SSEHOST_CONSOLE = this.address.backinfo.host;
   const GHOSTHOST = this.address.homeinfo.ghost.host;
+  const FILEHOST = this.address.officeinfo.ghost.host;
   const PYTHONHOST = "https://" + this.address.pythoninfo.host + ":3000";
   const BRIDGEHOST = "https://" + this.address.bridgeinfo.host + ":3000";
   const FRONTHOST = "https://" + this.address.frontinfo.host;
@@ -388,7 +390,7 @@ DataConsole.prototype.renderMiddleStatic = async function (staticFolder, address
     pythonString = "const PYTHONHOST = \"" + PYTHONHOST + "\";";
     bridgeString = "const BRIDGEHOST = \"" + BRIDGEHOST + "\";";
     frontWebString = "const FRONTHOST = \"" + FRONTHOST + "\";";
-    officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";";
+    officeString = "const OFFICEHOST = \"" + OFFICEHOST + "\";\n" + "const FILEHOST = \"" + FILEHOST + "\";";
     svgTongString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/string/svgTong.js` ]);
     consoleGeneralString = await fileSystem(`readString`, [ `${this.dir}/router/source/general/general.js` ]);
     polyfillString = await fileSystem(`readString`, [ `${process.cwd()}/apps/frontMaker/source/jsGeneral/polyfill.js` ]);

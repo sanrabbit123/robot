@@ -160,13 +160,13 @@ document.addEventListener("DOMContentLoaded", async function (e) {
 
     if (/Electron/gi.test(window.navigator.userAgent)) {
       const { ipcRenderer } = require("electron");
-      // const wssSocket = new WebSocket(OFFICEHOST.replace(/^https/, "wss") + "/client");
-      //
-      // wssSocket.onopen = () => {
-      //   wssSocket.onmessage = (event) => {
-      //     console.log(event);
-      //   }
-      // }
+      const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/client");
+
+      wssSocket.onopen = () => {
+        wssSocket.onmessage = (event) => {
+          console.log(event);
+        }
+      }
 
       ipcRenderer.on("asynchronous-reply", (event, arg) => {
         console.log(arg);

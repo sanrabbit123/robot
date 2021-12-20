@@ -676,7 +676,7 @@ DashboardJs.prototype.whiteBoards = function () {
               alignItems: "center",
               cursor: "pointer",
             },
-            event: { click: (e) => { blankHref("https:" + OFFICEHOST.split(":")[1] + "/publicSector/estimation"); } },
+            event: { click: (e) => { blankHref("https://" + FILEHOST + "/publicSector/estimation"); } },
             children: [
               {
                 class: [ "hoverDefault_lite" ],
@@ -1002,9 +1002,9 @@ DashboardJs.prototype.launching = async function () {
     this.grayBarWidth = this.mother.grayBarWidth;
 
     this.whiteBlocks = {};
-    this.onlineStatus = await ajaxJson({}, "https:" + OFFICEHOST.split(':')[1] + "/officeMonitor/status", { equal: true });
+    this.onlineStatus = await ajaxJson({}, "https://" + FILEHOST + "/officeMonitor/status", { equal: true });
     this.members = (await ajaxJson({ type: "get" }, "/getMembers", { equal: true })).filter((obj) => { return obj.alive });
-    this.slackNotices = await ajaxJson({ channel: "000_master_notice" }, "https:" + OFFICEHOST.split(':')[1] + "/slackMessages", { equal: true });
+    this.slackNotices = await ajaxJson({ channel: "000_master_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
 
     this.baseMaker();
     this.whiteBoards();
