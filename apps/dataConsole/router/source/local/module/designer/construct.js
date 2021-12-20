@@ -4557,6 +4557,178 @@ DesignerJs.prototype.constructBlockMove = function () {
   right.addEventListener("click", moveEvent("right"));
 }
 
+DesignerJs.prototype.constructReport = async function (from, to) {
+  if (!(from instanceof Date) || !(to instanceof Date)) {
+    throw new Error("invaild input");
+  }
+  const instance = this;
+  const { ajaxJson, equalJson } = GeneralJs;
+  const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
+  try {
+    const projects = await ajaxJson({ noFlat: true, whereQuery: { desid: { $regex: "^d" } } }, "/getProjects", { equal: true });
+    const fromYear = from.getFullYear();
+    const fromMonth = from.getMonth();
+    const toYear = to.getFullYear();
+    const toMonth = to.getMonth();
+    let targets, tong;
+    let menuSet, menuDetailSet;
+    let thisPosition;
+    let tempDate;
+    let targetMatrixArr, targetMatrixArrFlat;
+    let standardDateTo, standardDateFrom;
+    let dateMatrix;
+
+    menuSet = {
+      before: [
+        "대기",
+        "의뢰서 작성중",
+        "견적 확인중",
+        "견적 안내",
+        "확인 필요",
+        "확인 요청",
+      ],
+      drop: [
+        "드랍",
+        "해당 없음",
+      ],
+      progress: [],
+    };
+    menuDetailSet = {
+      client: [
+        "고객 진행",
+        "고객 완료",
+      ],
+      designer: [
+        "디자이너 진행",
+        "수수료 요청",
+        "AS 진행중",
+        "디자이너 완료"
+      ],
+      homeliaison: []
+    };
+
+    targets = projects.filter((obj) => { return obj.process.design.construct !== null });
+
+    tong = [];
+    for (let project of targets) {
+      if (project.process.contract.first.date.valueOf() > emptyDateValue) {
+        thisPosition = "";
+        if (menuSet.before.includes(project.process.design.construct.status)) {
+          thisPosition = "before";
+        } else if (menuSet.drop.includes(project.process.design.construct.status)) {
+          thisPosition = "drop";
+        } else {
+          if (menuDetailSet.client.includes(project.process.design.construct.status)) {
+            thisPosition = "progress.client";
+          } else if (menuDetailSet.designer.includes(project.process.design.construct.status)) {
+            thisPosition = "progress.designer";
+          } else {
+            thisPosition = "progress.homeliaison";
+          }
+        }
+
+        tong.push({
+          proid: project.proid,
+          cliid: project.cliid,
+          desid: project.desid,
+          status: thisPosition,
+          request: project.process.design.construct.request,
+          estimate: project.process.design.construct.estimate,
+          contract: project.process.contract.first.date,
+          start: project.process.contract.form.date.from
+        });
+      }
+    }
+
+    standardDateFrom = new Date(fromYear, fromMonth, 1);
+    standardDateTo = new Date(toYear, toMonth, 25);
+
+    dateMatrix = GeneralJs.getDateMatrix();
+    tempDate = new Date(dateMatrix.year, dateMatrix.month, 15);
+
+    targetMatrixArr = [];
+    do {
+      if (tempDate.valueOf() < standardDateTo.valueOf() && tempDate.valueOf() > standardDateFrom.valueOf()) {
+        targetMatrixArr.push(dateMatrix.nextMatrix().previousMatrix());
+      }
+      dateMatrix = dateMatrix.previousMatrix();
+      tempDate = new Date(dateMatrix.year, dateMatrix.month, 15);
+    } while (tempDate.valueOf() > standardDateFrom.valueOf());
+
+
+    for (let obj of targetMatrixArr) {
+      obj.startEnd = obj.matrix.map((arr) => {
+        let obj2 = {};
+        obj2.start = arr.find((obj) => { return obj !== null; });
+        obj2.end = arr.reverse().find((obj) => { return obj !== null; });
+        return obj2;
+      })
+    }
+
+    targetMatrixArrFlat = targetMatrixArr.map((obj) => { return obj.startEnd }).flat().map((obj) => {
+      let obj2 = {};
+      obj2.from = obj.start.dateObject;
+      obj.end.dateObject.setDate(obj.end.dateObject.getDate() + 1);
+      obj2.to = obj.end.dateObject;
+      return obj2;
+    });
+    targetMatrixArrFlat.sort((a, b) => { return b.to.valueOf() - a.to.valueOf() });
+
+    for (let obj of targetMatrixArrFlat) {
+      obj.children = [];
+      for (let obj2 of tong) {
+        if (obj.from.valueOf() <= obj2.start.valueOf() && obj2.start.valueOf() < obj.to.valueOf()) {
+          obj.children.push(equalJson(JSON.stringify(obj2)));
+        }
+      }
+    }
+
+    for (let obj of targetMatrixArrFlat) {
+      obj.report = {};
+      obj.report.total = obj.children.map(o => o).map((o) => { return o.proid });
+      obj.report.before = obj.children.filter((o) => {
+        return /before/gi.test(o.status);
+      }).map((o) => { return o.proid; });
+      obj.report.progress = obj.children.filter((o) => {
+        return /progress/gi.test(o.status);
+      }).map((o) => { return o.proid; });
+      obj.report.with = {};
+      obj.report.with.homeliaison = obj.children.filter((o) => {
+        return /progress\.homeliaison/gi.test(o.status);
+      }).map((o) => { return o.proid; });
+      obj.report.with.designer = obj.children.filter((o) => {
+        return /progress\.designer/gi.test(o.status);
+      }).map((o) => { return o.proid; });
+      obj.report.with.client = obj.children.filter((o) => {
+        return /progress\.client/gi.test(o.status);
+      }).map((o) => { return o.proid; });
+      obj.report.request = obj.children.filter((o) => {
+        return o.request.valueOf() > emptyDateValue;
+      }).map((o) => { return o.proid; });
+      obj.report.estimate = obj.children.filter((o) => {
+        return o.estimate.length > 0;
+      }).map((o) => { return o.proid; });
+
+      obj.numbers = {};
+      obj.numbers.total = obj.report.total.length;
+      obj.numbers.before = obj.report.before.length;
+      obj.numbers.progress = obj.report.progress.length;
+      obj.numbers.with = {};
+      obj.numbers.with.homeliaison = obj.report.with.homeliaison.length;
+      obj.numbers.with.designer = obj.report.with.designer.length;
+      obj.numbers.with.client = obj.report.with.client.length;
+      obj.numbers.request = obj.report.request.length;
+      obj.numbers.estimate = obj.report.estimate.length;
+    }
+
+    return targetMatrixArrFlat;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 DesignerJs.prototype.constructView = async function () {
   const instance = this;
   try {
@@ -4708,6 +4880,10 @@ DesignerJs.prototype.constructView = async function () {
         key: "Enter"
       })
     }
+
+
+    console.log(await this.constructReport(new Date(2021, 3, 1), new Date(2021, 10, 1)));
+
 
   } catch (e) {
     console.log(e);
