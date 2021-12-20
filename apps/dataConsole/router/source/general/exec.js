@@ -160,14 +160,10 @@ document.addEventListener("DOMContentLoaded", async function (e) {
 
     if (/Electron/gi.test(window.navigator.userAgent)) {
       const { ipcRenderer } = require("electron")
-      console.log(ipcRenderer.sendSync("synchronous-message", "ping"))
-
       ipcRenderer.on('asynchronous-reply', (event, arg) => {
         console.log(arg)
-      })
-
-      ipcRenderer.send('asynchronous-message', 'ping')
-      window.alert("This is Electron");
+      });
+      ipcRenderer.send('asynchronous-message', 'ping');
     }
 
     //on green left

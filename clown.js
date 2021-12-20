@@ -2025,6 +2025,10 @@ Clown.prototype.launching = async function () {
         icon: "./icon.icns",
         titleBarStyle: "hidden",
         roundedCorners: true,
+        webPreferences: {
+          nodeIntegration: true,
+          contextIsolation: false,
+        }
       });
 
       mainWindow.maximize();
@@ -2055,14 +2059,10 @@ Clown.prototype.launching = async function () {
       }
     });
 
-    ipcMain.on('asynchronous-message', (event, arg) => {
-      console.log(arg) // prints "ping"
-      event.reply('asynchronous-reply', 'pong')
-    })
-
-    ipcMain.on('synchronous-message', (event, arg) => {
-      console.log(arg) // prints "ping"
-      event.returnValue = 'pong'
+    ipcMain.on("asynchronous-message", (event, arg) => {
+      const alarm = new Notification({ title: "HomeLiaison", body: arg });
+      alarm.show();
+      event.reply("asynchronous-reply", "pong");
     })
 
   } catch (e) {
