@@ -6,6 +6,7 @@ apps/infoObj_bak.js
 apps/memberObj.js
 binary/
 temp/
+dist/
 node_modules/
 python_modules/
 pems/

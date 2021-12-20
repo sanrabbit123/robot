@@ -1,13 +1,15 @@
 {
-  "name": "robot",
+  "name": "alien-clown-ghost-robot-koala",
   "version": "1.0.0",
-  "description": "homeliaison autobot series <robot_ghost_alien> : Robot",
-  "main": "robot.js",
+  "description": "homeliaison SI system <alien-clown-ghost-robot-koala>",
+  "main": "clown.js",
   "scripts": {
     "robot": "node robot.js",
     "source": "node robot.js frontsource --entire",
     "pack": "node robot.js front --webpack",
-    "clown": "electron clown.js"
+    "clown": "electron clown.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "author": "uragen",
   "license": "ISC",
@@ -38,6 +40,29 @@
     "babel-loader": "^8.2.2",
     "babel-preset-minify": "^0.5.1",
     "webpack": "^5.39.1",
-    "electron": "^16.0.2"
+    "electron": "^16.0.2",
+    "electron-builder": "^22.14.5"
+  },
+  "build": {
+    "appId": "homeliaisonClown",
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "mac": {
+      "category": "SI",
+      "icon": "./icon.icns"
+    }
   }
 }

@@ -89,23 +89,23 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await ghostRequest("print", { cliid: "c2112_aa77s" })
 
 
 
 
-    // const selfMongo = this.MONGOLOCALC;
-    // const projects = await back.getProjectsByQuery({}, { selfMongo });
-    // let targets, tong;
-    //
-    // targets = projects.toNormal().filter((obj) => { return obj.process.design.construct !== null });
-    //
-    // tong = [];
-    // for (let project of targets) {
-    //
-    // }
-    //
-    // console.log(tong);
+
+    const selfMongo = this.MONGOLOCALC;
+    const projects = await back.getProjectsByQuery({}, { selfMongo });
+    let targets, tong;
+
+    targets = projects.toNormal().filter((obj) => { return obj.process.design.construct !== null });
+
+    tong = [];
+    for (let project of targets) {
+
+    }
+
+    console.log(tong);
 
 
 
