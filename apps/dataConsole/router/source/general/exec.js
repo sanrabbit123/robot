@@ -162,25 +162,23 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       const { ipcRenderer } = require("electron");
       const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
 
-      wssSocket.onopen = (event) => {
-
-        console.log(event);
-        wssSocket.send("Here's some text that the server is urgently awaiting!");
+      wssSocket.onopen = () => {
         wssSocket.onmessage = (event) => {
-          console.log(event);
+          try {
+            const data = GeneralJs.equalJson(event.data);
+            if (data.alarm !== undefined) {
+              ipcRenderer.send("asynchronous-message", data.message);
+            } else if (data.alert !== undefined) {
+              window.alert(data.message);
+            }
+          } catch {
+            // pass
+          }
         }
-
-        ipcRenderer.on("asynchronous-reply", (event, arg) => {
-          console.log(arg);
-        });
-        ipcRenderer.send("asynchronous-message", "ping");
-
         setInterval(() => {
           wssSocket.send(JSON.stringify({ message: "alive" }));
         }, 3 * 1000);
-
       }
-
     }
 
     //on green left
