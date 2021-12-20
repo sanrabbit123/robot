@@ -163,7 +163,10 @@ DevContext.prototype.launching = async function () {
 
     console.log(tong);
 
+
+
     // 해당 기간 내
+
     // 홈리에종과 진행
     // 디자이너와 진행
     // 고객이 알아서 진행
@@ -171,6 +174,9 @@ DevContext.prototype.launching = async function () {
     // 시공 의뢰 성공
     // 견전 내기 나간 수
     // 견적 내기 성공
+
+
+
 
 
 

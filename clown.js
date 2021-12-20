@@ -2040,9 +2040,6 @@ Clown.prototype.launching = async function () {
     app.whenReady().then(createWindow).then((mainWindow) => {
       mainWindow.webContents.openDevTools();
       return requestSystem("https://" + address.officeinfo.ghost.host + address.officeinfo.ghost.monitor.path + "/subway");
-    }).then(() => {
-      const alarm = new Notification({ title: "HomeLiaison", body: "안녕" });
-      alarm.show();
     }).catch((err) => {
       console.log(err);
     });
@@ -2062,7 +2059,7 @@ Clown.prototype.launching = async function () {
     ipcMain.on("asynchronous-message", (event, arg) => {
       const alarm = new Notification({ title: "HomeLiaison", body: arg });
       alarm.show();
-      event.reply("asynchronous-reply", "pong");
+      event.reply("asynchronous-reply", "done");
     })
 
   } catch (e) {

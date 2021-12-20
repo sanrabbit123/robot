@@ -4315,7 +4315,7 @@ DesignerProposalJs.prototype.launching = async function (loading) {
       this.testMode = true;
     }
     if (proid === "p1801_aa01s") {
-      this.client.name = "우수리미";
+      this.client.name = "은주부";
       for (let d of designers) {
         d.end = false;
       }
