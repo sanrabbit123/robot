@@ -179,18 +179,36 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const WebSocket = require("ws");
-    const ws = new WebSocket('wss://home-liaison.serveftp.com:5000/general');
 
-    ws.on('open', function open() {
-      setInterval(function () {
-        ws.send('something');
-      }, 1000);
-    });
+    // const sendAlarm = function (message) {
+    //   const url = "wss://home-liaison.serveftp.com:5000/general";
+    //   const WebSocket = require("ws");
+    //   return new Promise((resolve, reject) => {
+    //     const ws = new WebSocket(url);
+    //     ws.on("open", () => {
+    //       ws.send(JSON.stringify({ alarm: true, message }));
+    //       ws.close();
+    //       resolve({ message: "done" });
+    //     });
+    //   });
+    // }
+    //
+    // const sendAlert = function (message) {
+    //   const url = "wss://home-liaison.serveftp.com:5000/general";
+    //   const WebSocket = require("ws");
+    //   return new Promise((resolve, reject) => {
+    //     const ws = new WebSocket(url);
+    //     ws.on("open", () => {
+    //       ws.send(JSON.stringify({ alert: true, message }));
+    //       ws.close();
+    //       resolve({ message: "done" });
+    //     });
+    //   });
+    // }
+    //
+    // await sendAlert("안녕안녕");
 
-    ws.on('message', function message(data) {
-      console.log('received: %s', data);
-    });
+
 
 
 
