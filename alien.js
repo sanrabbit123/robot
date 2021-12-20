@@ -183,12 +183,13 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
       const { pathname } = url.parse(request.url);
       if (/general/gi.test(pathname)) {
         generalSocket.handleUpgrade(request, socket, head, (ws) => {
-          socket.emit("connection", ws, request);
+          generalSocket.emit("connection", ws, request);
         });
       } else {
         socket.destroy();
       }
     });
+
     console.log(`\x1b[33m%s\x1b[0m`, `Wss running`);
 
     cronScript = await cron.scriptReady(cronNumber);

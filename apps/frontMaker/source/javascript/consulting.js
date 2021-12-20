@@ -2291,6 +2291,8 @@ ConsultingJs.prototype.returnBlocks = function () {
           callback: function (needs) {
             const { subtitles, buttons } = needs;
             let today = new Date();
+            let today2 = new Date();
+            today2.setMonth(today2.getMonth() + 2);
             let h = document.createDocumentFragment();
             let list = [
               { name: "year", style: { left: 98, width: 81, }, img: { left: 192 }, },
@@ -2304,6 +2306,8 @@ ConsultingJs.prototype.returnBlocks = function () {
             }
             function clickEvent(e) {
               let today = new Date();
+              let today2 = new Date();
+              today2.setMonth(today2.getMonth() + 2);
               let target;
               let dayList = [
                 document.querySelector("#blocks_date_year > input"),
@@ -2318,6 +2322,7 @@ ConsultingJs.prototype.returnBlocks = function () {
               if (target.checked) {
                 target.checked = false;
                 target.value = "이사";
+                dayList[0].value = String(today2.getFullYear());
                 dayList[1].value = "";
                 dayList[2].value = "";
                 dayList[1].focus();
@@ -2327,6 +2332,7 @@ ConsultingJs.prototype.returnBlocks = function () {
               } else {
                 target.checked = true;
                 target.value = "거주중";
+                dayList[0].value = String(today.getFullYear());
                 dayList[1].value = String(today.getMonth() + 1);
                 dayList[2].value = String(today.getDate());
                 dayList[0].parentElement.style.opacity = "0.4";
@@ -2343,7 +2349,9 @@ ConsultingJs.prototype.returnBlocks = function () {
               input_clone = dom.children[0];
               input_clone.style.textAlign = "center";
               input_clone.addEventListener("keyup", keyupEvent);
-              if (i === 0) { input_clone.value = String(today.getFullYear()); }
+              if (i === 0) {
+                input_clone.value = String(today2.getFullYear());
+              }
               h.appendChild(dom);
 
               svg_clone = SvgTong.tongMaker();
@@ -2539,6 +2547,8 @@ ConsultingJs.prototype.returnBlocks = function () {
           callback: function (needs) {
             const { subtitles, buttons } = needs;
             let today = new Date();
+            let today2 = new Date();
+            today2.setMonth(today2.getMonth() + 2);
             let h = document.createDocumentFragment();
             let list = [
               { name: "year", style: { left: 28.5, width: 17.4, }, img: { left: 48, }, },
@@ -2552,6 +2562,8 @@ ConsultingJs.prototype.returnBlocks = function () {
             }
             function clickEvent(e) {
               let today = new Date();
+              let today2 = new Date();
+              today2.setMonth(today2.getMonth() + 2);
               let target;
               let dayList = [
                 document.querySelector("#moblocks_date_year > input"),
@@ -2566,6 +2578,7 @@ ConsultingJs.prototype.returnBlocks = function () {
               if (target.checked) {
                 target.checked = false;
                 target.value = "이사";
+                dayList[0].value = String(today2.getFullYear());
                 dayList[1].value = "";
                 dayList[2].value = "";
                 dayList[1].focus();
@@ -2575,6 +2588,7 @@ ConsultingJs.prototype.returnBlocks = function () {
               } else {
                 target.checked = true;
                 target.value = "거주중";
+                dayList[0].value = String(today.getFullYear());
                 dayList[1].value = String(today.getMonth() + 1);
                 dayList[2].value = String(today.getDate());
                 dayList[0].parentElement.style.opacity = "0.4";
@@ -2591,7 +2605,9 @@ ConsultingJs.prototype.returnBlocks = function () {
               input_clone = dom.children[0];
               input_clone.style.textAlign = "center";
               input_clone.addEventListener("keyup", keyupEvent);
-              if (i === 0) { input_clone.value = String(today.getFullYear()); }
+              if (i === 0) {
+                input_clone.value = String(today2.getFullYear());
+              }
               h.appendChild(dom);
 
               svg_clone = SvgTong.tongMaker();
