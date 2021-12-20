@@ -176,11 +176,11 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
 
     server = https.createServer(pems, app);
 
-    server.on("upgrade", function (request, socket, head) {
+    server.on("upgrade", (request, socket, head) => {
       const { pathname } = url.parse(request.url);
       if (/general/gi.test(pathname)) {
         generalSocket.handleUpgrade(request, socket, head, (ws) => {
-          generalSocket.emit("connection", ws, request);
+          socket.emit("connection", ws, request);
         });
       } else {
         socket.destroy();
