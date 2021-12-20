@@ -164,7 +164,9 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
 
     generalSocket = new WebSocket.Server({ noServer: true });
     generalSocket.on("connection", (ws) => {
+      errorLog("a1")
       ws.on("message", (message) => {
+        errorLog("a2")
         const clients = generalSocket.clients;
         for (let c of clients) {
           if (c.readyState === WebSocket.OPEN) {
@@ -180,14 +182,10 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
       errorLog("request generate");
       const { pathname } = url.parse(request.url);
       if (/general/gi.test(pathname)) {
-        errorLog("this!1");
-
         generalSocket.handleUpgrade(request, socket, head, (ws) => {
-          errorLog("this!2");
           socket.emit("connection", ws, request);
         });
       } else {
-        errorLog("this!3");
         socket.destroy();
       }
     });
