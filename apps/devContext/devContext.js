@@ -88,18 +88,24 @@ DevContext.prototype.launching = async function () {
     // console.log(await requestSystem("https://home-liaison.serveftp.com/officeMonitor/status", { test: 1 }, { headers: { "Content-Type": "application/json" } }));
 
 
-    const selfMongo = this.MONGOLOCALC;
-    const projects = await back.getProjectsByQuery({}, { selfMongo });
-    let targets, tong;
 
-    targets = projects.toNormal().filter((obj) => { return obj.process.design.construct !== null });
+    await ghostRequest("print", { cliid: "c2112_aa75s" })
 
-    tong = [];
-    for (let project of targets) {
 
-    }
 
-    console.log(tong);
+
+    // const selfMongo = this.MONGOLOCALC;
+    // const projects = await back.getProjectsByQuery({}, { selfMongo });
+    // let targets, tong;
+    //
+    // targets = projects.toNormal().filter((obj) => { return obj.process.design.construct !== null });
+    //
+    // tong = [];
+    // for (let project of targets) {
+    //
+    // }
+    //
+    // console.log(tong);
 
 
 

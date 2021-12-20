@@ -12,6 +12,7 @@ def getBase(request, mongoConnection):
         </head>
         <body>
             <div id="totalcontents"></div>
+            <div id="titledragbar" style="-webkit-app-region: drag;position: fixed;top: 0px;left: 0px;width: 100%; height: 20px;z-index: 10"></div>
             <script src='/publicSector/{request.match_info['name']}.js'></script>
         </body>
     </html>"""

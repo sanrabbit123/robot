@@ -28,7 +28,7 @@ DashboardJs.prototype.whiteBoards = function () {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
   const { onlineStatus, members, slackNotices } = this;
-  const { createNode, colorChip, withOut, blankHref } = GeneralJs;
+  const { createNode, colorChip, withOut, blankHref, isMac } = GeneralJs;
   const vh = "vh";
   const memberTongClassName = "memberTong";
   const serverTongClassName = "serverTong";
@@ -67,6 +67,7 @@ DashboardJs.prototype.whiteBoards = function () {
   let noticeSize, noticeDateSize;
   let noticePaddingLeft, noticePaddingTop, noticePaddingBottom;
   let noticeMarginBottom;
+  let onlineTextTop;
 
   outerMargin = <%% 30, 30, 28, 24, 4 %%>;
   innerMargin = <%% 5, 5, 4, 3, 1 %%>;
@@ -79,12 +80,13 @@ DashboardJs.prototype.whiteBoards = function () {
   lineHeight = 1.02;
   lineHeight2 = 1.25;
   visualTop = -4;
-  visualTop2 = -3;
+  visualTop2 = isMac() ? -3 : 0;
 
   onlineWordingSize = 1.7;
   onlineBoxTitleTop = 2.2;
   onlineBoxLeft = 2.7;
   onlineBoxTop = 5.4;
+  onlineTextTop = isMac() ? 0 : 0.2;
 
   onlineBoxHeight0 = 33.2;
   onlineBoxBetween = 1;
@@ -100,9 +102,9 @@ DashboardJs.prototype.whiteBoards = function () {
 
   noticeSize = 1.2;
   noticeDateSize = 0.8;
-  noticePaddingLeft = 1.3;
-  noticePaddingTop = 1;
-  noticePaddingBottom = 1.5;
+  noticePaddingLeft = 1.5;
+  noticePaddingTop = isMac() ? 1 : 1.2;
+  noticePaddingBottom = 1.4;
   noticeMarginBottom = 0.5;
 
   serverTargets = [
@@ -373,6 +375,7 @@ DashboardJs.prototype.whiteBoards = function () {
             fontWeight: String(400),
             color: colorChip.black,
             paddingRight: String(memberBlockPaddingRight) + vh,
+            top: String(onlineTextTop) + vh,
           }
         },
         {

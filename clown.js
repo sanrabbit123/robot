@@ -7,18 +7,27 @@ const Clown = function () {
   this.address = ADDRESS;
 }
 
+Clown.prototype.serverConnect = async function () {
+  const instance = this;
+  
+  try {
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Clown.prototype.launching = async function () {
   const instance = this;
   const address = this.address;
   try {
-    const { app, BrowserWindow, Menu } = require("electron");
+    const { app, BrowserWindow } = require("electron");
 
     app.whenReady().then(() => {
       const mainWindow = new BrowserWindow({
         width: 5000,
         height: 5000,
         title: "HomeLiaison Console",
-        icon: "./icon.icns",
         titleBarStyle: "hidden",
         roundedCorners: true,
       })

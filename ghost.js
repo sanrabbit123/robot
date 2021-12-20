@@ -114,7 +114,7 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
     return new Promise((resolve, reject) => {
       lpstat.stdout.on("data", (data) => {
         const arr = String(data).split("\n").map((i) => { return i.trim(); });
-        const printerRaw = arr.find((i) => { return /^printer/gi.test(i); });
+        const printerRaw = arr.find((i) => { return /^printer/gi.test(i) && /HP/gi.test(i); });
         if (typeof printerRaw !== "string") {
           reject("There is no printer");
         }
