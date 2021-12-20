@@ -120,7 +120,6 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
         }
         printer = printerRaw.trim().split(' ')[1];
         lpstat.kill();
-        console.log(printer);
         resolve(printer);
       });
     });
