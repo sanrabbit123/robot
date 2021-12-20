@@ -114,19 +114,21 @@ Alien.prototype.cronLaunching = async function (cronNumber) {
   }
 }
 
-Alien.prototype.wssLaunching = async function () {
+Alien.prototype.wssLaunching = async function (cronNumber) {
   const instance = this;
-  const { fileSystem } = this.mother;
+  const { fileSystem, shell, shellLink } = this.mother;
   try {
-
     const https = require("https");
     const express = require("express");
     const app = express();
     const useragent = require("express-useragent");
     const WebSocket = require("ws");
     const url = require("url");
+    const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
+    const cron = new CronGhost();
     const socketNumbers = 99;
     const port = 5000;
+    let cronScript;
     let sockets, server;
     let pems, pemsLink;
     let certDir, keyDir, caDir;
@@ -252,6 +254,10 @@ Alien.prototype.wssLaunching = async function () {
       }
     });
 
+    cronScript = await cron.scriptReady(cronNumber);
+    shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
+    console.log(`\x1b[33m%s\x1b[0m`, `Cron running`);
+
     server.listen(port, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nWss server running\n`); });
 
   } catch (e) {
@@ -279,7 +285,7 @@ Alien.prototype.requestWhisk = async function (num) {
 
 const app = new Alien();
 if (/office/gi.test(process.argv[2])) {
-  app.cronLaunching(2);
+  app.wssLaunching(2);
 } else if (/home/gi.test(process.argv[2])) {
   app.cronLaunching(0);
 } else if (/polling/gi.test(process.argv[2])) {
