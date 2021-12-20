@@ -5521,7 +5521,7 @@ StyleCurationJs.prototype.launching = async function (loading) {
 
     // TEST Center ==================================================================================================
     if (getObj.cliid === "c1801_aa01s") {
-      this.client.name = "우수리미";
+      this.client.name = "은주부";
       this.testMode = true;
     }
     // TEST Center ==================================================================================================
