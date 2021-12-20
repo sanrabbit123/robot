@@ -158,6 +158,18 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       local_funcs.entireSse = es;
     }
 
+    if (/Electron/gi.test(window.navigator.userAgent)) {
+      const { ipcRenderer } = require("electron")
+      console.log(ipcRenderer.sendSync("synchronous-message", "ping"))
+
+      ipcRenderer.on('asynchronous-reply', (event, arg) => {
+        console.log(arg)
+      })
+
+      ipcRenderer.send('asynchronous-message', 'ping')
+      window.alert("This is Electron");
+    }
+
     //on green left
     // if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {
     //   await GeneralJs.sleep(200);

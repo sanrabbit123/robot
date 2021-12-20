@@ -95,20 +95,82 @@ DevContext.prototype.launching = async function () {
 
 
     const selfMongo = this.MONGOLOCALC;
-    const projects = await back.getProjectsByQuery({}, { selfMongo });
+    const projects = await back.getProjectsByQuery({ desid: { $regex: "^d" } }, { selfMongo });
+    const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
     let targets, tong;
+    let menuSet, menuDetailSet;
+    let thisPosition;
 
-    targets = projects.toNormal().filter((obj) => { return obj.process.design.construct !== null });
+    menuSet = {
+      before: [
+        "대기",
+        "의뢰서 작성중",
+        "견적 확인중",
+        "견적 안내",
+        "확인 필요",
+        "확인 요청",
+      ],
+      drop: [
+        "드랍",
+        "해당 없음",
+      ],
+      progress: [],
+    };
+    menuDetailSet = {
+      client: [
+        "고객 진행",
+        "고객 완료",
+      ],
+      designer: [
+        "디자이너 진행",
+        "수수료 요청",
+        "AS 진행중",
+        "디자이너 완료"
+      ],
+      homeliaison: []
+    };
+
+    targets = projects.filter((obj) => { return obj.process.design.construct !== null });
 
     tong = [];
     for (let project of targets) {
+      if (project.process.contract.first.date.valueOf() > emptyDateValue) {
+        thisPosition = "";
+        if (menuSet.before.includes(project.process.design.construct.status)) {
+          thisPosition = "before";
+        } else if (menuSet.drop.includes(project.process.design.construct.status)) {
+          thisPosition = "drop";
+        } else {
+          if (menuDetailSet.client.includes(project.process.design.construct.status)) {
+            thisPosition = "progress.client";
+          } else if (menuDetailSet.designer.includes(project.process.design.construct.status)) {
+            thisPosition = "progress.designer";
+          } else {
+            thisPosition = "progress.homeliaison";
+          }
+        }
 
+        tong.push({
+          proid: project.proid,
+          status: thisPosition,
+          request: project.process.design.construct.request,
+          estimate: project.process.design.construct.estimate,
+          contract: project.process.contract.first.date,
+          start: project.process.contract.form.date.from
+        });
+      }
     }
 
     console.log(tong);
 
-
-
+    // 해당 기간 내
+    // 홈리에종과 진행
+    // 디자이너와 진행
+    // 고객이 알아서 진행
+    // 시공 의뢰 나간 수
+    // 시공 의뢰 성공
+    // 견전 내기 나간 수
+    // 견적 내기 성공
 
 
 

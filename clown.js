@@ -2016,7 +2016,7 @@ Clown.prototype.launching = async function () {
   const address = this.address;
   const { requestSystem } = this.mother;
   try {
-    const { app, BrowserWindow } = require("electron");
+    const { app, BrowserWindow, Notification, ipcMain } = require("electron");
     const createWindow = () => {
       const mainWindow = new BrowserWindow({
         width: 5000,
@@ -2033,18 +2033,18 @@ Clown.prototype.launching = async function () {
       return mainWindow;
     }
 
-    app.whenReady().then(createWindow).then(() => {
+    app.whenReady().then(createWindow).then((mainWindow) => {
+      mainWindow.webContents.openDevTools();
       return requestSystem("https://" + address.officeinfo.ghost.host + address.officeinfo.ghost.monitor.path + "/subway");
     }).then(() => {
-      const NativeNotifier = require("nativeNotifier");
-      const notifier = new NativeNotifier(instance.mother);
-      return notifier.sendAlarm("안녕");
+      const alarm = new Notification({ title: "HomeLiaison", body: "안녕" });
+      alarm.show();
     }).catch((err) => {
       console.log(err);
     });
 
     app.on("window-all-closed", () => {
-      if (process.platform !== 'darwin') {
+      if (process.platform !== "darwin") {
         app.quit();
       }
     });
@@ -2054,6 +2054,16 @@ Clown.prototype.launching = async function () {
         createWindow();
       }
     });
+
+    ipcMain.on('asynchronous-message', (event, arg) => {
+      console.log(arg) // prints "ping"
+      event.reply('asynchronous-reply', 'pong')
+    })
+
+    ipcMain.on('synchronous-message', (event, arg) => {
+      console.log(arg) // prints "ping"
+      event.returnValue = 'pong'
+    })
 
   } catch (e) {
     console.log(e);
