@@ -126,9 +126,9 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     const url = require("url");
     const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
     const cron = new CronGhost();
-    const socketNumbers = 99;
     const port = 5000;
     let cronScript;
+    let generalSocket;
     let sockets, server;
     let pems, pemsLink;
     let certDir, keyDir, caDir;
@@ -136,64 +136,6 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     app.use(useragent.express());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-
-    sockets = [];
-    for (let i = 0; i < socketNumbers; i++) {
-      sockets.push(new WebSocket.Server({ noServer: true }));
-    }
-
-    for (let wss of sockets) {
-      wss.on("connection", function (ws) {
-        ws.on("message", (message) => {
-          const clients = wss.clients;
-          for (let c of clients) {
-            if (c.readyState === WebSocket.OPEN && ws !== c) {
-              c.send(message);
-            }
-          }
-        });
-      });
-    }
-
-    app.get("/view", (req, res) => {
-      let numbers;
-      numbers = [];
-      for (let wss of sockets) {
-        numbers.push(wss.clients.size);
-      }
-      res.set({
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-      res.send(JSON.stringify(numbers));
-    });
-
-    app.get("/viewSse", (req, res) => {
-      let numbers, pusher;
-      res.set({
-        "Content-Type": "text/event-stream; charset=utf-8",
-        "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-        "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-      });
-
-      pusher = setInterval(function () {
-        numbers = [];
-        for (let wss of sockets) {
-          numbers.push(wss.clients.size === 0 ? 0 : 1);
-        }
-        res.write(`event: updateTong\ndata: ${JSON.stringify(numbers)}\n\n`);
-      }, 3 * 1000);
-
-      res.on('close', function () {
-        clearInterval(pusher);
-        res.end();
-      });
-    });
 
     pems = {};
     pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
@@ -220,39 +162,32 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     }
     pems.allowHTTP1 = true;
 
+    generalSocket = new WebSocket.Server({ noServer: true });
+    generalSocket.on("connection", (ws) => {
+      ws.on("message", (message) => {
+        const clients = wss.clients;
+        for (let c of clients) {
+          if (c.readyState === WebSocket.OPEN && ws !== c) {
+            c.send(message);
+          }
+        }
+      });
+    });
+
     server = https.createServer(pems, app);
 
     server.on("upgrade", function (request, socket, head) {
       const { pathname } = url.parse(request.url);
-      let number;
-      if (/client/gi.test(pathname)) {
-        number = null;
-        for (let i = 0; i < sockets.length; i++) {
-          if (sockets[i].clients.size === 0) {
-            number = i;
-            break;
-          }
-        }
-        if (number === null) {
-          socket.destroy();
-        } else {
-          sockets[number].handleUpgrade(request, socket, head, function (ws) {
-            sockets[number].emit("connection", ws, request);
-          });
-        }
-      } else if (/homeliaison/gi.test(pathname)) {
-        number = Number(pathname.replace(/[^0-9]/gi, ''));
-        if (sockets[number] !== undefined) {
-          sockets[number].handleUpgrade(request, socket, head, function (ws) {
-            sockets[number].emit("connection", ws, request);
-          });
-        } else {
-          socket.destroy();
-        }
+      if (/general/gi.test(pathname)) {
+        generalSocket.handleUpgrade(request, socket, head, (ws) => {
+          generalSocket.emit("connection", ws, request);
+        });
       } else {
         socket.destroy();
       }
     });
+    console.log(`\x1b[33m%s\x1b[0m`, `Wss running`);
+
 
     cronScript = await cron.scriptReady(cronNumber);
     shell.exec(`python3 ${shellLink(cronScript)}`, { async: true });
