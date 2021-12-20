@@ -116,7 +116,7 @@ Alien.prototype.cronLaunching = async function (cronNumber) {
 
 Alien.prototype.wssLaunching = async function (cronNumber) {
   const instance = this;
-  const { fileSystem, shell, shellLink } = this.mother;
+  const { fileSystem, shell, shellLink, errorLog } = this.mother;
   try {
     const https = require("https");
     const express = require("express");
@@ -177,12 +177,17 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     server = https.createServer(pems, app);
 
     server.on("upgrade", (request, socket, head) => {
+      errorLog("request generate");
       const { pathname } = url.parse(request.url);
       if (/general/gi.test(pathname)) {
+        errorLog("this!1");
+
         generalSocket.handleUpgrade(request, socket, head, (ws) => {
+          errorLog("this!2");
           socket.emit("connection", ws, request);
         });
       } else {
+        errorLog("this!3");
         socket.destroy();
       }
     });
