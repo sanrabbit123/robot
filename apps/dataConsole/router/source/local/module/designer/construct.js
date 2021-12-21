@@ -4479,7 +4479,7 @@ DesignerJs.prototype.constructSearchEvent = function () {
   input.addEventListener("keypress", this.searchEvent);
 }
 
-DesignerJs.prototype.contentsExtractEvent = function () {
+DesignerJs.prototype.constructExtractEvent = function () {
   const instance = this;
   const { ignoreNumbers, parentId, sheetName } = this;
   const { ajaxJson, blankHref } = GeneralJs;
@@ -4532,6 +4532,18 @@ DesignerJs.prototype.contentsExtractEvent = function () {
   });
 }
 
+DesignerJs.prototype.constructReportEvent = function () {
+  const instance = this;
+  const { belowButtons: { square: { reportIcon } } } = this.mother;
+
+  reportIcon.addEventListener("click", function (e) {
+    if (document.getElementById("constructReport") === null) {
+      instance.constructReportView();
+    }
+  });
+
+}
+
 DesignerJs.prototype.constructBlockMove = function () {
   const instance = this;
   const { ea } = this;
@@ -4577,6 +4589,10 @@ DesignerJs.prototype.constructReport = async function (from, to) {
     let targetMatrixArr, targetMatrixArrFlat;
     let standardDateTo, standardDateFrom;
     let dateMatrix;
+    let minDate, maxDate;
+    let mongoRange;
+    let copiedDate;
+    let final, finalFactor;
 
     menuSet = {
       before: [
@@ -4721,7 +4737,42 @@ DesignerJs.prototype.constructReport = async function (from, to) {
       obj.numbers.estimate = obj.report.estimate.length;
     }
 
-    return targetMatrixArrFlat;
+    minDate = targetMatrixArrFlat[targetMatrixArrFlat.length - 1].from;
+    maxDate = targetMatrixArrFlat[0].from;
+
+    copiedDate = new Date(JSON.stringify(minDate).slice(1, -1));
+
+    mongoRange = 0;
+    while (copiedDate.valueOf() < maxDate.valueOf()) {
+      mongoRange = mongoRange + 1;
+      copiedDate.setMonth(copiedDate.getMonth() + 1);
+    }
+
+    final = [];
+    for (let i = 0; i < mongoRange; i++) {
+      copiedDate = new Date(JSON.stringify(minDate).slice(1, -1));
+      copiedDate.setMonth(copiedDate.getMonth() + i);
+      final.unshift({
+        year: copiedDate.getFullYear(),
+        month: copiedDate.getMonth(),
+        children: []
+      });
+    }
+
+    for (let z of final) {
+      for (let obj of targetMatrixArrFlat) {
+        if (obj.from.getFullYear() === z.year && obj.from.getMonth() === z.month) {
+          z.children.push(equalJson(JSON.stringify(obj)));
+        }
+      }
+    }
+
+    for (let obj of targetMatrixArrFlat) {
+      obj.from.getFullYear()
+      obj.from.getMonth()
+    }
+
+    return final;
 
   } catch (e) {
     console.log(e);
@@ -4735,6 +4786,7 @@ DesignerJs.prototype.constructReportView = function () {
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
   const today = new Date();
   const ago = new Date();
+  const zeroAddition = num => (num < 10 ? `0${String(num)}` : String(num));
   let margin;
   let heightVisual;
   let whiteBox, cancelBack;
@@ -4750,6 +4802,7 @@ DesignerJs.prototype.constructReportView = function () {
   let subSumRight;
   let subSumTop;
   let subSum;
+  let reload;
 
   margin = 30;
   heightVisual = 10;
@@ -4765,15 +4818,21 @@ DesignerJs.prototype.constructReportView = function () {
   subSumRight = 1;
   subSumTop = 56;
 
+  dataArea = {};
+  subSum = {};
+
   ago.setMonth(ago.getMonth() - 6);
   this.constructReport(ago, today).then((data) => {
 
-    console.log(data);
-
     // total
-
     cancelBack = createNode({
       mother: totalContents,
+      event: {
+        click: function (e) {
+          totalContents.removeChild(totalContents.lastChild);
+          totalContents.removeChild(totalContents.lastChild);
+        }
+      },
       style: {
         position: "fixed",
         background: colorChip.cancelBlack,
@@ -4787,6 +4846,7 @@ DesignerJs.prototype.constructReportView = function () {
     });
     whiteBox = createNode({
       mother: totalContents,
+      id: "constructReport",
       style: {
         position: "fixed",
         background: colorChip.white,
@@ -4801,9 +4861,21 @@ DesignerJs.prototype.constructReportView = function () {
       }
     });
 
+    reload = (strValue) => {
+      const arr = strValue.split(" ~ ").map((s) => { return s.trim(); });
+      const fromArr = arr[0].split('-').map((s) => { return s.trim(); }).map((s) => { return Number(s); });
+      const toArr = arr[1].split('-').map((s) => { return s.trim(); }).map((s) => { return Number(s); });
+      const from = new Date(fromArr[0], fromArr[1] - 1, 1);
+      const to = new Date(toArr[0], toArr[1] - 1, 1);
+
+      instance.constructReport(from, to).then((data) => {
+        instance.constructReportBoxRender(dataArea, data, subSum);
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
 
     // search bar area
-
     searchArea = createNode({
       mother: whiteBox,
       style: {
@@ -4818,6 +4890,31 @@ DesignerJs.prototype.constructReportView = function () {
 
     searchInput = createNode({
       mother: searchArea,
+      event: {
+        focus: function (e) {
+          this.setAttribute("pastvalue", this.getAttribute("value"));
+          this.style.color = colorChip.green;
+        },
+        keypress: function (e) {
+          if (e.key === "Enter") {
+            if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9] ~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]$/.test(this.value)) {
+              this.value = this.getAttribute("pastvalue");
+            } else {
+              reload(this.value);
+            }
+            this.blur();
+            this.style.color = colorChip.black;
+          }
+        },
+        blur: function (e) {
+          if (!/^[0-9][0-9][0-9][0-9]\-[0-9][0-9] ~ [0-9][0-9][0-9][0-9]\-[0-9][0-9]$/.test(this.value)) {
+            this.value = this.getAttribute("pastvalue");
+          } else {
+            reload(this.value);
+          }
+          this.style.color = colorChip.black;
+        }
+      },
       mode: "input",
       attribute: {
         type: "text"
@@ -4832,6 +4929,7 @@ DesignerJs.prototype.constructReportView = function () {
         border: String(0) + ea,
         outline: String(0) + ea,
         color: colorChip.black,
+        transition: "all 0.5s ease",
       }
     });
 
@@ -4850,9 +4948,7 @@ DesignerJs.prototype.constructReportView = function () {
       }
     });
 
-
     // data area
-
     dataArea = createNode({
       mother: whiteBox,
       style: {
@@ -4865,10 +4961,368 @@ DesignerJs.prototype.constructReportView = function () {
       }
     });
 
+    instance.constructReportBoxRender(dataArea, data, subSum);
 
   }).catch((err) => {
     console.log(err);
   });
+}
+
+DesignerJs.prototype.constructReportBoxRender = function (dataArea, data, subSum) {
+  const instance = this;
+  const { ea, projects, belowHeight, totalContents } = this;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString, cleanChildren } = GeneralJs;
+  const zeroAddition = num => (num < 10 ? `0${String(num)}` : String(num));
+  let margin, innerMargin;
+  let boxNumber, boxHeight, boxWidth, boxMargin;
+  let grayBoxPaddingLeft;
+  let grayBoxPaddingTop;
+  let yearMonthBoxHeight;
+  let yearMonthBoxSize;
+  let yearMonthBoxPadding;
+  let titleLineBottom;
+  let titleLineMarginBottom;
+  let table, block;
+  let blockHeight, blockSize;
+  let columns;
+  let blockTextTop;
+  let values;
+  let sumBox;
+  let sumBoxBottom;
+  let sumSize;
+  let sumText, sumArr;
+  let sumVisual;
+  let proidMatrix;
+  let valuesTarget;
+  let ratioSuccess, ratioHomeliaison;
+  let ratioSuccessWording, ratioHomeliaisonWording;
+  let totalMatrix, totalArr;
+  let tempNumber;
+  let totalSumText;
+
+  margin = 30;
+  innerMargin = 36;
+
+  boxMargin = 18;
+  boxNumber = Math.floor((window.innerWidth - (boxMargin * 5)) / (boxMargin + 400));
+  boxHeight = 400;
+  boxWidth = ((window.innerWidth - (margin * 2)) - (boxMargin * (boxNumber - 1)) - (innerMargin * 2)) / boxNumber;
+  grayBoxPaddingTop = 18;
+  grayBoxPaddingLeft = 24;
+
+  yearMonthBoxHeight = 28;
+  yearMonthBoxSize = 20;
+  yearMonthBoxPadding = 12;
+
+  titleLineBottom = 14;
+  titleLineMarginBottom = 12;
+
+  blockHeight = 36;
+  blockSize = 14;
+  blockTextTop = -1;
+
+  sumBoxBottom = 25;
+  sumSize = 16;
+  sumVisual = 1;
+
+  columns = [
+    "",
+    "대기",
+    "견적",
+    "진행",
+    "HL",
+    "DE",
+    "CL"
+  ];
+
+  ratioSuccessWording = "견적 성공률";
+  ratioHomeliaisonWording = "HL 진행율";
+
+  cleanChildren(dataArea);
+
+  totalMatrix = [];
+  for (let obj of data) {
+
+    // total table
+    table = createNode({
+      mother: dataArea,
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(boxWidth - (grayBoxPaddingLeft * 2)) + ea,
+        height: String(boxHeight - grayBoxPaddingTop) + ea,
+        overflow: "scroll",
+        marginRight: String(boxMargin) + ea,
+        marginBottom: String(boxMargin) + ea,
+        background: colorChip.gray0,
+        borderRadius: String(5) + "px",
+        paddingTop: String(grayBoxPaddingTop) + ea,
+        paddingLeft: String(grayBoxPaddingLeft) + ea,
+        paddingRight: String(grayBoxPaddingLeft) + ea,
+        verticalAlign: "top",
+      },
+      children: [
+        {
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            height: String(yearMonthBoxHeight) + ea,
+            position: "relative",
+            marginBottom: String(titleLineMarginBottom) + ea,
+          },
+          children: [
+            {
+              style: {
+                position: "absolute",
+                top: String(0),
+                left: String(0) + ea,
+                width: withOut(0, ea),
+                height: String(titleLineBottom) + ea,
+                borderBottom: "1px solid " + colorChip.gray3,
+              }
+            },
+            {
+              text: String(obj.year) + "-" + zeroAddition(obj.month + 1),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(yearMonthBoxSize) + ea,
+                fontWeight: String(200),
+                background: colorChip.gray0,
+                paddingRight: String(yearMonthBoxPadding) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            display: "block",
+            width: String(100) + '%',
+            position: "relative",
+            border: "1px solid " + colorChip.gray4,
+            boxSizing: "border-box",
+            borderRadius: String(5) + "px",
+            overflow: "hidden",
+          }
+        }
+      ]
+    }).children[1];
+
+    // title set
+    block = createNode({
+      mother: table,
+      style: {
+        display: "flex",
+        width: String(100) + '%',
+        flexDirection: "row",
+        height: String(blockHeight) + ea,
+        background: colorChip.white,
+        boxSizing: "border-box",
+        borderBottom: "1px solid " + colorChip.gray2,
+      }
+    });
+    for (let i = 0; i < columns.length; i++) {
+      createNode({
+        mother: block,
+        style: {
+          display: "inline-flex",
+          flexShrink: String(1),
+          borderRight: i === columns.length - 1 ? "" : "1px solid " + colorChip.gray2,
+          boxSizing: "border-box",
+          width: String(100) + '%',
+          height: String(100) + '%',
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        children: [
+          {
+            text: columns[i],
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(blockSize) + ea,
+              fontWeight: String(600),
+              color: colorChip.black,
+              top: String(blockTextTop) + ea,
+            }
+          }
+        ]
+      });
+    }
+
+    // value set
+    sumArr = [];
+    for (let i = 0; i < obj.children.length; i++) {
+
+      values = [
+        [ i + 1, [] ],
+        [ obj.children[i].numbers.before, obj.children[i].report.before ],
+        [ obj.children[i].numbers.estimate, obj.children[i].report.estimate ],
+        [ obj.children[i].numbers.progress, obj.children[i].report.progress ],
+        [ obj.children[i].numbers.with.homeliaison, obj.children[i].report.with.homeliaison ],
+        [ obj.children[i].numbers.with.designer, obj.children[i].report.with.designer ],
+        [ obj.children[i].numbers.with.client, obj.children[i].report.with.client ],
+      ];
+      sumArr.push(values);
+
+      block = createNode({
+        mother: table,
+        style: {
+          display: "flex",
+          width: String(100) + '%',
+          flexDirection: "row",
+          height: String(blockHeight) + ea,
+          boxSizing: "border-box",
+          borderBottom: "1px solid " + colorChip.gray2,
+        }
+      });
+      for (let i = 0; i < values.length; i++) {
+        createNode({
+          mother: block,
+          attribute: {
+            proid: JSON.stringify(values[i][1])
+          },
+          event: {
+            click: function (e) {
+              const proidArr = JSON.parse(this.getAttribute("proid"));
+              if (proidArr.length > 0) {
+                GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/project?" + "specificids=" + proidArr.join(","));
+              }
+            }
+          },
+          style: {
+            display: "inline-flex",
+            flexShrink: String(1),
+            borderRight: i === values.length - 1 ? "" : "1px solid " + colorChip.gray2,
+            boxSizing: "border-box",
+            width: String(100) + '%',
+            height: String(100) + '%',
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+          },
+          children: [
+            {
+              attribute: {
+                proid: JSON.stringify(values[i][1])
+              },
+              text: String(values[i][0]),
+              style: {
+                display: "inline-block",
+                position: "relative",
+                fontSize: String(blockSize) + ea,
+                fontWeight: String(i === 0 ? 600 : 300),
+                color: colorChip.black,
+                top: String(blockTextTop) + ea,
+              }
+            }
+          ]
+        })
+      }
+
+    }
+
+    // sum set
+
+    sumText = '';
+    proidMatrix = [];
+    totalArr = [];
+    for (let i = 1; i < columns.length; i++) {
+      proidMatrix.push(sumArr.map((matrix) => {
+        return matrix[i][1];
+      }).reduce((acc, curr) => {
+        return acc.concat(curr);
+      }, []));
+
+      sumText += columns[i];
+      sumText += " <b%";
+      tempNumber = sumArr.map((matrix) => {
+        return matrix[i][0];
+      }).reduce((acc, curr) => {
+        return acc + curr;
+      }, 0);
+      sumText += String(tempNumber);
+      if (i === columns.length - 1) {
+        sumText += "%b>명";
+      } else {
+        sumText += "%b>명&nbsp;&nbsp;&nbsp;";
+      }
+      totalArr.push(tempNumber);
+    }
+    totalMatrix.push(totalArr);
+
+    sumBox = createNode({
+      mother: table.parentNode,
+      text: sumText,
+      style: {
+        position: "absolute",
+        width: withOut((grayBoxPaddingLeft + sumVisual) * 2, ea),
+        left: String(grayBoxPaddingLeft + sumVisual) + ea,
+        bottom: String(sumBoxBottom) + ea,
+        fontSize: String(sumSize) + ea,
+        fontWeight: String(400),
+        color: colorChip.black,
+        textAlign: "right",
+        lineHeight: String(1.6),
+      },
+      bold: {
+        fontSize: String(sumSize) + ea,
+        fontWeight: String(300),
+        color: colorChip.green,
+      }
+    });
+
+    valuesTarget = sumBox.querySelectorAll("b");
+    for (let i = 0; i < valuesTarget.length; i++) {
+      valuesTarget[i].setAttribute("proid", JSON.stringify(proidMatrix[i]));
+      valuesTarget[i].addEventListener("click", function (e) {
+        const proidArr = JSON.parse(this.getAttribute("proid"));
+        if (proidArr.length > 0) {
+          GeneralJs.blankHref(window.location.protocol + "//" + window.location.host + "/project?" + "specificids=" + proidArr.join(","));
+        }
+      });
+    }
+
+    if (Number(valuesTarget[1].textContent.replace(/[^0-9]/gi, '')) === 0) {
+      ratioSuccess = 0;
+    } else {
+      ratioSuccess = Math.round(100 * (Number(valuesTarget[3].textContent.replace(/[^0-9]/gi, '')) / Number(valuesTarget[1].textContent.replace(/[^0-9]/gi, ''))));
+    }
+
+    if (Number(valuesTarget[2].textContent.replace(/[^0-9]/gi, '')) === 0) {
+      ratioHomeliaison = 0;
+    } else {
+      ratioHomeliaison = Math.round(100 * (Number(valuesTarget[3].textContent.replace(/[^0-9]/gi, '')) / Number(valuesTarget[2].textContent.replace(/[^0-9]/gi, ''))));
+    }
+
+    sumBox.insertAdjacentHTML(`beforeend`, `<br>${ratioSuccessWording} <b style="font-weight:300;color:${colorChip.green}">${String(ratioSuccess)}</b>%&nbsp;&nbsp;&nbsp;${ratioHomeliaisonWording} <b style="font-weight:300;color:${colorChip.green}">${String(ratioHomeliaison)}</b>%`);
+
+  }
+
+  columns.filter((str) => { return str !== '' }).fill(0, 0)
+
+  totalMatrix = totalMatrix.reduce((acc, curr) => {
+    for (let i = 0; i < acc.length; i++) {
+      acc[i] += curr[i];
+    }
+    return acc;
+  }, columns.filter((str) => { return str !== '' }).fill(0, 0));
+
+  totalSumText = "";
+  for (let i = 1; i < columns.length; i++) {
+    totalSumText += columns[i];
+    totalSumText += ' <b style="font-weight:300;color:' + colorChip.green + '">';
+    totalSumText += String(totalMatrix[i - 1]);
+    if (i === columns.length - 1) {
+      totalSumText += "</b>명";
+    } else {
+      totalSumText += "</b>명&nbsp;&nbsp;&nbsp;";
+    }
+  }
+
+  subSum.textContent = '';
+  subSum.insertAdjacentHTML(`beforeend`, totalSumText);
+
 }
 
 DesignerJs.prototype.constructView = async function () {
@@ -4991,8 +5445,8 @@ DesignerJs.prototype.constructView = async function () {
     this.constructBase();
     this.constructSearchEvent();
     this.constructBlockMove();
-    this.contentsExtractEvent();
-    this.constructReportView();
+    this.constructExtractEvent();
+    this.constructReportEvent();
 
     if (returnGet().proid !== undefined) {
       this.searchEvent.call({

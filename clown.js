@@ -2022,7 +2022,6 @@ Clown.prototype.launching = async function () {
         width: 5000,
         height: 5000,
         title: "HomeLiaison Console",
-        icon: "./icon.icns",
         titleBarStyle: "hidden",
         roundedCorners: true,
         webPreferences: {

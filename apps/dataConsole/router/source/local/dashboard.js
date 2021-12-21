@@ -317,7 +317,7 @@ DashboardJs.prototype.whiteBoards = function () {
           alignItems: "center",
           cursor: "pointer",
         },
-        event: { click: (e) => { blankHref(FRONTHOST); } },
+        event: { click: (e) => { blankHref(FRONTHOST, true); } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
@@ -676,7 +676,7 @@ DashboardJs.prototype.whiteBoards = function () {
               alignItems: "center",
               cursor: "pointer",
             },
-            event: { click: (e) => { blankHref("https://" + FILEHOST + "/publicSector/estimation"); } },
+            event: { click: (e) => { blankHref("https://" + FILEHOST + "/publicSector/estimation", true); } },
             children: [
               {
                 class: [ "hoverDefault_lite" ],
@@ -710,7 +710,7 @@ DashboardJs.prototype.whiteBoards = function () {
               alignItems: "center",
               cursor: "pointer",
             },
-            event: { click: (e) => { blankHref(window.location.protocol + "//" + window.location.host + "/middle/console?desid=d1701_aa01s"); } },
+            event: { click: (e) => { blankHref(window.location.protocol + "//" + window.location.host + "/middle/console?desid=d1701_aa01s", true); } },
             children: [
               {
                 class: [ "hoverDefault_lite" ],
