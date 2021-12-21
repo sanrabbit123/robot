@@ -4562,10 +4562,10 @@ DesignerJs.prototype.constructReport = async function (from, to) {
     throw new Error("invaild input");
   }
   const instance = this;
+  const { projects } = this;
   const { ajaxJson, equalJson } = GeneralJs;
   const emptyDateValue = (new Date(2000, 0, 1)).valueOf();
   try {
-    const projects = await ajaxJson({ noFlat: true, whereQuery: { desid: { $regex: "^d" } } }, "/getProjects", { equal: true });
     const fromYear = from.getFullYear();
     const fromMonth = from.getMonth();
     const toYear = to.getFullYear();
@@ -4607,7 +4607,7 @@ DesignerJs.prototype.constructReport = async function (from, to) {
       homeliaison: []
     };
 
-    targets = projects.filter((obj) => { return obj.process.design.construct !== null });
+    targets = projects.toNormal();
 
     tong = [];
     for (let project of targets) {
@@ -4729,6 +4729,148 @@ DesignerJs.prototype.constructReport = async function (from, to) {
   }
 }
 
+DesignerJs.prototype.constructReportView = function () {
+  const instance = this;
+  const { ea, projects, belowHeight, totalContents } = this;
+  const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
+  const today = new Date();
+  const ago = new Date();
+  let margin;
+  let heightVisual;
+  let whiteBox, cancelBack;
+  let searchArea, dataArea;
+  let searchAreaHeight;
+  let searchAreaPaddingTop;
+  let innerMargin;
+  let inputWidth;
+  let inputHeight;
+  let inputSize;
+  let searchInput;
+  let subSumSize;
+  let subSumRight;
+  let subSumTop;
+  let subSum;
+
+  margin = 30;
+  heightVisual = 10;
+
+  innerMargin = 36;
+  searchAreaHeight = 88;
+  searchAreaPaddingTop = isMac() ? 42 : 47;
+  inputWidth = 500;
+  inputHeight = 30;
+  inputSize = 29;
+
+  subSumSize = 15;
+  subSumRight = 1;
+  subSumTop = 56;
+
+  ago.setMonth(ago.getMonth() - 6);
+  this.constructReport(ago, today).then((data) => {
+
+    console.log(data);
+
+    // total
+
+    cancelBack = createNode({
+      mother: totalContents,
+      style: {
+        position: "fixed",
+        background: colorChip.cancelBlack,
+        animation: "justfadein 0.3s ease forwards",
+        zIndex: String(2),
+        top: String(0),
+        left: String(0),
+        width: String(100) + '%',
+        height: withOut(belowHeight, ea),
+      }
+    });
+    whiteBox = createNode({
+      mother: totalContents,
+      style: {
+        position: "fixed",
+        background: colorChip.white,
+        top: String(margin) + ea,
+        left: String(margin) + ea,
+        borderRadius: String(5) + "px",
+        boxShadow: "0 2px 10px -6px " + colorChip.shadow,
+        width: withOut(margin * 2, ea),
+        height: withOut(belowHeight + (margin * 2) + heightVisual, ea),
+        zIndex: String(2),
+        animation: "fadeup 0.3s ease forwards",
+      }
+    });
+
+
+    // search bar area
+
+    searchArea = createNode({
+      mother: whiteBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(innerMargin) + ea,
+        width: withOut(innerMargin * 2, ea),
+        height: String(searchAreaHeight - searchAreaPaddingTop) + ea,
+        paddingTop: String(searchAreaPaddingTop) + ea,
+      }
+    });
+
+    searchInput = createNode({
+      mother: searchArea,
+      mode: "input",
+      attribute: {
+        type: "text"
+      },
+      style: {
+        display: "inline-block",
+        position: "relative",
+        width: String(inputWidth) + ea,
+        height: String(inputHeight) + ea,
+        fontSize: String(inputSize) + ea,
+        fontWeight: String(200),
+        border: String(0) + ea,
+        outline: String(0) + ea,
+        color: colorChip.black,
+      }
+    });
+
+    searchInput.value = dateToString(ago).slice(0, 7) + " ~ " + dateToString(today).slice(0, 7);
+
+    subSum = createNode({
+      mother: searchArea,
+      text: "문의 문의 문의 100명",
+      style: {
+        position: "absolute",
+        fontSize: String(subSumSize) + ea,
+        fontWeight: String(500) + ea,
+        right: String(subSumRight) + ea,
+        top: String(subSumTop) + ea,
+        color: colorChip.black,
+      }
+    });
+
+
+    // data area
+
+    dataArea = createNode({
+      mother: whiteBox,
+      style: {
+        display: "block",
+        position: "relative",
+        marginLeft: String(innerMargin) + ea,
+        width: withOut(innerMargin, ea),
+        height: withOut(searchAreaHeight, ea),
+        overflow: "scroll",
+      }
+    });
+
+
+  }).catch((err) => {
+    console.log(err);
+  });
+}
+
 DesignerJs.prototype.constructView = async function () {
   const instance = this;
   try {
@@ -4747,6 +4889,13 @@ DesignerJs.prototype.constructView = async function () {
           }
         }
         return obj;
+      }
+      toNormal() {
+        let arr = [];
+        for (let i of this) {
+          arr.push(i);
+        }
+        return arr;
       }
     }
     const { createNodes, colorChip, ajaxJson, returnGet, equalJson, sleep, uniqueValue } = GeneralJs;
@@ -4783,49 +4932,20 @@ DesignerJs.prototype.constructView = async function () {
     this.blockMapConst = "blockMap_";
 
     whereQuery = {};
-    whereQuery["$and"] = [];
-    whereQuery["$and"].push({ desid: { $regex: "^d" } });
-    whereQuery["$and"].push({ "process.status": { $regex: "^[진홀완]" } });
-
     projects = await ajaxJson({ noFlat: true, whereQuery }, "/getProjects", { equal: true });
-    projects = new SearchArray(projects.filter((obj) => { return obj.process.design.construct !== null }));
+    projects = new SearchArray(projects.filter((obj) => {
+      return obj.desid !== '';
+    }).filter((obj) => {
+      return /^[진홀완]/gi.test(obj.process.status);
+    }).filter((obj) => {
+      return obj.process.design.construct !== null
+    }));
 
-    desidArr_raw = [];
-    cliidArr_raw = [];
-    proidArr = [];
-    for (let project of projects) {
-      desidArr_raw.push(project.desid);
-      cliidArr_raw.push(project.cliid);
-      proidArr.push(project.proid);
-    }
-
-    desidArr_raw = Array.from(new Set(desidArr_raw));
-    desidArr = [];
-    for (let desid of desidArr_raw) {
-      desidArr.push({ desid });
-    }
-    cliidArr_raw = Array.from(new Set(cliidArr_raw));
-    cliidArr = [];
-    for (let cliid of cliidArr_raw) {
-      cliidArr.push({ cliid });
-    }
-
-    designers = new SearchArray(await ajaxJson({
-      noFlat: true,
-      whereQuery: {
-        $or: desidArr
-      }
-    }, "/getDesigners", { equal: true }));
-
-    clients = new SearchArray(await ajaxJson({
-      noFlat: true,
-      whereQuery: {
-        $or: cliidArr
-      }
-    }, "/getClients", { equal: true }));
+    designers = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: projects.toNormal().map((obj) => { return { desid: obj.desid } }) } }, "/getDesigners", { equal: true }));
+    clients = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: projects.toNormal().map((obj) => { return { cliid: obj.cliid } }) } }, "/getClients", { equal: true }));
 
     projectHistory = await ajaxJson({
-      idArr: proidArr,
+      idArr: projects.toNormal().map((obj) => { return obj.proid }),
       method: "project",
       property: "construct",
     }, "/getHistoryProperty", { equal: true });
@@ -4872,6 +4992,7 @@ DesignerJs.prototype.constructView = async function () {
     this.constructSearchEvent();
     this.constructBlockMove();
     this.contentsExtractEvent();
+    this.constructReportView();
 
     if (returnGet().proid !== undefined) {
       this.searchEvent.call({
@@ -4880,10 +5001,6 @@ DesignerJs.prototype.constructView = async function () {
         key: "Enter"
       })
     }
-
-
-    console.log(await this.constructReport(new Date(2021, 3, 1), new Date(2021, 10, 1)));
-
 
   } catch (e) {
     console.log(e);
