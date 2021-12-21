@@ -179,6 +179,13 @@ document.addEventListener("DOMContentLoaded", async function (e) {
           wssSocket.send(JSON.stringify({ message: "alive" }));
         }, 3 * 1000);
       }
+
+      GeneralJs.setQueue(() => {
+        const { ipcRenderer } = require("electron");
+        const deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));
+        console.log(deviceInfo);
+        GeneralJs.stacks.deviceInfo = deviceInfo;
+      });
     }
 
     //on green left

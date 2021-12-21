@@ -2015,6 +2015,7 @@ Clown.prototype.launching = async function () {
   const instance = this;
   const address = this.address;
   const { requestSystem } = this.mother;
+  const os = require("os");
   try {
     const { app, BrowserWindow, Notification, ipcMain } = require("electron");
     const createWindow = () => {
@@ -2059,7 +2060,38 @@ Clown.prototype.launching = async function () {
       const alarm = new Notification({ title: "HomeLiaison", body: arg });
       alarm.show();
       event.reply("asynchronous-reply", "done");
-    })
+    });
+
+    ipcMain.on("synchronous-message", (event, arg) => {
+      if (arg === "device") {
+        let network;
+
+        network = Object.values(os.networkInterfaces()).flat().filter((obj) => {
+          return obj.family === "IPv4";
+        }).filter((obj) => {
+          return obj.mac !== "00:00:00:00:00:00";
+        });
+
+        event.returnValue = JSON.stringify({
+          type: os.type(),
+          platform: os.platform(),
+          release: os.release(),
+          arch: os.arch(),
+          hostname: os.hostname(),
+          cpus: os.cpus(),
+          uptime: os.uptime(),
+          memory: {
+            total: os.totalmem(),
+            free: os.freemem()
+          },
+          networkInterfaces: network,
+        });
+
+      } else {
+        event.returnValue = ""
+      }
+    });
+
 
   } catch (e) {
     console.log(e);
