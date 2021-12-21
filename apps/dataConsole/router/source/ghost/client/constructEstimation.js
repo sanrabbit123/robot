@@ -220,12 +220,12 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
 
   itemBarLeft = <%% 28, 28, 28, 28, 2 %%>;
   itemBarTop = <%% 10, 10, 10, 10, 1 %%>;
-  itemBarBottom = <%% (isMac() ? 11 : 9), (isMac() ? 11 : 9), (isMac() ? 11 : 9), (isMac() ? 11 : 9), 2 %%>;
+  itemBarBottom = <%% (isMac() ? 11 : 8), (isMac() ? 11 : 8), (isMac() ? 11 : 8), (isMac() ? 11 : 8), 2 %%>;
 
   tableMarginTopFirst = <%% 92, 92, 90, 82, 8.5 %%>;
   tableMarginTop = <%% 150, 150, 150, 150, 8.5 %%>;
   tablePaddingTop = <%% 10, 10, 10, 10, 2.5 %%>;
-  tablePaddingBottom = <%% (isMac() ? 85 : 83), (isMac() ? 85 : 83), (isMac() ? 85 : 83), (isMac() ? 85 : 83), 3 %%>;
+  tablePaddingBottom = <%% (isMac() ? 85 : 82), (isMac() ? 85 : 82), (isMac() ? 85 : 82), (isMac() ? 85 : 82), 3 %%>;
   barPaddingBottom = <%% 9, 9, 9, 9, 1.5 %%>;
   barMarginBottom = <%% 13, 13, 13, 13, 2.5 %%>;
 
@@ -248,9 +248,9 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   itemTitleTop = <%% -38, -38, -36, -33, -2 %%>;
   itemTitleSize = <%% 20, 20, 19, 18, 2 %%>;
 
-  itemSumBottom = <%% 27, 27, 27, 26, 2 %%>;
+  itemSumBottom = <%% (isMac() ? 27 : 25), (isMac() ? 27 : 25), (isMac() ? 27 : 25), (isMac() ? 26 : 24), 2 %%>;
   itemSumLineTop = <%% -11, -11, -10, -10, 4 %%>;
-  itemTotalSumLineTop = <%% 19, 19, 18, 17, 4 %%>;
+  itemTotalSumLineTop = <%% (isMac() ? 19 : 17), (isMac() ? 19 : 17), (isMac() ? 18 : 16), (isMac() ? 17 : 15), 4 %%>;
 
   sumBoxHeight = <%% 25, 25, 24, 23, 5 %%>;
   finalPaddingBottomVisual = <%% 3, 3, 2, 1, 0 %%>;
