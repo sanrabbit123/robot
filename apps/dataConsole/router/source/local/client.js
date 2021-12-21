@@ -3299,8 +3299,8 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   //property
   contentsBoxHeight = motherHeight - titleHeight - (topMargin * 2.5);
   contentsBoxBottom = topMargin;
-  fontSize = (contentsBoxHeight / info.length) / 1.8;
-  lineHeightRatio = ((contentsBoxHeight - fontSize) / fontSize) / (info.length - 1);
+  fontSize = <%% 15, 14, 12, 11, 3 %%>;
+  lineHeightRatio = <%% 1.98, 1.93, 1.9, 1.9, 1.9 %%>;
 
   //contents event
   updateEventFunction = function () {
@@ -3817,6 +3817,7 @@ ClientJs.prototype.whiteContentsMaker = function (thisCase, mother) {
     left: String(leftMargin) + ea,
     width: "calc(45% - " + String(leftMargin) + ea + ")",
     height: "100%",
+    overflow: "scroll",
   };
   for (let i in style) {
     propertyBox.style[i] = style[i];

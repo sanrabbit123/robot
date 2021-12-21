@@ -220,7 +220,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
 
   itemBarLeft = <%% 28, 28, 28, 28, 2 %%>;
   itemBarTop = <%% 10, 10, 10, 10, 1 %%>;
-  itemBarBottom = <%% (isMac() ? 11 : 7), (isMac() ? 11 : 7), (isMac() ? 11 : 7), (isMac() ? 11 : 7), 2 %%>;
+  itemBarBottom = <%% (isMac() ? 11 : 8), (isMac() ? 11 : 8), (isMac() ? 11 : 8), (isMac() ? 11 : 8), 2 %%>;
 
   tableMarginTopFirst = <%% 92, 92, 90, 82, 8.5 %%>;
   tableMarginTop = <%% 150, 150, 150, 150, 8.5 %%>;
