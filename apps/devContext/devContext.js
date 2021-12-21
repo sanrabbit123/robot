@@ -85,26 +85,18 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    // console.log(await requestSystem("https://home-liaison.serveftp.com/officeMonitor/status", { test: 1 }, { headers: { "Content-Type": "application/json" } }));
+
+    // const WebSocket = require("ws");
+    // const url = "wss://" + this.address.officeinfo.ghost.host + ":5000/general";
+    // const ws = new WebSocket(url);
+    // ws.on("open", () => {
+    //   ws.on("message", (raw) => {
+    //     console.log(raw);
+    //   })
+    // });
 
 
 
-
-    // 해당 기간 내
-
-    // 홈리에종과 진행
-    // 디자이너와 진행
-    // 고객이 알아서 진행
-    // 시공 의뢰 나간 수
-    // 시공 의뢰 성공
-    // 견전 내기 나간 수
-    // 견적 내기 성공
-
-
-
-
-
-    
 
 
     // const sendAlarm = function (message) {

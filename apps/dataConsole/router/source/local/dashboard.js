@@ -28,7 +28,7 @@ DashboardJs.prototype.whiteBoards = function () {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
   const { onlineStatus, members, slackNotices } = this;
-  const { createNode, colorChip, withOut, blankHref, isMac } = GeneralJs;
+  const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue } = GeneralJs;
   const vh = "vh";
   const memberTongClassName = "memberTong";
   const serverTongClassName = "serverTong";
@@ -332,57 +332,69 @@ DashboardJs.prototype.whiteBoards = function () {
 
   memberTong = firstMother.querySelector('.' + memberTongClassName);
   serverTong = firstMother.querySelector('.' + serverTongClassName);
-  for (let member of members) {
-    createNode({
-      mother: memberTong,
-      style: {
-        display: "block",
-        position: "relative",
-        width: withOut(memberBlockPaddingLeft * 1, vh),
-        paddingLeft: String(memberBlockPaddingLeft) + vh,
-        marginBottom: String(memberBlockMarginBottom) + ea,
-      },
-      children: [
-        {
-          mode: "svg",
-          source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, member.alive !== "offline" ? colorChip.green : colorChip.gray4),
-          style: {
-            position: "absolute",
-            width: String(memberBlockWidth) + ea,
-            height: "",
-            top: String(memberBlockTop) + ea,
-            left: String(memberBlockLeft) + vh,
-          }
+
+  memberReload = () => {
+    cleanChildren(memberTong);
+    for (let member of members) {
+      createNode({
+        mother: memberTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(memberBlockPaddingLeft * 1, vh),
+          paddingLeft: String(memberBlockPaddingLeft) + vh,
+          marginBottom: String(memberBlockMarginBottom) + ea,
         },
-        {
-          text: member.name + " " + member.title + "님",
-          style: {
-            display: "inline-block",
-            position: "relative",
-            background: colorChip.white,
-            fontSize: String(memberBlockSize) + ea,
-            fontWeight: String(400),
-            color: colorChip.black,
-            paddingRight: String(memberBlockPaddingRight) + vh,
-            top: String(onlineTextTop) + vh,
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, member.alive !== "offline" ? colorChip.green : colorChip.gray4),
+            style: {
+              position: "absolute",
+              width: String(memberBlockWidth) + ea,
+              height: "",
+              top: String(memberBlockTop) + ea,
+              left: String(memberBlockLeft) + vh,
+            }
+          },
+          {
+            text: member.name + " " + member.title + "님",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              background: colorChip.white,
+              fontSize: String(memberBlockSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              paddingRight: String(memberBlockPaddingRight) + vh,
+              top: String(onlineTextTop) + vh,
+            }
+          },
+          {
+            text: member.alive,
+            style: {
+              position: "absolute",
+              right: String(0),
+              top: String(0),
+              background: colorChip.white,
+              fontSize: String(memberBlockSize) + ea,
+              fontWeight: String(300),
+              fontFamily: "graphik",
+              color: member.alive !== "offline" ? colorChip.green : colorChip.gray4,
+            }
           }
-        },
-        {
-          text: member.alive,
-          style: {
-            position: "absolute",
-            right: String(0),
-            top: String(0),
-            background: colorChip.white,
-            fontSize: String(memberBlockSize) + ea,
-            fontWeight: String(300),
-            fontFamily: "graphik",
-            color: member.alive !== "offline" ? colorChip.green : colorChip.gray4,
-          }
-        }
-      ]
-    });
+        ]
+      });
+    }
   }
+  memberReload();
+  setQueue(() => {
+    memberReload();
+  }, 500);
+  setInterval(() => {
+    memberReload();
+  }, 30 * 1000);
+
   for (let server of serverTargets) {
     createNode({
       mother: serverTong,

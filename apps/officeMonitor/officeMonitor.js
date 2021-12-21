@@ -186,6 +186,8 @@ OfficeMonitor.prototype.routerPatch = function (app) {
       return true;
     } else if (ip === "220.117.13.12") {
       return true;
+    } else if (ip === "220.72.109.59") {
+      return true;
     } else if (/^223\.3/.test(ip)) {
       return true;
     } else if (/^223\.4/.test(ip)) {
@@ -252,6 +254,52 @@ OfficeMonitor.prototype.routerPatch = function (app) {
       res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   });
+
+  app.post(defaultPath + "/deviceLogin", async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      const { device } = equalJson(req.body);
+      let macArr, memid;
+      let index;
+
+      macArr = device.networkInterfaces.map((obj) => { return obj.mac });
+
+      memid = null;
+      for (let mac of macArr) {
+        index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac });
+        if (index !== -1) {
+          if (typeof address.officeinfo.map[index].memid === "string") {
+            memid = address.officeinfo.map[index].memid;
+            break;
+          }
+        }
+      }
+
+      if (memid !== null) {
+        OfficeMonitor.stacks.memberAlive[memid] = true;
+        if (OfficeMonitor.stacks.deathTimeout[memid] !== null) {
+          clearTimeout(OfficeMonitor.stacks.deathTimeout[memid]);
+        }
+        OfficeMonitor.stacks.deathTimeout[memid] = setTimeout(() => {
+          OfficeMonitor.stacks.memberAlive[memid] = false;
+        }, 2 * 30 * 1000);
+      }
+
+      res.send({ message: "done" });
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  });
+
 }
 
 OfficeMonitor.prototype.intervalMonitoring = function () {
@@ -394,7 +442,7 @@ OfficeMonitor.prototype.reportServer = async function () {
               }
               OfficeMonitor.stacks.deathTimeout[memid] = setTimeout(() => {
                 OfficeMonitor.stacks.memberAlive[memid] = false;
-              }, 2 * 60 * 1000);
+              }, 2 * 30 * 1000);
             }
           }
         } catch {
