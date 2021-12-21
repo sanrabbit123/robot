@@ -86,14 +86,14 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const WebSocket = require("ws");
-    const url = "wss://" + this.address.officeinfo.ghost.host + ":5000/general";
-    const ws = new WebSocket(url);
-    ws.on("open", () => {
-      ws.on("message", (raw) => {
-        console.log(raw);
-      })
-    });
+    // const WebSocket = require("ws");
+    // const url = "wss://" + this.address.officeinfo.ghost.host + ":5000/general";
+    // const ws = new WebSocket(url);
+    // ws.on("open", () => {
+    //   ws.on("message", (raw) => {
+    //     console.log(raw);
+    //   })
+    // });
 
 
 
