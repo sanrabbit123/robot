@@ -91,13 +91,13 @@ DashboardJs.prototype.whiteBoards = function () {
   onlineBoxHeight0 = 33.2;
   onlineBoxBetween = 1;
   memberBlockPaddingLeft = 1.1;
-  memberBlockMarginBottom = 1.05;
+  memberBlockMarginBottom = <%% 10, 9, 8, 7, 1 %%>;
   onlineBoxInnerMarginTop = 2;
-  memberBlockWidth = 0.5;
-  memberBlockTop = 0.67;
-  memberBlockTop2 = 0.77;
+  memberBlockWidth = <%% 5, 5, 4, 3, 1 %%>;
+  memberBlockTop = <%% 6.5, 6.5, 5, 4, 1 %%>;
+  memberBlockTop2 = <%% 8, 8, 7, 6, 1 %%>;
   memberBlockLeft = 0.1;
-  memberBlockSize = 1.38;
+  memberBlockSize = <%% 14, 13, 12, 11, 3 %%>;
   memberBlockPaddingRight = 1;
 
   noticeSize = 1.2;
@@ -351,17 +351,17 @@ DashboardJs.prototype.whiteBoards = function () {
         position: "relative",
         width: withOut(memberBlockPaddingLeft * 1, vh),
         paddingLeft: String(memberBlockPaddingLeft) + vh,
-        marginBottom: String(memberBlockMarginBottom) + vh,
+        marginBottom: String(memberBlockMarginBottom) + ea,
       },
       children: [
         {
           mode: "svg",
-          source: instance.mother.returnRound(String(memberBlockWidth / 2) + vh, member.alive !== "offline" ? colorChip.green : colorChip.gray4),
+          source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, member.alive !== "offline" ? colorChip.green : colorChip.gray4),
           style: {
             position: "absolute",
-            width: String(memberBlockWidth) + vh,
+            width: String(memberBlockWidth) + ea,
             height: "",
-            top: String(memberBlockTop) + vh,
+            top: String(memberBlockTop) + ea,
             left: String(memberBlockLeft) + vh,
           }
         },
@@ -371,7 +371,7 @@ DashboardJs.prototype.whiteBoards = function () {
             display: "inline-block",
             position: "relative",
             background: colorChip.white,
-            fontSize: String(memberBlockSize) + vh,
+            fontSize: String(memberBlockSize) + ea,
             fontWeight: String(400),
             color: colorChip.black,
             paddingRight: String(memberBlockPaddingRight) + vh,
@@ -385,7 +385,7 @@ DashboardJs.prototype.whiteBoards = function () {
             right: String(0),
             top: String(0),
             background: colorChip.white,
-            fontSize: String(memberBlockSize) + vh,
+            fontSize: String(memberBlockSize) + ea,
             fontWeight: String(300),
             fontFamily: "graphik",
             color: member.alive !== "offline" ? colorChip.green : colorChip.gray4,
@@ -402,17 +402,17 @@ DashboardJs.prototype.whiteBoards = function () {
         position: "relative",
         width: withOut(memberBlockPaddingLeft * 1, vh),
         paddingLeft: String(memberBlockPaddingLeft) + vh,
-        marginBottom: String(memberBlockMarginBottom) + vh,
+        marginBottom: String(memberBlockMarginBottom) + ea,
       },
       children: [
         {
           mode: "svg",
-          source: instance.mother.returnRound(String(memberBlockWidth / 2) + vh, server.alive(onlineStatus) ? colorChip.green : colorChip.gray4),
+          source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, server.alive(onlineStatus) ? colorChip.green : colorChip.gray4),
           style: {
             position: "absolute",
-            width: String(memberBlockWidth) + vh,
+            width: String(memberBlockWidth) + ea,
             height: "",
-            top: String(memberBlockTop2) + vh,
+            top: String(memberBlockTop2) + ea,
             left: String(memberBlockLeft) + vh,
           }
         },
@@ -422,7 +422,7 @@ DashboardJs.prototype.whiteBoards = function () {
             display: "inline-block",
             position: "relative",
             background: colorChip.white,
-            fontSize: String(memberBlockSize) + vh,
+            fontSize: String(memberBlockSize) + ea,
             fontWeight: String(300),
             fontFamily: "graphik",
             color: colorChip.black,
@@ -436,7 +436,7 @@ DashboardJs.prototype.whiteBoards = function () {
             right: String(0),
             top: String(0),
             background: colorChip.white,
-            fontSize: String(memberBlockSize) + vh,
+            fontSize: String(memberBlockSize) + ea,
             fontWeight: String(300),
             fontFamily: "graphik",
             color: server.alive(onlineStatus) ? colorChip.green : colorChip.gray4,
@@ -482,7 +482,7 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(titleSize) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight),
             },
             bold: {
@@ -517,7 +517,7 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(titleSize) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight),
             },
             bold: {
@@ -638,7 +638,7 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.whiteBlack,
               fontSize: String(titleSize) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight),
             },
             bold: {
@@ -753,7 +753,7 @@ DashboardJs.prototype.whiteBoards = function () {
               color: colorChip.black,
               fontSize: String(titleSize) + vh,
               textAlign: "center",
-              fontWeight: String(600),
+              fontWeight: String(500),
               lineHeight: String(lineHeight),
             },
             bold: {
@@ -990,7 +990,6 @@ DashboardJs.prototype.whiteBoards = function () {
   this.whiteBlocks = { onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock };
 
 }
-
 
 DashboardJs.prototype.launching = async function () {
   const instance = this;

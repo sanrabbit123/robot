@@ -4194,9 +4194,13 @@ DataRouter.prototype.rou_post_callTo = function () {
         res.send(JSON.stringify({ message: "OK" }));
       } else {
         const cookies = DataRouter.cookieParsing(req);
-        const who = cookies.homeliaisonConsoleLoginedEmail;
         const members = instance.members;
-        let thisPerson, index, number, phone;
+        let thisPerson, index, number, phone, who;
+
+        who = cookies.homeliaisonConsoleLoginedEmail;
+        if (who === undefined || who === null) {
+          who = req.body.who;
+        }
 
         if (req.body.phone !== undefined) {
           phone = req.body.phone;
@@ -4215,7 +4219,7 @@ DataRouter.prototype.rou_post_callTo = function () {
         index = address.officeinfo.phone.members.indexOf(thisPerson);
 
         if (index === -1 || address.officeinfo.phone.numbers[index] === undefined) {
-          errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index => " + String(index) + ", " + thisPerson + ", " + who).catch((e) => { console.log(e); });
+          errorLog("Console 서버 문제 생김 (rou_post_callTo): cannot find member index => " + String(index) + ", " + thisPerson + ", " + who + ", " + JSON.stringify(req.body)).catch((e) => { console.log(e); });
           res.set({ "Content-Type": "application/json" });
           res.send(JSON.stringify({ message: "OK" }));
         } else {

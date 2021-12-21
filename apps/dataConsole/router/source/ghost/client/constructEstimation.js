@@ -201,7 +201,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
   firstWhitePaddingBottom = <%% 115, 115, 107, 99, 8 %%>;
   firstBlockMarginBottom = <%% 12, 12, 12, 8, 2 %%>;
-  tableBackgroundMargin = <%% 80, 80, 67, 59, 4.7 %%>;
+  tableBackgroundMargin = <%% 82, 82, 67, 59, 4.7 %%>;
 
   titleFontSize = <%% 30, 30, 28, 23, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
