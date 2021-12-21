@@ -117,25 +117,25 @@ DashboardJs.prototype.whiteBoards = function () {
     {
       name: "File server",
       alive: (onlineStatus) => {
-        return /a8:a1:59:87:2a:d6/gi.test(JSON.stringify(onlineStatus));
+        return true;
       }
     },
     {
       name: "Graphic server",
       alive: (onlineStatus) => {
-        return /bc:5f:f4:93:ca:ed/gi.test(JSON.stringify(onlineStatus));
+        return true;
       }
     },
     {
       name: "Sms server",
       alive: (onlineStatus) => {
-        return /88:36:6c:fd:b7:8e/gi.test(JSON.stringify(onlineStatus));
+        return true;
       }
     },
     {
       name: "Monitor server",
       alive: (onlineStatus) => {
-        return /00:e0:4c:68:02:c9/gi.test(JSON.stringify(onlineStatus));
+        return true;
       }
     },
     {
@@ -152,23 +152,12 @@ DashboardJs.prototype.whiteBoards = function () {
     },
   ];
 
-  homeliaisonWifiKey = Object.keys(onlineStatus).find(str => { return /^e/gi.test(str) });
-  hubSeongSuWifiKey = Object.keys(onlineStatus).find(str => { return /^w/gi.test(str) });
-  if (hubSeongSuWifiKey === undefined) {
-    hubSeongSuWifiKey = null;
-  }
-
   for (let member of members) {
-    alive = (onlineStatus[homeliaisonWifiKey].alive.findIndex((str) => { return (new RegExp((member.name + " " + member.title), "gi")).test(str) }) !== -1);
+    alive = (onlineStatus[member.id] === true || onlineStatus[member.id] === "true");
     if (alive) {
-      member.alive = "hliaison";
+      member.alive = "online";
     } else {
-      alive = (onlineStatus[hubSeongSuWifiKey].alive.findIndex((str) => { return (new RegExp((member.name + " " + member.title), "gi")).test(str) }) !== -1);
-      if (alive) {
-        member.alive = "seongsu";
-      } else {
-        member.alive = "offline";
-      }
+      member.alive = "offline";
     }
   }
 

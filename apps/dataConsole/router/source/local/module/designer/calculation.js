@@ -772,11 +772,11 @@ DesignerJs.prototype.calculationExtractEvent = function () {
       total = 0;
       for (let arr of matrix) {
         if (arr[3].split('/').map((i) => { return Number(i.trim()); }).every((i) => { return i === 0; })) {
-          matrix2.push([ arr[0], arr[1], Number(arr[2].replace(/[^0-9]/g, '')), "선금", arr[6], (window.location.protocol + "//" + window.location.host + "/project?proid" + arr[6]) ]);
+          matrix2.push([ arr[0], arr[1], Number(arr[2].replace(/[^0-9]/g, '')), "선금", arr[6], (window.location.protocol + "//" + window.location.host + "/project?proid=" + arr[6]) ]);
           total += Number(arr[2].replace(/[^0-9]/g, ''));
         }
         if (arr[5].split('/').map((i) => { return Number(i.trim()); }).every((i) => { return i === 0; })) {
-          matrix2.push([ arr[0], arr[1], Number(arr[4].replace(/[^0-9]/g, '')), "잔금", arr[6], (window.location.protocol + "//" + window.location.host + "/project?proid" + arr[6]) ]);
+          matrix2.push([ arr[0], arr[1], Number(arr[4].replace(/[^0-9]/g, '')), "잔금", arr[6], (window.location.protocol + "//" + window.location.host + "/project?proid=" + arr[6]) ]);
           total += Number(arr[4].replace(/[^0-9]/g, ''));
         }
       }

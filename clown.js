@@ -2039,7 +2039,6 @@ Clown.prototype.launching = async function () {
 
     app.whenReady().then(createWindow).then((mainWindow) => {
       mainWindow.webContents.openDevTools();
-      return requestSystem("https://" + address.officeinfo.ghost.host + address.officeinfo.ghost.monitor.path + "/subway");
     }).catch((err) => {
       console.log(err);
     });
@@ -2088,7 +2087,7 @@ Clown.prototype.launching = async function () {
         });
 
       } else {
-        event.returnValue = ""
+        event.returnValue = "";
       }
     });
 

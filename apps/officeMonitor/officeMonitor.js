@@ -177,10 +177,8 @@ OfficeMonitor.prototype.renderReport = async function () {
 OfficeMonitor.prototype.routerPatch = function (app) {
   const instance = this;
   const address = this.address;
-  const { scanResultName } = this;
   const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
   const defaultPath = address.officeinfo.ghost.monitor.path;
-  const resultFile = this.address.officeinfo.ghost.file.static + "/" + scanResultName;
   const ipPass = (req) => {
     let ip;
     ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -219,42 +217,6 @@ OfficeMonitor.prototype.routerPatch = function (app) {
     }
   });
 
-  app.get(defaultPath + "/subway", async (req, res) => {
-    res.set({
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!ipPass(req)) {
-        throw new Error("ip ban");
-      }
-      res.send(JSON.stringify(await instance.renderReport(), null, 2));
-    } catch (e) {
-      console.log(e);
-      res.send("error");
-    }
-  });
-
-  app.post(defaultPath + "/subway", async (req, res) => {
-    res.set({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
-      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
-    });
-    try {
-      if (!ipPass(req)) {
-        throw new Error("ip ban");
-      }
-      res.send(JSON.stringify(await instance.renderReport()));
-    } catch (e) {
-      console.log(e);
-      res.send(JSON.stringify({ message: "error : " + e.message }));
-    }
-  });
-
   app.get(defaultPath + "/status", async (req, res) => {
     res.set({
       "Content-Type": "text/plain",
@@ -266,7 +228,7 @@ OfficeMonitor.prototype.routerPatch = function (app) {
       if (!ipPass(req)) {
         throw new Error("ip ban");
       }
-      res.send(JSON.stringify((await fileSystem(`readJson`, [ resultFile ])), null, 2));
+      res.send(JSON.stringify(OfficeMonitor.stacks.memberAlive));
     } catch (e) {
       console.log(e);
       res.send("error");
@@ -284,7 +246,7 @@ OfficeMonitor.prototype.routerPatch = function (app) {
       if (!ipPass(req)) {
         throw new Error("ip ban");
       }
-      res.send(JSON.stringify(await fileSystem(`readJson`, [ resultFile ])));
+      res.send(JSON.stringify(OfficeMonitor.stacks.memberAlive));
     } catch (e) {
       console.log(e);
       res.send(JSON.stringify({ message: "error : " + e.message }));
@@ -392,8 +354,6 @@ OfficeMonitor.prototype.reportServer = async function () {
 
     this.routerPatch(app);
 
-    // this.intervalMonitoring();
-
     memberAlive = {};
     OfficeMonitor.stacks.deathTimeout = {};
     for (let { id } of members) {
@@ -412,17 +372,31 @@ OfficeMonitor.prototype.reportServer = async function () {
       ws.on("message", (raw) => {
         try {
           const data = equalJson(raw);
-
+          let macArr, memid, index;
           if (data.device !== undefined && data.message === "alive") {
-            // device to member
+            macArr = data.device.networkInterfaces.map((obj) => { return obj.mac });
 
+            memid = null;
+            for (let mac of macArr) {
+              index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac });
+              if (index !== -1) {
+                if (typeof address.officeinfo.map[index].memid === "string") {
+                  memid = address.officeinfo.map[index].memid;
+                  break;
+                }
+              }
+            }
 
-            // device to member => ().alive = true
+            if (memid !== null) {
+              OfficeMonitor.stacks.memberAlive[memid] = true;
+              if (OfficeMonitor.stacks.deathTimeout[memid] !== null) {
+                clearTimeout(OfficeMonitor.stacks.deathTimeout[memid]);
+              }
+              OfficeMonitor.stacks.deathTimeout[memid] = setTimeout(() => {
+                OfficeMonitor.stacks.memberAlive[memid] = false;
+              }, 2 * 60 * 1000);
+            }
           }
-
-
-
-
         } catch {
           // pass
         }
