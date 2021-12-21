@@ -17,6 +17,8 @@ const OfficeMonitor = function (mother = null, back = null, address = null) {
 
 OfficeMonitor.intervals = {};
 
+OfficeMonitor.stacks = {};
+
 OfficeMonitor.prototype.renderReport = async function () {
   const instance = this;
   const os = require(`os`);
@@ -342,8 +344,12 @@ OfficeMonitor.prototype.reportServer = async function () {
   const express = require("express");
   const multer = require("multer");
   const useragent = require("express-useragent");
-  const { shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, errorLog, sleep, messageSend, messageLog } = this.mother;
+  const WebSocket = require("ws");
+  const members = require(`${process.cwd()}/apps/memberObj.js`);
+  const address = this.address;
+  const { shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, errorLog, sleep, messageSend, messageLog, equalJson } = this.mother;
   try {
+    const url = "wss://" + this.address.officeinfo.ghost.host + ":5000/general";
     const PORT = this.address.officeinfo.ghost.monitor.port;
     const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     await MONGOLOCALC.connect();
@@ -351,6 +357,8 @@ OfficeMonitor.prototype.reportServer = async function () {
     const multiForms = multer();
     let pems, pemsLink;
     let certDir, keyDir, caDir;
+    let ws;
+    let memberAlive;
 
     app.use(useragent.express());
     app.use(express.json({ limit : "50mb" }));
@@ -384,7 +392,44 @@ OfficeMonitor.prototype.reportServer = async function () {
 
     this.routerPatch(app);
 
-    this.intervalMonitoring();
+    // this.intervalMonitoring();
+
+    memberAlive = {};
+    OfficeMonitor.stacks.deathTimeout = {};
+    for (let { id } of members) {
+      memberAlive[id] = false;
+      OfficeMonitor.stacks.deathTimeout[id] = null;
+    }
+    OfficeMonitor.stacks.memberAlive = memberAlive;
+
+    ws = new WebSocket(url);
+    ws.on("open", () => {
+
+      setInterval(() => {
+        ws.send(JSON.stringify({ message: "alive" }));
+      }, 30 * 1000);
+
+      ws.on("message", (raw) => {
+        try {
+          const data = equalJson(raw);
+
+          if (data.device !== undefined && data.message === "alive") {
+            // device to member
+
+
+            // device to member => ().alive = true
+          }
+
+
+
+
+        } catch {
+          // pass
+        }
+      });
+
+    });
+
 
     // server launching
     https.createServer(pems, app).listen(PORT, () => { console.log(`\x1b[33m%s\x1b[0m`, `\nServer running\n`); });

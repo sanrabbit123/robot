@@ -748,6 +748,7 @@ DesignerJs.prototype.calculationExtractEvent = function () {
       let width;
       let num0, num1;
       let total;
+      let proid;
 
       matrix = [];
       for (let i of designerDoms) {
@@ -757,30 +758,31 @@ DesignerJs.prototype.calculationExtractEvent = function () {
         designer = title.textContent.trim();
         projectWhites = i.querySelectorAll(".projectWhite");
         for (let j = 0; j < projectWhites.length; j++) {
+          proid = projectWhites[j].id;
           clientName = projectWhites[j].querySelector(".clientName").textContent.trim();
           firstAmount = projectWhites[j].querySelector(".firstAmount").textContent.trim();
           firstDate = projectWhites[j].querySelector(".firstDate").textContent.trim();
           remainAmount = projectWhites[j].querySelector(".remainAmount").textContent.trim();
           remainDate = projectWhites[j].querySelector(".remainDate").textContent.trim();
-          matrix.push([ designer, clientName, firstAmount, firstDate, remainAmount, remainDate ]);
+          matrix.push([ designer, clientName, firstAmount, firstDate, remainAmount, remainDate, proid ]);
         }
       }
 
-      matrix2 = [ [ "디자이너", "고객", "정산대기액", "종류" ] ];
+      matrix2 = [ [ "디자이너", "고객", "정산대기액", "종류", "아이디", "링크" ] ];
       total = 0;
       for (let arr of matrix) {
         if (arr[3].split('/').map((i) => { return Number(i.trim()); }).every((i) => { return i === 0; })) {
-          matrix2.push([ arr[0], arr[1], Number(arr[2].replace(/[^0-9]/g, '')), "선금" ]);
+          matrix2.push([ arr[0], arr[1], Number(arr[2].replace(/[^0-9]/g, '')), "선금", arr[6], (window.location.protocol + "//" + window.location.host + "/project?proid" = arr[6]) ]);
           total += Number(arr[2].replace(/[^0-9]/g, ''));
         }
         if (arr[5].split('/').map((i) => { return Number(i.trim()); }).every((i) => { return i === 0; })) {
-          matrix2.push([ arr[0], arr[1], Number(arr[4].replace(/[^0-9]/g, '')), "잔금" ]);
+          matrix2.push([ arr[0], arr[1], Number(arr[4].replace(/[^0-9]/g, '')), "잔금", arr[6], (window.location.protocol + "//" + window.location.host + "/project?proid" = arr[6]) ]);
           total += Number(arr[4].replace(/[^0-9]/g, ''));
         }
       }
 
-      matrix2.push([ "", "", "", "" ]);
-      matrix2.push([ "합계", "", total, "" ]);
+      matrix2.push([ "", "", "", "", "", "" ]);
+      matrix2.push([ "합계", "", total, "", "", "" ]);
       matrix = matrix2;
 
       div_clone = GeneralJs.nodes.div.cloneNode(true);

@@ -159,32 +159,31 @@ document.addEventListener("DOMContentLoaded", async function (e) {
     }
 
     if (/Electron/gi.test(window.navigator.userAgent)) {
-      const { ipcRenderer } = require("electron");
-      const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
-
-      wssSocket.onopen = () => {
-        wssSocket.onmessage = (event) => {
-          try {
-            const data = GeneralJs.equalJson(event.data);
-            if (data.alarm !== undefined) {
-              ipcRenderer.send("asynchronous-message", data.message);
-            } else if (data.alert !== undefined) {
-              window.alert(data.message);
-            }
-          } catch {
-            // pass
-          }
-        }
-        setInterval(() => {
-          wssSocket.send(JSON.stringify({ message: "alive" }));
-        }, 3 * 1000);
-      }
-
+      GeneralJs.stacks.deviceInfo = null;
       GeneralJs.setQueue(() => {
         const { ipcRenderer } = require("electron");
         const deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));
-        console.log(deviceInfo);
         GeneralJs.stacks.deviceInfo = deviceInfo;
+
+        const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
+        wssSocket.onopen = () => {
+          wssSocket.onmessage = (event) => {
+            try {
+              const data = GeneralJs.equalJson(event.data);
+              if (data.alarm !== undefined) {
+                ipcRenderer.send("asynchronous-message", data.message);
+              } else if (data.alert !== undefined) {
+                window.alert(data.message);
+              }
+            } catch {
+              // pass
+            }
+          }
+          setInterval(() => {
+            wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
+          }, 30 * 1000);
+        }
+
       });
     }
 
