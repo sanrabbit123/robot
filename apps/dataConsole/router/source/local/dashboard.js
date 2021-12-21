@@ -27,7 +27,7 @@ DashboardJs.prototype.baseMaker = function () {
 DashboardJs.prototype.whiteBoards = function () {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
-  const { onlineStatus, members, slackNotices } = this;
+  const { members, slackNotices } = this;
   const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue } = GeneralJs;
   const vh = "vh";
   const memberTongClassName = "memberTong";
@@ -116,25 +116,25 @@ DashboardJs.prototype.whiteBoards = function () {
     },
     {
       name: "File server",
-      alive: (onlineStatus) => {
+      alive: () => {
         return true;
       }
     },
     {
       name: "Graphic server",
-      alive: (onlineStatus) => {
+      alive: () => {
         return true;
       }
     },
     {
       name: "Sms server",
-      alive: (onlineStatus) => {
+      alive: () => {
         return true;
       }
     },
     {
       name: "Monitor server",
-      alive: (onlineStatus) => {
+      alive: () => {
         return true;
       }
     },
@@ -151,15 +151,6 @@ DashboardJs.prototype.whiteBoards = function () {
       }
     },
   ];
-
-  for (let member of members) {
-    alive = (onlineStatus[member.id] === true || onlineStatus[member.id] === "true");
-    if (alive) {
-      member.alive = "online";
-    } else {
-      member.alive = "offline";
-    }
-  }
 
   boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
   boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
@@ -333,66 +324,90 @@ DashboardJs.prototype.whiteBoards = function () {
   memberTong = firstMother.querySelector('.' + memberTongClassName);
   serverTong = firstMother.querySelector('.' + serverTongClassName);
 
-  memberReload = () => {
-    cleanChildren(memberTong);
-    for (let member of members) {
-      createNode({
-        mother: memberTong,
-        style: {
-          display: "block",
-          position: "relative",
-          width: withOut(memberBlockPaddingLeft * 1, vh),
-          paddingLeft: String(memberBlockPaddingLeft) + vh,
-          marginBottom: String(memberBlockMarginBottom) + ea,
-        },
-        children: [
-          {
-            mode: "svg",
-            source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, member.alive !== "offline" ? colorChip.green : colorChip.gray4),
-            style: {
-              position: "absolute",
-              width: String(memberBlockWidth) + ea,
-              height: "",
-              top: String(memberBlockTop) + ea,
-              left: String(memberBlockLeft) + vh,
-            }
+  memberReload = async () => {
+    try {
+      const members = instance.members;
+      const onlineStatus = await ajaxJson({}, "https://" + FILEHOST + "/officeMonitor/status", { equal: true });
+      let alive;
+      for (let member of members) {
+        alive = (onlineStatus[member.id] === true || onlineStatus[member.id] === "true");
+        if (alive) {
+          member.alive = "online";
+        } else {
+          member.alive = "offline";
+        }
+      }
+      cleanChildren(memberTong);
+      for (let member of members) {
+        createNode({
+          mother: memberTong,
+          style: {
+            display: "block",
+            position: "relative",
+            width: withOut(memberBlockPaddingLeft * 1, vh),
+            paddingLeft: String(memberBlockPaddingLeft) + vh,
+            marginBottom: String(memberBlockMarginBottom) + ea,
           },
-          {
-            text: member.name + " " + member.title + "님",
-            style: {
-              display: "inline-block",
-              position: "relative",
-              background: colorChip.white,
-              fontSize: String(memberBlockSize) + ea,
-              fontWeight: String(400),
-              color: colorChip.black,
-              paddingRight: String(memberBlockPaddingRight) + vh,
-              top: String(onlineTextTop) + vh,
+          children: [
+            {
+              mode: "svg",
+              source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, member.alive !== "offline" ? colorChip.green : colorChip.gray4),
+              style: {
+                position: "absolute",
+                width: String(memberBlockWidth) + ea,
+                height: "",
+                top: String(memberBlockTop) + ea,
+                left: String(memberBlockLeft) + vh,
+              }
+            },
+            {
+              text: member.name + " " + member.title + "님",
+              style: {
+                display: "inline-block",
+                position: "relative",
+                background: colorChip.white,
+                fontSize: String(memberBlockSize) + ea,
+                fontWeight: String(400),
+                color: colorChip.black,
+                paddingRight: String(memberBlockPaddingRight) + vh,
+                top: String(onlineTextTop) + vh,
+              }
+            },
+            {
+              text: member.alive,
+              style: {
+                position: "absolute",
+                right: String(0),
+                top: String(0),
+                background: colorChip.white,
+                fontSize: String(memberBlockSize) + ea,
+                fontWeight: String(300),
+                fontFamily: "graphik",
+                color: member.alive !== "offline" ? colorChip.green : colorChip.gray4,
+              }
             }
-          },
-          {
-            text: member.alive,
-            style: {
-              position: "absolute",
-              right: String(0),
-              top: String(0),
-              background: colorChip.white,
-              fontSize: String(memberBlockSize) + ea,
-              fontWeight: String(300),
-              fontFamily: "graphik",
-              color: member.alive !== "offline" ? colorChip.green : colorChip.gray4,
-            }
-          }
-        ]
-      });
+          ]
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
-  memberReload();
-  setQueue(() => {
-    memberReload();
-  }, 500);
-  setInterval(() => {
-    memberReload();
+
+  memberReload().then(() => {
+    return GeneralJs.sleep(3000);
+  }).then(() => {
+    return memberReload();
+  }).catch((err) => {
+    console.log(err);
+  });
+
+  setInterval(async () => {
+    try {
+      await memberReload();
+    } catch (e) {
+      console.log(e);
+    }
   }, 30 * 1000);
 
   for (let server of serverTargets) {
@@ -408,7 +423,7 @@ DashboardJs.prototype.whiteBoards = function () {
       children: [
         {
           mode: "svg",
-          source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, server.alive(onlineStatus) ? colorChip.green : colorChip.gray4),
+          source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, server.alive() ? colorChip.green : colorChip.gray4),
           style: {
             position: "absolute",
             width: String(memberBlockWidth) + ea,
@@ -431,7 +446,7 @@ DashboardJs.prototype.whiteBoards = function () {
           }
         },
         {
-          text: server.alive(onlineStatus) ? "online" : "offline",
+          text: server.alive() ? "online" : "offline",
           style: {
             position: "absolute",
             right: String(0),
@@ -440,7 +455,7 @@ DashboardJs.prototype.whiteBoards = function () {
             fontSize: String(memberBlockSize) + ea,
             fontWeight: String(300),
             fontFamily: "graphik",
-            color: server.alive(onlineStatus) ? colorChip.green : colorChip.gray4,
+            color: server.alive() ? colorChip.green : colorChip.gray4,
           }
         }
       ]
@@ -1002,7 +1017,6 @@ DashboardJs.prototype.launching = async function () {
     this.grayBarWidth = this.mother.grayBarWidth;
 
     this.whiteBlocks = {};
-    this.onlineStatus = await ajaxJson({}, "https://" + FILEHOST + "/officeMonitor/status", { equal: true });
     this.members = (await ajaxJson({ type: "get" }, "/getMembers", { equal: true })).filter((obj) => { return obj.alive });
     this.slackNotices = await ajaxJson({ channel: "000_master_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
 
