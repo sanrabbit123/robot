@@ -380,7 +380,7 @@ OfficeMonitor.prototype.routerPatch = function (app, MONGOLOCALC) {
         option = {};
       }
       const messageObj = instance.sendMessage(from, to, message, option);
-      await MONGOLOCALC.db(`miro81`).collection(messageStorage).insetOne(messageObj);
+      await MONGOLOCALC.db(`miro81`).collection(messageStorage).insertOne(messageObj);
       res.send(JSON.stringify(messageObj));
     } catch (e) {
       console.log(e);
