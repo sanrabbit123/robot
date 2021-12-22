@@ -1936,6 +1936,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
         }
         let thisMemid, thisMap, thisMember;
 
+        thisMemid = null;
         for (let obj of address.officeinfo.map) {
           if (mac.includes(obj.mac) && typeof obj.memid === "string") {
             thisMemid = obj.memid;
@@ -1943,13 +1944,17 @@ DataRouter.prototype.rou_post_getMembers = function () {
           }
         }
 
-        thisMap = address.officeinfo.map.find((obj) => { return obj.memid = thisMemid; })
-        thisMember = membersArr.find((obj) => { return obj.id === "thisMemid" });
-        thisMember.memid = thisMember.id;
-        thisMember.mac = thisMap.mac;
+        if (thisMemid !== null) {
+          thisMap = address.officeinfo.map.find((obj) => { return obj.memid = thisMemid; })
+          thisMember = membersArr.find((obj) => { return obj.id === "thisMemid" });
+          thisMember.memid = thisMember.id;
+          thisMember.mac = thisMap.mac;
 
-        res.send((JSON.stringify(thisMember)));
-
+          res.send((JSON.stringify(thisMember)));
+        } else {
+          res.send((JSON.stringify({ member: null })));
+        }
+        
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getMembers): " + e.message).catch((e) => { console.log(e); });

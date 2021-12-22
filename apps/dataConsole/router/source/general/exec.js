@@ -163,8 +163,12 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       GeneralJs.setQueue(() => {
         const { ipcRenderer } = require("electron");
         const deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));
-        
+        const memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");
         GeneralJs.stacks.deviceInfo = deviceInfo;
+        GeneralJs.stacks.memberInfo = memberInfo;
+
+        console.log(memberInfo);
+
         const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
         wssSocket.onopen = () => {
 
