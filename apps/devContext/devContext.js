@@ -58,7 +58,7 @@ DevContext.prototype.launching = async function () {
   const instance = this;
   const rethink = new RethinkAccess();
   const { mongo, mongoinfo, mongolocalinfo, mongopythoninfo, mongoconsoleinfo } = this.mother;
-  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, webpackSystem, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete } = this.mother;
+  const { fileSystem, shellExec, shellLink, orderSystem, ghostFileUpload, ghostFileList, curlRequest, webpackSystem, requestSystem, ajaxJson, uniqueValue, getDateMatrix, ghostRequest, generalFileUpload, promiseTimeout, mysqlQuery, headRequest, binaryRequest, cryptoString, decryptoHash, treeParsing, appleScript, sleep, equalJson, copyJson, pythonExecute, autoComma, dateToString, stringToDate, ipParsing, ipCheck, leafParsing, statusReading, errorLog, messageLog, messageSend, pureServer, s3FileDelete, sendMessage } = this.mother;
   try {
     await this.MONGOC.connect();
     await this.MONGOLOCALC.connect();
@@ -97,55 +97,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    const sendMessage = function (from, to, message, option = {}) {
-      if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
-        throw new Error("invaild input");
-      }
-      if (!to.every((id) => { return typeof id === "string" })) {
-        throw new Error("invaild to array");
-      }
-      if (typeof option !== "object") {
-        throw new Error("invild option");
-      }
-      const { uniqueValue } = instance.mother;
-      const messageIdInitial = "M";
-      const toLength = to.length;
-      let dummy;
-
-      dummy = {
-        id: messageIdInitial + uniqueValue("hex"),
-        date: new Date(),
-        participants: { from, to },
-        method: {
-          alarm: (option.alarm === true),
-          alert: (option.alert === true),
-        },
-        contents: { message },
-        receive: {
-          readed: (new Array(toLength)).fill(0),
-          date: (new Array(toLength)).fill(new Date(1800, 0, 1)),
-        }
-      };
-
-      return dummy;
-    }
-
-
-    const sendAlarm = function (messageObj) {
-      const url = "wss://home-liaison.serveftp.com:5000/general";
-      const WebSocket = require("ws");
-      return new Promise((resolve, reject) => {
-        const ws = new WebSocket(url);
-        ws.on("open", () => {
-          ws.send(JSON.stringify(messageObj));
-          ws.close();
-          resolve({ message: "done" });
-        });
-      });
-    }
-
-
-    await sendAlarm(sendMessage("m1810_aa01s", [ "m1810_aa01s" ], "안녕하세요", { alarm: true }));
+    await sendMessage("m1810_aa01s", [ "m1810_aa01s" ], "안녕하세요", { alarm: true });
 
 
 

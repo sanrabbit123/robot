@@ -3519,4 +3519,30 @@ Mother.prototype.xyConverting = function (original) {
   return converted;
 }
 
+Mother.prototype.sendMessage = function (from, to, message, option = {}) {
+  if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!to.every((id) => { return typeof id === "string" })) {
+    throw new Error("invaild to array");
+  }
+  if (typeof option !== "object") {
+    throw new Error("invild option");
+  }
+  const ADDRESS = require(`${process.cwd()}/apps/infoObj.js`);
+  const monitorUrl = "https://" + ADDRESS.officeinfo.ghost.host + "/officeMonitor/sendMessage";
+  const axios = require("axios");
+  return new Promise((resolve, reject) => {
+    axios.post(monitorUrl, { from, to, message, option }, { headers: { "Content-Type": "application/json" } }).then((res) => {
+      if (res.status !== 200) {
+        reject(res);
+      } else {
+        resolve(res);
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+}
+
 module.exports = Mother;
