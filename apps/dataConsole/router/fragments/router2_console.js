@@ -1877,20 +1877,22 @@ DataRouter.prototype.rou_post_proposalReset = function () {
 
 DataRouter.prototype.rou_post_getMembers = function () {
   const instance = this;
-  const { shell, shellLink } = this.mother;
+  const address = this.address;
+  const { equalJson } = this.mother;
   let obj = {};
   obj.link = "/getMembers";
   obj.func = async function (req, res) {
+    res.set("Content-Type", "application/json");
     try {
+      if (typeof req.body.type !== "string") {
+        throw new Error("must be type");
+      }
       const membersArr = instance.members;
       let emailArr = [];
       let targetMember = null;
 
       if (req.body.type === "get") {
-
-        res.set("Content-Type", "application/json");
         res.send(JSON.stringify(membersArr));
-
       } else if (req.body.type === "boo") {
         for (let { id, email } of membersArr) {
           for (let e of email) {
@@ -1914,17 +1916,45 @@ DataRouter.prototype.rou_post_getMembers = function () {
         }
         //---------------------------------------------------------
 
-        res.set("Content-Type", "application/json");
         if (targetMember === undefined || targetMember === null) {
           res.send(JSON.stringify({ result: null }));
         } else {
           res.send(JSON.stringify({ result: targetMember }));
         }
 
+      } else if (req.body.type === "this") {
+
+        if (req.body.mac === undefined) {
+          throw new Error("must be mac array");
+        }
+        const { mac } = equalJson(req.body);
+        if (!Array.isArray(mac)) {
+          throw new Error("invaild post");
+        }
+        if (!mac.every((str) => { return typeof str === "string" })) {
+          throw new Error("invaild post");
+        }
+        let thisMemid, thisMap, thisMember;
+
+        for (let obj of address.officeinfo.map) {
+          if (mac.includes(obj.mac) && typeof obj.memid === "string") {
+            thisMemid = obj.memid;
+            break;
+          }
+        }
+
+        thisMap = address.officeinfo.map.find((obj) => { return obj.memid = thisMemid; })
+        thisMember = membersArr.find((obj) => { return obj.id === "thisMemid" });
+        thisMember.memid = thisMember.id;
+        thisMember.mac = thisMap.mac;
+
+        res.send((JSON.stringify(thisMember)));
+
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getMembers): " + e.message).catch((e) => { console.log(e); });
       console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
     }
   }
   return obj;

@@ -9,7 +9,7 @@
     "pack": "node robot.js front --webpack",
     "clown": "electron clown.js",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "build": "electron-builder"
   },
   "author": "uragen",
   "license": "ISC",
@@ -62,7 +62,18 @@
     },
     "mac": {
       "category": "SI",
-      "icon": "./icon.icns"
+      "icon": "./apps/nativeNotifier/module/vendor/icon.icns"
+    },
+    "win": {
+      "target": [
+        "zip",
+        "nsis"
+      ],
+      "icon": "./apps/nativeNotifier/module/vendor/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     }
   }
 }

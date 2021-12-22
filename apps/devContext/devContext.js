@@ -99,33 +99,33 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // const sendAlarm = function (message) {
-    //   const url = "wss://home-liaison.serveftp.com:5000/general";
-    //   const WebSocket = require("ws");
-    //   return new Promise((resolve, reject) => {
-    //     const ws = new WebSocket(url);
-    //     ws.on("open", () => {
-    //       ws.send(JSON.stringify({ alarm: true, message }));
-    //       ws.close();
-    //       resolve({ message: "done" });
-    //     });
-    //   });
-    // }
-    //
-    // const sendAlert = function (message) {
-    //   const url = "wss://home-liaison.serveftp.com:5000/general";
-    //   const WebSocket = require("ws");
-    //   return new Promise((resolve, reject) => {
-    //     const ws = new WebSocket(url);
-    //     ws.on("open", () => {
-    //       ws.send(JSON.stringify({ alert: true, message }));
-    //       ws.close();
-    //       resolve({ message: "done" });
-    //     });
-    //   });
-    // }
-    //
-    // await sendAlarm("안녕안녕");
+    const sendAlarm = function (message) {
+      const url = "wss://home-liaison.serveftp.com:5000/general";
+      const WebSocket = require("ws");
+      return new Promise((resolve, reject) => {
+        const ws = new WebSocket(url);
+        ws.on("open", () => {
+          ws.send(JSON.stringify({ alarm: true, message }));
+          ws.close();
+          resolve({ message: "done" });
+        });
+      });
+    }
+
+    const sendAlert = function (message) {
+      const url = "wss://home-liaison.serveftp.com:5000/general";
+      const WebSocket = require("ws");
+      return new Promise((resolve, reject) => {
+        const ws = new WebSocket(url);
+        ws.on("open", () => {
+          ws.send(JSON.stringify({ alert: true, message }));
+          ws.close();
+          resolve({ message: "done" });
+        });
+      });
+    }
+
+    await sendAlarm("안녕안녕");
 
 
 
