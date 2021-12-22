@@ -173,11 +173,12 @@ document.addEventListener("DOMContentLoaded", async function (e) {
             wssSocket.onmessage = (event) => {
               try {
                 const data = GeneralJs.equalJson(event.data);
-                if (data.memid === memberInfo.memid) {
-                  if (data.alarm !== undefined) {
-                    ipcRenderer.send("asynchronous-message", data.message);
-                  } else if (data.alert !== undefined) {
-                    window.alert(data.message);
+                if (data.participants.to.includes(GeneralJs.stacks.memberInfo.memid)) {
+                  if (data.method.alarm) {
+                    ipcRenderer.send("asynchronous-message", data.contents.message);
+                  }
+                  if (data.method.alert) {
+                    window.alert(data.contents.message);
                   }
                 }
               } catch {

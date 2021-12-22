@@ -97,38 +97,55 @@ DevContext.prototype.launching = async function () {
 
 
 
+    const sendMessage = function (from, to, message, option = {}) {
+      if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
+        throw new Error("invaild input");
+      }
+      if (!to.every((id) => { return typeof id === "string" })) {
+        throw new Error("invaild to array");
+      }
+      if (typeof option !== "object") {
+        throw new Error("invild option");
+      }
+      const { uniqueValue } = instance.mother;
+      const messageIdInitial = "M";
+      const toLength = to.length;
+      let dummy;
+
+      dummy = {
+        id: messageIdInitial + uniqueValue("hex"),
+        date: new Date(),
+        participants: { from, to },
+        method: {
+          alarm: (option.alarm === true),
+          alert: (option.alert === true),
+        },
+        contents: { message },
+        receive: {
+          readed: (new Array(toLength)).fill(0),
+          date: (new Array(toLength)).fill(new Date(1800, 0, 1)),
+        }
+      };
+
+      return dummy;
+    }
 
 
-    const sendAlarm = function (message) {
+    const sendAlarm = function (messageObj) {
       const url = "wss://home-liaison.serveftp.com:5000/general";
       const WebSocket = require("ws");
       return new Promise((resolve, reject) => {
         const ws = new WebSocket(url);
         ws.on("open", () => {
-          ws.send(JSON.stringify({ alarm: true, memid: "m1810_aa01s", message }));
+          ws.send(JSON.stringify(messageObj));
           ws.close();
           resolve({ message: "done" });
         });
       });
     }
 
-    const sendAlert = function (message) {
-      const url = "wss://home-liaison.serveftp.com:5000/general";
-      const WebSocket = require("ws");
-      return new Promise((resolve, reject) => {
-        const ws = new WebSocket(url);
-        ws.on("open", () => {
-          ws.send(JSON.stringify({ alert: true, message }));
-          ws.close();
-          resolve({ message: "done" });
-        });
-      });
-    }
 
-    await sendAlarm("안녕안녕");
-
-
-
+    await sendAlarm(sendMessage("m1810_aa01s", [ "m1810_aa01s" ], "안녕안녕", { alarm: true }));
 
 
 
