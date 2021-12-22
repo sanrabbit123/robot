@@ -160,37 +160,40 @@ document.addEventListener("DOMContentLoaded", async function (e) {
 
     if (/Electron/gi.test(window.navigator.userAgent)) {
       GeneralJs.stacks.deviceInfo = null;
-      GeneralJs.setQueue(() => {
-        const { ipcRenderer } = require("electron");
-        const deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));
-        const memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");
-        GeneralJs.stacks.deviceInfo = deviceInfo;
-        GeneralJs.stacks.memberInfo = memberInfo;
+      GeneralJs.setQueue(async () => {
+        try {
+          const { ipcRenderer } = require("electron");
+          const deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));
+          const memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");
+          GeneralJs.stacks.deviceInfo = deviceInfo;
+          GeneralJs.stacks.memberInfo = memberInfo;
 
-        console.log(memberInfo);
+          console.log(memberInfo);
 
-        const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
-        wssSocket.onopen = () => {
+          const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
+          wssSocket.onopen = () => {
 
-          wssSocket.onmessage = (event) => {
-            try {
-              const data = GeneralJs.equalJson(event.data);
-              if (data.alarm !== undefined) {
-                ipcRenderer.send("asynchronous-message", data.message);
-              } else if (data.alert !== undefined) {
-                window.alert(data.message);
+            wssSocket.onmessage = (event) => {
+              try {
+                const data = GeneralJs.equalJson(event.data);
+                if (data.alarm !== undefined) {
+                  ipcRenderer.send("asynchronous-message", data.message);
+                } else if (data.alert !== undefined) {
+                  window.alert(data.message);
+                }
+              } catch {
+                // pass
               }
-            } catch {
-              // pass
             }
-          }
 
-          wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
-          setInterval(() => {
             wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
-          }, 30 * 1000);
+            setInterval(() => {
+              wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
+            }, 30 * 1000);
+          }
+        } catch (e) {
+          console.log(e);
         }
-
       });
     }
 
