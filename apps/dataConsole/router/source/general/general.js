@@ -2672,7 +2672,7 @@ GeneralJs.prototype.memberView = function () {
   const instance = this;
   return async function (e) {
     try {
-      const { createNode, colorChip, withOut, ajaxJson, setCookie, sendMessage } = GeneralJs;
+      const { createNode, colorChip, withOut, ajaxJson, setCookie, sendMessage, isMac } = GeneralJs;
       const totalContents = document.getElementById("totalcontents");
       const member = instance.member;
       const ea = "px";
@@ -2697,8 +2697,8 @@ GeneralJs.prototype.memberView = function () {
       left = 220;
 
       whitePaddingLeft = 20;
-      whitePaddingTop = 18;
-      whitePaddingBottom = 54;
+      whitePaddingTop = isMac() ? 18 : 20;
+      whitePaddingBottom = isMac () ? 54 : 52;
 
       logOutBottom = 22;
       buttonBottom = 19.5;
@@ -2837,17 +2837,14 @@ GeneralJs.prototype.memberView = function () {
                   let targetMembers;
                   let thisMemid;
                   let message;
-
                   targetMembers = [];
                   for (let dom of tong) {
                     if (dom.getAttribute("toggle") === "on") {
                       targetMembers.push(dom.getAttribute("memid"));
                     }
                   }
-
                   thisMemid = instance.member.id;
                   message = window.prompt("경고 문구를 적어주세요!");
-
                   if (typeof message === "string") {
                     await sendMessage(thisMemid, targetMembers, message, option);
                   }
