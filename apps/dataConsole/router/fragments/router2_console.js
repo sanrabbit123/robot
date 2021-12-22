@@ -1946,7 +1946,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
 
         if (thisMemid !== null) {
           thisMap = address.officeinfo.map.find((obj) => { return obj.memid = thisMemid; })
-          thisMember = membersArr.find((obj) => { return obj.id === "thisMemid" });
+          thisMember = membersArr.find((obj) => { return obj.id === thisMemid });
           thisMember.memid = thisMember.id;
           thisMember.mac = thisMap.mac;
 
@@ -1954,7 +1954,7 @@ DataRouter.prototype.rou_post_getMembers = function () {
         } else {
           res.send((JSON.stringify({ member: null })));
         }
-        
+
       }
     } catch (e) {
       instance.mother.errorLog("Console 서버 문제 생김 (rou_post_getMembers): " + e.message).catch((e) => { console.log(e); });
