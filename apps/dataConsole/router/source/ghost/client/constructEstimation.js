@@ -191,7 +191,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   let firstWhitePaddingBottom;
   let firstBlockMarginBottom;
   let sumBoxHeight;
-  let finalPaddingBottomVisual;
+  let finalPaddingTopVisual, finalPaddingBottomVisual;
   let sumMiddleNumberSize;
   let itemTotalSumLineTop;
   let tableBackgroundMargin;
@@ -199,9 +199,9 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
-  firstWhitePaddingBottom = <%% 115, 115, 107, 99, 8 %%>;
+  firstWhitePaddingBottom = <%% 115, 115, 80, 72, 8 %%>;
   firstBlockMarginBottom = <%% 12, 12, 12, 8, 2 %%>;
-  tableBackgroundMargin = <%% 82, 82, 67, 59, 4.7 %%>;
+  tableBackgroundMargin = <%% 82, 82, 75, 65, 12 %%>;
 
   titleFontSize = <%% 30, 30, 28, 23, 5.7 %%>;
   titleFontWeight = <%% 300, 300, 300, 300, 300 %%>;
@@ -222,20 +222,20 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   itemBarTop = <%% 10, 10, 10, 10, 1 %%>;
   itemBarBottom = <%% (isMac() ? 11 : 8), (isMac() ? 11 : 8), (isMac() ? 11 : 8), (isMac() ? 11 : 8), 2 %%>;
 
-  tableMarginTopFirst = <%% 92, 92, 90, 82, 8.5 %%>;
-  tableMarginTop = <%% 150, 150, 150, 150, 8.5 %%>;
+  tableMarginTopFirst = <%% 92, 92, 90, 82, 14 %%>;
+  tableMarginTop = <%% 150, 150, 150, 120, 25 %%>;
   tablePaddingTop = <%% 10, 10, 10, 10, 2.5 %%>;
   tablePaddingBottom = <%% (isMac() ? 85 : 82), (isMac() ? 85 : 82), (isMac() ? 85 : 82), (isMac() ? 85 : 82), 3 %%>;
   barPaddingBottom = <%% 9, 9, 9, 9, 1.5 %%>;
   barMarginBottom = <%% 13, 13, 13, 13, 2.5 %%>;
 
-  grayMarginTop0 = <%% 60, 60, 50, 40, 4 %%>;
+  grayMarginTop0 = <%% 60, 60, 50, 40, 7.5 %%>;
 
   cautionPaddingTop = <%% 34, 34, 34, 27, 4 %%>;
   cautionPaddingBottom = <%% (isMac() ? 29 : 25), (isMac() ? 29 : 25), (isMac() ? 29 : 25), (isMac() ? 24 : 22), 4 %%>;
   cautionPaddingLeft = <%% 40, 40, 40, 32, 4.5 %%>;
   cautionPaddingRight = <%% 40, 40, 40, 32, 4.5 %%>;
-  cautionFirstBoxWidth = <%% 180, 180, 150, 110, 20 %%>;
+  cautionFirstBoxWidth = <%% 180, 180, 135, 100, 20 %%>;
   cautionWordsMarginBottom = <%% 8, 8, 8, 8, 1.5 %%>;
 
   cautionLogoBottom = <%% 12, 12, 12, 12, 12 %%>;
@@ -245,15 +245,16 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   sumNumberSize = <%% 31, 31, 29, 28, 6 %%>;
   sumWhitePaddingLeft = <%% 15, 15, 14, 13, 2 %%>;
 
-  itemTitleTop = <%% -38, -38, -36, -33, -2 %%>;
-  itemTitleSize = <%% 20, 20, 19, 18, 2 %%>;
+  itemTitleTop = <%% -38, -38, -36, -33, -7 %%>;
+  itemTitleSize = <%% 20, 20, 19, 18, 3.5 %%>;
 
-  itemSumBottom = <%% (isMac() ? 27 : 25), (isMac() ? 27 : 25), (isMac() ? 27 : 25), (isMac() ? 26 : 24), 2 %%>;
+  itemSumBottom = <%% (isMac() ? 27 : 25), (isMac() ? 27 : 25), (isMac() ? 27 : 25), (isMac() ? 26 : 24), -7.5 %%>;
   itemSumLineTop = <%% -11, -11, -10, -10, 4 %%>;
   itemTotalSumLineTop = <%% (isMac() ? 19 : 16), (isMac() ? 19 : 16), (isMac() ? 18 : 15), (isMac() ? 17 : 14), 4 %%>;
 
   sumBoxHeight = <%% 25, 25, 24, 23, 5 %%>;
-  finalPaddingBottomVisual = <%% 3, 3, 2, 1, 0 %%>;
+  finalPaddingTopVisual = <%% 0, 7, 7, 7, 0 %%>;
+  finalPaddingBottomVisual = <%% 11, 17, 24, 49, 0 %%>;
 
   itemsRatio = wordings.ratio.map((num) => { return String(num) + '%'; });
   items = wordings.items;
@@ -378,7 +379,7 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
           style: {
             position: "absolute",
             width: "calc(100% + " + String(margin * 2) + ea + ")",
-            height: "calc(100% + " + String(tableBackgroundMargin * 2) + ea + ")",
+            height: "calc(100% + " + String((tableBackgroundMargin * 2) + (desktop ? 0 : 1)) + ea + ")",
             top: String(tableBackgroundMargin * -1) + ea,
             left: String(margin * -1) + ea,
             background: colorChip[z % 2 === 0 ? "white" : "gray0"],
@@ -491,8 +492,8 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
         position: "absolute",
         display: "block",
         bottom: String(itemSumBottom) + ea,
-        width: withOut(itemBarLeft * 2, ea),
-        left: String(itemBarLeft) + ea,
+        width: withOut(desktop ? itemBarLeft * 2 : 0, ea),
+        left: String(desktop ? itemBarLeft : 0) + ea,
         textAlign: "right",
       },
       children: [
@@ -526,8 +527,8 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
       width: String(100) + '%',
       height: desktop ? String(blockHeight - (margin * 2)) + ea : "auto",
       background: colorChip.white,
-      paddingTop: String(desktop ? margin : 8.5) + ea,
-      paddingBottom: String(desktop ? margin + finalPaddingBottomVisual : 8) + ea,
+      paddingTop: String(desktop ? margin - finalPaddingTopVisual : 8.5) + ea,
+      paddingBottom: String(desktop ? margin + finalPaddingBottomVisual : 5) + ea,
       marginBottom: String(blockMarginBottom) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
     },

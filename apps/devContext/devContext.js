@@ -1595,9 +1595,9 @@ DevContext.prototype.launching = async function () {
     // const filter = new PortfolioFilter();
     // await filter.rawToRaw([
     //   {
-    //     client: "정혜민",
-    //     designer: "전경화",
-    //     link: "https://drive.google.com/drive/folders/10T8J57Ue5krIY7WFvSzLB0RvUi2uLFdz",
+    //     client: "정현진",
+    //     designer: "김지은",
+    //     link: "https://drive.google.com/drive/folders/1H6ZT1AdErEHwRhLHlrVJetuIlJOm-5BE",
     //     pay: true
     //   },
     // ]);
@@ -1618,7 +1618,7 @@ DevContext.prototype.launching = async function () {
 
 
     // get corePortfolio by pid
-    // await this.getCorePortfolio("p113");
+    // await this.getCorePortfolio("p116");
 
 
     // aspirant to designer
