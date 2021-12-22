@@ -2405,6 +2405,65 @@ GeneralJs.hasQuery = function (key) {
   }
 }
 
+GeneralJs.sendMessage = function (from, to, message, option = {}) {
+  if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!to.every((id) => { return typeof id === "string" })) {
+    throw new Error("invaild to array");
+  }
+  if (typeof option !== "object") {
+    throw new Error("invild option");
+  }
+  const url = "https://" + FILEHOST + "/officeMonitor/sendMessage";
+  let data, dataString;
+
+  data = { from, to, message, option };
+
+  dataString = "";
+  for (let i in data) {
+    dataString += i.replace(/[\=\&]/g, '');
+    dataString += '=';
+    if (typeof data[i] === "object") {
+      if (data[i] instanceof Date) {
+        dataString += JSON.stringify(data[i]).replace(/^\"/g, '').replace(/\"$/g, '');
+      } else {
+        dataString += JSON.stringify(data[i]).replace(/[\=\&]/g, '');
+      }
+    } else {
+      dataString += String(data[i]).replace(/[\=\&]/g, '');
+    }
+    dataString += '&';
+  }
+  data = dataString.slice(0, -1);
+
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.onload = function () {
+     if (xhr.readyState !== 4) {
+       return;
+     }
+     if (xhr.status >= 200 && xhr.status < 300) {
+       resolve(xhr.response);
+     } else {
+       reject({
+         status: this.status,
+         statusText: xhr.statusText
+       });
+     }
+    };
+    xhr.onerror = function () {
+     reject({
+       status: this.status,
+       statusText: xhr.statusText
+     });
+    };
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(data);
+  });
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;

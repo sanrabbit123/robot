@@ -705,7 +705,7 @@ GeneralJs.prototype.generalCss = function () {
   @keyframes loginfadeup1{from{opacity:0;backdrop-filter: blur(0px);}to{opacity:0.6;backdrop-filter: blur(4px);}}
   @keyframes loginfadedown0{from{opacity:0.1;}to{opacity:0;}}
   @keyframes loginfadedown1{from{opacity:0.6;backdrop-filter: blur(4px);}to{opacity:0;backdrop-filter: blur(0px);}}
-  @keyframes profilefadeup{from{opacity:0;transform:translateY(10px);}to{opacity:0.9;transform:translateY(0px);}}
+  @keyframes profilefadeup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes communicationfadeup{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0px);}}
   @keyframes fadedowndelay{from{opacity:1;transform:translateY(0px);}70%,to{opacity:0;transform:translateY(-5px);}}
 
@@ -2670,209 +2670,263 @@ GeneralJs.prototype.dashboardBox = function () {
 
 GeneralJs.prototype.memberView = function () {
   const instance = this;
-  return function (e) {
-    const member = instance.member;
-    let div_clone, div_clone2;
-    let svg_clone;
-    let style;
-    let ea = "px";
-    let temp;
+  return async function (e) {
+    try {
+      const { createNode, colorChip, withOut, ajaxJson, setCookie, sendMessage } = GeneralJs;
+      const totalContents = document.getElementById("totalcontents");
+      const member = instance.member;
+      const ea = "px";
+      const zIndex = 3;
+      let allMembers;
+      let width, height;
+      let bottom, left;
+      let logOutBottom, logOutRight, logOutWidth;
+      let whiteTong;
+      let whitePaddingLeft, whitePaddingTop, whitePaddingBottom;
+      let buttonBottom;
+      let secondButtonIndent;
+      let between;
+      let size;
+      let memberStatus;
+      let tempDom, tong;
+      let buttonSize;
+      let firstButtonIndent;
 
-    instance.memberBox = {};
+      width = 200;
+      bottom = 66;
+      left = 220;
 
-    //cancel back
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "fixed",
-      width: String(98.5) + "vw",
-      height: String(98) + "vh",
-      bottom: String(0) + ea,
-      left: String(0) + ea,
-      background: "transparent",
-      opacity: String(0),
-      zIndex: String(3),
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
+      whitePaddingLeft = 20;
+      whitePaddingTop = 18;
+      whitePaddingBottom = 54;
+
+      logOutBottom = 22;
+      buttonBottom = 19.5;
+      logOutRight = 17.5;
+      logOutWidth = 16;
+
+      between = 8;
+
+      firstButtonIndent = 2;
+      secondButtonIndent = 46;
+      size = 13;
+
+      buttonSize = 13;
+
+      tong = [];
+
+      allMembers = (await ajaxJson({ type: "get" }, "/getMembers", { equal: true })).filter((obj) => { return obj.alive });
+      memberStatus = await ajaxJson({}, "https://" + FILEHOST + "/officeMonitor/status", { equal: true });
+      for (let member of allMembers) {
+        member.online = memberStatus[member.id];
+      }
+
+      instance.memberBox = {};
+      instance.memberBox.cancel = createNode({
+        mother: totalContents,
+        event: {
+          click: function (e) {
+            instance.memberBox.cancel.remove();
+            instance.memberBox.contents.remove();
+          }
+        },
+        style: {
+          position: "fixed",
+          width: String(98) + "vw",
+          height: String(98) + "vh",
+          bottom: String(0) + ea,
+          left: String(0) + ea,
+          background: "transparent",
+          opacity: String(0),
+          zIndex: String(zIndex),
+        }
+      });
+      instance.memberBox.contents = createNode({
+        mother: totalContents,
+        style: {
+          position: "fixed",
+          width: String(width) + ea,
+          bottom: String(bottom) + ea,
+          left: String(left) + ea,
+          background: colorChip.white,
+          borderRadius: String(4) + "px",
+          boxShadow: "0px 6px 18px -9px " + colorChip.darkDarkShadow,
+          animation: "profilefadeup 0.4s ease forwards",
+          zIndex: String(zIndex),
+          paddingLeft: String(whitePaddingLeft) + ea,
+          paddingRight: String(whitePaddingLeft) + ea,
+          paddingTop: String(whitePaddingTop) + ea,
+          paddingBottom: String(whitePaddingBottom) + ea,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.returnLogout(colorChip.green),
+            class: [ "hoverDefault" ],
+            event: {
+              click: function (e) {
+                let obj = {};
+                obj["homeliaisonConsoleLoginedName"] = '';
+                obj["homeliaisonConsoleLoginedEmail"] = '';
+                obj["homeliaisonConsoleLoginedBoolean"] = '';
+                setCookie(obj, true);
+                window.localStorage.removeItem("GoogleClientProfile");
+                window.location.reload();
+              }
+            },
+            style: {
+              position: "absolute",
+              bottom: String(logOutBottom) + ea,
+              right: String(logOutRight) + ea,
+              width: String(logOutWidth) + ea,
+            }
+          },
+          {
+            style: {
+              position: "relative",
+              top: String(0),
+              left: String(0),
+              width: String(100) + '%',
+            }
+          },
+          {
+            text: "alarm",
+            event: {
+              click: async function (e) {
+                try {
+                  const option = { alarm: true };
+                  let targetMembers;
+                  let thisMemid;
+                  let message;
+
+                  targetMembers = [];
+                  for (let dom of tong) {
+                    if (dom.getAttribute("toggle") === "on") {
+                      targetMembers.push(dom.getAttribute("memid"));
+                    }
+                  }
+
+                  thisMemid = instance.member.id;
+                  message = window.prompt("알람 문구를 적어주세요!");
+
+                  if (typeof message === "string") {
+                    await sendMessage(thisMemid, targetMembers, message, option);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            class: [ "hoverDefault_lite" ],
+            style: {
+              position: "absolute",
+              bottom: String(buttonBottom) + ea,
+              left: String(logOutRight + firstButtonIndent) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(400),
+              fontFamily: "graphik",
+              color: colorChip.green,
+            }
+          },
+          {
+            text: "alert",
+            event: {
+              click: async function (e) {
+                try {
+                  const option = { alarm: true, alert: true };
+                  let targetMembers;
+                  let thisMemid;
+                  let message;
+
+                  targetMembers = [];
+                  for (let dom of tong) {
+                    if (dom.getAttribute("toggle") === "on") {
+                      targetMembers.push(dom.getAttribute("memid"));
+                    }
+                  }
+
+                  thisMemid = instance.member.id;
+                  message = window.prompt("경고 문구를 적어주세요!");
+
+                  if (typeof message === "string") {
+                    await sendMessage(thisMemid, targetMembers, message, option);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            class: [ "hoverDefault_lite" ],
+            style: {
+              position: "absolute",
+              bottom: String(buttonBottom) + ea,
+              left: String(logOutRight + secondButtonIndent) + ea,
+              fontSize: String(buttonSize) + ea,
+              fontWeight: String(400),
+              fontFamily: "graphik",
+              color: colorChip.green,
+            }
+          },
+        ]
+      });
+      whiteTong = instance.memberBox.contents.children[1];
+
+      for (let member of allMembers) {
+        // if (member.id !== instance.member.id) {
+          tempDom = createNode({
+            mother: whiteTong,
+            attribute: {
+              memid: member.id,
+              toggle: "off",
+            },
+            style: {
+              display: "block",
+              position: "relative",
+              marginBottom: String(between) + ea,
+            },
+            children: [
+              {
+                text: member.name + " " + member.title + "님",
+                event: {
+                  click: function (e) {
+                    const toggle = this.parentElement.getAttribute("toggle");
+                    if (toggle === "on") {
+                      this.style.color = colorChip.black;
+                      this.parentElement.setAttribute("toggle", "off");
+                    } else if (toggle === "off") {
+                      this.style.color = colorChip.green;
+                      this.parentElement.setAttribute("toggle", "on");
+                    }
+                  }
+                },
+                class: [ "hoverDefault_lite" ],
+                style: {
+                  display: "inline-block",
+                  fontSize: String(size) + ea,
+                  fontWeight: String(400),
+                  color: colorChip.black,
+                }
+              },
+              {
+                text: member.online ? "online" : "offline",
+                style: {
+                  position: "absolute",
+                  fontSize: String(size) + ea,
+                  fontWeight: String(300),
+                  color: member.online ? colorChip.green : colorChip.deactive,
+                  right: String(0),
+                  top: String(0),
+                }
+              }
+            ]
+          });
+          tong.push(tempDom);
+        // }
+      }
+
+    } catch (e) {
+      console.log(e);
     }
-    div_clone.addEventListener("click", function (e) {
-      instance.memberBox.cancel.remove();
-      instance.memberBox.contents.remove();
-    });
-    instance.memberBox.cancel = div_clone;
-    document.getElementById("totalcontents").appendChild(div_clone);
-
-    //white box
-    div_clone = GeneralJs.nodes.div.cloneNode(true);
-    div_clone.classList.add("backblurdefault_lite");
-    style = {
-      position: "fixed",
-      width: String(326) + ea,
-      height: String(160) + ea,
-      bottom: String(66) + ea,
-      left: String(220) + ea,
-      background: GeneralJs.colorChip.white,
-      borderRadius: String(4) + ea,
-      opacity: String(0.9),
-      boxShadow: "0px 6px 18px -9px " + GeneralJs.colorChip.darkDarkShadow,
-      animation: "profilefadeup 0.4s ease forwards",
-      zIndex: String(3),
-    };
-    for (let i in style) {
-      div_clone.style[i] = style[i];
-    }
-
-    //photo
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      width: String(114) + ea,
-      height: String(114) + ea,
-      top: String(24) + ea,
-      left: String(24) + ea,
-      borderRadius: String(60) + ea,
-    };
-    for (let i in style) {
-      div_clone2.style[i] = style[i];
-    }
-    if (member.photo !== undefined && member.photo !== null) {
-      div_clone2.style.backgroundImage = 'url("' + S3HOST + member.photo + '")';
-      div_clone2.style.backgroundSize = '102% 102%';
-      div_clone2.style.backgroundPosition = '-1% -1%';
-    } else {
-      temp = SvgTong.stringParsing(instance.returnProfile(GeneralJs.colorChip.gray3, true));
-      temp.style.position = "absolute";
-      temp.style.width = "100%";
-      temp.style.height = "100%";
-      temp.style.top = "0" + ea;
-      temp.style.left = "0" + ea;
-      div_clone2.appendChild(temp);
-    }
-    div_clone.appendChild(div_clone2);
-
-    //name
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(30) + ea,
-      left: String(157) + ea,
-      fontSize: String(24) + ea,
-      fontWeight: String(600),
-    };
-    for (let i in style) {
-      div_clone2.style[i] = style[i];
-    }
-    div_clone2.textContent = member.name;
-    div_clone.appendChild(div_clone2);
-
-    //id
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(45) + ea,
-      left: String(227) + ea,
-      fontSize: String(12) + ea,
-      fontWeight: String(200),
-      color: GeneralJs.colorChip.shadow,
-    };
-    for (let i in style) {
-      div_clone2.style[i] = style[i];
-    }
-    div_clone2.textContent = member.id;
-    div_clone.appendChild(div_clone2);
-
-    //bar
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(66) + ea,
-      left: String(158) + ea,
-      width: String(139) + ea,
-      borderBottom: "1px solid " + GeneralJs.colorChip.gray2,
-    };
-    for (let i in style) {
-      div_clone2.style[i] = style[i];
-    }
-    div_clone.appendChild(div_clone2);
-
-    //roles
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(74) + ea,
-      left: String(158) + ea,
-      fontSize: String(12.5) + ea,
-      fontWeight: String(400),
-      color: GeneralJs.colorChip.green,
-      width: String(137) + ea,
-      overflow: "hidden",
-    };
-    for (let i in style) {
-      div_clone2.style[i] = style[i];
-    }
-    div_clone2.textContent = member.roles.join(", ");
-    div_clone.appendChild(div_clone2);
-
-    //email
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(91) + ea,
-      left: String(158) + ea,
-      fontSize: String(12.5) + ea,
-      fontWeight: String(400),
-      width: String(137) + ea,
-      overflow: "hidden",
-    };
-    for (let i in style) {
-      div_clone2.style[i] = style[i];
-    }
-    div_clone2.textContent = member.email[0];
-    div_clone.appendChild(div_clone2);
-
-    //phone
-    div_clone2 = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "absolute",
-      top: String(109) + ea,
-      left: String(158) + ea,
-      fontSize: String(12.5) + ea,
-      fontWeight: String(400),
-      width: String(137) + ea,
-      overflow: "hidden",
-    };
-    for (let i in style) {
-      div_clone2.style[i] = style[i];
-    }
-    div_clone2.textContent = member.phone;
-    div_clone.appendChild(div_clone2);
-
-    //logout icon
-    svg_clone = SvgTong.stringParsing(instance.returnLogout(GeneralJs.colorChip.green));
-    svg_clone.classList.add("hoverDefault");
-    style = {
-      position: "absolute",
-      bottom: String(17.5) + ea,
-      right: String(11) + ea,
-      width: String(16) + ea,
-      height: String(16 / SvgTong.getRatio(svg_clone)) + ea,
-    };
-    for (let i in style) {
-      svg_clone.style[i] = style[i];
-    }
-    svg_clone.addEventListener("click", function (e) {
-      let obj = {};
-      obj["homeliaisonConsoleLoginedName"] = '';
-      obj["homeliaisonConsoleLoginedEmail"] = '';
-      obj["homeliaisonConsoleLoginedBoolean"] = '';
-      GeneralJs.setCookie(obj, true);
-      window.localStorage.removeItem("GoogleClientProfile");
-      window.location.reload();
-    });
-    div_clone.appendChild(svg_clone);
-
-    instance.memberBox.contents = div_clone;
-    document.getElementById("totalcontents").appendChild(div_clone);
   }
 }
 
