@@ -105,7 +105,7 @@ DevContext.prototype.launching = async function () {
       return new Promise((resolve, reject) => {
         const ws = new WebSocket(url);
         ws.on("open", () => {
-          ws.send(JSON.stringify({ alarm: true, message }));
+          ws.send(JSON.stringify({ alarm: true, memid: "m1810_aa01s", message }));
           ws.close();
           resolve({ message: "done" });
         });

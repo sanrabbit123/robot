@@ -167,19 +167,18 @@ document.addEventListener("DOMContentLoaded", async function (e) {
           const memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");
           GeneralJs.stacks.deviceInfo = deviceInfo;
           GeneralJs.stacks.memberInfo = memberInfo;
-
-          console.log(memberInfo);
-
           const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
           wssSocket.onopen = () => {
 
             wssSocket.onmessage = (event) => {
               try {
                 const data = GeneralJs.equalJson(event.data);
-                if (data.alarm !== undefined) {
-                  ipcRenderer.send("asynchronous-message", data.message);
-                } else if (data.alert !== undefined) {
-                  window.alert(data.message);
+                if (data.memid === memberInfo.memid) {
+                  if (data.alarm !== undefined) {
+                    ipcRenderer.send("asynchronous-message", data.message);
+                  } else if (data.alert !== undefined) {
+                    window.alert(data.message);
+                  }
                 }
               } catch {
                 // pass
@@ -190,6 +189,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
             setInterval(() => {
               wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
             }, 30 * 1000);
+
           }
         } catch (e) {
           console.log(e);
