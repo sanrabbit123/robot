@@ -145,7 +145,7 @@ DevContext.prototype.launching = async function () {
     }
 
 
-    await sendAlarm(sendMessage("m1810_aa01s", [ "m1810_aa01s" ], "안녕안녕", { alarm: true }));
+    await sendAlarm(sendMessage("m1810_aa01s", [ "m1810_aa01s" ], "안녕하세요", { alarm: true }));
 
 
 

@@ -13,11 +13,68 @@ const OfficeMonitor = function (mother = null, back = null, address = null) {
   }
   this.dir = process.cwd() + "/apps/officeMonitor";
   this.scanResultName = "arpScanResult.json";
+  this.messageStorage = "messageStorage";
 }
 
 OfficeMonitor.intervals = {};
 
 OfficeMonitor.stacks = {};
+
+OfficeMonitor.prototype.messageDummy = function (from, to, message, option = {}) {
+  if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!to.every((id) => { return typeof id === "string" })) {
+    throw new Error("invaild to array");
+  }
+  if (typeof option !== "object") {
+    throw new Error("invild option");
+  }
+  const instance = this;
+  const { uniqueValue } = this.mother;
+  const messageIdInitial = "M";
+  const toLength = to.length;
+  let dummy;
+
+  dummy = {
+    id: messageIdInitial + uniqueValue("hex"),
+    date: new Date(),
+    participants: { from, to },
+    method: {
+      alarm: (option.alarm === true),
+      alert: (option.alert === true),
+    },
+    contents: { message },
+    receive: {
+      readed: (new Array(toLength)).fill(0),
+      date: (new Array(toLength)).fill(new Date(1800, 0, 1)),
+    }
+  };
+
+  return dummy;
+}
+
+OfficeMonitor.prototype.sendMessage = function (from, to, message, option = {}) {
+  if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!to.every((id) => { return typeof id === "string" })) {
+    throw new Error("invaild to array");
+  }
+  if (typeof option !== "object") {
+    throw new Error("invild option");
+  }
+  const instance = this;
+  const address = this.address;
+  const WebSocket = require("ws");
+  const PORT = 5000;
+  const url = `wss://${address.officeinfo.ghost.host}:${String(PORT)}/general`;
+  const messageObj = this.messageDummy(from, to, message, option);
+  if (OfficeMonitor.stacks.wssSocket !== undefined) {
+    OfficeMonitor.stacks.wssSocket.send(JSON.stringify(messageObj));
+  }
+  return messageObj;
+}
 
 OfficeMonitor.prototype.renderReport = async function () {
   const instance = this;
@@ -174,10 +231,11 @@ OfficeMonitor.prototype.renderReport = async function () {
   }
 }
 
-OfficeMonitor.prototype.routerPatch = function (app) {
+OfficeMonitor.prototype.routerPatch = function (app, MONGOLOCALC) {
   const instance = this;
   const address = this.address;
   const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
+  const { messageStorage } = this;
   const defaultPath = address.officeinfo.ghost.monitor.path;
   const ipPass = (req) => {
     let ip;
@@ -300,6 +358,36 @@ OfficeMonitor.prototype.routerPatch = function (app) {
     }
   });
 
+  app.post(defaultPath + "/sendMessage", async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      if (req.body.from === undefined || req.body.to === undefined || req.body.message === undefined) {
+        throw new Error("invaild post");
+      }
+      const { from, to, message } = equalJson(req.body);
+      let option;
+      if (req.body.option !== undefined) {
+        option = equalJson(req.body.option);
+      } else {
+        option = {};
+      }
+      const messageObj = instance.sendMessage(from, to, message, option);
+      await MONGOLOCALC.db(`miro81`).collection(messageStorage).insetOne(messageObj);
+      res.send(JSON.stringify(messageObj));
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  });
+
 }
 
 OfficeMonitor.prototype.intervalMonitoring = function () {
@@ -359,7 +447,7 @@ OfficeMonitor.prototype.reportServer = async function () {
   const address = this.address;
   const { shellExec, shellLink, fileSystem, setQueue, mongo, mongolocalinfo, errorLog, sleep, messageSend, messageLog, equalJson } = this.mother;
   try {
-    const url = "wss://" + this.address.officeinfo.ghost.host + ":5000/general";
+    const url = "wss://" + this.address.officeinfo.ghost.host + ":" + String(5000) + "/general";
     const PORT = this.address.officeinfo.ghost.monitor.port;
     const MONGOLOCALC = new mongo(mongolocalinfo, { useUnifiedTopology: true });
     await MONGOLOCALC.connect();
@@ -370,11 +458,14 @@ OfficeMonitor.prototype.reportServer = async function () {
     let ws;
     let memberAlive;
 
+
     app.use(useragent.express());
     app.use(express.json({ limit : "50mb" }));
     app.use(multiForms.array());
     app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+
+    // ssl patch
     pems = {};
     pemsLink = process.cwd() + "/pems/" + this.address.officeinfo.ghost.host;
 
@@ -400,8 +491,12 @@ OfficeMonitor.prototype.reportServer = async function () {
     }
     pems.allowHTTP1 = true;
 
-    this.routerPatch(app);
 
+    // routing
+    this.routerPatch(app, MONGOLOCALC);
+
+
+    // alive monitor
     memberAlive = {};
     OfficeMonitor.stacks.deathTimeout = {};
     for (let { id } of members) {
@@ -410,14 +505,14 @@ OfficeMonitor.prototype.reportServer = async function () {
     }
     OfficeMonitor.stacks.memberAlive = memberAlive;
 
-    ws = new WebSocket(url);
-    ws.on("open", () => {
+    OfficeMonitor.stacks.wssSocket = new WebSocket(url);
+    OfficeMonitor.stacks.wssSocket.on("open", () => {
 
       setInterval(() => {
-        ws.send(JSON.stringify({ message: "alive" }));
+        OfficeMonitor.stacks.wssSocket.send(JSON.stringify({ message: "alive" }));
       }, 30 * 1000);
 
-      ws.on("message", (raw) => {
+      OfficeMonitor.stacks.wssSocket.on("message", (raw) => {
         try {
           const data = equalJson(raw);
           let macArr, memid, index;

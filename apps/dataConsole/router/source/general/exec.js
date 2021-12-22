@@ -163,14 +163,12 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       GeneralJs.setQueue(async () => {
         try {
           const { ipcRenderer } = require("electron");
-          const deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));
-          const memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");
-          GeneralJs.stacks.deviceInfo = deviceInfo;
-          GeneralJs.stacks.memberInfo = memberInfo;
-          const wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
-          wssSocket.onopen = () => {
+          GeneralJs.stacks.deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));;
+          GeneralJs.stacks.memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");;
+          GeneralJs.stacks.wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
+          GeneralJs.stacks.wssSocket.onopen = () => {
 
-            wssSocket.onmessage = (event) => {
+            GeneralJs.stacks.wssSocket.onmessage = (event) => {
               try {
                 const data = GeneralJs.equalJson(event.data);
                 if (data.participants.to.includes(GeneralJs.stacks.memberInfo.memid)) {
@@ -186,9 +184,9 @@ document.addEventListener("DOMContentLoaded", async function (e) {
               }
             }
 
-            wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
+            GeneralJs.stacks.wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
             setInterval(() => {
-              wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
+              GeneralJs.stacks.wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
             }, 30 * 1000);
 
           }
