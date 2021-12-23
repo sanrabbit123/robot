@@ -1,4 +1,4 @@
-const DesignerJs = function () {
+const BuilderJs = function () {
   this.mother = new GeneralJs();
   this.totalContents = this.mother.totalContents;
   this.module = {};
@@ -29,7 +29,7 @@ const DesignerJs = function () {
   this.designers = [];
 }
 
-DesignerJs.prototype.standardBar = function (standard, localMode = false, specificDesid = null) {
+BuilderJs.prototype.standardBar = function (standard, localMode = false, specificDesid = null) {
   const instance = this;
   const mobile = this.media[4];
   const desktop = !mobile;
@@ -303,7 +303,7 @@ DesignerJs.prototype.standardBar = function (standard, localMode = false, specif
 
 }
 
-DesignerJs.prototype.infoArea = function (info) {
+BuilderJs.prototype.infoArea = function (info) {
   const instance = this;
   let div_clone, div_clone2, div_clone3;
   let style, style2, style3;
@@ -1492,7 +1492,7 @@ DesignerJs.prototype.infoArea = function (info) {
 
 }
 
-DesignerJs.prototype.spreadData = async function (search = null, localMode = false, specificDesid = null) {
+BuilderJs.prototype.spreadData = async function (search = null, localMode = false, specificDesid = null) {
   const instance = this;
   try {
     let designers, totalMother;
@@ -1551,7 +1551,7 @@ DesignerJs.prototype.spreadData = async function (search = null, localMode = fal
   }
 }
 
-DesignerJs.prototype.makeImportantEvent = function (id, update = true) {
+BuilderJs.prototype.makeImportantEvent = function (id, update = true) {
   const instance = this;
   const cookies = GeneralJs.getCookiesAll();
   return async function (e) {
@@ -1611,7 +1611,7 @@ DesignerJs.prototype.makeImportantEvent = function (id, update = true) {
   }
 }
 
-DesignerJs.prototype.cardViewMaker = function (force = false) {
+BuilderJs.prototype.cardViewMaker = function (force = false) {
   const instance = this;
 
   return async function (e) {
@@ -1644,14 +1644,14 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
       const { createNodes, colorChip, withOut } = GeneralJs;
       const modeHref = (mode) => { window.location.href = `${window.location.protocol}//${window.location.host}${window.location.pathname}?mode=${mode}`; }
       const cards = [
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>신청자 조회", event: (e) => { modeHref("aspirant"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>기본 정보", event: (e) => { modeHref("general"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>정산 정보", event: (e) => { modeHref("calculation"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>가격 정보", event: (e) => { modeHref("price"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>일정 관리", event: (e) => { modeHref("possible"); }, contextmenu: (e) => { modeHref("possible"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>체크리스트", event: (e) => { modeHref("checklist"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>의뢰서 관리", event: (e) => { modeHref("request"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">디자이너</b><br>보고서", event: (e) => { modeHref("report"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>파트너 정보", event: (e) => { modeHref("construct"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>기본 관리", event: (e) => { modeHref("construct"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>디자이너사", event: (e) => { modeHref("construct"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>수수료 정보", event: (e) => { modeHref("construct"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>견적서 관리", event: (e) => { modeHref("construct"); }, contextmenu: (e) => { modeHref("possible"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>공정표 관리", event: (e) => { modeHref("construct"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>의뢰서 관리", event: (e) => { modeHref("construct"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>정산 관리", event: (e) => { modeHref("construct"); } },
       ];
       let totalFather, tong, nodeArr;
       let tempObj;
@@ -1739,7 +1739,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
               fontFamily: "graphik",
               top: String(16) + ea,
               left: String(29) + ea,
-              color: colorChip.green,
+              color: colorChip.red,
             }
           },
           {
@@ -1764,7 +1764,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
               left: String(0) + ea,
               width: String(100) + '%',
               height: String(50) + '%',
-              borderBottom: "1px solid " + colorChip.green,
+              borderBottom: "1px solid " + colorChip.red,
               transformOrigin: "50% 100%",
               transition: "all 0s ease",
               opacity: String(0.3)
@@ -1789,7 +1789,7 @@ DesignerJs.prototype.cardViewMaker = function (force = false) {
   }
 }
 
-DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
+BuilderJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   const instance = this;
   let { standard, info } = DataPatch.designerWhiteViewStandard();
   let div_clone, div_clone2, div_clone3, div_clone4, div_clone5, textArea_clone;
@@ -3149,7 +3149,7 @@ DesignerJs.prototype.whiteContentsMaker = function (thisCase, mother) {
   mother.appendChild(div_clone);
 }
 
-DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = false) {
+BuilderJs.prototype.whiteCancelMaker = function (callback = null, recycle = false) {
   const instance = this;
   return function (e) {
 
@@ -3205,7 +3205,7 @@ DesignerJs.prototype.whiteCancelMaker = function (callback = null, recycle = fal
   }
 }
 
-DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
+BuilderJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   const instance = this;
   const { standard, info } = DataPatch.designerWhiteViewStandard();
   const { colorChip, hasQuery, removeQuery, appendQuery } = GeneralJs;
@@ -3308,7 +3308,7 @@ DesignerJs.prototype.whiteViewMakerDetail = function (index, recycle = false) {
   }
 }
 
-DesignerJs.prototype.whiteViewMaker = function (index) {
+BuilderJs.prototype.whiteViewMaker = function (index) {
   const instance = this;
   return function (e) {
     let tempFunc;
@@ -3326,7 +3326,7 @@ DesignerJs.prototype.whiteViewMaker = function (index) {
   }
 }
 
-DesignerJs.prototype.rowViewMaker = function () {
+BuilderJs.prototype.rowViewMaker = function () {
   const instance = this;
   return function (e) {
     if (instance.totalFather !== null) {
@@ -3350,7 +3350,7 @@ DesignerJs.prototype.rowViewMaker = function () {
   }
 }
 
-DesignerJs.prototype.returnValueEventMaker = function () {
+BuilderJs.prototype.returnValueEventMaker = function () {
   const instance = this;
   return async function (e) {
     let pastObj;
@@ -3419,7 +3419,7 @@ DesignerJs.prototype.returnValueEventMaker = function () {
   }
 }
 
-DesignerJs.prototype.reportViewMaker = function () {
+BuilderJs.prototype.reportViewMaker = function () {
   const instance = this;
   return function (e) {
     let tempFunc;
@@ -3439,7 +3439,7 @@ DesignerJs.prototype.reportViewMaker = function () {
   }
 }
 
-DesignerJs.prototype.addTransFormEvent = function () {
+BuilderJs.prototype.addTransFormEvent = function () {
   const instance = this;
   const { square: { up, down, reportIcon, returnIcon } } = this.mother.belowButtons;
   up.addEventListener("click", this.cardViewMaker());
@@ -3448,7 +3448,7 @@ DesignerJs.prototype.addTransFormEvent = function () {
   returnIcon.addEventListener("click", this.returnValueEventMaker());
 }
 
-DesignerJs.prototype.makeSearchEvent = function (search = null) {
+BuilderJs.prototype.makeSearchEvent = function (search = null) {
   const instance = this;
   return async function (e) {
     if (GeneralJs.confirmKey.includes(e.key)) {
@@ -3514,13 +3514,13 @@ DesignerJs.prototype.makeSearchEvent = function (search = null) {
   }
 }
 
-DesignerJs.prototype.addSearchEvent = function () {
+BuilderJs.prototype.addSearchEvent = function () {
   const instance = this;
   const input = this.searchInput;
   input.addEventListener("keypress", this.makeSearchEvent(null));
 }
 
-DesignerJs.prototype.backGrayBar = function () {
+BuilderJs.prototype.backGrayBar = function () {
   const instance = this;
   let div_clone;
   let style;
@@ -3543,7 +3543,7 @@ DesignerJs.prototype.backGrayBar = function () {
   this.totalContents.appendChild(div_clone);
 }
 
-DesignerJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
+BuilderJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
   const instance = this;
   try {
     return function () {
@@ -3654,7 +3654,7 @@ DesignerJs.prototype.extractViewMakerDetail = function (recycle = false, link) {
   }
 }
 
-DesignerJs.prototype.extractViewMaker = function (link) {
+BuilderJs.prototype.extractViewMaker = function (link) {
   const instance = this;
   return function (e) {
     let tempFunc;
@@ -3672,7 +3672,7 @@ DesignerJs.prototype.extractViewMaker = function (link) {
   }
 }
 
-DesignerJs.prototype.addExtractEvent = function () {
+BuilderJs.prototype.addExtractEvent = function () {
   const instance = this;
   const { sub: { extractIcon } } = this.mother.belowButtons;
   let sendEvent;
@@ -3778,7 +3778,7 @@ DesignerJs.prototype.addExtractEvent = function () {
   extractIcon.addEventListener("click", sendEvent);
 }
 
-DesignerJs.prototype.makeClipBoardEvent = function (id) {
+BuilderJs.prototype.makeClipBoardEvent = function (id) {
   const instance = this;
   return async function (e) {
     if (e.cancelable) {
@@ -3794,7 +3794,7 @@ DesignerJs.prototype.makeClipBoardEvent = function (id) {
   }
 }
 
-DesignerJs.prototype.whiteResize = function () {
+BuilderJs.prototype.whiteResize = function () {
   const instance = this;
   this.resizeStack = 0;
   this.resizeFrom = 0;
@@ -3832,12 +3832,12 @@ DesignerJs.prototype.whiteResize = function () {
   window.addEventListener('resize', resizeDebounceEvent());
 }
 
-DesignerJs.prototype.launching = async function () {
+BuilderJs.prototype.launching = async function () {
   const instance = this;
   const { returnGet, getUser, protoPatch } = GeneralJs;
   try {
     const getObj = returnGet();
-    const modulePath = "/module/designer";
+    const modulePath = "/module/builder";
     let getTarget;
     let tempFunction;
 
@@ -3850,135 +3850,28 @@ DesignerJs.prototype.launching = async function () {
     this.mother.grayBarWidth = <%% 210, 200, 200, 210, 0 %%>;
 
     if (getObj.desid !== undefined && getObj.mode === undefined) {
-      getObj.mode = "checklist";
+      getObj.mode = "construct";
     }
 
     getTarget = null;
-    if (getObj.mode === "general") {
-
-      this.backGrayBar();
-      await this.spreadData();
-      this.addTransFormEvent();
-      this.addSearchEvent();
-      this.addExtractEvent();
-      this.whiteResize();
-
-      if (getObj.desid !== undefined) {
-        for (let dom of this.standardDoms) {
-          if ((new RegExp(getObj.desid, 'gi')).test(dom.textContent)) {
-            getTarget = dom;
-          }
-        }
-        if (getTarget === null) {
-          tempFunction = this.makeSearchEvent(getObj.desid);
-          await tempFunction({ key: "Enter" });
-          for (let dom of this.standardDoms) {
-            if ((new RegExp(getObj.desid, 'gi')).test(dom.textContent)) {
-              getTarget = dom;
-            }
-          }
-        }
-        if (getTarget !== null) {
-          getTarget.click();
-        }
-      }
-
-    } else if (getObj.mode === "aspirant") {
+    if (getObj.mode === "construct") {
 
       this.grayBarWidth = 0;
       this.mother.grayBarWidth = 0;
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
-      await this.aspirantView();
+      await this.constructView();
       this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
 
-    } else if (getObj.mode === "calendar") {
-
-      this.grayBarWidth = 600;
-      this.mother.grayBarWidth = 600;
-      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
-      document.getElementById("grayLeftOpenButton").remove();
-      await this.calendarView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
-
-    } else if (getObj.mode === "contents") {
+    } else if (getObj.mode === "estimation") {
 
       this.grayBarWidth = 0;
       this.mother.grayBarWidth = 0;
       await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
       document.getElementById("grayLeftOpenButton").remove();
-      await this.contentsView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
-
-    } else if (getObj.mode === "calculation") {
-
-      this.grayBarWidth = 0;
-      this.mother.grayBarWidth = 0;
-      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
-      document.getElementById("grayLeftOpenButton").remove();
-      await this.calculationView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
-
-    } else if (getObj.mode === "checklist") {
-
-      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
-      document.getElementById("grayLeftOpenButton").remove();
-      await this.checkListView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
-
-    } else if (getObj.mode === "price") {
-
-      this.grayBarWidth = 0;
-      this.mother.grayBarWidth = 0;
-      await protoPatch(instance, `${modulePath}/${getObj.mode}.js`);
-      document.getElementById("grayLeftOpenButton").remove();
-      await this.priceView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
-
-    } else if (getObj.mode === "report") {
-
-      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
-      document.getElementById("grayLeftOpenButton").remove();
-      await this.reportView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
-
-    } else if (getObj.mode === "request") {
-
-      await protoPatch(instance, `${modulePath}/request.js`);
-      document.getElementById("grayLeftOpenButton").remove();
-      await this.requestView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
-
-    } else if (getObj.mode === "possible") {
-
-      await protoPatch(instance, `${modulePath}/possible.js`);
-      document.getElementById("grayLeftOpenButton").remove();
-      await this.possibleView();
-      this.addTransFormEvent();
-      document.getElementById("moveRightArea").style.display = "none";
-      document.getElementById("moveLeftArea").style.display = "none";
-
-    } else if (getObj.mode === "project") {
-
-      await protoPatch(instance, `${modulePath}/project.js`);
-      document.getElementById("grayLeftOpenButton").remove();
-      await this.projectView();
+      await this.estimationView();
       this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
@@ -3987,13 +3880,11 @@ DesignerJs.prototype.launching = async function () {
 
       tempFunction = this.cardViewMaker(true);
       await tempFunction();
-      await protoPatch(instance, [ `${modulePath}/checklist.js`, `${modulePath}/report.js` ]);
+      await protoPatch(instance, [ `${modulePath}/construct.js` ]);
       document.getElementById("grayLeftOpenButton").remove();
-      await this.checkListView();
       this.addTransFormEvent();
       document.getElementById("moveRightArea").style.display = "none";
       document.getElementById("moveLeftArea").style.display = "none";
-      this.totalMother.classList.add("justfadeoutoriginal");
 
     }
 

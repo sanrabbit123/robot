@@ -1,6 +1,6 @@
 // DATA -----------------------------------------------------------------------------------------------------------------
 
-DesignerJs.prototype.constructDataRender = function (project, titleMode) {
+BuilderJs.prototype.constructDataRender = function (project, titleMode) {
   const instance = this;
   const { ea, resetWidthEvent } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString, autoComma, equalJson, ajaxJson } = GeneralJs;
@@ -3168,7 +3168,7 @@ DesignerJs.prototype.constructDataRender = function (project, titleMode) {
   return { map, stringArr, updateArr, grayBoo, displayBoo };
 }
 
-DesignerJs.prototype.constructUpdate = async function (whereQuery, updateQuery, chainQuery = null, rawValue = '') {
+BuilderJs.prototype.constructUpdate = async function (whereQuery, updateQuery, chainQuery = null, rawValue = '') {
   const instance = this;
   const { colorChip, ajaxJson } = GeneralJs;
   try {
@@ -3221,7 +3221,7 @@ DesignerJs.prototype.constructUpdate = async function (whereQuery, updateQuery, 
   }
 }
 
-DesignerJs.prototype.constructDeactivate = function (proid, offMode = true) {
+BuilderJs.prototype.constructDeactivate = function (proid, offMode = true) {
   const instance = this;
   const { colorChip, stacks } = GeneralJs;
   let emptyDate, emptyValue;
@@ -3289,7 +3289,7 @@ DesignerJs.prototype.constructDeactivate = function (proid, offMode = true) {
 
 // LOGIC -----------------------------------------------------------------------------------------------------------------
 
-DesignerJs.prototype.constructBase = function (search = null) {
+BuilderJs.prototype.constructBase = function (search = null) {
   const instance = this;
   const { ea, belowHeight } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
@@ -3415,7 +3415,7 @@ DesignerJs.prototype.constructBase = function (search = null) {
   this.constructDashBoard();
 }
 
-DesignerJs.prototype.constructBlockInjection = function () {
+BuilderJs.prototype.constructBlockInjection = function () {
   const instance = this;
   const { ea, projects } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, appendQuery, returnGet, removeQuery, setQueue } = GeneralJs;
@@ -3523,7 +3523,7 @@ DesignerJs.prototype.constructBlockInjection = function () {
   }, 200);
 }
 
-DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, index, titleMode = false) {
+BuilderJs.prototype.constructWhiteBlock = function (mother, project, first, index, titleMode = false) {
   if (mother === undefined || project === undefined) {
     throw new Error("invaild input");
   }
@@ -4276,7 +4276,7 @@ DesignerJs.prototype.constructWhiteBlock = function (mother, project, first, ind
   };
 }
 
-DesignerJs.prototype.constructDashBoard = function () {
+BuilderJs.prototype.constructDashBoard = function () {
   const instance = this;
   const { ea, projects } = this;
   const { createNode, createNodes, colorChip, withOut } = GeneralJs;
@@ -4440,7 +4440,7 @@ DesignerJs.prototype.constructDashBoard = function () {
   }
 }
 
-DesignerJs.prototype.constructSearchEvent = function () {
+BuilderJs.prototype.constructSearchEvent = function () {
   const instance = this;
   const { ea } = this;
   const input = this.searchInput;
@@ -4479,7 +4479,7 @@ DesignerJs.prototype.constructSearchEvent = function () {
   input.addEventListener("keypress", this.searchEvent);
 }
 
-DesignerJs.prototype.constructExtractEvent = function () {
+BuilderJs.prototype.constructExtractEvent = function () {
   const instance = this;
   const { ignoreNumbers, parentId, sheetName } = this;
   const { ajaxJson, blankHref } = GeneralJs;
@@ -4532,7 +4532,7 @@ DesignerJs.prototype.constructExtractEvent = function () {
   });
 }
 
-DesignerJs.prototype.constructReportEvent = function () {
+BuilderJs.prototype.constructReportEvent = function () {
   const instance = this;
   const { belowButtons: { square: { reportIcon } } } = this.mother;
 
@@ -4544,7 +4544,7 @@ DesignerJs.prototype.constructReportEvent = function () {
 
 }
 
-DesignerJs.prototype.constructBlockMove = function () {
+BuilderJs.prototype.constructBlockMove = function () {
   const instance = this;
   const { ea } = this;
   const { belowButtons: { arrow: { left, right } } } = this.mother;
@@ -4569,7 +4569,7 @@ DesignerJs.prototype.constructBlockMove = function () {
   right.addEventListener("click", moveEvent("right"));
 }
 
-DesignerJs.prototype.constructReport = async function (from, to) {
+BuilderJs.prototype.constructReport = async function (from, to) {
   if (!(from instanceof Date) || !(to instanceof Date)) {
     throw new Error("invaild input");
   }
@@ -4780,7 +4780,7 @@ DesignerJs.prototype.constructReport = async function (from, to) {
   }
 }
 
-DesignerJs.prototype.constructReportView = function () {
+BuilderJs.prototype.constructReportView = function () {
   const instance = this;
   const { ea, projects, belowHeight, totalContents } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString } = GeneralJs;
@@ -4968,7 +4968,7 @@ DesignerJs.prototype.constructReportView = function () {
   });
 }
 
-DesignerJs.prototype.constructReportBoxRender = function (dataArea, data, subSum) {
+BuilderJs.prototype.constructReportBoxRender = function (dataArea, data, subSum) {
   const instance = this;
   const { ea, projects, belowHeight, totalContents } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, dateToString, cleanChildren } = GeneralJs;
@@ -5325,7 +5325,7 @@ DesignerJs.prototype.constructReportBoxRender = function (dataArea, data, subSum
 
 }
 
-DesignerJs.prototype.constructView = async function () {
+BuilderJs.prototype.constructView = async function () {
   const instance = this;
   try {
     class SearchArray extends Array {

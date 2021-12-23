@@ -1,11 +1,4 @@
-const EstimationJs = function () {
-  this.mother = new GeneralJs();
-  this.totalContents = document.getElementById("totalcontents");
-  this.ea = <%% "px", "px", "px", "px", "vw" %%>;
-  this.media = GeneralJs.stacks.updateMiddleMedialQueryConditions;
-}
-
-EstimationJs.prototype.navigatorLaunching = function () {
+BuilderJs.prototype.navigatorLaunching = function () {
   const instance = this;
   const { ea, media, grayBarWidth, tabletWidth, totalContents, totalMother, motherHeight, belowHeight } = this;
   const { createNode, createNodes, colorChip, withOut, cleanChildren, scrollTo, setQueue, downloadFile } = GeneralJs;
@@ -540,11 +533,11 @@ EstimationJs.prototype.navigatorLaunching = function () {
 
 }
 
-EstimationJs.prototype.baseMaker = function () {
+BuilderJs.prototype.baseMaker = function () {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth } = this;
   const { createNode, colorChip, withOut } = GeneralJs;
-  let totalMother, leftPannel, bottomPannel;
+  let totalMother, leftPannel;
 
   totalMother = createNode({
     mother: totalContents,
@@ -563,35 +556,17 @@ EstimationJs.prototype.baseMaker = function () {
       left: String(0),
       top: String(0),
       width: String(grayBarWidth) + ea,
-      height: String(100) + '%',
+      height: withOut(belowHeight, ea),
       background: colorChip.gray0,
     }
   });
-
-  bottomPannel = createNode({
-    mother: totalContents,
-    style: {
-      position: "fixed",
-      left: String(grayBarWidth) + ea,
-      bottom: String(0),
-      height: String(belowHeight) + ea,
-      width: withOut(grayBarWidth, ea),
-      background: colorChip.gradientGreen,
-      transform: "translateY(0px)",
-    }
-  });
-
-  this.mother.searchInput(bottomPannel);
-  this.searchInput = this.mother.searchInput;
-  this.leftPannel = leftPannel;
-  this.bottomPannel = bottomPannel;
 
   this.navigatorLaunching();
 
   this.searchInput.focus();
 }
 
-EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
+BuilderJs.prototype.listDetailLaunching = function (buiid = '') {
   const instance = this;
   const { ea, totalMother } = this;
   const { scrollTo, sleep } = GeneralJs;
@@ -612,7 +587,7 @@ EstimationJs.prototype.listDetailLaunching = function (buiid = '') {
   });
 }
 
-EstimationJs.prototype.estimationList = function (buiid = '') {
+BuilderJs.prototype.estimationList = function (buiid = '') {
   const instance = this;
   const { totalMother, ea, grayBarWidth, invoiceList } = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, downloadFile, setQueue, cleanChildren, ajaxForm, uniqueValue, equalJson } = GeneralJs;
@@ -1011,9 +986,9 @@ EstimationJs.prototype.estimationList = function (buiid = '') {
   this.addSearchEvent();
 }
 
-EstimationJs.prototype.estimationDetailLaunching = function (invid, fastMode = false, requestNumber = null) {
+BuilderJs.prototype.estimationDetailLaunching = function (invid, fastMode = false, requestNumber = null) {
   const instance = this;
-  const { ea, belowHeight, totalMother, mainBaseTong, bottomPannel, invoiceList } = this;
+  const { ea, belowHeight, totalMother, mainBaseTong, invoiceList } = this;
   const { createNode, createNodes, colorChip, withOut, isMac, setQueue } = GeneralJs;
   const invoice = invoiceList.search("invid", invid);
 
@@ -1028,7 +1003,7 @@ EstimationJs.prototype.estimationDetailLaunching = function (invid, fastMode = f
     newMainBase.style.animation = "";
     newMainBase.style.opacity = String(1);
     newMainBase.style.background = colorChip.white;
-    newMainBase.style.height = "calc(100% - " + String(top * 2) + ea + " + " + String(belowHeight) + ea + ")";
+    newMainBase.style.height = "calc(100% - " + String(top * 2) + ea + ")";
     newMainBase.style.borderRadius = String(5) + "px";
     newMainBase.style.boxShadow = "0px 3px 14px -9px " + colorChip.shadow;
 
@@ -1039,7 +1014,6 @@ EstimationJs.prototype.estimationDetailLaunching = function (invid, fastMode = f
     this.estimationDocument(newMainBase, invoice, requestNumber);
 
   } else {
-    bottomPannel.style.transform = "translateY(" + String(belowHeight) + ea + ")";
     mainBaseTong.style.animation = "fadedownlite 0.3s ease forwards";
 
     setQueue(() => {
@@ -1051,7 +1025,7 @@ EstimationJs.prototype.estimationDetailLaunching = function (invid, fastMode = f
 
       newMainBase.style.animation = "fadeuplite 0.3s ease forwards";
       newMainBase.style.background = colorChip.white;
-      newMainBase.style.height = "calc(100% - " + String(top * 2) + ea + " + " + String(belowHeight) + ea + ")";
+      newMainBase.style.height = "calc(100% - " + String(top * 2) + ea + ")";
       newMainBase.style.borderRadius = String(5) + "px";
       newMainBase.style.boxShadow = "0px 3px 14px -9px " + colorChip.shadow;
 
@@ -1082,7 +1056,7 @@ EstimationJs.prototype.estimationDetailLaunching = function (invid, fastMode = f
   }
 }
 
-EstimationJs.prototype.estimationBackward = function (fastMode = false) {
+BuilderJs.prototype.estimationBackward = function (fastMode = false) {
   const instance = this;
   const { ea } = this;
   const { setQueue } = GeneralJs;
@@ -1098,7 +1072,6 @@ EstimationJs.prototype.estimationBackward = function (fastMode = false) {
 
     this.newMainBase.style.animation = "fadedownlite 0.3s ease forwards";
     this.mainCancleBase.style.animation = "fadedownlite 0.3s ease forwards";
-    this.bottomPannel.style.transform = "translateY(" + String(0) + ea + ")";
     this.mainBaseTong.style.animation = "fadeuplite 0.3s ease forwards";
     setQueue(() => {
       instance.newMainBase.remove();
@@ -1110,7 +1083,7 @@ EstimationJs.prototype.estimationBackward = function (fastMode = false) {
   }
 }
 
-EstimationJs.prototype.estimationDocument = function (mother, invoice, pastNumber = null) {
+BuilderJs.prototype.estimationDocument = function (mother, invoice, pastNumber = null) {
   const instance = this;
   const { totalMother, ea } = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, dateToString, setQueue, autoComma, findByAttribute, uniqueValue, equalJson } = GeneralJs;
@@ -2555,7 +2528,7 @@ EstimationJs.prototype.estimationDocument = function (mother, invoice, pastNumbe
 
 }
 
-EstimationJs.prototype.autoSave = function () {
+BuilderJs.prototype.autoSave = function () {
   const instance = this;
   const { autoSaveConst } = this;
   const intervalConst = 10 * 60 * 1000;
@@ -2571,7 +2544,7 @@ EstimationJs.prototype.autoSave = function () {
   }, intervalConst);
 }
 
-EstimationJs.prototype.saveState = async function (unshiftMode = false) {
+BuilderJs.prototype.saveState = async function (unshiftMode = false) {
   const instance = this;
   const { ajaxJson, uniqueValue, equalJson } = GeneralJs;
   const { invid, dummy: { item, detail } } = this;
@@ -2643,21 +2616,18 @@ EstimationJs.prototype.saveState = async function (unshiftMode = false) {
       }
 
       await ajaxJson({
-        to: "generalMongo",
-        json: {
-          mode: "update",
-          collection: "constructInvoice",
-          db: "python",
-          whereQuery, updateQuery
-        }
-      }, "/publicSector/python");
+        mode: "update",
+        collection: "constructInvoice",
+        db: "python",
+        whereQuery, updateQuery
+      }, "/pythonPass_generalMongo");
     }
   } catch (e) {
     window.location.reload();
   }
 }
 
-EstimationJs.prototype.addSearchEvent = function () {
+BuilderJs.prototype.addSearchEvent = function () {
   const instance = this;
   const { totalMother, ea, searchInput, estimationBoxes } = this;
 
@@ -2675,7 +2645,7 @@ EstimationJs.prototype.addSearchEvent = function () {
 
 }
 
-EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
+BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
   const instance = this;
   const { totalMother, ea, grayBarWidth, invoiceList } = this;
   const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, setQueue, cleanChildren, ajaxForm, uniqueValue, equalJson } = GeneralJs;
@@ -2719,17 +2689,14 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
     formData = new FormData();
     formData.append(staticConst, file);
 
-    await ajaxForm(formData, "/publicSector/file");
+    await ajaxForm(formData, "https://" + FILEHOST + "/publicSector/file");
 
     res = await ajaxJson({
       file: staticConst + "/" + file.name,
       sheetsName: "내역서",
-    }, "/publicSector/excel", { equal: true });
+    }, "https://" + FILEHOST + "/publicSector/excel", { equal: true });
 
-    res2 = await ajaxJson({
-      to: "invoiceRequest",
-      json: { matrix: res }
-    }, "/publicSector/python", { equal: true });
+    res2 = await ajaxJson({ matrix: res }, "/pythonPass_invoiceRequest", { equal: true });
 
     newRequest = JSON.stringify(res2);
 
@@ -2842,14 +2809,11 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
                   updateQuery["requests"] = targetInvoice.requests;
 
                   await ajaxJson({
-                    to: "generalMongo",
-                    json: {
-                      mode: "update",
-                      collection: "constructInvoice",
-                      db: "python",
-                      whereQuery, updateQuery
-                    }
-                  }, "/publicSector/python");
+                    mode: "update",
+                    collection: "constructInvoice",
+                    db: "python",
+                    whereQuery, updateQuery
+                  }, "/pythonPass_generalMongo");
 
                   document.body.children[([ ...document.body.children ].length - 1)].style.animation = "fadedownlite 0.3s ease forwards";
                   document.body.children[([ ...document.body.children ].length - 2)].style.opacity = String(0);
@@ -2865,7 +2829,7 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
 
                     ajaxJson({
                       target: "publicSector",
-                    }, "/publicSector/delete").then(() => {
+                    }, "https://" + FILEHOST + "/publicSector/delete").then(() => {
                       instance.estimationBoxes.find((dom) => { return dom.getAttribute("invid") === invid }).click();
                     }).catch((err) => {
                       window.location.reload();
@@ -2940,7 +2904,7 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
   }
 }
 
-EstimationJs.prototype.launching = async function () {
+BuilderJs.prototype.estimationView = async function () {
   const instance = this;
   try {
     class SearchArray extends Array {
@@ -2960,19 +2924,17 @@ EstimationJs.prototype.launching = async function () {
         return obj;
       }
     }
+
     const { ajaxJson, returnGet } = GeneralJs;
     const getObj = returnGet();
     const buiid = getObj.buiid || "u2111_aa01s";
     const invoiceList = await ajaxJson({
-      to: "generalMongo",
-      json: {
-        mode: "read",
-        collection: "constructInvoice",
-        db: "python",
-        whereQuery: { "links.buiid": buiid }
-      }
-    }, "/publicSector/python", { equal: true });
-    const { host, static } = await ajaxJson({}, "/publicSector/static", { equal: true });
+      mode: "read",
+      collection: "constructInvoice",
+      db: "python",
+      whereQuery: { "links.buiid": buiid }
+    }, "/pythonPass_generalMongo", { equal: true });
+    const host = FILEHOST;
     let proidArr;
     let desidArr;
     let cliidArr;
@@ -2994,7 +2956,12 @@ EstimationJs.prototype.launching = async function () {
 
     this.buiid = buiid;
     this.invoiceList = new SearchArray(invoiceList);
-    [ builder ] = await ajaxJson({ whereQuery: { buiid } }, "/publicSector/builders", { equal: true });
+    [ builder ] = await ajaxJson({
+      mode: "read",
+      collection: "builder",
+      db: "core",
+      whereQuery: { buiid }
+    }, "/generalMongo", { equal: true });
     if (builder === undefined) {
       throw new Error("invaild buiid");
     }
@@ -3010,9 +2977,9 @@ EstimationJs.prototype.launching = async function () {
       cliidArr.push({ cliid: invoice.links.cliid });
     }
 
-    projects = new SearchArray(await ajaxJson({ whereQuery: { $or: proidArr } }, "/publicSector/projects", { equal: true }));
-    designers = new SearchArray(await ajaxJson({ whereQuery: { $or: desidArr } }, "/publicSector/designers", { equal: true }));
-    clients = new SearchArray(await ajaxJson({ whereQuery: { $or: cliidArr } }, "/publicSector/clients", { equal: true }));
+    projects = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: proidArr } }, "/getProjects", { equal: true }));
+    designers = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: desidArr } }, "/getDesigners", { equal: true }));
+    clients = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: cliidArr } }, "/getClients", { equal: true }));
 
     for (let invoice of invoiceList) {
       invoice.links.project = projects.search("proid", invoice.links.proid);
@@ -3023,8 +2990,8 @@ EstimationJs.prototype.launching = async function () {
     this.baseMaker();
     this.listDetailLaunching();
 
-    itemDummy = await ajaxJson({ to: "returnDummy", json: { collection: "constructInvoice", subject: "items" } }, "/publicSector/python", { equal: true });
-    detailDummy = await ajaxJson({ to: "returnDummy", json: { collection: "constructInvoice", subject: "detail" } }, "/publicSector/python", { equal: true });
+    itemDummy = await ajaxJson({ collection: "constructInvoice", subject: "items" }, "/pythonPass_returnDummy", { equal: true });
+    detailDummy = await ajaxJson({ collection: "constructInvoice", subject: "detail" }, "/pythonPass_returnDummy", { equal: true });
     this.dummy = {
       item: itemDummy,
       detail: detailDummy

@@ -315,10 +315,15 @@ DataRouter.prototype.rou_get_First = function () {
       let target;
 
       ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
-        pass = true;
-      } else {
+      if (typeof ip !== "string") {
         pass = false;
+        ip = '';
+      } else {
+        if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+          pass = true;
+        } else {
+          pass = false;
+        }
       }
 
       if (!pass) {
@@ -352,6 +357,8 @@ DataRouter.prototype.rou_get_First = function () {
 
           if (/^cl/i.test(req.params.id)) {
             target = "client";
+          } else if (/^bu/i.test(req.params.id)) {
+            target = "builder";
           } else if (/^de/i.test(req.params.id)) {
             target = "designer";
           } else if (/^dash/i.test(req.params.id)) {
@@ -4164,7 +4171,7 @@ DataRouter.prototype.rou_post_pythonPass = function () {
   const address = this.address;
   const { requestSystem, equalJson } = this.mother;
   let obj = {};
-  obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill", "/pythonPass_invoiceRead" ];
+  obj.link = [ "/pythonPass_ghostClientBill", "/pythonPass_generalBill", "/pythonPass_invoiceRead", "/pythonPass_generalMongo", "/pythonPass_returnDummy", "/pythonPass_invoiceRequest" ];
   obj.func = async function (req, res) {
     try {
       const url = req.url.replace(/^\//gi, '');

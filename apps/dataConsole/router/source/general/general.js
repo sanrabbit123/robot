@@ -2203,8 +2203,8 @@ GeneralJs.prototype.greenBar = function () {
   naviIconsContextLinks = [
     "/client",
     "/proposal",
-    "/designer?mode=construct",
-    "/designer",
+    "/builder?mode=construct",
+    "/builder",
     "/contents",
     "/dashboard",
   ];

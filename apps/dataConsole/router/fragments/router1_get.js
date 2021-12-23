@@ -147,10 +147,15 @@ DataRouter.prototype.rou_get_First = function () {
       let target;
 
       ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
-        pass = true;
-      } else {
+      if (typeof ip !== "string") {
         pass = false;
+        ip = '';
+      } else {
+        if (ipTong.includes(Number(ip.trim().replace(/[^0-9]/g, '')))) {
+          pass = true;
+        } else {
+          pass = false;
+        }
       }
 
       if (!pass) {
@@ -184,6 +189,8 @@ DataRouter.prototype.rou_get_First = function () {
 
           if (/^cl/i.test(req.params.id)) {
             target = "client";
+          } else if (/^bu/i.test(req.params.id)) {
+            target = "builder";
           } else if (/^de/i.test(req.params.id)) {
             target = "designer";
           } else if (/^dash/i.test(req.params.id)) {
