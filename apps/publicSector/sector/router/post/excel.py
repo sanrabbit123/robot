@@ -27,4 +27,4 @@ async def postExcel(request, mongoConnection):
 
 
 => @routes.post("/excel")
-=> web.json_response(await postExcel(request, mongoConnection))
+=> web.json_response((await postExcel(request, mongoConnection)), headers={ "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD", "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me" }, content_type='application/json')
