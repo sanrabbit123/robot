@@ -257,6 +257,7 @@ CronGhost.prototype.cronServer = async function () {
 
     intervalFunc = async () => {
       try {
+        await errorLog("time start");
         const now = new Date();
         const dayNumber = now.getDay();
         const dateString = dateToString(now, true);
@@ -298,8 +299,6 @@ CronGhost.prototype.cronServer = async function () {
       startTime = 10;
     }
     startTime = (10 - startTime) * (60 * 1000);
-
-    console.log(startTime)
 
     setTimeout(() => {
       intervalFunc().catch((err) => { console.log(err); });
