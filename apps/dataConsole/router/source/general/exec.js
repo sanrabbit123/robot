@@ -197,6 +197,38 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       });
     }
 
+    {
+      const { createNode, createNodes, withOut, colorChip } = GeneralJs;
+      const zIndex = 10;
+      const ea = "px";
+      let height;
+
+      height = 20;
+
+      createNode({
+        mother: document.body,
+        event: {
+          click: function (e) {
+            window.close();
+          }
+        },
+        style: {
+          position: "fixed",
+          top: String(0),
+          left: String(0),
+          width: String(100) + '%',
+          height: String(height) + ea,
+          background: "transparent",
+          zIndex: String(zIndex),
+          "-webkit-app-region": "drag",
+        }
+      });
+
+
+
+    }
+
+
     //on green left
     // if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {
     //   await GeneralJs.sleep(200);
