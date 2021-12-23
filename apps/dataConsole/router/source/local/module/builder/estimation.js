@@ -2477,6 +2477,7 @@ BuilderJs.prototype.saveState = async function (unshiftMode = false) {
   const iConst = "I";
   const dConst = "D";
   try {
+    console.log(this.invoiceNumber)
     if (this.invoiceNumber === 0) {
       const blockToJson = function (whiteDom) {
         const optionalValue = (value, d) => { return (value === null ? d : value) }
@@ -2539,6 +2540,8 @@ BuilderJs.prototype.saveState = async function (unshiftMode = false) {
         thisInvoice.requests[0].items = tong;
         updateQuery["requests"] = thisInvoice.requests;
       }
+
+      console.log(whereQuery, updateQuery);
 
       await ajaxJson({
         mode: "update",
@@ -2732,13 +2735,6 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
                   whereQuery = { inivid: targetInvoice.invid };
                   updateQuery = {};
                   updateQuery["requests"] = targetInvoice.requests;
-
-                  await ajaxJson({
-                    mode: "update",
-                    collection: "constructInvoice",
-                    db: "python",
-                    whereQuery, updateQuery
-                  }, "/pythonPass_generalMongo");
 
                   document.body.children[([ ...document.body.children ].length - 1)].style.animation = "fadedownlite 0.3s ease forwards";
                   document.body.children[([ ...document.body.children ].length - 2)].style.opacity = String(0);
