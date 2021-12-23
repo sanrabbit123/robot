@@ -2900,8 +2900,7 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
     });
 
   } catch (e) {
-    console.log(e);
-    // window.location.reload();
+    window.location.reload();
   }
 }
 
