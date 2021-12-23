@@ -299,6 +299,8 @@ CronGhost.prototype.cronServer = async function () {
     }
     startTime = (10 - startTime) * (60 * 1000);
 
+    errorLog(startTime);
+
     setTimeout(() => {
       intervalFunc().catch((err) => { console.log(err); });
       setInterval(intervalFunc, interval);
