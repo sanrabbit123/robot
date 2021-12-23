@@ -6,39 +6,6 @@ BuilderJs.prototype.navigatorLaunching = function () {
   const mobile = media[4];
   const desktop = !mobile;
   const menuClassName = "leftMenus";
-  const menuMap = [
-    {
-      title: "견적서 리스트",
-      position: 0,
-      mobile: true,
-      event: function (e) {
-        if (typeof instance.invid === "string") {
-          instance.estimationBackward();
-        }
-      },
-    },
-    {
-      title: "견적서 샘플",
-      position: 0,
-      mobile: true,
-      event: async function (e) {
-        try {
-          await downloadFile(instance.sampleFile);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-    },
-    {
-      title: "콘솔 메뉴얼",
-      position: 0,
-      mobile: true,
-      event: function (e) {
-
-      },
-    },
-  ];
-  this.menuMap = menuMap;
   let margin;
   let size;
   let barHeight;
@@ -70,391 +37,137 @@ BuilderJs.prototype.navigatorLaunching = function () {
   let left2;
   let bottom;
   let color;
+  let idNameHeight;
+  let idNameBottom, idNameLeft0, idNameLeft1;
+  let listFontSize;
+  let scrollTongPaddingTop;
+  let scrollTong;
+  let valueLeft0, valueLeft1;
+  let valueMarginBottom;
+  let blocks, tempDom;
 
   if (desktop) {
 
-    margin = <%% 40, 31, 27, 24, 35 %%>;
-    size = <%% 16, 15, 14, 13, 15 %%>;
-    barHeight = 19;
-    marginBottom = 23;
-    indent = 16;
-    menuMargin = <%% 15, 11, 9, 8, 15 %%>;
-    secondBold = 500;
-    titleSize = <%% 21, 19, 17, 15, 3 %%>;
+    listFontSize = 14;
+    idNameHeight = 71;
+    idNameBottom = 13;
+    idNameLeft0 = 57;
+    idNameLeft1 = 141;
+    scrollTongPaddingTop = 17;
 
-    menu = [];
-    for (let i = 0; i < menuMap.length; i++) {
-      menu.push({
-        class: [ "hoverDefault", menuClassName ],
-        attribute: [
-          { toggle: "off" },
-          { index: String(i) },
-          { mode: menuMap[i].mode }
-        ],
-        event: {
-          click: function (e) {
-            const index = Number(this.getAttribute("index"));
-            menuMap[index].event.call(this, e);
-          }
-        },
-        style: {
-          position: "relative",
-          fontSize: "inherit",
-          fontWeight: "inherit",
-          color: "inherit",
-          marginBottom: String(menuMargin) + ea,
-        },
-        children: [
-          {
-            text: String(i + 1),
-            style: {
-              position: "relative",
-              top: String(0),
-              left: String(0),
-              fontSize: "inherit",
-              fontWeight: String(500),
-              color: colorChip.green,
-            }
-          },
-          {
-            text: menuMap[i].title,
-            class: [ "leftTitles" ],
-            style: {
-              position: "absolute",
-              top: String(0),
-              left: String(indent) + ea,
-              fontSize: "inherit",
-              fontWeight: "inherit",
-              color: "inherit",
-            }
-          },
-        ]
-      });
-    }
+    valueLeft0 = 38;
+    valueLeft1 = 135;
+    valueMarginBottom = 17;
 
     createNode({
       mother,
       style: {
-        position: "fixed",
-        top: String(margin) + ea,
-        marginLeft: String(margin) + ea,
-        marginRight: String(margin) + ea,
-        width: String(grayBarWidth + tabletWidth - (margin * 2)) + ea,
-        height: withOut(100, margin * 2, ea),
-        fontSize: String(size) + ea,
-        fontWeight: String(secondBold),
-        color: colorChip.black
+        display: "block",
+        position: "relative",
+        top: String(0),
+        left: String(0),
+        background: colorChip.gray0,
+        width: String(100) + '%',
+        height: String(idNameHeight) + ea,
+        borderBottom: "1px dashed " + colorChip.gray3,
+        boxSizing: "border-box",
       },
       children: [
         {
+          text: "아이디",
           style: {
-            display: tabletWidth === 0 ? "none" : "block",
             position: "absolute",
-            top: String(-1 * margin) + ea,
-            left: String(-1 * margin) + ea,
-            width: withOut(-1 * 2 * margin, ea),
-            height: withOut(-1 * 2 * margin, ea),
-            boxShadow: "1px 0px 13px -9px " + colorChip.shadow,
-            background: colorChip.gray0,
-            opacity: String(0.9),
+            fontSize: String(listFontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.green,
+            bottom: String(idNameBottom) + ea,
+            left: String(idNameLeft0) + ea,
           }
         },
         {
-          text: "<b%Builder%b> Console",
-          event: {
-            click: function (e) {
-              window.location.reload();
-            }
-          },
+          text: "성함",
           style: {
-            position: "relative",
-            fontSize: String(titleSize) + ea,
-            fontFamily: "graphik",
-            fontWeight: String(300),
-            color: colorChip.black,
-            lineHeight: String(1.3),
-            cursor: "pointer",
-          },
-          bold: {
-            fontSize: String(titleSize) + ea,
-            fontFamily: "graphik",
-            fontWeight: String(500),
-            color: colorChip.black,
+            position: "absolute",
+            fontSize: String(listFontSize) + ea,
+            fontWeight: String(600),
+            color: colorChip.green,
+            bottom: String(idNameBottom) + ea,
+            left: String(idNameLeft1) + ea,
           }
         },
-        {
-          style: {
-            position: "relative",
-            height: String(barHeight) + ea,
-            width: String(100) + '%',
-            borderBottom: "1px solid " + colorChip.gray4,
-            marginBottom: String(marginBottom) + ea,
-          }
-        },
-        ...menu
       ]
     });
 
-  } else {
-
-    mother.style.display = "none";
-
-    boxPadding = 4;
-    boxWidth = 45;
-    factorHeight = 8.5;
-    factorSize = 4;
-    factorTextTop = 1.4;
-    naviHeight = 60;
-    size = 20;
-    fontTop = 12;
-    fontLeft = 7.2;
-    naviBuilderWidth = 68;
-    naviBetweenMargin = 7;
-    iconTop = 17;
-    iconWidth = size + 1;
-    iconIndent = 3;
-    popupTop = 29;
-
-    menu = [];
-    for (let { title, mode, position, mobile } of menuMap) {
-      if (mobile) {
-        menu.push({
-          attribute: [
-            { mode },
-            { position: String(position) },
-            { naviHeight: String(naviHeight) },
-          ],
-          style: {
-            display: "block",
-            position: "relative",
-            width: String(100) + '%',
-            height: String(factorHeight) + ea,
-          },
-          children: [
-            {
-              text: title,
-              attribute: [
-                { mode },
-                { position: String(position) },
-                { naviHeight: String(naviHeight) },
-              ],
-              style: {
-                position: "absolute",
-                width: String(100) + '%',
-                textAlign: "center",
-                fontSize: String(factorSize) + ea,
-                fontWeight: String(500),
-                top: String(factorTextTop) + ea,
-              }
-            }
-          ]
-        });
-      }
-    }
-
-    this.mobileNavigator = createNode({
+    scrollTong = createNode({
       mother,
       style: {
-        position: "absolute",
-        paddingTop: String(boxPadding) + ea,
-        paddingBottom: String(boxPadding) + ea,
-        width: String(boxWidth) + ea,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-        background: colorChip.gray0,
-        animation: "fadeuplite 0.2s ease forwards",
-      },
-      children: menu
+        display: "block",
+        width: String(100) + '%',
+        paddingTop: String(scrollTongPaddingTop) + ea,
+        height: withOut(idNameHeight + scrollTongPaddingTop, ea),
+        overflow: "scroll",
+      }
     });
 
-    mobileNavigator = GeneralJs.nodes.div.cloneNode(true);
-    style = {
-      position: "fixed",
-      top: String(0),
-      left: String(0),
-      width: String(100) + '%',
-      height: String(naviHeight) + "px",
-      zIndex: String(2),
-      background: "transparent"
-    };
-    for (let i in style) {
-      mobileNavigator.style[i] = style[i];
-    }
-    totalContents.insertBefore(mobileNavigator, totalMother);
-
-    menuOnEvent = function (direction = "down") {
-      return function (e) {
-        const self = this;
-        const id0 = "mobileMenu_cancelBox";
-        const id1 = "mobileMenu_menuBox"
-        let mobileNavigator, menus, cancelBox, style;
-
-        cancelBox = GeneralJs.nodes.div.cloneNode(true);
-        cancelBox.id = id0;
-        style = {
-          position: "fixed",
-          top: String(0),
-          right: String(0),
-          width: String(98) + "vw",
-          height: String(100) + "%",
-          zIndex: String(3),
-        };
-        for (let i in style) {
-          cancelBox.style[i] = style[i];
-        }
-        cancelBox.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          self.removeChild(document.getElementById(id1));
-          self.removeChild(document.getElementById(id0));
-        });
-        this.appendChild(cancelBox);
-
-        mobileNavigator = instance.mobileNavigator.cloneNode(true);
-        mobileNavigator.id = id1;
-        if (direction === "down") {
-          mobileNavigator.style.top = String(popupTop) + "px";
-        } else {
-          mobileNavigator.style.bottom = String(14) + ea;
-        }
-        mobileNavigator.style.right = String(0);
-        mobileNavigator.style.zIndex = String(3);
-        mobileNavigator.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-        });
-        this.appendChild(mobileNavigator);
-
-        menus = mobileNavigator.children;
-
-        for (let z = 0; z < menus.length; z++) {
-          menus[z].setAttribute("mode", menuMap[z].mode);
-          menus[z].setAttribute("index", String(z));
-          menus[z].classList.add(menuClassName);
-          menus[z].addEventListener("click", function (e) {
-            const index = Number(this.getAttribute("index"));
-            const position = Number(this.getAttribute("position"));
-            const naviHeight = Number(this.getAttribute("naviHeight"));
-            let blocks;
-
-            blocks = document.querySelector(".mainBaseTong").firstChild.children;
-            menuMap[index].event.call(this, e);
-            if (position !== 0 && blocks[position] !== undefined) {
-              scrollTo(document.querySelector(".totalMother"), blocks[position], naviHeight);
+    blocks = [];
+    for (let { buiid, builder } of this.builders) {
+      tempDom = createNode({
+        mother: scrollTong,
+        attribute: { buiid },
+        event: {
+          click: function (e) {
+            const buiid = this.getAttribute("buiid");
+            for (let dom of blocks) {
+              if (dom.getAttribute("buiid") === buiid) {
+                dom.children[0].style.color = colorChip.green;
+                dom.children[1].style.color = colorChip.green;
+              } else {
+                dom.children[0].style.color = colorChip.black;
+                dom.children[1].style.color = colorChip.black;
+              }
             }
-
-            self.removeChild(document.getElementById(id1));
-            self.removeChild(document.getElementById(id0));
-
-          });
-        }
-
-      }
-    }
-
-    createNodes([
-      {
-        mother: mobileNavigator,
+            instance.listDetailLaunching(buiid);
+          }
+        },
         style: {
+          display: "block",
           position: "relative",
-          top: String(0),
-          left: String(0),
-          width: String(100) + '%',
-          height: String(100) + '%',
-        }
-      },
-      {
-        mother: -1,
-        style: {
-          position: "absolute",
-          width: String(100) + '%',
-          height: String(100) + '%',
-          background: colorChip.black,
-          opacity: String(0.88),
-          backdropFilter: "blur(" + String(10) + "px" + ")",
-          top: String(0),
-          left: String(0)
-        }
-      },
-      {
-        mother: -2,
-        text: "Builder",
-        event: {
-          click: function (e) {
-            window.location.reload();
-          }
-        },
-        style: {
-          position: "absolute",
-          fontSize: String(size) + "px",
-          fontFamily: "graphik",
-          fontWeight: String(400),
-          fontStyle: "italic",
-          color: colorChip.white,
-          top: String(fontTop) + "px",
-          left: String(fontLeft) + ea,
-          cursor: "pointer",
-        }
-      },
-      {
-        mother: -3,
-        text: "console",
-        event: {
-          click: function (e) {
-            window.location.reload();
-          }
-        },
-        style: {
-          position: "absolute",
-          fontSize: String(size) + "px",
-          fontFamily: "graphik",
-          fontWeight: String(200),
-          color: colorChip.white,
-          top: String(fontTop) + "px",
-          left: "calc(" + String(fontLeft) + ea + " + " + String(naviBuilderWidth + naviBetweenMargin) + "px" + ")",
-          cursor: "pointer",
-        }
-      },
-      {
-        mother: -4,
-        events: [
-          {
-            type: "click",
-            event: menuOnEvent(),
-          }
-        ],
-        style: {
-          position: "absolute",
-          top: String(iconTop) + "px",
-          right: String(fontLeft) + ea,
-          width: String(iconWidth) + "px",
-          height: String(iconWidth) + "px",
+          width: withOut(valueLeft0, ea),
+          paddingLeft: String(valueLeft0) + ea,
+          marginBottom: String(valueMarginBottom) + ea,
           cursor: "pointer",
         },
         children: [
           {
-            mode: "svg",
-            source: this.mother.returnHamburger(colorChip.white),
+            text: buiid,
+            style: {
+              display: "inline-block",
+              position: "relative",
+              fontSize: String(listFontSize) + ea,
+              fontWeight: String(600),
+              color: this.buiid === buiid ? colorChip.green : colorChip.black,
+              bottom: String(0) + ea,
+            }
+          },
+          {
+            text: builder,
             style: {
               position: "absolute",
-              top: String(iconIndent) + "px",
-              right: String(0),
-              height: withOut(100, iconIndent * 2, "px"),
+              fontSize: String(listFontSize) + ea,
+              fontWeight: String(600),
+              color: this.buiid === buiid ? colorChip.green : colorChip.black,
+              top: String(0) + ea,
+              left: String(valueLeft1) + ea,
             }
-          }
+          },
         ]
-      },
-    ]);
+      });
+      blocks.push(tempDom);
+    }
 
+  } else {
+    mother.style.display = "none";
   }
-
-  radius = <%% 20, 18.5, 17, 15, 6 %%>;
-  left = <%% 40, 30, 25, 19, 0 %%>;
-  left2 = <%% 40, 36, 36, 19, 0 %%>;
-  bottom = <%% 40, 36, 30, 22, 7.2 %%>;
-  margin = <%% 6, 5, 4, 4, 0 %%>;
-  color = colorChip.gradientGreen;
-  iconTop = <%% 12.5, 12, 11, 10, 3.8 %%>;
 
 }
 
@@ -491,18 +204,102 @@ BuilderJs.prototype.baseMaker = function () {
   this.searchInput.focus();
 }
 
-BuilderJs.prototype.listDetailLaunching = function (buiid = '') {
+BuilderJs.prototype.listDetailLaunching = function (buiid) {
   const instance = this;
   const { ea, totalMother } = this;
-  const { scrollTo, sleep } = GeneralJs;
+  const { scrollTo, sleep, cleanChildren, ajaxJson } = GeneralJs;
+  class SearchArray extends Array {
+    constructor(arr) {
+      super();
+      for (let i of arr) {
+        this.push(i);
+      }
+    }
+    search(target, value) {
+      let obj = null;
+      for (let i of this) {
+        if (i[target] === value) {
+          obj = i;
+        }
+      }
+      return obj;
+    }
+  }
   let loading, pastScrollTop;
+  let proidArr;
+  let desidArr;
+  let cliidArr;
+
+  cleanChildren(totalMother);
 
   pastScrollTop = totalMother.scrollTop;
   this.buiid = buiid;
+  this.builder = this.builders.search("buiid", buiid);
+  this.invid = null;
 
   this.mother.loadingRun().then((dom) => {
     loading = dom;
-    return sleep(500);
+
+    return ajaxJson({
+      mode: "read",
+      collection: "constructInvoice",
+      db: "python",
+      whereQuery: { "links.buiid": buiid }
+    }, "/pythonPass_generalMongo", { equal: true });
+
+  }).then((invoiceList) => {
+
+    instance.invoiceList = new SearchArray(invoiceList);
+
+    proidArr = [];
+    desidArr = [];
+    cliidArr = [];
+    for (let invoice of invoiceList) {
+      proidArr.push({ proid: invoice.links.proid });
+      desidArr.push({ desid: invoice.links.desid });
+      cliidArr.push({ cliid: invoice.links.cliid });
+    }
+
+    if (proidArr.length > 0) {
+      return ajaxJson({ noFlat: true, whereQuery: { $or: proidArr } }, "/getProjects", { equal: true });
+    } else {
+      return [];
+    }
+
+  }).then((projects) => {
+
+    for (let invoice of instance.invoiceList) {
+      invoice.links.project = (new SearchArray(projects)).search("proid", invoice.links.proid);
+    }
+
+  }).then(() => {
+
+    if (proidArr.length > 0) {
+      return ajaxJson({ noFlat: true, whereQuery: { $or: desidArr } }, "/getDesigners", { equal: true });
+    } else {
+      return [];
+    }
+
+  }).then((designers) => {
+
+    for (let invoice of instance.invoiceList) {
+      invoice.links.designer = (new SearchArray(designers)).search("desid", invoice.links.desid);
+    }
+
+  }).then(() => {
+
+    if (proidArr.length > 0) {
+      return ajaxJson({ noFlat: true, whereQuery: { $or: cliidArr } }, "/getClients", { equal: true });
+    } else {
+      return [];
+    }
+
+  }).then((clients) => {
+
+    for (let invoice of instance.invoiceList) {
+      invoice.links.client = (new SearchArray(clients)).search("cliid", invoice.links.cliid);
+    }
+
   }).then(() => {
     loading.parentNode.removeChild(loading);
     instance.estimationList(buiid);
@@ -2477,7 +2274,6 @@ BuilderJs.prototype.saveState = async function (unshiftMode = false) {
   const iConst = "I";
   const dConst = "D";
   try {
-    console.log(this.invoiceNumber)
     if (this.invoiceNumber === 0) {
       const blockToJson = function (whiteDom) {
         const optionalValue = (value, d) => { return (value === null ? d : value) }
@@ -2541,8 +2337,6 @@ BuilderJs.prototype.saveState = async function (unshiftMode = false) {
         updateQuery["requests"] = thisInvoice.requests;
       }
 
-      console.log(whereQuery, updateQuery);
-
       await ajaxJson({
         mode: "update",
         collection: "constructInvoice",
@@ -2598,6 +2392,7 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
     let queryLineBetween;
     let queryLineTop;
     let newRequest;
+    let loading;
 
     whiteLineBoxWidth = 303;
     whiteLineBoxHeight = 293;
@@ -2614,6 +2409,8 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
 
     blackOpacity = 0.7;
 
+    loading = instance.mother.grayLoading();
+
     formData = new FormData();
     formData.append(staticConst, file);
 
@@ -2625,6 +2422,8 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
     }, "https://" + FILEHOST + "/publicSector/excel", { equal: true });
 
     res2 = await ajaxJson({ matrix: res }, "/pythonPass_invoiceRequest", { equal: true });
+
+    loading.remove();
 
     newRequest = JSON.stringify(res2);
 
@@ -2728,13 +2527,8 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
                   let targetInvoice;
                   let whereQuery, updateQuery;
 
-                  instance.invoiceList.search("invid", invid).requests[0].status = "작성 완료";
-                  instance.invoiceList.search("invid", invid).requests.unshift(newRequest);
+                  instance.invoiceList.search("invid", invid).requests[0] = newRequest;
                   targetInvoice = instance.invoiceList.search("invid", invid);
-
-                  whereQuery = { inivid: targetInvoice.invid };
-                  updateQuery = {};
-                  updateQuery["requests"] = targetInvoice.requests;
 
                   document.body.children[([ ...document.body.children ].length - 1)].style.animation = "fadedownlite 0.3s ease forwards";
                   document.body.children[([ ...document.body.children ].length - 2)].style.opacity = String(0);
@@ -2752,6 +2546,13 @@ BuilderJs.prototype.fileAddition = async function (file, eventDom, event) {
                       target: "publicSector",
                     }, "https://" + FILEHOST + "/publicSector/delete").then(() => {
                       instance.estimationBoxes.find((dom) => { return dom.getAttribute("invid") === invid }).click();
+                      setQueue(async () => {
+                        try {
+                          await instance.saveState();
+                        } catch (e) {
+                          window.location.reload();
+                        }
+                      }, 1000);
                     }).catch((err) => {
                       window.location.reload();
                     });
@@ -2845,23 +2646,13 @@ BuilderJs.prototype.estimationView = async function () {
         return obj;
       }
     }
-
     const { ajaxJson, returnGet } = GeneralJs;
     const getObj = returnGet();
     const buiid = getObj.buiid || "u2111_aa01s";
-    const invoiceList = await ajaxJson({
-      mode: "read",
-      collection: "constructInvoice",
-      db: "python",
-      whereQuery: { "links.buiid": buiid }
-    }, "/pythonPass_generalMongo", { equal: true });
     const host = FILEHOST;
-    let proidArr;
-    let desidArr;
-    let cliidArr;
-    let projects, designers, clients;
     let builder;
     let itemDummy, detailDummy;
+    let invoiceList;
 
     this.belowHeight = <%% 123, 123, 123, 123, 0 %%>;
     this.grayBarWidth = <%% 210, 200, 200, 200, 0 %%>;
@@ -2876,40 +2667,15 @@ BuilderJs.prototype.estimationView = async function () {
     GeneralJs.stacks[this.autoSaveConst] = null;
 
     this.buiid = buiid;
-    this.invoiceList = new SearchArray(invoiceList);
-    [ builder ] = await ajaxJson({
+    this.builders = new SearchArray(await ajaxJson({
       mode: "read",
       collection: "builder",
       db: "core",
-      whereQuery: { buiid }
-    }, "/generalMongo", { equal: true });
-    if (builder === undefined) {
-      throw new Error("invaild buiid");
-    }
-    this.builder = builder;
-    this.invid = null;
-
-    proidArr = [];
-    desidArr = [];
-    cliidArr = [];
-    for (let invoice of invoiceList) {
-      proidArr.push({ proid: invoice.links.proid });
-      desidArr.push({ desid: invoice.links.desid });
-      cliidArr.push({ cliid: invoice.links.cliid });
-    }
-
-    projects = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: proidArr } }, "/getProjects", { equal: true }));
-    designers = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: desidArr } }, "/getDesigners", { equal: true }));
-    clients = new SearchArray(await ajaxJson({ noFlat: true, whereQuery: { $or: cliidArr } }, "/getClients", { equal: true }));
-
-    for (let invoice of invoiceList) {
-      invoice.links.project = projects.search("proid", invoice.links.proid);
-      invoice.links.designer = designers.search("desid", invoice.links.desid);
-      invoice.links.client = clients.search("cliid", invoice.links.cliid);
-    }
+      whereQuery: {}
+    }, "/generalMongo", { equal: true }));
 
     this.baseMaker();
-    this.listDetailLaunching();
+    this.listDetailLaunching(buiid);
 
     itemDummy = await ajaxJson({ collection: "constructInvoice", subject: "items" }, "/pythonPass_returnDummy", { equal: true });
     detailDummy = await ajaxJson({ collection: "constructInvoice", subject: "detail" }, "/pythonPass_returnDummy", { equal: true });

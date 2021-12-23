@@ -252,42 +252,44 @@ CronGhost.prototype.cronServer = async function () {
     );
     await this.source.sourceLoad();
 
-    setInterval(async () => {
-      try {
-        const now = new Date();
-        const dayNumber = now.getDay();
-        const dateString = dateToString(now, true);
-        let tempArr, tempArr2, tempArr3;
-        let date, hour, minute;
-        let uniqueId, weekId, dayId, hourId;
+    setTimeout(() => {
+      setInterval(async () => {
+        try {
+          const now = new Date();
+          const dayNumber = now.getDay();
+          const dateString = dateToString(now, true);
+          let tempArr, tempArr2, tempArr3;
+          let date, hour, minute;
+          let uniqueId, weekId, dayId, hourId;
 
-        tempArr = dateString.split(' ');
-        tempArr2 = tempArr[0].split('-');
-        tempArr3 = tempArr[1].split(':');
+          tempArr = dateString.split(' ');
+          tempArr2 = tempArr[0].split('-');
+          tempArr3 = tempArr[1].split(':');
 
-        date = tempArr2[2];
-        hour = tempArr3[0];
-        minute = tempArr3[1].slice(0, 1);
+          date = tempArr2[2];
+          hour = tempArr3[0];
+          minute = tempArr3[1].slice(0, 1);
 
-        instance.time = dateCopy(now);
+          instance.time = dateCopy(now);
 
-        uniqueId = 'u' + dateString.slice(2, -4).replace(/[^0-9]/gi, '');
-        weekId = 'w' + String(dayNumber) + hour + minute;
-        dayId = 'd' + hour + minute;
-        hourId = 'h' + minute;
+          uniqueId = 'u' + dateString.slice(2, -4).replace(/[^0-9]/gi, '');
+          weekId = 'w' + String(dayNumber) + hour + minute;
+          dayId = 'd' + hour + minute;
+          hourId = 'h' + minute;
 
-        instance.cronId.unique = uniqueId;
-        instance.cronId.week = weekId;
-        instance.cronId.day = dayId;
-        instance.cronId.hour = hourId;
+          instance.cronId.unique = uniqueId;
+          instance.cronId.week = weekId;
+          instance.cronId.day = dayId;
+          instance.cronId.hour = hourId;
 
-        await instance.source.targetLauching(instance.cronId);
+          await instance.source.targetLauching(instance.cronId);
 
-      } catch (e) {
-        await errorLog("cron ghost 문제 일어남 : " + e.message);
-        process.exit();
-      }
-    }, interval);
+        } catch (e) {
+          await errorLog("cron ghost 문제 일어남 : " + e.message);
+          process.exit();
+        }
+      }, interval);
+    }, 0);
 
     pureServer("listen", app, port);
 

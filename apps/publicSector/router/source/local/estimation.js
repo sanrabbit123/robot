@@ -2700,6 +2700,7 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
     let queryLineBetween;
     let queryLineTop;
     let newRequest;
+    let loading;
 
     whiteLineBoxWidth = 303;
     whiteLineBoxHeight = 293;
@@ -2716,6 +2717,8 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
 
     blackOpacity = 0.7;
 
+    loading = instance.mother.grayLoading();
+
     formData = new FormData();
     formData.append(staticConst, file);
 
@@ -2730,6 +2733,8 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
       to: "invoiceRequest",
       json: { matrix: res }
     }, "/publicSector/python", { equal: true });
+
+    loading.remove();
 
     newRequest = JSON.stringify(res2);
 
@@ -2833,23 +2838,8 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
                   let targetInvoice;
                   let whereQuery, updateQuery;
 
-                  instance.invoiceList.search("invid", invid).requests[0].status = "작성 완료";
-                  instance.invoiceList.search("invid", invid).requests.unshift(newRequest);
+                  instance.invoiceList.search("invid", invid).requests[0] = newRequest;
                   targetInvoice = instance.invoiceList.search("invid", invid);
-
-                  whereQuery = { inivid: targetInvoice.invid };
-                  updateQuery = {};
-                  updateQuery["requests"] = targetInvoice.requests;
-
-                  await ajaxJson({
-                    to: "generalMongo",
-                    json: {
-                      mode: "update",
-                      collection: "constructInvoice",
-                      db: "python",
-                      whereQuery, updateQuery
-                    }
-                  }, "/publicSector/python");
 
                   document.body.children[([ ...document.body.children ].length - 1)].style.animation = "fadedownlite 0.3s ease forwards";
                   document.body.children[([ ...document.body.children ].length - 2)].style.opacity = String(0);
@@ -2867,6 +2857,13 @@ EstimationJs.prototype.fileAddition = async function (file, eventDom, event) {
                       target: "publicSector",
                     }, "/publicSector/delete").then(() => {
                       instance.estimationBoxes.find((dom) => { return dom.getAttribute("invid") === invid }).click();
+                      setQueue(async () => {
+                        try {
+                          await instance.saveState();
+                        } catch (e) {
+                          window.location.reload();
+                        }
+                      }, 1000);
                     }).catch((err) => {
                       window.location.reload();
                     });
