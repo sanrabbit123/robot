@@ -97,7 +97,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    await sendMessage("m1810_aa01s", [ "m1810_aa01s" ], "안녕하세요", { alarm: true });
+    // await sendMessage("m1810_aa01s", [ "m1810_aa01s" ], "안녕하세요", { alarm: true });
 
     // await findCode("memberView")
 

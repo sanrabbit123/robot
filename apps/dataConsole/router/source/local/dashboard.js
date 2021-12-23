@@ -560,11 +560,11 @@ DashboardJs.prototype.whiteBoards = function () {
           cursor: "pointer",
           verticalAlign: "top",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=construct"; } },
+        event: { click: (e) => { window.location.href = thisHost + "/proposal"; } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
-            text: "시공\n관리",
+            text: "제안서\n관리",
             style: {
               color: colorChip.black,
               fontSize: String(title2Size) + vh,
@@ -645,11 +645,11 @@ DashboardJs.prototype.whiteBoards = function () {
           cursor: "pointer",
           verticalAlign: "top",
         },
-        event: { click: (e) => { window.location.href = thisHost + "/proposal"; } },
+        event: { click: (e) => { window.location.href = thisHost + "/builder"; } },
         children: [
           {
             class: [ "hoverDefault_lite" ],
-            text: "웹 제안서 관리\n<b%Proposal%b>",
+            text: "시공 관리\n<b%Builder%b>",
             style: {
               color: colorChip.whiteBlack,
               fontSize: String(titleSize) + vh,

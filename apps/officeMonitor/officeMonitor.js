@@ -70,7 +70,6 @@ OfficeMonitor.prototype.sendMessage = function (from, to, message, option = {}) 
   const PORT = 5000;
   const url = `wss://${address.officeinfo.ghost.host}:${String(PORT)}/general`;
   const messageObj = this.messageDummy(from, to, message, option);
-  console.log(OfficeMonitor.stacks.wssSocket);
   if (OfficeMonitor.stacks.wssSocket !== undefined) {
     OfficeMonitor.stacks.wssSocket.send(JSON.stringify(messageObj));
   }
