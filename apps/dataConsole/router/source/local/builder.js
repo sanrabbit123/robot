@@ -1648,7 +1648,7 @@ BuilderJs.prototype.cardViewMaker = function (force = false) {
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>기본 관리", event: (e) => { modeHref("construct"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>디자이너사", event: (e) => { modeHref("construct"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>수수료 정보", event: (e) => { modeHref("construct"); } },
-        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>견적서 관리", event: (e) => { modeHref("construct"); }, contextmenu: (e) => { modeHref("possible"); } },
+        { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>견적서 관리", event: (e) => { modeHref("estimation"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>공정표 관리", event: (e) => { modeHref("construct"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>의뢰서 관리", event: (e) => { modeHref("construct"); } },
         { name: "<b style=\"font-weight:100;color:" + colorChip.black + "\">시공</b><br>정산 관리", event: (e) => { modeHref("construct"); } },

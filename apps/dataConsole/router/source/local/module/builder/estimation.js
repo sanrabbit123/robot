@@ -70,7 +70,6 @@ BuilderJs.prototype.navigatorLaunching = function () {
   let left2;
   let bottom;
   let color;
-  let listIcon;
 
   if (desktop) {
 
@@ -96,11 +95,6 @@ BuilderJs.prototype.navigatorLaunching = function () {
           click: function (e) {
             const index = Number(this.getAttribute("index"));
             menuMap[index].event.call(this, e);
-            if (tabletWidth !== 0) {
-              setQueue(() => {
-                instance.listIcon.click();
-              }, 500);
-            }
           }
         },
         style: {
@@ -461,75 +455,6 @@ BuilderJs.prototype.navigatorLaunching = function () {
   margin = <%% 6, 5, 4, 4, 0 %%>;
   color = colorChip.gradientGreen;
   iconTop = <%% 12.5, 12, 11, 10, 3.8 %%>;
-
-  listIcon = createNode({
-    mother,
-    class: [ "iconTong" ],
-    style: {
-      display: "block",
-      position: "fixed",
-      height: String(desktop ? motherHeight : (bottom + (radius * 2))) + ea,
-      width: String(desktop ? grayBarWidth : (bottom + (radius * 2))) + ea,
-      left: desktop ? String(0) : "",
-      right: desktop ? "" : String(0),
-      bottom: String(0) + ea,
-      background: "transparent",
-      zIndex: String(2),
-    },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          width: String(radius * 2) + ea,
-          height: String(radius * 2) + ea,
-          bottom: String(bottom) + ea,
-          left: String(left) + ea,
-          background: color,
-          borderRadius: String(radius * 2) + ea,
-          cursor: "pointer",
-        },
-        children: [
-          {
-            mode: "svg",
-            source: this.mother.returnHamburger(colorChip.whiteIcon),
-            style: {
-              position: "absolute",
-              width: String(radius * 0.9) + ea,
-              left: "calc(50% - " + String(radius * 0.45) + ea + ")",
-              top: String(iconTop) + ea,
-            }
-          }
-        ]
-      }
-    ]
-  });
-  this.iconTong = listIcon;
-  this.listIcon = listIcon.children[0];
-  listIcon.addEventListener("click", function (e) {
-    const totalContents = document.getElementById("totalcontents");
-    const totalMother = document.querySelector(".totalMother");
-    const grayBack = totalContents.children[1];
-    const listPannel = totalMother.nextElementSibling.children[0];
-    const mainBaseTong = instance.mainBaseTong;
-    const outerMargin = Number(mainBaseTong.style.top.replace(/[^0-9\.\-]/gi, ''));
-
-    if (grayBack.getAttribute("toggle") !== "off") {
-      grayBack.style.width = String(0) + ea;
-      listPannel.style.transform = "translateX(" + String((instance.grayBarWidth + instance.tabletWidth) * -1) + ea + ")";
-      mainBaseTong.style.left = String(outerMargin) + ea;
-      mainBaseTong.style.width = withOut(outerMargin * 2, ea);
-      instance.listIcon.style.left = String(left2) + ea;
-      grayBack.setAttribute("toggle", "off");
-    } else {
-      grayBack.style.width = String(instance.grayBarWidth) + ea;
-      listPannel.style.transform = "translateX(" + String(0) + ea + ")";
-      mainBaseTong.style.left = String(instance.grayBarWidth + outerMargin) + ea;
-      mainBaseTong.style.width = withOut(instance.grayBarWidth + (outerMargin * 2), ea);
-      instance.listIcon.style.left = String(left) + ea;
-      grayBack.setAttribute("toggle", "on");
-    }
-
-  });
 
 }
 
