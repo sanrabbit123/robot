@@ -217,6 +217,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                   background: "transparent",
                   zIndex: String(zIndex),
                   "-webkit-app-region": "drag",
+                  cursor: "pointer",
                 },
                 children: [
                   {
@@ -227,7 +228,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                         window.close();
                       }
                     },
-                    class: [ "hoverDefault_lite" ],
                     style: {
                       position: "absolute",
                       top: String(top) + ea,
@@ -245,7 +245,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                         window.close();
                       }
                     },
-                    class: [ "hoverDefault_lite" ],
                     style: {
                       position: "absolute",
                       top: String(top) + ea,
@@ -263,7 +262,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                         window.close();
                       }
                     },
-                    class: [ "hoverDefault_lite" ],
                     style: {
                       position: "absolute",
                       top: String(top) + ea,
