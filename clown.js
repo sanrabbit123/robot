@@ -2023,7 +2023,7 @@ Clown.prototype.launching = async function () {
         width: 5000,
         height: 5000,
         title: "HomeLiaison Console",
-        titleBarStyle: "hidden",
+        frame: false,
         roundedCorners: true,
         webPreferences: {
           nodeIntegration: true,

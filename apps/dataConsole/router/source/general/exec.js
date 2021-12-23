@@ -227,6 +227,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                         window.close();
                       }
                     },
+                    class: [ "hoverDefault_lite" ],
                     style: {
                       position: "absolute",
                       top: String(top) + ea,
@@ -244,6 +245,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                         window.close();
                       }
                     },
+                    class: [ "hoverDefault_lite" ],
                     style: {
                       position: "absolute",
                       top: String(top) + ea,
@@ -261,6 +263,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                         window.close();
                       }
                     },
+                    class: [ "hoverDefault_lite" ],
                     style: {
                       position: "absolute",
                       top: String(top) + ea,
