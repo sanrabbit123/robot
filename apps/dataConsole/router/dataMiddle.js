@@ -91,7 +91,6 @@ MiddleCommunication.prototype.baseHtml = async function (target, req, selfMongo,
       <body>
         <div style="display: none;position: absolute;opacity: 0;font-size: 0px;">${descriptionString}</div>
         <div id="totalcontents"></div>
-        <div id="titledragbar" style="-webkit-app-region: drag;position: fixed;top: 0px;left: 0px;width: 100%; height: 20px;z-index: 10"></div>
         <script src="/middle/${name}.js"></script>`
 
     if (meta.module) {
