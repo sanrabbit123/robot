@@ -257,7 +257,6 @@ CronGhost.prototype.cronServer = async function () {
 
     intervalFunc = async () => {
       try {
-        await errorLog("time start");
         const now = new Date();
         const dayNumber = now.getDay();
         const dateString = dateToString(now, true);
