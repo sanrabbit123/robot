@@ -786,7 +786,7 @@ GeneralJs.prototype.generalCss = function () {
 }
 
 GeneralJs.prototype.returnCircle = function (cssString, color) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="circle" style="${cssString}"><circle cx="6px" cy="6px" r="6px" fill="${color}" /></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="circle" style="${cssString}"><circle cx="5.5px" cy="5.5px" r="5.5px" fill="${color}" /></svg>`;
 }
 
 GeneralJs.prototype.returnRound = function (radius, color) {
@@ -1991,11 +1991,9 @@ GeneralJs.prototype.greenBar = function () {
 
   //circle
   margin = 18;
-  start = 7;
+  start = 6;
   colors = [
     GeneralJs.colorChip.green,
-    GeneralJs.colorChip.yellow,
-    GeneralJs.colorChip.red,
   ];
 
   for (let i = 0; i < colors.length; i++) {
