@@ -1993,7 +1993,7 @@ ReceiptRouter.prototype.rou_post_requestRefund = function () {
       }
 
       report = await bill.requestRefund(kind, bilid, requestIndex, payIndex, option);
-      await messageLog(report);
+      await messageLog("환불 감지 : " + JSON.stringify(report, null, 2));
       report.bill = report.bill.toNormal();
       report.pastProject = report.pastProject.toNormal();
       report.project = report.project.toNormal();
