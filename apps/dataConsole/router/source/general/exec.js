@@ -166,9 +166,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
           GeneralJs.stacks.deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));;
           GeneralJs.stacks.memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: GeneralJs.stacks.deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");
 
-          console.log(GeneralJs.stacks.deviceInfo);
-          console.log(GeneralJs.stacks.memberInfo);
-
           GeneralJs.stacks.wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
           GeneralJs.stacks.wssSocket.onopen = () => {
 
