@@ -190,22 +190,24 @@ document.addEventListener("DOMContentLoaded", async function (e) {
               GeneralJs.stacks.wssSocket.send(JSON.stringify({ device: GeneralJs.stacks.deviceInfo, message: "alive" }));
             }, 30 * 1000);
 
-
-            {
+            const makeTitleBar = () => {
               const { createNode, createNodes, withOut, colorChip } = GeneralJs;
               const zIndex = 10;
               const ea = "px";
               let height;
+              let radius;
+              let top;
+              let between;
+              let left;
 
               height = 20;
+              radius = 5.5;
+              top = 9;
+              left = 11;
+              between = 7;
 
               createNode({
                 mother: document.body,
-                event: {
-                  click: function (e) {
-                    window.close();
-                  }
-                },
                 style: {
                   position: "fixed",
                   top: String(0),
@@ -215,11 +217,63 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                   background: "transparent",
                   zIndex: String(zIndex),
                   "-webkit-app-region": "drag",
-                }
+                },
+                children: [
+                  {
+                    mode: "svg",
+                    source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.red),
+                    event: {
+                      click: function (e) {
+                        window.close();
+                      }
+                    },
+                    style: {
+                      position: "absolute",
+                      top: String(top) + ea,
+                      left: String(left) + ea,
+                      width: String(radius * 2) + ea,
+                      height: "",
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    mode: "svg",
+                    source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.yellow),
+                    event: {
+                      click: function (e) {
+                        window.close();
+                      }
+                    },
+                    style: {
+                      position: "absolute",
+                      top: String(top) + ea,
+                      left: String(left + (radius * 2) + between) + ea,
+                      width: String(radius * 2) + ea,
+                      height: "",
+                      cursor: "pointer",
+                    }
+                  },
+                  {
+                    mode: "svg",
+                    source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.green),
+                    event: {
+                      click: function (e) {
+                        window.close();
+                      }
+                    },
+                    style: {
+                      position: "absolute",
+                      top: String(top) + ea,
+                      left: String(left + (radius * 2 * 2) + (between * 2)) + ea,
+                      width: String(radius * 2) + ea,
+                      height: "",
+                      cursor: "pointer",
+                    }
+                  }
+                ]
               });
             }
-
-
+            makeTitleBar();
 
           }
         } catch (e) {
@@ -227,7 +281,6 @@ document.addEventListener("DOMContentLoaded", async function (e) {
         }
       });
     }
-
 
     //on green left
     // if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {
