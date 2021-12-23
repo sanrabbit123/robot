@@ -180,6 +180,7 @@ CronGhost.prototype.cronServer = async function () {
   const port = 3000;
   const interval = (10 * 60 * 1000);
   const dateCopy = (dateObj) => { return new Date(JSON.stringify(dateObj).slice(1, -1)); }
+  const zeroAddition = (num) => { return num < 10 ? `0${String(num)}` : String(num) }
   const CronSource = require(`${this.dir}/source/cronSource.js`);
   const RethinkAccess = require(`${process.cwd()}/apps/rethinkAccess/rethinkAccess.js`);
   const MONGOC = new mongo(mongoinfo, { useUnifiedTopology: true });
@@ -230,6 +231,8 @@ CronGhost.prototype.cronServer = async function () {
     const kakaoInstance = new KakaoTalk();
     await kakaoInstance.ready();
 
+    let intervalFunc, startTime, today;
+
     this.source = new CronSource(
       this.mother,
       this.back,
@@ -252,44 +255,54 @@ CronGhost.prototype.cronServer = async function () {
     );
     await this.source.sourceLoad();
 
+    intervalFunc = async () => {
+      try {
+        const now = new Date();
+        const dayNumber = now.getDay();
+        const dateString = dateToString(now, true);
+        let tempArr, tempArr2, tempArr3;
+        let date, hour, minute;
+        let uniqueId, weekId, dayId, hourId;
+
+        tempArr = dateString.split(' ');
+        tempArr2 = tempArr[0].split('-');
+        tempArr3 = tempArr[1].split(':');
+
+        date = tempArr2[2];
+        hour = tempArr3[0];
+        minute = tempArr3[1].slice(0, 1);
+
+        instance.time = dateCopy(now);
+
+        uniqueId = 'u' + dateString.slice(2, -4).replace(/[^0-9]/gi, '');
+        weekId = 'w' + String(dayNumber) + hour + minute;
+        dayId = 'd' + hour + minute;
+        hourId = 'h' + minute;
+
+        instance.cronId.unique = uniqueId;
+        instance.cronId.week = weekId;
+        instance.cronId.day = dayId;
+        instance.cronId.hour = hourId;
+
+        await instance.source.targetLauching(instance.cronId);
+
+      } catch (e) {
+        await errorLog("cron ghost 문제 일어남 : " + e.message);
+        process.exit();
+      }
+    }
+
+    today = new Date();
+    startTime = Number(zeroAddition(today.getMinutes()).slice(1));
+    if (startTime === 0) {
+      startTime = 10;
+    }
+    startTime = (10 - startTime) * (60 * 1000);
+
     setTimeout(() => {
-      setInterval(async () => {
-        try {
-          const now = new Date();
-          const dayNumber = now.getDay();
-          const dateString = dateToString(now, true);
-          let tempArr, tempArr2, tempArr3;
-          let date, hour, minute;
-          let uniqueId, weekId, dayId, hourId;
-
-          tempArr = dateString.split(' ');
-          tempArr2 = tempArr[0].split('-');
-          tempArr3 = tempArr[1].split(':');
-
-          date = tempArr2[2];
-          hour = tempArr3[0];
-          minute = tempArr3[1].slice(0, 1);
-
-          instance.time = dateCopy(now);
-
-          uniqueId = 'u' + dateString.slice(2, -4).replace(/[^0-9]/gi, '');
-          weekId = 'w' + String(dayNumber) + hour + minute;
-          dayId = 'd' + hour + minute;
-          hourId = 'h' + minute;
-
-          instance.cronId.unique = uniqueId;
-          instance.cronId.week = weekId;
-          instance.cronId.day = dayId;
-          instance.cronId.hour = hourId;
-
-          await instance.source.targetLauching(instance.cronId);
-
-        } catch (e) {
-          await errorLog("cron ghost 문제 일어남 : " + e.message);
-          process.exit();
-        }
-      }, interval);
-    }, 0);
+      intervalFunc().catch((err) => { console.log(err); });
+      setInterval(intervalFunc, interval);
+    }, startTime);
 
     pureServer("listen", app, port);
 
