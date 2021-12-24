@@ -2464,6 +2464,14 @@ GeneralJs.sendMessage = function (from, to, message, option = {}) {
   });
 }
 
+GeneralJs.alert = function (message) {
+  window.alert(message);
+}
+
+GeneralJs.confirm = function (message) {
+  return window.confirm(message);
+}
+
 GeneralJs.prompt = function (message) {
   const { createNode, colorChip, withOut } = GeneralJs;
   const ea = "px";
@@ -2481,6 +2489,7 @@ GeneralJs.prompt = function (message) {
   let inputBottomVisual;
   let greenBarHeight;
   let lineHeight;
+  let wordingVisual;
 
   whiteWidth = 320;
   whiteHeight = 150;
@@ -2495,6 +2504,8 @@ GeneralJs.prompt = function (message) {
   inputIndent = 9;
   inputBottomVisual = 0;
   lineHeight = 1.5;
+  wordingVisual = GeneralJs.isMac() ? 0 : 2;
+
   greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
   if (Number.isNaN(greenBarHeight)) {
     greenBarHeight = 0;
@@ -2568,6 +2579,7 @@ GeneralJs.prompt = function (message) {
       fontWeight: String(500),
       color: colorChip.black,
       lineHeight: String(lineHeight),
+      top: String(wordingVisual) + ea,
     }
   });
 
