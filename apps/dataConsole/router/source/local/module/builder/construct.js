@@ -510,7 +510,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             thisBuiid = instance.builders.find((obj) => { return obj.builder === thisBuilder }).buiid;
           }
 
-          newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, "/invoiceCreate", { equal: true });
+          newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, "/pythonPass_invoiceCreate", { equal: true });
 
           tempArr = value.split('-');
 
