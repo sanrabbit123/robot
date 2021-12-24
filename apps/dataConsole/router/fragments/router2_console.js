@@ -3581,7 +3581,6 @@ DataRouter.prototype.rou_post_pythonPass = function () {
         let targetUrl, pythonResponse;
         targetUrl = "https://" + address["pythoninfo"].host + ":3000/" + path;
         pythonResponse = await requestSystem(targetUrl, equalJson(req.body), { headers: { "Content-Type": "application/json" } });
-        console.log(pythonResponse);
         res.set({ "Content-Type": "application/json" });
         res.send(JSON.stringify(pythonResponse.data));
       }

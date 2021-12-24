@@ -195,11 +195,12 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   let sumMiddleNumberSize;
   let itemTotalSumLineTop;
   let tableBackgroundMargin;
+  let bottomVisualBackHeight;
 
   blockHeight = <%% 444, 424, 390, 335, 424 %%>;
   margin = <%% 55, 55, 47, 39, 4.7 %%>;
   blockMarginBottom = <%% 160, 160, 160, 80, 12 %%>;
-  firstWhitePaddingBottom = <%% 115, 115, 80, 72, 8 %%>;
+  firstWhitePaddingBottom = <%% 115, 115, 80, 72, 14 %%>;
   firstBlockMarginBottom = <%% 12, 12, 12, 8, 2 %%>;
   tableBackgroundMargin = <%% 82, 82, 75, 65, 12 %%>;
 
@@ -256,8 +257,13 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
   finalPaddingTopVisual = <%% 0, 7, 7, 7, 0 %%>;
   finalPaddingBottomVisual = <%% 11, 17, 24, 49, 0 %%>;
 
+  bottomVisualBackHeight = <%% 50, 50, 40, 26, 2 %%>;
+
   itemsRatio = wordings.ratio.map((num) => { return String(num) + '%'; });
   items = wordings.items;
+  items = items.filter((obj) => {
+    return !obj.detail.every((i) => { return i.unit.number === 0; })
+  });
 
   whiteBlock = createNode({
     mother: baseTong,
@@ -271,14 +277,27 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
       paddingBottom: String(firstWhitePaddingBottom) + ea,
       marginBottom: String(firstBlockMarginBottom) + ea,
       boxShadow: "0px 5px 12px -10px " + colorChip.gray5,
+      overflow: "hidden",
     },
     children: [
       {
-        display: "block",
-        position: "relative",
-        width: withOut(margin * 2, ea),
-        height: String(100) + '%',
-        marginLeft: String(margin) + ea,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(margin * 2, ea),
+          height: String(100) + '%',
+          marginLeft: String(margin) + ea,
+        }
+      },
+      {
+        style: {
+          position: "absolute",
+          bottom: String(0),
+          height: String(bottomVisualBackHeight) + ea,
+          left: String(0),
+          width: String(100) + '%',
+          background: colorChip[items.length % 2 === 0 ? "gray0" : "white"],
+        }
       }
     ]
   });
@@ -354,10 +373,6 @@ ConstructEstimationJs.prototype.insertInitBox = function (requestIndex = 0) {
         }
       }
     ]
-  });
-
-  items = items.filter((obj) => {
-    return !obj.detail.every((i) => { return i.unit.number === 0; })
   });
 
   totalSum = 0;
