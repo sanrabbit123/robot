@@ -124,7 +124,7 @@ DevContext.prototype.launching = async function () {
     // }
 
 
-
+    console.log(await requestSystem("https://home-liaison.serveftp.com/publicSector/estimation/sample", { whereQuery: {} }));
 
 
 

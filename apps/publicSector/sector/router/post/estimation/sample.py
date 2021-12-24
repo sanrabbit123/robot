@@ -8,7 +8,7 @@ async def postSample(request, mongoConnection):
     sampleFile = "estimationSample.xlsx"
     sampleSheetsName = "내역서"
 
-    dic = pandas.read_excel(returnStaticFolder()["static"] + sampleFile, sheet_name=None)
+    dic = pandas.read_excel(returnStaticFolder()["static"] + "/publicSector/" + sampleFile, sheet_name=None)
     arr = dic[sampleSheetsName].values.tolist()
 
     columns = dic[sampleFile].columns.tolist()
