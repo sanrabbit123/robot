@@ -125,7 +125,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
         chain: null
       },
       estimate: {
-        title: "견적 기록",
+        title: "견적 발생",
         position: "process.design.construct.estimate",
         values: [],
         chain: null
@@ -496,8 +496,27 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
           let tempArr, thisProject, thisEstimate;
+          let thisBuilder, thisBuiid;
 
-          // DEV ============================================================================================
+          do {
+            thisBuilder = window.prompt("어느 소장님이 만드실 견적서인가요? 소장님 이름을 알려주세요!");
+          } while (thisBuilder === null || !instance.builders.map((obj) => { return obj.builder }).includes(thisBuilder));
+
+          if (instance.builders.map((obj) => { return obj.builder }).filter((str) => { return str === thisBuilder }).length !== 1) {
+            do {
+              thisBuiid = window.prompt("중복되는 이름이 있습니다. 소장님 아이디로 알려주세요!");
+            } while (thisBuiid === null || !instance.builders.map((obj) => { return obj.buiid }).includes(thisBuiid));
+          } else {
+            thisBuiid = instance.builders.find((obj) => { return obj.builder === thisBuilder }).buiid;
+          }
+
+
+
+          thisBuiid
+          project.proid
+
+          
+
 
           tempArr = value.split('-');
 
@@ -514,7 +533,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
 
           await instance.constructUpdate(whereQuery, updateQuery, chainQuery, value);
           valueDom.textContent = thisEstimate.map((obj) => { return dateToString(obj.date) }).join(", ");
-          // calendarEvent(thisCase);
+
           for (let dom of removeTargets) {
             mother.removeChild(dom);
           }
@@ -5434,6 +5453,7 @@ BuilderJs.prototype.constructView = async function () {
     builderNames.push("디자이너");
     builderNames.push("-");
 
+    this.builders = builders;
     this.builderNames = builderNames;
     this.projects = projects;
     this.designers = new Designers(designers);
