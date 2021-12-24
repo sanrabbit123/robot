@@ -2317,11 +2317,8 @@ ReceiptRouter.prototype.rou_post_invoiceCreate = function () {
       }
       const { buiid, proid } = equalJson(req.body);
       const matrix = (await requestSystem("https://" + address.officeinfo.ghost.host + "/publicSector/estimation/sample", { data: null })).data;
-      console.log(matrix);
       const request = await bill.matrixToRequest(matrix);
-      console.log(request);
-      const invoice = await bill.requestInvoice(buiid, proid, matrix, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
-      console.log(invoice);
+      const invoice = await bill.requestInvoice(buiid, proid, request, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
       res.send(JSON.stringify(invoice));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_invoiceCreate): " + e.message).catch((e) => { console.log(e); });
