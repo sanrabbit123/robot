@@ -3188,7 +3188,7 @@ GeneralJs.prototype.loginBox = async function () {
           GeneralJs.timeouts["login"] = null;
         }, 201);
       } else {
-        alert("허가된 멤버가 아닙니다.");
+        window.alert("허가된 멤버가 아닙니다.");
         window.location.href = "https://home-liaison.com";
       }
     }
@@ -4642,7 +4642,7 @@ GeneralJs.prototype.certificationBox = function (name, phone, callback) {
         callback(div_back, div_clone);
 
       } else {
-        alert("인증번호를 정확히 입력해주세요!");
+        window.alert("인증번호를 정확히 입력해주세요!");
         this.value = '';
       }
     }

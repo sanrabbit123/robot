@@ -497,6 +497,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           const removeTargets = mother.querySelectorAll("aside");
           let tempArr, thisProject, thisEstimate;
           let thisBuilder, thisBuiid, newInvoice;
+          let loading;
 
           do {
             thisBuilder = window.prompt("어느 소장님이 만드실 견적서인가요? 소장님 이름을 알려주세요!");
@@ -508,6 +509,11 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             } while (thisBuiid === null || !instance.builders.map((obj) => { return obj.buiid }).includes(thisBuiid));
           } else {
             thisBuiid = instance.builders.find((obj) => { return obj.builder === thisBuilder }).buiid;
+          }
+
+          loading = instance.mother.grayLoading();
+          if (window.confirm("견적 관리 페이지로 갈까요?")) {
+            window.location.href = window.location.protocol + "//" + window.location.host + "/builder?mode=estimation&buiid=" + thisBuiid;
           }
 
           newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, "/pythonPass_invoiceCreate", { equal: true });
@@ -526,6 +532,9 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           updateQuery[position] = thisEstimate;
 
           await instance.constructUpdate(whereQuery, updateQuery, chainQuery, value);
+
+          loading.remove();
+
           valueDom.textContent = thisEstimate.map((obj) => { return dateToString(obj.date) }).join(", ");
 
           for (let dom of removeTargets) {

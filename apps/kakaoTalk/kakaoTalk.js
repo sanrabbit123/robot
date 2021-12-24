@@ -854,6 +854,26 @@ KakaoTalk.prototype.templateTong = function (target) {
         ];
       },
     },
+    constructEstimation: {
+      name: "시공 견적서",
+      id: "TG_9724",
+      needs: [
+        "client",
+        "host",
+        "path",
+        "proid",
+        "buiid",
+      ],
+      convert: function (obj) {
+        return [
+          { from: "client", to: obj.client },
+          { from: "host", to: obj.host },
+          { from: "path", to: obj.path },
+          { from: "proid", to: obj.proid },
+          { from: "buiid", to: obj.buiid },
+        ];
+      },
+    },
   };
   if (target === "$all") {
     return tong;

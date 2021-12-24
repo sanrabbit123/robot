@@ -989,8 +989,19 @@ BuilderJs.prototype.estimationDocument = function (mother, invoice, pastNumber =
         try {
           if (window.confirm("견적서를 전송하시겠습니까?")) {
             await instance.saveState(true);
-            // kakao
-
+            const [ thisClient ] = await ajaxJson({ noFlat: true, whereQuery: { cliid: invoice.links.cliid } }, "/getClients", { equal: true });
+            await ajaxJson({
+              method: "constructEstimation",
+              name: thisClient.name,
+              phone: thisClient.phone,
+              option: {
+                client: thisClient.name,
+                host: GHOSTHOST,
+                path: "cestimation",
+                proid: invoice.links.proid,
+                buiid: invoice.links.buiid
+              }
+            }, "/alimTalk");
             window.alert("견적서를 전송하였습니다!");
           }
         } catch (e) {
