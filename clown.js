@@ -2020,8 +2020,8 @@ Clown.prototype.launching = async function () {
     const { app, BrowserWindow, Notification, ipcMain } = require("electron");
     const createWindow = () => {
       const mainWindow = new BrowserWindow({
-        width: 5000,
-        height: 5000,
+        width: 2000,
+        height: 2000,
         title: "HomeLiaison Console",
         frame: false,
         roundedCorners: true,
