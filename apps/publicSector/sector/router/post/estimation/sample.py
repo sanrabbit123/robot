@@ -11,7 +11,7 @@ async def postSample(request, mongoConnection):
     dic = pandas.read_excel(returnStaticFolder()["static"] + "/publicSector/" + sampleFile, sheet_name=None)
     arr = dic[sampleSheetsName].values.tolist()
 
-    columns = dic[sampleFile].columns.tolist()
+    columns = dic[sampleSheetsName].columns.tolist()
     firstArr = []
     for i in columns:
         if isinstance(i, str):
