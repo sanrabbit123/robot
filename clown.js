@@ -2030,17 +2030,15 @@ Clown.prototype.launching = async function () {
           contextIsolation: false,
         }
       });
-
       mainWindow.maximize();
       mainWindow.loadURL("https://" + address.homeinfo.ghost.host);
-
       return mainWindow;
     }
     let thisMainWindow;
 
     app.whenReady().then(createWindow).then((mainWindow) => {
       thisMainWindow = mainWindow;
-      mainWindow.webContents.openDevTools();
+      // mainWindow.webContents.openDevTools();
     }).catch((err) => {
       console.log(err);
     });
@@ -2088,9 +2086,15 @@ Clown.prototype.launching = async function () {
           networkInterfaces: network,
         });
 
+      } else if (arg === "close") {
+
+        thisMainWindow.close();
+        event.returnValue = "";
+
       } else if (arg === "maximize") {
 
         thisMainWindow.maximize();
+        event.returnValue = "";
 
       } else if (arg === "minimize") {
 
@@ -2099,6 +2103,7 @@ Clown.prototype.launching = async function () {
         } else {
           app.hide();
         }
+        event.returnValue = "";
 
       } else {
         event.returnValue = "";

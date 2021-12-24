@@ -226,10 +226,11 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                 children: [
                   {
                     mode: "svg",
+                    class: [ "hoverDefault_lite" ],
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.red),
                     event: {
                       click: function (e) {
-                        window.close();
+                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", "close");
                       }
                     },
                     style: {
@@ -243,6 +244,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                   },
                   {
                     mode: "svg",
+                    class: [ "hoverDefault_lite" ],
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.yellow),
                     event: {
                       click: function (e) {
@@ -260,6 +262,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                   },
                   {
                     mode: "svg",
+                    class: [ "hoverDefault_lite" ],
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.green),
                     event: {
                       click: function (e) {
