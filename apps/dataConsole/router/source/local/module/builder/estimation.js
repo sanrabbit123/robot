@@ -2246,7 +2246,7 @@ BuilderJs.prototype.estimationDocument = function (mother, invoice, pastNumber =
               position: "relative",
               fontSize: String(greenButtonWordingSize) + ea,
               fontWeight: String(600),
-              color: colorChip.white,
+              color: colorChip.whiteBlack,
               top: String(greenButtonTextTop) + ea,
             }
           }

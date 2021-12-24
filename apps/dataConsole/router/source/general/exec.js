@@ -166,7 +166,8 @@ document.addEventListener("DOMContentLoaded", async function (e) {
       GeneralJs.setQueue(async () => {
         try {
           const { ipcRenderer } = require("electron");
-          GeneralJs.stacks.deviceInfo = GeneralJs.equalJson(ipcRenderer.sendSync("synchronous-message", "device"));;
+          GeneralJs.stacks.ipcRenderer = ipcRenderer;
+          GeneralJs.stacks.deviceInfo = GeneralJs.equalJson(GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", "device"));
           GeneralJs.stacks.memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: GeneralJs.stacks.deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");
 
           GeneralJs.stacks.wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
@@ -177,7 +178,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                 const data = GeneralJs.equalJson(event.data);
                 if (data.participants.to.includes(GeneralJs.stacks.memberInfo.memid)) {
                   if (data.method.alarm) {
-                    ipcRenderer.send("asynchronous-message", data.contents.message);
+                    GeneralJs.stacks.ipcRenderer.send("asynchronous-message", data.contents.message);
                   }
                   if (data.method.alert) {
                     window.alert(data.contents.message);
@@ -245,7 +246,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.yellow),
                     event: {
                       click: function (e) {
-                        window.close();
+                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", "maximize");
                       }
                     },
                     style: {
@@ -262,7 +263,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.green),
                     event: {
                       click: function (e) {
-                        window.close();
+                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", "minimize");
                       }
                     },
                     style: {

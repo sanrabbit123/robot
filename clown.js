@@ -2036,8 +2036,10 @@ Clown.prototype.launching = async function () {
 
       return mainWindow;
     }
+    let thisMainWindow;
 
     app.whenReady().then(createWindow).then((mainWindow) => {
+      thisMainWindow = mainWindow;
       mainWindow.webContents.openDevTools();
     }).catch((err) => {
       console.log(err);
@@ -2051,7 +2053,7 @@ Clown.prototype.launching = async function () {
 
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
+        thisMainWindow = createWindow();
       }
     });
 
@@ -2085,6 +2087,18 @@ Clown.prototype.launching = async function () {
           },
           networkInterfaces: network,
         });
+
+      } else if (arg === "maximize") {
+
+        thisMainWindow.maximize();
+
+      } else if (arg === "minimize") {
+
+        if (process.platform !== "darwin") {
+          thisMainWindow.minimize();
+        } else {
+          app.hide();
+        }
 
       } else {
         event.returnValue = "";
