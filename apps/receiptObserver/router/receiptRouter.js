@@ -2300,7 +2300,8 @@ ReceiptRouter.prototype.rou_post_invoiceRequest = function () {
 ReceiptRouter.prototype.rou_post_invoiceCreate = function () {
   const instance = this;
   const bill = this.bill;
-  const { equalJson } = this.mother;
+  const address = this.address;
+  const { equalJson, requestSystem } = this.mother;
   let obj = {};
   obj.link = "/invoiceCreate";
   obj.func = async function (req, res) {
@@ -2311,12 +2312,14 @@ ReceiptRouter.prototype.rou_post_invoiceCreate = function () {
       "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
     });
     try {
-      if (req.body.matrix === undefined) {
-        throw new Error("invaild post : must be { matrix }");
+      if (req.body.buiid === undefined || req.body.proid === undefined) {
+        throw new Error("invaild post : must be { buiid, proid }");
       }
-      const { matrix } = equalJson(req.body);
-      const request = await bill.requestInvoice(matrix);
-      res.send(JSON.stringify(request));
+      const { buiid, proid } = equalJson(req.body);
+      const matrix = (await requestSystem("https://" + address.officeinfo.ghost.host + "/publicSector/estimation/sample", { data: null })).data;
+      const request = await bill.matrixToRequest(matrix);
+      const invoice = await bill.requestInvoice(buiid, proid, matrix, { selfMongo: instance.mongolocal, selfCoreMongo: instance.mongo });
+      res.send(JSON.stringify(invoice));
     } catch (e) {
       instance.mother.errorLog("Python 서버 문제 생김 (rou_post_invoiceCreate): " + e.message).catch((e) => { console.log(e); });
       res.send(JSON.stringify({ message: "error" }));

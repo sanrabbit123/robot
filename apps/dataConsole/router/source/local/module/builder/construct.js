@@ -496,7 +496,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           const value = this.getAttribute("value");
           const removeTargets = mother.querySelectorAll("aside");
           let tempArr, thisProject, thisEstimate;
-          let thisBuilder, thisBuiid;
+          let thisBuilder, thisBuiid, newInvoice;
 
           do {
             thisBuilder = window.prompt("어느 소장님이 만드실 견적서인가요? 소장님 이름을 알려주세요!");
@@ -510,20 +510,14 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
             thisBuiid = instance.builders.find((obj) => { return obj.builder === thisBuilder }).buiid;
           }
 
-
-
-          thisBuiid
-          project.proid
-
-          
-
+          newInvoice = await ajaxJson({ buiid: thisBuiid, proid: project.proid }, "/invoiceCreate", { equal: true });
 
           tempArr = value.split('-');
 
           thisProject = instance.projects.search("proid", project.proid);
           thisEstimate = thisProject.process.design.construct.estimate;
           thisEstimate.unshift({
-            invid: "",
+            invid: newInvoice.invid,
             date: new Date(Number(tempArr[0]), Number(tempArr[1].replace(/^0/, '')) - 1, Number(tempArr[2].replace(/^0/, '')))
           });
           thisEstimate.sort((a, b) => { return b.date.valueOf() - a.date.valueOf() });
