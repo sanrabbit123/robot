@@ -2464,6 +2464,165 @@ GeneralJs.sendMessage = function (from, to, message, option = {}) {
   });
 }
 
+GeneralJs.prompt = function (message) {
+  const { createNode, colorChip, withOut } = GeneralJs;
+  const ea = "px";
+  let whiteTongBase;
+  let whiteTong;
+  let whiteWidth, whiteHeight;
+  let paddingTop, paddingLeft;
+  let paddingBottom;
+  let size0, size1;
+  let marginLeft;
+  let bottomVisual;
+  let inputBoxHeight;
+  let input;
+  let inputIndent;
+  let inputBottomVisual;
+  let greenBarHeight;
+  let lineHeight;
+
+  whiteWidth = 320;
+  whiteHeight = 150;
+  paddingTop = 16;
+  paddingLeft = 23;
+  paddingBottom = 62;
+  size0 = 14;
+  size1 = 15;
+  marginLeft = 18;
+  bottomVisual = 7;
+  inputBoxHeight = 30;
+  inputIndent = 9;
+  inputBottomVisual = 0;
+  lineHeight = 1.5;
+  greenBarHeight = document.getElementById("greenBar") !== null ? Number(document.getElementById("greenBar").style.height.replace(/[^0-9\.\-]/gi, '')) : 0;
+  if (Number.isNaN(greenBarHeight)) {
+    greenBarHeight = 0;
+  }
+
+  whiteTongBase = createNode({
+    mode: "aside",
+    mother: document.body,
+    event: {
+      click: (e) => { e.stopPropagation(); },
+      contextmenu: (e) => { e.stopPropagation(); },
+      dblclick: (e) => { e.stopPropagation(); },
+      drop: (e) => { e.stopPropagation(); },
+      keyup: (e) => { e.stopPropagation(); },
+      keydown: (e) => { e.stopPropagation(); },
+      keypress: (e) => { e.stopPropagation(); },
+    },
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "fixed",
+      top: String(0) + "vh",
+      left: String(1) + "vw",
+      width: String(98) + "vw",
+      height: "calc(100vh - " + String(greenBarHeight) + ea + ")",
+      background: "transparent",
+      zIndex: String(900)
+    }
+  });
+
+  whiteTong = createNode({
+    mother: whiteTongBase,
+    style: {
+      display: "block",
+      position: "relative",
+      width: String(whiteWidth - (paddingLeft * 2)) + ea,
+      paddingTop: String(paddingTop) + ea,
+      paddingBottom: String(paddingBottom) + ea,
+      paddingLeft: String(paddingLeft) + ea,
+      paddingRight: String(paddingLeft) + ea,
+      borderRadius: String(5) + "px",
+      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
+      background: colorChip.white,
+      animation: "fadeuplite 0.4s ease forwards",
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: "Q",
+    style: {
+      fontSize: String(size0) + ea,
+      fontWeight: String(400),
+      color: colorChip.green,
+      fontFamily: "graphik",
+      position: "absolute",
+      top: String(paddingTop) + ea,
+      left: String(paddingLeft) + ea,
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    text: message,
+    style: {
+      position: "relative",
+      marginLeft: String(marginLeft) + ea,
+      fontSize: String(size1) + ea,
+      fontWeight: String(500),
+      color: colorChip.black,
+      lineHeight: String(lineHeight),
+    }
+  });
+
+  createNode({
+    mother: whiteTong,
+    style: {
+      position: "absolute",
+      bottom: String(paddingTop + bottomVisual) + ea,
+      left: String(paddingLeft + marginLeft) + ea,
+      width: withOut((paddingLeft * 2) + marginLeft, ea),
+      height: String(inputBoxHeight) + ea,
+      borderRadius: String(5) + "px",
+      background: colorChip.gray1,
+    }
+  });
+
+  input = createNode({
+    mother: whiteTong,
+    mode: "input",
+    attribute: {
+      type: "text",
+    },
+    style: {
+      position: "absolute",
+      bottom: String(paddingTop + bottomVisual + inputBottomVisual) + ea,
+      left: String(paddingLeft + marginLeft + inputIndent) + ea,
+      width: withOut((paddingLeft * 2) + marginLeft + (inputIndent * 2), ea),
+      height: String(inputBoxHeight) + ea,
+      background: "transparent",
+      fontSize: String(13) + ea,
+      fontWeight: String(400),
+      color: colorChip.black,
+      border: String(0),
+      outline: String(0),
+    }
+  });
+
+  input.focus();
+
+  return new Promise((resolve, reject) => {
+    input.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const finalValue = this.value.trim();
+        const topLevelTargets = [ ...document.body.children ];
+        const asideTargets = topLevelTargets.filter((dom) => { return /ASIDE/gi.test(dom.nodeName) }).filter((dom) => { return [ ...dom.children ].length > 0 });
+        this.parentNode.style.animation = "fadedownlite 0.2s ease forwards";
+        setTimeout(() => {
+          document.body.removeChild(asideTargets[asideTargets.length - 1]);
+          resolve(finalValue);
+        }, 201);
+      }
+    });
+  });
+}
+
 GeneralJs.prototype.resizeLaunching = function (callback) {
   const instance = this;
   this.resizeStack = 0;

@@ -1971,6 +1971,7 @@ GeneralJs.prototype.greenBar = function () {
   this.belowHeight = 123;
 
   div_clone = GeneralJs.nodes.div.cloneNode(true);
+  div_clone.id = "greenBar";
   style = {
     display: "block",
     position: "fixed",
@@ -2805,7 +2806,7 @@ GeneralJs.prototype.memberView = function () {
                   }
 
                   thisMemid = instance.member.id;
-                  message = window.prompt("알람 문구를 적어주세요!");
+                  message = await GeneralJs.prompt("알람 문구를 적어주세요!");
 
                   if (typeof message === "string") {
                     await sendMessage(thisMemid, targetMembers, message, option);
@@ -2842,7 +2843,7 @@ GeneralJs.prototype.memberView = function () {
                     }
                   }
                   thisMemid = instance.member.id;
-                  message = window.prompt("경고 문구를 적어주세요!");
+                  message = await GeneralJs.prompt("경고 문구를 적어주세요!");
                   if (typeof message === "string") {
                     await sendMessage(thisMemid, targetMembers, message, option);
                   }

@@ -145,8 +145,11 @@ document.addEventListener("DOMContentLoaded", async function (e) {
             } else if (obj.email !== undefined && obj.prompt !== undefined && obj.url !== undefined) {
               if (Array.isArray(obj.email)) {
                 if (obj.email.includes(GeneralJs.getCookiesAll().homeliaisonConsoleLoginedEmail)) {
-                  const promptResult = window.prompt(obj.prompt);
-                  GeneralJs.ajax({ result: (promptResult ? 1 : 0) }, obj.url, () => {});
+                  GeneralJs.prompt(obj.prompt).then((promptResult) => {
+                    return GeneralJs.ajaxPromise({ result: (promptResult ? 1 : 0) }, obj.url);
+                  }).catch((err) => {
+                    console.log(err);
+                  });
                 }
               }
             }
@@ -282,6 +285,8 @@ document.addEventListener("DOMContentLoaded", async function (e) {
         }
       });
     }
+
+
 
     //on green left
     // if (GeneralJs.stacks["grayLeftButton"] !== undefined && GeneralJs.stacks["grayLeftButton"] !== null) {

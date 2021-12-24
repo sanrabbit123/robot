@@ -1996,7 +1996,7 @@ BuilderJs.prototype.estimationDocument = function (mother, invoice, pastNumber =
                 let block, sum;
 
                 do {
-                  response = window.prompt("중분류의 명칭을 알려주세요!");
+                  response = await GeneralJs.prompt("중분류의 명칭을 알려주세요!");
                 } while (typeof response !== "string" || response === '');
 
                 itemDummy = equalJson(JSON.stringify(instance.dummy.item));

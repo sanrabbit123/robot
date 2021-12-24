@@ -890,10 +890,10 @@ PageBlockJs.prototype.launching = async function (loading) {
         answer = Number(window.localStorage.getItem("passwords"));
         if (answer === 2039 || Number.isNaN(answer)) {
           window.localStorage.clear();
-          answer = Number(window.prompt("비밀번호를 입력해주세요!"));
+          answer = Number(await GeneralJs.prompt("비밀번호를 입력해주세요!"));
         }
       } else {
-        answer = Number(window.prompt("비밀번호를 입력해주세요!"));
+        answer = Number(await GeneralJs.prompt("비밀번호를 입력해주세요!"));
       }
 
       if ((String(Math.round(((Number(String((((((5 * ((answer - 30) / 5) * 2)) - 18) / 4) - 998) / 2) + String(13)) % 3) * 500) / 3)) + String(3)) === "-423") {

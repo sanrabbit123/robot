@@ -5161,7 +5161,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                               if (/출장/gi.test(itemName)) {
                                                 if (window.confirm("출장 횟수를 변경할까요?")) {
                                                   let position, thisIndex, number, pastBill, bill, tempObj, promptValue;
-                                                  promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
+                                                  promptValue = await GeneralJs.prompt("출장비를 몇 회로 설정할까요?");
                                                   if (promptValue !== null) {
                                                     number = promptValue.trim();
                                                     number = Number(String(number).replace(/[^0-9]/gi, ''));
@@ -5367,7 +5367,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                               percentage = 100;
                                               if (!window.confirm("전체 환불을 진행할까요? (부분일시, '취소')")) {
                                                 do {
-                                                  raw = window.prompt("돌려줄 금액의 비율을 알려주세요! (예: 50%)");
+                                                  raw = await GeneralJs.prompt("돌려줄 금액의 비율을 알려주세요! (예: 50%)");
                                                   if (raw !== null) {
                                                     percentage = Number(raw.replace(/[^0-9]/gi, ''));
                                                   } else {
@@ -5389,7 +5389,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                 kind = "vaccount" + (percentage === 100 ? "Entire" : "Partial");
                                                 bankCode = await GeneralJs.ajaxJson({}, PYTHONHOST + "/returnBankCode");
                                                 do {
-                                                  raw = window.prompt("은행 이름을 알려주세요!");
+                                                  raw = await GeneralJs.prompt("은행 이름을 알려주세요!");
                                                   if (raw !== null) {
                                                     raw = raw.trim();
                                                     bankName = null;
@@ -5405,7 +5405,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                   }
                                                 } while (bankName === null)
                                                 do {
-                                                  raw = window.prompt("계좌 번호를 알려주세요!");
+                                                  raw = await GeneralJs.prompt("계좌 번호를 알려주세요!");
                                                   if (raw !== null) {
                                                     accountNumber = null;
                                                     accountNumber = raw.replace(/[^0-9]/gi, '').trim();
@@ -5414,7 +5414,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                                   }
                                                 } while (accountNumber === null)
                                                 do {
-                                                  raw = window.prompt("예금주를 알려주세요!");
+                                                  raw = await GeneralJs.prompt("예금주를 알려주세요!");
                                                   if (raw !== null) {
                                                     accountName = null;
                                                     accountName = raw.trim();
@@ -5592,7 +5592,7 @@ ProjectJs.prototype.whiteContentsMaker = function (thisCase, mother) {
                                   e.stopPropagation();
                                   try {
                                     let position, number, bill, tempObj, promptValue;
-                                    promptValue = window.prompt("출장비를 몇 회로 설정할까요?");
+                                    promptValue = await GeneralJs.prompt("출장비를 몇 회로 설정할까요?");
                                     if (promptValue !== null) {
                                       number = promptValue.trim();
                                       number = Number(String(number).replace(/[^0-9]/gi, ''));
@@ -8092,7 +8092,7 @@ ProjectJs.prototype.communicationRender = function () {
         let proid, thisCase;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            proid = window.prompt("프로젝트 아이디를 입력하세요!");
+            proid = await GeneralJs.prompt("프로젝트 아이디를 입력하세요!");
           } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
         } else {
           proid = instance.whiteBox.id;
@@ -8169,7 +8169,7 @@ ProjectJs.prototype.communicationRender = function () {
         if (window.confirm(client.name + "고객님에게 스타일링 계약서를 전송합니다! 확실하십니까?")) {
           let contractName, contractAddress;
 
-          contractName = window.prompt("계약시 별도의 이름이 있습니까? 없을 시, '없음' 또는 공백").trim();
+          contractName = await GeneralJs.prompt("계약시 별도의 이름이 있습니까? 없을 시, '없음' 또는 공백").trim();
           if (/없/gi.test(contractName)) {
             contractName = '';
           }
@@ -8178,7 +8178,7 @@ ProjectJs.prototype.communicationRender = function () {
           }
           contractName = contractName.replace(/[ㄱ-ㅎㅏ-ㅣ]/gi, '');
 
-          contractAddress = window.prompt("계약시 별도의 주소가 있습니까? 없을 시, '없음' 또는 공백").trim();
+          contractAddress = await GeneralJs.prompt("계약시 별도의 주소가 있습니까? 없을 시, '없음' 또는 공백").trim();
           if (/없/gi.test(contractAddress)) {
             contractAddress = '';
           }
@@ -8209,7 +8209,7 @@ ProjectJs.prototype.communicationRender = function () {
         let cliid, client;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            proid = window.prompt("프로젝트 아이디를 입력하세요!");
+            proid = await GeneralJs.prompt("프로젝트 아이디를 입력하세요!");
           } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
         } else {
           proid = instance.whiteBox.id;
@@ -8272,7 +8272,7 @@ ProjectJs.prototype.communicationRender = function () {
         let cliid, client;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            proid = window.prompt("프로젝트 아이디를 입력하세요!");
+            proid = await GeneralJs.prompt("프로젝트 아이디를 입력하세요!");
           } while (!/^p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(proid));
         } else {
           proid = instance.whiteBox.id;

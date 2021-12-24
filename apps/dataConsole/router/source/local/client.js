@@ -6683,7 +6683,7 @@ ClientJs.prototype.communicationRender = function () {
 
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+            cliid = await GeneralJs.prompt("고객 아이디를 입력하세요!").trim();
           } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
         } else {
           cliid = instance.whiteBox.id;
@@ -6704,7 +6704,7 @@ ClientJs.prototype.communicationRender = function () {
             requestNumber = 0;
             if (caseTong.length > 1) {
               if (caseTong.filter((obj) => { return obj.status === "응대중" || obj.status === "장기" }).length > 1) {
-                answer = window.prompt("응대중인 건이 2건 이상 발견됩니다! 전송하고자 하는 건의 순번을 숫자로만 적어주세요! (최근순, 예: 1번째, 2번째 등등)").trim().replace(/[^0-9]/gi, '');
+                answer = await GeneralJs.prompt("응대중인 건이 2건 이상 발견됩니다! 전송하고자 하는 건의 순번을 숫자로만 적어주세요! (최근순, 예: 1번째, 2번째 등등)").trim().replace(/[^0-9]/gi, '');
                 if (Number.isNaN(answer)) {
                   requestNumber = 0;
                 } else {
@@ -6858,7 +6858,7 @@ ClientJs.prototype.communicationRender = function () {
 
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+            cliid = await GeneralJs.prompt("고객 아이디를 입력하세요!").trim();
           } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
         } else {
           cliid = instance.whiteBox.id;
@@ -6879,7 +6879,7 @@ ClientJs.prototype.communicationRender = function () {
             requestNumber = 0;
             if (caseTong.length > 1) {
               if (caseTong.filter((obj) => { return obj.status === "응대중" || obj.status === "장기" }).length > 1) {
-                answer = window.prompt("응대중인 건이 2건 이상 발견됩니다! 전송하고자 하는 건의 순번을 숫자로만 적어주세요! (최근순, 예: 1번째, 2번째 등등)").trim().replace(/[^0-9]/gi, '');
+                answer = await GeneralJs.prompt("응대중인 건이 2건 이상 발견됩니다! 전송하고자 하는 건의 순번을 숫자로만 적어주세요! (최근순, 예: 1번째, 2번째 등등)").trim().replace(/[^0-9]/gi, '');
                 if (Number.isNaN(answer)) {
                   requestNumber = 0;
                 } else {
@@ -6985,7 +6985,7 @@ ClientJs.prototype.communicationRender = function () {
         let cliid, thisCase, serid;
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+            cliid = await GeneralJs.prompt("고객 아이디를 입력하세요!").trim();
           } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
         } else {
           cliid = instance.whiteBox.id;
@@ -7046,7 +7046,7 @@ ClientJs.prototype.communicationRender = function () {
 
         if (instance.whiteBox === null || instance.whiteBox === undefined) {
           do {
-            cliid = window.prompt("고객 아이디를 입력하세요!").trim();
+            cliid = await GeneralJs.prompt("고객 아이디를 입력하세요!").trim();
           } while (!/^c[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z]$/.test(cliid));
         } else {
           cliid = instance.whiteBox.id;

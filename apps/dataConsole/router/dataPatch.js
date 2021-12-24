@@ -4495,6 +4495,9 @@ DataPatch.prototype.projectMap = function () {
         let newPrice;
         let ajaxData, ajaxData2;
         let client, cliid;
+        let inspectionArr;
+        let report;
+        let message;
 
         proid = mother.parentElement.className.replace(/(p[0-9][0-9][0-9][0-9]_[a-z][a-z][0-9][0-9][a-z])/g, (match, proid) => { return proid.trim(); });
         currentMode = "row";
@@ -4540,67 +4543,52 @@ DataPatch.prototype.projectMap = function () {
 
         if (onlineAble && designerAble) {
           if (window.confirm("서비스를 바꾸시겠습니까?")) {
-
-            GeneralJs.ajaxJson({
+            inspectionArr = await GeneralJs.ajaxJson({
               mode: "inspection",
               addressArr: [ { id: cliid, address: client.requests[0].request.space.address } ],
               liteMode: false,
-            }, "/parsingAddress").then((inspectionArr) => {
-              if (inspectionArr.length !== 0) {
-                window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
-                window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionArr[0].id;
-              } else {
+            }, "/parsingAddress");
+            if (inspectionArr.length !== 0) {
+              window.alert("고객님의 주소가 잘못되어 제안서를 만들 수 없습니다!\n" + inspectionArr[0].message + "\n고객님의 주소를 올바른 형식으로 고쳐주세요!\n(도로명과 건물 번호가 반드시 있어야 함)");
+              window.location.href = window.location.protocol + "//" + window.location.host + "/client?cliid=" + inspectionArr[0].id;
+            } else {
 
-                ajaxData = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s`, mode: "confirm" };
-                ajaxData2 = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` };
-                newPrice = window.prompt("새로운 공급가를 오직 숫자로만 적어주세요! (만원 표기 안 됨) 자동 계산을 원할 시, '자동'이라고 써주세요!");
-                if (!Number.isNaN(Number(newPrice.replace(/[^0-9]/gi, '')))) {
-                  if (Number(newPrice.replace(/[^0-9]/gi, '')) !== 0) {
-                    ajaxData.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
-                    ajaxData2.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
-                  }
+              ajaxData = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s`, mode: "confirm" };
+              ajaxData2 = { proid, method: (/오프/gi.test(onoffLine) ? "offline" : "online"), serid: `s2011_aa0${String(x + 1)}s` };
+              newPrice = await GeneralJs.prompt("새로운 공급가를 오직 숫자로만 적어주세요! (만원 표기 안 됨) 자동 계산을 원할 시, '자동'이라고 써주세요!");
+              if (!Number.isNaN(Number(newPrice.replace(/[^0-9]/gi, '')))) {
+                if (Number(newPrice.replace(/[^0-9]/gi, '')) !== 0) {
+                  ajaxData.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
+                  ajaxData2.newPrice = Number(newPrice.replace(/[^0-9]/gi, ''));
                 }
-
-                GeneralJs.ajaxJson(ajaxData, PYTHONHOST + "/serviceConverting").then((report) => {
-                  let message;
-                  if (typeof report.error === "string") {
-                    window.alert(report.error);
-                    window.alert("이 디자이너는 해당 서비스를 진행할 수 없습니다!");
-                    return new Promise((resolve, reject) => {
-                      resolve(null);
-                    });
-                  }
-                  message = "다음 상세 사항을 확인해주세요! 추가 견적이 발생할 경우 자동으로 알림톡이 발송될 예정입니다, 확실합니까?\n";
-                  message += "기존 공급가 : " + GeneralJs.autoComma(report.price.supply.from) + '원' + '\n';
-                  message += "기존 잔금 : " + GeneralJs.autoComma(report.price.remain.from) + '원' + '\n';
-                  message += "새로운 공급가 : " + GeneralJs.autoComma(report.price.supply.to) + '원' + '\n';
-                  message += "새로운 잔금 : " + GeneralJs.autoComma(report.price.remain.to) + '원' + '\n';
-                  message += "안내될 차액 : " + GeneralJs.autoComma(report.price.between.consumer) + '원' + '\n';
-                  message += "기존 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total.from) + '원' + '\n';
-                  message += "기존 정산 선금 : " + GeneralJs.autoComma(report.calculate.first.from) + '원' + '\n';
-                  message += "기존 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain.from) + '원' + '\n';
-                  message += "새로운 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total.to) + '원' + '\n';
-                  message += "새로운 정산 선금 : " + GeneralJs.autoComma(report.calculate.first.to) + '원' + '\n';
-                  message += "새로운 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain.to) + '원' + '\n';
-                  if (window.confirm(message)) {
-                    return GeneralJs.ajaxJson(ajaxData2, PYTHONHOST + "/serviceConverting");
-                  } else {
-                    return new Promise((resolve, reject) => {
-                      resolve(null);
-                    });
-                  }
-                }).then((res) => {
-                  if (res !== null) {
-                    window.location.reload();
-                  }
-                }).catch((err) => {
-                  throw new Error(err.message);
-                });
-
               }
-            }).catch((err) => {
-              throw new Error(err.message);
-            });
+
+              mother.grayLoading();
+
+              report = await GeneralJs.ajaxJson(ajaxData, PYTHONHOST + "/serviceConverting");
+              if (typeof report.error === "string") {
+                window.alert(report.error);
+                window.alert("이 디자이너는 해당 서비스를 진행할 수 없습니다!");
+              } else {
+                message = "다음 상세 사항을 확인해주세요! 추가 견적이 발생할 경우 자동으로 알림톡이 발송될 예정입니다, 확실합니까?\n";
+                message += "기존 공급가 : " + GeneralJs.autoComma(report.price.supply.from) + '원' + '\n';
+                message += "기존 잔금 : " + GeneralJs.autoComma(report.price.remain.from) + '원' + '\n';
+                message += "새로운 공급가 : " + GeneralJs.autoComma(report.price.supply.to) + '원' + '\n';
+                message += "새로운 잔금 : " + GeneralJs.autoComma(report.price.remain.to) + '원' + '\n';
+                message += "안내될 차액 : " + GeneralJs.autoComma(report.price.between.consumer) + '원' + '\n';
+                message += "기존 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total.from) + '원' + '\n';
+                message += "기존 정산 선금 : " + GeneralJs.autoComma(report.calculate.first.from) + '원' + '\n';
+                message += "기존 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain.from) + '원' + '\n';
+                message += "새로운 정산 총 금액 : " + GeneralJs.autoComma(report.calculate.total.to) + '원' + '\n';
+                message += "새로운 정산 선금 : " + GeneralJs.autoComma(report.calculate.first.to) + '원' + '\n';
+                message += "새로운 정산 잔금 : " + GeneralJs.autoComma(report.calculate.remain.to) + '원' + '\n';
+                if (window.confirm(message)) {
+                  await GeneralJs.ajaxJson(ajaxData2, PYTHONHOST + "/serviceConverting");
+                }
+              }
+
+              window.location.reload();
+            }
           }
         } else {
           window.alert("이 디자이너는 해당 서비스를 운용할 수 없습니다!");

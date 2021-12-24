@@ -500,12 +500,12 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
           let loading;
 
           do {
-            thisBuilder = window.prompt("어느 소장님이 만드실 견적서인가요? 소장님 이름을 알려주세요!");
+            thisBuilder = await GeneralJs.prompt("어느 소장님이 만드실 견적서인가요? 소장님 이름을 알려주세요!");
           } while (thisBuilder === null || !instance.builders.map((obj) => { return obj.builder }).includes(thisBuilder));
 
           if (instance.builders.map((obj) => { return obj.builder }).filter((str) => { return str === thisBuilder }).length !== 1) {
             do {
-              thisBuiid = window.prompt("중복되는 이름이 있습니다. 소장님 아이디로 알려주세요!");
+              thisBuiid = await GeneralJs.prompt("중복되는 이름이 있습니다. 소장님 아이디로 알려주세요!");
             } while (thisBuiid === null || !instance.builders.map((obj) => { return obj.buiid }).includes(thisBuiid));
           } else {
             thisBuiid = instance.builders.find((obj) => { return obj.builder === thisBuilder }).buiid;
@@ -1172,7 +1172,7 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
 
                             num = 0;
                             while (true) {
-                              answer = window.prompt(questions[num].question);
+                              answer = await GeneralJs.prompt(questions[num].question);
                               if (answer === null) {
                                 window.alert("올바른 형식이 아닙니다!");
                                 continue;
@@ -1339,15 +1339,15 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
 
                       if (window.confirm(message)) {
 
-                        contractName = window.prompt("계약서 작성시 별도의 이름이 있나요? (별도로 없다면 '없음' 또는 공백)");
+                        contractName = await GeneralJs.prompt("계약서 작성시 별도의 이름이 있나요? (별도로 없다면 '없음' 또는 공백)");
                         if (contractName === null || (typeof contractName === "string" && contractName.trim() === '') || (typeof contractName === "string" && /없/gi.test(contractName))) {
                           contractName = project.name;
                         }
-                        contractAddress = window.prompt("계약서 작성시 별도의 주소가 있나요? (별도로 없다면 '없음' 또는 공백)");
+                        contractAddress = await GeneralJs.prompt("계약서 작성시 별도의 주소가 있나요? (별도로 없다면 '없음' 또는 공백)");
                         if (contractAddress === null || (typeof contractAddress === "string" && contractAddress.trim() === '') || (typeof contractAddress === "string" && /없/gi.test(contractAddress))) {
                           contractAddress = project.address;
                         }
-                        contractPhone = window.prompt("계약서 작성시 별도의 사업자 번호가 있나요? (별도로 없다면 '없음' 또는 공백)");
+                        contractPhone = await GeneralJs.prompt("계약서 작성시 별도의 사업자 번호가 있나요? (별도로 없다면 '없음' 또는 공백)");
                         if (contractPhone === null || (typeof contractPhone === "string" && contractPhone.trim() === '') || (typeof contractPhone === "string" && /없/gi.test(contractPhone))) {
                           contractPhone = project.phone;
                         }
@@ -3116,61 +3116,68 @@ BuilderJs.prototype.constructDataRender = function (project, titleMode) {
     updateArr.push(function (e, option, cancelBox, parent) {
       const mother = this;
       if (window.confirm("시공 금액을 변경하시겠습니까?")) {
-        let answer, answerRaw, boo, message, zeroBoo, loading;
-        do {
+        const valueInput = async function () {
+          let answer, answerRaw, boo, message, zeroBoo;
           do {
-            answer = window.prompt("새로운 시공 잔금을 소비자가 기준으로 숫자로만, 또는 만원 단위로 써서 입력해주세요!\n예) 24000000원 또는 2400만원 등등");
-            if (typeof answer === "string") {
-              answerRaw = answer;
-              answer = answer.trim().replace(/[^0-9]/gi, '');
-              if (answer === '') {
-                boo = false;
-              } else {
-                answer =  Number(answer);
-                if (Number.isNaN(answer)) {
+            do {
+              answer = await GeneralJs.prompt("새로운 시공 잔금을 소비자가 기준으로 숫자로만, 또는 만원 단위로 써서 입력해주세요!\n예) 24000000원 또는 2400만원 등등");
+              if (typeof answer === "string") {
+                answerRaw = answer;
+                answer = answer.trim().replace(/[^0-9]/gi, '');
+                if (answer === '') {
                   boo = false;
                 } else {
-                  if (answer < 100000) {
-                    if (/만/gi.test(answerRaw)) {
-                      answer = answer * 10000;
-                      boo = true;
-                    } else if (/억/gi.test(answerRaw)) {
-                      answer = answer * 10000 * 10000;
-                      boo = true;
-                    } else {
-                      boo = false;
-                    }
+                  answer =  Number(answer);
+                  if (Number.isNaN(answer)) {
+                    boo = false;
                   } else {
-                    boo = true;
+                    if (answer < 100000) {
+                      if (/만/gi.test(answerRaw)) {
+                        answer = answer * 10000;
+                        boo = true;
+                      } else if (/억/gi.test(answerRaw)) {
+                        answer = answer * 10000 * 10000;
+                        boo = true;
+                      } else {
+                        boo = false;
+                      }
+                    } else {
+                      boo = true;
+                    }
                   }
                 }
+              } else {
+                boo = false;
               }
+            } while (!boo);
+            message = '';
+            if ((answer / 10000) > 10000) {
+              message = String(answer / (10000 * 10000)) + "억원";
             } else {
-              boo = false;
+              message = String(answer / 10000) + "만원";
             }
-          } while (!boo);
-          message = '';
-          if ((answer / 10000) > 10000) {
-            message = String(answer / (10000 * 10000)) + "억원";
-          } else {
-            message = String(answer / 10000) + "만원";
-          }
-          message += "이 맞습니까?";
-          zeroBoo = !window.confirm(message);
-        } while (zeroBoo);
+            message += "이 맞습니까?";
+            zeroBoo = !window.confirm(message);
+          } while (zeroBoo);
+          return answer;
+        }
+        let loading;
 
-        loading = instance.mother.grayLoading();
-        ajaxJson({ mode: "amountSync", proid, amount: answer }, "/constructInteraction").then(() => {
+        valueInput().then((answer) => {
+          loading = instance.mother.grayLoading();
+
+          mother.querySelector(".value").textContent = autoComma(answer) + '원';
+          instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.supply = Math.floor(answer) - Math.floor(answer / 11);
+          instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.vat = Math.floor(answer / 11);
+          instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.consumer = Math.floor(answer);
+
+          return ajaxJson({ mode: "amountSync", proid, amount: answer }, "/constructInteraction");
+        }).then(() => {
           loading.remove();
           window.alert("업데이트가 완료되었습니다!");
         }).catch((err) => {
           console.log(err);
         });
-
-        mother.querySelector(".value").textContent = autoComma(answer) + '원';
-        instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.supply = Math.floor(answer) - Math.floor(answer / 11);
-        instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.vat = Math.floor(answer / 11);
-        instance.projects.search("proid", proid).process.design.construct.contract.payments.remain.calculation.amount.consumer = Math.floor(answer);
 
       }
       cancelBox.parentNode.removeChild(cancelBox);
