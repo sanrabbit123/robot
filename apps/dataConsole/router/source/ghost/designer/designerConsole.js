@@ -636,7 +636,9 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       }
     }
 
-    this.listIcon.addEventListener("click", menuOnEvent("up"));
+    if (this.listIcon !== undefined && this.listIcon !== null) {
+      this.listIcon.addEventListener("click", menuOnEvent("up"));
+    }
 
     createNodes([
       {
@@ -988,6 +990,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   const { members, slackNotices, media } = this;
   const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue, ajaxJson } = GeneralJs;
   const vh = "vh";
+  const vw = "vw";
   const memberTongClassName = "memberTong";
   const serverTongClassName = "serverTong";
   const noticeTongClassName = "noticeTong";
@@ -1027,26 +1030,44 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let noticeMarginBottom;
   let onlineTextTop;
   let desktopMode, tabletMode, mobileMode;
+  let desktop, mobile;
+  let mobileBoxHeight;
+  let mobileBoxWidth0, mobileBoxWidth1, mobileBoxWidth2, mobileBoxWidth3;
+  let mobileTitleSize;
+  let mobileTitleZoneHeight, mobileTitleMarginBottom;
+  let mobileBackgroundHeight;
+  let mobileFinalMarginBottom;
+  let backgroundWidth;
 
   if (window.innerWidth > 1420) {
     desktopMode = true;
     tabletMode = false;
     mobileMode = false;
-  } else if (window.innerWidth <= 1420 && window.innerWidth > 900) {
+    desktop = true;
+    mobile = false;
+  } else if (window.innerWidth <= 1420 && window.innerWidth > 780) {
     desktopMode = false;
     tabletMode = true;
     mobileMode = false;
+    desktop = true;
+    mobile = false;
   } else {
     desktopMode = false;
     tabletMode = false;
     mobileMode = true;
+    desktop = false;
+    mobile = true;
   }
 
-
-
-  outerMargin = <%% 30, 30, 28, 24, 4 %%>;
-  innerMargin = <%% 5, 5, 4, 3, 1 %%>;
+  outerMargin = <%% 30, 30, 28, 24, 6 %%>;
+  innerMargin = <%% 5, 5, 4, 3, 1.8 %%>;
   whiteRadius = <%% 8, 8, 7, 6, 3 %%>;
+
+  if (mobile) {
+    outerMargin = 6;
+    innerMargin = 1.8;
+    whiteRadius = 3;
+  }
 
   titleSize = 2.6;
   title2Size = 2.3;
@@ -1054,7 +1075,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   subSize = 2;
   lineHeight = 1.02;
   lineHeight2 = 1.25;
-  visualTop = -4;
+  visualTop = -5;
   visualTop2 = isMac() ? -3 : 0;
 
   onlineWordingSize = 1.7;
@@ -1081,6 +1102,14 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   noticePaddingTop = isMac() ? 1 : 1.2;
   noticePaddingBottom = 1.4;
   noticeMarginBottom = 0.5;
+
+  mobileTitleSize = 4.8;
+  mobileTitleZoneHeight = 10;
+  mobileTitleMarginBottom = 6;
+  mobileBackgroundHeight = 34;
+  mobileFinalMarginBottom = 42;
+
+  backgroundWidth = <%% 210, 180, 180, 180, 0 %%>;
 
   serverTargets = [
     {
@@ -1130,25 +1159,197 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
   boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
 
-  totalMother.style["min-width"] = "calc(" + boxWidth0 + " * 4.5)";
+  if (desktop) {
+    totalMother.style["min-width"] = "calc(" + boxWidth0 + " * 4.5)";
+  } else {
+    totalMother.style.paddingTop = String(outerMargin) + ea;
+    totalMother.style.height = withOut(outerMargin, ea);
+  }
   totalMother.style.background = colorChip.gray3;
   totalMother.firstChild.style.display = "none";
-
 
   motherBox = createNode({
     mother: totalMother,
     style: {
       position: "relative",
       display: "block",
-      width: withOut(outerMargin * 2, ea),
-      height: withOut(outerMargin * 2, ea),
-      top: String(outerMargin) + ea,
-      left: String(outerMargin) + ea,
+      width: desktop ? withOut(outerMargin * 2, ea) : String(100 - (outerMargin * 2)) + vw,
+      height: desktop ? withOut(outerMargin * 2, ea) : "",
+      top: desktop ? String(outerMargin) + ea : "",
+      left: desktop ? String(outerMargin) + ea : "",
+      marginLeft: desktop ? "" : String(outerMargin) + vw,
     }
   });
 
-  if (desktopMode) {
-    firstMother = createNode({
+  if (!mobileMode) {
+
+    createNode({
+      mother: motherBox,
+      style: {
+        position: "absolute",
+        top: String(outerMargin * -1) + ea,
+        left: String(outerMargin * -1) + ea,
+        width: String(backgroundWidth) + ea,
+        height: "calc(100% + " + String(outerMargin * 2) + ea + ")",
+        backgroundImage: "url('/middle/meeting/back.jpg')",
+        backgroundSize: "auto 100%",
+        backgroundPosition: "12% 0%",
+      }
+    });
+
+    if (desktopMode) {
+      firstMother = createNode({
+        mother: motherBox,
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: boxWidth0,
+          height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+          marginRight: String(innerMargin) + ea,
+          verticalAlign: "top",
+          opacity: String(0),
+          animation: "fadeuporiginal 0.5s ease 0.1s forwards",
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              paddingTop: String(onlineBoxTop) + vh,
+              display: "block",
+              width: boxWidth0,
+              height: "calc(calc(calc(100% - " + boxHeight1 + ") - " + String(innerMargin) + ea + ") - " + String(onlineBoxTop) + vh + ")",
+              borderRadius: String(whiteRadius) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+              marginBottom: String(innerMargin) + ea,
+            },
+            children: [
+              {
+                text: "Ongoing",
+                style: {
+                  position: "absolute",
+                  fontSize: String(onlineWordingSize) + vh,
+                  fontFamily: "graphik",
+                  fontWeight: String(400),
+                  top: String(onlineBoxTitleTop) + vh,
+                  left: String(onlineBoxLeft) + vh,
+                  color: colorChip.green,
+                }
+              },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  left: String(onlineBoxLeft) + vh,
+                  width: withOut(onlineBoxLeft * 2, vh),
+                  height: String(onlineBoxHeight0) + vh,
+                  boxSizing: "border-box",
+                  border: "1px solid " + colorChip.gray4,
+                  borderRadius: String(5) + "px",
+                },
+                children: [
+                  {
+                    style: {
+                      position: "absolute",
+                      top: String(onlineBoxInnerMarginTop) + vh,
+                      left: String(onlineBoxInnerMarginTop) + vh,
+                      width: withOut(onlineBoxInnerMarginTop * 2, vh),
+                      height: withOut(onlineBoxInnerMarginTop * 2, vh),
+                      overflow: "scroll",
+                    },
+                    children: [
+                      {
+                        class: [ memberTongClassName ],
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          top: String(0),
+                          left: String(0),
+                          width: String(100) + '%',
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                style: {
+                  display: "block",
+                  position: "relative",
+                  marginTop: String(onlineBoxBetween) + vh,
+                  left: String(onlineBoxLeft) + vh,
+                  width: withOut(onlineBoxLeft * 2, vh),
+                  height: withOut(onlineBoxHeight0 + onlineBoxBetween + onlineBoxLeft, vh),
+                  boxSizing: "border-box",
+                  border: "1px solid " + colorChip.gray4,
+                  borderRadius: String(5) + "px",
+                },
+                children: [
+                  {
+                    style: {
+                      position: "absolute",
+                      top: String(onlineBoxInnerMarginTop) + vh,
+                      left: String(onlineBoxInnerMarginTop) + vh,
+                      width: withOut(onlineBoxInnerMarginTop * 2, vh),
+                      height: withOut(onlineBoxInnerMarginTop * 2, vh),
+                      overflow: "scroll",
+                    },
+                    children: [
+                      {
+                        class: [ serverTongClassName ],
+                        style: {
+                          display: "block",
+                          position: "relative",
+                          top: String(0),
+                          left: String(0),
+                          width: String(100) + '%',
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+            ]
+          },
+          {
+            style: {
+              position: "relative",
+              display: "flex",
+              width: boxWidth0,
+              height: boxHeight1,
+              borderRadius: String(whiteRadius) + ea,
+              background: colorChip.white,
+              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            event: { click: (e) => { blankHref(FRONTHOST, true); } },
+            children: [
+              {
+                class: [ "hoverDefault_lite" ],
+                text: "Designer console",
+                style: {
+                  color: colorChip.green,
+                  fontSize: String(title3Size) + vh,
+                  textAlign: "center",
+                  fontWeight: String(500),
+                  lineHeight: String(lineHeight),
+                  fontFamily: "graphik",
+                  position: "relative",
+                  top: String(visualTop) + ea,
+                  fontStyle: "italic",
+                },
+              }
+            ]
+          },
+        ]
+      });
+      onlineBlock = firstMother.firstChild;
+      webBlock = firstMother.lastChild;
+    }
+
+    secondMother = createNode({
       mother: motherBox,
       style: {
         position: "relative",
@@ -1158,693 +1359,781 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         marginRight: String(innerMargin) + ea,
         verticalAlign: "top",
         opacity: String(0),
-        animation: "fadeup 0.5s ease 0.1s forwards",
+        animation: "fadeuporiginal 0.5s ease 0.2s forwards",
       },
       children: [
         {
           style: {
             position: "relative",
-            paddingTop: String(onlineBoxTop) + vh,
-            display: "block",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             width: boxWidth0,
-            height: "calc(calc(calc(100% - " + boxHeight1 + ") - " + String(innerMargin) + ea + ") - " + String(onlineBoxTop) + vh + ")",
+            height: boxHeight0,
             borderRadius: String(whiteRadius) + ea,
             background: colorChip.white,
             boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
             marginBottom: String(innerMargin) + ea,
+            cursor: "pointer",
           },
+          event: { click: (e) => { window.location.href = thisHost + "/client"; } },
           children: [
             {
-              text: "Ongoing",
+              class: [ "hoverDefault_lite" ],
+              text: "가능 일정 관리\n<b%Calendar%b>",
               style: {
-                position: "absolute",
-                fontSize: String(onlineWordingSize) + vh,
+                color: colorChip.black,
+                fontSize: String(titleSize) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight),
+              },
+              bold: {
+                color: colorChip.green,
+                fontSize: String(subSize) + vh,
                 fontFamily: "graphik",
                 fontWeight: String(400),
-                top: String(onlineBoxTitleTop) + vh,
-                left: String(onlineBoxLeft) + vh,
-                color: colorChip.green,
               }
-            },
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                left: String(onlineBoxLeft) + vh,
-                width: withOut(onlineBoxLeft * 2, vh),
-                height: String(onlineBoxHeight0) + vh,
-                boxSizing: "border-box",
-                border: "1px solid " + colorChip.gray4,
-                borderRadius: String(5) + "px",
-              },
-              children: [
-                {
-                  style: {
-                    position: "absolute",
-                    top: String(onlineBoxInnerMarginTop) + vh,
-                    left: String(onlineBoxInnerMarginTop) + vh,
-                    width: withOut(onlineBoxInnerMarginTop * 2, vh),
-                    height: withOut(onlineBoxInnerMarginTop * 2, vh),
-                    overflow: "scroll",
-                  },
-                  children: [
-                    {
-                      class: [ memberTongClassName ],
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        top: String(0),
-                        left: String(0),
-                        width: String(100) + '%',
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              style: {
-                display: "block",
-                position: "relative",
-                marginTop: String(onlineBoxBetween) + vh,
-                left: String(onlineBoxLeft) + vh,
-                width: withOut(onlineBoxLeft * 2, vh),
-                height: withOut(onlineBoxHeight0 + onlineBoxBetween + onlineBoxLeft, vh),
-                boxSizing: "border-box",
-                border: "1px solid " + colorChip.gray4,
-                borderRadius: String(5) + "px",
-              },
-              children: [
-                {
-                  style: {
-                    position: "absolute",
-                    top: String(onlineBoxInnerMarginTop) + vh,
-                    left: String(onlineBoxInnerMarginTop) + vh,
-                    width: withOut(onlineBoxInnerMarginTop * 2, vh),
-                    height: withOut(onlineBoxInnerMarginTop * 2, vh),
-                    overflow: "scroll",
-                  },
-                  children: [
-                    {
-                      class: [ serverTongClassName ],
-                      style: {
-                        display: "block",
-                        position: "relative",
-                        top: String(0),
-                        left: String(0),
-                        width: String(100) + '%',
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
+            }
           ]
         },
         {
           style: {
             position: "relative",
-            display: "flex",
             width: boxWidth0,
-            height: boxHeight1,
+            height: boxHeight0,
             borderRadius: String(whiteRadius) + ea,
-            backgroundImage: "url('/middle/meeting/back.jpg')",
-            backgroundSize: "100% auto",
-            backgroundPosition: "50% 50%",
+            background: colorChip.white,
             boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            marginBottom: String(innerMargin) + ea,
+            display: "flex",
             justifyContent: "center",
             alignItems: "center",
             cursor: "pointer",
           },
-          event: { click: (e) => { blankHref(FRONTHOST, true); } },
+          event: { click: (e) => { window.location.href = thisHost + "/project"; } },
           children: [
             {
               class: [ "hoverDefault_lite" ],
-              text: "HomeLiaison kakao",
+              text: "의뢰서 관리\n<b%Request%b>",
               style: {
-                color: colorChip.whiteBlack,
-                fontSize: String(title3Size) + vh,
+                color: colorChip.black,
+                fontSize: String(titleSize) + vh,
                 textAlign: "center",
                 fontWeight: String(500),
                 lineHeight: String(lineHeight),
-                fontFamily: "graphik",
-                position: "relative",
-                top: String(visualTop) + ea,
-                fontStyle: "italic",
               },
+              bold: {
+                color: colorChip.green,
+                fontSize: String(subSize) + vh,
+                fontFamily: "graphik",
+                fontWeight: String(400),
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+            height: boxHeight1,
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.gray1,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            marginRight: String(innerMargin) + ea,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          event: { click: (e) => { window.location.href = thisHost + "/proposal"; } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "정산\n관리",
+              style: {
+                color: colorChip.black,
+                fontSize: String(title2Size) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight2),
+                position: "relative",
+                top: String(visualTop2) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+            height: boxHeight1,
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.gray1,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=contents"; } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "컨텐츠\n관리",
+              style: {
+                color: colorChip.black,
+                fontSize: String(title2Size) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight2),
+                position: "relative",
+                top: String(visualTop2) + ea,
+              }
             }
           ]
         },
       ]
     });
-    onlineBlock = firstMother.firstChild;
-    webBlock = firstMother.lastChild;
-  }
+    clientBlock = secondMother.children[0];
+    projectBlock = secondMother.children[1];
+    constructBlock = secondMother.children[2];
+    photoBlock = secondMother.children[3];
 
-  secondMother = createNode({
-    mother: motherBox,
-    style: {
-      position: "relative",
-      display: "inline-block",
-      width: boxWidth0,
-      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
-      marginRight: String(innerMargin) + ea,
-      verticalAlign: "top",
-      opacity: String(0),
-      animation: "fadeup 0.5s ease 0.2s forwards",
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: boxWidth0,
-          height: boxHeight0,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          marginBottom: String(innerMargin) + ea,
-          cursor: "pointer",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/client"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "가능 일정 관리\n<b%Calendar%b>",
-            style: {
-              color: colorChip.black,
-              fontSize: String(titleSize) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight),
-            },
-            bold: {
-              color: colorChip.green,
-              fontSize: String(subSize) + vh,
-              fontFamily: "graphik",
-              fontWeight: String(400),
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          width: boxWidth0,
-          height: boxHeight0,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          marginBottom: String(innerMargin) + ea,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/project"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "의뢰서 관리\n<b%Request%b>",
-            style: {
-              color: colorChip.black,
-              fontSize: String(titleSize) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight),
-            },
-            bold: {
-              color: colorChip.green,
-              fontSize: String(subSize) + vh,
-              fontFamily: "graphik",
-              fontWeight: String(400),
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
-          height: boxHeight1,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.gray1,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          marginRight: String(innerMargin) + ea,
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/proposal"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "정산\n관리",
-            style: {
-              color: colorChip.black,
-              fontSize: String(title2Size) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight2),
-              position: "relative",
-              top: String(visualTop2) + ea,
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          display: "inline-block",
-          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
-          height: boxHeight1,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.gray1,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=contents"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "컨텐츠\n관리",
-            style: {
-              color: colorChip.black,
-              fontSize: String(title2Size) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight2),
-              position: "relative",
-              top: String(visualTop2) + ea,
-            }
-          }
-        ]
-      },
-    ]
-  });
-  clientBlock = secondMother.children[0];
-  projectBlock = secondMother.children[1];
-  constructBlock = secondMother.children[2];
-  photoBlock = secondMother.children[3];
-
-  thirdMother = createNode({
-    mother: motherBox,
-    style: {
-      position: "relative",
-      display: "inline-block",
-      width: "calc(calc(" + boxWidth0 + " * 2) + " + String(innerMargin) + ea + ")",
-      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
-      marginRight: String(innerMargin) + ea,
-      verticalAlign: "top",
-      opacity: String(0),
-      animation: "fadeup 0.5s ease 0.3s forwards",
-    },
-    children: [
-      {
-        style: {
-          position: "relative",
-          width: boxWidth0,
-          height: boxHeight0,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.gradientGreen,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          marginBottom: String(innerMargin) + ea,
-          marginRight: String(innerMargin) + ea,
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/builder"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "프로젝트 케어\n<b%Project%b>",
-            style: {
-              color: colorChip.whiteBlack,
-              fontSize: String(titleSize) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight),
-            },
-            bold: {
-              color: colorChip.whiteBlack,
-              fontSize: String(subSize) + vh,
-              fontFamily: "graphik",
-              fontWeight: String(400),
-              opacity: String(0.7),
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          display: "inline-block",
-          width: boxWidth0,
-          height: boxHeight0,
-          marginBottom: String(innerMargin) + ea,
-        },
-        children: [
-          {
-            style: {
-              position: "relative",
-              display: "flex",
-              width: boxWidth0,
-              height: "calc(calc(" + boxHeight0 + " - " + String(innerMargin) + ea + ") / 2)",
-              borderRadius: String(5) + ea,
-              backgroundImage: "url('/middle/proposal/back.jpg')",
-              backgroundSize: "100% auto",
-              backgroundPosition: "50% 50%",
-              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-              marginBottom: String(innerMargin) + ea,
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-            },
-            event: { click: (e) => { blankHref("https://" + FILEHOST + "/publicSector/estimation", true); } },
-            children: [
-              {
-                class: [ "hoverDefault_lite" ],
-                text: "HomeLiaison web",
-                style: {
-                  color: colorChip.whiteBlack,
-                  fontSize: String(title3Size) + vh,
-                  textAlign: "center",
-                  fontWeight: String(500),
-                  lineHeight: String(lineHeight),
-                  fontFamily: "graphik",
-                  position: "relative",
-                  top: String(visualTop) + ea,
-                  fontStyle: "italic",
-                },
-              }
-            ]
-          },
-          {
-            style: {
-              position: "relative",
-              display: "flex",
-              width: boxWidth0,
-              height: "calc(calc(" + boxHeight0 + " - " + String(innerMargin) + ea + ") / 2)",
-              borderRadius: String(5) + ea,
-              backgroundImage: "url('/middle/curation/back.jpg')",
-              backgroundSize: "100% auto",
-              backgroundPosition: "50% 50%",
-              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-            },
-            event: { click: (e) => { blankHref(window.location.protocol + "//" + window.location.host + "/middle/console?desid=d1701_aa01s", true); } },
-            children: [
-              {
-                class: [ "hoverDefault_lite" ],
-                text: "Web setting",
-                style: {
-                  color: colorChip.whiteBlack,
-                  fontSize: String(title3Size) + vh,
-                  textAlign: "center",
-                  fontWeight: String(500),
-                  lineHeight: String(lineHeight),
-                  fontFamily: "graphik",
-                  position: "relative",
-                  top: String(visualTop) + ea,
-                  fontStyle: "italic",
-                },
-              }
-            ]
-          },
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          height: boxHeight0,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.white,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          marginBottom: String(innerMargin) + ea,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "체크리스트\n<b%Checklist%b>",
-            style: {
-              color: colorChip.black,
-              fontSize: String(titleSize) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight),
-            },
-            bold: {
-              color: colorChip.green,
-              fontSize: String(subSize) + vh,
-              fontFamily: "graphik",
-              fontWeight: String(400),
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          display: "inline-block",
-          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
-          height: boxHeight1,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.gray1,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          marginRight: String(innerMargin) + ea,
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=aspirant"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "기본\n정보",
-            style: {
-              color: colorChip.black,
-              fontSize: String(title2Size) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight2),
-              position: "relative",
-              top: String(visualTop2) + ea,
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          display: "inline-block",
-          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
-          height: boxHeight1,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.gray1,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          marginRight: String(innerMargin) + ea,
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=checklist"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "작업\n정보",
-            style: {
-              color: colorChip.black,
-              fontSize: String(title2Size) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight2),
-              position: "relative",
-              top: String(visualTop2) + ea,
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          display: "inline-block",
-          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
-          height: boxHeight1,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.gray1,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          marginRight: String(innerMargin) + ea,
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=possible"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "스타일\n정보",
-            style: {
-              color: colorChip.black,
-              fontSize: String(title2Size) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight2),
-              position: "relative",
-              top: String(visualTop2) + ea,
-            }
-          }
-        ]
-      },
-      {
-        style: {
-          position: "relative",
-          display: "inline-block",
-          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
-          height: boxHeight1,
-          borderRadius: String(whiteRadius) + ea,
-          background: colorChip.gray1,
-          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-          display: "inline-flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          verticalAlign: "top",
-        },
-        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=request"; } },
-        children: [
-          {
-            class: [ "hoverDefault_lite" ],
-            text: "시공\n정보",
-            style: {
-              color: colorChip.black,
-              fontSize: String(title2Size) + vh,
-              textAlign: "center",
-              fontWeight: String(500),
-              lineHeight: String(lineHeight2),
-              position: "relative",
-              top: String(visualTop2) + ea,
-            }
-          }
-        ]
-      },
-    ]
-  });
-  [ proposalBlock, tempMother, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock ] = [ ...thirdMother.children ];
-  [ constructConsoleBlock, designerConsoleBlock ] = [ ...tempMother.children ];
-
-  fourthMother = createNode({
-    mother: motherBox,
-    style: {
-      position: "relative",
-      paddingTop: String(onlineBoxTop) + vh,
-      display: "inline-block",
-      width: "calc(calc(100vw - " + String((outerMargin * 2) + (innerMargin * 4)) + ea + ") - calc(" + boxWidth0 + " * 4))",
-      height: "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ") - " + String(onlineBoxTop) + vh + ")",
-      borderRadius: String(whiteRadius) + ea,
-      background: colorChip.gray1,
-      boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-      verticalAlign: "top",
-      transition: "all 0s ease",
-      opacity: String(0),
-      animation: "fadeup 0.5s ease 0.4s forwards",
-    },
-    children: [
-      {
-        text: "Notice",
-        style: {
-          position: "absolute",
-          fontSize: String(onlineWordingSize) + vh,
-          fontFamily: "graphik",
-          fontWeight: String(400),
-          top: String(onlineBoxTitleTop) + vh,
-          left: String(onlineBoxLeft) + vh,
-          color: colorChip.black,
-        }
-      },
-      {
-        class: [ noticeTongClassName ],
-        style: {
-          display: "block",
-          position: "relative",
-          left: String(onlineBoxLeft) + vh,
-          width: withOut(onlineBoxLeft * 2, vh),
-          height: String(100) + '%',
-          overflow: "scroll",
-        },
-      }
-    ]
-  });
-  noticeBlock = fourthMother;
-  noticeTong = fourthMother.querySelector("." + noticeTongClassName);
-
-  /*
-  for (let { text, user, date } of slackNotices) {
-    createNode({
-      mother: noticeTong,
+    thirdMother = createNode({
+      mother: motherBox,
       style: {
-        display: "block",
         position: "relative",
-        width: String(100) + '%',
-        background: colorChip.white,
-        borderRadius: String(5) + "px",
-        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
-        marginBottom: String(noticeMarginBottom) + vh,
+        display: "inline-block",
+        width: "calc(calc(" + boxWidth0 + " * 2) + " + String(innerMargin) + ea + ")",
+        height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+        marginRight: String(innerMargin) + ea,
+        verticalAlign: "top",
+        opacity: String(0),
+        animation: "fadeuporiginal 0.5s ease 0.3s forwards",
       },
       children: [
         {
-          text: "<u%" + String(date.getFullYear()).slice(2) + "." + String(date.getMonth() + 1) + "." + String(date.getDate()) + " " + String(date.getHours()) + ":" + String(date.getDate()) + "%u>\n" + "<b%" + user + "%b> : " + text.replace(/\<[^\>]+\>/g, '').trim(),
           style: {
-            paddingTop: String(noticePaddingTop) + vh,
-            paddingLeft: String(noticePaddingLeft) + vh,
-            paddingRight: String(noticePaddingLeft) + vh,
-            paddingBottom: String(noticePaddingBottom) + vh,
-            fontSize: String(noticeSize) + vh,
+            position: "relative",
+            width: boxWidth0,
+            height: boxHeight0,
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.gradientGreen,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            marginBottom: String(innerMargin) + ea,
+            marginRight: String(innerMargin) + ea,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          event: { click: (e) => { window.location.href = thisHost + "/builder"; } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "프로젝트 케어\n<b%Project%b>",
+              style: {
+                color: colorChip.whiteBlack,
+                fontSize: String(titleSize) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight),
+              },
+              bold: {
+                color: colorChip.whiteBlack,
+                fontSize: String(subSize) + vh,
+                fontFamily: "graphik",
+                fontWeight: String(400),
+                opacity: String(0.7),
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: boxWidth0,
+            height: boxHeight0,
+            marginBottom: String(innerMargin) + ea,
+          },
+          children: [
+            {
+              style: {
+                position: "relative",
+                display: "flex",
+                width: boxWidth0,
+                height: "calc(calc(" + boxHeight0 + " - " + String(innerMargin) + ea + ") / 2)",
+                borderRadius: String(5) + ea,
+                backgroundImage: "url('/middle/proposal/back.jpg')",
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+                marginBottom: String(innerMargin) + ea,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              },
+              event: { click: (e) => { blankHref("https://" + FILEHOST + "/publicSector/estimation", true); } },
+              children: [
+                {
+                  class: [ "hoverDefault_lite" ],
+                  text: "HomeLiaison web",
+                  style: {
+                    color: colorChip.whiteBlack,
+                    fontSize: String(title3Size) + vh,
+                    textAlign: "center",
+                    fontWeight: String(500),
+                    lineHeight: String(lineHeight),
+                    fontFamily: "graphik",
+                    position: "relative",
+                    top: String(visualTop) + ea,
+                    fontStyle: "italic",
+                  },
+                }
+              ]
+            },
+            {
+              style: {
+                position: "relative",
+                display: "flex",
+                width: boxWidth0,
+                height: "calc(calc(" + boxHeight0 + " - " + String(innerMargin) + ea + ") / 2)",
+                borderRadius: String(5) + ea,
+                backgroundImage: "url('/middle/curation/back.jpg')",
+                backgroundSize: "100% auto",
+                backgroundPosition: "50% 50%",
+                boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              },
+              event: { click: (e) => { blankHref(window.location.protocol + "//" + window.location.host + "/middle/console?desid=d1701_aa01s", true); } },
+              children: [
+                {
+                  class: [ "hoverDefault_lite" ],
+                  text: "Web setting",
+                  style: {
+                    color: colorChip.whiteBlack,
+                    fontSize: String(title3Size) + vh,
+                    textAlign: "center",
+                    fontWeight: String(500),
+                    lineHeight: String(lineHeight),
+                    fontFamily: "graphik",
+                    position: "relative",
+                    top: String(visualTop) + ea,
+                    fontStyle: "italic",
+                  },
+                }
+              ]
+            },
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            height: boxHeight0,
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            marginBottom: String(innerMargin) + ea,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "체크리스트\n<b%Checklist%b>",
+              style: {
+                color: colorChip.black,
+                fontSize: String(titleSize) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight),
+              },
+              bold: {
+                color: colorChip.green,
+                fontSize: String(subSize) + vh,
+                fontFamily: "graphik",
+                fontWeight: String(400),
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+            height: boxHeight1,
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.gray1,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            marginRight: String(innerMargin) + ea,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=aspirant"; } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "기본\n정보",
+              style: {
+                color: colorChip.black,
+                fontSize: String(title2Size) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight2),
+                position: "relative",
+                top: String(visualTop2) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+            height: boxHeight1,
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.gray1,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            marginRight: String(innerMargin) + ea,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=checklist"; } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "작업\n정보",
+              style: {
+                color: colorChip.black,
+                fontSize: String(title2Size) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight2),
+                position: "relative",
+                top: String(visualTop2) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+            height: boxHeight1,
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.gray1,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            marginRight: String(innerMargin) + ea,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=possible"; } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "스타일\n정보",
+              style: {
+                color: colorChip.black,
+                fontSize: String(title2Size) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight2),
+                position: "relative",
+                top: String(visualTop2) + ea,
+              }
+            }
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            display: "inline-block",
+            width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+            height: boxHeight1,
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.gray1,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            verticalAlign: "top",
+          },
+          event: { click: (e) => { window.location.href = thisHost + "/designer?mode=request"; } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "시공\n정보",
+              style: {
+                color: colorChip.black,
+                fontSize: String(title2Size) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight2),
+                position: "relative",
+                top: String(visualTop2) + ea,
+              }
+            }
+          ]
+        },
+      ]
+    });
+    [ proposalBlock, tempMother, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock ] = [ ...thirdMother.children ];
+    [ constructConsoleBlock, designerConsoleBlock ] = [ ...tempMother.children ];
+
+    fourthMother = createNode({
+      mother: motherBox,
+      style: {
+        position: "relative",
+        paddingTop: String(onlineBoxTop) + vh,
+        display: "inline-block",
+        width: "calc(calc(100vw - " + String((outerMargin * 2) + (innerMargin * 4)) + ea + ") - calc(" + boxWidth0 + " * 4))",
+        height: "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ") - " + String(onlineBoxTop) + vh + ")",
+        borderRadius: String(whiteRadius) + ea,
+        background: colorChip.gray1,
+        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        verticalAlign: "top",
+        transition: "all 0s ease",
+        opacity: String(0),
+        animation: "fadeuporiginal 0.5s ease 0.4s forwards",
+      },
+      children: [
+        {
+          text: "Notice",
+          style: {
+            position: "absolute",
+            fontSize: String(onlineWordingSize) + vh,
+            fontFamily: "graphik",
             fontWeight: String(400),
+            top: String(onlineBoxTitleTop) + vh,
+            left: String(onlineBoxLeft) + vh,
             color: colorChip.black,
-            lineHeight: String(1.6),
-          },
-          bold: {
-            fontSize: String(noticeSize) + vh,
-            fontWeight: String(600),
-            color: colorChip.black,
-          },
-          under: {
-            fontSize: String(noticeDateSize) + vh,
-            fontWeight: String(600),
-            color: colorChip.deactive,
           }
+        },
+        {
+          class: [ noticeTongClassName ],
+          style: {
+            display: "block",
+            position: "relative",
+            left: String(onlineBoxLeft) + vh,
+            width: withOut(onlineBoxLeft * 2, vh),
+            height: String(100) + '%',
+            overflow: "scroll",
+          },
         }
       ]
+    });
+    noticeBlock = fourthMother;
+    noticeTong = fourthMother.querySelector("." + noticeTongClassName);
+
+    /*
+    for (let { text, user, date } of slackNotices) {
+      createNode({
+        mother: noticeTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: String(100) + '%',
+          background: colorChip.white,
+          borderRadius: String(5) + "px",
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(noticeMarginBottom) + vh,
+        },
+        children: [
+          {
+            text: "<u%" + String(date.getFullYear()).slice(2) + "." + String(date.getMonth() + 1) + "." + String(date.getDate()) + " " + String(date.getHours()) + ":" + String(date.getDate()) + "%u>\n" + "<b%" + user + "%b> : " + text.replace(/\<[^\>]+\>/g, '').trim(),
+            style: {
+              paddingTop: String(noticePaddingTop) + vh,
+              paddingLeft: String(noticePaddingLeft) + vh,
+              paddingRight: String(noticePaddingLeft) + vh,
+              paddingBottom: String(noticePaddingBottom) + vh,
+              fontSize: String(noticeSize) + vh,
+              fontWeight: String(400),
+              color: colorChip.black,
+              lineHeight: String(1.6),
+            },
+            bold: {
+              fontSize: String(noticeSize) + vh,
+              fontWeight: String(600),
+              color: colorChip.black,
+            },
+            under: {
+              fontSize: String(noticeDateSize) + vh,
+              fontWeight: String(600),
+              color: colorChip.deactive,
+            }
+          }
+        ]
+      })
+
+    }
+    */
+
+  } else {
+
+    mobileBoxHeight = String((100 - (outerMargin * 2) - (innerMargin * 2)) / 3) + vw;
+    mobileBoxWidth0 = String(100 - (outerMargin * 2)) + vw;
+    mobileBoxWidth1 = String((100 - (outerMargin * 2) - (innerMargin * 1)) / 2) + vw;
+    mobileBoxWidth2 = String((100 - (outerMargin * 2) - (innerMargin * 2)) / 3) + vw;
+    mobileBoxWidth3 = String((((100 - (outerMargin * 2) - (innerMargin * 2)) / 3) * 2) + innerMargin) + vw;
+
+    createNode({
+      mother: motherBox,
+      style: {
+        position: "absolute",
+        top: String(-1 * outerMargin) + vw,
+        left: String(-1 * outerMargin) + vw,
+        width: "calc(100% + " + String(outerMargin * 2) + vw + ")",
+        height: String(mobileBackgroundHeight) + vw,
+        backgroundImage: "url('/middle/cestimation/moback.jpg')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "50% 22%",
+        zIndex: String(-1),
+      }
     })
 
-  }
-  */
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        position: "relative",
+        height: String(mobileTitleZoneHeight) + vw,
+        marginBottom: String(mobileTitleMarginBottom) + vw,
+        borderBottom: "1px solid " + colorChip.gray3,
+      },
+      children: [
+        {
+          text: "Designer",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(mobileTitleSize) + vw,
+            fontWeight: String(400),
+            fontFamily: "graphik",
+            color: colorChip.white,
+            marginRight: String(1) + vw
+          }
+        },
+        {
+          text: "Console",
+          style: {
+            display: "inline-block",
+            position: "relative",
+            fontSize: String(mobileTitleSize) + vw,
+            fontWeight: String(400),
+            fontFamily: "graphik",
+            fontStyle: "italic",
+            color: colorChip.white,
+          }
+        },
+      ]
+    });
 
-  this.whiteBlocks = { onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock };
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth1,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        marginRight: String(innerMargin) + vw,
+        background: colorChip.white,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth1,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        background: colorChip.green,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth2,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        marginRight: String(innerMargin) + vw,
+        background: colorChip.white,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth2,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        marginRight: String(innerMargin) + vw,
+        background: colorChip.white,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth2,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth0,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        backgroundImage: "url('/middle/curation/back2.jpg')",
+        backgroundSize: mobileBoxWidth0 + " auto",
+        backgroundPosition: "0% 0%",
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth2,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        marginRight: String(innerMargin) + vw,
+        background: colorChip.gray0,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth3,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        backgroundImage: "url('/middle/curation/back2.jpg')",
+        backgroundSize: mobileBoxWidth0 + " auto",
+        backgroundPosition: "100% 100%",
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth2,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        marginRight: String(innerMargin) + vw,
+        background: colorChip.gray0,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth2,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        marginRight: String(innerMargin) + vw,
+        background: colorChip.gray0,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth2,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        background: colorChip.gray0,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth0,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(innerMargin) + vw
+      }
+    });
+
+    createNode({
+      mother: motherBox,
+      style: {
+        display: "inline-block",
+        width: mobileBoxWidth0,
+        height: mobileBoxHeight,
+        borderRadius: String(5) + "px",
+        background: colorChip.white,
+        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
+        marginBottom: String(mobileFinalMarginBottom) + vw
+      }
+    });
+
+  }
+
   this.mainBaseTong = motherBox;
 
 }
