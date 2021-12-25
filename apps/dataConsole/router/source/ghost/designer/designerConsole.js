@@ -1003,7 +1003,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let boxWidth0, boxWidth1;
   let boxHeight0, boxHeight1;
   let whiteRadius;
-  let onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock;
+  let ongoingBlock, mainTitleBlock, calendarBlock, requestBlock, reportBlock, contentsBlock, projectsBlock, webBlock, webSettingBlock, checklistBlock, basicBlock, workBlock, styleBlock, constructBlock, noticeBlock;
   let firstMother, secondMother, thirdMother, fourthMother;
   let tempMother;
   let titleSize, subSize, lineHeight;
@@ -1345,8 +1345,8 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
           },
         ]
       });
-      onlineBlock = firstMother.firstChild;
-      webBlock = firstMother.lastChild;
+      ongoingBlock = firstMother.firstChild;
+      mainTitleBlock = firstMother.lastChild;
     }
 
     secondMother = createNode({
@@ -1498,10 +1498,10 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         },
       ]
     });
-    clientBlock = secondMother.children[0];
-    projectBlock = secondMother.children[1];
-    constructBlock = secondMother.children[2];
-    photoBlock = secondMother.children[3];
+    calendarBlock = secondMother.children[0];
+    requestBlock = secondMother.children[1];
+    reportBlock = secondMother.children[2];
+    contentsBlock = secondMother.children[3];
 
     thirdMother = createNode({
       mother: motherBox,
@@ -1801,8 +1801,8 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         },
       ]
     });
-    [ proposalBlock, tempMother, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock ] = [ ...thirdMother.children ];
-    [ constructConsoleBlock, designerConsoleBlock ] = [ ...tempMother.children ];
+    [ projectsBlock, tempMother, checklistBlock, basicBlock, workBlock, styleBlock, constructBlock ] = [ ...thirdMother.children ];
+    [ webBlock, webSettingBlock ] = [ ...tempMother.children ];
 
     fourthMother = createNode({
       mother: motherBox,
