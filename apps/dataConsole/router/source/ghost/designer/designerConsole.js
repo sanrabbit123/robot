@@ -158,6 +158,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         if (instance.mode === modes[0]) {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -176,6 +177,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.possibleDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -190,6 +192,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 4,
       mobile: true,
       event: function (e) {
+        totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[0]) {
@@ -210,6 +213,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 5,
       mobile: true,
       event: function (e) {
+        totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[0]) {
@@ -230,6 +234,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         if (instance.mode === modes[1]) {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -248,6 +253,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 3,
       mobile: true,
       event: function (e) {
+        totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         const blocks = document.querySelector(".mainBaseTong").firstChild.children;
         if (instance.mode === modes[1]) {
@@ -268,6 +274,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.requestDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -285,6 +292,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
       position: 0,
       mobile: true,
       event: function (e) {
+        totalMother.style.background = "transparent";
         instance.pageHistory.unshift({ index: Number(this.getAttribute("index")), status: "page" });
         instance.projectDetailLaunching(desid, () => {
           scrollTo(document.querySelector(".totalMother"), 0);
@@ -339,6 +347,9 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
     menuMargin = <%% 15, 11, 9, 8, 15 %%>;
     secondBold = 500;
     titleSize = <%% 21, 19, 17, 15, 3 %%>;
+
+    mother.style.height = String(100) + '%';
+    mother.style.position = "absolute";
 
     menu = [];
     for (let i = 0; i < menuMap.length; i++) {
@@ -411,7 +422,7 @@ DesignerConsoleJs.prototype.navigatorLaunching = function () {
         height: withOut(100, margin * 2, ea),
         fontSize: String(size) + ea,
         fontWeight: String(secondBold),
-        color: colorChip.black
+        color: colorChip.black,
       },
       children: [
         {
@@ -971,833 +982,871 @@ DesignerConsoleJs.prototype.initialLogin = function () {
 
 }
 
-DesignerConsoleJs.prototype.consoleDetailLaunching = function (desid) {
+DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   const instance = this;
-  const { ea, belowHeight, firstTop, motherHeight, middleMode } = this;
-  const totalMother = document.querySelector(".totalMother");
-  const standardBar = this.standardDoms[0].parentElement;
-  const { scrollTo, ajaxJson, colorChip } = GeneralJs;
-  let target, pastScrollTop;
+  const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
+  const { members, slackNotices, media } = this;
+  const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue, ajaxJson } = GeneralJs;
+  const vh = "vh";
+  const memberTongClassName = "memberTong";
+  const serverTongClassName = "serverTong";
+  const noticeTongClassName = "noticeTong";
+  const thisHost = window.location.protocol + "//" + window.location.host;
+  let outerMargin;
+  let motherBox;
+  let childrenBox;
+  let middleBox;
+  let innerMargin;
+  let boxWidth0, boxWidth1;
+  let boxHeight0, boxHeight1;
+  let whiteRadius;
+  let onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock;
+  let firstMother, secondMother, thirdMother, fourthMother;
+  let tempMother;
+  let titleSize, subSize, lineHeight;
+  let title2Size, title3Size;
+  let visualTop, visualTop2;
+  let onlineBoxTop, onlineBoxTitleTop, onlineBoxLeft;
+  let onlineWordingSize;
+  let onlineBoxHeight0, onlineBoxBetween;
+  let onlineBoxInnerMargin;
+  let onlineBoxInnerMarginTop;
+  let memberTong, serverTong;
+  let memberBlockPaddingLeft;
+  let memberBlockMarginBottom;
+  let memberBlockWidth;
+  let memberBlockTop, memberBlockTop2, memberBlockLeft;
+  let memberBlockSize;
+  let memberBlockPaddingRight;
+  let homeliaisonWifiKey, hubSeongSuWifiKey;
+  let alive;
+  let serverTargets;
+  let noticeTong;
+  let noticeSize, noticeDateSize;
+  let noticePaddingLeft, noticePaddingTop, noticePaddingBottom;
+  let noticeMarginBottom;
+  let onlineTextTop;
+  let desktopMode, tabletMode, mobileMode;
 
-  pastScrollTop = totalMother.scrollTop;
-  this.desid = desid;
-  this.fixTargets = [];
-
-  window.history.pushState({ path: "console", status: "list", desid }, '');
-
-  if (this.mainBaseTong !== undefined && this.mainBaseTong !== null) {
-    this.mainBaseTong.parentNode.removeChild(this.mainBaseTong);
-    this.mainBaseTong = null;
-    for (let i = 1; i < this.standardDoms.length; i++) {
-      this.standardDoms[i].style.color = colorChip.black;
-    }
-    if (this.iconTong !== undefined && this.iconTong !== null) {
-      this.iconTong.parentElement.removeChild(this.iconTong);
-    }
-    this.iconTong = null;
-    if (document.getElementById("memoTong") !== null) {
-      totalMother.removeChild(document.getElementById("memoTong"));
-    }
+  if (window.innerWidth > 1420) {
+    desktopMode = true;
+    tabletMode = false;
+    mobileMode = false;
+  } else if (window.innerWidth <= 1420 && window.innerWidth > 900) {
+    desktopMode = false;
+    tabletMode = true;
+    mobileMode = false;
+  } else {
+    desktopMode = false;
+    tabletMode = false;
+    mobileMode = true;
   }
 
-  ajaxJson({
-    page: "console",
-    mode: "page",
-    who: instance.designer.information.phone,
-    desid,
-  }, "/ghostDesigner_updateAnalytics").then((message) => {
-    console.log(message);
-  }).catch((err) => {
-    console.log(err);
-  });
 
-  this.consoleDetail(desid);
-  this.checkListIconSet(desid);
-}
 
-DesignerConsoleJs.prototype.consoleDetail = function (desid) {
-  if (desid === undefined) {
-    throw new Error("invaild input");
-  }
-  const instance = this;
-  const { createNode, createNodes, ajaxJson, colorChip, withOut, isMac, findByAttribute, uniqueValue, swipePatch } = GeneralJs;
-  const { totalMother, ea, grayBarWidth, belowHeight, projectMap } = this;
-  const mobile = this.media[4];
-  const desktop = !mobile;
-  const token = "__split__";
-  const detailWhitePopupConst = "detailWhitePopupConst";
-  const { color, emoji, title, contents, index } = this.consoleStatics("all");
-  let designer;
-  let margin;
-  let baseTong0, baseTong1, baseTong2, baseTong;
-  let tempObj, nodeArr, subNodeArr;
-  let topMargin, leftMargin, bottomMargin;
-  let size;
-  let temp;
-  let tong;
-  let baseTongMarginBottom;
-  let baseTongPaddingTop, baseTongPaddingBottom;
-  let divisionEntireMap;
-  let baseArea;
-  let num, num2;
-  let areaBetween;
-  let innerPaddingTop;
-  let innerPaddingLeft;
-  let titleHeight;
-  let areaPaddingTop, areaPaddingLeft, areaPaddingBottom;
-  let areaTitleTop, areaTitleLeft;
-  let fontSize0, fontSize1, fontSize2, fontSize3;
-  let mainTitleTextTop, mainTitleTextLeft;
-  let countNumberBetween;
-  let countNumberTextTop;
-  let lastMargin;
-  let cardHeight;
-  let cardMargin;
-  let areaMinHeight;
-  let cards;
-  let whiteCard, nameWord, idWord;
-  let division;
-  let divideArr, sizeArr;
-  let totalStandard;
-  let tempSize;
-  let divideNumber;
-  let cardWidthConstant;
-  let fixedHeightSize;
-  let divisionMap;
-  let nameFontSize, nameWordTop;
-  let idFontSize, idWordTop;
-  let intend;
-  let between;
-  let requestNumber;
-  let whiteTong;
-  let whiteTongHeight;
-  let initialBoxNumber;
-  let initialDivide;
-  let colorAreaHeight0, colorAreaHeight1;
-  let colorAreaHeight;
-  let motherMargin;
-  let blockMargin;
-  let initialWordingSize;
-  let twinkleAdditional;
-  let twinkleTop;
-  let initialWordingTop;
-  let innerPaddingMiddle;
-  let innerPaddingHigh;
-  let mainTitleLineTop0, mainTitleLineTop1;
-  let initDescriptionIndent, initDescriptionPaddingTop;
-  let fifthTitleMarginTop, fifthTitleMarginBottom, fifthTitle;
-  let whiteFlexNum;
-  let grayBarWidthMinus;
-  let numbers;
+  outerMargin = <%% 30, 30, 28, 24, 4 %%>;
+  innerMargin = <%% 5, 5, 4, 3, 1 %%>;
+  whiteRadius = <%% 8, 8, 7, 6, 3 %%>;
 
-  designer = this.designers.pick(desid);
-  divisionEntireMap = projectMap.action.itemMap;
-  divisionMap = [];
-  for (let arr of divisionEntireMap) {
-    divisionMap = divisionMap.concat(arr[1]);
-  }
+  titleSize = 2.6;
+  title2Size = 2.3;
+  title3Size = 2.3;
+  subSize = 2;
+  lineHeight = 1.02;
+  lineHeight2 = 1.25;
+  visualTop = -4;
+  visualTop2 = isMac() ? -3 : 0;
 
-  initialBoxNumber = title.length - 1;
-  initialDivide = <%% 4, 2, 2, 2, 2 %%>;
-  whiteFlexNum = Math.ceil(initialBoxNumber / initialDivide);
+  onlineWordingSize = 1.7;
+  onlineBoxTitleTop = 2.2;
+  onlineBoxLeft = 2.7;
+  onlineBoxTop = 5.4;
+  onlineTextTop = isMac() ? 0 : 0.2;
 
-  initialWordingSize = <%% 43, 40, 36, 32, 5 %%>;
-  twinkleAdditional = <%% 33, 30, 22, 2, 3 %%>;
-  initialWordingTop = <%% 80, 80, 80, 80, 8 %%>;
-  twinkleTop = <%% -3, -3, -3, -3, -0.2 %%>;
-  colorAreaHeight0 = <%% 265, 255, 235, 180, 26 %%>;
-  colorAreaHeight1 = <%% 160, 140, 130, 85, 16 %%>;
-  colorAreaHeight = colorAreaHeight0 + colorAreaHeight1;
+  onlineBoxHeight0 = 33.2;
+  onlineBoxBetween = 1;
+  memberBlockPaddingLeft = 1.1;
+  memberBlockMarginBottom = <%% 10, 9, 8, 7, 1 %%>;
+  onlineBoxInnerMarginTop = 2;
+  memberBlockWidth = <%% 5, 5, 4, 3, 1 %%>;
+  memberBlockTop = <%% 6, 6, 5, 4, 1 %%>;
+  memberBlockTop2 = <%% 8, 8, 7, 6, 1 %%>;
+  memberBlockLeft = 0.1;
+  memberBlockSize = <%% 14, 13, 12, 11, 3 %%>;
+  memberBlockPaddingRight = 1;
 
-  motherMargin = <%% 40, 40, 40, 40, 4 %%>;
-  blockMargin = <%% 15, 12, 10, 8, 1 %%>;
+  noticeSize = 1.2;
+  noticeDateSize = 0.8;
+  noticePaddingLeft = 1.5;
+  noticePaddingTop = isMac() ? 1 : 1.2;
+  noticePaddingBottom = 1.4;
+  noticeMarginBottom = 0.5;
 
-  whiteTongHeight = <%% 360, 360, 360, 360, 36 %%>;
+  serverTargets = [
+    {
+      name: "Console server",
+      alive: () => {
+        return true;
+      }
+    },
+    {
+      name: "File server",
+      alive: () => {
+        return true;
+      }
+    },
+    {
+      name: "Graphic server",
+      alive: () => {
+        return true;
+      }
+    },
+    {
+      name: "Sms server",
+      alive: () => {
+        return true;
+      }
+    },
+    {
+      name: "Monitor server",
+      alive: () => {
+        return true;
+      }
+    },
+    {
+      name: "Bill Server",
+      alive: () => {
+        return true;
+      }
+    },
+    {
+      name: "Bridge Server",
+      alive: () => {
+        return true;
+      }
+    },
+  ];
 
-  mainTitleLineTop0 = <%% 10, 10, 10, 10, 1 %%>;
-  mainTitleLineTop1 = <%% 2, 2, 2, 2, 0 %%>;
+  boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
+  boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
 
-  initDescriptionPaddingTop = <%% 28, 28, 28, 28, 4 %%>;
-  initDescriptionIndent = <%% 40, 40, 40, 40, 5 %%>;
+  totalMother.style["min-width"] = "calc(" + boxWidth0 + " * 4.5)";
+  totalMother.style.background = colorChip.gray3;
+  totalMother.firstChild.style.display = "none";
 
-  fifthTitleMarginTop = <%% 12, 12, 12, 12, 1 %%>;
-  fifthTitleMarginBottom = <%% 16, 16, 16, 16, 0 %%>;
-  fifthTitle = title[title.length - 1];
 
-  cardWidthConstant = <%% 140, 140, 140, 140, 14 %%>;
-  fixedHeightSize = <%% 40, 40, 40, 40, 7 %%>;
-
-  margin = <%% 8, 8, 8, 8, 1 %%>;
-  topMargin = <%% (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), (isMac() ? 30 : 34), 6 %%>;
-  leftMargin = <%% 34, 34, 34, 34, 8 %%>;
-  bottomMargin = <%% (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), (isMac() ? 15 : 13), 11 %%>;
-  baseTongMarginBottom = <%% 80, 80, 80, 80, 25 %%>;
-  size = <%% 16, 15, 15, 15, 3.5 %%>;
-
-  baseTongPaddingTop = 1;
-  baseTongPaddingBottom = <%% 50, 50, 50, 50, 5 %%>;
-
-  areaBetween = <%% 13, 12, 12, 12, 1.5 %%>;
-  innerPaddingTop = <%% 24, 22, 20, 16, 5.2 %%>;
-  innerPaddingMiddle = <%% 30, 26, 24, 18, 5 %%>;
-  innerPaddingLeft = <%% 36, 32, 30, 24, 6 %%>;
-  innerPaddingHigh = <%% 42, 38, 36, 30, 6 %%>;
-  titleHeight = <%% 62, 58, 56, 52, 10.5 %%>;
-
-  areaPaddingTop = <%% (isMac() ? 48 : 47), (isMac() ? 48 : 47), (isMac() ? 46 : 45), (isMac() ? 44 : 43), 7.5 %%>;
-  areaPaddingLeft = <%% 15, 15, 15, 15, 0 %%>;
-  areaPaddingBottom = <%% 15, 15, 15, 15, 0 %%>;
-
-  areaTitleTop = <%% (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), (isMac() ? 13 : 15), 1.7 %%>;
-  areaTitleLeft = <%% 20, 20, 20, 20, 3 %%>;
-
-  fontSize0 = <%% 25, 23, 22, 21, 4 %%>;
-  fontSize1 = <%% 16, 16, 15, 14, 2.8 %%>;
-  fontSize2 = <%% 14, 14, 13, 12, 3 %%>;
-  fontSize3 = <%% 12, 12, 11, 11, 2.5 %%>;
-
-  mainTitleTextTop = <%% -3, -3, -3, -3, 0 %%>;
-  mainTitleTextLeft = <%% 3, 3, 3, 3, 1 %%>;
-  countNumberBetween = <%% 9, 9, 9, 9, 1 %%>;
-  countNumberTextTop = <%% 1, 1, 1, 1, 0 %%>;
-
-  lastMargin = <%% 30, 30, 30, 30, 3 %%>;
-
-  cardHeight = <%% 40, 40, 40, 40, 6 %%>;
-  cardMargin = <%% 10, 10, 10, 10, 1.5 %%>;
-  areaMinHeight = cardHeight + (cardMargin * 2);
-
-  nameFontSize = <%% 14, 14, 14, 14, 2.8 %%>;
-  idFontSize = <%% 11, 11, 11, 11, 2.8 %%>;
-  nameWordTop = <%% (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), (isMac() ? 9 : 11), -0.3 %%>;
-  idWordTop = <%% (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), (isMac() ? 13 : 14), 3 %%>;
-  intend = <%% 16, 16, 16, 16, 4 %%>;
-  between = <%% 8, 8, 8, 8, 1 %%>;
-
-  grayBarWidthMinus = this.grayBarWidth;
-  cards = designer.projects;
-
-  divideArr = [];
-  sizeArr = [];
-  for (let i = 0; i < 5; i++) {
-    if (desktop) {
-      totalStandard = (window.innerWidth - grayBarWidthMinus - (motherMargin * 2) - (innerPaddingLeft * 2) - 2 - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
-    } else {
-      totalStandard = (100 - (motherMargin * 2) - (innerPaddingLeft * 2) - (areaPaddingLeft * 2) - (((areaPaddingLeft * 2) + areaBetween + 2) * i)) / (i + 1);
-    }
-    divideNumber = Math.floor(totalStandard / (cardMargin + cardWidthConstant));
-    if (divideNumber === 0) {
-      divideNumber = 1;
-    }
-    tempSize = (totalStandard - (cardMargin * (divideNumber + 1))) / divideNumber;
-    divideArr.push(divideNumber);
-    sizeArr.push(tempSize);
-  }
-
-  if (mobile) {
-    totalMother.style.background = colorChip.gray2;
-  }
-
-  baseTong0 = createNode({
+  motherBox = createNode({
     mother: totalMother,
-    class: [ "mainBaseTong" ],
     style: {
-      position: "absolute",
-      top: desktop ? String(0) + ea : String(60) + "px",
-      left: String(grayBarWidth) + ea,
-      width: withOut(grayBarWidth, ea),
-      height: "auto",
-      animation: "",
-      paddingTop: String(colorAreaHeight0) + ea,
+      position: "relative",
+      display: "block",
+      width: withOut(outerMargin * 2, ea),
+      height: withOut(outerMargin * 2, ea),
+      top: String(outerMargin) + ea,
+      left: String(outerMargin) + ea,
     }
   });
 
-  baseTong1 = createNode({
-    mother: baseTong0,
-    style: {
-      display: "block",
-      position: "relative",
-      background: colorChip.gray2,
-      paddingTop: String(motherMargin) + ea,
-      paddingBottom: String(baseTongPaddingBottom) + ea,
-      paddingLeft: String(motherMargin) + ea,
-      paddingRight: String(motherMargin) + ea,
-      width: withOut(motherMargin * 2, ea),
-    },
-    children: [
-      {
-        style: {
-          position: "absolute",
-          top: String(-1 * colorAreaHeight0) + ea,
-          left: String(0),
-          width: String(100) + '%',
-          height: String(colorAreaHeight) + ea,
-          background: color,
-        }
-      },
-      {
-        style: {
-          position: "absolute",
-          top: String(initialWordingTop - colorAreaHeight0) + ea,
-          left: String(motherMargin) + ea,
-          width: withOut(motherMargin * 2, ea),
-          textAlign: "center",
-        },
-        children: [
-          {
-            text: "안녕하세요" + emoji.replace(/^U\+/, "&#x") + ";&nbsp;" + designer.designer + " 디자이너님! <u%_%u>",
-            style: {
-              display: "block",
-              position: "relative",
-              fontSize: String(initialWordingSize) + ea,
-              fontWeight: String(700),
-              top: String(0),
-              color: colorChip.white,
-              textAlign: "center",
-            },
-            under: {
-              position: "relative",
-              top: String(twinkleTop) + ea,
-              fontSize: String(initialWordingSize + twinkleAdditional) + ea,
-              fontWeight: String(300),
-              color: colorChip.white,
-              animation: "twinkle 1.1s ease infinite"
-            }
-          },
-        ]
-      }
-    ]
-  });
-
-  for (let z = 0; z < whiteFlexNum; z++) {
-
-    baseTong2 = createNode({
-      mother: baseTong1,
+  if (desktopMode) {
+    firstMother = createNode({
+      mother: motherBox,
       style: {
-        display: "flex",
-        width: String(100) + '%',
-        marginBottom: String(blockMargin) + ea,
-        flexDirection: "row",
-      }
-    });
-
-    for (let i = 0; i < initialDivide; i++) {
-
-      if (index[i + (z * initialDivide)] === undefined) {
-        break;
-      }
-
-      whiteTong = createNode({
-        mother: baseTong2,
-        style: {
-          display: "inline-block",
-          position: "relative",
-          borderRadius: String(5) + "px",
-          boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-          background: colorChip.white,
-          width: "calc(calc(100% - " + String(blockMargin * (initialDivide - 1)) + ea + ") / " + String(initialDivide) + ")",
-          marginRight: String(i === initialDivide - 1 ? 0 : blockMargin) + ea,
-          paddingTop: String(innerPaddingMiddle) + ea,
-          paddingBottom: String(innerPaddingHigh) + ea,
-          cursor: "pointer",
-        },
-        children: [
-          {
-            style: {
-              display: "block",
-              position: "relative",
-              paddingLeft: String(innerPaddingLeft) + ea,
-              paddingRight: String(innerPaddingLeft) + ea,
-              width: withOut(innerPaddingLeft * 2, ea),
-            },
-            children: [
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  textAlign: "left",
-                },
-                children: [
-                  {
-                    text: title[i + (z * initialDivide)],
-                    attribute: {
-                      index: String(index[i + (z * initialDivide)])
-                    },
-                    event: {
-                      click: function (e) {
-                        const targetIndex = Number(this.getAttribute("index"));
-                        // DEV
-                        if (targetIndex === 1) {
-                          window.alert("아직 서비스 오픈 전입니다!");
-                        } else {
-                          if (document.querySelectorAll(".leftMenus").length > 0) {
-                            instance.menuMap[targetIndex].event.call(document.querySelectorAll(".leftMenus")[targetIndex], {});
-                          } else {
-                            instance.menuMap[targetIndex].event.call({
-                              getAttribute: (index) => {
-                                return targetIndex;
-                              }
-                            }, {});
-                          }
-                        }
-                        // DEV
-                      }
-                    },
-                    style: {
-                      display: "block",
-                      fontSize: String(fontSize0) + ea,
-                      fontWeight: String(600),
-                      color: colorChip.black,
-                    }
-                  },
-                  {
-                    style: {
-                      display: "block",
-                      height: String(mainTitleLineTop0) + ea,
-                      borderBottom: "1px solid " + color,
-                    }
-                  },
-                  {
-                    style: {
-                      display: desktop ? "block" : "none",
-                      height: String(mainTitleLineTop1) + ea,
-                      borderBottom: "1px solid " + color,
-                    }
-                  },
-                  {
-                    style: {
-                      display: "flex",
-                      flexDirection: "row",
-                      paddingTop: String(initDescriptionPaddingTop) + ea,
-                    },
-                    children: [
-                      {
-                        text: String(i + 1),
-                        style: {
-                          position: "relative",
-                          top: String(desktop ? -1 : 0) + ea,
-                          fontSize: String(fontSize2) + ea,
-                          lineHeight: String(1.6),
-                          fontWeight: String(700),
-                          color: color,
-                          textAlign: "left",
-                          marginRight: String(initDescriptionIndent) + ea,
-                        }
-                      },
-                      {
-                        text: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + contents[i + (z * initialDivide)][desktop ? 0 : 1],
-                        style: {
-                          display: "block",
-                          fontSize: String(fontSize2) + ea,
-                          lineHeight: String(1.6),
-                          fontWeight: String(400),
-                          color: colorChip.black,
-                          textAlign: "right",
-                        },
-                        bold: {
-                          fontSize: String(fontSize2) + ea,
-                          fontWeight: String(600),
-                          color: colorChip.black,
-                        }
-                      },
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      });
-    }
-
-  }
-
-  baseTong = createNode({
-    mother: baseTong1,
-    style: {
-      display: "block",
-      position: "relative",
-      top: String(0) + ea,
-      left: String(0) + ea,
-      width: String(100) + '%',
-      borderRadius: String(5) + "px",
-      boxShadow: "0px 3px 15px -9px " + colorChip.shadow,
-      background: colorChip.white,
-      overflow: "hidden",
-      marginBottom: String(baseTongMarginBottom) + ea,
-      paddingTop: String(innerPaddingTop) + ea,
-      paddingBottom: String(baseTongPaddingBottom) + ea,
-    }
-  });
-
-  numbers = new Map();
-  division = new Map();
-
-  createNode({
-    mother: baseTong,
-    style: {
-      display: "block",
-      position: "relative",
-      height: String(titleHeight) + ea,
-      paddingLeft: String(innerPaddingLeft) + ea,
-      marginTop: String(fifthTitleMarginTop) + ea,
-      marginBottom: String(fifthTitleMarginBottom) + ea,
-    },
-    children: [
-      {
-        text: fifthTitle,
-        style: {
-          fontSize: String(fontSize0) + ea,
-          fontWeight: String(600),
-          color: colorChip.black,
-          position: "relative",
-        }
-      },
-      {
-        style: {
-          display: "block",
-          width: withOut(innerPaddingLeft * 1, ea),
-          height: String(mainTitleLineTop0) + ea,
-          borderBottom: "1px solid " + color,
-        }
-      },
-      {
-        style: {
-          display: desktop ? "block" : "none",
-          width: withOut(innerPaddingLeft * 1, ea),
-          height: String(mainTitleLineTop1) + ea,
-          borderBottom: "1px solid " + color,
-        }
-      },
-    ]
-  });
-
-  for (let [ title, subTitles ] of divisionEntireMap) {
-
-    createNode({
-      mother: baseTong,
-      style: {
-        display: "flex",
         position: "relative",
-        alignItems: "center",
-        height: String(titleHeight) + ea,
-        paddingLeft: String(innerPaddingLeft) + ea,
+        display: "inline-block",
+        width: boxWidth0,
+        height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+        marginRight: String(innerMargin) + ea,
+        verticalAlign: "top",
+        opacity: String(0),
+        animation: "fadeup 0.5s ease 0.1s forwards",
       },
       children: [
         {
-          text: title,
           style: {
-            fontSize: String(fontSize0) + ea,
-            fontWeight: String(600),
-            color: colorChip.black,
             position: "relative",
-            top: String(mainTitleTextTop) + ea,
-          }
-        }
-      ]
-    });
-
-    num2 = 0;
-    for (let subTitle of subTitles) {
-      baseArea = createNode({
-        mother: baseTong,
-        style: {
-          display: "flex",
-          flexDirection: "row",
-          position: "relative",
-          paddingLeft: String(innerPaddingLeft) + ea,
-          width: withOut(innerPaddingLeft * 2, ea),
-          marginBottom: String(num2 !== subTitles.length - 1 ? areaBetween : lastMargin) + ea,
-        },
-      });
-      num = 0;
-      for (let sub of subTitle) {
-        tong = createNode({
-          mother: baseArea,
-          style: {
-            verticalAlign: "top",
-            position: "relative",
-            borderRadius: String(5) + "px",
-            border: "1px dashed " + colorChip.gray4,
-            boxSizing: "border-box",
-            width: "calc(calc(100% - " + String(areaBetween * (subTitle.length - 1)) + ea + ") / " + String(subTitle.length) + ")",
-            marginRight: String(num !== subTitle.length - 1 ? areaBetween : 0) + ea,
-            paddingTop: String(areaPaddingTop) + ea,
-            paddingLeft: String(areaPaddingLeft) + ea,
-            paddingRight: String(areaPaddingLeft) + ea,
-            paddingBottom: String(areaPaddingBottom) + ea,
+            paddingTop: String(onlineBoxTop) + vh,
+            display: "block",
+            width: boxWidth0,
+            height: "calc(calc(calc(100% - " + boxHeight1 + ") - " + String(innerMargin) + ea + ") - " + String(onlineBoxTop) + vh + ")",
+            borderRadius: String(whiteRadius) + ea,
+            background: colorChip.white,
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            marginBottom: String(innerMargin) + ea,
           },
           children: [
             {
+              text: "Ongoing",
+              style: {
+                position: "absolute",
+                fontSize: String(onlineWordingSize) + vh,
+                fontFamily: "graphik",
+                fontWeight: String(400),
+                top: String(onlineBoxTitleTop) + vh,
+                left: String(onlineBoxLeft) + vh,
+                color: colorChip.green,
+              }
+            },
+            {
               style: {
                 display: "block",
-                position: "absolute",
-                width: withOut(areaTitleLeft * 2, ea),
-                top: String(areaTitleTop) + ea,
-                left: String(areaTitleLeft) + ea,
+                position: "relative",
+                left: String(onlineBoxLeft) + vh,
+                width: withOut(onlineBoxLeft * 2, vh),
+                height: String(onlineBoxHeight0) + vh,
+                boxSizing: "border-box",
+                border: "1px solid " + colorChip.gray4,
+                borderRadius: String(5) + "px",
               },
               children: [
                 {
-                  text: sub,
                   style: {
-                    display: "inline-block",
-                    position: "relative",
-                    fontSize: String(fontSize1) + ea,
-                    fontWeight: String(600),
-                    color: colorChip.black,
-                  }
-                },
-                {
-                  text: String(0) + "명",
-                  style: {
-                    display: desktop ? "inline-block" : "none",
-                    position: "relative",
-                    fontSize: String(fontSize2) + ea,
-                    fontWeight: String(400),
-                    color: colorChip.deactive,
-                    top: String(countNumberTextTop) + ea,
-                    marginLeft: String(countNumberBetween) + ea,
-                  }
+                    position: "absolute",
+                    top: String(onlineBoxInnerMarginTop) + vh,
+                    left: String(onlineBoxInnerMarginTop) + vh,
+                    width: withOut(onlineBoxInnerMarginTop * 2, vh),
+                    height: withOut(onlineBoxInnerMarginTop * 2, vh),
+                    overflow: "scroll",
+                  },
+                  children: [
+                    {
+                      class: [ memberTongClassName ],
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        top: String(0),
+                        left: String(0),
+                        width: String(100) + '%',
+                      }
+                    }
+                  ]
                 }
               ]
             },
             {
-              attribute: {
-                kinds: "area",
-                name: sub,
-                action: sub,
-                family: JSON.stringify(subTitle),
-                length: String(subTitle.length),
-                size: String(sizeArr[subTitle.length - 1]),
-                divide: String(divideArr[subTitle.length - 1]),
-              },
-              event: {
-                dragenter: (e) => { e.preventDefault(); },
-                dragleave: function (e) {
-                  e.preventDefault();
-                  this.style.background = colorChip.gray1;
-                  this.parentElement.firstChild.style.color = colorChip.black;
-                },
-                dragover: function (e) {
-                  e.preventDefault();
-                  this.style.background = colorChip.whiteGreen;
-                  this.parentElement.firstChild.style.color = colorChip.green;
-                },
-                drop: async function (e) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const name = this.getAttribute("name");
-                  const length = Number(this.getAttribute("length"));
-                  const size = Number(this.getAttribute("size"));
-                  const divide = Number(this.getAttribute("divide"));
-                  const proid = e.dataTransfer.getData("dragData").split(token)[0];
-                  const fromAction = e.dataTransfer.getData("dragData").split(token)[1];
-                  const requestNumber = Number(e.dataTransfer.getData("dragData").split(token)[2]);
-                  const card = findByAttribute(instance.whiteCards, [ "proid", "request" ], [ proid, String(requestNumber) ]);
-                  const from = division.get(fromAction);
-                  const fromSize = Number(from.getAttribute("size"));
-                  const fromName = from.getAttribute("name");
-                  const fromDivide = Number(from.getAttribute("divide"));
-                  instance.randomToken = uniqueValue();
-                  try {
-                    let thisChildren;
-                    let thisChildrenLength;
-
-                    this.style.background = colorChip.gray1;
-                    this.parentElement.firstChild.style.color = colorChip.black;
-                    this.appendChild(card);
-
-                    thisChildren = this.children;
-                    thisChildrenLength = thisChildren.length;
-                    for (let c of thisChildren) {
-                      c.style.width = String(size) + ea;
-                    }
-
-                  } catch (e) {
-                    console.log(e);
-                  }
-                },
-              },
               style: {
                 display: "block",
                 position: "relative",
-                background: colorChip.gray1,
-                minHeight: String(areaMinHeight - cardMargin) + ea,
-                height: withOut(cardMargin, ea),
+                marginTop: String(onlineBoxBetween) + vh,
+                left: String(onlineBoxLeft) + vh,
+                width: withOut(onlineBoxLeft * 2, vh),
+                height: withOut(onlineBoxHeight0 + onlineBoxBetween + onlineBoxLeft, vh),
+                boxSizing: "border-box",
+                border: "1px solid " + colorChip.gray4,
                 borderRadius: String(5) + "px",
-                paddingBottom: String(cardMargin) + ea,
-                borderTopRightRadius: desktop ? "" : String(0),
-                borderTopLeftRadius: desktop ? "" : String(0),
-              }
+              },
+              children: [
+                {
+                  style: {
+                    position: "absolute",
+                    top: String(onlineBoxInnerMarginTop) + vh,
+                    left: String(onlineBoxInnerMarginTop) + vh,
+                    width: withOut(onlineBoxInnerMarginTop * 2, vh),
+                    height: withOut(onlineBoxInnerMarginTop * 2, vh),
+                    overflow: "scroll",
+                  },
+                  children: [
+                    {
+                      class: [ serverTongClassName ],
+                      style: {
+                        display: "block",
+                        position: "relative",
+                        top: String(0),
+                        left: String(0),
+                        width: String(100) + '%',
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+          ]
+        },
+        {
+          style: {
+            position: "relative",
+            display: "flex",
+            width: boxWidth0,
+            height: boxHeight1,
+            borderRadius: String(whiteRadius) + ea,
+            backgroundImage: "url('/middle/meeting/back.jpg')",
+            backgroundSize: "100% auto",
+            backgroundPosition: "50% 50%",
+            boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+          },
+          event: { click: (e) => { blankHref(FRONTHOST, true); } },
+          children: [
+            {
+              class: [ "hoverDefault_lite" ],
+              text: "HomeLiaison kakao",
+              style: {
+                color: colorChip.whiteBlack,
+                fontSize: String(title3Size) + vh,
+                textAlign: "center",
+                fontWeight: String(500),
+                lineHeight: String(lineHeight),
+                fontFamily: "graphik",
+                position: "relative",
+                top: String(visualTop) + ea,
+                fontStyle: "italic",
+              },
             }
           ]
-        });
-        numbers.set(sub, tong.children[0].children[1]);
-        division.set(sub, tong.children[1]);
-        num++;
-      }
-      num2++;
-    }
+        },
+      ]
+    });
+    onlineBlock = firstMother.firstChild;
+    webBlock = firstMother.lastChild;
   }
 
-  this.whiteCards = [];
-  for (let obj of cards) {
-    whiteCard = createNode({
-      mother: division.get(obj.process.action),
-      attribute: {
-        kinds: "card",
-        action: obj.process.action,
-        proid: obj.proid,
-        cliid: obj.cliid,
-        draggable: "true",
-        request: String(obj.requestNumber),
-      },
-      event: {
-        dragstart: function (e) {
-          e.dataTransfer.setData("dragData", this.getAttribute("proid") + token + this.getAttribute("action") + token + this.getAttribute("request"));
+  secondMother = createNode({
+    mother: motherBox,
+    style: {
+      position: "relative",
+      display: "inline-block",
+      width: boxWidth0,
+      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+      marginRight: String(innerMargin) + ea,
+      verticalAlign: "top",
+      opacity: String(0),
+      animation: "fadeup 0.5s ease 0.2s forwards",
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: boxWidth0,
+          height: boxHeight0,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(innerMargin) + ea,
+          cursor: "pointer",
         },
-        dragend: function (e) {
-          e.preventDefault();
-        },
-        dragenter: function (e) {
-          e.preventDefault();
-        },
-        dragleave: function (e) {
-          e.preventDefault();
-        },
-        click: function (e) {
-          const proid = this.getAttribute("proid");
-          const action = this.getAttribute("action");
-          const requestNumber = Number(this.getAttribute("request"));
-          const cliid = this.getAttribute("cliid");
-          const totalMother = document.querySelector(".totalMother");
-          const zIndex = 2;
-          let cancelBack, whiteBox;
-          let whiteMargin;
-          let whiteResult;
-          let mobileNavigatorHeight;
-
-          whiteMargin = <%% 40, 40, 40, 40, 4 %%>;
-          mobileNavigatorHeight = 60;
-          cancelBack = createNode({
-            mother: totalMother,
-            event: {
-              click: function (e) {
-                document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-              }
+        event: { click: (e) => { window.location.href = thisHost + "/client"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "가능 일정 관리\n<b%Calendar%b>",
+            style: {
+              color: colorChip.black,
+              fontSize: String(titleSize) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight),
             },
-            style: {
-              position: "fixed",
-              top: String(0),
-              left: String(instance.grayBarWidth) + ea,
-              width: withOut(instance.grayBarWidth, ea),
-              height: desktop ? withOut(belowHeight, ea) : String(100) + "%",
-              background: colorChip.shadow,
-              zIndex: String(zIndex),
-              animation: "justfadeinmiddle 0.3s ease forwards",
+            bold: {
+              color: colorChip.green,
+              fontSize: String(subSize) + vh,
+              fontFamily: "graphik",
+              fontWeight: String(400),
             }
-          });
-          whiteBox = createNode({
-            mother: totalMother,
-            class: [ detailWhitePopupConst ],
-            style: {
-              position: "fixed",
-              top: desktop ? String(whiteMargin) + ea : "calc(" + String(whiteMargin) + ea + " + " + String(mobileNavigatorHeight) + "px" + ")",
-              left: String(instance.grayBarWidth + whiteMargin) + ea,
-              width: withOut(instance.grayBarWidth + (whiteMargin * 2), ea),
-              height: desktop ? withOut(belowHeight + (whiteMargin * 2), ea) : "calc(calc(100% - " + String(whiteMargin * 2) + ea + ") - " + String(belowHeight + mobileNavigatorHeight) + "px)",
-              background: colorChip.white,
-              borderRadius: String(5) + "px",
-              zIndex: String(zIndex),
-              boxShadow: "0px 3px 15px -9px " + colorChip.darkDarkShadow,
-              animation: "fadeup 0.3s ease forwards",
-            }
-          });
-
-          whiteResult = instance.projectWhiteDetail(whiteBox, action, proid, cliid, requestNumber, desid, divisionEntireMap);
-
-          if (!whiteResult) {
-            cancelBack.click();
-          } else {
-
-            if (mobile) {
-              if (mobile) {
-                swipePatch({
-                  left: (e) => {
-                    if (document.querySelector('.' + detailWhitePopupConst) !== null) {
-                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                    }
-                  },
-                  right: (e) => {
-                    if (document.querySelector('.' + detailWhitePopupConst) !== null) {
-                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                      document.querySelector(".totalMother").removeChild(document.querySelector(".totalMother").lastChild);
-                    }
-                  },
-                });
-              }
-            }
-
           }
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          width: boxWidth0,
+          height: boxHeight0,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(innerMargin) + ea,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/project"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "의뢰서 관리\n<b%Request%b>",
+            style: {
+              color: colorChip.black,
+              fontSize: String(titleSize) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight),
+            },
+            bold: {
+              color: colorChip.green,
+              fontSize: String(subSize) + vh,
+              fontFamily: "graphik",
+              fontWeight: String(400),
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.gray1,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginRight: String(innerMargin) + ea,
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          verticalAlign: "top",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/proposal"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "정산\n관리",
+            style: {
+              color: colorChip.black,
+              fontSize: String(title2Size) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.gray1,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          verticalAlign: "top",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=contents"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "컨텐츠\n관리",
+            style: {
+              color: colorChip.black,
+              fontSize: String(title2Size) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+            }
+          }
+        ]
+      },
+    ]
+  });
+  clientBlock = secondMother.children[0];
+  projectBlock = secondMother.children[1];
+  constructBlock = secondMother.children[2];
+  photoBlock = secondMother.children[3];
+
+  thirdMother = createNode({
+    mother: motherBox,
+    style: {
+      position: "relative",
+      display: "inline-block",
+      width: "calc(calc(" + boxWidth0 + " * 2) + " + String(innerMargin) + ea + ")",
+      height: "calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ")",
+      marginRight: String(innerMargin) + ea,
+      verticalAlign: "top",
+      opacity: String(0),
+      animation: "fadeup 0.5s ease 0.3s forwards",
+    },
+    children: [
+      {
+        style: {
+          position: "relative",
+          width: boxWidth0,
+          height: boxHeight0,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.gradientGreen,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(innerMargin) + ea,
+          marginRight: String(innerMargin) + ea,
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          verticalAlign: "top",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/builder"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "프로젝트 케어\n<b%Project%b>",
+            style: {
+              color: colorChip.whiteBlack,
+              fontSize: String(titleSize) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight),
+            },
+            bold: {
+              color: colorChip.whiteBlack,
+              fontSize: String(subSize) + vh,
+              fontFamily: "graphik",
+              fontWeight: String(400),
+              opacity: String(0.7),
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: boxWidth0,
+          height: boxHeight0,
+          marginBottom: String(innerMargin) + ea,
+        },
+        children: [
+          {
+            style: {
+              position: "relative",
+              display: "flex",
+              width: boxWidth0,
+              height: "calc(calc(" + boxHeight0 + " - " + String(innerMargin) + ea + ") / 2)",
+              borderRadius: String(5) + ea,
+              backgroundImage: "url('/middle/proposal/back.jpg')",
+              backgroundSize: "100% auto",
+              backgroundPosition: "50% 50%",
+              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+              marginBottom: String(innerMargin) + ea,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            event: { click: (e) => { blankHref("https://" + FILEHOST + "/publicSector/estimation", true); } },
+            children: [
+              {
+                class: [ "hoverDefault_lite" ],
+                text: "HomeLiaison web",
+                style: {
+                  color: colorChip.whiteBlack,
+                  fontSize: String(title3Size) + vh,
+                  textAlign: "center",
+                  fontWeight: String(500),
+                  lineHeight: String(lineHeight),
+                  fontFamily: "graphik",
+                  position: "relative",
+                  top: String(visualTop) + ea,
+                  fontStyle: "italic",
+                },
+              }
+            ]
+          },
+          {
+            style: {
+              position: "relative",
+              display: "flex",
+              width: boxWidth0,
+              height: "calc(calc(" + boxHeight0 + " - " + String(innerMargin) + ea + ") / 2)",
+              borderRadius: String(5) + ea,
+              backgroundImage: "url('/middle/curation/back.jpg')",
+              backgroundSize: "100% auto",
+              backgroundPosition: "50% 50%",
+              boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            },
+            event: { click: (e) => { blankHref(window.location.protocol + "//" + window.location.host + "/middle/console?desid=d1701_aa01s", true); } },
+            children: [
+              {
+                class: [ "hoverDefault_lite" ],
+                text: "Web setting",
+                style: {
+                  color: colorChip.whiteBlack,
+                  fontSize: String(title3Size) + vh,
+                  textAlign: "center",
+                  fontWeight: String(500),
+                  lineHeight: String(lineHeight),
+                  fontFamily: "graphik",
+                  position: "relative",
+                  top: String(visualTop) + ea,
+                  fontStyle: "italic",
+                },
+              }
+            ]
+          },
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          height: boxHeight0,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.white,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginBottom: String(innerMargin) + ea,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/designer"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "체크리스트\n<b%Checklist%b>",
+            style: {
+              color: colorChip.black,
+              fontSize: String(titleSize) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight),
+            },
+            bold: {
+              color: colorChip.green,
+              fontSize: String(subSize) + vh,
+              fontFamily: "graphik",
+              fontWeight: String(400),
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.gray1,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginRight: String(innerMargin) + ea,
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          verticalAlign: "top",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=aspirant"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "기본\n정보",
+            style: {
+              color: colorChip.black,
+              fontSize: String(title2Size) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.gray1,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginRight: String(innerMargin) + ea,
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          verticalAlign: "top",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=checklist"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "작업\n정보",
+            style: {
+              color: colorChip.black,
+              fontSize: String(title2Size) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.gray1,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          marginRight: String(innerMargin) + ea,
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          verticalAlign: "top",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=possible"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "스타일\n정보",
+            style: {
+              color: colorChip.black,
+              fontSize: String(title2Size) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+            }
+          }
+        ]
+      },
+      {
+        style: {
+          position: "relative",
+          display: "inline-block",
+          width: "calc(calc(" + boxWidth0 + " - " + String(innerMargin) + ea + ") / 2)",
+          height: boxHeight1,
+          borderRadius: String(whiteRadius) + ea,
+          background: colorChip.gray1,
+          boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+          display: "inline-flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+          verticalAlign: "top",
+        },
+        event: { click: (e) => { window.location.href = thisHost + "/designer?mode=request"; } },
+        children: [
+          {
+            class: [ "hoverDefault_lite" ],
+            text: "시공\n정보",
+            style: {
+              color: colorChip.black,
+              fontSize: String(title2Size) + vh,
+              textAlign: "center",
+              fontWeight: String(500),
+              lineHeight: String(lineHeight2),
+              position: "relative",
+              top: String(visualTop2) + ea,
+            }
+          }
+        ]
+      },
+    ]
+  });
+  [ proposalBlock, tempMother, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock ] = [ ...thirdMother.children ];
+  [ constructConsoleBlock, designerConsoleBlock ] = [ ...tempMother.children ];
+
+  fourthMother = createNode({
+    mother: motherBox,
+    style: {
+      position: "relative",
+      paddingTop: String(onlineBoxTop) + vh,
+      display: "inline-block",
+      width: "calc(calc(100vw - " + String((outerMargin * 2) + (innerMargin * 4)) + ea + ") - calc(" + boxWidth0 + " * 4))",
+      height: "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2)) + ea + ") - " + String(onlineBoxTop) + vh + ")",
+      borderRadius: String(whiteRadius) + ea,
+      background: colorChip.gray1,
+      boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+      verticalAlign: "top",
+      transition: "all 0s ease",
+      opacity: String(0),
+      animation: "fadeup 0.5s ease 0.4s forwards",
+    },
+    children: [
+      {
+        text: "Notice",
+        style: {
+          position: "absolute",
+          fontSize: String(onlineWordingSize) + vh,
+          fontFamily: "graphik",
+          fontWeight: String(400),
+          top: String(onlineBoxTitleTop) + vh,
+          left: String(onlineBoxLeft) + vh,
+          color: colorChip.black,
         }
       },
+      {
+        class: [ noticeTongClassName ],
+        style: {
+          display: "block",
+          position: "relative",
+          left: String(onlineBoxLeft) + vh,
+          width: withOut(onlineBoxLeft * 2, vh),
+          height: String(100) + '%',
+          overflow: "scroll",
+        },
+      }
+    ]
+  });
+  noticeBlock = fourthMother;
+  noticeTong = fourthMother.querySelector("." + noticeTongClassName);
+
+  /*
+  for (let { text, user, date } of slackNotices) {
+    createNode({
+      mother: noticeTong,
       style: {
-        display: desktop ? "inline-block" : "inline-flex",
+        display: "block",
         position: "relative",
-        width: desktop ? String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea : "calc(" + String(sizeArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + ea + " - " + String(2 / divideArr[divisionMap[divisionMap.findIndex((arr) => { return arr.includes(obj.process.action); })].length - 1]) + "px" + ")",
-        height: String(fixedHeightSize) + ea,
-        marginLeft: String(cardMargin) + ea,
-        marginTop: String(cardMargin) + ea,
+        width: String(100) + '%',
         background: colorChip.white,
         borderRadius: String(5) + "px",
-        cursor: "pointer",
-        justifyContent: desktop ? "" : "center",
-        alignItems: desktop ? "" : "center",
-      }
-    });
+        boxShadow: "0px 3px 14px -9px " + colorChip.shadow,
+        marginBottom: String(noticeMarginBottom) + vh,
+      },
+      children: [
+        {
+          text: "<u%" + String(date.getFullYear()).slice(2) + "." + String(date.getMonth() + 1) + "." + String(date.getDate()) + " " + String(date.getHours()) + ":" + String(date.getDate()) + "%u>\n" + "<b%" + user + "%b> : " + text.replace(/\<[^\>]+\>/g, '').trim(),
+          style: {
+            paddingTop: String(noticePaddingTop) + vh,
+            paddingLeft: String(noticePaddingLeft) + vh,
+            paddingRight: String(noticePaddingLeft) + vh,
+            paddingBottom: String(noticePaddingBottom) + vh,
+            fontSize: String(noticeSize) + vh,
+            fontWeight: String(400),
+            color: colorChip.black,
+            lineHeight: String(1.6),
+          },
+          bold: {
+            fontSize: String(noticeSize) + vh,
+            fontWeight: String(600),
+            color: colorChip.black,
+          },
+          under: {
+            fontSize: String(noticeDateSize) + vh,
+            fontWeight: String(600),
+            color: colorChip.deactive,
+          }
+        }
+      ]
+    })
 
-    nameWord = createNode({
-      mother: whiteCard,
-      text: obj.name,
-      style: {
-        display: "inline-block",
-        position: "relative",
-        fontSize: String(nameFontSize) + ea,
-        fontWeight: String(500),
-        top: String(nameWordTop) + ea,
-        marginLeft: desktop ? String(intend) + ea : "",
-        color: desktop ? colorChip.black : colorChip.green,
-        cursor: "pointer",
-      }
-    });
-
-    idWord = createNode({
-      mother: whiteCard,
-      text: obj.proid,
-      style: {
-        display: desktop ? "inline-block" : "none",
-        position: "relative",
-        fontSize: String(idFontSize) + ea,
-        fontWeight: String(400),
-        top: String(nameWordTop) + ea,
-        marginLeft: String(between) + ea,
-        color: colorChip.green,
-        cursor: "pointer",
-      }
-    });
-
-    this.whiteCards.push(whiteCard);
   }
+  */
 
-  numbers.forEach((value, key) => {
-    numbers.get(key).textContent = String(division.get(key).children.length) + "명";
-    numbers.get(key).setAttribute("number", String(division.get(key).children.length));
-  });
+  this.whiteBlocks = { onlineBlock, webBlock, clientBlock, projectBlock, constructBlock, photoBlock, proposalBlock, constructConsoleBlock, designerConsoleBlock, designerBlock, aspirantBlock, checklistBlock, calendarBlock, requestBlock, noticeBlock };
+  this.mainBaseTong = motherBox;
 
-  this.divisionMap = division;
-  this.mainBaseTong = baseTong0;
 }
 
 DesignerConsoleJs.prototype.consoleView = async function () {
@@ -1805,14 +1854,23 @@ DesignerConsoleJs.prototype.consoleView = async function () {
   try {
     const loading = await this.mother.loadingRun();
     const middleMode = true;
-    this.backGrayBar();
+    const getObj = GeneralJs.returnGet();
+    const dashBoardMode = (getObj.mode === "dashboard");
+
+    if (!dashBoardMode) {
+      this.backGrayBar();
+    }
     await this.spreadData(null, true, "middle");
+    if (dashBoardMode) {
+      this.totalMother.children[0].style.transition = "all 0s ease";
+      this.totalMother.children[0].style.background = "transparent";
+    }
+
     const { returnGet, createNode, createNodes, ajaxJson, colorChip, withOut, equalJson, scrollTo, setQueue } = GeneralJs;
     const { totalMother, ea, grayBarWidth, belowHeight, media, desid, tabletWidth } = this;
     const mobile = media[4];
     const desktop = !mobile;
     const standardBar = totalMother.firstChild;
-    const getObj = returnGet();
     let designers, length;
     let boxTong;
     let nodeArr;
@@ -1870,9 +1928,11 @@ DesignerConsoleJs.prototype.consoleView = async function () {
 
     this.pageHistory = [];
     if (desktop) {
-      window.addEventListener("resize", (e) => {
-        window.location.reload();
-      });
+      if (!dashBoardMode) {
+        window.addEventListener("resize", (e) => {
+          window.location.reload();
+        });
+      }
     }
     window.addEventListener("popstate", (e) => {
       let targets, targetIndex;
@@ -1908,8 +1968,13 @@ DesignerConsoleJs.prototype.consoleView = async function () {
     });
 
     //launching
-    this.consoleDetailLaunching(this.desid);
-    this.navigatorLaunching();
+    if (dashBoardMode) {
+      this.consoleDashboard(this.desid);
+    } else {
+      this.navigatorLaunching();
+      await this.checkListDetailLaunching(desid);
+      this.mode = this.modes[0];
+    }
 
     if (this.menuMap !== undefined && getObj.mode !== undefined && getObj.cliid !== undefined) {
       targetIndex = null;
@@ -1943,10 +2008,12 @@ DesignerConsoleJs.prototype.consoleView = async function () {
       }
     }
 
-    if (tabletWidth !== 0) {
-      setQueue(() => {
-        instance.listIcon.click();
-      }, 500);
+    if (!dashBoardMode) {
+      if (tabletWidth !== 0) {
+        setQueue(() => {
+          instance.listIcon.click();
+        }, 500);
+      }
     }
 
   } catch (e) {
