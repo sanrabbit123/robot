@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.red),
                     event: {
                       click: function (e) {
-                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", { order: "close", data: {} } });
+                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", { order: "close", data: {} });
                       }
                     },
                     style: {
@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.yellow),
                     event: {
                       click: function (e) {
-                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", { order: "maximize", data: {} } });
+                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", { order: "maximize", data: {} });
                       }
                     },
                     style: {
