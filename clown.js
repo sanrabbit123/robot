@@ -2236,8 +2236,10 @@ Clown.prototype.launching = async function () {
     }
     let thisMainWindow;
     let timeoutId;
+    let reloadTime;
 
     timeoutId = null;
+    reloadTime = 10;
 
     app.whenReady().then(createWindow).then((mainWindow) => {
       thisMainWindow = mainWindow;
@@ -2247,13 +2249,13 @@ Clown.prototype.launching = async function () {
     });
 
     app.on("window-all-closed", (e) => {
-      const alarm = new Notification({ title: "HomeLiaison", body: "5초 뒤에 다시 창이 활성화됩니다! " + quitAlert });
+      const alarm = new Notification({ title: "HomeLiaison", body: String(reloadTime) + "초 뒤에 다시 창이 활성화됩니다! " + quitAlert });
       alarm.show();
       timeoutId = setTimeout(() => {
         thisMainWindow = createWindow();
         clearTimeout(timeoutId);
         timeoutId = null;
-      }, 10 * 1000);
+      }, reloadTime * 1000);
     });
 
     app.on("activate", (e) => {

@@ -1115,7 +1115,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
   const { members, slackNotices, media, designer } = this;
-  const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue, ajaxJson } = GeneralJs;
+  const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue, ajaxJson, dateToString } = GeneralJs;
   const { wordings, methods: { justMerge, greenMerge, smallMerge, englishMerge } } = this.dashboardWordings();
   const vh = "vh";
   const vw = "vw";
@@ -1167,8 +1167,18 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let mobileLineHeight, mobileLineHeight2;
   let mobileMainSize, mobileMainSize2, mobileSubSize;
   let squareMode;
-
-  console.log(designer);
+  let mobileOngoingPaddingLeft, mobileOngoingPaddingTop, mobileOngoingPaddingBottom;
+  let mobileOngoingWordingPaddingLeft, mobileOngoingWordingMarginBottom;
+  let mobileOngoingWhite;
+  let mobileOngoingLineTop;
+  let mobileOngoingTitleSize;
+  let mobileOngoingTitleMarginBottom;
+  let mobileNoticeSize;
+  let mobileNoticeLineheight;
+  let mobileNoticePaddingLeft;
+  let mobileNoticePaddingTop;
+  let mobileNoticePaddingBottom;
+  let mobileNoticeMarginBottom;
 
   if (window.innerWidth <= 780) {
     desktopMode = false;
@@ -1228,10 +1238,10 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   memberBlockMarginBottom = <%% 10, 9, 8, 7, 1 %%>;
   onlineBoxInnerMarginTop = 2;
   memberBlockWidth = <%% 5, 5, 4, 3, 1 %%>;
-  memberBlockTop = <%% 6, 6, 5, 4, 1 %%>;
-  memberBlockTop2 = <%% 8, 8, 7, 6, 1 %%>;
+  memberBlockTop = <%% 6, 6, 5, 4, 1.5 %%>;
+  memberBlockTop2 = <%% 8, 8, 7, 6, 1.5 %%>;
   memberBlockLeft = 0.1;
-  memberBlockSize = <%% 14, 13, 12, 11, 3 %%>;
+  memberBlockSize = <%% 14, 13, 12, 11, 3.1 %%>;
   memberBlockPaddingRight = 1;
 
   noticeSize = 1.2;
@@ -1257,6 +1267,27 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   mobileLineHeight2 = 1.3;
   mobileMainSize2 = 4.1;
   mobileSubSize = 3.2;
+
+  mobileOngoingPaddingLeft = 5;
+  mobileOngoingPaddingTop = 3.6;
+  mobileOngoingPaddingBottom = 4;
+
+  mobileOngoingWordingPaddingLeft = 1.8;
+  mobileOngoingWordingMarginBottom = 1.5;
+
+  mobileOngoingWhite = 2;
+  mobileOngoingLineTop = 1.8;
+
+  mobileOngoingTitleSize = 3.5;
+  mobileOngoingTitleMarginBottom = 2.7;
+
+  mobileNoticeSize = 2.8;
+  mobileNoticeLineheight = 1.5;
+
+  mobileNoticePaddingLeft = 3.8;
+  mobileNoticePaddingTop = 3.1;
+  mobileNoticePaddingBottom = 3.4;
+  mobileNoticeMarginBottom = 1;
 
   if (desktop) {
     totalMother.style["min-width"] = "calc(" + boxWidth0 + " * 4.5)";
@@ -2333,27 +2364,155 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       mother: motherBox,
       style: {
         display: "inline-block",
-        width: mobileBoxWidth0,
-        height: mobileBoxHeight,
+        width: String(100 - (outerMargin * 2) - (mobileOngoingPaddingLeft * 2)) + vw,
+        paddingTop: String(mobileOngoingPaddingTop) + vw,
+        paddingBottom: String(mobileOngoingPaddingBottom) + vw,
+        paddingLeft: String(mobileOngoingPaddingLeft) + vw,
+        paddingRight: String(mobileOngoingPaddingLeft) + vw,
         borderRadius: String(5) + "px",
         background: colorChip.white,
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
         marginBottom: String(innerMargin) + vw
-      }
+      },
+      children: [
+        {
+          text: wordings.ongoing.text[1],
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(mobileOngoingTitleSize) + vw,
+            fontWeight: String(400),
+            color: colorChip.green,
+            fontFamily: "graphik",
+            marginBottom: String(mobileOngoingTitleMarginBottom) + vw,
+          }
+        }
+      ]
     });
+
+    for (let project of designer.projects) {
+      createNode({
+        mother: ongoingBlock,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(mobileOngoingWordingPaddingLeft * 1, vw),
+          paddingLeft: String(mobileOngoingWordingPaddingLeft) + vw,
+          marginBottom: String(mobileOngoingWordingMarginBottom) + ea,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, /^[완드]/gi.test(project.process.status) ? colorChip.deactive : colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(memberBlockWidth) + ea,
+              height: "",
+              top: String(memberBlockTop) + ea,
+              left: String(memberBlockLeft) + vw,
+            }
+          },
+          {
+            style: {
+              position: "absolute",
+              top: String(0),
+              left: String(mobileOngoingWordingPaddingLeft) + ea,
+              width: withOut(mobileOngoingWordingPaddingLeft, ea),
+              height: String(mobileOngoingLineTop) + vw,
+              borderBottom: "1px solid " + colorChip.gray3,
+            }
+          },
+          {
+            text: project.name + " 고객님",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              background: colorChip.white,
+              fontSize: String(memberBlockSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              paddingRight: String(mobileOngoingWhite) + vw,
+            }
+          },
+          {
+            text: project.process.status + ", " + project.process.action,
+            style: {
+              position: "absolute",
+              right: String(0),
+              top: String(0),
+              background: colorChip.white,
+              fontSize: String(memberBlockSize) + ea,
+              fontWeight: String(300),
+              color: /^[완드]/gi.test(project.process.status) ? colorChip.deactive : colorChip.green,
+              paddingLeft: String(mobileOngoingWhite) + vw,
+            }
+          }
+        ]
+      });
+    }
 
     noticeBlock = createNode({
       mother: motherBox,
       style: {
         display: "inline-block",
-        width: mobileBoxWidth0,
-        height: mobileBoxHeight,
+        width: String(100 - (outerMargin * 2) - (mobileOngoingPaddingLeft * 2)) + vw,
+        paddingTop: String(mobileOngoingPaddingTop) + vw,
+        paddingBottom: String(mobileOngoingPaddingBottom) + vw,
+        paddingLeft: String(mobileOngoingPaddingLeft) + vw,
+        paddingRight: String(mobileOngoingPaddingLeft) + vw,
         borderRadius: String(5) + "px",
         background: colorChip.white,
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
         marginBottom: String(mobileFinalMarginBottom) + vw
-      }
+      },
+      children: [
+        {
+          text: wordings.notice.text[1],
+          style: {
+            display: "block",
+            position: "relative",
+            fontSize: String(mobileOngoingTitleSize) + vw,
+            fontWeight: String(400),
+            color: colorChip.green,
+            fontFamily: "graphik",
+            marginBottom: String(mobileOngoingTitleMarginBottom) + vw,
+          }
+        }
+      ]
     });
+
+    for (let { text, date } of slackNotices) {
+      createNode({
+        mother: noticeBlock,
+        style: {
+          display: "block",
+          position: "relative",
+          border: "1px solid " + colorChip.gray3,
+          borderRadius: String(5) + "px",
+          marginBottom: String(mobileNoticeMarginBottom) + vw,
+          paddingLeft: String(mobileNoticePaddingLeft) + vw,
+          paddingRight: String(mobileNoticePaddingLeft) + vw,
+          paddingTop: String(mobileNoticePaddingTop) + vw,
+          paddingBottom: String(mobileNoticePaddingBottom) + vw,
+          lineHeight: String(mobileNoticeLineheight),
+          boxSizing: "border-box",
+        },
+        children: [
+          {
+            text: "<b%" + dateToString(date) + "%b>\n" + text.trim(),
+            style: {
+              fontSize: String(mobileNoticeSize) + vw,
+              color: colorChip.black,
+              fontWeight: String(400),
+            },
+            bold: {
+              color: colorChip.green,
+              fontWeight: String(600),
+            }
+          }
+        ]
+      });
+    }
 
   }
 

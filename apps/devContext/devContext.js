@@ -85,17 +85,17 @@ DevContext.prototype.launching = async function () {
     // await this.pureSpawn();
 
 
-    // const WebSocket = require("ws");
-    // const url = "wss://" + this.address.officeinfo.ghost.host + ":5000/general";
-    // const ws = new WebSocket(url);
-    // ws.on("open", () => {
-    //   ws.on("message", (raw) => {
-    //     console.log(raw);
-    //   })
-    // });
+    const WebSocket = require("ws");
+    const url = "wss://" + this.address.officeinfo.ghost.host + ":5000/general";
+    const ws = new WebSocket(url);
+    ws.on("open", () => {
+      ws.on("message", (raw) => {
+        console.log(raw);
+      })
+    });
 
 
-
+    // console.log(await requestSystem("https://home-liaison.serveftp.com/officeMonitor/status"))
 
 
 
@@ -1640,8 +1640,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "구본재";
-    // const amount = 1430000;
+    // const name = "배창규";
+    // const amount = 1800000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01021993403",
