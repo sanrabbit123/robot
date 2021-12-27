@@ -98,7 +98,7 @@ DevContext.prototype.launching = async function () {
     // console.log(await requestSystem("https://home-liaison.serveftp.com/officeMonitor/status"))
 
 
-    await findCode("OfficeMonitor");
+
 
 
 

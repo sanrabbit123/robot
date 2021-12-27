@@ -3995,6 +3995,13 @@ DesignerJs.prototype.contentsView = async function () {
       "해당 없음"
     ];
 
+    for (let t of typeArr) {
+      window.localStorage.removeItem(this.localStorageConst + this.blockMapConst + t);
+      for (let i = 0; i < 20; i++) {
+        window.localStorage.removeItem(this.localStorageConst + t + String(i));
+      }
+    }
+
     whereQuery = {};
     whereQuery["$and"] = [];
     whereQuery["$and"].push({ desid: { $regex: "^d" } });

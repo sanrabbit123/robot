@@ -2210,10 +2210,91 @@ const Clown = function () {
   this.address = ADDRESS;
 }
 
+Clown.prototype.databaseSetting = async function () {
+  const instance = this;
+  const { fileSystem, shellExec, uniqueValue } = this.mother;
+  const home = process.env.HOME;
+  const mainFolderName = "homeliaison";
+  const jsonFolderName = "json";
+  try {
+    const homeDir = await fileSystem(`readDir`, [ home ]);
+    if (!homeDir.includes('.' + mainFolderName)) {
+      await shellExec(`mkdir`, [ `${home}/.${mainFolderName}` ]);
+    }
+    const homeDirDir = await fileSystem(`readDir`, [ `${home}/.${mainFolderName}` ]);
+    if (!homeDirDir.includes('.' + jsonFolderName)) {
+      await shellExec(`mkdir`, [ `${home}/.${mainFolderName}/${jsonFolderName}` ]);
+    }
+    const dbBase = `${home}/.${mainFolderName}/${jsonFolderName}`;
+    return {
+      async create(newJson) {
+        try {
+          if (typeof newJson !== "object" || newJson === null) {
+            throw new Error("invaild input");
+          }
+          newJson.date = new Date();
+          await fileSystem(`writeJson`, [ dbBase + "/" + uniqueValue("hex") + ".json", newJson ]);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      async read(whereQuery) {
+        try {
+          if (typeof whereQuery !== "object" || whereQuery === null) {
+            throw new Error("invaild input");
+          }
+
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      async update(queryArr) {
+        try {
+          if (!Array.isArray(queryArr)) {
+            throw new Error("invaild input");
+          }
+          if (queryArr.length !== 2) {
+            throw new Error("invaild input");
+          }
+          if (typeof queryArr[0] !== "object" || typeof queryArr[1] !== "object") {
+            throw new Error("invaild input");
+          }
+          if (queryArr[0] === null || queryArr[1] === null) {
+            throw new Error("invaild input");
+          }
+          const [ whereQuery, updateQuery ] = queryArr;
+
+
+
+
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      async delete(whereQuery) {
+        try {
+          if (typeof whereQuery !== "object" || whereQuery === null) {
+            throw new Error("invaild input");
+          }
+
+
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 Clown.prototype.launching = async function () {
   const instance = this;
   const address = this.address;
-  const { requestSystem } = this.mother;
+  const { requestSystem, fileSystem } = this.mother;
   const os = require("os");
   try {
     const quitAlert = "홈리에종 앱은 종료하실 수 없습니다!";
@@ -2237,13 +2318,16 @@ Clown.prototype.launching = async function () {
     let thisMainWindow;
     let timeoutId;
     let reloadTime;
+    let localDb;
 
     timeoutId = null;
     reloadTime = 10;
 
+    localDb = await this.databaseSetting();
+
     app.whenReady().then(createWindow).then((mainWindow) => {
       thisMainWindow = mainWindow;
-      // mainWindow.webContents.openDevTools();
+      mainWindow.webContents.openDevTools();
     }).catch((err) => {
       console.log(err);
     });
@@ -2274,8 +2358,12 @@ Clown.prototype.launching = async function () {
     });
 
     ipcMain.on("asynchronous-message", (event, arg) => {
-      const alarm = new Notification({ title: "HomeLiaison", body: arg });
-      alarm.show();
+
+      console.log(arg);
+
+
+      // const alarm = new Notification({ title: "HomeLiaison", body: arg });
+      // alarm.show();
       event.reply("asynchronous-reply", "done");
     });
 

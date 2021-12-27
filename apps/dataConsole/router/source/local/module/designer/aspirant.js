@@ -2074,6 +2074,13 @@ DesignerJs.prototype.aspirantView = async function () {
     this.localStorageConst = "aspirantFilter_";
     this.blockMapConst = "blockMap_";
 
+    for (let t of typeArr) {
+      window.localStorage.removeItem(this.localStorageConst + this.blockMapConst + t);
+      for (let i = 0; i < 20; i++) {
+        window.localStorage.removeItem(this.localStorageConst + t + String(i));
+      }
+    }
+
     aspirants = new SearchArray(await ajaxJson({ whereQuery: {} }, "/getAspirants", { equal: true }));
     this.aspirants = aspirants;
     for (let aspirant of this.aspirants) {

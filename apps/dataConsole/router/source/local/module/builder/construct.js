@@ -5414,6 +5414,13 @@ BuilderJs.prototype.constructView = async function () {
     this.localStorageConst = "constructFilter_";
     this.blockMapConst = "blockMap_";
 
+    for (let t of typeArr) {
+      window.localStorage.removeItem(this.localStorageConst + this.blockMapConst + t);
+      for (let i = 0; i < 20; i++) {
+        window.localStorage.removeItem(this.localStorageConst + t + String(i));
+      }
+    }
+
     whereQuery = {};
     projects = await ajaxJson({ noFlat: true, whereQuery }, "/getProjects", { equal: true });
     projects = new SearchArray(projects.filter((obj) => {
