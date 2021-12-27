@@ -2625,8 +2625,11 @@ Clown.prototype.launching = async function () {
       });
     });
 
-    ipcMain.on("synchronous-message", (event, arg) => {
-      if (arg === "device") {
+    ipcMain.on("synchronous-message", (event, raw) => {
+      const { order, data } = raw;
+      console.log(order, data);
+
+      if (order === "device") {
         let network;
 
         network = Object.values(os.networkInterfaces()).flat().filter((obj) => {
@@ -2650,17 +2653,17 @@ Clown.prototype.launching = async function () {
           networkInterfaces: network,
         });
 
-      } else if (arg === "close") {
+      } else if (order === "close") {
 
         thisMainWindow.close();
         event.returnValue = "";
 
-      } else if (arg === "maximize") {
+      } else if (order === "maximize") {
 
         thisMainWindow.maximize();
         event.returnValue = "";
 
-      } else if (arg === "minimize") {
+      } else if (order === "minimize") {
 
         if (process.platform !== "darwin") {
           thisMainWindow.minimize();

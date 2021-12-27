@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
         try {
           const { ipcRenderer } = require("electron");
           GeneralJs.stacks.ipcRenderer = ipcRenderer;
-          GeneralJs.stacks.deviceInfo = GeneralJs.equalJson(GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", "device"));
+          GeneralJs.stacks.deviceInfo = GeneralJs.equalJson(GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", { order: "device", data: {} }));
           GeneralJs.stacks.memberInfo = await GeneralJs.ajaxJson({ type: "this", mac: GeneralJs.stacks.deviceInfo.networkInterfaces.map((obj) => { return obj.mac; }) }, "/getMembers");
 
           GeneralJs.stacks.wssSocket = new WebSocket("wss://" + FILEHOST + ":5000/general");
@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.red),
                     event: {
                       click: function (e) {
-                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", "close");
+                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", { order: "close", data: {} } });
                       }
                     },
                     style: {
@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.yellow),
                     event: {
                       click: function (e) {
-                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", "maximize");
+                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", { order: "maximize", data: {} } });
                       }
                     },
                     style: {
@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", async function (e) {
                     source: local_funcs.mother.returnRound(String(radius) + ea, colorChip.green),
                     event: {
                       click: function (e) {
-                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", "minimize");
+                        GeneralJs.stacks.ipcRenderer.sendSync("synchronous-message", { order: "minimize", data: {} });
                       }
                     },
                     style: {

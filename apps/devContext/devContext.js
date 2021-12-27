@@ -103,7 +103,6 @@ DevContext.prototype.launching = async function () {
 
 
 
-
     // console.log(await bill.matrixToRequest(`${process.cwd()}/temp/test.xlsx`));
     // const selfPythonMongo = this.MONGOLOCALC;
     // const selfCoreMongo = this.MONGOLOCALC;
@@ -2204,7 +2203,7 @@ DevContext.prototype.findCode = async function (str, openMode = false) {
   }
   const instance = this;
   const { treeParsing, fileSystem, shellExec, shellLink } = this.mother;
-  const entryPoints = [ "robot.js", "ghost.js", "alien.js", "setup.py" ];
+  const entryPoints = [ "robot.js", "ghost.js", "alien.js", "setup.py", "koala.js", "clown.js" ];
   const escapeReg = function (s) {
     s = s.replace(/\*/gi, "\\*");
     s = s.replace(/\+/gi, "\\+");
