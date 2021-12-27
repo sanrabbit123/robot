@@ -2216,7 +2216,8 @@ Clown.prototype.launching = async function () {
   const { requestSystem } = this.mother;
   const os = require("os");
   try {
-    const { app, BrowserWindow, Notification, ipcMain } = require("electron");
+    const quitAlert = "홈리에종 앱은 종료하실 수 없습니다!";
+    const { app, BrowserWindow, Notification, ipcMain, dialog } = require("electron");
     const createWindow = () => {
       const mainWindow = new BrowserWindow({
         width: 5000,
@@ -2245,17 +2246,17 @@ Clown.prototype.launching = async function () {
       console.log(err);
     });
 
-    app.on("window-all-closed", () => {
-      const alarm = new Notification({ title: "HomeLiaison", body: "20초 뒤에 다시 창이 활성화됩니다!" });
+    app.on("window-all-closed", (e) => {
+      const alarm = new Notification({ title: "HomeLiaison", body: "5초 뒤에 다시 창이 활성화됩니다! " + quitAlert });
       alarm.show();
       timeoutId = setTimeout(() => {
         thisMainWindow = createWindow();
         clearTimeout(timeoutId);
         timeoutId = null;
-      }, 20 * 1000);
+      }, 10 * 1000);
     });
 
-    app.on("activate", () => {
+    app.on("activate", (e) => {
       if (BrowserWindow.getAllWindows().length === 0) {
         if (timeoutId !== null) {
           clearTimeout(timeoutId);
@@ -2263,6 +2264,11 @@ Clown.prototype.launching = async function () {
         }
         thisMainWindow = createWindow();
       }
+    });
+
+    app.on("before-quit", (e) => {
+      e.preventDefault();
+      dialog.showErrorBox("", quitAlert);
     });
 
     ipcMain.on("asynchronous-message", (event, arg) => {

@@ -1151,7 +1151,6 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let memberBlockPaddingRight;
   let homeliaisonWifiKey, hubSeongSuWifiKey;
   let alive;
-  let serverTargets;
   let noticeTong;
   let noticeSize, noticeDateSize;
   let noticePaddingLeft, noticePaddingTop, noticePaddingBottom;
@@ -1166,6 +1165,8 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let mobileBackgroundHeight;
   let mobileFinalMarginBottom;
   let backgroundWidth;
+  let mobileLineHeight, mobileLineHeight2;
+  let mobileMainSize, mobileMainSize2, mobileSubSize;
 
   if (window.innerWidth > 1420) {
     desktopMode = true;
@@ -1239,53 +1240,14 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
   backgroundWidth = <%% 210, 180, 180, 180, 0 %%>;
 
-  serverTargets = [
-    {
-      name: "Console server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "File server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Graphic server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Sms server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Monitor server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Bill Server",
-      alive: () => {
-        return true;
-      }
-    },
-    {
-      name: "Bridge Server",
-      alive: () => {
-        return true;
-      }
-    },
-  ];
-
   boxWidth0 = boxHeight0 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(2.5) + ")";
   boxWidth1 = boxHeight1 = "calc(calc(100vh - " + String(belowHeight + (outerMargin * 2) + (innerMargin * 2)) + ea + ") / " + String(5) + ")";
+
+  mobileLineHeight = 1;
+  mobileMainSize = 4.7;
+  mobileLineHeight2 = 1.3;
+  mobileMainSize2 = 4.1;
+  mobileSubSize = 3.2;
 
   if (desktop) {
     totalMother.style["min-width"] = "calc(" + boxWidth0 + " * 4.5)";
@@ -2055,7 +2017,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       },
       children: [
         {
-          text: "Designer",
+          text: wordings.title.text[0],
           style: {
             display: "inline-block",
             position: "relative",
@@ -2067,7 +2029,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
           }
         },
         {
-          text: "Console",
+          text: wordings.title.text[1],
           style: {
             display: "inline-block",
             position: "relative",
@@ -2081,37 +2043,83 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       ]
     });
 
-    createNode({
+    checklistBlock = createNode({
       mother: motherBox,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
         width: mobileBoxWidth1,
         height: mobileBoxHeight,
         borderRadius: String(5) + "px",
         marginRight: String(innerMargin) + vw,
         background: colorChip.white,
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
-        marginBottom: String(innerMargin) + vw
-      }
+        marginBottom: String(innerMargin) + vw,
+      },
+      children: [
+        {
+          text: greenMerge(wordings.checklist),
+          style: {
+            color: colorChip.black,
+            fontSize: String(mobileMainSize) + vw,
+            textAlign: "center",
+            fontWeight: String(500),
+            lineHeight: String(mobileLineHeight),
+          },
+          bold: {
+            color: colorChip.green,
+            fontSize: String(mobileSubSize) + vw,
+            fontFamily: "graphik",
+            fontWeight: String(400),
+          }
+        }
+      ]
     });
 
-    createNode({
+    projectsBlock = createNode({
       mother: motherBox,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
         width: mobileBoxWidth1,
         height: mobileBoxHeight,
         borderRadius: String(5) + "px",
         background: colorChip.green,
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
         marginBottom: String(innerMargin) + vw
-      }
+      },
+      children: [
+        {
+          text: greenMerge(wordings.care),
+          style: {
+            color: colorChip.white,
+            fontSize: String(mobileMainSize) + vw,
+            textAlign: "center",
+            fontWeight: String(500),
+            lineHeight: String(mobileLineHeight),
+          },
+          bold: {
+            color: colorChip.white,
+            fontSize: String(mobileSubSize) + vw,
+            fontFamily: "graphik",
+            fontWeight: String(400),
+            opacity: String(0.6),
+          }
+        }
+      ]
     });
 
-    createNode({
+    calendarBlock = createNode({
       mother: motherBox,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
         width: mobileBoxWidth2,
         height: mobileBoxHeight,
         borderRadius: String(5) + "px",
@@ -2119,13 +2127,30 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         background: colorChip.white,
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
         marginBottom: String(innerMargin) + vw
-      }
+      },
+      children: [
+        {
+          class: [ "hoverDefault_lite" ],
+          text: smallMerge(wordings.calendar),
+          style: {
+            color: colorChip.black,
+            fontSize: String(mobileMainSize2) + vw,
+            textAlign: "center",
+            fontWeight: String(500),
+            lineHeight: String(mobileLineHeight2),
+            position: "relative",
+          }
+        }
+      ]
     });
 
-    createNode({
+    requestBlock = createNode({
       mother: motherBox,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
         width: mobileBoxWidth2,
         height: mobileBoxHeight,
         borderRadius: String(5) + "px",
@@ -2133,26 +2158,60 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         background: colorChip.white,
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
         marginBottom: String(innerMargin) + vw
-      }
+      },
+      children: [
+        {
+          class: [ "hoverDefault_lite" ],
+          text: smallMerge(wordings.request),
+          style: {
+            color: colorChip.black,
+            fontSize: String(mobileMainSize2) + vw,
+            textAlign: "center",
+            fontWeight: String(500),
+            lineHeight: String(mobileLineHeight2),
+            position: "relative",
+          }
+        }
+      ]
     });
 
-    createNode({
+    reportBlock = createNode({
       mother: motherBox,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
         width: mobileBoxWidth2,
         height: mobileBoxHeight,
         borderRadius: String(5) + "px",
         background: colorChip.white,
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
         marginBottom: String(innerMargin) + vw
-      }
+      },
+      children: [
+        {
+          class: [ "hoverDefault_lite" ],
+          text: smallMerge(wordings.report),
+          style: {
+            color: colorChip.black,
+            fontSize: String(mobileMainSize2) + vw,
+            textAlign: "center",
+            fontWeight: String(500),
+            lineHeight: String(mobileLineHeight2),
+            position: "relative",
+          }
+        }
+      ]
     });
 
-    createNode({
+    webBlock = createNode({
       mother: motherBox,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
         width: mobileBoxWidth0,
         height: mobileBoxHeight,
         borderRadius: String(5) + "px",
@@ -2161,13 +2220,32 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         backgroundSize: mobileBoxWidth0 + " auto",
         backgroundPosition: "0% 0%",
         marginBottom: String(innerMargin) + vw
-      }
+      },
+      children: [
+        {
+          text: justMerge(wordings.web),
+          style: {
+            color: colorChip.whiteBlack,
+            fontSize: String(mobileMainSize) + vw,
+            textAlign: "center",
+            fontWeight: String(500),
+            lineHeight: String(mobileLineHeight),
+            top: String(-1) + vw,
+            fontFamily: "graphik",
+            position: "relative",
+            fontStyle: "italic",
+          },
+        }
+      ]
     });
 
-    createNode({
+    contentsBlock = createNode({
       mother: motherBox,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
         width: mobileBoxWidth2,
         height: mobileBoxHeight,
         borderRadius: String(5) + "px",
@@ -2175,13 +2253,30 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         background: colorChip.gray0,
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
         marginBottom: String(innerMargin) + vw
-      }
+      },
+      children: [
+        {
+          class: [ "hoverDefault_lite" ],
+          text: smallMerge(wordings.contents),
+          style: {
+            color: colorChip.black,
+            fontSize: String(mobileMainSize2) + vw,
+            textAlign: "center",
+            fontWeight: String(500),
+            lineHeight: String(mobileLineHeight2),
+            position: "relative",
+          }
+        }
+      ]
     });
 
-    createNode({
+    webSettingBlock = createNode({
       mother: motherBox,
       style: {
-        display: "inline-block",
+        display: "inline-flex",
+        verticalAlign: "top",
+        justifyContent: "center",
+        alignItems: "center",
         width: mobileBoxWidth3,
         height: mobileBoxHeight,
         borderRadius: String(5) + "px",
@@ -2190,51 +2285,26 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         backgroundPosition: "100% 100%",
         boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
         marginBottom: String(innerMargin) + vw
-      }
+      },
+      children: [
+        {
+          text: justMerge(wordings.setting),
+          style: {
+            color: colorChip.whiteBlack,
+            fontSize: String(mobileMainSize) + vw,
+            textAlign: "center",
+            fontWeight: String(500),
+            lineHeight: String(mobileLineHeight),
+            top: String(-1) + vw,
+            fontFamily: "graphik",
+            position: "relative",
+            fontStyle: "italic",
+          },
+        }
+      ]
     });
 
-    createNode({
-      mother: motherBox,
-      style: {
-        display: "inline-block",
-        width: mobileBoxWidth2,
-        height: mobileBoxHeight,
-        borderRadius: String(5) + "px",
-        marginRight: String(innerMargin) + vw,
-        background: colorChip.gray0,
-        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
-        marginBottom: String(innerMargin) + vw
-      }
-    });
-
-    createNode({
-      mother: motherBox,
-      style: {
-        display: "inline-block",
-        width: mobileBoxWidth2,
-        height: mobileBoxHeight,
-        borderRadius: String(5) + "px",
-        marginRight: String(innerMargin) + vw,
-        background: colorChip.gray0,
-        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
-        marginBottom: String(innerMargin) + vw
-      }
-    });
-
-    createNode({
-      mother: motherBox,
-      style: {
-        display: "inline-block",
-        width: mobileBoxWidth2,
-        height: mobileBoxHeight,
-        borderRadius: String(5) + "px",
-        background: colorChip.gray0,
-        boxShadow: "0px 3px 14px -9px " + colorChip.darkShadow,
-        marginBottom: String(innerMargin) + vw
-      }
-    });
-
-    createNode({
+    ongoingBlock = createNode({
       mother: motherBox,
       style: {
         display: "inline-block",
@@ -2247,7 +2317,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       }
     });
 
-    createNode({
+    noticeBlock = createNode({
       mother: motherBox,
       style: {
         display: "inline-block",
