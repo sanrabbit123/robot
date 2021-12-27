@@ -1167,25 +1167,33 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let backgroundWidth;
   let mobileLineHeight, mobileLineHeight2;
   let mobileMainSize, mobileMainSize2, mobileSubSize;
+  let squareMode;
 
-  if (window.innerWidth > 1420) {
-    desktopMode = true;
-    tabletMode = false;
-    mobileMode = false;
-    desktop = true;
-    mobile = false;
-  } else if (window.innerWidth <= 1420 && window.innerWidth > 780) {
-    desktopMode = false;
-    tabletMode = true;
-    mobileMode = false;
-    desktop = true;
-    mobile = false;
-  } else {
+  if (window.innerWidth <= 780) {
     desktopMode = false;
     tabletMode = false;
     mobileMode = true;
+    squareMode = false;
     desktop = false;
     mobile = true;
+  } else {
+    desktop = true;
+    mobile = false;
+    if (window.innerWidth / window.innerHeight > 1.7358490566037736) {
+      desktopMode = true;
+      tabletMode = false;
+      mobileMode = false;
+      squareMode = false;
+    } else {
+      desktopMode = false;
+      tabletMode = true;
+      mobileMode = false;
+      if (window.innerWidth / window.innerHeight < 1.3264150943396227) {
+        squareMode = true;
+      } else {
+        squareMode = false;
+      }
+    }
   }
 
   outerMargin = <%% 30, 30, 28, 24, 6 %%>;
@@ -1914,6 +1922,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         {
           text: englishMerge(wordings.notice),
           style: {
+            opacity: String(squareMode ? 0 : 1),
             position: "absolute",
             fontSize: String(onlineWordingSize) + vh,
             fontFamily: "graphik",
@@ -1926,6 +1935,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
         {
           class: [ noticeTongClassName ],
           style: {
+            opacity: String(squareMode ? 0 : 1),
             display: "block",
             position: "relative",
             left: String(onlineBoxLeft) + vh,
