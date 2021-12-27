@@ -152,16 +152,6 @@ Ghost.prototype.clientPrint = async function (cliid, MONGOC = null) {
   }
 }
 
-Ghost.prototype.officeMonitor = async function () {
-  try {
-    const OfficeMonitor = require(`${process.cwd()}/apps/officeMonitor/officeMonitor.js`);
-    const app = new OfficeMonitor();
-    await app.reportServer();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 Ghost.prototype.slackToMongo = async function (selfMongo) {
   const instance = this;
   const { slack_token: token, slack_bot } = this;
@@ -4217,6 +4207,4 @@ if (process.argv[2] === undefined || /server/gi.test(process.argv[2]) || /ghost/
   app.wssLaunching().catch((err) => { console.log(err); });
 } else if (/print/gi.test(process.argv[2])) {
   app.clientPrint(process.argv[3].trim(), null).catch((err) => { console.log(err); });
-} else if (/officeMonitor/gi.test(process.argv[2])) {
-  app.officeMonitor().catch((err) => { console.log(err); });
 }
