@@ -10,6 +10,8 @@ const Alien = function () {
   this.robot = process.cwd() + "/robot.js";
 }
 
+Alien.stacks = {};
+
 Alien.prototype.setTimer = function (callback, timeObj) {
   if (typeof timeObj !== "object" || typeof callback !== "function") {
     throw new Error("arguments must be Object: timeObj, Function: callback");
@@ -114,9 +116,190 @@ Alien.prototype.cronLaunching = async function (cronNumber) {
   }
 }
 
+Alien.prototype.sendMessage = function (from, to, message, option = {}) {
+  if (typeof from !== "string" || !Array.isArray(to) || typeof message !== "string") {
+    throw new Error("invaild input");
+  }
+  if (!to.every((id) => { return typeof id === "string" })) {
+    throw new Error("invaild to array");
+  }
+  if (typeof option !== "object") {
+    throw new Error("invild option");
+  }
+  const instance = this;
+  const address = this.address;
+  const WebSocket = require("ws");
+  const PORT = 5000;
+  const url = `wss://${address.officeinfo.ghost.host}:${String(PORT)}/general`;
+  const messageObj = this.messageDummy(from, to, message, option);
+  if (Alien.stacks.wssSocket !== undefined) {
+    Alien.stacks.wssSocket.send(JSON.stringify(messageObj));
+  }
+  return messageObj;
+}
+
+Alien.prototype.routerPatch = function (app) {
+  const instance = this;
+  const address = this.address;
+  const { shellExec, shellLink, fileSystem, setQueue, equalJson, errorLog, sleep, messageSend, messageLog } = this.mother;
+  const { messageStorage } = this;
+  const defaultPath = address.officeinfo.ghost.monitor.path;
+  const ipPass = (req) => {
+    let ip;
+    ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    if (/^172\.30\.1/.test(ip)) {
+      return true;
+    } else if (ip === "220.117.13.12") {
+      return true;
+    } else if (ip === "220.72.109.59") {
+      return true;
+    } else if (/^223\.3/.test(ip)) {
+      return true;
+    } else if (/^223\.4/.test(ip)) {
+      return true;
+    } else if (/^223\.5/.test(ip)) {
+      return true;
+    } else if (/^223\.6/.test(ip)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  app.get(defaultPath, async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      res.send(JSON.stringify({ message: "OK" }));
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  });
+
+  app.get(defaultPath + "/status", async (req, res) => {
+    res.set({
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      res.send(JSON.stringify(Alien.stacks.memberAlive));
+    } catch (e) {
+      console.log(e);
+      res.send("error");
+    }
+  });
+
+  app.post(defaultPath + "/status", async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      res.send(JSON.stringify(Alien.stacks.memberAlive));
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  });
+
+  app.post(defaultPath + "/deviceLogin", async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      const { device } = equalJson(req.body);
+      let macArr, memid;
+      let index;
+
+      macArr = device.networkInterfaces.map((obj) => { return obj.mac });
+
+      memid = null;
+      for (let mac of macArr) {
+        index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac });
+        if (index !== -1) {
+          if (typeof address.officeinfo.map[index].memid === "string") {
+            memid = address.officeinfo.map[index].memid;
+            break;
+          }
+        }
+      }
+
+      if (memid !== null) {
+        Alien.stacks.memberAlive[memid] = true;
+        if (Alien.stacks.deathTimeout[memid] !== null) {
+          clearTimeout(Alien.stacks.deathTimeout[memid]);
+        }
+        Alien.stacks.deathTimeout[memid] = setTimeout(() => {
+          Alien.stacks.memberAlive[memid] = false;
+        }, 2 * 30 * 1000);
+      }
+
+      res.send({ message: "done" });
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  });
+
+  app.post(defaultPath + "/sendMessage", async (req, res) => {
+    res.set({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, HEAD",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With, remember-me",
+    });
+    try {
+      if (!ipPass(req)) {
+        throw new Error("ip ban");
+      }
+      if (req.body.from === undefined || req.body.to === undefined || req.body.message === undefined) {
+        throw new Error("invaild post");
+      }
+      const { from, to, message } = equalJson(req.body);
+      let option;
+      if (req.body.option !== undefined) {
+        option = equalJson(req.body.option);
+      } else {
+        option = {};
+      }
+      const messageObj = instance.sendMessage(from, to, message, option);
+      res.send(JSON.stringify(messageObj));
+    } catch (e) {
+      console.log(e);
+      res.send(JSON.stringify({ message: "error : " + e.message }));
+    }
+  });
+
+}
+
 Alien.prototype.wssLaunching = async function (cronNumber) {
   const instance = this;
-  const { fileSystem, shell, shellLink, errorLog } = this.mother;
+  const address = this.address;
+  const { fileSystem, shell, shellLink, errorLog, equalJson } = this.mother;
   try {
     const https = require("https");
     const express = require("express");
@@ -125,6 +308,7 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     const WebSocket = require("ws");
     const url = require("url");
     const CronGhost = require(process.cwd() + "/apps/cronGhost/cronGhost.js");
+    const members = require(`${process.cwd()}/apps/memberObj.js`);
     const cron = new CronGhost();
     const port = 5000;
     let cronScript;
@@ -132,6 +316,7 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     let sockets, server;
     let pems, pemsLink;
     let certDir, keyDir, caDir;
+    let memberAlive;
 
     app.use(useragent.express());
     app.use(express.json());
@@ -162,14 +347,59 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
     }
     pems.allowHTTP1 = true;
 
+
+    // routing
+    this.routerPatch(app);
+
+
+    // alive monitor
+    memberAlive = {};
+    Alien.stacks.deathTimeout = {};
+    for (let { id } of members) {
+      memberAlive[id] = false;
+      Alien.stacks.deathTimeout[id] = null;
+    }
+    Alien.stacks.memberAlive = memberAlive;
+
     generalSocket = new WebSocket.Server({ noServer: true });
     generalSocket.on("connection", (ws) => {
+      Alien.stacks.wssSocket = ws;
       ws.on("message", (message) => {
         const clients = generalSocket.clients;
         for (let c of clients) {
           if (c.readyState === WebSocket.OPEN && ws !== c) {
             c.send(message);
           }
+        }
+        try {
+          const data = equalJson(raw);
+          let macArr, memid, index;
+          if (data.device !== undefined && data.message === "alive") {
+            macArr = data.device.networkInterfaces.map((obj) => { return obj.mac });
+
+            memid = null;
+            for (let mac of macArr) {
+              index = address.officeinfo.map.findIndex((obj) => { return obj.mac === mac });
+              if (index !== -1) {
+                if (typeof address.officeinfo.map[index].memid === "string") {
+                  memid = address.officeinfo.map[index].memid;
+                  break;
+                }
+              }
+            }
+
+            if (memid !== null) {
+              Alien.stacks.memberAlive[memid] = true;
+              if (Alien.stacks.deathTimeout[memid] !== null) {
+                clearTimeout(Alien.stacks.deathTimeout[memid]);
+              }
+              Alien.stacks.deathTimeout[memid] = setTimeout(() => {
+                Alien.stacks.memberAlive[memid] = false;
+              }, 2 * 30 * 1000);
+            }
+          }
+        } catch {
+          // pass
         }
       });
     });
