@@ -1218,7 +1218,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   onlineBoxTitleTop = 2.2;
   onlineBoxLeft = 2.7;
   onlineBoxTop = 5.4;
-  onlineTextTop = isMac() ? 0 : 0.2;
+  onlineTextTop = 0;
 
   onlineBoxHeight0 = 3;
   onlineBoxBetween = 1;
@@ -2590,7 +2590,7 @@ DesignerConsoleJs.prototype.consoleView = async function () {
 
     this.projectMap = await ajaxJson({ method: "projectMap" }, "/getDataPatch");
     this.checklist = await ajaxJson({ kind: "checklist" }, "/getServicesByKind");
-    this.slackNotices = await ajaxJson({ channel: "000_master_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
+    this.slackNotices = await ajaxJson({ channel: "001_designer_notice" }, "https://" + FILEHOST + "/slackMessages", { equal: true });
     this.arrowDomTargets = [];
 
     loading.parentNode.removeChild(loading);
