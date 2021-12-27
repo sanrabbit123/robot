@@ -96,9 +96,7 @@ DevContext.prototype.launching = async function () {
 
 
 
-    // await sendMessage("m1810_aa01s", [ "m1810_aa01s" ], "안녕하세요", { alarm: true });
 
-    // await findCode("memberView")
 
 
 
@@ -1642,8 +1640,8 @@ DevContext.prototype.launching = async function () {
     // send sms
     // const HumanPacket = require(`${process.cwd()}/apps/humanPacket/humanPacket.js`);
     // const human = new HumanPacket();
-    // const name = "구선아";
-    // const amount = 4208000;
+    // const name = "구본재";
+    // const amount = 1430000;
     // await human.sendSms({
     //   name: "",
     //   phone: "01021993403",

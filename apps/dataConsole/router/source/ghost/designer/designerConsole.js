@@ -1114,13 +1114,12 @@ DesignerConsoleJs.prototype.dashboardWordings = function () {
 DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   const instance = this;
   const { ea, totalContents, belowHeight, grayBarWidth, totalMother } = this;
-  const { members, slackNotices, media } = this;
+  const { members, slackNotices, media, designer } = this;
   const { createNode, colorChip, withOut, blankHref, isMac, cleanChildren, setQueue, ajaxJson } = GeneralJs;
   const { wordings, methods: { justMerge, greenMerge, smallMerge, englishMerge } } = this.dashboardWordings();
   const vh = "vh";
   const vw = "vw";
-  const memberTongClassName = "memberTong";
-  const serverTongClassName = "serverTong";
+  const ongoingTongClassName = "memberTong";
   const noticeTongClassName = "noticeTong";
   const thisHost = window.location.protocol + "//" + window.location.host;
   let outerMargin;
@@ -1142,7 +1141,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let onlineBoxHeight0, onlineBoxBetween;
   let onlineBoxInnerMargin;
   let onlineBoxInnerMarginTop;
-  let memberTong, serverTong;
+  let memberTong;
   let memberBlockPaddingLeft;
   let memberBlockMarginBottom;
   let memberBlockWidth;
@@ -1169,6 +1168,8 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let mobileMainSize, mobileMainSize2, mobileSubSize;
   let squareMode;
 
+  console.log(designer);
+
   if (window.innerWidth <= 780) {
     desktopMode = false;
     tabletMode = false;
@@ -1179,7 +1180,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   } else {
     desktop = true;
     mobile = false;
-    if (window.innerWidth / window.innerHeight > 1.7358490566037736) {
+    if (window.innerWidth / window.innerHeight > 1.71) {
       desktopMode = true;
       tabletMode = false;
       mobileMode = false;
@@ -1188,7 +1189,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       desktopMode = false;
       tabletMode = true;
       mobileMode = false;
-      if (window.innerWidth / window.innerHeight < 1.3264150943396227) {
+      if (window.innerWidth / window.innerHeight < 1.32) {
         squareMode = true;
       } else {
         squareMode = false;
@@ -1221,7 +1222,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   onlineBoxTop = 5.4;
   onlineTextTop = isMac() ? 0 : 0.2;
 
-  onlineBoxHeight0 = 33.2;
+  onlineBoxHeight0 = 3;
   onlineBoxBetween = 1;
   memberBlockPaddingLeft = 1.1;
   memberBlockMarginBottom = <%% 10, 9, 8, 7, 1 %%>;
@@ -1340,7 +1341,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
                   position: "relative",
                   left: String(onlineBoxLeft) + vh,
                   width: withOut(onlineBoxLeft * 2, vh),
-                  height: String(onlineBoxHeight0) + vh,
+                  height: withOut(onlineBoxHeight0, vh),
                   boxSizing: "border-box",
                   border: "1px solid " + colorChip.gray4,
                   borderRadius: String(5) + "px",
@@ -1352,12 +1353,12 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
                       top: String(onlineBoxInnerMarginTop) + vh,
                       left: String(onlineBoxInnerMarginTop) + vh,
                       width: withOut(onlineBoxInnerMarginTop * 2, vh),
-                      height: withOut(onlineBoxInnerMarginTop * 2, vh),
+                      height: withOut(onlineBoxInnerMarginTop * 1, vh),
                       overflow: "scroll",
                     },
                     children: [
                       {
-                        class: [ memberTongClassName ],
+                        class: [ ongoingTongClassName ],
                         style: {
                           display: "block",
                           position: "relative",
@@ -1369,44 +1370,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
                     ]
                   }
                 ]
-              },
-              {
-                style: {
-                  display: "block",
-                  position: "relative",
-                  marginTop: String(onlineBoxBetween) + vh,
-                  left: String(onlineBoxLeft) + vh,
-                  width: withOut(onlineBoxLeft * 2, vh),
-                  height: withOut(onlineBoxHeight0 + onlineBoxBetween + onlineBoxLeft, vh),
-                  boxSizing: "border-box",
-                  border: "1px solid " + colorChip.gray4,
-                  borderRadius: String(5) + "px",
-                },
-                children: [
-                  {
-                    style: {
-                      position: "absolute",
-                      top: String(onlineBoxInnerMarginTop) + vh,
-                      left: String(onlineBoxInnerMarginTop) + vh,
-                      width: withOut(onlineBoxInnerMarginTop * 2, vh),
-                      height: withOut(onlineBoxInnerMarginTop * 2, vh),
-                      overflow: "scroll",
-                    },
-                    children: [
-                      {
-                        class: [ serverTongClassName ],
-                        style: {
-                          display: "block",
-                          position: "relative",
-                          top: String(0),
-                          left: String(0),
-                          width: String(100) + '%',
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
+              }
             ]
           },
           {
@@ -1445,6 +1409,59 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
       });
       ongoingBlock = firstMother.firstChild;
       mainTitleBlock = firstMother.lastChild;
+    }
+
+    memberTong = firstMother.querySelector('.' + ongoingTongClassName);
+
+    for (let project of designer.projects) {
+      createNode({
+        mother: memberTong,
+        style: {
+          display: "block",
+          position: "relative",
+          width: withOut(memberBlockPaddingLeft * 1, vh),
+          paddingLeft: String(memberBlockPaddingLeft) + vh,
+          marginBottom: String(memberBlockMarginBottom) + ea,
+        },
+        children: [
+          {
+            mode: "svg",
+            source: instance.mother.returnRound(String(memberBlockWidth / 2) + ea, /^[완드]/gi.test(project.process.status) ? colorChip.deactive : colorChip.green),
+            style: {
+              position: "absolute",
+              width: String(memberBlockWidth) + ea,
+              height: "",
+              top: String(memberBlockTop) + ea,
+              left: String(memberBlockLeft) + vh,
+            }
+          },
+          {
+            text: project.name + " 고객님",
+            style: {
+              display: "inline-block",
+              position: "relative",
+              background: colorChip.white,
+              fontSize: String(memberBlockSize) + ea,
+              fontWeight: String(400),
+              color: colorChip.black,
+              paddingRight: String(memberBlockPaddingRight) + vh,
+              top: String(onlineTextTop) + vh,
+            }
+          },
+          {
+            text: project.process.status + ", " + project.process.action,
+            style: {
+              position: "absolute",
+              right: String(0),
+              top: String(0),
+              background: colorChip.white,
+              fontSize: String(memberBlockSize) + ea,
+              fontWeight: String(300),
+              color: /^[완드]/gi.test(project.process.status) ? colorChip.deactive : colorChip.green,
+            }
+          }
+        ]
+      });
     }
 
     secondMother = createNode({
