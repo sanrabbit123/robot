@@ -398,8 +398,8 @@ Alien.prototype.wssLaunching = async function (cronNumber) {
               }, 2 * 30 * 1000);
             }
           }
-        } catch {
-          // pass
+        } catch (e) {
+          errorLog(e.message).catch((err) => { console.log(err); });
         }
       });
     });
