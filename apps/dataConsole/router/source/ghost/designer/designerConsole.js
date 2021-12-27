@@ -1167,6 +1167,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   let mobileNoticePaddingTop;
   let mobileNoticePaddingBottom;
   let mobileNoticeMarginBottom;
+  let mobileOngoingTextTop;
 
   if (window.innerWidth <= 780) {
     desktopMode = false;
@@ -1228,7 +1229,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
   memberBlockWidth = <%% 5, 5, 4, 3, 1 %%>;
   memberBlockTop = <%% 6, 6, 5, 4, 1.5 %%>;
   memberBlockTop2 = <%% 8, 8, 7, 6, 1.5 %%>;
-  memberBlockLeft = 0.1;
+  memberBlockLeft = 0;
   memberBlockSize = <%% 14, 13, 12, 11, 3.1 %%>;
   memberBlockPaddingRight = 1;
 
@@ -1268,6 +1269,8 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
 
   mobileOngoingTitleSize = 3.5;
   mobileOngoingTitleMarginBottom = 2.7;
+
+  mobileOngoingTextTop = -0.2;
 
   mobileNoticeSize = 2.8;
   mobileNoticeLineheight = 1.5;
@@ -2428,6 +2431,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
               fontWeight: String(400),
               color: colorChip.black,
               paddingRight: String(mobileOngoingWhite) + vw,
+              top: String(mobileOngoingTextTop) + vw,
             }
           },
           {
@@ -2435,7 +2439,7 @@ DesignerConsoleJs.prototype.consoleDashboard = function (desid) {
             style: {
               position: "absolute",
               right: String(0),
-              top: String(0),
+              top: String(mobileOngoingTextTop) + vw,
               background: colorChip.white,
               fontSize: String(memberBlockSize) + ea,
               fontWeight: String(300),
